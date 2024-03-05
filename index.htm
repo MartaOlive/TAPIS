@@ -238,6 +238,7 @@
 				<span id="ButtonsContextMenuObjects"></span><br>
 				<button onclick='removeCircularImage(event, "DialogContextMenu")'>Remove</button>
 				<button onclick='renameCircularImage(event, "DialogContextMenu")'>Rename</button><br>
+<button onclick='giveMeNetworkInformation(event, "DialogContextMenu")'>Network Info</button><br>
 			</p>
 			<div class="center">
 				<button value="cancel" onClick="startingNodeContextId=null;" formmethod="dialog">Cancel</button>
@@ -295,7 +296,7 @@
 				<option value="windows-1250">Windows-1250</option>
 				<option value="windows-1251">Windows-1251</option>
 				<option value="windows-1253">Windows-1253</option>
-				<option value="iso-8859-9">ISO 8859-9, windows-1254, Latin 5)</option>
+				<option value="iso-8859-9">ISO 8859-9, windows-1254, Latin 5</option>
 				<option value="windows-1255">Windows-1255</option>
 				<option value="windows-1256">Windows-1256</option>
 				<option value="windows-1257">Windows-1257</option>
@@ -687,15 +688,35 @@
 
 		//Return null if there is no reason (and there is a "fit").
 		function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-			if (parentNode.image=="ogc.png")
+			if (parentNode.image == "ogc.png" && node.image != "FilterRowsSTA.png") {
+				
 				return null;
+			} else if (parentNode.image == "ogc.png" && node.image == "FilterRowsSTA.png") {
+				console.log("nop");
+				return "You need to select first an Entity";
+			}
 			if (TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true)
 				return "Parent node is a leaf node and cannot be connected with any other node";
 			if (node.image=="OneValue.png" && parentNode.image!="Observations.png")
 				return "'One value' node is designed be connected to an 'observations' node only.";
 			var idNode=IdOfSTAEntity(node);
-			if (idNode<0)
+			if (idNode < 0) {
+				var entity = getSTAURLLastEntity(parentNode.STAURL);
+				var staEntitiesList = Object.keys(STAEntities);
+				var isPlural = false;
+				for (var i = 0; i < staEntitiesList.length; i++) {
+					if (staEntitiesList[i] == entity) {
+						isPlural = true;
+						break;
+					}
+				}
+				if (node.image == "FilterRowsSTA.png" && isPlural == false) {
+					return "Your result is already one value, you can not filter it more"
+				} else {
 				return null;
+			}
+
+			}
 			var getCon=getConnectionSTAEntity(parentNode, node)
 			if (getCon.error)
 				return getCon.error;
@@ -2219,8 +2240,8 @@
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogFilterRows").close();
 
-			var previousSTAURL=currentNode.STAURL;
-			var parentNode=GetFirstParentNode(currentNode);
+			var previousSTAURL = currentNode.STAURL;
+			var parentNode = GetFirstParentNode(currentNode);
 			if (parentNode) {
 				if (parentNode.STAURL)
 					currentNode.STAURL = parentNode.STAURL;
@@ -2232,17 +2253,17 @@
 
 			//updateinfoFilter
 			takeSelectInformation(currentNode.id);
-			console.log(currentNode.STAURL);
+
 			var previousNode = networkNodes.get(network.getConnectedNodes(currentNode.id, "from"));
 
-			urlAPICounter = []; // I need to restart it 
+			currentNode.STAUrlAPICounter = []; // I need to restart it 
 			//put URL ready to add things
 			var previousURL = previousNode[0].STAURL;
 
 			if (previousURL.includes("$select=") || previousURL.includes("$orderby")) {
-				urlAPI = previousURL + "&$filter=";
+				currentNode.STAUrlAPI = previousURL + "&$filter=";
 			} else {
-				urlAPI = previousURL + "?$filter=";
+				currentNode.STAUrlAPI = previousURL + "?$filter=";
 			}
 
 			stopReadInformationRowFilter = false;
@@ -2253,29 +2274,9 @@
 				entity = "STAPlus"
 			}
 
-			readInformationRowFilter(elemFilter, entity, "no", "no"); //And apply filter
-			console.log(urlAPI);
-			currentNode.STAURL = urlAPI;
-			//Selectors Information
-			currentNode.STAelementFilter = elemFilter;
-			currentNode.STAinfoFilter = infoFilter;
-			currentNode.STAboxName = boxNames;
-			currentNode.STAConditionsFilter = conditionsFilter;
-
-			//keep in this node
-			elemFilter = { //restart for next node
-				elems: [0],
-				nexus: null,
-				boxName: "0_0"
-			}
-			infoFilter = [];
-			boxNames = ["0_0"];
-			conditionsFilter = [ //valors de la taula
-				{
-					property: "<div id='optionsRow_0' class='optionsRow'></div>",
-					number: "0"
-				}
-			];
+			readInformationRowFilter(currentNode.STAElemFilter, entity, "no", "no"); //And apply filter
+			console.log(currentNode.STAUrlAPI);
+			currentNode.STAURL = currentNode.STAUrlAPI;
 
 			currentNode.STAExpectedLength = parentNode.STAExpectedLength;
 			networkNodes.update(currentNode);
@@ -3366,7 +3367,7 @@
 				conditionsFilter = currentNode.STAConditionsFilter;
 			}
 
-			ShowFilterTable(dataAttributes, currentNode.id);
+			ShowFilterTable();
 		}
 
 		function SeparatePropertyIfNeeded(record, property, baseName)
@@ -3828,7 +3829,11 @@
 				startingNodeContextId = null;
 
 			network.selectNodes([newId]);
+			if (image == "FilterRowsSTA.png") { //Add 
+				addNecessaryVariablesToNode(newId);
+			}
 		}
+		
 
 		function removeNode(nodeId)
 		 {
@@ -3956,6 +3961,15 @@
 				}
 			}
 		}
+
+
+		function giveMeNetworkInformation(event) {
+			if (event)
+				event.preventDefault(); // We don't want to submit this form
+			document.getElementById("DialogSelectColumns").close();
+			console.log(networkNodes);
+		}
+
 	</script>
 
 </body>
