@@ -1194,7 +1194,7 @@
 		}
 
 		function RetrieveMeaningTableCallback(usage_descr, params_function) {
-			if (usage_descr.codeMediaType=="application/json" /*&& usage_descr.schema==urlSchemaMeaning The part after the # is not stored of recovered from the server.*/)
+			if (usage_descr.codeMediaType=="application/json" && usage_descr.schema==urlSchemaMeaning)
 				params_function.node.STAdataAttributes=JSON.parse(usage_descr.code);  //The saved format is tha TAPIS internal format
 			networkNodes.update(params_function.node);
 			showInfoMessage("Meaning retrieved from NiMMbus.");
@@ -2978,13 +2978,13 @@
 		function ShowSaveLayerDialogSelects(node, descripUoM) {
 			var parentNode=GetFirstParentNode(node);
 			if (parentNode) {
-				var data = networkNodes.get(parentNode).STAdata;
+				var data = parentNode.STAdata;
 				var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 				var s, elem;
 				PopulateSelectSaveLayerDialog("DialogSaveLayerPlace", dataAttributes, "FeatureOfInterest/description");
 				PopulateSelectSaveLayerDialog("DialogSaveLayerLongitude", dataAttributes, "FeatureOfInterest/feature/coordinates_0");
 				PopulateSelectSaveLayerDialog("DialogSaveLayerLatitude", dataAttributes, "FeatureOfInterest/feature/coordinates_1");
-				PopulateSelectSaveLayerDialog("DialogSaveLayerTime", dataAttributes, "PhenomenonTime");
+				PopulateSelectSaveLayerDialog("DialogSaveLayerTime", dataAttributes, "phenomenonTime");
 				PopulateSelectSaveLayerDialog("DialogSaveLayerVariable", dataAttributes, "Datastream/ObservedProperty/name");
 				if (descripUoM){
 					document.getElementById("DialogMeaningVariableDescriptionUoM").style.display="inline-block";

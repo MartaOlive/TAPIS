@@ -33,19 +33,81 @@
 
 <H2>Table of content</H2>
 <ul>
+<li><a href="#help">How TAPIS works</a></li>
+<ul>
+<li><a href="#helpStart">How start with TAPIS</a></li>
+<li><a href="#helpConnectingNodes">Connecting nodes</a></li>
+<li><a href="#helpLeafNodes">Leaf nodes</a></li>
+<li><a href="#helpSTAvsTableNodes">SensorThings API nodes vs Table nodes</a></li>
+</ul>
 <li><a href="#recipes">Recipes</a></li>
 <ul>
-<li><a href="#recipe1">Recipe 1</a></li>
-<li><a href="#recipe2">Recipe 2</a></li>
+<li><a href="#recipe1">Recipe 1: Add semantics (meaning) to a table and share, retrieve and store it</a></li>
+<li><a href="#recipe2">Recipe 2: Show the current evolution of a variable captured by a particular party</a></li>
+<li><a href="#recipe3">Recipe 3: Show a map of all observation features in an STA service</a></li>
 </ul>
 </ul>
 
-<a id="recipes"></a>
+<hr>
+<a id="help"></a>
+<h2>How TAPIS works</h2>
+TAPIS is a javascript interface to deal with tabular data. Internaly, everything is a table that has colummns that represents fields and rows that represent records. 
+<p>
+While the project is completely independent from the <i>Orange data mining</i> software, it has been inspired by its GUI. IF you have used Orange in the past, you will immediately know how TAPIS works.
+<p>
+But thera are some differences with Orange
+<ul>
+<li>Columns can be semantically tagged adding meaning to the data fields
+<li>SensorThings API (STA) and STAplus is one of the sources of tababular data. 
+</ul>
+
+<p>
+Other capabilities are saving CSVs or GeoJSON and connectings with the MiraMon Map Browser
+
+The workspace of Tapis can be devided in the following areas
+<br>
+<img src="help_tapisAreas.png" width="800" class="center">
+
+<a id="helpStart"></a>
+<h3>How start with TAPIS</h3>
+The first thing that you need to do in Tapis is page a starting node in the network area. Examples of starting nodes are "Add STA service" and "Import CSV file". One clicking on them in the <i>button area</i> will place them in the <i>network area</i>. Double clicking on their representation in the network area will make appear dialog box to specify the parameters necessary to import the data in Tapis.
+<p>
+Next thing is connecting other nodes to the starting nodes. 
+
+<a id="helpConnectingNodes"></a>
+<h3>Connecting nodes</h3>
+There are two ways to do so:
+<ul>
+<li>Right click in the previous node will make visible a dialog box with many buttons. Select one of them and it will be placed in the <i>network area</i> as a new node and it will be automatically connected to the previous node.
+<li>Click on one of the buttons of the button area to create a new node in the network area. This node will not be connected to any previous node. You will need to connect the node to the previous node by clicking int he "Connect to nodes" button and the click on the new node and then in the previous node.
+</ul>
+
+Connections represents the inheritance of information. So if two nodes are connected, the arrow points to the node that is the data source of the next target node (like in a lineage diagram). You can see arrows as "data dependencies". In other words, the information "travels" in the oposite direction of the arrows. Commonly a target node uses the tabular data represented by source node and operates with it to create a new table. Nodes can be source nodes of as many target nodes as needed. Nodes can be target nodes and source nodes at the same time.
+<br>
+<img src="help_sourceTarget.png" width="400" class="center">
+<p>
+
+<a id="helpLeafNodes"></a>
+<h3>Leaf nodes</h3>
+Since almost all nodes represent data in tabular form the "Table" button is a good asset to check the content of a node.
+<p>
+"Table" is an example of "leaf node". Leaf nodes cannot be the source node of any other node and represent the "leafs" of a network representation. Other examples of leaf nodes are "Scatter plot", "One value", "View query" or, "Save table".
+<br>
+<img src="help_Table.png" width="800" class="center">
+<p>
+
+<a id="helpSTAvsTableNodes"></a>
+<h3>SensorThings API nodes vs Table nodes</h3>
+Some operations are performed by TAPIS directly (the ones that has grey icons) and some others are performed by tha STA (Tapis will only build queries and wait for the STA server to return the new table). 
+<p>
+A blue node can commonly be a source node for a grey node but a grey node cannot be a source node for a blue node.
+
+<hr>
 <H2>Recipes</H2>
-For the moment, only one recipe is provided. More to come soon!.
+Just a few collection of recipies are provided. More recipies to come soon!.
 
 <a id="recipe1"></a>
-<H3>Recipe 1: Add semantics (meaning) to a table and share, retrieve and store it</H2>
+<h3>Recipe 1: Add semantics (meaning) to a table and share, retrieve and store it</h3>
 In this example, we illustrate how to manage a table semantics.
 
 <p>
@@ -208,10 +270,10 @@ This is the result of saving the CSV (fragment) and the CSVW.
 </textarea>
 </td></tr>
 </table>
-</body>
+
 
 <a id="recipe2"></a>
-<H3>Recipe 2: Show the current evolution of a variable capture by a particular party</H2>
+<h3>Recipe 2: Show the current evolution of a variable captured by a particular party</h3>
 In this example, we illustrate how to monitor a variable capture by a particular party. The way this is done is conditioned by the STAplus entities data model (see the figure below) that relates Observations to Party through Datastream. Remember that a Datastream is just a convenience entity that links to all observations of a single ObservedProperty, captured by a single Thing using a single Sensor managed by a single Party.<br>
 We will start by selecting a Party, selecting the observed variable by selecting the Datastring (that contains properties that tell us about the ObservedProperty; this saving us the need to actually querying the ObservedProperty). Finally we will request the most recent observations in that Datastream.
 <br>
@@ -285,4 +347,233 @@ Another way of showing the current value (last value) is to use the "One value" 
 We can see the last temperature captured in the icon in the center of the pentagon. We can also see the value in the information window, as well as the promise to see a refreshed value in a 20 seconds time.<br>
 <img src="recipe02_oneValueView.png" width="800" class="center">
 
+<a id="recipe3"></a>
+<h3>Recipe 3: Show a map of all observation features in an STA service</h3>
+In this example, we illustrate how to show a map of all observation features stored in the STA with a view of the last observations. 
+
+<p>
+We will start by using the "Add STA service" tool to type the URL of the landing page of our favorite STAplus service. We will connect it to observations to get the "Observations" stored in the service.
+<br>
+<img src="recipe03_observationsTable.png" width="800" class="center">
+
+<p>
+The problem with "Observations" is that it only shows values and times with no mention of the meaning of the values. "Observations" returns links to the "Datastream" and the "FeatureOfInterest" that can be visited to get the actual properties of them. To reveal the actual meaning of the values in the same table, we need expand the units of measure stored in the "Datastream" as well as the variable name stored in "ObservedProperties". We will also need to get the actual positions of the observed variable that are stored in "FeaturesOfInterest". All this can be achieved by using the "Expand Columns" tools that allow us to select the needed properties (in practice removing the non-selected ones from the result) and expand the needed objects to see the properties directly in the table.<br>
+<br>
+<img src="recipe03_selectExpand.png" width="600" class="center">
+
+<p>
+Commonly, we are interested in the last observations on the latest observations (possibly the current ones) so we will request them in descending order by using the "Sort By" and specifying that we want to sort by "phenomenonTime" in descending order. We can also change the number of records requested to a bigger number. 
+<br>
+<img src="recipe03_sortBy.png" width="600" class="center">
+
+<p>
+This has created a complex STA query that we can examine with the "View query" tool. This is the actual query URL:
+<br>
+<a href="https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$select=phenomenonTime,result&$expand=Datastream($select=unitOfMeasurement;$expand=ObservedProperty($select=name,definition,description)),FeatureOfInterest($select=description,feature)&$orderby=phenomenonTime desc">https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$select=phenomenonTime,result&$expand=Datastream($select=unitOfMeasurement;$expand=ObservedProperty($select=name,definition,description)),FeatureOfInterest($select=description,feature)&$orderby=phenomenonTime desc</a>
+<br>
+The same query can be generated directly by connecting the "Observations layer" tool to the "Add STA service". This tool acts as a macro that has the predefined query stored.
+
+<p>
+Still we have the problem that the expanded entities are shown as serialized JSON objects. The tool "Separate columns" splits all JSON serialized columns into separated columns. The final table contains all the fields needed to build a time series.
+<br>
+<img src="recipe03_separateColumns.png" width="500" class="center">
+
+<p>
+The resulting table is ready to be converted into a map. 
+<br>
+<img src="recipe03_openMapBrowser.png" width="800" class="center">
+
+<p>
+By selecting the right fields and pressing the "Open" button, a map browser emerges with an extra layer that shows the last observations as a time series. By clicking in the point icons we can see the time evolution of the different variables.
+<br>
+<img src="recipe03_mapBrowser.png" width="800" class="center">
+
+<p>
+It is also possible to create a GeoJSON and a GeoJSON schema using the "Save layer" tool.
+<br>
+<img src="recipe03_saveGeoJSON.png" width="800" class="center">
+
+<p>
+As a result, we get a GeoJSON with the features of interest as geometries and the observations as values. The corresponding GeoJSON schema is extended to include the meaning of each observed properties (variable names, definitions and units of measure). Since the time series are represented as a list of properties which names contain the datetime, the GeoJSON schema properties uses name templates representing a generic datetime format. The extended properties of the properties definition are defined in a metaschema that can also be saved.
+<br>
+<table>
+<tr><td>
+<textarea rows="30" cols="80" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll;" readonly>
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [
+					2.090889,
+					41.473967
+				]
+			},
+			"properties": {
+				"Place": "Avinguda Cerdanyola 53",
+				"PM1_2024-03-05T01:41:00Z": 30,
+				"PM1_2024-03-05T01:41:10Z": 29,
+				"PM1_2024-03-05T01:41:20Z": 31,
+				"PM1_2024-03-05T01:41:30Z": 32,
+				"PM1_2024-03-05T01:41:40Z": 31,
+				"PM1_2024-03-05T01:41:50Z": 30,
+				"PM1_2024-03-05T01:42:01Z": 31,
+				"PM1_2024-03-05T01:42:11Z": 30,
+				"PM1_2024-03-05T01:42:21Z": 30,
+				"PM1_2024-03-05T01:42:31Z": 31,
+				"PM1_2024-03-05T01:42:41Z": 32,
+				"PM1_2024-03-05T01:42:51Z": 31,
+				"PM1_2024-03-05T01:43:02Z": 31,
+				"PM1_2024-03-05T01:43:12Z": 32,
+				"PM1_2024-03-05T01:43:22Z": 30,
+				"PM1_2024-03-05T01:43:32Z": 30,
+				"PM1_2024-03-05T01:43:42Z": 31,
+				"...": "...",
+				"temp_2024-03-05T02:00:19Z": 21.12,
+				"temp_2024-03-05T02:00:29Z": 21.12,
+				"temp_2024-03-05T02:00:39Z": 21.11,
+				"temp_2024-03-05T02:00:50Z": 21.12,
+				"temp_2024-03-05T02:01:00Z": 21.12,
+				"temp_2024-03-05T02:01:10Z": 21.11,
+				"temp_2024-03-05T02:01:20Z": 21.12,
+				"temp_2024-03-05T02:01:30Z": 21.09,
+				"temp_2024-03-05T02:01:40Z": 21.12,
+				"temp_2024-03-05T02:01:51Z": 21.11,
+				"temp_2024-03-05T02:02:01Z": 21.09
+			}
+		}
+	]
+}</textarea>
+</td><td>
+<textarea rows="30" cols="80" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll;" readonly>
+{
+	"$id": "https://meaning.ad4gd.eu/meaning.schema.json",
+	"$schema": "https://meaning.ad4gd.eu/json-meta/meaning",
+	"type": "object",
+	"properties": {
+		"features": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"geometry": {
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "string"
+							},
+							"coordinates": {
+								"type": "array"
+							}
+						}
+					},
+					"properties": {
+						"type": "object",
+						"properties": {
+							"Place": {
+								"description": "Place name",
+								"mostrar": "si"
+							},
+							"PM1_{time?f=ISO}": {
+								"description": "Particulate matter with an average aerodynamic diameter of up to 1 micrometers",
+								"definition": "https://www.iqair.com/us/newsroom/pm1",
+								"UoM": "Microgram per cubic meter",
+								"UoMSymbol": "µg/m³",
+								"UoMDefinition": "https://qudt.org/vocab/unit/MicroGM-PER-M3",
+								"mostrar": "si",
+								"serieTemporal": {
+									"color": "#ff0000"
+								}
+							},
+							"PM10_{time?f=ISO}": {
+								"description": "Particulate matter with an average aerodynamic diameter of up to 10 micrometers",
+								"definition": "https://www.eea.europa.eu/help/glossary/eea-glossary/pm10",
+								"UoM": "Microgram per cubic meter",
+								"UoMSymbol": "µg/m³",
+								"UoMDefinition": "https://qudt.org/vocab/unit/MicroGM-PER-M3",
+								"mostrar": "si",
+								"serieTemporal": {
+									"color": "#ff0000"
+								}
+							},
+							"PM25_{time?f=ISO}": {
+								"description": "Particulate matter with an average aerodynamic diameter of up to 2.5 micrometers",
+								"definition": "https://www.eea.europa.eu/help/glossary/eea-glossary/pm2.5",
+								"UoM": "Microgram per cubic meter",
+								"UoMSymbol": "µg/m³",
+								"UoMDefinition": "https://qudt.org/vocab/unit/MicroGM-PER-M3",
+								"mostrar": "si",
+								"serieTemporal": {
+									"color": "#ff0000"
+								}
+							},
+							"RH_{time?f=ISO}": {
+								"description": "Relative Humidity",
+								"definition": "http://vocabs.lter-europe.net/EnvThes/21579",
+								"UoM": "Percentage",
+								"UoMSymbol": "%",
+								"UoMDefinition": "https://qudt.org/vocab/unit/PERCENT",
+								"mostrar": "si",
+								"serieTemporal": {
+									"color": "#ff0000"
+								}
+							},
+							"light_{time?f=ISO}": {
+								"description": "Ambient Light",
+								"definition": "https://qudt.org/vocab/quantitykind/LuminousExposure",
+								"UoM": "Lumens per square meter",
+								"UoMSymbol": "LUX",
+								"UoMDefinition": "https://qudt.org/vocab/unit/LUX",
+								"mostrar": "si",
+								"serieTemporal": {
+									"color": "#ff0000"
+								}
+							},
+							"noise_{time?f=ISO}": {
+								"description": "Noise Level",
+								"definition": "https://qudt.org/vocab/quantitykind/SoundExposureLevel",
+								"UoM": "A-weighted decibel",
+								"UoMSymbol": "dBA",
+								"UoMDefinition": "https://www.eea.europa.eu/help/glossary/eea-glossary/a-weighted-decibel",
+								"mostrar": "si",
+								"serieTemporal": {
+									"color": "#ff0000"
+								}
+							},
+							"pres_{time?f=ISO}": {
+								"description": "Barometric Pressure",
+								"definition": "https://vocabs.lter-europe.net/EnvThes/22060",
+								"UoM": "kiloPascals",
+								"UoMSymbol": "kPa",
+								"UoMDefinition": "https://qudt.org/vocab/unit/KiloPA",
+								"mostrar": "si",
+								"serieTemporal": {
+									"color": "#ff0000"
+								}
+							},
+							"temp_{time?f=ISO}": {
+								"description": "Air Temperature",
+								"definition": "http://vocabs.lter-europe.net/EnvThes/22035",
+								"UoM": "Celsius",
+								"UoMSymbol": "C",
+								"UoMDefinition": "https://qudt.org/vocab/unit/DEG_C",
+								"mostrar": "si",
+								"serieTemporal": {
+									"color": "#ff0000"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+</textarea>
+</td></tr>
+</table>
+
+</body>
 </html>
