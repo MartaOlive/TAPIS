@@ -149,6 +149,20 @@
 			</div>
 		</form>
 	</dialog>
+	<dialog id="DialogFilterRowEntities">
+		<form>
+			<fieldset id="DialogFilterRowEntitiesHTML">
+				<legend>Choose the way to get to the Entity you want to filter</legend>
+				<span id="DialogFilterRowEntitiesCheckBoxes"> 
+				</span>
+			</fieldset>
+			
+			<div class="center">
+				<button value="default" onClick="OkButtonInRowFilterEntities(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
 
 	<dialog id="DialogSelectNRecords">
 		<form>
@@ -3653,7 +3667,7 @@
 				else if (currentNode.image == "ExpandColumnsSTA.png") {
 					var parentNode=GetFirstParentNode(currentNode);
 					if (parentNode) {
-						ShowTableSelectExpandsDialog(parentNode, currentNode, true);
+						ShowTableSelectExpandsDialog(parentNode, currentNode, true,"");
 						document.getElementById("DialogSelectExpands").showModal();
 					}
 				}
