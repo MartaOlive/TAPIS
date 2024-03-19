@@ -1763,6 +1763,8 @@ var stopReadInformationRowFilter = false;
 
 function readInformationRowFilter(elem, entity, nexus, parent) {
 	var infoFilter = currentNode.STAInfoFilter;
+
+
 	if (stopReadInformationRowFilter == false) {
 		if (typeof elem === "object") {
 			for (var i = 0; i < elem.elems.length; i++) {

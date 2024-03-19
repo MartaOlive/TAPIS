@@ -214,6 +214,10 @@
 		<div id="divTitleSelectRows" class="center" style="font-size: large;"></div>
 		<form>
 			Filter:
+			<br>
+			<label>Number records to request:
+				<input type="text" id="SelectNumberOfRecordsFilterRow" size="6" maxlength="6" value="100"></input>
+			</label>
 			<span id="DialogSelectRowsFilter">
 			</span>
 			<div class="center">
@@ -2293,6 +2297,8 @@
 			currentNode.STAURL = currentNode.STAUrlAPI;
 
 			currentNode.STAExpectedLength = parentNode.STAExpectedLength;
+			var SelectNumberOfRecordsFilterRow=document.getElementById("SelectNumberOfRecordsFilterRow");
+			currentNode.STAExpectedLength = SelectNumberOfRecordsFilterRow.value;
 			networkNodes.update(currentNode);
 			showInfoMessage("Filtering STA rows...");
 			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
