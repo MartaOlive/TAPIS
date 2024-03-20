@@ -214,12 +214,11 @@
 		<div id="divTitleSelectRows" class="center" style="font-size: large;"></div>
 		<form>
 			Filter:
-			<br>
+			<div id="DialogSelectRowsFilter">
+			</div>
 			<label>Number records to request:
-				<input type="text" id="SelectNumberOfRecordsFilterRow" size="6" maxlength="6" value="100"></input>
+				<input type="text" id="SelectNumberOfRecordsFilterRows" size="6" maxlength="6" value="100"></input>
 			</label>
-			<span id="DialogSelectRowsFilter">
-			</span>
 			<div class="center">
 				<button value="default" onClick="GetFilterRows(event)">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
@@ -256,7 +255,6 @@
 				<span id="ButtonsContextMenuObjects"></span><br>
 				<button onclick='removeCircularImage(event, "DialogContextMenu")'>Remove</button>
 				<button onclick='renameCircularImage(event, "DialogContextMenu")'>Rename</button><br>
-<button onclick='giveMeNetworkInformation(event, "DialogContextMenu")'>Network Info</button><br>
 			</p>
 			<div class="center">
 				<button value="cancel" onClick="startingNodeContextId=null;" formmethod="dialog">Cancel</button>
@@ -288,7 +286,7 @@
 
 	<dialog id="DialogImportCSV">
 		<form>
-			Import CSV file table.
+			Import CSV file table
 			<br>
 			<label>CSV delimiter:
 				<label><input type="radio" name="DialogImportCSVDelimiter" id="DialogImportCSVDelimiterText" checked></input> <input type="text" id="DialogImportCSVDelimiter" size="1" maxlength="1" value=";"></input></label> <label><input type="radio" name="DialogImportCSVDelimiter" id="DialogImportCSVDelimiterTab"></input> Tab</label>
@@ -332,29 +330,28 @@
 				<legend>Meaning source</legend>
 				<label><input type="radio" id="DialogImportMeaningCSVSourceFile" name="DialogImportMeaningCSVSource" value="file" checked="checked" onClick="SelectImportMeaningCSVSource(event)">
 				Local CSVW file: <input type="file" id="DialogImportMeaningCSVSourceFileText" accept=".csvw,.json" onChange="ReadFileImportCSVW(event)"></input></label><br>
-				<label><input type="radio" id="DialogImportMeaningCSVSourceURL" name="DialogImportMeaningCSVSource" value="url" onClick="SelectImportMeaningCSVSource(event)">
+				<label><input type="radio" id="DialogImportMeaningCSVSourceURL" name="DialogImportMeaningCSVSource" value="url" onClick='SelectImportMeaningFileSource(event, "CSV")'>
 				CSVW URL: <input type="text" size="70" id="DialogImportMeaningCSVSourceURLText" onChange="ReadURLImportCSVW(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningCSVSourceURLButton" onClick="ReadURLImportCSVW(event)" disabled="disabled">Load</button></label><br>
-				<label><input type="radio" id="DialogImportMeaningCSVSourceAuto" name="DialogImportMeaningCSVSource" value="auto" onClick="SelectImportMeaningCSVSource(event)">
+				<label><input type="radio" id="DialogImportMeaningCSVSourceAuto" name="DialogImportMeaningCSVSource" value="auto" onClick='SelectImportMeaningFileSource(event, "CSV")'>
 				Automatic retrieve of shared meaning</label><br>
 			</fieldset>
 			<br>
 			<fieldset>
 				<legend>CSV source</legend>
-				<label><input type="radio" id="DialogImportCSVSourceFile" name="DialogImportCSVSource" value="file" checked="checked" onClick="SelectImportCSVSource(event)">
+				<label><input type="radio" id="DialogImportCSVSourceFile" name="DialogImportCSVSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "CSV")'>
 				Local file: <input type="file" accept=".csv,*.txt" id="DialogImportCSVSourceFileText" onChange="ReadFileImportCSV(event)"></input></label><br>
-				<label><input type="radio" id="DialogImportCSVSourceURL" name="DialogImportCSVSource" value="url" onClick="SelectImportCSVSource(event)">
+				<label><input type="radio" id="DialogImportCSVSourceURL" name="DialogImportCSVSource" value="url" onClick='SelectImportFileSource(event, "CSV")'>
 				URL: <input type="text" size="70" id="DialogImportCSVSourceURLText" onChange="ReadURLImportCSV(event)" disabled="disabled"></input> <button type="button" id="DialogImportCSVSourceURLButton" onClick="ReadURLImportCSV(event)" disabled="disabled">Load</button></label>
 			</fieldset>
 			<div class="center">
-				<button value="ok" formmethod="dialog" onClick="RetrieveMeaningTable(event)">Done</button>
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "CSV")'>Done</button>
 			</div>
-			<input type="hidden" id="DialogImportCSVdataAttributes" value=""></input>
 		</form>
 	</dialog>
 
 	<dialog id="DialogSaveTable">
 		<form>
-			Save the table as CSV.
+			Save the table as CSV
 			<br>
 			<label>CSV delimiter:
 				<input type="text" id="DialogSaveTableDelimiter" size="2" maxlength="1" value=";"></input>
@@ -381,6 +378,39 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogImportGeoJSON">
+		<form>
+			Import GeoJSON
+			<br>
+
+			<!-- ·$· tres variants d'importacio 
+				* As is
+				* Diferent variables in a time series as columns
+                                * A time series variable per row
+			-->
+			
+			<fieldset>
+				<legend>Meaning source</legend>
+				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceFile" name="DialogImportMeaningGeoJSONSource" value="file" checked="checked" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
+				Local GeoJSON schema file: <input type="file" id="DialogImportMeaningGeoJSONSourceFileText" accept=".json" onChange="ReadFileImportGeoJSONSchema(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceURL" name="DialogImportMeaningGeoJSONSource" value="url" onClick='SelectImportMeaningFileSource(event, "GeoJSON")'>
+				GeoJSON schema URL: <input type="text" size="70" id="DialogImportMeaningGeoJSONSourceURLText" onChange="ReadURLImportGeoJSON(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSONSchema(event)" disabled="disabled">Load</button></label><br>
+				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceAuto" name="DialogImportMeaningGeoJSONSource" value="auto" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
+				Automatic retrieve of shared meaning</label><br>
+			</fieldset>
+			<br>
+			<fieldset>
+				<legend>GeoJSON source</legend>
+				<label><input type="radio" id="DialogImportGeoJSONSourceFile" name="DialogImportGeoJSONSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "GeoJSON")'>
+				Local file: <input type="file" accept=".geojson,*.json" id="DialogImportGeoJSONSourceFileText" onChange="ReadFileImportGeoJSON(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportGeoJSONSourceURL" name="DialogImportGeoJSONSource" value="url" onClick='SelectImportFileSource(event, "GeoJSON")'>
+				URL: <input type="text" size="70" id="DialogImportGeoJSONSourceURLText" onChange="ReadURLImportGeoJSON(event)" disabled="disabled"></input> <button type="button" id="DialogImportGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSON(event)" disabled="disabled">Load</button></label>
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GeoJSON")'>Done</button>
+			</div>
+		</form>
+	</dialog>
 
 	<dialog id="DialogSaveLayer">
 		<form>
@@ -596,7 +626,8 @@
 		const STAEntitiesArray = Object.keys(STAEntities);
 		const STASpecialQueries = {ObsLayer: {description: "Observations Layer", query: "Observations?$orderby=phenomenonTime%20desc&$expand=Datastream($select=unitOfMeasurement),Datastream/ObservedProperty($select=name,description,definition),FeatureOfInterest($select=description,feature)&$select=phenomenonTime,result"}}
 		const STASpecialQueriesArray = Object.keys(STASpecialQueries);
-		const TableOperations = {ImportCSV: {description: "Import CSV file"},
+		const TableOperations = {ImportCSV: {description: "Import CSV"},
+					ImportGeoJSON: {description: "Import GeoJSON"},
 					Table: {description: "View Table", leafNode: true}, 
 					Meaning: {description: "Fields meaning"}, 
 					SelectColumnsSTA: {description: "Select Columns", callSTALoad: true},
@@ -706,35 +737,15 @@
 
 		//Return null if there is no reason (and there is a "fit").
 		function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-			if (parentNode.image == "ogc.png" && node.image != "FilterRowsSTA.png") {
-				
+			if (parentNode.image=="ogc.png")
 				return null;
-			} else if (parentNode.image == "ogc.png" && node.image == "FilterRowsSTA.png") {
-				console.log("nop");
-				return "You need to select first an Entity";
-			}
 			if (TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true)
 				return "Parent node is a leaf node and cannot be connected with any other node";
 			if (node.image=="OneValue.png" && parentNode.image!="Observations.png")
 				return "'One value' node is designed be connected to an 'observations' node only.";
 			var idNode=IdOfSTAEntity(node);
-			if (idNode < 0) {
-				var entity = getSTAURLLastEntity(parentNode.STAURL);
-				var staEntitiesList = Object.keys(STAEntities);
-				var isPlural = false;
-				for (var i = 0; i < staEntitiesList.length; i++) {
-					if (staEntitiesList[i] == entity) {
-						isPlural = true;
-						break;
-					}
-				}
-				if (node.image == "FilterRowsSTA.png" && isPlural == false) {
-					return "Your result is already one value, you can not filter it more"
-				} else {
+			if (idNode<0)
 				return null;
-			}
-
-			}
 			var getCon=getConnectionSTAEntity(parentNode, node)
 			if (getCon.error)
 				return getCon.error;
@@ -1183,31 +1194,33 @@
 			return savedFile;
 		}
 
-		function SelectImportCSVSource(event) {
-			if (document.getElementById("DialogImportCSVSourceFile").checked) {
-				document.getElementById("DialogImportCSVSourceFileText").disabled=false;
-				document.getElementById("DialogImportCSVSourceURLText").disabled=true;
-				document.getElementById("DialogImportCSVSourceURLButton").disabled=true;
-			} else /*if (document.getElementById("DialogImportCSVSourceURL").checked)*/ {
-				document.getElementById("DialogImportCSVSourceFileText").disabled=true;
-				document.getElementById("DialogImportCSVSourceURLText").disabled=false;
-				document.getElementById("DialogImportCSVSourceURLButton").disabled=false;
+		//type should be "CSV" or "GeoJSON"
+		function SelectImportFileSource(event, type) {
+			if (document.getElementById("DialogImport"+type+"SourceFile").checked) {
+				document.getElementById("DialogImport"+type+"SourceFileText").disabled=false;
+				document.getElementById("DialogImport"+type+"SourceURLText").disabled=true;
+				document.getElementById("DialogImport"+type+"SourceURLButton").disabled=true;
+			} else /*if (document.getElementById("DialogImport"+type+"SourceURL").checked)*/ {
+				document.getElementById("DialogImport"+type+"SourceFileText").disabled=true;
+				document.getElementById("DialogImport"+type+"SourceURLText").disabled=false;
+				document.getElementById("DialogImport"+type+"SourceURLButton").disabled=false;
 			}
 		}
 
-		function SelectImportMeaningCSVSource(event) {
-			if (document.getElementById("DialogImportMeaningCSVSourceFile").checked) {
-				document.getElementById("DialogImportMeaningCSVSourceFileText").disabled=false;
-				document.getElementById("DialogImportMeaningCSVSourceURLText").disabled=true;
-				document.getElementById("DialogImportMeaningCSVSourceURLButton").disabled=true;
-			} else if (document.getElementById("DialogImportMeaningCSVSourceURL").checked) {
-				document.getElementById("DialogImportMeaningCSVSourceFileText").disabled=true;
-				document.getElementById("DialogImportMeaningCSVSourceURLText").disabled=false;
-				document.getElementById("DialogImportMeaningCSVSourceURLButton").disabled=false;
-			} else /*if (document.getElementById("DialogImportMeaningCSVSourceAuto").checked)*/ {
-				document.getElementById("DialogImportMeaningCSVSourceFileText").disabled=true;
-				document.getElementById("DialogImportMeaningCSVSourceURLText").disabled=true;
-				document.getElementById("DialogImportMeaningCSVSourceURLButton").disabled=true;
+		//type should be "CSV" or "GeoJSON"
+		function SelectImportMeaningFileSource(event, type) {
+			if (document.getElementById("DialogImportMeaning"+type+"SourceFile").checked) {
+				document.getElementById("DialogImportMeaning"+type+"SourceFileText").disabled=false;
+				document.getElementById("DialogImportMeaning"+type+"SourceURLText").disabled=true;
+				document.getElementById("DialogImportMeaning"+type+"SourceURLButton").disabled=true;
+			} else if (document.getElementById("DialogImportMeaning"+type+"SourceURL").checked) {
+				document.getElementById("DialogImportMeaning"+type+"SourceFileText").disabled=true;
+				document.getElementById("DialogImportMeaning"+type+"SourceURLText").disabled=false;
+				document.getElementById("DialogImportMeaning"+type+"SourceURLButton").disabled=false;
+			} else /*if (document.getElementById("DialogImportMeaning"+type+"SourceAuto").checked)*/ {
+				document.getElementById("DialogImportMeaning"+type+"SourceFileText").disabled=true;
+				document.getElementById("DialogImportMeaning"+type+"SourceURLText").disabled=true;
+				document.getElementById("DialogImportMeaning"+type+"SourceURLButton").disabled=true;
 			}
 		}
 
@@ -1218,12 +1231,12 @@
 			showInfoMessage("Meaning retrieved from NiMMbus.");
 		}
 
-		function RetrieveMeaningTable(event) {
+		function RetrieveMeaningTable(event, type) {
 			event.preventDefault(); // We don't want to submit this form
-			if (document.getElementById("DialogImportMeaningCSVSourceAuto").checked && 
-				document.getElementById("DialogImportCSVSourceURL").checked &&
-				document.getElementById("DialogImportCSVSourceURLText").value) {
-				var urlCSV=document.getElementById("DialogImportCSVSourceURLText").value
+			if (document.getElementById("DialogImportMeaning"+type+"SourceAuto").checked && 
+				document.getElementById("DialogImport"+type+"SourceURL").checked &&
+				document.getElementById("DialogImport"+type+"SourceURLText").value) {
+				var urlCSV=document.getElementById("DialogImport"+type+"SourceURLText").value
 				GUFLoadLastPreviousReproducibleUsageCode(getFileName(urlCSV),
 					getAddressPath(getAbsoluteURL(urlCSV)), 
 					{ru_platform: "https://github.com/joanma747/TAPIS", 
@@ -1231,7 +1244,7 @@
 					//ru_schema: urlSchemaMeaning
 				}, "eng", null, RetrieveMeaningTableCallback, {node: currentNode});
 			}
-			document.getElementById("DialogImportCSV").close();
+			document.getElementById("DialogImport"+type).close();
 		}
 
 		function TransformTextCSVWToDataAttributes(csvwText)
@@ -1272,10 +1285,53 @@
 			HTTPJSONData(document.getElementById("DialogImportMeaningCSVSourceURLText").value).then(
 						function(value) { 
 							showInfoMessage('Download CSVW completed.'); 
-							TransformTextCSVToTable(value.text);
+							TransformTextCSVWToDataAttributes(value.text);
 						},
 						function(error) { 
 							showInfoMessage('Error downloading CSVW. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+							console.log(error) ;
+						}
+					);	
+		}
+
+
+		function TransformTextGeoJSONSchemaToDataAttributes(jsonText)
+		{
+			var jsonschema=JSON.parse(jsonText);
+			currentNode.STAdataAttributes=getDataAttributesGeoJSONSchema(jsonschema);
+			networkNodes.update(currentNode);
+			UpdateChildenTable(currentNode);
+		}
+
+		function ReadFileImportGeoJSONSchema(event) {
+			var input = event.target;
+
+			var reader = new FileReader();
+			reader.onload = function() {
+				//Transform the JSON text into a STAdataAttributes structure in memory
+				try
+				{
+					TransformTextGeoJSONSchemaToDataAttributes(reader.result);
+				}
+				catch (e) 
+				{
+					showInfoMessage("JSON message parse error: " + e + " The file content is:\n" + reader.result);
+					currentNode.STAdataAttributes=null;
+					networkNodes.update(currentNode);
+					return;
+				}
+			};
+			reader.readAsText(input.files[0]);
+		}
+
+		function ReadURLImportGeoJSONSchema() {
+			HTTPJSONData(document.getElementById("DialogImportMeaningGeoJSONSourceURLText").value).then(
+						function(value) { 
+							showInfoMessage('Download GeoJSON schema completed.'); 
+							TransformTextGeoJSONSchemaToDataAttributes(value.text);
+						},
+						function(error) { 
+							showInfoMessage('Error downloading GeoJSON Schema. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
 							console.log(error) ;
 						}
 					);	
@@ -1321,6 +1377,76 @@
 						},
 						function(error) { 
 							showInfoMessage('Error downloading CSV. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+							console.log(error) ;
+						}
+					);	
+		}
+
+		function TransformTextGeoJSONToTable(jsonText, url) {
+			try
+			{
+				var geojson = JSON.parse(jsonText);
+			}
+			catch (e) 
+			{
+				showInfoMessage("GeoJSON parse error: " + e + " The file content is:\n" + jsonText);
+				currentNode.STAdata=null;
+				networkNodes.update(currentNode);
+				return;
+			}
+			if (!geojson.type || geojson.type!="FeatureCollection")
+			{
+				showInfoMessage("GeoJSON parse error. The only supported GeoJSONs are the ones containing a root type FeatureCollection.");
+				currentNode.STAdata=null;
+				networkNodes.update(currentNode);
+				return;
+			}
+			var data=[], feature;				
+			for (var i=0; i<geojson.features.length; i++)
+			{
+				feature=geojson.features[i];
+				data.push(deapCopy(feature.properties)); //JSON properties are directly copied into STAdata
+				data[data.length-1].geometry=deapCopy(feature.geometry);  //JSON geometry are directly copied into STAdata
+			}
+			currentNode.STAdata=data;
+			if (currentNode.STAdataAttributes)
+			{
+				var retorn=transformTimeSeriesTemplateIntoObservedPropertyTimeValue(currentNode.STAdata, currentNode.STAdataAttributes);
+				if (retorn) {
+					currentNode.STAdata=retorn.data
+					currentNode.STAdataAttributes=retorn.dataAttributes;
+				}
+				retorn=transformObservedPropertyTimeValueIntoTimeSemanticValues(currentNode.STAdata, currentNode.STAdataAttributes, retorn.dataAttributesValues, "extractedObservedProperty", "extractedPhenomenonTime", "extractedValue");
+				if (retorn) {
+					currentNode.STAdata=retorn.data
+					currentNode.STAdataAttributes=retorn.dataAttributes;
+				}
+			}
+			if (url)
+				currentNode.STAfileUrl=url;				
+			networkNodes.update(currentNode);
+			UpdateChildenTable(currentNode);
+		}
+
+		function ReadFileImportGeoJSON(event) {
+			var input = event.target;
+
+			var reader = new FileReader();
+			reader.onload = function() {
+				TransformTextGeoJSONToTable(reader.result, null);
+			};
+			reader.readAsText(input.files[0]);  //By default it assumes "UTF8" as encoding
+		}
+
+
+		function ReadURLImportGeoJSON() {
+			HTTPJSONData(document.getElementById("DialogImportGeoJSONSourceURLText").value).then(
+						function(value) { 
+							showInfoMessage('Download GeoJSON completed.'); 
+							TransformTextGeoJSONToTable(value.text, document.getElementById("DialogImportGeoJSONSourceURLText").value);
+						},
+						function(error) { 
+							showInfoMessage('Error downloading GeoJSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
 							console.log(error) ;
 						}
 					);	
@@ -2258,8 +2384,8 @@
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogFilterRows").close();
 
-			var previousSTAURL = currentNode.STAURL;
-			var parentNode = GetFirstParentNode(currentNode);
+			var previousSTAURL=currentNode.STAURL;
+			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				if (parentNode.STAURL)
 					currentNode.STAURL = parentNode.STAURL;
@@ -2272,33 +2398,25 @@
 			//updateinfoFilter
 			takeSelectInformation(currentNode.id);
 
-			var previousNode = networkNodes.get(network.getConnectedNodes(currentNode.id, "from"));
-
 			currentNode.STAUrlAPICounter = []; // I need to restart it 
 			//put URL ready to add things
-			var previousURL = previousNode[0].STAURL;
+			var previousURL = parentNode.STAURL;
 
-			if (previousURL.includes("$select=") || previousURL.includes("$orderby")) {
-				currentNode.STAUrlAPI = previousURL + "&$filter=";
-			} else {
-				currentNode.STAUrlAPI = previousURL + "?$filter=";
-			}
+			currentNode.STAUrlAPI=AddKVPToURL(parentNode.STAURL, "$filter=");
 
 			stopReadInformationRowFilter = false;
 			var entity;
 			if (getSTAURLLastEntity(currentNode.STAURL)) {
 				entity = getSTAURLLastEntity(currentNode.STAURL);
 			} else {
-				entity = "STAPlus"
+				entity = "STAPlus"  //JM: Això no te ni solta ni volta. ·$·
 			}
 
-			readInformationRowFilter(currentNode.STAElemFilter, entity, "no", "no"); //And apply filter
-			console.log(currentNode.STAUrlAPI);
+			readInformationRowFilter(currentNode.STAelementFilter, entity, "no", "no"); //And apply filter
+			//console.log(currentNode.STAUrlAPI);
 			currentNode.STAURL = currentNode.STAUrlAPI;
 
-			currentNode.STAExpectedLength = parentNode.STAExpectedLength;
-			var SelectNumberOfRecordsFilterRow=document.getElementById("SelectNumberOfRecordsFilterRow");
-			currentNode.STAExpectedLength = SelectNumberOfRecordsFilterRow.value;
+			currentNode.STAExpectedLength = document.getElementById("SelectNumberOfRecordsFilterRows").value;
 			networkNodes.update(currentNode);
 			showInfoMessage("Filtering STA rows...");
 			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
@@ -3214,6 +3332,189 @@
 			return dataAttributes;
 		}
 
+		function getDataAttributesGeoJSONSchema(jsonschema){
+			var dataAttributes;
+			dataAttributes=deapCopy(jsonschema.properties.features.items.properties.properties.properties);
+			dataAttributes["geometry"]={
+				"type": "object",
+				"definition": "DataStream/Observations/FeatureOfInterest/feature/geometry"
+			};
+			return dataAttributes;
+		}
+
+		//Has the string s a ISO data in the position i?
+		function fragmentStartsWithISODate(s, i) {
+			return s.charAt(i+0) >= '0' && s.charAt(i+0) <= '9' &&
+				s.charAt(i+1) >= '0' && s.charAt(i+1) <= '9' &&
+				s.charAt(i+2) >= '0' && s.charAt(i+2) <= '9' &&
+				s.charAt(i+3) >= '0' && s.charAt(i+3) <= '9' &&
+				s.charAt(i+4) == '-' &&
+				s.charAt(i+5) >= '0' && s.charAt(i+5) <= '1' &&
+				s.charAt(i+6) >= '0' && s.charAt(i+6) <= '9' &&
+				s.charAt(i+7) == '-' &&
+				s.charAt(i+8) >= '0' && s.charAt(i+8) <= '3' &&
+				s.charAt(i+9) >= '0' && s.charAt(i+9) <= '9' &&
+				s.charAt(i+10) == 'T' &&
+				s.charAt(i+11) >= '0' && s.charAt(i+11) <= '2' &&
+				s.charAt(i+12) >= '0' && s.charAt(i+12) <= '9' &&
+				s.charAt(i+13) == ':' &&
+				s.charAt(i+14) >= '0' && s.charAt(i+14) <= '5' &&
+				s.charAt(i+15) >= '0' && s.charAt(i+15) <= '9' &&
+				s.charAt(i+16) == ':' &&
+				s.charAt(i+17) >= '0' && s.charAt(i+17) <= '5' &&
+				s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9' &&
+				s.charAt(i+19) == 'Z';
+		}
+
+		//transforms a full ISO data (2024-03-05T01:41:00Z) into a template {time?f=ISO}
+		function replaceISODateBySISOTemplate(s) {
+			for (var i=0; i<s.length-19; i++) {
+				if (fragmentStartsWithISODate(s, i)) {
+					s=s.substring(0, i) + "{time?f=ISO}" + s.substring(i+20);
+					i+=11;
+				}
+			}
+			return s;
+		}
+		//returns the first full ISO data (2024-03-05T01:41:00Z) found in the string
+		function getISODateFromDataAttribute(s) {
+			for (var i=0; i<s.length-19; i++) {
+				if (fragmentStartsWithISODate(s, i)) {
+					return s.substr(i, 20);
+				}
+			}
+			return null;
+		}
+
+		function removeTimeISOTemplate(attributeName)
+		{
+			var s=attributeName.replaceAll("{time?f=ISO}", "");
+			if (s.length>1 && (s[s.length-1]=="_" || s[s.length-1]=="-" || s[s.length-1]==" "))
+				s=s.substr(0, s.length-1);
+			return s;
+		}
+
+		function transformTimeSeriesTemplateIntoObservedPropertyTimeValue(data, dataAttributes)
+		{	
+			var dataAttributesArray=Object.keys(dataAttributes);
+
+			var dataAttrFromData=getDataAttributes(data)
+			var dataAttrFromDataArray=Object.keys(dataAttrFromData);
+
+			for (var a=0; a<dataAttributesArray.length; a++) {
+				if (-1!=dataAttributesArray[a].indexOf("{time?f=ISO}"))
+					break;
+			}
+			if (a==dataAttributesArray.length)
+				return null; //nothing to do.
+
+			var resultDataAttributes={}
+			var resultDataAttributesValues={};
+			for (var a=0; a<dataAttributesArray.length; a++) {
+				if (-1!=dataAttributesArray[a].indexOf("{time?f=ISO}"))
+					resultDataAttributesValues[removeTimeISOTemplate(dataAttributesArray[a])]=deapCopy(dataAttributes[dataAttributesArray[a]]);
+				else
+					resultDataAttributes[dataAttributesArray[a]]=deapCopy(dataAttributes[dataAttributesArray[a]]);
+			}
+			resultDataAttributes["extractedObservedProperty"]={
+				"definition": "Datastream/ObservedProperty/name"
+			};
+			resultDataAttributes["extractedPhenomenonTime"]={
+				"definition": "Datastream/Observations/phenomenonTime"
+			};
+			resultDataAttributes["extractedValue"]={
+				"definition": "Datastream/Observations/result"
+			};
+			var resultData=[], resultRecord, record, first, replaceddataAttrFromDataItem;
+			for (var r=0; r<data.length; r++) {  //for each record
+				record=data[r];
+				resultData.push({});
+				resultRecord=resultData[resultData.length-1];
+				first=true;
+				for (var i=0; i<dataAttrFromDataArray.length; i++) {  //for each attribute found in the data
+					if (dataAttributes[dataAttrFromDataArray[i]]) {
+						if (typeof record[dataAttrFromDataArray[i]] !== "undefined")
+							resultRecord[dataAttrFromDataArray[i]]=record[dataAttrFromDataArray[i]];
+					}
+				}
+				for (var i=0; i<dataAttrFromDataArray.length; i++) {  //for each attribute found in the data
+					if (dataAttributes[dataAttrFromDataArray[i]])
+						continue;
+					replaceddataAttrFromDataItem=replaceISODateBySISOTemplate(dataAttrFromDataArray[i]);
+					if (dataAttributes[replaceddataAttrFromDataItem] && replaceddataAttrFromDataItem!=dataAttrFromDataArray[i]) {
+						if (!first) {
+							resultData.push(deapCopy(resultRecord));
+							resultRecord=resultData[resultData.length-1];
+						}
+						resultRecord["extractedObservedProperty"]=removeTimeISOTemplate(replaceddataAttrFromDataItem);
+						resultRecord["extractedPhenomenonTime"]=getISODateFromDataAttribute(dataAttrFromDataArray[i]);
+						resultRecord["extractedValue"]=record[dataAttrFromDataArray[i]];
+						first=false;
+					}
+				}
+			}
+			return {data: resultData, dataAttributes: resultDataAttributes, dataAttributesValues: resultDataAttributesValues};
+		}
+	
+		function transformObservedPropertyTimeValueIntoTimeSemanticValues(data, dataAttributes, dataAttributesValues, observedPropertyName, phenomenonTimeName, extractedValueName) {
+
+			function sortObservedPropertyTimeValue(a, b) {
+				for (var i=0; i<dataAttributesArray.length; i++) {
+					if (dataAttributesArray[i]==observedPropertyName ||
+					    dataAttributesArray[i]==phenomenonTimeName ||
+					    dataAttributesArray[i]==extractedValueName)
+						continue;	
+					if (a[dataAttributesArray[i]]<b[dataAttributesArray[i]])
+						return -1;
+					if (a[dataAttributesArray[i]]>b[dataAttributesArray[i]])
+						return 1;
+				}
+				if (a[phenomenonTimeName]<b[phenomenonTimeName])
+					return -1;
+				if (a[phenomenonTimeName]>b[phenomenonTimeName])
+					return 1;
+				return 0;};
+
+			//Sort by time
+			var dataSorted=deapCopy(data);
+			var dataAttributesArray=Object.keys(dataAttributes);
+			dataSorted.sort(sortObservedPropertyTimeValue);
+
+			var resultDataAttributes={}
+			for (var attr=0; attr<dataAttributesArray.length; attr++) {
+				if (dataAttributesArray[attr]==observedPropertyName ||
+				    dataAttributesArray[attr]==extractedValueName)
+					continue;	
+				resultDataAttributes[dataAttributesArray[attr]]=deapCopy(dataAttributes[dataAttributesArray[attr]]);
+			}
+			var dataAttributesValuesArray=Object.keys(dataAttributesValues);
+			for (var attr=0; attr<dataAttributesValuesArray.length; attr++) {
+				resultDataAttributes[dataAttributesValuesArray[attr]]=deapCopy(dataAttributesValues[dataAttributesValuesArray[attr]]);
+			}
+
+			var resultData=[], resultRecord, a, b;
+
+			for (var r=0; r<data.length; r++) {
+				a=dataSorted[r];
+				b=dataSorted[r==0 ? 0 : r-1];
+				if (r==0 || 0!=sortObservedPropertyTimeValue(a,b)) {
+					resultData.push({});
+					resultRecord=resultData[resultData.length-1];
+					for (var attr=0; attr<dataAttributesArray.length; attr++) {
+						if (dataAttributesArray[attr]==observedPropertyName ||
+						    dataAttributesArray[attr]==extractedValueName ||
+						    dataAttributesValues[dataAttributesArray[attr]])
+							continue;
+						if (a[dataAttributesArray[attr]])
+							resultRecord[dataAttributesArray[attr]]=a[dataAttributesArray[attr]];
+					}
+				}
+				if (a[observedPropertyName])
+					resultRecord[a[observedPropertyName]]=a[extractedValueName];
+			}
+			return {data: resultData, dataAttributes: resultDataAttributes};
+		}
+
 		function getCSVReadParams(csvw){
 			return csvw.dialect;
 		}
@@ -3367,8 +3668,8 @@
 			document.getElementById("DialogSelectRowsTable").innerHTML = GetHTMLTable(data, networkNodes.get(parentNodeId).STAdataAttributes ? networkNodes.get(parentNodeId).STAdataAttributes : getDataAttributes(data), false, "SelectRow_", networkNodes.get(nodeId).STAURLIdSelected ? networkNodes.get(nodeId).STAURLIdSelected : 0, null, "", isAttributeAnyURI);
 		}
 
-		function ShowTableFilterRowsDialog(nodeId) {
-			var data = networkNodes.get(nodeId).STAdata;
+		function ShowTableFilterRowsDialog(parentNode, node) {
+			var data = parentNode.STAdata;
 			var dataAttributes = getDataAttributes(data);
 
 			addTitleInRowFilterDialog("divTitleSelectRows");
@@ -3379,13 +3680,7 @@
 			}
 
 			document.getElementById("DialogSelectRowsFilter").innerHTML = "<div id='selectorRowsContainer'><div id='divSelectorRowsFilter'></div></div>"; 
-			//Take elemFilter information from Node
-			if (currentNode.STAelementFilter) {
-				elemFilter = currentNode.STAelementFilter;
-				infoFilter = currentNode.STAinfoFilter;
-				boxNames = currentNode.STAboxName;
-				conditionsFilter = currentNode.STAConditionsFilter;
-			}
+			addNecessaryVariablesToFilterRowsSTANode(node);
 
 			ShowFilterTable();
 		}
@@ -3611,8 +3906,10 @@
 					document.getElementById("DialogSTAViewQuery").showModal();
 				}
 				else if (currentNode.image == "ImportCSV.png") {
-					//ShowImportCSVDialog(currentNode.id);
 					document.getElementById("DialogImportCSV").showModal();
+				}
+				else if (currentNode.image == "ImportGeoJSON.png") {
+					document.getElementById("DialogImportGeoJSON").showModal();
 				}
 				else if (currentNode.image == "Table.png") {
 					///Determining the parent node.
@@ -3673,7 +3970,7 @@
 				else if (currentNode.image == "ExpandColumnsSTA.png") {
 					var parentNode=GetFirstParentNode(currentNode);
 					if (parentNode) {
-						ShowTableSelectExpandsDialog(parentNode, currentNode, true,"");
+						ShowTableSelectExpandsDialog(parentNode, currentNode, true);
 						document.getElementById("DialogSelectExpands").showModal();
 					}
 				}
@@ -3694,11 +3991,10 @@
 					}
 				}
 				else if (currentNode.image == "FilterRowsSTA.png") {
-					var nodeids = network.getConnectedNodes(currentNode.id, "from");
-					if (nodeids && nodeids.length) {
-						if (networkNodes.get(nodeids[0]) && networkNodes.get(nodeids[0]).STAURL) {
-							ShowTableFilterRowsDialog(nodeids[0]);
-						}
+					var parentNode=GetFirstParentNode(currentNode);
+					if (parentNode) {
+						if (parentNode.STAURL)
+							ShowTableFilterRowsDialog(parentNode, currentNode);
 						document.getElementById("DialogFilterRows").showModal();
 					}
 				}
@@ -3849,11 +4145,7 @@
 				startingNodeContextId = null;
 
 			network.selectNodes([newId]);
-			if (image == "FilterRowsSTA.png") { //Add 
-				addNecessaryVariablesToNode(newId);
-			}
 		}
-		
 
 		function removeNode(nodeId)
 		 {
@@ -3981,15 +4273,6 @@
 				}
 			}
 		}
-
-
-		function giveMeNetworkInformation(event) {
-			if (event)
-				event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogSelectColumns").close();
-			console.log(networkNodes);
-		}
-
 	</script>
 
 </body>

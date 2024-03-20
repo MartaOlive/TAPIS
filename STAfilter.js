@@ -49,43 +49,36 @@ const selectConditionContent = [' = ', ' &ne; ', ' &ge; ', ' > ', ' &le; ', ' < 
 const selectConditionContentText = [' = ', ' &ne; ', 'contains', 'no contains', 'starts with', 'ends with'];
 
 
-function addNecessaryVariablesToNode(nodeId) {
-	//Define properties
-	var conditionsFilter = [ //Table values
-		{
-			property: "<div id='optionsRow_0' style='display: inline-block;'></div>", //class='optionsRow'
-			number: "0"
-		}
-	];
-	var boxNames = ["0_0"];
-	var infoFilter = [];
-	var elemFilter = {
-		elems: [0],
-		nexus: null,
-		boxName: "0_0"
-	}
-	var urlAPICounter = [];
-	var urlAPI = "";
-	var counter = [];
-	var actualNode = networkNodes.get(nodeId);
-
-	var entity = getSTAURLLastEntity(actualNode.STAURL)
-	var filterRowEntities = {
-		optionsRow0: [entity]
-	}
-	// currentNode. STAFilterRowEntities= {
-	// 	optionsRow1: ["Observation","Datastream"], //Observations/Datastream 
-	// }
+function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
 
 	//Create node propierties
-	actualNode.STABoxNames = boxNames;
-	actualNode.STAConditionsFilter = conditionsFilter;
-	actualNode.STAInfoFilter = infoFilter;
-	actualNode.STAElemFilter = elemFilter;
-	actualNode.STAUrlAPICounter = urlAPICounter;
-	actualNode.STAUrlAPI = urlAPI;
-	actualNode.STACounter = counter;
-	actualNode.STAFilterRowEntities = filterRowEntities;
+	if (!actualNode.STAboxNames)
+		actualNode.STAboxNames = ["0_0"];
+	if (!actualNode.STAconditionsFilter)
+		actualNode.STAconditionsFilter = [ //Table values
+			{
+				property: "<div id='optionsRow_0' style='display: inline-block;'></div>", //class='optionsRow'
+				number: "0"
+			}
+		];
+	if (typeof actualNode.STAinfoFilter === "undefined")
+		actualNode.STAinfoFilter = [];
+	if (!actualNode.STAelementFilter)
+		actualNode.STAelementFilter = {
+			elems: [0],
+			nexus: null,
+			boxName: "0_0"
+		};
+	if (typeof actualNode.STAUrlAPICounter === "undefined")
+		actualNode.STAUrlAPICounter = [];
+	if (typeof actualNode.STAUrlAPI === "undefined")
+		actualNode.STAUrlAPI = "";
+	if (typeof actualNode.STACounter === "undefined")
+		actualNode.STACounter = "";
+	if (!actualNode.STAFilterRowEntities)
+		actualNode.STAFilterRowEntities = {
+			optionsRow0: [getSTAURLLastEntity(actualNode.STAURL)]
+		};
 
 	networkNodes.update(actualNode);
 }
@@ -235,7 +228,7 @@ function createSelectorRowFilters(number) {
 	var divFilterBox = document.getElementById("optionsRow_" + number);
 
 	var selectorInfo = [];
-	var infoFilter = currentNode.STAInfoFilter;
+	var infoFilter = currentNode.STAinfoFilter;
 	if (infoFilter.length != 0) {
 
 		for (var i = 0; i < infoFilter.length; i++) {
@@ -255,6 +248,7 @@ function createSelectorRowFilters(number) {
 	divFilterBox.appendChild(divIsAnObject);
 
 }
+
 function sortValuesForSelect(arrayValues) {
 	var arrayNumbers = [];
 	var arrayText = [];
@@ -1263,7 +1257,7 @@ function GetFilterTable(elem, nodeId, first) //Built table //The second will be 
 
 function GetFilterCondition(elem) {
 	currentNode.STACounter.push(elem);
-	return currentNode.STAConditionsFilter[elem].property + '<div class="buttonsInFilterRow"><button id="buttonDown_' + elem + '" onClick="MoveDownFilterCondition(' + elem + ')"><img src="arrowDown.png" alt="Move down" title="Move down"></button> <button  id="buttonUp_' + elem + '"onClick="MoveUpFilterCondition(' + elem + ')"><img src="arrowUp.png" alt="Move up" title="Move up"></button><button onClick="DeleteElementButton(' + elem + ')"><img src="trash.png" alt="Remove" title="Remove"></button></div>';
+	return currentNode.STAconditionsFilter[elem].property + '<div class="buttonsInFilterRow"><button id="buttonDown_' + elem + '" onClick="MoveDownFilterCondition(' + elem + ')"><img src="arrowDown.png" alt="Move down" title="Move down"></button> <button  id="buttonUp_' + elem + '"onClick="MoveUpFilterCondition(' + elem + ')"><img src="arrowUp.png" alt="Move up" title="Move up"></button><button onClick="DeleteElementButton(' + elem + ')"><img src="trash.png" alt="Remove" title="Remove"></button></div>';
 
 }
 
@@ -1271,7 +1265,7 @@ function GetFilterCondition(elem) {
 function ShowFilterTable() //This is who iniciates the table
 {
 	currentNode.STACounter = []; //To not acumulate
-	document.getElementById("divSelectorRowsFilter").innerHTML = GetFilterTable(currentNode.STAElemFilter, currentNode.id, true); //I need to pass currentNode.elemFilter because it is a recursive function an need to start in this point
+	document.getElementById("divSelectorRowsFilter").innerHTML = GetFilterTable(currentNode.STAelementFilter, currentNode.id, true); //I need to pass currentNode.elemFilter because it is a recursive function an need to start in this point
 
 	for (var i = 0; i < currentNode.STACounter.length; i++) {//Adding Selectors
 		createSelectorRowFilters(currentNode.STACounter[i]);
@@ -1280,11 +1274,11 @@ function ShowFilterTable() //This is who iniciates the table
 
 
 //Select Nexus (And, or, not)
-function actualizeSelectChoice(boxName) { //When select nexus changes (put selected option in STAElemFilter)
+function actualizeSelectChoice(boxName) { //When select nexus changes (put selected option in STAelementFilter)
 
 	var select = document.getElementById("selectAndOrNot_" + boxName);
 	var option = select.options[select.selectedIndex].value
-	searchGrouptoChangeSelectChoice(boxName, currentNode.STAElemFilter, option);
+	searchGrouptoChangeSelectChoice(boxName, currentNode.STAelementFilter, option);
 
 }
 function searchGrouptoChangeSelectChoice(boxName, elem, option) {
@@ -1299,7 +1293,7 @@ function searchGrouptoChangeSelectChoice(boxName, elem, option) {
 	}
 }
 function resizeBottomPartSelectAndOrNot() {
-	var boxNames = currentNode.STABoxNames;
+	var boxNames = currentNode.STAboxNames;
 
 	for (var i = 0; i < boxNames.length; i++) {
 		var tdSelectAndOrNot = document.getElementById("tdSelectAndOrNot_" + boxNames[i]);
@@ -1317,10 +1311,10 @@ function resizeBottomPartSelectAndOrNot() {
 var stopMoveDownFilterCondition;
 function MoveDownFilterCondition(currentNumber) {
 	event.preventDefault();
-	var nextElement = GiveNextConditionNextBoxFilterTable(currentNode.STAElemFilter, currentNumber);
+	var nextElement = GiveNextConditionNextBoxFilterTable(currentNode.STAelementFilter, currentNumber);
 
 	if (nextElement != -1) {
-		searchBoxName(currentNode.STAElemFilter, currentNumber, "no", nextElement);
+		searchBoxName(currentNode.STAelementFilter, currentNumber, "no", nextElement);
 		stopMoveDownFilterCondition = false;
 	}
 }
@@ -1354,7 +1348,7 @@ function changeElements(currentElement, nextElement, iCon) {
 	currentElement.elems = arrayElements;
 	nextElement.elems.push(iCon);
 	if (currentElement.elems.length == 0) {
-		searchGroupToDelete(currentElement.boxName, currentNode.STAElemFilter, nodeId, "no");
+		searchGroupToDelete(currentElement.boxName, currentNode.STAelementFilter, nodeId, "no");
 	}
 }
 function GiveNextConditionNextBoxFilterTable(elem, iCon) {
@@ -1415,9 +1409,9 @@ function LookForNextConditionFilterTable(elem, iCon) {
 //Up button
 function MoveUpFilterCondition(iCon) {
 	event.preventDefault();
-	var previousElement = GivePreviousConditionFilterTable(currentNode.STAElemFilter, iCon);
+	var previousElement = GivePreviousConditionFilterTable(currentNode.STAelementFilter, iCon);
 	if (previousElement != -1) {
-		searchBoxName(currentNode.STAElemFilter, iCon, "no", previousElement);
+		searchBoxName(currentNode.STAelementFilter, iCon, "no", previousElement);
 		stopMoveDownFilterCondition = false;
 	}
 }
@@ -1457,7 +1451,7 @@ function addNewCondition(boxName, fromBiggest) {
 	if (typeof fromBiggest === "undefined") {
 		fromBiggest = false;
 	}
-	searchFilterBoxName(boxName, currentNode.STAElemFilter, currentNode.Id, fromBiggest);
+	searchFilterBoxName(boxName, currentNode.STAelementFilter, currentNode.Id, fromBiggest);
 
 }
 
@@ -1474,14 +1468,14 @@ function searchFilterBoxName(boxNamee, elem, paramsNodeId, fromBiggest) { //the 
 
 function addNewElement(elem, fromBiggest) {
 	var elements = elem.elems;
-	var conditionsFilter = currentNode.STAConditionsFilter;
+	var conditionsFilter = currentNode.STAconditionsFilter;
 	var lastNumber = conditionsFilter[conditionsFilter.length - 1].number;
 	var nextNumber = parseInt(lastNumber) + 1; //for those who are within the 0_...
 	if (elem.boxName.charAt(0) != 0) {//groups other than 0 and must create a group and not an element
 		var newBoxName = elem.boxName;
 		var firstNumberBoxNameInside = parseInt(elem.boxName.charAt(0)) - 1; //First number: inside group
 		//search, split , arrange iand the lastone, plus one i add boxNames
-		var boxNames = currentNode.STABoxNames;
+		var boxNames = currentNode.STAboxNames;
 		var boxNamesFiltered = boxNames.filter(element => element.charAt(0) == firstNumberBoxNameInside); //filter those that already exist in the group that will be created
 		var nextBoxNumber;
 		if (boxNamesFiltered.length != 0) {
@@ -1507,7 +1501,7 @@ function addNewElement(elem, fromBiggest) {
 					boxName: newBoxName,
 				})
 		}
-		currentNode.STABoxNames.push(newBoxName);
+		currentNode.STAboxNames.push(newBoxName);
 
 		//If it's the second one, you must create a higher level and change the nexus so that it will be not null
 	}
@@ -1517,7 +1511,6 @@ function addNewElement(elem, fromBiggest) {
 	if (elements.length == 2) { //change nexus if pass from one to two
 		elem.nexus = "and"
 	}
-	var conditionsFilter = currentNode.STAConditionsFilter;
 	conditionsFilter.push({ //add to conditionsFilter
 		property: "<div id='optionsRow_" + nextNumber + "' style='display: inline-block'></div>", //class='optionsRow
 		number: nextNumber
@@ -1603,7 +1596,7 @@ function takeSelectInformation() {
 
 	}
 
-	currentNode.STAInfoFilter = infoFilter;
+	currentNode.STAinfoFilter = infoFilter;
 }
 
 //Delete element
@@ -1611,7 +1604,7 @@ function DeleteElementButton(numberOfElement) {
 	event.preventDefault();
 	//Delete elemen from currentNode.STAFilterRowEntities 
 	delete currentNode.STAFilterRowEntities["optionsRow" + numberOfElement];
-	searchElementToDelete(numberOfElement, currentNode.STAElemFilter, currentNode.id);
+	searchElementToDelete(numberOfElement, currentNode.STAelementFilter, currentNode.id);
 }
 
 function searchElementToDelete(numberOfElement, elem, paramsNodeId) { //elem has boxname...
@@ -1648,7 +1641,7 @@ function DeleteElementInElemFilter(elem, nodeId, numberOfElement) {
 //Delete group (necesary when it is the last condition in the group)
 function deleteGroup(numberOfElement, nodeId) {
 	event.preventDefault();
-	searchGroupToDelete(numberOfElement, currentNode.STAElemFilter, nodeId, "no");
+	searchGroupToDelete(numberOfElement, currentNode.STAelementFilter, nodeId, "no");
 	takeSelectInformation();//get selector values and update an external variable 
 	drawTableAgain();//repaint the selects
 
@@ -1681,10 +1674,10 @@ function DeleteGroupInElemFilter(elem, fatherElem) {
 		if (newArray.length == 1) { //if it is the last one, delete the nexus and the parent
 			fatherElem.nexus = null;
 			var copyFather = Object.assign(fatherElem.elems);
-			currentNode.STAElemFilter = copyFather[0];
+			currentNode.STAelementFilter = copyFather[0];
 		}
-		var boxNames = currentNode.STABoxNames;
-		boxNames = actualizeBoxNames(currentNode.STAElemFilter, arrayBoxNumbers);
+		var boxNames = currentNode.STAboxNames;
+		boxNames = actualizeBoxNames(currentNode.STAelementFilter, arrayBoxNumbers);
 
 	}
 }
@@ -1717,10 +1710,10 @@ function biggestLevelButton(boxName, nodeId) {
 		nexus: null,
 		boxName: newBoxName
 	};
-	var copy = Object.assign(currentNode.STAElemFilter);
+	var copy = Object.assign(currentNode.STAelementFilter);
 	newInsert.elems.push(copy);
-	currentNode.STABoxNames.push(newBoxName);
-	currentNode.STAElemFilter = newInsert;
+	currentNode.STAboxNames.push(newBoxName);
+	currentNode.STAelementFilter = newInsert;
 
 	var boxNameToPass = newBoxName;
 
@@ -1762,9 +1755,7 @@ function addTitleInRowFilterDialog(divName) {
 var stopReadInformationRowFilter = false;
 
 function readInformationRowFilter(elem, entity, nexus, parent) {
-	var infoFilter = currentNode.STAInfoFilter;
-
-
+	var infoFilter = currentNode.STAinfoFilter;
 	if (stopReadInformationRowFilter == false) {
 		if (typeof elem === "object") {
 			for (var i = 0; i < elem.elems.length; i++) {
@@ -1933,5 +1924,4 @@ function readInformationRowFilter(elem, entity, nexus, parent) {
 			stopReadInformationRowFilter = true;
 		}
 	}
-
 }

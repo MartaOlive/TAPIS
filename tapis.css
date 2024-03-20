@@ -194,7 +194,7 @@
 
  .trLineBoxName td { /*Line with selects and buttons */
     height: 35px;
-        padding-left: 5px;
+    padding-left: 5px;
     padding-right: 5px;
 }
 
@@ -219,7 +219,7 @@
 
 .bottomPartSelectAndOrNot {
     height: auto;
-        display: flex;
+    display: flex;
     align-items: center;
     padding-left: 5px;
 }
