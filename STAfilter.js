@@ -89,7 +89,7 @@ function isAnObject(nodeId, number) {
 	var select = document.getElementById("selectorValue_" + number);
 	var selectOption = select.options[select.selectedIndex].value;
 	if (selectOption === "[object Object]") {
-		
+
 	}
 
 }
@@ -98,13 +98,13 @@ function isAnObject(nodeId, number) {
 function changeWriteToSelect(number, selector) {  //To take the text in input
 	event.preventDefault();
 	var divFilterContainer = document.getElementById("divFilterContainer_" + number);
-	var textInput = document.getElementById("textInput_" + number);
+	var inputText = document.getElementById("inputText_" + number);
 	var displaySelect = document.getElementById("displaySelect_" + number);
 	var selectorValue = document.getElementById("selectorValue_" + number);
 
 	var divFilterContainer2 = document.getElementById("divFilterContainer2_" + number);
-	var textInputInterval1 = document.getElementById("textInputInterval1_" + number);
-	var textInputInterval2 = document.getElementById("textInputInterval2_" + number);
+	var inputTextInterval1 = document.getElementById("inputTextInterval1_" + number);
+	var inputTextInterval2 = document.getElementById("inputTextInterval2_" + number);
 	var displaySelectInterval = document.getElementById("displaySelectInterval_" + number);
 	var selectorValueInterval1 = document.getElementById("selectorValueInterval1_" + number);
 	var selectorValueInterval2 = document.getElementById("selectorValueInterval2_" + number);
@@ -118,110 +118,24 @@ function changeWriteToSelect(number, selector) {  //To take the text in input
 
 	//Wich text is open?
 	if (selector == "simple") {
-		textInput.style.display = "none";
+		inputText.style.display = "none";
 		displaySelect.style.display = "none";
 		divFilterContainer.style.display = "inline-block";
 		selectorValue.style.display = "inline-block";
 
 
 	} else { //interval
-		textInputInterval1.style.display = "none";
-		textInputInterval2.style.display = "none";
+		inputTextInterval1.style.display = "none";
+		inputTextInterval2.style.display = "none";
 		displaySelectInterval.style.display = "none";
 		divFilterContainer2.style.display = "inline-block";
 		selectorValueInterval1.style.display = "inline-block";
 		selectorValueInterval2.style.display = "inline-block";
 
 	}
-}
-
-function showIntervalSelector(number) {
-	event.preventDefault();
-	var selectorCondition = document.getElementById("selectorCondition_" + number);
-	var selectedValue = selectorCondition.options[selectorCondition.selectedIndex].value;
-
-	var divFilterContainer = document.getElementById("divFilterContainer_" + number);
-	var textInput = document.getElementById("textInput_" + number);
-	var displaySelect = document.getElementById("displaySelect_" + number);
-
-
-	var divFilterContainer2 = document.getElementById("divFilterContainer2_" + number);
-	var textInputInterval1 = document.getElementById("textInputInterval1_" + number);
-	var textInputInterval2 = document.getElementById("textInputInterval2_" + number);
-
-	var displaySelectInterval = document.getElementById("displaySelectInterval_" + number);
-	var parentLabel = searchParentLabel();
-
-
-	var inputForEntityFilterRow = document.getElementById("inputForEntityFilterRow_" + number);
-	var inputForEntityFilterRowValue = inputForEntityFilterRow.value;
-	var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(inputForEntityFilterRowValue), true)
-
-
-	if (selectedValue == " [a,b] " || selectedValue == " (a,b] " || selectedValue == " [a,b) " || selectedValue == " (a,b) ") {
-		if (divFilterContainer2.style.display == "none") { //Not shown
-			if (textInputInterval1.style.display == "none") { //Not shown (simple is shown)
-				if (divFilterContainer.style.display == "none") { //Simple text and display are shown
-					//hidden to texts and display
-					textInput.style.display = "none"
-					displaySelect.style.display = "none";
-
-					//Show textinput and display
-					textInputInterval1.style.display = "inline-block";
-					textInputInterval2.style.display = "inline-block";
-					displaySelect.style.display = "none";
-
-					if (parentLabel == entity) {
-						displaySelectInterval.style.display = "inline-block";
-					}
-
-				} else { // divContainer is shown
-					//hidden to divFilterContainer
-					divFilterContainer.style.display = "none";
-					//show textInput and display from Interval
-					textInputInterval1.style.display = "inline-block";
-					textInputInterval2.style.display = "inline-block";
-					if (parentLabel == entity)
-						displaySelectInterval.style.display = "inline-block";
-				}
-			} //Simple text  is shown 
-			//Nothing
-		} //If FilterCOntains is shown, don't touch
-	}
-	else { //simple
-		//comes from itself
-		if (divFilterContainer.style.display == "none") { //It is not shown
-			if (textInput.style.display == "none") { //It is not shown (interval is shown)
-				if (divFilterContainer2.style.display == "none") { // texts and display from interval are shown
-					//hidden to texts and diplay
-					textInputInterval1.style.display = "none";
-					textInputInterval2.style.display = "none";
-					displaySelectInterval.style.display = "none";
-
-					//show textInput and display
-					textInput.style.display = "inline-block";
-					//textInput.classList.add("inblock");
-					if (parentLabel == entity) {
-						displaySelect.style.display = "inline-block";
-					}
-				}
-				else { //divContainer2 is shown
-					//hidden to divFilterContainer2
-					divFilterContainer2.style.display = "none";
-					//show textInput and display
-					textInput.style.display = "inline-block";
-					displaySelect.style.display = "inline-block";;
-
-				}
-			} //Simple text  is shown 
-			//Nothing
-		} //If FilterCOntains is shown, don't touch
-
-	}
-
-
 
 }
+
 //Build selectors
 function createSelectorRowFilters(number) {
 	//update STAdata from node
@@ -248,10 +162,10 @@ function createSelectorRowFilters(number) {
 	divFilterBox.appendChild(divIsAnObject);
 
 }
-
 function sortValuesForSelect(arrayValues) {
 	var arrayNumbers = [];
 	var arrayText = [];
+	var arrayNumbersArranged, arrayTextsArranged, arrayValuesArranged;
 
 	for (var i = 0; i < arrayValues.length; i++) { //Separate numbers and text
 		if (typeof arrayValues[i] !== "undefined") {
@@ -270,10 +184,10 @@ function sortValuesForSelect(arrayValues) {
 			}
 		}
 
-		var arrayNumbersArranged = arrayNumbers.sort((a, b) => a - b);
-		var arrayTextsArranged = arrayText.sort();
+		arrayNumbersArranged = arrayNumbers.sort((a, b) => a - b);
+		arrayTextsArranged = arrayText.sort();
 
-		var arrayValuesArranged = arrayNumbersArranged.concat(arrayTextsArranged); //join arrays
+		arrayValuesArranged = arrayNumbersArranged.concat(arrayTextsArranged); //join arrays
 	}
 	return arrayValuesArranged;
 }
@@ -307,7 +221,7 @@ function updateSTAFilterRowEntities(number, counter, entity) { //Modify or erase
 function fillInDialogDialogFilterRowEntities(number, row, selected) {
 	var dialogFilterRowEntitiesCheckBoxes = document.getElementById("DialogFilterRowEntitiesCheckBoxes");
 	dialogFilterRowEntitiesCheckBoxes.innerHTML = ""; //Empty DialogFilterRowEntitiesCheckBoxes
-	
+
 	if (selected != "") { //avoid first time
 		updateSTAFilterRowEntities(number, row, selected);//Update currentNode.STAFilterRowEntities
 	}
@@ -399,6 +313,7 @@ function OkButtonInRowFilterEntities(event) { //Ok in DialogFilterRowEntities
 
 
 	fillPropertySelector(number, lastEntity);//To change properties of select
+	fillValueSelectorFilterRow(number);
 	document.getElementById("DialogFilterRowEntities").close();
 }
 
@@ -411,6 +326,161 @@ function extractLastEntityFromTextFromInputInFilterRow(textFromInput) {
 		lastEntity = textFromInput
 	}
 	return lastEntity;
+
+}
+function showAndHiddeSelectorAndInputsFilterRow(number) {
+	var divFilterContainer = document.getElementById("divFilterContainer_" + number);
+	var divFilterContainer2 = document.getElementById("divFilterContainer2_" + number);
+	var inputText = document.getElementById("inputText_" + number);
+	var inputTextInterval1 = document.getElementById("inputTextInterval1_" + number);
+	var inputTextInterval2 = document.getElementById("inputTextInterval2_" + number);
+	var displaySelect = document.getElementById("displaySelect_" + number);
+	var displaySelectInterval = document.getElementById("displaySelectInterval_" + number);
+	var selectorConditionValue = document.getElementById("selectorCondition_" + number).value;
+	var selectorValue = document.getElementById("selectorValue_" + number);
+	var selectorValueHasChildren;
+	if (selectorValue.hasChildNodes()) {
+		selectorValueHasChildren = true;
+	} else {
+		selectorValueHasChildren = false;
+	}
+
+	if (selectorConditionValue == " [a,b] " || selectorConditionValue == " (a,b] " || selectorConditionValue == " [a,b) " || selectorConditionValue == " (a,b) ") {
+		if (inputTextInterval1.style.display == "none" && inputText.style.display == "none") { //selectors are shown
+			if (selectorValueHasChildren) { //show display button, hidde inputTexts
+				divFilterContainer2.style.display = "inline-block";
+				inputTextInterval1.style.display = "none";
+				inputTextInterval2.style.display = "none";
+
+			} else { // hidde selector things and show inputText
+				divFilterContainer2.style.display = "none";
+				displaySelectInterval.style.display = "none";
+				inputTextInterval1.style.display = "inline-block";
+				inputTextInterval2.style.display = "inline-block";
+			}
+
+		} else { //inputs are shown
+			if (selectorValueHasChildren) { //show display button
+				displaySelectInterval.style.display = "inline-block";
+			} else {
+				displaySelectInterval.style.display = "none";
+			}
+			inputTextInterval1.style.display = "inline-block";
+			inputTextInterval2.style.display = "inline-block";
+			divFilterContainer2.style.display = "none";
+		}
+		//simple : hide all
+		inputText.style.display = "none";
+		divFilterContainer.style.display = "none";
+		displaySelect.style.display = "none"
+
+	} else { //simple
+		if (inputText.style.display == "none" && inputTextInterval1.style.display == "none") { //selectors are shown
+			if (selectorValueHasChildren) { //show display button, hidde inputTexts
+				divFilterContainer.style.display = "inline-block";
+				inputText.style.display = "none";
+				inputText.style.display = "none";
+
+			} else { // hidde selector things and show inputText
+				divFilterContainer.style.display = "none";
+				displaySelect.style.display = "none";
+				inputText.style.display = "inline-block";
+				inputText.style.display = "inline-block";
+			}
+		} else { //inputs are shown
+			if (selectorValueHasChildren) { //show display button
+				displaySelect.style.display = "inline-block";
+			} else {
+				displaySelect.style.display = "none";
+			}
+			inputText.style.display = "inline-block";
+			inputText.style.display = "inline-block";
+			divFilterContainer.style.display = "none";
+
+		}
+		//Interval : hide all
+		inputTextInterval1.style.display = "none";
+		inputTextInterval2.style.display = "none";
+		divFilterContainer2.style.display = "none";
+		displaySelectInterval.style.display = "none";
+
+	}
+}
+
+async function fillValueSelectorFilterRow(count) {
+
+	var inputForEntityFilterRowValue = document.getElementById("inputForEntityFilterRow_" + count).value;
+	var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(inputForEntityFilterRowValue, true));
+
+	var url = getURLWithoutQueryParams(currentNode.STAURL);
+	//Find the entity to search values
+	var parentLabel = searchParentLabel();
+	if (parentLabel != entity) {
+		url = url.replace(parentLabel, entity);
+
+	}
+
+	var dataToFillSelect;
+	if (typeof currentNode.STAentityValuesForSelect !== "undefined") {
+		if (entity != currentNode.STAentityValuesForSelect[0]) { //avoid to call to API for same entity
+			dataToFillSelect = await loadAPIDataToFillSelectInRowFilter(url);
+			currentNode.STAentityValuesForSelect = [entity, dataToFillSelect];
+			dataToFillSelect = currentNode.STAentityValuesForSelect[1];
+		} else {
+			dataToFillSelect = currentNode.STAentityValuesForSelect[1];
+		}
+	} else {
+		dataToFillSelect = await loadAPIDataToFillSelectInRowFilter(url);
+		currentNode.STAentityValuesForSelect = [entity, dataToFillSelect];
+		dataToFillSelect = currentNode.STAentityValuesForSelect[1];
+
+	}
+
+	//Fill Select
+	//Simple
+	var select = document.getElementById("selectorValue_" + count);
+	//Interval
+	var selectorValueInterval1 = document.getElementById("selectorValueInterval1_" + count);
+	var selectorValueInterval2 = document.getElementById("selectorValueInterval2_" + count);
+	select.innerHTML = "";
+	selectorValueInterval1.innerHTML = "";
+	selectorValueInterval2.innerHTML = "";
+
+	var valor;
+	var arrayValors = [];
+	var select2 = document.getElementById("selectorProperty_" + count);
+	var select2PropertyValue = select2.options[select2.selectedIndex].value;
+	var valueUndefined = true;
+
+	for (let index = 0; index < dataToFillSelect.length; index++) {
+		valor = dataToFillSelect[index][select2PropertyValue];
+		if (valueUndefined == true && typeof valor !== "undefined") { //All values are undefined? Don't show select
+			valueUndefined = false;
+		}
+		if (!arrayValors.find(element => element == valor)) { //create array with not arranged values
+			arrayValors.push(valor);
+		}
+	}
+
+	var arrayValuesArranged = sortValuesForSelect(arrayValors); //arrange values 
+
+	for (var i = 0; i < arrayValuesArranged.length; i++) { //create select options
+		var option = document.createElement("option");
+		option.setAttribute("value", arrayValuesArranged[i]);
+		option.innerHTML = arrayValuesArranged[i];
+		var option2 = document.createElement("option");
+		option2.setAttribute("value", arrayValuesArranged[i]);
+		option2.innerHTML = arrayValuesArranged[i];
+		var option3 = document.createElement("option");
+		option3.setAttribute("value", arrayValuesArranged[i]);
+		option3.innerHTML = arrayValuesArranged[i];
+		select.appendChild(option);
+		selectorValueInterval1.appendChild(option2);
+		selectorValueInterval2.appendChild(option3);
+	}
+
+	showAndHiddeSelectorAndInputsFilterRow(count);
+
 
 }
 
@@ -431,7 +501,7 @@ function createSelect(number, selectorInfo, count) {
 	}
 	var entity;
 	var isEntity = false;
-	var staEntitiesKeys = Object.keys(STAEntities);
+	var staEntitiesKeys = Object.keys(STAEntities); //??
 	if (getSTAURLLastEntity(currentNode.STAURL)) {
 		entity = getSTAURLLastEntity(currentNode.STAURL);
 		for (var i = 0; i < staEntitiesKeys.length; i++) {
@@ -451,7 +521,7 @@ function createSelect(number, selectorInfo, count) {
 		inputForEntityFilterRow.setAttribute("READONLY", true);
 		inputForEntityFilterRow.setAttribute("id", "inputForEntityFilterRow_" + count);
 		inputForEntityFilterRow.style.backgroundColor = "#D8DFD6"; //grey
-		inputForEntityFilterRow.style.marginRight="5px";
+		inputForEntityFilterRow.style.marginRight = "5px";
 		var entityToInput;
 		if (currentNode.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
 			entityToInput = entity;
@@ -460,11 +530,11 @@ function createSelect(number, selectorInfo, count) {
 		}
 		inputForEntityFilterRow.value = entityToInput;
 		inputForEntityFilterRow.style.width = entityToInput.length * 7 + "px"; //Adjust width of the input to fit all content
-		
+
 		var inputForEntityFilterRowButton = document.createElement("button");
 		inputForEntityFilterRowButton.innerHTML = "Search the Entity";
 		inputForEntityFilterRowButton.setAttribute("onclick", "openModalRowFilterEntities('" + count + "')");
-		
+
 		placeId.appendChild(inputForEntityFilterRowButton);
 		placeId.appendChild(inputForEntityFilterRow);
 
@@ -472,8 +542,8 @@ function createSelect(number, selectorInfo, count) {
 
 	if (number == 2) {
 		select.setAttribute("id", "selectorProperty_" + count);
-		select.setAttribute("onChange", "fillValueSelector('" + count + "')");
-		select.style.marginRight="5px";
+		select.setAttribute("onChange", "fillValueSelectorFilterRow('" + count + "')");
+		select.style.marginRight = "5px";
 
 		if (currentNode.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
 			entity = getSTAEntityPlural(entity, true);
@@ -498,7 +568,7 @@ function createSelect(number, selectorInfo, count) {
 
 	else if (number == 3) {
 		select.setAttribute("id", "selectorCondition_" + count);
-		select.style.marginRight="5px";
+		select.style.marginRight = "5px";
 		var selectConditionContent2;
 		if (selectorInfo.length != 0) {
 			var typeOfValues = typeOfValueFromInput("simple", selectorInfo[0][4]);
@@ -516,7 +586,7 @@ function createSelect(number, selectorInfo, count) {
 		for (var i = 0; i < selectConditionContent2.length; i++) { //create options in condition Select
 			var opcioCondicio = document.createElement("option");
 			opcioCondicio.setAttribute("value", selectConditionContent2[i]);
-			select.setAttribute("onChange", "showIntervalSelector('" + count + "')");
+			select.setAttribute("onChange", "showAndHiddeSelectorAndInputsFilterRow('" + count + "')");
 			opcioCondicio.innerHTML = selectConditionContent2[i];
 			if (selectorInfo.length != 0) {
 				if (selectConditionContent2[i] == selectorInfo[0][3]) {
@@ -529,8 +599,21 @@ function createSelect(number, selectorInfo, count) {
 
 	}
 	else if (number == 4) { //Select box, ok and change button
+		var inputForEntityFilterRow = document.getElementById("inputForEntityFilterRow_" + count);
+		var inputForEntityFilterRowValue = inputForEntityFilterRow.value;
+		var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(inputForEntityFilterRowValue), true);
 
-		//Select simple
+
+		var url = getURLWithoutQueryParams(currentNode.STAURL);
+		//Find the entity to search values
+		var parentLabel = searchParentLabel();
+		if (parentLabel != entity) {
+			var parentLabelLength = parentLabel.length;
+			url = url.slice(parentLabelLength); //Erase entity without "/"
+			url += entity;
+		}
+
+		//Selects
 		var divFilterContainer = document.createElement("div");
 		divFilterContainer.setAttribute("id", "divFilterContainer_" + count);
 		divFilterContainer.setAttribute("style", "display: none;");
@@ -538,47 +621,24 @@ function createSelect(number, selectorInfo, count) {
 
 		select.setAttribute("id", "selectorValue_" + count);
 		select.setAttribute("onChange", "changeSelectValueRowFilter('" + currentNode.id + "','" + count + "')");
-
-		var valor;
-		var arrayValors = [];
-		var select2 = document.getElementById("selectorProperty_" + count);
-		var select2PropertyValue = select2.options[select2.selectedIndex].value;
-		var valueUndefined = true;
-
-		for (let index = 0; index < data.length; index++) {
-			valor = data[index][select2PropertyValue];
-			if (valueUndefined == true && typeof valor !== "undefined") { //All values are undefined? Don't show select
-				valueUndefined = false;
-			}
-			if (!arrayValors.find(element => element == valor)) { //create array with not arranged values
-				arrayValors.push(valor);
-			}
-		}
-
-		var arrayValuesArranged = sortValuesForSelect(arrayValors); //arrange values 
-
-		for (var i = 0; i < arrayValuesArranged.length; i++) { //create select options
-			var option = document.createElement("option");
-			option.setAttribute("value", arrayValuesArranged[i]);
-			option.innerHTML = arrayValuesArranged[i];
-			select.appendChild(option);
-		}
 		divFilterContainer.appendChild(select);
 
-		var textInput = document.createElement("input");
-		textInput.setAttribute("id", "textInput_" + count);
-		textInput.setAttribute("type", "text");
-		textInput.addEventListener("input", function () {
+
+		//Simple: inputText, buttons and displaySelects
+		var inputText = document.createElement("input");
+		inputText.setAttribute("id", "inputText_" + count);
+		inputText.setAttribute("type", "text");
+		inputText.addEventListener("input", function () {
 			changesInInputValueRowFilter("simple", count)
 		});
-		textInput.addEventListener("keypress", function (event) {
+		inputText.addEventListener("keypress", function (event) {
 			// If the user presses the "Enter" key on the keyboard
 			if (event.key === "Enter") {
 				event.preventDefault();
 			}
 		});
 
-		placeId.appendChild(textInput);
+		placeId.appendChild(inputText);
 
 		var okButton = document.createElement("button");
 		okButton.setAttribute("onclick", "closeModalSelect('" + count + "','ok')");
@@ -602,42 +662,43 @@ function createSelect(number, selectorInfo, count) {
 		buttonImage2.setAttribute("src", "arrowSelectButton.png");
 		displaySelect.appendChild(buttonImage2);
 
-		//Interval select
+		//Interval: inputText, buttons and displaySelects
 		var divFilterContainer2 = document.createElement("div");
 		divFilterContainer2.setAttribute("id", "divFilterContainer2_" + count);
 		placeId.appendChild(divFilterContainer2);
-
-		var selectorValueInterval1 = select.cloneNode(true); //filled like the other automatically
+		var selectorValueInterval1 = document.createElement("select");
 		selectorValueInterval1.setAttribute("id", "selectorValueInterval1_" + count);
-		var selectorValueInterval2 = select.cloneNode(true);
+		var selectorValueInterval2 = document.createElement("select");
 		selectorValueInterval2.setAttribute("id", "selectorValueInterval2_" + count);
+
 		divFilterContainer2.appendChild(selectorValueInterval1);
 		divFilterContainer2.appendChild(selectorValueInterval2);
 
-		var textInputInterval1 = textInput.cloneNode(true);
-		textInputInterval1.setAttribute("id", "textInputInterval1_" + count);
-		var textInputInterval2 = textInput.cloneNode(true);
-		textInputInterval2.setAttribute("id", "textInputInterval2_" + count);
 
-		textInputInterval1.addEventListener("input", function () {
+		var inputTextInterval1 = inputText.cloneNode(true);
+		inputTextInterval1.setAttribute("id", "inputTextInterval1_" + count);
+		var inputTextInterval2 = inputText.cloneNode(true);
+		inputTextInterval2.setAttribute("id", "inputTextInterval2_" + count);
+
+		inputTextInterval1.addEventListener("input", function () {
 			changesInInputValueRowFilter("interval", count)
 		});
-		textInputInterval2.addEventListener("input", function () {
+		inputTextInterval2.addEventListener("input", function () {
 			changesInInputValueRowFilter("interval", count)
 		});
-		textInputInterval1.addEventListener("keypress", function (event) {
+		inputTextInterval1.addEventListener("keypress", function (event) {
 			if (event.key === "Enter") {
 				event.preventDefault();
 			}
 		});
-		textInputInterval2.addEventListener("keypress", function (event) {
+		inputTextInterval2.addEventListener("keypress", function (event) {
 			if (event.key === "Enter") {
 				event.preventDefault();
 			}
 		});
 
-		placeId.appendChild(textInputInterval1);
-		placeId.appendChild(textInputInterval2);
+		placeId.appendChild(inputTextInterval1);
+		placeId.appendChild(inputTextInterval2);
 
 
 		var okButtonInterval = document.createElement("button");
@@ -661,62 +722,24 @@ function createSelect(number, selectorInfo, count) {
 		divFilterContainer2.appendChild(okButtonInterval);
 		divFilterContainer2.appendChild(cancelButtonInterval);
 
-		var entityUrl;
-		if (getSTAURLLastEntity(currentNode.STAURL)) {
-			entityUrl = getSTAURLLastEntity(currentNode.STAURL);
-		} else {
-			entityUrl = "No entity";
-		}
-
-		var inputForEntityFilterRow = document.getElementById("inputForEntityFilterRow_" + count);
-		var inputForEntityFilterRowValue = inputForEntityFilterRow.value;
-		var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(inputForEntityFilterRowValue), true)
-
-		var selectedEntityValue;
-		if (currentNode.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
-			selectedEntityValue = getSTAEntityPlural(entity, true);
-		} else {
-			selectedEntityValue = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(selectorInfo[0][1]), true);
-		}
-
-		if (selectedEntityValue != entityUrl) {
-			displaySelect.style.display = "none";
-		}
 
 
-		if (selectorInfo.length != 0) {
-			if (selectorInfo[0].length == 6) {//simple
-				divFilterContainer2.style.display = "none";
-				textInputInterval1.style.display = "none";
-				textInputInterval2.style.display = "none";
-
-				displaySelectInterval.style.display = "none";
-				if (valueUndefined == true) { //if it's empty don't show it
-					divFilterContainer.style.display = "none";
-				}
-				textInput.value = selectorInfo[0][4];
-
-			} else if (selectorInfo[0].length == 7) { //interval
-				textInput.style.display = "none";
-				divFilterContainer.style.display = "none";
-				divFilterContainer2.style.display = "none";
-				displaySelect.style.display = "none";
-				if (selectedEntityValue != entityUrl) {
-					displaySelectInterval.style.display = "none";
-				}
-				textInputInterval1.value = selectorInfo[0][4];
-				textInputInterval2.value = selectorInfo[0][5];
+		//Put previous values in input Text( 
+		if (selectorInfo.length!=0) {
+			if (selectorInfo[0][3] == ' [a,b] ' || selectorInfo[0][3] == ' (a,b] ' || selectorInfo[0][3] == ' [a,b) ' || selectorInfo[0][3] == ' (a,b) ') {
+				inputTextInterval1.value = selectorInfo[0][4];
+				inputTextInterval2.value = selectorInfo[0][5];
+			} else { //simple
+				inputText.value = selectorInfo[0][4];
 			}
-		} else { //Last or first
-			divFilterContainer2.style.display = "none";
-			textInputInterval1.style.display = "none";
-			textInputInterval2.style.display = "none";
-			displaySelectInterval.style.display = "none";
-			if (valueUndefined == true) { //if it's empty don't show it
-				divFilterContainer.style.display = "none";
-			}
-
 		}
+
+		fillValueSelectorFilterRow(count);
+		showAndHiddeSelectorAndInputsFilterRow(count);
+
+
+	
+
 	}
 }
 
@@ -738,8 +761,6 @@ function searchParentLabel() {
 
 function fillPropertySelector(number, lastEntity) { //lastEntity: Entity obtained in input
 	var selectProperty = document.getElementById("selectorProperty_" + number);
-	var selectCondition = document.getElementById("selectorCondition_" + number);
-	var selectedValueCondition = selectCondition.options[selectCondition.selectedIndex].value;
 	selectProperty.innerHTML = "";
 
 	var properties = STAEntities[getSTAEntityPlural(lastEntity, true)]["properties"];
@@ -749,164 +770,21 @@ function fillPropertySelector(number, lastEntity) { //lastEntity: Entity obtaine
 		option.innerHTML = properties[i];
 		selectProperty.appendChild(option);
 	}
-	//look who is the father to hide the button show the select
-	var displaySelect = document.getElementById("displaySelect_" + number);
-	var displaySelectInterval = document.getElementById("displaySelectInterval_" + number);
+	showAndHiddeSelectorAndInputsFilterRow(number);
 
-	var parentLabel = searchParentLabel();
-
-	if (parentLabel == getSTAEntityPlural(lastEntity, true)) { //show
-		if (selectedValueCondition == " [a,b] " || selectedValueCondition == " (a,b] " || selectedValueCondition == " [a,b) " || selectedValueCondition == " (a,b) ") {
-			displaySelectInterval.style.display = "inline-block";
-		} else {
-			displaySelect.style.display = "inline-block";
-		}
-	} else {
-		if (selectedValueCondition == " [a,b] " || selectedValueCondition == " (a,b] " || selectedValueCondition == " [a,b) " || selectedValueCondition == " (a,b) ") {
-			displaySelectInterval.style.display = "none";
-		} else {
-			displaySelect.style.display = "none";
-		}
-	}
-
-	var divFilterContainer = document.getElementById("divFilterContainer_" + number);
-	var divFilterContainer2 = document.getElementById("divFilterContainer2_" + number);
-
-	var textInput = document.getElementById("textInput_" + number);
-	var textInputInterval1 = document.getElementById("textInputInterval1_" + number);
-	var textInputInterval2 = document.getElementById("textInputInterval2_" + number);
-
-
-
-	if (divFilterContainer.style.display == "inline-block" || divFilterContainer2.style.display == "inline-block") {
-		if (divFilterContainer.style.display == "inline-block") { //simple
-			divFilterContainer.style.display = "none";
-			textInput.style.display = "inline-block";
-			textInput.innerHTML = "";
-		} else { //interval
-			divFilterContainer2.style.display = "none";
-			textInputInterval1.style.display = "inline-block";
-			textInputInterval1.innerHTML = "";
-			textInputInterval2.style.display = "inline-block";
-			textInputInterval2.innerHTML = "";
-		}
-	}
 }
 
-function fillValueSelector(number) { //Onchange first selector, fill second selector
-	var parentNodeid = network.getConnectedNodes(currentNode.id, "from");
-	var parentNode = networkNodes.get(parentNodeid);
-	var data = parentNode[0].STAdata;
 
-	var select = document.getElementById("selectorProperty_" + number);
-	var selectedProperty = select.options[select.selectedIndex].value;
-	var selectorValue, selectorValueInterval, selectorValueInterval2;
-	var displaySelect = document.getElementById("displaySelect_" + number);
-	var displaySelectInterval = document.getElementById("displaySelectInterval_" + number);
-
-	var inputForEntityFilterRow = document.getElementById("inputForEntityFilterRow_" + number);
-	var inputForEntityFilterRowValue = inputForEntityFilterRow.value;
-	var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(inputForEntityFilterRowValue), true)
-
-	var selectCondition = document.getElementById("selectorCondition_" + number);
-	var selectedValueCondition = selectCondition.options[selectCondition.selectedIndex].value;
-	var divFilterContainer = document.getElementById("divFilterContainer_" + number);
-	var divFilterContainer2 = document.getElementById("divFilterContainer2_" + number);
-	var textInput = document.getElementById("textInput_" + number);
-	var textInputInterval1 = document.getElementById("textInputInterval1_" + number);
-	var textInputInterval2 = document.getElementById("textInputInterval2_" + number);
-
-	var STALastEntity = getSTAURLLastEntity(currentNode.STAURL);
-
-
-	selectorValue = document.getElementById("selectorValue_" + number);
-	selectorValue.innerHTML = "";
-	selectorValueInterval = document.getElementById("selectorValueInterval1_" + number);
-	selectorValueInterval.innerHTML = "";
-	selectorValueInterval2 = document.getElementById("selectorValueInterval2_" + number);
-	selectorValueInterval2.innerHTML = "";
-
-	var valor;
-	var arrayValors = [];
-	var isAnObject;
-
-	//it must be filtered
-	for (var index = 0; index < data.length; index++) { //built values array
-		valor = data[index][selectedProperty];
-		if (typeof valor === "object") isAnObject = "yes";
-		if (!arrayValors.find(element => element == valor)) {
-			arrayValors.push(valor);
-		}
-	}
-	var arrayValuesArranged = sortValuesForSelect(arrayValors);
-
-	var valueUndefined = true;
-
-	for (var i = 0; i < arrayValuesArranged.length; i++) { //fill selector (there are 3: Simple + 2 Intervals)
-		var opcio = document.createElement("option");
-		var opcio2 = document.createElement("option");
-		var opcio3 = document.createElement("option");
-		valor = arrayValuesArranged[i];
-
-		if (valueUndefined == true && typeof valor !== "undefined") { //All values are undefined? Don't show select
-			valueUndefined = false;
-		}
-		opcio.setAttribute("value", valor);
-		opcio2.setAttribute("value", valor);
-		opcio3.setAttribute("value", valor);
-		opcio.innerHTML = valor;
-		opcio2.innerHTML = valor;
-		opcio3.innerHTML = valor;
-		selectorValue.appendChild(opcio);
-		selectorValueInterval.appendChild(opcio2);
-		selectorValueInterval2.appendChild(opcio3);
-	}
-
-	if (valueUndefined == true) { //hidde
-
-		if ((selectedValueCondition == " [a,b] " || selectedValueCondition == " (a,b] " || selectedValueCondition == " [a,b) " || selectedValueCondition == " (a,b) ") && (entity == STALastEntity)) {
-			divFilterContainer2.style.display = "none";
-			displaySelectInterval.style.display = "none";
-			textInputInterval1.style.display = "inline-block";
-			textInputInterval2.style.display = "inline-block";
-		}
-		else {
-			divFilterContainer.style.display = "none"; //hidde select if it's open
-			displaySelect.style.display = "none"; //hidde button to display select
-			textInput.style.display = "inline-block"; //Show text input
-		}
-
-
-
-
-	} else { //show
-		if ((selectedValueCondition == " [a,b] " || selectedValueCondition == " (a,b] " || selectedValueCondition == " [a,b) " || selectedValueCondition == " (a,b) ") && (entity == STALastEntity)) {
-			displaySelectInterval.style.display = "inline-block";
-		} else if ((selectedValueCondition != " [a,b] " || selectedValueCondition != " (a,b] " || selectedValueCondition != " [a,b) " || selectedValueCondition != " (a,b) ") && (entity == STALastEntity)) { //simple
-			displaySelect.style.display = "inline-block";
-		}
-	}
-
-	var divIsAnObject = document.getElementById("divIsAnObject");
-	if (isAnObject === "yes") { //n//It is not finished!!!!!
-		selectorValue.setAttribute("class", "objectInSelect");
-		divIsAnObject.style.display = "inline-block";
-	} else {
-		selectorValue.classList.remove("objectInSelect");
-		divIsAnObject.style.display = "none";
-
-	}
-}
 
 function closeModalSelect(number, button) { //Ok and Cancel Buttons
 	event.preventDefault();
 	var divFilterContainer = document.getElementById("divFilterContainer_" + number);
-	var textInput = document.getElementById("textInput_" + number);
+	var inputText = document.getElementById("inputText_" + number);
 	var displaySelect = document.getElementById("displaySelect_" + number);
 
 	var divFilterContainer2 = document.getElementById("divFilterContainer2_" + number);
-	var textInputInterval1 = document.getElementById("textInputInterval1_" + number);
-	var textInputInterval2 = document.getElementById("textInputInterval2_" + number);
+	var inputTextInterval1 = document.getElementById("inputTextInterval1_" + number);
+	var inputTextInterval2 = document.getElementById("inputTextInterval2_" + number);
 	var displaySelectInterval = document.getElementById("displaySelectInterval_" + number);
 	var interval;
 
@@ -918,48 +796,50 @@ function closeModalSelect(number, button) { //Ok and Cancel Buttons
 	//If it comes from simple. Hidde container and show text and display
 	if (divFilterContainer.style.display != "none") {
 		divFilterContainer.style.display = "none";
-		textInput.style.display = "inline-block";
+		inputText.style.display = "inline-block";
 		displaySelect.style.display = "inline-block";
 		interval = false;
 	} else {//if it comes from interval. Hidde container and show texts and display
 		divFilterContainer2.style.display = "none";
-		textInputInterval1.style.display = "inline-block";
-		textInputInterval2.style.display = "inline-block";
+		inputTextInterval1.style.display = "inline-block";
+		inputTextInterval2.style.display = "inline-block";
 		displaySelectInterval.style.display = "inline-block";
 		interval = true;
 	}
 
+
+
 	if (button == "ok") {
 		if (interval == false) {
 			var selectorValue = document.getElementById("selectorValue_" + number);
-			textInput.value = selectorValue.options[selectorValue.selectedIndex].value;
+			inputText.value = selectorValue.options[selectorValue.selectedIndex].value;
 			changesInInputValueRowFilter("simple", number);
 		} else {
 			var selectorValueInterval1 = document.getElementById("selectorValueInterval1_" + number);
 			var selectorValueInterval2 = document.getElementById("selectorValueInterval2_" + number);
-			textInputInterval1.value = selectorValueInterval1.options[selectorValueInterval1.selectedIndex].value;
-			textInputInterval2.value = selectorValueInterval2.options[selectorValueInterval2.selectedIndex].value;
+			inputTextInterval1.value = selectorValueInterval1.options[selectorValueInterval1.selectedIndex].value;
+			inputTextInterval2.value = selectorValueInterval2.options[selectorValueInterval2.selectedIndex].value;
 			changesInInputValueRowFilter("interval", number);
 
 		}
 	}
 }
 
-function changeSelectConditionValues(number, wichTextInput, value1, valueInput1, valueInput2) {
+function changeSelectConditionValues(number, wichinputText, value1, valueInput1, valueInput2) {
 
 	var selectCondition = document.getElementById("selectorCondition_" + number);
 
-	if (wichTextInput == "simple") {
-		var typeOfValues = typeOfValueFromInput(wichTextInput, value1);
+	if (wichinputText == "simple") {
+		var typeOfValues = typeOfValueFromInput(wichinputText, value1);
 
 	} else {
-		var typeOfValues = typeOfValueFromInput(wichTextInput, valueInput1, valueInput2);
+		var typeOfValues = typeOfValueFromInput(wichinputText, valueInput1, valueInput2);
 	}
 	var actualConditionSelected = selectCondition.options[selectCondition.selectedIndex].value;
 
 	var selectContent;
 	selectCondition.innerHTML = ""; //Erase to not acumulate it
-	if (wichTextInput == "simple") {
+	if (wichinputText == "simple") {
 		if (typeOfValues == "text") { selectContent = selectConditionContentText; } //text
 		else { selectContent = selectConditionContent; }//data, empty, number
 	} else {
@@ -977,53 +857,53 @@ function changeSelectConditionValues(number, wichTextInput, value1, valueInput1,
 		selectCondition.appendChild(opcioCondicio);
 	}
 }
-function changesInInputValueRowFilter(wichTextInput, number) { //and refill conditionSelect (interval if it is a number or a date)
-	var textInput, textIputInterval1, textIputInterval2;
-	if (wichTextInput == "simple") { textInput = document.getElementById("textInput_" + number); }
+function changesInInputValueRowFilter(wichinputText, number) { //and refill conditionSelect (interval if it is a number or a date)
+	var inputText, textIputInterval1, textIputInterval2;
+	if (wichinputText == "simple") { inputText = document.getElementById("inputText_" + number); }
 	else {
-		textIputInterval1 = document.getElementById("textInputInterval1_" + number);
-		textIputInterval2 = document.getElementById("textInputInterval2_" + number);
+		textIputInterval1 = document.getElementById("inputTextInterval1_" + number);
+		textIputInterval2 = document.getElementById("inputTextInterval2_" + number);
 	}
 	var value1, valueInput1, valueInput2;
 	var valueLength, valueLengthInterval1, valueLengthInterval2;
 	var width, withInterval1, withInterval2;
 
 
-	if (wichTextInput == "interval") {
+	if (wichinputText == "interval") {
 		valueInput1 = textIputInterval1.value;
 		valueLengthInterval1 = valueInput1.length;
 		valueInput2 = textIputInterval2.value;
 		valueLengthInterval2 = valueInput2.length;
 	} else {
-		value1 = textInput.value;
+		value1 = inputText.value;
 		valueLength = value1.length;
 	}
 
 	//Adjusting input length
 	if (valueLength > 15) {
 		width = valueLength * 8; // 8px per character
-		textInput.style.width = width + "px";
-		if (wichTextInput == "interval") {
+		inputText.style.width = width + "px";
+		if (wichinputText == "interval") {
 			withInterval1 = valueLengthInterval1 * 8; // 8px per character
 			textIputInterval1.style.width = withInterval1 + "px";
 			withInterval2 = valueLengthInterval2 * 8; // 8px per character
 			textIputInterval2.style.width = withInterval2 + "px";
 		}
 	} else if (valueLength <= 15) {
-		textInput.style.width = "100px";
-		if (wichTextInput == "interval") {
-			textInput1.style.width = "100px";
-			textInput2.style.width = "100px";
+		inputText.style.width = "100px";
+		if (wichinputText == "interval") {
+			inputText1.style.width = "100px";
+			inputText2.style.width = "100px";
 		}
 	}
 	//Change options in selector depending of type of value selector
-	changeSelectConditionValues(number, wichTextInput, value1, valueInput1, valueInput2);
+	changeSelectConditionValues(number, wichinputText, value1, valueInput1, valueInput2);
 
 }
 
-function typeOfValueFromInput(wichTextInput, value1, value2) {
+function typeOfValueFromInput(wichinputText, value1, value2) {
 	var typeOfValues;
-	if (wichTextInput == "simple") {
+	if (wichinputText == "simple") {
 		if (value1 == null) {
 			value1 = "";
 		}
@@ -1037,7 +917,7 @@ function typeOfValueFromInput(wichTextInput, value1, value2) {
 	}
 
 
-	if (wichTextInput == "simple") {
+	if (wichinputText == "simple") {
 
 		if (value1.includes("-") == true) {//inputText1
 			var value1Array = value1.split("-");
@@ -1203,7 +1083,7 @@ function GetFilterTable(elem, nodeId, first) //Built table //The second will be 
 	}
 
 	if (first) {
-		s += `<div class="topButtonsFilterRow"><button onclick="biggestLevelButton('${elem.boxName}','${nodeId}')">Add a higher group</button>`;
+		s += `<div class="topButtonsFilterRow"><button onclick="biggestLevelButton('${elem.boxName}')">Add a higher group</button>`;
 	}
 	if (elem.boxName) {
 
@@ -1539,8 +1419,8 @@ function addNewElement(elem, fromBiggest) {
 
 function takeSelectInformation() {
 	var optionsRow;
-	var inputForEntityFilterRow, selectorProperty, selectorCondition, textInput, textInputInterval1, textInputInterval2, selectorValue, selectorValueInterval1, selectorValueInterval2, divFilterContainer, divFilterContainer2;
-	var inputForEntityFilterRowValue, selectorPropertyValue, selectorConditionValue, textInputValue, textInputInterval1Value, textInputInterval2Value;
+	var inputForEntityFilterRow, selectorProperty, selectorCondition, inputText, inputTextInterval1, inputTextInterval2, selectorValue, selectorValueInterval1, selectorValueInterval2, divFilterContainer, divFilterContainer2;
+	var inputForEntityFilterRowValue, selectorPropertyValue, selectorConditionValue, inputTextValue, inputTextInterval1Value, inputTextInterval2Value;
 	var arrayInfo;
 	var infoFilter = [];
 	var counter = currentNode.STACounter;
@@ -1558,36 +1438,36 @@ function takeSelectInformation() {
 			arrayInfo.push(inputForEntityFilterRowValue, selectorPropertyValue, selectorConditionValue);
 
 			if (selectorConditionValue == ' [a,b] ' || selectorConditionValue == ' (a,b] ' || selectorConditionValue == ' [a,b) ' || selectorConditionValue == ' (a,b) ') {
-				textInputInterval1 = document.getElementById("textInputInterval1_" + counter[i]);
-				textInputInterval2 = document.getElementById("textInputInterval2_" + counter[i]);
+				inputTextInterval1 = document.getElementById("inputTextInterval1_" + counter[i]);
+				inputTextInterval2 = document.getElementById("inputTextInterval2_" + counter[i]);
 				selectorValueInterval1 = document.getElementById("selectorValueInterval1_" + counter[i]);
 				selectorValueInterval2 = document.getElementById("selectorValueInterval2_" + counter[i]);
 				divFilterContainer2 = document.getElementById("divFilterContainer2_" + counter[i]);
 
 				if (divFilterContainer2.style.display == "inline-block") { //Select open
-					textInputInterval1Value = selectorValueInterval1.options[selectorValueInterval1.selectedIndex].value;
-					textInputInterval2Value = selectorValueInterval2.options[selectorValueInterval2.selectedIndex].value;
+					inputTextInterval1Value = selectorValueInterval1.options[selectorValueInterval1.selectedIndex].value;
+					inputTextInterval2Value = selectorValueInterval2.options[selectorValueInterval2.selectedIndex].value;
 				} else {
-					textInputInterval1Value = textInputInterval1.value;
-					textInputInterval2Value = textInputInterval2.value;
+					inputTextInterval1Value = inputTextInterval1.value;
+					inputTextInterval2Value = inputTextInterval2.value;
 				}
 
-				arrayInfo.push(textInputInterval1Value);
-				arrayInfo.push(textInputInterval2Value);
-				var typeOfValue = typeOfValueFromInput("interval", textInputInterval1Value, textInputInterval2Value)
+				arrayInfo.push(inputTextInterval1Value);
+				arrayInfo.push(inputTextInterval2Value);
+				var typeOfValue = typeOfValueFromInput("interval", inputTextInterval1Value, inputTextInterval2Value)
 
 			} else {
-				textInput = document.getElementById("textInput_" + counter[i]);
+				inputText = document.getElementById("inputText_" + counter[i]);
 				divFilterContainer = document.getElementById("divFilterContainer_" + counter[i]);
 				selectorValue = document.getElementById("selectorValue_" + counter[i]);
 				if (divFilterContainer.style.display == "inline-block") { //Select open
-					textInputValue = selectorValue.options[selectorValue.selectedIndex].value;
+					inputTextValue = selectorValue.options[selectorValue.selectedIndex].value;
 				} else {
-					textInputValue = textInput.value;
+					inputTextValue = inputText.value;
 				}
 
-				arrayInfo.push(textInputValue);
-				var typeOfValue = typeOfValueFromInput("simple", textInputValue)
+				arrayInfo.push(inputTextValue);
+				var typeOfValue = typeOfValueFromInput("simple", inputTextValue)
 
 			}
 		}
@@ -1614,14 +1494,14 @@ function searchElementToDelete(numberOfElement, elem, paramsNodeId) { //elem has
 			element = searchElementToDelete(numberOfElement, elem.elems[i], paramsNodeId);
 		}
 		if (elem.elems.includes(numberOfElement)) { //add a elems => elems[0,1...]
-			DeleteElementInElemFilter(elem, paramsNodeId, numberOfElement);
+			DeleteElementInElemFilter(elem, numberOfElement);
 		}
 	}
 	else {
 
 	}
 }
-function DeleteElementInElemFilter(elem, nodeId, numberOfElement) {
+function DeleteElementInElemFilter(elem, numberOfElement) {
 	//do not delete the conditions filter because it is the position
 
 	var index = elem.elems.indexOf(parseInt(numberOfElement));
@@ -1654,7 +1534,7 @@ function searchGroupToDelete(numberOfElement, elem, nodeId, fatherElem) { //elem
 			element = searchGroupToDelete(numberOfElement, elem.elems[i], nodeId, elem);
 		}
 		if (elem.boxName == numberOfElement) { //add to elems => elems[0,1...]
-			var parent = DeleteGroupInElemFilter(elem, fatherElem);
+			DeleteGroupInElemFilter(elem, fatherElem);
 
 		}
 	}
@@ -1702,7 +1582,7 @@ function drawTableAgain() {
 }
 
 //Add bigger Level
-function biggestLevelButton(boxName, nodeId) {
+function biggestLevelButton(boxName) {
 	event.preventDefault();
 	var newBoxName = (parseInt(boxName.charAt(0)) + 1) + "_0";
 	var newInsert = {
@@ -1766,7 +1646,7 @@ function readInformationRowFilter(elem, entity, nexus, parent) {
 				currentNode.STAUrlAPI += " " + nexus + " ";
 			}
 		}
-		else { //Build url
+		else { //Build URL
 			//Last Array, which contains the filters 
 			var data = "";
 			for (var i = 0; i < infoFilter.length; i++) {
@@ -1778,11 +1658,10 @@ function readInformationRowFilter(elem, entity, nexus, parent) {
 					}
 
 					var valueOfEntity = infoFilter[i][1];
-					if (infoFilter[i][1].includes("/")) {//Erase entity name from current Node. 
-						var parentLabel = searchParentLabel();
-						var parentLabelLength=parentLabel.length;
-						valueOfEntity=valueOfEntity.slice(parentLabelLength+1); //Erase entity and "/"
-					} 
+					var lengthEntity = valueOfEntity.indexOf("/")
+					if (-1 != lengthEntity) { //Erase first entity name in the path
+						valueOfEntity = valueOfEntity.slice(lengthEntity + 1); //Erase entity and "/"
+					}
 
 
 					///Apply filter depending on Select Condition
@@ -1924,4 +1803,46 @@ function readInformationRowFilter(elem, entity, nexus, parent) {
 			stopReadInformationRowFilter = true;
 		}
 	}
+
+}
+
+async function loadAPIDataToFillSelectInRowFilter(url) {
+	var response, options = {}, STAdata;
+	try {
+		var url_fetch;
+		url_fetch = url;
+
+
+		AddHeadersIfNeeded(options);
+		if (options.headers)
+			response = await fetch(url_fetch, options);
+		else
+			response = await fetch(url_fetch);
+	}
+	catch (error) {
+		STAdata = null;
+
+		return STAdata;
+	}
+
+	// Uses the 'optional chaining' operator
+	if (!(response?.ok)) {
+		STAdata = null;
+
+		return STAdata;
+	}
+
+	try {
+		STAdata = await response.json();
+		STAdata = (typeof STAdata.value !== "undefined") ? STAdata.value : [STAdata];
+
+	}
+	catch (error) {
+
+		STAdata = null;
+
+	}
+	return STAdata;
+
+
 }

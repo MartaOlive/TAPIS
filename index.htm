@@ -255,6 +255,7 @@
 				<span id="ButtonsContextMenuObjects"></span><br>
 				<button onclick='removeCircularImage(event, "DialogContextMenu")'>Remove</button>
 				<button onclick='renameCircularImage(event, "DialogContextMenu")'>Rename</button><br>
+				<button onclick='giveMeNetworkInformation(event, "DialogContextMenu")'>Network Info</button><br>
 			</p>
 			<div class="center">
 				<button value="cancel" onClick="startingNodeContextId=null;" formmethod="dialog">Cancel</button>
@@ -737,15 +738,35 @@
 
 		//Return null if there is no reason (and there is a "fit").
 		function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-			if (parentNode.image=="ogc.png")
+			if (parentNode.image == "ogc.png" && node.image != "FilterRowsSTA.png") {
+				
 				return null;
+} else if (parentNode.image == "ogc.png" && node.image == "FilterRowsSTA.png") {
+				console.log("nop");
+				return "You need to select first an Entity";
+			}
 			if (TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true)
 				return "Parent node is a leaf node and cannot be connected with any other node";
 			if (node.image=="OneValue.png" && parentNode.image!="Observations.png")
 				return "'One value' node is designed be connected to an 'observations' node only.";
 			var idNode=IdOfSTAEntity(node);
-			if (idNode<0)
+			if (idNode < 0) {
+				var entity = getSTAURLLastEntity(parentNode.STAURL);
+				var staEntitiesList = Object.keys(STAEntities);
+				var isPlural = false;
+				for (var i = 0; i < staEntitiesList.length; i++) {
+					if (staEntitiesList[i] == entity) {
+						isPlural = true;
+						break;
+					}
+				}
+				if (node.image == "FilterRowsSTA.png" && isPlural == false) {
+					return "Your result is already one value, you can not filter it more"
+				} else {
 				return null;
+			}
+
+			}
 			var getCon=getConnectionSTAEntity(parentNode, node)
 			if (getCon.error)
 				return getCon.error;
@@ -2413,7 +2434,6 @@
 			}
 
 			readInformationRowFilter(currentNode.STAelementFilter, entity, "no", "no"); //And apply filter
-			//console.log(currentNode.STAUrlAPI);
 			currentNode.STAURL = currentNode.STAUrlAPI;
 
 			currentNode.STAExpectedLength = document.getElementById("SelectNumberOfRecordsFilterRows").value;
@@ -2450,6 +2470,9 @@
 				if (node.image == STAEntitiesArray[i] + ".png")
 					return i;
 			}
+						//Perhaps this node is a filter of a previous node. The URL can help me to find the entity to use
+			if (node.STAURL)
+				return STAEntitiesArray.indexOf(getFileName(getURLWithoutQueryParams(node.STAURL)));
 			return -1;
 		}
 
@@ -4273,6 +4296,15 @@
 				}
 			}
 		}
+
+
+		function giveMeNetworkInformation(event) {
+			if (event)
+				event.preventDefault(); // We don't want to submit this form
+			document.getElementById("DialogSelectColumns").close();
+			console.log(networkNodes);
+		}
+
 	</script>
 
 </body>
