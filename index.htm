@@ -255,7 +255,7 @@
 				<span id="ButtonsContextMenuObjects"></span><br>
 				<button onclick='removeCircularImage(event, "DialogContextMenu")'>Remove</button>
 				<button onclick='renameCircularImage(event, "DialogContextMenu")'>Rename</button><br>
-				<button onclick='giveMeNetworkInformation(event, "DialogContextMenu")'>Network Info</button><br>
+<button onclick='giveMeNetworkInformation(event, "DialogContextMenu")'>Network Info</button><br>
 			</p>
 			<div class="center">
 				<button value="cancel" onClick="startingNodeContextId=null;" formmethod="dialog">Cancel</button>
@@ -395,7 +395,7 @@
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceFile" name="DialogImportMeaningGeoJSONSource" value="file" checked="checked" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				Local GeoJSON schema file: <input type="file" id="DialogImportMeaningGeoJSONSourceFileText" accept=".json" onChange="ReadFileImportGeoJSONSchema(event)"></input></label><br>
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceURL" name="DialogImportMeaningGeoJSONSource" value="url" onClick='SelectImportMeaningFileSource(event, "GeoJSON")'>
-				GeoJSON schema URL: <input type="text" size="70" id="DialogImportMeaningGeoJSONSourceURLText" onChange="ReadURLImportGeoJSON(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSONSchema(event)" disabled="disabled">Load</button></label><br>
+				GeoJSON schema URL: <input type="text" size="70" id="DialogImportMeaningGeoJSONSourceURLText" onChange="ReadURLImportGeoJSONSchema(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSONSchema(event)" disabled="disabled">Load</button></label><br>
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceAuto" name="DialogImportMeaningGeoJSONSource" value="auto" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				Automatic retrieve of shared meaning</label><br>
 			</fieldset>
@@ -611,7 +611,7 @@
 		//var MMNpath="../osm";
 
 		const STAEntities = {ObservedProperties: {singular: "ObservedProperty", entities: ["Datastreams", "MultiDatastreams"], properties: ["name", "definition", "description", "properties"]},
-				Observations: {singular: "Observation", entities: ["Datastream", "MultiDatastream", "FeatureOfInterest", "ObservationGroups", "Subjects", "Objects"], properties: ["phenomenonTime", "resultTime", "result", "resultQuality", "validTime", "parameters"], entityLinks: ["Object", "Subject"]}, 
+				Observations: {singular: "Observation", entities: ["Datastream", "MultiDatastream", "FeatureOfInterest", "ObservationGroups", "Subjects", "Objects"], properties: ["phenomenonTime", "resultTime", "result", "resultQuality", "validTime", "parameters"], entityRelations: ["Object", "Subject"]}, 
       				FeaturesOfInterest: {singular: "FeatureOfInterest", entities: ["Observations"], properties: ["name", "description", "encodingType", "feature", "properties"]},
 				Sensors: {singular: "Sensor", entities: ["Datastreams", "MultiDatastreams"], properties: ["name", "description", "encodingType", "metadata", "properties"]}, 
 				Things: {singular: "Thing", entities: ["Datastreams", "MultiDatastreams", "Party", "Locations", "HistoricalLocations"], properties: ["name", "description", "proprties"]},
@@ -623,7 +623,7 @@
 				Campaigns: {singular: "Campaign", entities: ["Datastreams", "MultiDatastreams", "Party", "License"], properties: ["name", "description", "classification", "termsOfUse", "privacyPolicy", "creationTime", "startTime", "endTime", "url", "properties"]},
 				Licenses: {singular: "License", entities: ["Datastreams", "MultiDatastreams", "Campaigns", "ObservationGroups"], properties: ["name", "description", "definition", "logo", "attributionText"]},
 				ObservationGroups: {singular: "ObservationGroup", entities: ["Party", "Campaigns", "License", "Observations", "Relations"], properties: ["name", "description", "purpose", "creationTime", "endTime", "termsOfUsed", "privacyPolicy", "properties", "dataQuality"]},
-				Relations: {singular: "Relation", entities: ["Object", "Subject", "ObservationGroups"], properties: ["role", "description", "externalObject", "properties"], entityLinks: ["Objects", "Subjects"]}};
+				Relations: {singular: "Relation", entities: ["Object", "Subject", "ObservationGroups"], properties: ["role", "description", "externalObject", "properties"], entityRelations: ["Objects", "Subjects"]}};
 		const STAEntitiesArray = Object.keys(STAEntities);
 		const STASpecialQueries = {ObsLayer: {description: "Observations Layer", query: "Observations?$orderby=phenomenonTime%20desc&$expand=Datastream($select=unitOfMeasurement),Datastream/ObservedProperty($select=name,description,definition),FeatureOfInterest($select=description,feature)&$select=phenomenonTime,result"}}
 		const STASpecialQueriesArray = Object.keys(STASpecialQueries);
@@ -635,11 +635,13 @@
 					ExpandColumnsSTA: {description: "Expand Columns", callSTALoad: true},
 					SelectRowSTA: {description: "Select Row", callSTALoad: true},
 					FilterRowsSTA: {description: "Filter Rows", callSTALoad: true},
+					GeoFilterRowsSTA: {description: "Geospatial Filter Rows", callSTALoad: true},
 					SortBySTA: {description: "Sort by", callSTALoad: true},
 					ViewQuerySTA: {description: "View Query", leafNode: true},
 					UploadObservations: {description: "Upload in STA", leafNode: true},
 					//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
 					SelectColumnsTable: {description: "Select Columns"},
+					SelectRowTable: {description: "Select Row"},
 					JoinTables: {description: "Join Tables"},
 					/*SelectRowsTable: {description: "Select Rows"},*/
 					SeparateColumns: {description: "Separate Columns"},
@@ -664,16 +666,17 @@
 			return null;
 		}
 
-		function getSTAEntityPlural(entityName, considerEntityLinks) {
+		//considerEntityRelations means that in some paths you can find "Subject, Object..." that are relations to "Observations" Entity 
+		function getSTAEntityPlural(entityName, considerEntityRelations) {
 			for (var i=0; i<STAEntitiesArray.length; i++) {
 				if (STAEntities[STAEntitiesArray[i]].singular==entityName)
 					return STAEntitiesArray[i];
 			}
-			if (considerEntityLinks) {
+			if (considerEntityRelations) {
 				for (var i=0; i<STAEntitiesArray.length; i++) {
-					if ( STAEntities[STAEntitiesArray[i]].entityLinks) {
-						for (var j=0; j<STAEntities[STAEntitiesArray[i]].entityLinks.length; j++) {
-							if (STAEntities[STAEntitiesArray[i]].entityLinks[j]==entityName)
+					if ( STAEntities[STAEntitiesArray[i]].entityRelations) {
+						for (var j=0; j<STAEntities[STAEntitiesArray[i]].entityRelations.length; j++) {
+							if (STAEntities[STAEntitiesArray[i]].entityRelations[j]==entityName)
 								return STAEntitiesArray[i];
 						}
 					}
@@ -741,7 +744,7 @@
 			if (parentNode.image == "ogc.png" && node.image != "FilterRowsSTA.png") {
 				
 				return null;
-} else if (parentNode.image == "ogc.png" && node.image == "FilterRowsSTA.png") {
+			} else if (parentNode.image == "ogc.png" && node.image == "FilterRowsSTA.png") {
 				console.log("nop");
 				return "You need to select first an Entity";
 			}
@@ -767,6 +770,9 @@
 			}
 
 			}
+				
+			// if (!parentNode.STAURL)
+			// 	return null;
 			var getCon=getConnectionSTAEntity(parentNode, node)
 			if (getCon.error)
 				return getCon.error;
@@ -820,7 +826,7 @@
 			return null;
 		}
 
-		//Get the last entity of the path (without the filter or selection of a single entity by using (id))
+		//Get the last entity of the path (without the filter, selection, expantion... or selection of a single entity by using (id))
 		function getSTAURLLastEntity(url)
 		{
 			var s=getURLWithoutQueryParams(url);
@@ -905,13 +911,46 @@
 			return s;
 		}
 
-		function AddKVPToURL(url, kvp) {
+		//Before it was called AddKVPToURL
+		function AddQueryParamsToURL(url, kvp) {
 			kvp=removeExtraAmpersand(kvp);
 			if (!kvp)
 				return url;
 			if (url.indexOf('?')==-1)
 				return url + "?" + kvp;
 			return url + "&" + kvp;
+		}
+
+		function GetQueryParamFromURL(url, queryparam) {
+			var queryparams=getURLQueryParams(url);
+			var kvp=queryparams.split("&");
+			for(var i=0; i<kvp.length; i++) {
+				var j = kvp[i].indexOf("=");  // Gets the first index where a space occours
+				if (j==-1)
+					continue;
+				if (kvp[i].substring(0, j)==queryparam)
+					return kvp[i].substring(j+1);
+			}
+			return null;
+		}
+
+		function RemoveQueryParamFromURL(url, queryparam) {
+			var queryparams=getURLQueryParams(url);
+			if (!queryparams)
+				return url;
+			var kvp=queryparams.split("&");
+			for(var i=0; i<kvp.length; i++) {
+				var j = kvp[i].indexOf("=");  // Gets the first index where a space occours
+				if (j==-1)
+					continue;
+				if (kvp[i].substring(0, j)==queryparam){
+					kvp.splice(i, 1);
+					if (kvp.length)
+						return getURLWithoutQueryParams(url)+'?'+kvp.join('&');
+					return getURLWithoutQueryParams(url)
+				}
+			}
+			return url;
 		}
 
 		//https://stackoverflow.com/questions/50036922/change-a-css-stylesheets-selectors-properties/50036923#50036923
@@ -1138,7 +1177,7 @@
 				else if (typeof node.STAExpectedLength==="undefined")
 					url_fetch=node.STAURL;
 				else
-					url_fetch=AddKVPToURL(node.STAURL, "$top="+node.STAExpectedLength);
+					url_fetch=AddQueryParamsToURL(node.STAURL, "$top="+node.STAExpectedLength);
 
 				AddHeadersIfNeeded(options);
 
@@ -1188,11 +1227,19 @@
 			}
 			else
 				node.STAdata = (typeof jsonData.value!=="undefined") ? jsonData.value : [jsonData];
-			networkNodes.update(node);
 			if (jsonData.value && node.STAExpectedLength && node.STAdata.length<node.STAExpectedLength && jsonData["@iot.nextLink"])
+			{
+				networkNodes.update(node);
 				await LoadJSONNodeSTAData(node, callback, jsonData["@iot.nextLink"]);
+			}
 			else
 			{
+				if (node.image!="ogc.png")
+				{
+					node.STAdataAttributes=getDataAttributes(node.STAdata);
+					addSemanticsSTADataAttributes(node.STAdataAttributes, node.STAURL);
+				}
+				networkNodes.update(node);
 				showInfoMessage("Completed.");
 				await UpdateChildenLoadJSONCallback(node);
 				if (callback)
@@ -1318,10 +1365,7 @@
 
 		function TransformTextGeoJSONSchemaToDataAttributes(jsonText)
 		{
-			var jsonschema=JSON.parse(jsonText);
-			currentNode.STAdataAttributes=getDataAttributesGeoJSONSchema(jsonschema);
-			networkNodes.update(currentNode);
-			UpdateChildenTable(currentNode);
+			return getDataAttributesGeoJSONSchema(JSON.parse(jsonText));
 		}
 
 		function ReadFileImportGeoJSONSchema(event) {
@@ -1332,7 +1376,9 @@
 				//Transform the JSON text into a STAdataAttributes structure in memory
 				try
 				{
-					TransformTextGeoJSONSchemaToDataAttributes(reader.result);
+					currentNode.STAdataAttributes=TransformTextGeoJSONSchemaToDataAttributes(reader.result);
+					networkNodes.update(currentNode);
+					UpdateChildenTable(currentNode);
 				}
 				catch (e) 
 				{
@@ -1349,7 +1395,9 @@
 			HTTPJSONData(document.getElementById("DialogImportMeaningGeoJSONSourceURLText").value).then(
 						function(value) { 
 							showInfoMessage('Download GeoJSON schema completed.'); 
-							TransformTextGeoJSONSchemaToDataAttributes(value.text);
+							currentNode.STAdataAttributes=TransformTextGeoJSONSchemaToDataAttributes(value.text);
+							networkNodes.update(currentNode);
+							UpdateChildenTable(currentNode);
 						},
 						function(error) { 
 							showInfoMessage('Error downloading GeoJSON Schema. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -1436,11 +1484,11 @@
 				if (retorn) {
 					currentNode.STAdata=retorn.data
 					currentNode.STAdataAttributes=retorn.dataAttributes;
-				}
-				retorn=transformObservedPropertyTimeValueIntoTimeSemanticValues(currentNode.STAdata, currentNode.STAdataAttributes, retorn.dataAttributesValues, "extractedObservedProperty", "extractedPhenomenonTime", "extractedValue");
-				if (retorn) {
-					currentNode.STAdata=retorn.data
-					currentNode.STAdataAttributes=retorn.dataAttributes;
+					retorn=transformObservedPropertyTimeValueIntoTimeSemanticValues(currentNode.STAdata, currentNode.STAdataAttributes, retorn.dataAttributesValues, "extractedObservedProperty", "extractedPhenomenonTime", "extractedValue");
+					if (retorn) {
+						currentNode.STAdata=retorn.data
+						currentNode.STAdataAttributes=retorn.dataAttributes;
+					}
 				}
 			}
 			if (url)
@@ -1949,9 +1997,9 @@
 			if (!parentNode)
 				return;
 			//var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
-			currentNode.STAURL = AddKVPToURL(parentNode.STAURL, "$orderby="+timeVariable+" desc");
+			currentNode.STAURL = AddQueryParamsToURL(parentNode.STAURL, "$orderby="+timeVariable+" desc");
 			if (removeExtension(parentNode.image)=="Observations")
-				currentNode.STAURL = AddKVPToURL(currentNode.STAURL, "$expand=Datastream,MultiDatastream")
+				currentNode.STAURL = AddQueryParamsToURL(currentNode.STAURL, "$expand=Datastream,MultiDatastream")
 			currentNode.STAExpectedLength = 1;
 			networkNodes.update(currentNode);
 			showInfoMessage("Getting the last observation...");
@@ -2221,18 +2269,21 @@
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogSelectColumns").close();
 
-			var previousSTAURL=null;
-			var parentNode=GetFirstParentNode(currentNode);
-			if (parentNode) {
-				if (parentNode.STAURL)
-				{
-					previousSTAURL=currentNode.STAURL;
-					currentNode.STAURL = parentNode.STAURL;
+			if (currentNode.image == "SelectColumnsSTA.png")
+			{
+				var previousSTAURL=null;
+				var parentNode=GetFirstParentNode(currentNode);
+				if (parentNode) {
+					if (parentNode.STAURL)
+					{
+						previousSTAURL=currentNode.STAURL;
+						currentNode.STAURL = parentNode.STAURL;
+					}
+					if (parentNode.STAdata)
+						currentNode.STAdata = deapCopy(parentNode.STAdata);
+					if (parentNode.STAdataAttributes)
+						currentNode.STAdataAttributes = deapCopy(parentNode.STAdataAttributes);
 				}
-				if (parentNode.STAdata)
-					currentNode.STAdata = deapCopy(parentNode.STAdata);
-				if (parentNode.STAdataAttributes)
-					currentNode.STAdataAttributes = deapCopy(parentNode.STAdataAttributes);
 			}
 			currentNode.STASelectedColumns=[];
 			var dataAttributes = currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);
@@ -2243,10 +2294,10 @@
 			}
 			if (a < dataAttributesArray.length) //A checked attribute has been found ("for" breaks before ending).
 			{
-				if (parentNode.STAURL)
+				if (currentNode.image == "SelectColumnsSTA.png" && parentNode.STAURL)
 				{
 					var s;
-					currentNode.STAURL=AddKVPToURL(currentNode.STAURL, "$select=");
+					currentNode.STAURL=AddQueryParamsToURL(currentNode.STAURL, "$select=");
 					for (var a = 0; a < dataAttributesArray.length; a++) {
 						if (document.getElementById("SelectColumn_" + a).checked) {
 							if (dataAttributesArray[a]=="@iot.selfLink")
@@ -2350,7 +2401,7 @@
 				if (a < dataAttributesArray.length) //A checked attribute has been found ("for" breaks before ending).
 				{
 					var s;
-					currentNode.STAURL = AddKVPToURL(currentNode.STAURL, "$orderby="+dataAttributesArray[a]+" "+((document.getElementById("SelectSortByDesc") && document.getElementById("SelectSortByDesc").checked) ? "desc" : "asc"));
+					currentNode.STAURL = AddQueryParamsToURL(currentNode.STAURL, "$orderby="+dataAttributesArray[a]+" "+((document.getElementById("SelectSortByDesc") && document.getElementById("SelectSortByDesc").checked) ? "desc" : "asc"));
 				}
 			}
 			if (!isNaN(parseInt(document.getElementById("SelectExpandsNumberOfRecords").value)))
@@ -2371,16 +2422,18 @@
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogSelectRow").close();
 
-			var previousSTAURL=currentNode.STAURL;
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				if (parentNode.STAURL)
 					currentNode.STAURL = parentNode.STAURL;
-				if (parentNode.STAdata)
-					currentNode.STAdata = parentNode.STAdata;
+				//if (parentNode.STAdata)
+				//	currentNode.STAdata = parentNode.STAdata;
 			}
 			else
 				return;
+
+			if (currentNode.STAURL)
+				var previousSTAURL=currentNode.STAURL;
 
 			var elems = document.getElementsByName("SelectRowRadio");
 			for (var i = 0; i < elems.length; i++) {
@@ -2388,17 +2441,30 @@
 					break;
 			}
 			if (i < elems.length) {
-				const s = elems[i].id.substring("SelectRow_".length);
-				const n = Number(s);
-
-				currentNode.STAURL = AddKVPToURL(getURLWithoutQueryParams(currentNode.STAURL) + (Number.isInteger(n) ? "(" + n + ")" : "('" + s + "')"), getURLQueryParams(currentNode.STAURL));
-				currentNode.STAURLIdSelected=s;
+				if (currentNode.STAURL) {
+					const s = elems[i].id.substring("SelectRow_".length);
+					const n = Number(s);
+	
+					currentNode.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(currentNode.STAURL) + (Number.isInteger(n) ? "(" + n + ")" : "('" + s + "')"), getURLQueryParams(currentNode.STAURL));
+					currentNode.STAURLIdSelected=s;
+				}
+				else  //This should be a table operation: I'll do it mayself here
+				{
+					if (parentNode.STAdata && i<parentNode.STAdata.length){
+						currentNode.STAdata=[];
+						currentNode.STAdata.push(deapCopy(parentNode.STAdata[i]));
+					}
+				}
 			}
-			currentNode.STAExpectedLength = parentNode.STAExpectedLength;
+			if (currentNode.STAURL)
+				currentNode.STAExpectedLength = parentNode.STAExpectedLength;
 			networkNodes.update(currentNode);
-			showInfoMessage("Selecting STA row...");
-			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
-			LoadJSONNodeSTAData(currentNode);
+			if (currentNode.STAURL)
+			{
+				showInfoMessage("Selecting STA row...");
+				UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+				LoadJSONNodeSTAData(currentNode);
+			}
 		}
 
 		function GetFilterRows(event) {
@@ -2423,7 +2489,13 @@
 			//put URL ready to add things
 			var previousURL = parentNode.STAURL;
 
-			currentNode.STAUrlAPI=AddKVPToURL(parentNode.STAURL, "$filter=");
+			var prevFilter=GetQueryParamFromURL(parentNode.STAURL, "$filter");
+			if (prevFilter) {
+				currentNode.STAUrlAPI=RemoveQueryParamFromURL(parentNode.STAURL, "$filter");
+				currentNode.STAUrlAPI=AddQueryParamsToURL(currentNode.STAUrlAPI, "$filter=" + prevFilter + " and ");
+			}
+			else
+				currentNode.STAUrlAPI=AddQueryParamsToURL(parentNode.STAURL, "$filter=");
 
 			stopReadInformationRowFilter = false;
 			var entity;
@@ -2434,6 +2506,7 @@
 			}
 
 			readInformationRowFilter(currentNode.STAelementFilter, entity, "no", "no"); //And apply filter
+			//console.log(currentNode.STAUrlAPI);
 			currentNode.STAURL = currentNode.STAUrlAPI;
 
 			currentNode.STAExpectedLength = document.getElementById("SelectNumberOfRecordsFilterRows").value;
@@ -2441,6 +2514,76 @@
 			showInfoMessage("Filtering STA rows...");
 			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 			LoadJSONNodeSTAData(currentNode);
+		}
+
+		function getGeospatialFilter(node, parentNode){
+			var data=node.STAdata, geometry, coords, cdns=[];
+			for (var i=0; i<data.length; i++){
+				cdns.push("geo.intersects(");
+				var id=IdOfSTAEntity(parentNode);
+				if (STAEntitiesArray[id]=="Parties" || STAEntitiesArray[id]=="Sensors" || STAEntitiesArray[id]=="ObservedProperties" || STAEntitiesArray[id]=="Things" || STAEntitiesArray[id]=="Licenses")
+					cdns.push("Observations/FeatureOfInterest/");
+				else if (STAEntitiesArray[id]=="Datastreams" || STAEntitiesArray[id]=="MultiDatastreams" || STAEntitiesArray[id]=="ObservationGroups")
+					cdns.push("Observations/FeatureOfInterest/");
+				else if (STAEntitiesArray[id]=="Observations")
+					cdns.push("FeatureOfInterest/");
+				cdns.push("feature,geography'");
+				geometry=data[i]["geometry"];
+				coords=geometry["coordinates"];
+				if (geometry["type"]=="Polygon") {
+					cdns.push("POLYGON (");
+					for (var j=0; j<coords.length; j++){
+						cdns.push("(");
+						for (var k=0; k<coords[j].length; k++){
+							cdns.push(coords[j][k][0], " ", coords[j][k][1]);
+							if (k<coords[j].length-1)
+								cdns.push(", ");
+						}
+						cdns.push(")");
+						if (j<coords.length-1)
+							cdns.push(",");
+					}
+					cdns.push(")')");
+				}
+				if (i<data.length-1)
+					cdns.push(" or ");
+			}
+			return cdns.join("");
+		}
+
+		function DoGeoFilterRows(node) {
+			var previousSTAURL=node.STAURL;
+			var nodes=GetParentNodes(node);
+			if (nodes && nodes.length>1)
+				var parentNode=nodes[0];
+			else
+				return;				
+			
+			if (parentNode.STAURL)
+				node.STAURL = parentNode.STAURL;
+			if (parentNode.STAdata)
+				node.STAdata = parentNode.STAdata;
+
+			var previousURL = parentNode.STAURL;
+		
+			var geo=getGeospatialFilter(nodes[1], nodes[0]);
+			
+			if (!geo)
+				return;
+
+			var prevFilter=GetQueryParamFromURL(parentNode.STAURL, "$filter");
+			if (prevFilter) {
+				node.STAURL=RemoveQueryParamFromURL(parentNode.STAURL, "$filter");
+				node.STAURL=AddQueryParamsToURL(node.STAURL, "$filter=" + prevFilter + " and " + geo);
+			}
+			else
+				node.STAURL=AddQueryParamsToURL(parentNode.STAURL, "$filter="+geo);
+
+			node.STAExpectedLength = parseInt(document.getElementById("SelectSortByNumberOfRecords").value);
+			networkNodes.update(node);
+			showInfoMessage("Filtering STA rows by polygon...");
+			UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
+			LoadJSONNodeSTAData(node);
 		}
 
 		function GetJoinTables(event) {
@@ -2470,9 +2613,9 @@
 				if (node.image == STAEntitiesArray[i] + ".png")
 					return i;
 			}
-						//Perhaps this node is a filter of a previous node. The URL can help me to find the entity to use
+			//Perhaps this node is a filter of a previous node. The URL can help me to find the entity to use
 			if (node.STAURL)
-				return STAEntitiesArray.indexOf(getFileName(getURLWithoutQueryParams(node.STAURL)));
+				return STAEntitiesArray.indexOf(getSTAURLLastEntity(node.STAURL));
 			return -1;
 		}
 
@@ -2503,7 +2646,7 @@
 							queryParam=queryParam.replace(previousQueryParams, currentQueryParams);
 						
 						getURLQueryParams(node.STAURL).replace(previousQueryParams, getURLQueryParams(currentSTAURLroot))
-						node.STAURL=AddKVPToURL(getURLWithoutQueryParams(currentSTAURLroot)+getURLWithoutQueryParams(node.STAURL).substring(previousSTAURLrootWithoutQuery.length), 
+						node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(currentSTAURLroot)+getURLWithoutQueryParams(node.STAURL).substring(previousSTAURLrootWithoutQuery.length), 
 									queryParam);
 						networkNodes.update(node);
 					}
@@ -2581,14 +2724,14 @@
 			return t;
 		}
 
+		//Creates dataAttributes and determines the "type" attribute only.
 		function getDataAttributes(data) {
 			var dataAttributes = {}, dataAttribute, type;
 
 			for (var i = 0; i < data.length; i++) {
 				var keys = Object.keys(data[i]);
 				for (var k = 0; k < keys.length; k++) {
-					if (dataAttributes[keys[k]])
-					{
+					if (dataAttributes[keys[k]]) {
 						dataAttribute=dataAttributes[keys[k]];
 						if (!isAttributeAnyURI(keys[k]))
 						{
@@ -2614,6 +2757,16 @@
 				}
 			}
 			return dataAttributes;
+		}
+
+		//Add the definition URL to a preexisting dataAttributes based on the STA Entity requested.
+		function addSemanticsSTADataAttributes(dataAttributes, url) {
+			var dataAttributesArray = Object.keys(dataAttributes);
+
+			var parentLastEntity=getSTAEntityPlural(getSTAURLLastEntity(url), true);
+			for (var attr = 0; attr < dataAttributesArray.length; attr++) {
+				dataAttributes[dataAttributesArray[attr]].definition="http://www.opengis.net/def/docs/15-078r6/" + STAEntities[parentLastEntity].singular + "/" + dataAttributesArray[attr];
+			}
 		}
 
 		function isAttributeAnyURI(s){
@@ -3679,16 +3832,17 @@
 			document.getElementById("SelectSortByNumberOfRecords").value=node.STAExpectedLength;
 		}
 
-		function ShowTableSelectRowDialog(parentNodeId, nodeId) {
-			var data = networkNodes.get(parentNodeId).STAdata;
-
-			addTitleInRowFilterDialog("divTitleSelectRow");
+		function ShowTableSelectRowDialog(parentNode, node) {
+			var data = parentNode.STAdata;
+			
+			if (node.STAURL)
+				addTitleInRowFilterDialog("divTitleSelectRow");
 
 			if (!data || !data.length) {
 				document.getElementById("DialogSelectRowsTable").innerHTML = "No data to show.";
 				return;
 			}
-			document.getElementById("DialogSelectRowsTable").innerHTML = GetHTMLTable(data, networkNodes.get(parentNodeId).STAdataAttributes ? networkNodes.get(parentNodeId).STAdataAttributes : getDataAttributes(data), false, "SelectRow_", networkNodes.get(nodeId).STAURLIdSelected ? networkNodes.get(nodeId).STAURLIdSelected : 0, null, "", isAttributeAnyURI);
+			document.getElementById("DialogSelectRowsTable").innerHTML = GetHTMLTable(data, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data), false, "SelectRow_", node.STAURLIdSelected ? node.STAURLIdSelected : 0, null, "", isAttributeAnyURI);
 		}
 
 		function ShowTableFilterRowsDialog(parentNode, node) {
@@ -3766,8 +3920,9 @@
 			}
 			if (parentNode.STAdataAttributes)
 			{
-				var dataAttributes=getDataAttributes(data);
+				var dataAttributes=getDataAttributes(node.STAdata);
 				var dataAttributesArray=Object.keys(dataAttributes);
+				node.STAdataAttributes={};
 				for (var i = 0; i < dataAttributesArray.length; i++) {
 					node.STAdataAttributes[dataAttributesArray[i]]=deapCopy( (parentNode.STAdataAttributes[dataAttributesArray[i]]) ? parentNode.STAdataAttributes[dataAttributesArray[i]] : dataAttributes[dataAttributesArray[i]]);
 				}
@@ -3829,8 +3984,33 @@
 				//LoadJSONNodeSTAData(nodeTo);
 				return true;
 			}
+			if (nodeTo.STAURL && nodeTo.image == "GeoFilterRowsSTA.png") {
+				if (!GetFirstParentNode(nodeTo)){
+					nodeTo.STAURL = nodeFrom.STAURL;
+					nodeTo.STAExpectedLength = nodeFrom.STAExpectedLength;
+					if (nodeFrom.STAdata)
+						nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
+					if (nodeFrom.STAdataAttributes)
+						nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);		
+					networkNodes.update(nodeTo);
+				}
+				if (calUnir)
+					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+				DoGeoFilterRows(nodeTo);
+				return true;
+			}
 			if (nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "Meaning.png") {
 				UpdateChildTableNode(nodeTo, nodeFrom);
+				if (calUnir)
+					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+				return true;
+			}
+			if (nodeTo.image == "SelectRowTable.png") {
+				if (nodeFrom.STAdata)
+					nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
+				if (nodeFrom.STAdataAttributes)
+					nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
+				networkNodes.update(nodeTo);
 				if (calUnir)
 					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 				return true;
@@ -4004,11 +4184,12 @@
 						document.getElementById("DialogJoinTables").showModal();
 					}
 				}
-				else if (currentNode.image == "SelectRowSTA.png") {
-					var nodeids = network.getConnectedNodes(currentNode.id, "from");
-					if (nodeids && nodeids.length) {
-						if (networkNodes.get(nodeids[0]) && networkNodes.get(nodeids[0]).STAURL) {
-							ShowTableSelectRowDialog(nodeids[0], currentNode.id);
+				else if (currentNode.image == "SelectRowSTA.png" || currentNode.image == "SelectRowTable.png") {
+					var parentNode=GetFirstParentNode(currentNode);
+					if (parentNode) {
+						if ((currentNode.image == "SelectRowSTA.png" && networkNodes.get(nodeids[0]).STAURL) ||
+						    currentNode.image == "SelectRowTable.png") {
+							ShowTableSelectRowDialog(parentNode, currentNode);
 						}
 						document.getElementById("DialogSelectRow").showModal();
 					}
@@ -4029,13 +4210,12 @@
 						document.getElementById("DialogSelectSortBy").showModal();
 					}
 				}
-				else if (IdOfSTAEntity(currentNode) != -1) {
-					//Offering expand
-					//ShowTableSelectExpandsDialog(currentNode.id, true);
-					document.getElementById("DialogSelectNRecords").showModal();
+				else if (currentNode.image == "SeparateColumns.png") {
+					;
 				}
-				else if (IdOfSTASpecialQueries(currentNode) != -1) {
-					//ShowTableSelectExpandsDialog(currentNode.id, false);
+				else if (currentNode.image == "GeoFilterRowsSTA.png" || 
+					IdOfSTAEntity(currentNode) != -1 ||
+					IdOfSTASpecialQueries(currentNode) != -1) {
 					document.getElementById("DialogSelectNRecords").showModal();
 				}
 			}

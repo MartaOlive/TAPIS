@@ -97,7 +97,7 @@
 				if (a < dataAttrArray.length) //A checked attribute has been found ("for" breaks before ending).
 				{
 					var s;
-					currentNode.STAURL = AddKVPToURL(currentNode.STAURL, "$expand=");
+					currentNode.STAURL = AddQueryParamsToURL(currentNode.STAURL, "$expand=");
 					for (var a = 0; a < dataAttrArray.length; a++) {
 						if (document.getElementById("SelectExpand_" + a) && 
 							document.getElementById("SelectExpand_" + a).checked && 
@@ -121,7 +121,7 @@
 				GetSelectedSelectExpandsDialog(currentNode);
 				var s=GetKVPSelectedSelectExpands(currentNode.STASelectedExpands, true);
 				if (s)
-					currentNode.STAURL = AddKVPToURL(currentNode.STAURL, s);
+					currentNode.STAURL = AddQueryParamsToURL(currentNode.STAURL, s);
 			}
 			if (!isNaN(parseInt(document.getElementById("SelectExpandsNumberOfRecords").value)))
 				currentNode.STAExpectedLength = parseInt(document.getElementById("SelectExpandsNumberOfRecords").value);

@@ -42,29 +42,34 @@
 </ul>
 <li><a href="#recipes">Recipes</a></li>
 <ul>
-<li><a href="#recipe1">Recipe 1: Add semantics (meaning) to a table and share, retrieve and store it</a></li>
-<li><a href="#recipe2">Recipe 2: Show the current evolution of a variable captured by a particular party</a></li>
-<li><a href="#recipe3">Recipe 3: Show a map of all observation features in an STA service</a></li>
+<li><a href="#recipe01">Recipe 1: Understanding the concept of Datastream in STAplus</a></li>
+<li><a href="#recipe02">Recipe 2: Show the current evolution of a variable captured by a particular party</a></li>
+<ul>
+<li><a href="#recipe02_01">Cooking method 1: Recurrently selecting a row using entity identifiers</a>
+<li><a href="#recipe02_02">Cooking method 2: Filtering observations</a>
+</ul>
+<li><a href="#recipe03">Recipe 3: Show a map of all observation features in an STA service</a></li>
+<li><a href="#recipe04">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</a></li>
 </ul>
 </ul>
 
 <hr>
 <a id="help"></a>
 <h2>How TAPIS works</h2>
-TAPIS is a javascript interface to deal with tabular data. Internaly, everything is a table that has colummns that represents fields and rows that represent records. 
+TAPIS is a JavaScript interface to deal with tabular data. Internally, everything is a table that has columns that represents fields and rows that represent records. 
 <p>
-While the project is completely independent from the <i>Orange data mining</i> software, it has been inspired by its GUI. IF you have used Orange in the past, you will immediately know how TAPIS works.
+While the project is completely independent from the <i>Orange data mining</i> software, it has been inspired by its GUI. If you have used Orange in the past, you will immediately know how TAPIS works.
 <p>
-But thera are some differences with Orange
+But there are some differences with Orange
 <ul>
 <li>Columns can be semantically tagged adding meaning to the data fields
-<li>SensorThings API (STA) and STAplus is one of the sources of tababular data. 
+<li>SensorThings API (STA) and STAplus is one of the sources of tabular data. 
 </ul>
 
 <p>
-Other capabilities are saving CSVs or GeoJSON and connectings with the MiraMon Map Browser
+Other capabilities are saving CSVs or GeoJSON and connecting with the MiraMon Map Browser
 
-The workspace of Tapis can be devided in the following areas
+The workspace of Tapis can be divided in the following areas
 <br>
 <img src="help_tapisAreas.png" width="800" class="center">
 
@@ -79,17 +84,17 @@ Next thing is connecting other nodes to the starting nodes.
 There are two ways to do so:
 <ul>
 <li>Right click in the previous node will make visible a dialog box with many buttons. Select one of them and it will be placed in the <i>network area</i> as a new node and it will be automatically connected to the previous node.
-<li>Click on one of the buttons of the button area to create a new node in the network area. This node will not be connected to any previous node. You will need to connect the node to the previous node by clicking int he "Connect to nodes" button and the click on the new node and then in the previous node.
+<li>Click on one of the buttons of the button area to create a new node in the network area. This node will not be connected to any previous node. You will need to connect the node to the previous node by clicking in the "Connect to nodes" button and the click on the new node and then in the previous node.
 </ul>
 
-Connections represents the inheritance of information. So if two nodes are connected, the arrow points to the node that is the data source of the next target node (like in a lineage diagram). You can see arrows as "data dependencies". In other words, the information "travels" in the oposite direction of the arrows. Commonly a target node uses the tabular data represented by source node and operates with it to create a new table. Nodes can be source nodes of as many target nodes as needed. Nodes can be target nodes and source nodes at the same time.
+Connections represents the inheritance of information. So if two nodes are connected, the arrow points to the node that is the data source of the next target node (like in a lineage diagram). You can see arrows as "data dependencies". In other words, the information "travels" in the opposite direction of the arrows. Commonly a target node uses the tabular data represented by source node and operates with it to create a new table. Nodes can be source nodes of as many target nodes as needed. Nodes can be target nodes and source nodes at the same time.
 <br>
 <img src="help_sourceTarget.png" width="400" class="center">
 <p>
 
 <a id="helpLeafNodes"></a>
 <h3>Leaf nodes</h3>
-Since almost all nodes represent data in tabular form the "Table" button is a good asset to check the content of a node.
+Since almost all nodes represent data in tabular form, the "Table" button is a good asset to check the content of a node.
 <p>
 "Table" is an example of "leaf node". Leaf nodes cannot be the source node of any other node and represent the "leafs" of a network representation. Other examples of leaf nodes are "Scatter plot", "One value", "View query" or, "Save table".
 <br>
@@ -98,256 +103,208 @@ Since almost all nodes represent data in tabular form the "Table" button is a go
 
 <a id="helpSTAvsTableNodes"></a>
 <h3>SensorThings API nodes vs Table nodes</h3>
-Some operations are performed by TAPIS directly (the ones that has grey icons) and some others are performed by tha STA (Tapis will only build queries and wait for the STA server to return the new table). 
+Some operations are performed by TAPIS directly (the ones that has grey icons) and some others are performed by the STA (Tapis will only build queries and wait for the STA server to return the new table). 
 <p>
 A blue node can commonly be a source node for a grey node but a grey node cannot be a source node for a blue node.
 
 <hr>
 <H2>Recipes</H2>
-Just a few collection of recipies are provided. More recipies to come soon!.
-
-<a id="recipe1"></a>
-<h3>Recipe 1: Add semantics (meaning) to a table and share, retrieve and store it</h3>
-In this example, we illustrate how to manage a table semantics.
-
-<p>
-To start the exercise, need to find a CSV in the Internet. In this case we go to the Open data portal of the Catalan Government to find a dataset of quantity of water in the Catalonia reservoirs
-(<a href="https://analisi.transparenciacatalunya.cat/ca/Medi-Ambient/Quantitat-d-aigua-als-embassaments-de-les-Conques-/gn9e-3qhr/about_data" target="_blank">https://analisi.transparenciacatalunya.cat/ca/Medi-Ambient/Quantitat-d-aigua-als-embassaments-de-les-Conques-/gn9e-3qhr/about_data</a>). 
-<br>
-<img src="recipe01_findcsv_url.png" width="600" class="center">
-
-<p>
-There is a way to get a direct link to the data in CSV format (<a href="https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.csv" target="_blank">https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.csv</a>).
-<br>
-<img src="recipe01_copycsv_url.png" width="600" class="center">
-
-<p>
-First we import a table from the internet using the "Import CSV" tool.
-<br>
-<img src="recipe01_importcsv.png" width="600" class="center">
-
-<p>
-We specify that this is a coma separated file with headers defining the titles of the fields. We do not have any <a href="https://csvw.org/">CSVW</a> to add semantics so we will not select any file name. We will copy the URL of the CSV in the last box. The file is automatically uploaded in the background.
-<br>
-<img src="recipe01_opencsv.png" width="600" class="center">
-
-<p>
-Now we will include the semantics with the fields meaning tool.
-<br>
-<img src="recipe01_fieldsMeaning.png" width="600" class="center">
-
-<p>
-We need to populate the description of each field, the URL of a vocabulary definition and the units of measure description, URL definition and symbol.
-<br>
-<img src="recipe01_defineMeaning.png" width="600" class="center">
-
-<p>
-That is a complicated process because it requires some knowledge of the existing vocabulary services. We can use one of the predefined exemplary combinations to start with. Do not worry if you do not know the answer of some items now as all fields are optional and can be left blank.
-<br>
-<img src="recipe01_dropdownhelp.png" width="600" class="center">
-
-<p>
-Once this is done for all fields, we can check if all works by visualizing the table with the table tool.
-<br>
-<img src="recipe01_table.png" width="600" class="center">
-
-<p>
-Field names are replaced by descriptions that are linked to the concept they represent and the units of measure are represented by a symbol linked to the definition of them.
-<br>
-<img src="recipe01_table_links.png" width="800" class="center">
-
-<p>
-Now, by going back to the "meaning" tool we can share this definitions in the Internet by pressing the "share" button.
-<br>
-<img src="recipe01_shareMeaning.png" width="600" class="center">
-
-<p>
-The NiMMbus system will be open. You are required to login using an identity provider such as Authenix or by creating your own user name in the system. 
-Do not be alarmed by the number of fields you see in the screen. They are all pre-populated, so you only need to press save and the NiMMbus system will close and you will be redirected to the Tapis again.
-<br>
-<img src="recipe01_saveNiMMbus.png" width="800" class="center">
-
-<p>
-To check that all is correct, we can redraw the window to reset the status of it to zero. By adding using the ImportCSV again, we can reload the previous CSV. We will specify again that the file is coma separated and has headers. We will reenter the URL of th CSV but this time we will also select "Automatic retrieve of shared meaning". This will force the system to look for sources of meaning in the NiMMbus system ans retrieve our last definition in the backgroud once we press "Done".
-<br>
-<img src="recipe01_retrieveNiMMbus.png" width="600" class="center">
-
-<p>
-We can verify that the meaning of the field was been loaded by adding and open the "Meaning" tool again, just to see that the definitions were uploaded with no extra human interaction.
-<br>
-<img src="recipe01_retrievedMeaning.png" width="600" class="center">
-
-<p>
-To finalize, we can use the "Save Table" tool to save a CSVW file with the meaning definitions that we have provided as well as the original CSV for latter use.
-<br>
-<img src="recipe01_savecsvw.png" width="600" class="center">
-
-<p>
-This is the result of saving the CSV (fragment) and the CSVW.
-<table>
-<tr><td>
-<textarea rows="30" cols="80" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll;" readonly>
-{
-	"tableSchema": {
-		"columns": [
-			{
-				"name": "dia",
-				"datatype": "string",
-				"titles": "phenomenonTime",
-				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime"
-			},
-			{
-				"name": "estaci",
-				"datatype": "string",
-				"titles": "Estation Name",
-				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/FeatureOfInterest/name"
-			},
-			{
-				"name": "nivell_absolut",
-				"datatype": "string",
-				"titles": "Lake level",
-				"propertyUrl": "https://hydro.geodab.eu/hydro-ontology/concept/15",
-				"unitMeasureTitles": "Meters",
-				"unitMeasureSymbol": "m",
-				"unitMeasureUrl": "https://qudt.org/vocab/unit/M"
-			},
-			{
-				"name": "percentatge_volum_embassat",
-				"datatype": "string",
-				"titles": "Lake water volume",
-				"propertyUrl": "http://hydro.geodab.eu/hydro-ontology/concept/85",
-				"unitMeasureTitles": "Cubic hectometer",
-				"unitMeasureSymbol": "hm3",
-				"unitMeasureUrl": "http://www.ontology-of-units-of-measure.org/resource/om-2/cubicHectometre"
-			},
-			{
-				"name": "volum_embassat",
-				"datatype": "string",
-				"titles": "Lake water volume",
-				"propertyUrl": "http://hydro.geodab.eu/hydro-ontology/concept/85",
-				"unitMeasureTitles": "Percentage",
-				"unitMeasureSymbol": "%",
-				"unitMeasureUrl": "https://qudt.org/vocab/unit/PERCENT"
-			}
-		]
-	},
-	"dialect": {
-		"header": true,
-		"delimiter": ","
-	}
-}
-</textarea>
-</td><td>
-<textarea rows="30" cols="80" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll;" readonly>
-"dia","estaci","nivell_absolut","percentatge_volum_embassat","volum_embassat"
-"2024-02-22T00:00:00.000","Embassament de la Baells (Cercs)","591.5","20","21.94"
-"2024-02-22T00:00:00.000","Embassament de Sant Ponç (Clariana de Cardener)","512.44","26.9","6.55"
-"2024-02-22T00:00:00.000","Embassament de Susqueda (Osor)","301.07","21.1","49.05"
-"2024-02-22T00:00:00.000","Embassament de Riudecanyes","194.67","2.7","0.15"
-"2024-02-22T00:00:00.000","Embassament de Foix (Castellet i la Gornal)","97.6","57.3","2.14"
-"2024-02-22T00:00:00.000","Embassament de la Llosa del Cavall (Navès)","765.07","16.4","13.13"
-"2024-02-22T00:00:00.000","Embassament de Sau (Vilanova de Sau)","373.12","1.9","3.08"
-"2024-02-22T00:00:00.000","Embassament de Darnius Boadella (Darnius)","132.23","11.3","6.89"
-"2024-02-22T00:00:00.000","Embassament de Siurana (Cornudella de Montsant)","453.89","3.2","0.39"
-"2024-02-21T00:00:00.000","Embassament de Susqueda (Osor)","301.04","21","49.02"
-"2024-02-21T00:00:00.000","Embassament de Riudecanyes","194.67","2.7","0.15"
-"2024-02-21T00:00:00.000","Embassament de Sau (Vilanova de Sau)","373.31","2","3.25"
-"2024-02-21T00:00:00.000","Embassament de la Llosa del Cavall (Navès)","765.1","16.4","13.15"
-"2024-02-21T00:00:00.000","Embassament de la Baells (Cercs)","591.55","20.1","22"
-"2024-02-21T00:00:00.000","Embassament de Darnius Boadella (Darnius)","132.24","11.3","6.9"
-"2024-02-21T00:00:00.000","Embassament de Foix (Castellet i la Gornal)","97.63","57.6","2.16"
-"2024-02-21T00:00:00.000","Embassament de Sant Ponç (Clariana de Cardener)","512.51","27","6.59"
-"2024-02-21T00:00:00.000","Embassament de Siurana (Cornudella de Montsant)","453.9","3.2","0.39"
-"2024-02-20T00:00:00.000","Embassament de Foix (Castellet i la Gornal)","97.63","57.7","2.16"
-"2024-02-20T00:00:00.000","Embassament de Sant Ponç (Clariana de Cardener)","512.58","27.2","6.64"
-"2024-02-20T00:00:00.000","Embassament de Darnius Boadella (Darnius)","132.26","11.3","6.92"
-"2024-02-20T00:00:00.000","Embassament de Siurana (Cornudella de Montsant)","453.92","3.2","0.39"
-"2024-02-20T00:00:00.000","Embassament de Susqueda (Osor)","301.01","21","49"
-"2024-02-20T00:00:00.000","Embassament de la Llosa del Cavall (Navès)","765.15","16.5","13.18"
-"2024-02-20T00:00:00.000","Embassament de Sau (Vilanova de Sau)","373.5","2.1","3.43"
-"2024-02-20T00:00:00.000","Embassament de la Baells (Cercs)","591.6","20.2","22.05"
-"2024-02-20T00:00:00.000","Embassament de Riudecanyes","194.68","2.7","0.15"
-</textarea>
-</td></tr>
-</table>
-
-
-<a id="recipe2"></a>
-<h3>Recipe 2: Show the current evolution of a variable captured by a particular party</h3>
-In this example, we illustrate how to monitor a variable capture by a particular party. The way this is done is conditioned by the STAplus entities data model (see the figure below) that relates Observations to Party through Datastream. Remember that a Datastream is just a convenience entity that links to all observations of a single ObservedProperty, captured by a single Thing using a single Sensor managed by a single Party.<br>
-We will start by selecting a Party, selecting the observed variable by selecting the Datastring (that contains properties that tell us about the ObservedProperty; this saving us the need to actually querying the ObservedProperty). Finally we will request the most recent observations in that Datastream.
+Just a few collection of recipes are provided. More recipes to come soon!
+<br><br><br>
+<hr width="30%">
+<a id="recipe01"></a>
+<h3>Recipe 1: Understanding the concept of Datastream in STAplus</h3>
+In this example, we would like to illustate what is a Datastream and how to use it. A Datastream is "contaner" entity, a convenience that contains a collection of observations of a single ObservedProperty, captured by a single Thing using a single Sensor managed by a single Party and shared with the same licence. The relation with the different entities in the STAplus data model is illustrated in the following UML diagram. We will use TAPIS to generate the same diagram.<br>
 <br>
 <img src="STAplusSensingEntities.png" width="800" class="center">
 
+We will start by selecting by connecting to our favourite Sensor Things API plus service. We do that by using the [Add STA service]. By double-clicking in the creating icon you can select the service or type the URL of th landing page.
+<p>
+From the landing page, all entity types are available. This give us the flexibility to explore the model from different points of view. In our case we would like to explore Datastreams. We will right-click in the STA service and we will select the [DataStreams] button. This will give us access to all Datastreams.<br>
+<img src="recipe01_pressDatastreams.png" width="600" class="center">
+<p>
+While it is possible to use [View table] to see the properties of the available datastreams, we will use the [Select Row] button (the blue one) to directly select a particular Datastream.<br>
+<img src="recipe01_pressSelectRow.png" width="600" class="center">
+We will select a datastream that we like to start exploring its content. While we selecting it we can see that the description of the units of measure is part of the Datastream.<br>
+<img src="recipe01_selectDatastream" width="800" class="center">
+<p>
+Now we are ready to reproduce the UML diagram by connecting Datastream with all entities directly connected to it. We can do it by rigth clicking on Datastream and selecting the entity as we did before.<br>
+<img src="recipe01_entitiesConnectedToDataStream.png" width="400" class="center">
+<p>
+By adding a connection to [View table] to any of this entities we will be able to see its content.<br>
+<img src="recipe01_entitiesToDataStreamTable.png" width="800" class="center">
+<p>
+A Datastream is a collection of observations. This allows us to see the observations as a table.<br>
+<img src="recipe01_datastreamObservations.png" width="600" class="center">
+<p>
+All the observations in a datastream are done by the same Party...<br>
+<img src="recipe01_datastreamParty.png" width="600" class="center">
+<p>
+...with the same device (Thing)...<br>
+<img src="recipe01_datastreamThing.png" width="600" class="center">
+<p>
+...in the same current location...<br>
+<img src="recipe01_datastreamLocation.png" width="600" class="center">
+<p>
+...observing the same observed property...<br>
+<img src="recipe01_datastreamObservedProperty.png" width="600" class="center">
+<p>
+...shared with the same License.<br>
+<img src="recipe01_datastreamLicense.png" width="600" class="center">
+<p>
+and that is why they are a coherent time series that can be represented in a single scatter plot by adding the tool to the observations node.<br>
+<img src="recipe01_datastreamScatterPlot.png" width="800" class="center">
+<p>
+We can extend the diagram further by selecting one observations with the blue [select row]...<br>
+<img src="recipe01_observationSelectOne.png" width="800" class="center">
+<p>
+... and then add a [FeaturesOfInterest] and a [observationsGroup]
+<br>
+<img src="recipe01_entitiesConnectedToObservation.png" width="800" class="center">
+<p>
+This way we can know the position ofot he feature of interest...<br>
+<img src="recipe01_observationFeatureOfInterest.png" width="600" class="center">
+<p>
+... and read about the observation group.<br>
+<img src="recipe01_observationObsGroup.png" width="600" class="center">
+<p>
+<br><br><br>
+<hr width="30%">
+
+<a id="recipe02"></a>
+<h3>Recipe 2: Show the current evolution of a variable captured by a particular party</h3>
+In this example, we illustrate how to monitor a variable capture by a particular party. The way this is done, is conditioned by the STAplus entities data model (see the figure below) that relates Observations to Party through Datastream.<br>
+
 <p>
 We will start by using the "Add STA service" tool to type the URL of the landing page of our favorite STAplus service. Instead, we can select one from the list of suggested STA services.<br>
-<img src="recipe02_openstaSugg.png" width="600" class="center">
+<img src="recipe02_openstaSugg.png" width="600" class="center">.
+
+<br><br><br>
+<hr width="30%">
+<a id="recipe02_01"></a>
+<h4>Cooking method 1: Recurrently selecting a row using entity identifiers</h4>
+
+We will start by selecting a Party, selecting the observed variable by selecting the Datastream (that contains properties that tell us about the ObservedProperty; this saving us the need to actually querying the ObservedProperty). Finally, we will request the most recent observations in that Datastream.
 
 <p>
 Then we can request the list of parties available by using the "Parties" tool. We can then see all parties by using the "Table" tool or even better, see the same list and select one from the list using the "Select Row" tool. We are selecting the "Joan Maso" party.<br>
-<img src="recipe02_selectParty.png" width="600" class="center">
+<img src="recipe02_01_selectParty.png" width="600" class="center">
 
 <p>
 Now we can add the "Datastreams" to access the Datastreams generated by Joan Maso. It is a common mistake to try to connect a tool representing an entity (in plural) to another entity (in plural) directly. Please note that you can only connect two entities in plural if you select on entity with "Select Row" first and only if they are directly connected in the Entities diagram. We are only interested in one particular Datastream in this exercise, so we will use the "Select Row" tool again to select the Ambient Temperature variable.<br>
-<img src="recipe02_selectDatastream.png" width="800" class="center">
+<img src="recipe02_01_selectDatastream.png" width="800" class="center">
 
 <p>
-At this point it becomes difficult to remember our selections. We can use the "Rename" tool or simply press F2 to change the name of the selection tools to a more intuitive name.<br>
-<img src="recipe02_rename.png" width="600" class="center">
+At this point, it becomes difficult to remember our selections. We can use the "Rename" tool or simply press F2 to change the name of the selection tools to a more intuitive name.<br>
+<img src="recipe02_01_rename.png" width="600" class="center">
 
 <p>
-Finally we will be able to see the Observations about Temperature done by Joan Maso adding the Tool "Observations" and adding the "Table" after it<br>
-<img src="recipe02_observations.png" width="600" class="center">
+Finally, we will be able to see the Observations about Temperature done by Joan Maso adding the Tool "Observations" and adding the "Table" after it.<br>
+<img src="recipe02_01_observations.png" width="600" class="center">
 
 <p>
-By double clicking the "Table" tool we will see the observations as a table with the properties that the Entity "Observations" has in the diagram: phenomenonTime (the time where the sample was collected), result (the actual value of the temperature) and resultTime (the time the observation was determined and recorded). If we look at the table, we can see that we get 100 observations and time is increasing so we can assume they are in order starting by the earliest one.<br>
-<img src="recipe02_observationsTable.png" width="600" class="center">
+By double clicking the "Table" tool, we will see the observations as a table with the properties that the Entity "Observations" has in the diagram: phenomenonTime (the time where the sample was collected), result (the actual value of the temperature) and resultTime (the time the observation was determined and recorded). If we look at the table, we can see that we get 100 observations and time is increasing so we can assume they are in order starting by the earliest one.<br>
+<img src="recipe02_01_observationsTable.png" width="400" class="center">
 
 <p>
-Commonly, we are interested in the last observations on the latest observations (possibly the current ones) so we will request them in descending order by using the "Sort By" and specifying that we want to sort by "phenomenonTime" in descending order. We can also change the number of records requested to a bigger number. 
+Commonly, we are interested in the latest observations (possibly the current ones) so we will request them in descending order by using the "Sort By" and specifying that we want to sort by "phenomenonTime" in descending order. We can also change the number of records requested to a bigger number. 
 <br>
-<img src="recipe02_observationsSortBy.png" width="600" class="center">
+<img src="recipe02_01_observationsSortBy.png" width="600" class="center">
 
 <p>
 Behind the scenes, the tool is creating STA queries and sending them to the STAplus service. The responses of these queries are converted into a tabular format (that is the common representation format in Tapis). We can learn about the actual request done using the "View Query" tool.
 <br>
-<img src="recipe02_viewQuery.png" width="800" class="center">
+<img src="recipe02_01_viewQuery.png" width="800" class="center">
 
 <p>
 We can even click on the provided link to see the actual response to the query in the original JSON format (or in a nicer representation as objects if we use FireFox).
 <br>
-<img src="recipe02_queryResponse.png" width="800" class="center">
+<img src="recipe02_01_queryResponse.png" width="800" class="center">
 
 <p>
 We can also see the last temperatures as a scatter plot by using the "Scatter Plot" tool and pressing the "Draw" button.
 <br>
-<img src="recipe02_scatterPlot.png" width="800" class="center">
+<img src="recipe02_01_scatterPlot.png" width="800" class="center">
 
 <p>
 Unfortunately, there is no mention of the variable or the units of measure in the graphic. This is because this information is not on the Observations entity but in the previous entity: Datastream. We can see the properties of Datastream such as name, description and unitOfMeasurement. In here we see one of the limitations of the tabular common representation used in Tapis: in property that is an object its values are represented as JSON serialization.
 <br>
-<img src="recipe02_datastreamTemperatureRecord.png" width="600" class="center">
+<img src="recipe02_01_datastreamTemperatureRecord.png" width="600" class="center">
 
 <p>
 In case a JSON object needs to be used, the tool "Separate columns" split all JSON serialized columns into separated columns. In this case, unitOfmeasurement is splitted in unitOfmeasurement/name, unitOfmeasurement/symbol and unitOfmeasurement/definition.
 <br>
-<img src="recipe02_separateColumns.png" width="600" class="center">
+<img src="recipe02_01_separateColumns.png" width="600" class="center">
 
 <p>
 Now we can link this split record into the scatter plot with the "Connect two nodes" and then clicking  the "Scatter plot" and the "Separate columns" (in this order), creating a pentagonal shape. Now the scattered plot has more possibilities to select and the title of the diagram is more expressive showing both the name of the datastream and the units of measure.
 <br>
-<img src="recipe02_scatterPlotUoM.png" width="800" class="center">
+<img src="recipe02_01_scatterPlotUoM.png" width="800" class="center">
 
 <p>
 Another way of showing the current value (last value) is to use the "One value" tool. Allow to represent the last captured value directly in the main screen and refresh its value a fix number of seconds (what is particularly useful for datastreams that are constantly adding new values).
 <br>
-<img src="recipe02_oneValue.png" width="600" class="center">
+<img src="recipe02_01_oneValue.png" width="600" class="center">
 
 <p>
 We can see the last temperature captured in the icon in the center of the pentagon. We can also see the value in the information window, as well as the promise to see a refreshed value in a 20 seconds time.<br>
-<img src="recipe02_oneValueView.png" width="800" class="center">
+<img src="recipe02_01_oneValueView.png" width="800" class="center">
 
-<a id="recipe3"></a>
+<br><br><br>
+<hr width="30%">
+<a id="recipe02_02"></a>
+<h4>Cooking method 2: Filtering observations</h4>
+
+We will start by looking at Observations, by connecting the "Observations" tool to the STA server. This will give us access to all observations intermixed, regardless who produced the data, or what is the observed variable.
+<br>
+<img src="recipe02_02_allObservations.png" width="600" class="center">
+
+<p>
+By the use of the FilterRowsSTA tool, we are able to formulate complex queries with no much effort. 
+<br>
+<img src="recipe02_02_filterRowsSTATool.png" width="200" class="center">
+
+<p>
+We formulate 2 conditions on having a party with displayName equal to "Joan Masó" and a observedProperty with a definition equal to "http://vocabs.lter-europe.net/EnvThes/22035". We use the nexus "and" for joining these two conditions.
+<br>
+<img src="recipe02_02_filterPartyObservedProperty.png" width="800" class="center">
+
+<p>
+There is a tool to select the right entity where the property to formulate the condition exist.
+<br>
+<img src="recipe02_02_selectEntity.png" width="300" class="center">
+<p>
+This is how the internal query looks like: <a href="https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$filter=((Datastream/Party/displayName%20eq%20%27Joan%20Mas%C3%B3%27)and(Datastream/ObservedProperty/definition%20eq%20%27http://vocabs.lter-europe.net/EnvThes/22035%27))">https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$filter=((Datastream/Party/displayName%20eq%20%27Joan%20Mas%C3%B3%27)and(Datastream/ObservedProperty/definition%20eq%20%27http://vocabs.lter-europe.net/EnvThes/22035%27))</a>
+<p>
+Next step is to expand the link properties in the result, limiting the information extracted to the phenomenonTime, result, unitOfMeasurement, definition and name of the observedProperty.
+<br>
+<img src="recipe02_02_expandSelect.png" width="800" class="center">
+
+<p>
+Commonly, we are interested in the latest observations (possibly the current ones) so we will request them in descending order by using the "Sort By" and specifying that we want to sort by "phenomenonTime" in descending order. We can also change the number of records requested to a bigger number. 
+<br>
+<img src="recipe02_02_observationsSortBy.png" width="600" class="center">
+<P>
+This generate a complex query that looks like: <a href="https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$filter=((Datastream/Party/displayName%20eq%20%27Joan%20Mas%C3%B3%27)and(Datastream/ObservedProperty/definition%20eq%20%27http://vocabs.lter-europe.net/EnvThes/22035%27))&$select=phenomenonTime,result&$expand=Datastream($select=unitOfMeasurement;$expand=ObservedProperty($select=name,definition))&$orderby=phenomenonTime%20desc">https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$filter=((Datastream/Party/displayName%20eq%20%27Joan%20Mas%C3%B3%27)and(Datastream/ObservedProperty/definition%20eq%20%27http://vocabs.lter-europe.net/EnvThes/22035%27))&$select=phenomenonTime,result&$expand=Datastream($select=unitOfMeasurement;$expand=ObservedProperty($select=name,definition))&$orderby=phenomenonTime%20desc</a>
+
+<p>
+Now we are ready to separate the columns of the STA result and then show it as a table and as scatter plot.
+<br>
+<img src="recipe02_02_SeparateColumnsTableScatter.png" width="600" class="center">
+
+<p>
+This is the resulting table that contains a time series of temperature measurements and other columns with constant content
+<br>
+<img src="recipe02_02_SeparateColumnsTable.png" width="800" class="center">
+
+<p>
+And this is the result as a scatter plot.
+<br>
+<img src="recipe02_02_SeparateColumnsScatterPlot.png" width="800" class="center">
+
+<br><br><br>
+<hr width="30%">
+<a id="recipe03"></a>
 <h3>Recipe 3: Show a map of all observation features in an STA service</h3>
 In this example, we illustrate how to show a map of all observation features stored in the STA with a view of the last observations. 
 
@@ -574,6 +531,175 @@ As a result, we get a GeoJSON with the features of interest as geometries and th
 </textarea>
 </td></tr>
 </table>
+<br><br><br>
+
+<a id="recipe04"></a>
+<h3>Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</h3>
+In this example, we illustrate how to manage a table semantics.
+
+<p>
+To start the exercise, need to find a CSV in the Internet. In this case, we go to the Open data portal of the Catalan Government to find a dataset of quantity of water in the Catalonia reservoirs
+(<a href="https://analisi.transparenciacatalunya.cat/ca/Medi-Ambient/Quantitat-d-aigua-als-embassaments-de-les-Conques-/gn9e-3qhr/about_data" target="_blank">https://analisi.transparenciacatalunya.cat/ca/Medi-Ambient/Quantitat-d-aigua-als-embassaments-de-les-Conques-/gn9e-3qhr/about_data</a>). 
+<br>
+<img src="recipe04_findcsv_url.png" width="600" class="center">
+
+<p>
+There is a way to get a direct link to the data in CSV format (<a href="https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.csv" target="_blank">https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.csv</a>).
+<br>
+<img src="recipe04_copycsv_url.png" width="600" class="center">
+
+<p>
+First, we import a table from the internet using the "Import CSV" tool.
+<br>
+<img src="recipe04_importcsv.png" width="600" class="center">
+
+<p>
+We specify that this is a coma separated file with headers defining the titles of the fields. We do not have any <a href="https://csvw.org/">CSVW</a> to add semantics so we will not select any file name. We will copy the URL of the CSV in the last box. The file is automatically uploaded in the background.
+<br>
+<img src="recipe04_opencsv.png" width="600" class="center">
+
+<p>
+Now we will include the semantics with the fields meaning tool.
+<br>
+<img src="recipe04_fieldsMeaning.png" width="600" class="center">
+
+<p>
+We need to populate the description of each field, the URL of a vocabulary definition and the units of measure description, URL definition and symbol.
+<br>
+<img src="recipe04_defineMeaning.png" width="600" class="center">
+
+<p>
+That is a complicated process because it requires some knowledge of the existing vocabulary services. We can use one of the predefined exemplary combinations to start with. Do not worry if you do not know the answer of some items now as all fields are optional and can be left blank.
+<br>
+<img src="recipe04_dropdownhelp.png" width="600" class="center">
+
+<p>
+Once this is done for all fields, we can check if all works by visualizing the table with the table tool.
+<br>
+<img src="recipe04_table.png" width="600" class="center">
+
+<p>
+Field names are replaced by descriptions that are linked to the concept they represent and the units of measure are represented by a symbol linked to the definition of them.
+<br>
+<img src="recipe04_table_links.png" width="800" class="center">
+
+<p>
+Now, by going back to the "meaning" tool we can share this definitions in the Internet by pressing the "share" button.
+<br>
+<img src="recipe04_shareMeaning.png" width="600" class="center">
+
+<p>
+The NiMMbus system will be open. You are required to login using an identity provider such as Authenix or by creating your own user name in the system. 
+Do not be alarmed by the number of fields you see in the screen. They are all pre-populated, so you only need to press save and the NiMMbus system will close and you will be redirected to the Tapis again.
+<br>
+<img src="recipe04_saveNiMMbus.png" width="800" class="center">
+
+<p>
+To check that all is correct, we can redraw the window to reset the status of it to zero. By adding using the ImportCSV again, we can reload the previous CSV. We will specify again that the file is coma separated and has headers. We will reenter the URL of th CSV but this time we will also select "Automatic retrieve of shared meaning". This will force the system to look for sources of meaning in the NiMMbus system and retrieve our last definition in the background once we press "Done".
+<br>
+<img src="recipe04_retrieveNiMMbus.png" width="600" class="center">
+
+<p>
+We can verify that the meaning of the field was been loaded by adding and open the "Meaning" tool again, just to see that the definitions were uploaded with no extra human interaction.
+<br>
+<img src="recipe04_retrievedMeaning.png" width="600" class="center">
+
+<p>
+To finalize, we can use the "Save Table" tool to save a CSVW file with the meaning definitions that we have provided as well as the original CSV for later use.
+<br>
+<img src="recipe04_savecsvw.png" width="600" class="center">
+
+<p>
+This is the result of saving the CSV (fragment) and the CSVW.
+<table>
+<tr><td>
+<textarea rows="30" cols="80" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll;" readonly>
+{
+	"tableSchema": {
+		"columns": [
+			{
+				"name": "dia",
+				"datatype": "string",
+				"titles": "phenomenonTime",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime"
+			},
+			{
+				"name": "estaci",
+				"datatype": "string",
+				"titles": "Estation Name",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/FeatureOfInterest/name"
+			},
+			{
+				"name": "nivell_absolut",
+				"datatype": "string",
+				"titles": "Lake level",
+				"propertyUrl": "https://hydro.geodab.eu/hydro-ontology/concept/15",
+				"unitMeasureTitles": "Meters",
+				"unitMeasureSymbol": "m",
+				"unitMeasureUrl": "https://qudt.org/vocab/unit/M"
+			},
+			{
+				"name": "percentatge_volum_embassat",
+				"datatype": "string",
+				"titles": "Lake water volume",
+				"propertyUrl": "http://hydro.geodab.eu/hydro-ontology/concept/85",
+				"unitMeasureTitles": "Cubic hectometer",
+				"unitMeasureSymbol": "hm3",
+				"unitMeasureUrl": "http://www.ontology-of-units-of-measure.org/resource/om-2/cubicHectometre"
+			},
+			{
+				"name": "volum_embassat",
+				"datatype": "string",
+				"titles": "Lake water volume",
+				"propertyUrl": "http://hydro.geodab.eu/hydro-ontology/concept/85",
+				"unitMeasureTitles": "Percentage",
+				"unitMeasureSymbol": "%",
+				"unitMeasureUrl": "https://qudt.org/vocab/unit/PERCENT"
+			}
+		]
+	},
+	"dialect": {
+		"header": true,
+		"delimiter": ","
+	}
+}
+</textarea>
+</td><td>
+<textarea rows="30" cols="80" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll;" readonly>
+"dia","estaci","nivell_absolut","percentatge_volum_embassat","volum_embassat"
+"2024-02-22T00:00:00.000","Embassament de la Baells (Cercs)","591.5","20","21.94"
+"2024-02-22T00:00:00.000","Embassament de Sant Ponç (Clariana de Cardener)","512.44","26.9","6.55"
+"2024-02-22T00:00:00.000","Embassament de Susqueda (Osor)","301.07","21.1","49.05"
+"2024-02-22T00:00:00.000","Embassament de Riudecanyes","194.67","2.7","0.15"
+"2024-02-22T00:00:00.000","Embassament de Foix (Castellet i la Gornal)","97.6","57.3","2.14"
+"2024-02-22T00:00:00.000","Embassament de la Llosa del Cavall (Navès)","765.07","16.4","13.13"
+"2024-02-22T00:00:00.000","Embassament de Sau (Vilanova de Sau)","373.12","1.9","3.08"
+"2024-02-22T00:00:00.000","Embassament de Darnius Boadella (Darnius)","132.23","11.3","6.89"
+"2024-02-22T00:00:00.000","Embassament de Siurana (Cornudella de Montsant)","453.89","3.2","0.39"
+"2024-02-21T00:00:00.000","Embassament de Susqueda (Osor)","301.04","21","49.02"
+"2024-02-21T00:00:00.000","Embassament de Riudecanyes","194.67","2.7","0.15"
+"2024-02-21T00:00:00.000","Embassament de Sau (Vilanova de Sau)","373.31","2","3.25"
+"2024-02-21T00:00:00.000","Embassament de la Llosa del Cavall (Navès)","765.1","16.4","13.15"
+"2024-02-21T00:00:00.000","Embassament de la Baells (Cercs)","591.55","20.1","22"
+"2024-02-21T00:00:00.000","Embassament de Darnius Boadella (Darnius)","132.24","11.3","6.9"
+"2024-02-21T00:00:00.000","Embassament de Foix (Castellet i la Gornal)","97.63","57.6","2.16"
+"2024-02-21T00:00:00.000","Embassament de Sant Ponç (Clariana de Cardener)","512.51","27","6.59"
+"2024-02-21T00:00:00.000","Embassament de Siurana (Cornudella de Montsant)","453.9","3.2","0.39"
+"2024-02-20T00:00:00.000","Embassament de Foix (Castellet i la Gornal)","97.63","57.7","2.16"
+"2024-02-20T00:00:00.000","Embassament de Sant Ponç (Clariana de Cardener)","512.58","27.2","6.64"
+"2024-02-20T00:00:00.000","Embassament de Darnius Boadella (Darnius)","132.26","11.3","6.92"
+"2024-02-20T00:00:00.000","Embassament de Siurana (Cornudella de Montsant)","453.92","3.2","0.39"
+"2024-02-20T00:00:00.000","Embassament de Susqueda (Osor)","301.01","21","49"
+"2024-02-20T00:00:00.000","Embassament de la Llosa del Cavall (Navès)","765.15","16.5","13.18"
+"2024-02-20T00:00:00.000","Embassament de Sau (Vilanova de Sau)","373.5","2.1","3.43"
+"2024-02-20T00:00:00.000","Embassament de la Baells (Cercs)","591.6","20.2","22.05"
+"2024-02-20T00:00:00.000","Embassament de Riudecanyes","194.68","2.7","0.15"
+</textarea>
+</td></tr>
+</table>
+
+<br><br><br>
+
 
 </body>
 </html>
