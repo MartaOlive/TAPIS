@@ -90,6 +90,36 @@
 			]
 		}
 	],
+	"suggestedCSVurls": [
+		{
+			"group": "Testing Examples",
+			"STAs": [
+			{
+				"desc": "--Select one--",
+				"url": ""
+			},
+			{
+				"desc": "Amount of water in Catalan reservoires",
+				"url": "https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.csv"
+			}
+			]
+		}
+	],
+	"suggestedGeoJSONurls": [
+		{
+			"group": "Testing Examples",
+			"STAs": [
+			{
+				"desc": "--Select one--",
+				"url": ""
+			},
+			{
+				"desc": "Recipe 5 GeoJSON example",
+				"url": "help/callus_munich.geojson"
+			}
+			]
+		}
+	],
 	"suggestedVarUoMs": [
 		{
 			"group": "Air Quality",

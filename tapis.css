@@ -14,14 +14,11 @@
 			border-spacing: 0px;
 		}
 
-		.tablesmall th {
+		.tablesmall th,td {
 			padding-top: 1px;
 			padding-bottom: 1px;
-		}
-
-		.tablesmall td {
-			padding-top: 1px;
-			padding-bottom: 1px;
+			padding-left: 3px;
+			padding-right: 3px;
 		}
 
 		.tablesmall tr:nth-child(even) {
