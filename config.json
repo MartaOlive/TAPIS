@@ -1,6 +1,7 @@
 {
 	"MMNpath": "../mmn",
 	"STAurl": "https://citiobs.demo.secure-dimensions.de/staplus/v1.1",
+	"OGCAPIurl": "https://test.cubewerx.com/cubewerx/cubeserv/demo/ogcapi/Daraa",
 	"suggestedSTAurls": [
 		{
 			"group": "Releated to CREAF projects",
@@ -88,6 +89,20 @@
 				"url": "https://ogc-demo.k8s.ilt-dmz.iosb.fraunhofer.de/v1.1/"
 			}
 			]
+		}
+	],
+	"suggestedOGCAPIurls": [
+		{
+			"group": "Testing Instances",
+			"STAs": [
+			{
+				"desc": "CubeWerx Daraa demo service",
+				"url": "https://test.cubewerx.com/cubewerx/cubeserv/demo/ogcapi/Daraa"
+			},
+			{
+				"desc": "CubeWerx Foundation demo service",
+				"url": "https://test.cubewerx.com/cubewerx/cubeserv/demo/ogcapi/Foundation"
+			}]
 		}
 	],
 	"suggestedCSVurls": [
