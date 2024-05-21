@@ -2635,31 +2635,32 @@
 				currentNode.STAExpectedLength = document.getElementById("SelectNumberOfRecordsFilterRows").value;
 				UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 			}
-			function GetFilterRowsTable() {
-				stopreadInformationRowFilterTable = false;
-				currentNode.STAtableCounter = [];
-				currentNode.STAtable = "";
-				readInformationRowFilterTable(currentNode.STAelementFilter, "no", "no"); //And apply filter
-				applyEvalAndFilterData();
+		function GetFilterRowsTable() {
+			stopreadInformationRowFilterTable = false;
+			currentNode.STAtableCounter = [];
+			currentNode.STAtable = "";
+			readInformationRowFilterTable(currentNode.STAelementFilter, "no", "no"); //And apply filter
+			applyEvalAndFilterData();
 				
 				
+		}
+		function GetFilterRows(event) {
+			event.preventDefault(); // We don't want to submit this form
+			document.getElementById("DialogFilterRows").close();
+			//updateinfoFilter
+			takeSelectInformation(currentNode.id);
+
+			if (currentNode.label == "FilterRowsSTA") {
+				GetFilterRowsSTA()
+			} else {
+				GetFilterRowsTable()
 			}
-			function GetFilterRows(event) {
-				event.preventDefault(); // We don't want to submit this form
-				document.getElementById("DialogFilterRows").close();
-				//updateinfoFilter
-				takeSelectInformation(currentNode.id);
 
-				if (currentNode.label == "FilterRowsSTA") {
-					GetFilterRowsSTA()
-				} else {
-					GetFilterRowsTable()
-				}
+			showInfoMessage("Filtering STA rows...");
+			networkNodes.update(currentNode);
+			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 
-				showInfoMessage("Filtering STA rows...");
-				networkNodes.update(currentNode);
-
-			}
+		}
 
 		function getGeospatialFilter(node, parentNode){
 			var data=node.STAdata, geometry, coords, cdns=[];
@@ -4003,6 +4004,8 @@
 
 		function ShowTableFilterRowsDialog(parentNode, node) {
 			var data = parentNode.STAdata;
+			currentNode.STAdata=data; //Put all data from parent in this node 
+			networkNodes.update(currentNode);
 			var dataAttributes = getDataAttributes(data);
 
 			if (parentNode.image != "FilterRowsTable.png") {
