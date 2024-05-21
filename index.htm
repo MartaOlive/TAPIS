@@ -1419,6 +1419,7 @@
 					//ru_schema: urlSchemaMeaning
 				}, "eng", null, RetrieveMeaningTableCallback, {node: currentNode});
 			}
+			UpdateChildenTable(currentNode);
 			document.getElementById("DialogImport"+type).close();
 		}
 
@@ -2658,7 +2659,13 @@
 
 			showInfoMessage("Filtering STA rows...");
 			networkNodes.update(currentNode);
-			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+
+			if (currentNode.label == "FilterRowsSTA"){ //STA
+				UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+			}else{
+				UpdateChildenTable(currentNode);
+			}
+			
 
 		}
 
