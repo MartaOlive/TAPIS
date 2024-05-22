@@ -2651,7 +2651,7 @@
 			//updateinfoFilter
 			takeSelectInformation(currentNode.id);
 
-			if (currentNode.label == "FilterRowsSTA") {
+			if (currentNode.image == "FilterRowsSTA.png") {
 				GetFilterRowsSTA()
 			} else {
 				GetFilterRowsTable()
@@ -2660,7 +2660,7 @@
 			showInfoMessage("Filtering STA rows...");
 			networkNodes.update(currentNode);
 
-			if (currentNode.label == "FilterRowsSTA"){ //STA
+			if (currentNode.image == "FilterRowsSTA.png"){ //STA
 				UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 			}else{
 				UpdateChildenTable(currentNode);

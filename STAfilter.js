@@ -50,7 +50,7 @@ const selectConditionContentText = ['---Choose operator ---', ' = ', ' &ne; ', '
 
 
 function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
-	var actualNodeLabel = actualNode.label;
+	var actualNodeLabel = actualNode.image;
 	//Create node propierties
 	if (!actualNode.STAboxNames)
 		actualNode.STAboxNames = ["0_0"];
@@ -73,7 +73,7 @@ function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
 	if (typeof actualNode.STACounter === "undefined")
 		actualNode.STACounter = "";
 
-	if (actualNodeLabel == "FilterRowsSTA") { //Only necessary in STA Filter, not in CSV
+	if (actualNodeLabel == "FilterRowsSTA.png") { //Only necessary in STA Filter, not in CSV
 		if (typeof actualNode.STAUrlAPI === "undefined")
 			actualNode.STAUrlAPI = "";
 		if (typeof actualNode.STAUrlAPICounter === "undefined")
@@ -110,7 +110,7 @@ function addTitleInRowFilterDialog(divName) {
 function createSelectorRowFilters(number) {
 	var selectorInfo = [];
 	var infoFilter = currentNode.STAinfoFilter;
-	var currentNodeLabel = currentNode.label;
+	var currentNodeLabel = currentNode.image;
 	if (infoFilter.length != 0) {
 
 		for (var i = 0; i < infoFilter.length; i++) {
@@ -119,7 +119,7 @@ function createSelectorRowFilters(number) {
 			}
 		}
 	}
-	if (currentNodeLabel == "FilterRowsSTA") {
+	if (currentNodeLabel == "FilterRowsSTA.png") {
 		createEntitySelectorInFilterRows(selectorInfo, number);
 		createPropertySelectInFilterRows(selectorInfo, number);
 		createConditionSelectInFilterRows(selectorInfo, number);
@@ -874,7 +874,7 @@ function createValueSelectInFilterRows(selectorInfo, count, informationOrigin) {
 async function fillValueSelectorFilterRow(count) {
 	var valor, valueToinput, dataToFillSelect, arrayValors = [], valueUndefined, informationOrigin;
 
-	if (currentNode.label == "FilterRowsSTA") {
+	if (currentNode.image == "FilterRowsSTA.png") {
 		informationOrigin = "STA";
 	} else {
 		informationOrigin = "Table";
@@ -1001,7 +1001,7 @@ function sortValuesForSelect(arrayValues) {
 function changeWriteToSelect(number, selector) {  //To take the text in input
 	event.preventDefault();
 	var informationOrigin;
-	if (currentNode.label == "FilterRowsSTA") {
+	if (currentNode.image == "FilterRowsSTA.png") {
 		informationOrigin = "STA";
 	} else {
 		informationOrigin = "Table"
@@ -1036,7 +1036,7 @@ function changeWriteToSelect(number, selector) {  //To take the text in input
 function closeModalSelectInValue(number, button) { //Ok and Cancel Buttons
 	event.preventDefault();
 	var informationOrigin;
-	if (currentNode.label == "FilterRowsSTA") {
+	if (currentNode.image == "FilterRowsSTA.png") {
 		informationOrigin = "STA";
 	} else {
 		informationOrigin = "Table"
@@ -1079,7 +1079,7 @@ function closeModalSelectInValue(number, button) { //Ok and Cancel Buttons
 }
 function changesInInputValueRowFilter(wichinputText, number) { //and refill conditionSelect (interval if it is a number or a date)
 	var inputText, textIputInterval1, textIputInterval2, informationOrigin;
-	if (currentNode.label == "FilterRowsSTA") {
+	if (currentNode.image == "FilterRowsSTA.png") {
 		informationOrigin = "STA";
 	} else {
 		informationOrigin = "Table"
@@ -1124,7 +1124,7 @@ function changesInInputValueRowFilter(wichinputText, number) { //and refill cond
 //General selects in FilterRow
 function showAndHiddeSelectorAndInputsFilterRow(number) {
 	var informationOrigin;
-	if (currentNode.label == "FilterRowsSTA") {
+	if (currentNode.image == "FilterRowsSTA.png") {
 		informationOrigin = "STA";
 	} else {
 		informationOrigin = "Table"
@@ -1149,7 +1149,7 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 		selectorValueHasChildren = false;
 	}
 
-	if (currentNode.label == "FilterRowsSTA") {
+	if (currentNode.image == "FilterRowsSTA.png") {
 		var selectorPropertyValue = selectorProperty.options[selectorProperty.selectedIndex].value;
 		if (selectorPropertyValue.charAt(selectorPropertyValue.length - 1) == "/") {
 			inputForProperty.style.display = "inline-block";
@@ -1172,7 +1172,7 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 				inputTextInterval2STA.style.display = "inline-block";
 			}
 			//PropertySelect finals with "/" . Selector for value has to be hidden
-			if (currentNode.label == "FilterRowsSTA") {
+			if (currentNode.image == "FilterRowsSTA.png") {
 				if (selectorPropertyValue.charAt(selectorPropertyValue.length - 1) == "/") {
 					inputTextInterval1STA.style.display = "inline-block";
 					inputTextInterval2STA.style.display = "inline-block";
@@ -1210,7 +1210,7 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 			}
 			//PropertySelect finals with "/" . Selector for value has to be hidden
 
-			if (currentNode.label == "FilterRowsSTA") {
+			if (currentNode.image == "FilterRowsSTA.png") {
 				if (selectorPropertyValue.charAt(selectorPropertyValue.length - 1) == "/") {
 					inputText.style.display = "inline-block";
 					selectorValue.style.display = "none"
@@ -1405,7 +1405,7 @@ function addNewElement(elem, fromBiggest) {
 		}
 	}
 
-	if (currentNode.label == "FilterRowsSTA") {
+	if (currentNode.image == "FilterRowsSTA.png") {
 		var entity = getSTAURLLastEntity(currentNode.STAURL);
 		currentNode.STAFilterRowEntities["optionsRow" + nextNumber] = [entity];
 
@@ -1421,8 +1421,8 @@ function addNewElement(elem, fromBiggest) {
 function DeleteElementButton(numberOfElement) {
 	event.preventDefault();
 	//Delete elemen from currentNode.STAFilterRowEntities 
-	var currentNodeLabel = currentNode.label;
-	if (currentNodeLabel == "FilterRowsSTA") {
+	var currentNodeLabel = currentNode.image;
+	if (currentNodeLabel == "FilterRowsSTA.png") {
 		delete currentNode.STAFilterRowEntities["optionsRow" + numberOfElement];
 	}
 
@@ -1537,7 +1537,7 @@ function takeSelectInformation() {
 	var infoFilter = [];
 	var counter = currentNode.STACounter;
 
-	if (currentNode.label == "FilterRowsSTA") {
+	if (currentNode.image == "FilterRowsSTA.png") {
 		informationOrigin = "STA";
 	} else {
 		informationOrigin = "Table";
@@ -1548,7 +1548,7 @@ function takeSelectInformation() {
 		arrayInfo = [];
 		arrayInfo.push(counter[i]); //they are out of order, it is necessary to put each info in its place when painting the select
 		if (optionsRow != null) {
-			if (currentNode.label == "FilterRowsSTA") {
+			if (currentNode.image == "FilterRowsSTA.png") {
 				inputForEntityFilterRow = document.getElementById("inputForEntityFilterRow_" + counter[i]);
 				inputForEntityFilterRowValue = inputForEntityFilterRow.value;
 				selectorProperty = document.getElementById("selectorProperty_" + counter[i]);
