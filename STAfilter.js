@@ -183,13 +183,11 @@ function obtainValuesFromSTAdataInCSV(column) {
 	var valuesSorted = sortValuesForSelect(valuesArray);
 	return valuesSorted;
 }
-async function loadAPIDataToFillSelectInRowFilter(url) {
-	var response, options = {}, STAdata;
+async function loadAPIDataWithReturn(url, reasonForData) { // Ask API to , "FIllSelectInRowFilter" and CountResults
+	var response, options = {}, data; //Data in FIllSelectInRowFilter will be STAData and in CountResults will be the number of results
 	try {
 		var url_fetch;
 		url_fetch = url;
-
-
 		AddHeadersIfNeeded(options);
 		if (options.headers)
 			response = await fetch(url_fetch, options);
@@ -197,29 +195,29 @@ async function loadAPIDataToFillSelectInRowFilter(url) {
 			response = await fetch(url_fetch);
 	}
 	catch (error) {
-		STAdata = null;
-
-		return STAdata;
+		data = null;
+		return data;
 	}
 
 	// Uses the 'optional chaining' operator
 	if (!(response?.ok)) {
-		STAdata = null;
-
-		return STAdata;
+		data = null;
+		return data;
 	}
 
 	try {
-		STAdata = await response.json();
-		STAdata = (typeof STAdata.value !== "undefined") ? STAdata.value : [STAdata];
-
+		data = await response.json();
+		if (reasonForData=="EntitiesFilterRow"){
+			data = (typeof data.value !== "undefined") ? data.value : [data];
+		}else{
+			data = (typeof data.value !== "undefined") ? data["@iot.count"] : [data];
+		}
+		
 	}
 	catch (error) {
-
-		STAdata = null;
-
+		data = null;
 	}
-	return STAdata;
+	return data;
 
 
 }
@@ -901,14 +899,14 @@ async function fillValueSelectorFilterRow(count) {
 		}
 		if (typeof currentNode.STAentityValuesForSelect !== "undefined") {
 			if (entity != currentNode.STAentityValuesForSelect[0]) { //avoid to call to API for same entity
-				dataToFillSelect = await loadAPIDataToFillSelectInRowFilter(url);
+				dataToFillSelect = await loadAPIDataWithReturn(url,"EntitiesFilterRow");
 				currentNode.STAentityValuesForSelect = [entity, dataToFillSelect];
 				dataToFillSelect = currentNode.STAentityValuesForSelect[1];
 			} else {
 				dataToFillSelect = currentNode.STAentityValuesForSelect[1];
 			}
 		} else {
-			dataToFillSelect = await loadAPIDataToFillSelectInRowFilter(url);
+			dataToFillSelect = await loadAPIDataWithReturn(url,"EntitiesFilterRow");
 			currentNode.STAentityValuesForSelect = [entity, dataToFillSelect];
 			dataToFillSelect = currentNode.STAentityValuesForSelect[1];
 		}
