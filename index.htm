@@ -204,7 +204,7 @@
 
 	<dialog id="DialogSelectNRecords">
 		<form>
-			<label>Number records to request:
+			<label>:Number records to request (>100)
 				<input type="text" id="SelectNumberOfRecords" size="6" maxlength="6" value="100"></input>
 			</label>
 			<div class="center">
@@ -2127,22 +2127,18 @@
 			}
 		}
 
-		function prepareRefreshCountResults(event) {
-			event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogCountResults").close();
 
-			//var node = networkNodes.get(startingNodeContextId);
-			if (!currentNode)
-				return;
-			startingNodeContextId = null;
-			if (currentNode.STAtimeOut) {
-				clearTimeout(currentNode.STAtimeOut);
-				currentNode.STAtimeOut = null;
-			}
-			currentNode.STAredrawPeriod = document.getElementById("DialogCountResultsRefreshPeriod").value;
-			networkNodes.update(currentNode);
+	function prepareRefreshCountResults(event) {
+		event.preventDefault(); // We don't want to submit this form
+		document.getElementById("DialogCountResults").close();
 
-			requestLastObservationAndRefreshCountResults(currentNode, currentNode.STAredrawPeriod);
+		if (currentNode.STAtimeOut) {
+			clearInterval(currentNode.STAtimeOut);
+			currentNode.STAtimeOut = null;
+		}
+		currentNode.STAredrawPeriod = document.getElementById("DialogCountResultsRefreshPeriod").value;
+		networkNodes.update(currentNode);
+		currentNode.STAtimeOut = setInterval(requestLastObservationAndRefreshCountResults, currentNode.STAredrawPeriod  * 1000, currentNode, currentNode.STAredrawPeriod );
 }
 async function requestLastObservationAndRefreshCountResults(currentNode, period) {
     var parentNode = GetFirstParentNode(currentNode);
@@ -2155,24 +2151,22 @@ async function requestLastObservationAndRefreshCountResults(currentNode, period)
     var numberOfResults = await loadAPIDataWithReturn(currentNode.STAURL, "countResults");
 
     //Redraw the label
-
     currentNode.label = " (Items: " + numberOfResults + ")";
 
     //Redraw
     showInfoMessage(currentNode.label + ". Waiting " + period + " seconds ...");
-    currentNode.STAtimeOut = setTimeout(requestLastObservationAndRefreshCountResults, period * 1000, currentNode, period);
-    networkNodes.update(currentNode);
+
 }
 
+var contador;
 function stopRefreshCountResults(event) {
     event.preventDefault(); // We don't want to submit this form
     document.getElementById("DialogCountResults").close();
 
-    //var node = networkNodes.get(startingNodeContextId);
     if (!currentNode)
         return;
     if (currentNode.STAtimeOut) {
-        clearTimeout(currentNode.STAtimeOut);
+        clearInterval(currentNode.STAtimeOut);
         showInfoMessage("Refresh cancelled.");
     }
 }
