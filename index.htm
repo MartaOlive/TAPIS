@@ -2693,7 +2693,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 		}
 		function GetFilterRowsSTA() {
-				//var previousSTAURL = currentNode.STAURL;
+				var previousSTAURL = currentNode.STAURL;
 				var parentNode = GetFirstParentNode(currentNode);
 				if (parentNode) {
 					if (parentNode.STAURL)
@@ -2754,7 +2754,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				currentNode.STAExpectedLength = document.getElementById("SelectNumberOfRecordsFilterRows").value;
 				var data = await loadAPIDataWithReturn(currentNode.STAURL, "reloadOGCAPIFeaturesData");
 				console.log(currentNode.STAdata)
-				
+				// networknode.update
 				UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousURL);
 
 			}
@@ -2768,12 +2768,14 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			if (currentNode.image == "FilterRowsTable.png" ) { //import CSV
 				GetFilterRowsTable();
-			} else if (!currentNode.STAOGCAPIconformance.includes("filter")) { //OGCAPIFeatures
-				GetFilterRowsTable();
-			}else if (currentNode.image == "FilterRowsTable.png"){ //STA
+			}else if (currentNode.STAOGCAPIconformance){//OGCAPIFeatures
+				if (!currentNode.STAOGCAPIconformance?.includes("filter")){
+					GetFilterRowsOGCAPIFeatures()// -> Mirar el tipus de filtre i tal
+				}else{
+					GetFilterRowsTable(); //No filter, use table filter
+				}
+			}else if (currentNode.image == "FilterRowsSTA.png"){ //STA
 				GetFilterRowsSTA();
-			}else if (currentNode.STAOGCAPIconformance.includes("filter")){
-				GetFilterRowsOGCAPIFeatures()// -> Mirar el tipus de filtre i tal
 			}
 
 			showInfoMessage("Filtering STA rows...");
