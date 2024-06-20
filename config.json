@@ -96,12 +96,28 @@
 			"group": "Testing Instances",
 			"STAs": [
 			{
-				"desc": "CubeWerx Daraa demo service",
+				"desc": "CubeWerx Daraa demo service (has filter)",
 				"url": "https://test.cubewerx.com/cubewerx/cubeserv/demo/ogcapi/Daraa"
 			},
 			{
-				"desc": "CubeWerx Foundation demo service",
+				"desc": "CubeWerx Foundation demo service (has filter)",
 				"url": "https://test.cubewerx.com/cubewerx/cubeserv/demo/ogcapi/Foundation"
+			},
+			{
+				"desc": "GeoE3 Buildings (hasn't got filter)",
+				"url": "https://geoe3platform.eu/geoe3/buildings/"
+			},
+			{
+				"desc": "ldproxy Daraa (has filter, doesn't work with limit=100)",
+				"url": "https://demo.ldproxy.net/daraa"
+			},
+			{
+				"desc": "ldproxy Daraa (has filter, doesn't work with limit=100)",
+				"url": "https://ogc.heig-vd.ch/ldproxy/geoclimate/"
+			},
+			{
+				"desc": "geoserver (has filter)",
+				"url": "https://ogc.heig-vd.ch/geoserver/ogc/features"
 			}]
 		}
 	],

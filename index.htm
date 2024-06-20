@@ -204,7 +204,7 @@
 
 	<dialog id="DialogSelectNRecords">
 		<form>
-			<label>:Number records to request (>100)
+			<label>Number records to request (>100):
 				<input type="text" id="SelectNumberOfRecords" size="6" maxlength="6" value="100"></input>
 			</label>
 			<div class="center">
@@ -241,6 +241,9 @@
 			Select an element:
 			<span id="DialogSelectRowsTable">
 			</span>
+			<label id="SelectNumberOfRecordsSelectRowLabel">Number records to request:
+				<input type="text" id="SelectNumberOfRecordsSelectRow" size="6" maxlength="6" value="100"></input>
+			</label>
 			<div class="center">
 				<button value="default" onClick="GetSelectRow(event)">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
@@ -374,7 +377,7 @@
 				<label><input type="radio" id="DialogImportMeaningCSVSourceFile" name="DialogImportMeaningCSVSource" value="file" checked="checked" onClick="SelectImportMeaningCSVSource(event)">
 				Local CSVW file: <input type="file" id="DialogImportMeaningCSVSourceFileText" accept=".csvw,.json" onChange="ReadFileImportCSVW(event)"></input></label><br>
 				<label><input type="radio" id="DialogImportMeaningCSVSourceURL" name="DialogImportMeaningCSVSource" value="url" onClick='SelectImportMeaningFileSource(event, "CSV")'>
-				CSVW URL: <input type="text" size="70" id="DialogImportMeaningCSVSourceURLText" onChange="ReadURLImportCSVW(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningCSVSourceURLButton" onClick="ReadURLImportCSVW(event)" disabled="disabled">Load</button></label><br>
+				CSVW URL: <input type="text" size="70" id="DialogImportMeaningCSVSourceURLInput" onChange="ReadURLImportCSVW(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningCSVSourceURLButton" onClick="ReadURLImportCSVW(event)" disabled="disabled">Load</button></label><br>
 				<label><input type="radio" id="DialogImportMeaningCSVSourceAuto" name="DialogImportMeaningCSVSource" value="auto" onClick='SelectImportMeaningFileSource(event, "CSV")'>
 				Automatic retrieve of shared meaning</label><br>
 			</fieldset>
@@ -441,7 +444,7 @@
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceFile" name="DialogImportMeaningGeoJSONSource" value="file" checked="checked" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				Local GeoJSON schema file: <input type="file" id="DialogImportMeaningGeoJSONSourceFileText" accept=".json" onChange="ReadFileImportGeoJSONSchema(event)"></input></label><br>
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceURL" name="DialogImportMeaningGeoJSONSource" value="url" onClick='SelectImportMeaningFileSource(event, "GeoJSON")'>
-				GeoJSON schema URL: <input type="text" size="70" id="DialogImportMeaningGeoJSONSourceURLText" onChange="ReadURLImportGeoJSONSchema(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSONSchema(event)" disabled="disabled">Load</button></label><br>
+				GeoJSON schema URL: <input type="text" size="70" id="DialogImportMeaningGeoJSONSourceURLInput" onChange="ReadURLImportGeoJSONSchema(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSONSchema(event)" disabled="disabled">Load</button></label><br>
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceAuto" name="DialogImportMeaningGeoJSONSource" value="auto" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				Automatic retrieve of shared meaning</label><br>
 			</fieldset>
@@ -693,31 +696,30 @@
 		const STASpecialQueries = {ObsLayer: {description: "Observations Layer", query: "Observations?$orderby=phenomenonTime%20desc&$expand=Datastream($select=unitOfMeasurement),Datastream/ObservedProperty($select=name,description,definition),FeatureOfInterest($select=description,feature)&$select=phenomenonTime,result"}}
 		const STASpecialQueriesArray = Object.keys(STASpecialQueries);
 		const TableOperations = {ImportCSV: {description: "Import CSV", startNode: true},
-		ImportCSV: { description: "Import CSV", startNode: true },
-				ImportGeoJSON: { description: "Import GeoJSON", startNode: true },
-				Table: { description: "View Table", leafNode: true },
-				Meaning: { description: "Fields meaning" },
-				SelectColumnsSTA: { description: "Select Columns", callSTALoad: true },
-				ExpandColumnsSTA: { description: "Expand Columns", callSTALoad: true },
-				SelectRowSTA: { description: "Select Row", callSTALoad: true },
-				FilterRowsSTA: { description: "Filter Rows", callSTALoad: true },
-				GeoFilterRowsSTA: { description: "Geospatial Filter Rows", callSTALoad: true },
-				SortBySTA: { description: "Sort by", callSTALoad: true },
-				ViewQuerySTA: { description: "View Query", leafNode: true },
-				UploadObservations: { description: "Upload in STA", leafNode: true },
-				//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
-				SelectColumnsTable: { description: "Select Columns" },
-				SelectRowTable: { description: "Select Row" },
-				JoinTables: { description: "Join Tables" },
-				FilterRowsTable: { description: "Filter Rows" },
-				SeparateColumns: { description: "Separate Columns" },
-				ScatterPlot: { description: "Scatter Plot", leafNode: true },
-				OneValue: { description: "One Value", leafNode: true },
-				countResults: { description: "Count results", leafNode: true },
-				SaveTable: { description: "Save Table", leafNode: true },
-				SaveLayer: { description: "Save Layer", leafNode: true },
-				OpenMap: { description: "Open Map", leafNode: true }
-	}
+					ImportGeoJSON: {description: "Import GeoJSON", startNode: true},
+					Table: {description: "View Table", leafNode: true}, 
+					Meaning: {description: "Fields meaning"}, 
+					SelectColumnsSTA: {description: "Select Columns", callSTALoad: true},
+					ExpandColumnsSTA: {description: "Expand Columns", callSTALoad: true},
+					SelectRowSTA: {description: "Select Row", callSTALoad: true},
+					FilterRowsSTA: {description: "Filter Rows", callSTALoad: true},
+					GeoFilterRowsSTA: {description: "Geospatial Filter Rows", callSTALoad: true},
+					SortBySTA: {description: "Sort by", callSTALoad: true},
+					ViewQuerySTA: {description: "View Query", leafNode: true},
+					UploadObservations: {description: "Upload in STA", leafNode: true},
+					//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
+					SelectColumnsTable: {description: "Select Columns"},
+					SelectRowTable: {description: "Select Row"},
+					JoinTables: {description: "Join Tables"},
+					FilterRowsTable: {description: "Filter Rows"},
+					SeparateColumns: {description: "Separate Columns"},
+					ScatterPlot: {description: "Scatter Plot", leafNode: true},
+					OneValueSTA: {description: "One Value", leafNode: true},
+					CountResultsSTA: { description: "Count results", leafNode: true },
+					SaveTable: {description: "Save Table", leafNode: true},
+					SaveLayer: {description: "Save Layer", leafNode: true},
+					OpenMap: {description: "Open Map", leafNode: true}};
+
 		const TableOperationsArray = Object.keys(TableOperations);
 
 		//If the two nodes cannot connect it returns null. It transforms a plural to singular if needed.
@@ -771,7 +773,7 @@
 						break;
 					}
 				}
-				if (i==parentEntity.entities.length)
+				if (i==STAEntitiesArray.length)
 					return {error: "Parent node is not a STA entity"};
 			}
 
@@ -808,42 +810,53 @@
 
 		//Return null if there is no reason (and there is a "fit").
 		function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-				if (parentNode.image == "ogc.png" && node.image != "FilterRowsSTA.png") {
-
-					return null;
-				} else if (parentNode.image == "ogc.png" && node.image == "FilterRowsSTA.png") {
-					console.log("nop");
-					return "You need to select first an Entity";
-				}
-				if (TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode == true)
-					return "Parent node is a leaf node and cannot be connected with any other node";
-				if (node.image == "OneValue.png" && parentNode.image != "Observations.png")
-					return "'One value' node is designed be connected to an 'observations' node only.";
-				var idNode = IdOfSTAEntity(node);
-				if (idNode < 0 && node.image != "FilterRowsTable.png" && parentNode.image != "FilterRowsTable.png" && node.image != "SelectRowTable.png" && parentNode.image != "SelectRowTable.png" ) { //If you add a view table after "FilterRowsTable" too
-					var entity = getSTAURLLastEntity(parentNode.STAURL);
-					var staEntitiesList = Object.keys(STAEntities);
-					var isPlural = false;
-					for (var i = 0; i < staEntitiesList.length; i++) {
-						if (staEntitiesList[i] == entity) {
-							isPlural = true;
-							break;
-						}
-					}
-					if (node.image == "FilterRowsSTA.png" && isPlural == false) {
-						return "Your result is already one value, you can not filter it more"
-					} else {
-						return null;
-					}
-				}
-				if (node.image == "FilterRowsSTA.png") {
-					var getCon = getConnectionSTAEntity(parentNode, node)
-					if (getCon.error)
-						return getCon.error;
-				}
-
+			if (parentNode.image == "ogc.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "GeoFilterRowsSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnsSTA.png" || node.image == "SortBySTA.png" || node.image == "OneValueSTA.png" || node.image == "CountResultsSTA.png" ) )
+				return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
+			if (parentNode.image=="ogc.png" || parentNode.image=="ogcAPIs.png")
 				return null;
-			}
+			if (TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true)
+				return "Parent node is a leaf node and cannot be connected with any other node";
+			if (node.image=="OneValueSTA.png" && parentNode.image!="Observations.png")
+				return "'One value' node is designed be connected to an 'Observations' node only.";
+			var idNode=IdOfSTAEntity(node);
+			if (idNode<0)
+				return null;
+			if (!parentNode.STAURL)
+				return null;
+			var getCon=getConnectionSTAEntity(parentNode, node)
+			if (getCon.error)
+				return getCon.error;
+			return null;
+
+
+			// if (idNode < 0 && node.image != "FilterRowsTable.png" && parentNode.image != "FilterRowsTable.png" && node.image != "SelectRowTable.png" && parentNode.image != "SelectRowTable.png" ) { //If you add a view table after "FilterRowsTable" too
+			// 		var entity = getSTAURLLastEntity(parentNode.STAURL);
+			// 		var staEntitiesList = Object.keys(STAEntities);
+			// 		var isPlural = false;
+			// 		for (var i = 0; i < staEntitiesList.length; i++) {
+			// 			if (staEntitiesList[i] == entity) {
+			// 				isPlural = true;
+			// 				break;
+			// 			}
+			// 		}
+			// 		if (node.image == "FilterRowsSTA.png" && isPlural == false) {
+			// 			if (parentNode.OGCType){
+			// 				if (parentNode.OGCType!= "OGCAPIitems"){ //Allow to conect SelectRow originating from OGC API
+			// 					return "Your result is already one value, you can not filter it more"
+			// 				}
+			// 			}
+						
+			// 		} else {
+			// 			return null;
+			// 		}
+			// 	}
+			// 	if (node.image == "FilterRowsSTA.png" && !parentNode.OGCType) {
+			// 		var getCon = getConnectionSTAEntity(parentNode, node)
+			// 		if (getCon.error)
+			// 			return getCon.error;
+			// 	}
+		}
+
 
 		window.onbeforeunload = function () { return "Your work will be lost."; }
 
@@ -1100,7 +1113,7 @@
 			if (s_protocol && s_protocol.toLowerCase()!="https:")
 				location.replace("https:" + location.href.substring(s_protocol.length));
 
-			hello.init({"authenix": "1cc09d67-8ce1-48c2-872a-6e2f03dba835"}, {redirect_uri: ((location.pathname.charAt(location.pathname.length-1)=='/') ? location.pathname.substring(0, location.pathname.length-1) : location.pathname)});
+			hello.init({"authenix": "662eb5eb-e706-40a4-baf8-51016fec5a05"}, {redirect_uri: ((location.pathname.charAt(location.pathname.length-1)=='/') ? location.pathname.substring(0, location.pathname.length-1) : location.pathname)});
 
 			UpdateConfiguration();
 
@@ -1403,15 +1416,15 @@
 		function SelectImportMeaningFileSource(event, type) {
 			if (document.getElementById("DialogImportMeaning"+type+"SourceFile").checked) {
 				document.getElementById("DialogImportMeaning"+type+"SourceFileText").disabled=false;
-				document.getElementById("DialogImportMeaning"+type+"SourceURLText").disabled=true;
+				document.getElementById("DialogImportMeaning"+type+"SourceURLInput").disabled=true;
 				document.getElementById("DialogImportMeaning"+type+"SourceURLButton").disabled=true;
 			} else if (document.getElementById("DialogImportMeaning"+type+"SourceURL").checked) {
 				document.getElementById("DialogImportMeaning"+type+"SourceFileText").disabled=true;
-				document.getElementById("DialogImportMeaning"+type+"SourceURLText").disabled=false;
+				document.getElementById("DialogImportMeaning"+type+"SourceURLInput").disabled=false;
 				document.getElementById("DialogImportMeaning"+type+"SourceURLButton").disabled=false;
 			} else /*if (document.getElementById("DialogImportMeaning"+type+"SourceAuto").checked)*/ {
 				document.getElementById("DialogImportMeaning"+type+"SourceFileText").disabled=true;
-				document.getElementById("DialogImportMeaning"+type+"SourceURLText").disabled=true;
+				document.getElementById("DialogImportMeaning"+type+"SourceURLInput").disabled=true;
 				document.getElementById("DialogImportMeaning"+type+"SourceURLButton").disabled=true;
 			}
 		}
@@ -1427,8 +1440,8 @@
 			event.preventDefault(); // We don't want to submit this form
 			if (document.getElementById("DialogImportMeaning"+type+"SourceAuto").checked && 
 				document.getElementById("DialogImport"+type+"SourceURL").checked &&
-				document.getElementById("DialogImport"+type+"SourceURLText").value) {
-				var urlCSV=document.getElementById("DialogImport"+type+"SourceURLText").value
+				document.getElementById("DialogImport"+type+"SourceURLInput").value) {
+				var urlCSV=document.getElementById("DialogImport"+type+"SourceURLInput").value
 				GUFLoadLastPreviousReproducibleUsageCode(getFileName(urlCSV),
 					getAddressPath(getAbsoluteURL(urlCSV)), 
 					{ru_platform: "https://github.com/joanma747/TAPIS", 
@@ -1475,7 +1488,7 @@
 		}
 
 		function ReadURLImportCSVW() {
-			HTTPJSONData(document.getElementById("DialogImportMeaningCSVSourceURLText").value).then(
+			HTTPJSONData(document.getElementById("DialogImportMeaningCSVSourceURLInput").value).then(
 						function(value) { 
 							showInfoMessage('Download CSVW completed.'); 
 							TransformTextCSVWToDataAttributes(value.text);
@@ -1517,7 +1530,7 @@
 		}
 
 		function ReadURLImportGeoJSONSchema() {
-			HTTPJSONData(document.getElementById("DialogImportMeaningGeoJSONSourceURLText").value).then(
+			HTTPJSONData(document.getElementById("DialogImportMeaningGeoJSONSourceURLInput").value).then(
 						function(value) { 
 							showInfoMessage('Download GeoJSON schema completed.'); 
 							currentNode.STAdataAttributes=TransformTextGeoJSONSchemaToDataAttributes(value.text);
@@ -1780,6 +1793,7 @@
 
 			networkNodes.update(currentNode);	//https://visjs.github.io/vis-data/data/dataset.html#Data_Manipulation
 
+			askForConformanceInOGCAPIFeatures();//OCGAPICconformande
 			//if childen nodes have also STAURL
 			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 			LoadJSONNodeSTAData(currentNode);
@@ -1787,7 +1801,9 @@
 
 		function PopulateInputFromSelect(event, idPrefix) {
 			event.preventDefault(); // We don't want to submit this form
-			document.getElementById(idPrefix+"Input").value=document.getElementById(idPrefix+"Select").value
+			document.getElementById(idPrefix+"Input").value=document.getElementById(idPrefix+"Select").value;
+			if (document.getElementById(idPrefix))
+				document.getElementById(idPrefix).click();
 		}
 
 		function GetOptionsSelectDialog(suggestedURLs) {
@@ -2069,9 +2085,6 @@
 			document.getElementById("DialogScatterPlot").close();
 		}
 
-		function ShowOneValueDialog(currentNode){
-			fgfgj
-		}
 
 		function ShowOneValueDialog(currentNode) {
 			var parentNode=GetFirstParentNode(currentNode);
@@ -2108,7 +2121,7 @@
 			node.STAvariable=document.getElementById("DialogOneValueVariableSelect").value;
 			node.STAtimeVariable=document.getElementById("DialogOneValueTimeSelect").value;
 			node.STAredrawPeriod=document.getElementById("DialogOneValueRefreshPeriod").value;
-			networkNodes.update(currentNode);
+			networkNodes.update(node);
 
 			RequestLastObservationAndRefreshOneValue(node, node.STAvariable, node.STAtimeVariable, node.STAredrawPeriod);
 		}
@@ -2128,46 +2141,35 @@
 		}
 
 
-	function prepareRefreshCountResults(event) {
-		event.preventDefault(); // We don't want to submit this form
-		document.getElementById("DialogCountResults").close();
+		function prepareRefreshCountResults(event) {
+			event.preventDefault(); // We don't want to submit this form
+			document.getElementById("DialogCountResults").close();
 
-		if (currentNode.STAtimeOut) {
-			clearInterval(currentNode.STAtimeOut);
-			currentNode.STAtimeOut = null;
+			var node=networkNodes.get(startingNodeContextId);
+			if (!node)
+				return;
+			startingNodeContextId = null;
+			if (node.STACountTimeOut) {
+				clearTimeout(node.STACountTimeOut);
+				node.STACountTimeOut=null;
+			}
+			node.STAredrawPeriodCount=document.getElementById("DialogCountResultsRefreshPeriod").value;
+			networkNodes.update(node);
+
+			requestAndRefreshCountResults(node, node.STAredrawPeriodCount);
+
 		}
-		currentNode.STAredrawPeriod = document.getElementById("DialogCountResultsRefreshPeriod").value;
-		networkNodes.update(currentNode);
-		currentNode.STAtimeOut = setInterval(requestLastObservationAndRefreshCountResults, currentNode.STAredrawPeriod  * 1000, currentNode, currentNode.STAredrawPeriod );
-}
-async function requestLastObservationAndRefreshCountResults(currentNode, period) {
-    var parentNode = GetFirstParentNode(currentNode);
-    if (!parentNode)
-        return;
-    currentNode.STAURL = AddQueryParamsToURL(parentNode.STAURL, "$count=true&$top=0");
-    currentNode.STAExpectedLength = 1;
-    networkNodes.update(currentNode);
-    showInfoMessage("Getting number of results");
-    var numberOfResults = await loadAPIDataWithReturn(currentNode.STAURL, "countResults");
-
-    //Redraw the label
-    currentNode.label = " (Items: " + numberOfResults + ")";
-
-    //Redraw
-    showInfoMessage(currentNode.label + ". Waiting " + period + " seconds ...");
-
-}
 
 function stopRefreshCountResults(event) {
-    event.preventDefault(); // We don't want to submit this form
-    document.getElementById("DialogCountResults").close();
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogCountResults").close();
 
-    if (!currentNode)
-        return;
-    if (currentNode.STAtimeOut) {
-        clearInterval(currentNode.STAtimeOut);
-        showInfoMessage("Refresh cancelled.");
-    }
+	if (!currentNode)
+		return;
+	if (currentNode.STACountTimeOut) {
+		clearInterval(currentNode.STACountTimeOut);
+		showInfoMessage("Refresh cancelled.");
+	}
 }
 
 function closeDialogCountResults(event) {
@@ -2192,7 +2194,6 @@ function closeDialogCountResults(event) {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (!parentNode)
 				return;
-			//var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
 			currentNode.STAURL = AddQueryParamsToURL(parentNode.STAURL, "$orderby="+timeVariable+" desc");
 			if (removeExtension(parentNode.image)=="Observations")
 				currentNode.STAURL = AddQueryParamsToURL(currentNode.STAURL, "$expand=Datastream,MultiDatastream")
@@ -2229,6 +2230,26 @@ function closeDialogCountResults(event) {
 			currentNode.STAtimeOut=setTimeout(RequestLastObservationAndRefreshOneValue, period*1000, currentNode, variable, timeVariable, period);
 			networkNodes.update(currentNode);
 		}
+
+
+async function requestAndRefreshCountResults(currentNode, period) {
+    	var parentNode = GetFirstParentNode(currentNode);
+	if (!parentNode)
+		return;
+	currentNode.STAURL = AddQueryParamsToURL(parentNode.STAURL, "$count=true&$top=0");
+	currentNode.STAExpectedLength = 1;	
+	networkNodes.update(currentNode);
+	showInfoMessage("Getting number of items");
+	var numberOfResults = await loadAPIDataWithReturn(currentNode.STAURL, "CountResults");
+
+	//Redraw the label	
+	currentNode.label = "Items: " + numberOfResults;
+	
+	//Redraw	
+	showInfoMessage(currentNode.label + ". Waiting " + period + " seconds ...");
+	currentNode.STACountTimeOut=setTimeout(requestAndRefreshCountResults, period*1000, currentNode, period);
+	networkNodes.update(currentNode);
+}
 
 		function CloseDialogOneValue(event) {
 			event.preventDefault(); // We don't want to submit this form
@@ -2617,7 +2638,7 @@ function closeDialogCountResults(event) {
 		function GetSelectRow(event) {
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogSelectRow").close();
-
+		
 			if (currentNode.STAURL)
 				var previousSTAURL=currentNode.STAURL;
 
@@ -2656,8 +2677,13 @@ function closeDialogCountResults(event) {
 					}
 				}
 			}
-			if (currentNode.STAURL)
-				currentNode.STAExpectedLength = parentNode.STAExpectedLength;
+			if (currentNode.STAURL){
+				// currentNode.STAExpectedLength = parentNode.STAExpectedLength;
+				currentNode.STAExpectedLength = document.getElementById("SelectNumberOfRecordsSelectRow").value;
+				
+			}
+				
+			askForCollectionQueryables();
 			networkNodes.update(currentNode);
 			if (currentNode.STAURL)
 			{
@@ -2667,7 +2693,7 @@ function closeDialogCountResults(event) {
 			}
 		}
 		function GetFilterRowsSTA() {
-				var previousSTAURL = currentNode.STAURL;
+				//var previousSTAURL = currentNode.STAURL;
 				var parentNode = GetFirstParentNode(currentNode);
 				if (parentNode) {
 					if (parentNode.STAURL)
@@ -2701,6 +2727,7 @@ function closeDialogCountResults(event) {
 				currentNode.STAURL = currentNode.STAUrlAPI;
 
 				currentNode.STAExpectedLength = document.getElementById("SelectNumberOfRecordsFilterRows").value;
+				LoadJSONNodeSTAData(currentNode);
 				UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 			}
 		function GetFilterRowsTable() {
@@ -2709,8 +2736,29 @@ function closeDialogCountResults(event) {
 			currentNode.STAtable = "";
 			readInformationRowFilterTable(currentNode.STAelementFilter, "no", "no"); //And apply filter
 			applyEvalAndFilterData();
+			UpdateChildenTable(currentNode);
 				
+		}
+		async function GetFilterRowsOGCAPIFeatures(){
+			var previousNode=networkNodes.get(network.getConnectedNodes(currentNode.id, "from"));
+			var previousURL = previousNode[0].STAURL;//put URL ready to add things 
+			if (currentNode.STAOGCAPIconformance.includes("cql-text")){
+				currentNode.STAUrlAPICounter = []; // I need to restart it 
+				stopreadInformationRowFilterOGCAPIFeatures = false;
+				currentNode.STAURL = previousURL  +"?filter="; //mirar si ho ha actualitzat
+				if (currentNode.STAUrlAPI){
+					currentNode.STAUrlAPI="";
+				}
+				readInformationRowFilterOGCAPIFeatures(currentNode.STAelementFilter, "no", "no"); //And apply filter
+				currentNode.STAURL = currentNode.STAURL+currentNode.STAUrlAPI+"&f=json";
+				currentNode.STAExpectedLength = document.getElementById("SelectNumberOfRecordsFilterRows").value;
+				var data = await loadAPIDataWithReturn(currentNode.STAURL, "reloadOGCAPIFeaturesData");
+				console.log(currentNode.STAdata)
 				
+				UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousURL);
+
+			}
+
 		}
 		function GetFilterRows(event) {
 			event.preventDefault(); // We don't want to submit this form
@@ -2718,22 +2766,18 @@ function closeDialogCountResults(event) {
 			//updateinfoFilter
 			takeSelectInformation(currentNode.id);
 
-			if (currentNode.image == "FilterRowsSTA.png") {
-				GetFilterRowsSTA()
-			} else {
-				GetFilterRowsTable()
+			if (currentNode.image == "FilterRowsTable.png" ) { //import CSV
+				GetFilterRowsTable();
+			} else if (!currentNode.STAOGCAPIconformance.includes("filter")) { //OGCAPIFeatures
+				GetFilterRowsTable();
+			}else if (currentNode.image == "FilterRowsTable.png"){ //STA
+				GetFilterRowsSTA();
+			}else if (currentNode.STAOGCAPIconformance.includes("filter")){
+				GetFilterRowsOGCAPIFeatures()// -> Mirar el tipus de filtre i tal
 			}
 
 			showInfoMessage("Filtering STA rows...");
 			networkNodes.update(currentNode);
-
-			if (currentNode.image == "FilterRowsSTA.png"){ //STA
-				UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
-			}else{
-				UpdateChildenTable(currentNode);
-			}
-			
-
 		}
 
 		function getGeospatialFilter(node, parentNode){
@@ -2911,13 +2955,21 @@ function closeDialogCountResults(event) {
 					showInfoMessage("Updating "+ removeExtension(node.image) + " ...");
 					await LoadJSONNodeSTAData(node);
 				}
-				else if (node.image == "OneValue.png")
+				else if (node.image == "OneValueSTA.png")
 				{
 					if (node.STAtimeOut) {
 						clearTimeout(node.STAtimeOut);
 						node.STAtimeOut=null;
 					}
 					await RequestLastObservationAndRefreshOneValue(node, node.STAvariable, node.STAtimeVariable, node.STAredrawPeriod);
+				}
+				else if (node.image == "CountResultsSTA.png")
+				{
+					if (node.STACountTimeOut) {
+						clearTimeout(node.STACountTimeOut);
+						node.STACountTimeOut=null;
+					}
+					await requestAndRefreshCountResults(node, node.STAredrawPeriodCount);
 				}
 			}
 		}
@@ -4077,9 +4129,10 @@ function closeDialogCountResults(event) {
 		}
 
 		function ShowTableFilterRowsDialog(parentNode, node) {
-			var data = parentNode.STAdata;
+			var data=parentNode.STAdata
 			currentNode.STAdata=data; //Put all data from parent in this node 
 			networkNodes.update(currentNode);
+
 			var dataAttributes = getDataAttributes(data);
 
 			if (parentNode.image != "FilterRowsTable.png") {
@@ -4102,9 +4155,23 @@ function closeDialogCountResults(event) {
 				SelectNumberOfRecordsFilterRows.style.display="inline-block";
 				SelectNumberOfRecordsFilterRowsLabel.style.display="inline-block";
 			}
+			if (currentNode.STAExpectedLength){ //"write" number of data required previously 
+				document.getElementById('SelectNumberOfRecordsFilterRows').value= currentNode.STAExpectedLength
+			}
+			
 			addNecessaryVariablesToFilterRowsSTANode(node);
 
-			ShowFilterTable();
+			
+			if (currentNode.image=="FilterRowsSTA.png" && currentNode.STAOGCAPIconformance){
+				if (currentNode.STAOGCAPIconformance.includes("filter")){ //Create Filters if the API allows to filter its information
+					ShowFilterTable();
+
+				}else{
+				showFilterTableWithoutFilters(); //OGCAPIFeatures without filter option		
+				}
+			}else{
+				ShowFilterTable(); //STA and CSV 
+			}
 		}
 
 		function SeparatePropertyIfNeeded(record, property, baseName)
@@ -4212,7 +4279,8 @@ function closeDialogCountResults(event) {
 			if (errorText)
 			{
 				alert("Incompatible node. " + errorText + ". It has not been added.");
-				return false;
+				return null;
+				//return false?? Crec que amb el null no impedeix que uneixi el node que no volem que uneixi
 			}
 			if (nodeFrom.STAURL && IdOfSTAEntity(nodeTo) != -1) {
 				if (nodeFrom.image=="ogc.png")
@@ -4249,6 +4317,11 @@ function closeDialogCountResults(event) {
 				networkNodes.update(nodeTo);
 				if (calUnir)
 					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+					if (nodeFrom.OGCType){
+					if (nodeTo.image == "FilterRowsSTA.png"&& nodeFrom.OGCType=="OGCAPIitems"){
+						//askForConformanceInOGCAPIFeatures();//OCGAPICconformande will be in select node
+					}
+				}
 				//showInfoMessage("Selecting " + (nodeTo.image == "SelectColumnsSTA.png" ? "columns" : "rows") + " to STA...");
 				//LoadJSONNodeSTAData(nodeTo);
 				return true;
@@ -4296,12 +4369,6 @@ function closeDialogCountResults(event) {
 					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 				SeparateColumns(nodeTo, nodeFrom);
 				return true;
-			}
-			if (nodeTo.image == "CountResults.png") {
-				if (calUnir)
-					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-				// Funció que s'executarà
-				 return true;
 			}
 
 			return false;
@@ -4429,12 +4496,12 @@ function closeDialogCountResults(event) {
 						document.getElementById("DialogScatterPlot").showModal();
 					}
 				}
-				else if (currentNode.image == "OneValue.png") {
+				else if (currentNode.image == "OneValueSTA.png") {
 					ShowOneValueDialog(currentNode);
 					document.getElementById("DialogOneValue").showModal();
 				}
-				else if (currentNode.image == "countResults.png") {
-					//ShowCountResultsDialog(currentNode);
+				else if (currentNode.image == "CountResultsSTA.png") {
+					startingNodeContextId=currentNode.id;
 					document.getElementById("DialogCountResults").showModal();
 				}
 				else if (currentNode.image == "SaveLayer.png") {
@@ -4473,6 +4540,10 @@ function closeDialogCountResults(event) {
 				else if (currentNode.image == "SelectRowSTA.png" || currentNode.image == "SelectRowTable.png") {
 					var parentNode=GetFirstParentNode(currentNode);
 					if (parentNode) {
+						if (parentNode.STAOGCAPIconformance){
+							currentNode.STAOGCAPIconformance=parentNode.STAOGCAPIconformance;
+						}
+						
 						if ((currentNode.image == "SelectRowSTA.png" && parentNode.STAURL) ||
 						    currentNode.image == "SelectRowTable.png") {
 							ShowTableSelectRowDialog(parentNode, currentNode);
@@ -4483,19 +4554,16 @@ function closeDialogCountResults(event) {
 				else if (currentNode.image == "FilterRowsSTA.png" || currentNode.image == "FilterRowsTable.png") {
 					var parentNode=GetFirstParentNode(currentNode);
 					if (parentNode) {
-							if (parentNode.STAURL) {
-								if (currentNode.image == "FilterRowsSTA.png" && parentNode.STAURL) {
-									ShowTableFilterRowsDialog(parentNode, currentNode);
-								}
-							} else {
-								if (currentNode.image == "FilterRowsTable.png") { //It comes from CSV, it hasn't got STAURL
-									ShowTableFilterRowsDialog(parentNode, currentNode);
-								}
-							}
-
-
-							document.getElementById("DialogFilterRows").showModal();
+						if (parentNode.STAOGCAPIconformance){
+							currentNode.STAOGCAPIconformance=parentNode.STAOGCAPIconformance;
 						}
+						if (parentNode.STAOGCAPIqueryable){
+							currentNode.STAOGCAPIqueryable=parentNode.STAOGCAPIqueryable;
+						}
+						ShowTableFilterRowsDialog(parentNode, currentNode);
+						document.getElementById("DialogFilterRows").showModal();
+				
+					}
 				}
 				else if (currentNode.image == "SortBySTA.png") {
 					var parentNode=GetFirstParentNode(currentNode);
@@ -4657,6 +4725,7 @@ function closeDialogCountResults(event) {
 					{
 						networkNodes.add(node);
 						networkEdges.add([{ from: startingNodeContextId, to: newId, arrows: "from" }]);
+
 					}
 				}
 			}
@@ -4817,13 +4886,12 @@ function closeDialogCountResults(event) {
 				}
 			}
 		}
-
 		function giveMeNetworkInformation(event) {
 				if (event)
 					event.preventDefault(); // We don't want to submit this form
 				document.getElementById("DialogSelectColumns").close();
 				console.log(networkNodes);
-			}
+		}
 	</script>
 
 </body>
