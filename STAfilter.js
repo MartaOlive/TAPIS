@@ -47,6 +47,7 @@
 
 const selectConditionContent = ['---Choose operator ---', ' = ', ' &ne; ', ' &ge; ', ' > ', ' &le; ', ' < ', ' [a,b] ', ' (a,b] ', ' [a,b) ', ' (a,b) ', 'contains', 'no contains', 'starts with', 'ends with', 'year', 'month', 'day', 'hour', 'minute', 'date'];
 const selectConditionContentText = ['---Choose operator ---', ' = ', ' &ne; ', 'contains', 'no contains', 'starts with', 'ends with'];
+const selectConditionContentOGCAPIFeatures = ['---Choose operator ---', ' = ', ' &ne; ', ' &ge; ', ' > ', ' &le; ', ' < ', ' [a,b] ', ' (a,b] ', ' [a,b) ', ' (a,b) '];
 
 
 function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
@@ -57,7 +58,7 @@ function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
 	if (!actualNode.STAconditionsFilter)
 		actualNode.STAconditionsFilter = [ //Table values
 			{
-				property: "<div id='optionsRow_0' style='display: inline-block;'></div>", //class='optionsRow'
+				property: "<div id='optionsRow_0' style='display: inline-block;'></div>",
 				number: "0"
 			}
 		];
@@ -136,9 +137,10 @@ function createSelectorRowFilters(number) {
 	if (dialogType == "withEntities_4selectors") {
 		createEntitySelectorInFilterRows(selectorInfo, number);
 		createPropertySelectInFilterRows(selectorInfo, number);
-	} else {
+	} else { //withoutEntities_3selectors
 		createColumsSelectorFilterRows(selectorInfo, number);
 	}
+	//In both cases 
 	createConditionSelectInFilterRows(selectorInfo, number);
 	createValueSelectInFilterRows(selectorInfo, number);
 
@@ -156,12 +158,9 @@ function createColumsSelectorFilterRows(selectorInfo, count) {
 
 }
 
-function fillColumsSelectorFilterRows(selectorInfo, count) { //2 selectors
+function fillColumsSelectorFilterRows(selectorInfo, count) { //withoutEntities_3selectors
 
 	var selectorColumns = document.getElementById("selectorColumns_" + count);
-
-
-	//First option (-- choose a field--)
 	var option = document.createElement("option"); //First option
 	option.setAttribute("value", "-- choose a field--");
 	option.innerHTML = "-- choose a field--";
@@ -225,7 +224,9 @@ function obtainValuesFromSTAdataInCSV(column) {
 	var valuesSorted = sortValuesForSelect(valuesArray);
 	return valuesSorted;
 }
-async function loadAPIDataWithReturn(url, reasonForData) { // Ask API to , "FIllSelectInRowFilter" and CountResults
+
+//Ask API data or information 
+async function loadAPIDataWithReturn(url, reasonForData) { // Ask API to  "FIllSelectInRowFilter" and CountResults
 	var response, options = {}, data; //Data in FIllSelectInRowFilter will be STAData and in CountResults will be the number of results
 	try {
 		var url_fetch;
@@ -255,9 +256,6 @@ async function loadAPIDataWithReturn(url, reasonForData) { // Ask API to , "FIll
 			data = (typeof data !== "undefined") ? data["conformsTo"] : [data];
 		} else if (reasonForData == "OGCAPIqueryables") {
 			data = (typeof data !== "undefined") ? data["properties"] : [data];
-		} else if (reasonForData == "reloadOGCAPIFeaturesData") {
-			data = (typeof data.value !== "undefined") ? data.value : [data];
-			currentNode.STAdata = data;
 		}
 		else {
 			data = (typeof data.value !== "undefined") ? data["@iot.count"] : [data];
@@ -271,6 +269,46 @@ async function loadAPIDataWithReturn(url, reasonForData) { // Ask API to , "FIll
 
 
 }
+async function askForConformanceInOGCAPIFeatures() {
+	const filterInConformance = ["filter", "features-filter", "simple-cql", "cql-text", "cql-json"];//What I need for filter
+	var url = currentNode.STAURL;
+	var index = url.indexOf("/collection");
+	url = url.slice(0, index);
+	url += "/conformance?f=json";
+	var conformanceInformation = await loadAPIDataWithReturn(url, "OGCAPIConformance"); //ask for conformance (what can I do with this API)
+	var conformanceArray = []
+	for (var i = 0; i < conformanceInformation.length; i++) {
+		for (var a = 0; a < filterInConformance.length; a++) {
+			if (conformanceInformation[i].includes(filterInConformance[a])) {
+				if (!conformanceArray.includes(filterInConformance[a])) {
+					conformanceArray.push(filterInConformance[a])
+				}
+
+			}
+		}
+
+	}
+	currentNode.STAOGCAPIconformance = conformanceArray; //Only keeps what I need for filter
+	networkNodes.update(currentNode);
+}
+async function askForCollectionQueryables() {
+	var url = currentNode.STAURL;
+	var index = url.indexOf("/items");
+	url = url.slice(0, index);
+	url += "/queryables?f=json";
+	var queryablesInformation = await loadAPIDataWithReturn(url, "OGCAPIqueryables");
+	if (Object.keys(queryablesInformation).length != 0) {
+		currentNode.STAOGCAPIqueryable = queryablesInformation;
+	} else {
+		currentNode.STAOGCAPIqueryable = "no";
+	}
+
+
+	networkNodes.update(currentNode);
+}
+
+
+
 //Entiy input, dialog...
 function createEntitySelectorInFilterRows(selectorInfo, count) {
 	var optionsRow = document.getElementById("optionsRow_" + count);
@@ -481,7 +519,6 @@ function createPropertySelectInFilterRows(selectorInfo, count) {
 }
 function onchangePropertySelect(count) {
 	fillValueSelectorFilterRow(count);
-	//Dins el fillValue s'ha de mirar si la property acaba en "/", si es així, deixar el select buit i potser aixo ja farà q s'amagui al ser undefined
 	showInputProperty(count);
 }
 function showInputProperty(count) {
@@ -587,19 +624,6 @@ function fillPropertySelector(number, lastEntity, selectorInfo) { //lastEntity: 
 	}
 }
 
-function fillColumsSelectorFilterRowsOGCAPIFeatures(number, selectorInfo) {
-	var selectProperty = document.getElementById("selectorProperty_" + number);
-	selectProperty.innerHTML = "";
-
-	var option = document.createElement("option"); //First option
-	option.setAttribute("value", " ");
-	option.innerHTML = "--- choose Property ---";
-	selectProperty.appendChild(option);
-
-
-}
-
-
 //condition select
 function createConditionSelectInFilterRows(selectorInfo, count) {
 	var optionsRow = document.getElementById("optionsRow_" + count);
@@ -617,6 +641,10 @@ function createConditionSelectInFilterRows(selectorInfo, count) {
 	} else {
 		selectConditionContent2 = selectConditionContent;
 	}
+	if (currentNode.OGCType = "OGCAPIitem") {
+		selectConditionContent2 = selectConditionContentOGCAPIFeatures;
+	}
+	
 	for (var i = 0; i < selectConditionContent2.length; i++) { //create options in condition Select
 		var opcioCondicio = document.createElement("option");
 		opcioCondicio.setAttribute("value", selectConditionContent2[i]);
@@ -670,6 +698,7 @@ function typeOfValueFromInput(wichinputText, value1, value2) {
 			value2 = "";
 		}
 	}
+	//eval function doesn't work to knowif it is a date, because a number for the function is a date.
 	if (wichinputText == "simple") {
 		if (value1.includes("-") == true) {//inputText1
 			var value1Array = value1.split("-");
@@ -1302,6 +1331,9 @@ function GetFilterCondition(elem) {
 }
 function ShowFilterTable() //This is who iniciates the table
 {
+	var SelectNumberOfRecordsFilterRowsLabel = document.getElementById("SelectNumberOfRecordsFilterRowsLabel");
+	SelectNumberOfRecordsFilterRowsLabel.style.display = "none";
+
 	currentNode.STACounter = []; //To not acumulate
 	document.getElementById("divSelectorRowsFilter").innerHTML = GetFilterTable(currentNode.STAelementFilter, currentNode.id, true); //I need to pass currentNode.elemFilter because it is a recursive function an need to start in this point
 	for (var i = 0; i < currentNode.STACounter.length; i++) {//Adding Selectors
@@ -1310,7 +1342,9 @@ function ShowFilterTable() //This is who iniciates the table
 
 }
 function showFilterTableWithoutFilters() {
-	document.getElementById("divSelectorRowsFilter").innerHTML = "<div>This collection doesn't allow to filter its data. You can filter the data preloaded by clickng the button below. Choose how many registers you want to filter in the box below. </div><button onclick='ShowFilterTable()'>See filtering box</button>";
+	document.getElementById("divSelectorRowsFilter").innerHTML = "<div>This collection doesn't allow to filter its data. You can filter the data preloaded by clickng the button below. Choose how many registers you want to filter in the previous node. </div><button onclick='ShowFilterTable()'>See filtering box</button>";
+	var SelectNumberOfRecordsFilterRowsLabel = document.getElementById("SelectNumberOfRecordsFilterRowsLabel");
+	SelectNumberOfRecordsFilterRowsLabel.style.display = "none";
 }
 
 //Select Nexus (And, or, not)
@@ -1471,8 +1505,6 @@ function deleteGroup(numberOfElement) {
 	drawTableAgain();//repaint the selects
 }
 
-
-
 function searchBoxNameGroupForGetFilterRowsTable(numberOfElement, elem, originFunction) { //elem has boxes ...
 	if (typeof elem === "object") {
 		for (var i = 0; i < elem.elems.length; i++) {
@@ -1519,8 +1551,8 @@ function DeleteGroupInElemFilter(elem, fatherElem) {
 			var copyFather = Object.assign(fatherElem.elems);
 			currentNode.STAelementFilter = copyFather[0];
 		}
-		//var boxNames = currentNode.STAboxNames;
-		var boxNames = actualizeBoxNames(currentNode.STAelementFilter, arrayBoxNumbers);  //It is necesary?
+	
+		actualizeBoxNames(currentNode.STAelementFilter, arrayBoxNumbers);  //It is necesary?
 	}
 }
 function actualizeBoxNames(elem, arrayBoxNumbers) {
@@ -1537,8 +1569,6 @@ function drawTableAgain() {
 	document.getElementById("divSelectorRowsFilter").innerHTML = "";
 	ShowFilterTable()
 }
-
-
 
 function takeSelectInformation() {
 	var optionsRow;
@@ -1633,7 +1663,6 @@ function biggestLevelButton(boxName) {
 }
 //Applying the filter
 var stopreadInformationRowFilterSTA = false;
-
 function readInformationRowFilterSTA(elem, entity, nexus, parent) {  //STA
 	var infoFilter = currentNode.STAinfoFilter;
 	if (stopreadInformationRowFilterSTA == false) {
@@ -1795,9 +1824,7 @@ function readInformationRowFilterSTA(elem, entity, nexus, parent) {  //STA
 	}
 }
 
-
 var stopreadInformationRowFilterTable = false;
-
 function readInformationRowFilterTable(elem, nexus, parent) {  //Table
 	var infoFilter = currentNode.STAinfoFilter;
 
@@ -1982,16 +2009,37 @@ function readInformationRowFilterOGCAPIFeatures(elem, entity, nexus, parent) { /
 					var indexOf = parent.elems.indexOf(elem);
 					var apostropheOrSpace;
 					var typeOfValue = infoFilter[i][5];//it is not posible to take the information of data type because every API calls it diferent (type, data type...)		
-					(typeOfValue == "number") ? apostropheOrSpace = "" : apostropheOrSpace = "'"; //Canviar segons el tipus que posi a la queryable
+					(typeOfValue == "number") ? apostropheOrSpace = "" : apostropheOrSpace = "'";
 
 					// if (indexOf == 0) {
 					// 	data += "(";
 					// }
-					if (condition == ' = ' || condition == ' &ne; ' || condition == ' &ge; ' || condition == ' > ' || condition == ' &le; ' || condition == ' < ') { //passarho a com Table+
+					if (condition == ' = ' || condition == ' != ' || condition == ' >=; ' || condition == ' > ' || condition == ' <= ' || condition == ' < ') { //passarho a com Table+
 
 						data += "(" + infoFilter[i][1] + condition + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
 
 					}
+					else if (infoFilter[i][3] == ' [a,b] ' || infoFilter[i][3] == ' (a,b] ' || infoFilter[i][3] == ' [a,b) ' || infoFilter[i][3] == ' (a,b) ') {
+
+						data += "( "
+						switch (infoFilter[i][3]) {
+							case ' [a,b] ':
+								data += infoFilter[i][1] + " >= " + infoFilter[i][4] + " and " + infoFilter[i][1] + " <= " + infoFilter[i][5] + ")";
+								break;
+							case ' (a,b] ':
+								data += infoFilter[i][1] + " > " + infoFilter[i][4] + " and " + infoFilter[i][1] + " <= " + infoFilter[i][5] + ")";
+								break;
+							case ' [a,b) ':
+								data += infoFilter[i][1] + " >= " + infoFilter[i][4] + " and " + infoFilter[i][1] + " < " + infoFilter[i][5] + ")";
+								break;
+							case ' (a,b) ':
+								data += infoFilter[i][1] + " > " + infoFilter[i][4] + " and " + infoFilter[i][1] + " < " + infoFilter[i][5] + ")";
+								break;
+							default:
+						}
+					}
+
+
 					//by the moment, only this can be filtered
 					if ((indexOf + 1) != parentLenght) {
 						data += nexus
@@ -2053,41 +2101,4 @@ function applyEvalAndFilterData() {
 	//update STAdata
 	currentNode.STAdata = resultsFiltered;
 }
-async function askForConformanceInOGCAPIFeatures() {
-	const filterInConformance = ["filter", "features-filter", "simple-cql", "cql-text", "cql-json"];//What I need for filter
-	var url = currentNode.STAURL;
-	var index = url.indexOf("/collection");
-	url = url.slice(0, index);
-	url += "/conformance?f=json";
-	var conformanceInformation = await loadAPIDataWithReturn(url, "OGCAPIConformance"); //ask for conformance (what can I do with this API)
-	var conformanceArray = []
-	for (var i = 0; i < conformanceInformation.length; i++) {
-		for (var a = 0; a < filterInConformance.length; a++) {
-			if (conformanceInformation[i].includes(filterInConformance[a])) {
-				if (!conformanceArray.includes(filterInConformance[a])) {
-					conformanceArray.push(filterInConformance[a])
-				}
 
-			}
-		}
-
-	}
-	currentNode.STAOGCAPIconformance = conformanceArray; //Only keeps what I need for filter
-	networkNodes.update(currentNode);
-}
-
-async function askForCollectionQueryables() {
-	var url = currentNode.STAURL;
-	var index = url.indexOf("/items");
-	url = url.slice(0, index);
-	url += "/queryables?f=json";
-	var queryablesInformation = await loadAPIDataWithReturn(url, "OGCAPIqueryables");
-	if (Object.keys(queryablesInformation).length != 0) {
-		currentNode.STAOGCAPIqueryable = queryablesInformation;
-	} else {
-		currentNode.STAOGCAPIqueryable = "no";
-	}
-
-
-	//networkNodes.update(currentNode);
-}

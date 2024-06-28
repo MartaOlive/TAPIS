@@ -15,8 +15,20 @@
 				"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1"
 			},
 			{
+				"desc": "CitiObs VirtualAir server",
+				"url": "https://api-virtualair.nilu.no/v1.1"
+			},
+			{
+				"desc": "NILU STA server",
+				"url": "https://sensorsstaplus.nilu.no/api/v1.1"
+			},
+			{
 				"desc": "AD4GD STAplus server",
 				"url": "https://frost.iotlab.com/sensorthings/v1.1"
+			},
+			{
+				"desc": "AD4GD STAplus secured server",
+				"url": "https://frost.iotlab.com/sensorthingsapi2"
 			},
 			{
 				"desc": "OGC sprint STAplus demo server",
