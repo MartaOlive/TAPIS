@@ -213,6 +213,65 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogCreateColumns">
+		<form>
+			Create columns:
+			<span id="DialogCreateColumnsHTML">
+			 <br>
+			  <label for="columnName">Column Name </label>
+			  <input id="columnName" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
+			  <br>
+			  <div>
+				<fieldset>
+					<input type="radio" id="constantValue" name="TypeOfValues" value="constantValue" checked> 
+					<label for="constantValue">Constant value</label><input id="inputText_constantValue" type="text" style="margin-left:10px" ><br>
+					<input type="radio" id="autoincrementalValue" name="TypeOfValues" value="autoincrementalValue">
+					<label for="autoincrementalValue">Autoincemental value</label><input id="inputText_autoincrementalValue" type="text" style="margin-left:10px"  placeholder="Initial value" ><br>
+					<input type="radio" id="empty" name="TypeOfValues" value="empty">
+					<label for="empty">Empty column</label><br>
+				</fieldset>
+				<button value="add" onClick="addColumnToList(event)"style="margin-bottom:10px">Add column to list </button>
+				<div style="width:auto;border:solid black 1px " >
+					<label>Columns to add</label>
+					<div id="columnsBox"style="border:solid black 1px">
+						<table class="tableInCreateColumns" id="columnsBoxTable"><tr> <th>Column type</th><th>Column Name</th> <th>Value</th><th></th> </tr></table> 
+					</div>
+				</div>
+			  </div>
+			  
+		
+			</span>
+			<div class="center">
+			  <button value="default" onClick="addColumnsToTableInCreateColumns()">Add columns to your table</button>
+			  <button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		  </form>
+	</dialog>
+
+	<dialog id="DialogAggregateColumns">
+		<form>
+			Aggregate columns:
+			<span id="DialogAggregateColumnsHTML">
+			</span>
+			<div class="center">
+				<button value="default" onClick="GetAggregateColumns(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogColumnsCalculator">
+		<form>
+			Columns Calculator:
+			<span id="DialogColumnsCalculatorHTML">
+			</span>
+			<div class="center">
+				<button value="default" onClick="GetColumnsCalculator(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
 	<dialog id="DialogSelectExpands">
 		<form>
 			<fieldset id="DialogSelectExpandsHTML">
@@ -756,6 +815,9 @@
 					JoinTables: {description: "Join Tables"},
 					FilterRowsTable: {description: "Filter Rows"},
 					GroupBy: {description: "GroupBy"},
+					AggregateColumns:{description: "Aggregate Columns"},
+					CreateColumns:{description: "Create Columns"},
+					ColumnsCalculator:{description: "Columns calculator"},
 					SeparateColumns: {description: "Separate Columns"},
 					ScatterPlot: {description: "Scatter Plot", leafNode: true},
 					OneValueSTA: {description: "One Value", leafNode: true},
@@ -2623,6 +2685,20 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			return groupByParams;
 		}
 
+		function GetCreateColumns(event){
+
+		}
+
+		function GetAggregateColumns(event){
+
+		}
+
+		function GetColumnsCalculator(event){
+
+		}
+
+
+
 		function GetSelectNRecords(event) {
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogSelectNRecords").close();
@@ -4312,6 +4388,15 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			CheckSelectedAggrGroupBy(null, node.id);
 			return;
 		}
+		function ShowAggregateColumns() {
+
+		}
+		function ShowCreateColumns() {
+
+		}
+		function ShowColumnsCalculator() {
+
+		}
 
 		function ShowTableSelectRowDialog(parentNode, node) {
 			var data = parentNode.STAdata;
@@ -4567,6 +4652,16 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				SeparateColumns(nodeTo, nodeFrom);
 				return true;
 			}
+			if (nodeTo.image == "CreateColumns.png") {
+				if (nodeFrom.STAdata){
+					nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
+					networkNodes.update(nodeTo);
+				}
+				if (calUnir)
+					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+				return true;
+			}
+
 
 			return false;
 		}
@@ -4779,6 +4874,30 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					if (parentNode) {
 						ShowGroupByDialog(parentNode, currentNode);
 						document.getElementById("DialogGroupBy").showModal();
+					}
+				}
+				else if (currentNode.image == "AggregateColumns.png") {
+					var parentNode=GetFirstParentNode(currentNode);
+					if (parentNode) {
+
+						//ShowAggregateColumnsDialog();
+						document.getElementById("DialogAggregateColumns").showModal();
+					}
+				}
+				else if (currentNode.image == "CreateColumns.png") {
+					var parentNode=GetFirstParentNode(currentNode);
+					var columnsBox=document.getElementById("columnsBoxTable");
+					columnsBox.innerHTML=""; //Erase old content
+					if (parentNode) {
+							currentNode.STAnewColumnsToAdd=[]; //First time: To create it. Later: To erase old values					
+						document.getElementById("DialogCreateColumns").showModal();
+					}
+				}
+				else if (currentNode.image == "ColumnsCalculator.png") {
+					var parentNode=GetFirstParentNode(currentNode);
+					if (parentNode) {
+						//ShowColumnsCalculatorsDialog();
+						document.getElementById("DialogColumnsCalculator").showModal();
 					}
 				}
 				else if (currentNode.image == "SeparateColumns.png") {
@@ -5093,6 +5212,91 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 			}
 		}
+
+		//Create Columns
+		function addColumnToList(event){
+			event.preventDefault();
+			
+			var TypeOfValuesRadiobuttons= document.getElementsByName("TypeOfValues");
+			for (var i = 0; i < TypeOfValuesRadiobuttons.length; i++) {
+                if (TypeOfValuesRadiobuttons[i].checked){
+					var columnName= document.getElementById("columnName").value;
+					var number= document.getElementById("inputText_"+TypeOfValuesRadiobuttons[i].value)?.value;
+					currentNode.STAnewColumnsToAdd.push([TypeOfValuesRadiobuttons[i].value,columnName,number]);
+				}
+                 
+            }  
+			drawTableInColumnBoxTable();
+			
+
+
+		}
+		function drawTableInColumnBoxTable(){
+			var columnsBox=document.getElementById("columnsBoxTable");
+			columnsBox.innerHTML="<table class='tableInCreateColumns'> <tr> <th>Column type</th><th>Column Name</th> <th>Value</th><th></th> </tr>";
+				//columnsBox.innerHTML=""
+   
+ 
+			for (var a=0;a<currentNode.STAnewColumnsToAdd.length;a++){
+				switch (currentNode.STAnewColumnsToAdd[a][0]){
+					case  "constantValue": 
+						columnsBox.innerHTML+="<tr> <td>Constant Value</td><td>"+currentNode.STAnewColumnsToAdd[a][1]+"</td> <td>Constant value: " +currentNode.STAnewColumnsToAdd[a][2]+"</td><td><button onclick='deleteRowInColumnsBoxTable("+a+")'>Delete</button></td></tr>";
+						
+						break;
+					case  "autoincrementalValue": 
+						columnsBox.innerHTML+="<tr> <td>Autoincremental Value</td><td>"+currentNode.STAnewColumnsToAdd[a][1]+"</td> <td>Initial value: " +currentNode.STAnewColumnsToAdd[a][2]+"</td><td><button onclick='deleteRowInColumnsBoxTable("+a+")'>Delete</button></td></tr>";
+						
+						break;
+					case  "empty": 
+						columnsBox.innerHTML+="<tr> <td>Empty</td><td>"+currentNode.STAnewColumnsToAdd[a][1]+"</td> <td> - </td><td><button onclick='deleteRowInColumnsBoxTable("+a+")'>Delete</button></td></tr>";
+						break;
+				}
+			
+			}
+			columnsBox.innerHTML+="</table>";
+		}
+		function deleteRowInColumnsBoxTable(number){
+			event.preventDefault(); 
+			var copyWithoutNumber=[];
+			for (var i=0;i<currentNode.STAnewColumnsToAdd.length;i++){
+				if (i!=number){
+					copyWithoutNumber.push(currentNode.STAnewColumnsToAdd[i])
+				}
+			}
+
+			currentNode.STAnewColumnsToAdd=copyWithoutNumber;
+			drawTableInColumnBoxTable();
+		}
+
+		function addColumnsToTableInCreateColumns(){
+			event.preventDefault();
+			var data;
+			for (var i=0;i<currentNode.STAnewColumnsToAdd.length;i++){
+	
+				switch(currentNode.STAnewColumnsToAdd[i][0]) {
+				case  "constantValue":
+					data=addNewColumnWithUniqueValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2])
+					break;
+				case  "autoincrementalValue":
+					data=addNewColumnWithAutoincrementalValues(currentNode.STAdata,currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2])
+					break;
+				case  "empty":
+					data= addNewEmptyColumn(currentNode.STAdata,currentNode.STAnewColumnsToAdd[i][1]);
+					
+					break;
+				}	
+				currentNode.STAdata=data;
+				networkNodes.update(currentNode);
+					
+			}
+			UpdateChildenTable(currentNode);
+			document.getElementById("DialogCreateColumns").close();
+			showInfoMessage("New columns have been added");
+		}
+		
+		
+
+		/////
 		function giveMeNetworkInformation(event) {
 				if (event)
 					event.preventDefault(); // We don't want to submit this form
