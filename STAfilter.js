@@ -221,7 +221,7 @@ function obtainValuesFromSTAdataInCSV(column) {
 			}
 		}
 	}
-	var valuesSorted = sortValuesForSelect(valuesArray);
+	var valuesSorted = sortValuesNumbersOrText(valuesArray);
 	return valuesSorted;
 }
 
@@ -985,7 +985,7 @@ async function fillValueSelectorFilterRow(count) {
 					arrayValors.push(valor);
 				}
 			}
-			arrayValuesArranged = sortValuesForSelect(arrayValors); //arrange values 
+			arrayValuesArranged = sortValuesNumbersOrText(arrayValors); //arrange values 
 		}
 	} else { //CSV, OGCAPIFeature (3selectors)
 		var selectorColumns = document.getElementById("selectorColumns_" + count);
@@ -1019,38 +1019,38 @@ async function fillValueSelectorFilterRow(count) {
 
 	showAndHiddeSelectorAndInputsFilterRow(count);
 }
-function sortValuesForSelect(arrayValues) {
-	var arrayNumbers = [];
-	var arrayText = [];
-	var arrayNumbersArranged, arrayTextsArranged, arrayValuesArranged;
-	var isNumber, punctuationMark;
-	for (var i = 0; i < arrayValues.length; i++) { //Separate numbers and text
-		if (typeof arrayValues[i] !== "undefined") {
-			isNumber = true;
-			punctuationMark = false;
-			for (var a = 0; a < arrayValues[i].length; a++) { //check each character
-				if (isNumber == true && arrayValues[i] != "," && arrayValues[i] != "." && punctuationMark != true) {
-					if (isNaN(arrayValues[i][a])) {//is not a number 
-						isNumber = false;
+// function sortValuesForSelect(arrayValues) { //Està a data_tables (sortValuesNumbersOrText())
+// 	var arrayNumbers = [];
+// 	var arrayText = [];
+// 	var arrayNumbersArranged, arrayTextsArranged, arrayValuesArranged;
+// 	var isNumber, punctuationMark;
+// 	for (var i = 0; i < arrayValues.length; i++) { //Separate numbers and text
+// 		if (typeof arrayValues[i] !== "undefined") {
+// 			isNumber = true;
+// 			punctuationMark = false;
+// 			for (var a = 0; a < arrayValues[i].length; a++) { //check each character
+// 				if (isNumber == true && arrayValues[i] != "," && arrayValues[i] != "." && punctuationMark != true) {
+// 					if (isNaN(arrayValues[i][a])) {//is not a number 
+// 						isNumber = false;
 
-					}
-					if (arrayValues[i] != "," || arrayValues[i] != ".") {
-						punctuationMark = true;
-					}
-				}
-			}
-			if (isNumber == true) {
-				arrayNumbers.push(arrayValues[i]);
-			} else {
-				arrayText.push(arrayValues[i]);
-			}
-		}
-		arrayNumbersArranged = arrayNumbers.sort((a, b) => a - b);
-		arrayTextsArranged = arrayText.sort();
-		arrayValuesArranged = arrayNumbersArranged.concat(arrayTextsArranged); //join arrays
-	}
-	return arrayValuesArranged;
-}
+// 					}
+// 					if (arrayValues[i] != "," || arrayValues[i] != ".") {
+// 						punctuationMark = true;
+// 					}
+// 				}
+// 			}
+// 			if (isNumber == true) {
+// 				arrayNumbers.push(arrayValues[i]);
+// 			} else {
+// 				arrayText.push(arrayValues[i]);
+// 			}
+// 		}
+// 		arrayNumbersArranged = arrayNumbers.sort((a, b) => a - b);
+// 		arrayTextsArranged = arrayText.sort();
+// 		arrayValuesArranged = arrayNumbersArranged.concat(arrayTextsArranged); //join arrays
+// 	}
+// 	return arrayValuesArranged;
+// }
 function changeWriteToSelect(number, selector) {  //To take the text in input
 	event.preventDefault();
 
@@ -1331,9 +1331,6 @@ function GetFilterCondition(elem) {
 }
 function ShowFilterTable() //This is who iniciates the table
 {
-	var SelectNumberOfRecordsFilterRowsLabel = document.getElementById("SelectNumberOfRecordsFilterRowsLabel");
-	SelectNumberOfRecordsFilterRowsLabel.style.display = "none";
-
 	currentNode.STACounter = []; //To not acumulate
 	document.getElementById("divSelectorRowsFilter").innerHTML = GetFilterTable(currentNode.STAelementFilter, currentNode.id, true); //I need to pass currentNode.elemFilter because it is a recursive function an need to start in this point
 	for (var i = 0; i < currentNode.STACounter.length; i++) {//Adding Selectors
@@ -1342,9 +1339,7 @@ function ShowFilterTable() //This is who iniciates the table
 
 }
 function showFilterTableWithoutFilters() {
-	document.getElementById("divSelectorRowsFilter").innerHTML = "<div>This collection doesn't allow to filter its data. You can filter the data preloaded by clickng the button below. Choose how many registers you want to filter in the previous node. </div><button onclick='ShowFilterTable()'>See filtering box</button>";
-	var SelectNumberOfRecordsFilterRowsLabel = document.getElementById("SelectNumberOfRecordsFilterRowsLabel");
-	SelectNumberOfRecordsFilterRowsLabel.style.display = "none";
+	document.getElementById("divSelectorRowsFilter").innerHTML = "<div>This collection doesn't allow to filter its data. You can filter the data preloaded by clickng the button below. Choose how many registers you want to filter in the box below. </div><button onclick='ShowFilterTable()'>See filtering box</button>";
 }
 
 //Select Nexus (And, or, not)
@@ -1551,8 +1546,8 @@ function DeleteGroupInElemFilter(elem, fatherElem) {
 			var copyFather = Object.assign(fatherElem.elems);
 			currentNode.STAelementFilter = copyFather[0];
 		}
-	
-		actualizeBoxNames(currentNode.STAelementFilter, arrayBoxNumbers);  //It is necesary?
+		//var boxNames = currentNode.STAboxNames;
+		var boxNames = actualizeBoxNames(currentNode.STAelementFilter, arrayBoxNumbers);  //It is necesary?
 	}
 }
 function actualizeBoxNames(elem, arrayBoxNumbers) {
@@ -1569,6 +1564,8 @@ function drawTableAgain() {
 	document.getElementById("divSelectorRowsFilter").innerHTML = "";
 	ShowFilterTable()
 }
+
+
 
 function takeSelectInformation() {
 	var optionsRow;
@@ -1663,6 +1660,7 @@ function biggestLevelButton(boxName) {
 }
 //Applying the filter
 var stopreadInformationRowFilterSTA = false;
+
 function readInformationRowFilterSTA(elem, entity, nexus, parent) {  //STA
 	var infoFilter = currentNode.STAinfoFilter;
 	if (stopreadInformationRowFilterSTA == false) {
@@ -1824,7 +1822,9 @@ function readInformationRowFilterSTA(elem, entity, nexus, parent) {  //STA
 	}
 }
 
+
 var stopreadInformationRowFilterTable = false;
+
 function readInformationRowFilterTable(elem, nexus, parent) {  //Table
 	var infoFilter = currentNode.STAinfoFilter;
 
@@ -2009,37 +2009,16 @@ function readInformationRowFilterOGCAPIFeatures(elem, entity, nexus, parent) { /
 					var indexOf = parent.elems.indexOf(elem);
 					var apostropheOrSpace;
 					var typeOfValue = infoFilter[i][5];//it is not posible to take the information of data type because every API calls it diferent (type, data type...)		
-					(typeOfValue == "number") ? apostropheOrSpace = "" : apostropheOrSpace = "'";
+					(typeOfValue == "number") ? apostropheOrSpace = "" : apostropheOrSpace = "'"; //Canviar segons el tipus que posi a la queryable
 
 					// if (indexOf == 0) {
 					// 	data += "(";
 					// }
-					if (condition == ' = ' || condition == ' != ' || condition == ' >=; ' || condition == ' > ' || condition == ' <= ' || condition == ' < ') { //passarho a com Table+
+					if (condition == ' = ' || condition == ' &ne; ' || condition == ' &ge; ' || condition == ' > ' || condition == ' &le; ' || condition == ' < ') { //passarho a com Table+
 
 						data += "(" + infoFilter[i][1] + condition + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
 
 					}
-					else if (infoFilter[i][3] == ' [a,b] ' || infoFilter[i][3] == ' (a,b] ' || infoFilter[i][3] == ' [a,b) ' || infoFilter[i][3] == ' (a,b) ') {
-
-						data += "( "
-						switch (infoFilter[i][3]) {
-							case ' [a,b] ':
-								data += infoFilter[i][1] + " >= " + infoFilter[i][4] + " and " + infoFilter[i][1] + " <= " + infoFilter[i][5] + ")";
-								break;
-							case ' (a,b] ':
-								data += infoFilter[i][1] + " > " + infoFilter[i][4] + " and " + infoFilter[i][1] + " <= " + infoFilter[i][5] + ")";
-								break;
-							case ' [a,b) ':
-								data += infoFilter[i][1] + " >= " + infoFilter[i][4] + " and " + infoFilter[i][1] + " < " + infoFilter[i][5] + ")";
-								break;
-							case ' (a,b) ':
-								data += infoFilter[i][1] + " > " + infoFilter[i][4] + " and " + infoFilter[i][1] + " < " + infoFilter[i][5] + ")";
-								break;
-							default:
-						}
-					}
-
-
 					//by the moment, only this can be filtered
 					if ((indexOf + 1) != parentLenght) {
 						data += nexus
@@ -2101,4 +2080,41 @@ function applyEvalAndFilterData() {
 	//update STAdata
 	currentNode.STAdata = resultsFiltered;
 }
+async function askForConformanceInOGCAPIFeatures() {
+	const filterInConformance = ["filter", "features-filter", "simple-cql", "cql-text", "cql-json"];//What I need for filter
+	var url = currentNode.STAURL;
+	var index = url.indexOf("/collection");
+	url = url.slice(0, index);
+	url += "/conformance?f=json";
+	var conformanceInformation = await loadAPIDataWithReturn(url, "OGCAPIConformance"); //ask for conformance (what can I do with this API)
+	var conformanceArray = []
+	for (var i = 0; i < conformanceInformation.length; i++) {
+		for (var a = 0; a < filterInConformance.length; a++) {
+			if (conformanceInformation[i].includes(filterInConformance[a])) {
+				if (!conformanceArray.includes(filterInConformance[a])) {
+					conformanceArray.push(filterInConformance[a])
+				}
 
+			}
+		}
+
+	}
+	currentNode.STAOGCAPIconformance = conformanceArray; //Only keeps what I need for filter
+	networkNodes.update(currentNode);
+}
+
+async function askForCollectionQueryables() {
+	var url = currentNode.STAURL;
+	var index = url.indexOf("/items");
+	url = url.slice(0, index);
+	url += "/queryables?f=json";
+	var queryablesInformation = await loadAPIDataWithReturn(url, "OGCAPIqueryables");
+	if (Object.keys(queryablesInformation).length != 0) {
+		currentNode.STAOGCAPIqueryable = queryablesInformation;
+	} else {
+		currentNode.STAOGCAPIqueryable = "no";
+	}
+
+
+	//networkNodes.update(currentNode);
+}

@@ -1,14 +1,14 @@
-/* 
-    This file is part of TAPIS. TAPIS is a web page and a Javascript code 
-    that builds queries and explore the STAplus content, saves it as CSV or 
-    GeoJSON and connects with the MiraMon Map Browser. While the project is 
-    completely independent from the Orange data mining software, it has been 
-    inspired by its GUI. The general idea of the application is to be able 
+/*
+    This file is part of TAPIS. TAPIS is a web page and a Javascript code
+    that builds queries and explore the STAplus content, saves it as CSV or
+    GeoJSON and connects with the MiraMon Map Browser. While the project is
+    completely independent from the Orange data mining software, it has been
+    inspired by its GUI. The general idea of the application is to be able
     to work with STA data as tables.
-  
+
     The TAPIS client is free software under the terms of the MIT License
 
-    Copyright (c) 2023 Joan Masó
+    Copyright (c) 2023-2024 Joan Masó
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -27,21 +27,39 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
-    
+
     The TAPIS can be updated from https://github.com/joanma747/tapis.
 
-    Aquest codi JavaScript ha estat idea de Joan Masó Pau (joan maso at uab cat) 
-    dins del grup del MiraMon. MiraMon és un projecte del 
-    CREAF que elabora programari de Sistema d'Informació Geogràfica 
-    i de Teledetecció per a la visualització, consulta, edició i anàlisi 
+    Aquest codi JavaScript ha estat idea de Joan Masó Pau (joan maso at ieee org) 
+    dins del grup del MiraMon. MiraMon és un projecte del
+    CREAF que elabora programari de Sistema d'Informació Geogràfica
+    i de Teledetecció per a la visualització, consulta, edició i anàlisi
     de mapes ràsters i vectorials. Aquest progamari programari inclou
     aplicacions d'escriptori i també servidors i clients per Internet.
-    No tots aquests productes són gratuïts o de codi obert. 
-    
+    No tots aquests productes són gratuïts o de codi obert.
+
     En particular, el TAPIS es distribueix sota els termes de la llicència MIT.
-    
+
     El TAPIS es pot actualitzar des de https://github.com/joanma747/tapis.
 */
+
+/*
+This library use two main types of data. In general, table functions expect 
+these two objects as inputs and respond these as outputs.
+
+"Data tables" (commonly referenced with the parameter 'data' or derivates) are 
+an array of records, each on being an object of key and value pairs.
+Normaly, the same keys are present in every record, but this is
+not required. values are not restricted being numbers, strings or 
+objects. See a json schema and examples in /schemas/data_*.json
+
+"Data attributes" (commonly referenced with the parameter 'dataAttributes' 
+or derivates), are an object. Every keys of the main object is an object 
+that defines the 'type', 'description', 'definition', 'UoM', 'UoMSymbol' 
+and 'UoMDefinition'. See a json schema and examples in /schemas/dataAttributes_*.json
+*/
+
+
 
 "use strict"
 
@@ -62,7 +80,7 @@ function getJSONType(a) {
 		return "integer";
 	if (parseFloat(a))
 		return "number"
-	else 
+	else
 		return "string";
 }
 
@@ -146,14 +164,14 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 	var dataLeftAttributesArray = Object.keys(dataLeftAttributes);
 	var dataRightAttributesArray = Object.keys(dataRightAttributes);
 	var dataRightNameInJoin=[], dataCurrent=[];
-	
+
 	for (var i=0; i<dataLeftAttributesArray.length; i++) {
 		dataCurrentAttributes[dataLeftAttributesArray[i]]=deapCopy(dataLeftAttributes[dataLeftAttributesArray[i]]);
 	}
 	for (var i=0; i<dataRightAttributesArray.length; i++) {
 		for (var j=0; j<options.RowMatching.length; j++)
 			if (dataRightAttributesArray[i]==options.RowMatching[j].right)
-				break; 
+				break;
 		if (j<options.RowMatching.length) {
 			dataRightNameInJoin[i]==null;
 			continue; //This should be not included as it is already there.
@@ -172,9 +190,9 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 		dataRightNameInJoin[i]=dataRightAttributesArray[i];
 		dataCurrentAttributes[dataRightNameInJoin[i]]=deapCopy(dataRightAttributes[dataRightAttributesArray[i]]);
 	}
-			
+
 	var dataCurrentAttributesArray = Object.keys(dataCurrentAttributes);
-	
+
 	//Sort a duplicate of the second tabla by the matching criteria.
 	var dataRightSorted=deapCopy(dataRight);
 	dataRightSorted.sort(function (a, b) {
@@ -200,7 +218,7 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 		for (var i=0; i<options.RowMatching.length; i++)
 			recordRight[options.RowMatching[i].right]=dataLeft[j][options.RowMatching[i].left];
 		iRight=binarySearch(dataRightSorted, recordRight, compareRightTable, options);
-		
+
 		if (options.NotMatch=="LeftTable" || options.NotMatch=="BothTables" || iRight!=null) {
 			dataCurrent.push(deapCopy(dataLeft[j]));
 			if (iRight!=null) {
@@ -235,79 +253,503 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 	return dataCurrent;
 }
 
-//rowNumbers: Show rwo numbers as first collumn
-//prefix_selectedEntityId, in the radio buttons to select use prefix_selectedEntityId+i as an identifier, 
-//selectedEntityId index of the selected radio button, 
+		const AggregationsOptions=[{name: "Mean", desc: "Mean"},
+					 {name: "Mode", desc: "Mode"},
+					 {name: "FirstValue", desc: "First value"},
+					 {name: "Median", desc: "Median"},
+					 {name: "StandardDeviation", desc: "Standard deviation"},
+					 {name: "LastValue", desc: "Last value"},
+					 {name: "Q1", desc: "Q1"},
+					 {name: "Variance", desc: "Variance"},
+					 {name: "RandomValue", desc: "Random value"},
+					 {name: "Q3", desc: "Q3"},
+					 {name: "Sum", desc: "Sum"},
+					 {name: "CountDefined", desc: "Count defined"},
+					 {name: "MinValue", desc: "Min. Value"},
+					 {name: "Concatenate", desc: "Concatenate"},
+					 {name: "Count", desc: "Count"},
+					 {name: "MaxValue", desc: "Max. value"},
+					 {name: "Span", desc: "Span"},
+					 {name: "ProportionDefined", desc: "Proportion defined"}];
+		const GroupByDateTimeOptions=[{name: "Year", desc: "Year"},
+					 {name: "Month", desc: "Month"},
+					 {name: "Day", desc: "Day"},
+					 {name: "Hour", desc: "Hour"},
+					 {name: "Minute", desc: "Minute"},
+					 {name: "Second", desc: "Second"}];
+
+/*All these functions DO NOT support an array null or will zero elements or with undefined or null element. That is why "CountDefined" and "ProportionDefined" are not defined
+  All these functions EXCEPT "Concatenate", "Mode", "Median", "Q1" and "Q3" expect an array of numbers*/
+
+function aggrFuncMean(values){
+var r=0;
+	for (var i=0; i<values.length; i++)
+		r+=values[i];
+	return r/values.length;
+}
+
+function aggrFuncMode(values) {
+	var numberValueArray=[];//[value of mode], one or more
+	var summaryOfData={}; //Object. Every key is a value, every value of the key is the number of repetitions
+	var numberOfRepetitions, maxNumberOfRepetitions=0, mode;
+	for (var i = 0; i < values.length; i++) { //creating summaryOfData object
+	  if (summaryOfData[values[i]]) {
+		numberOfRepetitions = summaryOfData[values[i]];
+		summaryOfData[values[i]] = numberOfRepetitions+ 1;
+
+	  }else{ //First appearance
+		summaryOfData[values[i]]=1;
+	  }
+	}
+
+	var objectKeys=Object.keys(summaryOfData); //every key is a different value from values
+
+	for (var a=0;a<objectKeys.length;a++){ //Searching value with more repetitions
+	  if (summaryOfData[objectKeys[a]]==maxNumberOfRepetitions){
+		numberValueArray.push(objectKeys[a]);//several with same number
+	  }else if (summaryOfData[objectKeys[a]]>maxNumberOfRepetitions){
+		  numberValueArray=[objectKeys[a]]; //add moda value 
+		  maxNumberOfRepetitions = summaryOfData[objectKeys[a]]; //update number max
+	  }
+	}
+	mode=numberValueArray; //One value or more, always in a array;
+   
+	return mode;
+
+  }
+
+function aggrFuncFirstValue(values){
+	return values[0];
+}
+
+function aggrFuncCoefficientOfVariation (values){ //Aquesta no estava,però com és fàcil de calcular tenint les altres...
+	var standardDeviation= aggrFuncStandardDeviation(values);
+	var mean= aggrFuncMean(values);
+	var CoefficientOfVariation= standardDeviation/mean;
+	return CoefficientOfVariation;
+}
+function aggrFuncMedian(values) {
+	var numberOfValues = values.length;
+	var isPar, middleNumber, median;
+	var sortedValues = sortValuesNumbersOrText(values);
+	if (numberOfValues % 2 == 0) {
+	  isPar = true;
+	}else{
+		isPar = false;
+	}
+
+	if (isPar) {
+	  middleNumber = numberOfValues / 2;
+	  median = ((sortedValues[middleNumber - 1] + sortedValues[(middleNumber + 1) - 1])) / 2;
+	} else {
+	  median = sortedValues[((numberOfValues + 1) / 2) - 1];
+	}
+	return median;
+  }
+
+function aggrFuncStandardDeviation(values){
+	var variance= aggrFuncVariance(values);
+	var standardDeviation= Math.sqrt(variance);
+	return standardDeviation;
+}
+
+function aggrFuncLastValue(values){
+	return values[values.length-1];
+}
+
+function aggrFuncQ1(values) {
+	var isPar, medianaPosition, q1;
+	var valuesSorted = values.sort((a, b) => a - b);
+	if (valuesSorted.length % 2 == 0) {
+	  isPar = true;
+	} else {
+	  isPar = false;
+	}
+
+	if (isPar) {
+	  medianaPosition = valuesSorted.length / 2; 
+	  
+	  if (medianaPosition% 2 == 0){//par
+		numbersPerSite = medianaPosition - (medianaPosition / 2);
+		q1 = (valuesSorted[numbersPerSite - 1] + valuesSorted[(numbersPerSite - 1)+1])/2;
+
+	  }else{ 
+		numbersPerSite = medianaPosition - ((medianaPosition-1) / 2); //Every side has numberPerSite -1 numbers
+		 q1 = valuesSorted[numbersPerSite - 1];
+	  }     
+	}
+	else {
+	  medianaPosition = (valuesSorted.length + 1) / 2;
+	  if (medianaPosition% 2 == 0){//if number is par, every side has an odd number of digits
+		numbersPerSite = medianaPosition - (medianaPosition / 2);
+		q1 = valuesSorted[numbersPerSite - 1];
+
+	  }else{//if number is odd, every side has an par number of digits
+		numbersPerSite = (medianaPosition -1)- ((medianaPosition -1)/ 2);
+		q1 = (valuesSorted[numbersPerSite - 1] + valuesSorted[(numbersPerSite - 1)+1])/2;
+	  }
+	 
+	}
+	return q1;
+	  
+}
+
+function aggrFuncQ3(values) {
+	var isPar, medianaPosition, q3;
+      var valuesSorted = values.sort((a, b) => a - b);
+      if (valuesSorted.length % 2 == 0) {
+        isPar = true;
+      } else {
+        isPar = false;
+      }
+
+      if (isPar) {
+        medianaPosition = valuesSorted.length / 2;
+
+        if (medianaPosition % 2 == 0) {//par
+          numbersPerSite = medianaPosition + (medianaPosition / 2);
+          q3 = (valuesSorted[numbersPerSite - 1] + valuesSorted[(numbersPerSite - 1) + 1]) / 2;
+
+        } else {
+          numbersPerSite = medianaPosition + ((medianaPosition + 1) / 2); //Every side has numberPerSite -1 numbers
+          q3 = valuesSorted[numbersPerSite - 1];
+        }
+      }
+      else {
+        medianaPosition = (valuesSorted.length + 1) / 2;
+        if (medianaPosition % 2 == 0) {//if number is par, every side has an odd number of digits
+          numbersPerSite = medianaPosition + (medianaPosition / 2);
+          q3 = valuesSorted[numbersPerSite - 1];
+
+        } else {//if number is odd, every side has an par number of digits
+          numbersPerSite = medianaPosition + ((medianaPosition - 1) / 2);
+          q3 = (valuesSorted[numbersPerSite - 1] + valuesSorted[(numbersPerSite - 1) + 1]) / 2;
+        }
+
+      }
+    return q3;
+}
+function aggrFuncVariance(values){
+	var mean= aggrFuncMean(values);
+	var summation=0, value, variance;
+	for (var i=0;i<values.length;i++){
+		value= values[i]-mean;
+		summation+=value*value;
+	}
+	variance= summation/(values.length-1);
+	return variance;
+}
+
+function aggrFuncRandomValue(values){
+	var max= values.length;
+	var randomIndex=Math.floor(Math.random() * max);
+	var randomValue= values[randomIndex];
+	return randomValue;
+}
+
+
+
+function aggrFuncSum(values){
+var r=0;
+	for (var i=0; i<values.length; i++)
+		r+=values[i];
+	return r;
+}
+
+/*function aggrFuncCountDefined(values){
+}*/
+
+function aggrFuncMinValue(values){
+var r=values[0];
+	for (var i=1; i<values.length; i++) {
+		if (r>values[i])
+			r=values[i];
+	}
+	return r
+}
+
+function aggrFuncConcatenate(values){
+var r="";
+	for (var i=0; i<values.length; i++) {
+		r=values[i]+" ";
+	}
+	return r.slice(0, -1);  //remove last character
+}
+
+function aggrFuncCount(values){
+	return values.length;
+}
+
+function aggrFuncMaxValue(values){
+var r=values[0];
+	for (var i=1; i<values.length; i++) {
+		if (r<values[i])
+			r=values[i];
+	}
+	return r;
+}
+
+function aggrFuncSpan(values){
+var r_max,r_min;
+
+	r_max=r_min=values[0];
+	for (var i=1; i<values.length; i++) {
+		if (r_min>values[i])
+			r_min=values[i];
+		else if (r_max<values[i])
+			r_max=values[i];
+	}
+	return r_max-r_min;
+}
+
+/*function aggrFuncProportionDefined(values){
+}*/
+
+function GroupRecordsData(dataSorted, i_ini, i_end, dataAttributesArray, groupByParams) {
+	var record={}, recordSorted=dataSorted[i_ini], aggrFuncName, valuesString=null, values=null, r, countDefined=-1;
+	//Populate groupByAttr
+	for (var j=0; j<dataAttributesArray.length; j++) {
+		if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1)
+			record[dataAttributesArray[j]]=recordSorted[dataAttributesArray[j]];
+	}
+	for (var j=0; j<dataAttributesArray.length; j++) {
+		if (groupByParams.aggregationAttr[dataAttributesArray[j]]) {
+			for (var k=0; k<groupByParams.aggregationAttr[dataAttributesArray[j]].length; k++) {
+				//Calculate the aggregations
+				//Populate the aggregated columns
+				aggrFuncName=groupByParams.aggregationAttr[dataAttributesArray[j]][k];
+				if (aggrFuncName=="Count")
+					record[dataAttributesArray[j]+"_"+aggrFuncName]=i_end-i_ini+1;
+				else if (aggrFuncName=="FirstValue")
+					record[dataAttributesArray[j]+"_"+aggrFuncName]=dataSorted[i_ini][dataAttributesArray[j]];
+				else if (aggrFuncName=="LastValue")
+					record[dataAttributesArray[j]+"_"+aggrFuncName]=dataSorted[i_end][dataAttributesArray[j]];
+				else if (aggrFuncName=="RandomValue")
+					record[dataAttributesArray[j]+"_"+aggrFuncName]=dataSorted[Math.floor(Math.random()*(i_end-i_ini+1)+i_ini)][dataAttributesArray[j]];
+				else if (aggrFuncName=="CountDefined" || aggrFuncName=="ProportionDefined") {
+					if (countDefined==-1) {
+						countDefined=0;
+						for (var i=i_ini; i<=i_end; i++){
+							if (typeof dataSorted[i][dataAttributesArray[j]] === "undefined" || dataSorted[i][dataAttributesArray[j]]===null || dataSorted[i][dataAttributesArray[j]]==="")
+								continue;
+							countDefined++;
+						}
+					}
+					if (aggrFuncName=="CountDefined")
+						record[dataAttributesArray[j]+"_"+aggrFuncName]=countDefined;
+					else if (aggrFuncName=="ProportionDefined")
+						record[dataAttributesArray[j]+"_"+aggrFuncName]=countDefined/(i_end-i_ini+1)*100;
+				}
+				else {
+					if (aggrFuncName=="Concatenate") {
+						r="";
+						for (var i=i_ini; i<=i_end; i++){
+							if (typeof dataSorted[i][dataAttributesArray[j]] === "undefined" || dataSorted[i][dataAttributesArray[j]]===null)
+								continue;
+							r+=dataSorted[i][dataAttributesArray[j]] + " ";
+						}
+						record[dataAttributesArray[j]+"_"+aggrFuncName]=r.slice(0, -1);  //remove last space;
+						continue;
+					}
+					if  (aggrFuncName=="Mode" || aggrFuncName=="Median" || aggrFuncName=="Q1" || aggrFuncName=="Q3") {
+						if (valuesString==null) {
+							valuesString=[];
+							for (var i=i_ini; i<=i_end; i++){
+								if (typeof dataSorted[i][dataAttributesArray[j]] === "undefined" || dataSorted[i][dataAttributesArray[j]]===null)
+									continue;
+								valuesString.push(dataSorted[i][dataAttributesArray[j]]);
+							}
+						}
+						if (valuesString.length==0 || !window["aggrFunc"+aggrFuncName])
+							continue;
+						record[dataAttributesArray[j]+"_"+aggrFuncName]=window["aggrFunc"+aggrFuncName](valuesString);
+					} else {
+						if (values==null) {
+							values=[];
+							for (var i=i_ini; i<=i_end; i++){
+								if (typeof dataSorted[i][dataAttributesArray[j]] === "undefined" || dataSorted[i][dataAttributesArray[j]]===null || dataSorted[i][dataAttributesArray[j]]==="")
+									continue;
+								else if (typeof dataSorted[i][dataAttributesArray[j]] === 'string'){
+									r=parseFloat(dataSorted[i][dataAttributesArray[j]]);
+									if (isNaN(r))
+										continue;
+									values.push(r);
+								}
+								else
+									values.push(dataSorted[i][dataAttributesArray[j]]);
+							}
+						}
+						if (values.length==0 || !window["aggrFunc"+aggrFuncName])
+							continue;
+						record[dataAttributesArray[j]+"_"+aggrFuncName]=window["aggrFunc"+aggrFuncName](values);
+					}
+				}
+			}
+		}
+	}
+	return record;
+}
+
+/*var groupByParams={groupByAttr: [],   //Array of column names that should have the same value to group
+		groupByDate:"",         //Rounding for the date fields
+		aggregationAttr:{}};    //column names and the aggregation method
+*/
+function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, groupByParams) {
+	var dataAttributes=dataAttributesNull ? dataAttributesNull : getDataAttributesSimple(data);
+	var dataAttributesArray = Object.keys(dataAttributes);
+	var s, record;
+
+	/*Structure of the table:
+		-the grouping collumns
+		-columns the statistics of the first aggregation collumn
+		-columns the statistics of the second aggregation collumn
+		-...
+		-tempory collumn with an order (it will be removed before returning).
+		Note: that the collumns order of the definion of groupByParams has no influence the order of the output that is determined by the order or the original table.
+	*/
+
+	for (var j=0; j<dataAttributesArray.length; j++) {
+		if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1)
+			dataCurrentAttributes[dataAttributesArray[j]]=deapCopy(dataAttributes[dataAttributesArray[j]]);
+	}
+	for (var j=0; j<dataAttributesArray.length; j++) {
+		if (groupByParams.aggregationAttr[dataAttributesArray[j]]) {
+			for (var k=0; k<groupByParams.aggregationAttr[dataAttributesArray[j]].length; k++) {
+				s=dataAttributesArray[j]+"_"+groupByParams.aggregationAttr[dataAttributesArray[j]][k];
+				dataCurrentAttributes[s]=deapCopy(dataAttributes[dataAttributesArray[j]]);
+				//Modify the Attribute description accordingly.
+			}
+		}
+	}
+
+	//Duplicate the table. Any field that is not grouping of aggregating is removed at this stage
+	var dataSorted=[], recordSorted;
+	//Add a data index column to ensure that the order of the groups is not altered
+	for (var i=0; i<data.length; i++) {
+		record=data[i];
+		recordSorted={};
+		for (var j=0; j<dataAttributesArray.length; j++) {
+			if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1){
+				recordSorted[dataAttributesArray[j]]=record[dataAttributesArray[j]];
+				continue; // this is necessary to avoid adding this field twice if it is asoo in the aggregationAttr.
+			}
+			if (groupByParams.aggregationAttr[dataAttributesArray[j]])
+				recordSorted[dataAttributesArray[j]]=record[dataAttributesArray[j]];
+		}
+		recordSorted["$$order$$"]=i;
+		dataSorted.push(recordSorted);
+	}
+
+	//Sort the data by groupByAttr
+	var sortRecords=function (a, b) {
+		for (var j=0; j<groupByParams.groupByAttr.length; j++) {
+			//groupByDate: TBD
+			if (a[groupByParams.groupByAttr[j]]<b[groupByParams.groupByAttr[j]])
+				return -1;
+			if (a[groupByParams.groupByAttr[j]]>b[groupByParams.groupByAttr[j]])
+				return 1;
+		}
+		return 0;
+	}
+
+	dataSorted.sort(function (a, b) {
+		var r=sortRecords(a, b);
+		if (r!=0)
+			return r;
+		if (a["$$order$$"]<b["$$order$$"])
+			return -1;
+		if (a["$$order$$"]>b["$$order$$"])
+			return 1;
+		return 0;  //Not posible in this case
+	});
+
+	//Populate the output data
+	var dataCurrent=[], i_ini=0, iniRecord;
+	for (var i=1; i<dataSorted.length; i++) {
+		iniRecord=dataSorted[i_ini];
+		if (0!=sortRecords(iniRecord, dataSorted[i])){
+			//records i_ini to i-1 are grouped
+			dataCurrent.push(GroupRecordsData(dataSorted, i_ini, i-1, dataAttributesArray, groupByParams));  //Add the record to the result
+			i_ini=i;
+		}
+	}
+	dataCurrent.push(GroupRecordsData(dataSorted, i_ini, i-1, dataAttributesArray, groupByParams));  //Add the record to the result
+	return dataCurrent;
+}
+
+//rowNumbers: Show two numbers as first collumn
+//prefix_selectedEntityId, in the radio buttons to select use prefix_selectedEntityId+i as an identifier,
+//selectedEntityId index of the selected radio button,
 //f_onclickselectEntity: on click function for the radio buttons
 //f_onclickselectEntityParam: on click function for the radio buttons parameter (it is an string)
 //f_isAttributeAnyURI: function to determine if an attribute is a URI
 //f_attributeToHide: function to determine if an attribute should be hidden in the view
-function GetHTMLTable(data, dataAttributesInput, rowNumbers, prefix_selectedEntityId, selectedEntityId, f_onclickselectEntity, f_onclickselectEntityParam, f_isAttributeAnyURI, f_attributeToHide) {
-	var dataAttributes = dataAttributesInput ? dataAttributesInput : getDataAttributesSimple(data); 
-	var cdns=[], needhref=[], record, cell, dataAttribute;
-	var dataAttributesArray = Object.keys(dataAttributes);
+		function GetHTMLTable(data, dataAttributesInput, rowNumbers, prefix_selectedEntityId, selectedEntityId, f_onclickselectEntity, f_onclickselectEntityParam, f_isAttributeAnyURI, f_attributeToHide) {
+			var dataAttributes = dataAttributesInput ? dataAttributesInput : getDataAttributesSimple(data);
+			var cdns=[], needhref=[], record, cell, dataAttribute;
+			var dataAttributesArray = Object.keys(dataAttributes);
 
-	cdns.push("<table class='tablesmall'><tr>");
-	if (rowNumbers)
-		cdns.push("<th></th>");
-	if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
-		cdns.push("<th></th>");
-	for (var a = 0; a < dataAttributesArray.length; a++) {
-		if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
-			continue;
-		cdns.push("<th>");
-		dataAttribute=dataAttributes[dataAttributesArray[a]];
-		if (dataAttribute.definition)
-			cdns.push("<a href='", dataAttribute.definition, "' target='_blank'>");
-		cdns.push(dataAttributesArray[a]);
-		if (dataAttribute.definition)
-			cdns.push("</a>");
-		if (dataAttribute.UoM || dataAttribute.UoMSymbol)
-		{
-			cdns.push(" (");
-			if (dataAttribute.UoMDefinition)
-				cdns.push("<a href='", dataAttribute.UoMDefinition, "' target='_blank'>");
-			cdns.push(dataAttribute.UoMSymbol ? dataAttribute.UoMSymbol : dataAttribute.UoM);
-			if (dataAttribute.UoMDefinition)
-				cdns.push("</a>");
-			cdns.push(")");
-		}
-		cdns.push("</th>");
-		if (f_isAttributeAnyURI)
-			needhref[a]=f_isAttributeAnyURI(dataAttributesArray[a]);
-	}
-
-	cdns.push("</tr>");
-	for (var i = 0; i < data.length; i++) {
-		record=data[i];
-		cdns.push("<tr>");
-		if (rowNumbers)
-			cdns.push("<td align='right'>", i + 1, "</td>");
-		if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
-		{
-			var s=record["@iot.id"] ? record["@iot.id"] : i;
-			cdns.push("<td><input type='radio' name='SelectRowRadio' id='", prefix_selectedEntityId, s, "' ", f_onclickselectEntity ? "onClick='" + f_onclickselectEntity.name + "(\"" + f_onclickselectEntityParam+ "\");' " : "", s == selectedEntityId ? "checked='checked'" : "", "/></td>");
-		}
-		for (var a = 0; a < dataAttributesArray.length; a++) {
-			if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
-				continue;
-			cell=record[dataAttributesArray[a]];
-			cdns.push((dataAttributes[dataAttributesArray[a]].type=="number" || dataAttributes[dataAttributesArray[a]].type=="integer") ? "<td align='right'>" :  "<td>");
-			if (typeof cell !== "undefined") {
-				if (f_isAttributeAnyURI && needhref[a] && cell.length)
-					cdns.push("<a href='", cell, "' target='_blank'>", cell, "</a>");
-				else if (typeof cell === "object")
-					cdns.push(JSON.stringify(cell));
-				else
-					cdns.push(cell);
+			cdns.push("<table class='tablesmall'><tr>");
+			if (rowNumbers)
+				cdns.push("<th></th>");
+			if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
+				cdns.push("<th></th>");
+			for (var a = 0; a < dataAttributesArray.length; a++) {
+				if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
+					continue;
+				cdns.push("<th>");
+				dataAttribute=dataAttributes[dataAttributesArray[a]];
+				if (dataAttribute.definition)
+					cdns.push("<a href='", dataAttribute.definition, "' target='_blank'>");
+				cdns.push(dataAttributesArray[a]);
+				if (dataAttribute.definition)
+					cdns.push("</a>");
+				if (dataAttribute.UoM || dataAttribute.UoMSymbol)
+				{
+					cdns.push(" (");
+					if (dataAttribute.UoMDefinition)
+						cdns.push("<a href='", dataAttribute.UoMDefinition, "' target='_blank'>");
+					cdns.push(dataAttribute.UoMSymbol ? dataAttribute.UoMSymbol : dataAttribute.UoM);
+					if (dataAttribute.UoMDefinition)
+						cdns.push("</a>");
+					cdns.push(")");
+				}
+				cdns.push("</th>");
+				if (f_isAttributeAnyURI)
+					needhref[a]=f_isAttributeAnyURI(dataAttributesArray[a]);
 			}
-			cdns.push("</td>");
+
+			cdns.push("</tr>");
+			for (var i = 0; i < data.length; i++) {
+				record=data[i];
+				cdns.push("<tr>");
+				if (rowNumbers)
+					cdns.push("<td align='right'>", i + 1, "</td>");
+				if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
+				{
+					var s=record["@iot.id"] ? record["@iot.id"] : i;
+					cdns.push("<td><input type='radio' name='SelectRowRadio' id='", prefix_selectedEntityId, s, "' ", f_onclickselectEntity ? "onClick='" + f_onclickselectEntity.name + "(\"" + f_onclickselectEntityParam+ "\");' " : "", s == selectedEntityId ? "checked='checked'" : "", "/></td>");
+				}
+				for (var a = 0; a < dataAttributesArray.length; a++) {
+					if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
+						continue;
+					cell=record[dataAttributesArray[a]];
+					cdns.push((dataAttributes[dataAttributesArray[a]].type=="number" || dataAttributes[dataAttributesArray[a]].type=="integer") ? "<td align='right'>" :  "<td>");
+					if (typeof cell !== "undefined") {
+						if (f_isAttributeAnyURI && needhref[a] && cell.length)
+							cdns.push("<a href='", cell, "' target='_blank'>", cell, "</a>");
+						else if (typeof cell === "object")
+							cdns.push(JSON.stringify(cell));
+						else
+							cdns.push(cell);
+					}
+					cdns.push("</td>");
+				}
+				cdns.push("</tr>");
+			}
+			cdns.push("</table>");
+			return cdns.join("");
 		}
-		cdns.push("</tr>");
-	}
-	cdns.push("</table>");
-	return cdns.join("");
-}
 
 function addNewEmptyColumn(data,columnName){
 	for (var i=0;i<data.length;i++){
@@ -328,4 +770,223 @@ function addNewColumnWithAutoincrementalValues(data,columnName,firstValue){
 		data[i][columnName]=parseInt(firstValue)+i;
 	}
 	return data;
+}
+
+function addnewColumnSummingColumns(data, columnName,columnsToSum, decimalNumber){
+	var sum; 
+	//numWithComa, value, num;
+	for (var i=0;i<data.length;i++){
+		sum=0;
+		for (var a=0;a<columnsToSum.length;a++){
+			if (typeof data[i][columnsToSum[a]] =="string"){
+				sum+=parseFloat(data[i][columnsToSum[a]]);
+			}else{
+				sum+= data[i][columnsToSum[a]]; //Tal com agafa el CSV mai passarà per aquí perque sempre és STRING
+			}
+			// value=data[i][columnsToSum[a]];
+			// if (value.includes(".")){ //float with .
+			// 	num= parseFloat(value);
+			// }else if (value.includes(",")){ //Float with ","
+        	// 	numWithComa=data[i][columnsToSum[a]];
+			// 	num=value.replace(",",".");
+			// 	num= parseFloat(numWithComa);
+			// }else{ //Integer
+			// num= parseInt(value);
+			// }
+			//sum+=num;
+		}
+		
+		if (decimalNumber){
+			data[i][columnName]= sum.toFixed(decimalNumber);
+		}else{
+			data[i][columnName]= sum;
+		}
+	}
+}
+
+function addnewColumnMultiplyingColumns(data, columnName,columnsToSum, decimalNumber){
+	var product; 
+	//numWithComa, value, product;
+	for (var i=0;i<data.length;i++){
+		
+		for (var a=0;a<columnsToSum.length;a++){
+			if (typeof data[i][columnsToSum[a]] =="string"){
+				if (a==0){
+					product=parseFloat(data[i][columnsToSum[a]]);
+				}else{
+					product=product*parseFloat(data[i][columnsToSum[a]]);
+				}
+			 
+			}else{
+				if (a==0){
+					product=data[i][columnsToSum[a]];
+				}else{
+					product=product* data[i][columnsToSum[a]]; //Tal com agafa el CSV mai passarà per aquí perque sempre és STRING
+
+
+				}
+
+			}
+		}
+		
+		if (decimalNumber){
+			if (decimalNumber==0){ //round number
+				data[i][columnName]= Math.round(product);
+			}
+			data[i][columnName]= product.toFixed(decimalNumber);
+		
+		}else{
+			data[i][columnName]= product;
+		}
+	}
+}
+
+function addnewColumnMinimalValue(data, columnName,columnsToEvaluate, decimalNumber){
+	var values,min;
+	for (var i=0;i<data.length;i++){
+		values=[];
+		for (var a=0;a<columnsToEvaluate.length;a++){
+			values.push(data[i][columnsToEvaluate[a]]);
+		}
+		min=aggrFuncMinValue(values); //Use function to be able to evaluate many columns
+		if (decimalNumber){
+			if (decimalNumber==0){ //round number
+				data[i][columnName]= Math.round(min);
+			}
+			data[i][columnName]= min.toFixed(decimalNumber);
+		
+		}else{
+			data[i][columnName]= min;
+		}
+		
+		//data[i][columnName]=min;
+	}
+}
+
+function addnewColumnMaximalValue(data, columnName,columnsToEvaluate, decimalNumber){
+	var values,max;
+	for (var i=0;i<data.length;i++){
+		values=[];
+		for (var a=0;a<columnsToEvaluate.length;a++){
+			values.push(data[i][columnsToEvaluate[a]]);
+		}
+		max=aggrFuncMaxValue(values); //Use function to be able to evaluate many columns
+		if (decimalNumber){
+			if (decimalNumber==0){ //round number
+				data[i][columnName]= Math.round(max);
+			}
+			data[i][columnName]= max.toFixed(decimalNumber);
+		
+		}else{
+			data[i][columnName]= max;
+		}
+		//data[i][columnName]=max;
+	}
+}
+
+function addnewColumnMeanValue(data, columnName,columnsToEvaluate, decimalNumber){
+	var values,mean;
+	for (var i=0;i<data.length;i++){
+		values=[];
+		for (var a=0;a<columnsToEvaluate.length;a++){
+			values.push(data[i][columnsToEvaluate[a]]);
+		}
+		mean=aggrFuncMean(values); //Use function to be able to evaluate many columns
+		if (decimalNumber){
+			if (decimalNumber==0){ //round number
+				data[i][columnName]= Math.round(mean);
+			}
+			data[i][columnName]= mean.toFixed(decimalNumber);
+		
+		}else{
+			data[i][columnName]= mean;
+		}
+		//data[i][columnName]=mean;
+	}
+}
+
+function addnewColumnVarianceValue(data, columnName,columnsToEvaluate, decimalNumber){
+	var values,variance;
+	for (var i=0;i<data.length;i++){
+		values=[];
+		for (var a=0;a<columnsToEvaluate.length;a++){
+			values.push(data[i][columnsToEvaluate[a]]);
+		}
+		variance=aggrFuncVariance(values); //Use function to be able to evaluate many columns
+		if (decimalNumber){
+			if (decimalNumber==0){ //round number
+				data[i][columnName]= Math.round(variance);
+			}
+			data[i][columnName]= variance.toFixed(decimalNumber);
+		
+		}else{
+			data[i][columnName]= variance;
+		}
+		//data[i][columnName]=variance;
+	}
+}
+function addnewColumnMedianValue (data, columnName,columnsToEvaluate, decimalNumber){
+	var values,median;
+	for (var i=0;i<data.length;i++){
+		values=[];
+		for (var a=0;a<columnsToEvaluate.length;a++){
+			values.push(data[i][columnsToEvaluate[a]]);
+		}
+		median=aggrFuncMedian(values); //Use function to be able to evaluate many columns
+		if (decimalNumber){
+			if (decimalNumber==0){ //round number
+				data[i][columnName]= Math.round(median);
+			}
+			data[i][columnName]= median.toFixed(decimalNumber);
+		
+		}else{
+			data[i][columnName]= median;
+		}
+		//data[i][columnName]=median;
+	}
+}
+function addnewColumnConcatenatingValues (data, columnName,columnsToEvaluate){ //!!!!!!!!!!!!No funciona amb numeros
+	var values,concatenated;
+	for (var i=0;i<data.length;i++){
+		values=[];
+		for (var a=0;a<columnsToEvaluate.length;a++){
+			values.push(data[i][columnsToEvaluate[a]]);
+		}
+		concatenated=aggrFuncConcatenate(values); //Use function to be able to evaluate many columns
+
+		data[i][columnName]= concatenated;
+	}
+}
+
+function sortValuesNumbersOrText(arrayValues) {
+	var arrayNumbers = [];
+	var arrayText = [];
+	var arrayNumbersArranged, arrayTextsArranged, arrayValuesArranged;
+	var isNumber, punctuationMark;
+	for (var i = 0; i < arrayValues.length; i++) { //Separate numbers and text
+		if (typeof arrayValues[i] !== "undefined") {
+			isNumber = true;
+			punctuationMark = false;
+			for (var a = 0; a < arrayValues[i].length; a++) { //check each character
+				if (isNumber == true && arrayValues[i] != "," && arrayValues[i] != "." && punctuationMark != true) {
+					if (isNaN(arrayValues[i][a])) {//is not a number 
+						isNumber = false;
+
+					}
+					if (arrayValues[i] != "," || arrayValues[i] != ".") {
+						punctuationMark = true;
+					}
+				}
+			}
+			if (isNumber == true) {
+				arrayNumbers.push(arrayValues[i]);
+			} else {
+				arrayText.push(arrayValues[i]);
+			}
+		}
+		arrayNumbersArranged = arrayNumbers.sort((a, b) => a - b);
+		arrayTextsArranged = arrayText.sort();
+		arrayValuesArranged = arrayNumbersArranged.concat(arrayTextsArranged); //join arrays
+	}
+	return arrayValuesArranged;
 }
