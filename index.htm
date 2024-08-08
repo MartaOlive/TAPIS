@@ -427,11 +427,12 @@
 			  <input type="button" style="width:62px" value="atang"
 				onclick="WriteInTheFormulaButtons('Math.atan( *Math.PI/180)')"> <!--Math.atan	(&quot;,&quot;*Math.PI/180)	 -->
 			</fieldset>
-		
-			<label>Formula:</label>
+			<div>
+			<label style="position:relative;top:22px">Formula:</label>
 			<br>
-			<textarea id="textAreaFormulaColumnsCalculator" style="width:438px;height:100px"></textarea>
-			<fieldset  style="display:inline-block" >
+			
+			<textarea id="textAreaFormulaColumnsCalculator" style="width:350px;height:100px;display:inline-block;position:relative;top:27px"></textarea>
+			<fieldset  style="display:inline-block;position:relative; top:10px" >
 				<legend>Set number of decimals:</legend>
 				<span>
 					<input type="radio" id="chooseNumberDecimalsCalculator_1" name="chooseNumberDecimalsCalculator" value="no" checked> 
@@ -444,6 +445,7 @@
 
 							 
 			</fieldset>
+		</div>
 			<br>
 			<button value="add" onClick="addColumnToListColumnsCalculator(event)" style="margin-bottom:10px">Add column to list
 			</button>
