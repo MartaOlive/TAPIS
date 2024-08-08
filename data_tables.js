@@ -941,9 +941,30 @@ function addnewColumnCountDefined (data, columnName,columnsToEvaluate){ //No est
 function addnewColumnProportionDefined (data, columnName,columnsToEvaluate){ //No està feta la funció
 	//return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncProportionDefined); 
 }
-function addnewColumnWithFormula (data, columnName,formula){ //No està feta la funció
-	
+function addnewColumnWithFormula (data, columnName,formula,decimalNumber){ 
+	var formulaWithValues;
+	var dataKeys= Object.keys(data[0]);
+	var n=data.length, m=dataKeys.length;
+	for (var i=0; i<n; i++){
+		formulaWithValues=formula;//Restore the original formula sentence to be changed with other data 
+		for (var a=0;a<m;a++){
+			formulaWithValues = formulaWithValues.replaceAll(dataKeys[a], data[i][dataKeys[a]]);
+		}
+		if (decimalNumber || decimalNumber!=""){
+			if (decimalNumber==0){ //round number
+				data[i][columnName]= Math.round(eval(formulaWithValues));
+			}
+			data[i][columnName]= eval(formulaWithValues).toFixed(decimalNumber);
+		
+		}else{
+			data[i][columnName]= eval(formulaWithValues);
+		}
+		
+	}
 }
+
+
+
 
 function sortValuesNumbersOrText(arrayValues) {
 	var arrayNumbers = [], n=arrayValues.length;

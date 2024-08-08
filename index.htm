@@ -431,6 +431,19 @@
 			<label>Formula:</label>
 			<br>
 			<textarea id="textAreaFormulaColumnsCalculator" style="width:438px;height:100px"></textarea>
+			<fieldset  style="display:inline-block" >
+				<legend>Set number of decimals:</legend>
+				<span>
+					<input type="radio" id="chooseNumberDecimalsCalculator_1" name="chooseNumberDecimalsCalculator" value="no" checked> 
+					<label for="chooseNumberDecimalsCalculator_1">No </label>
+					<br>
+					<input type="radio" id="chooseNumberDecimalsCalculator_0" name="chooseNumberDecimalsCalculator" value="yes"> 
+					<label for="chooseNumberDecimalsCalculator_0">Yes: </label>
+					<input id="chooseNumberDecimalsCalculator_0_input" type="number" max="10" min="0">
+				</span>
+
+							 
+			</fieldset>
 			<br>
 			<button value="add" onClick="addColumnToListColumnsCalculator(event)" style="margin-bottom:10px">Add column to list
 			</button>
@@ -5387,7 +5400,7 @@
 			event.preventDefault();
 			var data;
 			var decimalNumber,n=currentNode.STAnewColumnsToAdd.length;
-		var dataAttributes= getDataAttributes(currentNode.STAdata)
+			var dataAttributes= getDataAttributes(currentNode.STAdata)
 			if (n!=0){
 				for (var i=0;i<n;i++){
 					decimalNumber=""; //Restart 
@@ -5606,8 +5619,11 @@
 		if(columnNameExist){ //It will not be added because column name already exist
 			alert("Chosen column name already exists, change it to add column to the list ");
 		}else{
-
-			currentNode.STAnewColumnsToAdd.push([textAreaFormulaColumnsCalculator.value,columnName]);
+			var decimalNumber="";
+			if (document.getElementById("chooseNumberDecimalsCalculator_0").checked) {
+            	decimalNumber=document.getElementById("chooseNumberDecimalsCalculator_0_input").value;
+          	}
+			currentNode.STAnewColumnsToAdd.push([textAreaFormulaColumnsCalculator.value,columnName,decimalNumber]);
 			drawTableInColumnBoxTableInCalculatorColumns();
 		}
 		
@@ -5630,11 +5646,11 @@
 	function drawTableInColumnBoxTableInCalculatorColumns(){
 		var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCalculatorColumns");
 		var cdns;
-		var tableHTML=`<table border=1><tr><th>Formula</th><th>Column name</th><th></th>`;
+		var tableHTML=`<table border=1><tr><th>Formula</th><th>Column name</th><th>Number of decimals</th><th></th>`;
 			if (currentNode.STAnewColumnsToAdd.length!=0){
 		 		var n= currentNode.STAnewColumnsToAdd.length;
 		 		for (var i=0;i<n;i++){
-					tableHTML+= `<tr><td>${currentNode.STAnewColumnsToAdd[i][0]}</td> <td>${currentNode.STAnewColumnsToAdd[i][1]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`
+					tableHTML+= `<tr><td>${currentNode.STAnewColumnsToAdd[i][0]}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td><td>${currentNode.STAnewColumnsToAdd[i][0]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`
 
 				}
 			}
@@ -5645,11 +5661,17 @@
 
 	function addColumnsToTableInColumnsCalculator(){
 		event.preventDefault();
-			var n=currentNode.STAnewColumnsToAdd.length;
-			for (var i=0;i<n;i++){
+		var decimalNumber;//decimalNumber=currentNode.STAnewColumnsToAdd[i][2];
+		var n=currentNode.STAnewColumnsToAdd.length;
+		for (var i=0;i<n;i++){
+			decimalNumber=currentNode.STAnewColumnsToAdd[i][2];
+			if (decimalNumber!=""){
+				addnewColumnWithFormula (currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][0],decimalNumber);
+			}else{
 				addnewColumnWithFormula (currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][0]);
 			}
-			document.getElementById("DialogColumnsCalculator").close();
+		}
+		document.getElementById("DialogColumnsCalculator").close();
 
 	}
 		
