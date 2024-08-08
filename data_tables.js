@@ -950,7 +950,7 @@ function addnewColumnWithFormula (data, columnName,formula,decimalNumber){
 		for (var a=0;a<m;a++){
 			formulaWithValues = formulaWithValues.replaceAll(dataKeys[a], data[i][dataKeys[a]]);
 		}
-		if (decimalNumber || decimalNumber!=""){
+		if (typeof decimalNumber !=="undefined"& decimalNumber!=""){
 			if (decimalNumber==0){ //round number
 				data[i][columnName]= Math.round(eval(formulaWithValues));
 			}
