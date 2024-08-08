@@ -1,0 +1,14 @@
+{
+	"columnNumber": {
+		"type": "number",
+		"description": "A number",
+		"definition": "http://www.bob.com/number",
+		"UoM": "meters",
+		"UoMSymbol": "m",
+		"UoMDefinition": "https://qudt.org/vocab/unit/M"
+	},
+	"columnString": {
+		"type": "string",
+		"description": "Salutation"
+	}	
+}

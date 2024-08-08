@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../tapis.css">
+  <link href=".../tools.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+  <form name="CalculadoraCapes" onsubmit="return false;"><br>
+    <label for="columnNameColumnsCalculator">Column Name </label>
+    <input id="columnNameColumnsCalculator" type="text" style="margin-top: 10px; margin-bottom: 10px; ">
+    <br>
+    <label for="afegeix-capa-capa-calcul-valor-capa-0">Capa:</label>
+    <select id="calculator_selectColumns" name="calculator_selectColumnsValue" style="width:400px;" onchange="">
+      <option value="columna1" selected="selected">Columna 1</option>
+      <option value="columna2" selected="selected">Columna 2</option>
+    </select>
+
+    <button onclick="WriteInTheFormulaButtons('attributeSelected')">Write in the formula</button>
+
+    <fieldset>
+      <legend>Operators and functions for the formula: </legend>
+      <input type="button" style="width:40px" value="&#40;" onclick="WriteInTheFormulaButtons('&#40;')">
+      <input type="button" style="width:40px" value="&#41;" onclick="WriteInTheFormulaButtons('&#41;')">
+      <br>
+      <input type="button" style="width:40px" value="=" onclick="WriteInTheFormulaButtons('=')">
+      <input type="button" style="width:40px" value="&gt;=" onclick="WriteInTheFormulaButtons('>=')">
+      <input type="button" style="width:40px" value="&lt;" onclick="WriteInTheFormulaButtons('<')">&nbsp;&nbsp;&nbsp;&nbsp; <!--per fer la separacio-->
+  
+  
+  
+      <input type="button" style="width:30px" value="7" onclick="WriteInTheFormulaButtons('7')">
+      <input type="button" style="width:30px" value="8" onclick="WriteInTheFormulaButtons('8')">
+      <input type="button" style="width:30px" value="9" onclick="WriteInTheFormulaButtons('9')">&nbsp;&nbsp;&nbsp;&nbsp;
+  
+      <input type="button" style="width:30px" value="/" onclick="WriteInTheFormulaButtons('/')">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+  
+      <input type="button" style="width:40px" value="and" onclick="WriteInTheFormulaButtons('and')">
+  
+      <br>
+      <input type="button" style="width:40px" value="≠" onclick="WriteInTheFormulaButtons('!')">
+      <input type="button" style="width:40px" value="&lt;=" onclick="WriteInTheFormulaButtons('<=')">
+      <input type="button" style="width:40px" value="&gt;" 	onclick="WriteInTheFormulaButtons('>')">&nbsp;&nbsp;&nbsp;&nbsp;
+  
+  
+      <input type="button" style="width:30px" value="4" onclick="WriteInTheFormulaButtons('4')">
+      <input type="button" style="width:30px" value="5" onclick="WriteInTheFormulaButtons('5')">
+      <input type="button" style="width:30px" value="6" onclick="WriteInTheFormulaButtons('6')">&nbsp;&nbsp;&nbsp;&nbsp;
+  
+      <input type="button" style="width:30px" value="×" onclick="WriteInTheFormulaButtons('*')">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+  
+      <input type="button" style="width:40px" value="or" onclick="WriteInTheFormulaButtons('or')">
+      <br>
+  
+      <input type="button" style="width:40px" value="Log" onclick="WriteInTheFormulaButtons('Math.log10()')">
+      <input type="button" style="width:40px" value="Ln" onclick="WriteInTheFormulaButtons('Math.log()')">
+      <input type="button" style="width:40px" value="xⁿ"
+      onclick="WriteInTheFormulaButtons('**')">&nbsp;&nbsp;&nbsp;&nbsp;
+  
+  
+      <input type="button" style="width:30px" value="1" onclick="WriteInTheFormulaButtons('1')">
+      <input type="button" style="width:30px" value="2" onclick="WriteInTheFormulaButtons('2')">
+      <input type="button" style="width:30px" value="3" onclick="WriteInTheFormulaButtons('3')">&nbsp;&nbsp;&nbsp;&nbsp;
+  
+      <input type="button" style="width:30px" value="-" onclick="WriteInTheFormulaButtons('-')">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+  
+      <input type="button" style="width:40px" value="not" onclick="WriteInTheFormulaButtons('not')">
+  
+      <br>
+      <input type="button" style="width:40px" value="Exp" onclick="WriteInTheFormulaButtons('Math.exp()')">
+      <input type="button" style="width:40px" value="%" onclick="WriteInTheFormulaButtons('%')">
+      <input type="button" style="width:40px" value="√¯" onclick="WriteInTheFormulaButtons('Math.sqrt()')">&nbsp;&nbsp;&nbsp;&nbsp;
+  
+  
+      <input type="button" style="width:30px" value="&#928;" onclick="WriteInTheFormulaButtons('Math.PI')">
+      <input type="button" style="width:30px" value="0" onclick="WriteInTheFormulaButtons('0')">
+      <input type="button" style="width:30px" value="." onclick="WriteInTheFormulaButtons('.')">&nbsp;&nbsp;&nbsp;&nbsp;
+  
+      <input type="button" style="width:30px" value="+" onclick="WriteInTheFormulaButtons('+')">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+  
+  
+      <input type="button" style="width:40px" value="xor" onclick="WriteInTheFormulaButtons('^')">
+  
+      <br>
+  
+      <input type="button" style="width:40px" value="1/x" onclick="WriteInTheFormulaButtons('1/()')">
+      <input type="button" style="width:40px" value="Ent" onclick="WriteInTheFormulaButtons('Math.trunc()')">
+      <input type="button" style="width:40px" value="Abs"
+      onclick="WriteInTheFormulaButtons('Math.abs()')">&nbsp;&nbsp;&nbsp;&nbsp;
+  
+      <input type="button" style="width:30px" value="e" onclick="WriteInTheFormulaButtons('Math.E')">
+  
+      <br><br>
+      <input type="button" style="width:62px" value="sin" onclick="WriteInTheFormulaButtons('Math.sin()')">
+      <input type="button" style="width:62px" value="asin" onclick="WriteInTheFormulaButtons('Math.asin()')">
+      <input type="button" style="width:62px" value="cos" onclick="WriteInTheFormulaButtons('Math.cos()')">
+      <input type="button" style="width:62px" value="acos" onclick="WriteInTheFormulaButtons('Math.acos()')">
+      <input type="button" style="width:62px" value="tan" onclick="WriteInTheFormulaButtons('Math.tan()')">
+      <input type="button" style="width:62px" value="atan" onclick="WriteInTheFormulaButtons('Math.atan()')">
+  
+      <br>
+      <input type="button" style="width:62px" value="sing"
+      onclick="WriteInTheFormulaButtons('Math.sin( *Math.PI/180)')"> <!-- Math.sin	(&quot;,&quot;*Math.PI/180)	 -->
+      <input type="button" style="width:62px" value="asing"
+      onclick="WriteInTheFormulaButtons('Math.asin()*180/Math.PI')">
+      <!--Math.asin	(&quot;,&quot;)*180/Math.PI&quot	 -->
+      <input type="button" style="width:62px" value="cosg"
+      onclick="WriteInTheFormulaButtons('Math.cos( *Math.PI/180)')"> <!--Math.cos	(&quot;,&quot;*Math.PI/180)	 -->
+      <input type="button" style="width:62px" value="acosg"
+      onclick="WriteInTheFormulaButtons('Math.acos( *Math.PI/180)')"> <!--Math.acos	(&quot;,&quot;*Math.PI/180)	 -->
+      <input type="button" style="width:62px" value="tang"
+      onclick="WriteInTheFormulaButtons('Math.tan( *Math.PI/180)	')"> <!--Math.tan	(&quot;,&quot;*Math.PI/180)	 -->
+      <input type="button" style="width:62px" value="atang"
+      onclick="WriteInTheFormulaButtons('Math.atan( *Math.PI/180)')"> <!--Math.atan	(&quot;,&quot;*Math.PI/180)	 -->
+    </fieldset>
+
+    <label>Formula:</label>
+    <br>
+    <textarea id="textAreaFormulaColumnsCalculator" style="width:438px;height:100px"></textarea>
+    <br>
+    <button value="add" onClick="addColumnToListColumnsCalculator(event)" style="margin-bottom:10px">Add column to list
+    </button>
+    <div style="width:auto;">
+      <label>Add formula to new columns list</label>
+      <div>
+        <ol id="columnsBoxColumnsCalculator"></ol>
+      </div>
+    </div>
+    <br>
+    <div class="center" style="margin-top: 10px">
+      <button value="default" onClick="addColumnsToTableInColumnsCalculator()">Add columns to your table</button>
+      <button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
+    </div>
+  </form>
+
+  <script>
+    var array = [20, 30, 50, 60, 70, 80, 110, 120, 150, 160, 200, 310, 330, 340, 450, 460]; //par, 8 par (6,5 / 32)
+    var array2 = [2, 3, 5, 6, 7, 8, 11, 12, 15, 16, 20, 31, 33, 34, 36]; //impar, 7 impar (6, 31)
+    var array3 = [2, 3, 5, 6, 7, 8, 11, 12, 15, 16, 20, 31, 33, 34]; //par, 7 impar (6,20)
+    var array4 = [2, 3, 5, 6, 7, 8, 11, 12, 15, 16, 20, 31, 33, 34, 36, 45, 46, 47, 48, 49, 50]; //impar, 8 par (7,5/45,5)
+
+    var textarea = document.getElementById("textAreaFormulaColumnsCalculator")
+    textarea.addEventListener('click', event => {
+      textarea.setAttribute("data-mousePosition", textarea.selectionStart)
+      //console.log(textarea.selectionStart) // logs previous location
+    })
+
+    function WriteInTheFormulaButtons(character) {
+      event.preventDefault();
+      var textAreaFormulaColumnsCalculator = document.getElementById("textAreaFormulaColumnsCalculator");
+      var text = textAreaFormulaColumnsCalculator.value;
+      var mousePosition = textAreaFormulaColumnsCalculator.getAttribute("data-mousePosition");
+
+      if (character == "attributeSelected") {
+        var selector = document.getElementById("calculator_selectColumns");
+        character = selector.options[selector.selectedIndex].value;
+      }
+      textAreaFormulaColumnsCalculator.value = [text.slice(0, mousePosition), character, text.slice(mousePosition)].join('');
+      if (!mousePosition) {
+        mousePosition = 0; //If a button is clicked before click text area
+      }
+      textAreaFormulaColumnsCalculator.setAttribute("data-mousePosition", parseInt(mousePosition) + character.length); //If there is no click, next button will be written after this.
+    }
+
+    console.log (eval("Math.log10(9)*3+5"))
+
+
+
+
+
+
+
+
+  </script>
+</body>
+
+</html>

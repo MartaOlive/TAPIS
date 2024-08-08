@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div draggable="true" class="dropzone box" data-item="A">A</div>
+        <div draggable="true" class="dropzone box" data-item="B">B</div>
+        <div draggable="true" class="dropzone box" data-item="C">C</div>
+    </div>
+</body>
+<script>
+// Part 2: Drag & drop elements
+
+var draggedElement = null;
+var items;
+
+function handleDragStart(e) {
+    this.style.opacity = "0.4";
+    draggedElement = this;
+
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("item", this.innerHTML);
+}
+
+function handleDragOver(e) {
+    if (e.preventDefault) 
+        e.preventDefault();
+
+    e.dataTransfer.dropEffect = "move";
+    return false;
+}
+
+function handleDragEnter(e) {
+    this.classList.add("dragover");
+}
+
+function handleDragLeave(e) {
+    this.classList.remove("dragover");
+}
+
+function handleDrop(e) {
+    if (e.stopPropagation)
+        e.stopPropagation();
+
+    if (draggedElement != this) {
+        draggedElement.innerHTML = this.innerHTML;
+        draggedElement.setAttribute("data-item", this.innerHTML);
+
+        let replacedItem = e.dataTransfer.getData("item");
+        this.innerHTML = replacedItem;
+        this.setAttribute("data-item", replacedItem);
+    }
+
+    return false;
+}
+
+function handleDragEnd(e) {
+    this.style.opacity = "1";
+
+    items.forEach(function(item) {
+        item.classList.remove("dragover");
+    });
+}
+
+document.addEventListener("DOMContentLoaded", event => {
+    items = document.querySelectorAll(".container .box");
+
+    items.forEach(function(item) {
+      item.addEventListener("dragstart", handleDragStart);
+      item.addEventListener("dragenter", handleDragEnter);
+      item.addEventListener("dragover", handleDragOver);
+      item.addEventListener("dragleave", handleDragLeave);
+      item.addEventListener("drop", handleDrop);
+      item.addEventListener("dragend", handleDragEnd);
+    });
+});
+
+</script>
+</html>
+
+

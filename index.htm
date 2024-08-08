@@ -217,33 +217,37 @@
 		<form>
 			Create columns:
 			<span id="DialogCreateColumnsHTML">
-			 <br>
-			  <label for="columnNameCreateColumns">Column Name </label>
-			  <input id="columnNameCreateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
-			  <br>
+
 			  <div>
 				<fieldset>
 					<legend>Select your operation:</legend>
-					<input type="radio" id="constantValue" name="TypeOfValues" value="constantValue" checked> 
-					<label for="constantValue">Constant value</label><input id="inputText_constantValue" type="text" style="margin-left:10px" ><br>
-					<input type="radio" id="autoincrementalValue" name="TypeOfValues" value="autoincrementalValue">
-					<label for="autoincrementalValue">Autoincemental value</label><input id="inputText_autoincrementalValue" type="text" style="margin-left:10px"  placeholder="Initial value" ><br>
-					<input type="radio" id="empty" name="TypeOfValues" value="empty">
-					<label for="empty">Empty column</label><br>
+					<input type="radio" id="columnNameRadioType_constantValue" name="TypeOfValues" value="constantValue" checked> 
+					<label for="columnNameRadioType_constantValue">Constant value</label><input id="inputText_constantValue" type="text" style="margin-left:10px" ><br>
+					<input type="radio" id="columnNameRadioType_autoincrementalValue" name="TypeOfValues" value="autoincrementalValue">
+					<label for="columnNameRadioType_autoincrementalValue">Autoincemental value</label><input id="inputText_autoincrementalValue" type="text" style="margin-left:10px"  placeholder="Initial value" ><br>
+					<input type="radio" id="columnNameRadioType_empty" name="TypeOfValues" value="empty">
+					<label for="columnNameRadioType_empty">Empty column</label><br>
+				</fieldset>
+
+				<fieldset>
+					<legend>Column name:</legend>
+					<input type="radio" name="columnNameRadioCreateColumns" id ="columnNameRadioACreateColumns_personalized" checked="checked"> <!--Function has no sense, it is only to mimic aggregated columns dialog-->
+					<label for ="columnNameRadioACreateColumns_personalized" >Personalized</label>
+					<input id="columnNameCreateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
+
+
 				</fieldset>
 				<button value="add" onClick="addColumnToListCreateColumn(event)"style="margin-bottom:10px">Add column to list </button>
-				<div  style="width:auto;">
-					<label>Columns to add</label>
-					<div >
-						<ol id="columnsBoxCreateColumns"></ol>
-					</div>
-				</div>
+				<br><br>
+				<div style="width:auto;" >
+					<label>List of columns to add</label>
+					<span id= spanColumnsListCreateColumns></span>
 			  </div>
 			  
 		
 			</span>
 			<div class="center" style="margin-top: 10px">
-			  <button value="default" onClick="addColumnsToTableInCreateColumns()">Add columns to your table</button>
+			  <button value="default" onClick="addColumnsToTableInCreateColumns()">Ok</button>
 			  <button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
 			</div>
 		  </form>
@@ -254,55 +258,55 @@
 			Aggregate columns:
 			<span id="DialogAggregateColumnsHTML">
 			  <br>
-			  <label for="columnNameAggregateColumns">Column Name </label>
-			  <input id="columnNameAggregateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
-			  <br>
+
 			  
-				<fieldset id="columnsFielset" style="display:inline-block">
+				<fieldset  style="display:inline-block">
+					<legend>Select attributes:</legend>
+					<span id="columnsFielset"></span>
 				  
 						 
 				</fieldset>		
-			  <fieldset id="operationsFieldSet" style="display:inline-block">
-				<legend>Select your operation:</legend>
-				<input type="radio" id="sum" name="TypeOfOperation" value="sum" checked> 
-				<label for="sum">Sum</label><br>
-				<input type="radio" id="product" name="TypeOfOperation" value="product">
-				<label for="product">Product</label><br>
-				<input type="radio" id="minimalValue" name="TypeOfOperation" value="minimalValue">
-				<label for="minimalValue">Minimal Value</label><br>
-				<input type="radio" id="maximalValue" name="TypeOfOperation" value="maximalValue">
-				<label for="maximalValue">Maximal Value</label><br>
-				<input type="radio" id="meanValue" name="TypeOfOperation" value="meanValue">
-				<label for="meanValue">Mean Value</label><br>
-				<input type="radio" id="variance" name="TypeOfOperation" value="variance">
-				<label for="variance">Variance</label><br>
-				<input type="radio" id="median" name="TypeOfOperation" value="median">
-				<label for="median">Median</label><br>
-				<input type="radio" id="concatenate" name="TypeOfOperation" value="concatenate">
-				<label for="concatenate">Concatenate</label><br>
+			  <fieldset style="display:inline-block">
+				<legend>Aggregations:</legend>
+				<span  id="operationsFieldSet"></span>
 			  </fieldset>
 
 				<fieldset  style="display:inline-block" >
 					<legend>Set number of decimals:</legend>
-					<input type="radio" id="chooseNumberDecimals_1" name="chooseNumberDecimals" value="no" checked> 
-					<label for="chooseNumberDecimals_1">No </label>
-					<br>
-					<input type="radio" id="chooseNumberDecimals_0" name="chooseNumberDecimals" value="yes"> 
-					<label for="chooseNumberDecimals_0">Yes: </label>
-					<input id="chooseNumberDecimals_0_input" type="number" max="10" min="0"> 
+					<span>
+						<input type="radio" id="chooseNumberDecimals_1" name="chooseNumberDecimals" value="no" checked> 
+						<label for="chooseNumberDecimals_1">No </label>
+						<br>
+						<input type="radio" id="chooseNumberDecimals_0" name="chooseNumberDecimals" value="yes"> 
+						<label for="chooseNumberDecimals_0">Yes: </label>
+						<input id="chooseNumberDecimals_0_input" type="number" max="10" min="0">
+					</span>
+
 								 
 				</fieldset>
 			  <br>
+			  <fieldset style="display:inline-block" >
+				<legend >Column name: </legend>
+				<input type="radio" name="columnNameRadioAggregateColumns" id ="columnNameRadioAggregateColumns_personalized">
+				<label for ="columnNameRadioAggregateColumns_personalized" >Personalized</label>
+				<input id="columnNameAggregateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
+				<br>				
+				<input type="radio" name="columnNameRadioAggregateColumns" checked="checked"  id ="columnNameRadioAggregateColumns_suggested">
+				<label for ="columnNameRadioAggregateColumns_suggested" >Suggested: </label>
+				<span id ="columnNameAggregateColumns_span" ></span>
+			  </fieldset>
+			 <br>
+			  
 			  <button value="add" onClick="addColumnToListAggregateColumns(event)"style="margin-bottom:10px">Add column to list </button>
+
+			  <br><br>
 			  <div style="width:auto;" >
-				<label>Columns to add</label>
-				<div >
-					<ol id="columnsBoxAggregateColumn"></ol>
-				</div>
+				<label>List of columns to add</label>
+				<span id= spanColumnsListAggregateColumns></span>
 			  </div>
 			</span>
 			<div class="center" style="margin-top: 10px">
-			  <button value="default" onClick="addColumnsToTableInAggregateColumns(event)">Create new columns</button>
+			  <button value="default" onClick="addColumnsToTableInAggregateColumns(event)">Ok</button>
 			  <button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
 			</div>
 		  </form>
@@ -312,15 +316,134 @@
 
 
 	<dialog id="DialogColumnsCalculator">
-		<form>
-			Columns Calculator:
-			<span id="DialogColumnsCalculatorHTML">
-			</span>
-			<div class="center">
-				<button value="default" onClick="GetColumnsCalculator(event)">OK</button>
-				<button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
+		<form name="CalculadoraCapes" onsubmit="return false;"><br>
+			<label for="columnNameColumnsCalculator">Column Name </label>
+			<input id="columnNameColumnsCalculator" type="text" style="margin-top: 10px; margin-bottom: 10px; ">
+			<br>
+			<label for="afegeix-capa-capa-calcul-valor-capa-0">Capa:</label>
+			<select id="calculator_selectColumns" name="calculator_selectColumnsValue" style="width:400px;" onchange="">
+			  <option value="columna1" selected="selected">Columna 1</option>
+			  <option value="columna2" >Columna 2</option>
+			</select>
+		
+			<button onclick="WriteInTheFormulaButtons('attributeSelected')" >Write in the formula</button>
+		
+			<fieldset>
+			  <legend>Operators and functions for the formula: </legend>
+			  <input type="button" style="width:40px" value="&#40;" onclick="WriteInTheFormulaButtons('&#40;')">
+			  <input type="button" style="width:40px" value="&#41;" onclick="WriteInTheFormulaButtons('&#41;')">
+			  <br>
+			  <input type="button" style="width:40px" value="=" onclick="WriteInTheFormulaButtons('=')">
+			  <input type="button" style="width:40px" value="&gt;=" onclick="WriteInTheFormulaButtons('>=')">
+			  <input type="button" style="width:40px" value="&lt;" onclick="WriteInTheFormulaButtons('<')">&nbsp;&nbsp;&nbsp;&nbsp; <!--per fer la separacio-->
+		
+		
+		
+			  <input type="button" style="width:30px" value="7" onclick="WriteInTheFormulaButtons('7')">
+			  <input type="button" style="width:30px" value="8" onclick="WriteInTheFormulaButtons('8')">
+			  <input type="button" style="width:30px" value="9" onclick="WriteInTheFormulaButtons('9')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="/" onclick="WriteInTheFormulaButtons('/')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:40px" value="and" onclick="WriteInTheFormulaButtons('and')">
+		
+			  <br>
+			  <input type="button" style="width:40px" value="≠" onclick="WriteInTheFormulaButtons('!')">
+			  <input type="button" style="width:40px" value="&lt;=" onclick="WriteInTheFormulaButtons('<=')">
+			  <input type="button" style="width:40px" value="&gt;" 	onclick="WriteInTheFormulaButtons('>')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:30px" value="4" onclick="WriteInTheFormulaButtons('4')">
+			  <input type="button" style="width:30px" value="5" onclick="WriteInTheFormulaButtons('5')">
+			  <input type="button" style="width:30px" value="6" onclick="WriteInTheFormulaButtons('6')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="×" onclick="WriteInTheFormulaButtons('*')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:40px" value="or" onclick="WriteInTheFormulaButtons('or')">
+			  <br>
+		
+			  <input type="button" style="width:40px" value="Log" onclick="WriteInTheFormulaButtons('Math.log10()')">
+			  <input type="button" style="width:40px" value="Ln" onclick="WriteInTheFormulaButtons('Math.log()')">
+			  <input type="button" style="width:40px" value="xⁿ"
+				onclick="WriteInTheFormulaButtons('**')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:30px" value="1" onclick="WriteInTheFormulaButtons('1')">
+			  <input type="button" style="width:30px" value="2" onclick="WriteInTheFormulaButtons('2')">
+			  <input type="button" style="width:30px" value="3" onclick="WriteInTheFormulaButtons('3')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="-" onclick="WriteInTheFormulaButtons('-')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:40px" value="not" onclick="WriteInTheFormulaButtons('not')">
+		
+			  <br>
+			  <input type="button" style="width:40px" value="Exp" onclick="WriteInTheFormulaButtons('Math.exp()')">
+			  <input type="button" style="width:40px" value="%" onclick="WriteInTheFormulaButtons('%')">
+			  <input type="button" style="width:40px" value="√¯" onclick="WriteInTheFormulaButtons('Math.sqrt()')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:30px" value="&#928;" onclick="WriteInTheFormulaButtons('Math.PI')">
+			  <input type="button" style="width:30px" value="0" onclick="WriteInTheFormulaButtons('0')">
+			  <input type="button" style="width:30px" value="." onclick="WriteInTheFormulaButtons('.')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="+" onclick="WriteInTheFormulaButtons('+')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:40px" value="xor" onclick="WriteInTheFormulaButtons('^')">
+		
+			  <br>
+		
+			  <input type="button" style="width:40px" value="1/x" onclick="WriteInTheFormulaButtons('1/()')">
+			  <input type="button" style="width:40px" value="Ent" onclick="WriteInTheFormulaButtons('Math.trunc()')">
+			  <input type="button" style="width:40px" value="Abs"
+				onclick="WriteInTheFormulaButtons('Math.abs()')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="e" onclick="WriteInTheFormulaButtons('Math.E')">
+		
+			  <br><br>
+			  <input type="button" style="width:62px" value="sin" onclick="WriteInTheFormulaButtons('Math.sin()')">
+			  <input type="button" style="width:62px" value="asin" onclick="WriteInTheFormulaButtons('Math.asin()')">
+			  <input type="button" style="width:62px" value="cos" onclick="WriteInTheFormulaButtons('Math.cos()')">
+			  <input type="button" style="width:62px" value="acos" onclick="WriteInTheFormulaButtons('Math.acos()')">
+			  <input type="button" style="width:62px" value="tan" onclick="WriteInTheFormulaButtons('Math.tan()')">
+			  <input type="button" style="width:62px" value="atan" onclick="WriteInTheFormulaButtons('Math.atan()')">
+		
+			  <br>
+			  <input type="button" style="width:62px" value="sing"
+				onclick="WriteInTheFormulaButtons('Math.sin( *Math.PI/180)')"> <!-- Math.sin	(&quot;,&quot;*Math.PI/180)	 -->
+			  <input type="button" style="width:62px" value="asing"
+				onclick="WriteInTheFormulaButtons('Math.asin()*180/Math.PI')">
+			  <!--Math.asin	(&quot;,&quot;)*180/Math.PI&quot	 -->
+			  <input type="button" style="width:62px" value="cosg"
+				onclick="WriteInTheFormulaButtons('Math.cos( *Math.PI/180)')"> <!--Math.cos	(&quot;,&quot;*Math.PI/180)	 -->
+			  <input type="button" style="width:62px" value="acosg"
+				onclick="WriteInTheFormulaButtons('Math.acos( *Math.PI/180)')"> <!--Math.acos	(&quot;,&quot;*Math.PI/180)	 -->
+			  <input type="button" style="width:62px" value="tang"
+				onclick="WriteInTheFormulaButtons('Math.tan( *Math.PI/180)	')"> <!--Math.tan	(&quot;,&quot;*Math.PI/180)	 -->
+			  <input type="button" style="width:62px" value="atang"
+				onclick="WriteInTheFormulaButtons('Math.atan( *Math.PI/180)')"> <!--Math.atan	(&quot;,&quot;*Math.PI/180)	 -->
+			</fieldset>
+		
+			<label>Formula:</label>
+			<br>
+			<textarea id="textAreaFormulaColumnsCalculator" style="width:438px;height:100px"></textarea>
+			<br>
+			<button value="add" onClick="addColumnToListColumnsCalculator(event)" style="margin-bottom:10px">Add column to list
+			</button>
+			<div style="width:auto;" >
+				<label>List of columns to add</label>
+				<span id= spanColumnsListCalculatorColumns></span>
+			  </div>
+			<br>
+			<div class="center" style="margin-top: 10px">
+			  <button value="default" onClick="addColumnsToTableInColumnsCalculator()">Ok</button>
+			  <button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
 			</div>
-		</form>
+		  </form>
 	</dialog>
 
 	<dialog id="DialogSelectExpands">
@@ -488,7 +611,7 @@
 			<br>
 			<fieldset style="display: inline;">
 				<legend>Delimiter</legend>
-				<label><input type="radio" name="DialogImportCSVDelimiter" id="DialogImportCSVDelimiterText" checked></input><input type="text" id="DialogImportCSVDelimiter" size="1" maxlength="1" value=","></input></label> &ensp;
+				<label><input type="radio" name="DialogImportCSVDelimiter" id="DialogImportCSVDelimiterText" checked></input><input type="text" id="DialogImportCSVDelimiter" size="1" maxlength="1" value=";"></input></label> &ensp;
 				<label><input type="radio" name="DialogImportCSVDelimiter" id="DialogImportCSVDelimiterTab"></input> Tab</label> &ensp;
 				<label><input type="radio" name="DialogImportCSVDelimiter" id="DialogImportCSVDelimiterAuto" checked="checked"></input> Auto</label>
 			</fieldset>
@@ -2311,22 +2434,22 @@
 
 		}
 
-function stopRefreshCountResults(event) {
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogCountResults").close();
+		function stopRefreshCountResults(event) {
+			event.preventDefault(); // We don't want to submit this form
+			document.getElementById("DialogCountResults").close();
 
-	if (!currentNode)
-		return;
-	if (currentNode.STACountTimeOut) {
-		clearInterval(currentNode.STACountTimeOut);
-		showInfoMessage("Refresh cancelled.");
-	}
-}
+			if (!currentNode)
+				return;
+			if (currentNode.STACountTimeOut) {
+				clearInterval(currentNode.STACountTimeOut);
+				showInfoMessage("Refresh cancelled.");
+			}
+		}
 
-function closeDialogCountResults(event) {
-    event.preventDefault(); // We don't want to submit this form
-    document.getElementById("DialogCountResults").close();
-}
+		function closeDialogCountResults(event) {
+			event.preventDefault(); // We don't want to submit this form
+			document.getElementById("DialogCountResults").close();
+		}
 
 		function getTimeISOTime(isodatetime) {
 			var d=new Date(isodatetime);
@@ -2383,24 +2506,24 @@ function closeDialogCountResults(event) {
 		}
 
 
-async function requestAndRefreshCountResults(currentNode, period) {
-    	var parentNode = GetFirstParentNode(currentNode);
-	if (!parentNode)
-		return;
-	currentNode.STAURL = AddQueryParamsToURL(parentNode.STAURL, "$count=true&$top=0");
-	currentNode.STAExpectedLength = 1;	
-	networkNodes.update(currentNode);
-	showInfoMessage("Getting number of items");
-	var numberOfResults = await loadAPIDataWithReturn(currentNode.STAURL, "CountResults");
+		async function requestAndRefreshCountResults(currentNode, period) {
+				var parentNode = GetFirstParentNode(currentNode);
+			if (!parentNode)
+				return;
+			currentNode.STAURL = AddQueryParamsToURL(parentNode.STAURL, "$count=true&$top=0");
+			currentNode.STAExpectedLength = 1;	
+			networkNodes.update(currentNode);
+			showInfoMessage("Getting number of items");
+			var numberOfResults = await loadAPIDataWithReturn(currentNode.STAURL, "CountResults");
 
-	//Redraw the label	
-	currentNode.label = "Items: " + numberOfResults;
-	
-	//Redraw	
-	showInfoMessage(currentNode.label + ". Waiting " + period + " seconds ...");
-	currentNode.STACountTimeOut=setTimeout(requestAndRefreshCountResults, period*1000, currentNode, period);
-	networkNodes.update(currentNode);
-}
+			//Redraw the label	
+			currentNode.label = "Items: " + numberOfResults;
+			
+			//Redraw	
+			showInfoMessage(currentNode.label + ". Waiting " + period + " seconds ...");
+			currentNode.STACountTimeOut=setTimeout(requestAndRefreshCountResults, period*1000, currentNode, period);
+			networkNodes.update(currentNode);
+		}
 
 		function CloseDialogOneValue(event) {
 			event.preventDefault(); // We don't want to submit this form
@@ -3082,6 +3205,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 								else if (dataAttribute.type=="integer" && type=="number")
 									dataAttribute.type="number";
 							}
+							if (dataAttribute.type=="object")
+								break;
 						}
 					}
 					else
@@ -4165,6 +4290,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			if (node.STAURL)
 				addTitleInRowFilterDialog("divTitleSelectRow");
 
+			document.getElementById("SelectNumberOfRecordsSelectRowLabel").style.display=(node.image == "SelectRowTable.png") ? "none" : "inline-block";
+
 			if (!data || !data.length) {
 				document.getElementById("DialogSelectRowsTable").innerHTML = "No data to show.";
 				return;
@@ -4323,8 +4450,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			{
 				alert("Incompatible node. " + errorText + ". It has not been added.");
 				return null;
-				//return false?? Crec que amb el null no impedeix que uneixi el node que no volem que uneixi
-			}
+				}
 			if (nodeFrom.STAURL && IdOfSTAEntity(nodeTo) != -1) {
 				if (nodeFrom.image=="ogc.png")
 					nodeTo.STAURL = nodeFrom.STAURL + "/" + STAEntitiesArray[IdOfSTAEntity(nodeTo)];
@@ -4385,24 +4511,15 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				DoGeoFilterRows(nodeTo);
 				return true;
 			}
-			if (nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "Meaning.png") {
-				UpdateChildTableNode(nodeTo, nodeFrom);
-				if (calUnir)
-					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-				return true;
-			}
-			if (nodeTo.image == "SelectRowTable.png" || nodeTo.image == "FilterRowsTable.png") {
+			if (nodeTo.image == "Meaning.png" || 
+                            nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "SelectRowTable.png" || 
+			    nodeTo.image == "FilterRowsTable.png" || nodeTo.image == "JoinTables.png"){
 				if (nodeFrom.STAdata)
-					nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
+					nodeTo.STAdata = deapCopy(nodeFrom.STAdata);  //This copy will be done again in "SelectColumnsTable.png" and "SelectRowTable.png". We do it here to have the full table while the user does not enter any selection
 				if (nodeFrom.STAdataAttributes)
 					nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
 				networkNodes.update(nodeTo);
-				if (calUnir)
-					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-				return true;
-			}
-			if (nodeTo.image == "JoinTables.png") {
-				networkNodes.update(nodeTo);
+				UpdateChildTableNode(nodeTo, nodeFrom);
 				if (calUnir)
 					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 				return true;
@@ -4644,40 +4761,57 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 				else if (currentNode.image == "CreateColumns.png") {
 					var parentNode=GetFirstParentNode(currentNode);
+					createColumnListToAddColumns();//create columnsList including columns in the table 
 					if (parentNode.STAdata){
 						currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
 						currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
 					}
-					 if (parentNode) {
+					if (parentNode) {
 						if (!currentNode.STAnewColumnsToAdd){
 							currentNode.STAnewColumnsToAdd=[]; //First time: To create it. Later: To erase old values					
 						}
 						networkNodes.update(currentNode);
+						drawTableInColumnBoxTableInCreateColumns();
 						document.getElementById("DialogCreateColumns").showModal();
-					 }		
+					}		
 				}
+
 				else if (currentNode.image == "AggregateColumns.png") {
 					var parentNode=GetFirstParentNode(currentNode);
-						
-
+					createColumnListToAddColumns();//create columnsList including columns in the table 
 					if (parentNode.STAdata){
 						currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
 						currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent
 					}
 					fillAggregateColumVariablesList();
+					showCheckRadioOptions("operationsFieldSet", "operationsRadioAggrgatedColumns_", AggregationColumnsOptions, 3, "operationsRadioAggrgatedColumns", "writeColumnNameInAggregatedColumns (event)");
 					if (parentNode) {
 						if (!currentNode.STAnewColumnsToAdd){
 							currentNode.STAnewColumnsToAdd=[]; //First time: To create it. Later: To erase old values					
 						}
 						networkNodes.update(currentNode);
-						//drawTableInColumnBoxTableInAggregateColumns()
+						drawTableInColumnBoxTableInAggregateColumns()
 						document.getElementById("DialogAggregateColumns").showModal();
 					}
 				}
 				else if (currentNode.image == "ColumnsCalculator.png") {
 					var parentNode=GetFirstParentNode(currentNode);
+					
+					if (parentNode.STAdata){
+						if (currentNode.STAdata){
+							currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
+						}
+						currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
+					}
+					createColumnListToAddColumns();//create columnsList including columns in the table 
+					fillCalculatorColumVariablesList();
+					document.getElementById("textAreaFormulaColumnsCalculator").setAttribute("data-mousePosition",0);
 					if (parentNode) {
-						//ShowColumnsCalculatorsDialog();
+						if (!currentNode.STAnewColumnsToAdd){
+							currentNode.STAnewColumnsToAdd=[]; //First time: To create it. Later: To erase old values					
+						}
+						networkNodes.update(currentNode);
+						drawTableInColumnBoxTableInCalculatorColumns();
 						document.getElementById("DialogColumnsCalculator").showModal();
 					}
 				}
@@ -4995,87 +5129,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 		}
 
-		//Create Columns
-		function addColumnToListCreateColumn(event){
-			event.preventDefault();
-			
-			var TypeOfValuesRadiobuttons= document.getElementsByName("TypeOfValues");
-			for (var i = 0; i < TypeOfValuesRadiobuttons.length; i++) {
-                if (TypeOfValuesRadiobuttons[i].checked){
-					var columnName= document.getElementById("columnNameCreateColumns").value;
-					var number= document.getElementById("inputText_"+TypeOfValuesRadiobuttons[i].value)?.value;
-					if (number=="") //to avoid undefined in column list and problems afeter
-						number=0;
-					currentNode.STAnewColumnsToAdd.push([TypeOfValuesRadiobuttons[i].value,columnName,number]);
-				}
-                 
-            }  
-			drawTColumnsInformaionInColumnBoxTableInCreateColumns();
-			
 
-
-		}
-		function drawTColumnsInformaionInColumnBoxTableInCreateColumns(){
-			var columnsBox=document.getElementById("columnsBoxCreateColumns");
-			columnsBox.innerHTML=""
-   
- 
-			for (var a=0;a<currentNode.STAnewColumnsToAdd.length;a++){
-	
-				if (currentNode.STAnewColumnsToAdd[a][0]=="constantValue" ){
-					columnsBox.innerHTML+= `<li><b>Column type:</b> Constant value, <b>Column name:</b> ${currentNode.STAnewColumnsToAdd[a][1]}, <b>value: </b>${currentNode.STAnewColumnsToAdd[a][2]}<button onclick='deleteRowInColumnsBoxTable(${a})'><img src="trash.png" alt="Remove" title="Remove"></button></li>`;
-				}else if (currentNode.STAnewColumnsToAdd[a][0]=="autoincrementalValue" ){
-					columnsBox.innerHTML+= `<li><b>Column type:</b> Autoincremental value, <b>Column name:</b> ${currentNode.STAnewColumnsToAdd[a][1]}, <b>Initial value: </b>${currentNode.STAnewColumnsToAdd[a][2]}<button onclick='deleteRowInColumnsBoxTable(${a})'><img src="trash.png" alt="Remove" title="Remove"></button></li>`
-				}else{
-					columnsBox.innerHTML+= `<li><b>Column type:</b> Empty column, <b>Column name:</b> ${currentNode.STAnewColumnsToAdd[a][1]} <button onclick='deleteRowInColumnsBoxTable(${a})'><img src="trash.png" alt="Remove" title="Remove"></button></li>`
-				}
-
-			
-			}
-		}
-
-		function deleteRowInColumnsBoxTable(number){
-			event.preventDefault(); 
-			var copyWithoutNumber=[];
-			for (var i=0;i<currentNode.STAnewColumnsToAdd.length;i++){
-				if (i!=number){
-					copyWithoutNumber.push(currentNode.STAnewColumnsToAdd[i])
-				}
-			}
-
-			currentNode.STAnewColumnsToAdd=copyWithoutNumber;
-			if (currentNode.image=="CreateColumns.png"){ //createColumn
-				drawTColumnsInformaionInColumnBoxTableInCreateColumns();
-			}else{ //aggregateTable
-				drawTableInColumnBoxTableInAggregateColumns();
-			} 
-			
-		}
-		function addColumnsToTableInCreateColumns(){
-			event.preventDefault();
-			var data;
-			for (var i=0;i<currentNode.STAnewColumnsToAdd.length;i++){
-	
-				switch(currentNode.STAnewColumnsToAdd[i][0]) {
-				case  "constantValue":
-					data=addNewColumnWithUniqueValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2])
-					break;
-				case  "autoincrementalValue":
-					data=addNewColumnWithAutoincrementalValues(currentNode.STAdata,currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2])
-					break;
-				case  "empty":
-					data= addNewEmptyColumn(currentNode.STAdata,currentNode.STAnewColumnsToAdd[i][1]);
-					
-					break;
-				}	
-				currentNode.STAdata=data;
-				networkNodes.update(currentNode);
-					
-			}
-			UpdateChildenTable(currentNode);
-			document.getElementById("DialogCreateColumns").close();
-			showInfoMessage("New columns have been added");
-		}
+		//General to addColumns
 		function cancelButtonRecoveryOldData(event){
 			event.preventDefault();
 			currentNode.STAdata=currentNode.STAdataCopy;
@@ -5083,152 +5138,521 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			if (currentNode.image=="CreateColumns.png"){
 				document.getElementById("DialogCreateColumns").close();
-			}else{
+			}else if (currentNode.image=="AggregateColumns.png"){
 				document.getElementById("DialogAggregateColumns").close();
+			}else{
+				document.getElementById("DialogColumnsCalculator").close();
 			}
 		}
-		//Aggregate columns
-		
-		function fillAggregateColumVariablesList(){
-			var columnsFielset= document.getElementById("columnsFielset");
-			columnsFielset.innerHTML="<legend>Select your variables/columns:</legend>";
-			var dataKeys= Object.keys(currentNode.STAdata[0]);
-			for (var i=0;i<dataKeys.length;i++){
-				columnsFielset.innerHTML+=' <input type="checkbox" id="columnsFielset_'+dataKeys[i]+'" value="'+dataKeys[i]+'"/><label for="'+dataKeys[i]+'">'+dataKeys[i]+'</label><br>'
+		function deleteRowInColumnsBoxTable(number){
+			event.preventDefault(); 
+			var copyWithoutNumber=[],n=currentNode.STAcolumnsList.length, c=currentNode.STAnewColumnsToAdd.length,columsnListNew=[];
+			for (var i=0;i<c;i++){
+				if (i!=number){
+					copyWithoutNumber.push(currentNode.STAnewColumnsToAdd[i])
+				}else{
+					var columnToErase=currentNode.STAnewColumnsToAdd[i][1];
+				}
 			}
-		}
-		function addColumnToListAggregateColumns(event){
-			event.preventDefault();
-			var TypeOfOperation=document.getElementsByName("TypeOfOperation"); //operation
-			var STANewColumnsArray=[],variablesArray=[],variable; 
-			var dataKeys= Object.keys(currentNode.STAdata[0]);
-			var chooseNumberDecimalsInputRadio,chooseNumberDecimalsInput;
 
-			for (var i=0;i<TypeOfOperation.length;i++){ //Take operation and column name
-				if (TypeOfOperation[i].checked){
-					var columnName= document.getElementById("columnNameAggregateColumns").value;
-					STANewColumnsArray.push(TypeOfOperation[i].value,columnName);
+			//Erase attribute from the column list
+			for (var a=0;a<n;a++) {
+				if (currentNode.STAcolumnsList[a]!=columnToErase){
+					columsnListNew.push(currentNode.STAcolumnsList[a])
 				}
-			}
-			for (var a=0;a<dataKeys.length;a++ ){
-				variable=document.getElementById("columnsFielset_"+dataKeys[a]);
-				if (variable.checked){
-					variablesArray.push(dataKeys[a]);
-				}
-			}
-			STANewColumnsArray.push(variablesArray);
-			if (document.getElementById("chooseNumberDecimals_0").checked){
-				STANewColumnsArray.push(document.getElementById("chooseNumberDecimals_0_input").value)
 			}	
-						
-			currentNode.STAnewColumnsToAdd.push(STANewColumnsArray); //[typeOfOperation,columnName,[variables]]
-			networkNodes.update(currentNode);
-			drawTableInColumnBoxTableInAggregateColumns();
-		}
-		function drawTableInColumnBoxTableInAggregateColumns(){
-			var columnsBox=document.getElementById("columnsBoxAggregateColumn");
-			var columns;
-			columnsBox.innerHTML="";
+
+			currentNode.STAnewColumnsToAdd=copyWithoutNumber;
+			currentNode.STAcolumnsList=columsnListNew;
+			if (currentNode.image=="CreateColumns.png"){ //createColumn
+				drawTableInColumnBoxTableInCreateColumns();
+			}else if (currentNode.image=="AggregateColumns.png"){ //aggregateTable
+				drawTableInColumnBoxTableInAggregateColumns();
+			} else{
+				drawTableInColumnBoxTableInCalculatorColumns();
+			}
 			
-				for (var i=0;i<currentNode.STAnewColumnsToAdd.length;i++){
-					columns=""
-					for(var a=0;a<currentNode.STAnewColumnsToAdd[i][2].length;a++){ //unfold array with columns to put in string
-						if (a!=0){
-						columns+=", "	;
-						}
-						columns+=currentNode.STAnewColumnsToAdd[i][2][a];
-					}
-					columnsBox.innerHTML+=`<li> <b>Operation: </b> ${currentNode.STAnewColumnsToAdd[i][0]}, <b> Column name: </b>${currentNode.STAnewColumnsToAdd[i][1]}, <b>Variables/columns: </b>${columns}` 
-					if (currentNode.STAnewColumnsToAdd[i][3]){
-						columnsBox.innerHTML+=`<b>Decimal number: </b> ${currentNode.STAnewColumnsToAdd[i][3]}`
-					}
-						
-					columnsBox.innerHTML+=`<button onclick="deleteRowInColumnsBoxTable(${i})"><img src="trash.png" alt="Remove" title="Remove"></button>`;
+		}
+	function columnExistInTheTable(columnName){
+		var columnList=	currentNode.STAcolumnsList;
+		var n= columnList.length, columnNameExist=false;
+		
+		for (var i=0;i<n;i++){
+			if (columnList[i]==columnName){
+				columnNameExist=true;
+				break;
+			}
+		}
+		if (!columnNameExist){
+			columnList.push(columnName); //Add to Column list to avoid duplicates
+			currentNode.STAcolumnsList=columnList 
+		}
+
+		return columnNameExist;
+	}
+	function createColumnListToAddColumns(){
+		var dataKeys= Object.keys(currentNode.STAdata[0]);
+		currentNode.STAcolumnsList=dataKeys;
+		networkNodes.update(currentNode);
+	}
+
+	//Create Columns
+
+	function addColumnToListCreateColumn(event){
+		event.preventDefault();
+		
+		var TypeOfValuesRadiobuttons= document.getElementsByName("TypeOfValues");
+		var columnName= document.getElementById("columnNameCreateColumns").value;
+		var n= TypeOfValuesRadiobuttons.length;
+		
+		if (columnName.length==0) columnName="noname";
+		var columnNameExist=columnExistInTheTable(columnName); //Search if name for column is not repeated
+
+		if(columnNameExist){ //It will not be added because column name already exist
+			alert("Chosen column name already exists, change it to add column to the list ");
+		}else{
+			for (var i = 0; i <n ; i++) {
+				if (TypeOfValuesRadiobuttons[i].checked){
+					var number= document.getElementById("inputText_"+TypeOfValuesRadiobuttons[i].value)?.value;
+					if (number=="") //to avoid undefined in column list and problems afeter
+						number="0";
+					currentNode.STAnewColumnsToAdd.push([TypeOfValuesRadiobuttons[i].value,columnName,number]);
 				}
+			} 
+
+			drawTableInColumnBoxTableInCreateColumns();
+		}
+
+	}
+
+	function drawTableInColumnBoxTableInCreateColumns(){
+		var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCreateColumns");
+		var cdns=[], tableHTML;
+
+		tableHTML='<table border=1><tr><th>Column type</th><th>Column name</th><th>Value</th></th></tr>';
+		if (currentNode.STAnewColumnsToAdd.length!=0){ //[columnType, columnName, value]
+			var n= currentNode.STAnewColumnsToAdd.length, columnType;
+			for (var i=0;i<n;i++){
+				switch(currentNode.STAnewColumnsToAdd[i][0]){
+					case "constantValue":
+						columnType="Constant value"
+						break;
+					case "autoincrementalValue":
+						columnType="Autoincremental value"
+						break;
+					case "empty":
+						columnType="Empty"
+						break;
+							
+				}
+					tableHTML+=`<tr><td>${columnType}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td>`;
+				if (currentNode.STAnewColumnsToAdd[i][2]){ 
+					tableHTML+=`<td>${currentNode.STAnewColumnsToAdd[i][2]}</td>`;
+				}else{
+					tableHTML+=`<td> </td>`;
+				}
+				tableHTML+=`<td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button> </td>`;
+			}
+		}
+		tableHTML+=`</table>`;
+		cdns=[tableHTML];
+		spanColumnsListAggregateColumns.innerHTML=cdns;
+	}
+	function addColumnsToTableInCreateColumns(){
+		event.preventDefault();
+		var data;
+		for (var i=0;i<currentNode.STAnewColumnsToAdd.length;i++){
+
+			switch(currentNode.STAnewColumnsToAdd[i][0]) {
+			case  "constantValue":
+				data=addNewColumnWithUniqueValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2])
+				break;
+			case  "autoincrementalValue":
+				data=addNewColumnWithAutoincrementalValues(currentNode.STAdata,currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2])
+				break;
+			case  "empty":
+				data= addNewEmptyColumn(currentNode.STAdata,currentNode.STAnewColumnsToAdd[i][1]);
+				
+				break;
+			}	
+			currentNode.STAdata=data;
+			networkNodes.update(currentNode);
+				
+		}
+		UpdateChildenTable(currentNode);
+		document.getElementById("DialogCreateColumns").close();
+		showInfoMessage("New columns have been added");
+	}
+	
+
+	//Aggregate columns
+	
+	function fillAggregateColumVariablesList(){
+
+		var dataKeys= Object.keys(currentNode.STAdata[0]);
+		var n= dataKeys.length;
+		var dataKeysObject=[];
+		for (var i=0;i<n;i++){
+			dataKeysObject.push({name:dataKeys[i], desc:dataKeys[i] });
+		}
+		showCheckRadioOptions("columnsFielset", "attributesRadioAggrgatedColumns_", dataKeysObject, 1, null, "writeColumnNameInAggregatedColumns (event)");
+		//Create list of columns to avoid repetitions
+		currentNode.STAcolumnsList=dataKeys;
+	
+	}
+	function addColumnToListAggregateColumns(event) {
+      event.preventDefault();
+      var TypeOfOperation = document.getElementsByName("operationsRadioAggrgatedColumns"); //operation
+      var STANewColumnsArray = [], attributesArray = [], attribute;
+      var dataKeys = Object.keys(currentNode.STAdata[0]);
+      var chooseNumberDecimalsInputRadio, chooseNumberDecimalsInput, typeOfOperationLenght = TypeOfOperation.length, dataKeysLenght = dataKeys.length;
+      var columnList = currentNode.STAcolumnsList;
+      var columnName;
+
+      var typeOfOperationExist = false, atLeast2attributesSelected = false;
+      //Operation
+      for (var i = 0; i < typeOfOperationLenght; i++) { //Take operation 
+        if (TypeOfOperation[i].checked) {
+          STANewColumnsArray.push(TypeOfOperation[i].id.split("AggrgatedColumns_")[1]);
+          typeOfOperationExist = true;
+        }
+      }
+      //attributes
+      for (var a = 0; a < dataKeysLenght; a++) {
+        attribute = document.getElementById("attributesRadioAggrgatedColumns_" + dataKeys[a]);
+        if (attribute.checked) {
+          attributesArray.push(dataKeys[a]);
+        }
+      }
+      if (attributesArray.length >= 2) {
+        atLeast2attributesSelected = true;
+      }
+
+      if (typeOfOperationExist == false || atLeast2attributesSelected == false) {
+        alert("At least two attributes and one aggregation method have to be selected");
+      } else {//All is correct, new column can be added to the list
+        //columnName
+        if (document.getElementById("columnNameRadioAggregateColumns_personalized").checked) {
+          columnName = document.getElementById("columnNameAggregateColumns").value;
+          if (columnName.length == 0) columnName = "noname";
+        } else {
+          columnName = document.getElementById("columnNameAggregateColumns_span").value;
+        }
+        var columnNameExist = columnExistInTheTable(columnName); //Search if name for column is not repeated
+        
+        if (columnNameExist) { //It will not be added because column name already exist
+          alert("Chosen column name already exists, change it to add column to the list ");
+        }
+        else { //It can be added
+          STANewColumnsArray.push(columnName, attributesArray);
+          if (document.getElementById("chooseNumberDecimals_0").checked) {
+            STANewColumnsArray.push(document.getElementById("chooseNumberDecimals_0_input").value)
+          }
+          currentNode.STAnewColumnsToAdd.push(STANewColumnsArray); //[typeOfOperation,columnName,[attributes]]
+          networkNodes.update(currentNode);
+          drawTableInColumnBoxTableInAggregateColumns();
+        }
+      }
+    }
+		function drawTableInColumnBoxTableInAggregateColumns(){
+			var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListAggregateColumns");
+			var cdns;
+			var tableHTML=`<table border=1><tr><th>Attributes</th><th>Operation</th><th>Column name</th><th>Number of decimals</th><th></th></tr>`;
+			if (currentNode.STAnewColumnsToAdd.length!=0){
+				var n= currentNode.STAnewColumnsToAdd.length, attributes="";
+				for (var i=0;i<n;i++){
+					attributes="";//restart
+					for (var a =0; a<currentNode.STAnewColumnsToAdd[i][2].length; a++){
+						if (a!=0){
+							attributes+=", ";
+						}
+						attributes +=currentNode.STAnewColumnsToAdd[i][2][a];
+						
+					}
+					tableHTML+=`<tr><td>${attributes}</td><td>${currentNode.STAnewColumnsToAdd[i][0]}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td>`;
+					if (currentNode.STAnewColumnsToAdd[i][3]){ //number of decimals
+						tableHTML+=`<td>${currentNode.STAnewColumnsToAdd[i][3]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`;
+					}else{
+						tableHTML+=`<td> </td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`;
+					}
+				}
+			}
+			
+			tableHTML+=`</table>`;
+			cdns=[tableHTML];
+			spanColumnsListAggregateColumns.innerHTML=cdns;
 		}
 
 		function addColumnsToTableInAggregateColumns(event){
 			event.preventDefault();
 			var data;
-			var decimalNumber;
-		
-			for (var i=0;i<currentNode.STAnewColumnsToAdd.length;i++){
-				decimalNumber=""; //Restart 
-				if (currentNode.STAnewColumnsToAdd[i][3]){
-				decimalNumber=currentNode.STAnewColumnsToAdd[i][3];
+			var decimalNumber,n=currentNode.STAnewColumnsToAdd.length;
+		var dataAttributes= getDataAttributes(currentNode.STAdata)
+			if (n!=0){
+				for (var i=0;i<n;i++){
+					decimalNumber=""; //Restart 
+					if (currentNode.STAnewColumnsToAdd[i][3]){
+						decimalNumber=currentNode.STAnewColumnsToAdd[i][3];
+					}
+					switch(currentNode.STAnewColumnsToAdd[i][0]) {
+						case  "Sum":
+							if (decimalNumber!=""){
+								addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
+
+							}else{
+								addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); //data, columnName,columnsToSum
+
+							}
+							break;
+						case  "Product": //(s'ha de crear)
+						if (decimalNumber!=""){
+								addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
+
+							}else{
+								addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); //data, columnName,columnsToSum
+
+							}
+							break;
+						case  "MinValue":
+						if (decimalNumber!=""){
+							addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes); 
+
+						}else{
+							addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); 
+						}
+							break;
+						case  "MaxValue":
+						if (decimalNumber!=""){
+							addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,dataAttributes); 
+						}else{
+						}
+							addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); 
+
+							break;
+						case  "Mean":
+						if (decimalNumber!=""){
+							addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+
+						}else{
+							addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+
+						}	
+							break;
+						case  "Variance":
+							if (decimalNumber!=""){
+								addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+
+							}else{
+								addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+
+							}
+								break;
+						case  "Median":
+							if (decimalNumber!=""){
+								addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+
+							}else{
+								addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+
+							}
+							break;
+						case  "Concatenate":
+							addnewColumnConcatenatingValues(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]);
+							break;
+
+						case  "Mode":
+						if (decimalNumber!=""){
+							addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+						}else{
+							addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+						}
+							break;
+						case  "FirstValue":
+						if (decimalNumber!=""){
+							addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+						}else{
+							addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+						}
+							break;
+
+						case  "StandardDeviation":
+						if (decimalNumber!=""){
+							addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,"", dataAttributes);
+						}else{
+							addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
+						}
+							break;
+						case  "LastValue":
+						if (decimalNumber!=""){
+							addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+						}else{
+							addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+						}
+							break;
+						case  "Q1":
+						if (decimalNumber!=""){
+							addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+						}else{
+							addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+						}
+							break;
+						case  "Q3":
+						if (decimalNumber!=""){
+							addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+						}else{
+							addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+						}
+							break;
+						case  "RandomValue":
+						if (decimalNumber!=""){
+							addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,"", dataAttributes);
+						}else{
+							addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
+						}
+							break;						
+						case  "Count": //TE SENTIT?
+							addnewColumnCount(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
+							break;
+						case  "CountDefined": //Falta fer la funció que conta
+							
+							break;
+						case  "span": //???
+							//
+							break;
+						case  "ProportionDefined": //Falta fer la funció que conta
+						if (decimalNumber!=""){
+							addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+						}else{
+							addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]),"", dataAttributes;
+						}
+							
+							break;
+					}
+				}
+				document.getElementById("DialogAggregateColumns").close();
+			}else{
+				alert("There are no columns in the list to add, nothing will be added to the table")
 			}
-				switch(currentNode.STAnewColumnsToAdd[i][0]) {
-					case  "sum":
-						if (decimalNumber!=""){
-							 addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber); //data, columnName,columnsToSum, decimalnumber
 
-						}else{
-							 addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]); //data, columnName,columnsToSum
-
+			
+		}
+		function writeColumnNameInAggregatedColumns(event){
+			event.preventDefault();
+			var columnName=document.getElementById("columnNameAggregateColumns")
+			var columnNameValue=columnName.value;
+			var spanSuggested= document.getElementById("columnNameAggregateColumns_span");
+				var dataKeys= Object.keys(currentNode.STAdata[0]);
+				var dataKeysLenght=dataKeys.length, attribute, columnNameText="";
+				for (var a=0;a<dataKeysLenght;a++ ){
+						attribute=document.getElementById("attributesRadioAggrgatedColumns_"+dataKeys[a]);
+						if (attribute.checked){
+							if (columnNameText==""){
+								columnNameText+=dataKeys[a];
+							}else{ //more than one chosen
+								columnNameText+="_"+dataKeys[a];
+							}
+							
 						}
-						break;
-					case  "product":
-					if (decimalNumber!=""){
-							addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber); //data, columnName,columnsToSum, decimalnumber
-
-						}else{
-							addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]); //data, columnName,columnsToSum
-
-						}
-						break;
-					case  "minimalValue":
-					if (decimalNumber!=""){
-						addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber); 
-
-					}else{
-						addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]); 
+				}
+				//
+				var TypeOfOperation=document.getElementsByName("operationsRadioAggrgatedColumns");
+				var typeOfOperationLenght=TypeOfOperation.length
+				for (var i=0;i<typeOfOperationLenght;i++){ //Take operation and column name
+					if (TypeOfOperation[i].checked){
+						columnNameText+="_"+ TypeOfOperation[i].id.split("AggrgatedColumns_")[1];
 					}
-						break;
-					case  "maximalValue":
-					if (decimalNumber!=""){
-						addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber); 
-
-					}else{
-
-					}
-						addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]); 
-
-						break;
-					case  "meanValue":
-					if (decimalNumber!=""){
-						addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
-
-					}else{
-						addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]);
-
-					}	
-						break;
-					case  "variance":
-					if (decimalNumber!=""){
-						addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
-
-					}else{
-						addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]);
-
-					}
-						break;
-					case  "median":
-						if (decimalNumber!=""){
-							addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
-
-						}else{
-							addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]);
-
-						}
-						break;
-					case  "concatenate":
-						addnewColumnConcatenatingValues(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]);
-						break;
 				}
 
-			}
-			document.getElementById("DialogAggregateColumns").close();
+				spanSuggested.innerHTML= columnNameText;
+				spanSuggested.value=columnNameText;
+				
+			/////
+			
 		}
+		//Calulator 
+	var textarea = document.getElementById("textAreaFormulaColumnsCalculator")
+    textarea.addEventListener('click', event => { //keep mouse position to add buttons information in that place
+    textarea.setAttribute("data-mousePosition", textarea.selectionStart) 
+    })
+
+    function WriteInTheFormulaButtons(character) {
+      event.preventDefault();
+      var textAreaFormulaColumnsCalculator = document.getElementById("textAreaFormulaColumnsCalculator");
+      var text = textAreaFormulaColumnsCalculator.value;
+      var mousePosition = textAreaFormulaColumnsCalculator.getAttribute("data-mousePosition");
+		if (character=="&#40;"){
+			character=="("
+		}else if (character=="&#41;"){
+			character==")"
+		}
+
+
+
+
+      if (character == "attributeSelected") {
+        var selector = document.getElementById("calculator_selectColumns");
+        character = selector.options[selector.selectedIndex].value;
+      }
+      textAreaFormulaColumnsCalculator.value = [text.slice(0, mousePosition), character, text.slice(mousePosition)].join('');
+      textAreaFormulaColumnsCalculator.setAttribute("data-mousePosition", parseInt(mousePosition) + character.length); //If there is no click, next button will be written after this.
+    }
+	
+	function addColumnToListColumnsCalculator(event){
+		event.preventDefault();
+		var columnName= document.getElementById("columnNameColumnsCalculator").value;
+		var textAreaFormulaColumnsCalculator= document.getElementById("textAreaFormulaColumnsCalculator");
+		if (columnName.length==0) columnName="noname";
+		var columnNameExist=columnExistInTheTable(columnName); //Search if name for column is not repeated
+		if(columnNameExist){ //It will not be added because column name already exist
+			alert("Chosen column name already exists, change it to add column to the list ");
+		}else{
+
+			currentNode.STAnewColumnsToAdd.push([textAreaFormulaColumnsCalculator.value,columnName]);
+			drawTableInColumnBoxTableInCalculatorColumns();
+		}
+		
+	}
+	function fillCalculatorColumVariablesList(){ //omplir el desplegable
+
+		var dataKeys= Object.keys(currentNode.STAdata[0]);
+		var n= dataKeys.length;
+		var select = document.getElementById("calculator_selectColumns");
+		var cdns=[]
+
+		for (var i=0;i<n;i++){
+			cdns.push(`<option value= ${dataKeys[i]}>${dataKeys[i]}</option>`);
+		}
+		select.innerHTML=cdns.join("");
+	
+		//Create list of columns to avoid repetitionss
+		currentNode.STAcolumnsList=dataKeys;
+	}
+	function drawTableInColumnBoxTableInCalculatorColumns(){
+		var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCalculatorColumns");
+		var cdns;
+		var tableHTML=`<table border=1><tr><th>Formula</th><th>Column name</th><th></th>`;
+			if (currentNode.STAnewColumnsToAdd.length!=0){
+		 		var n= currentNode.STAnewColumnsToAdd.length;
+		 		for (var i=0;i<n;i++){
+					tableHTML+= `<tr><td>${currentNode.STAnewColumnsToAdd[i][0]}</td> <td>${currentNode.STAnewColumnsToAdd[i][1]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`
+
+				}
+			}
+		 	tableHTML+=`</table>`;
+		 	cdns=[tableHTML];
+			spanColumnsListAggregateColumns.innerHTML=cdns;
+	}
+
+	function addColumnsToTableInColumnsCalculator(){
+		event.preventDefault();
+			var n=currentNode.STAnewColumnsToAdd.length;
+			for (var i=0;i<n;i++){
+				addnewColumnWithFormula (currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][0]);
+			}
+			document.getElementById("DialogColumnsCalculator").close();
+
+	}
+		
 		/////
 		function giveMeNetworkInformation(event) {
 				if (event)
