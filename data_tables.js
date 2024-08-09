@@ -750,7 +750,6 @@ function addNewColumnWithAutoincrementalValues(data,columnName,firstValue){
 function addnewColumnSummingColumns(data, columnName,columnsToSum, decimalNumber, dataAttributes){
 	var sum,n=columnsToSum.length; 
 	console.log(dataAttributes)
-	//numWithComa, value, num;
 	for (var i=0;i<data.length;i++){
 		sum=0;
 		for (var a=0;a<n;a++){

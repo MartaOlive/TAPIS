@@ -4815,10 +4815,16 @@
 					if (parentNode.STAdata){
 						if (currentNode.STAdata){
 							currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
+							createColumnListToAddColumns();//create columnsList including columns in the table
+							currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
+						}else{
+							currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
+							createColumnListToAddColumns();//create columnsList including columns in the table
 						}
-						currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
+						 
+						
 					}
-					createColumnListToAddColumns();//create columnsList including columns in the table 
+					
 					fillCalculatorColumVariablesList();
 					document.getElementById("textAreaFormulaColumnsCalculator").setAttribute("data-mousePosition",0);
 					if (parentNode) {
@@ -5273,7 +5279,7 @@
 		cdns=[tableHTML];
 		spanColumnsListAggregateColumns.innerHTML=cdns;
 	}
-	function addColumnsToTableInCreateColumns(){
+	function addColumnsToTableInCreateColumns(){ ///!!!!!!!!!!!!!REPASAR
 		event.preventDefault();
 		var data;
 		for (var i=0;i<currentNode.STAnewColumnsToAdd.length;i++){
@@ -5642,8 +5648,7 @@
 		}
 		select.innerHTML=cdns.join("");
 	
-		//Create list of columns to avoid repetitionss
-		currentNode.STAcolumnsList=dataKeys;
+		
 	}
 	function drawTableInColumnBoxTableInCalculatorColumns(){
 		var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCalculatorColumns");
@@ -5673,6 +5678,7 @@
 				addnewColumnWithFormula (currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][0]);
 			}
 		}
+		
 		document.getElementById("DialogColumnsCalculator").close();
 
 	}
