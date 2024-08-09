@@ -5638,13 +5638,20 @@
 	}
 	function fillCalculatorColumVariablesList(){ //omplir el desplegable
 
-		var dataKeys= Object.keys(currentNode.STAdata[0]);
-		var n= dataKeys.length;
+		// var dataKeys= Object.keys(currentNode.STAdata[0]);
+		//var n= dataKeys.length;
+		var dataAttributes= getDataAttributes(currentNode.STAdata);
+		var dataAttributesKeys=Object.keys(dataAttributes)
+		var n= dataAttributesKeys.length;
+		
 		var select = document.getElementById("calculator_selectColumns");
 		var cdns=[]
 
 		for (var i=0;i<n;i++){
-			cdns.push(`<option value= ${dataKeys[i]}>${dataKeys[i]}</option>`);
+			//cdns.push(`<option value= ${dataKeys[i]}>${dataKeys[i]}</option>`);
+			console.log(dataAttributes[dataAttributesKeys[i]]);
+			console.log(dataAttributes[dataAttributesKeys[i]]['type']);
+			if (dataAttributes[dataAttributesKeys[i]]['type']=="number") cdns.push(`<option value= ${dataAttributesKeys[i]}>${dataAttributesKeys[i]}</option>`);
 		}
 		select.innerHTML=cdns.join("");
 	
