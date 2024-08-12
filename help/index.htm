@@ -51,6 +51,7 @@
 <li><a href="#recipe03">Recipe 3: Show a map of all observation features in an STA service</a></li>
 <li><a href="#recipe04">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</a></li>
 <li><a href="#recipe05">Recipe 5: Selecting temperatures from an area</a></li>
+<li><a href="#recipe06">Recipe 6: Creating a new stream of observations</a></li>
 </ul>
 </ul>
 
@@ -76,7 +77,7 @@ The workspace of Tapis can be divided in the following areas
 
 <a id="helpStart"></a>
 <h3>How start with TAPIS</h3>
-The first thing that you need to do in Tapis is page a starting node in the network area. Examples of starting nodes are "Add STA service",  "Import CSV file" or Import GeoJSON file. Clicking on them in the <i>button area</i> will place them in the <i>network area</i>. Double clicking on their representation in the network area will make appear dialog box to specify the parameters necessary to import the data in Tapis. After accepting the options messages about the progress and eventual errors will appear in the <i>Information area</i>. The result of the operation will be represented as a table in the <i>Query and table area</i> (a STA query will also be shown if the node is a STA node; the ones with blue icons).
+The first thing that you need to do in Tapis is page a starting node in the network area. Examples of starting nodes are "Add STA service",  "Import CSV file" or Import GeoJSON file. Clicking on them in the <i>button area</i> will place them in the <i>network area</i>. Doubleclicking on their representation in the network area will make appear dialog box to specify the parameters necessary to import the data in Tapis. After accepting the options messages about the progress and eventual errors will appear in the <i>Information area</i>. The result of the operation will be represented as a table in the <i>Query and table area</i> (a STA query will also be shown if the node is a STA node; the ones with blue icons).
 <p>
 Next thing is connecting other nodes to the starting nodes. 
 
@@ -204,7 +205,7 @@ Finally, we will be able to see the Observations about Temperature done by Joan 
 <img src="recipe02_01_observations.png" width="600" class="center">
 
 <p>
-By double clicking the "Table" tool, we will see the observations as a table with the properties that the Entity "Observations" has in the diagram: phenomenonTime (the time where the sample was collected), result (the actual value of the temperature) and resultTime (the time the observation was determined and recorded). If we look at the table, we can see that we get 100 observations and time is increasing so we can assume they are in order starting by the earliest one.<br>
+By doubleclicking the "Table" tool, we will see the observations as a table with the properties that the Entity "Observations" has in the diagram: phenomenonTime (the time where the sample was collected), result (the actual value of the temperature) and resultTime (the time the observation was determined and recorded). If we look at the table, we can see that we get 100 observations and time is increasing so we can assume they are in order starting by the earliest one.<br>
 <img src="recipe02_01_observationsTable.png" width="400" class="center">
 
 <p>
@@ -761,6 +762,195 @@ This results in thiw complex query URL: <a href="https://citiobs.demo.secure-dim
 Now that we have a time series we can use the scater plot tool to generate a temperature/time diagram.<br>
 <img src="recipe05_scatterPlot.png" width="800" class="center">
 
+<br><br><br>
+<br>
+<hr width="30%">
+<a id="recipe06"></a>
+<h3>Recipe 6: Creating two new datastream of observations</h3>
+In this example, we illustrate how to store two datastreams of observations that are related in STAplus. The concrete case is a fixed camera trap that is installed in the woods and takes a short sequence of pictures of an animal that is latter identified as a particular species. The pictures are stored and described in a datastream and the identification (occurrence) of the species is stored in another datastream. Each small set of pictures and the occurrence is grouped in an observation group.   
+
+<p>
+Commonly you cannot write in a STA service without permissions. The first think that we need is order to be able to write in the STA service using the login button<br>
+<img src="recipe06_loginButton.png" width="600" class="center">
+
+<p>
+The login mechanims in Tapis is called Authenix. Authenix does not manage users. Instead it uses preexisting user names created in other platforms. In the Authenix window select your platform or institution integrated in Edugain and follow the instructions to login. If you are previously logged in the Authenix window will open and close with no need for interaction.
+<br>
+<img src="recipe06_authenix.png" width="400" class="center">
+
+<p>
+Your name and organization will appear on the left hand side of the <i>control area</i>.
+<br>
+<img src="recipe06_loginUser.png" width="600" class="center">
+
+<p>
+Now select the <i>Add STA service</i> button and select a STA service where you have writing rights.
+<br>
+<img src="recipe06_STAplus.png" width="600" class="center">
+
+<p>
+Since the camera trap is owned by the same person that owns the pictures and does the identifiacion, we will start by creating a single <i>Party</i> for everthing. Do not worry, if the party already exists it will be retrieved instead. A right click on the STAplus will open a context menu to select <i>Party</i>. (please note that you should select the family of bottons with the entity names in singular that have a icon with a little pencil.
+<br>
+<img src="recipe06_partyButton.png" width="600" class="center">
+
+<p>
+The creation of a Party is particularly easy, as it takes the authId from the authetication process and no need to add any extra information. You only need to press [Create]. Again, do not worry, if the party already exists it will be retrieved instead.
+<br>
+<img src="recipe06_party.png" width="600" class="center">
+
+<p>
+The information area will show the identified of the created or retreived Party.
+<br>
+<img src="recipe06_partyCreated.png" width="600" class="center">
+
+<p>
+The Query and Table area will show the description of the Party.
+<br>
+<img src="recipe06_partyTable.png" width="600" class="center">
+
+<p>
+The same procedure can be used to create an <i>ObservedProperty</i>. In this case, we start by creating the identification (occurrence) observed property. You should populate the requered information before pressing [Create]. In particular we use the Species definition in GBIF as URI definition (https://en.wikipedia.org/wiki/Image).
+<br>
+<img src="recipe06_observedPropertyCreation.png" width="600" class="center">
+
+<p>
+The other observedProperty is the Picture itself. In this case, you should populate the requered information before pressing [Create]. To make things simple, we use the wikipedia definition of an image (https://en.wikipedia.org/wiki/Image).
+<br>
+<img src="recipe06_pictureObservedPropertyCreation.png" width="600" class="center">
+
+<p>
+Now we can create a <i>Location</i> where the <i>Thing</i> is placed. In this case this is the position of a Camera trap. Again, you should populate the requered information including the position (in this case represented by a point) before pressing [Create]. The encodingType property is fixed to application/geo+json.
+<br>
+<img src="recipe06_locationCreation.png" width="600" class="center">
+
+<p>
+Once the <i>Location</i> and the <i>Party</i> are created, it is possible to create a <i>Thing</i> that is connected to both elements. By right clicking in the Location and selecting the [Thing] botton we have the first connection and the second connection can be done using the [Connect two nodes] button. In this case this is the Camera trap itself. In the window, the connections to both objects are indicated and you should populate the requered information only a name and a description before pressing [Create].
+<br>
+<img src="recipe06_thingCreation.png" width="600" class="center">
+
+<p>
+The second <i>Thing</i> that we will need is the Citizen itself, that has an irrelevant location when the identification was done (probably at home reviewing the pictures downloaded from the camera trap. By right clicking in the STA plus, we will select the [Thing] botton and create a second connection using the [Connect two nodes] button to the Party. In the window, the connections to both objects are indicated and you should populate the requered information only a name and a description before pressing [Create]. The illustration shows the result of it.
+<br>
+<img src="recipe06_CitizenThingCreation.png" width="600" class="center">
+
+<p>
+Now two <i>Sensors</i> are created, the first one for the human sensor. By right clicking in the STA plus and selecting the [Sensor] botton. In the window, you should populate the requered information only a name and a description before pressing [Create].
+<br>
+<img src="recipe06_humanSensorCreation.png" width="600" class="center">
+
+<p>
+The second <i>Sensor</i> is the optics and CCD inside the camera trap. By right clicking in the STA plus and selecting the [Sensor] botton. In the window, you should populate the requered information only a name and a description before pressing [Create].
+<br>
+<img src="recipe06_cameraSensorCreation.png" width="600" class="center">
+
+<p>
+Some Creative Commons licenses are already created in the STA plus, so in this case we will use the <i>Licenses</i> to request all the licences in the STA. Then by right clicking in the <i>Licenses</i> we will add the Select Row tool (the one with a blue icon) and by doubleclicking in it, we can select the license we want. In this case, we will select CC-BY.
+<br>
+<img src="recipe06_cc-bySelection.png" width="600" class="center">
+
+<p>
+Now we have all the elements necessary to create two DataStreams. 
+DataStream is a complicated object that is connected to <i>Sensor</i>, <i>Thing</i>, <i>ObservedProperty</i>, <i>Party</i> and <i>License</i>. 
+This can be a bit confusing so, before starting, we will organize the entities that are related to the "camera/picture" in on side (to the top, in the illustration) 
+and the ones related with "citizen/identification" on the other side (to the bottomin the illustration). 
+Then, we will start by right clicking in one of the entities related to the "camera/picture" and selecting <i>Datastream</i>, and using the "Connect node" botton for generating the other four connections.
+By doubleclicking in the <i>Datastream</i> we will see the five relations and you should populate the requered information; in our case only a name and a description (due to, there is no units of measure in this case) before pressing [Create].
+<br>
+<img src="recipe06_picturesDatastreamCreation.png" width="600" class="center">
+
+<p>
+Now, we will start by right clicking in one of the entities related to the "human/identification" and selecting <i>Datastream</i>, and using the "Connect node" botton for generating the other four connections.
+<br>
+<img src="recipe06_connectNodeDatastreamCreation.png" width="600" class="center">
+
+<p>
+By doubleclicking in the <i>Datastream</i> we will see the five relations and you should populate the requered information before pressing [Create].
+<br>
+<img src="recipe06_occurrenceDatastreamCreation.png" width="600" class="center">
+
+<p>
+Now, everything is prepared for illustrating how to create the observations. We should start by creating one ObservationGroup that will be connected to occurrence observations and image observations. This entity can be connected at least to the <i>Party</i> and <i>License</i>. You should populate the requered information before pressing [Create]. 
+<br>
+<img src="recipe06_observationGroupCreation.png" width="600" class="center">
+
+<p>
+We cannot start creating observations without a <i>FeatureOfInterest</i>. Since the FeatureOfInterest can not be connected to anything, it should be created by right clicking on the <i>STA plus</i> entity. You should populate the requered information, including the coordinates of the occurrence before pressing [Create].
+<br>
+<img src="recipe06_featureOfInterestCreation.png" width="600" class="center">
+
+<p>
+Now all the elements to be connected to observations are there. To create a "picture" observation you can right click the ObservationGroup and select the <i>Observation</i>. Then we should connect the Observation to the <i>FeatureOfInterest</i> and <i>Datastream</i> related to "camera/images".
+<br>
+<img src="recipe06_linkPictureObservationCreation.png" width="600" class="center">
+
+<p>
+You should populate the requered information before pressing [Create], being the most important the "result".
+<br>
+<img src="recipe06_pictureObservationCreation.png" width="600" class="center">
+
+<p>
+In this case, the "result" is the full URL of the picture that was previously stored in a external repository and the phenomenonTime is the time when the picture was taken.
+<br>
+<img src="recipe06_pictureObservationResult.png" width="300" class="center">
+
+<p>
+To create a "occurrence" observation you can right click the ObservationGroup and select the <i>Observation</i>. Then we should connect the Observation to the <i>FeatureOfInterest</i> and <i>Datastream</i> related to "identifications/occurrences".
+<br>
+<img src="recipe06_linkOccurObservationCreation.png" width="600" class="center">
+
+<p>
+By doubleclicking in the observation, you should populate the requered information before pressing [Create].
+<br>
+<img src="recipe06_occurObservationCreation.png" width="600" class="center">
+
+<p>
+In this case, the "result" the full URL of the species name in GBIF (https://www.gbif.org/species/7193910), and the phenomenonTime is the time when the picture was taken and the occurrence happened.
+<br>
+<img src="recipe06_occurObservationResult.png" width="1000" class="center">
+
+<p>
+You can add as many Observations and ObservationGroups as needed repeating the same procedure.
+
+<P>
+A partial result of the created observation group can be retrieved from the following query: <a href="https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)?$expand=Observations($select=result,phenomenonTime;$expand=Datastream($select=description;$expand=ObservedProperty($select=description)))" target="_blank">https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)?$expand=Observations($select=result,phenomenonTime;$expand=Datastream($select=description;$expand=ObservedProperty($select=description)))</a>
+
+<textarea rows="30" cols="80" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll;" readonly>
+{
+  "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)",
+  "@iot.id": 232753,
+  "name": "GatFerOcc1",
+  "description": "Felis silvestris Occurrence 1",
+  "creationTime": "2024-07-12T17:30:00Z",
+  "endTime": "2024-07-12T17:30:00Z",
+  "Observations": [
+    {
+      "result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/20240712_1930_C3/20240712_1930_C3_04.JPG",
+      "phenomenonTime": "2024-07-12T17:30:00Z",
+      "Datastream": {
+        "description": "Pictures with an animal inside",
+        "ObservedProperty": {
+          "description": "Pictorial image"
+        }
+      }
+    },
+    {
+      "result": "https://www.gbif.org/species/7193910",
+      "phenomenonTime": "2024-07-12T17:30:00Z",
+      "Datastream": {
+        "description": "Species occurrence",
+        "ObservedProperty": {
+          "description": "Species Name"
+        }
+      }
+    }
+  ],
+  "License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)/License",
+  "Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)/Party",
+  "Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)/Campaigns",
+  "Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)/Observations",
+  "Relations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)/Relations"
+}
+</textarea>
 <br><br><br>
 
 

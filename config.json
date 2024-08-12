@@ -1,7 +1,6 @@
 {
 	"MMNpath": "../mmn",
 	"STAurl": "https://citiobs.demo.secure-dimensions.de/staplus/v1.1",
-	"OGCAPIurl": "https://test.cubewerx.com/cubewerx/cubeserv/demo/ogcapi/Daraa",
 	"suggestedSTAurls": [
 		{
 			"group": "Releated to CREAF projects",
@@ -28,7 +27,7 @@
 			},
 			{
 				"desc": "AD4GD STAplus secured server",
-				"url": "https://frost.iotlab.com/sensorthingsapi2"
+				"url": "https://frost.iotlab.com/sensorthings2/v1.1/"
 			},
 			{
 				"desc": "OGC sprint STAplus demo server",
@@ -133,14 +132,28 @@
 			}]
 		}
 	],
+	"suggestedCatalogues": [
+		{
+			"group": "Project catalogues",
+			"STAs": [
+			{
+				"desc": "AD4GD CSW",
+				"url": "https://catalogue.grumets.cat/geonetwork/ad4gd/cat/csw"
+			},
+			{
+				"desc": "More4Nature CSW",
+				"url": "https://catalogue.grumets.cat/geonetwork/more4nature/cat/csw"
+			},
+			{
+				"desc": "Framework CSW",
+				"url": "https://catalogue.grumets.cat/geonetwork/framework/cat/csw"
+			}]
+		}
+	],
 	"suggestedCSVurls": [
 		{
 			"group": "Testing Examples",
 			"STAs": [
-			{
-				"desc": "--Select one--",
-				"url": ""
-			},
 			{
 				"desc": "Amount of water in Catalan reservoires",
 				"url": "https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.csv"
@@ -152,10 +165,6 @@
 		{
 			"group": "Testing Examples",
 			"STAs": [
-			{
-				"desc": "--Select one--",
-				"url": ""
-			},
 			{
 				"desc": "Recipe 5 GeoJSON example",
 				"url": "help/callus_munich.geojson"

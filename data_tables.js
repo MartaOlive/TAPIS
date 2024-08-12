@@ -251,30 +251,30 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 	return dataCurrent;
 }
 
-const AggregationsOptions=[{name: "Mean", desc: "Mean"},
-				{name: "Mode", desc: "Mode"},
-				{name: "FirstValue", desc: "First value"},
-				{name: "Median", desc: "Median"},
-				{name: "StandardDeviation", desc: "Standard deviation"},
-				{name: "LastValue", desc: "Last value"},
-				{name: "Q1", desc: "Q1"},
-				{name: "Variance", desc: "Variance"},
-				{name: "RandomValue", desc: "Random value"},
-				{name: "Q3", desc: "Q3"},
-				{name: "Sum", desc: "Sum"},
-				{name: "CountDefined", desc: "Count defined"},
-				{name: "MinValue", desc: "Min. Value"},
-				{name: "Concatenate", desc: "Concatenate"},
-				{name: "Count", desc: "Count"},
-				{name: "MaxValue", desc: "Max. value"},
-				{name: "Span", desc: "Span"},
-	{name: "ProportionDefined", desc: "Proportion defined"}]; 
-const GroupByDateTimeOptions=[{name: "Year", desc: "Year"},
-	{name: "Month", desc: "Month"},
-	{name: "Day", desc: "Day"},
-	{name: "Hour", desc: "Hour"},
-	{name: "Minute", desc: "Minute"},
-	{name: "Second", desc: "Second"}]; 
+		const AggregationsOptions=[{name: "Mean", desc: "Mean"},
+					 {name: "Mode", desc: "Mode"},
+					 {name: "FirstValue", desc: "First value"},
+					 {name: "Median", desc: "Median"},
+					 {name: "StandardDeviation", desc: "Standard deviation"},
+					 {name: "LastValue", desc: "Last value"},
+					 {name: "Q1", desc: "Q1"},
+					 {name: "Variance", desc: "Variance"},
+					 {name: "RandomValue", desc: "Random value"},
+					 {name: "Q3", desc: "Q3"},
+					 {name: "Sum", desc: "Sum"},
+					 {name: "CountDefined", desc: "Count defined"},
+					 {name: "MinValue", desc: "Min. Value"},
+					 {name: "Concatenate", desc: "Concatenate"},
+					 {name: "Count", desc: "Count"},
+					 {name: "MaxValue", desc: "Max. value"},
+					 {name: "Span", desc: "Span"},
+					 {name: "ProportionDefined", desc: "Proportion defined"}]; 
+		const GroupByDateTimeOptions=[{name: "Year", desc: "Year"},
+					 {name: "Month", desc: "Month"},
+					 {name: "Day", desc: "Day"},
+					 {name: "Hour", desc: "Hour"},
+					 {name: "Minute", desc: "Minute"},
+					 {name: "Second", desc: "Second"}]; 
 const AggregationColumnsOptions=[{name: "Mean", desc: "Mean"},
 	{name: "Mode", desc: "Mode"},
 	{name: "FirstValue", desc: "First value"},
@@ -659,72 +659,72 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 //f_onclickselectEntityParam: on click function for the radio buttons parameter (it is an string)
 //f_isAttributeAnyURI: function to determine if an attribute is a URI
 //f_attributeToHide: function to determine if an attribute should be hidden in the view
-function GetHTMLTable(data, dataAttributesInput, rowNumbers, prefix_selectedEntityId, selectedEntityId, f_onclickselectEntity, f_onclickselectEntityParam, f_isAttributeAnyURI, f_attributeToHide) {
-	var dataAttributes = dataAttributesInput ? dataAttributesInput : getDataAttributesSimple(data); 
-	var cdns=[], needhref=[], record, cell, dataAttribute;
-	var dataAttributesArray = Object.keys(dataAttributes);
+		function GetHTMLTable(data, dataAttributesInput, rowNumbers, prefix_selectedEntityId, selectedEntityId, f_onclickselectEntity, f_onclickselectEntityParam, f_isAttributeAnyURI, f_attributeToHide) {
+			var dataAttributes = dataAttributesInput ? dataAttributesInput : getDataAttributesSimple(data); 
+			var cdns=[], needhref=[], record, cell, dataAttribute;
+			var dataAttributesArray = Object.keys(dataAttributes);
 
-	cdns.push("<table class='tablesmall'><tr>");
-	if (rowNumbers)
-		cdns.push("<th></th>");
-	if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
-		cdns.push("<th></th>");
-	for (var a = 0; a < dataAttributesArray.length; a++) {
-		if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
-			continue;
-		cdns.push("<th>");
-		dataAttribute=dataAttributes[dataAttributesArray[a]];
-		if (dataAttribute.definition)
-			cdns.push("<a href='", dataAttribute.definition, "' target='_blank'>");
-		cdns.push(dataAttributesArray[a]);
-		if (dataAttribute.definition)
-			cdns.push("</a>");
-		if (dataAttribute.UoM || dataAttribute.UoMSymbol)
-		{
-			cdns.push(" (");
-			if (dataAttribute.UoMDefinition)
-				cdns.push("<a href='", dataAttribute.UoMDefinition, "' target='_blank'>");
-			cdns.push(dataAttribute.UoMSymbol ? dataAttribute.UoMSymbol : dataAttribute.UoM);
-			if (dataAttribute.UoMDefinition)
-				cdns.push("</a>");
-			cdns.push(")");
-		}
-		cdns.push("</th>");
-		if (f_isAttributeAnyURI)
-			needhref[a]=f_isAttributeAnyURI(dataAttributesArray[a]);
-	}
-
-	cdns.push("</tr>");
-	for (var i = 0; i < data.length; i++) {
-		record=data[i];
-		cdns.push("<tr>");
-		if (rowNumbers)
-			cdns.push("<td align='right'>", i + 1, "</td>");
-		if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
-		{
-			var s=record["@iot.id"] ? record["@iot.id"] : i;
-			cdns.push("<td><input type='radio' name='SelectRowRadio' id='", prefix_selectedEntityId, s, "' ", f_onclickselectEntity ? "onClick='" + f_onclickselectEntity.name + "(\"" + f_onclickselectEntityParam+ "\");' " : "", s == selectedEntityId ? "checked='checked'" : "", "/></td>");
-		}
-		for (var a = 0; a < dataAttributesArray.length; a++) {
-			if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
-				continue;
-			cell=record[dataAttributesArray[a]];
-			cdns.push((dataAttributes[dataAttributesArray[a]].type=="number" || dataAttributes[dataAttributesArray[a]].type=="integer") ? "<td align='right'>" :  "<td>");
-			if (typeof cell !== "undefined") {
-				if (f_isAttributeAnyURI && needhref[a] && cell.length)
-					cdns.push("<a href='", cell, "' target='_blank'>", cell, "</a>");
-				else if (typeof cell === "object")
-					cdns.push(JSON.stringify(cell));
-				else
-					cdns.push(cell);
+			cdns.push("<table class='tablesmall'><tr>");
+			if (rowNumbers)
+				cdns.push("<th></th>");
+			if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
+				cdns.push("<th></th>");
+			for (var a = 0; a < dataAttributesArray.length; a++) {
+				if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
+					continue;
+				cdns.push("<th>");
+				dataAttribute=dataAttributes[dataAttributesArray[a]];
+				if (dataAttribute.definition)
+					cdns.push("<a href='", dataAttribute.definition, "' target='_blank'>");
+				cdns.push(dataAttributesArray[a]);
+				if (dataAttribute.definition)
+					cdns.push("</a>");
+				if (dataAttribute.UoM || dataAttribute.UoMSymbol)
+				{
+					cdns.push(" (");
+					if (dataAttribute.UoMDefinition)
+						cdns.push("<a href='", dataAttribute.UoMDefinition, "' target='_blank'>");
+					cdns.push(dataAttribute.UoMSymbol ? dataAttribute.UoMSymbol : dataAttribute.UoM);
+					if (dataAttribute.UoMDefinition)
+						cdns.push("</a>");
+					cdns.push(")");
+				}
+				cdns.push("</th>");
+				if (f_isAttributeAnyURI)
+					needhref[a]=f_isAttributeAnyURI(dataAttributesArray[a]);
 			}
-			cdns.push("</td>");
+
+			cdns.push("</tr>");
+			for (var i = 0; i < data.length; i++) {
+				record=data[i];
+				cdns.push("<tr>");
+				if (rowNumbers)
+					cdns.push("<td align='right'>", i + 1, "</td>");
+				if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
+				{
+					var s=record["@iot.id"] ? record["@iot.id"] : i;
+					cdns.push("<td><input type='radio' name='SelectRowRadio' id='", prefix_selectedEntityId, s, "' ", f_onclickselectEntity ? "onClick='" + f_onclickselectEntity.name + "(\"" + f_onclickselectEntityParam+ "\");' " : "", s == selectedEntityId ? "checked='checked'" : "", "/></td>");
+				}
+				for (var a = 0; a < dataAttributesArray.length; a++) {
+					if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
+						continue;
+					cell=record[dataAttributesArray[a]];
+					cdns.push((dataAttributes[dataAttributesArray[a]].type=="number" || dataAttributes[dataAttributesArray[a]].type=="integer") ? "<td align='right'>" :  "<td>");
+					if (typeof cell !== "undefined") {
+						if (f_isAttributeAnyURI && needhref[a] && cell.length)
+							cdns.push("<a href='", cell, "' target='_blank'>", cell, "</a>");
+						else if (typeof cell === "object")
+							cdns.push(JSON.stringify(cell));
+						else
+							cdns.push(cell);
+					}
+					cdns.push("</td>");
+				}
+				cdns.push("</tr>");
+			}
+			cdns.push("</table>");
+			return cdns.join("");
 		}
-		cdns.push("</tr>");
-	}
-	cdns.push("</table>");
-	return cdns.join("");
-}
 
 function addNewEmptyColumn(data,columnName){
 	for (var i=0;i<data.length;i++){
@@ -749,7 +749,6 @@ function addNewColumnWithAutoincrementalValues(data,columnName,firstValue){
 
 function addnewColumnSummingColumns(data, columnName,columnsToSum, decimalNumber, dataAttributes){
 	var sum,n=columnsToSum.length; 
-	console.log(dataAttributes)
 	for (var i=0;i<data.length;i++){
 		sum=0;
 		for (var a=0;a<n;a++){
@@ -822,7 +821,7 @@ function addnewColumnMinimalValue(data, columnName,columnsToEvaluate, decimalNum
 		}else{
 			data[i][columnName]= min;
 		}
-
+		
 	}
 }
 
