@@ -2791,7 +2791,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				"authId": authId,
 				//"displayName": authId,  //It might change soon to "description"
 				//"description": null,
-				role: "individual"
+				"role": "individual"
 			});
 		}
 
@@ -5224,9 +5224,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						}else{
 							currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
 							createColumnListToAddColumns();//create columnsList including columns in the table
-						}
-						 
-						
+						}						
 					}
 					
 					fillCalculatorColumVariablesList();
@@ -5602,6 +5600,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			currentNode.STAnewColumnsToAdd=copyWithoutNumber;
 			currentNode.STAcolumnsList=columsnListNew;
+			networkNodes.update(currentNode);
 			if (currentNode.image=="CreateColumns.png"){ //createColumn
 				drawTableInColumnBoxTableInCreateColumns();
 			}else if (currentNode.image=="AggregateColumns.png"){ //aggregateTable
@@ -5611,118 +5610,116 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 			
 		}
-	function columnExistInTheTable(columnName){
-		var columnList=	currentNode.STAcolumnsList;
-		var n= columnList.length, columnNameExist=false;
-		
-		for (var i=0;i<n;i++){
-			if (columnList[i]==columnName){
-				columnNameExist=true;
-				break;
-			}
-		}
-		if (!columnNameExist){
-			columnList.push(columnName); //Add to Column list to avoid duplicates
-			currentNode.STAcolumnsList=columnList 
-		}
-
-		return columnNameExist;
-	}
-	function createColumnListToAddColumns(){
-		var dataKeys= Object.keys(currentNode.STAdata[0]);
-		currentNode.STAcolumnsList=dataKeys;
-		networkNodes.update(currentNode);
-	}
-
-		//Create Columns
-
-		function addColumnToListCreateColumn(event){
-			event.preventDefault();
+		function columnExistInTheTable(columnName){
+			var columnList=	currentNode.STAcolumnsList;
+			var n= columnList.length, columnNameExist=false;
 			
-			var TypeOfValuesRadiobuttons= document.getElementsByName("TypeOfValues");
-		var columnName= document.getElementById("columnNameCreateColumns").value;
-		var n= TypeOfValuesRadiobuttons.length;
-		
-		if (columnName.length==0) columnName="noname";
-		var columnNameExist=columnExistInTheTable(columnName); //Search if name for column is not repeated
-
-		if(columnNameExist){ //It will not be added because column name already exist
-			alert("Chosen column name already exists, change it to add column to the list ");
-		}else{
-			for (var i = 0; i <n ; i++) {
-                if (TypeOfValuesRadiobuttons[i].checked){
-					var columnName= document.getElementById("columnNameCreateColumns").value;
-					var number= document.getElementById("inputText_"+TypeOfValuesRadiobuttons[i].value)?.value;
-					if (number=="") //to avoid undefined in column list and problems afeter
-						number="0";
-					currentNode.STAnewColumnsToAdd.push([TypeOfValuesRadiobuttons[i].value,columnName,number]);
-				}
-			} 
-
-			drawTableInColumnBoxTableInCreateColumns();
-		}
-
-		}
-
-	function drawTableInColumnBoxTableInCreateColumns(){
-		var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCreateColumns");
-		var cdns=[], tableHTML;
-
-		tableHTML='<table border=1><tr><th>Column type</th><th>Column name</th><th>Value</th></th></tr>';
-		if (currentNode.STAnewColumnsToAdd.length!=0){ //[columnType, columnName, value]
-			var n= currentNode.STAnewColumnsToAdd.length, columnType;
 			for (var i=0;i<n;i++){
-				switch(currentNode.STAnewColumnsToAdd[i][0]){
-					case "constantValue":
-						columnType="Constant value"
-						break;
-					case "autoincrementalValue":
-						columnType="Autoincremental value"
-						break;
-					case "empty":
-						columnType="Empty"
-						break;
-							
+				if (columnList[i]==columnName){
+					columnNameExist=true;
+					break;
 				}
-					tableHTML+=`<tr><td>${columnType}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td>`;
-				if (currentNode.STAnewColumnsToAdd[i][2]){ 
-					tableHTML+=`<td>${currentNode.STAnewColumnsToAdd[i][2]}</td>`;
+			}
+			if (!columnNameExist){
+				columnList.push(columnName); //Add to Column list to avoid duplicates
+				currentNode.STAcolumnsList=columnList 
+			}
+
+			return columnNameExist;
+		}
+		function createColumnListToAddColumns(){
+			var dataKeys= Object.keys(currentNode.STAdata[0]);
+			currentNode.STAcolumnsList=dataKeys;
+			networkNodes.update(currentNode);
+		}
+
+			//Create Columns
+
+			function addColumnToListCreateColumn(event){
+				event.preventDefault();
+				
+				var TypeOfValuesRadiobuttons= document.getElementsByName("TypeOfValues");
+				var columnName= document.getElementById("columnNameCreateColumns").value;
+				var n= TypeOfValuesRadiobuttons.length;
+				
+				if (columnName.length==0) columnName="noname";
+				var columnNameExist=columnExistInTheTable(columnName); //Search if name for column is not repeated
+
+				if(columnNameExist){ //It will not be added because column name already exist
+					alert("Chosen column name already exists, change it to add column to the list ");
 				}else{
-					tableHTML+=`<td> </td>`;
+					for (var i = 0; i <n ; i++) {
+						if (TypeOfValuesRadiobuttons[i].checked){
+							var columnName= document.getElementById("columnNameCreateColumns").value;
+							var number= document.getElementById("inputText_"+TypeOfValuesRadiobuttons[i].value)?.value;
+							if (number=="") //to avoid undefined in column list and problems afeter
+								number="0";
+							currentNode.STAnewColumnsToAdd.push([TypeOfValuesRadiobuttons[i].value,columnName,number]);
+						}
+					} 
+					networkNodes.update(currentNode);
+					drawTableInColumnBoxTableInCreateColumns();
 				}
-				tableHTML+=`<td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button> </td>`;
+
 			}
-		}
-		tableHTML+=`</table>`;
-		cdns=[tableHTML];
-		spanColumnsListAggregateColumns.innerHTML=cdns;
-		}
-	function addColumnsToTableInCreateColumns(){ ///!!!!!!!!!!!!!REPASAR
-			event.preventDefault();
-			var data;
-			for (var i=0;i<currentNode.STAnewColumnsToAdd.length;i++){
-	
-				switch(currentNode.STAnewColumnsToAdd[i][0]) {
-				case  "constantValue":
-					data=addNewColumnWithUniqueValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2])
-					break;
-				case  "autoincrementalValue":
-					data=addNewColumnWithAutoincrementalValues(currentNode.STAdata,currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2])
-					break;
-				case  "empty":
-					data= addNewEmptyColumn(currentNode.STAdata,currentNode.STAnewColumnsToAdd[i][1]);
-					
-					break;
-				}	
-				currentNode.STAdata=data;
-				networkNodes.update(currentNode);
-					
+
+		function drawTableInColumnBoxTableInCreateColumns(){
+			var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCreateColumns");
+			var cdns=[], tableHTML;
+
+			tableHTML='<table border=1><tr><th>Column type</th><th>Column name</th><th>Value</th></th></tr>';
+			if (currentNode.STAnewColumnsToAdd.length!=0){ //[columnType, columnName, value]
+				var n= currentNode.STAnewColumnsToAdd.length, columnType;
+				for (var i=0;i<n;i++){
+					switch(currentNode.STAnewColumnsToAdd[i][0]){
+						case "constantValue":
+							columnType="Constant value"
+							break;
+						case "autoincrementalValue":
+							columnType="Autoincremental value"
+							break;
+						case "empty":
+							columnType="Empty"
+							break;
+								
+					}
+						tableHTML+=`<tr><td>${columnType}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td>`;
+					if (currentNode.STAnewColumnsToAdd[i][2]){ 
+						tableHTML+=`<td>${currentNode.STAnewColumnsToAdd[i][2]}</td>`;
+					}else{
+						tableHTML+=`<td> </td>`;
+					}
+					tableHTML+=`<td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button> </td>`;
+				}
 			}
-			UpdateChildenTable(currentNode);
-			document.getElementById("DialogCreateColumns").close();
-			showInfoMessage("New columns have been added");
-		}
-	
+			tableHTML+=`</table>`;
+			cdns=[tableHTML];
+			spanColumnsListAggregateColumns.innerHTML=cdns;
+			}
+		function addColumnsToTableInCreateColumns(){ ///!!!!!!!!!!!!!REPASAR
+				event.preventDefault();
+				var datan,n=currentNode.STAnewColumnsToAdd.length;
+				for (var i=0;i<n;i++){
+		
+					switch(currentNode.STAnewColumnsToAdd[i][0]) {
+					case  "constantValue":
+						addNewColumnWithUniqueValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2])
+						break;
+					case  "autoincrementalValue":
+						addNewColumnWithAutoincrementalValues(currentNode.STAdata,currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2])
+						break;
+					case  "empty":
+						addNewEmptyColumn(currentNode.STAdata,currentNode.STAnewColumnsToAdd[i][1]);
+						
+						break;
+					}	
+					
+						
+				}
+				document.getElementById("DialogCreateColumns").close();
+				showInfoMessage("New columns have been added");
+			}
+		
 
 		//Aggregate columns
 		
@@ -5968,6 +5965,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							break;
 				}
 			}
+			showInfoMessage("New columns have been added");
 			document.getElementById("DialogAggregateColumns").close();
 			}else{
 				alert("There are no columns in the list to add, nothing will be added to the table")
@@ -6009,112 +6007,112 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 		}
 		//Calulator 
-	var textarea = document.getElementById("textAreaFormulaColumnsCalculator")
-    textarea.addEventListener('click', event => { //keep mouse position to add buttons information in that place
-    textarea.setAttribute("data-mousePosition", textarea.selectionStart) 
-    })
+		var textarea = document.getElementById("textAreaFormulaColumnsCalculator")
+		textarea.addEventListener('click', event => { //keep mouse position to add buttons information in that place
+		textarea.setAttribute("data-mousePosition", textarea.selectionStart) 
+		})
 
-    function WriteInTheFormulaButtons(character) {
-      event.preventDefault();
-      var textAreaFormulaColumnsCalculator = document.getElementById("textAreaFormulaColumnsCalculator");
-      var text = textAreaFormulaColumnsCalculator.value;
-      var mousePosition = textAreaFormulaColumnsCalculator.getAttribute("data-mousePosition");
-		if (character=="&#40;"){
-			character=="("
-		}else if (character=="&#41;"){
-			character==")"
-		}
-
-
-
-
-      if (character == "attributeSelected") {
-        var selector = document.getElementById("calculator_selectColumns");
-        character = selector.options[selector.selectedIndex].value;
-      }
-      textAreaFormulaColumnsCalculator.value = [text.slice(0, mousePosition), character, text.slice(mousePosition)].join('');
-      textAreaFormulaColumnsCalculator.setAttribute("data-mousePosition", parseInt(mousePosition) + character.length); //If there is no click, next button will be written after this.
-    }
-	
-	function addColumnToListColumnsCalculator(event){
+		function WriteInTheFormulaButtons(character) {
 		event.preventDefault();
-		var columnName= document.getElementById("columnNameColumnsCalculator").value;
-		var textAreaFormulaColumnsCalculator= document.getElementById("textAreaFormulaColumnsCalculator");
-		if (columnName.length==0) columnName="noname";
-		var columnNameExist=columnExistInTheTable(columnName); //Search if name for column is not repeated
-		if(columnNameExist){ //It will not be added because column name already exist
-			alert("Chosen column name already exists, change it to add column to the list ");
-		}else{
-			var decimalNumber="";
-			if (document.getElementById("chooseNumberDecimalsCalculator_0").checked) {
-            	decimalNumber=document.getElementById("chooseNumberDecimalsCalculator_0_input").value;
-          	}
-			currentNode.STAnewColumnsToAdd.push([textAreaFormulaColumnsCalculator.value,columnName,decimalNumber]);
-			drawTableInColumnBoxTableInCalculatorColumns();
+		var textAreaFormulaColumnsCalculator = document.getElementById("textAreaFormulaColumnsCalculator");
+		var text = textAreaFormulaColumnsCalculator.value;
+		var mousePosition = textAreaFormulaColumnsCalculator.getAttribute("data-mousePosition");
+			if (character=="&#40;"){
+				character=="("
+			}else if (character=="&#41;"){
+				character==")"
+			}
+
+
+
+
+		if (character == "attributeSelected") {
+			var selector = document.getElementById("calculator_selectColumns");
+			character = selector.options[selector.selectedIndex].value;
+		}
+		textAreaFormulaColumnsCalculator.value = [text.slice(0, mousePosition), character, text.slice(mousePosition)].join('');
+		textAreaFormulaColumnsCalculator.setAttribute("data-mousePosition", parseInt(mousePosition) + character.length); //If there is no click, next button will be written after this.
 		}
 		
-	}
-	function fillCalculatorColumVariablesList(){ //omplir el desplegable
-
-		// var dataKeys= Object.keys(currentNode.STAdata[0]);
-		//var n= dataKeys.length;
-		var dataAttributes= getDataAttributes(currentNode.STAdata);
-		var dataAttributesKeys=Object.keys(dataAttributes)
-		var n= dataAttributesKeys.length;
-		
-		var select = document.getElementById("calculator_selectColumns");
-		var cdns=[]
-
-		for (var i=0;i<n;i++){
-			//cdns.push(`<option value= ${dataKeys[i]}>${dataKeys[i]}</option>`);
-			console.log(dataAttributes[dataAttributesKeys[i]]);
-			console.log(dataAttributes[dataAttributesKeys[i]]['type']);
-			if (dataAttributes[dataAttributesKeys[i]]['type']=="number") cdns.push(`<option value= ${dataAttributesKeys[i]}>${dataAttributesKeys[i]}</option>`);
+		function addColumnToListColumnsCalculator(event){
+			event.preventDefault();
+			var columnName= document.getElementById("columnNameColumnsCalculator").value;
+			var textAreaFormulaColumnsCalculator= document.getElementById("textAreaFormulaColumnsCalculator");
+			if (columnName.length==0) columnName="noname";
+			var columnNameExist=columnExistInTheTable(columnName); //Search if name for column is not repeated
+			if(columnNameExist){ //It will not be added because column name already exist
+				alert("Chosen column name already exists, change it to add column to the list ");
+			}else{
+				var decimalNumber="";
+				if (document.getElementById("chooseNumberDecimalsCalculator_0").checked) {
+					decimalNumber=document.getElementById("chooseNumberDecimalsCalculator_0_input").value;
+				}
+				currentNode.STAnewColumnsToAdd.push([textAreaFormulaColumnsCalculator.value,columnName,decimalNumber]);
+				drawTableInColumnBoxTableInCalculatorColumns();
+			}
+			
 		}
-		select.innerHTML=cdns.join("");
-	
-		
-	}
-	function drawTableInColumnBoxTableInCalculatorColumns(){
-		var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCalculatorColumns");
-		var cdns;
-		var tableHTML=`<table border=1><tr><th>Formula</th><th>Column name</th><th>Number of decimals</th><th></th>`;
-			if (currentNode.STAnewColumnsToAdd.length!=0){
-		 		var n= currentNode.STAnewColumnsToAdd.length;
-		 		for (var i=0;i<n;i++){
-					tableHTML+= `<tr><td>${currentNode.STAnewColumnsToAdd[i][0]}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td><td>${currentNode.STAnewColumnsToAdd[i][2]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`
+		function fillCalculatorColumVariablesList(){ //omplir el desplegable
 
+			// var dataKeys= Object.keys(currentNode.STAdata[0]);
+			//var n= dataKeys.length;
+			var dataAttributes= getDataAttributes(currentNode.STAdata);
+			var dataAttributesKeys=Object.keys(dataAttributes)
+			var n= dataAttributesKeys.length;
+			
+			var select = document.getElementById("calculator_selectColumns");
+			var cdns=[]
+
+			for (var i=0;i<n;i++){
+				//cdns.push(`<option value= ${dataKeys[i]}>${dataKeys[i]}</option>`);
+				console.log(dataAttributes[dataAttributesKeys[i]]);
+				console.log(dataAttributes[dataAttributesKeys[i]]['type']);
+				if (dataAttributes[dataAttributesKeys[i]]['type']=="number") cdns.push(`<option value= ${dataAttributesKeys[i]}>${dataAttributesKeys[i]}</option>`);
+			}
+			select.innerHTML=cdns.join("");
+		
+			
+		}
+		function drawTableInColumnBoxTableInCalculatorColumns(){
+			var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCalculatorColumns");
+			var cdns;
+			var tableHTML=`<table border=1><tr><th>Formula</th><th>Column name</th><th>Number of decimals</th><th></th>`;
+				if (currentNode.STAnewColumnsToAdd.length!=0){
+					var n= currentNode.STAnewColumnsToAdd.length;
+					for (var i=0;i<n;i++){
+						tableHTML+= `<tr><td>${currentNode.STAnewColumnsToAdd[i][0]}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td><td>${currentNode.STAnewColumnsToAdd[i][2]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`
+
+					}
+				}
+				tableHTML+=`</table>`;
+				cdns=[tableHTML];
+				spanColumnsListAggregateColumns.innerHTML=cdns;
+		}
+
+		function addColumnsToTableInColumnsCalculator(){
+			event.preventDefault();
+			var decimalNumber;//decimalNumber=currentNode.STAnewColumnsToAdd[i][2];
+			var n=currentNode.STAnewColumnsToAdd.length;
+			for (var i=0;i<n;i++){
+				decimalNumber=currentNode.STAnewColumnsToAdd[i][2];
+				if (decimalNumber!=""){
+					addnewColumnWithFormula (currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][0],decimalNumber);
+				}else{
+					addnewColumnWithFormula (currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][0]);
 				}
 			}
-		 	tableHTML+=`</table>`;
-		 	cdns=[tableHTML];
-			spanColumnsListAggregateColumns.innerHTML=cdns;
-	}
+			showInfoMessage("New columns have been added");
+			document.getElementById("DialogColumnsCalculator").close();
 
-	function addColumnsToTableInColumnsCalculator(){
-		event.preventDefault();
-		var decimalNumber;//decimalNumber=currentNode.STAnewColumnsToAdd[i][2];
-		var n=currentNode.STAnewColumnsToAdd.length;
-		for (var i=0;i<n;i++){
-			decimalNumber=currentNode.STAnewColumnsToAdd[i][2];
-			if (decimalNumber!=""){
-				addnewColumnWithFormula (currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][0],decimalNumber);
-			}else{
-				addnewColumnWithFormula (currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][0]);
-			}
 		}
-		
-		document.getElementById("DialogColumnsCalculator").close();
-
-	}
-		
-		/////
+			
+			/////
 		function giveMeNetworkInformation(event) {
-				if (event)
-					event.preventDefault(); // We don't want to submit this form
-				document.getElementById("DialogSelectColumns").close();
-				console.log(networkNodes);
-		}
+			if (event)
+				event.preventDefault(); // We don't want to submit this form
+			document.getElementById("DialogSelectColumns").close();
+			console.log(networkNodes);
+	}
 	</script>
 
 </body>

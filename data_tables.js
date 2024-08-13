@@ -730,21 +730,18 @@ function addNewEmptyColumn(data,columnName){
 	for (var i=0;i<data.length;i++){
 		data[i][columnName]="";
 	}
-	return data;
 }
 
 function addNewColumnWithUniqueValue(data, columnName, uniqueValue){
 	for (var i=0;i<data.length;i++){
 		data[i][columnName]=uniqueValue;
 	}
-	return data;
 }
 function addNewColumnWithAutoincrementalValues(data,columnName,firstValue){
 
 	for (var i=0;i<data.length;i++){
 		data[i][columnName]=parseInt(firstValue)+i;
 	}
-	return data;
 }
 
 function addnewColumnSummingColumns(data, columnName,columnsToSum, decimalNumber, dataAttributes){

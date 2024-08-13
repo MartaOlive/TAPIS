@@ -1,0 +1,1144 @@
+{
+	"version": 1,
+	"collections": [
+		{
+			"id": "6ef99e8e-46c0-4aa8-b67d-952805aada70",
+			"name": "Webhook",
+			"description": null,
+			"auth": null,
+			"events": null,
+			"variables": [],
+			"order": [
+				"bed14b94-a644-49e0-afce-5476c0c5bf6a",
+				"2b22306e-24f8-4876-afd9-e4d92b4ffac6",
+				"da7562f2-0dca-4245-acb0-b55860a95855"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {},
+			"folders": [],
+			"requests": [
+				{
+					"id": "2b22306e-24f8-4876-afd9-e4d92b4ffac6",
+					"name": "subscription",
+					"url": "https://hub.demo.secure-dimensions.de/",
+					"description": "",
+					"data": [
+						{
+							"key": "hub.callback",
+							"value": "https://webhook.site/mywebhook2",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "hub.mode",
+							"value": "subscribe",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "hub.topic",
+							"value": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(1802)/Observations?$orderby=phenomenonTime desc",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "hub.secret",
+							"value": "28I13BKM4YP",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "webhook.x_api_key",
+							"value": "asdfadasjdhkjhakjhlkjhgl",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						}
+					],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "urlencoded",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/x-www-form-urlencoded",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"description": "",
+							"enabled": true,
+							"key": "X-Hub-Signature",
+							"type": "text",
+							"value": "sha256=c8430d87b21dc514f31022bbc35c8f64de1b0e813aa47c23501c684cd0019d12"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": null,
+					"events": null,
+					"folder": null,
+					"currentHelper": null,
+					"helperAttributes": null,
+					"collectionId": "6ef99e8e-46c0-4aa8-b67d-952805aada70",
+					"headers": "Content-Type: application/x-www-form-urlencoded\nX-Hub-Signature: sha256=c8430d87b21dc514f31022bbc35c8f64de1b0e813aa47c23501c684cd0019d12\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "bed14b94-a644-49e0-afce-5476c0c5bf6a",
+					"name": "callback",
+					"url": "https://webhook.site/mywebhook2",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/x-www-form-urlencoded",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "X-Hub-Signature",
+							"value": "sha256=c8430d87b21dc514f31022bbc35c8f64de1b0e813aa47c23501c684cd0019d12",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": null,
+					"events": null,
+					"folder": null,
+					"currentHelper": null,
+					"helperAttributes": null,
+					"collectionId": "6ef99e8e-46c0-4aa8-b67d-952805aada70",
+					"rawModeData": "{ \"name\": \"Nuria Julia\", \"nh\": 1}",
+					"headers": "Content-Type: application/x-www-form-urlencoded\nX-Hub-Signature: sha256=c8430d87b21dc514f31022bbc35c8f64de1b0e813aa47c23501c684cd0019d12\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "da7562f2-0dca-4245-acb0-b55860a95855",
+					"name": "validate of intent",
+					"url": "https://webhook.site/mywebhook2?hub.mode=subscribe&hub.topic=https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(1802)/Observations?$orderby=phenomenonTime desc&hub.challenge=123456789&hub.lease_seconds=300",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/x-www-form-urlencoded",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "X-Hub-Signature",
+							"value": "sha256=c8430d87b21dc514f31022bbc35c8f64de1b0e813aa47c23501c684cd0019d12",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						}
+					],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [
+						{
+							"key": "hub.mode",
+							"value": "subscribe",
+							"equals": true,
+							"description": "",
+							"enabled": true
+						},
+						{
+							"key": "hub.topic",
+							"value": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(1802)/Observations?$orderby=phenomenonTime desc",
+							"equals": true,
+							"description": "",
+							"enabled": true
+						},
+						{
+							"key": "hub.challenge",
+							"value": "123456789",
+							"equals": true,
+							"description": "",
+							"enabled": true
+						},
+						{
+							"key": "hub.lease_seconds",
+							"value": "300",
+							"equals": true,
+							"description": "",
+							"enabled": true
+						}
+					],
+					"auth": null,
+					"events": null,
+					"folder": null,
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"currentHelper": null,
+					"helperAttributes": null,
+					"collectionId": "6ef99e8e-46c0-4aa8-b67d-952805aada70",
+					"rawModeData": "{ \"name\": \"Nuria Julia\", \"nh\": 1}",
+					"headers": "Content-Type: application/x-www-form-urlencoded\nX-Hub-Signature: sha256=c8430d87b21dc514f31022bbc35c8f64de1b0e813aa47c23501c684cd0019d12\n",
+					"pathVariables": {}
+				}
+			]
+		},
+		{
+			"id": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+			"name": "STAplus",
+			"description": "",
+			"auth": null,
+			"events": null,
+			"variables": [],
+			"order": [
+				"6633097e-b92b-44fc-864f-77734333fc84",
+				"18642ed6-4752-4251-a471-fb2f9f342c2b",
+				"e79d8a8d-5202-40c4-b6bc-39a10ab1645c",
+				"495094bf-9d59-4413-a9b9-a66f533cae2f",
+				"343019f8-a8da-4f64-94c4-d3b27c85e681",
+				"3e6afe4c-a579-4c06-af11-32d0acd6e961",
+				"871b5f5f-8157-4339-8927-96c882199562",
+				"28efff7f-68d6-408d-b163-f3631d64dc27",
+				"f67245dd-a516-4662-978b-2fb7f06e6b84",
+				"bd3f45ef-d50a-4572-9504-202e6f1ccbe0",
+				"e135cd66-5796-4a2e-8758-13b17d8b2c79",
+				"aa1ae198-b52e-4a37-8cde-5ce770b4bc47",
+				"1e36d8a6-e815-42ed-b09b-48e6a55a0cf2",
+				"52853978-efe2-4b7e-a211-65de66a9dd15",
+				"e3a95144-a31b-499e-a6c8-c2484d78a35c",
+				"6c3f5764-6384-4b6f-86d7-3980f6a80453",
+				"8e218c59-4951-4478-8e67-dcc69dff4edd",
+				"f440cbe8-9719-4c4d-8914-a2055970086c",
+				"ee4dae48-899a-402f-83fa-eafe1fba4066",
+				"97975d31-2555-48a8-bcdd-fb71a623a4b8"
+			],
+			"folders_order": [],
+			"protocolProfileBehavior": {},
+			"folders": [],
+			"requests": [
+				{
+					"id": "18642ed6-4752-4251-a471-fb2f9f342c2b",
+					"name": "GatObservedProperty Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/ObservedProperties",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_0tJWiwWAQ977Mj9lfw6IVP-tmdjp6"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_0tJWiwWAQ977Mj9lfw6IVP-tmdjp6"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\n\t\"name\": \"Species\",\n    \"definition\": \"https://www.gbif.org/species\",\n    \"description\": \"Species Name\"\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "1e36d8a6-e815-42ed-b09b-48e6a55a0cf2",
+					"name": "CameraLocation Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Locations",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_kzMCyvoiZLVCLM0PtU_RjTCSG-tCN"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_kzMCyvoiZLVCLM0PtU_RjTCSG-tCN"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n    \t\"name\": \"Albera3\",\r\n    \t\"description\": \"Albera Site 3\",\r\n    \t\"encodingType\": \"application/geo+json\",\r\n    \t\"location\": {\"type\": \"Point\", \"coordinates\": [2.942919, 42.47697]}\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "28efff7f-68d6-408d-b163-f3631d64dc27",
+					"name": "PictureDataStream Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Datastreams",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_Md3DVmVYcldAj~aqDF~sEBFlTgyxA"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_Md3DVmVYcldAj~aqDF~sEBFlTgyxA"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n      \"name\": \"Pictures\",\r\n      \"description\": \"Pictures with an animal inside\",\r\n      \"observationType\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\r\n      \"unitOfMeasurement\": {\"name\": null,\r\n        \"symbol\": null,\r\n        \"definition\": null\r\n      },\r\n      \"License\": {\"@iot.id\": \"CC_BY\"},\r\n      \"ObservedProperty\": {\"@iot.id\": 59},\r\n      \"Party\": {\"@iot.id\": \"acf3265f-ad75-44df-a599-ce7ff54c9d97\"},\r\n      \"Sensor\": {\"@iot.id\": 41},\r\n      \"Thing\": {\"@iot.id\": 41}\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "343019f8-a8da-4f64-94c4-d3b27c85e681",
+					"name": "CameraThingLocation Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Things(41)",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "PUT",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_kzMCyvoiZLVCLM0PtU_RjTCSG-tCN"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_kzMCyvoiZLVCLM0PtU_RjTCSG-tCN"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n\t\"name\": \"BROWNING DARK OPS PRO X 1080\",\r\n    \"description\": \"The Browning Trail Cameras Dark Ops Pro X 1080 (2023) featuring a 1.5” color view screen, less than a quarter second trigger speed, and an all-steel adjustable mounting bracket for easy set-up in the field.\",\r\n    \"Party\": {\"@iot.id\": \"acf3265f-ad75-44df-a599-ce7ff54c9d97\"},\r\n    \"Locations\": [{\"@iot.id\": \"41\"}]\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "3e6afe4c-a579-4c06-af11-32d0acd6e961",
+					"name": "HumanThingLocation Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Things",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_kzMCyvoiZLVCLM0PtU_RjTCSG-tCN"
+							}
+						],
+						"type": "bearer"
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_kzMCyvoiZLVCLM0PtU_RjTCSG-tCN"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n\t\"name\": \"CitizenScientist\",\r\n    \"description\": \"Citizen Scientist.\",\r\n    \"Party\": {\"@iot.id\": \"acf3265f-ad75-44df-a599-ce7ff54c9d97\"}\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "495094bf-9d59-4413-a9b9-a66f533cae2f",
+					"name": "CameraThing Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Things",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_vtgGgBeHw3Rsmi-nydktkUTCJc0J9"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_vtgGgBeHw3Rsmi-nydktkUTCJc0J9"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n\t\"name\": \"BROWNING DARK OPS PRO X 1080\",\r\n    \"description\": \"The Browning Trail Cameras Dark Ops Pro X 1080 (2023) featuring a 1.5” color view screen, less than a quarter second trigger speed, and an all-steel adjustable mounting bracket for easy set-up in the field.\",\r\n    \"Party\": {\"@iot.id\": \"acf3265f-ad75-44df-a599-ce7ff54c9d97\"}\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "52853978-efe2-4b7e-a211-65de66a9dd15",
+					"name": "FeatureOfInterest Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/FeaturesOfInterest",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_wKrPKNZK5yEs-TiHFyEPdIowgO5q-"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_wKrPKNZK5yEs-TiHFyEPdIowgO5q-"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n    \t\"name\": \"Albera3\",\r\n    \t\"description\": \"Albera Site 3\",\r\n    \t\"encodingType\": \"application/geo+json\",\r\n    \t\"feature\": {\"type\": \"Point\", \"coordinates\": [2.942919, 42.47697]}\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "6633097e-b92b-44fc-864f-77734333fc84",
+					"name": "POST Berta Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Parties",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_0tJWiwWAQ977Mj9lfw6IVP-tmdjp6"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_0tJWiwWAQ977Mj9lfw6IVP-tmdjp6"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n  \"displayName\": \"Berta Giralt\",\r\n  \"role\": \"individual\"\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "6c3f5764-6384-4b6f-86d7-3980f6a80453",
+					"name": "Human Sensor Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Sensors",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_kzMCyvoiZLVCLM0PtU_RjTCSG-tCN"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_kzMCyvoiZLVCLM0PtU_RjTCSG-tCN"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n\t\"name\": \"Human Sensor\",\r\n    \"description\": \"Human Sensor\",\r\n    \"encodingType\": \"\",\r\n\t\"metadata\": \"\"\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "871b5f5f-8157-4339-8927-96c882199562",
+					"name": "OccurenceDataStream Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Datastreams",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_wKrPKNZK5yEs-TiHFyEPdIowgO5q-"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_wKrPKNZK5yEs-TiHFyEPdIowgO5q-"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n      \"name\": \"Occurrence\",\r\n      \"description\": \"Species occurrence\",\r\n      \"observationType\": \"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement\",\r\n      \"unitOfMeasurement\": {\"name\": null,\r\n        \"symbol\": null,\r\n        \"definition\": null\r\n      },\r\n      \"License\": {\"@iot.id\": \"CC_BY\"},\r\n      \"ObservedProperty\": {\"@iot.id\": 58},\r\n      \"Party\": {\"@iot.id\": \"acf3265f-ad75-44df-a599-ce7ff54c9d97\"},\r\n      \"Sensor\": {\"@iot.id\": 42},\r\n      \"Thing\": {\"@iot.id\": 42}\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "8e218c59-4951-4478-8e67-dcc69dff4edd",
+					"name": "FotoObservedProperty Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/ObservedProperties(60)",
+					"description": "",
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [],
+					"method": "DELETE",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_0tJWiwWAQ977Mj9lfw6IVP-tmdjp6"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_0tJWiwWAQ977Mj9lfw6IVP-tmdjp6"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"headers": "",
+					"pathVariables": {}
+				},
+				{
+					"id": "97975d31-2555-48a8-bcdd-fb71a623a4b8",
+					"name": "Token",
+					"url": "https://www.authenix.eu/oauth/token",
+					"description": "",
+					"data": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "scope",
+							"value": "idp",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						}
+					],
+					"dataOptions": null,
+					"dataMode": "urlencoded",
+					"headerData": [
+						{
+							"key": "Authorization",
+							"value": "Basic YWNmMzI2NWYtYWQ3NS00NGRmLWE1OTktY2U3ZmY1NGM5ZDk3OmYyZjkxZTYyYTgxM2JkZjc2YjExNjEyZTJjZWQwNzcyYjZhNmNiMWNhZjQ0MzMwMTU1MTQ1NDNmNjQwYWVkNjQ=",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/x-www-form-urlencoded",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "Accept",
+							"value": "application/json",
+							"description": "",
+							"type": "text",
+							"enabled": true
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": null,
+					"events": [],
+					"folder": null,
+					"currentHelper": null,
+					"helperAttributes": null,
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"headers": "Authorization: Basic YWNmMzI2NWYtYWQ3NS00NGRmLWE1OTktY2U3ZmY1NGM5ZDk3OmYyZjkxZTYyYTgxM2JkZjc2YjExNjEyZTJjZWQwNzcyYjZhNmNiMWNhZjQ0MzMwMTU1MTQ1NDNmNjQwYWVkNjQ=\nContent-Type: application/x-www-form-urlencoded\nAccept: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "aa1ae198-b52e-4a37-8cde-5ce770b4bc47",
+					"name": "ObservationGroup Cedric Copy",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/ObservationGroups",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_wKrPKNZK5yEs-TiHFyEPdIowgO5q-"
+							}
+						],
+						"type": "bearer"
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_wKrPKNZK5yEs-TiHFyEPdIowgO5q-"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n      \"name\": \"GatFerOcc1\",\r\n      \"description\": \"Felis silvestris Occurrence 1\",\r\n      \"creationTime\": \"2024-07-12T17:30:00Z\",\r\n      \"endTime\": \"2024-07-12T17:30:00Z\",\r\n      \"License\": {\"@iot.id\": \"CC_BY\"},\r\n      \"Party\": {\"@iot.id\": \"acf3265f-ad75-44df-a599-ce7ff54c9d97\"}\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "bd3f45ef-d50a-4572-9504-202e6f1ccbe0",
+					"name": "Picture1Observation Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Observations",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_Md3DVmVYcldAj~aqDF~sEBFlTgyxA"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_Md3DVmVYcldAj~aqDF~sEBFlTgyxA"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n      \"phenomenonTime\": \"2024-07-12T17:30:00Z\",\r\n      \"resultTime\": \"2024-07-20T09:00:00Z\",\r\n      \"result\": \"https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/20240712_1930_C3/20240712_1930_C3_04.JPG\",\r\n      \"Datastream\": {\"@iot.id\": 36},\r\n      \"FeatureOfInterest\": {\"@iot.id\": 36},\r\n      \"ObservationGroups\": [{\"@iot.id\": 3}]\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "e135cd66-5796-4a2e-8758-13b17d8b2c79",
+					"name": "ObservationGroup Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/ObservationGroups",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_wKrPKNZK5yEs-TiHFyEPdIowgO5q-"
+							}
+						],
+						"type": "bearer"
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_wKrPKNZK5yEs-TiHFyEPdIowgO5q-"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n      \"name\": \"GatFerOcc1\",\r\n      \"description\": \"Felis silvestris Occurrence 1\",\r\n      \"creationTime\": \"2024-07-12T17:30:00Z\",\r\n      \"endTime\": \"2024-07-12T17:30:00Z\",\r\n      \"License\": {\"@iot.id\": \"CC_BY\"},\r\n      \"Party\": {\"@iot.id\": \"acf3265f-ad75-44df-a599-ce7ff54c9d97\"}\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "e3a95144-a31b-499e-a6c8-c2484d78a35c",
+					"name": "CameraOpticsSensor Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Sensors",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_vtgGgBeHw3Rsmi-nydktkUTCJc0J9"
+							}
+						],
+						"type": "bearer"
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_vtgGgBeHw3Rsmi-nydktkUTCJc0J9"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n\t\"name\": \"Optics in BROWNING DARK OPS PRO X 1080\",\r\n    \"description\": \"The Optics in Browning Trail Cameras Dark Ops Pro X 1080 (2023) .\",\r\n    \"encodingType\": \"application/json\",\r\n\t\"metadata\": \"{\\\"resolution\\\" : \\\"24 megapixels\\\", \\\"fieldOfView\\\": \\\"55 degrees\\\", \\\"detectionAngle\\\": \\\"45 degrees\\\"}\"\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "e79d8a8d-5202-40c4-b6bc-39a10ab1645c",
+					"name": "FotoObservedProperty Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/ObservedProperties",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_0tJWiwWAQ977Mj9lfw6IVP-tmdjp6"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_0tJWiwWAQ977Mj9lfw6IVP-tmdjp6"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\n\t\"name\": \"Picture\",\n    \"definition\": \"https://en.wikipedia.org/wiki/Image\",\n    \"description\": \"Pictorial image\"\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				},
+				{
+					"id": "ee4dae48-899a-402f-83fa-eafe1fba4066",
+					"name": "Generic GET Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1",
+					"description": "",
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_kceG6Fib3-W6Wy9KCwmGRNBvdHIQM"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_kceG6Fib3-W6Wy9KCwmGRNBvdHIQM"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"headers": "",
+					"pathVariables": {}
+				},
+				{
+					"id": "f440cbe8-9719-4c4d-8914-a2055970086c",
+					"name": "Es la Berta? Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1",
+					"description": "",
+					"data": null,
+					"dataOptions": null,
+					"dataMode": null,
+					"headerData": [],
+					"method": "GET",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_kceG6Fib3-W6Wy9KCwmGRNBvdHIQM"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_kceG6Fib3-W6Wy9KCwmGRNBvdHIQM"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"headers": "",
+					"pathVariables": {}
+				},
+				{
+					"id": "f67245dd-a516-4662-978b-2fb7f06e6b84",
+					"name": "OccurrenceObservation Cedric",
+					"url": "https://frost.iotlab.com/sensorthings2/v1.1/Observations",
+					"description": "",
+					"data": [],
+					"dataOptions": {
+						"raw": {
+							"language": "json"
+						}
+					},
+					"dataMode": "raw",
+					"headerData": [
+						{
+							"description": "",
+							"key": "Content-Type",
+							"name": "Content-Type",
+							"type": "text",
+							"value": "application/json"
+						}
+					],
+					"method": "POST",
+					"pathVariableData": [],
+					"queryParams": [],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "at_Md3DVmVYcldAj~aqDF~sEBFlTgyxA"
+							}
+						]
+					},
+					"events": [],
+					"folder": null,
+					"currentHelper": "bearerAuth",
+					"helperAttributes": {
+						"id": "bearer",
+						"token": "at_Md3DVmVYcldAj~aqDF~sEBFlTgyxA"
+					},
+					"collectionId": "c83b68ff-3e3f-451a-b836-de051e22cf24",
+					"rawModeData": "{\r\n      \"phenomenonTime\": \"2024-07-12T17:30:00Z\",\r\n      \"resultTime\": \"2024-07-20T09:00:00Z\",\r\n      \"result\": \"https://www.gbif.org/species/7193910\",\r\n      \"Datastream\": {\"@iot.id\": 35},\r\n      \"FeatureOfInterest\": {\"@iot.id\": 36},\r\n      \"ObservationGroups\": [{\"@iot.id\": 3}]\r\n}",
+					"headers": "Content-Type: application/json\n",
+					"pathVariables": {}
+				}
+			]
+		},
+		{
+			"id": "f088da71-14c4-449b-8afb-b3331bd29ec8",
+			"name": "d:\\docs",
+			"description": null,
+			"auth": null,
+			"events": null,
+			"variables": [],
+			"order": [],
+			"folders_order": [],
+			"protocolProfileBehavior": {},
+			"folders": [],
+			"requests": []
+		}
+	],
+	"environments": [
+		{
+			"id": "33741e00-92ee-49e8-b30b-2e591f73e304",
+			"name": "My Workspace - globals",
+			"values": []
+		}
+	],
+	"headerPresets": [],
+	"globals": []
+}
