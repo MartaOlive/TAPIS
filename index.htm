@@ -225,7 +225,6 @@
 	</dialog>
 	<dialog id="DialogCreateColumns">
 		<form>
-			Create columns:
 			<span id="DialogCreateColumnsHTML">
 
 			  <div>
@@ -238,15 +237,14 @@
 					<input type="radio" id="columnNameRadioType_empty" name="TypeOfValues" value="empty">
 					<label for="columnNameRadioType_empty">Empty column</label><br>
 				</fieldset>
-
+<br>
 				<fieldset>
 					<legend>Column name:</legend>
 					<input type="radio" name="columnNameRadioCreateColumns" id ="columnNameRadioACreateColumns_personalized" checked="checked"> <!--Function has no sense, it is only to mimic aggregated columns dialog-->
 					<label for ="columnNameRadioACreateColumns_personalized" >Personalized</label>
 					<input id="columnNameCreateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
-
-
 				</fieldset>
+				<br>
 				<button value="add" onClick="addColumnToListCreateColumn(event)"style="margin-bottom:10px">Add column to list </button>
 				<br><br><hr>
 				<div style="width:auto;" >
@@ -265,7 +263,6 @@
 
 	<dialog id="DialogAggregateColumns">
 		<form>
-		  Aggregate columns:
 		  <span id="DialogAggregateColumnsHTML">
 			<br>
 			<div>
@@ -324,18 +321,14 @@
 
 
 	<dialog id="DialogColumnsCalculator">
-		<form name="CalculadoraCapes" onsubmit="return false;"><br>
-			<label for="columnNameColumnsCalculator">Column Name </label>
-			<input id="columnNameColumnsCalculator" type="text" style="margin-top: 10px; margin-bottom: 10px; ">
+		<form >
 			<br>
-			<label for="afegeix-capa-capa-calcul-valor-capa-0">Capa:</label>
+			<label for="calculator_selectColumns">Attribute:</label>
 			<select id="calculator_selectColumns" name="calculator_selectColumnsValue" style="width:400px;" onchange="">
-			  <option value="columna1" selected="selected">Columna 1</option>
-			  <option value="columna2" >Columna 2</option>
 			</select>
 		
 			<button onclick="WriteInTheFormulaButtons('attributeSelected')" >Write in the formula</button>
-		
+			<br><br>
 			<fieldset>
 			  <legend>Operators and functions for the formula: </legend>
 			  <input type="button" style="width:40px" value="&#40;" onclick="WriteInTheFormulaButtons('&#40;')">
@@ -451,6 +444,13 @@
 			</span>		 
 			</fieldset>
 		</div>
+		<br>
+		<fieldset>
+			<legend>Column name:</legend>
+			<input type="radio" name="columnNameRadioCalculatorColumns" id ="columnNameRadioACalculatorColumns_personalized" checked="checked"> <!--Function has no sense, it is only to mimic aggregated columns dialog-->
+			<label for ="columnNameRadioACalculatorColumns_personalized" >Personalized</label>
+			<input id="columnNameColumnsCalculator" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
+		</fieldset>
 			<br>
 			
 			<button value="add" onClick="addColumnToListColumnsCalculator(event)" style="margin-bottom:10px">Add column to list
