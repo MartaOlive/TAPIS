@@ -248,7 +248,7 @@
 
 				</fieldset>
 				<button value="add" onClick="addColumnToListCreateColumn(event)"style="margin-bottom:10px">Add column to list </button>
-				<br><br>
+				<br><br><hr>
 				<div style="width:auto;" >
 					<label>List of columns to add</label>
 					<span id= spanColumnsListCreateColumns></span>
@@ -269,16 +269,16 @@
 		  <span id="DialogAggregateColumnsHTML">
 			<br>
 			<div>
-			<fieldset style="display:inline-block;position:relative;">
+			<fieldset style="display:inline-block">
 			  <legend>Select attributes:</legend>
 			  <span id="DialogcolumnsFielsetHTML"></span>
 			</fieldset>
-			<fieldset style="display:inline-block;position:relative;">
+			<fieldset style="display:inline-block">
 			  <legend>Aggregations:</legend>
 			  <span id="operationsFieldSet"></span>
 			</fieldset>
-	
-			<fieldset style="display:inline-block;position:relative;">
+			<br>
+			<fieldset style="display:inline-block">
 			  <legend>Set number of decimals:</legend>
 			  <span>
 				<input type="radio" id="chooseNumberDecimals_1" name="chooseNumberDecimals" value="no" checked>
@@ -303,11 +303,11 @@
 			  <span id="columnNameAggregateColumns_span"></span>
 			</fieldset>
 			<br>
-	
+			<br>	
 			<button value="add" onClick="addColumnToListAggregateColumns(event)" style="margin-bottom:10px">Add column to
 			  list </button>
 	
-			<br><br>
+			<br><br><hr>
 			<div style="width:auto;">
 			  <label>List of columns to add</label>
 			  <span id=spanColumnsListAggregateColumns></span>
@@ -448,14 +448,15 @@
 					<input type="radio" id="chooseNumberDecimalsCalculator_0" name="chooseNumberDecimalsCalculator" value="yes"> 
 					<label for="chooseNumberDecimalsCalculator_0">Yes: </label>
 					<input id="chooseNumberDecimalsCalculator_0_input" type="number" max="10" min="0">
-			</span>
-
-							 
+			</span>		 
 			</fieldset>
 		</div>
 			<br>
+			
 			<button value="add" onClick="addColumnToListColumnsCalculator(event)" style="margin-bottom:10px">Add column to list
 			</button>
+			<br>
+			<hr>
 			<div style="width:auto;" >
 				<label>List of columns to add</label>
 				<span id= spanColumnsListCalculatorColumns></span>
@@ -5664,7 +5665,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCreateColumns");
 			var cdns=[], tableHTML;
 
-			tableHTML='<table border=1><tr><th>Column type</th><th>Column name</th><th>Value</th></th></tr>';
+			tableHTML='<table border=1><tr><th>Column type</th><th>Column name</th><th>Value</th><th></th></tr>';
 			if (currentNode.STAnewColumnsToAdd.length!=0){ //[columnType, columnName, value]
 				var n= currentNode.STAnewColumnsToAdd.length, columnType;
 				for (var i=0;i<n;i++){
@@ -5688,6 +5689,9 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					}
 					tableHTML+=`<td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button> </td>`;
 				}
+			}
+			else{
+				tableHTML+=`<tr style="height:20px"><td> </td><td></td><td></td><td></td></tr>`
 			}
 			tableHTML+=`</table>`;
 			cdns=[tableHTML];
@@ -5812,6 +5816,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						tableHTML+=`<td> </td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`;
 					}
 				}
+			}else{
+				tableHTML+=`<tr style="height:20px"><td></td><td></td><td></td><td></td><td></td></tr>`
 			}
 			
 			tableHTML+=`</table>`;
@@ -6076,14 +6082,16 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		function drawTableInColumnBoxTableInCalculatorColumns(){
 			var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCalculatorColumns");
 			var cdns;
-			var tableHTML=`<table border=1><tr><th>Formula</th><th>Column name</th><th>Number of decimals</th><th></th>`;
+			var tableHTML=`<table border=1><tr><th>Formula</th><th>Column name</th><th>Number of decimals</th><th></th></tr>`;
 				if (currentNode.STAnewColumnsToAdd.length!=0){
 					var n= currentNode.STAnewColumnsToAdd.length;
 					for (var i=0;i<n;i++){
 						tableHTML+= `<tr><td>${currentNode.STAnewColumnsToAdd[i][0]}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td><td>${currentNode.STAnewColumnsToAdd[i][2]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`
 
 					}
-				}
+				}else{
+					tableHTML+=`<tr style="height:20px"><td></td><td></td><td></td><td></td></tr>`
+			}
 				tableHTML+=`</table>`;
 				cdns=[tableHTML];
 				spanColumnsListAggregateColumns.innerHTML=cdns;
