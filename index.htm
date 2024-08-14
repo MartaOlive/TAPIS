@@ -265,62 +265,60 @@
 
 	<dialog id="DialogAggregateColumns">
 		<form>
-			Aggregate columns:
-			<span id="DialogAggregateColumnsHTML">
+		  Aggregate columns:
+		  <span id="DialogAggregateColumnsHTML">
+			<br>
+			<div>
+			<fieldset style="display:inline-block;position:relative;">
+			  <legend>Select attributes:</legend>
+			  <span id="DialogcolumnsFielsetHTML"></span>
+			</fieldset>
+			<fieldset style="display:inline-block;position:relative;">
+			  <legend>Aggregations:</legend>
+			  <span id="operationsFieldSet"></span>
+			</fieldset>
+	
+			<fieldset style="display:inline-block;position:relative;">
+			  <legend>Set number of decimals:</legend>
+			  <span>
+				<input type="radio" id="chooseNumberDecimals_1" name="chooseNumberDecimals" value="no" checked>
+				<label for="chooseNumberDecimals_1">No </label>
+				<br>
+				<input type="radio" id="chooseNumberDecimals_0" name="chooseNumberDecimals" value="yes">
+				<label for="chooseNumberDecimals_0">Yes: </label>
+				<input id="chooseNumberDecimals_0_input" type="number" max="10" min="0">
+			  </span>
+			</fieldset>
+		</div>
+			<br>
+			<fieldset style="display:inline-block">
+			  <legend>Column name: </legend>
+			  <input type="radio" name="columnNameRadioAggregateColumns" id="columnNameRadioAggregateColumns_personalized">
+			  <label for="columnNameRadioAggregateColumns_personalized">Personalized</label>
+			  <input id="columnNameAggregateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; ">
 			  <br>
-			  
-			  
-				<fieldset  style="display:inline-block">
-					<legend>Select attributes:</legend>
-					<span id="columnsFielset"></span>
-				  
-						 
-				</fieldset>		
-			  <fieldset style="display:inline-block">
-				<legend>Aggregations:</legend>
-				<span  id="operationsFieldSet"></span>
-			  </fieldset>
-
-				<fieldset  style="display:inline-block" >
-					<legend>Set number of decimals:</legend>
-					<span>
-					<input type="radio" id="chooseNumberDecimals_1" name="chooseNumberDecimals" value="no" checked> 
-					<label for="chooseNumberDecimals_1">No </label>
-					<br>
-					<input type="radio" id="chooseNumberDecimals_0" name="chooseNumberDecimals" value="yes"> 
-					<label for="chooseNumberDecimals_0">Yes: </label>
-					<input id="chooseNumberDecimals_0_input" type="number" max="10" min="0"> 
-					</span>
-
-								 
-				</fieldset>
-			  <br>
-			  <fieldset style="display:inline-block" >
-				<legend >Column name: </legend>
-				<input type="radio" name="columnNameRadioAggregateColumns" id ="columnNameRadioAggregateColumns_personalized">
-				<label for ="columnNameRadioAggregateColumns_personalized" >Personalized</label>
-				<input id="columnNameAggregateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
-				<br>				
-				<input type="radio" name="columnNameRadioAggregateColumns" checked="checked"  id ="columnNameRadioAggregateColumns_suggested">
-				<label for ="columnNameRadioAggregateColumns_suggested" >Suggested: </label>
-				<span id ="columnNameAggregateColumns_span" ></span>
-			  </fieldset>
-			 <br>
-			  
-			  <button value="add" onClick="addColumnToListAggregateColumns(event)"style="margin-bottom:10px">Add column to list </button>
-
-			  <br><br>
-			  <div style="width:auto;" >
-				<label>List of columns to add</label>
-				<span id= spanColumnsListAggregateColumns></span>
-			  </div>
-			</span>
-			<div class="center" style="margin-top: 10px">
-			  <button value="default" onClick="addColumnsToTableInAggregateColumns(event)">Ok</button>
-			  <button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
+			  <input type="radio" name="columnNameRadioAggregateColumns" checked="checked"
+				id="columnNameRadioAggregateColumns_suggested">
+			  <label for="columnNameRadioAggregateColumns_suggested">Suggested: </label>
+			  <span id="columnNameAggregateColumns_span"></span>
+			</fieldset>
+			<br>
+	
+			<button value="add" onClick="addColumnToListAggregateColumns(event)" style="margin-bottom:10px">Add column to
+			  list </button>
+	
+			<br><br>
+			<div style="width:auto;">
+			  <label>List of columns to add</label>
+			  <span id=spanColumnsListAggregateColumns></span>
 			</div>
-		  </form>
-	</dialog>
+		  </span>
+		  <div class="center" style="margin-top: 10px">
+			<button value="default" onClick="addColumnsToTableInAggregateColumns(event)">Ok</button>
+			<button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
+		  </div>
+		</form>
+	  </dialog>
 
 
 
@@ -345,7 +343,7 @@
 			  <br>
 			  <input type="button" style="width:40px" value="=" onclick="WriteInTheFormulaButtons('=')">
 			  <input type="button" style="width:40px" value="&gt;=" onclick="WriteInTheFormulaButtons('>=')">
-			  <input type="button" style="width:40px" value="&lt;" onclick="WriteInTheFormulaButtons('<')">&nbsp;&nbsp;&nbsp;&nbsp; <!--per fer la separacio-->
+			  <input type="button" style="width:40px" value="&lt;" onclick="WriteInTheFormulaButtons('<')">&nbsp;&nbsp;&nbsp;&nbsp;
 		
 		
 		
@@ -424,18 +422,17 @@
 		
 			  <br>
 			  <input type="button" style="width:62px" value="sing"
-				onclick="WriteInTheFormulaButtons('Math.sin( *Math.PI/180)')"> <!-- Math.sin	(&quot;,&quot;*Math.PI/180)	 -->
+				onclick="WriteInTheFormulaButtons('Math.sin( *Math.PI/180)')"> 
 			  <input type="button" style="width:62px" value="asing"
 				onclick="WriteInTheFormulaButtons('Math.asin()*180/Math.PI')">
-			  <!--Math.asin	(&quot;,&quot;)*180/Math.PI&quot	 -->
 			  <input type="button" style="width:62px" value="cosg"
-				onclick="WriteInTheFormulaButtons('Math.cos( *Math.PI/180)')"> <!--Math.cos	(&quot;,&quot;*Math.PI/180)	 -->
+				onclick="WriteInTheFormulaButtons('Math.cos( *Math.PI/180)')">
 			  <input type="button" style="width:62px" value="acosg"
-				onclick="WriteInTheFormulaButtons('Math.acos( *Math.PI/180)')"> <!--Math.acos	(&quot;,&quot;*Math.PI/180)	 -->
+				onclick="WriteInTheFormulaButtons('Math.acos( *Math.PI/180)')">
 			  <input type="button" style="width:62px" value="tang"
-				onclick="WriteInTheFormulaButtons('Math.tan( *Math.PI/180)	')"> <!--Math.tan	(&quot;,&quot;*Math.PI/180)	 -->
+				onclick="WriteInTheFormulaButtons('Math.tan( *Math.PI/180)	')">
 			  <input type="button" style="width:62px" value="atang"
-				onclick="WriteInTheFormulaButtons('Math.atan( *Math.PI/180)')"> <!--Math.atan	(&quot;,&quot;*Math.PI/180)	 -->
+				onclick="WriteInTheFormulaButtons('Math.atan( *Math.PI/180)')">
 			</fieldset>
 			<div>
 			<label style="position:relative;top:22px">Formula:</label>
@@ -5633,35 +5630,35 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			networkNodes.update(currentNode);
 		}
 
-			//Create Columns
+		//Create Columns
 
-			function addColumnToListCreateColumn(event){
-				event.preventDefault();
-				
-				var TypeOfValuesRadiobuttons= document.getElementsByName("TypeOfValues");
-				var columnName= document.getElementById("columnNameCreateColumns").value;
-				var n= TypeOfValuesRadiobuttons.length;
-				
-				if (columnName.length==0) columnName="noname";
-				var columnNameExist=columnExistInTheTable(columnName); //Search if name for column is not repeated
+		function addColumnToListCreateColumn(event){
+			event.preventDefault();
+			
+			var TypeOfValuesRadiobuttons= document.getElementsByName("TypeOfValues");
+			var columnName= document.getElementById("columnNameCreateColumns").value;
+			var n= TypeOfValuesRadiobuttons.length;
+			
+			if (columnName.length==0) columnName="noname";
+			var columnNameExist=columnExistInTheTable(columnName); //Search if name for column is not repeated
 
-				if(columnNameExist){ //It will not be added because column name already exist
-					alert("Chosen column name already exists, change it to add column to the list ");
-				}else{
-					for (var i = 0; i <n ; i++) {
-						if (TypeOfValuesRadiobuttons[i].checked){
-							var columnName= document.getElementById("columnNameCreateColumns").value;
-							var number= document.getElementById("inputText_"+TypeOfValuesRadiobuttons[i].value)?.value;
-							if (number=="") //to avoid undefined in column list and problems afeter
-								number="0";
-							currentNode.STAnewColumnsToAdd.push([TypeOfValuesRadiobuttons[i].value,columnName,number]);
-						}
-					} 
-					networkNodes.update(currentNode);
-					drawTableInColumnBoxTableInCreateColumns();
-				}
-
+			if(columnNameExist){ //It will not be added because column name already exist
+				alert("Chosen column name already exists, change it to add column to the list ");
+			}else{
+				for (var i = 0; i <n ; i++) {
+					if (TypeOfValuesRadiobuttons[i].checked){
+						var columnName= document.getElementById("columnNameCreateColumns").value;
+						var number= document.getElementById("inputText_"+TypeOfValuesRadiobuttons[i].value)?.value;
+						if (number=="") //to avoid undefined in column list and problems afeter
+							number="0";
+						currentNode.STAnewColumnsToAdd.push([TypeOfValuesRadiobuttons[i].value,columnName,number]);
+					}
+				} 
+				networkNodes.update(currentNode);
+				drawTableInColumnBoxTableInCreateColumns();
 			}
+
+		}
 
 		function drawTableInColumnBoxTableInCreateColumns(){
 			var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCreateColumns");
@@ -5725,13 +5722,16 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		
 		function fillAggregateColumVariablesList(){
 
-			var dataKeys= Object.keys(currentNode.STAdata[0]);
-		var n= dataKeys.length;
-		var dataKeysObject=[];
-		for (var i=0;i<n;i++){
-			dataKeysObject.push({name:dataKeys[i], desc:dataKeys[i] });
-		}
-		showCheckRadioOptions("columnsFielset", "attributesRadioAggrgatedColumns_", dataKeysObject, 1, null, "writeColumnNameInAggregatedColumns (event)");
+	 	var dataKeys= Object.keys(currentNode.STAdata[0]);
+		 //var n= dataKeys.length;
+		// var dataKeysObject=[];
+		// for (var i=0;i<n;i++){
+		// 	dataKeysObject.push({name:dataKeys[i], desc:dataKeys[i] });
+		// }
+		//showCheckRadioOptions("columnsFielset", "attributesRadioAggrgatedColumns_", dataKeysObject, 1, null, "writeColumnNameInAggregatedColumns (event)");
+		var parentNode=GetFirstParentNode(currentNode);
+		ShowTableSelectColumnsDialog("columnsFielset", parentNode, currentNode);
+
 		//Create list of columns to avoid repetitions
 		currentNode.STAcolumnsList=dataKeys;
 	
