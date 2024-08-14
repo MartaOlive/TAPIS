@@ -5730,7 +5730,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		// }
 		//showCheckRadioOptions("columnsFielset", "attributesRadioAggrgatedColumns_", dataKeysObject, 1, null, "writeColumnNameInAggregatedColumns (event)");
 		var parentNode=GetFirstParentNode(currentNode);
-		ShowTableSelectColumnsDialog("columnsFielset", parentNode, currentNode);
+		ShowTableSelectColumnsDialog("columnsFielset", parentNode, currentNode, false,"writeColumnNameInAggregatedColumns (event)" );
 
 		//Create list of columns to avoid repetitions
 		currentNode.STAcolumnsList=dataKeys;
@@ -5755,7 +5755,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
       }
       //attributes
       for (var a = 0; a < dataKeysLenght; a++) {
-        attribute = document.getElementById("attributesRadioAggrgatedColumns_" + dataKeys[a]);
+        attribute = document.getElementById("columnsFielset_" + a);
         if (attribute.checked) {
           attributesArray.push(dataKeys[a]);
         }
@@ -5981,7 +5981,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				var dataKeys= Object.keys(currentNode.STAdata[0]);
 				var dataKeysLenght=dataKeys.length, attribute, columnNameText="";
 				for (var a=0;a<dataKeysLenght;a++ ){
-						attribute=document.getElementById("attributesRadioAggrgatedColumns_"+dataKeys[a]);
+						attribute=document.getElementById("columnsFielset_"+a);
 						if (attribute.checked){
 							if (columnNameText==""){
 								columnNameText+=dataKeys[a];
