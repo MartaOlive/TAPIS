@@ -62,9 +62,10 @@ function xml2json(xml, ns, tab) {
             }
             if (!xml.attributes.length && !xml.firstChild) o = null;
          }
-         else if (xml.nodeType==9) { // document.node
+         else if (xml.nodeType==9) // document.node
             o = X.toObj(xml.documentElement);
-         }
+	 else if (xml.nodeType==8) // document.comment 
+		;  //ignored
          else
             alert("unhandled node type: " + xml.nodeType);
          return o;

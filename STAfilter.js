@@ -641,7 +641,7 @@ function createConditionSelectInFilterRows(selectorInfo, count) {
 	} else {
 		selectConditionContent2 = selectConditionContent;
 	}
-	if (currentNode.OGCType == "OGCAPIitem") {
+	if (currentNode.OGCType = "OGCAPIitem") {
 		selectConditionContent2 = selectConditionContentOGCAPIFeatures;
 	}
 	

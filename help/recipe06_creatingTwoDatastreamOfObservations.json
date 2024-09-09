@@ -1,0 +1,784 @@
+{
+	"nodes": [
+		{
+			"id": "8nbp1.bjauma",
+			"label": "STA plus",
+			"image": "ogc.png",
+			"shape": "circularImage",
+			"STAExpectedLength": 100,
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+			"STAdata": [
+				{
+					"name": "Campaigns",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Campaigns"
+				},
+				{
+					"name": "Datastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams"
+				},
+				{
+					"name": "FeaturesOfInterest",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest"
+				},
+				{
+					"name": "HistoricalLocations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/HistoricalLocations"
+				},
+				{
+					"name": "Licenses",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses"
+				},
+				{
+					"name": "Locations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations"
+				},
+				{
+					"name": "MultiDatastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams"
+				},
+				{
+					"name": "Observations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations"
+				},
+				{
+					"name": "ObservationGroups",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups"
+				},
+				{
+					"name": "ObservedProperties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties"
+				},
+				{
+					"name": "Parties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Parties"
+				},
+				{
+					"name": "Relations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Relations"
+				},
+				{
+					"name": "Sensors",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors"
+				},
+				{
+					"name": "Things",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
+				}
+			],
+			"x": -118,
+			"y": -11
+		},
+		{
+			"id": "8vcm6.03hu6m",
+			"label": "Party",
+			"image": "Party.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Parties('f0562c89-731f-3732-8cf6-13d990d83c44')",
+			"STAdata": [
+				{
+					"authId": "f0562c89-731f-3732-8cf6-13d990d83c44",
+					"@iot.id": "f0562c89-731f-3732-8cf6-13d990d83c44"
+				}
+			],
+			"x": 58,
+			"y": -2
+		},
+		{
+			"id": "3jqd3.7cpdnsg",
+			"label": "ObservedProperty Species",
+			"image": "ObservedProperty.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(2322)",
+			"STAdata": [
+				{
+					"name": "Species",
+					"definition": "https://www.gbif.org/species",
+					"description": "Species Name",
+					"@iot.id": 2322
+				}
+			],
+			"x": -207,
+			"y": 158
+		},
+		{
+			"id": "6o0gr.a1b7ee",
+			"label": "Location Camera",
+			"image": "Location.png",
+			"shape": "circularImage",
+			"x": -30,
+			"y": -157,
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(2343)",
+			"STAdata": [
+				{
+					"name": "Albera camera",
+					"description": "Camera trap deployed in Albera",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							2.942919,
+							42.47697
+						]
+					},
+					"@iot.id": 2343
+				}
+			]
+		},
+		{
+			"id": "25qvg.jtrf3q",
+			"label": "Thing Camera",
+			"image": "Thing.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(153)",
+			"STAdata": [
+				{
+					"Locations": [
+						{
+							"@iot.id": 2343
+						}
+					],
+					"Party": {
+						"@iot.id": "f0562c89-731f-3732-8cf6-13d990d83c44"
+					},
+					"name": "BROWNING DARK OPS PRO X 1080",
+					"description": "The Browning Trail Cameras Dark Ops Pro X 1080 (2023) featuring a 1.5” color view screen, less than a quarter second trigger speed, and an all-steel adjustable mounting bracket for easy set-up in the field.",
+					"@iot.id": 153
+				}
+			],
+			"x": 95,
+			"y": -183
+		},
+		{
+			"id": "8ha1b.1otr8",
+			"label": "ObservedProperty Picture",
+			"image": "ObservedProperty.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(2323)",
+			"STAdata": [
+				{
+					"name": "Picture",
+					"definition": "https://en.wikipedia.org/wiki/Image",
+					"description": "Pictorial image",
+					"@iot.id": 2323
+				}
+			],
+			"x": -104,
+			"y": -170
+		},
+		{
+			"id": "5vgnd.21d97t",
+			"label": "Thing Citizen",
+			"image": "Thing.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(154)",
+			"STAdata": [
+				{
+					"Party": {
+						"@iot.id": "f0562c89-731f-3732-8cf6-13d990d83c44"
+					},
+					"name": "Citizen",
+					"description": "Citizen Scientist",
+					"@iot.id": 154
+				}
+			],
+			"x": 10,
+			"y": 156
+		},
+		{
+			"id": "32vvh.9drotcg",
+			"label": "Sensor Camera",
+			"image": "Sensor.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(2641)",
+			"STAdata": [
+				{
+					"name": "Optics in BROWNING DARK OPS PRO X 1080",
+					"description": "The Optics in Browning Trail Cameras Dark Ops Pro X 1080 (2023)",
+					"encodingType": "text/plain",
+					"metadata": "resolution: 24 megapixels, field of view: 55 degrees, detection angle: 45 degrees",
+					"@iot.id": 2641
+				}
+			],
+			"x": -165,
+			"y": -188
+		},
+		{
+			"id": "1nd5c.6qust38",
+			"label": "Sensor Human",
+			"image": "Sensor.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(2642)",
+			"STAdata": [
+				{
+					"name": "Human",
+					"description": "Human sensor",
+					"encodingType": "text/plain",
+					"metadata": "See Party for more details",
+					"@iot.id": 2642
+				}
+			],
+			"x": -132,
+			"y": 165
+		},
+		{
+			"id": "3bbk8.1gdbu4",
+			"label": "Licenses",
+			"image": "Licenses.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses",
+			"STAExpectedLength": 100,
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')",
+					"@iot.id": "CC_BY",
+					"name": "CC BY 3.0",
+					"description": "The Creative Commons Attribution license",
+					"definition": "https://creativecommons.org/licenses/by/3.0/deed.en",
+					"logo": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')/Campaigns",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')/ObservationGroups"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC')",
+					"@iot.id": "CC_BY_NC",
+					"name": "CC BY-NC 3.0",
+					"description": "The Creative Commons Attribution-NonCommercial license",
+					"definition": "https://creativecommons.org/licenses/by-nc/3.0/deed.en",
+					"logo": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc.png",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC')/Campaigns",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC')/ObservationGroups"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC_ND')",
+					"@iot.id": "CC_BY_NC_ND",
+					"name": "CC BY-NC-ND 3.0",
+					"description": "The Creative Commons Attribution & NonCommercial & NoDerivs license",
+					"definition": "https://creativecommons.org/licenses/by-nc-nd/3.0/deed.en",
+					"logo": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-nd.png",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC_ND')/Campaigns",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC_ND')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC_ND')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC_ND')/ObservationGroups"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC_SA')",
+					"@iot.id": "CC_BY_NC_SA",
+					"name": "CC BY-NC-SA 3.0",
+					"description": "The Creative Commons Attribution & Share-alike non-commercial license",
+					"definition": "https://creativecommons.org/licenses/by-nc-sa/3.0/deed.en",
+					"logo": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc-sa.png",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC_SA')/Campaigns",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC_SA')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC_SA')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_NC_SA')/ObservationGroups"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_ND')",
+					"@iot.id": "CC_BY_ND",
+					"name": "CC BY-ND 3.0",
+					"description": "The Creative Commons Attribution & NoDerivs license",
+					"definition": "https://creativecommons.org/licenses/by-nd/3.0/deed.en",
+					"logo": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nd.png",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_ND')/Campaigns",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_ND')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_ND')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_ND')/ObservationGroups"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_SA')",
+					"@iot.id": "CC_BY_SA",
+					"name": "CC BY-SA 3.0",
+					"description": "The Creative Commons Attribution & Share-alike license",
+					"definition": "https://creativecommons.org/licenses/by-sa/3.0/deed.en",
+					"logo": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-sa.png",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_SA')/Campaigns",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_SA')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_SA')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY_SA')/ObservationGroups"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_PD')",
+					"@iot.id": "CC_PD",
+					"name": "CC_PD",
+					"description": "CC0 Universal (CC0 1.0) Public Domain Dedication",
+					"definition": "https://creativecommons.org/publicdomain/zero/1.0/",
+					"logo": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/cc-zero.png",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_PD')/Campaigns",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_PD')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_PD')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_PD')/ObservationGroups"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/description"
+				},
+				"definition": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/definition"
+				},
+				"logo": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/logo"
+				},
+				"Campaigns@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/Campaigns@iot.navigationLink"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/Datastreams@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/MultiDatastreams@iot.navigationLink"
+				},
+				"ObservationGroups@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/ObservationGroups@iot.navigationLink"
+				}
+			},
+			"x": -163,
+			"y": 18
+		},
+		{
+			"id": "7dusl.a8lrjt",
+			"label": "Select Row CC-BY",
+			"image": "SelectRowSTA.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')",
+			"STAExpectedLength": "100",
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')",
+					"@iot.id": "CC_BY",
+					"name": "CC BY 3.0",
+					"description": "The Creative Commons Attribution license",
+					"definition": "https://creativecommons.org/licenses/by/3.0/deed.en",
+					"logo": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')/Campaigns",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses('CC_BY')/ObservationGroups"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/description"
+				},
+				"definition": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/definition"
+				},
+				"logo": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/logo"
+				},
+				"Campaigns@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/Campaigns@iot.navigationLink"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/Datastreams@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/MultiDatastreams@iot.navigationLink"
+				},
+				"ObservationGroups@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/License/ObservationGroups@iot.navigationLink"
+				}
+			},
+			"STAURLIdSelected": "CC_BY",
+			"x": 4,
+			"y": 45
+		},
+		{
+			"id": "83p2c.c1u6h",
+			"label": "Datastream Camera",
+			"image": "Datastream.png",
+			"shape": "circularImage",
+			"x": 33,
+			"y": -165,
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(2371)",
+			"STAdata": [
+				{
+					"Thing": {
+						"@iot.id": 153
+					},
+					"License": {
+						"@iot.id": "CC_BY"
+					},
+					"ObservedProperty": {
+						"@iot.id": 2323
+					},
+					"Sensor": {
+						"@iot.id": 2641
+					},
+					"Party": {
+						"@iot.id": "f0562c89-731f-3732-8cf6-13d990d83c44"
+					},
+					"name": "Pictures",
+					"description": "Pictures with an animal inside",
+					"unitOfMeasurement": {
+						"name": null,
+						"symbol": null,
+						"definition": null
+					},
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"@iot.id": 2371
+				}
+			]
+		},
+		{
+			"id": "98j6o.hsg3cs",
+			"label": "Datastream Identif.",
+			"image": "Datastream.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(2372)",
+			"STAdata": [
+				{
+					"ObservedProperty": {
+						"@iot.id": 2322
+					},
+					"Sensor": {
+						"@iot.id": 2642
+					},
+					"Thing": {
+						"@iot.id": 154
+					},
+					"Party": {
+						"@iot.id": "f0562c89-731f-3732-8cf6-13d990d83c44"
+					},
+					"License": {
+						"@iot.id": "CC_BY"
+					},
+					"name": "Occurrences",
+					"description": "Species occurrence",
+					"unitOfMeasurement": {
+						"name": null,
+						"symbol": null,
+						"definition": null
+					},
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"@iot.id": 2372
+				}
+			],
+			"x": -34,
+			"y": 209
+		},
+		{
+			"id": "7ucr3.9o16la",
+			"label": "ObservationGroup",
+			"image": "ObservationGroup.png",
+			"shape": "circularImage",
+			"x": 207,
+			"y": 58,
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)",
+			"STAdata": [
+				{
+					"Party": {
+						"@iot.id": "f0562c89-731f-3732-8cf6-13d990d83c44"
+					},
+					"License": {
+						"@iot.id": "CC_BY"
+					},
+					"name": "GatFerOcc1",
+					"description": "Felis silvestris Occurrence 1",
+					"creationTime": "2024-07-12T17:30:00Z",
+					"endTime": "2024-07-12T17:30:00Z",
+					"@iot.id": 232753
+				}
+			]
+		},
+		{
+			"id": "34qsr.fncodpg",
+			"label": "FeatureOfInterest",
+			"image": "FeatureOfInterest.png",
+			"shape": "circularImage",
+			"x": 107,
+			"y": 18,
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest(659)",
+			"STAdata": [
+				{
+					"name": "Albera3",
+					"description": "Albera Site 3",
+					"encodingType": "application/geo+json",
+					"feature": {
+						"type": "Point",
+						"coordinates": [
+							2.942919,
+							42.47697
+						]
+					},
+					"@iot.id": 659
+				}
+			]
+		},
+		{
+			"id": "7r04t.ppmc2l",
+			"label": "Observation picture",
+			"image": "Observation.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1928838)",
+			"STAdata": [
+				{
+					"ObservationGroups": [
+						{
+							"@iot.id": 232753
+						}
+					],
+					"FeatureOfInterest": {
+						"@iot.id": 659
+					},
+					"Datastream": {
+						"@iot.id": 2371
+					},
+					"phenomenonTime": "2024-07-12T17:30:00Z",
+					"resultTime": "2024-07-20T09:00:00Z",
+					"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/20240712_1930_C3/20240712_1930_C3_04.JPG",
+					"@iot.id": 1928838
+				}
+			],
+			"x": 217,
+			"y": -93
+		},
+		{
+			"id": "1nqsd.7df3qtg",
+			"label": "Observation Occur.",
+			"image": "Observation.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1928839)",
+			"STAdata": [
+				{
+					"ObservationGroups": [
+						{
+							"@iot.id": 232753
+						}
+					],
+					"FeatureOfInterest": {
+						"@iot.id": 659
+					},
+					"Datastream": {
+						"@iot.id": 2372
+					},
+					"phenomenonTime": "2024-07-12T17:30:00Z",
+					"resultTime": "2024-07-20T09:00:00Z",
+					"result": "https://www.gbif.org/species/7193910",
+					"@iot.id": 1928839
+				}
+			],
+			"x": 156,
+			"y": 186
+		}
+	],
+	"edges": [
+		{
+			"from": "8nbp1.bjauma",
+			"to": "8vcm6.03hu6m",
+			"arrows": "from"
+		},
+		{
+			"from": "8nbp1.bjauma",
+			"to": "9gjn6.r2lbgo",
+			"arrows": "from"
+		},
+		{
+			"from": "8nbp1.bjauma",
+			"to": "3jqd3.7cpdnsg",
+			"arrows": "from"
+		},
+		{
+			"from": "8nbp1.bjauma",
+			"to": "6o0gr.a1b7ee",
+			"arrows": "from"
+		},
+		{
+			"from": "6o0gr.a1b7ee",
+			"to": "jf11.4lirql8",
+			"arrows": "from"
+		},
+		{
+			"from": "6o0gr.a1b7ee",
+			"to": "25qvg.jtrf3q",
+			"arrows": "from"
+		},
+		{
+			"from": "8vcm6.03hu6m",
+			"to": "25qvg.jtrf3q",
+			"arrows": "from"
+		},
+		{
+			"from": "8nbp1.bjauma",
+			"to": "8ha1b.1otr8",
+			"arrows": "from"
+		},
+		{
+			"from": "8nbp1.bjauma",
+			"to": "5vgnd.21d97t",
+			"arrows": "from"
+		},
+		{
+			"from": "8vcm6.03hu6m",
+			"to": "5vgnd.21d97t",
+			"arrows": "from"
+		},
+		{
+			"from": "8nbp1.bjauma",
+			"to": "32vvh.9drotcg",
+			"arrows": "from"
+		},
+		{
+			"from": "8nbp1.bjauma",
+			"to": "1nd5c.6qust38",
+			"arrows": "from"
+		},
+		{
+			"from": "8nbp1.bjauma",
+			"to": "3bbk8.1gdbu4",
+			"arrows": "from"
+		},
+		{
+			"from": "3bbk8.1gdbu4",
+			"to": "7dusl.a8lrjt",
+			"arrows": "from"
+		},
+		{
+			"from": "25qvg.jtrf3q",
+			"to": "83p2c.c1u6h",
+			"arrows": "from"
+		},
+		{
+			"from": "7dusl.a8lrjt",
+			"to": "83p2c.c1u6h",
+			"arrows": "from"
+		},
+		{
+			"from": "8ha1b.1otr8",
+			"to": "83p2c.c1u6h",
+			"arrows": "from"
+		},
+		{
+			"from": "32vvh.9drotcg",
+			"to": "83p2c.c1u6h",
+			"arrows": "from"
+		},
+		{
+			"from": "8vcm6.03hu6m",
+			"to": "83p2c.c1u6h",
+			"arrows": "from"
+		},
+		{
+			"from": "3jqd3.7cpdnsg",
+			"to": "98j6o.hsg3cs",
+			"arrows": "from"
+		},
+		{
+			"from": "1nd5c.6qust38",
+			"to": "98j6o.hsg3cs",
+			"arrows": "from"
+		},
+		{
+			"from": "5vgnd.21d97t",
+			"to": "98j6o.hsg3cs",
+			"arrows": "from"
+		},
+		{
+			"from": "8vcm6.03hu6m",
+			"to": "98j6o.hsg3cs",
+			"arrows": "from"
+		},
+		{
+			"from": "7dusl.a8lrjt",
+			"to": "98j6o.hsg3cs",
+			"arrows": "from"
+		},
+		{
+			"from": "8vcm6.03hu6m",
+			"to": "7ucr3.9o16la",
+			"arrows": "from"
+		},
+		{
+			"from": "7dusl.a8lrjt",
+			"to": "7ucr3.9o16la",
+			"arrows": "from"
+		},
+		{
+			"from": "7ucr3.9o16la",
+			"to": "1eb9f.8gif2fg",
+			"arrows": "from"
+		},
+		{
+			"from": "83p2c.c1u6h",
+			"to": "1eb9f.8gif2fg",
+			"arrows": "from"
+		},
+		{
+			"from": "8nbp1.bjauma",
+			"to": "34qsr.fncodpg",
+			"arrows": "from"
+		},
+		{
+			"from": "7ucr3.9o16la",
+			"to": "7r04t.ppmc2l",
+			"arrows": "from"
+		},
+		{
+			"from": "34qsr.fncodpg",
+			"to": "7r04t.ppmc2l",
+			"arrows": "from"
+		},
+		{
+			"from": "83p2c.c1u6h",
+			"to": "7r04t.ppmc2l",
+			"arrows": "from"
+		},
+		{
+			"from": "7ucr3.9o16la",
+			"to": "1nqsd.7df3qtg",
+			"arrows": "from"
+		},
+		{
+			"from": "34qsr.fncodpg",
+			"to": "1nqsd.7df3qtg",
+			"arrows": "from"
+		},
+		{
+			"from": "98j6o.hsg3cs",
+			"to": "1nqsd.7df3qtg",
+			"arrows": "from"
+		}
+	]
+}
