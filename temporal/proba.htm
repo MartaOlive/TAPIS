@@ -10,95 +10,184 @@
 
 <body>
 
-  <dialog id="DialogAggregateColumns">
+  
     <form>
-      Aggregate columns:
-      <span id="DialogAggregateColumnsHTML">
-        <br>
-        <fieldset style="display:inline-block">
-          <legend>Select attributes:</legend>
-          <span id="columnsFielset"></span>
-        </fieldset>
-        <fieldset style="display:inline-block">
-          <legend>Aggregations:</legend>
-          <span id="operationsFieldSet"></span>
-        </fieldset>
-
-        <fieldset style="display:inline-block">
-          <legend>Set number of decimals:</legend>
-          <span>
-            <input type="radio" id="chooseNumberDecimals_1" name="chooseNumberDecimals" value="no" checked>
-            <label for="chooseNumberDecimals_1">No </label>
-            <br>
-            <input type="radio" id="chooseNumberDecimals_0" name="chooseNumberDecimals" value="yes">
-            <label for="chooseNumberDecimals_0">Yes: </label>
-            <input id="chooseNumberDecimals_0_input" type="number" max="10" min="0">
-          </span>
-
-
-        </fieldset>
-        <br>
-        <fieldset style="display:inline-block">
-          <legend>Column name: </legend>
-          <input type="radio" name="columnNameRadioAggregateColumns" id="columnNameRadioAggregateColumns_personalized">
-          <label for="columnNameRadioAggregateColumns_personalized">Personalized</label>
-          <input id="columnNameAggregateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; ">
-          <br>
-          <input type="radio" name="columnNameRadioAggregateColumns" checked="checked"
-            id="columnNameRadioAggregateColumns_suggested">
-          <label for="columnNameRadioAggregateColumns_suggested">Suggested: </label>
-          <span id="columnNameAggregateColumns_span"></span>
-        </fieldset>
-        <br>
-
-        <button value="add" onClick="addColumnToListAggregateColumns(event)" style="margin-bottom:10px">Add column to
-          list </button>
-
-        <br><br>
-        <div style="width:auto;">
-          <label>List of columns to add</label>
-          <span id=spanColumnsListAggregateColumns></span>
-        </div>
-      </span>
-      <div class="center" style="margin-top: 10px">
-        <button value="default" onClick="addColumnsToTableInAggregateColumns(event)">Ok</button>
-        <button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
-      </div>
+      <br>
+			<label for="calculator_selectColumns">Attribute:</label>
+			<select id="calculator_selectColumns" name="calculator_selectColumnsValue" style="width:400px;" onchange="">
+			</select>
+		
+			<button onclick="WriteInTheFormulaButtonsProba('attributeSelected')" >Write in the formula</button>
+			<br><br>
+			<fieldset>
+			  <legend>Operators and functions for the formula: </legend>
+			  <input type="button" style="width:40px" value="&#40;" onclick="WriteInTheFormulaButtonsProba('&#40;')">
+			  <input type="button" style="width:40px" value="&#41;" onclick="WriteInTheFormulaButtonsProba('&#41;')">
+			  <br>
+			  <input type="button" style="width:40px" value="=" onclick="WriteInTheFormulaButtonsProba('==')">
+			  <input type="button" style="width:40px" value="&gt;=" onclick="WriteInTheFormulaButtonsProba('>=')">
+			  <input type="button" style="width:40px" value="&lt;" onclick="WriteInTheFormulaButtonsProba('<')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+		
+			  <input type="button" style="width:30px" value="7" onclick="WriteInTheFormulaButtonsProba('7')">
+			  <input type="button" style="width:30px" value="8" onclick="WriteInTheFormulaButtonsProba('8')">
+			  <input type="button" style="width:30px" value="9" onclick="WriteInTheFormulaButtonsProba('9')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="/" onclick="WriteInTheFormulaButtonsProba('/')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:40px" value="and" onclick="WriteInTheFormulaButtonsProba('&&')">
+		
+			  <br>
+			  <input type="button" style="width:40px" value="≠" onclick="WriteInTheFormulaButtonsProba('!=')">
+			  <input type="button" style="width:40px" value="&lt;=" onclick="WriteInTheFormulaButtonsProba('<=')">
+			  <input type="button" style="width:40px" value="&gt;" 	onclick="WriteInTheFormulaButtonsProba('>')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:30px" value="4" onclick="WriteInTheFormulaButtonsProba('4')">
+			  <input type="button" style="width:30px" value="5" onclick="WriteInTheFormulaButtonsProba('5')">
+			  <input type="button" style="width:30px" value="6" onclick="WriteInTheFormulaButtonsProba('6')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="×" onclick="WriteInTheFormulaButtonsProba('*')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:40px" value="or" onclick="WriteInTheFormulaButtonsProba('||')">
+			  <br>
+		
+			  <input type="button" style="width:40px" value="Log" onclick="WriteInTheFormulaButtonsProba('Math.log10()')">
+			  <input type="button" style="width:40px" value="Ln" onclick="WriteInTheFormulaButtonsProba('Math.log()')">
+			  <input type="button" style="width:40px" value="xⁿ"
+				onclick="WriteInTheFormulaButtonsProba('**')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:30px" value="1" onclick="WriteInTheFormulaButtonsProba('1')">
+			  <input type="button" style="width:30px" value="2" onclick="WriteInTheFormulaButtonsProba('2')">
+			  <input type="button" style="width:30px" value="3" onclick="WriteInTheFormulaButtonsProba('3')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="-" onclick="WriteInTheFormulaButtonsProba('-')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:40px" value="not" onclick="WriteInTheFormulaButtonsProba('!')">
+		
+			  <br>
+			  <input type="button" style="width:40px" value="Exp" onclick="WriteInTheFormulaButtonsProba('Math.exp()')">
+			  <input type="button" style="width:40px" value="%" onclick="WriteInTheFormulaButtonsProba('%')">
+			  <input type="button" style="width:40px" value="√¯" onclick="WriteInTheFormulaButtonsProba('Math.sqrt()')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:30px" value="&#928;" onclick="WriteInTheFormulaButtonsProba('Math.PI')">
+			  <input type="button" style="width:30px" value="0" onclick="WriteInTheFormulaButtonsProba('0')">
+			  <input type="button" style="width:30px" value="." onclick="WriteInTheFormulaButtonsProba('.')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="+" onclick="WriteInTheFormulaButtonsProba('+')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:40px" value="xor" onclick="WriteInTheFormulaButtonsProba('^')">
+		
+			  <br>
+		
+			  <input type="button" style="width:40px" value="1/x" onclick="WriteInTheFormulaButtonsProba('1/()')">
+			  <input type="button" style="width:40px" value="Ent" onclick="WriteInTheFormulaButtonsProba('Math.trunc()')">
+			  <input type="button" style="width:40px" value="Abs"
+				onclick="WriteInTheFormulaButtonsProba('Math.abs()')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="e" onclick="WriteInTheFormulaButtonsProba('Math.E')">
+		
+			  <br><br>
+			  <input type="button" style="width:62px" value="sin" onclick="WriteInTheFormulaButtonsProba('Math.sin()')">
+			  <input type="button" style="width:62px" value="asin" onclick="WriteInTheFormulaButtonsProba('Math.asin()')">
+			  <input type="button" style="width:62px" value="cos" onclick="WriteInTheFormulaButtonsProba('Math.cos()')">
+			  <input type="button" style="width:62px" value="acos" onclick="WriteInTheFormulaButtonsProba('Math.acos()')">
+			  <input type="button" style="width:62px" value="tan" onclick="WriteInTheFormulaButtonsProba('Math.tan()')">
+			  <input type="button" style="width:62px" value="atan" onclick="WriteInTheFormulaButtonsProba('Math.atan()')">
+		
+			  <br>
+			  <input type="button" style="width:62px" value="sing"
+				onclick="WriteInTheFormulaButtonsProba('Math.sin( *Math.PI/180)')"> 
+			  <input type="button" style="width:62px" value="asing"
+				onclick="WriteInTheFormulaButtonsProba('Math.asin()*180/Math.PI')">
+			  <input type="button" style="width:62px" value="cosg"
+				onclick="WriteInTheFormulaButtonsProba('Math.cos( *Math.PI/180)')">
+			  <input type="button" style="width:62px" value="acosg"
+				onclick="WriteInTheFormulaButtonsProba('Math.acos( *Math.PI/180)')">
+			  <input type="button" style="width:62px" value="tang"
+				onclick="WriteInTheFormulaButtonsProba('Math.tan( *Math.PI/180)	')">
+			  <input type="button" style="width:62px" value="atang"
+				onclick="WriteInTheFormulaButtonsProba('Math.atan( *Math.PI/180)')">
+			</fieldset>
+			<div>
+			<label style="position:relative;top:22px">Formula:</label>
+			<br>
+			
+			<textarea id="textAreaFormulaColumnsCalculator" style="width:350px;height:100px;display:inline-block;position:relative;top:27px"></textarea>
+			<fieldset  style="display:inline-block;position:relative; top:10px" >
+				<legend>Set number of decimals:</legend>
+				<span>
+					<input type="radio" id="chooseNumberDecimalsCalculator_1" name="chooseNumberDecimalsCalculator" value="no" checked> 
+					<label for="chooseNumberDecimalsCalculator_1">No </label>
+					<br>
+					<input type="radio" id="chooseNumberDecimalsCalculator_0" name="chooseNumberDecimalsCalculator" value="yes"> 
+					<label for="chooseNumberDecimalsCalculator_0">Yes: </label>
+					<input id="chooseNumberDecimalsCalculator_0_input" type="number" max="10" min="0">
+			</span>
+			</fieldset>
+		</div>
+		<br>
+		<fieldset>
+			<legend>Column name:</legend>
+			<input type="radio" name="columnNameRadioCalculatorColumns" id ="columnNameRadioACalculatorColumns_personalized" checked="checked"> <!--Function has no sense, it is only to mimic aggregated columns dialog-->
+			<label for ="columnNameRadioACalculatorColumns_personalized" >Personalized</label>
+			<input id="columnNameColumnsCalculator" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
+		</fieldset>
+			<br>
+			
+			<button value="add" onClick="addColumnToListColumnsCalculator(event)" style="margin-bottom:10px">Add column to list
+			</button>
+			<br>
+			<hr>
+			<div style="width:auto;" >
+				<label>List of columns to add</label>
+				<span id= spanColumnsListCalculatorColumns></span>
+			  </div>
+			<br>
+			<div class="center" style="margin-top: 10px">
+			  <button value="default" onClick="addColumnsToTableInColumnsCalculator()">Ok</button>
+				<button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
+			</div>
     </form>
   </dialog>
 
   <script>
-    var array = [20, 30, 50, 60, 70, 80, 110, 120, 150, 160, 200, 310, 330, 340, 450, 460]; //par, 8 par (6,5 / 32)
-    var array2 = [2, 3, 5, 6, 7, 8, 11, 12, 15, 16, 20, 31, 33, 34, 36]; //impar, 7 impar (6, 31)
-    var array3 = [2, 3, 5, 6, 7, 8, 11, 12, 15, 16, 20, 31, 33, 34]; //par, 7 impar (6,20)
-    var array4 = [2, 3, 5, 6, 7, 8, 11, 12, 15, 16, 20, 31, 33, 34, 36, 45, 46, 47, 48, 49, 50]; //impar, 8 par (7,5/45,5)
+function addColumnToListColumnsCalculator(event){
+  event.preventDefault();
+  var textAreaFormulaColumnsCalculator= document.getElementById("textAreaFormulaColumnsCalculator").value;
+  console.log(eval(textAreaFormulaColumnsCalculator));
 
-    var textarea = document.getElementById("textAreaFormulaColumnsCalculator")
-    textarea.addEventListener('click', event => {
-      textarea.setAttribute("data-mousePosition", textarea.selectionStart)
-      //console.log(textarea.selectionStart) // logs previous location
-    })
+}
 
-    function WriteInTheFormulaButtons(character) {
-      event.preventDefault();
-      var textAreaFormulaColumnsCalculator = document.getElementById("textAreaFormulaColumnsCalculator");
-      var text = textAreaFormulaColumnsCalculator.value;
-      var mousePosition = textAreaFormulaColumnsCalculator.getAttribute("data-mousePosition");
-
-      if (character == "attributeSelected") {
-        var selector = document.getElementById("calculator_selectColumns");
-        character = selector.options[selector.selectedIndex].value;
-      }
-      textAreaFormulaColumnsCalculator.value = [text.slice(0, mousePosition), character, text.slice(mousePosition)].join('');
-      if (!mousePosition) {
-        mousePosition = 0; //If a button is clicked before click text area
-      }
-      textAreaFormulaColumnsCalculator.setAttribute("data-mousePosition", parseInt(mousePosition) + character.length); //If there is no click, next button will be written after this.
-    }
-
-    console.log(eval("Math.log10(9)*3+5"))
+function WriteInTheFormulaButtonsProba(character) {
+		event.preventDefault();
+		var textAreaFormulaColumnsCalculator = document.getElementById("textAreaFormulaColumnsCalculator");
+		var text = textAreaFormulaColumnsCalculator.value;
+		var mousePosition = textAreaFormulaColumnsCalculator.getAttribute("data-mousePosition");
+			if (character=="&#40;"){
+				character=="("
+			}else if (character=="&#41;"){
+				character==")"
+			}
 
 
+
+
+		if (character == "attributeSelected") {
+			var selector = document.getElementById("calculator_selectColumns");
+			character = selector.options[selector.selectedIndex].value;
+		}
+		textAreaFormulaColumnsCalculator.value = [text.slice(0, mousePosition), character, text.slice(mousePosition)].join('');
+		textAreaFormulaColumnsCalculator.setAttribute("data-mousePosition", parseInt(mousePosition) + character.length); //If there is no click, next button will be written after this.
+		}
 
 
 

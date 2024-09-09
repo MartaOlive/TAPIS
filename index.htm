@@ -334,7 +334,7 @@
 			  <input type="button" style="width:40px" value="&#40;" onclick="WriteInTheFormulaButtons('&#40;')">
 			  <input type="button" style="width:40px" value="&#41;" onclick="WriteInTheFormulaButtons('&#41;')">
 			  <br>
-			  <input type="button" style="width:40px" value="=" onclick="WriteInTheFormulaButtons('=')">
+			  <input type="button" style="width:40px" value="=" onclick="WriteInTheFormulaButtons('==')">
 			  <input type="button" style="width:40px" value="&gt;=" onclick="WriteInTheFormulaButtons('>=')">
 			  <input type="button" style="width:40px" value="&lt;" onclick="WriteInTheFormulaButtons('<')">&nbsp;&nbsp;&nbsp;&nbsp;
 		
@@ -347,10 +347,10 @@
 			  <input type="button" style="width:30px" value="/" onclick="WriteInTheFormulaButtons('/')">
 			  &nbsp;&nbsp;&nbsp;&nbsp;
 		
-			  <input type="button" style="width:40px" value="and" onclick="WriteInTheFormulaButtons('and')">
+			  <input type="button" style="width:40px" value="and" onclick="WriteInTheFormulaButtons('&&')">
 		
 			  <br>
-			  <input type="button" style="width:40px" value="≠" onclick="WriteInTheFormulaButtons('!')">
+			  <input type="button" style="width:40px" value="≠" onclick="WriteInTheFormulaButtons('!=')">
 			  <input type="button" style="width:40px" value="&lt;=" onclick="WriteInTheFormulaButtons('<=')">
 			  <input type="button" style="width:40px" value="&gt;" 	onclick="WriteInTheFormulaButtons('>')">&nbsp;&nbsp;&nbsp;&nbsp;
 		
@@ -362,7 +362,7 @@
 			  <input type="button" style="width:30px" value="×" onclick="WriteInTheFormulaButtons('*')">
 			  &nbsp;&nbsp;&nbsp;&nbsp;
 		
-			  <input type="button" style="width:40px" value="or" onclick="WriteInTheFormulaButtons('or')">
+			  <input type="button" style="width:40px" value="or" onclick="WriteInTheFormulaButtons('||')">
 			  <br>
 		
 			  <input type="button" style="width:40px" value="Log" onclick="WriteInTheFormulaButtons('Math.log10()')">
@@ -378,7 +378,7 @@
 			  <input type="button" style="width:30px" value="-" onclick="WriteInTheFormulaButtons('-')">
 			  &nbsp;&nbsp;&nbsp;&nbsp;
 		
-			  <input type="button" style="width:40px" value="not" onclick="WriteInTheFormulaButtons('not')">
+			  <input type="button" style="width:40px" value="not" onclick="WriteInTheFormulaButtons('!')">
 		
 			  <br>
 			  <input type="button" style="width:40px" value="Exp" onclick="WriteInTheFormulaButtons('Math.exp()')">
@@ -6304,8 +6304,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			for (var i=0;i<n;i++){
 				//cdns.push(`<option value= ${dataKeys[i]}>${dataKeys[i]}</option>`);
-				console.log(dataAttributes[dataAttributesKeys[i]]);
-				console.log(dataAttributes[dataAttributesKeys[i]]['type']);
 				if (dataAttributes[dataAttributesKeys[i]]['type']=="number") cdns.push(`<option value= ${dataAttributesKeys[i]}>${dataAttributesKeys[i]}</option>`);
 			}
 			select.innerHTML=cdns.join("");
