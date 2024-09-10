@@ -276,26 +276,28 @@
 			  </fieldset>
 			<br>
 			<fieldset style="display:inline-block">
-					<legend>Set number of decimals:</legend>
-			  <span>
-					<input type="radio" id="chooseNumberDecimals_1" name="chooseNumberDecimals" value="no" checked> 
+				<legend>Set number of decimal figures:</legend>
+				<span>
+					<input type="checkbox" id="chooseNumberDecimals_0" name="chooseNumberDecimals" value="yes"> 
+					<label for="chooseNumberDecimals_0">Yes: </label>
+					<input id="chooseNumberDecimals_0_input" type="number" max="10" min="0">
+					<!-- <input type="radio" id="chooseNumberDecimals_1" name="chooseNumberDecimals" value="no" checked> 
 					<label for="chooseNumberDecimals_1">No </label>
 					<br>
 					<input type="radio" id="chooseNumberDecimals_0" name="chooseNumberDecimals" value="yes"> 
 					<label for="chooseNumberDecimals_0">Yes: </label>
-					<input id="chooseNumberDecimals_0_input" type="number" max="10" min="0"> 
-			  </span>
-				</fieldset>
+					<input id="chooseNumberDecimals_0_input" type="number" max="10" min="0">  -->
+				</span>
+			</fieldset>
 		</div>
 			  <br>
 			<fieldset style="display:inline-block">
 			  <legend>Column name: </legend>
-			  <input type="radio" name="columnNameRadioAggregateColumns" id="columnNameRadioAggregateColumns_personalized">
+			  <input type="radio" name="columnNameRadioAggregateColumns" id="columnNameRadioAggregateColumns_personalized" onchange="deselectColumnNameRadioButton('personalized')">
 			  <label for="columnNameRadioAggregateColumns_personalized">Personalized</label>
-			  <input id="columnNameAggregateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; ">
+			  <input disabled=true id="columnNameAggregateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; " >
 			  <br>
-			  <input type="radio" name="columnNameRadioAggregateColumns" checked="checked"
-				id="columnNameRadioAggregateColumns_suggested">
+			  <input type="radio" name="columnNameRadioAggregateColumns" checked="checked" id="columnNameRadioAggregateColumns_suggested" onchange="deselectColumnNameRadioButton('suggested')">
 			  <label for="columnNameRadioAggregateColumns_suggested">Suggested: </label>
 			  <span id="columnNameAggregateColumns_span"></span>
 			</fieldset>
@@ -333,6 +335,7 @@
 			  <legend>Operators and functions for the formula: </legend>
 			  <input type="button" style="width:40px" value="&#40;" onclick="WriteInTheFormulaButtons('&#40;')">
 			  <input type="button" style="width:40px" value="&#41;" onclick="WriteInTheFormulaButtons('&#41;')">
+			  <input type="button" style="width:40px" value="If" onclick="WriteInTheFormulaButtons('? :')">
 			  <br>
 			  <input type="button" style="width:40px" value="=" onclick="WriteInTheFormulaButtons('==')">
 			  <input type="button" style="width:40px" value="&gt;=" onclick="WriteInTheFormulaButtons('>=')">
@@ -433,15 +436,18 @@
 			
 			<textarea id="textAreaFormulaColumnsCalculator" style="width:350px;height:100px;display:inline-block;position:relative;top:27px"></textarea>
 			<fieldset  style="display:inline-block;position:relative; top:10px" >
-				<legend>Set number of decimals:</legend>
+				<legend>Set number of decimal figures:</legend>
 				<span>
-					<input type="radio" id="chooseNumberDecimalsCalculator_1" name="chooseNumberDecimalsCalculator" value="no" checked> 
+					<input type="checkbox" id="chooseNumberDecimalsCalculator_0" name="chooseNumberDecimalsCalculator" value="yes"> 
+					<label for="chooseNumberDecimalsCalculator_0">Yes: </label>
+					<input id="chooseNumberDecimalsCalculator_0_input" type="number" max="10" min="0">
+					<!-- <input type="radio" id="chooseNumberDecimalsCalculator_1" name="chooseNumberDecimalsCalculator" value="no" checked> 
 					<label for="chooseNumberDecimalsCalculator_1">No </label>
 					<br>
 					<input type="radio" id="chooseNumberDecimalsCalculator_0" name="chooseNumberDecimalsCalculator" value="yes"> 
 					<label for="chooseNumberDecimalsCalculator_0">Yes: </label>
 					<input id="chooseNumberDecimalsCalculator_0_input" type="number" max="10" min="0">
-			</span>
+			--></span> 
 			</fieldset>
 		</div>
 		<br>
@@ -5956,7 +5962,15 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		
 
 		//Aggregate columns
-		
+
+		function deselectColumnNameRadioButton(radiobutton){
+			if (radiobutton=="personalized"){
+				document.getElementById("columnNameAggregateColumns").disabled = false;
+			}else{
+				document.getElementById("columnNameAggregateColumns").disabled = true;
+			}
+		}
+
 		function fillAggregateColumVariablesList(){
 
 			var dataKeys= Object.keys(currentNode.STAdata[0]);
@@ -5972,59 +5986,65 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		//Create list of columns to avoid repetitions
 		currentNode.STAcolumnsList=dataKeys;
 	
-		}
+	}
+
+	function checkRadioButtonColumName(event){
+		event.preventDefault();
+		document.getElementById("columnNameRadioAggregateColumns_personalized").setAttribute("checked", true);
+		document.getElementById("columnNameRadioAggregateColumns_suggested").setAttribute("checked", false);
+	}
 	function addColumnToListAggregateColumns(event) {
-			event.preventDefault();
-      var TypeOfOperation = document.getElementsByName("operationsRadioAggrgatedColumns"); //operation
-      var STANewColumnsArray = [], attributesArray = [], attribute;
-      var dataKeys = Object.keys(currentNode.STAdata[0]);
-      var chooseNumberDecimalsInputRadio, chooseNumberDecimalsInput, typeOfOperationLenght = TypeOfOperation.length, dataKeysLenght = dataKeys.length;
-      var columnList = currentNode.STAcolumnsList;
-      var columnName;
+		event.preventDefault();
+		var TypeOfOperation = document.getElementsByName("operationsRadioAggrgatedColumns"); //operation
+		var STANewColumnsArray = [], attributesArray = [], attribute;
+		var dataKeys = Object.keys(currentNode.STAdata[0]);
+		var chooseNumberDecimalsInputRadio, chooseNumberDecimalsInput, typeOfOperationLenght = TypeOfOperation.length, dataKeysLenght = dataKeys.length;
+		var columnList = currentNode.STAcolumnsList;
+		var columnName;
 
-      var typeOfOperationExist = false, atLeast2attributesSelected = false;
-      //Operation
-      for (var i = 0; i < typeOfOperationLenght; i++) { //Take operation 
-        if (TypeOfOperation[i].checked) {
-          STANewColumnsArray.push(TypeOfOperation[i].id.split("AggrgatedColumns_")[1]);
-          typeOfOperationExist = true;
+		var typeOfOperationExist = false, atLeast2attributesSelected = false;
+		//Operation
+		for (var i = 0; i < typeOfOperationLenght; i++) { //Take operation 
+			if (TypeOfOperation[i].checked) {
+			STANewColumnsArray.push(TypeOfOperation[i].id.split("AggrgatedColumns_")[1]);
+			typeOfOperationExist = true;
+					}
 				}
+		//attributes
+		for (var a = 0; a < dataKeysLenght; a++) {
+			attribute = document.getElementById("columnsFielset_" + a);
+			if (attribute.checked) {
+			attributesArray.push(dataKeys[a]);
 			}
-      //attributes
-      for (var a = 0; a < dataKeysLenght; a++) {
-        attribute = document.getElementById("columnsFielset_" + a);
-        if (attribute.checked) {
-          attributesArray.push(dataKeys[a]);
-        }
-      }
-      if (attributesArray.length >= 2) {
-        atLeast2attributesSelected = true;
-      }
+		}
+		if (attributesArray.length >= 2) {
+			atLeast2attributesSelected = true;
+		}
 
-      if (typeOfOperationExist == false || atLeast2attributesSelected == false) {
-        alert("At least two attributes and one aggregation method have to be selected");
-      } else {//All is correct, new column can be added to the list
-        //columnName
-        if (document.getElementById("columnNameRadioAggregateColumns_personalized").checked) {
-          columnName = document.getElementById("columnNameAggregateColumns").value;
-          if (columnName.length == 0) columnName = "noname";
-        } else {
-          columnName = document.getElementById("columnNameAggregateColumns_span").value;
-        }
-        var columnNameExist = columnExistInTheTable(columnName); //Search if name for column is not repeated
-        
-        if (columnNameExist) { //It will not be added because column name already exist
-          alert("Chosen column name already exists, change it to add column to the list ");
-				}
-        else { //It can be added
-          STANewColumnsArray.push(columnName, attributesArray);
-          if (document.getElementById("chooseNumberDecimals_0").checked) {
-				STANewColumnsArray.push(document.getElementById("chooseNumberDecimals_0_input").value)
-			}	
-          currentNode.STAnewColumnsToAdd.push(STANewColumnsArray); //[typeOfOperation,columnName,[attributes]]
-			networkNodes.update(currentNode);
-			drawTableInColumnBoxTableInAggregateColumns();
-        }
+		if (typeOfOperationExist == false || atLeast2attributesSelected == false) {
+			alert("At least two attributes and one aggregation method have to be selected");
+		} else {//All is correct, new column can be added to the list
+			//columnName
+			if (document.getElementById("columnNameRadioAggregateColumns_personalized").checked) {
+			columnName = document.getElementById("columnNameAggregateColumns").value;
+			if (columnName.length == 0) columnName = "noname";
+			} else {
+			columnName = document.getElementById("columnNameAggregateColumns_span").value;
+			}
+			var columnNameExist = columnExistInTheTable(columnName); //Search if name for column is not repeated
+			
+			if (columnNameExist) { //It will not be added because column name already exist
+			alert("Chosen column name already exists, change it to add column to the list ");
+					}
+			else { //It can be added
+			STANewColumnsArray.push(columnName, attributesArray);
+			if (document.getElementById("chooseNumberDecimals_0").checked) {
+					STANewColumnsArray.push(document.getElementById("chooseNumberDecimals_0_input").value)
+				}	
+			currentNode.STAnewColumnsToAdd.push(STANewColumnsArray); //[typeOfOperation,columnName,[attributes]]
+				networkNodes.update(currentNode);
+				drawTableInColumnBoxTableInAggregateColumns();
+			}
       }
 		}
 		function drawTableInColumnBoxTableInAggregateColumns(){
@@ -6191,9 +6211,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						case  "CountDefined": //Falta fer la funció que conta
 							
 							break;
-						case  "span": //???
-							//
-							break;
+						case  "Range": 						
+							if (decimalNumber!=""){
+								addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+							}else{
+								addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]),"", dataAttributes;
+							}
+								break;
 						case  "ProportionDefined": //Falta fer la funció que conta
 						if (decimalNumber!=""){
 							addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);

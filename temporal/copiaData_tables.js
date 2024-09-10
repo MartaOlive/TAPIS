@@ -267,7 +267,7 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 					 {name: "Concatenate", desc: "Concatenate"},
 					 {name: "Count", desc: "Count"},
 					 {name: "MaxValue", desc: "Max. value"},
-					 {name: "Range", desc: "Range"},
+					 {name: "Span", desc: "Span"},
 					 {name: "ProportionDefined", desc: "Proportion defined"}]; 
 		const GroupByDateTimeOptions=[{name: "Year", desc: "Year"},
 					 {name: "Month", desc: "Month"},
@@ -275,27 +275,6 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 					 {name: "Hour", desc: "Hour"},
 					 {name: "Minute", desc: "Minute"},
 					 {name: "Second", desc: "Second"}]; 
-const AggregationColumnsOptions=[{name: "Mean", desc: "Mean"},
-	{name: "Mode", desc: "Mode"},
-	{name: "FirstValue", desc: "First value"},
-	{name: "Median", desc: "Median"},
-	{name: "StandardDeviation", desc: "Standard deviation"},
-	{name: "LastValue", desc: "Last value"},
-	{name: "Q1", desc: "Q1"},
-	{name: "Variance", desc: "Variance"},
-	{name: "RandomValue", desc: "Random value"},
-	{name: "Q3", desc: "Q3"},
-	{name: "Sum", desc: "Sum"},
-	{name: "CountDefined", desc: "Count defined"},
-	{name: "MinValue", desc: "Min. Value"},
-	{name: "Product", desc: "Product"},
-	{name: "Concatenate", desc: "Concatenate"},
-	//{name: "Count", desc: "Count"},
-	{name: "MaxValue", desc: "Max. value"},
-	{name: "Range", desc: "Range"},
-	{name: "ProportionDefined", desc: "Proportion defined"}
-	
-]; 
 
 /*All these functions DO NOT support an array null or will zero elements or with undefined or null element. That is why "CountDefined" and "ProportionDefined" are not defined
   All these functions EXCEPT "Concatenate", "Mode", "Median", "Q1" and "Q3" expect an array of numbers*/
@@ -319,7 +298,7 @@ function aggrFuncModes(values) {
 	}
 
 	var numberValueArray=[];  //[value of mode], one or more
-	var max=0;
+	var numberOfRepetitions, max=0;
 	var objectKeys=Object.keys(summaryOfData); //every key is a different value from values
 	var nObjectKeys=objectKeys.length;
 
@@ -349,7 +328,7 @@ function aggrFuncCoefficientOfVariation (values){
 
 function aggrFuncMedian(values) {
 	var n = values.length;
-	var middleNumber;
+	var middleNumber, median;
 	var sortedValues = values.sort((a, b) => a - b);
 
 	if (n%2) 
@@ -359,7 +338,9 @@ function aggrFuncMedian(values) {
 }
 
 function aggrFuncStandardDeviation(values){
-	return Math.sqrt(aggrFuncVariance(values));
+	var variance= aggrFuncVariance(values);
+	var standardDeviation= Math.sqrt(variance);
+	return standardDeviation;
 }
 
 function aggrFuncLastValue(values){
@@ -372,16 +353,16 @@ function aggrFuncQ1(values) {
 
 	if (valuesSorted.length%2) {
 		medianaPosition = (valuesSorted.length + 1) / 2;
-		if (medianaPosition% 2){//if number is odd, every side has an even number of digits
+		if (medianaPosition% 2){//if number is odd, every side has an par number of digits
 			numbersPerSite = medianaPosition - 1 - (medianaPosition -1)/2;
 			return (valuesSorted[numbersPerSite - 1] + valuesSorted[numbersPerSite])/2;
 		}
-		return valuesSorted[medianaPosition - medianaPosition / 2 - 1];  ////if number is even, every side has an odd number of digits
+		return valuesSorted[medianaPosition - medianaPosition / 2 - 1];  ////if number is par, every side has an odd number of digits
 	}
 	medianaPosition = valuesSorted.length/2;	  
 	if (medianaPosition%2) 
 		return valuesSorted[medianaPosition - (medianaPosition-1) / 2 - 1];  //Every side has numberPerSite -1 numbers     
-	//even
+	//par
 	numbersPerSite = medianaPosition - medianaPosition / 2;
 	return (valuesSorted[numbersPerSite - 1] + valuesSorted[numbersPerSite])/2;
 }
@@ -392,7 +373,7 @@ function aggrFuncQ3(values) {
 
 	if (valuesSorted.length % 2) {
         	medianaPosition = (valuesSorted.length + 1) / 2;
-        	if (medianaPosition % 2) {//if number is odd, every side has an even number of digits
+        	if (medianaPosition % 2) {//if number is odd, every side has an par number of digits
 			numbersPerSite = medianaPosition + (medianaPosition - 1) / 2;
 			return (valuesSorted[numbersPerSite - 1] + valuesSorted[numbersPerSite]) / 2;
         	}
@@ -464,7 +445,7 @@ var r=values[0], n=values.length;
 	return r;
 }
 
-function aggrFuncRange(values){
+function aggrFuncSpan(values){
 var r_max,r_min, n=values.length;
 
 	r_max=r_min=values[0];
@@ -730,30 +711,45 @@ function addNewEmptyColumn(data,columnName){
 	for (var i=0;i<data.length;i++){
 		data[i][columnName]="";
 	}
+	return data;
 }
 
 function addNewColumnWithUniqueValue(data, columnName, uniqueValue){
 	for (var i=0;i<data.length;i++){
 		data[i][columnName]=uniqueValue;
 	}
+	return data;
 }
 function addNewColumnWithAutoincrementalValues(data,columnName,firstValue){
 
 	for (var i=0;i<data.length;i++){
 		data[i][columnName]=parseInt(firstValue)+i;
 	}
+	return data;
 }
 
-function addnewColumnSummingColumns(data, columnName,columnsToSum, decimalNumber, dataAttributes){
-	var sum,n=columnsToSum.length; 
+function addnewColumnSummingColumns(data, columnName,columnsToSum, decimalNumber){
+	var sum; 
+	//numWithComa, value, num;
 	for (var i=0;i<data.length;i++){
 		sum=0;
-		for (var a=0;a<n;a++){
+		for (var a=0;a<columnsToSum.length;a++){
 			if (typeof data[i][columnsToSum[a]] =="string"){
 				sum+=parseFloat(data[i][columnsToSum[a]]);
 			}else{
-				sum+= data[i][columnsToSum[a]]; 
+				sum+= data[i][columnsToSum[a]]; //Tal com agafa el CSV mai passarà per aquí perque sempre és STRING
 			}
+			// value=data[i][columnsToSum[a]];
+			// if (value.includes(".")){ //float with .
+			// 	num= parseFloat(value);
+			// }else if (value.includes(",")){ //Float with ","
+        	// 	numWithComa=data[i][columnsToSum[a]];
+			// 	num=value.replace(",",".");
+			// 	num= parseFloat(numWithComa);
+			// }else{ //Integer
+			// num= parseInt(value);
+			// }
+			//sum+=num;
 		}
 		
 		if (decimalNumber){
@@ -764,24 +760,24 @@ function addnewColumnSummingColumns(data, columnName,columnsToSum, decimalNumber
 	}
 }
 
-function addnewColumnMultiplyingColumns(data, columnName,columnsToMult, decimalNumber){
-	var product,n=data.length, c=columnsToMult.length; 
+function addnewColumnMultiplyingColumns(data, columnName,columnsToSum, decimalNumber){
+	var product; 
 	//numWithComa, value, product;
-	for (var i=0;i<n;i++){
+	for (var i=0;i<data.length;i++){
 		
-		for (var a=0;a<c;a++){
-			if (typeof data[i][columnsToMult[a]] =="string"){
+		for (var a=0;a<columnsToSum.length;a++){
+			if (typeof data[i][columnsToSum[a]] =="string"){
 				if (a==0){
-					product=parseFloat(data[i][columnsToMult[a]]);
+					product=parseFloat(data[i][columnsToSum[a]]);
 				}else{
-					product=product*parseFloat(data[i][columnsToMult[a]]);
+					product=product*parseFloat(data[i][columnsToSum[a]]);
 				}
 			 
 			}else{
 				if (a==0){
-					product=data[i][columnsToMult[a]];
+					product=data[i][columnsToSum[a]];
 				}else{
-					product=product* data[i][columnsToMult[a]]; //Tal com agafa el CSV mai passarà per aquí perque sempre és STRING
+					product=product* data[i][columnsToSum[a]]; //Tal com agafa el CSV mai passarà per aquí perque sempre és STRING
 
 
 				}
@@ -819,6 +815,7 @@ function addnewColumnMinimalValue(data, columnName,columnsToEvaluate, decimalNum
 			data[i][columnName]= min;
 		}
 		
+		//data[i][columnName]=min;
 	}
 }
 
@@ -839,7 +836,7 @@ function addnewColumnMaximalValue(data, columnName,columnsToEvaluate, decimalNum
 		}else{
 			data[i][columnName]= max;
 		}
-
+		//data[i][columnName]=max;
 	}
 }
 
@@ -860,7 +857,7 @@ function addnewColumnMeanValue(data, columnName,columnsToEvaluate, decimalNumber
 		}else{
 			data[i][columnName]= mean;
 		}
-
+		//data[i][columnName]=mean;
 	}
 }
 
@@ -872,7 +869,7 @@ function addnewColumnMedianValue(data, columnName,columnsToEvaluate, decimalNumb
 	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncMedian, decimalNumber);
 }
 
-function addnewColumnAggr(data, columnName, columnsToEvaluate, aggrFunc, decimalNumber, dataAttributes) { //To pass dataAttributes without decimalNumber put "" to decimalnumber
+function addnewColumnAggr(data, columnName, columnsToEvaluate, aggrFunc, decimalNumber) {
 	var values, aggr;
 	for (var i=0; i<data.length; i++){
 		values=[];
@@ -880,7 +877,7 @@ function addnewColumnAggr(data, columnName, columnsToEvaluate, aggrFunc, decimal
 			values.push(data[i][columnsToEvaluate[a]]);
 		}
 		aggr=aggrFunc(values); //Use function to be able to evaluate many columns
-		if (decimalNumber || decimalNumber!=""){
+		if (decimalNumber){
 			if (decimalNumber==0){ //round number
 				data[i][columnName]= Math.round(aggr);
 			}
@@ -889,10 +886,11 @@ function addnewColumnAggr(data, columnName, columnsToEvaluate, aggrFunc, decimal
 		}else{
 			data[i][columnName]= aggr;
 		}
+		//data[i][columnName]=aggr;
 	}
 }
 
-function addnewColumnConcatenatingValues (data, columnName,columnsToEvaluate){ //Not numbers
+function addnewColumnConcatenatingValues (data, columnName,columnsToEvaluate){ //!!!!!!!!!!!!No funciona amb numeros
 	var values,concatenated;
 	for (var i=0; i<data.length; i++){
 		values=[];
@@ -904,68 +902,6 @@ function addnewColumnConcatenatingValues (data, columnName,columnsToEvaluate){ /
 		data[i][columnName]= concatenated;
 	}
 }
-
-function addnewColumnModeValue(data, columnName,columnsToEvaluate, decimalNumber){
-	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncMode, decimalNumber); //aggrFuncMode (one mode), for array aggrFuncModes
-}
-
-function addnewColumnFirstValue (data, columnName,columnsToEvaluate, decimalNumber){
-	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncFirstValue, decimalNumber); 
-}
-function addnewColumnStandardDeviationValue (data, columnName,columnsToEvaluate, decimalNumber){
-	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncStandardDeviation, decimalNumber); 
-}
-function addnewColumnLastValue (data, columnName,columnsToEvaluate, decimalNumber){
-	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncLastValue, decimalNumber); 
-}
-function addnewColumnQ1Value (data, columnName,columnsToEvaluate, decimalNumber){
-	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncQ1, decimalNumber); 
-}
-function addnewColumnQ3Value (data, columnName,columnsToEvaluate, decimalNumber){
-	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncQ3, decimalNumber); 
-}
-function addnewColumnRandomValue (data, columnName,columnsToEvaluate, decimalNumber){
-	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncRandomValue, decimalNumber); 
-}
-function addnewColumnCount (data, columnName,columnsToEvaluate){ //TE SENTIT?
-	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncCount); 
-}
-function addnewColumnRandomValue (data, columnName,columnsToEvaluate, decimalNumber){
-	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncRandomValue, decimalNumber); 
-}
-function addnewColumnCountDefined (data, columnName,columnsToEvaluate){ //No està feta la funció
-	//return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncCountDefined); 
-}
-function addnewColumnRange (data, columnName,columnsToEvaluate){ //No està feta la funció
-	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncRange); 
-}
-function addnewColumnProportionDefined (data, columnName,columnsToEvaluate){ //No està feta la funció
-	//return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncProportionDefined); 
-}
-function addnewColumnWithFormula (data, columnName,formula,decimalNumber){ 
-	var formulaWithValues;
-	var dataKeys= Object.keys(data[0]);
-	var n=data.length, m=dataKeys.length;
-	for (var i=0; i<n; i++){
-		formulaWithValues=formula;//Restore the original formula sentence to be changed with other data 
-		for (var a=0;a<m;a++){
-			formulaWithValues = formulaWithValues.replaceAll(dataKeys[a], data[i][dataKeys[a]]);
-		}
-		if (typeof decimalNumber !=="undefined"& decimalNumber!=""){
-			if (decimalNumber==0){ //round number
-				data[i][columnName]= Math.round(eval(formulaWithValues));
-			}
-			data[i][columnName]= eval(formulaWithValues).toFixed(decimalNumber);
-		
-		}else{
-			data[i][columnName]= eval(formulaWithValues);
-		}
-		
-	}
-}
-
-
-
 
 function sortValuesNumbersOrText(arrayValues) {
 	var arrayNumbers = [], n=arrayValues.length;
