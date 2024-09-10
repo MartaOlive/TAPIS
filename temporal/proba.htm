@@ -2,199 +2,38 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../tapis.css">
-  <link href=".../tools.css" rel="stylesheet" type="text/css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="../tapis.css">
+	<link href=".../tools.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
 
-  
-    <form>
-      <br>
-			<label for="calculator_selectColumns">Attribute:</label>
-			<select id="calculator_selectColumns" name="calculator_selectColumnsValue" style="width:400px;" onchange="">
-			</select>
-		
-			<button onclick="WriteInTheFormulaButtonsProba('attributeSelected')" >Write in the formula</button>
-			<br><br>
-			<fieldset>
-			  <legend>Operators and functions for the formula: </legend>
-			  <input type="button" style="width:40px" value="&#40;" onclick="WriteInTheFormulaButtonsProba('&#40;')">
-			  <input type="button" style="width:40px" value="&#41;" onclick="WriteInTheFormulaButtonsProba('&#41;')">
-			  <br>
-			  <input type="button" style="width:40px" value="=" onclick="WriteInTheFormulaButtonsProba('==')">
-			  <input type="button" style="width:40px" value="&gt;=" onclick="WriteInTheFormulaButtonsProba('>=')">
-			  <input type="button" style="width:40px" value="&lt;" onclick="WriteInTheFormulaButtonsProba('<')">&nbsp;&nbsp;&nbsp;&nbsp;
-		
-		
-		
-			  <input type="button" style="width:30px" value="7" onclick="WriteInTheFormulaButtonsProba('7')">
-			  <input type="button" style="width:30px" value="8" onclick="WriteInTheFormulaButtonsProba('8')">
-			  <input type="button" style="width:30px" value="9" onclick="WriteInTheFormulaButtonsProba('9')">&nbsp;&nbsp;&nbsp;&nbsp;
-		
-			  <input type="button" style="width:30px" value="/" onclick="WriteInTheFormulaButtonsProba('/')">
-			  &nbsp;&nbsp;&nbsp;&nbsp;
-		
-			  <input type="button" style="width:40px" value="and" onclick="WriteInTheFormulaButtonsProba('&&')">
-		
-			  <br>
-			  <input type="button" style="width:40px" value="≠" onclick="WriteInTheFormulaButtonsProba('!=')">
-			  <input type="button" style="width:40px" value="&lt;=" onclick="WriteInTheFormulaButtonsProba('<=')">
-			  <input type="button" style="width:40px" value="&gt;" 	onclick="WriteInTheFormulaButtonsProba('>')">&nbsp;&nbsp;&nbsp;&nbsp;
-		
-		
-			  <input type="button" style="width:30px" value="4" onclick="WriteInTheFormulaButtonsProba('4')">
-			  <input type="button" style="width:30px" value="5" onclick="WriteInTheFormulaButtonsProba('5')">
-			  <input type="button" style="width:30px" value="6" onclick="WriteInTheFormulaButtonsProba('6')">&nbsp;&nbsp;&nbsp;&nbsp;
-		
-			  <input type="button" style="width:30px" value="×" onclick="WriteInTheFormulaButtonsProba('*')">
-			  &nbsp;&nbsp;&nbsp;&nbsp;
-		
-			  <input type="button" style="width:40px" value="or" onclick="WriteInTheFormulaButtonsProba('||')">
-			  <br>
-		
-			  <input type="button" style="width:40px" value="Log" onclick="WriteInTheFormulaButtonsProba('Math.log10()')">
-			  <input type="button" style="width:40px" value="Ln" onclick="WriteInTheFormulaButtonsProba('Math.log()')">
-			  <input type="button" style="width:40px" value="xⁿ"
-				onclick="WriteInTheFormulaButtonsProba('**')">&nbsp;&nbsp;&nbsp;&nbsp;
-		
-		
-			  <input type="button" style="width:30px" value="1" onclick="WriteInTheFormulaButtonsProba('1')">
-			  <input type="button" style="width:30px" value="2" onclick="WriteInTheFormulaButtonsProba('2')">
-			  <input type="button" style="width:30px" value="3" onclick="WriteInTheFormulaButtonsProba('3')">&nbsp;&nbsp;&nbsp;&nbsp;
-		
-			  <input type="button" style="width:30px" value="-" onclick="WriteInTheFormulaButtonsProba('-')">
-			  &nbsp;&nbsp;&nbsp;&nbsp;
-		
-			  <input type="button" style="width:40px" value="not" onclick="WriteInTheFormulaButtonsProba('!')">
-		
-			  <br>
-			  <input type="button" style="width:40px" value="Exp" onclick="WriteInTheFormulaButtonsProba('Math.exp()')">
-			  <input type="button" style="width:40px" value="%" onclick="WriteInTheFormulaButtonsProba('%')">
-			  <input type="button" style="width:40px" value="√¯" onclick="WriteInTheFormulaButtonsProba('Math.sqrt()')">&nbsp;&nbsp;&nbsp;&nbsp;
-		
-		
-			  <input type="button" style="width:30px" value="&#928;" onclick="WriteInTheFormulaButtonsProba('Math.PI')">
-			  <input type="button" style="width:30px" value="0" onclick="WriteInTheFormulaButtonsProba('0')">
-			  <input type="button" style="width:30px" value="." onclick="WriteInTheFormulaButtonsProba('.')">&nbsp;&nbsp;&nbsp;&nbsp;
-		
-			  <input type="button" style="width:30px" value="+" onclick="WriteInTheFormulaButtonsProba('+')">
-			  &nbsp;&nbsp;&nbsp;&nbsp;
-		
-		
-			  <input type="button" style="width:40px" value="xor" onclick="WriteInTheFormulaButtonsProba('^')">
-		
-			  <br>
-		
-			  <input type="button" style="width:40px" value="1/x" onclick="WriteInTheFormulaButtonsProba('1/()')">
-			  <input type="button" style="width:40px" value="Ent" onclick="WriteInTheFormulaButtonsProba('Math.trunc()')">
-			  <input type="button" style="width:40px" value="Abs"
-				onclick="WriteInTheFormulaButtonsProba('Math.abs()')">&nbsp;&nbsp;&nbsp;&nbsp;
-		
-			  <input type="button" style="width:30px" value="e" onclick="WriteInTheFormulaButtonsProba('Math.E')">
-		
-			  <br><br>
-			  <input type="button" style="width:62px" value="sin" onclick="WriteInTheFormulaButtonsProba('Math.sin()')">
-			  <input type="button" style="width:62px" value="asin" onclick="WriteInTheFormulaButtonsProba('Math.asin()')">
-			  <input type="button" style="width:62px" value="cos" onclick="WriteInTheFormulaButtonsProba('Math.cos()')">
-			  <input type="button" style="width:62px" value="acos" onclick="WriteInTheFormulaButtonsProba('Math.acos()')">
-			  <input type="button" style="width:62px" value="tan" onclick="WriteInTheFormulaButtonsProba('Math.tan()')">
-			  <input type="button" style="width:62px" value="atan" onclick="WriteInTheFormulaButtonsProba('Math.atan()')">
-		
-			  <br>
-			  <input type="button" style="width:62px" value="sing"
-				onclick="WriteInTheFormulaButtonsProba('Math.sin( *Math.PI/180)')"> 
-			  <input type="button" style="width:62px" value="asing"
-				onclick="WriteInTheFormulaButtonsProba('Math.asin()*180/Math.PI')">
-			  <input type="button" style="width:62px" value="cosg"
-				onclick="WriteInTheFormulaButtonsProba('Math.cos( *Math.PI/180)')">
-			  <input type="button" style="width:62px" value="acosg"
-				onclick="WriteInTheFormulaButtonsProba('Math.acos( *Math.PI/180)')">
-			  <input type="button" style="width:62px" value="tang"
-				onclick="WriteInTheFormulaButtonsProba('Math.tan( *Math.PI/180)	')">
-			  <input type="button" style="width:62px" value="atang"
-				onclick="WriteInTheFormulaButtonsProba('Math.atan( *Math.PI/180)')">
-			</fieldset>
-			<div>
-			<label style="position:relative;top:22px">Formula:</label>
-			<br>
-			
-			<textarea id="textAreaFormulaColumnsCalculator" style="width:350px;height:100px;display:inline-block;position:relative;top:27px"></textarea>
-			<fieldset  style="display:inline-block;position:relative; top:10px" >
-				<legend>Set number of decimals:</legend>
-				<span>
-					<input type="radio" id="chooseNumberDecimalsCalculator_1" name="chooseNumberDecimalsCalculator" value="no" checked> 
-					<label for="chooseNumberDecimalsCalculator_1">No </label>
-					<br>
-					<input type="radio" id="chooseNumberDecimalsCalculator_0" name="chooseNumberDecimalsCalculator" value="yes"> 
-					<label for="chooseNumberDecimalsCalculator_0">Yes: </label>
-					<input id="chooseNumberDecimalsCalculator_0_input" type="number" max="10" min="0">
-			</span>
-			</fieldset>
-		</div>
-		<br>
-		<fieldset>
-			<legend>Column name:</legend>
-			<input type="radio" name="columnNameRadioCalculatorColumns" id ="columnNameRadioACalculatorColumns_personalized" checked="checked"> <!--Function has no sense, it is only to mimic aggregated columns dialog-->
-			<label for ="columnNameRadioACalculatorColumns_personalized" >Personalized</label>
-			<input id="columnNameColumnsCalculator" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
-		</fieldset>
-			<br>
-			
-			<button value="add" onClick="addColumnToListColumnsCalculator(event)" style="margin-bottom:10px">Add column to list
-			</button>
-			<br>
-			<hr>
-			<div style="width:auto;" >
-				<label>List of columns to add</label>
-				<span id= spanColumnsListCalculatorColumns></span>
-			  </div>
-			<br>
-			<div class="center" style="margin-top: 10px">
-			  <button value="default" onClick="addColumnsToTableInColumnsCalculator()">Ok</button>
-				<button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
-			</div>
-    </form>
-  </dialog>
-
-  <script>
-function addColumnToListColumnsCalculator(event){
-  event.preventDefault();
-  var textAreaFormulaColumnsCalculator= document.getElementById("textAreaFormulaColumnsCalculator").value;
-  console.log(eval(textAreaFormulaColumnsCalculator));
-
-}
-
-function WriteInTheFormulaButtonsProba(character) {
-		event.preventDefault();
-		var textAreaFormulaColumnsCalculator = document.getElementById("textAreaFormulaColumnsCalculator");
-		var text = textAreaFormulaColumnsCalculator.value;
-		var mousePosition = textAreaFormulaColumnsCalculator.getAttribute("data-mousePosition");
-			if (character=="&#40;"){
-				character=="("
-			}else if (character=="&#41;"){
-				character==")"
-			}
 
 
 
+	<script>
 
-		if (character == "attributeSelected") {
-			var selector = document.getElementById("calculator_selectColumns");
-			character = selector.options[selector.selectedIndex].value;
-		}
-		textAreaFormulaColumnsCalculator.value = [text.slice(0, mousePosition), character, text.slice(mousePosition)].join('');
-		textAreaFormulaColumnsCalculator.setAttribute("data-mousePosition", parseInt(mousePosition) + character.length); //If there is no click, next button will be written after this.
-		}
+		const STAEntities = {
+			ObservedProperties: { singular: "ObservedProperty", entities: ["Datastreams", "MultiDatastreams"], properties: { name: { dataType: "string", required: "true" }, definition: { dataType: "URI", required: "true" }, description: { dataType: "string", required: "true" }, properties: { dataType: "JSON", required: "false" } } },
+			Observations: { singular: "Observation", entities: ["Datastream", "MultiDatastream", "FeatureOfInterest", "ObservationGroups", "Subjects", "Objects"], properties: { phenomenonTime: { dataType: "object", required: "true" }, resultTime: { dataType: "isodatetime", required: "true" }, result: { dataType: "", required: "true" }, resultQuality: { dataType: "object", required: "false" }, validTime: { dataType: "data_isoperiod", required: "false" }, parameters: { dataType: "JSON", required: "false" }, }, entityRelations: ["Object", "Subject"] },
+			FeaturesOfInterest: { singular: "FeatureOfInterest", entities: ["Observations"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, encodingType: { dataType: "string", required: "true" }, feature: { dataType: "", required: "true" }, properties: { dataType: "JSON", required: "false" } } }, 
+			Sensors: { singular: "Sensor", entities: ["Datastreams", "MultiDatastreams"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, encodingType: { dataType: "string", required: "true" }, metadata: { dataType: "", required: "true" }, properties: { dataType: "JSON", required: "false" } } },
+			Things: { singular: "Thing", entities: ["Datastreams", "MultiDatastreams", "Party", "Locations", "HistoricalLocations"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, properties: { dataType: "JSON", required: "false" } } },
+			Locations: { singular: "Location", entities: ["Things", "HistoricalLocations"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, encodingType: { dataType: "string", required: "true" }, metadata: { dataType: "", required: "true" }, location: { dataType: "", required: "true" }, properties: { dataType: "JSON", required: "false" } } },
+			HistoricalLocations: { singular: "HistoricalLocation", entities: ["Things", "Location"], properties: { time: { dataType: "isodatetime", required: "true" } } },
+			Datastreams: { singular: "Datastream", entities: ["Party", "Sensor", "ObservedProperty", "Campaigns", "License", "Observations", "Thing"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, observationType: { dataType: "string", required: "true" }, unitOfMeasurement: { dataType: "JSON", required: "true" }, observedArea: { dataType: "object", required: "false" }, phenomenonTime: { dataType: "data_isoperiod", required: "false" }, resultTime: { dataType: "data_isoperiod", required: "false" }, properties: { dataType: "JSON", required: "false" } } },
+			MultiDatastreams: { singular: "MultiDatastream", entities: ["Party", "Sensor", "ObservedProperties", "Campaigns", "License", "Observations", "Thing"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, observationType: { dataType: "string", required: "true" }, unitOfMeasurement: { dataType: "JSON", required: "true" }, observedArea: { dataType: "object", required: "false" }, phenomenonTime: { dataType: "data_isoperiod", required: "false" }, resultTime: { dataType: "data_isoperiod", required: "false" }, multiObservationDataType: { dataType: "JSON", required: "true" }, properties: { dataType: "JSON", required: "false" } } },
+			Parties: { singular: "Party", entities: ["Datastreams", "MultiDatastreams", "Campaigns", "ObservationGroups", "Things"], properties: { description: { dataType: "string", required: "false" }, authId: { dataType: "string", required: "false" }, role: { dataType: "PartyRoleCode", required: "true" }, displayName: { dataType: "string", required: "false" } } },
+			Campaigns: { singular: "Campaign", entities: ["Datastreams", "MultiDatastreams", "Party", "License"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, classification: { dataType: "string", required: "false" }, termsOfUse: { dataType: "string", required: "true" }, privacyPolicy: { dataType: "string", required: "false" }, creationTime: { dataType: "isodatetime", required: "true" }, url: { dataType: "URI", required: "false" }, startTime: { dataType: "isodatetime", required: "false" }, endTime: { dataType: "isodatetime", required: "false" }, properties: { dataType: "JSON", required: "false" } } },
+			Licenses: { singular: "License", entities: ["Datastreams", "MultiDatastreams", "Campaigns", "ObservationGroups"], properties: { name: { dataType: "string", required: "true" }, definition: { dataType: "URI", required: "true" }, description: { dataType: "string", required: "true" }, logo: { dataType: "string", required: "false" }, attributionText: { dataType: "JSON", required: "false" } } },
+			ObservationGroups: {singular: "ObservationGroup", entities: ["Party", "Campaigns", "License", "Observations", "Relations"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, purpose: { dataType: "string", required: "false" }, creationTime: { dataType: "isodatetime", required: "false" }, endTimecreationTime: { dataType: "isodatetime", required: "false" }, termsOfUsed: { dataType: "string", required: "false" }, privacyPolicy: { dataType: "string", required: "false" }, dataQuality: { dataType: "JSON", required: "false" }, properties: { dataType: "JSON", required: "false" } }},
+			Relations: {singular: "Relation", entities: ["Object", "Subject", "ObservationGroups"],properties: {role: { dataType: "URI", required: "true" }, descriptiondescription: { dataType: "string", required: "false" }, externalObject: { dataType: "URI", required: "false" }, properties: { dataType: "JSON", required: "false" }},entityRelations: ["Objects", "Subjects"]}
+		};
 
 
-
-
-
-
-  </script>
+	</script>
 </body>
 
 </html>

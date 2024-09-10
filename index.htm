@@ -281,12 +281,7 @@
 					<input type="checkbox" id="chooseNumberDecimals_0" name="chooseNumberDecimals" value="yes"> 
 					<label for="chooseNumberDecimals_0">Yes: </label>
 					<input id="chooseNumberDecimals_0_input" type="number" max="10" min="0">
-					<!-- <input type="radio" id="chooseNumberDecimals_1" name="chooseNumberDecimals" value="no" checked> 
-					<label for="chooseNumberDecimals_1">No </label>
-					<br>
-					<input type="radio" id="chooseNumberDecimals_0" name="chooseNumberDecimals" value="yes"> 
-					<label for="chooseNumberDecimals_0">Yes: </label>
-					<input id="chooseNumberDecimals_0_input" type="number" max="10" min="0">  -->
+
 				</span>
 			</fieldset>
 		</div>
@@ -441,13 +436,7 @@
 					<input type="checkbox" id="chooseNumberDecimalsCalculator_0" name="chooseNumberDecimalsCalculator" value="yes"> 
 					<label for="chooseNumberDecimalsCalculator_0">Yes: </label>
 					<input id="chooseNumberDecimalsCalculator_0_input" type="number" max="10" min="0">
-					<!-- <input type="radio" id="chooseNumberDecimalsCalculator_1" name="chooseNumberDecimalsCalculator" value="no" checked> 
-					<label for="chooseNumberDecimalsCalculator_1">No </label>
-					<br>
-					<input type="radio" id="chooseNumberDecimalsCalculator_0" name="chooseNumberDecimalsCalculator" value="yes"> 
-					<label for="chooseNumberDecimalsCalculator_0">Yes: </label>
-					<input id="chooseNumberDecimalsCalculator_0_input" type="number" max="10" min="0">
-			--></span> 
+				</span> 
 			</fieldset>
 		</div>
 		<br>
@@ -986,21 +975,21 @@
 					ImportCSV: {name: "CSV", description: "Import CSV", startNode: true},
 					ImportGeoJSON: {name: "GeoJSON", description: "Import GeoJSON", startNode: true}};
 		const ServicesAndAPIsArray = Object.keys(ServicesAndAPIs);
-		const STAEntities = {ObservedProperties: {singular: "ObservedProperty", entities: ["Datastreams", "MultiDatastreams"], properties: ["name", "definition", "description", "properties"]},
-				Observations: {singular: "Observation", entities: ["Datastream", "MultiDatastream", "FeatureOfInterest", "ObservationGroups", "Subjects", "Objects"], properties: ["phenomenonTime", "resultTime", "result", "resultQuality", "validTime", "parameters"], entityRelations: ["Object", "Subject"]}, 
-      				FeaturesOfInterest: {singular: "FeatureOfInterest", entities: ["Observations"], properties: ["name", "description", "encodingType", "feature", "properties"]},
-				Sensors: {singular: "Sensor", entities: ["Datastreams", "MultiDatastreams"], properties: ["name", "description", "encodingType", "metadata", "properties"]}, 
-				Things: {singular: "Thing", entities: ["Datastreams", "MultiDatastreams", "Party", "Locations", "HistoricalLocations"], properties: ["name", "description", "properties"]},
-				Locations: {singular: "Location", entities: ["Things", "HistoricalLocations"], properties: ["name", "description", "encodingType", "location", "properties"]},
-				HistoricalLocations: {singular: "HistoricalLocation", entities: ["Things", "Location"], properties: ["time"]},
-				Datastreams: {singular: "Datastream", entities: ["Party", "Sensor", "ObservedProperty", "Campaigns", "License", "Observations", "Thing"], properties: ["name", "description", "unitOfMeasurement", "observationType", "observedArea", "phenomenonTime", "resultTime", "properties"]},
-				MultiDatastreams: {singular: "MultiDatastream", entities: ["Party", "Sensor", "ObservedProperties", "Campaigns", "License", "Observations", "Thing"], properties: ["name", "description", "unitOfMeasurements", "observationType", "observedArea", "phenomenonTime", "resultTime", "multiObservationDataTypes", "properties"]},
-				Parties: {singular: "Party", entities: ["Datastreams", "MultiDatastreams", "Campaigns", "ObservationGroups", "Things"], properties: ["description", "authId", "role", "displayName"]},
-				Campaigns: {singular: "Campaign", entities: ["Datastreams", "MultiDatastreams", "Party", "License"], properties: ["name", "description", "classification", "termsOfUse", "privacyPolicy", "creationTime", "startTime", "endTime", "url", "properties"]},
-				Licenses: {singular: "License", entities: ["Datastreams", "MultiDatastreams", "Campaigns", "ObservationGroups"], properties: ["name", "description", "definition", "logo", "attributionText"]},
-				ObservationGroups: {singular: "ObservationGroup", entities: ["Party", "Campaigns", "License", "Observations", "Relations"], properties: ["name", "description", "purpose", "creationTime", "endTime", "termsOfUsed", "privacyPolicy", "dataQuality", "properties"]},
-				Relations: {singular: "Relation", entities: ["Object", "Subject", "ObservationGroups"], properties: ["role", "description", "externalObject", "properties"], entityRelations: ["Objects", "Subjects"]}};
-		const STAEntitiesArray = Object.keys(STAEntities);
+		const STAEntities = {ObservedProperties: { singular: "ObservedProperty", entities: ["Datastreams", "MultiDatastreams"], properties: { name: { dataType: "string", required: "true" }, definition: { dataType: "URI", required: "true" }, description: { dataType: "string", required: "true" }, properties: { dataType: "JSON", required: "false" } } },
+			Observations: { singular: "Observation", entities: ["Datastream", "MultiDatastream", "FeatureOfInterest", "ObservationGroups", "Subjects", "Objects"], properties: { phenomenonTime: { dataType: "object", required: "true" }, resultTime: { dataType: "isodatetime", required: "true" }, result: { dataType: "", required: "true" }, resultQuality: { dataType: "object", required: "false" }, validTime: { dataType: "data_isoperiod", required: "false" }, parameters: { dataType: "JSON", required: "false" }, }, entityRelations: ["Object", "Subject"] },
+			FeaturesOfInterest: { singular: "FeatureOfInterest", entities: ["Observations"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, encodingType: { dataType: "string", required: "true" }, feature: { dataType: "", required: "true" }, properties: { dataType: "JSON", required: "false" } } }, 
+			Sensors: { singular: "Sensor", entities: ["Datastreams", "MultiDatastreams"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, encodingType: { dataType: "string", required: "true" }, metadata: { dataType: "", required: "true" }, properties: { dataType: "JSON", required: "false" } } },
+			Things: { singular: "Thing", entities: ["Datastreams", "MultiDatastreams", "Party", "Locations", "HistoricalLocations"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, properties: { dataType: "JSON", required: "false" } } },
+			Locations: { singular: "Location", entities: ["Things", "HistoricalLocations"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, encodingType: { dataType: "string", required: "true" }, metadata: { dataType: "", required: "true" }, location: { dataType: "", required: "true" }, properties: { dataType: "JSON", required: "false" } } },
+			HistoricalLocations: { singular: "HistoricalLocation", entities: ["Things", "Location"], properties: { time: { dataType: "isodatetime", required: "true" } } },
+			Datastreams: { singular: "Datastream", entities: ["Party", "Sensor", "ObservedProperty", "Campaigns", "License", "Observations", "Thing"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, observationType: { dataType: "string", required: "true" }, unitOfMeasurement: { dataType: "JSON", required: "true" }, observedArea: { dataType: "object", required: "false" }, phenomenonTime: { dataType: "data_isoperiod", required: "false" }, resultTime: { dataType: "data_isoperiod", required: "false" }, properties: { dataType: "JSON", required: "false" } } },
+			MultiDatastreams: { singular: "MultiDatastream", entities: ["Party", "Sensor", "ObservedProperties", "Campaigns", "License", "Observations", "Thing"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, observationType: { dataType: "string", required: "true" }, unitOfMeasurement: { dataType: "JSON", required: "true" }, observedArea: { dataType: "object", required: "false" }, phenomenonTime: { dataType: "data_isoperiod", required: "false" }, resultTime: { dataType: "data_isoperiod", required: "false" }, multiObservationDataType: { dataType: "JSON", required: "true" }, properties: { dataType: "JSON", required: "false" } } },
+			Parties: { singular: "Party", entities: ["Datastreams", "MultiDatastreams", "Campaigns", "ObservationGroups", "Things"], properties: { description: { dataType: "string", required: "false" }, authId: { dataType: "string", required: "false" }, role: { dataType: "PartyRoleCode", required: "true" }, displayName: { dataType: "string", required: "false" } } },
+			Campaigns: { singular: "Campaign", entities: ["Datastreams", "MultiDatastreams", "Party", "License"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, classification: { dataType: "string", required: "false" }, termsOfUse: { dataType: "string", required: "true" }, privacyPolicy: { dataType: "string", required: "false" }, creationTime: { dataType: "isodatetime", required: "true" }, url: { dataType: "URI", required: "false" }, startTime: { dataType: "isodatetime", required: "false" }, endTime: { dataType: "isodatetime", required: "false" }, properties: { dataType: "JSON", required: "false" } } },
+			Licenses: { singular: "License", entities: ["Datastreams", "MultiDatastreams", "Campaigns", "ObservationGroups"], properties: { name: { dataType: "string", required: "true" }, definition: { dataType: "URI", required: "true" }, description: { dataType: "string", required: "true" }, logo: { dataType: "string", required: "false" }, attributionText: { dataType: "JSON", required: "false" } } },
+			ObservationGroups: {singular: "ObservationGroup", entities: ["Party", "Campaigns", "License", "Observations", "Relations"], properties: { name: { dataType: "string", required: "true" }, description: { dataType: "string", required: "true" }, purpose: { dataType: "string", required: "false" }, creationTime: { dataType: "isodatetime", required: "false" }, endTimecreationTime: { dataType: "isodatetime", required: "false" }, termsOfUsed: { dataType: "string", required: "false" }, privacyPolicy: { dataType: "string", required: "false" }, dataQuality: { dataType: "JSON", required: "false" }, properties: { dataType: "JSON", required: "false" } }},
+			Relations: {singular: "Relation", entities: ["Object", "Subject", "ObservationGroups"],properties: {role: { dataType: "URI", required: "true" }, descriptiondescription: { dataType: "string", required: "false" }, externalObject: { dataType: "URI", required: "false" }, properties: { dataType: "JSON", required: "false" }},entityRelations: ["Objects", "Subjects"]}
+		};const STAEntitiesArray = Object.keys(STAEntities);
 		const STASpecialQueries = {ObsLayer: {description: "Observations Layer", query: "Observations?$orderby=phenomenonTime%20desc&$expand=Datastream($select=unitOfMeasurement),Datastream/ObservedProperty($select=name,description,definition),FeatureOfInterest($select=description,feature)&$select=phenomenonTime,result"}}
 		const STASpecialQueriesArray = Object.keys(STASpecialQueries);
 		const TableOperations = {Table: {description: "View Table", leafNode: true}, 
