@@ -151,8 +151,14 @@
 
 		function GetSelectedLevelSelectExpandsDialog(dataAttributesArray, selectedExpands, staEntityName, prefix)
 		{
-			var entities=STAEntities[getSTAEntityPlural(staEntityName, true)].entities;
-			var properties=STAEntities[getSTAEntityPlural(staEntityName, true)].properties;
+			var entity= getSTAEntityPlural(staEntityName, true);
+			var entities=STAEntities[entity].entities;
+
+			var properties = [], n= STAEntities[entity].properties.length;
+			for (var p = 0; p < n; p++) {
+				properties.push(STAEntities[entity].properties[p].name)
+			}
+
 
 			if (dataAttributesArray) {
 				for (var a = 0; a < dataAttributesArray.length; a++)
@@ -213,8 +219,14 @@
 		function GetHTMLLevelSelectExpandsDialog(dataAttributesArray, selectedExpands, node, staEntityName, staEntityParentName, prefix, spaces)
 		{
 			var cdns=[];
-			var entities=STAEntities[getSTAEntityPlural(staEntityName, true)].entities;
-			var properties=STAEntities[getSTAEntityPlural(staEntityName, true)].properties;
+
+			var entity= getSTAEntityPlural(staEntityName, true);
+			var entities=STAEntities[entity].entities;
+
+			var properties = [], n= STAEntities[entity].properties.length;
+			for (var p = 0; p < n; p++) {
+				properties.push(STAEntities[entity].properties[p].name)
+			}
 
 			cdns.push(spaces, "Properties (to select):<br>");
 			if (dataAttributesArray) {

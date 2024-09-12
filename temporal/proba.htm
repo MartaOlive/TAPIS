@@ -33,30 +33,33 @@
 		};
 
 
-		ObservedProperties: { 
-			singular: "ObservedProperty", 
-			entities: ["Datastreams", "MultiDatastreams"], 
-			properties: [
-				{ name: "name", dataType: "string", required: "true" }, 
-				{ name: "definition", dataType: "URI", required: "true" },
-				 { name: "description", dataType: "string", required: "true" },
-				  { name: "properties", dataType: "JSON", required: "false" }
-				] },
+		ObservedProperties: {
+			singular: "ObservedProperty",
+				entities: ["Datastreams", "MultiDatastreams"],
+					properties: [
+						{ name: "name", dataType: "string", required: "true" },
+						{ name: "definition", dataType: "URI", required: "true" },
+						{ name: "description", dataType: "string", required: "true" },
+						{ name: "properties", dataType: "JSON", required: "false" }
+					]
+		},
 
 		STAEntities["ObservedProperties"].properties[0].name
 
-		[STAEntities[entityName].properties[propertiesKeys[i]]]
-[STAEntities[entityName].properties[i].name]
+		var properties = [];
+	for (var p = 0; p < STAEntities[lastEntity].properties.length; p++) {
+		properties.push(STAEntities[lastEntity].properties[p].name)
+	}
+		[STAEntities[entityName].properties[i].name]
 
 
-[STAEntities[entityName].properties[propertiesKeys[i]]]
-[STAEntities[entityName].properties[propertiesKeys[i]]]
-[STAEntities[entityName].properties[propertiesKeys[i]]]
-[STAEntities[entityName].properties[propertiesKeys[i]]]
-[STAEntities[entityName].properties[propertiesKeys[i]]]
-[STAEntities[entityName].properties[propertiesKeys[i]]]
-[STAEntities[entityName].properties[propertiesKeys[i]]]
-[STAEntities[entityName].properties[propertiesKeys[i]]]
+
+
+		var entity= getSTAEntityPlural(lastEntity, true);
+	var properties = [], n= STAEntities[entity].properties.length;
+	for (var p = 0; p < n; p++) {
+		properties.push(STAEntities[entity].properties[p].name)
+	}
 
 	</script>
 </body>

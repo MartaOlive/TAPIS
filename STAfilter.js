@@ -551,7 +551,16 @@ function fillPropertySelector(number, lastEntity, selectorInfo) { //lastEntity: 
 	var selectProperty = document.getElementById("selectorProperty_" + number);
 	selectProperty.innerHTML = "";
 
-	var properties = STAEntities[getSTAEntityPlural(lastEntity, true)]["properties"];
+	var entity= getSTAEntityPlural(lastEntity, true);
+	var properties = [], n= STAEntities[entity].properties.length;
+	for (var p = 0; p < n; p++) {
+		properties.push(STAEntities[entity].properties[p].name)
+	}
+
+
+
+
+
 	var option = document.createElement("option"); //First option
 	option.setAttribute("value", " ");
 	option.innerHTML = "--- choose Property ---";
