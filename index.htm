@@ -3327,46 +3327,20 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 			showInfoMessage("Updating  "+ STAEntities[entityName].singular +" "+parentNodes[0].STAURLIdSelected+" ...");
 			
-			for (var i=0; i<STAEntities[entityName].properties.length; i++) {
-				if ((entityName=="Observations" ? 
-				[STAEntities[entityName].properties[i].name]=="parameters" :
-
-				[STAEntities[entityName].properties[i].name]=="properties") 
-				||((entityName=="Datastreams" 
-				|| entityName=="MultiDatastreams") 
-				&& ([STAEntities[entityName].properties[i].name]=="observedArea" 
-				|| [STAEntities[entityName].properties[i].name]=="phenomenonTime" 
-				|| [STAEntities[entityName].properties[i].name]=="resultTime")))
-
-
-					continue;
-				if ((entityName=="Locations" && [STAEntities[entityName].properties[i].name]=="location") || 
-				    (entityName=="FeaturesOfInterest" && [STAEntities[entityName].properties[i].name]=="feature"))
-				{
-					//For the moment in supporting only a point
-					obj[[STAEntities[entityName].properties[i].name]]={"type": "Point", "coordinates": []};
-					obj[[STAEntities[entityName].properties[i].name]].coordinates[0]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+[STAEntities[entityName].properties[i].name]+"_longitude").value);
-					obj[[STAEntities[entityName].properties[i].name]].coordinates[1]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+[STAEntities[entityName].properties[i].name]+"_latitude").value);
-					continue;	
+			var childrenNodes=document.getElementById("dlgCreateUpdateDeleteEntityProperties").childNodes;
+			console.log(childrenNodes)
+			var obj={}, idSplited
+			for (var i=0;i<childrenNodes.length;i++){
+				if (childrenNodes[i].nodeName=="INPUT"){
+					//Està en reqired i al value es blanc? anulaho tot
+					idSplited=childrenNodes[i].id.split("dlgCreateUpdateDeleteEntity_")[1];
+					obj[idSplited]=childrenNodes[i].value;
 				}
-				if (entityName=="Datastreams" && [STAEntities[entityName].properties[i].name]=="unitOfMeasurement")
-				{
-					//Something similar needs to be done for MultiDataStream
-					obj[[STAEntities[entityName].properties[i].name]]={};
-					obj[[STAEntities[entityName].properties[i].name]].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + [STAEntities[entityName].properties[i].name] + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + [STAEntities[entityName].properties[i].name] + "_name").value : null;
-					obj[[STAEntities[entityName].properties[i].name]].symbol=document.getElementById("dlgCreateUpdateDeleteEntity_" + [STAEntities[entityName].properties[i].name] + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + [STAEntities[entityName].properties[i].name] + "_symbol").value : null; 
-					obj[[STAEntities[entityName].properties[i].name]].definition=document.getElementById("dlgCreateUpdateDeleteEntity_" + [STAEntities[entityName].properties[i].name] + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + [STAEntities[entityName].properties[i].name] + "_definition").value : null;
-					continue;
-				}
-				prop=document.getElementById("dlgCreateUpdateDeleteEntity_"+[STAEntities[entityName].properties[i].name]).value;
-				if (prop!=="")
-					obj[[STAEntities[entityName].properties[i].name]]=(entityName=="Observations" && [STAEntities[entityName].properties[i].name]=="result" && !isNaN(prop)) ? parseFloat(prop) : prop;
 			}
 
+			console.log(obj);
 
-
-
-			var response= HTTPJSONData(url,"","PUT", )
+			var response= HTTPJSONData(url,null,"PUT",obj);
 
 
 
