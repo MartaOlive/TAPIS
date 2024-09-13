@@ -163,7 +163,7 @@
 			<div class="center">
 				<button value="default" id="dlgCreateUpdateDeleteEntityCreate" onClick="GetCreateEntity(event)">Create</button>
 				<button value="default" id="dlgCreateUpdateDeleteEntityUpdate" onClick="GetUpdateEntity(event)">Update</button>
-				<button value="default" id="dlgCreateUpdateDeleteEntityDelete" onClick="GetDeleteEntity(event)">Delete</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityDelete" onClick="AskForDeleteEntity(event)">Delete</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
@@ -3320,8 +3320,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		function GetUpdateEntity(event){
 			event.preventDefault(); 
 			document.getElementById("DialogCreateUpdateDeleteEntity").close();
-			var node=currentNode;
-			var parentNodes=GetParentNodes(node);
+			var parentNodes=GetParentNodes(currentNode);
 			var url=parentNodes[0].STAURL;
 			var entityName=getSTAEntityPlural(document.getElementById("dlgCreateUpdateDeleteEntityType").innerHTML)
 			
@@ -3341,11 +3340,39 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			console.log(obj);
 
 			var response= HTTPJSONData(url,null,"PUT",obj);
-
+			
 
 
 		}
-		
+		function AskForDeleteEntity(event){
+			event.preventDefault(); 
+			var parentNodes=GetParentNodes(currentNode);
+			var entityName=getSTAEntityPlural(document.getElementById("dlgCreateUpdateDeleteEntityType").innerHTML);
+			var entityNameSingular= STAEntities[entityName].singular;
+			var id= parentNodes[0].STAURLIdSelected;
+
+			var opcion = confirm("Do you want to erase "+entityNameSingular+" "+parentNodes[0].STAURLIdSelected);
+				if (opcion == true) {
+					GetDeleteEntity(entityName, id)
+					console.log("borrar")
+				} else{
+					console.log("cancelar")
+				}
+		}
+
+
+		function GetDeleteEntity(entityName, id){
+			event.preventDefault(); 
+			console.log("borrant")
+			document.getElementById("DialogCreateUpdateDeleteEntity").close();
+			var parentNodes=GetParentNodes(currentNode);
+			var url=parentNodes[0].STAURL;
+
+			//var response= HTTPJSONData(url,null,"DELETE",null);
+
+			showInfoMessage("Deleting  "+ entityName +" "+id+" ...");
+		}
+
 
 
 
