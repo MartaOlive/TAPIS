@@ -1026,11 +1026,17 @@
 		//If the two nodes cannot connect it returns null. It transforms a plural to singular if needed.
 		function transformToSingularIfNeededSTAEntity(parentEntity, entityName) {
 			//Determinino si ha de ser singular o plural
-			for (var i=0; i<parentEntity.entities.length; i++)
+
+			var n= parentEntity.entities.length, entitiesConnectedArray=[];
+			for (var t=0;t<n;t++){
+				entitiesConnectedArray.push(parentEntity.entities[t].name);
+			}
+
+			for (var i=0; i<entitiesConnectedArray.length; i++)
 			{			
-				if (parentEntity.entities[i]==entityName)
+				if (entitiesConnectedArray[i]==entityName)
 					return entityName;
-				else if (parentEntity.entities[i]==STAEntities[entityName].singular)
+				else if (entitiesConnectedArray[i]==STAEntities[entityName].singular)
 					return STAEntities[entityName].singular;
 			}
 			return null;
@@ -1091,8 +1097,14 @@
 					var entityName=transformToSingularIfNeededSTAEntity(parentEntity, nextEntity)
 					if (entityName)
 						return {entity: entityName};
-					else
-						return {error: "The node connection does not match the STA data model. Use one of the following: " + JSON.stringify(parentEntity.entities)};
+					else{
+						var n= parentEntity.entities.length, entitiesConnectedArray=[];
+						for (var t=0;t<n;t++){
+						entitiesConnectedArray.push(parentEntity.entities[t].name);
+						}
+						return {error: "The node connection does not match the STA data model. Use one of the following: " + JSON.stringify(entitiesConnectedArray)};
+
+					}
 				}
 				else
 				{
@@ -1105,8 +1117,14 @@
 			var entityName=transformToSingularIfNeededSTAEntity(parentEntity, nextEntity);
 			if (entityName)
 				return {entity: entityName};
-			else
-				return {error: "The node connection does not match the STA data model. Use one of the following: " + JSON.stringify(parentEntity.entities)};
+			else{
+				var n= parentEntity.entities.length, entitiesConnectedArray=[];
+						for (var t=0;t<n;t++){
+						entitiesConnectedArray.push(parentEntity.entities[t].name);
+						}
+						return {error: "The node connection does not match the STA data model. Use one of the following: " + JSON.stringify(entitiesConnectedArray)};
+
+			}
 		}
 
 		//Return null if there is no reason (and there is a "fit").
@@ -3111,7 +3129,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						return false;
 					}
 					var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), false);
-					if (parentEntityName!=entityName && STAEntities[entityName].entities.indexOf(parentEntityName)==-1 && STAEntities[entityName].entities.indexOf(STAEntities[parentEntityName].singular)==-1) {
+							
+					var n= STAEntities[entityName].entities.length, entitiesConnectedArray=[];
+					for (var t=0;t<n;t++){
+						entitiesConnectedArray.push(STAEntities[entityName].entities[t].name);
+					}
+					
+					if (parentEntityName!=entityName && entitiesConnectedArray.indexOf(parentEntityName)==-1 && entitiesConnectedArray.indexOf(STAEntities[parentEntityName].singular)==-1) {
 						alert("Parent node ("+STAEntities[parentEntityName].singular+") is not a/an " + STAEntities[entityName].singular + " or is directly related to a/an " +  STAEntities[entityName].singular);
 						return false;
 					}
@@ -3234,9 +3258,15 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 				var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), true);
 				var entity;
-				if (STAEntities[entityName].entities.indexOf(parentEntityName)!=-1)
+
+				var n= STAEntities[entityName].entities.length, entitiesConnectedArray=[];
+					for (var t=0;t<n;t++){
+						entitiesConnectedArray.push(STAEntities[entityName].entities[t].name);
+					}
+
+				if (entitiesConnectedArray.indexOf(parentEntityName)!=-1)
 					entity=parentEntityName;
-				else if (STAEntities[entityName].entities.indexOf(STAEntities[parentEntityName].singular)!=-1)
+				else if (entitiesConnectedArray.indexOf(STAEntities[parentEntityName].singular)!=-1)
 					entity=STAEntities[parentEntityName].singular;
 				else {
 					alert("Parent node ("+STAEntities[parentEntityName].singular+") is not directly related to a/an " +  STAEntities[entityName].singular);
