@@ -735,7 +735,7 @@ function typeOfValueFromInput(wichinputText, value1, value2) {
 			}
 		}
 		if (typeOfValues != "date") {
-			if (isNaN(parseInt(value1)) != true) {
+			if (Number.isNaN(parseInt(value1)) != true) {
 				var newValue = "";
 				for (var a = 0; a < value1.length; a++) {//erase 0 if starts with 0. 
 					if (value1.charAt(a) != 0) {
@@ -784,7 +784,7 @@ function typeOfValueFromInput(wichinputText, value1, value2) {
 			
 		}
 		if (inputText1 != "date") {
-			if (isNaN(parseInt(value1)) != true) { //numero
+			if (Number.isNaN(parseInt(value1)) != true) {  //number
 				var newValue = "";
 				for (var a = 0; a < value1.length; a++) {//erase 0 if starts with 0. 
 					if (value1.charAt(a) != 0) {
@@ -802,7 +802,7 @@ function typeOfValueFromInput(wichinputText, value1, value2) {
 			} else { inputText1 = "text"; }
 		}
 		if (inputText2 != "date") {
-			if (isNaN(parseInt(value2)) != true) { //If first is not a number, let's see second
+			if (Number.isNaN(parseInt(value2)) != true) { //If first is not a number, let's see second
 				var newValue2 = "";
 				for (var a = 0; a < value1.length; a++) {//erase 0 if starts with 0. 
 					if (value1.charAt(a) != 0) {

@@ -546,7 +546,7 @@ function GroupRecordsData(dataSorted, i_ini, i_end, dataAttributesArray, groupBy
 									continue;
 								else if (typeof dataSorted[i][dataAttributesArray[j]] === 'string'){
 									r=parseFloat(dataSorted[i][dataAttributesArray[j]]);
-									if (isNaN(r))
+									if (Number.isNaN(r))
 										continue;
 									values.push(r);
 								}
