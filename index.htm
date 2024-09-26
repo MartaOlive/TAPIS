@@ -6,19 +6,20 @@
 	<title>TAPIS: Tables from APIs for Sensors (Sensor Things API plus Explorer)</title>
 	<link rel="icon" type="image/x-icon" href="favicon.ico">
 	<script type="text/javascript" src="vis.min.js"></script>
-	<script type="text/javascript" src="Chart.bundle.min.js" async defer></script>
-        <script type="text/javascript" src="chartjs-plugin-labels.js" async defer></script>
+	<!-- <script type="text/javascript" src="Chart.bundle.min.js" async defer></script> -->
+    <script type="text/javascript" src="chartjs-plugin-labels.js" async defer></script>
 	<script type="text/javascript" src="papaparse.min.js" async defer></script>
-	<script type="text/javascript" src="hello.all.min.js" async></script>
+	<script type="text/javascript" src="hello.all.min.js"></script>
 	<script type="text/javascript" src="authenix.js" async defer></script>
 	<script type="text/javascript" src="mmn_postmessage.js" async defer></script>
 	<script type="text/javascript" src="guf.js" async defer></script>
-	<script type="text/javascript" src="xml2json.js"></script>
+	<script type="text/javascript" src="xml2json.js" async defer></script>
 	<script type="text/javascript" src="data_tables.js"></script>
 	<script type="text/javascript" src="STAselectExpand.js"></script>
 	<script type="text/javascript" src="selectColumnsDlg.js"></script>
 	<script type="text/javascript" src="groupByDlg.js"></script>
 	<script type="text/javascript" src="STAfilter.js"></script>
+	<script type="text/javascript" src="diagrams.js"></script>
 
 	<link rel="stylesheet" href="tapis.css">
 	<link rel="stylesheet" href="vis.min.css">
@@ -791,6 +792,25 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogGUF">
+		<form>
+			Geospatial user feedback
+			<fieldset>
+				<legend>Target:</legend>
+				<label>Title <small>(mandatory to add)</small>: <input type="text" id="DialogGUFTitleInput"></input></label><br>
+				<label>Code*: <input type="text" id="DialogGUFCodeInput"></input></label><br>
+				<label>Codespace*: <input type="text" id="DialogGUFCodespaceInput"></input></label>
+			</fieldset>
+			<br>
+			<div class="center">
+				<button value="add" onClick="AddGUF(event)">Add feedback</button>
+				<button value="edit" onClick='EditGUF(event)'>Edit previous feedback</button>
+				<button value="ok" formmethod="dialog" onClick="ShowGUF(event)">Get feedback</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
 	<dialog id="DialogScatterPlot">
 		<table border="0"><tr><td>
 			<span id="DialogScatterPlotTitle"></span>
@@ -859,6 +879,33 @@
 		</td>
 		<td><div id="DialogBarPlotVisualization" style="width:600px; height:500px;">
 				<canvas id="DialogBarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas></div></td>
+		</tr></table>
+	</dialog>
+
+	<dialog id="DialogImageViewer">
+		<table border="0"><tr><td>
+			<span id="DialogImageViewerTitle"></span>
+			<form>
+			<fieldset>
+    				<legend>Image Sources:</legend>
+				<label>Image URL:
+					<span id="DialogImageViewerURL"></span>
+				</label>
+				<label>Label:
+					<span id="DialogImageViewerLabel"></span>
+				</label>
+			</fieldset>
+			<label>Image size (px):
+				<input type="text" id="DialogImageViewerSizeInput" value="200"></input>
+			</label>
+			<br>
+			<div class="center">
+				<button value="draw" onClick="DrawImageViewer(event)">Draw</button>
+				<button value="ok" onClick="CloseDialogImageViewer(event)" formmethod="dialog">Close</button>
+			</div>
+			</form>
+		</td></tr>
+		<tr><td><div id="DialogImageViewerVisualization" style="width:700px; height:550px;"></div></td>
 		</tr></table>
 	</dialog>
 
@@ -1076,11 +1123,13 @@
 					SeparateColumns: {description: "Separate Columns"},
 					ScatterPlot: {description: "Scatter Plot", leafNode: true},
 					BarPlot: {description: "Bar Plot", leafNode: true},
+					ImageViewer: {description: "Image Viewer", leafNode: true},
 					OneValueSTA: {description: "One Value", leafNode: true},
 					CountResultsSTA: { description: "Count results", leafNode: true },
 					SaveTable: {description: "Save Table", leafNode: true},
 					SaveLayer: {description: "Save Layer", leafNode: true},
-					OpenMap: {description: "Open Map", leafNode: true}};
+					OpenMap: {description: "Open Map", leafNode: true},
+					guf: {description: "Feedback", leafNode: true}};
 
 		const TableOperationsArray = Object.keys(TableOperations);
 
@@ -1723,6 +1772,64 @@
 			return simpleUrlRecords; 
 		}
 
+		async function getSimplifyGUFRecord(metadatas){
+			var simpleUrlRecords=[], id, title;
+			for (var i=0; i<metadatas.length; i++)
+			{
+				var metadata=metadatas[i];
+				if (!metadata)
+					continue;
+				simpleUrlRecords.push({
+					id: metadata['id'],
+					title: metadata['title'],
+					updated: metadata['updated']});
+				var response=await HTTPJSONData(metadata['link']['@href']);
+				var wpsexecute=(response && response.text) ? response.text : null;
+				if (!wpsexecute) {
+					showInfoMessage("Error retrieving "+metadata['link']['@href']);
+					return;
+				}
+				var wpsex=JSON.parse(xml2json(parseXml(wpsexecute), false, null));
+				if (!wpsex || !wpsex['wps:ExecuteResponse'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'].length) {
+					showInfoMessage("Error retrieving "+metadata['link']['@href']);
+					return;
+				}
+				var outp=wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'][wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'].length-1]
+				if (!outp || !outp['wps:Data'] || !outp['wps:Data']['wps:ComplexData'] || !outp['wps:Data']['wps:ComplexData']['guf:GUF_FeedbackItem']) {
+					showInfoMessage("Error retrieving "+metadata['link']['@href']);
+					return;
+				}
+				var feedbackItem=outp['wps:Data']['wps:ComplexData']['guf:GUF_FeedbackItem'];
+				if (!feedbackItem['guf:abstract'] || !feedbackItem['guf:abstract']['gco:CharacterString'])
+					continue;
+				simpleUrlRecords[simpleUrlRecords.length-1].abstract=feedbackItem['guf:abstract']['gco:CharacterString'];
+				if (!feedbackItem['guf:contact'] || 
+				    !feedbackItem['guf:contact']['guf:GUF_UserInformation'] || 
+				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails'] || 
+				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual'] || 
+				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier'] || 
+				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier'] ||
+				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier']['mcc:description'] ||
+				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier']['mcc:description']['gco:CharacterString'])
+					continue;
+				simpleUrlRecords[simpleUrlRecords.length-1].owner=feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier']['mcc:description']['gco:CharacterString']
+				if (!feedbackItem['guf:rating'] || 
+				    !feedbackItem['guf:rating']['guf:GUF_Rating'] || 
+				    !feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating'] || 
+				    !feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating']['guf:GUF_RatingCode'] || 
+				    !feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating']['guf:GUF_RatingCode']['@codeListValue'])
+					continue;
+				simpleUrlRecords[simpleUrlRecords.length-1].rating=feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating']['guf:GUF_RatingCode']['@codeListValue'];
+				if (!feedbackItem['guf:userComment'] || 
+				    !feedbackItem['guf:userComment']['guf:GUF_UserComment'] || 
+				    !feedbackItem['guf:userComment']['guf:GUF_UserComment']['guf:comment'] || 
+				    !feedbackItem['guf:userComment']['guf:GUF_UserComment']['guf:comment']['gco:CharacterString']) 
+					continue;
+				simpleUrlRecords[simpleUrlRecords.length-1].comment=feedbackItem['guf:userComment']['guf:GUF_UserComment']['guf:comment']['gco:CharacterString'];
+			}
+			return simpleUrlRecords; 
+		}
+
 		function standardStatusText(status){
 			switch (status){
 				case 400:
@@ -1837,7 +1944,7 @@
 				else if (typeof node.STAExpectedLength==="undefined")
 					url_fetch=node.STAURL;
 				else
-					url_fetch=AddQueryParamsToURL(node.STAURL, ((node.OGCType == "OGCAPIcollections" || node.OGCType == "OGCAPIitems") ? "limit=" : "$top=") + node.STAExpectedLength);
+					url_fetch=AddQueryParamsToURL(node.STAURL, ((node.OGCType == "OGCAPIcollections" || node.OGCType == "OGCAPIitems") ? "limit=" : ((node.OGCType == "GUF") ? "COUNT=" : "$top=")) + node.STAExpectedLength);
 
 				AddHeadersIfNeeded(options);
 
@@ -1862,7 +1969,7 @@
 				return;
 			}
 			try {
-				if (node.OGCType=="OGCCSW")
+				if (node.OGCType=="OGCCSW" || node.OGCType=="GUF")
 				        jsonData = JSON.parse(xml2json(parseXml(await response.text()), false, null));
 				else
 					jsonData = await response.json();
@@ -1889,6 +1996,8 @@
 					node.STAdata = node.STAdata.concat(TransformGeoJSONToTable(jsonData));
 				else if (node.OGCType=="OGCCSW")
 					node.STAdata = node.STAdata.concat(getSimplifyOGCCSWRecord(jsonData['csw:GetRecordsResponse']['csw:SearchResults']['gmd:MD_Metadata']));
+				else if (node.OGCType=="GUF")
+					node.STAdata = node.STAdata.concat(await getSimplifyGUFRecord(jsonData['feed']['entry']));
 				else
 					node.STAdata = node.STAdata.concat(jsonData.value);
 					
@@ -1907,6 +2016,8 @@
 					//nextLink?
 				} else if (node.OGCType=="OGCCSW") {
 					node.STAdata = getSimplifyOGCCSWRecord(jsonData['csw:GetRecordsResponse']['csw:SearchResults']['gmd:MD_Metadata']);
+				} else if (node.OGCType=="GUF") {
+					node.STAdata = await getSimplifyGUFRecord(jsonData['feed']['entry']);
 				} else {
 					node.STAdata = (typeof jsonData.value!=="undefined") ? jsonData.value : [jsonData];
 					nextLink = jsonData["@iot.nextLink"];
@@ -2477,63 +2588,6 @@
 			return selectedOptions;
 		}
 
-		function ShowScatterPlotDialog(parentNodes) {
-			var data = parentNodes[0].STAdata;
-			if (!data || !data.length) {
-				document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
-				return;
-			}
-			document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
-
-			var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
-			PopulateSelectSaveLayerDialog("DialogScatterPlotAxisX", dataAttributes, "phenomenonTime");
-			PopulateSelectSaveLayerDialog("DialogScatterPlotAxisY", dataAttributes, "result");
-
-			if (parentNodes.length<2)
-			{
-				document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
-				return;
-			}
-			document.getElementById("DialogScatterPlotVariableUoM").style.display = "inline-block"
-
-			data = parentNodes[1].STAdata;
-			if (!data || data.length!=1) {
-				document.getElementById("DialogScatterPlotTitle").innerHTML = "Second connection should only have one item. Continuing without title.";
-				document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
-				return;
-			}
-			var dataAttributes = parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(data);
-			PopulateSelectSaveLayerDialog("DialogScatterPlotVariable", dataAttributes, "name");
-			PopulateSelectSaveLayerDialog("DialogScatterPlotUoM", dataAttributes, "unitOfMeasurement/symbol");
-		}
-
-		function ShowBarPlotDialog(parentNodes) {
-			var data = parentNodes[0].STAdata;
-			if (!data || !data.length) {
-				document.getElementById("DialogBarPlotTitle").innerHTML = "No data to show.";
-				return;
-			}
-			document.getElementById("DialogBarPlotTitle").innerHTML = "Bar Plot";
-
-			var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
-			PopulateSelectSaveLayerDialog("DialogBarPlotAxisX", dataAttributes, "phenomenonTime");
-			PopulateSelectSaveLayerDialog("DialogBarPlotAxisY", dataAttributes, "result");
-
-
-			if (parentNodes.length<2){
-				document.getElementById("DialogBarPlotVariable").innerHTML='<input id="DialogBarPlotVariableInput" value="">';
-				return;
-			}
-
-			data = parentNodes[1].STAdata;
-			if (!data || data.length!=1) {
-				document.getElementById("DialogBarPlotTitle").innerHTML = "Second connection should only have one item. Continuing without title.";
-				return;
-			}
-
-			var dataAttributes = parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(data);
-			PopulateSelectSaveLayerDialog("DialogBarPlotVariable", dataAttributes, "name");
-		}
 
 		function UpdateJoinTablesRowMatchingNode(node) {
 			node.STAJoinTables.RowMatching=[];
@@ -2616,222 +2670,6 @@
 			AddJoinTablesRowMatching(parentNodes[0], parentNodes[1], node, false);
 		}
 
-		function AdaptValueAxisY(value) {
-			return ''+value.toPrecision(5);
-		}
-
-		var ScatterPlotGraph2d=null;
-		function DrawScatterPlot(event){
-			event.preventDefault(); // We don't want to submit this form
-			var selectedOptions={};
-			selectedOptions.AxisX=document.getElementById("DialogScatterPlotAxisXSelect").value;
-			selectedOptions.AxisY=document.getElementById("DialogScatterPlotAxisYSelect").value;
-			if (document.getElementById("DialogScatterPlotVariableUoM").style.display!="none")
-			{
-				selectedOptions.Variable=document.getElementById("DialogScatterPlotVariableSelect").value;
-				selectedOptions.UoM=document.getElementById("DialogScatterPlotUoMSelect").value;
-			}
-
-			var nodes=GetParentNodes(currentNode);
-			if (nodes && nodes.length) {
-				var node=nodes[0];
-				var data, dataAttributes, record;
-				if (node.STAdata) {
-					var items=[], minx, maxx, miny, maxy;
-					data=node.STAdata;
-					dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
-
-					if (ScatterPlotGraph2d)
-						ScatterPlotGraph2d.destroy();
-					for (var i = 0; i < data.length; i++) {
-						record=data[i];
-						if (i==0){
-							minx=maxx=record[selectedOptions.AxisX];
-							miny=maxy=record[selectedOptions.AxisY];
-						} else {
-							if (minx>record[selectedOptions.AxisX])
-								minx=record[selectedOptions.AxisX];
-							if (maxx<record[selectedOptions.AxisX])
-								maxx=record[selectedOptions.AxisX];
-							if (miny>record[selectedOptions.AxisY])
-								miny=record[selectedOptions.AxisY];
-							if (maxy<record[selectedOptions.AxisY])
-								maxy=record[selectedOptions.AxisY];
-						}
-						items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: 0})
-					}
-					var dataset = new vis.DataSet(items);
-					var groups = new vis.DataSet();
-					var options = {
-						dataAxis: {left: {range: {min:miny-(maxy-miny)*0.025, max:maxy+(maxy-miny)*0.025}, title: {text: "Values"}, format: AdaptValueAxisY}},
-						drawPoints: {size: 1},
-						legend: {left:{position:"bottom-left"}},
-						start: minx,
-						end: maxx
-					};
-					var title="Results";
-
-					if (nodes.length>1 && nodes[1].STAURL) {
-						node=nodes[1];
-						data=node.STAdata;
-						if (data.length)
-							record=data[0];
-						if (record[selectedOptions.Variable])
-							title=record[selectedOptions.Variable];
-						if (record[selectedOptions.UoM])
-							title+=" (" + record[selectedOptions.UoM] + ")";
-					}
-					groups.add({
-						id: 0,
-						content: title,
-						interpolation: {
-							parametrization: 'chordal'
-						}
-					});
-					ScatterPlotGraph2d = new vis.Graph2d(document.getElementById('DialogScatterPlotVisualization'), dataset, groups, options);
-				}
-			}
-		}
-
-		function CloseDialogScatterPlot(event) {
-			event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogScatterPlot").close();
-		}
-
-const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df8a","#d62728","#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2","#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"];
-
-		var BarPlotGraph2d=null;
-		function DrawBarPlot(event){
-			event.preventDefault(); // We don't want to submit this form
-			var selectedOptions={};
-			selectedOptions.AxisX=document.getElementById("DialogBarPlotAxisXSelect").value;
-			selectedOptions.AxisY=document.getElementById("DialogBarPlotAxisYSelect").value;
-
-			var nodes=GetParentNodes(currentNode);
-			if (nodes && nodes.length) {
-				var node=nodes[0];
-				var data, dataAttributes, record;
-				if (node.STAdata) {
-					var labels=[], dataY=[], backgroundColor=[], labelY="Magnitude", plotType, scales, legend, plugins;
-					data=node.STAdata;
-					dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
-
-					for (var i = 0; i < data.length; i++) {
-						record=data[i];
-						labels.push(record[selectedOptions.AxisX]);
-						dataY.push(record[selectedOptions.AxisY]);
-						backgroundColor.push(ColorsForBarPlot[i%ColorsForBarPlot.length]);
-					}
-					if (document.getElementById("DialogBarPlotVariableSelect"))
-						labelY=document.getElementById("DialogBarPlotVariableSelect").value;
-					else if (document.getElementById("DialogBarPlotVariableInput") && document.getElementById("DialogBarPlotVariableInput").value)
-						labelY=document.getElementById("DialogBarPlotVariableInput").value;
-					else if (dataAttributes[selectedOptions.AxisY].description) {
-						labelY=dataAttributes[selectedOptions.AxisY].description;
-						if (dataAttributes[selectedOptions.AxisY].UoMSymbol)
-							labelY+=" (" + dataAttributes[selectedOptions.AxisY].UoMSymbol + ")";
-						else if (dataAttributes[selectedOptions.AxisY].UoM)
-							labelY+=" (" + dataAttributes[selectedOptions.AxisY].UoM + ")";
-					}
-					if (document.getElementById("DialogBarPlotTypePie").checked) {
-						plotType="pie";
-						scales=null;
-						legend={
-							position: "right",
-							labels: {
-								fontSize: 10,
-								padding: 3
-							}
-						};
-						plugins={
-							labels: {
-								render: 'value',
-								precision: 0,
-								showZero: true,
-								fontSize: 12,
-								fontColor: '#fff',
-								fontStyle: 'normal',
-								fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-								textShadow: true,
-								shadowOffsetX: -5,
-								shadowOffsetY: 5,
-								shadowColor: 'rgba(255,0,0,0.75)',
-								arc: true,
-								position: 'default',
-								overlap: true,
-								showActualPercentages: true,
-								images: [{
-								  src: 'image.png',
-								  width: 16,
-								  height: 16
-								}],
-								outsidePadding: 4,
-								textMargin: 4
-							}
-						};
-					} else {
-						plotType="bar";
-						scales={
-							xAxes: [{
-								scaleLabel: {display: true, labelString: dataAttributes[selectedOptions.AxisX].description ? dataAttributes[selectedOptions.AxisX].description : selectedOptions.AxisX},
-								categoryPercentage: 1,
-								barPercentage: 1,
-								gridLines: { display: false},
-								ticks: { autoSkip: false /*, maxRotation: 0 */}
-							}],
-							yAxes: [{
-								//type: "logarithmic",
-								scaleLabel: {display: true, labelString: labelY},
-							ticks: { beginAtZero:true }
-							}]
-						};
-						legend={
-							display: false
-						};
-						plugins={
-							labels: {
-								render: 'value',
-								precision: 0,
-								showZero: true,
-								fontSize: 12,
-								fontStyle: 'normal',
-								fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-								position: 'default',
-								overlap: true,
-								showActualPercentages: false,
-								outsidePadding: 4,
-								textMargin: 4
-							}
-						};
-					}
-					if (BarPlotGraph2d)
-						BarPlotGraph2d.destroy();
-					BarPlotGraph2d = new Chart(document.getElementById('DialogBarPlotVisualizationCanvas'), {
-								type: plotType,
-								data: {
-									labels: labels,
-									datasets: [{
-										data: dataY,
-										backgroundColor: backgroundColor,
-										borderWidth: 0
-									}]
-								},
-								options: {	
-									legend: legend,
-									scales: scales,
-									plugins: plugins,
-									maintainAspectRatio: false,
-									resizeDelay: 100
-								}
-							});
-				}
-			}
-		}
-
-		function CloseDialogBarPlot(event) {
-			event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogBarPlot").close();
-		}
 
 		function ShowOneValueDialog(currentNode) {
 			var parentNode=GetFirstParentNode(currentNode);
@@ -3333,7 +3171,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		}
 
 		function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
-			var cdns=[];
+			var cdns=[], entitiesParentArray=[];
 
 			var parentNodes=GetParentNodes(currentNode);
 			if (parentNodes.length==0) {
@@ -3370,24 +3208,49 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							alert("Cannot find @iot.id. Did you removed in a select?");
 							return false;
 						}
+						//Update or delete
 						cdns.push('Id: <input id="dlgCreateUpdateDeleteEntity_id" style="background-color:#D8DFD6" type="text" value="', record["@iot.id"], '" readonly=="readonly"><br>'); //update/delete
 					}
-					else { 
+					else { //CREATE
 						var record=parentNode.STAdata[0]; //Info from parentNode used to complete in update
 						if (!record["@iot.id"]){
 							alert("Cannot find @iot.id in parent node " + STAEntities[parentEntityName].singular + ". Did you removed in a select?");
 							return false;
 						}
 						//ENTITIES PARENTNODE
-						cdns.push(STAEntities[parentEntityName].singular, ' id: <a href="', getUrlToId(getSTAURLRoot(parentNodes[0].STAURL), parentEntityName, record["@iot.id"]), '" target="_blank">', record["@iot.id"], '</a><br>');
+						//cdns.push(STAEntities[parentEntityName].singular, ' id: <a href="', getUrlToId(getSTAURLRoot(parentNodes[0].STAURL), parentEntityName, record["@iot.id"]), '" target="_blank">', record["@iot.id"], '</a><br>');
 						
 						//entitat: STAEntities[parentEntityName].singular //dins del if : var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), false);
 						//"id"
 						//url:  <a href="' getUrlToId(getSTAURLRoot(parentNodes[0].STAURL), parentEntityName, record["@iot.id"]) ' --> EL STAURL pot tenir altres coses
 						//" target="_blank" --> Pàgina nova
 						//record["@iot.id"] -->està aqui dins (record=parentNode.STAdata[0];)
+						var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,record["@iot.id"])
+						entitiesParentArray.push([STAEntities[parentEntityName].singular,record["@iot.id"],url]); //EntityName,id.url
+
+						if (i==parentNodes.length-1){ //Ultim
+							var entitiesLinked= STAEntities[parentEntityName].entities,n=STAEntities[parentEntityName].entities.length, entitiesRequired=[],entitiesNotRequired=[];
+							entitiesRequired.push('<span style="font-weight:bold">Entities required</span>');
+							entitiesNotRequired.push('<span style="font-weight:bold">Entities not required</span>');
+
+							`<span>${entitiesParentArray[e][0]}: <a> href="${entitiesParentArray[e][2]}"> ${entitiesParentArray[e][1]}</a><br>)`
+							`<span>${entitiesParentArray[e][0]}: none <br>)`
+							for (var e=0;e<n;e++) {
+								entitiesLinked[e].name, entitiesLinked[e].reqired("true"/"false")
+								for(var u=0;u<entitiesParentArray;u++){
+
+
+								}
+							}
+							if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'>none</span>");
+							if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='font-style:italic'>none</span>");
+
+							cdns.push(...entitiesRequired,"<br>",...entitiesNotRequired,"<br>"); 
+							//cdns.push(...entitiesNotRequired);
+						}
 					
 					}
+					console.log(entitiesParentArray);
 				}
 			}
 			for (var i=0; i<STAEntities[entityName].properties.length; i++){
@@ -5122,6 +4985,33 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 		}
 
+		function AddGUF(event) {
+			event.preventDefault(); // We don't want to submit this form
+			GUFAfegirFeedbackCapa(document.getElementById("DialogGUFTitleInput").value, document.getElementById("DialogGUFCodeInput").value, document.getElementById("DialogGUFCodespaceInput").value, "eng", "authenix", null)
+		}
+
+		function EditGUF(event) {
+			event.preventDefault(); // We don't want to submit this form
+			GUFOpenNimmbus("eng", "authenix");
+		}
+
+		function ShowGUF(event) {
+			event.preventDefault(); // We don't want to submit this form
+			document.getElementById("DialogGUF").close();
+			
+			var previousSTAURL = currentNode.STAURL;
+
+			currentNode.STAURL = ServerGUF+"?SERVICE=WPS&REQUEST=EXECUTE&IDENTIFIER=NB_RESOURCE:ENUMERATE&LANGUAGE=eng&FORMAT=text/xml&TYPE=FEEDBACK";
+			currentNode.STAURL +="&TRG_TYPE_1=CITATION&TRG_FLD_1=CODE&TRG_VL_1=" + document.getElementById("DialogGUFCodeInput").value + "&TRG_OPR_1=EQ&TRG_NXS_1=AND&TRG_TYPE_2=CITATION&TRG_FLD_2=NAMESPACE&TRG_VL_2=" + document.getElementById("DialogGUFCodespaceInput").value + "&TRG_OPR_2=EQ";			
+
+			currentNode.OGCType = "GUF";
+			
+			networkNodes.update(currentNode);
+
+			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+			LoadJSONNodeSTAData(currentNode);
+		}
+
 		var MiraMonMapBrowserVars={};
 
 		function DisplayMapMMN(){
@@ -5671,6 +5561,14 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						document.getElementById("DialogBarPlot").showModal();
 					}
 				}
+				else if (currentNode.image == "ImageViewer.png") {
+					var parentNodes=GetParentNodes(currentNode);
+					if (parentNodes && parentNodes[0]) {
+						if (parentNodes[0].STAdata)
+							ShowImageViewerDialog(parentNodes);
+						document.getElementById("DialogImageViewer").showModal();
+					}
+				}
 				else if (currentNode.image == "OneValueSTA.png") {
 					ShowOneValueDialog(currentNode);
 					document.getElementById("DialogOneValue").showModal();
@@ -5686,6 +5584,34 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				else if (currentNode.image == "OpenMap.png") {
 					ShowOpenMapDialog(currentNode);
 					document.getElementById("DialogSaveLayer").showModal();
+				}
+				else if (currentNode.image == "guf.png") {
+					var parentNode=GetFirstParentNode(currentNode);
+					if (parentNode) {
+						var data=parentNode.STAdata;
+						if (!data || !data.length) 
+							alert("Parent node has no data loaded. It will be ignored.");
+						else if (data.length>1)
+							alert("Parent node has more than one row. Please select on row first. It will be ignored.");
+						else {
+							var record=data[0];
+							if (!record.dataURL)
+								alert("Parent node has no dataURL column. It will be ignored.");
+							else {
+								document.getElementById("DialogGUFTitleInput").value=record.title;
+								document.getElementById("DialogGUFCodeInput").value=record.dataURL;
+								document.getElementById("DialogGUFCodespaceInput").value="";
+								if (parentNode.STAURL)
+									document.getElementById("DialogGUFCodespaceInput").value=parentNode.STAURL;
+								else {
+									var grandParentNode=GetFirstParentNode(parentNode);
+									if (grandparentNode && grandParentNode.STAURL)
+										document.getElementById("DialogGUFCodespaceInput").value=grandParentNode.STAURL;
+								}
+							}
+						}
+					}
+					document.getElementById("DialogGUF").showModal();
 				}
 				else if (currentNode.image == "Meaning.png") {
 					ShowMeaningTableDialog(currentNode);
