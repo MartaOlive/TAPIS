@@ -3230,37 +3230,38 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 						if (i==parentNodes.length-1){ //Ultim
 							var entitiesRequired=[],entitiesNotRequired=[];
-							entitiesRequired.push('<span style="font-weight:bold">Entities required</span><br>');
-							entitiesNotRequired.push('<span style="font-weight:bold">Entities not required</span><br>');
+							var currentNodeEntityPlural=getSTAEntityPlural(currentNode.label,false);
+							entitiesRequired.push('<span style="font-weight:bold">Entities</span><br>');
+							//entitiesNotRequired.push('<span style="font-weight:bold">Entities not required</span><br>');
 
 
 								console.log(currentNode.label);
 								console.log(STAEntities[getSTAEntityPlural(currentNode.label,false)].entities);
 
 
-							for (var e=0;e<STAEntities[getSTAEntityPlural(currentNode.label,false)].entities.length;e++) {
+							for (var e=0;e<STAEntities[currentNodeEntityPlural].entities.length;e++) {
 
 								
-								  if (STAEntities[getSTAEntityPlural(currentNode.label,false)].entities[e].required =="true"){
+								  if (STAEntities[currentNodeEntityPlural].entities[e].required =="true"){
 								  	for(var u=0;u<entitiesParentArray.length;u++){ 
 										
-								 		if (getSTAEntityPlural(STAEntities[getSTAEntityPlural(currentNode.label,false)].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode 
-								 			entitiesRequired.push(`<span>${entitiesParentArray[u][0]}:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+								 		if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode 
+								 			entitiesRequired.push(`<span>${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
 												break;
 								 		}else{
 								 			if (u==entitiesParentArray.length-1){ //If there is not any 
-												entitiesRequired.push(`<span>${STAEntities[parentEntityName].entities[e].name}: none</span> <br>`);
+												entitiesRequired.push(`<span>${STAEntities[currentNodeEntityPlural].entities[e].name}*: none</span> <br>`);
 											}
 								 		}
 								 	}
 								}else{
 								 	for(var u=0;u<entitiesParentArray.length;u++){ 
-								 		if (getSTAEntityPlural(STAEntities[getSTAEntityPlural(currentNode.label,false)].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode
+								 		if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode
 								 			entitiesNotRequired.push(`<span>${entitiesParentArray[u][0]}: <a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
 												break;
 								 			}else{
 												if (u==entitiesParentArray.length-1){
-								 			entitiesNotRequired.push(`<span>${STAEntities[parentEntityName].entities[e].name}: none</span><br>`);
+								 			entitiesNotRequired.push(`<span>${STAEntities[currentNodeEntityPlural].entities[e].name}: none</span><br>`);
 											}
 								 		}
 								 	}
@@ -3275,7 +3276,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'>none</span>");
 			if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='font-style:italic'>none</span>");
 
-			cdns.push(...entitiesRequired,"<br>",...entitiesNotRequired,"<br>"); 
+			cdns.push(...entitiesRequired,...entitiesNotRequired,"<br>"); 
+			cdns.push('<span style="font-weight:bold">Properties</span><br>'); 
 
 
 			for (var i=0; i<STAEntities[entityName].properties.length; i++){
