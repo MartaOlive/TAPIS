@@ -3229,30 +3229,55 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						entitiesParentArray.push([STAEntities[parentEntityName].singular,record["@iot.id"],url]); //EntityName,id.url
 
 						if (i==parentNodes.length-1){ //Ultim
-							var entitiesLinked= STAEntities[parentEntityName].entities,n=STAEntities[parentEntityName].entities.length, entitiesRequired=[],entitiesNotRequired=[];
-							entitiesRequired.push('<span style="font-weight:bold">Entities required</span>');
-							entitiesNotRequired.push('<span style="font-weight:bold">Entities not required</span>');
-
-							`<span>${entitiesParentArray[e][0]}: <a> href="${entitiesParentArray[e][2]}"> ${entitiesParentArray[e][1]}</a><br>)`
-							`<span>${entitiesParentArray[e][0]}: none <br>)`
-							for (var e=0;e<n;e++) {
-								entitiesLinked[e].name, entitiesLinked[e].reqired("true"/"false")
-								for(var u=0;u<entitiesParentArray;u++){
+							var entitiesRequired=[],entitiesNotRequired=[];
+							entitiesRequired.push('<span style="font-weight:bold">Entities required</span><br>');
+							entitiesNotRequired.push('<span style="font-weight:bold">Entities not required</span><br>');
 
 
+								console.log(currentNode.label);
+								console.log(STAEntities[getSTAEntityPlural(currentNode.label,false)].entities);
+
+
+							for (var e=0;e<STAEntities[getSTAEntityPlural(currentNode.label,false)].entities.length;e++) {
+
+								
+								  if (STAEntities[getSTAEntityPlural(currentNode.label,false)].entities[e].required =="true"){
+								  	for(var u=0;u<entitiesParentArray.length;u++){ 
+										
+								 		if (getSTAEntityPlural(STAEntities[getSTAEntityPlural(currentNode.label,false)].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode 
+								 			entitiesRequired.push(`<span>${entitiesParentArray[u][0]}:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+												break;
+								 		}else{
+								 			if (u==entitiesParentArray.length-1){ //If there is not any 
+												entitiesRequired.push(`<span>${STAEntities[parentEntityName].entities[e].name}: none</span> <br>`);
+											}
+								 		}
+								 	}
+								}else{
+								 	for(var u=0;u<entitiesParentArray.length;u++){ 
+								 		if (getSTAEntityPlural(STAEntities[getSTAEntityPlural(currentNode.label,false)].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode
+								 			entitiesNotRequired.push(`<span>${entitiesParentArray[u][0]}: <a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+												break;
+								 			}else{
+												if (u==entitiesParentArray.length-1){
+								 			entitiesNotRequired.push(`<span>${STAEntities[parentEntityName].entities[e].name}: none</span><br>`);
+											}
+								 		}
+								 	}
 								}
 							}
-							if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'>none</span>");
-							if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='font-style:italic'>none</span>");
-
-							cdns.push(...entitiesRequired,"<br>",...entitiesNotRequired,"<br>"); 
-							//cdns.push(...entitiesNotRequired);
 						}
 					
 					}
-					console.log(entitiesParentArray);
 				}
 			}
+
+			if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'>none</span>");
+			if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='font-style:italic'>none</span>");
+
+			cdns.push(...entitiesRequired,"<br>",...entitiesNotRequired,"<br>"); 
+
+
 			for (var i=0; i<STAEntities[entityName].properties.length; i++){
 				if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
 					((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
