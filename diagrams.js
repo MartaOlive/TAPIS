@@ -356,7 +356,7 @@ const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df
 						size=200;
 					}
 				
-					var ncol=Math.floor(700/(size+20));
+					var ncol=Math.floor(900/(size+15));
 					var cdns=[];
 					data=node.STAdata;
 					dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);

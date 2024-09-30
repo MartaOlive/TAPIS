@@ -1,0 +1,49 @@
+{
+	"tableSchema": {
+		"columns": [
+			{
+				"name": "dia",
+				"datatype": "string",
+				"titles": "phenomenonTime",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime"
+			},
+			{
+				"name": "estaci",
+				"datatype": "string",
+				"titles": "Estation Name",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/FeatureOfInterest/name"
+			},
+			{
+				"name": "nivell_absolut",
+				"datatype": "string",
+				"titles": "Lake level",
+				"propertyUrl": "https://hydro.geodab.eu/hydro-ontology/concept/15",
+				"unitMeasureTitles": "Meters",
+				"unitMeasureSymbol": "m",
+				"unitMeasureUrl": "https://qudt.org/vocab/unit/M"
+			},
+			{
+				"name": "percentatge_volum_embassat",
+				"datatype": "string",
+				"titles": "Lake water volume",
+				"propertyUrl": "http://hydro.geodab.eu/hydro-ontology/concept/85",
+				"unitMeasureTitles": "Cubic hectometer",
+				"unitMeasureSymbol": "hm3",
+				"unitMeasureUrl": "http://www.ontology-of-units-of-measure.org/resource/om-2/cubicHectometre"
+			},
+			{
+				"name": "volum_embassat",
+				"datatype": "string",
+				"titles": "Lake water volume",
+				"propertyUrl": "http://hydro.geodab.eu/hydro-ontology/concept/85",
+				"unitMeasureTitles": "Percentage",
+				"unitMeasureSymbol": "%",
+				"unitMeasureUrl": "https://qudt.org/vocab/unit/PERCENT"
+			}
+		]
+	},
+	"dialect": {
+		"header": true,
+		"delimiter": ";"
+	}
+}

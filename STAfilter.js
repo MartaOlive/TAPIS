@@ -784,7 +784,7 @@ function typeOfValueFromInput(wichinputText, value1, value2) {
 			
 		}
 		if (inputText1 != "date") {
-			if (Number.isNaN(parseInt(value1)) != true) {  //number
+			if (Number.isNaN(parseInt(value1)) != true) { //numero
 				var newValue = "";
 				for (var a = 0; a < value1.length; a++) {//erase 0 if starts with 0. 
 					if (value1.charAt(a) != 0) {

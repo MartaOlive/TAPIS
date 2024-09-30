@@ -1,0 +1,73 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "csvw attributes",
+    "description": "Schema for CSVW files that contain Metadata descriptions for Tabular Data in CSV. More details in https://www.w3.org/ns/csvw",
+	"type": "object",
+	"properties": {
+		"tableSchema": {
+			"description": "A single schema description used as the default for all the tables in the group",
+			"type": "object",
+			"required": ["columns"],
+			"properties": {
+				"columns": {
+					"type": "array",
+					"items":{
+						"type": "object",
+						"required": ["name"],
+						"properties": {
+							"name": {
+								"description": "Name for the column. If the CSV has a header, it should be one of the names of the columns in the header row",
+								"type": "string"
+							},
+							"datatype": {
+								"description": "The main datatype of the values of the cell. Use JSON schema types",
+								"enum": [ "string", "boolean", "integer", "number", "object", "array", "null", "undefined"] 
+							},
+							"titles": {
+								"description": "Description of the column. Can be an array but it is not implemented in Tapis",
+								"type": "string"
+							},
+							"propertyUrl": {
+								"description": "URI of the definition of the variable, e.g. QUDT URI",
+								"type": "string",
+								"format": "uri"
+							},
+							"unitMeasureTitles": {
+								"description": "Description of the units of measurement. Extension of the CSVW based on W3C datacubes. Can be an array but it is not implemented in Tapis.",
+								"type": "string"
+							},
+							"unitMeasureSymbol": { 
+								"description": "Simbol of the units of measurement. Extension of the CSVW based on W3C datacubes. ",
+								"type": "string"
+							},
+							"unitMeasureUrl": {
+								"description": "URI of the definition of the units or measurement, e.g. QUDT URI. Extension of the CSVW based on W3C datacubes.",
+								"type": "string",
+								"format": "uri"
+							}
+						}
+					}
+				}
+			},
+			"dialect": { 
+				"description": "Hints to parser the described file",
+				"type": "object",
+				"properties": {
+					"delimiter": {
+						"description": "Sets the delimiter character in a CSV file. Use '\t' if the delimiter is a tab character.",
+						"type": "string"
+					},
+					"header": {
+						"description": "Indicates if the CSV has a header first row, unless headerRowCount is provided, in which case the value provided for the header property is ignored.",
+						"type": "boolean"
+					},
+					"headerRowCount": {
+						"description":  "Number of rows in the csv table that are headers. Not implemented in Tapis",
+						"type": "integer",
+						"minimum": 0
+					}
+				} 
+			}
+		}
+	}
+}

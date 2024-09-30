@@ -219,6 +219,7 @@
 		function GetHTMLLevelSelectExpandsDialog(dataAttributesArray, selectedExpands, node, staEntityName, staEntityParentName, prefix, spaces)
 		{
 			var cdns=[];
+
 			var entity= getSTAEntityPlural(staEntityName, true);
 			var entities=STAEntities[entity].entities;
 
