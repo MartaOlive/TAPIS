@@ -3495,8 +3495,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					obj[idSplited]=childrenNodes[i].value;
 				}
 			}
-
-
 			var response= HTTPJSONData(url,null,"PUT",obj);
 
 			showInfoMessage(STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
@@ -3528,9 +3526,17 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var parentNodes=GetParentNodes(currentNode);
 			var url=parentNodes[0].STAURL;
 
-			//var response= HTTPJSONData(url,null,"DELETE",null);
-
 			showInfoMessage("Deleting  "+ entityName +" "+id+" ...");
+
+			var id = parseInt(document.getElementById("dlgCreateUpdateDeleteEntity_id").value);
+			var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNodes[0].STAURL), false);
+			var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,id);
+
+			var response= HTTPJSONData(url,null,"DELETE",null);
+
+			
+			showInfoMessage(STAEntities[entityName].singular +" "+id+"has been deleted.");
+
 		}
 
 
