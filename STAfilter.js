@@ -572,6 +572,12 @@ function fillPropertySelector(number, lastEntity, selectorInfo) { //lastEntity: 
 	option.setAttribute("value", " ");
 	option.innerHTML = "--- choose Property ---";
 	selectProperty.appendChild(option);
+
+	var option2 = document.createElement("option"); //First option
+	option2.setAttribute("value", "id");
+	option2.innerHTML = "id";
+	selectProperty.appendChild(option2);
+
 	for (var i = 0; i < properties.length; i++) {// to fill property/property
 		if (properties[i] == "unitOfMeasurement") {
 			for (var u = 0; u < unitOfMeasurementExtension.length; u++) {

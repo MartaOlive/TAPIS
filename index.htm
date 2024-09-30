@@ -3276,17 +3276,20 @@ async function requestAndRefreshCountResults(currentNode, period) {
 								 	}
 								}
 							}
+
+							if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'>none</span>");
+							if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='font-style:italic'>none</span>");
+
+							cdns.push(...entitiesRequired,...entitiesNotRequired,"<br>"); 
+							cdns.push('<span style="font-weight:bold">Properties</span><br>');
+
 						}
 					
 					}
 				}
 			}
 
-			if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'>none</span>");
-			if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='font-style:italic'>none</span>");
-
-			cdns.push(...entitiesRequired,...entitiesNotRequired,"<br>"); 
-			cdns.push('<span style="font-weight:bold">Properties</span><br>'); 
+ 
 
 
 			for (var i=0; i<STAEntities[entityName].properties.length; i++){
