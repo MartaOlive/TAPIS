@@ -1,0 +1,2848 @@
+{
+	"nodes": [
+		{
+			"id": "2svm.mpmv24tg",
+			"label": "STA plus",
+			"image": "sta.png",
+			"shape": "circularImage",
+			"STAExpectedLength": 100,
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+			"STAdata": [
+				{
+					"name": "Campaigns",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Campaigns"
+				},
+				{
+					"name": "Datastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams"
+				},
+				{
+					"name": "FeaturesOfInterest",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest"
+				},
+				{
+					"name": "HistoricalLocations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/HistoricalLocations"
+				},
+				{
+					"name": "Licenses",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses"
+				},
+				{
+					"name": "Locations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations"
+				},
+				{
+					"name": "MultiDatastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams"
+				},
+				{
+					"name": "Observations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations"
+				},
+				{
+					"name": "ObservationGroups",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups"
+				},
+				{
+					"name": "ObservedProperties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties"
+				},
+				{
+					"name": "Parties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Parties"
+				},
+				{
+					"name": "Relations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Relations"
+				},
+				{
+					"name": "Sensors",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors"
+				},
+				{
+					"name": "Things",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
+				}
+			],
+			"x": 74,
+			"y": -92
+		},
+		{
+			"id": "4dmr8.5p0kat",
+			"label": "Sensors",
+			"image": "Sensors.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors",
+			"STAExpectedLength": 100,
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(102)",
+					"@iot.id": 102,
+					"name": "DHT22",
+					"description": "A digital temperature and humidity sensor. It uses a capacitive humidity sensor and a thermistor to measure the surrounding air, and spits out a digital signal on the data pin (no analog input pins needed)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 3
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(102)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(102)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(103)",
+					"@iot.id": 103,
+					"name": "DHT22 - Temperature",
+					"description": "Temperature",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 4
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(103)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(103)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(104)",
+					"@iot.id": 104,
+					"name": "DHT22 - Humidity",
+					"description": "Humidity",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 5
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(104)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(104)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(105)",
+					"@iot.id": 105,
+					"name": "PVD-P8001",
+					"description": "LDR Analog Light Sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 6
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(105)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(105)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(106)",
+					"@iot.id": 106,
+					"name": "POM-3044P-R",
+					"description": "Electret microphone with envelope follower sound pressure sensor (noise)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 7
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(106)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(106)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(107)",
+					"@iot.id": 107,
+					"name": "MICS-2710",
+					"description": "MOS NO2 gas sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 8
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(107)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(107)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(108)",
+					"@iot.id": 108,
+					"name": "MICS-5525",
+					"description": "MOS CO gas sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 9
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(108)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(108)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(109)",
+					"@iot.id": 109,
+					"name": "Battery SCK",
+					"description": "Custom Circuit",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 10
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(109)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(109)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(110)",
+					"@iot.id": 110,
+					"name": "Solar Panel",
+					"description": "Custom Circuit",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 11
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(110)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(110)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(111)",
+					"@iot.id": 111,
+					"name": "HPP828E031",
+					"description": "Temperature",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 12
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(111)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(111)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(112)",
+					"@iot.id": 112,
+					"name": "HPP828E031",
+					"description": "Humidity",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 13
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(112)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(112)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(113)",
+					"@iot.id": 113,
+					"name": "BH1730FVC - Light",
+					"description": "Digital Ambient Light Sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 14
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(113)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(113)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(114)",
+					"@iot.id": 114,
+					"name": "MiCS-4514-NO2",
+					"description": "NO2",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 15
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(114)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(114)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(115)",
+					"@iot.id": 115,
+					"name": "MiCS-4514-CO",
+					"description": "CO",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 16
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(115)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(115)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(116)",
+					"@iot.id": 116,
+					"name": "Battery",
+					"description": "Custom Circuit",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 17
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(116)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(116)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(117)",
+					"@iot.id": 117,
+					"name": "Solar Panel",
+					"description": "Custom Circuit",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 18
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(117)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(117)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(118)",
+					"@iot.id": 118,
+					"name": "HPP828E031 (SHT21)",
+					"description": "Digital Temperature and Relative Humidity Sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 19
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(118)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(118)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(119)",
+					"@iot.id": 119,
+					"name": "MiCS4514",
+					"description": "Gas Sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 20
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(119)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(119)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(120)",
+					"@iot.id": 120,
+					"name": "Microchip RN-131",
+					"description": "802.11 b/g WiFi",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 21
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(120)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(120)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(121)",
+					"@iot.id": 121,
+					"name": "NO2 Diffusion Tube",
+					"description": "NO2 Diffusion Tubes (test)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 22
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(121)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(121)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(122)",
+					"@iot.id": 122,
+					"name": "Noise Sensor TA120",
+					"description": "Noise Sensor CESVA TA120",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 23
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(122)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(122)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(123)",
+					"@iot.id": 123,
+					"name": "Street Activity",
+					"description": "Camera Measuring Street Activity with Computer Vision",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 24
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(123)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(123)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(124)",
+					"@iot.id": 124,
+					"name": "AUX Analog",
+					"description": "Grove Analog Sensor (12-bits ADC)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 25
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(124)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(124)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(125)",
+					"@iot.id": 125,
+					"name": "NO2-B43F+ISB",
+					"description": "Alphasense Nitrogen Dioxide with Individual Sensor Board",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 26
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(125)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(125)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(126)",
+					"@iot.id": 126,
+					"name": "NO2-B42F+ISB",
+					"description": "Alphasense Nitrogen Dioxide with Individual Sensor Board",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 27
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(126)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(126)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(127)",
+					"@iot.id": 127,
+					"name": "PPD-42NS",
+					"description": "Shinyei Optical Counter PM Sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 28
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(127)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(127)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(128)",
+					"@iot.id": 128,
+					"name": "MEMS Mic",
+					"description": "MEMS microphone with envelope follower sound pressure sensor (noise)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 29
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(128)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(128)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(129)",
+					"@iot.id": 129,
+					"name": "NO2-B43F+ISB-MAIN",
+					"description": "Alphasense Nitrogen Dioxide main electrode",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 30
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(129)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(129)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(130)",
+					"@iot.id": 130,
+					"name": "NO2-B43F+ISB-AUX",
+					"description": "Alphasense Nitrogen Dioxide auxiliary electrode",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 31
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(130)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(130)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(131)",
+					"@iot.id": 131,
+					"name": "NO2-B43F+ISB-CON",
+					"description": "Alphasense Nitrogen Dioxide post processed concentration",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 32
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(131)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(131)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(132)",
+					"@iot.id": 132,
+					"name": "PPD42NS-2.5-COUNT",
+					"description": "Number Particulate Matter 2.5 micron",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 33
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(132)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(132)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(133)",
+					"@iot.id": 133,
+					"name": "PPD42NS-2.5-CON",
+					"description": "Concentration Particulate Matter 2.5 micron",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 34
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(133)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(133)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(134)",
+					"@iot.id": 134,
+					"name": "PPD42NS-10-COUNT",
+					"description": "Number Particulate Matter 10 micron",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 35
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(134)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(134)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(135)",
+					"@iot.id": 135,
+					"name": "PPD42NS-10-CON",
+					"description": "Concentration Particulate Matter 10 micron",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 36
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(135)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(135)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(136)",
+					"@iot.id": 136,
+					"name": "Camera - Ionizing Radiation",
+					"description": "CMOS camera embedded in Smart phones and laptops measuring ionizing radiation using the GammaSense web app",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 37
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(136)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(136)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(137)",
+					"@iot.id": 137,
+					"name": "Camera - Ionizing Radiation - AVG",
+					"description": "Ionizing Radiation Average",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 38
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(137)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(137)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(138)",
+					"@iot.id": 138,
+					"name": "Camera - Ionizing Radiation - MIN",
+					"description": "Ionizing Radiation Minimum",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 39
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(138)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(138)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(139)",
+					"@iot.id": 139,
+					"name": "Camera - Ionizing Radiation - MAX",
+					"description": "Ionizing Radiation Maximum",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 40
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(139)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(139)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(140)",
+					"@iot.id": 140,
+					"name": "Camera - Ionizing Radiation - BASE",
+					"description": "Ionizing Radiation Baseline",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 41
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(140)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(140)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(141)",
+					"@iot.id": 141,
+					"name": "DS18B20",
+					"description": "Submergible Water Temperature sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 42
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(141)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(141)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(142)",
+					"@iot.id": 142,
+					"name": "AS EZO PH",
+					"description": "Atlas Scientific EZO™ pH",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 43
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(142)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(142)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(143)",
+					"@iot.id": 143,
+					"name": "AS EZO Conductivity",
+					"description": "Atlas Scientific EZO™ Conductivity Probe",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 44
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(143)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(143)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(144)",
+					"@iot.id": 144,
+					"name": "AS EZO Electrical Conductivity",
+					"description": "Atlas Scientific EZO™ Electrical Conductivity",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 45
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(144)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(144)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(145)",
+					"@iot.id": 145,
+					"name": "AS EZO  Specific Gravity ",
+					"description": "Atlas Scientific EZO™ Specific Gravity ",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 46
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(145)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(145)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(146)",
+					"@iot.id": 146,
+					"name": "AS  EZO DO",
+					"description": "Atlas Scientific EZO™ Dissolved Oxygen Probe",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 47
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(146)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(146)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(147)",
+					"@iot.id": 147,
+					"name": "AS  EZO Dissolved Oxygen",
+					"description": "Atlas Scientific EZO™ Dissolved Oxygen",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 48
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(147)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(147)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(148)",
+					"@iot.id": 148,
+					"name": "AS  EZO Oxygen Saturation",
+					"description": "Atlas Scientific EZO™ Oxygen Saturation",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 49
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(148)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(148)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(149)",
+					"@iot.id": 149,
+					"name": "Chirp Capacitive Soil Moisture",
+					"description": "Chirp Capacitive Soil Moisture",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 50
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(149)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(149)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(150)",
+					"@iot.id": 150,
+					"name": "AS EZO RTD",
+					"description": "Atlas Scientific EZO™ Temperature",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 51
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(150)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(150)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(151)",
+					"@iot.id": 151,
+					"name": "ICS43432",
+					"description": "I2S Digital Mems Microphone with custom Audio Processing Algorithm",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 52
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(151)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(151)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(152)",
+					"@iot.id": 152,
+					"name": "ICS43432 - Noise",
+					"description": "I2S Digital Mems Microphone with custom Audio Processing Algorithm",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 53
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(152)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(152)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(153)",
+					"@iot.id": 153,
+					"name": "Sensirion SHT31",
+					"description": "Digital relative humidity and air temperature sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 54
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(153)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(153)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(154)",
+					"@iot.id": 154,
+					"name": "Sensirion SHT31 - Temperature",
+					"description": "Temperature",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 55
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(154)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(154)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(155)",
+					"@iot.id": 155,
+					"name": "Sensirion SHT31 - Humidity",
+					"description": "Humidity",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 56
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(155)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(155)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(156)",
+					"@iot.id": 156,
+					"name": "MPL3115A2",
+					"description": "Digital Barometric Pressure Sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 57
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(156)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(156)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(157)",
+					"@iot.id": 157,
+					"name": "NXP MPL3115A2 - Barometric Pressure",
+					"description": "Digital Barometric Pressure Sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 58
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(157)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(157)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(158)",
+					"@iot.id": 158,
+					"name": "SCK Gases Pro Board",
+					"description": "SCK Gases Pro Board: Alphasense Series B 3 Channel Driver ",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 59
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(158)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(158)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(159)",
+					"@iot.id": 159,
+					"name": "NO2-B43F",
+					"description": "Alphasense Nitrogen Dioxide + Ozone",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 60
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(159)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(159)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(160)",
+					"@iot.id": 160,
+					"name": "NO2-B43F-MAIN",
+					"description": "Alphasense Nitrogen Dioxide + Ozone Main Electrode",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 61
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(160)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(160)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(161)",
+					"@iot.id": 161,
+					"name": "NO2-B43F-AUX",
+					"description": "Alphasense Nitrogen Dioxide + Ozone Aux Electrode",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 62
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(161)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(161)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(162)",
+					"@iot.id": 162,
+					"name": "CO-B4F",
+					"description": "Alphasense Carbon Monoxide + Ozone",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 63
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(162)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(162)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(163)",
+					"@iot.id": 163,
+					"name": "CO-B4F-MAIN",
+					"description": "Alphasense Carbon Monoxide Main",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 64
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(163)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(163)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(164)",
+					"@iot.id": 164,
+					"name": "CO-B4F-AUX",
+					"description": "Alphasense Carbon Monoxide Aux",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 65
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(164)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(164)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(165)",
+					"@iot.id": 165,
+					"name": "OXB431",
+					"description": "Alphasense Ozone",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 66
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(165)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(165)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(166)",
+					"@iot.id": 166,
+					"name": "OXB431-MAIN",
+					"description": "Alphasense Ozone Main",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 67
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(166)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(166)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(167)",
+					"@iot.id": 167,
+					"name": "OXB431-AUX",
+					"description": "Alphasense Ozone Aux",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 68
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(167)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(167)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(168)",
+					"@iot.id": 168,
+					"name": "SCK PM Board",
+					"description": "SCK PM Driver: Dual Platfower PMSX003 driver",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 69
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(168)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(168)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(169)",
+					"@iot.id": 169,
+					"name": "PMS5003_A",
+					"description": "Plantower PMS5003 PM 10/2.5/1 sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 70
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(169)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(169)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(170)",
+					"@iot.id": 170,
+					"name": "PMS5003_A-PM2.5",
+					"description": "Particle Matter (A) 2.5",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 71
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(170)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(170)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(171)",
+					"@iot.id": 171,
+					"name": "PMS5003_A-PM10",
+					"description": "Particle Matter (A)  PM 10",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 72
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(171)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(171)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(172)",
+					"@iot.id": 172,
+					"name": "PMS5003_A-PM1",
+					"description": "Particle Matter (A) PM 1",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 73
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(172)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(172)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(173)",
+					"@iot.id": 173,
+					"name": "PMS5003_B",
+					"description": "Plantower PMS5003 PM 10/2.5/1 sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 74
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(173)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(173)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(174)",
+					"@iot.id": 174,
+					"name": "PMS5003_B-PM2.5",
+					"description": "Particle Matter (B) PM 2.5",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 75
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(174)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(174)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(175)",
+					"@iot.id": 175,
+					"name": "PMS5003_B-PM10",
+					"description": "Particle Matter (B) PM 10",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 76
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(175)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(175)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(176)",
+					"@iot.id": 176,
+					"name": "PMS5003_B-PM1",
+					"description": "Particle Matter (B) PM 1",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 77
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(176)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(176)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(177)",
+					"@iot.id": 177,
+					"name": "Ext SHT31",
+					"description": "External digital relative humidity and air temperature sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 78
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(177)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(177)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(178)",
+					"@iot.id": 178,
+					"name": "Ext SHT31 - Temperature",
+					"description": "Temperature (External)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 79
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(178)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(178)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(179)",
+					"@iot.id": 179,
+					"name": "Ext SHT31 - Humidity",
+					"description": "Humidity (External)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 80
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(179)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(179)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(180)",
+					"@iot.id": 180,
+					"name": "MiCS-4514-NO2-CON",
+					"description": "MICS Nitrogen Dioxide",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 81
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(180)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(180)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(181)",
+					"@iot.id": 181,
+					"name": "MiCS-4514-CO-CON",
+					"description": "MICS Carbon Monoxide",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 82
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(181)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(181)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(182)",
+					"@iot.id": 182,
+					"name": "NO2-B43F-CON",
+					"description": "Alphasense Nitrogen Dioxide",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 83
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(182)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(182)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(183)",
+					"@iot.id": 183,
+					"name": "CO-B4F-CON",
+					"description": "Alphasense Carbon Monoxide",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 84
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(183)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(183)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(184)",
+					"@iot.id": 184,
+					"name": "OXB431-CON",
+					"description": "Alphasense Ozone",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 85
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(184)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(184)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(185)",
+					"@iot.id": 185,
+					"name": "PMS5003_AVG",
+					"description": "PM Board with dual PMS5003 PM 10/2.5/1 sensors",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 86
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(185)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(185)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(186)",
+					"@iot.id": 186,
+					"name": "Plantower PMS5003 - PM2.5",
+					"description": "Particle Matter PM 2.5",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 87
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(186)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(186)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(187)",
+					"@iot.id": 187,
+					"name": "Plantower PMS5003 - PM10",
+					"description": "Particle Matter PM 10",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 88
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(187)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(187)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(188)",
+					"@iot.id": 188,
+					"name": "Plantower PMS5003 - PM1.0",
+					"description": "Particle Matter PM 1",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 89
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(188)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(188)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(189)",
+					"@iot.id": 189,
+					"name": "Ultrasonic Ranger",
+					"description": "Ping Ultrasonic (40KHz) non-contact distance ranger (Ping with Grove connector)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 90
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(189)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(189)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(190)",
+					"@iot.id": 190,
+					"name": "Ultrasonic Ranger - Distance",
+					"description": "Ping Ultrasonic (40KHz) non-contact distance ranger (Ping with Grove connector)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 91
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(190)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(190)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(191)",
+					"@iot.id": 191,
+					"name": "Ultrasonic Ranger - Rising time",
+					"description": "Ping Ultrasonic (40KHz) non-contact distance ranger (Ping with Grove connector)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 92
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(191)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(191)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(192)",
+					"@iot.id": 192,
+					"name": "Ultrasonic Ranger - Decreasing time",
+					"description": "Ping Ultrasonic (40KHz) non-contact distance ranger (Ping with Grove connector)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 93
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(192)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(192)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(193)",
+					"@iot.id": 193,
+					"name": "Ultrasonic Ranger - Stagnating time",
+					"description": "Ping Ultrasonic (40KHz) non-contact distance ranger (Ping with Grove connector)",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 94
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(193)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(193)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(194)",
+					"@iot.id": 194,
+					"name": "TSL2561",
+					"description": "Grove - Digital Light Sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 95
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(194)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(194)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(195)",
+					"@iot.id": 195,
+					"name": "DS18B20",
+					"description": "Temperature sensor",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 96
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(195)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(195)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(196)",
+					"@iot.id": 196,
+					"name": "BAT Charg. Rate",
+					"description": "Battery Charging Rate",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 97
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(196)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(196)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(197)",
+					"@iot.id": 197,
+					"name": "VL6180",
+					"description": "SparkFun ToF Range Finder Sensor ",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 98
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(197)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(197)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(198)",
+					"@iot.id": 198,
+					"name": "PMS5003_A_PN0.3",
+					"description": "Particle Matter (A) PN0.3",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 99
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(198)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(198)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(199)",
+					"@iot.id": 199,
+					"name": "PMS5003_A_PN0.5",
+					"description": "Particle Matter (A) PN0.5",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 100
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(199)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(199)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(200)",
+					"@iot.id": 200,
+					"name": "PMS5003_A_PN1.0",
+					"description": "Particle Matter (A) PN1.0",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 101
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(200)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(200)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(201)",
+					"@iot.id": 201,
+					"name": "PMS5003_A_PN2.5",
+					"description": "Particle Matter (A) PN2.5",
+					"encodingType": "text/html",
+					"metadata": "https://docs.smartcitizen.me/",
+					"properties": {
+						"smartcitizen_sensor_id": 102
+					},
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(201)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(201)/MultiDatastreams"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/description"
+				},
+				"encodingType": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/encodingType"
+				},
+				"metadata": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/metadata"
+				},
+				"properties": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/properties"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/Datastreams@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/MultiDatastreams@iot.navigationLink"
+				}
+			},
+			"x": -36,
+			"y": -44
+		},
+		{
+			"id": "1fnet.83thsf8",
+			"label": "Filter Rows",
+			"image": "FilterRowsSTA.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors?$filter=((id eq 2644))",
+			"STAExpectedLength": "100",
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(2644)",
+					"@iot.id": 2644,
+					"name": "TestSensorChangedWithTapisFilter",
+					"description": "Chalched with tapis using filter",
+					"encodingType": "TestSensor",
+					"metadata": "TestSensor",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(2644)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(2644)/MultiDatastreams"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/description"
+				},
+				"encodingType": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/encodingType"
+				},
+				"metadata": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/metadata"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/Datastreams@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/MultiDatastreams@iot.navigationLink"
+				}
+			},
+			"STAboxNames": [
+				"0_0"
+			],
+			"STAconditionsFilter": [
+				{
+					"property": "<div id='optionsRow_0' style='display: inline-block;'></div>",
+					"number": "0"
+				}
+			],
+			"STAinfoFilter": [
+				[
+					0,
+					"Sensors",
+					[
+						"id"
+					],
+					" = ",
+					"2644",
+					"number"
+				]
+			],
+			"STAelementFilter": {
+				"elems": [
+					0
+				],
+				"nexus": null,
+				"boxName": "0_0"
+			},
+			"STACounter": [
+				0
+			],
+			"STAUrlAPI": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors?$filter=((id eq 2644))",
+			"STAUrlAPICounter": [
+				0
+			],
+			"STAFilterRowEntities": {
+				"optionsRow0": [
+					"Sensors"
+				]
+			},
+			"STAentityValuesForSelect": [
+				"Sensors",
+				[
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(102)",
+						"@iot.id": 102,
+						"name": "DHT22",
+						"description": "A digital temperature and humidity sensor. It uses a capacitive humidity sensor and a thermistor to measure the surrounding air, and spits out a digital signal on the data pin (no analog input pins needed)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 3
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(102)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(102)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(103)",
+						"@iot.id": 103,
+						"name": "DHT22 - Temperature",
+						"description": "Temperature",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 4
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(103)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(103)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(104)",
+						"@iot.id": 104,
+						"name": "DHT22 - Humidity",
+						"description": "Humidity",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 5
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(104)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(104)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(105)",
+						"@iot.id": 105,
+						"name": "PVD-P8001",
+						"description": "LDR Analog Light Sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 6
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(105)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(105)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(106)",
+						"@iot.id": 106,
+						"name": "POM-3044P-R",
+						"description": "Electret microphone with envelope follower sound pressure sensor (noise)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 7
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(106)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(106)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(107)",
+						"@iot.id": 107,
+						"name": "MICS-2710",
+						"description": "MOS NO2 gas sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 8
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(107)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(107)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(108)",
+						"@iot.id": 108,
+						"name": "MICS-5525",
+						"description": "MOS CO gas sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 9
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(108)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(108)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(109)",
+						"@iot.id": 109,
+						"name": "Battery SCK",
+						"description": "Custom Circuit",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 10
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(109)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(109)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(110)",
+						"@iot.id": 110,
+						"name": "Solar Panel",
+						"description": "Custom Circuit",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 11
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(110)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(110)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(111)",
+						"@iot.id": 111,
+						"name": "HPP828E031",
+						"description": "Temperature",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 12
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(111)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(111)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(112)",
+						"@iot.id": 112,
+						"name": "HPP828E031",
+						"description": "Humidity",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 13
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(112)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(112)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(113)",
+						"@iot.id": 113,
+						"name": "BH1730FVC - Light",
+						"description": "Digital Ambient Light Sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 14
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(113)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(113)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(114)",
+						"@iot.id": 114,
+						"name": "MiCS-4514-NO2",
+						"description": "NO2",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 15
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(114)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(114)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(115)",
+						"@iot.id": 115,
+						"name": "MiCS-4514-CO",
+						"description": "CO",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 16
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(115)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(115)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(116)",
+						"@iot.id": 116,
+						"name": "Battery",
+						"description": "Custom Circuit",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 17
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(116)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(116)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(117)",
+						"@iot.id": 117,
+						"name": "Solar Panel",
+						"description": "Custom Circuit",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 18
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(117)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(117)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(118)",
+						"@iot.id": 118,
+						"name": "HPP828E031 (SHT21)",
+						"description": "Digital Temperature and Relative Humidity Sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 19
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(118)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(118)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(119)",
+						"@iot.id": 119,
+						"name": "MiCS4514",
+						"description": "Gas Sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 20
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(119)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(119)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(120)",
+						"@iot.id": 120,
+						"name": "Microchip RN-131",
+						"description": "802.11 b/g WiFi",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 21
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(120)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(120)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(121)",
+						"@iot.id": 121,
+						"name": "NO2 Diffusion Tube",
+						"description": "NO2 Diffusion Tubes (test)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 22
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(121)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(121)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(122)",
+						"@iot.id": 122,
+						"name": "Noise Sensor TA120",
+						"description": "Noise Sensor CESVA TA120",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 23
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(122)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(122)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(123)",
+						"@iot.id": 123,
+						"name": "Street Activity",
+						"description": "Camera Measuring Street Activity with Computer Vision",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 24
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(123)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(123)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(124)",
+						"@iot.id": 124,
+						"name": "AUX Analog",
+						"description": "Grove Analog Sensor (12-bits ADC)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 25
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(124)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(124)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(125)",
+						"@iot.id": 125,
+						"name": "NO2-B43F+ISB",
+						"description": "Alphasense Nitrogen Dioxide with Individual Sensor Board",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 26
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(125)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(125)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(126)",
+						"@iot.id": 126,
+						"name": "NO2-B42F+ISB",
+						"description": "Alphasense Nitrogen Dioxide with Individual Sensor Board",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 27
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(126)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(126)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(127)",
+						"@iot.id": 127,
+						"name": "PPD-42NS",
+						"description": "Shinyei Optical Counter PM Sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 28
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(127)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(127)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(128)",
+						"@iot.id": 128,
+						"name": "MEMS Mic",
+						"description": "MEMS microphone with envelope follower sound pressure sensor (noise)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 29
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(128)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(128)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(129)",
+						"@iot.id": 129,
+						"name": "NO2-B43F+ISB-MAIN",
+						"description": "Alphasense Nitrogen Dioxide main electrode",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 30
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(129)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(129)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(130)",
+						"@iot.id": 130,
+						"name": "NO2-B43F+ISB-AUX",
+						"description": "Alphasense Nitrogen Dioxide auxiliary electrode",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 31
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(130)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(130)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(131)",
+						"@iot.id": 131,
+						"name": "NO2-B43F+ISB-CON",
+						"description": "Alphasense Nitrogen Dioxide post processed concentration",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 32
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(131)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(131)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(132)",
+						"@iot.id": 132,
+						"name": "PPD42NS-2.5-COUNT",
+						"description": "Number Particulate Matter 2.5 micron",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 33
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(132)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(132)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(133)",
+						"@iot.id": 133,
+						"name": "PPD42NS-2.5-CON",
+						"description": "Concentration Particulate Matter 2.5 micron",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 34
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(133)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(133)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(134)",
+						"@iot.id": 134,
+						"name": "PPD42NS-10-COUNT",
+						"description": "Number Particulate Matter 10 micron",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 35
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(134)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(134)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(135)",
+						"@iot.id": 135,
+						"name": "PPD42NS-10-CON",
+						"description": "Concentration Particulate Matter 10 micron",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 36
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(135)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(135)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(136)",
+						"@iot.id": 136,
+						"name": "Camera - Ionizing Radiation",
+						"description": "CMOS camera embedded in Smart phones and laptops measuring ionizing radiation using the GammaSense web app",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 37
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(136)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(136)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(137)",
+						"@iot.id": 137,
+						"name": "Camera - Ionizing Radiation - AVG",
+						"description": "Ionizing Radiation Average",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 38
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(137)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(137)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(138)",
+						"@iot.id": 138,
+						"name": "Camera - Ionizing Radiation - MIN",
+						"description": "Ionizing Radiation Minimum",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 39
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(138)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(138)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(139)",
+						"@iot.id": 139,
+						"name": "Camera - Ionizing Radiation - MAX",
+						"description": "Ionizing Radiation Maximum",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 40
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(139)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(139)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(140)",
+						"@iot.id": 140,
+						"name": "Camera - Ionizing Radiation - BASE",
+						"description": "Ionizing Radiation Baseline",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 41
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(140)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(140)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(141)",
+						"@iot.id": 141,
+						"name": "DS18B20",
+						"description": "Submergible Water Temperature sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 42
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(141)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(141)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(142)",
+						"@iot.id": 142,
+						"name": "AS EZO PH",
+						"description": "Atlas Scientific EZO™ pH",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 43
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(142)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(142)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(143)",
+						"@iot.id": 143,
+						"name": "AS EZO Conductivity",
+						"description": "Atlas Scientific EZO™ Conductivity Probe",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 44
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(143)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(143)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(144)",
+						"@iot.id": 144,
+						"name": "AS EZO Electrical Conductivity",
+						"description": "Atlas Scientific EZO™ Electrical Conductivity",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 45
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(144)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(144)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(145)",
+						"@iot.id": 145,
+						"name": "AS EZO  Specific Gravity ",
+						"description": "Atlas Scientific EZO™ Specific Gravity ",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 46
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(145)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(145)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(146)",
+						"@iot.id": 146,
+						"name": "AS  EZO DO",
+						"description": "Atlas Scientific EZO™ Dissolved Oxygen Probe",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 47
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(146)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(146)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(147)",
+						"@iot.id": 147,
+						"name": "AS  EZO Dissolved Oxygen",
+						"description": "Atlas Scientific EZO™ Dissolved Oxygen",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 48
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(147)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(147)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(148)",
+						"@iot.id": 148,
+						"name": "AS  EZO Oxygen Saturation",
+						"description": "Atlas Scientific EZO™ Oxygen Saturation",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 49
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(148)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(148)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(149)",
+						"@iot.id": 149,
+						"name": "Chirp Capacitive Soil Moisture",
+						"description": "Chirp Capacitive Soil Moisture",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 50
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(149)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(149)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(150)",
+						"@iot.id": 150,
+						"name": "AS EZO RTD",
+						"description": "Atlas Scientific EZO™ Temperature",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 51
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(150)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(150)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(151)",
+						"@iot.id": 151,
+						"name": "ICS43432",
+						"description": "I2S Digital Mems Microphone with custom Audio Processing Algorithm",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 52
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(151)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(151)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(152)",
+						"@iot.id": 152,
+						"name": "ICS43432 - Noise",
+						"description": "I2S Digital Mems Microphone with custom Audio Processing Algorithm",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 53
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(152)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(152)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(153)",
+						"@iot.id": 153,
+						"name": "Sensirion SHT31",
+						"description": "Digital relative humidity and air temperature sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 54
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(153)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(153)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(154)",
+						"@iot.id": 154,
+						"name": "Sensirion SHT31 - Temperature",
+						"description": "Temperature",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 55
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(154)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(154)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(155)",
+						"@iot.id": 155,
+						"name": "Sensirion SHT31 - Humidity",
+						"description": "Humidity",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 56
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(155)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(155)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(156)",
+						"@iot.id": 156,
+						"name": "MPL3115A2",
+						"description": "Digital Barometric Pressure Sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 57
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(156)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(156)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(157)",
+						"@iot.id": 157,
+						"name": "NXP MPL3115A2 - Barometric Pressure",
+						"description": "Digital Barometric Pressure Sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 58
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(157)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(157)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(158)",
+						"@iot.id": 158,
+						"name": "SCK Gases Pro Board",
+						"description": "SCK Gases Pro Board: Alphasense Series B 3 Channel Driver ",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 59
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(158)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(158)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(159)",
+						"@iot.id": 159,
+						"name": "NO2-B43F",
+						"description": "Alphasense Nitrogen Dioxide + Ozone",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 60
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(159)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(159)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(160)",
+						"@iot.id": 160,
+						"name": "NO2-B43F-MAIN",
+						"description": "Alphasense Nitrogen Dioxide + Ozone Main Electrode",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 61
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(160)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(160)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(161)",
+						"@iot.id": 161,
+						"name": "NO2-B43F-AUX",
+						"description": "Alphasense Nitrogen Dioxide + Ozone Aux Electrode",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 62
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(161)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(161)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(162)",
+						"@iot.id": 162,
+						"name": "CO-B4F",
+						"description": "Alphasense Carbon Monoxide + Ozone",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 63
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(162)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(162)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(163)",
+						"@iot.id": 163,
+						"name": "CO-B4F-MAIN",
+						"description": "Alphasense Carbon Monoxide Main",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 64
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(163)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(163)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(164)",
+						"@iot.id": 164,
+						"name": "CO-B4F-AUX",
+						"description": "Alphasense Carbon Monoxide Aux",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 65
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(164)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(164)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(165)",
+						"@iot.id": 165,
+						"name": "OXB431",
+						"description": "Alphasense Ozone",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 66
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(165)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(165)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(166)",
+						"@iot.id": 166,
+						"name": "OXB431-MAIN",
+						"description": "Alphasense Ozone Main",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 67
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(166)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(166)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(167)",
+						"@iot.id": 167,
+						"name": "OXB431-AUX",
+						"description": "Alphasense Ozone Aux",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 68
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(167)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(167)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(168)",
+						"@iot.id": 168,
+						"name": "SCK PM Board",
+						"description": "SCK PM Driver: Dual Platfower PMSX003 driver",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 69
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(168)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(168)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(169)",
+						"@iot.id": 169,
+						"name": "PMS5003_A",
+						"description": "Plantower PMS5003 PM 10/2.5/1 sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 70
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(169)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(169)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(170)",
+						"@iot.id": 170,
+						"name": "PMS5003_A-PM2.5",
+						"description": "Particle Matter (A) 2.5",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 71
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(170)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(170)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(171)",
+						"@iot.id": 171,
+						"name": "PMS5003_A-PM10",
+						"description": "Particle Matter (A)  PM 10",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 72
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(171)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(171)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(172)",
+						"@iot.id": 172,
+						"name": "PMS5003_A-PM1",
+						"description": "Particle Matter (A) PM 1",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 73
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(172)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(172)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(173)",
+						"@iot.id": 173,
+						"name": "PMS5003_B",
+						"description": "Plantower PMS5003 PM 10/2.5/1 sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 74
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(173)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(173)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(174)",
+						"@iot.id": 174,
+						"name": "PMS5003_B-PM2.5",
+						"description": "Particle Matter (B) PM 2.5",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 75
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(174)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(174)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(175)",
+						"@iot.id": 175,
+						"name": "PMS5003_B-PM10",
+						"description": "Particle Matter (B) PM 10",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 76
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(175)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(175)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(176)",
+						"@iot.id": 176,
+						"name": "PMS5003_B-PM1",
+						"description": "Particle Matter (B) PM 1",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 77
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(176)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(176)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(177)",
+						"@iot.id": 177,
+						"name": "Ext SHT31",
+						"description": "External digital relative humidity and air temperature sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 78
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(177)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(177)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(178)",
+						"@iot.id": 178,
+						"name": "Ext SHT31 - Temperature",
+						"description": "Temperature (External)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 79
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(178)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(178)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(179)",
+						"@iot.id": 179,
+						"name": "Ext SHT31 - Humidity",
+						"description": "Humidity (External)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 80
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(179)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(179)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(180)",
+						"@iot.id": 180,
+						"name": "MiCS-4514-NO2-CON",
+						"description": "MICS Nitrogen Dioxide",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 81
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(180)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(180)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(181)",
+						"@iot.id": 181,
+						"name": "MiCS-4514-CO-CON",
+						"description": "MICS Carbon Monoxide",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 82
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(181)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(181)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(182)",
+						"@iot.id": 182,
+						"name": "NO2-B43F-CON",
+						"description": "Alphasense Nitrogen Dioxide",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 83
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(182)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(182)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(183)",
+						"@iot.id": 183,
+						"name": "CO-B4F-CON",
+						"description": "Alphasense Carbon Monoxide",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 84
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(183)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(183)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(184)",
+						"@iot.id": 184,
+						"name": "OXB431-CON",
+						"description": "Alphasense Ozone",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 85
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(184)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(184)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(185)",
+						"@iot.id": 185,
+						"name": "PMS5003_AVG",
+						"description": "PM Board with dual PMS5003 PM 10/2.5/1 sensors",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 86
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(185)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(185)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(186)",
+						"@iot.id": 186,
+						"name": "Plantower PMS5003 - PM2.5",
+						"description": "Particle Matter PM 2.5",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 87
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(186)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(186)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(187)",
+						"@iot.id": 187,
+						"name": "Plantower PMS5003 - PM10",
+						"description": "Particle Matter PM 10",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 88
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(187)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(187)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(188)",
+						"@iot.id": 188,
+						"name": "Plantower PMS5003 - PM1.0",
+						"description": "Particle Matter PM 1",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 89
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(188)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(188)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(189)",
+						"@iot.id": 189,
+						"name": "Ultrasonic Ranger",
+						"description": "Ping Ultrasonic (40KHz) non-contact distance ranger (Ping with Grove connector)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 90
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(189)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(189)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(190)",
+						"@iot.id": 190,
+						"name": "Ultrasonic Ranger - Distance",
+						"description": "Ping Ultrasonic (40KHz) non-contact distance ranger (Ping with Grove connector)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 91
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(190)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(190)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(191)",
+						"@iot.id": 191,
+						"name": "Ultrasonic Ranger - Rising time",
+						"description": "Ping Ultrasonic (40KHz) non-contact distance ranger (Ping with Grove connector)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 92
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(191)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(191)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(192)",
+						"@iot.id": 192,
+						"name": "Ultrasonic Ranger - Decreasing time",
+						"description": "Ping Ultrasonic (40KHz) non-contact distance ranger (Ping with Grove connector)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 93
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(192)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(192)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(193)",
+						"@iot.id": 193,
+						"name": "Ultrasonic Ranger - Stagnating time",
+						"description": "Ping Ultrasonic (40KHz) non-contact distance ranger (Ping with Grove connector)",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 94
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(193)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(193)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(194)",
+						"@iot.id": 194,
+						"name": "TSL2561",
+						"description": "Grove - Digital Light Sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 95
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(194)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(194)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(195)",
+						"@iot.id": 195,
+						"name": "DS18B20",
+						"description": "Temperature sensor",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 96
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(195)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(195)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(196)",
+						"@iot.id": 196,
+						"name": "BAT Charg. Rate",
+						"description": "Battery Charging Rate",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 97
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(196)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(196)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(197)",
+						"@iot.id": 197,
+						"name": "VL6180",
+						"description": "SparkFun ToF Range Finder Sensor ",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 98
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(197)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(197)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(198)",
+						"@iot.id": 198,
+						"name": "PMS5003_A_PN0.3",
+						"description": "Particle Matter (A) PN0.3",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 99
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(198)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(198)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(199)",
+						"@iot.id": 199,
+						"name": "PMS5003_A_PN0.5",
+						"description": "Particle Matter (A) PN0.5",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 100
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(199)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(199)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(200)",
+						"@iot.id": 200,
+						"name": "PMS5003_A_PN1.0",
+						"description": "Particle Matter (A) PN1.0",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 101
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(200)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(200)/MultiDatastreams"
+					},
+					{
+						"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(201)",
+						"@iot.id": 201,
+						"name": "PMS5003_A_PN2.5",
+						"description": "Particle Matter (A) PN2.5",
+						"encodingType": "text/html",
+						"metadata": "https://docs.smartcitizen.me/",
+						"properties": {
+							"smartcitizen_sensor_id": 102
+						},
+						"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(201)/Datastreams",
+						"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(201)/MultiDatastreams"
+					}
+				]
+			],
+			"x": -36,
+			"y": 60
+		},
+		{
+			"id": "4rj44.qk37cm",
+			"label": "Sensor",
+			"image": "Sensor.png",
+			"shape": "circularImage",
+			"x": 78,
+			"y": 108
+		}
+	],
+	"edges": [
+		{
+			"from": "2svm.mpmv24tg",
+			"to": "4dmr8.5p0kat",
+			"arrows": "from"
+		},
+		{
+			"from": "4dmr8.5p0kat",
+			"to": "1fnet.83thsf8",
+			"arrows": "from"
+		},
+		{
+			"from": "1fnet.83thsf8",
+			"to": "4rj44.qk37cm",
+			"arrows": "from"
+		}
+	]
+}
