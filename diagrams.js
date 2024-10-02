@@ -367,7 +367,7 @@ const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df
 						if (i%ncol==0)
 							cdns.push("<tr>");
 						cdns.push('<td style="text-align: center;">');
-						cdns.push('<img src="', record[urlColumn], '" width="', size, '">');
+						cdns.push('<a href="', record[urlColumn], '" target="_blank"><img src="', record[urlColumn], '" width="', size, '"></a>');
 						if (labelColumn)
 							cdns.push('<br><small>', record[labelColumn], '</small>');
 						cdns.push('<td>');

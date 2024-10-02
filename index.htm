@@ -611,6 +611,7 @@
 		<form>
 			<p>
 				<span id="ButtonsContextMenuObjects"></span><br>
+				Node operations:<br>
 				<button onclick='removeCircularImage(event, "DialogContextMenu")'>Remove</button>
 				<button onclick='renameCircularImage(event, "DialogContextMenu")'>Rename</button><br>
 				<button onclick='giveMeNetworkInformation(event, "DialogContextMenu")'>Network Info</button><br><br>
@@ -1122,17 +1123,21 @@
 		const STAEntitiesArray = Object.keys(STAEntities);
 		const STASpecialQueries = {ObsLayer: {description: "Observations Layer", query: "Observations?$orderby=phenomenonTime%20desc&$expand=Datastream($select=unitOfMeasurement),Datastream/ObservedProperty($select=name,description,definition),FeatureOfInterest($select=description,feature)&$select=phenomenonTime,result"}}
 		const STASpecialQueriesArray = Object.keys(STASpecialQueries);
-		const TableOperations = {Table: {description: "View Table", leafNode: true}, 
-					Meaning: {description: "Fields meaning"}, 
-					SelectColumnsSTA: {description: "Select Columns", callSTALoad: true},
+		const STAOperations = {SelectColumnsSTA: {description: "Select Columns", callSTALoad: true},
 					ExpandColumnsSTA: {description: "Expand Columns", callSTALoad: true},
 					SelectRowSTA: {description: "Select Row", callSTALoad: true},
 					FilterRowsSTA: {description: "Filter Rows", callSTALoad: true},
 					GeoFilterRowsSTA: {description: "Geospatial Filter Rows", callSTALoad: true},
 					SortBySTA: {description: "Sort by", callSTALoad: true},
-					ViewQuerySTA: {description: "View Query", leafNode: true},
 					UploadObservations: {description: "Upload in STA", leafNode: true},
 					//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
+					OneValueSTA: {description: "One Value", leafNode: true},
+					CountResultsSTA: { description: "Count results", leafNode: true }};
+		const STAOperationsArray = Object.keys(STAOperations);
+
+		const TableOperations = {Table: {description: "View Table", leafNode: true}, 
+					ViewQuerySTA: {description: "View Query", leafNode: true},
+					Meaning: {description: "Column meaning"}, 
 					SelectColumnsTable: {description: "Select Columns"},
 					SelectRowTable: {description: "Select Row"},
 					JoinTables: {description: "Join Tables"},
@@ -1145,13 +1150,10 @@
 					ScatterPlot: {description: "Scatter Plot", leafNode: true},
 					BarPlot: {description: "Bar Plot", leafNode: true},
 					ImageViewer: {description: "Image Viewer", leafNode: true},
-					OneValueSTA: {description: "One Value", leafNode: true},
-					CountResultsSTA: { description: "Count results", leafNode: true },
 					SaveTable: {description: "Save Table", leafNode: true},
 					SaveLayer: {description: "Save Layer", leafNode: true},
 					OpenMap: {description: "Open Map", leafNode: true},
 					guf: {description: "Feedback", leafNode: true}};
-
 		const TableOperationsArray = Object.keys(TableOperations);
 
 		//If the two nodes cannot connect it returns null. It transforms a plural to singular if needed.
@@ -1254,7 +1256,8 @@
 				return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
 			if (parentNode.image=="sta.png" || parentNode.image=="ogcAPIs.png" || parentNode.image=="csw.png")
 				return null;
-			if (TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true)
+			if ((STAOperations[removeExtension(parentNode.image)] && STAOperations[removeExtension(parentNode.image)].leafNode==true) ||
+			    (TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true))
 				return "Parent node is a leaf node and cannot be connected with any other node";
 			if (node.image=="OneValueSTA.png" && parentNode.image!="Observations.png")
 				return "'One value' node is designed be connected to an 'Observations' node only.";
@@ -1581,6 +1584,11 @@
 				s += "<br>";
 			}
 
+			for (var i = 0; i < STAOperationsArray.length; i++) {
+				if (!document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked || STAOperations[STAOperationsArray[i]].startNode)
+					s += "<button onclick='addCircularImage(null, null, \"" + STAOperations[STAOperationsArray[i]].description + "\", \"" + STAOperationsArray[i] + ".png\");'><img src='" + STAOperationsArray[i] + ".png' height='20' valign='middle'> " + STAOperations[STAOperationsArray[i]].description + "</button> ";
+			}
+			s += "<br>";
 			for (var i = 0; i < TableOperationsArray.length; i++) {
 				if (!document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked || TableOperations[TableOperationsArray[i]].startNode)
 					s += "<button onclick='addCircularImage(null, null, \"" + TableOperations[TableOperationsArray[i]].description + "\", \"" + TableOperationsArray[i] + ".png\");'><img src='" + TableOperationsArray[i] + ".png' height='20' valign='middle'> " + TableOperations[TableOperationsArray[i]].description + "</button> ";
@@ -1593,6 +1601,7 @@
 
 		async function InitSTAPage() {
 			var response=await HTTPJSONData("config.json");
+			const nCol=4;
 			config=(response && response.obj) ? response.obj : null;
 			if (!config)
 			{
@@ -1601,33 +1610,39 @@
 			}
 			
 			PlaceButtonsSTAEntities();
-			var s = "";
+			var s = "Data Inputs:<br>";
 			for (var i = 0; i < ServicesAndAPIsArray.length; i++) {
 				s += "<button onclick='addCircularImage(event, \"DialogContextMenu\", \"" + ServicesAndAPIs[ServicesAndAPIsArray[i]].name + "\", \"" + ServicesAndAPIsArray[i] + ".png\");'><img src='" + ServicesAndAPIsArray[i] + ".png' height='20' valign='middle'> " + ServicesAndAPIs[ServicesAndAPIsArray[i]].description + "</button> ";
-				s += (i+1)%3==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
+				s += (i+1)%nCol==0 || i == ServicesAndAPIsArray.length-1 ? "<br>" : " ";
 			}
-			s += "<br>";
+			s += "<small><br></small>Read STA entities:<br>";
 			for (var i = 0; i < STAEntitiesArray.length; i++) {
 				s += "<button onclick='addCircularImage(event, \"DialogContextMenu\", \"" + STAEntitiesArray[i] + "\", \"" + STAEntitiesArray[i] + ".png\");'><img src='" + STAEntitiesArray[i] + ".png' height='20' valign='middle'> " + STAEntitiesArray[i] + "</button>";
-				s += (i+1)%3==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
+				s += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
 			}
-			s += "<br>";
+			s += "<small><br></small>Create, edit or delete STA entities:<br>";
 			for (var i = 0; i < STAEntitiesArray.length; i++)
 			{
 				s += "<button onclick='addCircularImage(event, \"DialogContextMenu\", \"" + STAEntities[STAEntitiesArray[i]].singular + "\", \"" + STAEntities[STAEntitiesArray[i]].singular + ".png\");'><img src='" + STAEntities[STAEntitiesArray[i]].singular + ".png' height='20' valign='middle'> " + STAEntities[STAEntitiesArray[i]].singular + "</button>";
-				s += (i+1)%3==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
+				s += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
 			}
-			s += "<br>";
+			s += "<small><br></small>Complex queries:<br>";
 			for (var i = 0; i < STASpecialQueriesArray.length; i++)
 			{
 				s += "<button onclick='addCircularImage(event, \"DialogContextMenu\", \"" + STASpecialQueriesArray[i] + "\", \"" + STASpecialQueriesArray[i] + ".png\");'><img src='" + STASpecialQueriesArray[i] + ".png' height='20' valign='middle'> " + STASpecialQueries[STASpecialQueriesArray[i]].description + "</button>";
-				s += (i+1)%3==0 || i == STASpecialQueriesArray.length-1 ? "<br>" : " ";
+				s += (i+1)%nCol==0 || i == STASpecialQueriesArray.length-1 ? "<br>" : " ";
 			}
-			s += "<br>";
+			s += "<small><br></small>STA tools:<br>";
+			for (var i = 0; i < STAOperationsArray.length; i++)
+			{
+				s += "<button onclick='addCircularImage(event, \"DialogContextMenu\", \"" + STAOperations[STAOperationsArray[i]].description + "\", \"" + STAOperationsArray[i] + ".png\");'><img src='" + STAOperationsArray[i] + ".png' height='20' valign='middle'> " + STAOperations[STAOperationsArray[i]].description + "</button>";
+				s += (i+1)%nCol==0 || i == STAOperationsArray.length-1 ? "<br>" : " ";
+			}
+			s += "<small><br></small>Table tools:<br>";
 			for (var i = 0; i < TableOperationsArray.length; i++)
 			{
 				s += "<button onclick='addCircularImage(event, \"DialogContextMenu\", \"" + TableOperations[TableOperationsArray[i]].description + "\", \"" + TableOperationsArray[i] + ".png\");'><img src='" + TableOperationsArray[i] + ".png' height='20' valign='middle'> " + TableOperations[TableOperationsArray[i]].description + "</button>";
-				s += (i+1)%3==0 || i == TableOperationsArray.length-1 ? "<br>" : " ";
+				s += (i+1)%nCol==0 || i == TableOperationsArray.length-1 ? "<br>" : " ";
 			}
 
 			document.getElementById("ButtonsContextMenuObjects").innerHTML = s;
@@ -3535,8 +3550,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			);	
 		}
 
-
-
 		function GetUpdateEntity(event){
 			event.preventDefault(); 
 			document.getElementById("DialogCreateUpdateDeleteEntity").close();
@@ -3920,7 +3933,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					//pensar com es podria fer.
 					showInfoMessage("Automatic update of SelectColumns not implemented for table nodes.");
 				}
-				else if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || TableOperations[removeExtension(node.image)].callSTALoad)
+				else if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || STAOperations[removeExtension(node.image)].callSTALoad)
 				{
 					showInfoMessage("Updating "+ removeExtension(node.image) + " ...");
 					await LoadJSONNodeSTAData(node);
@@ -5284,8 +5297,10 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		function SeparateColumnsNode(node, parentNode, options) {
 			var data=parentNode.STAdata;
 
-			if (!data)
+			if (!data) {
 				showInfoMessage("No data loaded in the parent node.");
+				return;
+			}
 			if (parentNode.STAURL)
 				node.STAURL=parentNode.STAURL;
 
