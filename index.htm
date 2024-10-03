@@ -34,7 +34,7 @@
 					<tr>
 						<td><img src="logo.png" height="70"></td>
 						<td>
-							<div style="font-size: 30px; font-weight: bold;">TAPIS</div>
+							<div style=" font-weight: bold;">TAPIS</div>
 							<div style="font-size: 20px; font-weight: bold;">Tables from OGC APIs for Sensors</div>
 							<div style="font-size: 10px; font-weight: normal;"> or a Sensor Things API plus Explorer
 							</div>
@@ -3244,7 +3244,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							return false;
 						}
 						//Update or delete
-						cdns.push('Id: <input id="dlgCreateUpdateDeleteEntity_id" style="background-color:#D8DFD6" type="text" value="', record["@iot.id"], '" readonly=="readonly"><br>'); //update/delete
+						cdns.push('<label style=" font-weight: bold;">Id: </label><input id="dlgCreateUpdateDeleteEntity_id" style="background-color:#D8DFD6" type="text" value="', record["@iot.id"], '" readonly=="readonly"><br>'); //update/delete
 					}
 					else { //CREATE
 						var record=parentNode.STAdata[0]; //Info from parentNode used to complete in update
@@ -3261,7 +3261,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						if (i==parentNodes.length-1){ //Lastone
 							var entitiesRequired=[],entitiesNotRequired=[];
 							var currentNodeEntityPlural=getSTAEntityPlural(currentNode.label,false);
-							entitiesRequired.push('<span style="font-weight:bold">Entities</span><br>');
+							entitiesRequired.push('<fieldset><legend>Entities</legend>');
 							var datastream="none"; // linked
 
 							for (var e=0;e<STAEntities[currentNodeEntityPlural].entities.length;e++) {
@@ -3273,15 +3273,15 @@ async function requestAndRefreshCountResults(currentNode, period) {
 								 		if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode 
 								 			if (getSTAEntityPlural(entitiesParentArray[u][0],false)=="Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0],false)=="MultiDatastreams"&& datastream!="linked")) {
 												datastream="linked";
-												entitiesRequired.push(`<span>${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+												entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
 											break;
 											}
 								 		}else{
 								 			if (u==entitiesParentArray.length-1){ //If there is not any 
 												if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
-													entitiesRequired.push(`<span>${STAEntities[currentNodeEntityPlural].entities[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+													entitiesRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
 												}else if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" && datastream!="linked"){
-													entitiesRequired.push(`<span>Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+													entitiesRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
 												}
 											}
 								 		}
@@ -3291,15 +3291,15 @@ async function requestAndRefreshCountResults(currentNode, period) {
 								 		if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode
 											if (getSTAEntityPlural(entitiesParentArray[u][0],false)=="Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0],false)=="MultiDatastreams"&& datastream!="linked")) {
 												datastream="linked";
-												entitiesNotRequired.push(`<span>${entitiesParentArray[u][0]}:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+												entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
 											break;
 											}
 								 			}else{
 												if (u==entitiesParentArray.length-1){
 													if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
-													entitiesNotRequired.push(`<span>${STAEntities[currentNodeEntityPlural].entities[e].name}: <span style="color: #897F7F; font-style: italic"" >none</span></span> <br>`);
+													entitiesNotRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}: <span style="color: #897F7F; font-style: italic"" >none</span></span> <br>`);
 												}else if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" && datastream!="linked"){
-													entitiesNotRequired.push(`<span>Datastreams/MultiDatastreams: <span style="color: #897F7F; font-style: italic" >none</span></span> <br>`);
+													entitiesNotRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams: <span style="color: #897F7F; font-style: italic" >none</span></span> <br>`);
 												}											
 											}
 								 		}
@@ -3310,8 +3310,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'><span style='color: #897F7F; font-style: italic'>none</span></span>");
 							if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='color: #897F7F; font-style: italic>none</span>");
 
-							cdns.push(...entitiesRequired,...entitiesNotRequired,"<br>"); 
-							cdns.push('<span style="font-weight:bold">Properties</span><br>');
+							cdns.push(...entitiesRequired,...entitiesNotRequired,"<br></fieldset>"); 
+							cdns.push('<fieldset><legend>Properties</legend>');
 
 						}
 					
@@ -3332,8 +3332,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					//For the moment in supporting only a point
 					cdns.push('<fieldset>',
 						'<legend>', STAEntities[entityName].properties[i].name, ' (point):</legend>', //Volem posar que sigui required?
-						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_longitude">', 'longitude: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_longitude" type="text"><br>',
-						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_latitude">', 'latitude: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_latitude" type="text"><br>',
+						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_longitude" style=" font-weight: bold;">', 'longitude: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_longitude" type="text"><br>',
+						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_latitude"style=" font-weight: bold;">', 'latitude: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_latitude" type="text"><br>',
 						'</fieldset>',
 						'<br>');
 					continue;	
@@ -3342,15 +3342,15 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					//Something similar needs to be done for MultiDataStream
 					cdns.push('<fieldset>',
 						'<legend>', STAEntities[entityName].properties[i].name, ':</legend>', //Quins volem que siguin required? perque al esquema diu que es required el unitOfMeasurement sencer, no desglosa
-						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_name">', 'name: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_name" type="text"><br>',
-						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_symbol">', 'symbol: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_symbol" type="text"><br>',
-						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_definition">', 'definition: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_definition" type="text"><br>',
+						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_name" style=" font-weight: bold;">', 'name: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_name" type="text"><br>',
+						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_symbol" style=" font-weight: bold;">', 'symbol: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_symbol" type="text"><br>',
+						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_definition" style=" font-weight: bold;">', 'definition: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_definition" type="text"><br>',
 						'</fieldset>',
 						'<br>');
 					continue;
 				}
 
-				cdns.push('<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" data-STArequired='+STAEntities[entityName].properties[i].required+'>', (STAEntities[entityName].properties[i].required=='true')? STAEntities[entityName].properties[i].name+'*':STAEntities[entityName].properties[i].name, ': </label>');
+				cdns.push('<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" data-STArequired='+STAEntities[entityName].properties[i].required+' style=" font-weight: bold;">', (STAEntities[entityName].properties[i].required=='true')? STAEntities[entityName].properties[i].name+'*':STAEntities[entityName].properties[i].name, ': </label>');
 				
 				if (STAEntities[entityName].properties[i].name=="time"||STAEntities[entityName].properties[i].name=="creationTime"||STAEntities[entityName].properties[i].name=="startTime"||STAEntities[entityName].properties[i].name=="endTime"||(STAEntities[entityName].properties[i].name=="resultTime" && entityName=="Observations")){
 					cdns.push('<label>Date:</label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name,'" type="text" placeholder="YYYY-MM-DDTHH:MM:SSZ" style="width:300px" onChange="', `addTimeToOtherInputCreateEntities('dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}','dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}_createEntityInputCalendar')">`);
@@ -3363,14 +3363,14 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}else if(STAEntities[entityName].properties[i].name=="phenomenonTime"){
 					cdns.push('<label>Date:</label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name,'" type="text" placeholder="YYYY-MM-DDTHH:MM:SSZ or YYYY-MM-DDTHH:MM:SSZ/YYYY-MM-DDTHH:MM:SSZ" style="width:300px" onChange="', `addTimeToOtherInputCreateEntities('dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}','dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}_createEntityInputCalendar',3,'input')">`);
 					cdns.push('<label>Generate with this: </label><input type="datetime-local" id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_createEntityInputCalendar" onChange="',`addTimeToOtherInputCreateEntities('dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}_createEntityInputCalendar','dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}',3,'calendar')">`);
-					cdns.push('<label> and: </label><input type="datetime-local" id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_createEntityInputCalendar3" onChange="',`addTimeToOtherInputCreateEntities('dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}_createEntityInputCalendar','dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}',3,'calendar')"><br>`);
+					cdns.push('<label> and: </label ><label style="font-size:15px;font-style: italic">(to create a period)  </label><input type="datetime-local" id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_createEntityInputCalendar3" onChange="',`addTimeToOtherInputCreateEntities('dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}_createEntityInputCalendar','dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}',3,'calendar')"><br>`);
 
 				}else{
 					cdns.push('<input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" type="text" style="width:300px"><br>');
 				}
 				
 			}
-
+			cdns.push('</fieldset>')
 			document.getElementById("dlgCreateUpdateDeleteEntityProperties").innerHTML=cdns.join("");
 
 			if (parentNodes[0].image != "sta.png" && parentEntityName==entityName) {
@@ -3418,7 +3418,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			if (number =='2'){
 				if (origin=="calendar"){
-					document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value +"/"+document.getElementById(itemWritten+"2").value;
+					document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value+"Z" +"/"+document.getElementById(itemWritten+"2").value+"Z" ;
 				}else{
 					var valueOfInput= document.getElementById(itemWritten).value.split ("/");
 					document.getElementById(itemToWrite).value=valueOfInput[0];
@@ -3427,9 +3427,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}else if (number=='3'){
 				if (origin=="calendar"){
 					if (document.getElementById(itemWritten+"3").value ==''){
-						document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value
+						document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value+"Z" 
 					}else{
-						document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value +"/"+document.getElementById(itemWritten+"3").value;
+						if (document.getElementById(itemWritten+"3").value!=""){
+							document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value+"Z"  +"/"+document.getElementById(itemWritten+"3").value+"Z"
+						}else{
+							document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value+"Z";
+						}
 					}
 				}else{
 					var valueOfInput= document.getElementById(itemWritten).value.split ("/");
@@ -3438,7 +3442,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					''
 				}
 			}else{
-				document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value;
+				document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value+"Z" ;
 			}
 		}
 
@@ -3550,7 +3554,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			);	
 		}
 
-		function GetUpdateEntity(event){
+		async function GetUpdateEntity(event){
 			event.preventDefault(); 
 			document.getElementById("DialogCreateUpdateDeleteEntity").close();
 			var parentNodes=GetParentNodes(currentNode);
@@ -3566,18 +3570,20 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			console.log(childrenNodes)
 			var obj={}, idSplited
 			for (var i=0;i<childrenNodes.length;i++){
-				if (childrenNodes[i].nodeName=="INPUT"){
+				if (childrenNodes[i].nodeName=="INPUT"&&childrenNodes[i].type=="text"){
 					//Està en reqired i al value es blanc? anulaho tot
 					idSplited=childrenNodes[i].id.split("dlgCreateUpdateDeleteEntity_")[1];
-					obj[idSplited]=childrenNodes[i].value;
+					if (childrenNodes[i].value!="")	obj[idSplited]=childrenNodes[i].value;
 				}
 			}
-			var response= HTTPJSONData(url,null,"PUT",obj);
+			var response= await HTTPJSONData(url,null,"PUT",obj);
 			if (response.ok)
 				showInfoMessage(STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
-			else
-			showInfoMessage("Error updating "+STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
+			else{
+				showInfoMessage("Error updating "+STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
 
+			}
+			
 		}
 		function AskForDeleteEntity(event){
 			event.preventDefault(); 
@@ -3594,7 +3600,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		}
 
 
-		function GetDeleteEntity(entityName, id){
+		async function GetDeleteEntity(entityName, id){
 			event.preventDefault(); 
 			console.log("borrant")
 			document.getElementById("DialogCreateUpdateDeleteEntity").close();
@@ -3607,7 +3613,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNodes[0].STAURL), false);
 			var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,id);
 
-			var response= HTTPJSONData(url,null,"DELETE",null);
+			var response= await HTTPJSONData(url,null,"DELETE",null);
 			console.log(response)
 			if (response?.ok)
 				showInfoMessage(STAEntities[entityName].singular +" "+id+"has been deleted.");
