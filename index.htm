@@ -3377,8 +3377,28 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				//Edit or delete
 				for (var i=0; i<STAEntities[entityName].properties.length; i++) {
 					//Falta posar altres excepcions que estaven posades adalt.. tipu datastreams unitOfMeasuremtns
+
 					if (entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties")
 						continue;
+					if ((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime"))
+						continue;
+					if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") ||    (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature"))//Locations/Feature of Interest coordenates
+					 {
+						// //For the moment in supporting only a point
+						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][0]?record[STAEntities[entityName].properties[i].name]["coordinates"][0]:"";
+						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][1]?record[STAEntities[entityName].properties[i].name]["coordinates"][1]:"";
+						console.log (record[STAEntities[entityName].properties[i].name]["coordinates"])
+						console.log (record[STAEntities[entityName].properties[i].name]["coordinates"][0])
+						continue;	
+					}
+					if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
+					//Something similar needs to be done for MultiDataStream
+				
+						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+ "_name").value= record[STAEntities[entityName].properties[i].name]["name"]? record[STAEntities[entityName].properties[i].name]["name"]:"";
+						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_symbol").value= record[STAEntities[entityName].properties[i].name]["symbol"]?record[STAEntities[entityName].properties[i].name]["symbol"]:"";
+						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_definition").value= record[STAEntities[entityName].properties[i].name]["definition"]?record[STAEntities[entityName].properties[i].name]["definition"]:"";
+						continue;
+					}
 					document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value=record[STAEntities[entityName].properties[i].name] ? record[STAEntities[entityName].properties[i].name] : ""; //Properties, completed with parentNodeInfo
 				}
 				document.getElementById("dlgCreateUpdateDeleteEntityCreate").style.display="none";
@@ -3439,7 +3459,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					var valueOfInput= document.getElementById(itemWritten).value.split ("/");
 					document.getElementById(itemToWrite).value=valueOfInput[0];
 					document.getElementById(itemToWrite+"3").value=valueOfInput[1];
-					''
+					
 				}
 			}else{
 				document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value+"Z" ;
