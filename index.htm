@@ -3586,10 +3586,10 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 			var childrenNodes=document.getElementById("dlgCreateUpdateDeleteEntityProperties").childNodes, childrenNodes2;
 			
-			var obj={}, obj2={}, idSplited
+			var obj={}, obj2={},idSplited
 			for (var i=0;i<childrenNodes.length;i++){
 				
-				if (childrenNodes[i].nodeName=="FIELDSET"){
+				if (currentNode.label=="Location"&&  childrenNodes[i].nodeName=="FIELDSET" ){
 					childrenNodes2=childrenNodes[i].childNodes;
 					console.log(childrenNodes2.length)
 					for (var e=0;e<childrenNodes2.length;e++){
@@ -3599,14 +3599,44 @@ async function requestAndRefreshCountResults(currentNode, period) {
 								obj2["coordinates"]=[childrenNodes2[e].value];
 								continue;
 							}
-						}
-						if (idSplited=="location_latitude"){
+
+							if (idSplited=="location_latitude"){
 							obj2["coordinates"].push(childrenNodes2[e].value);
 							obj["location"]=obj2;
 						}
+						}
+						
 					}
-				
+					continue;
 				}
+
+				if (currentNode.label=="Datastream"&&  childrenNodes[i].nodeName=="FIELDSET" ){
+					childrenNodes2=childrenNodes[i].childNodes;
+					console.log(childrenNodes2.length)
+
+					for (var e=0;e<childrenNodes2.length;e++){
+						if (childrenNodes2[e].nodeName=="INPUT"){
+							idSplited=childrenNodes2[e].id.split("dlgCreateUpdateDeleteEntity_")[1];
+							if (idSplited=="unitOfMeasurement_name"){
+								obj2["name"]=childrenNodes2[e].value;
+								continue;
+							}
+							if (idSplited=="unitOfMeasurement_symbol"){
+								obj2["symbol"]=childrenNodes2[e].value;
+							
+							continue;
+							}
+							if (idSplited=="unitOfMeasurement_definition"){
+								obj2["definition"]=childrenNodes2[e].value;
+								obj["unitOfMeasurement"]=obj2;
+							}
+						}
+						
+					}
+					continue;
+				}
+
+
 
 				if (childrenNodes[i].nodeName=="INPUT"&&childrenNodes[i].type=="text"){
 					//Comprobar si és required abans d'enviar-ho? Et deixa enviar camps que son required true en blanc i per tant, "eliminar-los"
@@ -3617,7 +3647,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 
 			}
-			console.log(obj);
 			 var response= await HTTPJSONData(url,null,"PUT",obj);
 			 if (response.ok)
 			 	showInfoMessage(STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
