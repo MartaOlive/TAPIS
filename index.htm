@@ -3387,8 +3387,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						// //For the moment in supporting only a point
 						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][0]?record[STAEntities[entityName].properties[i].name]["coordinates"][0]:"";
 						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][1]?record[STAEntities[entityName].properties[i].name]["coordinates"][1]:"";
-						console.log (record[STAEntities[entityName].properties[i].name]["coordinates"])
-						console.log (record[STAEntities[entityName].properties[i].name]["coordinates"][0])
 						continue;	
 					}
 					if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
@@ -3586,23 +3584,47 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 			showInfoMessage("Updating  "+ STAEntities[entityName].singular +" "+id+" ...");
 			
-			var childrenNodes=document.getElementById("dlgCreateUpdateDeleteEntityProperties").childNodes;
-			console.log(childrenNodes)
-			var obj={}, idSplited
+			var childrenNodes=document.getElementById("dlgCreateUpdateDeleteEntityProperties").childNodes, childrenNodes2;
+			
+			var obj={}, obj2={}, idSplited
 			for (var i=0;i<childrenNodes.length;i++){
-				if (childrenNodes[i].nodeName=="INPUT"&&childrenNodes[i].type=="text"){
-					//Està en reqired i al value es blanc? anulaho tot
-					idSplited=childrenNodes[i].id.split("dlgCreateUpdateDeleteEntity_")[1];
-					if (childrenNodes[i].value!="")	obj[idSplited]=childrenNodes[i].value;
+				
+				if (childrenNodes[i].nodeName=="FIELDSET"){
+					childrenNodes2=childrenNodes[i].childNodes;
+					console.log(childrenNodes2.length)
+					for (var e=0;e<childrenNodes2.length;e++){
+						if (childrenNodes2[e].nodeName=="INPUT"){
+							idSplited=childrenNodes2[e].id.split("dlgCreateUpdateDeleteEntity_")[1];
+							if (idSplited=="location_longitude"){
+								obj2["coordinates"]=[childrenNodes2[e].value];
+								continue;
+							}
+						}
+						if (idSplited=="location_latitude"){
+							obj2["coordinates"].push(childrenNodes2[e].value);
+							obj["location"]=obj2;
+						}
+					}
+				
 				}
-			}
-			var response= await HTTPJSONData(url,null,"PUT",obj);
-			if (response.ok)
-				showInfoMessage(STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
-			else{
-				showInfoMessage("Error updating "+STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
+
+				if (childrenNodes[i].nodeName=="INPUT"&&childrenNodes[i].type=="text"){
+					//Comprobar si és required abans d'enviar-ho? Et deixa enviar camps que son required true en blanc i per tant, "eliminar-los"
+					idSplited=childrenNodes[i].id.split("dlgCreateUpdateDeleteEntity_")[1];
+					if (childrenNodes[i].value!="")	{
+						obj[idSplited]=childrenNodes[i].value;
+					}
+				}
 
 			}
+			console.log(obj);
+			 var response= await HTTPJSONData(url,null,"PUT",obj);
+			 if (response.ok)
+			 	showInfoMessage(STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
+			 else{
+			 	showInfoMessage("Error updating "+STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
+
+			 }
 			
 		}
 		function AskForDeleteEntity(event){
