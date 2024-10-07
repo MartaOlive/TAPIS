@@ -34,7 +34,7 @@
 					<tr>
 						<td><img src="logo.png" height="70"></td>
 						<td>
-							<div style=" font-weight: bold;">TAPIS</div>
+							<div style="font-size: 30px; font-weight: bold;">TAPIS</div>
 							<div style="font-size: 20px; font-weight: bold;">Tables from OGC APIs for Sensors</div>
 							<div style="font-size: 10px; font-weight: normal;"> or a Sensor Things API plus Explorer
 							</div>
@@ -167,6 +167,25 @@
 				<button value="default" id="dlgCreateUpdateDeleteEntityCreate" onClick="GetCreateEntity(event)">Create</button>
 				<button value="default" id="dlgCreateUpdateDeleteEntityUpdate" onClick="GetUpdateEntity(event)">Update</button>
 				<button value="default" id="dlgCreateUpdateDeleteEntityDelete" onClick="AskForDeleteEntity(event)">Delete</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogCreateUpdateDeleteRecord">
+		<form>
+			<span id="dlgCreateUpdateDeleteRecordProperties">
+			</span>
+			<div class="center">
+				<button value="prev" id="dlgCreateUpdateDeleteRecordFirst" onClick="GetFirstRecord(event)">&lt;&lt;</button>
+				<button value="prev" id="dlgCreateUpdateDeleteRecordPrevious" onClick="GetPreviousRecord(event)">&nbsp&lt;&nbsp;</button>
+				<input type="text" id="dlgCreateUpdateDeleteRecordNumber" onChange="GetNumberRecord(event)"> /> / <span id="dlgCreateUpdateDeleteRecordLength"></span> 
+				<button value="next" id="dlgCreateUpdateDeleteRecordNext" onClick="GetNextRecord(event)">&nbsp;&gt;&nbsp;</button>
+				<button value="next" id="dlgCreateUpdateDeleteRecordLast" onClick="GetLastRecord(event)">&gt;&gt;</button>
+				<br>
+				<button value="default" id="dlgCreateUpdateDeleteRecordCreate" onClick="GetCreateRecord(event)">Insert</button>
+				<button value="default" id="dlgCreateUpdateDeleteRecordUpdate" onClick="GetUpdateRecord(event)">Update</button>
+				<button value="default" id="dlgCreateUpdateDeleteRecordDelete" onClick="AskForDeleteRecord(event)">Delete</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
@@ -1137,6 +1156,7 @@
 
 		const TableOperations = {Table: {description: "View Table", leafNode: true}, 
 					ViewQuerySTA: {description: "View Query", leafNode: true},
+					EditRecord: {description: "Edit record"}, 
 					Meaning: {description: "Column meaning"}, 
 					SelectColumnsTable: {description: "Select Columns"},
 					SelectRowTable: {description: "Select Row"},
@@ -3219,13 +3239,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			for (var i=0; i<parentNodes.length; i++)
 			{
 				var parentNode=parentNodes[i];
-				if (!parentNode.STAdata || parentNode.STAdata.length==0){//No STA associated
+				if (!parentNode.STAdata || parentNode.STAdata.length==0){
 					alert("Parent node has no STA data associated");
 					return false;
 				}
 				if (parentNode.image != "sta.png"){
 					if (parentNode.STAdata.length>1){
-						alert("Parent node has more than a single record. Please select a record first."); //More than single record
+						alert("Parent node has more than a single record. Please select a record first.");
 						return false;
 					}
 					var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), false);
@@ -3318,10 +3338,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					}
 				}
 			}
-
- 
-
-
 			for (var i=0; i<STAEntities[entityName].properties.length; i++){
 				if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
 					((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
@@ -3656,6 +3672,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			 }
 			
 		}
+
 		function AskForDeleteEntity(event){
 			event.preventDefault(); 
 			var parentNodes=GetParentNodes(currentNode);
@@ -3663,23 +3680,19 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var entityNameSingular= STAEntities[entityName].singular;
 			var id= parentNodes[0].STAURLIdSelected;
 
-			var opcion = confirm("Do you want to erase "+entityNameSingular+" "+parentNodes[0].STAURLIdSelected);
-				if (opcion == true) {
-					GetDeleteEntity(entityName, id)
-					
-				} 
+			if (true==confirm("Do you want to erase "+entityNameSingular+" "+parentNodes[0].STAURLIdSelected))
+				GetDeleteEntity(entityName, id)
 		}
 
 
 		async function GetDeleteEntity(entityName, id){
 			event.preventDefault(); 
-			console.log("borrant")
+			//console.log("borrant")
 			document.getElementById("DialogCreateUpdateDeleteEntity").close();
 			var parentNodes=GetParentNodes(currentNode);
 			var url=parentNodes[0].STAURL;
 
 			showInfoMessage("Deleting  "+ entityName +" "+id+" ...");
-
 			var id = parseInt(document.getElementById("dlgCreateUpdateDeleteEntity_id").value);
 			var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNodes[0].STAURL), false);
 			var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,id);
@@ -3692,8 +3705,221 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				showInfoMessage("Error deleting"+ STAEntities[entityName].singular +" "+id);
 		}
 
+		function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
+			var cdns=[];
 
+			var parentNode=GetFirstParentNode(currentNode);
+			if (!parentNode) {
+				alert("A parent node is needed to edit records");
+				return false;
+			}
 
+			if (!parentNode.STAdata || parentNode.STAdata.length==0) {
+				alert("Parent node has no STA data associated");
+				return false;
+			}
+			var data=parentNode.STAdata;
+			if (iRecord<0 || iRecord>=data.length) {
+				alert("Parent node is out of range");
+				return false;
+			}
+			var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
+			var dataAttributesArray=Object.keys(dataAttributes)
+
+			if (verify && document.getElementById("dlgCreateUpdateDeleteRecordInitialId"))
+			{
+				var i=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordInitialId").value);
+				var record=data[i];
+				for (var a=0; a<dataAttributesArray.length; a++) {
+					var cell=record[dataAttributesArray[a]];
+					var value=document.getElementById("dlgCreateUpdateDeleteRecord_" + dataAttributesArray[a]).value;
+					if (typeof cell ==="undefined" || cell==null) {
+						if (value!="")
+							break;
+					} else if (typeof cell === "object") {
+						var str=JSON.stringify(cell)
+						if (cell.getDate && str.charAt(0) == '"' && str.charAt(str.length -1) == '"')
+							str=str.substr(1,str.length -2);
+						if (str!=value)
+							break;
+					} else if (cell!=value) {
+						break;
+					} 
+				}
+				if (a<dataAttributesArray.length) {
+					if (false==confirm("Values has been modified but not saved by pressing 'update'. Do you want to continue and loose the modifications?"))
+						return false;
+				}
+			}
+			var record=data[iRecord];
+			for (var a=0; a<dataAttributesArray.length; a++) {
+				var cell=record[dataAttributesArray[a]];
+				var value;
+				if (typeof cell ==="undefined" || cell==null) 
+					value=""
+				else if (typeof cell === "object") {
+					value=JSON.stringify(cell);
+					if (cell.getDate && value.charAt(0) == '"' && value.charAt(value.length -1) == '"')
+						value=value.substr(1,value.length -2);
+				}
+				else
+					value=cell;
+				cdns.push('<label for="dlgCreateUpdateDeleteRecord_', dataAttributesArray[a], '">', GetHTMLdataAttribute(dataAttributesArray[a], dataAttributes[dataAttributesArray[a]]), ': </label>',
+					'<input id="dlgCreateUpdateDeleteRecord_', dataAttributesArray[a], '" type="text" value="', value , '"><br>');
+			}
+			cdns.push('<input id="dlgCreateUpdateDeleteRecordInitialId" type="hidden" value="', iRecord, '">');
+			document.getElementById("dlgCreateUpdateDeleteRecordNumber").value=iRecord+1;
+			document.getElementById("dlgCreateUpdateDeleteRecordLength").innerHTML=data.length;
+			document.getElementById("dlgCreateUpdateDeleteRecordProperties").innerHTML=cdns.join("");
+			document.getElementById("dlgCreateUpdateDeleteRecordFirst").disabled=false;
+			document.getElementById("dlgCreateUpdateDeleteRecordPrevious").disabled=false;
+			document.getElementById("dlgCreateUpdateDeleteRecordNext").disabled=false;
+			document.getElementById("dlgCreateUpdateDeleteRecordLast").disabled=false;
+
+			if (iRecord==0) {
+				document.getElementById("dlgCreateUpdateDeleteRecordFirst").disabled=true;
+				document.getElementById("dlgCreateUpdateDeleteRecordPrevious").disabled=true;
+			}
+			else if (iRecord==data.length-1) {			
+				document.getElementById("dlgCreateUpdateDeleteRecordNext").disabled=true;
+				document.getElementById("dlgCreateUpdateDeleteRecordLast").disabled=true;
+			}
+			return true;
+		}
+
+		function GetFirstRecord(event) {
+			event.preventDefault(); 
+			PopulateCreateUpdateDeleteRecord(currentNode, 0, true);
+		}
+
+		function GetPreviousRecord(event) {
+			event.preventDefault(); 
+			PopulateCreateUpdateDeleteRecord(currentNode, parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-2, true);
+		}
+
+		function GetNumberRecord(event) {
+			event.preventDefault(); 
+			PopulateCreateUpdateDeleteRecord(currentNode, parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1, true);
+		}
+
+		function GetNextRecord(event) {
+			event.preventDefault(); 
+			PopulateCreateUpdateDeleteRecord(currentNode, parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value), true);
+		}
+
+		function GetLastRecord(event) {
+			event.preventDefault(); 
+			PopulateCreateUpdateDeleteRecord(currentNode, parseInt(document.getElementById("dlgCreateUpdateDeleteRecordLength").innerHTML)-1, true);
+		}
+
+		function UpdateRecordId(node, iRecord) {
+			var data=node.STAdata;
+			if (iRecord<0 || iRecord>=data.length) {
+				alert("Parent node is out of range");
+				return false;
+			}
+			var dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
+			var dataAttributesArray=Object.keys(dataAttributes)
+
+			var record=data[iRecord];
+			var updated=false;
+			for (var a=0; a<dataAttributesArray.length; a++) {
+				var cell=record[dataAttributesArray[a]];
+				var value=document.getElementById("dlgCreateUpdateDeleteRecord_" + dataAttributesArray[a]).value;
+				if (typeof cell ==="undefined" || cell==null) {
+					if (value!="") {
+						record[dataAttributesArray[a]]=value;
+						updated=true;
+					}
+				} else if (typeof cell === "object") {
+					var str=JSON.stringify(cell)
+					if (cell.getDate && str.charAt(0) == '"' && str.charAt(str.length -1) == '"') {
+						str=str.substr(1,str.length -2);
+						if (str!=value)
+							record[dataAttributesArray[a]]=value;
+							updated=true;
+					} else if (str!=value) {
+						try {
+							record[dataAttributesArray[a]]=JSON.parse(value);
+						} catch (e) {
+							alert("Parse error: " + e + " The field content is:\n" + value);
+							return false;
+						}
+						updated=true;
+					}
+				} else if (cell!=value) {
+					record[dataAttributesArray[a]]=value;
+					updated=true;
+				}
+			}
+			if (updated==true)
+				networkNodes.update(node);
+		}
+
+		function GetCreateRecord(event) {
+			event.preventDefault(); 
+			var parentNode=GetFirstParentNode(currentNode);
+			if (!parentNode) {
+				alert("A parent node is needed to edit records");
+				return false;
+			}
+			if (!parentNode.STAdata || parentNode.STAdata.length==0) {
+				alert("Parent node has no STA data associated");
+				return false;
+			}
+			var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
+			var data=parentNode.STAdata;
+			if (iRecord<0 || iRecord>=data.length) {
+				alert("Parent node is out of range");
+				return false;
+			}
+			data.splice(iRecord+1, 0, deapCopy(data[iRecord]));
+			UpdateRecordId(parentNode, iRecord+1);
+			networkNodes.update(parentNode);
+			PopulateCreateUpdateDeleteRecord(currentNode, iRecord+1, false);
+		}
+
+		function GetUpdateRecord(event) {
+			event.preventDefault(); 
+			var parentNode=GetFirstParentNode(currentNode);
+			if (!parentNode) {
+				alert("A parent node is needed to edit records");
+				return false;
+			}
+
+			if (!parentNode.STAdata || parentNode.STAdata.length==0) {
+				alert("Parent node has no STA data associated");
+				return false;
+			}
+			var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
+			UpdateRecordId(parentNode, iRecord);
+			PopulateCreateUpdateDeleteRecord(currentNode, iRecord, true);
+		}
+
+		
+		function AskForDeleteRecord(event) {
+			event.preventDefault(); 
+			if (false==confirm("Do you want to erase this record?"))
+				return
+			var parentNode=GetFirstParentNode(currentNode);
+			if (!parentNode) {
+				alert("A parent node is needed to edit records");
+				return false;
+			}
+			if (!parentNode.STAdata || parentNode.STAdata.length==0) {
+				alert("Parent node has no STA data associated");
+				return false;
+			}
+			var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
+			var data=parentNode.STAdata;
+			if (iRecord<0 || iRecord>=data.length) {
+				alert("Parent node is out of range");
+				return false;
+			}
+			data.splice(iRecord, 1);
+			networkNodes.update(parentNode);
+			PopulateCreateUpdateDeleteRecord(currentNode, iRecord, false);
+		}
 
 		function GetSelectRow(event) {
 			event.preventDefault(); // We don't want to submit this form
@@ -5929,6 +6155,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					if (GetFirstParentNode(currentNode)) {
 						if (PopulateCreateUpdateDeleteEntity(getSTAEntityPlural(removeExtension(currentNode.image), true), currentNode))
 							document.getElementById("DialogCreateUpdateDeleteEntity").showModal();
+					}
+				}
+				else if (currentNode.image == "EditRecord.png") {
+					startingNodeContextId=currentNode.id;
+					if (GetFirstParentNode(currentNode)) {
+						if (PopulateCreateUpdateDeleteRecord(currentNode, 0, false))
+							document.getElementById("DialogCreateUpdateDeleteRecord").showModal();
 					}
 				}
 			}
