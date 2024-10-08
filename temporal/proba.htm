@@ -11,19 +11,31 @@
 <body>
 
 
-		<label>Date:</label> <input type="text" id="createEntityInputDate" onChange="addTimeToOtherInputCreateEntities('createEntityInputDate','createEntityInputCalendar' )"> 
-		<br><label>Generate with this: </label><input type="datetime-local" id="createEntityInputCalendar" onChange="addTimeToOtherInputCreateEntities('createEntityInputCalendar','createEntityInputDate')">
+	<label>Date:</label> <input type="text" id="createEntityInputDate"
+		onChange="addTimeToOtherInputCreateEntities('createEntityInputDate','createEntityInputCalendar' )">
+	<br><label>Generate with this: </label><input type="datetime-local" id="createEntityInputCalendar"
+		onChange="addTimeToOtherInputCreateEntities('createEntityInputCalendar','createEntityInputDate')">
 
 
 
 	<script>
 
-	function addTimeToOtherInputCreateEntities (itemWritten, itemToWrite){
- 		document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value
-	}
+		function addTimeToOtherInputCreateEntities(itemWritten, itemToWrite) {
+			document.getElementById(itemToWrite).value = document.getElementById(itemWritten).value
+		}
+
+
+
+
+	
+
+
+
+
+
+
 
 	</script>
 </body>
 
 </html>
-
