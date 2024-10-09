@@ -3236,6 +3236,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 
 			cdns.push('<span id="dlgCreateUpdateDeleteEntityType" style="font-weight:bold">',STAEntities[entityName].singular, "</span>:<br><br>"); //Title (Entity name) 
+			var actionToDo;
 			for (var i=0; i<parentNodes.length; i++)
 			{
 				var parentNode=parentNodes[i];
@@ -3254,6 +3255,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						return false;
 					}
 					if (parentEntityName==entityName) { //Update or delete
+						actionToDo="update_delete";
 						if (i>1) {
 							alert("One parent node is the same as the entity " + STAEntities[entityName].singular + ". This is for update or delete the entity. In this case, only one parent node is allowed.");
 							return false;
@@ -3266,7 +3268,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						//Update or delete
 						cdns.push('<label style=" font-weight: bold;">Id: </label><input id="dlgCreateUpdateDeleteEntity_id" style="background-color:#D8DFD6" type="text" value="', record["@iot.id"], '" readonly=="readonly"><br>'); //update/delete
 					}
-					else { //CREATE
+					else {
+						actionToDo="create" //CREATE
 						var record=parentNode.STAdata[0]; //Info from parentNode used to complete in update
 						if (!record["@iot.id"]){
 							alert("Cannot find @iot.id in parent node " + STAEntities[parentEntityName].singular + ". Did you removed in a select?");
@@ -3279,13 +3282,21 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						entitiesParentArray.push([STAEntities[parentEntityName].singular,record["@iot.id"],url]); //EntityName,id.url
 					
 					}
-					if (parentEntityName!=entityName) cdns.push(...createEntitiesinCreateEntity(currentNode,entitiesParentArray)); //only with create
-				}else if (parentNode.image == "sta.png" && parentNodes.length==1){
-					if (parentEntityName!=entityName)cdns.push(...createEntitiesinCreateEntity(currentNode)); //only with create
-				}			
+					
+				}
+						
 
 			}
-			
+
+			if(actionToDo=="create")  {
+				cdns.push(...createEntitiesinCreateEntity(currentNode,entitiesParentArray)); //only with create
+				console.log("bli")
+			}
+			else{
+				cdns.push(...createEntitiesinCreateEntity(currentNode)); //only with create
+				console.log("bu")
+			}
+
 		
 
 
@@ -3406,6 +3417,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var currentNodeEntityPlural=getSTAEntityPlural(currentNode.label,false);
 			var entitiesLinked=STAEntities[currentNodeEntityPlural].entities;
 			var datastream="none"; // linked
+			var entitiesRequiedNotLinked=[];
 
 			
 			
@@ -3421,14 +3433,17 @@ async function requestAndRefreshCountResults(currentNode, period) {
 									datastream = "linked";
 								}
 								entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
-								continue;
+								break;
 
 							} else {
 								if (u == entitiesParentArray.length - 1) { //If there is not any 
 									if (getSTAEntityPlural(entitiesLinked[e].name, false) != "MultiDatastreams" && getSTAEntityPlural(entitiesLinked[e].name, false) != "Datastreams") {
 										entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+										entitiesRequiedNotLinked.push(entitiesLinked[e].name);
+
 									} else if (getSTAEntityPlural(entitiesLinked[e].name, false) == "MultiDatastreams" && datastream != "linked") {
 										entitiesRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+										entitiesRequiedNotLinked.push("Datastream or Multidatastream");
 									}
 								}
 							}
@@ -3440,7 +3455,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 									datastream = "linked";
 								}
 								entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
-								continue;
+								break;
 
 							} else {
 								if (u == entitiesParentArray.length - 1) {
@@ -3455,7 +3470,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						}
 					}
 				}
-			}else{
+			}
+			else{
 		 	
 				if (currentNodeEntityPlural!=="Parties"){
 					entitiesRequired.push('<fieldset><legend>Entities</legend>');
@@ -3491,6 +3507,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var cdns=[]
 			cdns.push(...entitiesRequired,...entitiesNotRequired,"<br></fieldset>"); 
 			cdns.push('<fieldset><legend>Properties</legend>');
+			currentNode.STAEntitiesRequiredNotLinked=entitiesRequiedNotLinked;
 
 			return cdns;
 
@@ -3544,131 +3561,135 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var url=getSTAURLRoot(parentNodes[0].STAURL);
 			var obj={};
 
-
-			for (var i=0; i<parentNodes.length; i++) {
-				var parentNode=parentNodes[i];
-				if (parentNode.image == "sta.png")
-					continue;
-				if (i!=0 && getSTAURLRoot(parentNode.STAURL)!=url) {
-					alert("Not all parent nodes are from the same root URL: " + getSTAURLRoot(parentNode.STAURL) + ", " + url);
-					continue;
-				}
-			
-				var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), true);
-				var entity;
-				if (returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName)!=-1)
-					entity=parentEntityName;
-				else if (returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular)!=-1)
-					entity=STAEntities[parentEntityName].singular;
-				else {
-					alert("Parent node ("+STAEntities[parentEntityName].singular+") is not directly related to a/an " +  STAEntities[entityName].singular);
-					continue;
-				}
-
-				if (!parentNode.STAdata || parentNode.STAdata.length==0){
-					alert("Parent node has no STA data associated");
-					return;
-				}
-				if (parentNode.STAdata.length>1){
-					alert("Parent node '"+STAEntities[parentEntityName].singular+"' has more than a single record. Please select a record first.");
-					return;
-				}
-				var record=parentNode.STAdata[0];
-				if (!record["@iot.id"]){
-					alert("Cannot find @iot.id. Did you removed in a select?");
-					return;
-				}
-				if (obj[entity]){  //add to a plural array
-					if (entity==STAEntities[parentEntityName].singular){
-						alert("An element '"+STAEntities[entityName].singular+"' can not have more than one '"+parentEntityName+"' Associated. One the first will be considered.");
+			if (currentNode.STAEntitiesRequiredNotLinked.length==0){
+				for (var i=0; i<parentNodes.length; i++) {
+					var parentNode=parentNodes[i];
+					if (parentNode.image == "sta.png")
 						continue;
-					}					
-					obj[parentEntityName].push({"@iot.id": record["@iot.id"]});
-				}
-				else if (entity==STAEntities[parentEntityName].singular)
-					obj[STAEntities[parentEntityName].singular] = {"@iot.id": record["@iot.id"]}
-				else  //Add to a plural element
-					obj[parentEntityName]=[{"@iot.id": record["@iot.id"]}];
-	
-			}
-			var prop, allowToSend=true;
-			for (var i=0; i<STAEntities[entityName].properties.length; i++) {
-				if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
-					((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
-					continue;
-				if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || 
-				    (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature"))
-				{
-					//For the moment in supporting only a point
-					obj[STAEntities[entityName].properties[i].name]={"type": "Point", "coordinates": []};
-					if (document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value==""&& document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").getAttribute("data-starequired")=="true"){
-						alert("Longitude parameter is required, please fill in the box before send");
-						allowToSend=false;
-					}else{
-						obj[STAEntities[entityName].properties[i].name].coordinates[0]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value);
+					if (i!=0 && getSTAURLRoot(parentNode.STAURL)!=url) {
+						alert("Not all parent nodes are from the same root URL: " + getSTAURLRoot(parentNode.STAURL) + ", " + url);
+						continue;
 					}
-
-					if (document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value==""&& document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").getAttribute("data-starequired")=="true"){
-						alert("Latitude parameter is required, please fill in the box before send");
-						allowToSend=false;
-					}else{
-						obj[STAEntities[entityName].properties[i].name].coordinates[1]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value);
-					}
-
-					continue;	
-				}
-				if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement")
-				{
-					//Something similar needs to be done for MultiDataStream
-					obj[STAEntities[entityName].properties[i].name]={};
-					obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;					
-					obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
-					obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value : null;					
-					continue;
-				}
-				// if (entityName=="Multidatastream" && STAEntities[entityName].properties[i].name=="unitOfMeasurement")
-				// {
-				// 	obj[STAEntities[entityName].properties[i].name]={};
-				// 	obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;					
-				// 	obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
-				// 	obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value : null;					
-				// 	continue;
-				// }
-
-
-					
-				prop=document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value;
-				if (prop!=="") 	obj[STAEntities[entityName].properties[i].name]=(entityName=="Observations" && STAEntities[entityName].properties[i].name=="result" && !isNaN(prop)) ? parseFloat(prop) : prop;
-				else if (prop=="" && document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).getAttribute("data-starequired")=="true") {
-					alert( STAEntities[entityName].properties[i].name+" parameter is required, please fill in the box before send");
-					allowToSend=false;
-					break;
-				}
-
-			}
-			if (allowToSend==true){
-				document.getElementById("DialogCreateUpdateDeleteEntity").close();
-				showInfoMessage("Creating a/an "+ STAEntities[entityName].singular +"...");
-				GetObjectId(url, entityName, obj).then(
-				function(value) {
-					if (value)
-					{ 
-						document.getElementById("DialogCreateUpdateDeleteEntity").close();
-						showInfoMessage('Available at: <a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
-						node.STAURL=getUrlToId(url, entityName, value);
-						node.STAdata=[];
-						node.STAdata.push(obj);
-						node.STAdata[0]["@iot.id"]=isNaN(value) ? value : parseInt(value);
-						networkNodes.update(node);
-					}
-				},
-				function(error) { 
-					showInfoMessage('Error creating entity. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
-					console.log(error) ;
-				}
-				);	
-			}
 			
+					var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), true);
+					var entity;
+					if (returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName)!=-1)
+						entity=parentEntityName;
+					else if (returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular)!=-1)
+						entity=STAEntities[parentEntityName].singular;
+					else {
+						alert("Parent node ("+STAEntities[parentEntityName].singular+") is not directly related to a/an " +  STAEntities[entityName].singular);
+						continue;
+					}
+
+					if (!parentNode.STAdata || parentNode.STAdata.length==0){
+						alert("Parent node has no STA data associated");
+						return;
+					}
+					if (parentNode.STAdata.length>1){
+						alert("Parent node '"+STAEntities[parentEntityName].singular+"' has more than a single record. Please select a record first.");
+						return;
+					}
+					var record=parentNode.STAdata[0];
+					if (!record["@iot.id"]){
+						alert("Cannot find @iot.id. Did you removed in a select?");
+						return;
+					}
+					if (obj[entity]){  //add to a plural array
+						if (entity==STAEntities[parentEntityName].singular){
+							alert("An element '"+STAEntities[entityName].singular+"' can not have more than one '"+parentEntityName+"' Associated. One the first will be considered.");
+							continue;
+						}					
+						obj[parentEntityName].push({"@iot.id": record["@iot.id"]});
+					}
+					else if (entity==STAEntities[parentEntityName].singular)
+						obj[STAEntities[parentEntityName].singular] = {"@iot.id": record["@iot.id"]}
+					else  //Add to a plural element
+						obj[parentEntityName]=[{"@iot.id": record["@iot.id"]}];
+	
+				}
+				var prop, allowToSend=true;
+				for (var i=0; i<STAEntities[entityName].properties.length; i++) {
+					if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
+						((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
+						continue;
+					if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || 
+						(entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature"))
+					{
+						//For the moment in supporting only a point
+						obj[STAEntities[entityName].properties[i].name]={"type": "Point", "coordinates": []};
+						if (document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value==""&& document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").getAttribute("data-starequired")=="true"){
+							alert("Longitude parameter is required, please fill in the box before send");
+							allowToSend=false;
+						}else{
+							obj[STAEntities[entityName].properties[i].name].coordinates[0]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value);
+						}
+
+						if (document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value==""&& document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").getAttribute("data-starequired")=="true"){
+							alert("Latitude parameter is required, please fill in the box before send");
+							allowToSend=false;
+						}else{
+							obj[STAEntities[entityName].properties[i].name].coordinates[1]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value);
+						}
+
+						continue;	
+					}
+					if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement")
+					{
+						//Something similar needs to be done for MultiDataStream
+						obj[STAEntities[entityName].properties[i].name]={};
+						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;					
+						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
+						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value : null;					
+						continue;
+					}
+					// if (entityName=="Multidatastream" && STAEntities[entityName].properties[i].name=="unitOfMeasurement")
+					// {
+					// 	obj[STAEntities[entityName].properties[i].name]={};
+					// 	obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;					
+					// 	obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
+					// 	obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value : null;					
+					// 	continue;
+					// }
+
+
+						
+					prop=document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value;
+					if (prop!=="") 	obj[STAEntities[entityName].properties[i].name]=(entityName=="Observations" && STAEntities[entityName].properties[i].name=="result" && !isNaN(prop)) ? parseFloat(prop) : prop;
+					else if (prop=="" && document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).getAttribute("data-starequired")=="true") {
+						alert( STAEntities[entityName].properties[i].name+" parameter is required, please fill in the box before send");
+						allowToSend=false;
+						break;
+					}
+
+				}
+				if (allowToSend==true){
+					document.getElementById("DialogCreateUpdateDeleteEntity").close();
+					showInfoMessage("Creating a/an "+ STAEntities[entityName].singular +"...");
+					GetObjectId(url, entityName, obj).then(
+					function(value) {
+						if (value)
+						{ 
+							document.getElementById("DialogCreateUpdateDeleteEntity").close();
+							showInfoMessage('Available at: <a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
+							node.STAURL=getUrlToId(url, entityName, value);
+							node.STAdata=[];
+							node.STAdata.push(obj);
+							node.STAdata[0]["@iot.id"]=isNaN(value) ? value : parseInt(value);
+							networkNodes.update(node);
+						}
+					},
+					function(error) { 
+						showInfoMessage('Error creating entity. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+						console.log(error) ;
+					}
+					);	
+				}
+			
+			}else{
+				alert("You need to Link entities required to create the new entity") 
+			}
+		
 		}
 
 		async function GetUpdateEntity(event){
