@@ -3335,9 +3335,9 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						//}
 					
 					}
-					cdns.push(createEntitiesinCreateEntity(currentNode,entitiesParentArray));
+					cdns.push(...createEntitiesinCreateEntity(currentNode,entitiesParentArray));
 				}else if (parentNode.image == "sta.png" && parentNodes.length==1){
-					cdns.push(createEntitiesinCreateEntity(currentNode));
+					cdns.push(...createEntitiesinCreateEntity(currentNode));
 				}			
 
 			}
@@ -3522,7 +3522,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
 								entitiesRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
 							}
-							else if( getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" )  { multidatastreams
+							else if( getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" )  { //multidatastreams
 								entitiesRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
 							}
 
