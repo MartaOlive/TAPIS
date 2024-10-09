@@ -3277,67 +3277,11 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						
 						var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,record["@iot.id"])
 						entitiesParentArray.push([STAEntities[parentEntityName].singular,record["@iot.id"],url]); //EntityName,id.url
-
-						
-						// if (i==parentNodes.length-1){ //Lastone
-						// 	var entitiesRequired=[],entitiesNotRequired=[];
-						// 	var currentNodeEntityPlural=getSTAEntityPlural(currentNode.label,false);
-						// 	entitiesRequired.push('<fieldset><legend>Entities</legend>');
-						// 	var datastream="none"; // linked
-
-						// 	for (var e=0;e<STAEntities[currentNodeEntityPlural].entities.length;e++) {
-						// 		  if (STAEntities[currentNodeEntityPlural].entities[e].required =="true"){
-						// 		  	for(var u=0;u<entitiesParentArray.length;u++){ 
-										
-						// 		 		if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode 
-						// 		 			if (getSTAEntityPlural(entitiesParentArray[u][0],false)=="Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0],false)=="MultiDatastreams"&& datastream!="linked")) {
-						// 						datastream="linked";
-						// 						entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
-						// 					break;
-						// 					}
-						// 		 		}else{
-						// 		 			if (u==entitiesParentArray.length-1){ //If there is not any 
-						// 						if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
-						// 							entitiesRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
-						// 						}else if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" && datastream!="linked"){
-						// 							entitiesRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
-						// 						}
-						// 					}
-						// 		 		}
-						// 		 	}
-						// 		}else{
-						// 		 	for(var u=0;u<entitiesParentArray.length;u++){ 
-						// 		 		if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode
-						// 					if (getSTAEntityPlural(entitiesParentArray[u][0],false)=="Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0],false)=="MultiDatastreams"&& datastream!="linked")) {
-						// 						datastream="linked";
-						// 						entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
-						// 						break;
-						// 					}
-						// 		 		}else{
-						// 					if (u==entitiesParentArray.length-1){
-						// 						if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
-						// 						entitiesNotRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}: <span style="color: #897F7F; font-style: italic"" >none</span></span> <br>`);
-						// 					}else if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" && datastream!="linked"){
-						// 						entitiesNotRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams: <span style="color: #897F7F; font-style: italic" >none</span></span> <br>`);
-						// 					}											
-						// 				}
-						// 		 	}
-						// 		}
-						// 	}
-						// }
-
-						// 	if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'><span style='color: #897F7F; font-style: italic'>none</span></span>");
-						// 	if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='color: #897F7F; font-style: italic>none</span>");
-
-						// 	cdns.push(...entitiesRequired,...entitiesNotRequired,"<br></fieldset>"); 
-						// 	cdns.push('<fieldset><legend>Properties</legend>');
-
-						//}
 					
 					}
-					cdns.push(...createEntitiesinCreateEntity(currentNode,entitiesParentArray));
+					if (parentEntityName!=entityName) cdns.push(...createEntitiesinCreateEntity(currentNode,entitiesParentArray)); //only with create
 				}else if (parentNode.image == "sta.png" && parentNodes.length==1){
-					cdns.push(...createEntitiesinCreateEntity(currentNode));
+					if (parentEntityName!=entityName)cdns.push(...createEntitiesinCreateEntity(currentNode)); //only with create
 				}			
 
 			}
