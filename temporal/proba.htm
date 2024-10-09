@@ -20,20 +20,92 @@
 
 	<script>
 
-		function addTimeToOtherInputCreateEntities(itemWritten, itemToWrite) {
-			document.getElementById(itemToWrite).value = document.getElementById(itemWritten).value
+		if (entitiesParentArray) {
+			for (var e = 0; e < entitiesLinked.length; e++) {
+				if (entitiesLinked[e].required == "true") {
+					for (var u = 0; u < entitiesParentArray.length; u++) {
+
+						if (getSTAEntityPlural(entitiesLinked[e].name, false) == getSTAEntityPlural(entitiesParentArray[u][0], false)) { //If it is a parentNode 
+							if (getSTAEntityPlural(entitiesParentArray[u][0], false) == "Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0], false) == "MultiDatastreams" && datastream != "linked")) {
+								datastream = "linked";
+							}
+							entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+							continue;
+
+						} else {
+							if (u == entitiesParentArray.length - 1) { //If there is not any 
+								if (getSTAEntityPlural(entitiesLinked[e].name, false) != "MultiDatastreams" && getSTAEntityPlural(entitiesLinked[e].name, false) != "Datastreams") {
+									entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+								} else if (getSTAEntityPlural(entitiesLinked[e].name, false) == "MultiDatastreams" && datastream != "linked") {
+									entitiesRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+								}
+							}
+						}
+					}
+				} else {
+					for (var u = 0; u < entitiesParentArray.length; u++) {
+						if (getSTAEntityPlural(entitiesLinked[e].name, false) == getSTAEntityPlural(entitiesParentArray[u][0], false)) { //If it is a parentNode
+							if (getSTAEntityPlural(entitiesParentArray[u][0], false) == "Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0], false) == "MultiDatastreams" && datastream != "linked")) {
+								datastream = "linked";
+							}
+							entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+							continue;
+
+						} else {
+							if (u == entitiesParentArray.length - 1) {
+								if (getSTAEntityPlural(entitiesLinked[e].name, false) != "MultiDatastreams" && getSTAEntityPlural(entitiesLinked[e].name, false) != "Datastreams") {
+									entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}: <span style="color: #897F7F; font-style: italic"" >none</span></span> <br>`);
+								}
+								else if (getSTAEntityPlural(entitiesLinked[e].name, false) == "MultiDatastreams" && datastream != "linked") {
+									entitiesNotRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams: <span style="color: #897F7F; font-style: italic" >none</span></span> <br>`);
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 
 
 
 
-	
 
 
 
 
 
+		else if (parentNodes.length==1 && parentNode.image == "sta.png") { //sta.png (CREATE)
+				// 	var entitiesRequired=[],entitiesNotRequired=[];
+				// 	var currentNodeEntityPlural=getSTAEntityPlural(currentNode.label,false);
+				// 	if (currentNodeEntityPlural!=="Parties"){
+				// 		entitiesRequired.push('<fieldset><legend>Entities</legend>');
 
+				// 		for (var e=0;e<STAEntities[currentNodeEntityPlural].entities.length;e++) {
+				// 			if (STAEntities[currentNodeEntityPlural].entities[e].required =="true"){
+
+				// 				if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
+				// 					entitiesRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+				// 				}
+				// 				else if( getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" )  { //multidatastreams
+				// 					entitiesRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+				// 				}
+
+				// 			}
+				// 			else{
+				// 				if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
+				// 					entitiesNotRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}*: <span style="color: #897F7F; font-style: italic">none</span></span> <br>`);
+				// 				}
+				// 				else if( getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" ) { //multidatastreams
+				// 					entitiesNotRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams: <span style="color: #897F7F; font-style: italic">none</span></span> <br>`);
+				// 				}
+				// 			}
+				// 		}
+						
+				// 		cdns.push(...entitiesRequired,...entitiesNotRequired,"<br></fieldset>"); 
+				// 		cdns.push('<fieldset><legend>Properties</legend>');
+				// 	}
+					
+				// }
 
 	</script>
 </body>

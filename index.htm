@@ -1134,7 +1134,7 @@
 			Datastreams: { singular: "Datastream", entities: [{ name: "Party", required: "true" }, { name: "Sensor", required: "true" }, { name: "ObservedProperty", required: "true" }, { name: "Campaigns", required: "false" }, { name: "License", required: "false" }, { name: "Observations", required: "false" }, { name: "Thing", required: "true" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "observationType", dataType: "string", required: "true" }, { name: "unitOfMeasurement", dataType: "JSON", required: "true" }, { name: "observedArea", dataType: "object", required: "false" }, { name: "phenomenonTime", dataType: "data_isoperiod", required: "false" }, { name: "resultTime", dataType: "data_isoperiod", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }] },
 			MultiDatastreams: { singular: "MultiDatastream", entities: [{ name: "Party", required: "true" }, { name: "Sensor", required: "true" }, { name: "ObservedProperty", required: "true" }, { name: "Campaigns", required: "false" }, { name: "License", required: "false" }, { name: "Observations", required: "false" }, { name: "Thing", required: "true" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "observationType", dataType: "string", required: "true" }, { name: "unitOfMeasurement", dataType: "JSON", required: "true" }, { name: " observedArea", dataType: "object", required: "false" }, { name: "phenomenonTime", dataType: "data_isoperiod", required: "false" }, { name: "resultTime", dataType: "data_isoperiod", required: "false" }, { name: "multiObservationDataType", dataType: "JSON", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }] },
 			Parties: { singular: "Party", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Campaigns", required: "false" }, { name: "ObservationGroups", required: "false" }, { name: "Things", required: "false" }], properties: [{ name: "description", dataType: "string", required: "false" }, { name: "authId", dataType: "string", required: "false" }, { name: "role", dataType: "PartyRoleCode", required: "true" }, { name: "displayName", dataType: "string", required: "false" }] },
-			Campaigns: { singular: "Campaign", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Party", required: "true" }, { name: "License", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "classification", dataType: "string", required: "false" }, { name: "termsOfUse", dataType: "string", required: "true" }, { name: "privacyPolicy", dataType: "string", required: "false" }, { name: "creationTime", dataType: "isodatetime", required: "true" }, { name: "url", dataType: "URI", required: "false" }, { name: "startTime", dataType: "isodatetime", required: "false" }, { name: "endTime", dataType: "isodatetime", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }] },
+			Campaigns: { singular: "Campaign", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Party", required: "true" }, { name: "License", required: "false" }, {name:"ObservationGroups", required:"false"}], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "classification", dataType: "string", required: "false" }, { name: "termsOfUse", dataType: "string", required: "true" }, { name: "privacyPolicy", dataType: "string", required: "false" }, { name: "creationTime", dataType: "isodatetime", required: "true" }, { name: "url", dataType: "URI", required: "false" }, { name: "startTime", dataType: "isodatetime", required: "false" }, { name: "endTime", dataType: "isodatetime", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }] },
 			Licenses: { singular: "License", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Campaigns", required: "false" }, { name: "ObservationGroups", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "definition", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "logo", dataType: "string", required: "false" }, { name: "attributionText", dataType: "JSON", required: "false" }] },
 			ObservationGroups: { singular: "ObservationGroup", entities: [{ name: "Party", required: "true" }, { name: "Campaigns", required: "false" }, { name: "License", required: "false" }, { name: "Observations", required: "false" }, { name: "Relations", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "purpose", dataType: "string", required: "false" }, { name: "creationTime", dataType: "isodatetime", required: "false" }, { name: "endTime", dataType: "isodatetime", required: "false" }, { name: "termsOfUsed", dataType: "string", required: "false" }, { name: "privacyPolicy", dataType: "string", required: "false" }, { name: "dataQuality", dataType: "JSON", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }] },
 			Relations: { singular: "Relation", entities: [{ name: "Object", required: "true" }, { name: "Subject", required: "true" }, { name: "ObservationGroups", required: "false" }], properties: [{ name: "role", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "false" }, { name: "externalObject", dataType: "URI", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }], entityRelations: ["Objects", "Subjects"] }
@@ -3253,7 +3253,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						alert("Parent node ("+STAEntities[parentEntityName].singular+") is not a/an " + STAEntities[entityName].singular + " or is directly related to a/an " +  STAEntities[entityName].singular);
 						return false;
 					}
-					if (parentEntityName==entityName) { 
+					if (parentEntityName==entityName) { //Update or delete
 						if (i>1) {
 							alert("One parent node is the same as the entity " + STAEntities[entityName].singular + ". This is for update or delete the entity. In this case, only one parent node is allowed.");
 							return false;
@@ -3278,66 +3278,76 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,record["@iot.id"])
 						entitiesParentArray.push([STAEntities[parentEntityName].singular,record["@iot.id"],url]); //EntityName,id.url
 
-						if (i==parentNodes.length-1){ //Lastone
-							var entitiesRequired=[],entitiesNotRequired=[];
-							var currentNodeEntityPlural=getSTAEntityPlural(currentNode.label,false);
-							entitiesRequired.push('<fieldset><legend>Entities</legend>');
-							var datastream="none"; // linked
+						
+						// if (i==parentNodes.length-1){ //Lastone
+						// 	var entitiesRequired=[],entitiesNotRequired=[];
+						// 	var currentNodeEntityPlural=getSTAEntityPlural(currentNode.label,false);
+						// 	entitiesRequired.push('<fieldset><legend>Entities</legend>');
+						// 	var datastream="none"; // linked
 
-							for (var e=0;e<STAEntities[currentNodeEntityPlural].entities.length;e++) {
-
-								
-								  if (STAEntities[currentNodeEntityPlural].entities[e].required =="true"){
-								  	for(var u=0;u<entitiesParentArray.length;u++){ 
+						// 	for (var e=0;e<STAEntities[currentNodeEntityPlural].entities.length;e++) {
+						// 		  if (STAEntities[currentNodeEntityPlural].entities[e].required =="true"){
+						// 		  	for(var u=0;u<entitiesParentArray.length;u++){ 
 										
-								 		if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode 
-								 			if (getSTAEntityPlural(entitiesParentArray[u][0],false)=="Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0],false)=="MultiDatastreams"&& datastream!="linked")) {
-												datastream="linked";
-												entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
-											break;
-											}
-								 		}else{
-								 			if (u==entitiesParentArray.length-1){ //If there is not any 
-												if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
-													entitiesRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
-												}else if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" && datastream!="linked"){
-													entitiesRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
-												}
-											}
-								 		}
-								 	}
-								}else{
-								 	for(var u=0;u<entitiesParentArray.length;u++){ 
-								 		if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode
-											if (getSTAEntityPlural(entitiesParentArray[u][0],false)=="Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0],false)=="MultiDatastreams"&& datastream!="linked")) {
-												datastream="linked";
-												entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
-											break;
-											}
-								 			}else{
-												if (u==entitiesParentArray.length-1){
-													if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
-													entitiesNotRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}: <span style="color: #897F7F; font-style: italic"" >none</span></span> <br>`);
-												}else if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" && datastream!="linked"){
-													entitiesNotRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams: <span style="color: #897F7F; font-style: italic" >none</span></span> <br>`);
-												}											
-											}
-								 		}
-								 	}
-								}
-							}
+						// 		 		if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode 
+						// 		 			if (getSTAEntityPlural(entitiesParentArray[u][0],false)=="Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0],false)=="MultiDatastreams"&& datastream!="linked")) {
+						// 						datastream="linked";
+						// 						entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+						// 					break;
+						// 					}
+						// 		 		}else{
+						// 		 			if (u==entitiesParentArray.length-1){ //If there is not any 
+						// 						if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
+						// 							entitiesRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+						// 						}else if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" && datastream!="linked"){
+						// 							entitiesRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+						// 						}
+						// 					}
+						// 		 		}
+						// 		 	}
+						// 		}else{
+						// 		 	for(var u=0;u<entitiesParentArray.length;u++){ 
+						// 		 		if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)==getSTAEntityPlural(entitiesParentArray[u][0],false)){ //If it is a parentNode
+						// 					if (getSTAEntityPlural(entitiesParentArray[u][0],false)=="Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0],false)=="MultiDatastreams"&& datastream!="linked")) {
+						// 						datastream="linked";
+						// 						entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+						// 						break;
+						// 					}
+						// 		 		}else{
+						// 					if (u==entitiesParentArray.length-1){
+						// 						if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
+						// 						entitiesNotRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}: <span style="color: #897F7F; font-style: italic"" >none</span></span> <br>`);
+						// 					}else if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" && datastream!="linked"){
+						// 						entitiesNotRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams: <span style="color: #897F7F; font-style: italic" >none</span></span> <br>`);
+						// 					}											
+						// 				}
+						// 		 	}
+						// 		}
+						// 	}
+						// }
 
-							if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'><span style='color: #897F7F; font-style: italic'>none</span></span>");
-							if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='color: #897F7F; font-style: italic>none</span>");
+						// 	if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'><span style='color: #897F7F; font-style: italic'>none</span></span>");
+						// 	if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='color: #897F7F; font-style: italic>none</span>");
 
-							cdns.push(...entitiesRequired,...entitiesNotRequired,"<br></fieldset>"); 
-							cdns.push('<fieldset><legend>Properties</legend>');
+						// 	cdns.push(...entitiesRequired,...entitiesNotRequired,"<br></fieldset>"); 
+						// 	cdns.push('<fieldset><legend>Properties</legend>');
 
-						}
+						//}
 					
 					}
-				}
+					cdns.push(createEntitiesinCreateEntity(currentNode,entitiesParentArray));
+				}else if (parentNode.image == "sta.png" && parentNodes.length==1){
+					cdns.push(createEntitiesinCreateEntity(currentNode));
+				}			
+
 			}
+			
+		
+
+
+
+
+
 			for (var i=0; i<STAEntities[entityName].properties.length; i++){
 				if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
 					((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
@@ -3447,6 +3457,103 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 			return true;
 		}
+		function createEntitiesinCreateEntity(currentNode,entitiesParentArray){
+			var entitiesRequired=[],entitiesNotRequired=[];
+			var currentNodeEntityPlural=getSTAEntityPlural(currentNode.label,false);
+			var entitiesLinked=STAEntities[currentNodeEntityPlural].entities;
+			var datastream="none"; // linked
+
+			
+			
+
+			if (entitiesParentArray) {
+				entitiesRequired.push('<fieldset><legend>Entities</legend>');
+				for (var e = 0; e < entitiesLinked.length; e++) {
+					if (entitiesLinked[e].required == "true") {
+						for (var u = 0; u < entitiesParentArray.length; u++) {
+
+							if (getSTAEntityPlural(entitiesLinked[e].name, false) == getSTAEntityPlural(entitiesParentArray[u][0], false)) { //If it is a parentNode 
+								if (getSTAEntityPlural(entitiesParentArray[u][0], false) == "Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0], false) == "MultiDatastreams" && datastream != "linked")) {
+									datastream = "linked";
+								}
+								entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+								continue;
+
+							} else {
+								if (u == entitiesParentArray.length - 1) { //If there is not any 
+									if (getSTAEntityPlural(entitiesLinked[e].name, false) != "MultiDatastreams" && getSTAEntityPlural(entitiesLinked[e].name, false) != "Datastreams") {
+										entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+									} else if (getSTAEntityPlural(entitiesLinked[e].name, false) == "MultiDatastreams" && datastream != "linked") {
+										entitiesRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+									}
+								}
+							}
+						}
+					} else {
+						for (var u = 0; u < entitiesParentArray.length; u++) {
+							if (getSTAEntityPlural(entitiesLinked[e].name, false) == getSTAEntityPlural(entitiesParentArray[u][0], false)) { //If it is a parentNode
+								if (getSTAEntityPlural(entitiesParentArray[u][0], false) == "Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0], false) == "MultiDatastreams" && datastream != "linked")) {
+									datastream = "linked";
+								}
+								entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+								continue;
+
+							} else {
+								if (u == entitiesParentArray.length - 1) {
+									if (getSTAEntityPlural(entitiesLinked[e].name, false) != "MultiDatastreams" && getSTAEntityPlural(entitiesLinked[e].name, false) != "Datastreams") {
+										entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}: <span style="color: #897F7F; font-style: italic"" >none</span></span> <br>`);
+									}
+									else if (getSTAEntityPlural(entitiesLinked[e].name, false) == "MultiDatastreams" && datastream != "linked") {
+										entitiesNotRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams: <span style="color: #897F7F; font-style: italic" >none</span></span> <br>`);
+									}
+								}
+							}
+						}
+					}
+				}
+			}else{
+		 	
+				if (currentNodeEntityPlural!=="Parties"){
+					entitiesRequired.push('<fieldset><legend>Entities</legend>');
+
+					for (var e=0;e<STAEntities[currentNodeEntityPlural].entities.length;e++) {
+						if (STAEntities[currentNodeEntityPlural].entities[e].required =="true"){
+
+							if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
+								entitiesRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+							}
+							else if( getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" )  { multidatastreams
+								entitiesRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+							}
+
+						}
+						else{
+							if (getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="MultiDatastreams" && getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)!="Datastreams"){
+								entitiesNotRequired.push(`<span style=" font-weight: bold;">${STAEntities[currentNodeEntityPlural].entities[e].name}*: <span style="color: #897F7F; font-style: italic">none</span></span> <br>`);
+							}
+							else if( getSTAEntityPlural(STAEntities[currentNodeEntityPlural].entities[e].name,false)=="MultiDatastreams" ) {// multidatastreams
+								entitiesNotRequired.push(`<span style=" font-weight: bold;">Datastreams/MultiDatastreams: <span style="color: #897F7F; font-style: italic">none</span></span> <br>`);
+							}
+						}
+					}
+					
+				}
+					
+				 
+			}
+
+			// if (entitiesRequired.length==1)entitiesRequired.push("<br><span style='font-style:italic'><span style='color: #897F7F; font-style: italic'>none</span></span>");
+			// if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='color: #897F7F; font-style: italic>none</span>");
+			var cdns=[]
+			cdns.push(...entitiesRequired,...entitiesNotRequired,"<br></fieldset>"); 
+			cdns.push('<fieldset><legend>Properties</legend>');
+
+			return cdns;
+
+		}
+	
+	
+	
 
 		function addTimeToOtherInputCreateEntities (itemWritten, itemToWrite,number,origin){ //Put Date from calendar to input and vice versa 
 
