@@ -3423,7 +3423,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 
 			if (entitiesParentArray) {
-				entitiesRequired.push('<fieldset><legend>Entities</legend>');
+				entitiesRequired.push('<fieldset id="fieldsetModificateEntities_Entities"><legend>Entities</legend>');
 				for (var e = 0; e < entitiesLinked.length; e++) {
 					if (entitiesLinked[e].required == "true") {
 						for (var u = 0; u < entitiesParentArray.length; u++) {
@@ -3474,7 +3474,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			else{
 		 	
 				if (currentNodeEntityPlural!=="Parties"){
-					entitiesRequired.push('<fieldset><legend>Entities</legend>');
+					entitiesRequired.push('<fieldset id="fieldsetModificateEntities_Entities"><legend>Entities</legend>');
 
 					for (var e=0;e<STAEntities[currentNodeEntityPlural].entities.length;e++) {
 						if (STAEntities[currentNodeEntityPlural].entities[e].required =="true"){
@@ -3506,7 +3506,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			// if (entitiesNotRequired.length==1)entitiesNotRequired.push("<br><span style='color: #897F7F; font-style: italic>none</span>");
 			var cdns=[]
 			cdns.push(...entitiesRequired,...entitiesNotRequired,"<br></fieldset>"); 
-			cdns.push('<fieldset><legend>Properties</legend>');
+			cdns.push('<fieldset id="fieldsetModificateEntities_Properties"><legend>Properties</legend>');
 			currentNode.STAEntitiesRequiredNotLinked=entitiesRequiedNotLinked;
 
 			return cdns;
@@ -3704,7 +3704,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 			
 			
-			var childrenNodes=document.getElementById("dlgCreateUpdateDeleteEntityProperties").childNodes, childrenNodes2;
+			var childrenNodes=document.getElementById("fieldsetModificateEntities_Properties").childNodes, childrenNodes2;
 			
 			var obj={}, obj2={},idSplited, allowToSend=true;
 			for (var i=0;i<childrenNodes.length;i++){
@@ -3792,7 +3792,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 				if (childrenNodes[i].nodeName=="INPUT"&&childrenNodes[i].type=="text"){
 					idSplited=childrenNodes[i].id.split("dlgCreateUpdateDeleteEntity_")[1];
-					if (childrenNodes[i].value=="" && childrenNodes[i].dataset.starequired=="true"){
+					 if (childrenNodes[i].value=="" && childrenNodes[i].dataset.starequired=="true"){
+					 //document.getElementById(childrenNodes[i].id).getAttribute("dataset-starequired")=="true"
 						alert(idSplited +" parameter is required, please fill in the box before send");
 						allowToSend=false;
 						break;
