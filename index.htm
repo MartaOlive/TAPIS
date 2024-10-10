@@ -3236,10 +3236,12 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 
 			cdns.push('<span id="dlgCreateUpdateDeleteEntityType" style="font-weight:bold">',STAEntities[entityName].singular, "</span>:<br><br>"); //Title (Entity name) 
-			var actionToDo;
+			var actionToDo="";
+			
 			for (var i=0; i<parentNodes.length; i++)
 			{
 				var parentNode=parentNodes[i];
+				var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), false);
 				if (!parentNode.STAdata || parentNode.STAdata.length==0){
 					alert("Parent node has no STA data associated");
 					return false;
@@ -3248,8 +3250,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					if (parentNode.STAdata.length>1){
 						alert("Parent node has more than a single record. Please select a record first.");
 						return false;
-					}
-					var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), false);
+					}				
 					if (parentEntityName!=entityName && returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName)==-1 && returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular)==-1) {
 						alert("Parent node ("+STAEntities[parentEntityName].singular+") is not a/an " + STAEntities[entityName].singular + " or is directly related to a/an " +  STAEntities[entityName].singular);
 						return false;
@@ -3284,18 +3285,21 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					}
 					
 				}
+				else if (parentNodes.length==1&& parentNodes[0].image == "sta.png"){
+					actionToDo="create" //CREATE
+				}
 						
 
 			}
 
 			if(actionToDo=="create")  {
 				cdns.push(...createEntitiesinCreateEntity(currentNode,entitiesParentArray)); //only with create
-				console.log("bli")
+				
 			}
-			else{
-				cdns.push(...createEntitiesinCreateEntity(currentNode)); //only with create
-				console.log("bu")
-			}
+			// else{
+			// 	cdns.push(...createEntitiesinCreateEntity(currentNode)); //only with create
+			// 	console.log("bu")
+			// }
 
 		
 
@@ -3422,7 +3426,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 			
 
-			if (entitiesParentArray) {
+			if (entitiesParentArray.length!=0) {
 				entitiesRequired.push('<fieldset id="fieldsetModificateEntities_Entities"><legend>Entities</legend>');
 				for (var e = 0; e < entitiesLinked.length; e++) {
 					if (entitiesLinked[e].required == "true") {
