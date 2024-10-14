@@ -6,7 +6,7 @@
 	<title>TAPIS: Tables from APIs for Sensors (Sensor Things API plus Explorer)</title>
 	<link rel="icon" type="image/x-icon" href="favicon.ico">
 	<script type="text/javascript" src="vis.min.js"></script>
-	<!-- <script type="text/javascript" src="Chart.bundle.min.js" async defer></script> -->
+	<script type="text/javascript" src="Chart.bundle.min.js" async defer></script>
         <script type="text/javascript" src="chartjs-plugin-labels.js" async defer></script>
 	<script type="text/javascript" src="papaparse.min.js" async defer></script>
 	<script type="text/javascript" src="hello.all.min.js"></script>
@@ -1173,7 +1173,7 @@
 					SaveTable: {description: "Save Table", leafNode: true},
 					SaveLayer: {description: "Save Layer", leafNode: true},
 					OpenMap: {description: "Open Map", leafNode: true},
-					guf: {description: "Feedback", leafNode: true}};
+					guf: {description: "Feedback"}};
 		const TableOperationsArray = Object.keys(TableOperations);
 
 		//If the two nodes cannot connect it returns null. It transforms a plural to singular if needed.
@@ -1478,6 +1478,7 @@
 			}
 			return null;
 		}
+
 
 		function RemoveQueryParamFromURL(url, queryparam) {
 			var queryparams=getURLQueryParams(url);
@@ -1828,61 +1829,66 @@
 			return simpleUrlRecords; 
 		}
 
-		async function getSimplifyGUFRecord(metadatas){
-			var simpleUrlRecords=[], id, title;
-			for (var i=0; i<metadatas.length; i++)
-			{
-				var metadata=metadatas[i];
-				if (!metadata)
-					continue;
-				simpleUrlRecords.push({
+		async function getSimplifyGUFRecord(metadata){
+			var simpleUrlRecord={
 					id: metadata['id'],
 					title: metadata['title'],
-					updated: metadata['updated']});
-				var response=await HTTPJSONData(metadata['link']['@href']);
-				var wpsexecute=(response && response.text) ? response.text : null;
-				if (!wpsexecute) {
-					showInfoMessage("Error retrieving "+metadata['link']['@href']);
-					return;
-				}
-				var wpsex=JSON.parse(xml2json(parseXml(wpsexecute), false, null));
-				if (!wpsex || !wpsex['wps:ExecuteResponse'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'].length) {
-					showInfoMessage("Error retrieving "+metadata['link']['@href']);
-					return;
-				}
-				var outp=wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'][wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'].length-1]
-				if (!outp || !outp['wps:Data'] || !outp['wps:Data']['wps:ComplexData'] || !outp['wps:Data']['wps:ComplexData']['guf:GUF_FeedbackItem']) {
-					showInfoMessage("Error retrieving "+metadata['link']['@href']);
-					return;
-				}
-				var feedbackItem=outp['wps:Data']['wps:ComplexData']['guf:GUF_FeedbackItem'];
-				if (!feedbackItem['guf:abstract'] || !feedbackItem['guf:abstract']['gco:CharacterString'])
-					continue;
-				simpleUrlRecords[simpleUrlRecords.length-1].abstract=feedbackItem['guf:abstract']['gco:CharacterString'];
-				if (!feedbackItem['guf:contact'] || 
-				    !feedbackItem['guf:contact']['guf:GUF_UserInformation'] || 
-				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails'] || 
-				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual'] || 
-				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier'] || 
-				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier'] ||
-				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier']['mcc:description'] ||
-				    !feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier']['mcc:description']['gco:CharacterString'])
-					continue;
-				simpleUrlRecords[simpleUrlRecords.length-1].owner=feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier']['mcc:description']['gco:CharacterString']
-				if (!feedbackItem['guf:rating'] || 
-				    !feedbackItem['guf:rating']['guf:GUF_Rating'] || 
-				    !feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating'] || 
-				    !feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating']['guf:GUF_RatingCode'] || 
-				    !feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating']['guf:GUF_RatingCode']['@codeListValue'])
-					continue;
-				simpleUrlRecords[simpleUrlRecords.length-1].rating=feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating']['guf:GUF_RatingCode']['@codeListValue'];
-				if (!feedbackItem['guf:userComment'] || 
-				    !feedbackItem['guf:userComment']['guf:GUF_UserComment'] || 
-				    !feedbackItem['guf:userComment']['guf:GUF_UserComment']['guf:comment'] || 
-				    !feedbackItem['guf:userComment']['guf:GUF_UserComment']['guf:comment']['gco:CharacterString']) 
-					continue;
-				simpleUrlRecords[simpleUrlRecords.length-1].comment=feedbackItem['guf:userComment']['guf:GUF_UserComment']['guf:comment']['gco:CharacterString'];
+					updated: metadata['updated']};
+			var response=await HTTPJSONData(metadata['link']['@href']);
+			var wpsexecute=(response && response.text) ? response.text : null;
+			if (!wpsexecute) {
+				showInfoMessage("Error retrieving "+metadata['link']['@href']);
+				return simpleUrlRecord;
 			}
+			var wpsex=JSON.parse(xml2json(parseXml(wpsexecute), false, null));
+			if (!wpsex || !wpsex['wps:ExecuteResponse'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'].length) {
+				showInfoMessage("Error retrieving "+metadata['link']['@href']);
+				return simpleUrlRecord;
+			}
+			var outp=wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'][wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'].length-1]
+			if (!outp || !outp['wps:Data'] || !outp['wps:Data']['wps:ComplexData'] || !outp['wps:Data']['wps:ComplexData']['guf:GUF_FeedbackItem']) {
+				showInfoMessage("Error retrieving "+metadata['link']['@href']);
+				return simpleUrlRecord;
+			}
+			var feedbackItem=outp['wps:Data']['wps:ComplexData']['guf:GUF_FeedbackItem'];
+			if (feedbackItem['guf:abstract'] && feedbackItem['guf:abstract']['gco:CharacterString'])
+				simpleUrlRecord.abstract=feedbackItem['guf:abstract']['gco:CharacterString'];
+			if (feedbackItem['guf:contact'] && 
+			    feedbackItem['guf:contact']['guf:GUF_UserInformation'] && 
+			    feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails'] && 
+			    feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual'] && 
+			    feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier'] && 
+			    feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier'] &&
+			    feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier']['mcc:description'] &&
+			    feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier']['mcc:description']['gco:CharacterString'])
+				simpleUrlRecord.owner=feedbackItem['guf:contact']['guf:GUF_UserInformation']['guf:userDetails']['cit:CI_Individual']['cit:partyIdentifier']['mcc:MD_Identifier']['mcc:description']['gco:CharacterString']
+			if (feedbackItem['guf:rating'] && 
+			    feedbackItem['guf:rating']['guf:GUF_Rating'] && 
+			    feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating'] && 
+			    feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating']['guf:GUF_RatingCode'] && 
+			    feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating']['guf:GUF_RatingCode']['@codeListValue'])
+				simpleUrlRecord.rating=feedbackItem['guf:rating']['guf:GUF_Rating']['guf:rating']['guf:GUF_RatingCode']['@codeListValue'];
+			if (feedbackItem['guf:userComment'] && 
+			    feedbackItem['guf:userComment']['guf:GUF_UserComment'] && 
+			    feedbackItem['guf:userComment']['guf:GUF_UserComment']['guf:comment'] && 
+			    feedbackItem['guf:userComment']['guf:GUF_UserComment']['guf:comment']['gco:CharacterString']) 
+				simpleUrlRecord.comment=feedbackItem['guf:userComment']['guf:GUF_UserComment']['guf:comment']['gco:CharacterString'];
+			return simpleUrlRecord;
+		}
+
+		async function getSimplifyGUFRecords(metadatas){
+			var simpleUrlRecords=[], id, title;
+			if (!metadatas)
+				return null;
+			if (metadatas.length) {
+				for (var i=0; i<metadatas.length; i++) {
+					var metadata=metadatas[i];
+					if (!metadata)
+						continue;
+					simpleUrlRecords.push(await getSimplifyGUFRecord(metadata));
+				}
+			} else 
+				simpleUrlRecords.push(await getSimplifyGUFRecord(metadatas));
 			return simpleUrlRecords;
 		}
 
@@ -2053,7 +2059,7 @@
 				else if (node.OGCType=="OGCCSW")
 					node.STAdata = node.STAdata.concat(getSimplifyOGCCSWRecord(jsonData['csw:GetRecordsResponse']['csw:SearchResults']['gmd:MD_Metadata']));
 				else if (node.OGCType=="GUF")
-					node.STAdata = node.STAdata.concat(await getSimplifyGUFRecord(jsonData['feed']['entry']));
+					node.STAdata = node.STAdata.concat(await getSimplifyGUFRecords(jsonData['feed']['entry']));
 				else
 					node.STAdata = node.STAdata.concat(jsonData.value);
 					
@@ -2073,7 +2079,7 @@
 				} else if (node.OGCType=="OGCCSW") {
 					node.STAdata = getSimplifyOGCCSWRecord(jsonData['csw:GetRecordsResponse']['csw:SearchResults']['gmd:MD_Metadata']);
 				} else if (node.OGCType=="GUF") {
-					node.STAdata = await getSimplifyGUFRecord(jsonData['feed']['entry']);
+					node.STAdata = await getSimplifyGUFRecords(jsonData['feed']['entry']);
 				} else {
 					node.STAdata = (typeof jsonData.value!=="undefined") ? jsonData.value : [jsonData];
 					nextLink = jsonData["@iot.nextLink"];
@@ -3282,6 +3288,11 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 				else if (parentNodes.length==1&& parentNodes[0].image == "sta.png"){
 					actionToDo="create" //CREATE
+					var record=parentNode.STAdata[0]; //Info from parentNode used to complete in update
+					if (!record["@iot.id"]){
+						alert("Cannot find @iot.id in parent node " + STAEntities[parentEntityName].singular + ". Did you removed in a select?");
+						return false;
+					}
 				}
 						
 
@@ -3584,8 +3595,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		}
 	
 	
-	
 
+		
 		function addTimeToOtherInputCreateEntities (itemWritten, itemToWrite,number,origin){ //Put Date from calendar to input and vice versa 
 
 			if (number =='2'){
@@ -3632,87 +3643,87 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var obj={};
 
 			if (currentNode.STAEntitiesRequiredNotLinked.length==0){
-				for (var i=0; i<parentNodes.length; i++) {
-					var parentNode=parentNodes[i];
-					if (parentNode.image == "sta.png")
-						continue;
-					if (i!=0 && getSTAURLRoot(parentNode.STAURL)!=url) {
-						alert("Not all parent nodes are from the same root URL: " + getSTAURLRoot(parentNode.STAURL) + ", " + url);
-						continue;
-					}
-			
-					var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), true);
-					var entity;
-					if (returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName)!=-1)
-						entity=parentEntityName;
-					else if (returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular)!=-1)
-						entity=STAEntities[parentEntityName].singular;
-					else {
-						alert("Parent node ("+STAEntities[parentEntityName].singular+") is not directly related to a/an " +  STAEntities[entityName].singular);
-						continue;
-					}
-
-					if (!parentNode.STAdata || parentNode.STAdata.length==0){
-						alert("Parent node has no STA data associated");
-						return;
-					}
-					if (parentNode.STAdata.length>1){
-						alert("Parent node '"+STAEntities[parentEntityName].singular+"' has more than a single record. Please select a record first.");
-						return;
-					}
-					var record=parentNode.STAdata[0];
-					if (!record["@iot.id"]){
-						alert("Cannot find @iot.id. Did you removed in a select?");
-						return;
-					}
-					if (obj[entity]){  //add to a plural array
-						if (entity==STAEntities[parentEntityName].singular){
-							alert("An element '"+STAEntities[entityName].singular+"' can not have more than one '"+parentEntityName+"' Associated. One the first will be considered.");
-							continue;
-						}					
-						obj[parentEntityName].push({"@iot.id": record["@iot.id"]});
-					}
-					else if (entity==STAEntities[parentEntityName].singular)
-						obj[STAEntities[parentEntityName].singular] = {"@iot.id": record["@iot.id"]}
-					else  //Add to a plural element
-						obj[parentEntityName]=[{"@iot.id": record["@iot.id"]}];
-	
+			for (var i=0; i<parentNodes.length; i++) {
+				var parentNode=parentNodes[i];
+				if (parentNode.image == "sta.png")
+					continue;
+				if (i!=0 && getSTAURLRoot(parentNode.STAURL)!=url) {
+					alert("Not all parent nodes are from the same root URL: " + getSTAURLRoot(parentNode.STAURL) + ", " + url);
+					continue;
 				}
-				var prop, allowToSend=true;
-				for (var i=0; i<STAEntities[entityName].properties.length; i++) {
-					if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
-						((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
+			
+				var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), true);
+				var entity;
+				if (returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName)!=-1)
+					entity=parentEntityName;
+				else if (returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular)!=-1)
+					entity=STAEntities[parentEntityName].singular;
+				else {
+					alert("Parent node ("+STAEntities[parentEntityName].singular+") is not directly related to a/an " +  STAEntities[entityName].singular);
+					continue;
+				}
+
+				if (!parentNode.STAdata || parentNode.STAdata.length==0){
+					alert("Parent node has no STA data associated");
+					return;
+				}
+				if (parentNode.STAdata.length>1){
+					alert("Parent node '"+STAEntities[parentEntityName].singular+"' has more than a single record. Please select a record first.");
+					return;
+				}
+				var record=parentNode.STAdata[0];
+				if (!record["@iot.id"]){
+					alert("Cannot find @iot.id. Did you removed in a select?");
+					return;
+				}
+				if (obj[entity]){  //add to a plural array
+					if (entity==STAEntities[parentEntityName].singular){
+						alert("An element '"+STAEntities[entityName].singular+"' can not have more than one '"+parentEntityName+"' Associated. One the first will be considered.");
 						continue;
-					if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || 
-						(entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature"))
-					{
-						//For the moment in supporting only a point
-						obj[STAEntities[entityName].properties[i].name]={"type": "Point", "coordinates": []};
+					}					
+					obj[parentEntityName].push({"@iot.id": record["@iot.id"]});
+				}
+				else if (entity==STAEntities[parentEntityName].singular)
+					obj[STAEntities[parentEntityName].singular] = {"@iot.id": record["@iot.id"]}
+				else  //Add to a plural element
+					obj[parentEntityName]=[{"@iot.id": record["@iot.id"]}];
+	
+			}
+				var prop, allowToSend=true;
+			for (var i=0; i<STAEntities[entityName].properties.length; i++) {
+				if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
+					((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
+					continue;
+				if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || 
+				    (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature"))
+				{
+					//For the moment in supporting only a point
+					obj[STAEntities[entityName].properties[i].name]={"type": "Point", "coordinates": []};
 						if (document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value==""&& document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").getAttribute("data-starequired")=="true"){
 							alert("Longitude parameter is required, please fill in the box before send");
 							allowToSend=false;
 						}else{
-							obj[STAEntities[entityName].properties[i].name].coordinates[0]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value);
+					obj[STAEntities[entityName].properties[i].name].coordinates[0]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value);
 						}
 
 						if (document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value==""&& document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").getAttribute("data-starequired")=="true"){
 							alert("Latitude parameter is required, please fill in the box before send");
 							allowToSend=false;
 						}else{
-							obj[STAEntities[entityName].properties[i].name].coordinates[1]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value);
+					obj[STAEntities[entityName].properties[i].name].coordinates[1]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value);
 						}
 
-						continue;	
-					}
+					continue;	
+				}
 					if ((entityName=="Datastreams" || entityName=="MultiDatastreams")&& STAEntities[entityName].properties[i].name=="unitOfMeasurement")
-					{
-						//Something similar needs to be done for MultiDataStream
-						obj[STAEntities[entityName].properties[i].name]={};
-						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;					
+				{
+					//Something similar needs to be done for MultiDataStream
+					obj[STAEntities[entityName].properties[i].name]={};
+					obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;
 						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
 						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value : null;					
-						continue;
-					}
+					continue;
+				}
 					if (STAEntities[entityName].properties[i].name=="multiObservationDataType"){
 						var textArea=document.getElementById("dlgCreateUpdateDeleteEntity_multiObservationDataType_textAreaList");
 						if (textArea.value==""&& textArea.getAttribute("data-starequired")=="true"){
@@ -3727,7 +3738,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					}
 
 						
-					prop=document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value;
+				prop=document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value;
 					if (prop!=="") 	obj[STAEntities[entityName].properties[i].name]=(entityName=="Observations" && STAEntities[entityName].properties[i].name=="result" && !isNaN(prop)) ? parseFloat(prop) : prop;
 					else if (prop=="" && document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).getAttribute("data-starequired")=="true") {
 						alert( STAEntities[entityName].properties[i].name+" parameter is required, please fill in the box before send");
@@ -3739,24 +3750,24 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				if (allowToSend==true){
 					document.getElementById("DialogCreateUpdateDeleteEntity").close();
 					showInfoMessage("Creating a/an "+ STAEntities[entityName].singular +"...");
-					GetObjectId(url, entityName, obj).then(
-					function(value) {
-						if (value)
-						{ 
-							document.getElementById("DialogCreateUpdateDeleteEntity").close();
-							showInfoMessage('Available at: <a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
-							node.STAURL=getUrlToId(url, entityName, value);
-							node.STAdata=[];
-							node.STAdata.push(obj);
-							node.STAdata[0]["@iot.id"]=isNaN(value) ? value : parseInt(value);
-							networkNodes.update(node);
-						}
-					},
-					function(error) { 
-						showInfoMessage('Error creating entity. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
-						console.log(error) ;
+			GetObjectId(url, entityName, obj).then(
+				function(value) {
+					if (value)
+					{ 
+						document.getElementById("DialogCreateUpdateDeleteEntity").close();
+						showInfoMessage('Available at: <a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
+						node.STAURL=getUrlToId(url, entityName, value);
+						node.STAdata=[];
+						node.STAdata.push(obj);
+						node.STAdata[0]["@iot.id"]=isNaN(value) ? value : parseInt(value);
+						networkNodes.update(node);
 					}
-					);	
+				},
+				function(error) { 
+					showInfoMessage('Error creating entity. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error) ;
+				}
+			);	
 				}
 			
 			}else{
@@ -3794,7 +3805,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 									allowToSend=false;
 									break;
 								}else{
-									obj2["coordinates"]=[childrenNodes2[e].value];
+								obj2["coordinates"]=[childrenNodes2[e].value];
 								}
 								
 								continue;
@@ -3806,11 +3817,11 @@ async function requestAndRefreshCountResults(currentNode, period) {
 									allowToSend=false;
 									break;
 								}else{
-									obj2["coordinates"].push(childrenNodes2[e].value);
-									obj["location"]=obj2;
+							obj2["coordinates"].push(childrenNodes2[e].value);
+							obj["location"]=obj2;
 								}
 							
-							}
+						}
 						}
 						
 					}
@@ -3830,8 +3841,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 									allowToSend=false;
 									break;
 								}else{
-									obj2["name"]=childrenNodes2[e].value;
-									continue;
+								obj2["name"]=childrenNodes2[e].value;
+								continue;
 								}
 
 							}
@@ -3841,7 +3852,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 									allowToSend=false;
 									break;
 								}else{
-									obj2["symbol"]=childrenNodes2[e].value;
+								obj2["symbol"]=childrenNodes2[e].value;
 									continue;						
 								}
 							continue;
@@ -3852,8 +3863,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 									allowToSend=false;
 									break;
 								}else{
-									obj2["definition"]=childrenNodes2[e].value;
-									obj["unitOfMeasurement"]=obj2;
+								obj2["definition"]=childrenNodes2[e].value;
+								obj["unitOfMeasurement"]=obj2;
 									continue;						
 								}
 							}
@@ -3871,24 +3882,24 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						allowToSend=false;
 						break;
 					}else{
-						if (childrenNodes[i].value!="")	{
+					if (childrenNodes[i].value!="")	{
 						obj[idSplited]=childrenNodes[i].value;
-						}
 					}
-
 				}
+
+			}
 
 			}
 			if (allowToSend==true){
 				showInfoMessage("Updating  "+ STAEntities[entityName].singular +" "+id+" ...");
-				 var response= await HTTPJSONData(url,null,"PUT",obj);
+			 var response= await HTTPJSONData(url,null,"PUT",obj);
 				 document.getElementById("DialogCreateUpdateDeleteEntity").close();
-				if (response.ok)
-					showInfoMessage(STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
-				else{
-					showInfoMessage("Error updating "+STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
+			 if (response.ok)
+			 	showInfoMessage(STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
+			 else{
+			 	showInfoMessage("Error updating "+STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
 
-				}
+			 }
 			}			
 		}
 
@@ -5632,9 +5643,15 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 		}
 
+		function makeCodespaceHttp(url) {
+			if (url.length>8 && url.substring(0, 8)=="https://")
+				return "http://" + url.substring(8);
+			return url;
+		}
+
 		function AddGUF(event) {
 			event.preventDefault(); // We don't want to submit this form
-			GUFAfegirFeedbackCapa(document.getElementById("DialogGUFTitleInput").value, document.getElementById("DialogGUFCodeInput").value, document.getElementById("DialogGUFCodespaceInput").value, "eng", "authenix", null)
+			GUFAfegirFeedbackCapa(document.getElementById("DialogGUFTitleInput").value, document.getElementById("DialogGUFCodeInput").value, makeCodespaceHttp(document.getElementById("DialogGUFCodespaceInput").value), "eng", "authenix", null)
 		}
 
 		function EditGUF(event) {
@@ -5649,13 +5666,14 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var previousSTAURL = currentNode.STAURL;
 
 			currentNode.STAURL = ServerGUF+"?SERVICE=WPS&REQUEST=EXECUTE&IDENTIFIER=NB_RESOURCE:ENUMERATE&LANGUAGE=eng&FORMAT=text/xml&TYPE=FEEDBACK";
-			currentNode.STAURL +="&TRG_TYPE_1=CITATION&TRG_FLD_1=CODE&TRG_VL_1=" + document.getElementById("DialogGUFCodeInput").value + "&TRG_OPR_1=EQ&TRG_NXS_1=AND&TRG_TYPE_2=CITATION&TRG_FLD_2=NAMESPACE&TRG_VL_2=" + document.getElementById("DialogGUFCodespaceInput").value + "&TRG_OPR_2=EQ";			
+			currentNode.STAURL +="&TRG_TYPE_1=CITATION&TRG_FLD_1=CODE&TRG_VL_1=" + document.getElementById("DialogGUFCodeInput").value + "&TRG_OPR_1=EQ&TRG_NXS_1=AND&TRG_TYPE_2=CITATION&TRG_FLD_2=NAMESPACE&TRG_VL_2=" + makeCodespaceHttp(document.getElementById("DialogGUFCodespaceInput").value) + "&TRG_OPR_2=EQ";			
 
 			currentNode.OGCType = "GUF";
 			
 			networkNodes.update(currentNode);
 
 			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+			showInfoMessage("Requesting Feedback...");
 			LoadJSONNodeSTAData(currentNode);
 		}
 
@@ -6214,8 +6232,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 									document.getElementById("DialogGUFCodespaceInput").value=parentNode.STAURL;
 								else {
 									var grandParentNode=GetFirstParentNode(parentNode);
-									if (grandparentNode && grandParentNode.STAURL)
-										document.getElementById("DialogGUFCodespaceInput").value=grandParentNode.STAURL;
+									if (grandParentNode && grandParentNode.STAURL)
+										document.getElementById("DialogGUFCodespaceInput").value=(grandParentNode.OGCType=="OGCCSW") ? getURLWithoutQueryParams(grandParentNode.STAURL) : grandParentNode.STAURL;
 								}
 							}
 						}

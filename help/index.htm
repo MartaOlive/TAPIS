@@ -52,6 +52,7 @@
 <li><a href="#recipe04">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</a></li>
 <li><a href="#recipe05">Recipe 5: Selecting temperatures from an area</a></li>
 <li><a href="#recipe06">Recipe 6: Creating a new stream of observations</a></li>
+<li><a href="#recipe07">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</a></li>
 </ul>
 </ul>
 
@@ -951,8 +952,54 @@ A partial result of the created observation group can be retrieved from the foll
   "Relations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)/Relations"
 }
 </textarea>
-<br><br><br>
 
+<br><br><br>
+<br>
+<hr width="30%">
+<a id="recipe07"></a>
+<h3>Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</h3>
+In this example, we illustrate how to connect to a catalogue of metadata using the OGC CSW standard. Then we can select a dataset, look at it and explore the geospatial user feedback of input a new eedback about about it.
+
+<p>
+First we connect to the GeoNetwork AD4GD catalogue.<br>
+<img src="recipe07_catalogue.png" width="600" class="center">
+<p>
+
+The result is a table with a list of record in the catalogue that have data associated with it.<br>
+<img src="recipe07_catalogueTable.png" width="600" class="center">
+<p>
+
+We can select one of this records with the [select row] tool.<br>
+<img src="recipe07_catalogueSelectRow.png" width="600" class="center">
+<p>
+
+Now, depending on the format we can select a tool to open the file. In this case we use the [ImportCSV]. By double-clicking in the tool, we can immendiately open the resource without having to write the URL of the reource. We only need to press the two [load] buttons next to the URLs.<br>
+<img src="recipe07_importCSVTable.png" width="1000" class="center">
+<p>
+
+The table can be examine and analyce. In this case, we can do groupBy statistics to know about the number of occurrences per species selecting the species boht as GroupBy and as Attributes to aggregate and using the "count defined" aggregation. The results is a little table with two columns one with the species name and another with the number of occurrences per species.<br>
+<img src="recipe07_groupBy.png" width="800" class="center">
+<p>
+
+Then we can create a <b>bar chart</b> that reprensents the table by selecting the <i>species</i> as categories and the <i>countDefined</i> as values. We can easily see that the <i>Mustela putorius</i> is the <i>species</i> with more registered occurences.<br> 
+<img src="recipe07_barChart.png" width="1000" class="center">
+<p>
+
+Now we can report our little "finding" as geospatial user feedback. First, we need to connect the 'Feedback' tool to the 'Select row' element that contains the selected dataset record in the catalogue. By double clicking the GUF tool we can press the [Add feedback] botton.<br>
+<img src="recipe07_GUF.png" width="1000" class="center">
+<p>
+
+The interface of the Nimmbus system is called. After logging in the system is possible to report our "finding" as a "comment". We have to press [Save] to send the feedback to the feedback database and close the window.<br>
+<img src="recipe07_GUFCreation.png" width="1000" class="center">
+<p>
+
+To verify that the feedback is collected and recorded, we can use the button [Get feedback] to get the stored feedback as table (with only one row if there was no previous feedback.<br>
+<img src="recipe07_GUFGetFeedback.png" width="1200" class="center">
+<p>
+
+To read the record better, we can use the [Edit record] to see the item as a record in a form.<br>
+<img src="recipe07_GUFFeedbackItem.png" width="600" class="center">
+<p>
 
 </body>
 </html>
