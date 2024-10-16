@@ -20,75 +20,193 @@
 
 	<script>
 
-		if (actionToDo == "create") {
-			var currentNodeEntityPlural = getSTAEntityPlural(currentNode.label, false);
-			var entitiesLinked = STAEntities[currentNodeEntityPlural].entities;
-			var entitiesRequiedNotLinked = [], observedPropertiesArray = [], entitiesRequired = [], entitiesNotRequired = [];
+		function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNode, number) {
+			console.log(number)
+			var cdns = [], entitiesParentArray = [], entitiesParentArrayObservedProperties = [];
+			var parentNodes = GetParentNodes(currentNode);
+			if (parentNodes.length == 0) {
+				alert("Parent(s) node(s) are needed to know about the STA root url");
+				return false;
+			}
+			cdns.push('<span id="dlgCreateUpdateDeleteEntityType" style="font-weight:bold">MultiDatastream</span>:<br><br>'); //Title (Entity name) 
+			var actionToDo = "";
+			for (var i = 0; i < parentNodes.length; i++) {
+				var parentNode = parentNodes[i];
+				//console.log(parentNode.STAdata[0]["@iot.id"])
+				var parentEntityName = getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), false);
+				if (!parentNode.STAdata || parentNode.STAdata.length == 0) {
+					alert("Parent node has no STA data associated");
+					return false;
+				}
+				if (parentNode.image != "sta.png") {
+					if (parentNode.STAdata.length > 1) {
+						alert("Parent node has more than a single record. Please select a record first.");
+						return false;
+					}
+					if (parentEntityName != entityName && returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName) == -1 && returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular) == -1) {
+						alert("Parent node (" + STAEntities[parentEntityName].singular + ") is not a/an Multidatastream or is directly related to a/an Multidatastream");
+						return false;
+					}
+					if (parentEntityName == entityName) { //Update or delete
+						actionToDo = "update_delete";
+						if (i > 1) {
+							alert("One parent node is the same as the entity Multidatastream. This is for update or delete the entity. In this case, only one parent node is allowed.");
+							return false;
+						}
+						var record = parentNode.STAdata[0]; //Info from parentNode used to complete in update
+						if (!record["@iot.id"]) {
+							alert("Cannot find @iot.id. Did you removed in a select?");
+							return false;
+						}
+						//Update or delete
+						cdns.push('<label style=" font-weight: bold;">Id: </label><input id="dlgCreateUpdateDeleteEntity_id" style="background-color:#D8DFD6" type="text" value="', record["@iot.id"], '" readonly=="readonly"><br>'); //update/delete
+					}
+					else {
+						actionToDo = "create" //CREATE
+						var record = parentNode.STAdata[0]; //Info from parentNode used to complete in update
+						if (!record["@iot.id"]) {
+							alert("Cannot find @iot.id in parent node " + STAEntities[parentEntityName].singular + ". Did you removed in a select?");
+							return false;
+						}
+						//ENTITIES PARENTNODE
+						//cdns.push(STAEntities[parentEntityName].singular, ' id: <a href="', getUrlToId(getSTAURLRoot(parentNodes[0].STAURL), parentEntityName, record["@iot.id"]), '" target="_blank">', record["@iot.id"], '</a><br>');
+						var url = getUrlToId(getSTAURLRoot(parentNodes[0].STAURL), parentEntityName, record["@iot.id"]);
+						if (STAEntities[parentEntityName].singular == "ObservedProperty") {
+							entitiesParentArrayObservedProperties.push([STAEntities[parentEntityName].singular, record["@iot.id"], url, record["name"]])
+						} else {
+							entitiesParentArray.push([STAEntities[parentEntityName].singular, record["@iot.id"], url]); //EntityName,id.url
+						}
 
-			//Creating dialog			
-			if (entitiesParentArray.length != 0) {
 
 
-				for (var e = 0; e < entitiesLinked.length; e++) {
-					if (entitiesLinked[e].name == "Party" || entitiesLinked[e].name == "Sensor" || entitiesLinked[e].name == "ObservedProperty" || entitiesLinked[e].name == "Thing") { //required
-						for (var u = 0; u < entitiesParentArray.length; u++) {
+					}
+				}
+				else if (parentNodes.length == 1 && parentNodes[0].image == "sta.png") {
+					alert("You have to connect MultiDatastreams node with a compatible node STA \n Required nodes: Party,Sensor,ObservedProperty,Thing.\n Optional nodes: Campaigns, License,Observations");
+					return false;
 
-							if ((getSTAEntityPlural(entitiesLinked[e].name, false) == getSTAEntityPlural(entitiesParentArray[u][0], false)) && entitiesParentArray[u][0] != "ObservedProperty") { //If it is a parentNode 
-								entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
-								break;
-							} else if (getSTAEntityPlural(entitiesLinked[e].name, false) == "ObservedProperties") {
-								break;
-							}
-							else {
-								if (u == entitiesParentArray.length - 1) { //If there is not any 
-									entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
-									entitiesRequiedNotLinked.push(entitiesLinked[e].name);
+				} else if (parentNodes.length > 1 && parentNodes[0].image == "sta.png") {
+					actionToDo = "create" //CREATE
+				}
+			}
+			if (actionToDo == "create") {
+				var currentNodeEntityPlural = getSTAEntityPlural(currentNode.label, false);
+				var entitiesLinked = STAEntities[currentNodeEntityPlural].entities;
+				var entitiesRequiedNotLinked = [], observedPropertiesArray = [], entitiesRequired = [], entitiesNotRequired = [];
+
+				//Creating dialog			
+				if (entitiesParentArray.length != 0) {
+					for (var e = 0; e < entitiesLinked.length; e++) {
+						if (entitiesLinked[e].name == "Party" || entitiesLinked[e].name == "Sensor" || entitiesLinked[e].name == "ObservedProperty" || entitiesLinked[e].name == "Thing") { //required
+							for (var u = 0; u < entitiesParentArray.length; u++) {
+
+								if ((getSTAEntityPlural(entitiesLinked[e].name, false) == getSTAEntityPlural(entitiesParentArray[u][0], false)) && entitiesParentArray[u][0] != "ObservedProperty") { //If it is a parentNode 
+									entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+									break;
+								} else if (getSTAEntityPlural(entitiesLinked[e].name, false) == "ObservedProperties") {
+									break;
+								}
+								else {
+									if (u == entitiesParentArray.length - 1) { //If there is not any 
+										entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}*: <span style="color: red; font-style: italic" >You need to link one</span></span> <br>`);
+										entitiesRequiedNotLinked.push(entitiesLinked[e].name);
+									}
 								}
 							}
-						}
-					} else { //not required
-						for (var u = 0; u < entitiesParentArray.length; u++) {
+						} else { //not required
+							for (var u = 0; u < entitiesParentArray.length; u++) {
 
-							if (getSTAEntityPlural(entitiesLinked[e].name, false) == getSTAEntityPlural(entitiesParentArray[u][0], false) && entitiesParentArray[u][0] != "ObservedProperty") { //If it is a parentNode 
-								entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
-								break;
-							}
-							else {
-								if (u == entitiesParentArray.length - 1) { //If there is not any 
-									entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}*: <span style="color: #897F7F; font-style: italic">none</span></span><br>`);
-									entitiesRequiedNotLinked.push(entitiesLinked[e].name);
+								if (getSTAEntityPlural(entitiesLinked[e].name, false) == getSTAEntityPlural(entitiesParentArray[u][0], false) && entitiesParentArray[u][0] != "ObservedProperty") { //If it is a parentNode 
+									entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}*:<a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+									break;
+								}
+								else {
+									if (u == entitiesParentArray.length - 1) { //If there is not any 
+										entitiesNotRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}*: <span style="color: #897F7F; font-style: italic">none</span></span><br>`);
+										entitiesRequiedNotLinked.push(entitiesLinked[e].name);
+									}
 								}
 							}
 						}
 					}
+
+				}
+				//else{
+				cdns.push('<fieldset id="fieldsetModificateEntities_Entities"><legend>Entities</legend>');
+				if (entitiesParentArrayObservedProperties.length != 0) {
+					cdns.push('<span style=" font-weight: bold;">observedProperties*:');
+					for (var e = 0; e < entitiesParentArrayObservedProperties.length; e++) {
+						cdns.push(`<a href="${entitiesParentArrayObservedProperties[e][2]}"> ${entitiesParentArrayObservedProperties[e][1]}</a>, `);
+					}
+				} else {
+					cdns.push(`<span style=" font-weight: bold;">ObservedProperties*: <span style="color: red; font-style: italic" >You need to link one</span>`);
 				}
 
+
+				cdns.push(`</span><br>`);
+				cdns.push(...entitiesRequired, ...entitiesNotRequired, "<br></fieldset>");
+				cdns.push('<fieldset id="fieldsetModificateEntities_Properties"><legend>Properties</legend>');
+				currentNode.STAEntitiesRequiredNotLinked = entitiesRequiedNotLinked;
 			}
-			//else{
-			cdns.push('<fieldset id="fieldsetModificateEntities_Entities"><legend>Entities</legend>');
-			if (entitiesParentArrayObservedProperties.length != 0) {
-				cdns.push('<span style=" font-weight: bold;">observedProperties*:');
-				for (var e = 0; e < entitiesParentArrayObservedProperties.length; e++) {
-					cdns.push(`<a href="${entitiesParentArrayObservedProperties[e][2]}"> ${entitiesParentArrayObservedProperties[e][1]}</a>, `);
+
+
+			//properties
+			cdns.push('<label for="dlgCreateUpdateDeleteEntity_name" data-STArequired="true" style=" font-weight: bold;">name*:</label>',
+				'<input id="dlgCreateUpdateDeleteEntity_name" type="text" style="width:300px" data-STArequired="true"><br>', //name
+				'<label for="dlgCreateUpdateDeleteEntity_description" data-STArequired="true" style=" font-weight: bold;">description*:</label>',
+				'<input id="dlgCreateUpdateDeleteEntity_description" type="text" style="width:300px" data-STArequired="true"><br>', //description
+				'<label for="dlgCreateUpdateDeleteEntity_observationType" data-STArequired="true" style=" font-weight: bold;">observationType*:</label>',
+				'<input id="dlgCreateUpdateDeleteEntity_observationType" type="text" style="width:300px" data-STArequired="true"><br>');//onservationType
+
+			for (var a = 0; a < number; a++) {
+				cdns.push('<div style="background-color:#F0F0F2; padding:10px; margin-top:15px"><span style="margin-top:5px; margin-bottom:5px; font-weight: bold; font-style: italic; ">multidatastream ' + (a + 1) + '</span><br><br>');
+				cdns.push('<label for="dlgCreateUpdateDeleteEntity_observedPropertiesSelect">Select the <b>observedProperty </b>corresponding*:</label>',
+					'<select name="dlgCreateUpdateDeleteEntity_observedPropertiesSelect">');
+
+				for (var e = 0; e < entitiesParentArrayObservedProperties.length; e++) { //ObservedProperties
+					if (e == 0) {
+						cdns.push(`<option value="${entitiesParentArrayObservedProperties[e][1]}"selected >id: ${entitiesParentArrayObservedProperties[e][1]}, result: ${entitiesParentArrayObservedProperties[e][3]}</option>`)
+					} else {
+						cdns.push(`<option value="${entitiesParentArrayObservedProperties[e][1]}">id: ${entitiesParentArrayObservedProperties[e][1]}, result: ${entitiesParentArrayObservedProperties[e][3]}</option>`)
+					}
+
 				}
+				cdns.push('</select><br>');
+				cdns.push('<label for="dlgCreateUpdateDeleteEntity_multiobservationDataType" data-STArequired="true" style="font-weight: bold;">multiobservationDataType*:</label>',
+					'<input id="dlgCreateUpdateDeleteEntity_multiobservationDataType" type="text" style="width:300px" data-STArequired="true"><br>'); //multiobservationDataType
+				cdns.push('<fieldset>', //unitOfmeasurement
+					'<legend> unitOfmeasurement:</legend>',
+					'<label for="dlgCreateUpdateDeleteEntity_unitOfMeasurement_name_' + a + '" style="font-weight: bold;">name:</label>',
+					'<input id="dlgCreateUpdateDeleteEntity_unitOfMeasurement_name_' + a + '" type="text"><br>',
+					'<label for="dlgCreateUpdateDeleteEntity_unitOfMeasurement_symbol_' + a + '" style="font-weight: bold;">symbol:</label>',
+					'<input id="dlgCreateUpdateDeleteEntity_unitOfMeasurement_symbol_' + a + '" type="text"><br>',
+					'<label for="dlgCreateUpdateDeleteEntity_unitOfMeasurement_definition_' + a + '"style="font-weight: bold;">definition:</label>',
+					'<input id="dlgCreateUpdateDeleteEntity_unitOfMeasurement_definition_' + a + '" type="text"><br>',
+					'</fieldset>',
+					'<br>');
+
+
+
+
+
+				cdns.push('</div>');
+			}
+			//Omplir inputs amb el update i delete
+			if (actionToDo == "create") {
+				document.getElementById("dlgCreateUpdateDeleteEntityCreate_MultiDatastreams").style.display = "inline-block";
+				document.getElementById("dlgCreateUpdateDeleteEntityUpdate_MultiDatastreams").style.display = "none";
+				document.getElementById("dlgCreateUpdateDeleteEntityDelete_MultiDatastreams").style.display = "none";
 			} else {
-				cdns.push(`<span style=" font-weight: bold;">ObservedProperties*: <span style="color: red; font-style: italic" >You need to link one</span>`);
+				document.getElementById("dlgCreateUpdateDeleteEntityCreate_MultiDatastreams").style.display = "none";
+				document.getElementById("dlgCreateUpdateDeleteEntityUpdate_MultiDatastreams").style.display = "inline-block";
+				document.getElementById("dlgCreateUpdateDeleteEntityDelete_MultiDatastreams").style.display = "inline-block";
 			}
-			cdns.push(`</span><br>`);
-			cdns.push(...entitiesRequired, ...entitiesNotRequired, "<br></fieldset>");
-			cdns.push('<fieldset id="fieldsetModificateEntities_Properties"><legend>Properties</legend>');
-			currentNode.STAEntitiesRequiredNotLinked = entitiesRequiedNotLinked;
+
+			cdns.push('</fieldset>')
+			document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").innerHTML = cdns.join("");
+			return true;
+
 		}
-
-
-
-
-
-
-		cdns.push('</fieldset>')
-		document.getElementById("dlgCreateUpdateDeleteEntityProperties").innerHTML = cdns.join("");
-		return true;
-
 
 
 	</script>

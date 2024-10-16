@@ -1,7 +1,7 @@
 {
 	"nodes": [
 		{
-			"id": "387qf.lgvfsug",
+			"id": "2vu4e.lgl1vv",
 			"label": "STA plus",
 			"image": "sta.png",
 			"shape": "circularImage",
@@ -65,1005 +65,11 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": -83,
-			"y": 98
+			"x": 144,
+			"y": -46
 		},
 		{
-			"id": "6jipn.vgb8ok",
-			"label": "ObservedProperties",
-			"image": "ObservedProperties.png",
-			"shape": "circularImage",
-			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties",
-			"STAExpectedLength": 100,
-			"STAdata": [
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1)",
-					"@iot.id": 1,
-					"name": "temp",
-					"definition": "http://vocabs.lter-europe.net/EnvThes/22035",
-					"description": "Air Temperature",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(2)",
-					"@iot.id": 2,
-					"name": "RH",
-					"definition": "http://vocabs.lter-europe.net/EnvThes/21579",
-					"description": "Relative Humidity",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(2)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(2)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(3)",
-					"@iot.id": 3,
-					"name": "light",
-					"definition": "https://qudt.org/vocab/quantitykind/LuminousExposure",
-					"description": "Ambient Light",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(3)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(3)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(4)",
-					"@iot.id": 4,
-					"name": "rain",
-					"definition": "http://vocabs.lter-europe.net/EnvThes/30106",
-					"description": "Precipitation amount",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(4)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(4)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(5)",
-					"@iot.id": 5,
-					"name": "wdir",
-					"definition": "http://vocab.nerc.ac.uk/standard_name/wind_from_direction",
-					"description": "Wind direction",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(5)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(5)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(8)",
-					"@iot.id": 8,
-					"name": "UV",
-					"definition": "https://vocabs.lter-europe.net/EnvThes/30177",
-					"description": "Ultraviolet radiation intensity",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(8)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(8)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(9)",
-					"@iot.id": 9,
-					"name": "TVOC",
-					"definition": "http://fake-vocab.measurement/TVOC",
-					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(9)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(9)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(10)",
-					"@iot.id": 10,
-					"name": "eCO2",
-					"definition": "http://fake-vocab.measurement/eCO2",
-					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(10)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(10)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(11)",
-					"@iot.id": 11,
-					"name": "Light",
-					"definition": "http://fake-vocab.measurement/Light",
-					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(11)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(11)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(12)",
-					"@iot.id": 12,
-					"name": "battery",
-					"definition": "http://fake-vocab.measurement/battery",
-					"description": "The SCK remaining battery level in percentage.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(12)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(12)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(13)",
-					"@iot.id": 13,
-					"name": "Noise Level",
-					"definition": "http://fake-vocab.measurement/Noise Level",
-					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(13)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(13)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(14)",
-					"@iot.id": 14,
-					"name": "Barometric Pressure",
-					"definition": "http://fake-vocab.measurement/Barometric Pressure",
-					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(14)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(14)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(15)",
-					"@iot.id": 15,
-					"name": "PM 1",
-					"definition": "http://fake-vocab.measurement/PM 1",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(15)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(15)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(16)",
-					"@iot.id": 16,
-					"name": "PM 10",
-					"definition": "http://fake-vocab.measurement/PM 10",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(16)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(16)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(17)",
-					"@iot.id": 17,
-					"name": "PM 2.5",
-					"definition": "http://fake-vocab.measurement/PM 2.5",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(17)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(17)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(18)",
-					"@iot.id": 18,
-					"name": "Relative Humidity",
-					"definition": "http://fake-vocab.measurement/Relative Humidity",
-					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(18)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(18)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(19)",
-					"@iot.id": 19,
-					"name": "Air Temperature",
-					"definition": "http://fake-vocab.measurement/Air Temperature",
-					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(19)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(19)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(20)",
-					"@iot.id": 20,
-					"name": "temp",
-					"definition": "http://vocabs.lter-europe.net/EnvThes/22035",
-					"description": "Air Temperature",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(20)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(20)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(21)",
-					"@iot.id": 21,
-					"name": "RH",
-					"definition": "http://vocabs.lter-europe.net/EnvThes/21579",
-					"description": "Relative Humidity",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(21)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(21)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(22)",
-					"@iot.id": 22,
-					"name": "light",
-					"definition": "https://qudt.org/vocab/quantitykind/LuminousExposure",
-					"description": "Ambient Light",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(22)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(22)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(23)",
-					"@iot.id": 23,
-					"name": "rain",
-					"definition": "http://vocabs.lter-europe.net/EnvThes/30106",
-					"description": "Precipitation amount",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(23)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(23)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(24)",
-					"@iot.id": 24,
-					"name": "wdir",
-					"definition": "http://vocab.nerc.ac.uk/standard_name/wind_from_direction",
-					"description": "Wind direction",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(24)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(24)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(27)",
-					"@iot.id": 27,
-					"name": "UV",
-					"definition": "https://vocabs.lter-europe.net/EnvThes/30177",
-					"description": "Ultraviolet radiation intensity",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(27)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(27)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(28)",
-					"@iot.id": 28,
-					"name": "TVOC",
-					"definition": "http://fake-vocab.measurement/TVOC",
-					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(28)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(28)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(29)",
-					"@iot.id": 29,
-					"name": "TVOC",
-					"definition": "http://fake-vocab.measurement/TVOC",
-					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(29)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(29)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(30)",
-					"@iot.id": 30,
-					"name": "eCO2",
-					"definition": "http://fake-vocab.measurement/eCO2",
-					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(30)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(30)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(31)",
-					"@iot.id": 31,
-					"name": "Light",
-					"definition": "http://fake-vocab.measurement/Light",
-					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(31)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(31)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(32)",
-					"@iot.id": 32,
-					"name": "battery",
-					"definition": "http://fake-vocab.measurement/battery",
-					"description": "The SCK remaining battery level in percentage.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(32)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(32)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(33)",
-					"@iot.id": 33,
-					"name": "Noise Level",
-					"definition": "http://fake-vocab.measurement/Noise Level",
-					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(33)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(33)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(34)",
-					"@iot.id": 34,
-					"name": "Barometric Pressure",
-					"definition": "http://fake-vocab.measurement/Barometric Pressure",
-					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(34)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(34)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(35)",
-					"@iot.id": 35,
-					"name": "PM 1",
-					"definition": "http://fake-vocab.measurement/PM 1",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(35)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(35)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(36)",
-					"@iot.id": 36,
-					"name": "PM 10",
-					"definition": "http://fake-vocab.measurement/PM 10",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(36)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(36)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(37)",
-					"@iot.id": 37,
-					"name": "PM 2.5",
-					"definition": "http://fake-vocab.measurement/PM 2.5",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(37)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(37)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(38)",
-					"@iot.id": 38,
-					"name": "Relative Humidity",
-					"definition": "http://fake-vocab.measurement/Relative Humidity",
-					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(38)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(38)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(39)",
-					"@iot.id": 39,
-					"name": "Air Temperature",
-					"definition": "http://fake-vocab.measurement/Air Temperature",
-					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(39)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(39)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(40)",
-					"@iot.id": 40,
-					"name": "TVOC",
-					"definition": "http://fake-vocab.measurement/TVOC",
-					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(40)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(40)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(41)",
-					"@iot.id": 41,
-					"name": "eCO2",
-					"definition": "http://fake-vocab.measurement/eCO2",
-					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(41)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(41)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(42)",
-					"@iot.id": 42,
-					"name": "Light",
-					"definition": "http://fake-vocab.measurement/Light",
-					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(42)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(42)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(43)",
-					"@iot.id": 43,
-					"name": "battery",
-					"definition": "http://fake-vocab.measurement/battery",
-					"description": "The SCK remaining battery level in percentage.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(43)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(43)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(44)",
-					"@iot.id": 44,
-					"name": "Noise Level",
-					"definition": "http://fake-vocab.measurement/Noise Level",
-					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(44)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(44)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(45)",
-					"@iot.id": 45,
-					"name": "Barometric Pressure",
-					"definition": "http://fake-vocab.measurement/Barometric Pressure",
-					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(45)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(45)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(46)",
-					"@iot.id": 46,
-					"name": "PM 1",
-					"definition": "http://fake-vocab.measurement/PM 1",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(46)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(46)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(47)",
-					"@iot.id": 47,
-					"name": "PM 10",
-					"definition": "http://fake-vocab.measurement/PM 10",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(47)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(47)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(48)",
-					"@iot.id": 48,
-					"name": "PM 2.5",
-					"definition": "http://fake-vocab.measurement/PM 2.5",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(48)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(48)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(49)",
-					"@iot.id": 49,
-					"name": "Relative Humidity",
-					"definition": "http://fake-vocab.measurement/Relative Humidity",
-					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(49)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(49)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(50)",
-					"@iot.id": 50,
-					"name": "Air Temperature",
-					"definition": "http://fake-vocab.measurement/Air Temperature",
-					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(50)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(50)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(51)",
-					"@iot.id": 51,
-					"name": "TVOC",
-					"definition": "http://fake-vocab.measurement/TVOC",
-					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(51)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(51)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(52)",
-					"@iot.id": 52,
-					"name": "eCO2",
-					"definition": "http://fake-vocab.measurement/eCO2",
-					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(52)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(52)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(53)",
-					"@iot.id": 53,
-					"name": "Light",
-					"definition": "http://fake-vocab.measurement/Light",
-					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(53)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(53)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(54)",
-					"@iot.id": 54,
-					"name": "battery",
-					"definition": "http://fake-vocab.measurement/battery",
-					"description": "The SCK remaining battery level in percentage.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(54)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(54)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(55)",
-					"@iot.id": 55,
-					"name": "Noise Level",
-					"definition": "http://fake-vocab.measurement/Noise Level",
-					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(55)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(55)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(56)",
-					"@iot.id": 56,
-					"name": "Barometric Pressure",
-					"definition": "http://fake-vocab.measurement/Barometric Pressure",
-					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(56)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(56)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(57)",
-					"@iot.id": 57,
-					"name": "PM 1",
-					"definition": "http://fake-vocab.measurement/PM 1",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(57)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(57)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(58)",
-					"@iot.id": 58,
-					"name": "PM 10",
-					"definition": "http://fake-vocab.measurement/PM 10",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(58)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(58)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(59)",
-					"@iot.id": 59,
-					"name": "PM 2.5",
-					"definition": "http://fake-vocab.measurement/PM 2.5",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(59)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(59)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(60)",
-					"@iot.id": 60,
-					"name": "Relative Humidity",
-					"definition": "http://fake-vocab.measurement/Relative Humidity",
-					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(60)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(60)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(61)",
-					"@iot.id": 61,
-					"name": "Air Temperature",
-					"definition": "http://fake-vocab.measurement/Air Temperature",
-					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(61)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(61)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(62)",
-					"@iot.id": 62,
-					"name": "TVOC",
-					"definition": "http://fake-vocab.measurement/TVOC",
-					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(62)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(62)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(63)",
-					"@iot.id": 63,
-					"name": "eCO2",
-					"definition": "http://fake-vocab.measurement/eCO2",
-					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(63)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(63)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(64)",
-					"@iot.id": 64,
-					"name": "Light",
-					"definition": "http://fake-vocab.measurement/Light",
-					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(64)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(64)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(65)",
-					"@iot.id": 65,
-					"name": "battery",
-					"definition": "http://fake-vocab.measurement/battery",
-					"description": "The SCK remaining battery level in percentage.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(65)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(65)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(66)",
-					"@iot.id": 66,
-					"name": "Noise Level",
-					"definition": "http://fake-vocab.measurement/Noise Level",
-					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(66)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(66)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(67)",
-					"@iot.id": 67,
-					"name": "Barometric Pressure",
-					"definition": "http://fake-vocab.measurement/Barometric Pressure",
-					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(67)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(67)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(68)",
-					"@iot.id": 68,
-					"name": "PM 1",
-					"definition": "http://fake-vocab.measurement/PM 1",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(68)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(68)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(69)",
-					"@iot.id": 69,
-					"name": "PM 10",
-					"definition": "http://fake-vocab.measurement/PM 10",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(69)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(69)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(70)",
-					"@iot.id": 70,
-					"name": "PM 2.5",
-					"definition": "http://fake-vocab.measurement/PM 2.5",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(70)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(70)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(71)",
-					"@iot.id": 71,
-					"name": "Relative Humidity",
-					"definition": "http://fake-vocab.measurement/Relative Humidity",
-					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(71)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(71)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(72)",
-					"@iot.id": 72,
-					"name": "Air Temperature",
-					"definition": "http://fake-vocab.measurement/Air Temperature",
-					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(72)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(72)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(73)",
-					"@iot.id": 73,
-					"name": "TVOC",
-					"definition": "http://fake-vocab.measurement/TVOC",
-					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(73)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(73)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(74)",
-					"@iot.id": 74,
-					"name": "eCO2",
-					"definition": "http://fake-vocab.measurement/eCO2",
-					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(74)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(74)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(75)",
-					"@iot.id": 75,
-					"name": "Light",
-					"definition": "http://fake-vocab.measurement/Light",
-					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(75)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(75)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(76)",
-					"@iot.id": 76,
-					"name": "battery",
-					"definition": "http://fake-vocab.measurement/battery",
-					"description": "The SCK remaining battery level in percentage.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(76)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(76)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(77)",
-					"@iot.id": 77,
-					"name": "Noise Level",
-					"definition": "http://fake-vocab.measurement/Noise Level",
-					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(77)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(77)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(78)",
-					"@iot.id": 78,
-					"name": "Barometric Pressure",
-					"definition": "http://fake-vocab.measurement/Barometric Pressure",
-					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(78)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(78)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(79)",
-					"@iot.id": 79,
-					"name": "PM 1",
-					"definition": "http://fake-vocab.measurement/PM 1",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(79)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(79)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(80)",
-					"@iot.id": 80,
-					"name": "PM 10",
-					"definition": "http://fake-vocab.measurement/PM 10",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(80)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(80)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(81)",
-					"@iot.id": 81,
-					"name": "PM 2.5",
-					"definition": "http://fake-vocab.measurement/PM 2.5",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(81)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(81)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(82)",
-					"@iot.id": 82,
-					"name": "PN0.3",
-					"definition": "http://fake-vocab.measurement/PN0.3",
-					"description": "Particle Number Concentration below 0.3um",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(82)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(82)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(83)",
-					"@iot.id": 83,
-					"name": "PN0.5",
-					"definition": "http://fake-vocab.measurement/PN0.5",
-					"description": "Particle Number Concentration from previous size to 0.5um",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(83)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(83)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(84)",
-					"@iot.id": 84,
-					"name": "PN1.0",
-					"definition": "http://fake-vocab.measurement/PN1.0",
-					"description": "Particle Number Concentration from previous size to 1.0um",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(84)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(84)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(85)",
-					"@iot.id": 85,
-					"name": "PN10.0",
-					"definition": "http://fake-vocab.measurement/PN10.0",
-					"description": "Particle Number Concentration from previous size to 10.0um",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(85)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(85)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(86)",
-					"@iot.id": 86,
-					"name": "PN2.5",
-					"definition": "http://fake-vocab.measurement/PN2.5",
-					"description": "Particle Number Concentration from previous size to 2.5um",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(86)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(86)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(87)",
-					"@iot.id": 87,
-					"name": "PN5.0",
-					"definition": "http://fake-vocab.measurement/PN5.0",
-					"description": "Particle Number Concentration from previous size to 5.0um",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(87)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(87)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(88)",
-					"@iot.id": 88,
-					"name": "CO2",
-					"definition": "http://fake-vocab.measurement/CO2",
-					"description": "Carbon dioxide is a colorless gas produced by the combustion of all carbon-based fuels, such as methane (natural gas), petroleum distillates (gasoline, diesel, kerosene, propane), coal, wood and generic organic matter. Carbon dioxide is the most significant long-lived greenhouse gas in Earth's atmosphere.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(88)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(88)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(89)",
-					"@iot.id": 89,
-					"name": "Relative Humidity",
-					"definition": "http://fake-vocab.measurement/Relative Humidity",
-					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(89)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(89)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(90)",
-					"@iot.id": 90,
-					"name": "Air Temperature",
-					"definition": "http://fake-vocab.measurement/Air Temperature",
-					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(90)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(90)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(91)",
-					"@iot.id": 91,
-					"name": "SD-Card Presence",
-					"definition": "http://fake-vocab.measurement/SD-Card Presence",
-					"description": "This value is 1 if there is a micro SD-card inserted in the kit, and will be 0 otherwise (or if it's corrupted)",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(91)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(91)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(92)",
-					"@iot.id": 92,
-					"name": "Formaldehyde",
-					"definition": "http://fake-vocab.measurement/Formaldehyde",
-					"description": "Formaldehyde is a colourless gas, flammable and highly reactive at room temperature. Formaldehyde is ubiquitously found in the environment, because it is formed primarily by numerous natural sources and anthropogenic activities. In the environment, it is released through biomass combustion (forest and bush fires) or decomposition and through volcanoes, for example. Anthropogenic sources include direct ones such as on-site industrial emissions and fuel combustion from traffic. Other combustion processes (power plants, incineration, etc.) also represent sources of formaldehyde emissions in the atmosphere.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(92)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(92)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(93)",
-					"@iot.id": 93,
-					"name": "Relative Humidity",
-					"definition": "http://fake-vocab.measurement/Relative Humidity",
-					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(93)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(93)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(94)",
-					"@iot.id": 94,
-					"name": "Air Temperature",
-					"definition": "http://fake-vocab.measurement/Air Temperature",
-					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(94)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(94)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(95)",
-					"@iot.id": 95,
-					"name": "Relative Humidity",
-					"definition": "http://fake-vocab.measurement/Relative Humidity",
-					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(95)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(95)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(96)",
-					"@iot.id": 96,
-					"name": "Air Temperature",
-					"definition": "http://fake-vocab.measurement/Air Temperature",
-					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(96)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(96)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(97)",
-					"@iot.id": 97,
-					"name": "RSSI",
-					"definition": "http://fake-vocab.measurement/RSSI",
-					"description": "Received signal strength indication (RSSI) is a measurement of the power present in a received radio signal.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(97)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(97)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(98)",
-					"@iot.id": 98,
-					"name": "TVOC",
-					"definition": "http://fake-vocab.measurement/TVOC",
-					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(98)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(98)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(99)",
-					"@iot.id": 99,
-					"name": "eCO2",
-					"definition": "http://fake-vocab.measurement/eCO2",
-					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(99)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(99)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(100)",
-					"@iot.id": 100,
-					"name": "Light",
-					"definition": "http://fake-vocab.measurement/Light",
-					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(100)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(100)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(101)",
-					"@iot.id": 101,
-					"name": "battery",
-					"definition": "http://fake-vocab.measurement/battery",
-					"description": "The SCK remaining battery level in percentage.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(101)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(101)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(102)",
-					"@iot.id": 102,
-					"name": "Noise Level",
-					"definition": "http://fake-vocab.measurement/Noise Level",
-					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(102)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(102)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(103)",
-					"@iot.id": 103,
-					"name": "Barometric Pressure",
-					"definition": "http://fake-vocab.measurement/Barometric Pressure",
-					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(103)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(103)/MultiDatastreams"
-				},
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(104)",
-					"@iot.id": 104,
-					"name": "PM 1",
-					"definition": "http://fake-vocab.measurement/PM 1",
-					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(104)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(104)/MultiDatastreams"
-				}
-			],
-			"STAdataAttributes": {
-				"@iot.selfLink": {
-					"type": "anyURI",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/@iot.selfLink"
-				},
-				"@iot.id": {
-					"type": "integer",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/@iot.id"
-				},
-				"name": {
-					"type": "string",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/name"
-				},
-				"definition": {
-					"type": "anyURI",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/definition"
-				},
-				"description": {
-					"type": "string",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/description"
-				},
-				"Datastreams@iot.navigationLink": {
-					"type": "anyURI",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/Datastreams@iot.navigationLink"
-				},
-				"MultiDatastreams@iot.navigationLink": {
-					"type": "anyURI",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/MultiDatastreams@iot.navigationLink"
-				}
-			},
-			"x": 52,
-			"y": 106
-		},
-		{
-			"id": "8ve0j.bvbpf",
-			"label": "Select Row",
-			"image": "SelectRowSTA.png",
-			"shape": "circularImage",
-			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(5)",
-			"STAExpectedLength": "100",
-			"STAdata": [
-				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(5)",
-					"@iot.id": 5,
-					"name": "wdir",
-					"definition": "http://vocab.nerc.ac.uk/standard_name/wind_from_direction",
-					"description": "Wind direction",
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(5)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(5)/MultiDatastreams"
-				}
-			],
-			"STAdataAttributes": {
-				"@iot.selfLink": {
-					"type": "anyURI",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/@iot.selfLink"
-				},
-				"@iot.id": {
-					"type": "integer",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/@iot.id"
-				},
-				"name": {
-					"type": "string",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/name"
-				},
-				"definition": {
-					"type": "anyURI",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/definition"
-				},
-				"description": {
-					"type": "string",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/description"
-				},
-				"Datastreams@iot.navigationLink": {
-					"type": "anyURI",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/Datastreams@iot.navigationLink"
-				},
-				"MultiDatastreams@iot.navigationLink": {
-					"type": "anyURI",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/MultiDatastreams@iot.navigationLink"
-				}
-			},
-			"STAURLIdSelected": "5",
-			"x": 141,
-			"y": 5
-		},
-		{
-			"id": "1nh2u.7odqkag",
+			"id": "26kre.r19r9pg",
 			"label": "Sensors",
 			"image": "Sensors.png",
 			"shape": "circularImage",
@@ -2409,29 +1415,29 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/MultiDatastreams@iot.navigationLink"
 				}
 			},
-			"x": -129,
-			"y": -24
+			"x": 144,
+			"y": 94
 		},
 		{
-			"id": "5a70d.1goeh8",
+			"id": "88iiu.s5stf8",
 			"label": "Select Row",
 			"image": "SelectRowSTA.png",
 			"shape": "circularImage",
-			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(108)",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(106)",
 			"STAExpectedLength": "100",
 			"STAdata": [
 				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(108)",
-					"@iot.id": 108,
-					"name": "MICS-5525",
-					"description": "MOS CO gas sensor",
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(106)",
+					"@iot.id": 106,
+					"name": "POM-3044P-R",
+					"description": "Electret microphone with envelope follower sound pressure sensor (noise)",
 					"encodingType": "text/html",
 					"metadata": "https://docs.smartcitizen.me/",
 					"properties": {
-						"smartcitizen_sensor_id": 9
+						"smartcitizen_sensor_id": 7
 					},
-					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(108)/Datastreams",
-					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(108)/MultiDatastreams"
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(106)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors(106)/MultiDatastreams"
 				}
 			],
 			"STAdataAttributes": {
@@ -2472,20 +1478,1014 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/MultiDatastreams@iot.navigationLink"
 				}
 			},
-			"STAURLIdSelected": "108",
-			"x": -46,
-			"y": -126
+			"STAURLIdSelected": "106",
+			"x": 25,
+			"y": 162
 		},
 		{
-			"id": "1hq6m.h1v0s3",
+			"id": "8bjmv.i0vufq",
 			"label": "MultiDatastream",
 			"image": "MultiDatastream.png",
 			"shape": "circularImage",
-			"x": 85,
-			"y": -114
+			"x": -87,
+			"y": 68
 		},
 		{
-			"id": "f0dk.11fsdru",
+			"id": "8eonk.vsbaes",
+			"label": "ObservedProperties",
+			"image": "ObservedProperties.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties",
+			"STAExpectedLength": 100,
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1)",
+					"@iot.id": 1,
+					"name": "temp",
+					"definition": "http://vocabs.lter-europe.net/EnvThes/22035",
+					"description": "Air Temperature",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(2)",
+					"@iot.id": 2,
+					"name": "RH",
+					"definition": "http://vocabs.lter-europe.net/EnvThes/21579",
+					"description": "Relative Humidity",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(2)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(2)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(3)",
+					"@iot.id": 3,
+					"name": "light",
+					"definition": "https://qudt.org/vocab/quantitykind/LuminousExposure",
+					"description": "Ambient Light",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(3)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(3)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(4)",
+					"@iot.id": 4,
+					"name": "rain",
+					"definition": "http://vocabs.lter-europe.net/EnvThes/30106",
+					"description": "Precipitation amount",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(4)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(4)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(5)",
+					"@iot.id": 5,
+					"name": "wdir",
+					"definition": "http://vocab.nerc.ac.uk/standard_name/wind_from_direction",
+					"description": "Wind direction",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(5)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(5)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(8)",
+					"@iot.id": 8,
+					"name": "UV",
+					"definition": "https://vocabs.lter-europe.net/EnvThes/30177",
+					"description": "Ultraviolet radiation intensity",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(8)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(8)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(9)",
+					"@iot.id": 9,
+					"name": "TVOC",
+					"definition": "http://fake-vocab.measurement/TVOC",
+					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(9)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(9)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(10)",
+					"@iot.id": 10,
+					"name": "eCO2",
+					"definition": "http://fake-vocab.measurement/eCO2",
+					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(10)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(10)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(11)",
+					"@iot.id": 11,
+					"name": "Light",
+					"definition": "http://fake-vocab.measurement/Light",
+					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(11)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(11)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(12)",
+					"@iot.id": 12,
+					"name": "battery",
+					"definition": "http://fake-vocab.measurement/battery",
+					"description": "The SCK remaining battery level in percentage.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(12)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(12)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(13)",
+					"@iot.id": 13,
+					"name": "Noise Level",
+					"definition": "http://fake-vocab.measurement/Noise Level",
+					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(13)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(13)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(14)",
+					"@iot.id": 14,
+					"name": "Barometric Pressure",
+					"definition": "http://fake-vocab.measurement/Barometric Pressure",
+					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(14)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(14)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(15)",
+					"@iot.id": 15,
+					"name": "PM 1",
+					"definition": "http://fake-vocab.measurement/PM 1",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(15)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(15)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(16)",
+					"@iot.id": 16,
+					"name": "PM 10",
+					"definition": "http://fake-vocab.measurement/PM 10",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(16)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(16)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(17)",
+					"@iot.id": 17,
+					"name": "PM 2.5",
+					"definition": "http://fake-vocab.measurement/PM 2.5",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(17)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(17)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(18)",
+					"@iot.id": 18,
+					"name": "Relative Humidity",
+					"definition": "http://fake-vocab.measurement/Relative Humidity",
+					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(18)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(18)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(19)",
+					"@iot.id": 19,
+					"name": "Air Temperature",
+					"definition": "http://fake-vocab.measurement/Air Temperature",
+					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(19)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(19)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(20)",
+					"@iot.id": 20,
+					"name": "temp",
+					"definition": "http://vocabs.lter-europe.net/EnvThes/22035",
+					"description": "Air Temperature",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(20)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(20)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(21)",
+					"@iot.id": 21,
+					"name": "RH",
+					"definition": "http://vocabs.lter-europe.net/EnvThes/21579",
+					"description": "Relative Humidity",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(21)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(21)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(22)",
+					"@iot.id": 22,
+					"name": "light",
+					"definition": "https://qudt.org/vocab/quantitykind/LuminousExposure",
+					"description": "Ambient Light",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(22)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(22)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(23)",
+					"@iot.id": 23,
+					"name": "rain",
+					"definition": "http://vocabs.lter-europe.net/EnvThes/30106",
+					"description": "Precipitation amount",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(23)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(23)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(24)",
+					"@iot.id": 24,
+					"name": "wdir",
+					"definition": "http://vocab.nerc.ac.uk/standard_name/wind_from_direction",
+					"description": "Wind direction",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(24)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(24)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(27)",
+					"@iot.id": 27,
+					"name": "UV",
+					"definition": "https://vocabs.lter-europe.net/EnvThes/30177",
+					"description": "Ultraviolet radiation intensity",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(27)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(27)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(28)",
+					"@iot.id": 28,
+					"name": "TVOC",
+					"definition": "http://fake-vocab.measurement/TVOC",
+					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(28)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(28)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(29)",
+					"@iot.id": 29,
+					"name": "TVOC",
+					"definition": "http://fake-vocab.measurement/TVOC",
+					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(29)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(29)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(30)",
+					"@iot.id": 30,
+					"name": "eCO2",
+					"definition": "http://fake-vocab.measurement/eCO2",
+					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(30)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(30)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(31)",
+					"@iot.id": 31,
+					"name": "Light",
+					"definition": "http://fake-vocab.measurement/Light",
+					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(31)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(31)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(32)",
+					"@iot.id": 32,
+					"name": "battery",
+					"definition": "http://fake-vocab.measurement/battery",
+					"description": "The SCK remaining battery level in percentage.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(32)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(32)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(33)",
+					"@iot.id": 33,
+					"name": "Noise Level",
+					"definition": "http://fake-vocab.measurement/Noise Level",
+					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(33)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(33)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(34)",
+					"@iot.id": 34,
+					"name": "Barometric Pressure",
+					"definition": "http://fake-vocab.measurement/Barometric Pressure",
+					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(34)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(34)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(35)",
+					"@iot.id": 35,
+					"name": "PM 1",
+					"definition": "http://fake-vocab.measurement/PM 1",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(35)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(35)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(36)",
+					"@iot.id": 36,
+					"name": "PM 10",
+					"definition": "http://fake-vocab.measurement/PM 10",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(36)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(36)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(37)",
+					"@iot.id": 37,
+					"name": "PM 2.5",
+					"definition": "http://fake-vocab.measurement/PM 2.5",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(37)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(37)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(38)",
+					"@iot.id": 38,
+					"name": "Relative Humidity",
+					"definition": "http://fake-vocab.measurement/Relative Humidity",
+					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(38)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(38)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(39)",
+					"@iot.id": 39,
+					"name": "Air Temperature",
+					"definition": "http://fake-vocab.measurement/Air Temperature",
+					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(39)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(39)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(40)",
+					"@iot.id": 40,
+					"name": "TVOC",
+					"definition": "http://fake-vocab.measurement/TVOC",
+					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(40)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(40)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(41)",
+					"@iot.id": 41,
+					"name": "eCO2",
+					"definition": "http://fake-vocab.measurement/eCO2",
+					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(41)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(41)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(42)",
+					"@iot.id": 42,
+					"name": "Light",
+					"definition": "http://fake-vocab.measurement/Light",
+					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(42)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(42)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(43)",
+					"@iot.id": 43,
+					"name": "battery",
+					"definition": "http://fake-vocab.measurement/battery",
+					"description": "The SCK remaining battery level in percentage.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(43)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(43)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(44)",
+					"@iot.id": 44,
+					"name": "Noise Level",
+					"definition": "http://fake-vocab.measurement/Noise Level",
+					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(44)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(44)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(45)",
+					"@iot.id": 45,
+					"name": "Barometric Pressure",
+					"definition": "http://fake-vocab.measurement/Barometric Pressure",
+					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(45)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(45)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(46)",
+					"@iot.id": 46,
+					"name": "PM 1",
+					"definition": "http://fake-vocab.measurement/PM 1",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(46)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(46)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(47)",
+					"@iot.id": 47,
+					"name": "PM 10",
+					"definition": "http://fake-vocab.measurement/PM 10",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(47)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(47)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(48)",
+					"@iot.id": 48,
+					"name": "PM 2.5",
+					"definition": "http://fake-vocab.measurement/PM 2.5",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(48)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(48)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(49)",
+					"@iot.id": 49,
+					"name": "Relative Humidity",
+					"definition": "http://fake-vocab.measurement/Relative Humidity",
+					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(49)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(49)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(50)",
+					"@iot.id": 50,
+					"name": "Air Temperature",
+					"definition": "http://fake-vocab.measurement/Air Temperature",
+					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(50)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(50)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(51)",
+					"@iot.id": 51,
+					"name": "TVOC",
+					"definition": "http://fake-vocab.measurement/TVOC",
+					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(51)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(51)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(52)",
+					"@iot.id": 52,
+					"name": "eCO2",
+					"definition": "http://fake-vocab.measurement/eCO2",
+					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(52)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(52)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(53)",
+					"@iot.id": 53,
+					"name": "Light",
+					"definition": "http://fake-vocab.measurement/Light",
+					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(53)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(53)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(54)",
+					"@iot.id": 54,
+					"name": "battery",
+					"definition": "http://fake-vocab.measurement/battery",
+					"description": "The SCK remaining battery level in percentage.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(54)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(54)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(55)",
+					"@iot.id": 55,
+					"name": "Noise Level",
+					"definition": "http://fake-vocab.measurement/Noise Level",
+					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(55)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(55)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(56)",
+					"@iot.id": 56,
+					"name": "Barometric Pressure",
+					"definition": "http://fake-vocab.measurement/Barometric Pressure",
+					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(56)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(56)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(57)",
+					"@iot.id": 57,
+					"name": "PM 1",
+					"definition": "http://fake-vocab.measurement/PM 1",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(57)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(57)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(58)",
+					"@iot.id": 58,
+					"name": "PM 10",
+					"definition": "http://fake-vocab.measurement/PM 10",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(58)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(58)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(59)",
+					"@iot.id": 59,
+					"name": "PM 2.5",
+					"definition": "http://fake-vocab.measurement/PM 2.5",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(59)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(59)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(60)",
+					"@iot.id": 60,
+					"name": "Relative Humidity",
+					"definition": "http://fake-vocab.measurement/Relative Humidity",
+					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(60)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(60)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(61)",
+					"@iot.id": 61,
+					"name": "Air Temperature",
+					"definition": "http://fake-vocab.measurement/Air Temperature",
+					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(61)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(61)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(62)",
+					"@iot.id": 62,
+					"name": "TVOC",
+					"definition": "http://fake-vocab.measurement/TVOC",
+					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(62)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(62)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(63)",
+					"@iot.id": 63,
+					"name": "eCO2",
+					"definition": "http://fake-vocab.measurement/eCO2",
+					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(63)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(63)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(64)",
+					"@iot.id": 64,
+					"name": "Light",
+					"definition": "http://fake-vocab.measurement/Light",
+					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(64)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(64)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(65)",
+					"@iot.id": 65,
+					"name": "battery",
+					"definition": "http://fake-vocab.measurement/battery",
+					"description": "The SCK remaining battery level in percentage.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(65)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(65)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(66)",
+					"@iot.id": 66,
+					"name": "Noise Level",
+					"definition": "http://fake-vocab.measurement/Noise Level",
+					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(66)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(66)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(67)",
+					"@iot.id": 67,
+					"name": "Barometric Pressure",
+					"definition": "http://fake-vocab.measurement/Barometric Pressure",
+					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(67)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(67)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(68)",
+					"@iot.id": 68,
+					"name": "PM 1",
+					"definition": "http://fake-vocab.measurement/PM 1",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(68)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(68)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(69)",
+					"@iot.id": 69,
+					"name": "PM 10",
+					"definition": "http://fake-vocab.measurement/PM 10",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(69)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(69)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(70)",
+					"@iot.id": 70,
+					"name": "PM 2.5",
+					"definition": "http://fake-vocab.measurement/PM 2.5",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(70)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(70)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(71)",
+					"@iot.id": 71,
+					"name": "Relative Humidity",
+					"definition": "http://fake-vocab.measurement/Relative Humidity",
+					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(71)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(71)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(72)",
+					"@iot.id": 72,
+					"name": "Air Temperature",
+					"definition": "http://fake-vocab.measurement/Air Temperature",
+					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(72)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(72)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(73)",
+					"@iot.id": 73,
+					"name": "TVOC",
+					"definition": "http://fake-vocab.measurement/TVOC",
+					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(73)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(73)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(74)",
+					"@iot.id": 74,
+					"name": "eCO2",
+					"definition": "http://fake-vocab.measurement/eCO2",
+					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(74)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(74)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(75)",
+					"@iot.id": 75,
+					"name": "Light",
+					"definition": "http://fake-vocab.measurement/Light",
+					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(75)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(75)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(76)",
+					"@iot.id": 76,
+					"name": "battery",
+					"definition": "http://fake-vocab.measurement/battery",
+					"description": "The SCK remaining battery level in percentage.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(76)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(76)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(77)",
+					"@iot.id": 77,
+					"name": "Noise Level",
+					"definition": "http://fake-vocab.measurement/Noise Level",
+					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(77)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(77)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(78)",
+					"@iot.id": 78,
+					"name": "Barometric Pressure",
+					"definition": "http://fake-vocab.measurement/Barometric Pressure",
+					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(78)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(78)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(79)",
+					"@iot.id": 79,
+					"name": "PM 1",
+					"definition": "http://fake-vocab.measurement/PM 1",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(79)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(79)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(80)",
+					"@iot.id": 80,
+					"name": "PM 10",
+					"definition": "http://fake-vocab.measurement/PM 10",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(80)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(80)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(81)",
+					"@iot.id": 81,
+					"name": "PM 2.5",
+					"definition": "http://fake-vocab.measurement/PM 2.5",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(81)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(81)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(82)",
+					"@iot.id": 82,
+					"name": "PN0.3",
+					"definition": "http://fake-vocab.measurement/PN0.3",
+					"description": "Particle Number Concentration below 0.3um",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(82)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(82)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(83)",
+					"@iot.id": 83,
+					"name": "PN0.5",
+					"definition": "http://fake-vocab.measurement/PN0.5",
+					"description": "Particle Number Concentration from previous size to 0.5um",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(83)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(83)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(84)",
+					"@iot.id": 84,
+					"name": "PN1.0",
+					"definition": "http://fake-vocab.measurement/PN1.0",
+					"description": "Particle Number Concentration from previous size to 1.0um",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(84)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(84)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(85)",
+					"@iot.id": 85,
+					"name": "PN10.0",
+					"definition": "http://fake-vocab.measurement/PN10.0",
+					"description": "Particle Number Concentration from previous size to 10.0um",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(85)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(85)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(86)",
+					"@iot.id": 86,
+					"name": "PN2.5",
+					"definition": "http://fake-vocab.measurement/PN2.5",
+					"description": "Particle Number Concentration from previous size to 2.5um",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(86)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(86)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(87)",
+					"@iot.id": 87,
+					"name": "PN5.0",
+					"definition": "http://fake-vocab.measurement/PN5.0",
+					"description": "Particle Number Concentration from previous size to 5.0um",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(87)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(87)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(88)",
+					"@iot.id": 88,
+					"name": "CO2",
+					"definition": "http://fake-vocab.measurement/CO2",
+					"description": "Carbon dioxide is a colorless gas produced by the combustion of all carbon-based fuels, such as methane (natural gas), petroleum distillates (gasoline, diesel, kerosene, propane), coal, wood and generic organic matter. Carbon dioxide is the most significant long-lived greenhouse gas in Earth's atmosphere.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(88)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(88)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(89)",
+					"@iot.id": 89,
+					"name": "Relative Humidity",
+					"definition": "http://fake-vocab.measurement/Relative Humidity",
+					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(89)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(89)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(90)",
+					"@iot.id": 90,
+					"name": "Air Temperature",
+					"definition": "http://fake-vocab.measurement/Air Temperature",
+					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(90)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(90)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(91)",
+					"@iot.id": 91,
+					"name": "SD-Card Presence",
+					"definition": "http://fake-vocab.measurement/SD-Card Presence",
+					"description": "This value is 1 if there is a micro SD-card inserted in the kit, and will be 0 otherwise (or if it's corrupted)",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(91)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(91)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(92)",
+					"@iot.id": 92,
+					"name": "Formaldehyde",
+					"definition": "http://fake-vocab.measurement/Formaldehyde",
+					"description": "Formaldehyde is a colourless gas, flammable and highly reactive at room temperature. Formaldehyde is ubiquitously found in the environment, because it is formed primarily by numerous natural sources and anthropogenic activities. In the environment, it is released through biomass combustion (forest and bush fires) or decomposition and through volcanoes, for example. Anthropogenic sources include direct ones such as on-site industrial emissions and fuel combustion from traffic. Other combustion processes (power plants, incineration, etc.) also represent sources of formaldehyde emissions in the atmosphere.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(92)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(92)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(93)",
+					"@iot.id": 93,
+					"name": "Relative Humidity",
+					"definition": "http://fake-vocab.measurement/Relative Humidity",
+					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(93)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(93)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(94)",
+					"@iot.id": 94,
+					"name": "Air Temperature",
+					"definition": "http://fake-vocab.measurement/Air Temperature",
+					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(94)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(94)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(95)",
+					"@iot.id": 95,
+					"name": "Relative Humidity",
+					"definition": "http://fake-vocab.measurement/Relative Humidity",
+					"description": "Relative humidity is a measure of the amount of moisture in the air relative to the total amount of moisture the air can hold. For instance, if the relative humidity was 50%, then the air is only half saturated with moisture.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(95)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(95)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(96)",
+					"@iot.id": 96,
+					"name": "Air Temperature",
+					"definition": "http://fake-vocab.measurement/Air Temperature",
+					"description": "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter. Air temperature is dependent on the amount and strength of the sunlight hitting the earth, and atmospheric conditions, such as cloud cover and humidity, which trap heat.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(96)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(96)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(97)",
+					"@iot.id": 97,
+					"name": "RSSI",
+					"definition": "http://fake-vocab.measurement/RSSI",
+					"description": "Received signal strength indication (RSSI) is a measurement of the power present in a received radio signal.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(97)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(97)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(98)",
+					"@iot.id": 98,
+					"name": "TVOC",
+					"definition": "http://fake-vocab.measurement/TVOC",
+					"description": "Total volatile organic compounds is a grouping of a wide range of organic chemical compounds to simplify reporting when these are present in ambient air or emissions. Many substances, such as natural gas, could be classified as volatile organic compounds (VOCs).",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(98)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(98)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(99)",
+					"@iot.id": 99,
+					"name": "eCO2",
+					"definition": "http://fake-vocab.measurement/eCO2",
+					"description": "Equivalent CO2 is the concentration of CO2 that would cause the same level of radiative forcing as a given type and concentration of greenhouse gas. Examples of such greenhouse gases are methane, perfluorocarbons, and nitrous oxide. CO2 is primarily a by-product of human metabolism and is constantly being emitted into the indoor environment by building occupants. CO2 may come from combustion sources as well. Associations of higher indoor carbon dioxide concentrations with impaired work performance and increased health symptoms have been attributed to correlation of indoor CO2 with concentrations of other indoor air pollutants that are also influenced by rates of outdoor-air ventilation.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(99)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(99)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(100)",
+					"@iot.id": 100,
+					"name": "Light",
+					"definition": "http://fake-vocab.measurement/Light",
+					"description": "Lux is a measure of how much light is spread over a given area. A full moon clear night is around 1 lux, inside an office building you usually have 400 lux and a bright day can be more than 20000 lux.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(100)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(100)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(101)",
+					"@iot.id": 101,
+					"name": "battery",
+					"definition": "http://fake-vocab.measurement/battery",
+					"description": "The SCK remaining battery level in percentage.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(101)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(101)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(102)",
+					"@iot.id": 102,
+					"name": "Noise Level",
+					"definition": "http://fake-vocab.measurement/Noise Level",
+					"description": "dB's measure sound pressure difference between the average local pressure and the pressure in the sound wave.  A quiet library is below 40dB, your house is around 50dB and a diesel truck in your street 90dB.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(102)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(102)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(103)",
+					"@iot.id": 103,
+					"name": "Barometric Pressure",
+					"definition": "http://fake-vocab.measurement/Barometric Pressure",
+					"description": "Barometric pressure is the pressure within the atmosphere of Earth. In most circumstances atmospheric pressure is closely approximated by the hydrostatic pressure caused by the weight of air above the measurement point.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(103)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(103)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(104)",
+					"@iot.id": 104,
+					"name": "PM 1",
+					"definition": "http://fake-vocab.measurement/PM 1",
+					"description": "PM stands for particulate matter: the term for a mixture of solid particles and liquid droplets found in the air. Some particles, such as dust, dirt, soot, or smoke, are large or dark enough to be seen with the naked eye.",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(104)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(104)/MultiDatastreams"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/name"
+				},
+				"definition": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/definition"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/description"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/Datastreams@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/MultiDatastreams@iot.navigationLink"
+				}
+			},
+			"x": 9,
+			"y": -105
+		},
+		{
+			"id": "3qikv.eqkj29g",
+			"label": "Select Row",
+			"image": "SelectRowSTA.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1)",
+			"STAExpectedLength": "100",
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1)",
+					"@iot.id": 1,
+					"name": "temp",
+					"definition": "http://vocabs.lter-europe.net/EnvThes/22035",
+					"description": "Air Temperature",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1)/MultiDatastreams"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/name"
+				},
+				"definition": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/definition"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/description"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/Datastreams@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/MultiDatastreams@iot.navigationLink"
+				}
+			},
+			"STAURLIdSelected": "1",
+			"x": -50,
+			"y": -65
+		},
+		{
+			"id": "611b9.r8l1dl",
 			"label": "Select Row",
 			"image": "SelectRowSTA.png",
 			"shape": "circularImage",
@@ -2533,49 +2533,111 @@
 				}
 			},
 			"STAURLIdSelected": "2",
-			"x": -3,
-			"y": -5
+			"x": -144,
+			"y": -57
+		},
+		{
+			"id": "1pbig.dq46u9g",
+			"label": "Select Row",
+			"image": "SelectRowSTA.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(3)",
+			"STAExpectedLength": "100",
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(3)",
+					"@iot.id": 3,
+					"name": "light",
+					"definition": "https://qudt.org/vocab/quantitykind/LuminousExposure",
+					"description": "Ambient Light",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(3)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(3)/MultiDatastreams"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/name"
+				},
+				"definition": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/definition"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/description"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/Datastreams@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/MultiDatastreams@iot.navigationLink"
+				}
+			},
+			"STAURLIdSelected": "3",
+			"x": 25,
+			"y": 17
 		}
 	],
 	"edges": [
 		{
-			"from": "387qf.lgvfsug",
-			"to": "6jipn.vgb8ok",
+			"from": "2vu4e.lgl1vv",
+			"to": "26kre.r19r9pg",
 			"arrows": "from"
 		},
 		{
-			"from": "6jipn.vgb8ok",
-			"to": "8ve0j.bvbpf",
+			"from": "26kre.r19r9pg",
+			"to": "88iiu.s5stf8",
 			"arrows": "from"
 		},
 		{
-			"from": "387qf.lgvfsug",
-			"to": "1nh2u.7odqkag",
+			"from": "88iiu.s5stf8",
+			"to": "8bjmv.i0vufq",
 			"arrows": "from"
 		},
 		{
-			"from": "1nh2u.7odqkag",
-			"to": "5a70d.1goeh8",
+			"from": "2vu4e.lgl1vv",
+			"to": "8eonk.vsbaes",
 			"arrows": "from"
 		},
 		{
-			"from": "5a70d.1goeh8",
-			"to": "1hq6m.h1v0s3",
+			"from": "8eonk.vsbaes",
+			"to": "3qikv.eqkj29g",
 			"arrows": "from"
 		},
 		{
-			"from": "8ve0j.bvbpf",
-			"to": "1hq6m.h1v0s3",
+			"from": "8eonk.vsbaes",
+			"to": "611b9.r8l1dl",
 			"arrows": "from"
 		},
 		{
-			"from": "6jipn.vgb8ok",
-			"to": "f0dk.11fsdru",
+			"from": "8eonk.vsbaes",
+			"to": "1pbig.dq46u9g",
 			"arrows": "from"
 		},
 		{
-			"from": "f0dk.11fsdru",
-			"to": "1hq6m.h1v0s3",
+			"from": "1pbig.dq46u9g",
+			"to": "8bjmv.i0vufq",
+			"arrows": "from"
+		},
+		{
+			"from": "611b9.r8l1dl",
+			"to": "8bjmv.i0vufq",
+			"arrows": "from"
+		},
+		{
+			"from": "3qikv.eqkj29g",
+			"to": "8bjmv.i0vufq",
 			"arrows": "from"
 		}
 	]
