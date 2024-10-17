@@ -65,8 +65,8 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": 112,
-			"y": -23
+			"x": -44,
+			"y": 37
 		},
 		{
 			"id": "26kre.r19r9pg",
@@ -33197,8 +33197,8 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/MultiDatastreams@iot.navigationLink"
 				}
 			},
-			"x": 168,
-			"y": 117
+			"x": 80,
+			"y": 146
 		},
 		{
 			"id": "88iiu.s5stf8",
@@ -33254,16 +33254,8 @@
 				}
 			},
 			"STAURLIdSelected": "2644",
-			"x": 44,
-			"y": 156
-		},
-		{
-			"id": "8bjmv.i0vufq",
-			"label": "MultiDatastream",
-			"image": "MultiDatastream.png",
-			"shape": "circularImage",
-			"x": -85,
-			"y": 33
+			"x": 155,
+			"y": 69
 		},
 		{
 			"id": "8eonk.vsbaes",
@@ -54319,8 +54311,8 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedProperty/MultiDatastreams@iot.navigationLink"
 				}
 			},
-			"x": -30,
-			"y": -144
+			"x": -160,
+			"y": -67
 		},
 		{
 			"id": "611b9.r8l1dl",
@@ -54371,8 +54363,8 @@
 				}
 			},
 			"STAURLIdSelected": "2324",
-			"x": -173,
-			"y": -82
+			"x": -293,
+			"y": -87
 		},
 		{
 			"id": "1pbig.dq46u9g",
@@ -54423,8 +54415,8 @@
 				}
 			},
 			"STAURLIdSelected": "2325",
-			"x": -78,
-			"y": -109
+			"x": -62,
+			"y": -150
 		},
 		{
 			"id": "4f4lo.7k0i44",
@@ -54636,8 +54628,8 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/description"
 				}
 			},
-			"x": 25,
-			"y": 101
+			"x": -132,
+			"y": 145
 		},
 		{
 			"id": "2tbhv.dh9prb",
@@ -54698,8 +54690,8 @@
 				}
 			},
 			"STAURLIdSelected": "c1a70fe6-06a5-39f6-8098-9e585c4ce55f",
-			"x": -106,
-			"y": 164
+			"x": -33,
+			"y": 108
 		},
 		{
 			"id": "3c315.0eshhrg",
@@ -56072,8 +56064,8 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Datastreams@iot.navigationLink"
 				}
 			},
-			"x": 172,
-			"y": -126
+			"x": 111,
+			"y": -52
 		},
 		{
 			"id": "1i8gj.cgbrtb8",
@@ -57498,8 +57490,16 @@
 					}
 				]
 			],
+			"x": 139,
+			"y": -159
+		},
+		{
+			"id": "5ootn.3vsab5",
+			"label": "Datastream",
+			"image": "Datastream.png",
+			"shape": "circularImage",
 			"x": 46,
-			"y": -47
+			"y": -52
 		}
 	],
 	"edges": [
@@ -57581,6 +57581,26 @@
 		{
 			"from": "1i8gj.cgbrtb8",
 			"to": "8bjmv.i0vufq",
+			"arrows": "from"
+		},
+		{
+			"from": "1pbig.dq46u9g",
+			"to": "5ootn.3vsab5",
+			"arrows": "from"
+		},
+		{
+			"from": "1i8gj.cgbrtb8",
+			"to": "5ootn.3vsab5",
+			"arrows": "from"
+		},
+		{
+			"from": "88iiu.s5stf8",
+			"to": "5ootn.3vsab5",
+			"arrows": "from"
+		},
+		{
+			"from": "2tbhv.dh9prb",
+			"to": "5ootn.3vsab5",
 			"arrows": "from"
 		}
 	]
