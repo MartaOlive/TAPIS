@@ -1,0 +1,1007 @@
+{
+	"nodes": [
+		{
+			"id": "706rh.t5vlej",
+			"label": "STA plus",
+			"image": "sta.png",
+			"shape": "circularImage",
+			"STAExpectedLength": 100,
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+			"STAdata": [
+				{
+					"name": "Campaigns",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Campaigns"
+				},
+				{
+					"name": "Datastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams"
+				},
+				{
+					"name": "FeaturesOfInterest",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest"
+				},
+				{
+					"name": "HistoricalLocations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/HistoricalLocations"
+				},
+				{
+					"name": "Licenses",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses"
+				},
+				{
+					"name": "Locations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations"
+				},
+				{
+					"name": "MultiDatastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams"
+				},
+				{
+					"name": "Observations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations"
+				},
+				{
+					"name": "ObservationGroups",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups"
+				},
+				{
+					"name": "ObservedProperties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties"
+				},
+				{
+					"name": "Parties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Parties"
+				},
+				{
+					"name": "Relations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Relations"
+				},
+				{
+					"name": "Sensors",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors"
+				},
+				{
+					"name": "Things",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
+				}
+			],
+			"x": -66,
+			"y": 102
+		},
+		{
+			"id": "qtus.qk4hivo",
+			"label": "MultiDatastreams",
+			"image": "MultiDatastreams.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams",
+			"STAExpectedLength": 100,
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(1)",
+					"@iot.id": 1,
+					"name": "Wind speed avg",
+					"description": "Wind speed average measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"phenomenonTime": "2024-01-11T18:57:14Z/2024-01-11T18:57:14Z",
+					"resultTime": "2024-01-11T18:57:28Z/2024-01-11T18:57:28Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(1)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(1)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(1)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(1)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(1)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(1)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(1)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(2)",
+					"@iot.id": 2,
+					"name": "Wind speed avg",
+					"description": "Wind speed average measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"phenomenonTime": "2024-01-11T19:00:58Z/2024-01-11T19:04:26Z",
+					"resultTime": "2024-01-11T19:01:03Z/2024-01-11T19:04:26Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(2)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(2)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(2)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(2)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(2)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(2)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(2)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(3)",
+					"@iot.id": 3,
+					"name": "Wind speed avg",
+					"description": "Wind speed average measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"phenomenonTime": "2024-01-11T19:04:42Z/2024-01-14T16:10:06Z",
+					"resultTime": "2024-01-11T19:04:42Z/2024-01-14T16:10:06Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(3)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(3)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(3)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(3)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(3)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(3)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(3)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(4)",
+					"@iot.id": 4,
+					"name": "Wind speed avg",
+					"description": "Wind speed average measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"phenomenonTime": "2024-01-19T18:17:06Z/2024-01-19T19:48:02Z",
+					"resultTime": "2024-01-19T18:18:08Z/2024-01-19T19:48:03Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(4)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(4)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(4)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(4)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(4)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(4)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(4)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(5)",
+					"@iot.id": 5,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"phenomenonTime": "2023-12-28T17:23:11Z/2023-12-28T17:23:11Z",
+					"resultTime": "2024-01-23T10:06:59Z/2024-01-23T13:58:24Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(5)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(5)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(5)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(5)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(5)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(5)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(5)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(6)",
+					"@iot.id": 6,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "LineString",
+						"coordinates": [
+							[
+								10.746358,
+								59.910516
+							],
+							[
+								10.746323,
+								59.910421
+							]
+						]
+					},
+					"phenomenonTime": "2023-12-28T17:23:11Z/2024-01-23T17:45:49Z",
+					"resultTime": "2024-01-23T16:32:27Z/2024-01-23T17:45:55Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(6)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(6)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(6)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(6)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(6)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(6)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(6)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(7)",
+					"@iot.id": 7,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "LineString",
+						"coordinates": [
+							[
+								59.911485,
+								10.742708
+							],
+							[
+								10.742708,
+								59.911485
+							]
+						]
+					},
+					"phenomenonTime": "2024-01-24T05:57:17Z/2024-01-24T11:40:46Z",
+					"resultTime": "2024-01-24T05:59:22Z/2024-01-24T11:40:46Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(7)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(7)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(7)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(7)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(7)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(7)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(7)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(8)",
+					"@iot.id": 8,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							59.911485,
+							10.742708
+						]
+					},
+					"phenomenonTime": "2024-01-24T06:45:11Z/2024-01-24T06:47:41Z",
+					"resultTime": "2024-01-24T06:47:25Z/2024-01-24T06:47:42Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(8)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(8)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(8)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(8)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(8)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(8)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(8)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(9)",
+					"@iot.id": 9,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							10.74633,
+							59.910608
+						]
+					},
+					"phenomenonTime": "2023-12-28T17:23:11Z/2023-12-28T17:23:11Z",
+					"resultTime": "2024-01-24T12:59:20Z/2024-01-24T13:07:52Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(9)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(9)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(9)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(9)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(9)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(9)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(9)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(10)",
+					"@iot.id": 10,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "LineString",
+						"coordinates": [
+							[
+								10.746401,
+								59.910556
+							],
+							[
+								10.752658,
+								59.908685
+							]
+						]
+					},
+					"phenomenonTime": "2023-12-28T17:23:11Z/2023-12-28T17:23:11Z",
+					"resultTime": "2024-01-24T13:10:43Z/2024-01-26T12:21:12Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(10)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(10)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(10)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(10)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(10)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(10)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(10)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(11)",
+					"@iot.id": 11,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(11)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(11)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(11)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(11)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(11)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(11)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(11)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(12)",
+					"@iot.id": 12,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "LineString",
+						"coordinates": [
+							[
+								11,
+								49
+							],
+							[
+								11.571831,
+								48.135666
+							]
+						]
+					},
+					"phenomenonTime": "2024-04-13T19:57:24Z/2024-05-02T13:45:47Z",
+					"resultTime": "2024-05-01T16:46:03Z/2024-05-14T06:36:30Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(12)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(12)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(12)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(12)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(12)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(12)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(12)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(13)",
+					"@iot.id": 13,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							1.778585,
+							41.781574
+						]
+					},
+					"phenomenonTime": "2024-05-22T18:44:32Z/2024-05-28T02:07:16Z",
+					"properties": {},
+					"resultTime": "2024-05-22T18:44:33Z/2024-05-28T02:07:17Z",
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(13)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(13)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(13)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(13)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(13)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(13)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(13)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(14)",
+					"@iot.id": 14,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"properties": {
+						"channel_id": "3"
+					},
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(14)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(14)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(14)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(14)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(14)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(14)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(14)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(15)",
+					"@iot.id": 15,
+					"name": "Wind speed avg and gust",
+					"description": "Wind speed average and gust measured with the FT-0310 Weather Station",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+						"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						},
+						{
+							"name": "Meters per second",
+							"symbol": "m/s",
+							"definition": "https://qudt.org/vocab/unit/M-PER-SEC"
+						}
+					],
+					"properties": {
+						"channel_id": "1"
+					},
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(15)/License",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(15)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(15)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(15)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(15)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(15)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(15)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(16)",
+					"@iot.id": 16,
+					"name": "TestmultiObservationDataType",
+					"description": "TestmultiObservationDataType",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"a"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": null,
+							"symbol": null,
+							"definition": null
+						}
+					],
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(16)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(16)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(16)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(16)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(16)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(16)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(17)",
+					"@iot.id": 17,
+					"name": "TestmultiObservationDataType",
+					"description": "TestmultiObservationDataType",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"a",
+						"b"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": null,
+							"symbol": null,
+							"definition": null
+						},
+						{
+							"name": null,
+							"symbol": null,
+							"definition": null
+						}
+					],
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(17)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(17)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(17)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(17)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(17)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(17)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)",
+					"@iot.id": 18,
+					"name": "TestMultiDatastreamsTPostman",
+					"description": "TestMultiDatastreamsTPostman",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"aaaa",
+						"bbb"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "1111",
+							"symbol": "www",
+							"definition": "111"
+						},
+						{
+							"name": "222",
+							"symbol": "ww22w",
+							"definition": "22"
+						}
+					],
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(19)",
+					"@iot.id": 19,
+					"name": "TestMultiDatastreamsTapis",
+					"description": "TestMultiDatastreamsTapis",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"aaaa",
+						"bbbbb"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "1111",
+							"symbol": "11",
+							"definition": "111"
+						},
+						{
+							"name": "2222",
+							"symbol": "22",
+							"definition": "222"
+						}
+					],
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(19)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(19)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(19)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(19)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(19)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(19)/ObservedProperties"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(20)",
+					"@iot.id": 20,
+					"name": "TestMultiDatastreamsTapis",
+					"description": "TestMultiDatastreamsTapis",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"aaaa",
+						"bbbbb"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "1111",
+							"symbol": "11",
+							"definition": "111"
+						},
+						{
+							"name": "2222",
+							"symbol": "22",
+							"definition": "222"
+						}
+					],
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(20)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(20)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(20)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(20)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(20)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(20)/ObservedProperties"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/description"
+				},
+				"observationType": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/observationType"
+				},
+				"multiObservationDataTypes": {
+					"type": "array",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/multiObservationDataTypes"
+				},
+				"unitOfMeasurements": {
+					"type": "array",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/unitOfMeasurements"
+				},
+				"observedArea": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/observedArea"
+				},
+				"phenomenonTime": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/phenomenonTime"
+				},
+				"resultTime": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/resultTime"
+				},
+				"License@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/License@iot.navigationLink"
+				},
+				"Party@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/Party@iot.navigationLink"
+				},
+				"Sensor@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/Sensor@iot.navigationLink"
+				},
+				"Thing@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/Thing@iot.navigationLink"
+				},
+				"Campaigns@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/Campaigns@iot.navigationLink"
+				},
+				"Observations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/Observations@iot.navigationLink"
+				},
+				"ObservedProperties@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/ObservedProperties@iot.navigationLink"
+				},
+				"properties": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/properties"
+				}
+			},
+			"x": 41,
+			"y": 44
+		},
+		{
+			"id": "4p32p.l24cba",
+			"label": "Select Row",
+			"image": "SelectRowSTA.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)",
+			"STAExpectedLength": "100",
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)",
+					"@iot.id": 18,
+					"name": "TestMultiDatastreamsTPostman",
+					"description": "TestMultiDatastreamsTPostman",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation",
+					"multiObservationDataTypes": [
+						"aaaa",
+						"bbb"
+					],
+					"unitOfMeasurements": [
+						{
+							"name": "1111",
+							"symbol": "www",
+							"definition": "111"
+						},
+						{
+							"name": "222",
+							"symbol": "ww22w",
+							"definition": "22"
+						}
+					],
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/Observations",
+					"ObservedProperties@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams(18)/ObservedProperties"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/description"
+				},
+				"observationType": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/observationType"
+				},
+				"multiObservationDataTypes": {
+					"type": "array",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/multiObservationDataTypes"
+				},
+				"unitOfMeasurements": {
+					"type": "array",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/unitOfMeasurements"
+				},
+				"Party@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/Party@iot.navigationLink"
+				},
+				"Sensor@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/Sensor@iot.navigationLink"
+				},
+				"Thing@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/Thing@iot.navigationLink"
+				},
+				"Campaigns@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/Campaigns@iot.navigationLink"
+				},
+				"Observations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/Observations@iot.navigationLink"
+				},
+				"ObservedProperties@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/MultiDatastream/ObservedProperties@iot.navigationLink"
+				}
+			},
+			"STAURLIdSelected": "18",
+			"x": 29,
+			"y": -64
+		},
+		{
+			"id": "80t05.vp8j0q",
+			"label": "MultiDatastream",
+			"image": "MultiDatastream.png",
+			"shape": "circularImage",
+			"x": -87,
+			"y": -102
+		}
+	],
+	"edges": [
+		{
+			"from": "706rh.t5vlej",
+			"to": "qtus.qk4hivo",
+			"arrows": "from"
+		},
+		{
+			"from": "qtus.qk4hivo",
+			"to": "4p32p.l24cba",
+			"arrows": "from"
+		},
+		{
+			"from": "4p32p.l24cba",
+			"to": "80t05.vp8j0q",
+			"arrows": "from"
+		}
+	]
+}

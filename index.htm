@@ -3419,12 +3419,15 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				'<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_description" data-STArequired="true" style=" font-weight: bold;">description*:</label>',
 				'<input id="dlgCreateUpdateDeleteEntity_MultiDatastreams_description" type="text" style="width:300px" data-STArequired="true"><br>', //description
 				'<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_observationType" data-STArequired="true" style=" font-weight: bold;">observationType*:</label>',
-				'<input id="dlgCreateUpdateDeleteEntity_MultiDatastreams_observationType" type="text" style="width:300px" data-STArequired="true" readonly value="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation">http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation<br>');//observationType
+				'<input id="dlgCreateUpdateDeleteEntity_MultiDatastreams_observationType" type="text" style="width:510px" data-STArequired="true" readonly value="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation"><br>');//observationType
 
 			for (var a = 0; a < number; a++) {
 				cdns.push('<div style="background-color:#F0F0F2; padding:10px; margin-top:15px"><span style="margin-top:5px; margin-bottom:5px; font-weight: bold; font-style: italic; ">multidatastream ' + (a + 1) + '</span><br><br>');
-				cdns.push('<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_observedPropertiesSelect' + a + '">Select the <b>observedProperty </b>corresponding*:</label>',
+				if (actionToDo == "create"){
+					cdns.push('<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_observedPropertiesSelect' + a + '">Select the <b>observedProperty </b>corresponding*:</label>',
 					'<select id="dlgCreateUpdateDeleteEntity_MultiDatastreams_observedPropertiesSelect' + a + '">');
+				}
+					
 
 				for (var e = 0; e < entitiesParentArrayObservedProperties.length; e++) { //ObservedProperties
 					if (e == 0) {
@@ -3451,6 +3454,49 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				cdns.push('</div>');
 			}
 			//Omplir inputs amb el update i delete
+			cdns.push('</fieldset>')
+			document.getElementById("dlgCreateUpdateDeleteEntityProperties_MultiDatastreams").innerHTML = cdns.join("");
+
+			if (actionToDo!="create"){
+				var STAdata= parentNodes[0].STAdata[0];
+				document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_name").value= STAdata.name;
+				document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_description").value= STAdata.description;
+				
+
+				for (var i=0;i<number;i++){
+					document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_unitOfMeasurement_name_"+i).value= (STAdata.unitOfMeasurements[i].name)?STAdata.unitOfMeasurements[i].name:"";
+					document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_unitOfMeasurement_definition_"+i).value= (STAdata.unitOfMeasurements[i].definition)?STAdata.unitOfMeasurements[i].definition:"";
+					document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_unitOfMeasurement_symbol_"+i).value= (STAdata.unitOfMeasurements[i].symbol)?STAdata.unitOfMeasurements[i].symbol:"";
+					
+					document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_multiobservationDataType"+i).value= (STAdata.multiObservationDataTypes[i])?STAdata.multiObservationDataTypes[i]:"";
+				}
+
+				
+			
+				//Edit or delete
+				// for (var i=0; i<STAEntities[entityName].properties.length; i++) {
+				// 	//Falta posar altres excepcions que estaven posades adalt.. tipu datastreams unitOfMeasuremtns
+
+				// 	if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
+					
+				
+				// 		document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+ "_name").value= record[STAEntities[entityName].properties[i].name]["name"]? record[STAEntities[entityName].properties[i].name]["name"]:"";
+				// 		document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_symbol").value= record[STAEntities[entityName].properties[i].name]["symbol"]?record[STAEntities[entityName].properties[i].name]["symbol"]:"";
+				// 		document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_definition").value= record[STAEntities[entityName].properties[i].name]["definition"]?record[STAEntities[entityName].properties[i].name]["definition"]:"";
+				// 		continue;
+				// 	}
+				// 	document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value=record[STAEntities[entityName].properties[i].name] ? record[STAEntities[entityName].properties[i].name] : ""; //Properties, completed with parentNodeInfo
+				// }
+				// document.getElementById("dlgCreateUpdateDeleteEntityCreate").style.display="none";
+				// document.getElementById("dlgCreateUpdateDeleteEntityUpdate").style.display="inline-block";
+				// document.getElementById("dlgCreateUpdateDeleteEntityDelete").style.display="inline-block";
+				// return true;
+			}
+
+
+
+
+
 			 if (actionToDo == "create") {
 			 	document.getElementById("dlgCreateUpdateDeleteEntityCreate_MultiDatastreams").style.display = "inline-block";
 			 	document.getElementById("dlgCreateUpdateDeleteEntityUpdate_MultiDatastreams").style.display = "none";
@@ -3461,8 +3507,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			 	document.getElementById("dlgCreateUpdateDeleteEntityDelete_MultiDatastreams").style.display = "inline-block";
 			 }
 
-			cdns.push('</fieldset>')
-			document.getElementById("dlgCreateUpdateDeleteEntityProperties_MultiDatastreams").innerHTML = cdns.join("");
+
 			return true;
 
 		}
@@ -3603,7 +3648,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			if (parentNodes[0].image != "sta.png" && parentEntityName==entityName) {
 				//Edit or delete
 				for (var i=0; i<STAEntities[entityName].properties.length; i++) {
-					//Falta posar altres excepcions que estaven posades adalt.. tipu datastreams unitOfMeasuremtns
 
 					if (entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties")
 						continue;
@@ -3616,8 +3660,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][1]?record[STAEntities[entityName].properties[i].name]["coordinates"][1]:"";
 						continue;	
 					}
-					if ((entityName=="Datastreams"||entityName=="MultiDatastreams") && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
-					//Something similar needs to be done for MultiDataStream
+					if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
+					
 				
 						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+ "_name").value= record[STAEntities[entityName].properties[i].name]["name"]? record[STAEntities[entityName].properties[i].name]["name"]:"";
 						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_symbol").value= record[STAEntities[entityName].properties[i].name]["symbol"]?record[STAEntities[entityName].properties[i].name]["symbol"]:"";
@@ -3859,7 +3903,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 		
 			if (allowToSend==true){
-				//document.getElementById("DialogCreateUpdateDeleteEntity").close();
 				showInfoMessage("Creating a/an "+ STAEntities[entityName].singular +"...");
 
 
@@ -3976,11 +4019,11 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 					continue;	
 				}
-					if ((entityName=="Datastreams" || entityName=="MultiDatastreams")&& STAEntities[entityName].properties[i].name=="unitOfMeasurement")
+					if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement")
 				{
-					//Something similar needs to be done for MultiDataStream
-					obj[STAEntities[entityName].properties[i].name]={};
-					obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;
+					
+						obj[STAEntities[entityName].properties[i].name]={};
+						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;
 						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
 						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value : null;					
 					continue;
@@ -6655,10 +6698,14 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							document.getElementById("DialogCreateUpdateDeleteEntity").showModal();
 					}
 				}else if (currentNode.image == "MultiDatastream.png"){
-
-					if (GetFirstParentNode(currentNode)) {
+					var firstparentNode=GetFirstParentNode(currentNode);
+					if (firstparentNode&& (getSTAURLLastEntity(firstparentNode.STAURL)!="MultiDatastreams")) {
 						document.getElementById("DialogCreateUpdateDeleteEntity_numberOfMultiDatastream").showModal();
-					}	
+					}else {
+						var number =firstparentNode.STAdata[0].multiObservationDataTypes.length;
+						PopulateCreateUpdateDeleteEntityMultiDatastreams("MultiDatastreams", currentNode,number); //S'ha de calcular el numero
+						document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").showModal();
+					}
 				
 				}
 				else if (currentNode.image == "EditRecord.png") {
