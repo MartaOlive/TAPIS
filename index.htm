@@ -3285,7 +3285,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				alert("Parent(s) node(s) are needed to know about the STA root url");
 				return false;
 			}
-			cdns.push('<span id="dlgCreateUpdateDeleteEntityType_MultiDatastreams" style="font-weight:bold">MultiDatastream</span>:<br><br>'); //Title (Entity name) 
+			cdns.push('<span id="dlgCreateUpdateDeleteEntityType" style="font-weight:bold">MultiDatastream</span>:<br><br>'); //Title (Entity name) 
 			var actionToDo = "";
 			for (var i = 0; i < parentNodes.length; i++) {
 				var parentNode = parentNodes[i];
@@ -4254,7 +4254,12 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		async function GetDeleteEntity(entityName, id){
 			event.preventDefault(); 
 			//console.log("borrant")
-			document.getElementById("DialogCreateUpdateDeleteEntity").close();
+			if (entityName=="MultiDatastreams"){
+				document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").close();
+			}else{
+				document.getElementById("DialogCreateUpdateDeleteEntity").close();
+			}
+			
 			var parentNodes=GetParentNodes(currentNode);
 			var url=parentNodes[0].STAURL;
 
@@ -4266,7 +4271,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var response= await HTTPJSONData(url,null,"DELETE",null);
 			console.log(response)
 			if (response?.ok)
-				showInfoMessage(STAEntities[entityName].singular +" "+id+"has been deleted.");
+				showInfoMessage(STAEntities[entityName].singular +" "+id+" has been deleted.");
 			else
 				showInfoMessage("Error deleting"+ STAEntities[entityName].singular +" "+id);
 		}
