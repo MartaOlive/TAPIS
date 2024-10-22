@@ -3477,7 +3477,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			cdns.push('<span id="dlgCreateUpdateDeleteEntityType" style="font-weight:bold">',STAEntities[entityName].singular, "</span>:<br><br>"); //Title (Entity name) 
 			var actionToDo="";
-			
+			//ENTITIES
 			for (var i=0; i<parentNodes.length; i++)
 			{
 				var parentNode=parentNodes[i];
@@ -3516,36 +3516,34 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							alert("Cannot find @iot.id in parent node " + STAEntities[parentEntityName].singular + ". Did you removed in a select?");
 							return false;
 						}
-						//ENTITIES PARENTNODE						
+						//Prepare entities linked to be added to Dialog						
 						var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,record["@iot.id"])
 						entitiesParentArray.push([STAEntities[parentEntityName].singular,record["@iot.id"],url]); //EntityName,id.url
 					
 					}
-					
 				}
 				else if (parentNodes.length==1&& parentNodes[0].image == "sta.png"){
 					actionToDo="create" //CREATE
-				}
-						
-
+				}		
 			}			
 			
-			
-			if(actionToDo=="create")  {
-				cdns.push(...createEntitiesinCreateEntity(currentNode,entitiesParentArray)); //only with create
-				
+			if(actionToDo=="create")  { //adding Entities to Dialog
+				cdns.push(...createEntitiesInCreateEntity(currentNode,entitiesParentArray)); //only with create, not needed to update
 			}
 
+			//PROPERTIES (create + Fill --> Update/delete)
 			for (var i=0; i<STAEntities[entityName].properties.length; i++){
+				//Properties not added in dialog
 				if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
 					((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
 					continue;
+				//special properties (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
 				if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || 
 				    (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature"))//Locations/Feature of Interest coordenates
 				{
 					//For the moment in supporting only a point
 					cdns.push('<fieldset>',
-						'<legend>', STAEntities[entityName].properties[i].name, ' (point):</legend>', //Volem posar que sigui required?
+						'<legend>', STAEntities[entityName].properties[i].name, ' (point):</legend>',
 						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_longitude" style=" font-weight: bold;">', 'longitude: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_longitude" type="text" data-STArequired="'+STAEntities[entityName].properties[i].required+'"><br>',
 						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_latitude"style=" font-weight: bold;">', 'latitude: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_latitude" type="text" data-STArequired="'+STAEntities[entityName].properties[i].required+'"><br>',
 						'</fieldset>',
@@ -3553,7 +3551,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					continue;	
 				}
 				if (entityName=="Datastreams"  && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
-					//Something similar needs to be done for MultiDataStream
 					cdns.push('<fieldset>',
 						'<legend>', STAEntities[entityName].properties[i].name, ':</legend>', //Quins volem que siguin required? perque al esquema diu que es required el unitOfMeasurement sencer, no desglosa
 						'<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_name" style=" font-weight: bold;" data-STArequired="'+STAEntities[entityName].properties[i].required+'">', 'name: </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_name" type="text"><br>',
@@ -3563,13 +3560,11 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						'<br>');
 					continue;
 				}
-				
-
+				//Properties in general
 				cdns.push('<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" data-STArequired='+STAEntities[entityName].properties[i].required+' style=" font-weight: bold;">', (STAEntities[entityName].properties[i].required=='true')? STAEntities[entityName].properties[i].name+'*':STAEntities[entityName].properties[i].name, ': </label>');
 
 
-
-
+				//Special inputs with calendar
 				if (STAEntities[entityName].properties[i].name=="time"||STAEntities[entityName].properties[i].name=="creationTime"||STAEntities[entityName].properties[i].name=="startTime"||STAEntities[entityName].properties[i].name=="endTime"||(STAEntities[entityName].properties[i].name=="resultTime" && entityName=="Observations")){
 					cdns.push('<label>Date:</label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name,'" type="text" placeholder="YYYY-MM-DDTHH:MM:SSZ" style="width:300px" onChange="', `addTimeToOtherInputCreateEntities('dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}','dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}_createEntityInputCalendar')" data-STArequired="${STAEntities[entityName].properties[i].required}">`);
 					cdns.push('<label>Generate with this: </label><input type="datetime-local" id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '_createEntityInputCalendar" onChange="',`addTimeToOtherInputCreateEntities('dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}_createEntityInputCalendar','dlgCreateUpdateDeleteEntity_${STAEntities[entityName].properties[i].name}')"><br>`);
@@ -3595,14 +3590,16 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			cdns.push('</fieldset>')
 			document.getElementById("dlgCreateUpdateDeleteEntityProperties").innerHTML=cdns.join("");
 
+			//Fill properties in update and delete
 			if (parentNodes[0].image != "sta.png" && parentEntityName==entityName) {
-				//Edit or delete
 				for (var i=0; i<STAEntities[entityName].properties.length; i++) {
-
+					//properties to avoid
 					if (entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties")
 						continue;
 					if ((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime"))
 						continue;
+
+					//special properties (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
 					if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") ||    (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature"))//Locations/Feature of Interest coordenates
 					 {
 						// //For the moment in supporting only a point
@@ -3611,27 +3608,28 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						continue;	
 					}
 					if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
-					
 				
 						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+ "_name").value= record[STAEntities[entityName].properties[i].name]["name"]? record[STAEntities[entityName].properties[i].name]["name"]:"";
 						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_symbol").value= record[STAEntities[entityName].properties[i].name]["symbol"]?record[STAEntities[entityName].properties[i].name]["symbol"]:"";
 						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_definition").value= record[STAEntities[entityName].properties[i].name]["definition"]?record[STAEntities[entityName].properties[i].name]["definition"]:"";
 						continue;
 					}
+					//Properties in general
 					document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value=record[STAEntities[entityName].properties[i].name] ? record[STAEntities[entityName].properties[i].name] : ""; //Properties, completed with parentNodeInfo
 				}
+				//buttons to hide/show
 				document.getElementById("dlgCreateUpdateDeleteEntityCreate").style.display="none";
 				document.getElementById("dlgCreateUpdateDeleteEntityUpdate").style.display="inline-block";
 				document.getElementById("dlgCreateUpdateDeleteEntityDelete").style.display="inline-block";
 				return true;
 			}
 			else {
-				//Create
+				//Filling properties with "mandatory" data in CREATE mode
 				if (entityName=="Parties") {
 					if (CriptoName && CriptoName!="Anonymous")
 						document.getElementById("dlgCreateUpdateDeleteEntity_authId").value=CriptoName;
 					else {
-						alert("To create a STA Pa·rty, you should login first.");
+						alert("To create a STA Party, you should login first.");
 						return false;
 					}
 					document.getElementById("dlgCreateUpdateDeleteEntity_authId").readOnly=true;
@@ -3644,15 +3642,16 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					document.getElementById("dlgCreateUpdateDeleteEntity_encodingType").readOnly=true;	
 				}
 				else if (entityName=="Datastreams")	
-					document.getElementById("dlgCreateUpdateDeleteEntity_observationType").value="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement";
+					document.getElementById("dlgCreateUpdateDeleteEntity_observationType").value="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"; //suggested
 
+				//butons in create mode
 				document.getElementById("dlgCreateUpdateDeleteEntityCreate").style.display="inline-block";
 				document.getElementById("dlgCreateUpdateDeleteEntityUpdate").style.display="none";
 				document.getElementById("dlgCreateUpdateDeleteEntityDelete").style.display="none";
 			}
 			return true;
 		}
-		function createEntitiesinCreateEntity(currentNode,entitiesParentArray){
+		function createEntitiesInCreateEntity(currentNode,entitiesParentArray){
 			var entitiesRequired=[],entitiesNotRequired=[];
 			var currentNodeEntityPlural=getSTAEntityPlural(currentNode.label,false);
 			var entitiesLinked=STAEntities[currentNodeEntityPlural].entities;
