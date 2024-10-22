@@ -3705,6 +3705,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			return cdns;
 
 		}
+		
 		function addTimeToOtherInputCreateEntities (itemWritten, itemToWrite,number,origin){ //Put Date from calendar to input and vice versa 
 
 			if (number =='2'){
@@ -3730,7 +3731,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					var valueOfInput= document.getElementById(itemWritten).value.split ("/");
 					document.getElementById(itemToWrite).value=valueOfInput[0];
 					document.getElementById(itemToWrite+"3").value=valueOfInput[1];
-					
 				}
 			}else{
 				document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value+"Z" ;
@@ -3747,9 +3747,11 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			var prop, allowToSend=true;
 			for (var i=0; i<STAEntities[entityName].properties.length; i++) {
+				//avoid properties
 				if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
 					((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
 					continue;
+				//special properties (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
 				if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || 
 				    (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature"))
 				{
@@ -3773,7 +3775,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 					if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement")
 				{
-					
 						obj[STAEntities[entityName].properties[i].name]={};
 						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;
 						obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
@@ -3792,8 +3793,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						}
 						continue;
 					}
-
-						
+					//Properties in general	
 					prop=document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value;
 					if (prop!=="") 	obj[STAEntities[entityName].properties[i].name]=(entityName=="Observations" && STAEntities[entityName].properties[i].name=="result" && !isNaN(prop)) ? parseFloat(prop) : prop;
 					else if (prop=="" && document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).getAttribute("data-starequired")=="true") {
@@ -3801,15 +3801,12 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						allowToSend=false;
 						break;
 					}
-
-
 				}
 				if (allowToSend==true){
 						return obj;
 					}else{
 						return false;
 					}
-
 		}
 		function obtainDataInMultidatastreamsCreationAndUpdate(operation){
 			if (operation=="create"){
@@ -3817,9 +3814,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}else{
 				var obj={}
 			}
-
 			var prop, allowToSend=true;
-			
 			if (document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_name").value!=""){
 				obj["name"]=document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_name").value;
 
@@ -3843,7 +3838,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 			
 			var multiDatastreamsNumber=document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").getAttribute("data-stanumber");
-		
 			var observedProperties=[], multiObservationDataTypes=[],unitOfMeasurements=[];
 			var select;
 			for (var i=0;i<multiDatastreamsNumber;i++){
@@ -3870,21 +3864,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}else{
 				return false;
 			}
-
-		
-
-
-
-
-
-
-
-
-
-
-
-
-
 		}
 		function GetCreateEntityMultiDatastream(event){
 	
