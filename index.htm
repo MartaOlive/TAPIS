@@ -3349,7 +3349,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				var entitiesLinked = STAEntities[currentNodeEntityPlural].entities;
 				var entitiesRequiedNotLinked = [], observedPropertiesArray = [], entitiesRequired = [], entitiesNotRequired = [], entitiesObject={};
 
-				//Creating dialog			
+				//Creating dialog
+				//ENTITIES			
 				if (entitiesParentArray.length != 0) {
 					var isRequired;
 					for (var e = 0; e < entitiesLinked.length; e++) {
@@ -3376,7 +3377,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							}
 						}
 					}
-
 				}
 				cdns.push('<fieldset id="fieldsetModificateEntities_Entities"><legend>Entities</legend>');
 				if (entitiesParentArrayObservedProperties.length != 0) {
@@ -3390,7 +3390,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					cdns.push(`<span style=" font-weight: bold;">ObservedProperties*: <span style="color: red; font-style: italic" >You need to link one</span>`);
 				}
 
-
 				cdns.push(`</span><br>`);
 				cdns.push(...entitiesRequired, ...entitiesNotRequired, "<br></fieldset>");
 				cdns.push('<fieldset id="fieldsetModificateEntities_Properties"><legend>Properties</legend>');
@@ -3398,7 +3397,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				currentNode.STAentitiesObject= entitiesObject;
 			}
 
-			//properties
+			//PROPERTIES (create + fill ->update/delete)
 			cdns.push('<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_name" data-STArequired="true" style=" font-weight: bold;">name*:</label>',
 				'<input id="dlgCreateUpdateDeleteEntity_MultiDatastreams_name" type="text" style="width:300px" data-STArequired="true"><br>', //name
 				'<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_description" data-STArequired="true" style=" font-weight: bold;">description*:</label>',
@@ -3406,21 +3405,19 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				'<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_observationType" data-STArequired="true" style=" font-weight: bold;">observationType*:</label>',
 				'<input id="dlgCreateUpdateDeleteEntity_MultiDatastreams_observationType" type="text" style="width:510px" data-STArequired="true" readonly value="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_ComplexObservation"><br>');//observationType
 
-			for (var a = 0; a < number; a++) {
+			for (var a = 0; a < number; a++) { //Parts to be repeated: (ObservedProperties,unitOfmeasurement,multiobservationDataType)
+
 				cdns.push('<div style="background-color:#F0F0F2; padding:10px; margin-top:15px"><span style="margin-top:5px; margin-bottom:5px; font-weight: bold; font-style: italic; ">multidatastream ' + (a + 1) + '</span><br><br>');
 				if (actionToDo == "create"){
 					cdns.push('<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_observedPropertiesSelect' + a + '">Select the <b>observedProperty </b>corresponding*:</label>',
 					'<select id="dlgCreateUpdateDeleteEntity_MultiDatastreams_observedPropertiesSelect' + a + '">');
 				}
-					
-
 				for (var e = 0; e < entitiesParentArrayObservedProperties.length; e++) { //ObservedProperties
 					if (e == 0) {
 						cdns.push(`<option value="${entitiesParentArrayObservedProperties[e][1]}"selected >id: ${entitiesParentArrayObservedProperties[e][1]}, result: ${entitiesParentArrayObservedProperties[e][3]}</option>`)
 					} else {
 						cdns.push(`<option value="${entitiesParentArrayObservedProperties[e][1]}">id: ${entitiesParentArrayObservedProperties[e][1]}, result: ${entitiesParentArrayObservedProperties[e][3]}</option>`)
 					}
-
 				}
 				cdns.push('</select><br>');
 				cdns.push('<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_multiobservationDataType' + a + '" data-STArequired="true" style="font-weight: bold;">multiobservationDataType*:</label>',
@@ -3435,20 +3432,18 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					'<input id="dlgCreateUpdateDeleteEntity_MultiDatastreams_unitOfMeasurement_symbol_' + a + '" type="text"><br>',		
 					'</fieldset>',
 					'<br>');
-
 				cdns.push('</div>');
 			}
-			//FIll Inputs with information in update/delete
 			cdns.push('</fieldset>')
 			document.getElementById("dlgCreateUpdateDeleteEntityProperties_MultiDatastreams").innerHTML = cdns.join("");
-
+			
+			//Fill Inputs with information in update/delete
 			if (actionToDo!="create"){
 				document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").setAttribute("data-stanumber", number);
 				var STAdata= parentNodes[0].STAdata[0];
 				document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_name").value= STAdata.name;
 				document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_description").value= STAdata.description;
 				
-
 				for (var i=0;i<number;i++){
 					document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_unitOfMeasurement_name_"+i).value= (STAdata.unitOfMeasurements[i].name)?STAdata.unitOfMeasurements[i].name:"";
 					document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_unitOfMeasurement_definition_"+i).value= (STAdata.unitOfMeasurements[i].definition)?STAdata.unitOfMeasurements[i].definition:"";
@@ -3457,22 +3452,18 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_multiobservationDataType"+i).value= (STAdata.multiObservationDataTypes[i])?STAdata.multiObservationDataTypes[i]:"";
 				}
 
-
 			}
-
-			 if (actionToDo == "create") {
+			//Show/hide buttons 
+			if (actionToDo == "create") {
 			 	document.getElementById("dlgCreateUpdateDeleteEntityCreate_MultiDatastreams").style.display = "inline-block";
 			 	document.getElementById("dlgCreateUpdateDeleteEntityUpdate_MultiDatastreams").style.display = "none";
 			 	document.getElementById("dlgCreateUpdateDeleteEntityDelete_MultiDatastreams").style.display = "none";
-			 } else {
+			}else {
 			 	document.getElementById("dlgCreateUpdateDeleteEntityCreate_MultiDatastreams").style.display = "none";
 			 	document.getElementById("dlgCreateUpdateDeleteEntityUpdate_MultiDatastreams").style.display = "inline-block";
 			 	document.getElementById("dlgCreateUpdateDeleteEntityDelete_MultiDatastreams").style.display = "inline-block";
-			 }
-
-
+			}
 			return true;
-
 		}
 
 		function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
