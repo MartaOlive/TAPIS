@@ -530,12 +530,20 @@
 	</dialog>
 	<dialog id="DialogConcatenateTables">
 		<form >
-			<input type="radio" name="concatenationType" value="allColumns" id="concatenationType_allColumns" checked> <label for="concatenationType_allColumns">Concatenate all columns</label> 
+			<fieldset> 
+				<legend> Choose one option</legend>
+				<input type="radio" name="concatenationType" value="allColumns" id="concatenationType_allColumns" checked> <label for="concatenationType_allColumns">Concatenate all columns</label> 
+				<br>
+				<input type="radio" name="concatenationType" value="repeatedColumns" id="concatenationType_repeatedColumns"> <label for="concatenationType_repeatedColumns">Concatenate only repeated columns</label> 
+				
+			</fieldset>
+
 			<br>
-			<input type="radio" name="concatenationType" value="repeatedColumns" id="concatenationType_repeatedColumns"> <label for="concatenationType_repeatedColumns">Concatenate only repeated columns</label> 
-			<br>
-			<button value="default" onClick="concatenateTables()">Ok</button>
-			<button value="cancel" formmethod="dialog" onclick="closeConcatenateDialog(event)">Cancel</button>
+			<div  style="text-align: center">
+				<button value="default" onClick="concatenateTables()">Ok</button>
+				<button value="cancel" formmethod="dialog" onclick="closeConcatenateDialog(event)">Cancel</button>
+			</div>
+			
 		</form>
 		
 	</dialog>
