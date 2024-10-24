@@ -528,6 +528,22 @@
 			</div>
 		</form>
 	</dialog>
+	<dialog id="DialogColumnsStatistics">
+		<form >
+			<fieldset> 
+				<legend> x</legend>
+
+			</fieldset>
+
+			<br>
+			<div  style="text-align: center">
+				<button value="default" onClick="createColumnsStatistics()">Ok</button>
+				<button value="cancel" formmethod="dialog" onclick="closeColumnsStatisticsDialog(event)">Cancel</button>
+			</div>
+			
+		</form>
+		
+	</dialog>
 	<dialog id="DialogConcatenateTables">
 		<form >
 			<fieldset> 
@@ -1207,6 +1223,7 @@
 					AggregateColumns:{description: "Aggregate Columns"},
 					CreateColumns:{description: "Create Columns"},
 					ColumnsCalculator:{description: "Columns calculator"},
+					ColumnsStatistics:{description:"Columns statistics"},
 					SeparateColumns: {description: "Separate Columns"},
 					ScatterPlot: {description: "Scatter Plot", leafNode: true},
 					BarPlot: {description: "Bar Plot", leafNode: true},
@@ -6262,7 +6279,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 				return true;
 			}
-			// if (nodeTo.image == "ConcatenateTables.png") {
+			// if (nodeTo.image == "ColumnsStatistics.png") {
 
 			// }
 
@@ -6642,6 +6659,10 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				else if (currentNode.image =="ConcatenateTables.png"){
 					document.getElementById("DialogConcatenateTables").showModal();
 				}
+				else if (currentNode.image =="ColumnsStatistics.png"){
+					document.getElementById("DialogColumnsStatistics").showModal();
+				}
+				
 				else if (currentNode.image == "GeoFilterRowsSTA.png" || 
 					IdOfSTAEntity(currentNode) != -1 ||
 					IdOfSTASpecialQueries(currentNode) != -1) {
@@ -7540,10 +7561,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			document.getElementById("DialogColumnsCalculator").close();
 
 		}
-		function closeConcatenateDialog(event){
-			event.preventDefault();
-			document.getElementById("DialogConcatenateTables").close();
-		}
+
 		function concatenateTables(){
 			event.preventDefault();
 			var selected= (document.getElementById("concatenationType_allColumns").checked ==true)?"allColumns":"repeatedColumns";			//agafar les data de tots els pares i juntar
