@@ -528,7 +528,17 @@
 			</div>
 		</form>
 	</dialog>
-
+	<dialog id="DialogConcatenateTables">
+		<form >
+			<input type="radio" name="concatenationType" value="allColumns" id="concatenationType_allColumns" checked> <label for="concatenationType_allColumns">Concatenate all columns</label> 
+			<br>
+			<input type="radio" name="concatenationType" value="repeatedColumns" id="concatenationType_repeatedColumns"> <label for="concatenationType_repeatedColumns">Concatenate only repeated columns</label> 
+			<br>
+			<button value="default" onClick="concatenateTables()">Ok</button>
+			<button value="cancel" formmethod="dialog" onclick="closeConcatenateDialog(event)">Cancel</button>
+		</form>
+		
+	</dialog>
 	<dialog id="DialogSelectExpands">
 		<form>
 			<fieldset id="DialogSelectExpandsHTML">
@@ -1187,6 +1197,7 @@
 					GroupBy: {description: "GroupBy"},
 					AggregateColumns:{description: "Aggregate Columns"},
 					CreateColumns:{description: "Create Columns"},
+					ConcatenateTables:{description: "Concatenate Columns"},
 					ColumnsCalculator:{description: "Columns calculator"},
 					SeparateColumns: {description: "Separate Columns"},
 					ScatterPlot: {description: "Scatter Plot", leafNode: true},
@@ -6243,6 +6254,10 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 				return true;
 			}
+			// if (nodeTo.image == "ConcatenateTables.png") {
+
+			// }
+
 			return false;
 		}
 
@@ -6615,6 +6630,9 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 				else if (currentNode.image == "SeparateColumns.png") {
 					;
+				}
+				else if (currentNode.image =="ConcatenateTables.png"){
+					document.getElementById("DialogConcatenateTables").showModal();
 				}
 				else if (currentNode.image == "GeoFilterRowsSTA.png" || 
 					IdOfSTAEntity(currentNode) != -1 ||
@@ -7514,7 +7532,74 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			document.getElementById("DialogColumnsCalculator").close();
 
 		}
-			
+		function closeConcatenateDialog(event){
+			event.preventDefault();
+			document.getElementById("DialogConcatenateTables").close();
+		}
+		function concatenateTables(){
+			event.preventDefault();
+			var selected= (document.getElementById("concatenationType_allColumns").checked ==true)?"allColumns":"repeatedColumns";			//agafar les data de tots els pares i juntar
+			var parentNodes= GetParentNodes(currentNode);
+			var parentNodesArrayData=[], parentNodesArrayKeys=[];
+
+			for(var i=0;i<parentNodes.length;i++){
+				parentNodesArrayData.push(...parentNodes[i].STAdata);
+				parentNodesArrayKeys.push(Object.keys(parentNodes[i].STAdata[0]));
+			}
+			//llista de les keys
+			var allkeysWithOutRepetitions=parentNodesArrayKeys[0];
+			var repitedKeys=[];
+
+			for (var i=1;i<parentNodesArrayKeys.length;i++){
+				for (var e=0;e<parentNodesArrayKeys[i].length;e++){
+					if (allkeysWithOutRepetitions.indexOf(parentNodesArrayKeys[i][e])==-1){ //All different keys
+						allkeysWithOutRepetitions.push(parentNodesArrayKeys[i][e]); 
+						
+					}else{
+						repitedKeys.push(parentNodesArrayKeys[i][e]); //only repeated keys
+					}
+				}
+			}
+			var necessaryRepetitions= parentNodes.length-1;// repitedKeys shan de repetir un cop menys q elements hi ha
+			repitedKeys=repitedKeys.sort();
+			var count=1, lastKey=repitedKeys[0], repitedKeysDefinitive=[];
+			for (var i=0;i<repitedKeys.length;i++){
+
+				if (lastKey==repitedKeys[i]){
+					count+=1;
+					lastKey=repitedKeys[i];
+				}else{
+					if(count==necessaryRepetitions){repitedKeysDefinitive.push(repitedKeys[i])};
+					count=0;
+					lastKey=repitedKeys[i];
+				}
+			}
+
+			var keysToNewTable;
+			if (selected=="allColumns"){
+				keysToNewTable= allkeysWithOutRepetitions;
+
+			}else{ //repeatedColumns
+				keysToNewTable= repitedKeysDefinitive;
+			}
+
+			var resultData=[], obj;
+			for (var i=0;i<parentNodesArrayData.length;i++){
+				obj={}
+				for (var e=0;e<keysToNewTable.length;e++){
+					if(parentNodesArrayData[i].hasOwnProperty(keysToNewTable[e])){
+						obj[keysToNewTable[e]]= parentNodesArrayData[i][keysToNewTable[e]];
+					}else{
+						obj[keysToNewTable[e]]= "";
+					}
+				}
+				resultData.push(obj);
+				
+			}
+			currentNode.STAdata=resultData;
+			networkNodes.update(currentNode);
+			document.getElementById("DialogConcatenateTables").close();
+	}
 		
 		function giveMeNetworkInformation(event) {
 			if (event)
