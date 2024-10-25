@@ -530,15 +530,27 @@
 	</dialog>
 	<dialog id="DialogColumnsStatistics">
 		<form >
-			<fieldset> 
-				<legend> x</legend>
-
-			</fieldset>
+ 				<span>Table with follow statistics will be created:</span><br>
+				<div style="display: inline-block;">
+					<ul type="square">
+						<li>Mean</li><li>Median</li><li>Q1</li><li>Q3</li><li>Min. value</li><li>Max value</li>
+					</ul>
+				</div>
+				<div style="display: inline-block;">
+					<ul type="square">
+						<li>Mode</li><li>Standard deviation</li><li>Variance</li><li>Sum</li><li>Range</li><li>First value</li>
+					</ul>
+				</div>
+				<div style="display: inline-block;">
+					<ul type="square">
+						<li>Last value</li><li>Random value</li><li>Count defined</li><li>Count</li><li>Proportion defined</li>
+					</ul>
+				</div>
 
 			<br>
 			<div  style="text-align: center">
-				<button value="default" onClick="createColumnsStatistics()">Ok</button>
-				<button value="cancel" formmethod="dialog" onclick="closeColumnsStatisticsDialog(event)">Cancel</button>
+				<button value="default" onClick="createColumnsStatistics(event)">Ok</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			
 		</form>
@@ -557,7 +569,7 @@
 			<br>
 			<div  style="text-align: center">
 				<button value="default" onClick="concatenateTables()">Ok</button>
-				<button value="cancel" formmethod="dialog" onclick="closeConcatenateDialog(event)">Cancel</button>
+				<button value="cancel" formmethod="dialog" >Cancel</button>
 			</div>
 			
 		</form>
@@ -7561,6 +7573,49 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			document.getElementById("DialogColumnsCalculator").close();
 
 		}
+		function createColumnsStatistics(event){
+			event.preventDefault();
+			var parentNodes= GetParentNodes(currentNode);
+			var staData= parentNodes[0].STAdata;
+			console.log (getDataAttributes(staData));
+			var keys = Object.keys(staData[0]);
+			var collectedData=[],obj={}, finallyArray=[];
+
+			//keys number i la resta
+			for (var i=0;i<keys.length;i++){
+				obj={};
+				collectedData=[];
+				for (var e=0;e<staData.length;e++){
+					collectedData.push(staData[e][keys[i]]);
+				}
+				obj["ColumnName"]= keys[i];
+				obj["Mean"]= aggrFuncMean(collectedData);
+				obj["Median"]= aggrFuncMedian(collectedData);
+				obj["Q1"]= aggrFuncQ1(collectedData);
+				obj["Q3"]= aggrFuncQ3(collectedData);
+				obj["Min.value"]= aggrFuncMinValue(collectedData);
+				obj["Max.value"]= aggrFuncMaxValue(collectedData);
+				obj["Mode"]= aggrFuncMode(collectedData); //he triat la funció que només et dóna una moda (tenim la que et dóna totes, com prefereixis)
+				obj["StandardDeviation"]= aggrFuncStandardDeviation(collectedData);
+				obj["Variance"]= aggrFuncVariance(collectedData);
+				obj["Range"]= aggrFuncRange(collectedData);
+				obj["FirstValue"]= aggrFuncFirstValue(collectedData);
+				obj["LastValue"]= aggrFuncLastValue(collectedData);
+				obj["RandomValue"]= aggrFuncRandomValue(collectedData);
+				//obj["CountDefined"]= aggrFuncCountDefined(collectedData);
+				obj["Count"]= aggrFuncCount(collectedData);
+				//obj["ProportionDefined"]= aggrFuncProportionDefined(collectedData); 
+
+				finallyArray.push(obj);
+			}
+
+			currentNode.STAdata=finallyArray;
+			networkNodes.update(currentNode);
+			document.getElementById("DialogColumnsStatistics").close();
+
+			
+		}
+
 
 		function concatenateTables(){
 			event.preventDefault();
