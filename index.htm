@@ -543,7 +543,7 @@
 				</div>
 				<div style="display: inline-block;">
 					<ul type="square">
-						<li>Last value</li><li>Random value</li><li>Count defined</li><li>Count</li><li>Proportion defined</li>
+						<li>Last value</li><li>Random value</li><li>Count</li><!-- <li>Proportion defined</li><li>Count defined</li> -->
 					</ul>
 				</div>
 
@@ -668,6 +668,18 @@
 			</label>
 			<div class="center">
 				<button value="default" onClick="GetFilterRows(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogGeospatialFilterRowsByDistance">
+		
+		<form>
+			Filter:
+			
+			<div class="center">
+				<button value="default" onClick="GetGeoDistanceFilter(event)">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
@@ -1215,6 +1227,7 @@
 					SelectRowSTA: {description: "Select Row", callSTALoad: true},
 					FilterRowsSTA: {description: "Filter Rows", callSTALoad: true},
 					GeoFilterRowsSTA: {description: "Geospatial Filter Rows", callSTALoad: true},
+					GeospatialFilterRowsByDistance: {description: "Geospatial Filter Rows By Distance", callSTALoad: true},
 					SortBySTA: {description: "Sort by", callSTALoad: true},
 					UploadObservations: {description: "Upload in STA", leafNode: true},
 					//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
@@ -6291,7 +6304,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 				return true;
 			}
-			// if (nodeTo.image == "ColumnsStatistics.png") {
+			// if (nodeTo.image == "GeospatialFilterRowsByDistance.png") {
 
 			// }
 
@@ -6679,6 +6692,10 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					IdOfSTAEntity(currentNode) != -1 ||
 					IdOfSTASpecialQueries(currentNode) != -1) {
 					document.getElementById("DialogSelectNRecords").showModal();
+				}
+				else if (currentNode.image == "GeospatialFilterRowsByDistance.png" ){
+
+					document.getElementById("DialogGeospatialFilterRowsByDistance").showModal();
 				}
 				else if (currentNode.image == "ObservedProperty.png" || currentNode.image == "Observation.png" || 
 					currentNode.image == "FeatureOfInterest.png" || currentNode.image == "Sensor.png" || 
@@ -7577,30 +7594,32 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			event.preventDefault();
 			var parentNodes= GetParentNodes(currentNode);
 			var staData= parentNodes[0].STAdata;
-			console.log (getDataAttributes(staData));
+			var dataAttributes= getDataAttributes(staData);
 			var keys = Object.keys(staData[0]);
-			var collectedData=[],obj={}, finallyArray=[];
+			var collectedData,obj, finallyArray=[],dataType;
 
-			//keys number i la resta
 			for (var i=0;i<keys.length;i++){
 				obj={};
 				collectedData=[];
+				dataType=dataAttributes[keys[i]]["type"];
 				for (var e=0;e<staData.length;e++){
 					collectedData.push(staData[e][keys[i]]);
 				}
+
 				obj["ColumnName"]= keys[i];
-				obj["Mean"]= aggrFuncMean(collectedData);
-				obj["Median"]= aggrFuncMedian(collectedData);
-				obj["Q1"]= aggrFuncQ1(collectedData);
-				obj["Q3"]= aggrFuncQ3(collectedData);
-				obj["Min.value"]= aggrFuncMinValue(collectedData);
-				obj["Max.value"]= aggrFuncMaxValue(collectedData);
+				obj["DataType"]= dataType;
+				obj["Mean"]= (dataType=="number")?aggrFuncMean(collectedData):"";
+				obj["Median"]= (dataType=="number")?aggrFuncMedian(collectedData):"";
+				obj["Q1"]= (dataType=="number")?aggrFuncQ1(collectedData):"";
+				obj["Q3"]= (dataType=="number")?aggrFuncQ3(collectedData):"";
+				obj["Min.value"]= (dataType=="number")?aggrFuncMinValue(collectedData):"";
+				obj["Max.value"]= (dataType=="number")?aggrFuncMaxValue(collectedData):"";
 				obj["Mode"]= aggrFuncMode(collectedData); //he triat la funció que només et dóna una moda (tenim la que et dóna totes, com prefereixis)
-				obj["StandardDeviation"]= aggrFuncStandardDeviation(collectedData);
-				obj["Variance"]= aggrFuncVariance(collectedData);
-				obj["Range"]= aggrFuncRange(collectedData);
-				obj["FirstValue"]= aggrFuncFirstValue(collectedData);
-				obj["LastValue"]= aggrFuncLastValue(collectedData);
+				obj["StandardDeviation"]= (dataType=="number")?aggrFuncStandardDeviation(collectedData):"";
+				obj["Variance"]= (dataType=="number")?aggrFuncVariance(collectedData):"";
+				obj["Range"]= (dataType=="number")?aggrFuncRange(collectedData):"";
+				obj["FirstValue"]=(dataType=="number")? aggrFuncFirstValue(collectedData):"";
+				obj["LastValue"]= (dataType=="number")?aggrFuncLastValue(collectedData):"";
 				obj["RandomValue"]= aggrFuncRandomValue(collectedData);
 				//obj["CountDefined"]= aggrFuncCountDefined(collectedData);
 				obj["Count"]= aggrFuncCount(collectedData);
