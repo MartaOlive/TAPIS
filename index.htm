@@ -685,11 +685,12 @@
 			</fieldset>
 			<fieldset>
 				<legend>Introduce the coordenates</legend>
-			<select id="geoDistance_input_coordinate1_select" name="geoDistance_input_coordinate1_select" ></select><select id="geoDistance_input_coordinate2_select" name="geoDistance_input_coordinate2_select" ></select><br>
-			<input type="text" id ="geoDistance_input_coordinate1" style="margin-right: 10px"></input><input type="text" id ="geoDistance_input_coordinate2"></input><br>
+			<select id="geoDistance_input_coordinate1_select" name="geoDistance_input_coordinate1_select" onChange="writeValueInInputGeoDistance('1')"></select><input type="text" id ="geoDistance_input_coordinate1" style="margin-left: 10px"></input><br>
+			<select id="geoDistance_input_coordinate2_select" name="geoDistance_input_coordinate2_select"onChange="writeValueInInputGeoDistance('2')" ><input type="text" id ="geoDistance_input_coordinate2" style="margin-left: 10px"> </input></select><br>
+			<br>
 			<label> Use these to create an interval</label><br>
-			<select id="geoDistance_input_coordinate3_select" name="geoDistance_input_coordinate3_select" ></select><select id="geoDistance_input_coordinate4_select" name="geoDistance_input_coordinate4_select" ></select><br>
-			<input type="text" id ="geoDistance_input_coordinate3" style="margin-right: 10px"></input><input type="text" id ="geoDistance_input_coordinate4"></input>
+			<select id="geoDistance_input_coordinate3_select" name="geoDistance_input_coordinate3_select" onChange="writeValueInInputGeoDistance('3')"></select><input type="text" id ="geoDistance_input_coordinate3" style="margin-left: 10px"></input><br>
+			<select id="geoDistance_input_coordinate4_select" name="geoDistance_input_coordinate4_select" onChange="writeValueInInputGeoDistance('4')"></select><input type="text" id ="geoDistance_input_coordinate4" style="margin-left: 10px"></input><br>
 			</fieldset>
 
 			<label for="geoDistance_select">Choose operator:</label>
@@ -7735,7 +7736,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 		function takeParentsInformationInGeoDistance(){
 			var parentNodes= GetParentNodes(currentNode);
-			var nodeWithUniqueRow=false, columns=[];
+			var nodeWithUniqueRow=false, columns=[], columnsValues={};
 
 			for (var i=0;i<parentNodes.length;i++){
 				if (parentNodes[i].STAURL && parentNodes[i].STAdata.length>1){ //STA to apply filter
@@ -7752,37 +7753,49 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					alert ("There is a node linked not STA with more than one register, if you want to use it, apply a select row to choose your register")
 					
 					return false;
-				}else { //1 registre
+				}else { //1 register
 					if (nodeWithUniqueRow==true){
 						alert ("There is more than one node with only one register linked. Link only one node with one register to use to take the coordenates")
 						return false;
-
 					}
 					nodeWithUniqueRow=true;
 					var dataAttributes= getDataAttributes(parentNodes[i].STAdata);
 					var dataAttributesKeys=Object.keys(dataAttributes)
-					// columns=getDataAttributes(parentNodes[i].STAdata)//Object.keys(parentNodes[i].STAdata[0]);
 
 					for (var a=0;a<dataAttributesKeys.length;a++){
-				//cdns.push(`<option value= ${dataKeys[i]}>${dataKeys[i]}</option>`);
-						if (dataAttributes[dataAttributesKeys[a]]['type']=="number") columns.push(dataAttributesKeys[a]);
+				
+						if (dataAttributes[dataAttributesKeys[a]]['type']=="number") {
+							
+							if (dataAttributesKeys[a]!="geometry"){
+								columnsValues[dataAttributesKeys[a]]=parentNodes[i].STAdata[0][dataAttributesKeys[a]];
+								columns.push(dataAttributesKeys[a]);
+							}else{
+								columnsValues["geometry-coordinates"]=parentNodes[i].STAdata[0]["geometry"]["coordinates"];
+								columns.push("geometry-coordinates");
+							}
+							
+						}
 					}
 							
-					if (columns.indexOf("geometry")!=-1 && typeof parentNodes[i].STAdata[0]["geometry"]=="object")columns[columns.indexOf("geometry")]="geometry-coordinates";
+					//if (columns.indexOf("geometry")!=-1 && typeof parentNodes[i].STAdata[0]["geometry"]=="object")columns[columns.indexOf("geometry")]="geometry-coordinates";
+						
+					currentNode.STAcolumnsValuesGeoDistance= columnsValues;
+					networkNodes.update(currentNode);
 					console.log(columns)
 				}
 			}
 			var select,cdns=[];
 			for (var e=0;e<columns.length;e++){
-				cdns.push(`<option value="${columns[e]}">${columns[e]}</option>`)
+				cdns.push(`<option value="${columns[e]}">${columns[e]}</option>`);
+
 			}			
 			for (var i=1;i<5;i++){
 				select=document.getElementById("geoDistance_input_coordinate"+i+"_select");
-				
-
 				select.innerHTML=cdns.join("");
+				document.getElementById("geoDistance_input_coordinate"+i).value=columnsValues[Object.keys(columnsValues)[0]];
 			}
-			//geoDistance_input_coordinate1
+
+			
 			return true;
 		}
 		function GetGeoDistanceFilter(event){
@@ -7802,6 +7815,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 
 		}
+		function writeValueInInputGeoDistance(value){
+			var select=document.getElementById("geoDistance_input_coordinate"+value+"_select");
+			var selectValue= select.options[select.selectedIndex].value;
+			document.getElementById("geoDistance_input_coordinate"+value).value= currentNode.STAcolumnsValuesGeoDistance[selectValue]
+		}
+
+
 
 		function giveMeNetworkInformation(event) {
 			if (event)
