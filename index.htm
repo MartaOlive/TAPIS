@@ -693,8 +693,8 @@
 			<select id="geoDistance_input_coordinate4_select" name="geoDistance_input_coordinate4_select" onChange="writeValueInInputGeoDistance('4')"></select><input type="text" id ="geoDistance_input_coordinate4" style="margin-left: 10px"></input><br>
 			</fieldset>
 
-			<label for="geoDistance_select">Choose operator:</label>
-			<select id="geoDistance_select" name="geoDistance_select" >
+			<label for="geoDistance_select_operator">Choose operator:</label>
+			<select id="geoDistance_select_operator" name="geoDistance_select_operator" onChange="unableDisableSelectOperatorGeoDistance()">
 				<option value="eq"> =</option>
 				<option value="ne">  ≠ </option>
 				<option value="gt"> > </option>
@@ -7777,7 +7777,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						}
 					}
 							
-					//if (columns.indexOf("geometry")!=-1 && typeof parentNodes[i].STAdata[0]["geometry"]=="object")columns[columns.indexOf("geometry")]="geometry-coordinates";
+					unableDisableSelectOperatorGeoDistance();
 						
 					currentNode.STAcolumnsValuesGeoDistance= columnsValues;
 					networkNodes.update(currentNode);
@@ -7801,12 +7801,12 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		function GetGeoDistanceFilter(event){
 			event.preventDefault(); 
 			var distanceValue= document.getElementById("geoDistance_input_value").value;
-			var select= document.getElementById("geoDistance_select");
+			var select= document.getElementById("geoDistance_select_operator");
 			var selectedValue= select.options[select.selectedIndex].value;
 			var coordinatesValues=[];
 
 			coordinatesValues.push(document.getElementById("geoDistance_input_coordinate1").value,document.getElementById("geoDistance_input_coordinate2").value);
-			if (selectedValue== " [a,b] "|| selectedValue== " (a,b] "||selectedValue== " [a [a,b) ,b] "|| selectedValue== " (a,b) "){ //interval
+			if (selectedValue== " [a,b] "|| selectedValue== " (a,b] "||selectedValue== " [a,b) "|| selectedValue== " (a,b) "){ //interval
 				coordinatesValues.push(document.getElementById("geoDistance_input_coordinate3").value,document.getElementById("geoDistance_input_coordinate4").value)
 			}
 			console.log(distanceValue);
@@ -7821,7 +7821,23 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			document.getElementById("geoDistance_input_coordinate"+value).value= currentNode.STAcolumnsValuesGeoDistance[selectValue]
 		}
 
+		function unableDisableSelectOperatorGeoDistance(){
+			var select=document.getElementById("geoDistance_select_operator");
+			var selectValue= select.options[select.selectedIndex].value;
 
+			if (selectValue== " [a,b] "|| selectValue== " (a,b] "||selectValue== " [a,b) "|| selectValue== " (a,b) "){ //interval
+				document.getElementById("geoDistance_input_coordinate3_select").disabled=false;
+				document.getElementById("geoDistance_input_coordinate4_select").disabled=false;
+				document.getElementById("geoDistance_input_coordinate3").disabled=false;
+				document.getElementById("geoDistance_input_coordinate4").disabled=false;
+
+			}else{
+				document.getElementById("geoDistance_input_coordinate3_select").disabled=true;
+				document.getElementById("geoDistance_input_coordinate4_select").disabled=true;
+				document.getElementById("geoDistance_input_coordinate3").disabled=true;
+				document.getElementById("geoDistance_input_coordinate4").disabled=true;
+			}
+		}
 
 		function giveMeNetworkInformation(event) {
 			if (event)
