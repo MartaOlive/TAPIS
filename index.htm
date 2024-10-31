@@ -679,9 +679,13 @@
 			<fieldset>
 				<legend>Where do you want to apply the filter?</legend>
 				<input type="radio" id="geoDistance_FOI_Feature" name="geoDistanceRadios" value="Feature" checked> 
-			 	<label for="geoDistance_FOI_Feature">FeatureOfInterest-feature</label><br>
-				 <input type="radio" id="geoDistance_Location" name="geoDistanceRadios" value="Location" checked> 
-			 	<label for="geoDistance_Location">Locations-location</label><br>
+			 	<label for="geoDistance_FOI_Feature">FeatureOfInterest-feature</label>
+				<span style="font-size: 10px; font-style: italic" id="geoDistance_FOI_Feature_span" >Choose the route: </span>
+				<select id="geoDistance_FOI_Feature_select" name="geoDistance_FOI_Feature_select"></select><br>
+				<input type="radio" id="geoDistance_Location" name="geoDistanceRadios" value="Location" 
+				<label for="geoDistance_Location">Locations-location</label>
+				<span style="font-size: 10px; font-style: italic" id="geoDistance_Location_span" >Choose the route: </span>
+				<select id="geoDistance_Location_select" name="geoDistance_Location_select"></select><br>
 			</fieldset>
 			<fieldset>
 				<legend>Introduce the coordenates</legend>
@@ -7733,21 +7737,54 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			document.getElementById("DialogConcatenateTables").close();
 	}
 		
+		const RouteToLocation={
+		Parties: ["Things/Locations/location", "Datastreams/Thing/Locations/location", "MultiDatastreams/Thing/Locations/location" ],
+		Sensors: ["Datastreams/Thing/Locations/location", "MultiDatastreams/Thing/Locations/location"],
+		ObservedProperties: ["Datastreams/Thing/Locations/location", "MultiDatastreams/Thing/Locations/location"],
+		Things: ["Locations/location"], 
+		Observations:["Datastream/Thing/Locations/location", "MultiDatastream/Thing/Locations/location"],
+		Locations:["location"],
+		FeaturesOfInterest:["Observations/Datastream/Thing/Locations/location", "Observations/multiDatastream/Thing/Locations/location"],
+		HistoricalLocations: ["Location/location", "Things/Locations/location"],
+		Datastreams:["Thing/Locations/location"],
+		MultiDatastreams:["Thing/Locations/location"],
+		Campaigns: ["Datastreams/Thing/Locations/location","MultiDatastreams/Thing/Locations/location", "License/Datastreams/Thing/Locations/location", "License/MultiDatastreams/Thing/Locations/location","ObservationGroups/Observations/Datastream/Thing/Locations/location","ObservationGroups/License/Datastreams/Thing/Locations/location","ObservationGroups/License/MultiDatastreams/Thing/Locations/location", "ObservationGroups/Observations/MultiDatastream/Thing/Locations/location"],
+		Licenses: [ "Datastreams/Thing/Locations/location", "MultiDatastreams/Thing/Locations/location"],
+		ObservationGroups: ["Campaigns/Datastreams/Thing/Locations/location","Campaigns/MultiDatastreams/Thing/Locations/location", "Campaigns/License/Datastreams/Thing/Locations/location", "Campaigns/License/MultiDatastreams/Thing/Locations/location", "Observations/Datastream/Thing/Locations/location", "Observations/MultiDatastream/Thing/Locations/location"] 
+		//Relations: []
+		}
+		const RouteToFeature={
+			Parties: ["Datastreams/Observations/FeatureOfInterest/feature","MultiDatastreams/Observations/FeatureOfInterest/feature","Things/Datastreams/Observations/FeatureOfInterest/feature","Things/MultiDatastreams/Observations/FeatureOfInterest/feature"],
+			Sensors: ["Datastreams/Observations/FeatureOfInterest/feature", "MultiDatastreams/Observations/FeatureOfInterest/feature"], 
+			ObservedProperties: ["Datastreams/Observations/FeatureOfInterest/feature", "MultiDatastreams/Observations/FeatureOfInterest/feature"], 
+			Things: ["Datastreams/Observations/FeatureOfInterest/feature","MultiDatastreams/Observations/FeatureOfInterest/feature"], 
+			Observations:["FeatureOfInterest/feature"],
+			Locations:["Things/Datastreams/Observations/FeatureOfInterest/feature", "Things/MultiDatastreams/Observations/FeatureOfInterest/feature"],
+			FeaturesOfInterest:["feature"],
+			HistoricalLocations: ["Things/Datastreams/Observations/FeatureOfInterest/feature","Things/MultiDatastreams/Observations/FeatureOfInterest/feature"],
+			Datastreams: ["Observations/FeatureOfInterest/feature"],
+			MultiDatastreams:["Observations/FeatureOfInterest/feature"],
+			Campaigns:["License/ObservationGroups/Observations/FeatureOfInterest/feature",	"License/Datastreams/Observations/FeatureOfInterest/feature","License/MultiDatastreams/Observations/FeatureOfInterest/feature","ObservationGroups/Observations/FeatureOfInterest/feature"],
+			Licenses:["Datastreams/Observations/FeatureOfInterest/feature","MultiDatastreams/Observations/FeatureOfInterest/feature", "ObservationGroups/Observations/FeatureOfInterest/feature" ], 
+			ObservationGroups:[	"Campaigns/License/Datastreams/Observations/FeatureOfInterest/feature","Campaigns/License/MultiDatastreams/Observations/FeatureOfInterest/feature",	"Campaigns/Datastreams/Observations/FeatureOfInterest/feature", "Campaigns/MultiDatastreams/Observations/FeatureOfInterest/feature","License/Datastreams/Observations/FeatureOfInterest/feature", "License/MultiDatastreams/Observations/FeatureOfInterest/feature","Observations/Datastream/Observations/FeatureOfInterest/feature", "Observations/MultiDatastream/Observations/FeatureOfInterest/feature"]
+			//Relations: []
+		}
 
 		function takeParentsInformationInGeoDistance(){
 			var parentNodes= GetParentNodes(currentNode);
-			var nodeWithUniqueRow=false, columns=[], columnsValues={};
+			var nodeWithUniqueRow=false, columns=[], columnsValues={}, parentNodeSTAEntity;
 
 			for (var i=0;i<parentNodes.length;i++){
 				if (parentNodes[i].STAURL && parentNodes[i].STAdata.length>1){ //STA to apply filter
 					var url=parentNodes[i].STAURL, finalURL; 
+					parentNodeSTAEntity= getSTAURLLastEntity(parentNodes[i].STAURL);
 					var prevFilter = GetQueryParamFromURL(url, "$filter"); //Same way that in filterRows
 					if  (prevFilter) {
 					 	finalURL = RemoveQueryParamFromURL(url, "$filter");
 						finalURL = AddQueryParamsToURL(finalURL, "$filter=" + prevFilter + " and ");
 					}
 					 else
-						finalURL = AddQueryParamsToURL(parentNode.STAURL, "$filter=");
+						finalURL = AddQueryParamsToURL(url, "$filter=");
 
 				}else if (!parentNodes[i].STAURL &&parentNodes[i].STAdata.length>1){
 					alert ("There is a node linked not STA with more than one register, if you want to use it, apply a select row to choose your register")
@@ -7795,22 +7832,51 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				document.getElementById("geoDistance_input_coordinate"+i).value=columnsValues[Object.keys(columnsValues)[0]];
 			}
 
+			var entityRouteToLocation=RouteToLocation[parentNodeSTAEntity];
+			var entityRouteToFeature=RouteToFeature[parentNodeSTAEntity];
+			var entityRouteToLocationSelect= document.getElementById("geoDistance_Location_select");
+			var entityRouteToFeatureSelect= document.getElementById("geoDistance_FOI_Feature_select");
+			cdns=[];
+			for (var i=0;i<entityRouteToLocation.length;i++){
+				cdns.push(`<option value="${entityRouteToLocation[i]}">${entityRouteToLocation[i]}</option>`);
+			}
+			entityRouteToLocationSelect.innerHTML=cdns.join(""); 
+
+			cdns=[];
+			for (var i=0;i<entityRouteToFeature.length;i++){
+				cdns.push(`<option value="${entityRouteToFeature[i]}">${entityRouteToFeature[i]}</option>`);
+			}
+			entityRouteToFeatureSelect.innerHTML=cdns.join(""); 
+
+
 			
 			return true;
 		}
 		function GetGeoDistanceFilter(event){
 			event.preventDefault(); 
 			var distanceValue= document.getElementById("geoDistance_input_value").value;
-			var select= document.getElementById("geoDistance_select_operator");
-			var selectedValue= select.options[select.selectedIndex].value;
+			var selectOperator= document.getElementById("geoDistance_select_operator");
+			var selectedValueOperator= selectOperator.options[selectOperator.selectedIndex].value;
 			var coordinatesValues=[];
-
+			var selectRoute, selectedRouteValue;
+			//Route to feature or location
+			if  (document.getElementById("geoDistance_FOI_Feature").checked){
+				selectRoute= document.getElementById("geoDistance_FOI_Feature_select");
+				selectedRouteValue= selectRoute.options[selectRoute.selectedIndex].value;
+				
+			}else{
+				selectRoute= document.getElementById("geoDistance_Location_select");
+				selectedRouteValue= selectRoute.options[selectRoute.selectedIndex].value;
+			}
+			
+			//Take Coordenates
 			coordinatesValues.push(document.getElementById("geoDistance_input_coordinate1").value,document.getElementById("geoDistance_input_coordinate2").value);
-			if (selectedValue== " [a,b] "|| selectedValue== " (a,b] "||selectedValue== " [a,b) "|| selectedValue== " (a,b) "){ //interval
+			if (selectedValueOperator== " [a,b] "|| selectedValueOperator== " (a,b] "||selectedValueOperator== " [a,b) "|| selectedValueOperator== " (a,b) "){ //interval
 				coordinatesValues.push(document.getElementById("geoDistance_input_coordinate3").value,document.getElementById("geoDistance_input_coordinate4").value)
 			}
+			console.log(selectedRouteValue)
 			console.log(distanceValue);
-			console.log(selectedValue);
+			console.log(selectedValueOperator);
 			console.log(coordinatesValues);
 
 
@@ -7839,7 +7905,10 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 		}
 
-		function giveMeNetworkInformation(event) {
+		
+ 
+
+function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogSelectColumns").close();
