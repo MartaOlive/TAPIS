@@ -682,19 +682,19 @@
 			 	<label for="geoDistance_FOI_Feature">FeatureOfInterest-feature</label>
 				<span style="font-size: 10px; font-style: italic" id="geoDistance_FOI_Feature_span" >Choose the route: </span>
 				<select id="geoDistance_FOI_Feature_select" name="geoDistance_FOI_Feature_select"></select><br>
-				<input type="radio" id="geoDistance_Location" name="geoDistanceRadios" value="Location" 
+				<input type="radio" id="geoDistance_Location" name="geoDistanceRadios" value="Location" >
 				<label for="geoDistance_Location">Locations-location</label>
 				<span style="font-size: 10px; font-style: italic" id="geoDistance_Location_span" >Choose the route: </span>
 				<select id="geoDistance_Location_select" name="geoDistance_Location_select"></select><br>
 			</fieldset>
 			<fieldset>
 				<legend>Introduce the coordenates</legend>
-			<select id="geoDistance_input_coordinate1_select" name="geoDistance_input_coordinate1_select" onChange="writeValueInInputGeoDistance('1')"></select><input type="text" id ="geoDistance_input_coordinate1" style="margin-left: 10px"></input><br>
-			<select id="geoDistance_input_coordinate2_select" name="geoDistance_input_coordinate2_select"onChange="writeValueInInputGeoDistance('2')" ><input type="text" id ="geoDistance_input_coordinate2" style="margin-left: 10px"> </input></select><br>
+			<label> Point 1:</label><select id="geoDistance_input_coordinate1_select" name="geoDistance_input_coordinate1_select" onChange="writeValueInInputGeoDistance('1')"></select><input type="text" id ="geoDistance_input_coordinate1" style="margin-left: 10px"></input><br>
+			<label> Point 2:</label><select id="geoDistance_input_coordinate2_select" name="geoDistance_input_coordinate2_select"onChange="writeValueInInputGeoDistance('2')" ><input type="text" id ="geoDistance_input_coordinate2" style="margin-left: 10px"> </input></select><br>
 			<br>
 			<label> Use these to create an interval</label><br>
-			<select id="geoDistance_input_coordinate3_select" name="geoDistance_input_coordinate3_select" onChange="writeValueInInputGeoDistance('3')"></select><input type="text" id ="geoDistance_input_coordinate3" style="margin-left: 10px"></input><br>
-			<select id="geoDistance_input_coordinate4_select" name="geoDistance_input_coordinate4_select" onChange="writeValueInInputGeoDistance('4')"></select><input type="text" id ="geoDistance_input_coordinate4" style="margin-left: 10px"></input><br>
+			<label> Point 1:</label><select id="geoDistance_input_coordinate3_select" name="geoDistance_input_coordinate3_select" onChange="writeValueInInputGeoDistance('3')"></select><input type="text" id ="geoDistance_input_coordinate3" style="margin-left: 10px"></input><br>
+			<label> Point 2</label><select id="geoDistance_input_coordinate4_select" name="geoDistance_input_coordinate4_select" onChange="writeValueInInputGeoDistance('4')"></select><input type="text" id ="geoDistance_input_coordinate4" style="margin-left: 10px"></input><br>
 			</fieldset>
 
 			<label for="geoDistance_select_operator">Choose operator:</label>
@@ -7772,11 +7772,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 		function takeParentsInformationInGeoDistance(){
 			var parentNodes= GetParentNodes(currentNode);
-			var nodeWithUniqueRow=false, columns=[], columnsValues={}, parentNodeSTAEntity;
+			var nodeWithUniqueRow=false, columns=[], columnsValues={}, parentNodeSTAEntity, nodeSTA=false;
 
 			for (var i=0;i<parentNodes.length;i++){
+				
 				if (parentNodes[i].STAURL && parentNodes[i].STAdata.length>1){ //STA to apply filter
 					var url=parentNodes[i].STAURL, finalURL; 
+					nodeSTA=true;
 					parentNodeSTAEntity= getSTAURLLastEntity(parentNodes[i].STAURL);
 					var prevFilter = GetQueryParamFromURL(url, "$filter"); //Same way that in filterRows
 					if  (prevFilter) {
@@ -7820,16 +7822,29 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					console.log(columns)
 				}
 			}
-			var select,cdns=[];
-			for (var e=0;e<columns.length;e++){
-				cdns.push(`<option value="${columns[e]}">${columns[e]}</option>`);
+			if (parentNodes.length==1 && nodeSTA){ //only node STA write point
+				document.getElementById("geoDistance_input_coordinate1_select").style.display="none";
+				document.getElementById("geoDistance_input_coordinate2_select").style.display="none";
+				document.getElementById("geoDistance_input_coordinate3_select").style.display="none";
+				document.getElementById("geoDistance_input_coordinate4_select").style.display="none";
 
-			}			
-			for (var i=1;i<5;i++){
-				select=document.getElementById("geoDistance_input_coordinate"+i+"_select");
-				select.innerHTML=cdns.join("");
-				document.getElementById("geoDistance_input_coordinate"+i).value=columnsValues[Object.keys(columnsValues)[0]];
+				document.getElementById("geoDistance_input_coordinate3").disabled=true;;
+				document.getElementById("geoDistance_input_coordinate4").disabled=true;;
+
+			}else{
+				var select,cdns=[];
+				for (var e=0;e<columns.length;e++){
+					cdns.push(`<option value="${columns[e]}">${columns[e]}</option>`);
+
+				}			
+				for (var i=1;i<5;i++){
+					select=document.getElementById("geoDistance_input_coordinate"+i+"_select");
+					select.innerHTML=cdns.join("");
+					document.getElementById("geoDistance_input_coordinate"+i).value=columnsValues[Object.keys(columnsValues)[0]];
+				}
 			}
+			
+
 
 			var entityRouteToLocation=RouteToLocation[parentNodeSTAEntity];
 			var entityRouteToFeature=RouteToFeature[parentNodeSTAEntity];
@@ -7873,10 +7888,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			if (selectedValueOperator== " [a,b] "|| selectedValueOperator== " (a,b] "||selectedValueOperator== " [a,b) "|| selectedValueOperator== " (a,b) "){ //interval
 				coordinatesValues.push(document.getElementById("geoDistance_input_coordinate3").value,document.getElementById("geoDistance_input_coordinate4").value)
 			}
-			// console.log(selectedRouteValue)
-			// console.log(distanceValue);
-			// console.log(selectedValueOperator);
-			// console.log(coordinatesValues);
 
 			//make url
 			var url=currentNode.STAURL;
@@ -7902,8 +7913,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			}
 			currentNode.STAURL= url;
 			currentNode.STAdata= await loadAPIDataWithReturn(url,"EntitiesFilterRow") 
-				
-			//crida a la api i actualitzar el STAdata
 			networkNodes.update(currentNode);
 			document.getElementById("DialogGeospatialFilterRowsByDistance").close();
 
