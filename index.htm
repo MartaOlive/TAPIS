@@ -112,12 +112,14 @@
 					<select id="DialogOpenURLNetworkSelect" onChange="PopulateInputFromSelect(event, 'DialogOpenURLNetwork');">
 						<option "">-- Select an option--</option>
 						<option value="help/recipe01_STA_UML_model.json">Recipe 1: Understanding the concept of Datastream in STAplus</option>
-						<option value="help/recipe02_PartyObservationsParty.json">Recipe 2, both methods: Show the current evolution of a variable captured by a particular party
-						<option value="help/recipe02_01_PartyObservations.json">Recipe 2, cooking method 1: Recurrently selecting a row using entity identifiers
-						<option value="help/recipe02_02_ObservationsParty.json">Recipe 2, cooking method 2: Filtering observations
-						<option value="help/recipe03_OpenMap.json">Recipe 3: Show a map of all observation features in an STA service
-						<option value="help/recipe04_CSV_meaning.json">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it
-						<option value="help/recipe05_spatialFilterTemperature.json">Recipe 5: Selecting temperatures from an area
+						<option value="help/recipe02_PartyObservationsParty.json">Recipe 2, both methods: Show the current evolution of a variable captured by a particular party</option>
+						<option value="help/recipe02_01_PartyObservations.json">Recipe 2, cooking method 1: Recurrently selecting a row using entity identifiers</option>
+						<option value="help/recipe02_02_ObservationsParty.json">Recipe 2, cooking method 2: Filtering observations</option>
+						<option value="help/recipe03_OpenMap.json">Recipe 3: Show a map of all observation features in an STA service</option>
+						<option value="help/recipe04_CSV_meaning.json">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</option>
+						<option value="help/recipe05_spatialFilterTemperature.json">Recipe 5: Selecting temperatures from an area</option>
+						<option value="help/recipe06_creatingTwoDatastreamOfObservations.json">Recipe 6: Creating a new stream of observations</option>
+						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>
 					</select>
 				</label>
 			</p>
@@ -1262,7 +1264,7 @@
 					SelectRowSTA: {description: "Select Row", callSTALoad: true},
 					FilterRowsSTA: {description: "Filter Rows", callSTALoad: true},
 					GeoFilterRowsSTA: {description: "Geospatial Filter Rows", callSTALoad: true},
-					GeospatialFilterRowsByDistance: {description: "Geospatial Filter Rows By Distance", callSTALoad: true},
+					GeospatialFilterRowsByDistance: {description: "Geospatial Filter Rows By Distance"},
 					SortBySTA: {description: "Sort by", callSTALoad: true},
 					UploadObservations: {description: "Upload in STA", leafNode: true},
 					//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
@@ -1843,6 +1845,26 @@
 			return simpleCollecs;
 		}
 
+		function addOnlinesDigitalTransferOption(simpleUrlRecords, digitalTransfer, id, title, schema, bbox) {
+			if (!digitalTransfer || !digitalTransfer['gmd:onLine'])
+				return;
+			var ol_len=(typeof digitalTransfer['gmd:onLine'].length==="undefined") ? 1 : digitalTransfer['gmd:onLine'].length;
+			for (var ol=0; ol<ol_len; ol++) {
+				var online=(typeof digitalTransfer['gmd:onLine'].length==="undefined") ? digitalTransfer['gmd:onLine']['gmd:CI_OnlineResource'] : digitalTransfer['gmd:onLine'][ol]['gmd:CI_OnlineResource'];
+				if (!online['gmd:linkage'] || !online['gmd:linkage']['gmd:URL'])
+					continue;
+				simpleUrlRecords.push({
+					id: id,
+					title: title,
+					dataURL: online['gmd:linkage']['gmd:URL'],
+					schemaURL: schema});
+				if (online['gmd:name'] && online['gmd:name']['gco:CharacterString'])
+					simpleUrlRecords[simpleUrlRecords.length-1].distribution=online['gmd:name']['gco:CharacterString'];
+				if (bbox.length)
+					simpleUrlRecords[simpleUrlRecords.length-1].extent=bbox;
+			}
+		}
+
 		function getSimplifyOGCCSWRecord(metadatas){
 			var simpleUrlRecords=[], id, title, bbox, schema;
 			for (var i=0; i<metadatas.length; i++)
@@ -1872,8 +1894,7 @@
 							if (extent && extent['gmd:geographicElement']) {
 								var ge_len=(typeof extent['gmd:geographicElement'].length==="undefined") ? 1 : extent['gmd:geographicElement'].length; 
 								for (var ge=0; ge<ge_len; ge++) {
-									var geoElem=(typeof extent['gmd:geographicElement'].length==="undefined") ? extent['gmd:geographicElement'] : extent['gmd:geographicElement'][ge];
-									var gbb=extent['gmd:geographicElement']['gmd:EX_GeographicBoundingBox'];
+									var gbb=(typeof extent['gmd:geographicElement'].length==="undefined") ? extent['gmd:geographicElement']['gmd:EX_GeographicBoundingBox'] : extent['gmd:geographicElement'][ge]['gmd:EX_GeographicBoundingBox'];
 									if (gbb) {
 										var n=0;
 										if (gbb['gmd:westBoundLongitude'] && gbb['gmd:westBoundLongitude']['gco:Decimal']) {
@@ -1919,27 +1940,30 @@
 				var d_len=(typeof metadata['gmd:distributionInfo'].length==="undefined") ? 1 : metadata['gmd:distributionInfo'].length
 				for (var d=0; d<d_len; d++) {
 					var distribution=(typeof metadata['gmd:distributionInfo'].length==="undefined") ? metadata['gmd:distributionInfo']['gmd:MD_Distribution'] : metadata['gmd:distributionInfo'][d]['gmd:MD_Distribution'];
-					if (!distribution || !distribution['gmd:transferOptions'])
+					if (!distribution)
 						continue;
-					var dt_len=(typeof distribution['gmd:transferOptions'].length==="undefined") ? 1 : distribution['gmd:transferOptions'].length 
+					if (distribution['gmd:transferOptions']) {
+						var dt_len=(typeof distribution['gmd:transferOptions'].length==="undefined") ? 1 : distribution['gmd:transferOptions'].length; 
 					for (var dt=0; dt<dt_len; dt++) {
-						var digitalTransfer=(typeof distribution['gmd:transferOptions'].length==="undefined") ? distribution['gmd:transferOptions']['gmd:MD_DigitalTransferOptions'] : distribution['gmd:transferOptions'][dt]['gmd:MD_DigitalTransferOptions'];
-						if (!digitalTransfer || !digitalTransfer['gmd:onLine'])
+							addOnlinesDigitalTransferOption(simpleUrlRecords, 
+									(typeof distribution['gmd:transferOptions'].length==="undefined") ? distribution['gmd:transferOptions']['gmd:MD_DigitalTransferOptions'] : distribution['gmd:transferOptions'][dt]['gmd:MD_DigitalTransferOptions'], 
+									id, title, schema, bbox);
+						}
+					}
+					if (distribution['gmd:distributor']) {
+						var dtor_len=(typeof distribution['gmd:distributor'].length==="undefined") ? 1 : distribution['gmd:distributor'].length;
+						for (var dtor=0; dtor<dtor_len; dtor++) {
+							var distributor=(typeof distribution['gmd:distributor'].length==="undefined") ? distribution['gmd:distributor']['gmd:MD_Distributor'] : distribution['gmd:distributor'][dtor]['gmd:MD_Distributor'];
+							if (!distributor)
 							continue;
-						var ol_len=(typeof digitalTransfer['gmd:onLine'].length==="undefined") ? 1 : digitalTransfer['gmd:onLine'].length;
-						for (var ol=0; ol<ol_len; ol++) {
-							var online=(typeof digitalTransfer['gmd:onLine'].length==="undefined") ? digitalTransfer['gmd:onLine']['gmd:CI_OnlineResource'] : digitalTransfer['gmd:onLine'][ol]['gmd:CI_OnlineResource'];
-							if (!online['gmd:linkage'] || !online['gmd:linkage']['gmd:URL'])
-								continue;
-							simpleUrlRecords.push({
-								id: metadata['gmd:fileIdentifier']['gco:CharacterString'],
-								title: title,
-								dataURL: online['gmd:linkage']['gmd:URL'],
-								schemaURL: schema});
-							if (online['gmd:name'] && online['gmd:name']['gco:CharacterString'])
-								simpleUrlRecords[simpleUrlRecords.length-1].distribution=online['gmd:name']['gco:CharacterString'];
-							if (bbox.length)
-								simpleUrlRecords[simpleUrlRecords.length-1].extent=bbox;
+							if (distributor['gmd:distributorTransferOptions']) {
+								var dt_len=(typeof distributor['gmd:distributorTransferOptions'].length==="undefined") ? 1 : distributor['gmd:distributorTransferOptions'].length; 
+								for (var dt=0; dt<dt_len; dt++) {
+									addOnlinesDigitalTransferOption(simpleUrlRecords, 
+											(typeof distributor['gmd:distributorTransferOptions'].length==="undefined") ? distributor['gmd:distributorTransferOptions']['gmd:MD_DigitalTransferOptions'] : distributor['gmd:distributorTransferOptions'][dt]['gmd:MD_DigitalTransferOptions'], 
+											id, title, schema, bbox);
+								}
+							}
 						}
 					}
 				}
@@ -2115,6 +2139,17 @@
 			}
 		}
 
+
+		function updateQueryAndTableArea(node) {
+			var nodeId = network.getSelectedNodes();
+			for (var i=0; i<nodeId.length; i++) {
+				if (nodeId[i]==node.id) {
+					ShowQueryNode(node);
+					ShowTableNode(node);
+				}
+			}
+		}
+
 		async function LoadJSONNodeSTAData(node, callback, url) {
 			var response, jsonData, options={};
 			try {
@@ -2218,13 +2253,7 @@
 				}
 				networkNodes.update(node);
 				showInfoMessage("Completed.");
-				var nodeId = network.getSelectedNodes();
-				for (var i=0; i<nodeId.length; i++) {
-					if (nodeId[i]==node.id) {
-						ShowQueryNode(node);
-						ShowTableNode(node);
-					}
-				}
+				updateQueryAndTableArea(node);
 				await UpdateChildenLoadJSONCallback(node);
 				if (callback)
 					callback(node);  //The callback function is never used yet.
@@ -2413,6 +2442,23 @@
 					);	
 		}
 
+		function TransformDatesToISO(data) {
+			var record, s;
+			for (var r=0; r<data.length; r++) {
+				record=data[r];
+				var keys = Object.keys(data[r]);
+				for (var k = 0; k < keys.length; k++) {
+					if (record[keys[k]].getMonth && record[keys[k]].toISOString) {
+						s=record[keys[k]].toISOString();
+						if (s.length==24 && s.endsWith(".000Z"))
+							record[keys[k]]=s.substring(0,19)+"Z";
+						else
+							record[keys[k]]=s;
+					}
+				}
+			}
+		}
+
 		function TransformTextCSVToTable(csvText, url) {
 			try
 			{
@@ -2421,9 +2467,12 @@
 					dynamicTyping: document.getElementById("DialogImportCSVStringTyping").checked ? false : true,
 					skipEmptyLines: true});
 				currentNode.STAdata=result.data;
+				//Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
+				TransformDatesToISO(currentNode.STAdata);
 				if (url)
 					currentNode.STAfileUrl=url;
 				networkNodes.update(currentNode);
+				updateQueryAndTableArea(currentNode);
 				UpdateChildenTable(currentNode);
 			}
 			catch (e) 
@@ -4841,25 +4890,106 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		}
 
 
-		function getJSONSchemaTypeFromAttributeType(t)
-		{
-			if (t=="anyURI")
+		function getJSONSchemaTypeFromAttributeType(t) {
+			if (t=="anyURI" && t=="isodatetime")
 				return "string";
 			return t;
 		}
 
-		//Creates dataAttributes and determines the "type" attribute only.
+		function getJSONTypeOrISODatetime(s) {
+			var type=getJSONType(s)
+			if (type=="string" && (s.length==19 || s.length==20) && fragmentStartsWithISODate(s, 0))
+				return "isodatetime";
+			return type;
+		}
+		
+		function getHTMLCharacterAttributeType(type) {
+			var cdns=[];
+			cdns.push('<span class="roundCorner" style="background-color: ');
+			switch(type) {
+				case "boolean":
+					cdns.push('DarkGrey');
+					break;
+				case "array":
+					cdns.push('DarkOrange');
+					break;
+				case "null":
+					cdns.push('LightSlateGrey');
+					break;
+				case "object":
+					cdns.push('Fuchsia');
+					break;
+				case "undefined": 
+					cdns.push('LightGrey');
+					break;
+				case "integer": 
+					cdns.push('IndianRed');
+					break;
+				case "number":
+					cdns.push('Red');
+					break;
+				case "isodatetime":
+					cdns.push('BlueViolet');					
+					break;
+				case "anyURI":
+					cdns.push('Coral');
+					break;
+				case "string":
+				default:
+					cdns.push('ForestGreen');
+			}
+			cdns.push('" title="', type,'">');
+			switch(type) {
+				case "boolean":
+					cdns.push('B');
+					break;
+				case "array":
+					cdns.push('A');
+					break;
+				case "null":
+					cdns.push('N');
+					break;
+				case "object":
+					cdns.push('O');
+					break;
+				case "undefined":
+					cdns.push('U'); 
+					break;
+				case "integer": 
+					cdns.push('I');
+					break;
+				case "number":
+					cdns.push('N');
+					break;
+				case "isodatetime":
+					cdns.push('D');
+					break;
+				case "anyURI":
+					cdns.push('L');
+					break;
+				case "string":
+				default:
+					cdns.push('C');
+			}
+			cdns.push('</span>');
+			return cdns.join('');
+		}
+
+		//Creates dataAttributes and determines the "type" attribute.
+		//Possible values are the usual JSON types ("string", "boolean", "array", "null", "object", "undefined", "integer", "number")
+		// plus "isodatetime" and "anyURI"
 		function getDataAttributes(data) {
 			var dataAttributes = {}, dataAttribute, type;
 
 			for (var i = 0; i < data.length; i++) {
-				var keys = Object.keys(data[i]);
+				var record=data[i];
+				var keys = Object.keys(record);
 				for (var k = 0; k < keys.length; k++) {
 					if (dataAttributes[keys[k]]) {
 						dataAttribute=dataAttributes[keys[k]];
 						if (!isAttributeAnyURI(keys[k]))
 						{
-							type=getJSONType(data[i][keys[k]]);
+							type=getJSONTypeOrISODatetime(record[keys[k]]);
 							if (dataAttribute.type=="null" || dataAttribute.type=="undefined")
 								dataAttribute.type=type;
 							if (type!="null" && type!="undefined")
@@ -4871,6 +5001,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 									dataAttribute.type=type;
 								else if (dataAttribute.type=="integer" && type=="number")
 									dataAttribute.type="number";
+								else if (dataAttribute.type=="isodatetime" && (type=="string" || type=="number"))
+									dataAttribute.type="string";
 							}
 							if (dataAttribute.type=="object")
 								break;
@@ -4878,7 +5010,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					}
 					else
 						dataAttributes[keys[k]]={
-							type: isAttributeAnyURI(keys[k]) ? "anyURI" : getJSONType(data[i][keys[k]])
+							type: isAttributeAnyURI(keys[k]) ? "anyURI" : getJSONTypeOrISODatetime(record[keys[k]])
 						};
 				}
 			}
@@ -5636,7 +5768,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				cdns.push('</select>');				
 				document.getElementById("DialogMeaningVariableDropDown_"+i).innerHTML=cdns.join("");
 
-				document.getElementById("DialogMeaningVariableType_"+i).innerHTML=dataAttributes[dataAttributesArray[i]].type;
+				document.getElementById("DialogMeaningVariableType_"+i).innerHTML=getHTMLCharacterAttributeType(dataAttributes[dataAttributesArray[i]].type);
 				document.getElementById("DialogMeaningVariableDescription_"+i).innerHTML='<input id="DialogMeaningVariableDescriptionInput_' + i + '" type="text" size="50" value="a">';
 				document.getElementById("DialogMeaningVariableDefinition_"+i).innerHTML='<input id="DialogMeaningVariableDefinitionInput_' + i + '" type="text" size="50" value="">';
 				document.getElementById("DialogMeaningVariableUoM_"+i).innerHTML='<input id="DialogMeaningVariableUoMInput_' + i + '" type="text" size="30" value="">';
@@ -5768,9 +5900,9 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			return dataAttributes;
 		}
 
-		//Has the string s a ISO data in the position i?
+		//Has the string s a ISO data in the position i? It does not 
 		function fragmentStartsWithISODate(s, i) {
-			return s.charAt(i+0) >= '0' && s.charAt(i+0) <= '9' &&
+			if (s.charAt(i+0) >= '0' && s.charAt(i+0) <= '9' &&
 				s.charAt(i+1) >= '0' && s.charAt(i+1) <= '9' &&
 				s.charAt(i+2) >= '0' && s.charAt(i+2) <= '9' &&
 				s.charAt(i+3) >= '0' && s.charAt(i+3) <= '9' &&
@@ -5788,25 +5920,34 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				s.charAt(i+15) >= '0' && s.charAt(i+15) <= '9' &&
 				s.charAt(i+16) == ':' &&
 				s.charAt(i+17) >= '0' && s.charAt(i+17) <= '5' &&
-				s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9' &&
-				s.charAt(i+19) == 'Z';
+				s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9'){
+				if (s.charAt(i+19) == 'Z')
+					return 20;
+				return 19;
+			}
+			return 0;
 		}
 
 		//transforms a full ISO data (2024-03-05T01:41:00Z) into a template {time?f=ISO}
 		function replaceISODateBySISOTemplate(s) {
+			var date_length;
 			for (var i=0; i<s.length-19; i++) {
-				if (fragmentStartsWithISODate(s, i)) {
-					s=s.substring(0, i) + "{time?f=ISO}" + s.substring(i+20);
+				date_length=fragmentStartsWithISODate(s, i);
+				if (data_length) {
+					s=s.substring(0, i) + "{time?f=ISO}" + s.substring(i+data_length);
 					i+=11;
 				}
 			}
 			return s;
 		}
+
 		//returns the first full ISO data (2024-03-05T01:41:00Z) found in the string
 		function getISODateFromDataAttribute(s) {
+			var date_length;
 			for (var i=0; i<s.length-19; i++) {
-				if (fragmentStartsWithISODate(s, i)) {
-					return s.substr(i, 20);
+				date_length=fragmentStartsWithISODate(s, i);
+				if (date_length) {
+					return s.substr(i, date_length);
 				}
 			}
 			return null;
@@ -6339,10 +6480,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 				return true;
 			}
-			// if (nodeTo.image == "GeospatialFilterRowsByDistance.png") {
-
-			// }
-
 			return false;
 		}
 
