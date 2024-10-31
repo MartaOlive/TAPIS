@@ -7786,6 +7786,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					 else
 						finalURL = AddQueryParamsToURL(url, "$filter=");
 
+					currentNode.STAURL= finalURL;	
 				}else if (!parentNodes[i].STAURL &&parentNodes[i].STAdata.length>1){
 					alert ("There is a node linked not STA with more than one register, if you want to use it, apply a select row to choose your register")
 					
@@ -7810,10 +7811,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 								columnsValues["geometry-coordinates"]=parentNodes[i].STAdata[0]["geometry"]["coordinates"];
 								columns.push("geometry-coordinates");
 							}
-							
 						}
-					}
-							
+					}			
 					unableDisableSelectOperatorGeoDistance();
 						
 					currentNode.STAcolumnsValuesGeoDistance= columnsValues;
@@ -7852,7 +7851,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 			return true;
 		}
-		function GetGeoDistanceFilter(event){
+		async function GetGeoDistanceFilter(event){
 			event.preventDefault(); 
 			var distanceValue= document.getElementById("geoDistance_input_value").value;
 			var selectOperator= document.getElementById("geoDistance_select_operator");
@@ -7874,11 +7873,39 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			if (selectedValueOperator== " [a,b] "|| selectedValueOperator== " (a,b] "||selectedValueOperator== " [a,b) "|| selectedValueOperator== " (a,b) "){ //interval
 				coordinatesValues.push(document.getElementById("geoDistance_input_coordinate3").value,document.getElementById("geoDistance_input_coordinate4").value)
 			}
-			console.log(selectedRouteValue)
-			console.log(distanceValue);
-			console.log(selectedValueOperator);
-			console.log(coordinatesValues);
+			// console.log(selectedRouteValue)
+			// console.log(distanceValue);
+			// console.log(selectedValueOperator);
+			// console.log(coordinatesValues);
 
+			//make url
+			var url=currentNode.STAURL;
+			if (selectedValueOperator!= " [a,b] "|| selectedValueOperator!= " (a,b] "||selectedValueOperator!= " [a,b) "|| selectedValueOperator!= " (a,b) "){
+				
+				url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') ${selectedValueOperator}  ${distanceValue} `
+				
+			}else{
+				if (selectedValueOperator!= " [a,b] "){
+					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') ge  ${distanceValue} and `
+					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') le  ${distanceValue} `
+
+				}else if(selectedValueOperator!= " (a,b] "){
+					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') gt  ${distanceValue} and `
+					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') le  ${distanceValue} ` 
+				}else if(selectedValueOperator!= " [a,b) "){
+					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') ge  ${distanceValue} and `
+					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') lt  ${distanceValue} `
+				}else { //selectedValueOperator!= " (a,b) "
+					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') gt  ${distanceValue} and `
+					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') lt  ${distanceValue} `
+				}
+			}
+			currentNode.STAURL= url;
+			currentNode.STAdata= await loadAPIDataWithReturn(url,"EntitiesFilterRow") 
+				
+			//crida a la api i actualitzar el STAdata
+			networkNodes.update(currentNode);
+			document.getElementById("DialogGeospatialFilterRowsByDistance").close();
 
 		}
 		function writeValueInInputGeoDistance(value){
