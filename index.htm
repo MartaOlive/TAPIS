@@ -704,10 +704,6 @@
 				<option value="lt"> < </option>
 				<option value="ge">  ≥  </option>
 				<option value="le">   ≤   </option>
-				<option value=" [a,b] "> [a,b] </option>
-				<option value=" (a,b] "> (a,b] </option>
-				<option value=" [a,b) "> [a,b) </option>
-				<option value=" (a,b) "> (a,b) </option>
 			</select>
 
 			<label for="geoDistance_value">Introduce value</label><input type="number" id ="geoDistance_input_value" style="width:50px" min="0" value="0">
@@ -6842,9 +6838,9 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					document.getElementById("DialogColumnStatistics").showModal();
 				}
 				
-				else if (currentNode.image == "GeoFilterPolSTA.png" || 
+				else if ((currentNode.image == "GeoFilterPolSTA.png" || 
 					IdOfSTAEntity(currentNode) != -1 ||
-					IdOfSTASpecialQueries(currentNode) != -1) {
+					IdOfSTASpecialQueries(currentNode) != -1)&& currentNode.image != "GeoFilterPntSTA.png") { //It is necessary to exclude GeoFilterPntSTA to allow to entry to next else.
 					document.getElementById("DialogSelectNRecords").showModal();
 				}
 				else if (currentNode.image == "GeoFilterPntSTA.png" &&
@@ -7926,7 +7922,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							if (dataAttributesKeys[a]!="geometry"){
 								columnsValues[dataAttributesKeys[a]]=parentNodes[i].STAdata[0][dataAttributesKeys[a]];
 								columns.push(dataAttributesKeys[a]);
-							}else{
+							}else{ //GeoJSON
 								columnsValues["geometry-coordinates"]=parentNodes[i].STAdata[0]["geometry"]["coordinates"];
 								columns.push("geometry-coordinates");
 							}
