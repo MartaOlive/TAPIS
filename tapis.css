@@ -53,6 +53,18 @@
     			border-color: buttonborder;
     			border-image: initial;
 		}
+
+		.roundCorner {
+			color: white;
+			font-size: smaller;
+			border-radius: 0.2em;
+			background: #888888;
+			padding: 0.2em; 
+			display: inline-block;
+			min-width: 1em;
+			margin: 0 auto;
+			text-align: center;
+		}
 		
 /*RowFilter*/
 #divSelectorRowsFilter {

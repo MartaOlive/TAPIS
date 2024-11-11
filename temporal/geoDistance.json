@@ -7031,7 +7031,7 @@
 		{
 			"id": "15r63.gk2bfp8",
 			"label": "Geospatial Filter Rows By Distance",
-			"image": "GeospatialFilterRowsByDistance.png",
+			"image": "GeoFilterPntSTA.png",
 			"shape": "circularImage",
 			"x": 115,
 			"y": 0,

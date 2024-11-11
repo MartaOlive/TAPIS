@@ -120,8 +120,8 @@
 					]
 				}
 			],
-			"x": -34,
-			"y": 155
+			"x": -69,
+			"y": 196
 		},
 		{
 			"id": "7634j.nqc129",
@@ -144,8 +144,8 @@
 				}
 			],
 			"STAURL": null,
-			"x": 39,
-			"y": 50
+			"x": -19,
+			"y": 74
 		},
 		{
 			"id": "6kmq7.va0khv",
@@ -5391,8 +5391,8 @@
 					"description": "Last interpreted"
 				}
 			},
-			"x": -59,
-			"y": -21
+			"x": -92,
+			"y": -27
 		},
 		{
 			"id": "lk2g.udfeeus",
@@ -5533,24 +5533,45 @@
 					"definition": "http://w3id.org/ad4gd/ev/ebv/Speciesdistributionsofallterrestrialmammals"
 				}
 			},
-			"x": -53,
-			"y": -135
+			"x": -73,
+			"y": -143
 		},
 		{
 			"id": "1fj8d.vq5nvug",
 			"label": "Bar Plot",
 			"image": "BarPlot.png",
 			"shape": "circularImage",
-			"x": 61,
-			"y": -192
+			"x": 32,
+			"y": -214
 		},
 		{
 			"id": "8mikb.71l68u",
 			"label": "Feedback",
 			"image": "guf.png",
 			"shape": "circularImage",
-			"x": 160,
-			"y": 14
+			"x": 88,
+			"y": 11,
+			"STAURL": "https://www.nimmbus.cat/cgi-bin/nimmbus.cgi?SERVICE=WPS&REQUEST=EXECUTE&IDENTIFIER=NB_RESOURCE:ENUMERATE&LANGUAGE=eng&FORMAT=text/xml&TYPE=FEEDBACK&TRG_TYPE_1=CITATION&TRG_FLD_1=CODE&TRG_VL_1=https://catalogue.grumets.cat/geonetwork/ad4gd/api/records/63a296c5-f132-4174-bac5-babe5ad94f2a/attachments/GBIF_Mammals_ANSI.csv&TRG_OPR_1=EQ&TRG_NXS_1=AND&TRG_TYPE_2=CITATION&TRG_FLD_2=NAMESPACE&TRG_VL_2=http://catalogue.grumets.cat/geonetwork/ad4gd/cat/csw&TRG_OPR_2=EQ",
+			"OGCType": "GUF",
+			"STAdata": [
+				{
+					"id": "https://www.nimmbus.cat/cgi-bin/nimmbus.cgi?SERVICE=WPS&amp;REQUEST=EXECUTE&amp;IDENTIFIER=NB_RESOURCE:RETRIEVE&amp;LANGUAGE=cat&amp;RESOURCE=0K44ZO98EW2S7SLB90C77M1E603T3W814R80577I1166XB6",
+					"title": "Reporting the species with more occurrences",
+					"updated": "2024-10-13T09:08:20.612Z",
+					"abstract": "Reporting the species with more occurrences",
+					"owner": "JoanMaso",
+					"rating": "4",
+					"comment": "Mustela putorius is the species with more occurrences in this dataset"
+				}
+			]
+		},
+		{
+			"id": "25dje.r6psnvg",
+			"label": "Edit record",
+			"image": "EditRecord.png",
+			"shape": "circularImage",
+			"x": 206,
+			"y": 27
 		}
 	],
 	"edges": [
@@ -5582,6 +5603,11 @@
 		{
 			"from": "7634j.nqc129",
 			"to": "8mikb.71l68u",
+			"arrows": "from"
+		},
+		{
+			"from": "8mikb.71l68u",
+			"to": "25dje.r6psnvg",
 			"arrows": "from"
 		}
 	]

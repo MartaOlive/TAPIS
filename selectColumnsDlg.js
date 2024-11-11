@@ -56,15 +56,13 @@ function ShowTableSelectColumnsDialog(div_id, parentNode, node, selectDef, feven
 	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 	const dataAttributesArray = Object.keys(dataAttributes);
 
-	var s = '<table>';
+	var cdns=[];
+	cdns.push('<table>');
 	for (var a = 0; a < dataAttributesArray.length; a++){
-		var typeOfAttribute;
-		(dataAttributes[dataAttributesArray[a]].type=="number")?typeOfAttribute="Number" : typeOfAttribute="Text"; //Add Number or text next to attribute name
-		s += '<tr><td><input type="checkbox"' + ((!selectedColumns && selectDef) || (selectedColumns && (a>=selectedColumns.length || selectedColumns[a]))  ? 'checked="checked"' : '') + ' value="" id="'+div_id+'_' + a + '" name="'+div_id+'_' + a + '"' + (fevent ? ' onchange="'+ fevent +'"': '') + ' /> <label id="'+div_id+ '_label_' + a +'" for="'+div_id+'_' + a + '">' + dataAttributesArray[a] + ' ('+typeOfAttribute+') </label></td></tr>';
-
+		cdns.push('<tr><td><input type="checkbox"', ((!selectedColumns && selectDef) || (selectedColumns && (a>=selectedColumns.length || selectedColumns[a]))  ? 'checked="checked"' : ''), ' value="" id="', div_id, '_', a, '" name="', div_id, '_', a, '"', (fevent ? ' onchange="'+ fevent +'"': ''), ' /> <label id="', div_id, '_label_', a, '" for="', div_id, '_', a, '">', getHTMLCharacterAttributeType(dataAttributes[dataAttributesArray[a]].type), ' ', dataAttributesArray[a], '</label></td></tr>');
 	}
-	s += '</table>'	;
-	document.getElementById("Dialog"+div_id+"HTML").innerHTML = s;
+	cdns.push('</table>');
+	document.getElementById("Dialog"+div_id+"HTML").innerHTML = cdns.join('');
 }
 
 

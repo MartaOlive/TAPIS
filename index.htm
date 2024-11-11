@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -530,9 +530,10 @@
 			</div>
 		</form>
 	</dialog>
-	<dialog id="DialogColumnsStatistics">
+	
+	<dialog id="DialogColumnStatistics">
 		<form >
- 				<span>Table with follow statistics will be created:</span><br>
+ 				<span>For each column, rows with the follow statistics will be created:</span><br>
 				<div style="display: inline-block;">
 					<ul type="square">
 						<li>Mean</li><li>Median</li><li>Q1</li><li>Q3</li><li>Min. value</li><li>Max value</li>
@@ -551,13 +552,12 @@
 
 			<br>
 			<div  style="text-align: center">
-				<button value="default" onClick="createColumnsStatistics(event)">Ok</button>
+				<button value="default" onClick="createColumnStatistics(event)">Ok</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
-			
 		</form>
-		
 	</dialog>
+	
 	<dialog id="DialogConcatenateTables">
 		<form >
 			<fieldset> 
@@ -572,11 +572,10 @@
 			<div  style="text-align: center">
 				<button value="default" onClick="concatenateTables()">Ok</button>
 				<button value="cancel" formmethod="dialog" >Cancel</button>
-			</div>
-			
-		</form>
-		
+			</div>			
+		</form>		
 	</dialog>
+	
 	<dialog id="DialogSelectExpands">
 		<form>
 			<fieldset id="DialogSelectExpandsHTML">
@@ -594,6 +593,7 @@
 			</div>
 		</form>
 	</dialog>
+	
 	<dialog id="DialogFilterRowEntities">
 		<form>
 			<fieldset id="DialogFilterRowEntitiesHTML">
@@ -691,16 +691,13 @@
 			</fieldset>
 			<fieldset>
 				<legend>Introduce the coordenates</legend>
-			<label> Point 1:</label><select id="geoDistance_input_coordinate1_select" name="geoDistance_input_coordinate1_select" onChange="writeValueInInputGeoDistance('1')"></select><input type="text" id ="geoDistance_input_coordinate1" style="margin-left: 10px"></input><br>
-			<label> Point 2:</label><select id="geoDistance_input_coordinate2_select" name="geoDistance_input_coordinate2_select"onChange="writeValueInInputGeoDistance('2')" ><input type="text" id ="geoDistance_input_coordinate2" style="margin-left: 10px"> </input></select><br>
-			<br>
-			<label> Use these to create an interval</label><br>
-			<label> Point 1:</label><select id="geoDistance_input_coordinate3_select" name="geoDistance_input_coordinate3_select" onChange="writeValueInInputGeoDistance('3')"></select><input type="text" id ="geoDistance_input_coordinate3" style="margin-left: 10px"></input><br>
-			<label> Point 2</label><select id="geoDistance_input_coordinate4_select" name="geoDistance_input_coordinate4_select" onChange="writeValueInInputGeoDistance('4')"></select><input type="text" id ="geoDistance_input_coordinate4" style="margin-left: 10px"></input><br>
+				<label> Coordinate X:</label><select id="geoDistance_input_coordinate1_select" name="geoDistance_input_coordinate1_select" onChange="writeValueInInputGeoDistance('1')"></select><input type="text" id ="geoDistance_input_coordinate1" style="margin-left: 10px"></input><br>
+				<label> Coordinate Y:</label><select id="geoDistance_input_coordinate2_select" name="geoDistance_input_coordinate2_select" onChange="writeValueInInputGeoDistance('2')"></select><input type="text" id ="geoDistance_input_coordinate2" style="margin-left: 10px"> </input></select><br>
+		
 			</fieldset>
 
 			<label for="geoDistance_select_operator">Choose operator:</label>
-			<select id="geoDistance_select_operator" name="geoDistance_select_operator" onChange="unableDisableSelectOperatorGeoDistance()">
+			<select id="geoDistance_select_operator" name="geoDistance_select_operator" >
 				<option value="eq"> =</option>
 				<option value="ne">  ≠ </option>
 				<option value="gt"> > </option>
@@ -1158,28 +1155,6 @@
 		</form>
 	</dialog>
 
-	<!--dialog id="UploadTimeAverages">
-		<div id="UploadTimeAveragesLoginFirst" style="display: none;">
-		<form>
-			To upload data in a STA server, you should Login first.<br>
-			<div class="center">
-				<button value="cancel" formmethod="dialog">Cancel</button>
-			</div>
-		</form>
-		</div>
-		<form id="UploadTimeAveragesForm">
-			Upload Datastream as STA time averages
-			<br>
-			<label>STA target service URL:
-				<input type="text" id="DialogTimeAveragesSTAUploadURLInput" size="100"></input>
-			</label>
-			<div class="center">
-				<button value="ok" onClick="UploadTimeAveragesSTAURL(event)" formmethod="dialog">Upload</button>
-			</div>
-		</form>
-	</dialog-->
-
-
 	<!--h2 id="eventSpanHeading"></h2>
 	<pre id="eventSpanContent"></pre-->
 
@@ -1263,11 +1238,10 @@
 					ExpandColumnsSTA: {description: "Expand Columns", callSTALoad: true},
 					SelectRowSTA: {description: "Select Row", callSTALoad: true},
 					FilterRowsSTA: {description: "Filter Rows", callSTALoad: true},
-					GeoFilterRowsSTA: {description: "Geospatial Filter Rows", callSTALoad: true},
-					GeospatialFilterRowsByDistance: {description: "Geospatial Filter Rows By Distance"},
+					GeoFilterPolSTA: {description: "Filter Rows by Polygon", callSTALoad: true},
+					GeoFilterPntSTA: {description: "Filter Rows by Distance", callSTALoad: true},
 					SortBySTA: {description: "Sort by", callSTALoad: true},
 					UploadObservations: {description: "Upload in STA", leafNode: true},
-					//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
 					OneValueSTA: {description: "One Value", leafNode: true},
 					CountResultsSTA: { description: "Count results", leafNode: true }};
 		const STAOperationsArray = Object.keys(STAOperations);
@@ -1285,7 +1259,7 @@
 					AggregateColumns:{description: "Aggregate Columns"},
 					CreateColumns:{description: "Create Columns"},
 					ColumnsCalculator:{description: "Columns calculator"},
-					ColumnsStatistics:{description:"Columns statistics"},
+					ColumnStatistics:{description:"Columns statistics"},
 					SeparateColumns: {description: "Separate Columns"},
 					ScatterPlot: {description: "Scatter Plot", leafNode: true},
 					BarPlot: {description: "Bar Plot", leafNode: true},
@@ -1392,7 +1366,7 @@
 
 		//Return null if there is no reason (and there is a "fit").
 		function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-			if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "GeoFilterRowsSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnsSTA.png" || node.image == "SortBySTA.png" || node.image == "OneValueSTA.png" || node.image == "CountResultsSTA.png" ) )
+			if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnsSTA.png" || node.image == "SortBySTA.png" || node.image == "OneValueSTA.png" || node.image == "CountResultsSTA.png" ) )
 				return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
 			if (parentNode.image=="sta.png" || parentNode.image=="ogcAPIs.png" || parentNode.image=="csw.png")
 				return null;
@@ -1955,7 +1929,7 @@
 						for (var dtor=0; dtor<dtor_len; dtor++) {
 							var distributor=(typeof distribution['gmd:distributor'].length==="undefined") ? distribution['gmd:distributor']['gmd:MD_Distributor'] : distribution['gmd:distributor'][dtor]['gmd:MD_Distributor'];
 							if (!distributor)
-							continue;
+								continue;
 							if (distributor['gmd:distributorTransferOptions']) {
 								var dt_len=(typeof distributor['gmd:distributorTransferOptions'].length==="undefined") ? 1 : distributor['gmd:distributorTransferOptions'].length; 
 								for (var dt=0; dt<dt_len; dt++) {
@@ -2448,7 +2422,11 @@
 				record=data[r];
 				var keys = Object.keys(data[r]);
 				for (var k = 0; k < keys.length; k++) {
-					if (record[keys[k]].getMonth && record[keys[k]].toISOString) {
+					if (record[keys[k]]===null) {
+						delete record[keys[k]];
+						continue;
+					}
+					if (record[keys[k]] && record[keys[k]].getMonth && record[keys[k]].toISOString) {
 						s=record[keys[k]].toISOString();
 						if (s.length==24 && s.endsWith(".000Z"))
 							record[keys[k]]=s.substring(0,19)+"Z";
@@ -3152,18 +3130,18 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				delete obj["ObservedProperties"]; //To separate manually without AddKeysToFilter function 
 				delete obj["observationType"]; //to avoid error: "Illegal operation: No property called observationType for class de.fraunhofer.iosb.ilt.frostserver.plugin.multidatastream.TableImpMultiDatastreams"
 				var toAddToFilter="";
-				 for (var i=0;i<observedProperties.length;i++){
+				for (var i=0;i<observedProperties.length;i++){
 				 	toAddToFilter+= "and ObservedProperties/@iot.id eq '"+ observedProperties[i]["@iot.id"]+"'";
-				 }
-				var url2=url+"/"+objsName+ "?$filter=" + (AddKeysToFilter("", obj))+toAddToFilter;
+				}
+				var url2=url+"/"+objsName+ "?$filter=" + encodeURIComponent(AddKeysToFilter("", obj)) + toAddToFilter;
 				console.log(url2)
 				var response=await HTTPJSONData(url2);
 				obj["ObservedProperties"]=observedProperties;
 				obj["observationType"]=observationType;
 			}
 			else
-			var response=await HTTPJSONData(url+"/"+objsName+ "?$filter=" + (AddKeysToFilter("", obj)));
-			
+				var response=await HTTPJSONData(url+"/"+objsName+ "?$filter=" + encodeURIComponent(AddKeysToFilter("", obj)));
+
 			if (!response || (!response.obj && !response.ok && response.status!=404))
 				throw {name: "Error requesting resource existance.", message: "Status: "+ response.status, at: "", text: url+"/"+objsName+ "?$filter=" + AddKeysToFilter("", obj)};
 			var data=response.obj;
@@ -4275,14 +4253,11 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").close();
 				if (response.ok)
 					showInfoMessage("MultiDatastream <a href='" + url + "'target='_blank'>" + id + "</a> updated.");
-				else {
+				else
 					showInfoMessage("Error updating MultiDatastream <a href='" + url + "'target='_blank'>" + id + "</a> updated.");
 			}
 		}
-		
-		}
 
-	
 		function AskForDeleteEntity(event){
 			event.preventDefault(); 
 			var parentNodes=GetParentNodes(currentNode);
@@ -4882,10 +4857,21 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			return t;
 		}
 
+		//Taking this into consideration: https://www.w3.org/TR/tabular-data-primer
 		function getAttributeTypeFromCSVWType(t)
 		{
+			if (typeof t==="object" && t.base)
+				t=t.base;
 			if (t=="json")
 				return "object";
+			if (t=="decimal" || t=="long" || t=="int" || t=="short" || t=="byte" || t=="nonNegativeInteger"  || t=="positiveInteger" || t=="unsignedLong" || t=="unsignedInt" || t=="unsignedShort" || t=="unsignedByte" || t=="nonPositiveInteger"  || t=="negativeInteger")
+				return "number";
+			if (t=="double" || t=="float")
+				return "number";
+			if (t=="date" || t=="time")
+				return "isodatetime";
+			if (t=="normalizedString" || t=="token" || t=="Name" || t=="NMTOKEN" || t=="xml" || t=="html")
+				return "string";
 			return t;
 		}
 
@@ -6412,7 +6398,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				//LoadJSONNodeSTAData(nodeTo);
 				return true;
 			}
-			if (nodeTo.image == "GeoFilterRowsSTA.png") {
+			if (nodeTo.image == "GeoFilterPolSTA.png") {
 				if (!GetFirstParentNode(nodeTo)){
 					nodeTo.STAURL = nodeFrom.STAURL;
 					nodeTo.STAExpectedLength = nodeFrom.STAExpectedLength;
@@ -6641,10 +6627,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					ShowUploadObservationsDialog(currentNode);
 					document.getElementById("DialogUploadObservations").showModal();
 				}
-				/*else if (currentNode.image == "UploadTimeAverages.png") {
-					ShowUploadTimeAveragesDialog(currentNode.id);
-					document.getElementById("UploadTimeAverages").showModal();
-				}*/
 				else if (currentNode.image == "SaveTable.png") {
 					//ShowSaveTableDialog(currentNode.id);
 					document.getElementById("DialogSaveTable").showModal();
@@ -6853,28 +6835,27 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				else if (currentNode.image == "SeparateColumns.png") {
 					;
 				}
-				else if (currentNode.image =="ConcatenateTables.png"){
+				else if (currentNode.image =="ConcatenateTables.png") {
 					document.getElementById("DialogConcatenateTables").showModal();
 				}
-				else if (currentNode.image =="ColumnsStatistics.png"){
-					document.getElementById("DialogColumnsStatistics").showModal();
+				else if (currentNode.image =="ColumnStatistics.png") {
+					document.getElementById("DialogColumnStatistics").showModal();
 				}
 				
-				else if (currentNode.image == "GeoFilterRowsSTA.png" || 
+				else if (currentNode.image == "GeoFilterPolSTA.png" || 
 					IdOfSTAEntity(currentNode) != -1 ||
 					IdOfSTASpecialQueries(currentNode) != -1) {
 					document.getElementById("DialogSelectNRecords").showModal();
 				}
-				else if (currentNode.image == "GeospatialFilterRowsByDistance.png" ){
-
-					
-					if (takeParentsInformationInGeoDistance()==true)document.getElementById("DialogGeospatialFilterRowsByDistance").showModal();
+				else if (currentNode.image == "GeoFilterPntSTA.png" &&
+					takeParentsInformationInGeoDistance()==true) {
+					document.getElementById("DialogGeospatialFilterRowsByDistance").showModal();
 				}
 				else if (currentNode.image == "ObservedProperty.png" || currentNode.image == "Observation.png" || 
 					currentNode.image == "FeatureOfInterest.png" || currentNode.image == "Sensor.png" || 
 					currentNode.image == "Thing.png" || currentNode.image == "Location.png" || 
 					currentNode.image == "HistoricalLocation.png" || currentNode.image == "Datastream.png" || 
-					 currentNode.image == "Party.png" || 
+					currentNode.image == "Party.png" || 
 					currentNode.image == "Campaign.png" || currentNode.image == "License.png" || 
 					currentNode.image == "ObservationGroup.png" || currentNode.image == "Relation.png") {
 					startingNodeContextId=currentNode.id;
@@ -6891,7 +6872,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						PopulateCreateUpdateDeleteEntityMultiDatastreams("MultiDatastreams", currentNode,number); //S'ha de calcular el numero
 						document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").showModal();
 					}
-				
 				}
 				else if (currentNode.image == "EditRecord.png") {
 					startingNodeContextId=currentNode.id;
@@ -7763,7 +7743,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			document.getElementById("DialogColumnsCalculator").close();
 
 		}
-		function createColumnsStatistics(event){
+		function createColumnStatistics(event){
 			event.preventDefault();
 			var parentNodes= GetParentNodes(currentNode);
 			var staData= parentNodes[0].STAdata;
@@ -7803,7 +7783,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			currentNode.STAdata=finallyArray;
 			networkNodes.update(currentNode);
-			document.getElementById("DialogColumnsStatistics").close();
+			document.getElementById("DialogColumnStatistics").close();
 
 			
 		}
@@ -7952,7 +7932,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							}
 						}
 					}			
-					unableDisableSelectOperatorGeoDistance();
+					
 						
 					currentNode.STAcolumnsValuesGeoDistance= columnsValues;
 					networkNodes.update(currentNode);
@@ -7962,11 +7942,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			if (parentNodes.length==1 && nodeSTA){ //only node STA write point
 				document.getElementById("geoDistance_input_coordinate1_select").style.display="none";
 				document.getElementById("geoDistance_input_coordinate2_select").style.display="none";
-				document.getElementById("geoDistance_input_coordinate3_select").style.display="none";
-				document.getElementById("geoDistance_input_coordinate4_select").style.display="none";
 
-				document.getElementById("geoDistance_input_coordinate3").disabled=true;;
-				document.getElementById("geoDistance_input_coordinate4").disabled=true;;
 
 			}else{
 				var select,cdns=[];
@@ -7974,7 +7950,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					cdns.push(`<option value="${columns[e]}">${columns[e]}</option>`);
 
 				}			
-				for (var i=1;i<5;i++){
+				for (var i=1;i<3;i++){
 					select=document.getElementById("geoDistance_input_coordinate"+i+"_select");
 					select.innerHTML=cdns.join("");
 					document.getElementById("geoDistance_input_coordinate"+i).value=columnsValues[Object.keys(columnsValues)[0]];
@@ -8022,61 +7998,26 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 			//Take Coordenates
 			coordinatesValues.push(document.getElementById("geoDistance_input_coordinate1").value,document.getElementById("geoDistance_input_coordinate2").value);
-			if (selectedValueOperator== " [a,b] "|| selectedValueOperator== " (a,b] "||selectedValueOperator== " [a,b) "|| selectedValueOperator== " (a,b) "){ //interval
-				coordinatesValues.push(document.getElementById("geoDistance_input_coordinate3").value,document.getElementById("geoDistance_input_coordinate4").value)
-			}
 
 			//make url
 			var url=currentNode.STAURL;
-			if (selectedValueOperator!= " [a,b] "|| selectedValueOperator!= " (a,b] "||selectedValueOperator!= " [a,b) "|| selectedValueOperator!= " (a,b) "){
 				
-				url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') ${selectedValueOperator}  ${distanceValue} `
+			url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') ${selectedValueOperator}  ${distanceValue} `
 				
-			}else{
-				if (selectedValueOperator!= " [a,b] "){
-					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') ge  ${distanceValue} and `
-					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') le  ${distanceValue} `
-
-				}else if(selectedValueOperator!= " (a,b] "){
-					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') gt  ${distanceValue} and `
-					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') le  ${distanceValue} ` 
-				}else if(selectedValueOperator!= " [a,b) "){
-					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') ge  ${distanceValue} and `
-					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') lt  ${distanceValue} `
-				}else { //selectedValueOperator!= " (a,b) "
-					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') gt  ${distanceValue} and `
-					url+=`geo.distance( ${selectedRouteValue}, geography'POINT (${coordinatesValues[0]} ${coordinatesValues[1]})') lt  ${distanceValue} `
-				}
-			}
+		
 			currentNode.STAURL= url;
 			currentNode.STAdata= await loadAPIDataWithReturn(url,"EntitiesFilterRow") 
 			networkNodes.update(currentNode);
 			document.getElementById("DialogGeospatialFilterRowsByDistance").close();
-
 		}
+
 		function writeValueInInputGeoDistance(value){
 			var select=document.getElementById("geoDistance_input_coordinate"+value+"_select");
 			var selectValue= select.options[select.selectedIndex].value;
 			document.getElementById("geoDistance_input_coordinate"+value).value= currentNode.STAcolumnsValuesGeoDistance[selectValue]
 		}
 
-		function unableDisableSelectOperatorGeoDistance(){
-			var select=document.getElementById("geoDistance_select_operator");
-			var selectValue= select.options[select.selectedIndex].value;
 
-			if (selectValue== " [a,b] "|| selectValue== " (a,b] "||selectValue== " [a,b) "|| selectValue== " (a,b) "){ //interval
-				document.getElementById("geoDistance_input_coordinate3_select").disabled=false;
-				document.getElementById("geoDistance_input_coordinate4_select").disabled=false;
-				document.getElementById("geoDistance_input_coordinate3").disabled=false;
-				document.getElementById("geoDistance_input_coordinate4").disabled=false;
-
-			}else{
-				document.getElementById("geoDistance_input_coordinate3_select").disabled=true;
-				document.getElementById("geoDistance_input_coordinate4_select").disabled=true;
-				document.getElementById("geoDistance_input_coordinate3").disabled=true;
-				document.getElementById("geoDistance_input_coordinate4").disabled=true;
-			}
-		}
 
 		
  
