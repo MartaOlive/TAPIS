@@ -7699,7 +7699,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			for (var i=0;i<n;i++){
 				//cdns.push(`<option value= ${dataKeys[i]}>${dataKeys[i]}</option>`);
-				if (dataAttributes[dataAttributesKeys[i]]['type']=="number") cdns.push(`<option value= ${dataAttributesKeys[i]}>${dataAttributesKeys[i]}</option>`);
+				if (dataAttributes[dataAttributesKeys[i]]['type']=="number"||dataAttributes[dataAttributesKeys[i]]['type']=="integer") cdns.push(`<option value= ${dataAttributesKeys[i]}>${dataAttributesKeys[i]}</option>`);
 			}
 			select.innerHTML=cdns.join("");
 		
@@ -7913,20 +7913,27 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					}
 					nodeWithUniqueRow=true;
 					var dataAttributes= getDataAttributes(parentNodes[i].STAdata);
-					var dataAttributesKeys=Object.keys(dataAttributes)
+					var dataAttributesKeys=Object.keys(dataAttributes);
+					var itIsGeoJSON="no";
 
 					for (var a=0;a<dataAttributesKeys.length;a++){
-				
-						if (dataAttributes[dataAttributesKeys[a]]['type']=="number") {
+											
+							if (dataAttributesKeys[a]!="geometry" || (dataAttributesKeys[a]=="geometry"&& dataAttributesKeys.length>1 )){
+								if (dataAttributes[dataAttributesKeys[a]]['type']=="number"||dataAttributes[dataAttributesKeys[a]]['type']=="integer"){
+
+									columnsValues[dataAttributesKeys[a]]=parentNodes[i].STAdata[0][dataAttributesKeys[a]];
+									columns.push(dataAttributesKeys[a]);
+								 
+									
+								}
 							
-							if (dataAttributesKeys[a]!="geometry"){
-								columnsValues[dataAttributesKeys[a]]=parentNodes[i].STAdata[0][dataAttributesKeys[a]];
-								columns.push(dataAttributesKeys[a]);
 							}else{ //GeoJSON
 								columnsValues["geometry-coordinates"]=parentNodes[i].STAdata[0]["geometry"]["coordinates"];
 								columns.push("geometry-coordinates");
+								(parentNodes[i].STAdata[0]["geometry"]["type"]=="Point"||parentNodes[i].STAdata[0]["geometry"]["type"]=="point")?itIsGeoJSON="Point": itIsGeoJSON="Poligon"; 
+								
+							
 							}
-						}
 					}			
 					
 						
@@ -7935,12 +7942,19 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					console.log(columns)
 				}
 			}
-			if (parentNodes.length==1 && nodeSTA){ //only node STA write point
+			if ((parentNodes.length==1 && nodeSTA) || (itIsGeoJSON=="Point"||itIsGeoJSON=="Poligon")){ 
 				document.getElementById("geoDistance_input_coordinate1_select").style.display="none";
 				document.getElementById("geoDistance_input_coordinate2_select").style.display="none";
-
-
+				if (itIsGeoJSON=="Point"){
+					document.getElementById("geoDistance_input_coordinate1").value=columnsValues["geometry-coordinates"][0];
+					document.getElementById("geoDistance_input_coordinate2").value=columnsValues["geometry-coordinates"][1];
+				}else{
+					document.getElementById("geoDistance_input_coordinate1").value="";
+					document.getElementById("geoDistance_input_coordinate2").value="";
+				}
 			}else{
+				document.getElementById("geoDistance_input_coordinate1_select").style.display="inline-block";
+				document.getElementById("geoDistance_input_coordinate2_select").style.display="inline-block";
 				var select,cdns=[];
 				for (var e=0;e<columns.length;e++){
 					cdns.push(`<option value="${columns[e]}">${columns[e]}</option>`);
@@ -7953,8 +7967,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				}
 			}
 			
-
-
 			var entityRouteToLocation=RouteToLocation[parentNodeSTAEntity];
 			var entityRouteToFeature=RouteToFeature[parentNodeSTAEntity];
 			var entityRouteToLocationSelect= document.getElementById("geoDistance_Location_select");

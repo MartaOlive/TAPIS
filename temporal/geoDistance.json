@@ -7007,8 +7007,8 @@
 					"volum_embassat": 1.99
 				}
 			],
-			"x": 40,
-			"y": -231
+			"x": 96,
+			"y": -212
 		},
 		{
 			"id": "20hhh.sgve4ig",
@@ -7025,22 +7025,19 @@
 				}
 			],
 			"STAURL": null,
-			"x": 159,
-			"y": -193
+			"x": 193,
+			"y": -133
 		},
 		{
 			"id": "15r63.gk2bfp8",
 			"label": "Geospatial Filter Rows By Distance",
 			"image": "GeoFilterPntSTA.png",
 			"shape": "circularImage",
-			"x": 115,
-			"y": 0,
-			"STAcolumnsValuesGeoDistance": {
-				"geo_epgs_25831_x": 430710.4923185688,
-				"geo_epgs_25831_y": 4587548.740059066,
-				"geo_epgs_4326_lat": 41.436520723916416,
-				"geo_epgs_4326_lon": 2.170628425864479
-			}
+			"x": 1,
+			"y": -1,
+			"STAcolumnsValuesGeoDistance": {},
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations?$filter=",
+			"STAdata": null
 		},
 		{
 			"id": "21llr.j1qs7",
@@ -7078,8 +7075,8 @@
 					}
 				}
 			],
-			"x": -245,
-			"y": 134
+			"x": -315,
+			"y": 8
 		},
 		{
 			"id": "rn09.j2pefoc",
@@ -7092,39 +7089,44 @@
 					"B": "1b",
 					"C": "1c",
 					"dia": "dia1",
-					"geometry": 1
+					"geometry": 1,
+					"D": 44.1
 				},
 				{
 					"A": "2a",
 					"B": "2b",
 					"C": "2c",
 					"dia": "dia2",
-					"geometry": 2
+					"geometry": 2,
+					"D": 442.1
 				},
 				{
 					"A": "3a",
 					"B": "3b",
 					"C": "3c",
 					"dia": "dia3",
-					"geometry": 3
+					"geometry": 3,
+					"D": 445.1
 				},
 				{
 					"A": "4a",
 					"B": "4b",
 					"C": "4c",
 					"dia": "dia4",
-					"geometry": 3
+					"geometry": 3,
+					"D": 448.1
 				},
 				{
 					"A": "5a",
 					"B": "5b",
 					"C": "5c",
 					"dia": "dia5",
-					"geometry": 5
+					"geometry": 5,
+					"D": 449.1
 				}
 			],
-			"x": -129,
-			"y": -160
+			"x": -144,
+			"y": -195
 		},
 		{
 			"id": "24afu.m0akti",
@@ -7133,16 +7135,17 @@
 			"shape": "circularImage",
 			"STAdata": [
 				{
-					"A": "2a",
-					"B": "2b",
-					"C": "2c",
-					"dia": "dia2",
-					"geometry": 2
+					"A": "1a",
+					"B": "1b",
+					"C": "1c",
+					"dia": "dia1",
+					"geometry": 1,
+					"D": 44.1
 				}
 			],
 			"STAURL": null,
-			"x": -223,
-			"y": -79
+			"x": -87,
+			"y": -82
 		},
 		{
 			"id": "8f5t.gijfgt2",
@@ -7160,8 +7163,8 @@
 					}
 				}
 			],
-			"x": -104,
-			"y": 282
+			"x": 19,
+			"y": 305
 		},
 		{
 			"id": "3kk81.moet1o",
@@ -15534,8 +15537,8 @@
 					"end_date": null
 				}
 			],
-			"x": -98,
-			"y": 69
+			"x": -189,
+			"y": 160
 		},
 		{
 			"id": "4dv35.rlpjef",
@@ -15586,8 +15589,8 @@
 				}
 			],
 			"STAURL": null,
-			"x": 0,
-			"y": -1
+			"x": -68,
+			"y": 141
 		},
 		{
 			"id": "27fr7.o6jh8dg",
@@ -15654,8 +15657,8 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": 69,
-			"y": 213
+			"x": 198,
+			"y": 135
 		},
 		{
 			"id": "38ik0.dm5at8",
@@ -16910,11 +16913,11 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/@iot.id"
 				},
 				"phenomenonTime": {
-					"type": "string",
+					"type": "isodatetime",
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime"
 				},
 				"resultTime": {
-					"type": "string",
+					"type": "isodatetime",
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/resultTime"
 				},
 				"result": {
@@ -16950,8 +16953,8 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/parameters"
 				}
 			},
-			"x": 151,
-			"y": 117
+			"x": 102,
+			"y": 61
 		}
 	],
 	"edges": [
@@ -16991,7 +16994,7 @@
 			"arrows": "from"
 		},
 		{
-			"from": "4dv35.rlpjef",
+			"from": "24afu.m0akti",
 			"to": "15r63.gk2bfp8",
 			"arrows": "from"
 		}
