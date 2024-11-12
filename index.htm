@@ -7914,19 +7914,27 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					nodeWithUniqueRow=true;
 					var dataAttributes= getDataAttributes(parentNodes[i].STAdata);
 					var dataAttributesKeys=Object.keys(dataAttributes);
-					var itIsGeoJSON="no";
+					var itIsGeoJSON="no", fatureOrLocation="no";
 
 					for (var a=0;a<dataAttributesKeys.length;a++){
 											
 							if (dataAttributesKeys[a]!="geometry" || (dataAttributesKeys[a]=="geometry"&& dataAttributesKeys.length>1 )){
 								if (dataAttributes[dataAttributesKeys[a]]['type']=="number"||dataAttributes[dataAttributesKeys[a]]['type']=="integer"){
-
 									columnsValues[dataAttributesKeys[a]]=parentNodes[i].STAdata[0][dataAttributesKeys[a]];
-									columns.push(dataAttributesKeys[a]);
-								 
-									
+									columns.push(dataAttributesKeys[a]);									
 								}
-							
+							else if (dataAttributesKeys[a]=="feature"){
+								columnsValues["feature"]=parentNodes[i].STAdata[0]["feature"]["coordinates"];
+								columns.push("feature");
+								fatureOrLocation="feature";
+
+							}
+							else if (dataAttributesKeys[a]=="location"){
+								columnsValues["location"]=parentNodes[i].STAdata[0]["location"]["coordinates"];
+								columns.push("location");
+								fatureOrLocation="location";
+
+							}
 							}else{ //GeoJSON
 								columnsValues["geometry-coordinates"]=parentNodes[i].STAdata[0]["geometry"]["coordinates"];
 								columns.push("geometry-coordinates");
@@ -7942,13 +7950,21 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					console.log(columns)
 				}
 			}
-			if ((parentNodes.length==1 && nodeSTA) || (itIsGeoJSON=="Point"||itIsGeoJSON=="Poligon")){ 
+			if ((parentNodes.length==1 && nodeSTA) || (itIsGeoJSON=="Point"||itIsGeoJSON=="Poligon")||fatureOrLocation=="location"||fatureOrLocation=="feature"){ 
 				document.getElementById("geoDistance_input_coordinate1_select").style.display="none";
 				document.getElementById("geoDistance_input_coordinate2_select").style.display="none";
 				if (itIsGeoJSON=="Point"){
 					document.getElementById("geoDistance_input_coordinate1").value=columnsValues["geometry-coordinates"][0];
 					document.getElementById("geoDistance_input_coordinate2").value=columnsValues["geometry-coordinates"][1];
-				}else{
+				}else if(fatureOrLocation=="location"){
+					document.getElementById("geoDistance_input_coordinate1").value=columnsValues["location"][0];
+					document.getElementById("geoDistance_input_coordinate2").value=columnsValues["location"][1];
+				}
+				else if(fatureOrLocation=="feature"){
+					document.getElementById("geoDistance_input_coordinate1").value=columnsValues["feature"][0];
+					document.getElementById("geoDistance_input_coordinate2").value=columnsValues["feature"][1];
+				}
+				else{
 					document.getElementById("geoDistance_input_coordinate1").value="";
 					document.getElementById("geoDistance_input_coordinate2").value="";
 				}
