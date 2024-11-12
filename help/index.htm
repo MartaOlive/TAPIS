@@ -53,6 +53,7 @@
 <li><a href="#recipe05">Recipe 5: Selecting temperatures from an area</a></li>
 <li><a href="#recipe06">Recipe 6: Creating a new stream of observations</a></li>
 <li><a href="#recipe07">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</a></li>
+<li><a href="#recipe08">Recipe 8:  Selecting temperatures whose distance from a certain point is greater or lower than an established distance</a></li>
 </ul>
 </ul>
 
@@ -1001,5 +1002,29 @@ To read the record better, we can use the [Edit record] to see the item as a rec
 <img src="recipe07_GUFFeedbackItem.png" width="600" class="center">
 <p>
 
+<hr width="30%">
+<a id="recipe08"></a>
+<h3>Recipe 8: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</h3>
+In this example, we will illustrate how to apply spatial filter based on the distance between a certain point and the location of observations.
+<p>To apply this filter, we need to select an entity where we want to apply this filter (in this case, we will use Observations), a point used as a reference, a comparison operator and indicate the distance we want to use.<br>
+To start, we have to indicate the STA service that we want to use by adding the "Add STA service" tool and typing there the URL of this service. We will connect it to observations to get the "Observations" stored in the service.</p>
+	 
+<img src="recipe08_observationsTable.png" width="800" class="center">
+<p>To apply this filter we need to select the "Filter Rows by Distance"</p>
+<img src="recipe08_applyFilterRowsByDistance.png" width="800" class="center">
+<p>Let's start by adding a point manually. If we don't link any additional node, we will have a window like this.</p>
+<img src="recipe08_applyFilterRowsByDistanceWindow.png" width="800" class="center">
+
+<p>On the top, we have to select with which entity we want to apply the filter in our observations, and which way we want to follow. In other words, do we want to use coordinates from feature (in FeatureOfInterest) or coordinates in location (in Locations) from each observation to compare them with the reference point that we will choose later? In this case, we select feature from FeatureOfInterest, that there is only one way to achieve it.   </p>
+<img src="recipe08_chooseAWay.png" width="800" class="center">
+<p>In the middle, we have to write the coordinates from the reference point, the point with every observation coordinate (in this case, the feature of these observations) will be compared to to apply the filter.
+At the bottom, we will indicate the distance and the operator we want to use to apply the filter. In this case we want to obtain the observations which feature is in a distance lower than 5. </p>
+<img src="recipe08_coordinatesWithOutPoint.png" width="800" class="center">
+<p> Click ok to see the results. The filter has been applied:</p>
+<img src="recipe08_results.png" width="800" class="center">
+
+<p> Now let's see different ways to indicate the reference point by linking different nodes with different origins. </p>
+<p> In all cases, we need to take into account that only one register can be linked with the "Filter Rows by Distance" node (apart from our reference entity node where we want to apply the filter). </p>
+<p style="text-decoration:underline">Using a GeoJSON to indicate the point </p>
 </body>
 </html>
