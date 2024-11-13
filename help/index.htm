@@ -788,8 +788,8 @@ At the bottom, we will indicate the distance and the operator we want to use to 
 <p> Click Ok button to see the results. The filter has been applied:</p>
 <img src="recipe05b_results.png" width="700" class="center">
 
-<p> Now let's see different ways to indicate the reference point by linking different nodes with different origins. </p>
-<p> In all cases, we need to take into account that only one register can be linked with the "Filter Rows by Distance" node (apart from our reference entity node where we want to apply the filter). </p>
+<p> Now let's see different ways to indicate the reference point by linking different nodes with different sources origins. </p>
+<p> In all cases, we need to take into account that nodes with only one register can be linked with the "Filter Rows by Distance" node (apart from our reference entity node where we want to apply the filter). </p>
 <p style="text-decoration:underline">Using a GeoJSON to indicate the point</p>
 <p>We have already prepared a GeoJSON file with the coordinates with a reference point, so now let's import it with [Import GeoJSON] tool.</p>
 <img src="recipe05b_geojsonPicture.png" width="400">
@@ -800,12 +800,12 @@ At the bottom, we will indicate the distance and the operator we want to use to 
 <p>Let's use the same STA service to choose one FeatureOfInterest. Link FeatureOfInterest node to STA service and then select only one record using "select row" (STA) to obtain only one feature. </p>
 <img src="recipe05b_STAfeatureOfInterest.png" width="800" class="center">
 <img src="recipe05b_STAfeatureOfInterestSelectedRow.png" width="800" class="center">
-<p>Link this to "Filter Rows by Distance" and observe that again, you have already your point added automatically. The next steps will be as explained before, so they will be not repeated. The same procedure can be applied in Locations (location)</p>
+<p>Link this to "Filter Rows by Distance" and observe that again, you have already your point added automatically. The next steps will be as explained before, so they will be not repeated. The same procedure can be applied with Locations entity (location)</p>
 <img src="recipe05b_STAfeatureOfInterestWindow.png" width="800" class="center">
 <p style="text-decoration:underline">Using a CSV to indicate the point</p>
-<p>For this example, we will use a csv containing the coordinates in two of its columns. We have chosen a totally random CSV that has this information. First of all, let's add this CSV with "Import CVS" tool.</p>
+<p>For this example, we will use a CSV containing the coordinates in two of its columns. We have chosen a totally random CSV that has this information. First of all, let's add this CSV with "Import CVS" tool.</p>
 <img src="recipe05b_CSVwindow.png" width="800" class="center">
-<p> In our case, we have more than one register, so we have to select only one, with "Select Row" tool (for tables). As you can see below, in this example, columns that contain coordinates are"lat" and "long". </p>
+<p> In our case, we have more than one register, so we have to select only one, with "Select Row" tool (for tables). As you can see below, in this example, columns that contain coordinates are " and "long". </p>
 <img src="recipe05b_csvSelectRow.png" width="800" class="center">
 <p>After selecting one row (one register) link it to "Filter Rows by Distance".  </p>
 <img src="recipe05b_csvlinked.png" width="800" class="center">
