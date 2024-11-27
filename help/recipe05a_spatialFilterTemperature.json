@@ -3,7 +3,7 @@
 		{
 			"id": "4qtk1.ru0t8f",
 			"label": "STAplus",
-			"image": "ogc.png",
+			"image": "sta.png",
 			"shape": "circularImage",
 			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplus/v1.1",
 			"STAExpectedLength": 100,
@@ -1325,7 +1325,7 @@
 		{
 			"id": "8vfg1.60lt0k",
 			"label": "GeoFilterRowsSTA",
-			"image": "GeoFilterRowsSTA.png",
+			"image": "GeoFilterPolSTA.png",
 			"shape": "circularImage",
 			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$filter=geo.intersects(FeatureOfInterest/feature,geography'POLYGON ((1.78 41.78, 1.79 41.78, 1.79 41.79, 1.78 41.79, 1.78 41.78))')",
 			"STAExpectedLength": 100,

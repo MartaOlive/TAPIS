@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,6 +14,7 @@
 	<script type="text/javascript" src="mmn_postmessage.js" async defer></script>
 	<script type="text/javascript" src="guf.js" async defer></script>
 	<script type="text/javascript" src="xml2json.js" async defer></script>
+	<script type="text/javascript" src="dbf.js" async defer></script>
 	<script type="text/javascript" src="data_tables.js"></script>
 	<script type="text/javascript" src="STAselectExpand.js"></script>
 	<script type="text/javascript" src="selectColumnsDlg.js"></script>
@@ -117,8 +118,8 @@
 						<option value="help/recipe02_02_ObservationsParty.json">Recipe 2, cooking method 2: Filtering observations</option>
 						<option value="help/recipe03_OpenMap.json">Recipe 3: Show a map of all observation features in an STA service</option>
 						<option value="help/recipe04_CSV_meaning.json">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</option>
-						<option value="help/recipe05a_spatialFilterTemperature.json">Recipe 5a: Selecting temperatures from an area</option>
-						<option value="help/Recipe05b_FilteringByDistance.json">Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
+						<option value="help/recipe05_01_spatialFilterTemperature.json">Recipe 5_1: Selecting temperatures with a poligon</option>
+						<option value="help/recipe05_02_FilteringByDistance.json">Recipe 5_2: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
 						<option value="help/recipe06_creatingTwoDatastreamOfObservations.json">Recipe 6: Creating a new stream of observations</option>
 						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>
 					</select>
@@ -680,24 +681,24 @@
 		
 		<form>
 			<fieldset>
-				<legend>Where do you want to apply the filter?</legend>
+				<legend>Position source </legend>
 				<input type="radio" id="geoDistance_FOI_Feature" name="geoDistanceRadios" value="Feature" checked> 
 			 	<label for="geoDistance_FOI_Feature">FeatureOfInterest-feature</label>
-				<span style="font-size: 10px; font-style: italic" id="geoDistance_FOI_Feature_span" >Choose the route: </span>
+				<span style="font-size: 10px; font-style: italic" id="geoDistance_FOI_Feature_span" >Path: </span>
 				<select id="geoDistance_FOI_Feature_select" name="geoDistance_FOI_Feature_select"></select><br>
 				<input type="radio" id="geoDistance_Location" name="geoDistanceRadios" value="Location" >
 				<label for="geoDistance_Location">Locations-location</label>
-				<span style="font-size: 10px; font-style: italic" id="geoDistance_Location_span" >Choose the route: </span>
+				<span style="font-size: 10px; font-style: italic" id="geoDistance_Location_span" >Path: </span>
 				<select id="geoDistance_Location_select" name="geoDistance_Location_select"></select><br>
 			</fieldset>
 			<fieldset>
-				<legend>Introduce the coordenates</legend>
+				<legend>Center Point</legend>
 				<label> Coordinate X:</label><select id="geoDistance_input_coordinate1_select" name="geoDistance_input_coordinate1_select" onChange="writeValueInInputGeoDistance('1')"></select><input type="text" id ="geoDistance_input_coordinate1" style="margin-left: 10px"></input><br>
 				<label> Coordinate Y:</label><select id="geoDistance_input_coordinate2_select" name="geoDistance_input_coordinate2_select" onChange="writeValueInInputGeoDistance('2')"></select><input type="text" id ="geoDistance_input_coordinate2" style="margin-left: 10px"> </input></select><br>
 		
 			</fieldset>
 
-			<label for="geoDistance_select_operator">Choose operator:</label>
+			<label for="geoDistance_select_operator">Operator</label>
 			<select id="geoDistance_select_operator" name="geoDistance_select_operator" >
 				<option value="eq"> =</option>
 				<option value="ne">  ≠ </option>
@@ -707,7 +708,7 @@
 				<option value="le">   ≤   </option>
 			</select>
 
-			<label for="geoDistance_value">Introduce value</label><input type="number" id ="geoDistance_input_value" style="width:50px" min="0" value="0">
+			<label for="geoDistance_value">Distance</label><input type="number" id ="geoDistance_input_value" style="width:50px" min="0" value="0">
 
 			<div class="center">
 				<button value="default" onClick="GetGeoDistanceFilter(event)">OK</button>
@@ -910,6 +911,26 @@
 			</fieldset>
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GeoJSON")'>Done</button>
+				<button value="cancel" formmethod="dialog">Close</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogImportDBF">
+		<form>
+			Import dBASE III+, IV and MiraMon DBF Extended
+			<br>
+			
+			<fieldset>
+				<legend>DBF source</legend>
+				<label><input type="radio" id="DialogImportDBFSourceFile" name="DialogImportDBFSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "DBF")'>
+				Local file: <input type="file" accept=".dbf" id="DialogImportDBFSourceFileText" onChange="ReadFileImportDBF(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportDBFSourceURL" name="DialogImportDBFSource" value="url" onClick='SelectImportFileSource(event, "DBF")'>
+				URL: <input type="text" size="70" id="DialogImportDBFSourceURLInput" onChange="ReadURLImportDBF(event)" disabled="disabled"></input> <button type="button" id="DialogImportDBFSourceURLButton" onClick="ReadURLImportDBF(event)" disabled="disabled">Load</button></label><br>
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "DBF")'>Done</button>
+				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
 		</form>
 	</dialog>
@@ -1152,6 +1173,28 @@
 		</form>
 	</dialog>
 
+	<!--dialog id="UploadTimeAverages">
+		<div id="UploadTimeAveragesLoginFirst" style="display: none;">
+		<form>
+			To upload data in a STA server, you should Login first.<br>
+			<div class="center">
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+		</div>
+		<form id="UploadTimeAveragesForm">
+			Upload Datastream as STA time averages
+			<br>
+			<label>STA target service URL:
+				<input type="text" id="DialogTimeAveragesSTAUploadURLInput" size="100"></input>
+			</label>
+			<div class="center">
+				<button value="ok" onClick="UploadTimeAveragesSTAURL(event)" formmethod="dialog">Upload</button>
+			</div>
+		</form>
+	</dialog-->
+
+
 	<!--h2 id="eventSpanHeading"></h2>
 	<pre id="eventSpanContent"></pre-->
 
@@ -1209,6 +1252,7 @@
 					ogcAPIs: {name: "OGC API", description: "Add OGC API collection", startNode: true},
 					csw: {name: "Catalogue", description: "Add OGC CSW", startNode: true},
 					ImportCSV: {name: "CSV", description: "Import CSV", startNode: true},
+					ImportDBF: {name: "DBF", description: "Import DBF", startNode: true},
 					ImportGeoJSON: {name: "GeoJSON", description: "Import GeoJSON", startNode: true},
 					staRoot: {name: "STA root", description: "STA root"}};
 		const ServicesAndAPIsArray = Object.keys(ServicesAndAPIs);
@@ -1239,6 +1283,7 @@
 					GeoFilterPntSTA: {description: "Filter Rows by Distance", callSTALoad: true},
 					SortBySTA: {description: "Sort by", callSTALoad: true},
 					UploadObservations: {description: "Upload in STA", leafNode: true},
+					//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
 					OneValueSTA: {description: "One Value", leafNode: true},
 					CountResultsSTA: { description: "Count results", leafNode: true }};
 		const STAOperationsArray = Object.keys(STAOperations);
@@ -2110,6 +2155,45 @@
 			}
 		}
 
+		async function HTTPBinaryData(url) {
+			var response, jsonData, options={};
+			try {
+				response = await fetch(url, options);
+			}
+			catch (error) {
+				showInfoMessage('There was an error with ' + url + ": " + error.message);
+				console.log('There was an error', error);
+				return;
+			}
+			// Uses the 'optional chaining' operator
+			if (!(response?.ok)) {
+				var body;
+				if (removeParamContentType(response.headers.get('Content-Type'))=="application/json" &&
+					(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0)) {
+					body=await response.json();
+					body=JSON.stringify(body);
+				}
+				else
+					body=await response.text();
+				showInfoMessage("Error: HTTP " + (method ? method : "GET") + " URL: " + url + ", HTTP code: " + response?.status + ", Description: "+ (response.statusText ? response.statusText : standardStatusText(response.status)) + (body ? ", " + body : ""));
+				console.log("HTTP Response Code: " + response?.status + ": " + response?.statusText + (body ? JSON.stringify(body) : ""));
+				return response;
+			}
+			try {
+				return await response.arrayBuffer();
+			} catch (error) {
+				if (error instanceof SyntaxError) {
+					showInfoMessage('Syntax error reading ' + url + ": " + error.message);
+					console.log('There was a SyntaxError', error);
+					return;
+				}
+				else {
+					showInfoMessage('Error interpreting ' + url + ": " + error.message);
+					console.log('There was an error', error);
+					return;
+				}
+			}
+		}
 
 		function updateQueryAndTableArea(node) {
 			var nodeId = network.getSelectedNodes();
@@ -2246,7 +2330,7 @@
 			return savedFile;
 		}
 
-		//type should be "CSV" or "GeoJSON"
+		//type should be "CSV", "DBF" or "GeoJSON"
 		function SelectImportFileSource(event, type) {
 			if (document.getElementById("DialogImport"+type+"SourceFile").checked) {
 				document.getElementById("DialogImport"+type+"SourceFileText").disabled=false;
@@ -2285,7 +2369,7 @@
 
 		function RetrieveMeaningTable(event, type) {
 			event.preventDefault(); // We don't want to submit this form
-			if (document.getElementById("DialogImportMeaning"+type+"SourceAuto").checked && 
+			if (document.getElementById("DialogImportMeaning"+type+"SourceAuto")?.checked && 
 				document.getElementById("DialogImport"+type+"SourceURL").checked &&
 				document.getElementById("DialogImport"+type+"SourceURLInput").value) {
 				var urlCSV=document.getElementById("DialogImport"+type+"SourceURLInput").value
@@ -2469,7 +2553,6 @@
 			reader.readAsText(input.files[0], document.getElementById("DialogImportCSVEncoding").value);
 		}
 
-
 		function ReadURLImportCSV() {
 			HTTPJSONData(document.getElementById("DialogImportCSVSourceURLInput").value).then(
 						function(value) { 
@@ -2482,6 +2565,53 @@
 						}
 					);	
 		}
+
+		function TransformBinaryBDFToTable(buffer, url) {
+			var dbf=ParseDBF(buffer)
+			currentNode.STAdata=dbf.records;
+			currentNode.STAdataAttributes=getDataAttributesDBF(dbf);
+			if (dbf.records.length==0)
+				showInfoMessage("DBF table has no records.");
+			else
+				showInfoMessage("DBF table has been loaded.");
+			if (currentNode.STAdata) {
+				if (url)
+					currentNode.STAfileUrl=url;
+				networkNodes.update(currentNode);
+				updateQueryAndTableArea(currentNode);
+				UpdateChildenTable(currentNode);
+			} else {
+				showInfoMessage("CSV parse error: " + e + " The file content is:\n" + csvText);
+				currentNode.STAdata=null;
+				networkNodes.update(currentNode);
+				return;
+			}
+		}
+
+		function ReadFileImportDBF(event) {
+			var input = event.target;
+
+			var reader = new FileReader();
+			reader.onload = function() {
+				TransformBinaryBDFToTable(reader.result, null);
+			};
+			reader.readAsArrayBuffer(input.files[0]);
+		}
+
+
+		function ReadURLImportDBF() {
+			HTTPBinaryData(document.getElementById("DialogImportDBFSourceURLInput").value).then(
+						function(value) { 
+							showInfoMessage('Download DBF completed.'); 
+							TransformBinaryDBFToTable(value, document.getElementById("DialogImportDBFSourceURLInput").value);
+						},
+						function(error) { 
+							showInfoMessage('Error downloading DBF. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+							console.log(error) ;
+						}
+					);	
+		}
+
 
 		function TransformGeoJSONToTable(geojson) {
 			if (!geojson.type || geojson.type!="FeatureCollection")
@@ -4855,8 +4985,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		}
 
 		//Taking this into consideration: https://www.w3.org/TR/tabular-data-primer
-		function getAttributeTypeFromCSVWType(t)
-		{
+		function getAttributeTypeFromCSVWType(t) {
 			if (typeof t==="object" && t.base)
 				t=t.base;
 			if (t=="json")
@@ -6608,6 +6737,38 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					}
 					document.getElementById("DialogImportCSV").showModal();
 				}
+				else if (currentNode.image == "ImportDBF.png") {
+					var parentNode=GetFirstParentNode(currentNode);
+					if (parentNode) {
+						// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
+						var data=parentNode.STAdata;
+						if (!data || !data.length) 
+							alert("Parent node has no data loaded. It will be ignored.");
+						else if (data.length>1)
+							alert("Parent node has more than one row. Please select on row first. It will be ignored.");
+						else {
+							var record=data[0];
+							if (!record.dataURL)
+								alert("Parent node has no dataURL column. It will be ignored.");
+							else {
+								document.getElementById("DialogImportDBFSourceFile").checked=false;
+								document.getElementById("DialogImportDBFSourceURL").checked=true;
+								document.getElementById("DialogImportDBFSourceURLInput").value=record.dataURL;
+								document.getElementById("DialogImportDBFSourceURLButton").disabled=false;
+								
+								/*if (record.schemaURL)
+								{
+									document.getElementById("DialogImportMeaningDBFSourceFile").checked=false;
+									document.getElementById("DialogImportMeaningDBFSourceURL").checked=true;
+									document.getElementById("DialogImportMeaningDBFSourceAuto").checked=false;
+									document.getElementById("DialogImportMeaningDBFSourceURLInput").value=record.schemaURL;
+									document.getElementById("DialogImportMeaningDBFSourceURLButton").disabled=false;
+								}*/
+							}
+						}
+					}
+					document.getElementById("DialogImportDBF").showModal();
+				}
 				else if (currentNode.image == "ImportGeoJSON.png") {
 					document.getElementById("DialogImportGeoJSONSourceURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedGeoJSONurls);
 					document.getElementById("DialogImportGeoJSON").showModal();
@@ -6624,6 +6785,10 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					ShowUploadObservationsDialog(currentNode);
 					document.getElementById("DialogUploadObservations").showModal();
 				}
+				/*else if (currentNode.image == "UploadTimeAverages.png") {
+					ShowUploadTimeAveragesDialog(currentNode.id);
+					document.getElementById("UploadTimeAverages").showModal();
+				}*/
 				else if (currentNode.image == "SaveTable.png") {
 					//ShowSaveTableDialog(currentNode.id);
 					document.getElementById("DialogSaveTable").showModal();

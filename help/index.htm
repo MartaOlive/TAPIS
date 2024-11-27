@@ -50,8 +50,11 @@
 </ul>
 <li><a href="#recipe03">Recipe 3: Show a map of all observation features in an STA service</a></li>
 <li><a href="#recipe04">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</a></li>
-<li><a href="#recipe05a">Recipe 5a: Selecting temperatures from an area</a></li>
-<li><a href="#recipe05b">Recipe 5b: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</a></li>
+<li> <a href="#recipe05_01">Recipe 5: Selecting temperatures from an area </a></li>
+<ul>
+<li><a href="#recipe05_01">Recipe 5_1: Selecting temperatures with a determined polygon</a></li>
+<li><a href="#recipe05_02">Recipe 5_2: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</a></li>
+</ul>
 <li><a href="#recipe06">Recipe 6: Creating a new stream of observations</a></li>
 <li><a href="#recipe07">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</a></li>
 
@@ -706,112 +709,113 @@ This is the result of saving the CSV (fragment) and the CSVW.
 <br><br><br>
 
 <hr width="30%">
-<a id="recipe05a"></a>
-<h3>Recipe 5a: Selecting temperatures from an area</h3>
+<a id="recipe05_01"></a>
+<h3>Recipe 5: Selecting temperatures from an area </h3>
+<h4> Recipe 5_1:Selecting temperatures with a determined polygon</h4>
 In this example, we illustrate how to apply spatial and non-spatial filters (and easily generate complex queries) to extract temperatures of an area.
 
 <p>
 We will start by using the "Add STA service" tool to type the URL of the landing page of our favorite STAplus service. We will connect it to observations to get the "Observations" stored in the service.
 <br>
-<img src="recipe05a_observationsTable.png" width="800" class="center">
+<img src="recipe05_01_observationsTable.png" width="800" class="center">
 
 <p>
 Then we will apply the "Geospatial Filter Rows" tool to indicate that we will select observations by an area.
 <br>
-<img src="recipe05a_geospatialFilter.png" width="400" class="center">
+<img src="recipe05_01_geospatialFilter.png" width="400" class="center">
 
 <p>
 A geospatial filter requires a polygon as an input. To do that, we need to import a GeoJSON file that contains polygons. We are using an smap GeoJSON with 2 polygons called: "callus_munich.geojson" that contains 2 polygons, one in the Callus (Barcelona) area.
 <br>
-<img src="recipe05a_rectangleToFilter.png" width="1000" class="center">
+<img src="recipe05_01_rectangleToFilter.png" width="1000" class="center">
 
 <p>
 We need to import the GeoJSON file that contains polygons with the [Import GeoJSON] tool
 <br>
-<img src="recipe05a_importGeoJSON.png" width="800" class="center">
+<img src="recipe05_01_importGeoJSON.png" width="800" class="center">
 
 <p>
 Then, we need to select one polygon by using the "Select Row" (the one with the grey icon).
 <br>
-<img src="recipe05a_selectPolygon.png" width="10a00" class="center">
+<img src="recipe05_01_selectPolygon.png" width="10a00" class="center">
 
 <p>
 Then we need to create a second connection that starts on the geopatial filter and ends on the selected polygon
 <br>
-<img src="recipe05a_secondConnectionGeoFilter.png" width="400" class="center">
+<img src="recipe05_01_secondConnectionGeoFilter.png" width="400" class="center">
 
 <p>
 Now the selections is executed but still we have all observed properties mixed in the results list.
 <br>
-<img src="recipe05a_geoFilteredObservations.png" width="400" class="center">
+<img src="recipe05_01_geoFilteredObservations.png" width="400" class="center">
 
 <p>
 We need to concatenate the geospatial filter with a non-geospatial filter and specify that we would like to filter the observations that has an observed property with the definition "http://vocabs.lter-europe.net/EnvThes/22035".
 <br>
-<img src="recipe05a_nongeospatialFilter.png" width="800" class="center">
+<img src="recipe05_01_nongeospatialFilter.png" width="800" class="center">
 
 <p>
 Now all observations are temparatures<br>
-<img src="recipe05a_temperatures.png" width="400" class="center">
+<img src="recipe05_01_temperatures.png" width="400" class="center">
 
 <p>
 Finally, we can sort the observations with the more recent first.
 <br>
-<img src="recipe05a_temperaturesSorted.png" width="800" class="center">
+<img src="recipe05_01_temperaturesSorted.png" width="800" class="center">
 <br>
 This results in thiw complex query URL: <a href="https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$filter=geo.intersects(FeatureOfInterest/feature,geography'POLYGON ((1.78 41.78, 1.79 41.78, 1.79 41.79, 1.78 41.79, 1.78 41.78))') and ((Datastream/ObservedProperty/definition eq 'http://vocabs.lter-europe.net/EnvThes/22035'))&$orderby=phenomenonTime desc">https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$filter=geo.intersects(FeatureOfInterest/feature,geography'POLYGON ((1.78 41.78, 1.79 41.78, 1.79 41.79, 1.78 41.79, 1.78 41.78))') and ((Datastream/ObservedProperty/definition eq 'http://vocabs.lter-europe.net/EnvThes/22035'))&$orderby=phenomenonTime desc</a>
 
 <p>
 Now that we have a time series we can use the scater plot tool to generate a temperature/time diagram.<br>
-<img src="recipe05a_scatterPlot.png" width="800" class="center">
+<img src="recipe05_01_scatterPlot.png" width="800" class="center">
 
 <br><br><br><br>
 <hr width="30%">
-<a id="recipe05b"></a>
-<h3>Recipe 5b: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</h3>
+<a id="recipe05_02"></a>
+<h4>Recipe 5_2: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</h4>
 In this example, we will illustrate how to apply spatial filter based on the distance between a certain point and the location of our observations.
 <p>To apply this filter, we need to select an entity where we want to apply this filter (in this case, we will use Observations), the coordinates  from a point used as a reference and indicate the distance we want to use.<br>
 To start, we have to indicate the STA service that we want to use by adding the "Add STA service" tool and typing there the URL of this service. We will connect it to observations to get the "Observations" stored in the service.</p>
 	 
-<img src="recipe05b_observationsTable.png" width="600" class="center">
+<img src="recipe05_02_observationsTable.png" width="600" class="center">
 <p>Then, to apply this filter we need to select the "Filter Rows by Distance" tool.</p>
-<img src="recipe05b_applyFilterRowsByDistance.png" width="600" class="center">
+<img src="recipe05_02_applyFilterRowsByDistance.png" width="600" class="center">
 <p style="text-decoration:underline">Adding a point manually</p>
 <p>Let's start by adding a point manually. If we don't link any additional node, we will have a window like this.</p>
-<img src="recipe05b_applyFilterRowsByDistanceWindow.png" width="800" class="center">
+<img src="recipe05_02_applyFilterRowsByDistanceWindow.png" width="800" class="center">
 
 <p>On the top, we have to select with which entity we want to apply the filter in our observations, and which way we want to follow. In other words, do we want to use coordinates from feature (in FeatureOfInterest) or coordinates in location (in Locations) from each of our observation to compare them with the reference point that we will choose later? In this case, we select feature from FeatureOfInterest, that there is only one way to achieve it.   </p>
-<img src="recipe05b_chooseAWay.png" width="600" class="center">
+<img src="recipe05_02_chooseAWay.png" width="600" class="center">
 <p>In the middle, we have to write the coordinates from the reference point, the point with every observation coordinate (in this case, the feature of these observations) will be compared to to apply the filter.
 At the bottom, we will indicate the distance and the operator we want to use to apply the filter. In this case we want to obtain the observations which feature is in a distance lower than 5. </p>
-<img src="recipe05b_coordinatesWithOutPoint.png" width="600" class="center">
+<img src="recipe05_02_coordinatesWithOutPoint.png" width="600" class="center">
 <p> Click Ok button to see the results. The filter has been applied:</p>
-<img src="recipe05b_results.png" width="700" class="center">
+<img src="recipe05_02_results.png" width="700" class="center">
 
 <p> Now let's see different ways to indicate the reference point by linking different nodes with different sources origins. </p>
 <p> In all cases, we need to take into account that nodes with only one register can be linked with the "Filter Rows by Distance" node (apart from our reference entity node where we want to apply the filter). </p>
 <p style="text-decoration:underline">Using a GeoJSON to indicate the point</p>
 <p>We have already prepared a GeoJSON file with the coordinates with a reference point, so now let's import it with [Import GeoJSON] tool.</p>
-<img src="recipe05b_geojsonPicture.png" width="400">
-<img src="recipe05b_importGeoJsonpng.png" width="800">
+<img src="recipe05_02_geojsonPicture.png" width="400">
+<img src="recipe05_02_importGeoJsonpng.png" width="800">
 <p> As you can see below, when you link the "import GeoJSON" with "Filter Rows by Distance" you will have the same window as before, but the coordinates have been automatically added. The next steps will be as explained before, so they will be not repeated.   </p>
-<img src="recipe05b_geoJsonWindowFilterRowsByDistance.png" width="800" class="center">
+<img src="recipe05_02_geoJsonWindowFilterRowsByDistance.png" width="800" class="center">
 <p style="text-decoration:underline">Using a service STA and FeatureOfInterest as a reference to indicate the point</p>
 <p>Let's use the same STA service to choose one FeatureOfInterest. Link FeatureOfInterest node to STA service and then select only one record using "select row" (STA) to obtain only one feature. </p>
-<img src="recipe05b_STAfeatureOfInterest.png" width="800" class="center">
-<img src="recipe05b_STAfeatureOfInterestSelectedRow.png" width="800" class="center">
+<img src="recipe05_02_STAfeatureOfInterest.png" width="800" class="center">
+<img src="recipe05_02_STAfeatureOfInterestSelectedRow.png" width="800" class="center">
 <p>Link this to "Filter Rows by Distance" and observe that again, you have already your point added automatically. The next steps will be as explained before, so they will be not repeated. The same procedure can be applied with Locations entity (location)</p>
-<img src="recipe05b_STAfeatureOfInterestWindow.png" width="800" class="center">
+<img src="recipe05_02_STAfeatureOfInterestWindow.png" width="800" class="center">
 <p style="text-decoration:underline">Using a CSV to indicate the point</p>
 <p>For this example, we will use a CSV containing the coordinates in two of its columns. We have chosen a totally random CSV that has this information. First of all, let's add this CSV with "Import CVS" tool.</p>
-<img src="recipe05b_CSVwindow.png" width="800" class="center">
+<img src="recipe05_02_CSVwindow.png" width="800" class="center">
 <p> In our case, we have more than one register, so we have to select only one, with "Select Row" tool (for tables). As you can see below, in this example, columns that contain coordinates are " and "long". </p>
-<img src="recipe05b_csvSelectRow.png" width="800" class="center">
+<img src="recipe05_02_csvSelectRow.png" width="800" class="center">
 <p>After selecting one row (one register) link it to "Filter Rows by Distance".  </p>
-<img src="recipe05b_csvlinked.png" width="800" class="center">
+<img src="recipe05_02_csvlinked.png" width="800" class="center">
 <p>Unlike the previous cases, we have more than one column that can contain our coordinates, therefore, we will have to choose them in the selectors that will appear in "Filter Row by Distance" window. When we select the columns, its information will be added automatically. The next steps will be as explained before, so they will be not repeated. 
 </p>
-<img src="recipe05b_csvfilterRowWindow.png" width="800" class="center">
+<img src="recipe05_02_csvfilterRowWindow.png" width="800" class="center">
 <br><br><br>
 <br>
 <hr width="30%">

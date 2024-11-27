@@ -3,7 +3,7 @@
 		{
 			"id": "4e6te.c1t8ko",
 			"label": "STA plus",
-			"image": "ogc.png",
+			"image": "sta.png",
 			"shape": "circularImage",
 			"STAExpectedLength": 100,
 			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",

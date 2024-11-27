@@ -3,7 +3,7 @@
 		{
 			"id": "gm8p.8q931s4",
 			"label": "STA plus",
-			"image": "ogc.png",
+			"image": "sta.png",
 			"shape": "circularImage",
 			"STAExpectedLength": 100,
 			"STAURL": "https://frost.iotlab.com/sensorthings2/v1.1",

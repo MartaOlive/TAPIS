@@ -3,7 +3,7 @@
 		{
 			"id": "nbl0.6jgp33c",
 			"label": "STAplus",
-			"image": "ogc.png",
+			"image": "sta.png",
 			"shape": "circularImage",
 			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplus/v1.1",
 			"STAExpectedLength": 100,
