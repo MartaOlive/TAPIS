@@ -217,6 +217,21 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogEditColumnName">
+		<form>
+			<div>
+				<label>Old column name:</label>
+				<select id="editColumnNamesSelect"></select>
+				<label>New column name:</label>
+				<input type="text" id="editColumnNamesInputText"></input>
+			</div>
+			<div class="center">
+				<button value="default">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+
+	</dialog>
 	<dialog id="DialogSelectColumns">
 		<form>
 			Select columns:
@@ -1291,6 +1306,7 @@
 		const TableOperations = {Table: {description: "View Table", leafNode: true}, 
 					ViewQuerySTA: {description: "View Query", leafNode: true},
 					EditRecord: {description: "Edit record"}, 
+					EditColumnName: {description: "Edit column name"},
 					Meaning: {description: "Column meaning"}, 
 					SelectColumnsTable: {description: "Select Columns"},
 					SelectRowTable: {description: "Select Row"},
@@ -7042,6 +7058,15 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							document.getElementById("DialogCreateUpdateDeleteRecord").showModal();
 					}
 				}
+				else if (currentNode.image == "EditColumnName.png") {
+					 if (populateEditColumnName())document.getElementById("DialogEditColumnName").showModal();
+
+					// startingNodeContextId=currentNode.id;
+					// if (GetFirstParentNode(currentNode)) {
+					// 	if (PopulateCreateUpdateDeleteRecord(currentNode, 0, false))
+					// 		document.getElementById("DialogEditColumnName").showModal();
+					// }
+				}
 			}
 		}
 
@@ -8207,7 +8232,26 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			document.getElementById("geoDistance_input_coordinate"+value).value= currentNode.STAcolumnsValuesGeoDistance[selectValue]
 		}
 
+		function populateEditColumnName(){
+			var parentNodes=GetParentNodes(currentNode);
+			if (parentNodes.length>1) {
+				alert("Only one node linked is allowed to edit a column name");
+				return false
+			}else if((parentNodes.length==0) ){
+				alert("Connect one node with data to change its column name");
+				return false
+			}
+			else{
+				console.log(getDataAttributes(parentNodes[0].STAdata));
+				var cdns=[]
+				var select= document.getElementById("editColumnNamesSelect")
+			}
 
+
+			return true;
+			//currentNode.STAdata= await...
+			//networkNodes.update(currentNode);
+		}
 
 		
  
