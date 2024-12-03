@@ -677,7 +677,36 @@
 			</div>
 		</form>
 	</dialog>
+	<dialog id="DialogFilterRowsByTime"> 
+		
+		<form>
 
+			<fieldset>
+				<legend>Period</legend>
+
+				<label>From: </label>
+				<input type="datetime-local" id="filterRowsByTimeCalendarFrom">
+				<label>To: </label>
+				<input type="datetime-local" id="filterRowsByTimeCalendarTo">
+			</fieldset>
+			<fieldset>
+			<legend>To aggregate data by: (optional)</legend>
+			<input type="checkbox" id="aggregateDataYes" /><label> Aggregate data by:</label>
+			<select id="filterRowsByTimeSelectAggregation"> 
+				<option value="year">Year</option>
+				<option value="month">Month</option>
+				<option value="day">Day</option>
+				<option value="hour">Hour</option>
+				<option value="minute">Minute</option>
+			</select>
+			</fieldset>
+				<div class="center">
+					<button value="default" onClick="filterRowsByTimeOkButton()">OK</button>
+					<button value="cancel" formmethod="dialog">Cancel</button>
+				</div>
+		</form>
+
+	</dialog>
 	<dialog id="DialogGeospatialFilterRowsByDistance">
 		
 		<form>
@@ -1280,6 +1309,7 @@
 					ExpandColumnsSTA: {description: "Expand Columns", callSTALoad: true},
 					SelectRowSTA: {description: "Select Row", callSTALoad: true},
 					FilterRowsSTA: {description: "Filter Rows", callSTALoad: true},
+					FilterRowsByTime: {description: "Filter Rows by time"},
 					GeoFilterPolSTA: {description: "Filter Rows by Polygon", callSTALoad: true},
 					GeoFilterPntSTA: {description: "Filter Rows by Distance", callSTALoad: true},
 					SortBySTA: {description: "Sort by", callSTALoad: true},
@@ -6920,6 +6950,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						document.getElementById("DialogFilterRows").showModal();
 					}
 				}
+				else if (currentNode.image == "FilterRowsByTime.png"){
+					var parentNode=GetFirstParentNode(currentNode);
+					if (parentNode) {
+						//ShowTableFilterRowsByTimeDialog(parentNode, currentNode);
+						document.getElementById("DialogFilterRowsByTime").showModal();
+					}
+				}
 				else if (currentNode.image == "SortBySTA.png") {
 					var parentNode=GetFirstParentNode(currentNode);
 					if (parentNode) {
@@ -8210,7 +8247,10 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		}
 
 
-
+function filterRowsByTimeOkButton(){
+	event.preventDefault();
+	document.getElementById("DialogFilterRowsByTime").close();
+}
 function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
