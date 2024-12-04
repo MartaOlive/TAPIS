@@ -683,7 +683,8 @@
 
 			<fieldset>
 				<legend>Period</legend>
-
+				<label>Property:</label>
+				<select id="filterRowsByTimeSelectProperty"></select>
 				<label>From: </label>
 				<input type="datetime-local" id="filterRowsByTimeCalendarFrom">
 				<label>To: </label>
@@ -6951,11 +6952,9 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					}
 				}
 				else if (currentNode.image == "FilterRowsByTime.png"){
-					var parentNode=GetFirstParentNode(currentNode);
-					if (parentNode) {
-						//ShowTableFilterRowsByTimeDialog(parentNode, currentNode);
-						document.getElementById("DialogFilterRowsByTime").showModal();
-					}
+									
+					if (PopulateFilterRowsByTimePropertySelect())document.getElementById("DialogFilterRowsByTime").showModal();
+					
 				}
 				else if (currentNode.image == "SortBySTA.png") {
 					var parentNode=GetFirstParentNode(currentNode);
@@ -8246,7 +8245,38 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			document.getElementById("geoDistance_input_coordinate"+value).value= currentNode.STAcolumnsValuesGeoDistance[selectValue]
 		}
 
+function PopulateFilterRowsByTimePropertySelect(){
+	var parentNodes= GetParentNodes(currentNode)
+	if (parentNodes && parentNodes.length==1){
+		var idNode=IdOfSTAEntity(parentNodes[0]);
+			if (idNode<0){
+				alert("It is necessary to link only one node with data from STA source");
+				return false;
+			}else{
+					if (STAEntitiesArray[idNode]=="Datastreams" ||STAEntitiesArray[idNode]=="MultiDatastreams"||STAEntitiesArray[idNode]=="Observations"){
+						document.getElementById("filterRowsByTimeSelectProperty").innerHTML='<option value="phenomenonTime">phenomenonTime</option><option value="resultTime">resultTime</option>'
+					}
+					else if (STAEntitiesArray[idNode]=="Campaigns"){
+						document.getElementById("filterRowsByTimeSelectProperty").innerHTML='<option value="startTime">startTime</option><option value="endTime">endTime</option>'
+					}
+					else if (STAEntitiesArray[idNode]=="ObservationGroups"){
+						document.getElementById("filterRowsByTimeSelectProperty").innerHTML='<option value="creationTime">creationTime</option><option value="endTime">endTime</option>'
+					} else{
+						alert("It is necessary to link one node with a data property");
+						return false;
+					}
+			}
+			return true;			
+	}else {
+		alert("It is necessary to link only one node with data from STA source");
+		return false;
+	}
+	
+	//Comprobar el parent
+	//SI el parent no es ni Datastream, Observations, Campaigns, ObservationsGroup enviar false 
 
+
+}
 function filterRowsByTimeOkButton(){
 	event.preventDefault();
 	document.getElementById("DialogFilterRowsByTime").close();
