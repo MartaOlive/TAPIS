@@ -8271,16 +8271,56 @@ function PopulateFilterRowsByTimePropertySelect(){
 		alert("It is necessary to link only one node with data from STA source");
 		return false;
 	}
-	
-	//Comprobar el parent
-	//SI el parent no es ni Datastream, Observations, Campaigns, ObservationsGroup enviar false 
-
 
 }
 function filterRowsByTimeOkButton(){
 	event.preventDefault();
-	document.getElementById("DialogFilterRowsByTime").close();
+	//agafar la info del select i les dates
+	var selectProperty= document.getElementById("filterRowsByTimeSelectProperty");
+	var selectedValue= selectProperty.options[selectProperty.selectedIndex].value;
+	var dateFromValue= document.getElementById("filterRowsByTimeCalendarFrom").value;
+	var dateToValue= document.getElementById("filterRowsByTimeCalendarTo").value;
+	if (dateFromValue==""|| dateToValue =="")alert("It is necessary to select a Data");
+	else{
+		var url= prepareUrlToApplyFilter();
+		console.log(url);
+		applyTemporalFilter(url, dateFromValue+"Z", dateToValue+"Z",selectedValue );
+	
+	
+	
+	}
+	//Fer la crida a la api amb la info i guardarla noseon . funció on li passes les dates 
+	//mirar si està marcat lo de l'arrodoniment i si es q si, fer-lo (funcio especifica)
+	//document.getElementById("DialogFilterRowsByTime").close();
 }
+function prepareUrlToApplyFilter(){
+	var url;
+	//var previousSTAURL = currentNode.STAURL;
+	var parentNode = GetFirstParentNode(currentNode);
+	var previousURL = parentNode.STAURL;
+	var prevFilter = GetQueryParamFromURL(parentNode.STAURL, "$filter"); //Previous parameters filtered
+	if (prevFilter) {
+			url= RemoveQueryParamFromURL(parentNode.STAURL, "$filter");//treume el q hi ha del filter
+			url= AddQueryParamsToURL(url, "$filter=" + prevFilter + " and ");
+	}
+	else
+	url= AddQueryParamsToURL(parentNode.STAURL, "$filter=");
+
+	return url;
+}
+async function applyTemporalFilter(url, dateFrom, dateTo, property){
+	currentNode.STAURL=url +" "+ property+ " ge "+dateFrom +" and "+ property+ " le "+dateTo;
+	console.log(currentNode.STAURL);
+	
+	//Part del nou troç de filtre
+	//PENAR si ho puc posar pum o reuereix algo mes.. si ve d'una altre entity. Pot venir un filtre d'una altre entity?
+	//crec q no xq tu sempr ehas de seleccionar 1 amb el select rows per poder tenir una entity nova
+	//Encara q filtrem amb filter rows i quedi nomes una, ha de ser agafat amb el select. 
+	await LoadJSONNodeSTAData(currentNode);
+	
+	networkNodes.update(currentNode);
+}
+
 function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
