@@ -8284,10 +8284,16 @@ async function filterRowsByTimeOkButton(){
 	else{
 		var url= prepareUrlToApplyFilter();
 		await applyTemporalFilter(url, dateFromValue+"Z", dateToValue+"Z",selectedValue );
+		
 		if (document.getElementById("aggregateDataYes").checked){
 			var selectAggregation= document.getElementById("filterRowsByTimeSelectAggregation");
 			var selectedAggregationValue= selectAggregation.options[selectAggregation.selectedIndex].value;
-			askForAllDataResults(selectedValue)
+			showInfoMessage("Applying filter ... It may take a while, please wait")
+			await askForAllDataResults(selectedValue);
+			var necessaryData= await prepareSTAdataToAggregateDataByChosenPeriodFunction(currentNode.STAdata, [selectedValue, "result"]); //await because can contain a lot of data 
+			console.log(necessaryData)
+			//await AggregateDataByChosenPeriod();
+			showInfoMessage("Filter applied")
 
 		} 
 		
@@ -8331,7 +8337,7 @@ async function askForAllDataResults(property){
 		newUrl= currentNode.STAURL+ `&$top=${top} &$orderBy=${property}+asc`;
 		dataToPush= await loadAPIDataWithReturn(newUrl,"obtainAllData")
 		data.push(...dataToPush);
-		console.log(newUrl)
+		//console.log(newUrl)
 		
 		while (stop==false){ 
 
@@ -8347,8 +8353,8 @@ async function askForAllDataResults(property){
 			newUrl= currentNode.STAURL+ `&$skip=${skip} &$top=${top} &$orderBy=${property}+asc`;
 			dataToPush= await loadAPIDataWithReturn(newUrl,"obtainAllData")
 			data.push(...dataToPush);		
-			console.log(data)
-			console.log(newUrl)
+			// console.log(data)
+			// console.log(newUrl)
 
 		} 
 		currentNode.STAdata=data;
@@ -8362,6 +8368,29 @@ async function askForAllDataResults(property){
 			
 			console.log(numberOfResults);
 }
+
+function prepareSTAdataToAggregateDataByChosenPeriodFunction(data, properties){
+	var finalDataArray=[], loadArray; ;
+	
+	for (var i=0;i<data.length;i++){
+		loadArray=[];
+		for (var a=0;a<properties.length;a++){
+			loadArray.push(data[i][properties[a]]);	
+			
+		}
+		finalDataArray.push(loadArray)
+	}
+	return finalDataArray;
+}
+
+
+
+
+
+
+
+
+
 function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
