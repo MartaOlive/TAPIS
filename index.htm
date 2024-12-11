@@ -8292,7 +8292,7 @@ async function filterRowsByTimeOkButton(){
 			await askForAllDataResults(selectedValue);
 			var necessaryData= await prepareSTAdataToAggregateDataByChosenPeriodFunction(currentNode.STAdata, [selectedValue, "result"]); //await because can contain a lot of data 
 			console.log(necessaryData)
-			//await AggregateDataByChosenPeriod();
+			await AggregateDataByChosenPeriod(necessaryData, selectedAggregationValue);
 			showInfoMessage("Filter applied")
 
 		} 
@@ -8370,9 +8370,9 @@ async function askForAllDataResults(property){
 }
 
 function prepareSTAdataToAggregateDataByChosenPeriodFunction(data, properties){
-	var finalDataArray=[], loadArray; ;
+	var finalDataArray=[], loadArray, n= data.length;
 	
-	for (var i=0;i<data.length;i++){
+	for (var i=0;i<n;i++){
 		loadArray=[];
 		for (var a=0;a<properties.length;a++){
 			loadArray.push(data[i][properties[a]]);	
@@ -8383,7 +8383,34 @@ function prepareSTAdataToAggregateDataByChosenPeriodFunction(data, properties){
 	return finalDataArray;
 }
 
+function AggregateDataByChosenPeriod(necessaryData, period){//year, month, day, hour, minute - Date: YYYY-MM-DDTHH:MM:SSZ (already sorted by date)
+	var n= necessaryData.length, aggregedData=[], samePeriodData=[], lastDate=""; //aggregedData= [date, [values]]
+	switch (period){
+		case "year": 
+			for (var i=0;i<n;i++){
+				
+					if (necessaryData[i][0].substr(0,4)==lastDate){
+						samePeriodData.push(necessaryData[i][1]);
+						if (i== n-1){
+							aggregedData.push([lastDate,samePeriodData]);
+						}
+					}
+					else{ //new date
+						if (i!=0)aggregedData.push([lastDate,samePeriodData]); //load data from period before
+						lastDate= necessaryData[i][0].substr(0,4); //new date
+						samePeriodData=[]; //restart
+						samePeriodData.push(necessaryData[i][1]);
+						if (i== n-1){
+							aggregedData.push([lastDate,samePeriodData]);
+						}
+					}
+			}
+			console.log (aggregedData);
 
+		break;
+
+	}
+}
 
 
 
