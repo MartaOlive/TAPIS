@@ -8384,32 +8384,44 @@ function prepareSTAdataToAggregateDataByChosenPeriodFunction(data, properties){
 }
 
 function AggregateDataByChosenPeriod(necessaryData, period){//year, month, day, hour, minute - Date: YYYY-MM-DDTHH:MM:SSZ (already sorted by date)
-	var n= necessaryData.length, aggregedData=[], samePeriodData=[], lastDate=""; //aggregedData= [date, [values]]
+	var n= necessaryData.length, aggregedData=[], samePeriodData=[], lastDate="",x; //aggregedData= [date, [values]]
 	switch (period){
 		case "year": 
-			for (var i=0;i<n;i++){
-				
-					if (necessaryData[i][0].substr(0,4)==lastDate){
-						samePeriodData.push(necessaryData[i][1]);
-						if (i== n-1){
-							aggregedData.push([lastDate,samePeriodData]);
-						}
-					}
-					else{ //new date
-						if (i!=0)aggregedData.push([lastDate,samePeriodData]); //load data from period before
-						lastDate= necessaryData[i][0].substr(0,4); //new date
-						samePeriodData=[]; //restart
-						samePeriodData.push(necessaryData[i][1]);
-						if (i== n-1){
-							aggregedData.push([lastDate,samePeriodData]);
-						}
-					}
-			}
-			console.log (aggregedData);
-
+			x=4;
+		break;
+		case "month": 
+			x=7;
+		break;
+		case "day": 
+			x=10;
+		break;
+		case "hour": 
+			x=13;
+		break;
+		case "minute": 
+			x=16;
 		break;
 
 	}
+	for (var i=0;i<n;i++){
+				
+				if (necessaryData[i][0].substr(0,x)==lastDate){
+					samePeriodData.push(necessaryData[i][1]);
+					if (i== n-1){
+						aggregedData.push([lastDate,samePeriodData]);
+					}
+				}
+				else{ //new date
+					if (i!=0)aggregedData.push([lastDate,samePeriodData]); //load data from period before
+					lastDate= necessaryData[i][0].substr(0,x); //new date
+					samePeriodData=[]; //restart
+					samePeriodData.push(necessaryData[i][1]);
+					if (i== n-1){
+						aggregedData.push([lastDate,samePeriodData]);
+					}
+				}
+		}
+		console.log (aggregedData);
 }
 
 
