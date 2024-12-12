@@ -8292,8 +8292,11 @@ async function filterRowsByTimeOkButton(){
 			await askForAllDataResults(selectedValue);
 			var necessaryData= await prepareSTAdataToAggregateDataByChosenPeriodFunction(currentNode.STAdata, [selectedValue, "result"]); //await because can contain a lot of data 
 			console.log(necessaryData)
-			await AggregateDataByChosenPeriod(necessaryData, selectedAggregationValue);
-			showInfoMessage("Filter applied")
+			var aggregatedData= await AggregateDataByChosenPeriod(necessaryData, selectedAggregationValue);
+			var statistics= calculateMinMaxMeanDesvest(aggregatedData);
+			console.log(statistics);
+			showInfoMessage("Filter applied");
+
 
 		} 
 		
@@ -8301,8 +8304,6 @@ async function filterRowsByTimeOkButton(){
 	
 	}
 	
-	//mirar si està marcat lo de l'arrodoniment i si es q si, fer-lo (funcio especifica)
-	//document.getElementById("DialogFilterRowsByTime").close();
 }
 function prepareUrlToApplyFilter(){
 	var url;
@@ -8422,9 +8423,18 @@ function AggregateDataByChosenPeriod(necessaryData, period){//year, month, day, 
 				}
 		}
 		console.log (aggregedData);
+		return aggregedData;
 }
 
+function calculateMinMaxMeanDesvest(aggregatedData){
 
+	var n= aggregatedData.length, statisticsArray=[];
+
+	for (var i=0; i<n; i++){
+		statisticsArray.push([aggregatedData[i][0],[aggrFuncMinValue(aggregatedData[i][1]),aggrFuncMaxValue(aggregatedData[i][1]),aggrFuncMean(aggregatedData[i][1]),aggrFuncStandardDeviation(aggregatedData[i][1])]]);
+	}
+	return statisticsArray
+}
 
 
 
