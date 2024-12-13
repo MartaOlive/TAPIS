@@ -5759,7 +5759,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		// params.nameInLegend
 		// params.showValue
 		// params.showType
-		function GetHTMLVariableDefUoM(suffix, params) {
+		function GetHTMLVariableDefUoM(suffix, params, attibute) {
 			var cdns=[];
 			cdns.push('<fieldset>');
 			if (params.nameInLegend)
@@ -5772,7 +5772,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					'		</label>',
 					'	<br>');
 			if (params.showPredefOptions)
-				cdns.push('	<label>Predefined options:',
+				cdns.push('<label>Field name: <input id="DialogMeaningVariableName'+suffix+'" value="'+attibute+'"></label><br>',
+				'<label>Predefined options:',
 					'		<span id="DialogMeaningVariableDropDown' + suffix + '"></span>',
 					'		</label>',
 					'	<br>');
@@ -5897,7 +5898,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			document.getElementById("DialogMeaningFields").innerHTML="";
 			for (var i = 0; i < dataAttributesArray.length; i++) {
-				document.getElementById("DialogMeaningFields").innerHTML+=GetHTMLVariableDefUoM("_" + i, {nameInLegend: true, showValue: false, showType: true, showPredefOptions:true});
+				document.getElementById("DialogMeaningFields").innerHTML+=GetHTMLVariableDefUoM("_" + i, {nameInLegend: true, showValue: false, showType: true, showPredefOptions:true},dataAttributesArray[i] );
 				document.getElementById("DialogSaveLayerVariable_"+i).innerHTML="Field "+(i+1)+ ": " + dataAttributesArray[i];
 
 				cdns=[];
@@ -8292,11 +8293,14 @@ async function filterRowsByTimeOkButton(){
 			await askForAllDataResults(selectedValue);
 			var necessaryData= await prepareSTAdataToAggregateDataByChosenPeriodFunction(currentNode.STAdata, [selectedValue, "result"]); //await because can contain a lot of data 
 			console.log(necessaryData)
-			var aggregatedData= await AggregateDataByChosenPeriod(necessaryData, selectedAggregationValue);
-			var statistics= calculateMinMaxMeanDesvest(aggregatedData);
+			var aggregatedData= await AggregateDataByChosenPeriod(necessaryData, selectedAggregationValue, true);
+			var statistics= calculateMinMaxMeanDesvest(aggregatedData[0]);
 			console.log(statistics);
 			showInfoMessage("Filter applied");
+			var data=[], n=statistics.lenght; //data = array d'observations
+			for (var i=0;i<n;i++){
 
+			}
 
 		} 
 		
@@ -8384,7 +8388,7 @@ function prepareSTAdataToAggregateDataByChosenPeriodFunction(data, properties){
 	return finalDataArray;
 }
 
-function AggregateDataByChosenPeriod(necessaryData, period){//year, month, day, hour, minute - Date: YYYY-MM-DDTHH:MM:SSZ (already sorted by date)
+function AggregateDataByChosenPeriod(necessaryData, period,STA){//year, month, day, hour, minute - Date: YYYY-MM-DDTHH:MM:SSZ (already sorted by date)
 	var n= necessaryData.length, aggregedData=[], samePeriodData=[], lastDate="",x; //aggregedData= [date, [values]]
 	switch (period){
 		case "year": 
@@ -8404,16 +8408,44 @@ function AggregateDataByChosenPeriod(necessaryData, period){//year, month, day, 
 		break;
 
 	}
+	var firstDataValue, lastDataValue, observationsArray=[];
 	for (var i=0;i<n;i++){
-				
+				if (STA && i==0){
+					firstDataValue=necessaryData[i][0];
+					lastDataValue=necessaryData[i][0];
+				}
 				if (necessaryData[i][0].substr(0,x)==lastDate){
 					samePeriodData.push(necessaryData[i][1]);
+					if (STA)lastDataValue= necessaryData[i][0]; 
 					if (i== n-1){
 						aggregedData.push([lastDate,samePeriodData]);
+						if (STA){
+							observationsArray.push({
+								"phenomenonTime": firstDataValue+"/"+lastDataValue,
+								"resultTime": "",
+								"result": [],
+								"parameters":{
+									"resultCount": samePeriodData.length
+								}
+							})
+						}
 					}
 				}
 				else{ //new date
 					if (i!=0)aggregedData.push([lastDate,samePeriodData]); //load data from period before
+					if (STA &&  i!=0){
+						observationsArray.push({
+							"phenomenonTime": firstDataValue+"/"+lastDataValue,
+							"resultTime": "",
+							"result": [],
+							"parameters":{
+								"resultCount": samePeriodData.length
+							}
+
+						})
+						lastDataValue= necessaryData[i][0]; 
+						firstDataValue= necessaryData[i][0];
+					}
 					lastDate= necessaryData[i][0].substr(0,x); //new date
 					samePeriodData=[]; //restart
 					samePeriodData.push(necessaryData[i][1]);
@@ -8423,7 +8455,9 @@ function AggregateDataByChosenPeriod(necessaryData, period){//year, month, day, 
 				}
 		}
 		console.log (aggregedData);
-		return aggregedData;
+		console.log (observationsArray);
+		if (STA) return [aggregedData,observationsArray]
+		else return aggregedData;
 }
 
 function calculateMinMaxMeanDesvest(aggregatedData){
