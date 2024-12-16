@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="../tapis.css">
-	<link href=".../tools.css" rel="stylesheet" type="text/css">
+	
 </head>
 
 <body>
@@ -41,8 +41,164 @@
 
 
 	<script>
-		
-
+		var dates= [ 
+		 {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)",
+            "@iot.id": 1906662,
+            "phenomenonTime": "2024-06-22T10:03:17Z",
+            "resultTime": "2024-07-22T10:03:17Z",
+            "result": 24.03,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)/Subjects"
+        },
+        {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)",
+            "@iot.id": 1906670,
+            "phenomenonTime": "2024-07-25T10:03:27Z",
+            "resultTime": "2024-07-22T10:03:27Z",
+            "result": 24.02,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)/Subjects"
+        },
+        {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)",
+            "@iot.id": 1906678,
+            "phenomenonTime": "2024-07-22T10:03:37Z",
+            "resultTime": "2024-07-22T10:03:37Z",
+            "result": 24.03,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)/Subjects"
+        },
+        {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)",
+            "@iot.id": 1906686,
+            "phenomenonTime": "2024-08-22T10:03:47Z",
+            "resultTime": "2024-07-22T10:03:47Z",
+            "result": 24.65,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)/Subjects"
+        },
+        {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)",
+            "@iot.id": 1906694,
+            "phenomenonTime": "2024-07-22T10:03:57Z",
+            "resultTime": "2024-07-22T10:03:57Z",
+            "result": 24.68,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)/Subjects"
+        },
+        {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)",
+            "@iot.id": 1906702,
+            "phenomenonTime": "2024-07-22T10:04:07Z",
+            "resultTime": "2024-07-22T10:04:07Z",
+            "result": 24.64,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)/Subjects"
+        },
+        {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)",
+            "@iot.id": 1906710,
+            "phenomenonTime": "2024-07-22T10:04:17Z",
+            "resultTime": "2024-07-22T10:04:17Z",
+            "result": 24.57,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)/Subjects"
+        },
+        {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)",
+            "@iot.id": 1906718,
+            "phenomenonTime": "2024-07-22T10:04:28Z",
+            "resultTime": "2024-07-22T10:04:28Z",
+            "result": 24.53,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)/Subjects"
+        },
+        {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)",
+            "@iot.id": 1906726,
+            "phenomenonTime": "2024-07-22T10:04:38Z",
+            "resultTime": "2024-07-22T10:04:38Z",
+            "result": 24.48,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)/Subjects"
+        },
+        {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)",
+            "@iot.id": 1906734,
+            "phenomenonTime": "2024-07-22T10:04:48Z",
+            "resultTime": "2024-07-22T10:04:48Z",
+            "result": 24.43,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)/Subjects"
+        },
+        {
+            "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)",
+            "@iot.id": 1906742,
+            "phenomenonTime": "2024-07-22T10:04:58Z",
+            "resultTime": "2024-07-22T10:04:58Z",
+            "result": 24.38,
+            "parameters": {},
+            "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)/Datastream",
+            "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)/FeatureOfInterest",
+            "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)/Objects",
+            "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)/ObservationGroups",
+            "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)/Subjects"
+        }
+        ];
+var dates2= ["2024-06-22T10:03:17Z","2025-06-22T10:03:17Z","2024-07-22T10:03:17Z","2024-06-24T10:03:17Z","2024-06-22T11:03:17Z","2024-06-22T10:04:17Z","2024-06-22T10:03:18Z"]
+		function ordenar(){
+			console.log(dates.sort(function (a, b) {
+			if (a.phenomenonTime > b.phenomenonTime) {
+				return 1;
+			}
+			if (a.phenomenonTime < b.phenomenonTime) {
+				return -1;
+			}
+			// a must be equal to b
+			return 0;}))
+		}
+		ordenar();
 	</script>
 </body>
 

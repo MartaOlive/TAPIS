@@ -691,8 +691,8 @@
 				<input type="datetime-local" id="filterRowsByTimeCalendarTo">
 			</fieldset>
 			<fieldset>
-			<legend>To aggregate data by: (optional)</legend>
-			<input type="checkbox" id="aggregateDataYes" /><label> Aggregate data by:</label>
+			<legend>To aggregate data by (Optional. Only available with "Observations"): </legend>
+			<input type="checkbox" id="aggregateDataYes" /><label id="aggregateDataYes_label"> Aggregate data by:</label>
 			<select id="filterRowsByTimeSelectAggregation"> 
 				<option value="year">Year</option>
 				<option value="month">Month</option>
@@ -8254,18 +8254,31 @@ function PopulateFilterRowsByTimePropertySelect(){
 				alert("It is necessary to link only one node with data from STA source");
 				return false;
 			}else{
-					if (STAEntitiesArray[idNode]=="Datastreams" ||STAEntitiesArray[idNode]=="MultiDatastreams"||STAEntitiesArray[idNode]=="Observations"){
-						document.getElementById("filterRowsByTimeSelectProperty").innerHTML='<option value="phenomenonTime">phenomenonTime</option><option value="resultTime">resultTime</option>'
-					}
-					else if (STAEntitiesArray[idNode]=="Campaigns"){
-						document.getElementById("filterRowsByTimeSelectProperty").innerHTML='<option value="startTime">startTime</option><option value="endTime">endTime</option>'
-					}
-					else if (STAEntitiesArray[idNode]=="ObservationGroups"){
-						document.getElementById("filterRowsByTimeSelectProperty").innerHTML='<option value="creationTime">creationTime</option><option value="endTime">endTime</option>'
-					} else{
-						alert("It is necessary to link one node with a data property");
-						return false;
-					}
+				if (STAEntitiesArray[idNode]!="Observations"){
+					document.getElementById("aggregateDataYes").disabled=true;
+					document.getElementById("filterRowsByTimeSelectAggregation").disabled=true;
+					document.getElementById("aggregateDataYes_label").style.color="#b6b5b5";
+				}
+				else{
+					 document.getElementById("aggregateDataYes").disabled=false;
+					 document.getElementById("filterRowsByTimeSelectAggregation").disabled=false;
+					 document.getElementById("aggregateDataYes_label").style.color="#000000";
+				}
+				document.getElementById("filterRowsByTimeSelectProperty").innerHTML="";
+				if (STAEntitiesArray[idNode]=="Datastreams" ||STAEntitiesArray[idNode]=="MultiDatastreams"||STAEntitiesArray[idNode]=="Observations"){
+					document.getElementById("filterRowsByTimeSelectProperty").innerHTML='<option value="phenomenonTime">phenomenonTime</option><option value="resultTime">resultTime</option>'
+					
+					
+				}
+				else if (STAEntitiesArray[idNode]=="Campaigns"){
+					document.getElementById("filterRowsByTimeSelectProperty").innerHTML='<option value="startTime">startTime</option><option value="endTime">endTime</option>'
+				}
+				else if (STAEntitiesArray[idNode]=="ObservationGroups"){
+					document.getElementById("filterRowsByTimeSelectProperty").innerHTML='<option value="creationTime">creationTime</option><option value="endTime">endTime</option>'
+				} else{
+					alert("It is necessary to link one node with a data property");
+					return false;
+				}
 			}
 			return true;			
 	}else {
@@ -8292,16 +8305,19 @@ async function filterRowsByTimeOkButton(){
 			showInfoMessage("Applying filter ... It may take a while, please wait")
 			await askForAllDataResults(selectedValue);
 			var necessaryData= await prepareSTAdataToAggregateDataByChosenPeriodFunction(currentNode.STAdata, [selectedValue, "result"]); //await because can contain a lot of data 
-			console.log(necessaryData)
+			// console.log(necessaryData)
 			var aggregatedData= await AggregateDataByChosenPeriod(necessaryData, selectedAggregationValue, true);
 			var statistics= calculateMinMaxMeanDesvest(aggregatedData[0]);
 			console.log(statistics);
-			showInfoMessage("Filter applied");
-			var data=[], n=statistics.lenght; //data = array d'observations
-			for (var i=0;i<n;i++){
-
+			
+			var data=[], n=statistics.length; //data = array of observations. Every statistic has their observation
+			for (var i=0;i<n;i++){ //Put results in every observation
+				aggregatedData[1][i].result= statistics[i][1];
 			}
-
+			currentNode.STAdata= aggregatedData[1];
+			currentNode.STAdataStatistics= statistics;
+			networkNodes.update(currentNode);
+			showInfoMessage("Filter applied");
 		} 
 		
 		
