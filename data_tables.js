@@ -1082,7 +1082,31 @@ function addnewColumnWithFormula (data, columnName,formula,decimalNumber){
 	}
 }
 
+function sortDates(data, columnToSort) { //columnToSort only if is an object. If it is an array without columnToSort
+	if (columnToSort) { //object
+		data.sort(function (a, b) {
+			if (a[columnToSort] > b[columnToSort] ) {
+				return 1;
+			}
+			if (a[columnToSort]  < b[columnToSort] ) {
+				return -1;
+			}
 
+			return 0;
+		})
+	} else { //array
+		data.sort(function (a, b) {
+			if (a > b) {
+				return 1;
+			}
+			if (a < b) {
+				return -1;
+			}
+			return 0;
+		})
+	}
+	return data
+}
 
 
 function sortValuesNumbersOrText(arrayValues) {
