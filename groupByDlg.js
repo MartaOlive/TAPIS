@@ -171,16 +171,14 @@
 			var cdns=[], n=dataAttributesArray.length;
 			for (var i=0;i<n;i++){
 				cdns.push('<option value="'+dataAttributesArray[i]+'">' +dataAttributesArray[i]+'</option>');
-				console.log(i)
 			}
-			console.log(cdns.join(""))
 			document.getElementById("GroupByDateRoundingSelect").innerHTML=cdns.join("")
 
 			return;
 		}
 
 		function GetGroupBy(event) {
-			var groupByParams={groupByAttr: [], groupByDate:"", aggregationAttr:{}};
+			var groupByParams={groupByAttr: [], groupByDate:[], aggregationAttr:{}};
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogGroupBy").close();
 			var parentNode=GetFirstParentNode(currentNode), selectedColumn, s;
@@ -200,12 +198,20 @@
 				if (s)
 					groupByParams.aggregationAttr[dataAttributesArray[a]]=JSON.parse(s);
 			}
-			
+			var GroupByDateRoundingSelect=document.getElementById("GroupByDateRoundingSelect");
+			var GroupByDateRoundingSelectValue = GroupByDateRoundingSelect.options[GroupByDateRoundingSelect.selectedIndex].value;
+
 			for (var i = 0; i < GroupByDateTimeOptions.length; i++) {
 				if (document.getElementById("DialogGroupByDateTime" + GroupByDateTimeOptions[i].name).checked) {
-					groupByParams.groupByDate=GroupByDateTimeOptions[i].name;
+					groupByParams.groupByDate.push(GroupByDateTimeOptions[i].name);
 					break;
 				}
+			}
+			if (groupByParams.groupByDate.length>0){
+				var GroupByDateRoundingSelect=document.getElementById("GroupByDateRoundingSelect");
+				var GroupByDateRoundingSelectValue = GroupByDateRoundingSelect.options[GroupByDateRoundingSelect.selectedIndex].value;
+				groupByParams.groupByDate.push(GroupByDateRoundingSelectValue);
+
 			}
 			var dataCurrentAttributes={};
 			currentNode.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, groupByParams);

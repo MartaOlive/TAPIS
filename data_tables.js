@@ -695,14 +695,27 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 
 	for (var j=0; j<dataAttributesArray.length; j++) {
 		if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1)
-			dataCurrentAttributes[dataAttributesArray[j]]=deapCopy(dataAttributes[dataAttributesArray[j]]);
+			dataCurrentAttributes[dataAttributesArray[j]]=deapCopy(dataAttributes[dataAttributesArray[j]]);  //list of attributes to groupBy 
 	}
-	for (var j=0; j<dataAttributesArray.length; j++) {
+	//Different Dates with atribute.. each attribute with their dates
+	//Create array with sorted and aggregated dates
+	var dates=prepareSTAdataToAggregateDataByChosenPeriodFunction(data, [groupByParams.groupByDate[1]]);
+	dates= sortDates(dates);
+	var datesGrouped= AggregateDataByChosenPeriod(dates, groupByParams.groupByDate[0].toLowerCase()); //Result: ["short data", ["empty"]]
+	console.log(datesGrouped);
+	
+
+	////////
+	for (var j=0; j<dataAttributesArray.length; j++) { //createColumnsNames
 		if (groupByParams.aggregationAttr[dataAttributesArray[j]]) {
 			for (var k=0; k<groupByParams.aggregationAttr[dataAttributesArray[j]].length; k++) {
 				s=dataAttributesArray[j]+"_"+groupByParams.aggregationAttr[dataAttributesArray[j]][k];
+				/*for(var e=0;e<arrayWithDates;e++){
+				s+="_"+arrayWithDates[e]
+				}*/
 				dataCurrentAttributes[s]=deapCopy(dataAttributes[dataAttributesArray[j]]);
 				//Modify the Attribute description accordingly. 
+				//Add DATESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS (already created)
 			}
 		}
 	}
@@ -710,16 +723,21 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 	//Duplicate the table. Any field that is not grouping of aggregating is removed at this stage
 	var dataSorted=[], recordSorted;
 	//Add a data index column to ensure that the order of the groups is not altered
-	for (var i=0; i<data.length; i++) {
+	for (var i=0; i<data.length; i++) { //prepareSTAdataToAggregateDataByChosenPeriodFunction(data, properties) AQUESTA FORMULA RETORNA L'ARRAY D'OBJECTES NOMES AMB LE SPROPIETATS QUE T'INTERESSA
 		record=data[i];
 		recordSorted={};
 		for (var j=0; j<dataAttributesArray.length; j++) {
-			if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1){
+			if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1){ 
 				recordSorted[dataAttributesArray[j]]=record[dataAttributesArray[j]];
 				continue; // this is necessary to avoid adding this field twice if it is asoo in the aggregationAttr.
 			}
 			if (groupByParams.aggregationAttr[dataAttributesArray[j]])
 				recordSorted[dataAttributesArray[j]]=record[dataAttributesArray[j]];
+
+			//GUARDAT TMB EL ATTR QUE ES FARÀ SERVIR PER LA DATA (GROUPbYdAY [1], EL SEGON DE L'ARRAY, EL PRIMER ES EL VALOR PEL QUAL ES VOL AGRUPAR. ANY, MES..)
+
+			
+
 		}
 		recordSorted["$$order$$"]=i;
 		dataSorted.push(recordSorted);
@@ -737,7 +755,7 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 		return 0;
 	}
 
-	dataSorted.sort(function (a, b) {
+	dataSorted.sort(function (a, b) { //SI ESTÂ SELECCIONADA L'AGRUPACIO PER DATA , AQUI S'HAURIA D?ORDENAR PER DATA???
 		var r=sortRecords(a, b);
 		if (r!=0)
 			return r;
@@ -752,7 +770,9 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 	var dataCurrent=[], i_ini=0, iniRecord;
 	for (var i=1; i<dataSorted.length; i++) {
 		iniRecord=dataSorted[i_ini];
-		if (0!=sortRecords(iniRecord, dataSorted[i])){
+		//Quan compara si es com l'anterior... -> mirar d'encaixar aqui les dates
+		//Que miri primer si està en la data i si ja no es aixi q no pugui comparar lo altre? q sigui la data de l'arrai de les agrupades.. mirar any si es lany, any i mes si es mes.. etc
+		if (0!=sortRecords(iniRecord, dataSorted[i])){ //quan canvia el valor del attr pel quan s'agrupen. Aqui tmb ha de mirar la data . Hauria de ser attr i data diferent de l'anterior
 			//records i_ini to i-1 are grouped			
 			dataCurrent.push(GroupRecordsData(dataSorted, i_ini, i-1, dataAttributesArray, groupByParams));  //Add the record to the result
 			i_ini=i;
