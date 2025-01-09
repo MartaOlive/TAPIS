@@ -705,7 +705,7 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 	console.log(datesGrouped);
 	
 
-	////////
+	////////!!!!!!!!!!!!!!!!!!!!!!!!
 	for (var j=0; j<dataAttributesArray.length; j++) { //createColumnsNames
 		if (groupByParams.aggregationAttr[dataAttributesArray[j]]) {
 			for (var k=0; k<groupByParams.aggregationAttr[dataAttributesArray[j]].length; k++) {

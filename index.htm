@@ -1837,6 +1837,10 @@
 			}
 
 			document.getElementById("ButtonsContextMenuObjects").innerHTML = s;
+
+			window.addEventListener("message", ProcessMessageFromMiraMonMapBrowser);
+			if (window.opener)
+				window.opener.postMessage(JSON.stringify({msg: "Tapis is listening"}), "*");
 		}
 
 		function removeParamContentType(contentType) {
@@ -6316,7 +6320,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				DisplayMapMMN();
 			else
 			{
-				window.addEventListener("message", ProcessMessageFromMiraMonMapBrowser);
+				//window.addEventListener("message", ProcessMessageFromMiraMonMapBrowser);
 				MiraMonMapBrowserVars.mmnURL=url;
 				MiraMonMapBrowserVars.mmn=window.open(url, "_blank", "width=1000,height=800");
 			}
@@ -6324,9 +6328,37 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 		function ProcessMessageFromMiraMonMapBrowser(event)
 		{
-			if (!IsTrustedMiraMonMapBrowser(event, MiraMonMapBrowserVars.mmnURL))
-				return;
+			if (MiraMonMapBrowserVars.mmnURL)  //Tapis has open MMN and is getting feedback
+			{
+				if (!IsTrustedMiraMonMapBrowser(event, MiraMonMapBrowserVars.mmnURL))
+					return;
 
+				try
+				{
+					var data=JSON.parse(event.data);
+				}
+				catch (e) 
+				{
+					showInfoMessage("JSON message parse error: " + e + " The response was:\n" + event.data);
+					return;
+				}
+
+				if (data.msg === MMN_PM_IsListening)
+				{
+					showInfoMessage("MiraMon Map Browser is open and ready to show layers.");
+					DisplayMapMMN();
+					return;
+				}
+
+				if (data.msg === MMN_PM_Closed)
+				{
+					showInfoMessage("MiraMon Map Browser has been closed.");
+					MiraMonMapBrowserVars.mmn=null;
+					MiraMonMapBrowserVars.mmnURL=null;
+					return;
+				}
+				return;
+			}
 			try
 			{
 				var data=JSON.parse(event.data);
@@ -6337,20 +6369,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				return;
 			}
 
-			if (data.msg === MMN_PM_IsListening)
-			{
-				showInfoMessage("MiraMon Map Browser is open and ready to show layers.");
-				DisplayMapMMN();
+			if (!data.type)
+				return;
+			if (data.type!=="GeoJSON"){//QUÊ FER QUAN S'OBRE EN UN ALTRE LLOC: S'ha de carregar i obir l'esquema
+				alert("The format requets from an external source (" + data.type + ") is not implemented yet")
 				return;
 			}
-
-			if (data.msg === MMN_PM_Closed)
-			{
-				showInfoMessage("MiraMon Map Browser has been closed.");
-				MiraMonMapBrowserVars.mmn=null;
-				MiraMonMapBrowserVars.mmnURL=null;
-				return;
-			}
+			alert(JSON.stringify(data.data));
 			/*if (data.msg === MMN_PM_CurrentLocationText)
 			{
 				MiraMonMapBrowserVars.currentLocText=data.text;
@@ -8491,7 +8516,9 @@ function calculateMinMaxMeanDesvest(aggregatedData){
 
 
 
-
+function saludaAlTapis(){
+    console.log("hola des del navegadorsito")
+}
 function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
