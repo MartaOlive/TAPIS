@@ -6380,7 +6380,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				return;
 			}
 			alert(JSON.stringify(data.data));//QUÊ FER QUAN S'OBRE EN UN ALTRE LLOC: S'ha de carregar i obir l'esquema
-			createAndLoadImportGeoJSONNode(JSON.stringify(data.data))
+			createAndLoadImportGeoJSONNode(JSON.stringify(data.data),data.url)
 			return;
 			
 
@@ -8526,14 +8526,14 @@ function calculateMinMaxMeanDesvest(aggregatedData){
 
 
 
-function createAndLoadImportGeoJSONNode(data){
+function createAndLoadImportGeoJSONNode(data,url){
 	
 	addCircularImage(null, null, "GeoJSON", "ImportGeoJSON.png");
 
 	currentNode = networkNodes.get(network.getSelectedNodes()[0]);
 	document.getElementById("DialogImportGeoJSONSourceExternalData").disabled= false;
 	document.getElementById("DialogImportGeoJSONSourceExternalData").checked= true;
-	document.getElementById("DialogImportGeoJSONSourceExternalDataText").value= data.url;
+	document.getElementById("DialogImportGeoJSONSourceExternalDataText").value= url;
 	
 	TransformTextGeoJSONToTable(data);
 	
