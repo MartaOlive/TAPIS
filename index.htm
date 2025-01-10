@@ -940,7 +940,11 @@
 				URL: <input type="text" size="70" id="DialogImportGeoJSONSourceURLInput" onChange="ReadURLImportGeoJSON(event)" disabled="disabled"></input> <button type="button" id="DialogImportGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSON(event)" disabled="disabled">Load</button></label><br>
 				<label>Suggested GeoJSON URLs:
 					<select id="DialogImportGeoJSONSourceURLSelect" onChange="PopulateInputFromSelect(event, 'DialogImportGeoJSONSourceURL')"></select>
+				</label><br>
+				<label><input type="radio" id="DialogImportGeoJSONSourceExternalData" name="DialogImportGeoJSONSource" value="externalData" disabled="disabled" >
+					External data from: <input type="text" size="70" id="DialogImportGeoJSONSourceExternalDataText" disabled="disabled"></input>
 				</label>
+
 			</fieldset>
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GeoJSON")'>Done</button>
@@ -6371,11 +6375,17 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			if (!data.type)
 				return;
-			if (data.type!=="GeoJSON"){//QUÊ FER QUAN S'OBRE EN UN ALTRE LLOC: S'ha de carregar i obir l'esquema
+			if (data.type!=="GeoJSON"){
 				alert("The format requets from an external source (" + data.type + ") is not implemented yet")
 				return;
 			}
-			alert(JSON.stringify(data.data));
+			alert(JSON.stringify(data.data));//QUÊ FER QUAN S'OBRE EN UN ALTRE LLOC: S'ha de carregar i obir l'esquema
+			createAndLoadImportGeoJSONNode(JSON.stringify(data.data))
+			return;
+			
+
+
+
 			/*if (data.msg === MMN_PM_CurrentLocationText)
 			{
 				MiraMonMapBrowserVars.currentLocText=data.text;
@@ -8516,8 +8526,17 @@ function calculateMinMaxMeanDesvest(aggregatedData){
 
 
 
-function saludaAlTapis(){
-    console.log("hola des del navegadorsito")
+function createAndLoadImportGeoJSONNode(data){
+	
+	addCircularImage(null, null, "GeoJSON", "ImportGeoJSON.png");
+
+	currentNode = networkNodes.get(network.getSelectedNodes()[0]);
+	document.getElementById("DialogImportGeoJSONSourceExternalData").disabled= false;
+	document.getElementById("DialogImportGeoJSONSourceExternalData").checked= true;
+	document.getElementById("DialogImportGeoJSONSourceExternalDataText").value= data.url;
+	
+	TransformTextGeoJSONToTable(data);
+	
 }
 function giveMeNetworkInformation(event) {
 			if (event)
