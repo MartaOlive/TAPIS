@@ -727,7 +727,7 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 		record=data[i];
 		recordSorted={};
 		for (var j=0; j<dataAttributesArray.length; j++) {
-			if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1){ 
+			if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1){
 				recordSorted[dataAttributesArray[j]]=record[dataAttributesArray[j]];
 				continue; // this is necessary to avoid adding this field twice if it is asoo in the aggregationAttr.
 			}

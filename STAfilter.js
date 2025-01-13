@@ -256,8 +256,6 @@ async function loadAPIDataWithReturn(url, reasonForData) { // Ask API to  "FIllS
 			data = (typeof data !== "undefined") ? data["conformsTo"] : [data];
 		} else if (reasonForData == "OGCAPIqueryables") {
 			data = (typeof data !== "undefined") ? data["properties"] : [data];
-		}else if(reasonForData =="obtainAllData"){ //Obtain all data to agregate it
-			data = (typeof data.value !== "undefined") ? data.value : [data];
 		}
 		else {
 			data = (typeof data.value !== "undefined") ? data["@iot.count"] : [data];

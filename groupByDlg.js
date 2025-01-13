@@ -200,7 +200,7 @@
 			}
 			var GroupByDateRoundingSelect=document.getElementById("GroupByDateRoundingSelect");
 			var GroupByDateRoundingSelectValue = GroupByDateRoundingSelect.options[GroupByDateRoundingSelect.selectedIndex].value;
-
+			
 			for (var i = 0; i < GroupByDateTimeOptions.length; i++) {
 				if (document.getElementById("DialogGroupByDateTime" + GroupByDateTimeOptions[i].name).checked) {
 					groupByParams.groupByDate.push(GroupByDateTimeOptions[i].name);

@@ -9,18 +9,22 @@
 	<script type="text/javascript" src="Chart.bundle.min.js" async defer></script>
         <script type="text/javascript" src="chartjs-plugin-labels.js" async defer></script>
 	<script type="text/javascript" src="papaparse.min.js" async defer></script>
+	<script type="text/javascript" src="crypto-js.min.js" async defer></script>
 	<script type="text/javascript" src="hello.all.min.js"></script>
 	<script type="text/javascript" src="authenix.js" async defer></script>
 	<script type="text/javascript" src="mmn_postmessage.js" async defer></script>
 	<script type="text/javascript" src="guf.js" async defer></script>
 	<script type="text/javascript" src="xml2json.js" async defer></script>
+	<script type="text/javascript" src="oem.js" async defer></script>
 	<script type="text/javascript" src="dbf.js" async defer></script>
+	<script type="text/javascript" src="edc.js" async defer></script>
 	<script type="text/javascript" src="data_tables.js"></script>
 	<script type="text/javascript" src="STAselectExpand.js"></script>
 	<script type="text/javascript" src="selectColumnsDlg.js"></script>
 	<script type="text/javascript" src="groupByDlg.js"></script>
 	<script type="text/javascript" src="STAfilter.js"></script>
 	<script type="text/javascript" src="diagrams.js"></script>
+	<script type="text/javascript" src="aws.js"></script>
 
 	<link rel="stylesheet" href="tapis.css">
 	<link rel="stylesheet" href="vis.min.css">
@@ -118,8 +122,8 @@
 						<option value="help/recipe02_02_ObservationsParty.json">Recipe 2, cooking method 2: Filtering observations</option>
 						<option value="help/recipe03_OpenMap.json">Recipe 3: Show a map of all observation features in an STA service</option>
 						<option value="help/recipe04_CSV_meaning.json">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</option>
-						<option value="help/recipe05_01_spatialFilterTemperature.json">Recipe 5_1: Selecting temperatures with a poligon</option>
-						<option value="help/recipe05_02_FilteringByDistance.json">Recipe 5_2: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
+						<option value="help/Recipe05_01_spatialFilterTemperature.json">Recipe 5a: Selecting temperatures from an area</option>
+						<option value="help/Recipe05_02_FilteringByDistance.json">Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
 						<option value="help/recipe06_creatingTwoDatastreamOfObservations.json">Recipe 6: Creating a new stream of observations</option>
 						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>
 					</select>
@@ -146,6 +150,58 @@
 			</p>
 			<div class="center">
 				<button value="default" id="DialogSTAURLOk" onClick="GetSTAURLEvent(event)" formmethod="dialog">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogS3Bucket">
+		<div id="divTitleDialogS3Bucket" class="center" style="font-size: large;"></div>
+		<form>
+			<p>
+				<label>Landing page URL:
+					<input type="text" id="DialogS3BucketURL" size="100"></input>
+				</label>
+				<br>
+				<label>Access Key:
+					<input type="password" id="DialogS3BucketAccessKey" size="100"></input>
+				</label>
+				<br>
+				<label>Secret Key:
+					<input type="password" id="DialogS3BucketSecretKey" size="100"></input>
+				<br>
+				<label>S3 Service:
+					<input type="text" id="DialogS3BucketS3Service" size="30"></input>
+				<br>
+				<label>Suggested services:
+					<select id="DialogS3BucketSelect" onChange="PopulateURLSecurityFromSelect(event, 'DialogS3Bucket')"></select>
+				</label>
+			</p>
+			<div class="center">
+				<button value="default" id="DialogS3BucketOk" onClick="GetDialogS3BucketEvent(event)" formmethod="dialog">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogEDC">
+		<div id="divTitleDialogEDC" class="center" style="font-size: large;"></div>
+		<form>
+			<p>
+				<label>Landing page URL:
+					<input type="text" id="DialogEDCURL" size="100"></input>
+				</label>
+				<br>
+				<label>Counter Party Address:
+					<input type="text" id="DialogEDCCounterPartyAddress" size="100"></input>
+				</label>
+				<br>
+				<label>Suggested services:
+					<select id="DialogEDCSelect" onChange="PopulateURLSecurityFromSelect(event, 'DialogEDC')"></select>
+				</label>
+			</p>
+			<div class="center">
+				<button value="default" id="DialogEDCOk" onClick="GetDialogEDCEvent(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
@@ -216,7 +272,6 @@
 			</div>
 		</form>
 	</dialog>
-
 
 	<dialog id="DialogSelectColumns">
 		<form>
@@ -1285,9 +1340,13 @@
 
 		var config;
 
-		const ServicesAndAPIs = {sta: {name: "STA plus", description: "Add STA service", startNode: true},
-					ogcAPIs: {name: "OGC API", description: "Add OGC API collection", startNode: true},
-					csw: {name: "Catalogue", description: "Add OGC CSW", startNode: true},
+		const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", startNode: true},
+					ogcAPICols: {name: "OGC API cols", description: "OGC API collections", startNode: true},
+					ogcAPIItems: {name: "OGC API items", description: "OGC API items", startNode: true},
+					csw: {name: "Catalogue", description: "OGC CSW", startNode: true},
+					s3Service: {name: "S3 Service", description: "S3 Service", startNode: true},
+					s3Bucket: {name: "S3 Bucket", description: "S3 Bucket", startNode: true},
+					edc: {name: "DS catalogue", description: "DataSpace cat.", startNode: true},
 					ImportCSV: {name: "CSV", description: "Import CSV", startNode: true},
 					ImportDBF: {name: "DBF", description: "Import DBF", startNode: true},
 					ImportGeoJSON: {name: "GeoJSON", description: "Import GeoJSON", startNode: true},
@@ -1448,7 +1507,7 @@
 		function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 			if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnsSTA.png" || node.image == "SortBySTA.png" || node.image == "OneValueSTA.png" || node.image == "CountResultsSTA.png" ) )
 				return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
-			if (parentNode.image=="sta.png" || parentNode.image=="ogcAPIs.png" || parentNode.image=="csw.png")
+			if (parentNode.image=="sta.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
 				return null;
 			if ((STAOperations[removeExtension(parentNode.image)] && STAOperations[removeExtension(parentNode.image)].leafNode==true) ||
 			    (TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true))
@@ -1490,7 +1549,19 @@
 				return "";
 			return s.substring(i+1);
 		}
-
+		
+		//https://stackoverflow.com/questions/736513/how-do-i-parse-a-url-into-hostname-and-path-in-javascript
+		function transformStringIntoLocation(href) {
+			var location = document.createElement("a");
+			location.href = href;
+			// IE doesn't populate all link properties when setting .href with a relative URL,
+  			// however .href will return an absolute URL which then can be used on itself
+  			// to populate these additional fields.
+			if (location.host == "") {
+				location.href = location.href;
+  			}
+			return location;
+		}
 
 		//Returns the id of the selected resource in the last part of the path. So extracts in the "entities(id)" extracts the id
 		function getSTAURLSelectingARow(url)
@@ -1889,9 +1960,9 @@
 		}
 
 		function simplifyOGCAPICollections(collections){
-			var simpleCollecs=[];
-			for (var i=0; i<collections.length; i++) {
-				var collection=collections[i];
+			var simpleCollecs=[], len=collections.length ? collections.length : 1;
+			for (var i=0; i<len; i++) {
+				var collection=collections.length ? collections[i] : collections;
 				simpleCollecs.push({id: collection?.id,
 						title: collection?.title,
 						link: getLinkRelInLinks(collection?.links, "self", "application/json"),
@@ -2134,14 +2205,22 @@
 		}
 
 		//https://web.dev/fetch-api-error-handling/
-		//Despite its name it can also be used for retrieving non-json files (data as text in value.text).
-		//To do GET it can be used with the first parameter only 
-		async function HTTPJSONData(url, headersToGet, method, objToSend) {
+		//Despite the name of the function, it can also be used for retrieving non-json files.
+		//In fact, the response is an object with the following members: obj (only if the response is application/json), text: (only if the response is not application/json), responseHeaders: (only the ones listed in headersToGet), ok (always true);
+		//To do GET it can be used with the first parameter only or with method=null.
+		//It requests JSON content in 'Accept' by default. If you use headersToSend to specify headers then there is no default 'Accept' and you may specify it.
+		//objToSend is a JavaScript object that will be stringify into JSON text and send as the body of the HTTP request.
+		//headersToGet is an array of header names that will be part of the response.
+		async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend) {
 			var response, jsonData, options={};
 			try {
 				if (method)
 					options.method=method;
-				options.headers={'Accept': 'application/json, */*;q=0.8'};
+				
+				if (headersToSend)
+					options.headers=headersToSend;
+				else
+					options.headers={'Accept': 'application/json, */*;q=0.8'};
 
 				AddHeadersIfNeeded(options);
 				if (objToSend)
@@ -2180,7 +2259,7 @@
 				}
 				if (removeParamContentType(response.headers.get('Content-Type'))=="application/json" &&
 					(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0))
-					return {obj: await response.json(), responseHeaders: headersObj, ok: true};
+					return {obj: await response.json(), text: null, responseHeaders: headersObj, ok: true};
 				else
 					return {obj: null, text: await response.text(), responseHeaders: headersObj, ok: true};
 			} catch (error) {
@@ -2237,6 +2316,7 @@
 			}
 		}
 
+
 		function updateQueryAndTableArea(node) {
 			var nodeId = network.getSelectedNodes();
 			for (var i=0; i<nodeId.length; i++) {
@@ -2253,7 +2333,7 @@
 				var url_fetch;
 				if (url)
 					url_fetch=url;
-				else if (typeof node.STAExpectedLength==="undefined")
+				else if (typeof node.STAExpectedLength==="undefined" || node?.OGCType == "OGCAPIcollection")
 					url_fetch=node.STAURL;
 				else
 					url_fetch=AddQueryParamsToURL(node.STAURL, ((node.OGCType == "OGCAPIcollections" || node.OGCType == "OGCAPIitems") ? "limit=" : ((node.OGCType == "GUF") ? "COUNT=" : "$top=")) + node.STAExpectedLength);
@@ -2304,6 +2384,8 @@
 			if (url && typeof node.STAExpectedLength!=="undefined") {
 				if (node.OGCType=="OGCAPIcollections")
 					node.STAdata = node.STAdata.concat(simplifyOGCAPICollections(jsonData.collections));
+				if (node.OGCType=="OGCAPIcollection")
+					node.STAdata = node.STAdata.concat(simplifyOGCAPICollections(jsonData));
 				else if (node.OGCType=="OGCAPIitems")
 					node.STAdata = node.STAdata.concat(TransformGeoJSONToTable(jsonData));
 				else if (node.OGCType=="OGCCSW")
@@ -2320,12 +2402,15 @@
 				if (node.OGCType=="OGCAPIcollections") {
 					node.STAdata = (typeof jsonData.collections!=="undefined") ? simplifyOGCAPICollections(jsonData.collections) : [jsonData];
 					nextLink = getLinkRelInLinks(jsonData["links"], "next", "application/json");
+				} else if(node.OGCType=="OGCAPIcollection") {
+					node.STAdata = simplifyOGCAPICollections(jsonData);
+					//nextLink: This should be one object without "next".
 				} else if (node.OGCType=="OGCAPIitems") {
 					node.STAdata = (jsonData.type=="FeatureCollection") ? TransformGeoJSONToTable(jsonData) : [jsonData];
 					nextLink = getLinkRelInLinks(jsonData["links"], "next", "application/geo+json");
 				} else if(node.OGCType=="OGCAPIitem") {
 					node.STAdata = (jsonData.type=="FeatureCollection") ? TransformGeoJSONToTable(jsonData) : [jsonData];
-					//nextLink?
+					//nextLink: This should be one object without "next".
 				} else if (node.OGCType=="OGCCSW") {
 					node.STAdata = getSimplifyOGCCSWRecord(jsonData['csw:GetRecordsResponse']['csw:SearchResults']['gmd:MD_Metadata']);
 				} else if (node.OGCType=="GUF") {
@@ -2596,7 +2681,21 @@
 		}
 
 		function ReadURLImportCSV() {
-			HTTPJSONData(document.getElementById("DialogImportCSVSourceURLInput").value).then(
+			var locationSTAURL;
+			var parentNode=GetFirstParentNode(currentNode);
+			currentNode.STAURL = document.getElementById("DialogImportCSVSourceURLInput").value;
+			if (parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL) {
+				currentNode.STAAccessKey = parentNode.STAAccessKey;
+				currentNode.STASecretKey = parentNode.STASecretKey;
+				currentNode.STAS3Service = parentNode.STAS3Service;
+				locationSTAURL=transformStringIntoLocation(currentNode.STAURL);
+			} else {
+				currentNode.STAAccessKey = null;
+				currentNode.STASecretKey = null;
+				currentNode.STAS3Service = null;
+				locationSTAURL=null;
+			}
+			HTTPJSONData(currentNode.STAURL, null, null, null, locationSTAURL ? getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAAccessKey, currentNode.STASecretKey, currentNode.STAS3Service, "us-east-1") : null).then(
 						function(value) { 
 							showInfoMessage('Download CSV completed.'); 
 							TransformTextCSVToTable(value.text, document.getElementById("DialogImportCSVSourceURLInput").value);
@@ -2845,7 +2944,8 @@
 			document.getElementById("DialogSTAURL").close(document.getElementById("DialogSTAURLInput").value);
 			
 			if ((currentNode.image == "sta.png" && currentNode.STAURL == document.getElementById("DialogSTAURLInput").value) ||
-				(currentNode.image == "ogcAPIs.png" && currentNode.STAURL == document.getElementById("DialogSTAURLInput").value+"/collections") ||
+				(currentNode.image == "ogcAPICols.png" && currentNode.STAURL == document.getElementById("DialogSTAURLInput").value+"/collections") ||
+				(currentNode.image == "ogcAPIItems.png" && currentNode.STAURL == document.getElementById("DialogSTAURLInput").value) ||
 				(currentNode.image == "csw.png" && currentNode.STAURL == document.getElementById("DialogSTAURLInput").value+"?REQUEST=GetRecords&SERVICE=CSW&version=2.0.2&resultType=results&elementSetName=full&typeNames=gmd:MD_Metadata&namespace=xmlns(gmd=http://www.isotc211.org/2005/gmd)&outputSchema=http://www.isotc211.org/2005/gmd&maxRecords=100"))
 				return;
 			var previousSTAURL = currentNode.STAURL;
@@ -2854,9 +2954,13 @@
 				currentNode.STAURL.charAt(currentNode.STAURL.length - 1) == '?')
 				currentNode.STAURL = currentNode.STAURL.slice(0, -1);  //remove last character
 
-			if (currentNode.image == "ogcAPIs.png") {
+			if (currentNode.image == "ogcAPICols.png") {
 				currentNode.STAURL += "/collections";
 				currentNode.OGCType = "OGCAPIcollections";
+				askForConformanceInOGCAPIFeatures();//OCGAPICconformance
+			} else if (currentNode.image == "ogcAPIItems.png") {
+				//currentNode.STAURL += "/items";
+				currentNode.OGCType = "OGCAPIitems";
 				askForConformanceInOGCAPIFeatures();//OCGAPICconformance
 			} else if (currentNode.image == "csw.png") {
 				currentNode.STAURL += "?REQUEST=GetRecords&SERVICE=CSW&version=2.0.2&resultType=results&elementSetName=full&typeNames=gmd:MD_Metadata&namespace=xmlns(gmd=http://www.isotc211.org/2005/gmd)&outputSchema=http://www.isotc211.org/2005/gmd&maxRecords=100";
@@ -2871,9 +2975,114 @@
 			LoadJSONNodeSTAData(currentNode);
 		}
 
+		function TransformS3ServiceResponseToDataAttributes(node, text) {
+			if (node.OGCType == "S3Buckets")
+				node.STAdata=ParseS3BucketsList(node.STAURL, text);
+			else
+				node.STAdata=ParseS3Bucket(node.STAURL, text);
+			networkNodes.update(node);
+			updateQueryAndTableArea(node);
+			UpdateChildenTable(node);
+		}
+
+		function GetDialogS3BucketEvent(event) {
+			event.preventDefault(); // We don't want to submit this form
+			document.getElementById("DialogS3Bucket").close(document.getElementById("DialogS3BucketURL").value);
+
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode && parentNode.OGCType=="S3Buckets")
+				currentNode.OGCType = "S3Bucket";
+			else
+				currentNode.OGCType = "S3Buckets";
+			
+			var previousSTAURL = currentNode.STAURL;
+			currentNode.STAURL = document.getElementById("DialogS3BucketURL").value;
+			currentNode.STAAccessKey = document.getElementById("DialogS3BucketAccessKey").value;
+			currentNode.STASecretKey = document.getElementById("DialogS3BucketSecretKey").value;
+			currentNode.STAS3Service = document.getElementById("DialogS3BucketS3Service").value;
+			networkNodes.update(currentNode);
+
+			//if childen nodes have also STAURL
+			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+			var locationSTAURL=transformStringIntoLocation(currentNode.STAURL);
+			HTTPJSONData(currentNode.STAURL, null, null, null, getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAAccessKey, currentNode.STASecretKey, currentNode.STAS3Service, "us-east-1")).then(
+						function(value) {
+							if (currentNode.OGCType == "S3Buckets")
+								showInfoMessage('S3 Service bucket list request completed.'); 
+							else
+								showInfoMessage('S3 Bucket content request completed.'); 
+							TransformS3ServiceResponseToDataAttributes(currentNode, value.text);
+						},
+						function(error) { 
+							showInfoMessage('Error in requesting S3 Bucket root folder. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+							console.log(error) ;
+						}
+					);	
+		}
+
+		function TransformEDCCatalogueResponseToDataAttributes(node, obj) {
+			node.STAdata=ParseEDCCatalog(obj);
+			networkNodes.update(node);
+			updateQueryAndTableArea(node);
+			UpdateChildenTable(node);
+		}
+
+		function GetDialogEDCEvent(event) {
+			event.preventDefault(); // We don't want to submit this form
+			document.getElementById("DialogEDC").close(document.getElementById("DialogEDCURL").value);
+
+			var previousSTAURL = currentNode.STAURL;
+			currentNode.STAURL = document.getElementById("DialogEDCURL").value;
+			currentNode.STACounterPartyAddress = document.getElementById("DialogEDCCounterPartyAddress").value;
+			networkNodes.update(currentNode);
+
+			//if childen nodes have also STAURL
+			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+			var obj={
+				"@context": {
+					"@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+				},
+				"@type": "CatalogRequest",
+				"protocol": "dataspace-protocol-http",
+				"counterPartyAddress": "https://connector-pscn.mlops.ari-aidata.eu/protocol",
+				"querySpec": {
+					"@type": "QuerySpec",
+					"offset": 0,
+					"limit": 1000
+				}
+			};
+			if (document.getElementById("DialogEDCounterPartyAddress"))
+				obj.counterPartyAddress=document.getElementById("DialogEDCounterPartyAddress").value;
+
+			HTTPJSONData(document.getElementById("DialogEDCURL").value, null, "POST", obj).then(
+						function(value) { 
+							showInfoMessage('EDC catalogue request completed.'); 
+							TransformEDCCatalogueResponseToDataAttributes(currentNode, value.obj);
+						},
+						function(error) { 
+							showInfoMessage('Error in requesting EDC catalogue. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+							console.log(error) ;
+						}
+					);	
+		}
+
 		function PopulateInputFromSelect(event, idPrefix) {
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById(idPrefix+"Input").value=document.getElementById(idPrefix+"Select").value;
+			if (document.getElementById(idPrefix))
+				document.getElementById(idPrefix).click();
+		}
+
+		function PopulateURLSecurityFromSelect(event, idPrefix) {
+			event.preventDefault(); // We don't want to submit this form
+			var obj=JSON.parse(document.getElementById(idPrefix+"Select").value);
+			document.getElementById(idPrefix+"URL").value=obj.url;
+			const objArray = Object.keys(obj);
+			for (var i=0; i<objArray.length; i++) {
+				if (objArray[i]=="desc" || objArray[i]=="url")
+					continue;
+				document.getElementById(idPrefix+objArray[i].substring(0,1).toUpperCase()+objArray[i].substring(1)).value=obj[objArray[i]];
+			}
 			if (document.getElementById(idPrefix))
 				document.getElementById(idPrefix).click();
 		}
@@ -2888,6 +3097,21 @@
 					stas=suggestedURLs[g].STAs;
 					for (var i=0; i<stas.length; i++)
 						cdns.push('<option value="', stas[i].url, '">', stas[i].desc, '</option>');
+				}
+			}
+			return cdns.join("");  
+		}
+
+		function GetOptionsObjectSelectDialog(suggestedURLs) {
+			var cdns=[], stas;
+			if (suggestedURLs)
+			{
+				cdns.push('<option value="">-- Select one option below --</option>');
+				for (var g=0; g<suggestedURLs.length; g++) {
+					cdns.push('<optgroup label="', suggestedURLs[g].group, '">');
+					stas=suggestedURLs[g].URLs;
+					for (var i=0; i<stas.length; i++)
+						cdns.push("<option value='", JSON.stringify(stas[i], ""), "'>", stas[i].desc, "</option>");
 				}
 			}
 			return cdns.join("");  
@@ -4692,7 +4916,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				if (parentNode.STAURL)
 					currentNode.STAURL = parentNode.STAURL;
 				if (parentNode.OGCType=="OGCAPIcollections")
-					currentNode.OGCType = "OGCAPIitems";
+					currentNode.OGCType = "OGCAPIcollection";
+				if (parentNode.OGCType=="S3Buckets" || parentNode.OGCType=="S3Bucket") {
+					currentNode.OGCType = parentNode.OGCType;
+					currentNode.STAAccessKey = parentNode.STAAccessKey;
+					currentNode.STASecretKey = parentNode.STASecretKey;
+					currentNode.STAS3Service = parentNode.STAS3Service;
+				}
 			}
 			else
 				return;
@@ -4702,15 +4932,17 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				if (elems[i].checked)
 					break;
 			}
-			var requiresLoadJSON=currentNode.STAURL && (!parentNode || parentNode.OGCType!="OGCCSW");
+			var requiresLoadJSON=currentNode.STAURL && (!parentNode || (parentNode.OGCType!="OGCCSW" && parentNode.OGCType!="S3Buckets" && parentNode.OGCType!="S3Bucket"));
 			if (i < elems.length) {
 				if (requiresLoadJSON) {
 					const s = elems[i].id.substring("SelectRow_".length);
 					currentNode.STAURLIdSelected=s;
 
-					if (currentNode?.OGCType=="OGCAPIitems")
-						currentNode.STAURL = parentNode.STAdata ? (parentNode.STAdata[i].link ? getURLWithoutQueryParams(parentNode.STAdata[i].link) : currentNode.STAURL+"/"+parentNode.STAdata[i].id) + "/items"  : parentNode.STAURL;
-					else {					
+					//if (currentNode?.OGCType=="OGCAPIitems")
+					//	currentNode.STAURL = parentNode.STAdata ? (parentNode.STAdata[i].link ? getURLWithoutQueryParams(parentNode.STAdata[i].link) : currentNode.STAURL+"/"+parentNode.STAdata[i].id) + "/items"  : parentNode.STAURL;
+					if (parentNode?.OGCType=="OGCAPIcollections"){
+						currentNode.STAURL = RemoveQueryParamFromURL(parentNode.STAdata[s].link, "f");
+					} else {
 						const n = Number(s);
 						currentNode.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(currentNode.STAURL) + (Number.isInteger(n) ? "(" + n + ")" : "('" + s + "')"), getURLQueryParams(currentNode.STAURL));
 					}
@@ -4726,8 +4958,8 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			if (requiresLoadJSON){
 				// currentNode.STAExpectedLength = parentNode.STAExpectedLength;
 				currentNode.STAExpectedLength = document.getElementById("SelectNumberOfRecordsSelectRow").value;				
-				if (currentNode.OGCType=="OGCAPIitems")
-					askForCollectionQueryables();
+				//if (currentNode.OGCType=="OGCAPIitems")
+				//	askForCollectionQueryables();
 			}
 			else
 				currentNode.STAURL = null;
@@ -4799,10 +5031,9 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				LoadJSONNodeSTAData(currentNode);
 				networkNodes.update(currentNode);
 				UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousURL);
-
 			}
-
 		}
+
 		function GetFilterRows(event) {
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogFilterRows").close();
@@ -5769,7 +6000,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		// params.nameInLegend
 		// params.showValue
 		// params.showType
-		function GetHTMLVariableDefUoM(suffix, params, attibute) {
+		function GetHTMLVariableDefUoM(suffix, params) {
 			var cdns=[];
 			cdns.push('<fieldset>');
 			if (params.nameInLegend)
@@ -5782,8 +6013,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					'		</label>',
 					'	<br>');
 			if (params.showPredefOptions)
-				cdns.push('<label>Field name: <input id="DialogMeaningVariableName'+suffix+'" value="'+attibute+'"></label><br>',
-				'<label>Predefined options:',
+				cdns.push('	<label>Predefined options:',
 					'		<span id="DialogMeaningVariableDropDown' + suffix + '"></span>',
 					'		</label>',
 					'	<br>');
@@ -5908,7 +6138,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 
 			document.getElementById("DialogMeaningFields").innerHTML="";
 			for (var i = 0; i < dataAttributesArray.length; i++) {
-				document.getElementById("DialogMeaningFields").innerHTML+=GetHTMLVariableDefUoM("_" + i, {nameInLegend: true, showValue: false, showType: true, showPredefOptions:true},dataAttributesArray[i] );
+				document.getElementById("DialogMeaningFields").innerHTML+=GetHTMLVariableDefUoM("_" + i, {nameInLegend: true, showValue: false, showType: true, showPredefOptions:true});
 				document.getElementById("DialogSaveLayerVariable_"+i).innerHTML="Field "+(i+1)+ ": " + dataAttributesArray[i];
 
 				cdns=[];
@@ -6333,34 +6563,34 @@ async function requestAndRefreshCountResults(currentNode, period) {
 		function ProcessMessageFromMiraMonMapBrowser(event)
 		{
 			if (MiraMonMapBrowserVars.mmnURL)  //Tapis has open MMN and is getting feedback
+		{
+			if (!IsTrustedMiraMonMapBrowser(event, MiraMonMapBrowserVars.mmnURL))
+				return;
+
+			try
 			{
-				if (!IsTrustedMiraMonMapBrowser(event, MiraMonMapBrowserVars.mmnURL))
-					return;
+				var data=JSON.parse(event.data);
+			}
+			catch (e) 
+			{
+				showInfoMessage("JSON message parse error: " + e + " The response was:\n" + event.data);
+				return;
+			}
 
-				try
-				{
-					var data=JSON.parse(event.data);
-				}
-				catch (e) 
-				{
-					showInfoMessage("JSON message parse error: " + e + " The response was:\n" + event.data);
-					return;
-				}
+			if (data.msg === MMN_PM_IsListening)
+			{
+				showInfoMessage("MiraMon Map Browser is open and ready to show layers.");
+				DisplayMapMMN();
+				return;
+			}
 
-				if (data.msg === MMN_PM_IsListening)
-				{
-					showInfoMessage("MiraMon Map Browser is open and ready to show layers.");
-					DisplayMapMMN();
-					return;
-				}
-
-				if (data.msg === MMN_PM_Closed)
-				{
-					showInfoMessage("MiraMon Map Browser has been closed.");
-					MiraMonMapBrowserVars.mmn=null;
-					MiraMonMapBrowserVars.mmnURL=null;
-					return;
-				}
+			if (data.msg === MMN_PM_Closed)
+			{
+				showInfoMessage("MiraMon Map Browser has been closed.");
+				MiraMonMapBrowserVars.mmn=null;
+				MiraMonMapBrowserVars.mmnURL=null;
+				return;
+			}
 				return;
 			}
 			try
@@ -6749,11 +6979,24 @@ async function requestAndRefreshCountResults(currentNode, period) {
 					}
 					document.getElementById("DialogSTAURL").showModal();
 				}
-				else if (currentNode.image == "ogcAPIs.png") {
+				else if (currentNode.image == "ogcAPICols.png") {
 					document.getElementById("divTitleDialogSTAURL").innerHTML = "OGC API collections";
 					if (currentNode.STAURL)
 						document.getElementById("DialogSTAURLInput").value = currentNode.STAURL;
 					document.getElementById("DialogSTAURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedOGCAPIurls);
+					document.getElementById("DialogSTAURL").showModal();
+				}
+				else if (currentNode.image == "ogcAPIItems.png") {
+					document.getElementById("divTitleDialogSTAURL").innerHTML = "OGC API items";
+					if (currentNode.STAURL)
+						document.getElementById("DialogSTAURLInput").value = currentNode.STAURL;
+					else
+					{
+						var parentNode=GetFirstParentNode(currentNode);
+						if (parentNode) 
+							document.getElementById("DialogSTAURLInput").value = AddQueryParamsToURL(getURLWithoutQueryParams(parentNode.STAURL) + "/items", getURLQueryParams(parentNode.STAURL));
+					}
+					//document.getElementById("DialogSTAURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedOGCAPIurls);
 					document.getElementById("DialogSTAURL").showModal();
 				}
 				else if (currentNode.image == "csw.png") {
@@ -6762,6 +7005,37 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						document.getElementById("DialogSTAURLInput").value = currentNode.STAURL;
 					document.getElementById("DialogSTAURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedCatalogues);
 					document.getElementById("DialogSTAURL").showModal();
+				}
+				else if (currentNode.image == "s3Service.png") {
+					document.getElementById("divTitleDialogS3Bucket").innerHTML = "S3 Service";
+					if (currentNode.STAURL)
+						document.getElementById("DialogS3BucketURL").value = currentNode.STAURL;
+					document.getElementById("DialogS3BucketSelect").innerHTML = GetOptionsObjectSelectDialog(config.suggestedS3Buckets);
+					document.getElementById("DialogS3Bucket").showModal();
+				}
+				else if (currentNode.image == "s3Bucket.png") {
+					document.getElementById("divTitleDialogS3Bucket").innerHTML = "S3 Bucket";
+					if (currentNode.STAURL)
+						document.getElementById("DialogS3BucketURL").value = currentNode.STAURL;
+					else
+					{
+						var parentNode=GetFirstParentNode(currentNode);
+						if (parentNode && parentNode.OGCType=="S3Buckets" && parentNode.STAdata && parentNode.STAdata[0] && parentNode.STAdata[0].href) {
+							document.getElementById("DialogS3BucketURL").value = parentNode.STAdata[0].href;
+							document.getElementById("DialogS3BucketAccessKey").value = parentNode.STAAccessKey;
+							document.getElementById("DialogS3BucketSecretKey").value = parentNode.STASecretKey
+							document.getElementById("DialogS3BucketS3Service").value = parentNode.STAS3Service
+						}
+					}
+					document.getElementById("DialogS3BucketSelect").innerHTML = GetOptionsObjectSelectDialog(config.suggestedS3Buckets);
+					document.getElementById("DialogS3Bucket").showModal();
+				}
+				else if (currentNode.image == "edc.png") {
+					document.getElementById("divTitleDialogEDC").innerHTML = "Eclipse DataSpace Connector";
+					if (currentNode.STAURL)
+						document.getElementById("DialogEDCURL").value = currentNode.STAURL;
+					document.getElementById("DialogEDCSelect").innerHTML = GetOptionsObjectSelectDialog(config.suggestedEDCs);
+					document.getElementById("DialogEDC").showModal();
 				}
 				else if (currentNode.image == "ViewQuerySTA.png") {
 					var parentNode=GetFirstParentNode(currentNode);
@@ -6786,12 +7060,13 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							alert("Parent node has more than one row. Please select on row first. It will be ignored.");
 						else {
 							var record=data[0];
-							if (!record.dataURL)
-								alert("Parent node has no dataURL column. It will be ignored.");
+							var href=record.dataURL ? record.dataURL : record.href;
+							if (!href)
+								alert("Parent node has no 'dataURL' or 'href' column. It will be ignored.");
 							else {
 								document.getElementById("DialogImportCSVSourceFile").checked=false;
 								document.getElementById("DialogImportCSVSourceURL").checked=true;
-								document.getElementById("DialogImportCSVSourceURLInput").value=record.dataURL;
+								document.getElementById("DialogImportCSVSourceURLInput").value=href;
 								document.getElementById("DialogImportCSVSourceURLButton").disabled=false;
 								
 								if (record.schemaURL)
@@ -6982,9 +7257,9 @@ async function requestAndRefreshCountResults(currentNode, period) {
 						if (parentNode.STAOGCAPIqueryable){
 							currentNode.STAOGCAPIqueryable=parentNode.STAOGCAPIqueryable;
 						}
-						if (parentNode.OGCType){
+						/*if (parentNode.OGCType){
 							currentNode.OGCType="OGCAPIitem";
-						}
+						}*/
 						ShowTableFilterRowsDialog(parentNode, currentNode);
 						document.getElementById("DialogFilterRows").showModal();
 					}
@@ -7117,7 +7392,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 							document.getElementById("DialogCreateUpdateDeleteRecord").showModal();
 					}
 				}
-
 			}
 		}
 
@@ -7234,7 +7508,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			var newId = (Math.random() * 1e7).toString(32);
 			var node = { id: newId, label: label, image: image, shape: "circularImage" };
 
-			if (image == "sta.png" || image == "ogcAPIs.png")
+			if (image == "sta.png" || image == "ogcAPICols.png" || image == "ogcAPIItems.png")
 				node.STAExpectedLength = 100;
 
 			if (!startingNodeContextId)

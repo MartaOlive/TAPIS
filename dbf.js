@@ -80,7 +80,7 @@ function ParseDBF(buffer) {
 			c=dataView.getUint8(offset+j);
 			if (c==0) 
 				break;
-			attribute.name+=String.fromCharCode(c);
+			attribute.name+=String.fromCharCode(dbf.characterEncoding==0x14 ? oemToAnsi(c): c);
 		}
 		attribute.datatype=String.fromCharCode(dataView.getUint8(offset+11));
 		attribute.length=(dbf.isMMExtended && attribute.datatype=='C' && dataView.getUint8(offset+16)==0) ? dataView.getUint32(offset+21,littleEnddian) : dataView.getUint8(offset+16);
@@ -94,7 +94,7 @@ function ParseDBF(buffer) {
 					c=dataView.getUint8(offsetLongName+j);
 					if (c==0)
 						break;
-					attribute.longName+=String.fromCharCode(c);
+					attribute.longName+=String.fromCharCode(dbf.characterEncoding==0x14 ? oemToAnsi(c): c);
 				}
 			}
 		}
@@ -113,7 +113,6 @@ function ParseDBF(buffer) {
 			attribute=dbf.attributes[i];
 			s="";
 			switch (attribute.datatype) {
-				case 'C':
 				case 'N':
 				case 'F':
 				case 'D':
@@ -122,6 +121,14 @@ function ParseDBF(buffer) {
 						if (c==0)
 							break;
 						s+=String.fromCharCode(c);
+					}
+					break;
+				case 'C':
+					for (var j=0; j<attribute.length; j++) {
+						c=dataView.getUint8(offset+attribute.offsetInRecord+j);
+						if (c==0)
+							break;
+						s+=String.fromCharCode(dbf.characterEncoding==0x14 ? oemToAnsi(c): c);
 					}
 					break;
 			}

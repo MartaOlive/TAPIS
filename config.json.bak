@@ -150,37 +150,6 @@
 			}]
 		}
 	],
-	"suggestedS3Buckets": [
-		{
-			"group": "MinIO",
-			"URLs": [
-			{
-				"desc": "AD4GD MinIO",
-				"url": "https://minio-ad4gd-api.mlops.ari-aidata.eu",
-				"accessKey": "Ij3X86wXIhSBtDarOgOg",
-				"secretKey": "QrfVQPA4ZYOLQHhexArtAeOqq1jQtlRU4jN5h3us",
-				"s3Service": "s3" 
-			},
-			{
-				"desc": "AD4GD MinIO Cluster",
-				"url": "https://minio-ad4gd-api.dashboard-siba.store",
-				"accessKey": "84nR9Nw0l45JlRcfCjnU",
-				"secretKey": "ty19CeQRYgcJFYYus314sGQkXwtGB6bAyTLGtKNm",
-				"s3Service": "s3" 
-			}]
-		}
-	],
-	"suggestedEDCs": [
-		{
-			"group": "AD4GD",
-			"URLs": [
-			{
-				"desc": "AD4GD EDC PSNC",
-				"url": "https://connector-pscn.mlops.ari-aidata.eu/management/v2/catalog/request",
-				"counterPartyAddress": "https://connector-pscn.mlops.ari-aidata.eu/protocol"
-			}]
-		}
-	],
 	"suggestedCSVurls": [
 		{
 			"group": "Testing Examples",
