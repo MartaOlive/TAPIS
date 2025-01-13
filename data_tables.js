@@ -590,13 +590,15 @@ var r_max,r_min, n=values.length;
 /*function aggrFuncProportionDefined(values){
 }*/
 
-function GroupRecordsData(dataSorted, i_ini, i_end, dataAttributesArray, groupByParams) {
+function GroupRecordsData(dataSorted, i_ini, i_end, dataAttributesArray, groupByParams, date) {
 	var record={}, recordSorted=dataSorted[i_ini], aggrFuncName, valuesString=null, values=null, r, countDefined=-1;
 	//Populate groupByAttr
+	if (date) groupByParams.groupByAttr.push(groupByParams.groupByDate[1]) //Add date attribute
 	for (var j=0; j<dataAttributesArray.length; j++) {
 		if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1)
 			record[dataAttributesArray[j]]=recordSorted[dataAttributesArray[j]];
 	}
+	
 	for (var j=0; j<dataAttributesArray.length; j++) {
 		if (groupByParams.aggregationAttr[dataAttributesArray[j]]) {
 			for (var k=0; k<groupByParams.aggregationAttr[dataAttributesArray[j]].length; k++) {
@@ -697,25 +699,35 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 		if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1)
 			dataCurrentAttributes[dataAttributesArray[j]]=deapCopy(dataAttributes[dataAttributesArray[j]]);  //list of attributes to groupBy 
 	}
-	//Different Dates with atribute.. each attribute with their dates
-	//Create array with sorted and aggregated dates
-	var dates=prepareSTAdataToAggregateDataByChosenPeriodFunction(data, [groupByParams.groupByDate[1]]);
-	dates= sortDates(dates);
-	var datesGrouped= AggregateDataByChosenPeriod(dates, groupByParams.groupByDate[0].toLowerCase()); //Result: ["short data", ["empty"]]
-	console.log(datesGrouped);
-	
+	if (groupByParams.groupByDate.length!=0)dataCurrentAttributes[groupByParams.groupByDate[1]]=deapCopy(dataAttributes[groupByParams.groupByDate[1]]); //Date attribute
 
-	////////!!!!!!!!!!!!!!!!!!!!!!!!
+	if(groupByParams.groupByDate.length!=0){
+		var x;
+		switch (groupByParams.groupByDate[0].toLowerCase()){
+			case "year": 
+				x=4;
+			break;
+			case "month": 
+				x=7;
+			break;
+			case "day": 
+				x=10;
+			break;
+			case "hour": 
+				x=13;
+			break;
+			case "minute": 
+				x=16;
+			break;
+		}
+	}
+
 	for (var j=0; j<dataAttributesArray.length; j++) { //createColumnsNames
 		if (groupByParams.aggregationAttr[dataAttributesArray[j]]) {
 			for (var k=0; k<groupByParams.aggregationAttr[dataAttributesArray[j]].length; k++) {
-				s=dataAttributesArray[j]+"_"+groupByParams.aggregationAttr[dataAttributesArray[j]][k];
-				/*for(var e=0;e<arrayWithDates;e++){
-				s+="_"+arrayWithDates[e]
-				}*/
+				s=dataAttributesArray[j]+"_"+groupByParams.aggregationAttr[dataAttributesArray[j]][k]; //create column Name
 				dataCurrentAttributes[s]=deapCopy(dataAttributes[dataAttributesArray[j]]);
 				//Modify the Attribute description accordingly. 
-				//Add DATESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS (already created)
 			}
 		}
 	}
@@ -723,7 +735,7 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 	//Duplicate the table. Any field that is not grouping of aggregating is removed at this stage
 	var dataSorted=[], recordSorted;
 	//Add a data index column to ensure that the order of the groups is not altered
-	for (var i=0; i<data.length; i++) { //prepareSTAdataToAggregateDataByChosenPeriodFunction(data, properties) AQUESTA FORMULA RETORNA L'ARRAY D'OBJECTES NOMES AMB LE SPROPIETATS QUE T'INTERESSA
+	for (var i=0; i<data.length; i++) { 
 		record=data[i];
 		recordSorted={};
 		for (var j=0; j<dataAttributesArray.length; j++) {
@@ -734,28 +746,28 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 			if (groupByParams.aggregationAttr[dataAttributesArray[j]])
 				recordSorted[dataAttributesArray[j]]=record[dataAttributesArray[j]];
 
-			//GUARDAT TMB EL ATTR QUE ES FARÀ SERVIR PER LA DATA (GROUPbYdAY [1], EL SEGON DE L'ARRAY, EL PRIMER ES EL VALOR PEL QUAL ES VOL AGRUPAR. ANY, MES..)
-
-			
+			if (groupByParams.groupByDate[1]) //Column for date
+				recordSorted[groupByParams.groupByDate[1]]=record[groupByParams.groupByDate[1]].substr(0,x); //part of the date to group
 
 		}
 		recordSorted["$$order$$"]=i;
 		dataSorted.push(recordSorted);
 	}
 
-	//Sort the data by groupByAttr
-	var sortRecords=function (a, b) {
-		for (var j=0; j<groupByParams.groupByAttr.length; j++) {
-			//groupByDate: TBD
-			if (a[groupByParams.groupByAttr[j]]<b[groupByParams.groupByAttr[j]])
+	//Sort the data by groupByAttr 
+	var arrayToSort= groupByParams.groupByAttr.concat(groupByParams.groupByDate[1])
+	var sortRecords=function (a, b) {  
+		for (var j=0; j<arrayToSort.length; j++) {
+			
+			if (a[arrayToSort[j]]<b[arrayToSort[j]])
 				return -1;
-			if (a[groupByParams.groupByAttr[j]]>b[groupByParams.groupByAttr[j]])
+			if (a[arrayToSort[j]]>b[arrayToSort[j]])
 				return 1;
 		}
 		return 0;
 	}
 
-	dataSorted.sort(function (a, b) { //SI ESTÂ SELECCIONADA L'AGRUPACIO PER DATA , AQUI S'HAURIA D?ORDENAR PER DATA???
+	dataSorted.sort(function (a, b) { 
 		var r=sortRecords(a, b);
 		if (r!=0)
 			return r;
@@ -770,15 +782,13 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 	var dataCurrent=[], i_ini=0, iniRecord;
 	for (var i=1; i<dataSorted.length; i++) {
 		iniRecord=dataSorted[i_ini];
-		//Quan compara si es com l'anterior... -> mirar d'encaixar aqui les dates
-		//Que miri primer si està en la data i si ja no es aixi q no pugui comparar lo altre? q sigui la data de l'arrai de les agrupades.. mirar any si es lany, any i mes si es mes.. etc
-		if (0!=sortRecords(iniRecord, dataSorted[i])){ //quan canvia el valor del attr pel quan s'agrupen. Aqui tmb ha de mirar la data . Hauria de ser attr i data diferent de l'anterior
+		if (0!=sortRecords(iniRecord, dataSorted[i])){ 
 			//records i_ini to i-1 are grouped			
-			dataCurrent.push(GroupRecordsData(dataSorted, i_ini, i-1, dataAttributesArray, groupByParams));  //Add the record to the result
+			dataCurrent.push(GroupRecordsData(dataSorted, i_ini, i-1, dataAttributesArray, groupByParams,true));  //Add the record to the result
 			i_ini=i;
 		}
 	}
-	dataCurrent.push(GroupRecordsData(dataSorted, i_ini, i-1, dataAttributesArray, groupByParams));  //Add the record to the result
+	dataCurrent.push(GroupRecordsData(dataSorted, i_ini, i-1, dataAttributesArray, groupByParams,true));  //Add the record to the result
 	return dataCurrent;
 }
 

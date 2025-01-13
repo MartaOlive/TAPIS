@@ -1,13 +1,27 @@
 {
 	"nodes": [
 		{
-			"id": "2lle1.h1i7g9",
+			"id": "77nm4.c7vssh",
 			"label": "CSV",
 			"image": "ImportCSV.png",
 			"shape": "circularImage",
 			"STAdata": [
 				{
 					"dia": "2024-06-26T00:00:00.000",
+					"estaci": "Embassament de Sau (Vilanova de Sau)",
+					"nivell_absolut": 405.27,
+					"percentatge_volum_embassat": 44.5,
+					"volum_embassat": 73.46
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"estaci": "Embassament de Sau (Vilanova de Sau)",
+					"nivell_absolut": 405.27,
+					"percentatge_volum_embassat": 44.5,
+					"volum_embassat": 73.46
+				},
+				{
+					"dia": "2024-05-26T00:00:00.000",
 					"estaci": "Embassament de Sau (Vilanova de Sau)",
 					"nivell_absolut": 405.27,
 					"percentatge_volum_embassat": 44.5,
@@ -7007,22 +7021,22 @@
 					"volum_embassat": 1.99
 				}
 			],
-			"x": 52,
-			"y": -33
+			"x": -53,
+			"y": -17
 		},
 		{
-			"id": "57pmg.2idllr",
+			"id": "594v5.ntjcdh",
 			"label": "GroupBy",
 			"image": "GroupBy.png",
 			"shape": "circularImage",
-			"x": -52,
-			"y": 17
+			"x": 43,
+			"y": 35
 		}
 	],
 	"edges": [
 		{
-			"from": "2lle1.h1i7g9",
-			"to": "57pmg.2idllr",
+			"from": "77nm4.c7vssh",
+			"to": "594v5.ntjcdh",
 			"arrows": "from"
 		}
 	]
