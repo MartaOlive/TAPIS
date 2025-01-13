@@ -6609,7 +6609,6 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				alert("The format requets from an external source (" + data.type + ") is not implemented yet")
 				return;
 			}
-			alert(JSON.stringify(data.data));//QUÊ FER QUAN S'OBRE EN UN ALTRE LLOC: S'ha de carregar i obir l'esquema
 			createAndLoadImportGeoJSONNode(JSON.stringify(data.data),data.url)
 			return;
 			
