@@ -1,0 +1,14 @@
+{
+	"nodes": [
+		{
+			"id": "7oeh.cfrpv3p",
+			"label": "GeoJSON",
+			"image": "ImportGeoJSON.png",
+			"shape": "circularImage",
+			"STAdata": [],
+			"x": -62,
+			"y": -118
+		}
+	],
+	"edges": []
+}
