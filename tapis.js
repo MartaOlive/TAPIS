@@ -106,14 +106,14 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			CreateColumns:{description: "Create Columns", help: "To add a new column to your table. This column will be empty, filled with a constant value or with an autoincremental value"},
 			ColumnsCalculator:{description: "Columns calculator", help: "To add a new column to your table. This column will be filled with the result of the operation you create using the values of the other columns"},
 			ColumnStatistics:{description:"Columns statistics", help: "To create a table with main statistics of your data"},
-			SeparateColumns: {description: "Separate Columns", help: },
-			ScatterPlot: {description: "Scatter Plot", leafNode: true},
-			BarPlot: {description: "Bar Plot", leafNode: true},
-			ImageViewer: {description: "Image Viewer", leafNode: true},
-			SaveTable: {description: "Save Table", leafNode: true},
-			SaveLayer: {description: "Save Layer", leafNode: true},
+			SeparateColumns: {description: "Separate Columns", help:"To split JSON object from one column into different columns. This will add these new columns to your table" },
+			ScatterPlot: {description: "Scatter Plot", leafNode: true, help: "Create a scatter plot with your data"},
+			BarPlot: {description: "Bar Plot", leafNode: true, help: "Create a bar plot graph with your data"},
+			ImageViewer: {description: "Image Viewer", leafNode: true, help: "To see the picture if the data of the column is a url linked to pictures"},
+			SaveTable: {description: "Save Table", leafNode: true, help: "To save data that contains this node as a CSV or CSVW."},
+			SaveLayer: {description: "Save Layer", leafNode: true, help:"Save data as GeoJSON..."}, //són unes condiciosn tant específiques que no se com posar-ho
 			OpenMap: {description: "Open Map", leafNode: true},
-			guf: {description: "Feedback"}};
+			guf: {description: "Feedback", help: ""}};
 const TableOperationsArray = Object.keys(TableOperations);
 
 //If the two nodes cannot connect it returns null. It transforms a plural to singular if needed.

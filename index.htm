@@ -50,16 +50,16 @@
 			</td>
 			<td align="right" valign="top">
 				<span id="UserInfoText"></span>
-				<button id="buttonReloadSTA" onclick='reloadSTA(event);'><img src="reload.png" height="20" valign="middle"> Refresh</button>
-				<label class=labelbotton><img src="OpenNetwork.png" height="20" valign="middle"> Open
+				<button id="buttonReloadSTA" onclick='reloadSTA(event);'onmouseover='showHelpToolTip(event, "", "Reload all schema to upload the data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="reload.png" height="20" valign="middle"> Refresh</button>
+				<label class=labelbotton onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenNetwork.png" height="20" valign="middle" > Open
 				<input type="file" id="openNetworkFileName" hidden onchange='openFileNetwork(event);'/>
 				</label> <!-- https://dev.to/faddalibrahim/how-to-create-a-custom-file-upload-button-using-html-css-and-javascript-1c03 -->
-				<button onclick='document.getElementById("DialogOpenURLNetwork").showModal();'><img src="OpenURLNetwork.png" height="20" valign="middle"> Open URL</button>
-				<button onclick='saveNetwork(event);'><img src="SaveNetwork.png" height="20" valign="middle"> Save</button>
-				<button id="buttonOpenLogin" onclick='OpenLogin(event);'><img src="login.png" height="20" valign="middle"> Login</button>
-				<button id="buttonOpenLogout" onclick='OpenLogout(event);' style="display: none");'><img src="login.png" height="20" valign="middle"> Logout</button>
-				<button onclick='OpenConfiguration(event);'><img src="config.png" height="20" valign="middle">Configuration</button>
-				<button onclick='OpenHelp(event);'><img src="help.png" height="20" valign="middle">Help</button>
+				<button onclick='document.getElementById("DialogOpenURLNetwork").showModal();' onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data from a webside or from Help examples" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenURLNetwork.png" height="20" valign="middle"> Open URL</button>
+				<button onclick='saveNetwork(event);'onmouseover='showHelpToolTip(event, "", "Save your Tapis schema with nodes and data as a JSON to be able to open it later" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="SaveNetwork.png" height="20" valign="middle"> Save</button>
+				<button id="buttonOpenLogin" onclick='OpenLogin(event);' onmouseover='showHelpToolTip(event, "", "Login to be able to have access to certain places")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Login</button>
+				<button id="buttonOpenLogout" onclick='OpenLogout(event);' style="display: none");' onmouseover='showHelpToolTip(event, "", "Close your sesion")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Logout</button>
+				<button onclick='OpenConfiguration(event);'onmouseover='showHelpToolTip(event, "", "To modify display configurations")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )' ><img src="config.png" height="20" valign="middle">Configuration</button>
+				<button onclick='OpenHelp(event);' onmouseover='showHelpToolTip(event, "", "Explanations of how to use TAPIS and Examples")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="help.png" height="20" valign="middle">Help</button>
 				<br>
 				<span style="font-size: 10px;"><a href="TermsOfUse.htm">Terms of Use</a><br>
 					<a href="PrivacyStatement.htm">Privacy Statement</a><br>
