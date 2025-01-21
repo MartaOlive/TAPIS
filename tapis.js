@@ -7559,9 +7559,9 @@ function createAndLoadImportGeoJSONNode(data,url){
 	
 	TransformTextGeoJSONToTable(data);	
 }
-/*function giveMeNetworkInformation(event) {
+function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogSelectColumns").close();
 			console.log(networkNodes);
-}*/
+}

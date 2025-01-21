@@ -143,23 +143,29 @@
 
 					if (ScatterPlotGraph2d)
 						ScatterPlotGraph2d.destroy();
-					for (var i = 0; i < data.length; i++) {
-						record=data[i];
-						if (i==0){
-							minx=maxx=record[selectedOptions.AxisX];
-							miny=maxy=record[selectedOptions.AxisY];
-						} else {
-							if (minx>record[selectedOptions.AxisX])
-								minx=record[selectedOptions.AxisX];
-							if (maxx<record[selectedOptions.AxisX])
-								maxx=record[selectedOptions.AxisX];
-							if (miny>record[selectedOptions.AxisY])
-								miny=record[selectedOptions.AxisY];
-							if (maxy<record[selectedOptions.AxisY])
-								maxy=record[selectedOptions.AxisY];
+					//for (var e=0;e<x;e++){
+
+					
+						for (var i = 0; i < data.length; i++) {
+							record=data[i];
+							if (i==0){
+								minx=maxx=record[selectedOptions.AxisX];
+								miny=maxy=record[selectedOptions.AxisY];
+							} else {
+								if (minx>record[selectedOptions.AxisX])
+									minx=record[selectedOptions.AxisX];
+								if (maxx<record[selectedOptions.AxisX])
+									maxx=record[selectedOptions.AxisX];
+								if (miny>record[selectedOptions.AxisY])
+									miny=record[selectedOptions.AxisY];
+								if (maxy<record[selectedOptions.AxisY])
+									maxy=record[selectedOptions.AxisY];
+								//aixo xo cada linea es un group
+							}
+							items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: 0 /*group:e*/})
 						}
-						items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: 0})
-					}
+					//}
+					
 					var dataset = new vis.DataSet(items);
 					var groups = new vis.DataSet();
 					var options = {
