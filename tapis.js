@@ -7562,6 +7562,6 @@ function createAndLoadImportGeoJSONNode(data,url){
 function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogSelectColumns").close();
+			document.getElementById("DialogContextMenu").close();
 			console.log(networkNodes);
 }
