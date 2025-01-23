@@ -5888,11 +5888,11 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "ScatterPlot.png") {
 			var parentNodes=GetParentNodes(currentNode);
-			if (parentNodes && parentNodes[0]) {
-				if (parentNodes[0].STAdata)
-					ShowScatterPlotDialog(parentNodes);
+			// if (parentNodes && parentNodes[0]) {
+			// 	if (parentNodes[0].STAdata)
+					ShowScatterPlotDialog(parentNodes); //This will check if any parentNode hasn't got data. It is possible that some nodes linked has data but some not...
 				document.getElementById("DialogScatterPlot").showModal();
-			}
+			//}
 		}
 		else if (currentNode.image == "BarPlot.png") {
 			var parentNodes=GetParentNodes(currentNode);
@@ -6391,18 +6391,20 @@ function saveNetwork(event){
 	var pos=network.getPositions()
 	var posArray=Object.keys(pos);
 	var data={nodes:[], edges:[]};
+	data.nodes.push(...deapCopy(networkNodes.get()));
 	for (var i=0; i<posArray.length; i++)
 	{
-		data.nodes.push(deapCopy(networkNodes._data[posArray[i]]));
+		//data.nodes.push(deapCopy(networkNodes._data[posArray[i]]));
+		
 		data.nodes[i].x=pos[posArray[i]].x;
 		data.nodes[i].y=pos[posArray[i]].y;
 	}
-	var edgesArray=Object.keys(networkEdges._data);
+	var edgesArray=networkEdges.get();
 	for (var i=0; i<edgesArray.length; i++)
 	{
-		data.edges.push(deapCopy(networkEdges._data[edgesArray[i]]));
-		delete data.edges[i].id;
+		delete edgesArray[i].id;
 	}
+	data.edges.push(...deapCopy(edgesArray));
 	SaveLocalDataFile(JSON.stringify(data, null, "\t"), "network", ".json", "application/json");
 }
 
@@ -7563,5 +7565,5 @@ function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogContextMenu").close();
-			console.log(networkNodes);
+			console.log(networkNodes.get());
 }
