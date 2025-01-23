@@ -6391,11 +6391,9 @@ function saveNetwork(event){
 	var pos=network.getPositions()
 	var posArray=Object.keys(pos);
 	var data={nodes:[], edges:[]};
-	data.nodes.push(...deapCopy(networkNodes.get()));
+	data.nodes.push(...deapCopy(networkNodes.get())); //Hi ha  hagut canvis en el networNodes..per accedir als nodes es fa així, el ._data no conté res
 	for (var i=0; i<posArray.length; i++)
 	{
-		//data.nodes.push(deapCopy(networkNodes._data[posArray[i]]));
-		
 		data.nodes[i].x=pos[posArray[i]].x;
 		data.nodes[i].y=pos[posArray[i]].y;
 	}
