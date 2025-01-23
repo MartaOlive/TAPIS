@@ -6407,10 +6407,10 @@ function saveNetwork(event){
 }
 
 async function reloadSTA(event) {
-	var nodesArray=Object.keys(networkNodes._data);
+	var nodesArray=networkNodes.get();
 	for (var i=0; i<nodesArray.length; i++)
 	{
-		var node=networkNodes._data[nodesArray[i]];
+		var node=nodesArray[i];
 		if (node.image=="sta.png")
 		{
 			showInfoMessage("Reload STA home page and dependencies...");
