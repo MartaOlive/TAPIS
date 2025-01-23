@@ -49,10 +49,10 @@
 			console.log ("populate")
 			for (var i=0;i<parentNodes.length;i++){
 				
-				attributes= parentNodes[i].STAdataAttributes ? parentNodes[i].STAdataAttributes :  parentNodes[i].STAdata?getDataAttributes(parentNodes[i].STAdataAttributes):"";
+				attributes= parentNodes[i].STAdataAttributes ? parentNodes[i].STAdataAttributes :  parentNodes[i].STAdata?getDataAttributes(parentNodes[i].STAdata):"";
 				attributesKeys=Object.keys(attributes);
 				for (var e=0;e<attributesKeys.length;e++){
-					if (!attributesKeys[e].includes("@iot"))attributesKeys.push(attributesKeys[e])
+					if (!attributesKeys[e].includes("@iot"))attributesFiltered.push(attributesKeys[e])
 				}
 				
 				STAscatterPlotObject.push({
@@ -68,11 +68,11 @@
 		}
 
 		function createTableScatterPlot(){
-			var DialogScatterPlot= document.getElementById("DialogScatterPlot");
-			DialogScatterPlot.innerHTML=`<table border="0"><tbody>`
+			var ScatterPlotTableDiv= document.getElementById("ScatterPlotTableDiv");
+			ScatterPlotTableDiv.innerHTML=`<table border="0"><tbody>`
 
 
-			DialogScatterPlot.innerHTML+=`</tbody></table>`
+			ScatterPlotTableDiv.innerHTML+=`</tbody></table>`
 		}
 
 		function ShowScatterPlotDialog(parentNodes) {
