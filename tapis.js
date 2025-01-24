@@ -5421,7 +5421,7 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 	var data = parentNode.STAdata;
 	node.STAdata=data; //Put all data from parent in this node 
 	networkNodes.update(node);
-	var dataAttributes = getDataAttributes(data);
+	// var dataAttributes = getDataAttributes(data);
 
 	if (parentNode.image != "FilterRowsTable.png") {
 			addTitleInRowFilterDialog("divTitleSelectRows");
@@ -6714,9 +6714,8 @@ function drawTableInColumnBoxTableInAggregateColumns(){
 
 function addColumnsToTableInAggregateColumns(event){
 	event.preventDefault();
-	var data;
 	var decimalNumber,n=currentNode.STAnewColumnsToAdd.length;
-	var dataAttributes= getDataAttributes(currentNode.STAdata)
+	var dataAttributes= currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);
 	if (n!=0){
 		for (var i=0;i<n;i++){
 		decimalNumber=""; //Restart 
@@ -6956,7 +6955,7 @@ function fillCalculatorColumVariablesList(){ //omplir el desplegable
 
 	// var dataKeys= Object.keys(currentNode.STAdata[0]);
 	//var n= dataKeys.length;
-	var dataAttributes= getDataAttributes(currentNode.STAdata);
+	var dataAttributes= currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);
 	var dataAttributesKeys=Object.keys(dataAttributes)
 	var n= dataAttributesKeys.length;
 	
@@ -7009,7 +7008,7 @@ function createColumnStatistics(event){
 	event.preventDefault();
 	var parentNodes= GetParentNodes(currentNode);
 	var staData= parentNodes[0].STAdata;
-	var dataAttributes= getDataAttributes(staData);
+	var dataAttributes= parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(staData);
 	var keys = Object.keys(staData[0]);
 	var collectedData,obj, finallyArray=[],dataType;
 
