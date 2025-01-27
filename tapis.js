@@ -48,19 +48,19 @@
 var config;
 
 const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", startNode: true, help: "Connects to a SensorThings API or a STAplus instance and returns a table with the list of entities suported"},
-			ogcAPICols: {name: "OGC API cols", description: "OGC API collections", startNode: true, help: "Connects to the root of a OGC Web API and returns a table with the list collections available"},
-			ogcAPIItems: {name: "OGC API items", description: "OGC API items", startNode: true, help: "Connects to a collection on an OGC Web API Features or derivatives and returns a table with the items available. On of the columns in the table will be the geometry object as a GeoJSON"},
-			csw: {name: "Catalogue", description: "OGC CSW", startNode: true, help: "Connects to a OGC CSW cataloge service. The result is a table with a list of record in the catalogue that have data associated with it "},
-			s3Service: {name: "S3 Service", description: "S3 Service", startNode: true},
-			s3Bucket: {name: "S3 Bucket", description: "S3 Bucket", startNode: true},
-			edc: {name: "DS catalogue", description: "DataSpace cat.", startNode: true},
-			ImportCSV: {name: "CSV", description: "Import CSV", startNode: true, help: "Allows you to import all data from a CSV and returns a table with them"},
-			ImportDBF: {name: "DBF", description: "Import DBF", startNode: true, help: "Allows you to import all data from a DBF and returns a table with them"},
-			ImportGeoJSON: {name: "GeoJSON", description: "Import GeoJSON", startNode: true, help: "Allows you to import all data from GeoJSON and returns a table with them"},
-			staRoot: {name: "STA root", description: "STA root", help:"Return the url root from the STAplus service in use, taking out extra parameters added"}};
+			ogcAPICols: {name: "OGC API cols", description: "OGC API collections", startNode: true, help: "Connects to the collections page of a OGC Web API instance and returns a table with the list collections available"},
+			ogcAPIItems: {name: "OGC API items", description: "OGC API items", startNode: true, help: "Connects to a collection page on an OGC Web API Features or derivatives and returns a table with the items available. One of the columns contains the geometry JSON object"},
+			csw: {name: "Catalogue", description: "OGC CSW", startNode: true, help: "Connects to a OGC CSW cataloge service. The result is a table with a list of records in the catalogue that have data associated with them"},
+			s3Service: {name: "S3 Service", description: "S3 Service", startNode: true, help: "Connects to a Amazon S3 compatible service (e.g. MinIO) and return the list of buckets available as a table"},
+			s3Bucket: {name: "S3 Bucket", description: "S3 Bucket", startNode: true, help: "Connects to a Amazon S3 backet (e.g. MinIO) and return the list of files available (in the root folder and all subfolders as a table"},
+			edc: {name: "DataSpace cat.", description: "DataSpace cat.", startNode: true, help: "Connects an Eclipse Data Connector (EDC) Catalogue and returns the list of assets available as a table. This is work in process"},
+			ImportCSV: {name: "CSV", description: "Import CSV", startNode: true, help: "Imports data from a CSV file and returns a table with them"},
+			ImportDBF: {name: "DBF", description: "Import DBF", startNode: true, help: "Imports data from a DBASE III+ or IV file and returns a table with them"},
+			ImportGeoJSON: {name: "GeoJSON", description: "Import GeoJSON", startNode: true, help: "Imports the features of a GeoJSON and returns a table where each feature is a record. One of the columns contains the geometry JSON object"},
+			staRoot: {name: "STA root", description: "STA root", help:"Returns to the root of the SensorThings API or STAplus service in use. In other words, removes the path and query parameters of the previous node"}};
 const ServicesAndAPIsArray = Object.keys(ServicesAndAPIs);
 const STAEntities = {
-	ObservedProperties: { singular: "ObservedProperty", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "definition", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help:"Visualize through a table the ObservedProperties of this STAPlus service"  },
+	ObservedProperties: { singular: "ObservedProperty", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "definition", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help:"Visualize through a table the ObservedProperties of this STAPlus service" },
 	Observations: { singular: "Observation", entities: [{ name: "Datastream", required: "true" }, { name: "MultiDatastream", required: "true" }, { name: "FeatureOfInterest", required: "false" }, { name: "ObservationGroups", required: "false" }, { name: "Subjects", required: "false" }, { name: "Objects", required: "false" }], properties: [{ name: "phenomenonTime", dataType: "object", required: "true" }, { name: "resultTime", dataType: "isodatetime", required: "true" }, { name: "result", dataType: "", required: "true" }, { name: "resultQuality", dataType: "object", required: "false" }, { name: "validTime", dataType: "data_isoperiod", required: "false" }, { name: "parameters", dataType: "JSON", required: "false" }], entityRelations: ["Object", "Subject"], help:"Visualize through a table the Observations of this STAPlus service" },
 	FeaturesOfInterest: { singular: "FeatureOfInterest", entities: [{ name: "Observations", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "encodingType", dataType: "string", required: "true" }, { name: "feature", dataType: "", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }],help:"Visualize through a table the FeaturesOfInterest of this STAPlus service" },
 	Sensors: { singular: "Sensor", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "encodingType", dataType: "string", required: "true" }, { name: "metadata", dataType: "", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help:"Visualize through a table the Sensors of this STAPlus service" },
@@ -78,42 +78,42 @@ const STAEntities = {
 const STAEntitiesArray = Object.keys(STAEntities);
 const STASpecialQueries = {ObsLayer: {description: "Observations Layer", query: "Observations?$orderby=phenomenonTime%20desc&$expand=Datastream($select=unitOfMeasurement),Datastream/ObservedProperty($select=name,description,definition),FeatureOfInterest($select=description,feature)&$select=phenomenonTime,result", help: "Link to STAplus service to add a query to this url to obtain a table with phenomenomTime and results from Observations, unitsOfMeasurements and ObservedProperty from Datastreams and a description from the featureOfInterest related "}};
 const STASpecialQueriesArray = Object.keys(STASpecialQueries);
-const STAOperations = {SelectColumnsSTA: {description: "Select Columns", callSTALoad: true, help:"To obtain a table only with columns selected. Only with STA data"},
-			ExpandColumnsSTA: {description: "Expand Columns", callSTALoad: true, help: "To add to your table properties from another entity. Only with STA data"},
-			SelectRowSTA: {description: "Select Row", callSTALoad: true, help: "To obtain a table only with the selected register. Needed to link to another entity. Only with STA data"},
-			FilterRowsSTA: {description: "Filter Rows", callSTALoad: true, help: "To obtain a table with the registers that match with your parameters selected.Only with STA data"},
-			FilterRowsByTime: {description: "Filter Rows by time", help:"To obtain a table with the registers that match with your time interval selected. It is possible to group them by time periods. Only with STA data"},
-			GeoFilterPolSTA: {description: "Filter Rows by Polygon", callSTALoad: true, help:"To obtain a table with the registers contained within a poligon designed through a GeoJSON import.Only with STA data"},
-			GeoFilterPntSTA: {description: "Filter Rows by Distance", callSTALoad: true,help:"To obtain a table with the registers contained between a point designed through a GeoJSON import and a distance established.Only with STA data"},
-			SortBySTA: {description: "Sort by", callSTALoad: true, help: "To obtain a table with data sorted by your chose. Is possible to stablish the number of registers you want to obtain from the STAplus service with this tool. Only with STA data "},
-			UploadObservations: {description: "Upload in STA", leafNode: true},
+const STAOperations = {SelectColumnsSTA: {description: "Select Columns", callSTALoad: true, help:"Obtains a table only with columns selected. Requeres to be connected to another SensorThings API or a STAplus entity"},
+			ExpandColumnsSTA: {description: "Expand Columns", callSTALoad: true, help: "Adds columns coming from properties from related entities. Requeres to be connected to another SensorThings API or a STAplus entity"},
+			SelectRowSTA: {description: "Select Row", callSTALoad: true, help: "Obtains a table only with the selected record. Requeres to be connected to another SensorThings API or a STAplus entity. A single record is required to related entities to this one and navegate the SensorThings API or a STAplus data model"},
+			FilterRowsSTA: {description: "Filter Rows", callSTALoad: true, help: "Obtains a table with the records that match your conditions. Requeres to be connected to another SensorThings API or a STAplus entity"},
+			FilterRowsByTime: {description: "Filter Rows by time", help: "Obtains a table with records that match with a time interval. It is possible to group them by time periods. Requeres to be connected to another SensorThings API or a STAplus entity"},
+			GeoFilterPolSTA: {description: "Filter Rows by Polygon", callSTALoad: true, help: "Obtains a table with the records within a polygon. Requeres to be connected to another SensorThings API or a STAplus entity and to a table with a record that has a geometry (polygon)"},
+			GeoFilterPntSTA: {description: "Filter Rows by Distance", callSTALoad: true, help: "Obtains a table with the records that are closer that a given distance of a point. Requeres to be connected to another SensorThings API or a STAplus entity"},
+			SortBySTA: {description: "Sort by", callSTALoad: true, help: "Obtains a table with data sorted by a given criteria. Requeres to be connected to another SensorThings API or a STAplus entity"},
+			UploadObservations: {description: "Upload in STA", leafNode: true, help: "Saves some observations to a SensorThings API or a STAplus server"},
 			//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
-			OneValueSTA: {description: "One Value", leafNode: true, help:"Returns last value posted. This value will be updated according to the time period you set. Only with STA data" },
-			CountResultsSTA: { description: "Count results", leafNode: true, help: "Returns the total number of records that match the parameters selected so far, not just those loaded into TAPIS. Only with STA data"}};
+			OneValueSTA: {description: "One Value", leafNode: true, help: "Shows the last posted value. This value is updated according to the time period you set. Requeres to be connected to another SensorThings API or a STAplus entity. Do not requre to connect to previous sort by time. This node can not be connected to other dependend nodes" },
+			CountResultsSTA: { description: "Count results", leafNode: true, help: "Returns the total number of records returned by the API query without loading them in a table. Only with STA data. Requeres to be connected to another SensorThings API or a STAplus entity. This node can not be connected to other dependend nodes"}};
 const STAOperationsArray = Object.keys(STAOperations);
 
-const TableOperations = {Table: {description: "View Table", leafNode: true, help:"Visualize table in full screen mode"}, 
-			ViewQuerySTA: {description: "View Query", leafNode: true, help: "Visualize completed url that makes the query to obtain this data"},
-			EditRecord: {description: "Edit record", help: "Edit a register in your data uploaded. If you are using data from a web service and you ask again for data, you will lose this change"}, 
-			Meaning: {description: "Column meaning", help:"To check (visualize ande edit) semantics of fields (columns)"}, 
-			SelectColumnsTable: {description: "Select Columns",help:"Obtain a table only with columns selected. It has to be related to data from a table, not STAplus service"},
-			SelectRowTable: {description: "Select Row", help:"To obtain a table only with the selected register. It has to be related to data from a table, not STAplus service" },
-			FilterRowsTable: {description: "Filter Rows", help: "To obtain a table with the registers that match with your parameters selected. It has to be related to data from a table, not STAplus service"},
-			JoinTables: {description: "Join Tables", help:"To create a table combining two different tables. Different types of merge are available. It is not necessary to share a column between tables"}, //He posat combine per no tornar a posar join, perque si no s'entén que fa join... 
-			ConcatenateTables:{description: "Concatenate Columns",help: "To create a table the result of which will be to add the records of one table under the records of the other table, whether they share columns or not" },
-			GroupBy: {description: "GroupBy", help: "To create a new table which result will be the statistics of the aggregation of the values by one or more parameters."},
-			AggregateColumns:{description: "Aggregate Columns", help: "To add a new column to your table. The column will be filled with the aggregation of other columns selected that already exist"},
-			CreateColumns:{description: "Create Columns", help: "To add a new column to your table. This column will be empty, filled with a constant value or with an autoincremental value"},
-			ColumnsCalculator:{description: "Columns calculator", help: "To add a new column to your table. This column will be filled with the result of the operation you create using the values of the other columns"},
-			ColumnStatistics:{description:"Columns statistics", help: "To create a table with main statistics of your data"},
-			SeparateColumns: {description: "Separate Columns", help:"To split JSON object from one column into different columns. This will add these new columns to your table" },
-			ScatterPlot: {description: "Scatter Plot", leafNode: true, help: "Create a scatter plot with your data"},
-			BarPlot: {description: "Bar Plot", leafNode: true, help: "Create a bar plot graph with your data"},
-			ImageViewer: {description: "Image Viewer", leafNode: true, help: "To see the picture if the data of the column is a url linked to pictures"},
-			SaveTable: {description: "Save Table", leafNode: true, help: "To save data that contains this node as a CSV or CSVW."},
-			SaveLayer: {description: "Save Layer", leafNode: true, help:"Save data as GeoJSON..."}, //són unes condiciosn tant específiques que no se com posar-ho
-			OpenMap: {description: "Open Map", leafNode: true},
-			guf: {description: "Feedback", help: ""}};
+const TableOperations = {Table: {description: "View Table", leafNode: true, help: "Shows a table of the dependent node in a dialog box. Since the table behind the active node is represented in the table area, the use of this operation is no longer recommended"},
+			ViewQuerySTA: {description: "View Query", leafNode: true, help: "Shows the completed URL that is used to make the query to obtain the data from a service or an API of the depended node in a dialog box. Since the URL behind the active node is always represented in the query and table area, the use of this operation is no longer recommended"},
+			EditRecord: {description: "Edit record", help: "Shows and allows editing a record in the table of the related node. NOTE: If you are using data from a web service and you ask for data again, this change will be lost"},
+			Meaning: {description: "Column meaning", help: "Shows and allows editing the semantics (definition and units of measure) of the table columns"},
+			SelectColumnsTable: {description: "Select Columns", help: "Obtains a table only with the selected columns. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL"},
+			SelectRowTable: {description: "Select Row", help: "Obtains a table only with the selected record. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL" },
+			FilterRowsTable: {description: "Filter Rows", help: "Obtain a table with the records that match the contitions. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL"},
+			JoinTables: {description: "Join Tables", help:"Creates a single table that is the result of joining two tables using some selected column values in both tables to defined the merge criteria"},
+			ConcatenateTables: {description: "Concatenate Columns", help: "Create a single table by adding the records of the second table to the first one. The columns with the same name in both tables are merged in a sigle column" },
+			GroupBy: {description: "GroupBy", help: "Creates a table will the columns containng selected statistics of the aggregation of some records that have the same values other selected columns"},
+			AggregateColumns: {description: "Aggregate Columns", help: "Adds a new column to a table with the aggregation of other previous selected columns"},
+			CreateColumns: {description: "Create Columns", help: "Adds a new column to your table. This column can be left empty, filled with a constant value or filled with an autoincremental value"},
+			ColumnsCalculator: {description: "Columns calculator", help: "Adds a new column to your table where for each record the new column contains the result of an operation involving other column values of that record"},
+			ColumnStatistics: {description:"Columns statistics", help: "Create a table where, for each column the main statistics for the column values of all records are recorded"},
+			SeparateColumns: {description: "Separate Columns", help: "Splits a column containing a JSON object into separated new columns and removes the original column." },
+			ScatterPlot: {description: "Scatter Plot", leafNode: true, help: "Creates a scatter plot with a the values of the collumn of a table"},
+			BarPlot: {description: "Bar Plot", leafNode: true, help: "Create a bar or pie chart with a the values of the collumn of a table"},
+			ImageViewer: {description: "Image Viewer", leafNode: true, help: "Shows the pictures referenced by a column. Assumes that the content of the column are url to images supported by the browser (commonly in JPEG or PNG format)"},
+			SaveTable: {description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the collumn definition is semantically enriched; see 'meaning')."},
+			SaveLayer: {description: "Save Layer", leafNode: true, help: "Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values"},
+			OpenMap: {description: "Open Map", leafNode: true, help: "Opens a table as a map in a map browser interface. It requires two columns with a latitude and longitude values"},
+			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface"}};
 const TableOperationsArray = Object.keys(TableOperations);
 
 //If the two nodes cannot connect it returns null. It transforms a plural to singular if needed.
@@ -1721,10 +1721,12 @@ function GetSTAURLEvent(event) {
 	
 
 	networkNodes.update(currentNode);	//https://visjs.github.io/vis-data/data/dataset.html#Data_Manipulation
-
+	
 	//if childen nodes have also STAURL
 	UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 	LoadJSONNodeSTAData(currentNode);
+	currentNode.STAdataAttributes= getDataAttributes(currentNode.STAdata);
+	networkNodes.update(currentNode);
 }
 
 function TransformS3ServiceResponseToDataAttributes(node, text) {
@@ -4117,6 +4119,7 @@ function getHTMLCharacterAttributeType(type) {
 // plus "isodatetime" and "anyURI"
 function getDataAttributes(data) {
 	var dataAttributes = {}, dataAttribute, type;
+	// console.log(data.length)
 
 	for (var i = 0; i < data.length; i++) {
 		var record=data[i];
