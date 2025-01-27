@@ -41,199 +41,162 @@
 
 
     <script>
-        var dates = [
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)",
-                "@iot.id": 1906662,
-                "phenomenonTime": "2024-06-22T10:03:17Z",
-                "resultTime": "2024-07-22T10:03:17Z",
-                "result": 24.03,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906662)/Subjects"
-            },
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)",
-                "@iot.id": 1906670,
-                "phenomenonTime": "2024-07-25T10:03:27Z",
-                "resultTime": "2024-07-22T10:03:27Z",
-                "result": 24.02,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906670)/Subjects"
-            },
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)",
-                "@iot.id": 1906678,
-                "phenomenonTime": "2024-07-22T10:03:37Z",
-                "resultTime": "2024-07-22T10:03:37Z",
-                "result": 24.03,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906678)/Subjects"
-            },
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)",
-                "@iot.id": 1906686,
-                "phenomenonTime": "2024-08-22T10:03:47Z",
-                "resultTime": "2024-07-22T10:03:47Z",
-                "result": 24.65,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906686)/Subjects"
-            },
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)",
-                "@iot.id": 1906694,
-                "phenomenonTime": "2024-07-22T10:03:57Z",
-                "resultTime": "2024-07-22T10:03:57Z",
-                "result": 24.68,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906694)/Subjects"
-            },
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)",
-                "@iot.id": 1906702,
-                "phenomenonTime": "2024-07-22T10:04:07Z",
-                "resultTime": "2024-07-22T10:04:07Z",
-                "result": 24.64,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906702)/Subjects"
-            },
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)",
-                "@iot.id": 1906710,
-                "phenomenonTime": "2024-07-22T10:04:17Z",
-                "resultTime": "2024-07-22T10:04:17Z",
-                "result": 24.57,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906710)/Subjects"
-            },
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)",
-                "@iot.id": 1906718,
-                "phenomenonTime": "2024-07-22T10:04:28Z",
-                "resultTime": "2024-07-22T10:04:28Z",
-                "result": 24.53,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906718)/Subjects"
-            },
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)",
-                "@iot.id": 1906726,
-                "phenomenonTime": "2024-07-22T10:04:38Z",
-                "resultTime": "2024-07-22T10:04:38Z",
-                "result": 24.48,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906726)/Subjects"
-            },
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)",
-                "@iot.id": 1906734,
-                "phenomenonTime": "2024-07-22T10:04:48Z",
-                "resultTime": "2024-07-22T10:04:48Z",
-                "result": 24.43,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906734)/Subjects"
-            },
-            {
-                "@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)",
-                "@iot.id": 1906742,
-                "phenomenonTime": "2024-07-22T10:04:58Z",
-                "resultTime": "2024-07-22T10:04:58Z",
-                "result": 24.38,
-                "parameters": {},
-                "Datastream@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)/Datastream",
-                "FeatureOfInterest@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)/FeatureOfInterest",
-                "Objects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)/Objects",
-                "ObservationGroups@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)/ObservationGroups",
-                "Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(1906742)/Subjects"
-            }
-        ];
-        var dates2 = ["2024-06-22T10:03:17Z", "2025-06-22T10:03:17Z", "2024-07-22T10:03:17Z", "2024-06-24T10:03:17Z", "2024-06-22T11:03:17Z", "2024-06-22T10:04:17Z", "2024-06-22T10:03:18Z"]
-        // function ordenar() {
-        //     // console.log(dates.sort(function (a, b) {
-        //         dates.sort(function (a, b) {
-        //         if (a.phenomenonTime > b.phenomenonTime) {
-        //             return 1;
-        //         }
-        //         if (a.phenomenonTime < b.phenomenonTime) {
-        //             return -1;
-        //         }
-               
-        //         return 0;
-        //     })
-        //     console.log(dates)
-        // //)
-        // }
-        //ordenar();
-        // 
-          console.log(sortDates(dates, "phenomenonTime"));
-
-
-
-
-
-        function sortDates(data, columnToSort) { //columnToSort only if is an object. If it is an array without columnToSort
-            if (columnToSort) {
-                data.sort(function (a, b) {
-                    if (a[columnToSort] > b[columnToSort] ) {
-                        return 1;
+        function addColumnsToTableInAggregateColumns(event) {
+            event.preventDefault();
+            var decimalNumber, n = currentNode.STAnewColumnsToAdd.length;
+            var dataAttributes = currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);
+            if (n != 0) {
+                for (var i = 0; i < n; i++) {
+                    decimalNumber = ""; //Restart 
+                    if (currentNode.STAnewColumnsToAdd[i][3]) {
+                        decimalNumber = currentNode.STAnewColumnsToAdd[i][3];
                     }
-                    if (a[columnToSort]  < b[columnToSort] ) {
-                        return -1;
-                    }
+                    switch (currentNode.STAnewColumnsToAdd[i][0]) {
+                        case "Sum":
+                            if (decimalNumber != "") {
+                                addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
 
-                    return 0;
-                })
+                            } else {
+                                addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes); //data, columnName,columnsToSum
+
+                            }
+                            break;
+                        case "Product": //(s'ha de crear)
+                            if (decimalNumber != "") {
+                                addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
+
+                            } else {
+                                addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes); //data, columnName,columnsToSum
+
+                            }
+                            break;
+                        case "MinValue":
+                            if (decimalNumber != "") {
+                                addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+
+                            } else {
+                                addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
+                            }
+                            break;
+                        case "MaxValue":
+                            if (decimalNumber != "") {
+                                addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+                            } else {
+                            }
+                            addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
+
+                            break;
+                        case "Mean":
+                            if (decimalNumber != "") {
+                                addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+
+                            } else {
+                                addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
+
+                            }
+                            break;
+                        case "Variance":
+                            if (decimalNumber != "") {
+                                addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+
+                            } else {
+                                addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
+
+                            }
+                            break;
+                        case "Median":
+                            if (decimalNumber != "") {
+                                addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+
+                            } else {
+                                addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
+
+                            }
+                            break;
+                        case "Concatenate":
+                            addnewColumnConcatenatingValues(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2]);
+                            break;
+
+                        case "Mode":
+                            if (decimalNumber != "") {
+                                addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+                            } else {
+                                addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
+                            }
+                            break;
+                        case "FirstValue":
+                            if (decimalNumber != "") {
+                                addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+                            } else {
+                                addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
+                            }
+                            break;
+
+                        case "StandardDeviation":
+                            if (decimalNumber != "") {
+                                addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, "", dataAttributes);
+                            } else {
+                                addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
+                            }
+                            break;
+                        case "LastValue":
+                            if (decimalNumber != "") {
+                                addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+                            } else {
+                                addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
+                            }
+                            break;
+                        case "Q1":
+                            if (decimalNumber != "") {
+                                addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+                            } else {
+                                addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
+                            }
+                            break;
+                        case "Q3":
+                            if (decimalNumber != "") {
+                                addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+                            } else {
+                                addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
+                            }
+                            break;
+                        case "RandomValue":
+                            if (decimalNumber != "") {
+                                addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, "", dataAttributes);
+                            } else {
+                                addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
+                            }
+                            break;
+                        case "Count": //TE SENTIT?
+                            addnewColumnCount(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
+                            break;
+                        case "CountDefined": //Falta fer la funció que conta
+
+                            break;
+                        case "Range":
+                            if (decimalNumber != "") {
+                                addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+                            } else {
+                                addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2]), "", dataAttributes;
+                            }
+                            break;
+                        case "ProportionDefined": //Falta fer la funció que conta
+                            if (decimalNumber != "") {
+                                addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+                            } else {
+                                addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2]), "", dataAttributes;
+                            }
+
+                            break;
+                    }
+                }
+                showInfoMessage("New columns have been added");
+                document.getElementById("DialogAggregateColumns").close();
             } else {
-                data.sort(function (a, b) {
-                    if (a > b) {
-                        return 1;
-                    }
-                    if (a < b) {
-                        return -1;
-                    }
-                    return 0;
-                })
+                alert("There are no columns in the list to add, nothing will be added to the table")
             }
-            return data
+
+
         }
 
 
