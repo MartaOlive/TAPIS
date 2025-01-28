@@ -6882,11 +6882,14 @@ function addColumnsToTableInAggregateColumns(event) {
 function uploadDataAttributesAddingNewColumns(attributes, data,origin){
 	var columnNames= Object.keys(data[0]);
 	var oldAttributes= Object.keys(attributes);
-	var newAttributes={}, n=data.length, dataToAttribute=[], columnName, objToData;
+	var newAttributes={}, n=data.length, dataToAttribute=[], columnName, objToData, keysNewAttributes;
 
 	for (var i=0;i<columnNames.length;i++){
 		if (oldAttributes.includes(columnNames[i])){
-			newAttributes[columnNames[i]]= (attributes[columnNames[i]]);
+			keysNewAttributes=Object.keys(newAttributes);
+			if (!keysNewAttributes.includes(columnNames[i])){
+				newAttributes[columnNames[i]]= (attributes[columnNames[i]]);
+			}
 		}else{ //newColumns
 			if (origin!="calculator"){
 					for (var e=0;e<n;e++){
@@ -6897,7 +6900,7 @@ function uploadDataAttributesAddingNewColumns(attributes, data,origin){
 					}
 					newAttributes={...newAttributes,... getDataAttributes(dataToAttribute)};
 			}else{
-				newAttributes[columnNames[i]]={type: 'number'} //·$·
+				newAttributes[columnNames[i]]={type: 'number'} // GetAttributes define type as string, but is number
 			}
 		
 		}
@@ -7150,6 +7153,14 @@ function concatenateTables(){
 		
 	}
 	currentNode.STAdata=resultData;
+	var parentNodes= GetParentNodes(currentNode);
+	var allAttributes={}
+	for (var i=0;i<parentNodes.length;i++){
+		if (parentNodes[i].STAdata)	{
+			allAttributes={...allAttributes,...getDataAttributes(parentNodes[i].STAdata)}
+		}
+	}
+	uploadDataAttributesAddingNewColumns(allAttributes, currentNode.STAdata);
 	networkNodes.update(currentNode);
 	document.getElementById("DialogConcatenateTables").close();
 }
