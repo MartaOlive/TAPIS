@@ -9,196 +9,37 @@
 </head>
 
 <body>
-    <dialog id="DialogFilterRowsByTime"> <!--Canvia rper dialog-->
-        <fieldset>
-            <legend>Period</legend>
-            <label>From: </label>
-            <input type="datetime-local" id="filterRowsByTimeCalendarFrom">
-            <label>To: </label>
-            <input type="datetime-local" id="filterRowsByTimeCalendarTo">
-        </fieldset>
-        <fieldset>
-            <legend>To aggregate data by: (optional)</legend>
-            <input type="checkbox" id="aggregateDataYes" /><label> Aggregate data by:</label>
-            <select id="filterRowsByTimeSelectAggregation">
-                <option value="year">Year</option>
-                <option value="month">Month</option>
-                <option value="day">Day</option>
-                <option value="hour">Hour</option>
-                <option value="minute">Minute</option>
-            </select>
+	<div id="DialogSeparateColumns">
+		<form>
+			Separate columns:
+			<fieldset>
+				<legend>JSON Objects as:</legend>
+				<input type="radio" id="DialogSeparateColumnJSON_Columns" name="SeparedBy" value="JSON_columns" checked> 
+				<label for="DialogSeparateColumnJSON_Columns">columns</label>
+				<input type="radio" id="DialogSeparateColumnJSON_Records" name="SeparedBy" value="JSON_records"> 
+				<label for="DialogSeparateColumnJSON_Records">records</label>
+			</fieldset>
+            <fieldset>
+				<legend>Arrays as:</legend>
+				<input type="radio" id="DialogSeparateColumnsArrayAs_Columns" name="SeparedBy" value="Array_columns" checked> 
+				<label for="DialogSeparateColumnsArrayAs_Columns">columns</label>
+				<input type="radio" id="DialogSeparateColumnsArrayAs_Records" name="SeparedBy" value="Array_records"> 
+				<label for="DialogSeparateColumnsArrayAs_Records">records</label>
+                <select id="SeparateColumsSelect_column"></select></select>
+                <label >Delimiter</label> <input type="text" id="SeparateColumsInput_column">
+			</fieldset>
+			<br>
+			<input type="checkbox" id="DialogSeparateColumns_RemovePresent" value="yes"> 
+			<label for="DialogSeparateColumns_RemovePresent">Remove already present elements</label>
 
-        </fieldset>
-
-
-    </dialog>
-
-    <!-- <label>Date:</label> <input type="text" id="createEntityInputDate"
-		onChange="addTimeToOtherInputCreateEntities('createEntityInputDate','createEntityInputCalendar' )">
-	<br><label>Generate with this: </label><input type="datetime-local" id="createEntityInputCalendar"
-		onChange="addTimeToOtherInputCreateEntities('createEntityInputCalendar','createEntityInputDate')">
- -->
-
-
+			<div class="center">
+				<button value="default" onClick="SeparateColumns(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</div>
     <script>
-        function addColumnsToTableInAggregateColumns(event) {
-            event.preventDefault();
-            var decimalNumber, n = currentNode.STAnewColumnsToAdd.length;
-            var dataAttributes = currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);
-            if (n != 0) {
-                for (var i = 0; i < n; i++) {
-                    decimalNumber = ""; //Restart 
-                    if (currentNode.STAnewColumnsToAdd[i][3]) {
-                        decimalNumber = currentNode.STAnewColumnsToAdd[i][3];
-                    }
-                    switch (currentNode.STAnewColumnsToAdd[i][0]) {
-                        case "Sum":
-                            if (decimalNumber != "") {
-                                addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
-
-                            } else {
-                                addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes); //data, columnName,columnsToSum
-
-                            }
-                            break;
-                        case "Product": //(s'ha de crear)
-                            if (decimalNumber != "") {
-                                addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
-
-                            } else {
-                                addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes); //data, columnName,columnsToSum
-
-                            }
-                            break;
-                        case "MinValue":
-                            if (decimalNumber != "") {
-                                addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-
-                            } else {
-                                addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
-                            }
-                            break;
-                        case "MaxValue":
-                            if (decimalNumber != "") {
-                                addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-                            } else {
-                            }
-                            addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
-
-                            break;
-                        case "Mean":
-                            if (decimalNumber != "") {
-                                addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-
-                            } else {
-                                addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
-
-                            }
-                            break;
-                        case "Variance":
-                            if (decimalNumber != "") {
-                                addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-
-                            } else {
-                                addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
-
-                            }
-                            break;
-                        case "Median":
-                            if (decimalNumber != "") {
-                                addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-
-                            } else {
-                                addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
-
-                            }
-                            break;
-                        case "Concatenate":
-                            addnewColumnConcatenatingValues(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2]);
-                            break;
-
-                        case "Mode":
-                            if (decimalNumber != "") {
-                                addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-                            } else {
-                                addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
-                            }
-                            break;
-                        case "FirstValue":
-                            if (decimalNumber != "") {
-                                addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-                            } else {
-                                addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
-                            }
-                            break;
-
-                        case "StandardDeviation":
-                            if (decimalNumber != "") {
-                                addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, "", dataAttributes);
-                            } else {
-                                addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
-                            }
-                            break;
-                        case "LastValue":
-                            if (decimalNumber != "") {
-                                addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-                            } else {
-                                addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
-                            }
-                            break;
-                        case "Q1":
-                            if (decimalNumber != "") {
-                                addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-                            } else {
-                                addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
-                            }
-                            break;
-                        case "Q3":
-                            if (decimalNumber != "") {
-                                addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-                            } else {
-                                addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], "", dataAttributes);
-                            }
-                            break;
-                        case "RandomValue":
-                            if (decimalNumber != "") {
-                                addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, "", dataAttributes);
-                            } else {
-                                addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
-                            }
-                            break;
-                        case "Count": //TE SENTIT?
-                            addnewColumnCount(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
-                            break;
-                        case "CountDefined": //Falta fer la funció que conta
-
-                            break;
-                        case "Range":
-                            if (decimalNumber != "") {
-                                addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-                            } else {
-                                addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2]), "", dataAttributes;
-                            }
-                            break;
-                        case "ProportionDefined": //Falta fer la funció que conta
-                            if (decimalNumber != "") {
-                                addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
-                            } else {
-                                addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1], currentNode.STAnewColumnsToAdd[i][2]), "", dataAttributes;
-                            }
-
-                            break;
-                    }
-                }
-                showInfoMessage("New columns have been added");
-                document.getElementById("DialogAggregateColumns").close();
-            } else {
-                alert("There are no columns in the list to add, nothing will be added to the table")
-            }
-
-
-        }
-
+       
 
     </script>
 </body>

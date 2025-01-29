@@ -1187,7 +1187,9 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 			addSemanticsSTADataAttributes(node.STAdataAttributes, node.STAURL);
 		}
 		networkNodes.update(node);
-		showInfoMessage("Completed.");
+		if (currentNode.image!="FilterRowsByTime.png"){
+			showInfoMessage("Completed."); 
+		}
 		updateQueryAndTableArea(node);
 		await UpdateChildenLoadJSONCallback(node);
 		if (callback)
@@ -5473,16 +5475,76 @@ function SeparateColumns(event) {
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogSeparateColumns").close();
 	var options={};
-	if (document.getElementById("DialogSeparateColumnsArrayAs_Records").checked)
+	if (document.getElementById("DialogSeparateColumnJSON_Records").checked) //JSON records
 		options.arraysAsRecords=true;
 	if (document.getElementById("DialogSeparateColumns_RemovePresent").checked)
 		options.removeAlreadyPresent=true;
 	var parentNode=GetFirstParentNode(currentNode);
-	if (parentNode)
+	//Fer les funcions per larray
+	if (parentNode && document.getElementById("DialogSeparateColumnJSON_Columns").checked) //JSON columns
 		SeparateColumnsNode(currentNode, parentNode, options);
+	else{ //ARRAY
+		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
+		var columnName= selectColumnName.options[selectColumnName.selectedIndex].value;
+		var delimiter=document.getElementById("SeparateColumsInput_column").value;
+		console.log(columnName+delimiter);
+		if (!parentNode.STAdata) {
+			showInfoMessage("No data loaded in the parent node.");
+			return;
+		}
+		if (parentNode.STAURL)
+			node.STAURL=parentNode.STAURL;
+	
+		currentNode.STAExpectedLength = parentNode.STAExpectedLength;
+		if (document.getElementById("DialogSeparateColumnsArrayAs_Columns").checked){ //array columns
+			SeparateColumnsNodeArrayColumns(parentNode.STAdata, columnName, delimiter, options.removeAlreadyPresent);
+
+		}else{ //array records
+			SeparateColumnsNodeArrayRecords(parentNode.STAdata,columnName, delimiter, options.removeAlreadyPresent);
+		}
+	}
 }
 
-function SeparateColumnsNode(node, parentNode, options) {
+function populateSelectCoulmnSeparateColumns(){
+	if (currentNode.STAdataAttributes){
+		var attributes= Object.keys(currentNode.STAdataAttributes);
+		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
+		selectColumnName.innerHTML="";
+		var cdns=[];
+		for (var i=0;i< attributes.length;i++){
+			cdns.push(`<option value="${attributes[i]}"> ${attributes[i]}</option>`)
+		}
+		selectColumnName.innerHTML+=cdns.join("");
+	}
+}
+function SeparateColumnsNodeArrayColumns(data, columnName, delimiter, removeAlreadyPresent){
+	var n= data.length, highestNumber=1, newvar;
+	console.log(delimiter)
+	for (var i=0; i<n;i++){
+		data[i]["temporaryAttribute"]= data[i][columnName].split(delimiter);
+		if (highestNumber<data[i]["temporaryAttribute"].length)highestNumber=data[i]["temporaryAttribute"].length;
+	}
+	for (var e=0;e<n;e++){
+		if (highestNumber!=1){
+			for (var a=0;a<highestNumber;a++){
+				newvar=columnName+(a+1);
+				data[e][newvar]=data[e]["temporaryAttribute"][a];
+			}
+		}
+		if (removeAlreadyPresent) delete data[e][columnName]
+		delete data[e]["temporaryAttribute"];
+	}
+	
+	currentNode.STAdata= data;
+	//currentNode.STAdataAttributes=
+	networkNodes.update(currentNode);
+
+}
+function SeparateColumnsNodeArrayRecords(data, columnName, delimiter, removeAlreadyPresen){
+	
+}
+
+function SeparateColumnsNode(node, parentNode, options) { //JSON
 	var data=parentNode.STAdata;
 
 	if (!data) {
@@ -5495,6 +5557,7 @@ function SeparateColumnsNode(node, parentNode, options) {
 	node.STAExpectedLength = parentNode.STAExpectedLength;
 	if (parentNode.STAdataAttributes)
 		node.STAdataAttributes={};
+
 
 	node.STAdata=SeparateColumnsData(data, parentNode.STAdataAttributes, node.STAdataAttributes, options);
 	networkNodes.update(node);
@@ -5974,6 +6037,10 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "SeparateColumns.png") {
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode) {
+				populateSelectCoulmnSeparateColumns();
+			}
 			document.getElementById("DialogSeparateColumns").showModal();
 		}
 		else if (currentNode.image == "ExpandColumnsSTA.png") {

@@ -234,7 +234,7 @@ function SeparatePropertyIfNeeded(record, property, baseName, removeAlreadyPrese
 		record[baseName]=property;
 }
 
-function SeparateColumnsData(data, dataAttributesNull, dataResultAttributes, options) {
+function SeparateColumnsData(data, dataAttributesNull, dataResultAttributes, options) { //JSON
 	var resultData=[], record, iResultData;
 	var removeAlreadyPresent=options && options.removeAlreadyPresent ? options.removeAlreadyPresent : false
 
