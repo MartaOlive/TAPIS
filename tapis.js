@@ -5554,7 +5554,7 @@ function SeparateColumnsNodeArrayRecords(data, columnName, delimiter, removeAlre
 
 	}
 	currentNode.STAdata= newDataArray;
-	currentNode.STAdataAttributes= uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,newDataArray);
+	uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,newDataArray);
 	networkNodes.update(currentNode);
 }
 
@@ -5570,10 +5570,10 @@ function SeparateColumnsNode(node, parentNode, options) { //JSON
 
 	node.STAExpectedLength = parentNode.STAExpectedLength;
 	if (parentNode.STAdataAttributes)
-		node.STAdataAttributes={};
+		//node.STAdataAttributes={};
+		node.STAdataAttributes=parentNode.STAdataAttributes;
 
-
-	node.STAdata=SeparateColumnsData(data, parentNode.STAdataAttributes, node.STAdataAttributes, options);
+	//node.STAdata=SeparateColumnsData(data, parentNode.STAdataAttributes, node.STAdataAttributes, options);
 	networkNodes.update(node);
 }
 
@@ -6967,7 +6967,7 @@ function uploadDataAttributesAddingNewColumns(attributes, data,origin){
 
 	for (var i=0;i<columnNames.length;i++){
 		if (oldAttributes.includes(columnNames[i])){
-			keysNewAttributes=Object.keys(newAttributes);
+			keysNewAttributes=Object.keys(newAttributes); //avoid repetitions
 			if (!keysNewAttributes.includes(columnNames[i])){
 				newAttributes[columnNames[i]]= (attributes[columnNames[i]]);
 			}
