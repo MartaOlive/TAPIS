@@ -302,22 +302,23 @@
 		<form>
 			Separate columns:
 			<br><br>
+
+            <fieldset>
+				<legend>Arrays or lists as:</legend>
+				<input type="radio" id="DialogSeparateColumnsArrayAs_Records" name="SeparedBy" value="Array_records" > 
+				<label for="DialogSeparateColumnsArrayAs_Records">records</label><br>
+				<input type="radio" id="DialogSeparateColumnsArrayAs_Columns" name="SeparedBy" value="Array_columns" checked> 
+				<label for="DialogSeparateColumnsArrayAs_Columns">columns</label>
+                <select id="SeparateColumsSelect_column"></select></select><br>
+				<div style="display:flex;justify-content: center; margin-top:10px"><label style="margin-right: 5px;">Delimiter</label> <input type="text" id="SeparateColumsInput_column" style="width: 50px;" value=""></div>
+                
+			</fieldset>
 			<fieldset>
-				<legend>JSON Objects as:</legend>
+				<legend>JSON Objects as (represented with { } in the table):</legend>
 				<input type="radio" id="DialogSeparateColumnJSON_Columns" name="SeparedBy" value="JSON_columns" checked> 
 				<label for="DialogSeparateColumnJSON_Columns">columns</label>
 				<input type="radio" id="DialogSeparateColumnJSON_Records" name="SeparedBy" value="JSON_records"> 
 				<label for="DialogSeparateColumnJSON_Records">records</label>
-			</fieldset>
-            <fieldset>
-				<legend>Arrays as:</legend>
-				<input type="radio" id="DialogSeparateColumnsArrayAs_Columns" name="SeparedBy" value="Array_columns" checked> 
-				<label for="DialogSeparateColumnsArrayAs_Columns">columns</label>
-				<input type="radio" id="DialogSeparateColumnsArrayAs_Records" name="SeparedBy" value="Array_records" > 
-				<label for="DialogSeparateColumnsArrayAs_Records">records</label><br><br>
-				<label for="SeparateColumsSelect_column">Column:</label>
-                <select id="SeparateColumsSelect_column"></select></select>
-                <label >Delimiter</label> <input type="text" id="SeparateColumsInput_column" style="width: 50px;" value="">
 			</fieldset>
 			<br>
 			<input type="checkbox" id="DialogSeparateColumns_RemovePresent" value="yes"> 

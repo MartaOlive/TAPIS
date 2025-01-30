@@ -5536,7 +5536,7 @@ function SeparateColumnsNodeArrayColumns(data, columnName, delimiter, removeAlre
 	}
 	
 	currentNode.STAdata= data;
-	//currentNode.STAdataAttributes=
+	currentNode.STAdataAttributes= uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,data);
 	networkNodes.update(currentNode);
 
 }
