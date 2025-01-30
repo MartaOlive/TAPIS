@@ -302,16 +302,15 @@
 		<form>
 			Separate columns:
 			<br><br>
-
-            <fieldset>
+			<fieldset>
 				<legend>Arrays or lists as:</legend>
 				<input type="radio" id="DialogSeparateColumnsArrayAs_Records" name="SeparedBy" value="Array_records" > 
 				<label for="DialogSeparateColumnsArrayAs_Records">records</label><br>
 				<input type="radio" id="DialogSeparateColumnsArrayAs_Columns" name="SeparedBy" value="Array_columns" checked> 
-				<label for="DialogSeparateColumnsArrayAs_Columns">columns</label>
-                <select id="SeparateColumsSelect_column"></select></select><br>
-				<div style="display:flex;justify-content: center; margin-top:10px"><label style="margin-right: 5px;">Delimiter</label> <input type="text" id="SeparateColumsInput_column" style="width: 50px;" value=""></div>
-                
+				<label for="DialogSeparateColumnsArrayAs_Columns">columns</label><br>
+				<label for="SeparateColumsSelect_column">Column:</label>
+                <select id="SeparateColumsSelect_column"></select></select>
+                <label >Delimiter</label> <input type="text" id="SeparateColumsInput_column" style="width: 50px;" value="">
 			</fieldset>
 			<fieldset>
 				<legend>JSON Objects as (represented with { } in the table):</legend>
@@ -320,6 +319,7 @@
 				<input type="radio" id="DialogSeparateColumnJSON_Records" name="SeparedBy" value="JSON_records"> 
 				<label for="DialogSeparateColumnJSON_Records">records</label>
 			</fieldset>
+
 			<br>
 			<input type="checkbox" id="DialogSeparateColumns_RemovePresent" value="yes"> 
 			<label for="DialogSeparateColumns_RemovePresent">Remove already present elements</label>

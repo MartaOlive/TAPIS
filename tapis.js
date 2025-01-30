@@ -5541,7 +5541,21 @@ function SeparateColumnsNodeArrayColumns(data, columnName, delimiter, removeAlre
 
 }
 function SeparateColumnsNodeArrayRecords(data, columnName, delimiter, removeAlreadyPresen){
-	
+	var n= data.length, newDataArray=[], separateDataArray,newColumname;
+	for (var i=0;i<n;i++){
+		if (!removeAlreadyPresen) newDataArray.push(deapCopy(data[i]));
+		separateDataArray=data[i][columnName].split(delimiter);
+		newColumname=columnName+"-new";
+		for (var e=0;e<separateDataArray.length;e++){
+			delete data[i][columnName];
+			data[i][newColumname]=separateDataArray[e]
+			newDataArray.push(deapCopy(data[i]))
+		}
+
+	}
+	currentNode.STAdata= newDataArray;
+	currentNode.STAdataAttributes= uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,newDataArray);
+	networkNodes.update(currentNode);
 }
 
 function SeparateColumnsNode(node, parentNode, options) { //JSON
