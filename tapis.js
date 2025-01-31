@@ -1269,7 +1269,7 @@ function RetrieveMeaningTable(event, type) {
 			document.getElementById("DialogImport"+type).close();
 	}
 	else{
-		currentNode.STAdataAttributes= currentNode.STAdataAttributes ? currentNode.STAdataAttributes :  currentNode.STAdata?getDataAttributes(currentNode.STAdata):"";
+		currentNode.STAdataAttributes= getDataAttributes(currentNode.STAdata); //It is necessary when you load new csv, because it remember dataAttributes from old csv
 		networkNodes.update(currentNode)
 		document.getElementById("DialogImport"+type).close();
 	}
@@ -3980,9 +3980,10 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 	var nodeIds = network.getConnectedNodes(parentNode.id, 'to');
 	for (var i = 0; i < nodeIds.length; i++) {
 		var node = networkNodes.get(nodeIds[i])
-		if (node.image == "SeparateColumns.png")
-			SeparateColumnsNode(node, parentNode);
-		else if (node.image == "SelectColumnsTable.png")
+		//if (node.image == "SeparateColumns.png")
+			//SeparateColumnsNode(node, parentNode); No se si te sentit perque ara hi ha més possibilitats que quan es va pensar això
+		//else 
+		if (node.image == "SelectColumnsTable.png")
 		{
 			//pensar com es podria fer.
 			showInfoMessage("Automatic update of SelectColumns not implemented for table nodes.");
@@ -5475,14 +5476,15 @@ function SeparateColumns(event) {
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogSeparateColumns").close();
 	var options={};
-	if (document.getElementById("DialogSeparateColumnJSON_Records").checked) //JSON records
+	if (document.getElementById("DialogSeparateColumnsJSON").checked && document.getElementById("DialogSeparateColumnsAs_Records").checked ) //JSON records
 		options.arraysAsRecords=true;
 	if (document.getElementById("DialogSeparateColumns_RemovePresent").checked)
 		options.removeAlreadyPresent=true;
 	var parentNode=GetFirstParentNode(currentNode);
 	//Fer les funcions per larray
-	if (parentNode && document.getElementById("DialogSeparateColumnJSON_Columns").checked) //JSON columns
-		SeparateColumnsNode(currentNode, parentNode, options);
+	if (parentNode && document.getElementById("DialogSeparateColumnsJSON").checked) //JSON columns
+		//SeparateColumnsNode(currentNode, parentNode, options);
+		SeparateColumnsData(currentNode.STAdata, deapCopy(parentNode.STAdataAttributes), currentNode.STAdataAttributes, options);
 	else{ //ARRAY
 		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
 		var columnName= selectColumnName.options[selectColumnName.selectedIndex].value;
@@ -5496,85 +5498,109 @@ function SeparateColumns(event) {
 			node.STAURL=parentNode.STAURL;
 	
 		currentNode.STAExpectedLength = parentNode.STAExpectedLength;
-		if (document.getElementById("DialogSeparateColumnsArrayAs_Columns").checked){ //array columns
-			SeparateColumnsNodeArrayColumns(parentNode.STAdata, columnName, delimiter, options.removeAlreadyPresent);
+		if (document.getElementById("DialogSeparateColumnsAs_Columns").checked && document.getElementById("DialogSeparateColumnsLists").checked ){ //array columns
+			SeparateColumnsNodeArrayColumns( columnName, delimiter);
 
 		}else{ //array records
-			SeparateColumnsNodeArrayRecords(parentNode.STAdata,columnName, delimiter, options.removeAlreadyPresent);
+			SeparateColumnsNodeArrayRecords(columnName, delimiter);
 		}
 	}
 }
 
 function populateSelectCoulmnSeparateColumns(){
-	if (currentNode.STAdataAttributes){
-		var attributes= Object.keys(currentNode.STAdataAttributes);
+	var parentNode= GetFirstParentNode(currentNode);
+	if (!parentNode.STAdata) {
+		showInfoMessage("No data loaded in the parent node.");
+		return;
+	}
+	if (parentNode.STAURL)
+		currentNode.STAURL=parentNode.STAURL;
+	currentNode.STAExpectedLength =parentNode.STAExpectedLength;
+	currentNode.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+	currentNode.STAdata=deapCopy(parentNode.STAdata);
+	networkNodes.update(currentNode);
+	
+	var attributes= Object.keys(currentNode.STAdataAttributes);
 		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
 		selectColumnName.innerHTML="";
 		var cdns=[];
 		for (var i=0;i< attributes.length;i++){
-			cdns.push(`<option value="${attributes[i]}"> ${attributes[i]}</option>`)
+			cdns.push(`<option value="${attributes[i]}"> ${attributes[i]} (${currentNode.STAdataAttributes[attributes[i]].type})</option>`)
 		}
 		selectColumnName.innerHTML+=cdns.join("");
-	}
+		document.getElementById("SeparateColumsInput_column").value=",";
 }
-function SeparateColumnsNodeArrayColumns(data, columnName, delimiter, removeAlreadyPresent){
-	var n= data.length, highestNumber=1, newvar;
-	console.log(delimiter)
+
+function SeparateColumnsNodeArrayColumns(columnName, delimiter){
+	var data= currentNode.STAdata;
+	var n= data.length, highestNumber=1, newvarColumn;
+	console.log(delimiter);
+	if (currentNode?.STAdataAttributes[columnName]["type"]!="string"){
+		alert("The content of column selected to separate must be string type");
+		return;
+	}
 	for (var i=0; i<n;i++){
 		data[i]["temporaryAttribute"]= data[i][columnName].split(delimiter);
 		if (highestNumber<data[i]["temporaryAttribute"].length)highestNumber=data[i]["temporaryAttribute"].length;
+
 	}
 	for (var e=0;e<n;e++){
 		if (highestNumber!=1){
 			for (var a=0;a<highestNumber;a++){
-				newvar=columnName+(a+1);
-				data[e][newvar]=data[e]["temporaryAttribute"][a];
+				newvarColumn=columnName+(a+1);
+				if (data[e]["temporaryAttribute"][a])data[e][newvarColumn]=data[e]["temporaryAttribute"][a].trim();
+				else data[e][newvarColumn]="";
 			}
 		}
-		if (removeAlreadyPresent) delete data[e][columnName]
+		delete data[e][columnName]
 		delete data[e]["temporaryAttribute"];
 	}
 	
 	currentNode.STAdata= data;
-	currentNode.STAdataAttributes= uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,data);
-	networkNodes.update(currentNode);
+	uploadDataAttributesAddingNewColumns (currentNode.STAdataAttributes,data); //currentNode.STAdataAttributes upload and networkNodes.update
+	//UpdateChildenTable(currentNode);///???????????????
 
 }
-function SeparateColumnsNodeArrayRecords(data, columnName, delimiter, removeAlreadyPresen){
+function SeparateColumnsNodeArrayRecords(columnName, delimiter){
+	var data= currentNode.STAdata;
 	var n= data.length, newDataArray=[], separateDataArray,newColumname;
+	if (currentNode?.STAdataAttributes[columnName]["type"]!="string"){
+		alert("The content of column selected to separate must be string type");
+		return;
+	}
 	for (var i=0;i<n;i++){
-		if (!removeAlreadyPresen) newDataArray.push(deapCopy(data[i]));
 		separateDataArray=data[i][columnName].split(delimiter);
 		newColumname=columnName+"-new";
 		for (var e=0;e<separateDataArray.length;e++){
 			delete data[i][columnName];
-			data[i][newColumname]=separateDataArray[e]
+			data[i][newColumname]=separateDataArray[e].trim();
 			newDataArray.push(deapCopy(data[i]))
 		}
 
 	}
 	currentNode.STAdata= newDataArray;
-	uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,newDataArray);
-	networkNodes.update(currentNode);
+	uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,newDataArray); //currentNode.STAdataAttributes upload and networkNodes.update
+
+	//UpdateChildenTable(currentNode);
 }
 
 function SeparateColumnsNode(node, parentNode, options) { //JSON
-	var data=parentNode.STAdata;
+	//var data=parentNode.STAdata;
 
-	if (!data) {
-		showInfoMessage("No data loaded in the parent node.");
-		return;
-	}
-	if (parentNode.STAURL)
-		node.STAURL=parentNode.STAURL;
+	// if (!data) {
+	// 	showInfoMessage("No data loaded in the parent node.");
+	// 	return;
+	// }
+	// if (parentNode.STAURL)
+	// 	node.STAURL=parentNode.STAURL;
 
-	node.STAExpectedLength = parentNode.STAExpectedLength;
-	if (parentNode.STAdataAttributes)
-		//node.STAdataAttributes={};
-		node.STAdataAttributes=parentNode.STAdataAttributes;
+	// node.STAExpectedLength = parentNode.STAExpectedLength;
+	// if (parentNode.STAdataAttributes)
+	// 	node.STAdataAttributes={};
+	
 
 	//node.STAdata=SeparateColumnsData(data, parentNode.STAdataAttributes, node.STAdataAttributes, options);
-	networkNodes.update(node);
+	//networkNodes.update(node);
 }
 
 function ShowQueryNode(node) {
@@ -5692,7 +5718,8 @@ function StartCircularImage(nodeTo, nodeFrom, calUnir)
 	if (nodeTo.image == "SeparateColumns.png") {
 		if (calUnir)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		SeparateColumnsNode(nodeTo, nodeFrom);
+		networkNodes.update(nodeTo);
+		//SeparateColumnsNode(nodeTo, nodeFrom);
 		return true;
 	}
 	if (nodeTo.image == "CreateColumns.png") {
@@ -6181,9 +6208,7 @@ function networkDoubleClick(params) {
 				document.getElementById("DialogColumnsCalculator").showModal();
 			}
 		}
-		else if (currentNode.image == "SeparateColumns.png") {
-			;
-		}
+
 		else if (currentNode.image =="ConcatenateTables.png") {
 			document.getElementById("DialogConcatenateTables").showModal();
 		}
