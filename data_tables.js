@@ -261,7 +261,8 @@ function SeparateColumnsData(data, dataAttributesNull, dataResultAttributes, opt
 		for (var i = 0; i < dataAttributesArray.length; i++)
 			dataResultAttributes[dataAttributesArray[i]]=deapCopy( (dataAttributesNull[dataAttributesArray[i]]) ? dataAttributesNull[dataAttributesArray[i]] : dataAttributes[dataAttributesArray[i]]);
 	}
-	return resultData;
+	
+	 return resultData;
 }
 
 //options={RowMatching: [{left: "", right: ""}], NotMatch: "LeftTable"}

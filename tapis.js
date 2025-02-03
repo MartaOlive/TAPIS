@@ -5475,16 +5475,19 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 function SeparateColumns(event) {
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogSeparateColumns").close();
-	var options={};
+	var options={}, data;
 	if (document.getElementById("DialogSeparateColumnsJSON").checked && document.getElementById("DialogSeparateColumnsAs_Records").checked ) //JSON records
 		options.arraysAsRecords=true;
 	if (document.getElementById("DialogSeparateColumns_RemovePresent").checked)
 		options.removeAlreadyPresent=true;
 	var parentNode=GetFirstParentNode(currentNode);
 	//Fer les funcions per larray
-	if (parentNode && document.getElementById("DialogSeparateColumnsJSON").checked) //JSON columns
+	if (parentNode && document.getElementById("DialogSeparateColumnsJSON").checked) {//JSON columns
 		//SeparateColumnsNode(currentNode, parentNode, options);
-		SeparateColumnsData(currentNode.STAdata, deapCopy(parentNode.STAdataAttributes), currentNode.STAdataAttributes, options);
+		data= SeparateColumnsData(currentNode.STAdata, deapCopy(parentNode.STAdataAttributes), currentNode.STAdataAttributes, options);
+		currentNode.STAdata=data;
+		networkNodes.update(currentNode);
+	}
 	else{ //ARRAY
 		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
 		var columnName= selectColumnName.options[selectColumnName.selectedIndex].value;
