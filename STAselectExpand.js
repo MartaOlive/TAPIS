@@ -80,43 +80,7 @@
 			document.getElementById("DialogSelectExpands").close();
 			
 			var previousSTAURL = currentNode.STAURL;
-			//var dataAttributes = currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);
-			/*if (!currentNode.STASelectedExpands)
-				currentNode.STASelectedExpands={STAURLUnexpanded: currentNode.STAURL, dataAttributesUnexpanded: deapCopy(dataAttributes), selected: []};
-			else
-				currentNode.STAURL = currentNode.STASelectedExpands.STAURLUnexpanded;
-			
-			if (document.getElementById("DialogSelectExpandsHTML").style.display != "none")
-			{
-				var dataAttr=currentNode.STASelectedExpands.dataAttributesUnexpanded;
-				var dataAttrArray=Object.keys(dataAttr)
-				for (var a = 0; a < dataAttrArray.length; a++) {
-					if (document.getElementById("SelectExpand_" + a) && document.getElementById("SelectExpand_" + a).checked)
-						break;
-				}
-				if (a < dataAttrArray.length) //A checked attribute has been found ("for" breaks before ending).
-				{
-					var s;
-					currentNode.STAURL = AddQueryParamsToURL(currentNode.STAURL, "$expand=");
-					for (var a = 0; a < dataAttrArray.length; a++) {
-						if (document.getElementById("SelectExpand_" + a) && 
-							document.getElementById("SelectExpand_" + a).checked && 
-							dataAttrArray[a].endsWith("@iot.navigationLink")){
-							s = dataAttrArray[a].substring(0, dataAttrArray[a].length-"@iot.navigationLink".length);
-							currentNode.STAURL += s + ",";
-							currentNode.STASelectedExpands.selected[a]=true;
-						}
-						else
-							currentNode.STASelectedExpands.selected[a]=false;
-					}
-					currentNode.STAURL = currentNode.STAURL.slice(0, -1); //remove the last coma.
-				}
-				else   //If no selected collumn has been found, no expand is needed and the previous request is fine
-				{					
-					for (var a = 0; a < dataAttrArray.length; a++)
-						currentNode.STASelectedExpands.selected[a]=false;
-				}
-			}*/
+		
 			if (document.getElementById("DialogSelectExpandsHTML").style.display != "none") {
 				GetSelectedSelectExpandsDialog(currentNode);
 				var s=GetKVPSelectedSelectExpands(currentNode.STASelectedExpands, true);

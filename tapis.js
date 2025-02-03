@@ -1732,7 +1732,7 @@ function GetSTAURLEvent(event) {
 	//if childen nodes have also STAURL
 	UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 	LoadJSONNodeSTAData(currentNode);
-//·$·	currentNode.STAdataAttributes= getDataAttributes(currentNode.STAdata);
+	//currentNode.STAdataAttributes= getDataAttributes(currentNode.STAdata);
 	networkNodes.update(currentNode);
 }
 
@@ -3741,7 +3741,7 @@ function GetFilterRowsSTA() {
 			if (parentNode.STAURL)
 				currentNode.STAURL = parentNode.STAURL;
 			if (parentNode.STAdata)
-				currentNode.STAdata = parentNode.STAdata;
+				currentNode.STAdata = deapCopy(parentNode.STAdata);
 		}
 		else
 			return;
@@ -3749,13 +3749,13 @@ function GetFilterRowsSTA() {
 		currentNode.STAUrlAPICounter = []; // I need to restart it 
 		var previousURL = parentNode.STAURL;//put URL ready to add things
 
-		var prevFilter = GetQueryParamFromURL(parentNode.STAURL, "$filter");
+		var prevFilter = GetQueryParamFromURL(previousURL, "$filter");
 		if (prevFilter) {
-			currentNode.STAUrlAPI = RemoveQueryParamFromURL(parentNode.STAURL, "$filter");
+			currentNode.STAUrlAPI = RemoveQueryParamFromURL(previousURL, "$filter");
 			currentNode.STAUrlAPI = AddQueryParamsToURL(currentNode.STAUrlAPI, "$filter=" + prevFilter + " and ");
 		}
 		else
-			currentNode.STAUrlAPI = AddQueryParamsToURL(parentNode.STAURL, "$filter=");
+			currentNode.STAUrlAPI = AddQueryParamsToURL(previousURL, "$filter=");
 
 		stopreadInformationRowFilterSTA = false;
 		var entity=getSTAURLLastEntity(currentNode.STAURL);
@@ -3863,7 +3863,7 @@ function DoGeoFilterRows(node) {
 	if (parentNode.STAURL)
 		node.STAURL = parentNode.STAURL;
 	if (parentNode.STAdata)
-		node.STAdata = parentNode.STAdata;
+		node.STAdata = deapCopy(parentNode.STAdata);
 
 	var previousURL = parentNode.STAURL;
 
@@ -6155,7 +6155,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			createColumnListToAddColumns();//create columnsList including columns in the table 
 			if (parentNode.STAdata){
-				currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
+				currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
 				currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
 			}
 			 if (parentNode) {
@@ -6172,7 +6172,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			createColumnListToAddColumns();//create columnsList including columns in the table 
 			if (parentNode.STAdata){
-				currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
+				currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
 				currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent
 			}
 			fillAggregateColumVariablesList();
@@ -6191,7 +6191,7 @@ function networkDoubleClick(params) {
 			
 			if (parentNode.STAdata){
 				if (currentNode.STAdata){
-					currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
+					currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
 					createColumnListToAddColumns();//create columnsList including columns in the table
 					currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
 				}else{
@@ -7309,14 +7309,14 @@ const RouteToFeature={
 
 function takeParentsInformationInGeoDistance(){
 	var parentNodes= GetParentNodes(currentNode);
-	var nodeWithUniqueRow=false, columns=[], columnsValues={}, parentNodeSTAEntity, nodeSTA=false;
+	var nodeWithUniqueRow=false, columns=[], columnsValues={}, parentNodeSTAEntity, nodeSTA=false,parentNode;
 
 	for (var i=0;i<parentNodes.length;i++){
-		
-		if (parentNodes[i].STAURL && parentNodes[i].STAdata.length>1){ //STA to apply filter
-			var url=parentNodes[i].STAURL, finalURL; 
+		parentNode=deapCopy(parentNodes[i])
+		if (parentNode.STAURL && parentNode.STAdata.length>1){ //STA to apply filter
+			var url=parentNode.STAURL, finalURL; 
 			nodeSTA=true;
-			parentNodeSTAEntity= getSTAURLLastEntity(parentNodes[i].STAURL);
+			parentNodeSTAEntity= getSTAURLLastEntity(parentNode.STAURL);
 			var prevFilter = GetQueryParamFromURL(url, "$filter"); //Same way that in filterRows
 			if  (prevFilter) {
 				finalURL = RemoveQueryParamFromURL(url, "$filter");
@@ -7326,7 +7326,7 @@ function takeParentsInformationInGeoDistance(){
 				finalURL = AddQueryParamsToURL(url, "$filter=");
 
 			currentNode.STAURL= finalURL;	
-		}else if (!parentNodes[i].STAURL &&parentNodes[i].STAdata.length>1){
+		}else if (!parentNode.STAURL &&parentNode.STAdata.length>1){
 			alert ("There is a node linked not STA with more than one register, if you want to use it, apply a select row to choose your register")
 			
 			return false;
@@ -7336,7 +7336,7 @@ function takeParentsInformationInGeoDistance(){
 				return false;
 			}
 			nodeWithUniqueRow=true;
-			var dataAttributes= getDataAttributes(parentNodes[i].STAdata);
+			var dataAttributes= getDataAttributes(parentNode.STAdata);
 			var dataAttributesKeys=Object.keys(dataAttributes);
 			var itIsGeoJSON="no", fatureOrLocation="no";
 
@@ -7344,25 +7344,25 @@ function takeParentsInformationInGeoDistance(){
 									
 					if (dataAttributesKeys[a]!="geometry" || (dataAttributesKeys[a]=="geometry"&& dataAttributesKeys.length>1 )){
 						if (dataAttributes[dataAttributesKeys[a]]['type']=="number"||dataAttributes[dataAttributesKeys[a]]['type']=="integer"){
-							columnsValues[dataAttributesKeys[a]]=parentNodes[i].STAdata[0][dataAttributesKeys[a]];
+							columnsValues[dataAttributesKeys[a]]=parentNode.STAdata[0][dataAttributesKeys[a]];
 							columns.push(dataAttributesKeys[a]);									
 						}
 					else if (dataAttributesKeys[a]=="feature"){
-						columnsValues["feature"]=parentNodes[i].STAdata[0]["feature"]["coordinates"];
+						columnsValues["feature"]=parentNode.STAdata[0]["feature"]["coordinates"];
 						columns.push("feature");
 						fatureOrLocation="feature";
 
 					}
 					else if (dataAttributesKeys[a]=="location"){
-						columnsValues["location"]=parentNodes[i].STAdata[0]["location"]["coordinates"];
+						columnsValues["location"]=parentNode.STAdata[0]["location"]["coordinates"];
 						columns.push("location");
 						fatureOrLocation="location";
 
 					}
 					}else{ //GeoJSON
-						columnsValues["geometry-coordinates"]=parentNodes[i].STAdata[0]["geometry"]["coordinates"];
+						columnsValues["geometry-coordinates"]=parentNode.STAdata[0]["geometry"]["coordinates"];
 						columns.push("geometry-coordinates");
-						(parentNodes[i].STAdata[0]["geometry"]["type"]=="Point"||parentNodes[i].STAdata[0]["geometry"]["type"]=="point")?itIsGeoJSON="Point": itIsGeoJSON="Poligon"; 
+						(parentNode.STAdata[0]["geometry"]["type"]=="Point"||parentNode.STAdata[0]["geometry"]["type"]=="point")?itIsGeoJSON="Point": itIsGeoJSON="Poligon"; 
 						
 					
 					}
