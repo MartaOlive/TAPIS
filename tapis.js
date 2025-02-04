@@ -4044,9 +4044,12 @@ function getJSONSchemaTypeFromAttributeType(t) {
 }
 
 function getJSONTypeOrISODatetime(s) {
-	var type=getJSONType(s)
-	if (type=="string" && (s.length==19 || s.length==20) && fragmentStartsWithISODate(s, 0))
-		return "isodatetime";
+	var type=getJSONType(s), numberReturned;
+	if (type =="string" && (s.length==19 || s.length==20 || s.length==23 || s.length==25)){ //  If fragmentStartsWithISODate receives something that is not a string it fails
+		numberReturned= fragmentStartsWithISODate(s, 0);
+		if (numberReturned!=0)return "isodatetime";
+	}
+		
 	return type;
 }
 
@@ -5068,10 +5071,22 @@ function fragmentStartsWithISODate(s, i) {
 		s.charAt(i+15) >= '0' && s.charAt(i+15) <= '9' &&
 		s.charAt(i+16) == ':' &&
 		s.charAt(i+17) >= '0' && s.charAt(i+17) <= '5' &&
-		s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9'){
-		if (s.charAt(i+19) == 'Z')
-			return 20;
-		return 19;
+		s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9'){ 
+		
+			if (s.charAt(i+19) == 'Z') 	return 20; //2025-01-31T14:21:37Z
+			else if (s.charAt(i+19)=="."&& //2025-01-31T14:21:37.000
+			 s.charAt(i+20) >= '0' && s.charAt(i+20) <= '9' &&
+			 s.charAt(i+21) >= '0' && s.charAt(i+21) <= '9' &&
+			 s.charAt(i+22) >= '0' && s.charAt(i+22) <= '9' 
+			) return 23
+			else if (s.charAt(i+19) == '+'&&   //2025-01-31T14:21:37+00:00
+			s.charAt(i+20) >= '0' && s.charAt(i+20) <= '9' &&
+			s.charAt(i+21) == ':' &&
+			s.charAt(i+22) >= '0' && s.charAt(i+22) <= '9' &&
+			s.charAt(i+23) >= '0' && s.charAt(i+23) <= '9' &&
+			s.charAt(i+24) >= '0' && s.charAt(i+24) <= '9'
+			) return 25;
+		return 19; //2025-01-31T14:21:37
 	}
 	return 0;
 }
