@@ -1,7 +1,7 @@
 {
 	"nodes": [
 		{
-			"id": "3ja56.87m5j",
+			"id": "5v9jp.505pns",
 			"label": "CSV",
 			"image": "ImportCSV.png",
 			"shape": "circularImage",
@@ -8025,7 +8025,7 @@
 			],
 			"STAdataAttributes": {
 				"dia": {
-					"type": "string"
+					"type": "isodatetime"
 				},
 				"estaci": {
 					"type": "string"
@@ -8043,22 +8043,22 @@
 					"type": "string"
 				}
 			},
-			"x": -26,
-			"y": -50
+			"x": 53,
+			"y": -6
 		},
 		{
-			"id": "5sq1v.p4os3g",
+			"id": "4iikh.l00sgd",
 			"label": "GroupBy",
 			"image": "GroupBy.png",
 			"shape": "circularImage",
-			"x": 22,
-			"y": 51
+			"x": -53,
+			"y": -5
 		}
 	],
 	"edges": [
 		{
-			"from": "3ja56.87m5j",
-			"to": "5sq1v.p4os3g",
+			"from": "5v9jp.505pns",
+			"to": "4iikh.l00sgd",
 			"arrows": "from"
 		}
 	]

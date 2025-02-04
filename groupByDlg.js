@@ -164,16 +164,6 @@
 			showCheckRadioOptions("DialogGroupByDateTimeOptionsHTML", "DialogGroupByDateTime", GroupByDateTimeOptions, 1, "DialogGroupByDateTimeOption");
 			showCheckRadioOptions("DialogGroupByAggregationOptionsHTML", "DialogGroupByAggr", AggregationsOptions, 3, null, "AddSelectedOptionsToAggrGroupBy(event, '"+node.id+"')");
 			CheckSelectedAggrGroupBy(null, node.id);
-			//fill select to aggregated by date
-			var parentNode=GetFirstParentNode(node);
-			var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
-			var dataAttributesArray = Object.keys(dataAttributes);
-			var cdns=[], n=dataAttributesArray.length;
-			for (var i=0;i<n;i++){
-				cdns.push('<option value="'+dataAttributesArray[i]+'">' +dataAttributesArray[i]+'</option>');
-			}
-			document.getElementById("GroupByDateRoundingSelect").innerHTML=cdns.join("")
-
 			return;
 		}
 
@@ -181,7 +171,7 @@
 			var groupByParams={groupByAttr: [], groupByDate:[], aggregationAttr:{}};
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogGroupBy").close();
-			var parentNode=GetFirstParentNode(currentNode), selectedColumn, s;
+			var parentNode=GetFirstParentNode(currentNode), s;
 
 			var data = parentNode.STAdata ? parentNode.STAdata : currentNode.STAdata;
 
@@ -190,29 +180,34 @@
 			}
 			var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 			const dataAttributesArray = Object.keys(dataAttributes);
+			var dateTypeAttr=[];
 
 			for (var a = 0; a < dataAttributesArray.length; a++) {
-				if (document.getElementById("GroupBySelects_" + a).checked) 
-					groupByParams.groupByAttr.push(dataAttributesArray[a]);
-				s=document.getElementById("GroupByAttributesAggr"+"_" + a).value;
+				if (document.getElementById("GroupBySelects_" + a).checked) //groupBy
+					
+					if(dataAttributes[dataAttributesArray[a]]["type"]=="isodatetime"){
+						dateTypeAttr.push(dataAttributesArray[a]);
+					} else{
+						groupByParams.groupByAttr.push(dataAttributesArray[a]);
+					}
+				s=document.getElementById("GroupByAttributesAggr"+"_" + a).value; //Attributes
 				if (s)
 					groupByParams.aggregationAttr[dataAttributesArray[a]]=JSON.parse(s);
+				
 			}
-			var GroupByDateRoundingSelect=document.getElementById("GroupByDateRoundingSelect");
-			var GroupByDateRoundingSelectValue = GroupByDateRoundingSelect.options[GroupByDateRoundingSelect.selectedIndex].value;
-			
-			for (var i = 0; i < GroupByDateTimeOptions.length; i++) {
+
+			for (var i = 0; i < GroupByDateTimeOptions.length; i++) { //radioButtons (time period to groupBy)
 				if (document.getElementById("DialogGroupByDateTime" + GroupByDateTimeOptions[i].name).checked) {
 					groupByParams.groupByDate.push(GroupByDateTimeOptions[i].name);
 					break;
 				}
 			}
-			if (groupByParams.groupByDate.length>0){
-				var GroupByDateRoundingSelect=document.getElementById("GroupByDateRoundingSelect");
-				var GroupByDateRoundingSelectValue = GroupByDateRoundingSelect.options[GroupByDateRoundingSelect.selectedIndex].value;
-				groupByParams.groupByDate.push(GroupByDateRoundingSelectValue);
 
-			}
+
+			if (groupByParams.groupByDate.length==1 && dateTypeAttr.length>1) alert("To apply date rounding only one date type attribute is allowed to be selected");
+			else if  (groupByParams.groupByDate.length==1 && dateTypeAttr.length==1)groupByParams.groupByDate.push(...dateTypeAttr);
+			else if(groupByParams.groupByDate.length==1 && dateTypeAttr.length==0)alert ("To apply date rounding one date type attribute is has to be selected");
+
 			var dataCurrentAttributes={};
 			currentNode.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, groupByParams);
 			currentNode.STAdataAttributes=dataCurrentAttributes;
