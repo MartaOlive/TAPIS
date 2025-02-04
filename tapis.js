@@ -5648,7 +5648,7 @@ function SeparateColumnsNodeArrayColumns(columnName, delimiter){
 	
 	currentNode.STAdata= data;
 	uploadDataAttributesAddingNewColumns (currentNode.STAdataAttributes,data); //currentNode.STAdataAttributes upload and networkNodes.update
-	//UpdateChildenTable(currentNode);///???????????????
+	UpdateChildenTable(currentNode);
 
 }
 function SeparateColumnsNodeArrayRecords(columnName, delimiter){
@@ -5671,7 +5671,7 @@ function SeparateColumnsNodeArrayRecords(columnName, delimiter){
 	currentNode.STAdata= newDataArray;
 	uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,newDataArray); //currentNode.STAdataAttributes upload and networkNodes.update
 
-	//UpdateChildenTable(currentNode);
+	UpdateChildenTable(currentNode);
 }
 
 // function SeparateColumnsNode(node, parentNode, options) { //JSON
