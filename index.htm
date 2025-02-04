@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="chartjs-plugin-labels.js" async defer></script>
 	<script type="text/javascript" src="papaparse.min.js" async defer></script>
 	<script type="text/javascript" src="crypto-js.min.js" async defer></script> 
+	<script type="text/javascript" src="wicket.js" async defer></script>
 	<script type="text/javascript" src="hello.all.min.js"></script>
 	<script type="text/javascript" src="authenix.js" async defer></script>
 	<script type="text/javascript" src="mmn_postmessage.js" async defer></script>
@@ -19,6 +20,7 @@
 	<script type="text/javascript" src="xml2json.js" async defer></script>
 	<script type="text/javascript" src="oem.js" async defer></script>
 	<script type="text/javascript" src="dbf.js" async defer></script>
+	<script type="text/javascript" src="jsonld.js" async defer></script>
 	<script type="text/javascript" src="edc.js" async defer></script>
 	<script type="text/javascript" src="data_tables.js"></script>
 	<script type="text/javascript" src="STAselectExpand.js"></script>
@@ -1051,6 +1053,30 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogImportJSONLD">
+		<form>
+			Import JSON-LD
+			<br>
+			
+			<fieldset>
+				<legend>Include</legend>
+				<label><input type="checkbox" id="DialogImportJSONLDAddGeo" checked="chacked"></input>Add geometry</label> <small>(Sometimes is too big to be imported)</small><br>
+				<label><input type="checkbox" id="DialogImportJSONLDAddObs" checked="chacked"></input>Add observations</label> <small>(Forces to duplicate the geometry, if included)</small><br>
+			</fieldset>
+			<fieldset>
+				<legend>JSON-LD source</legend>
+				<label><input type="radio" id="DialogImportJSONLDSourceFile" name="DialogImportJSONLDSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "JSONLD")'>
+				Local file: <input type="file" accept=".json;*.jsonld" id="DialogImportJSONLDSourceFileText" onChange="ReadFileImportJSONLD(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportJSONLDSourceURL" name="DialogImportJSONLDSource" value="url" onClick='SelectImportFileSource(event, "JSONLD")'>
+				URL: <input type="text" size="70" id="DialogImportJSONLDSourceURLInput" onChange="ReadURLImportJSONLD(event)" disabled="disabled"></input> <button type="button" id="DialogImportJSONLDSourceURLButton" onClick="ReadURLImportJSONLD(event)" disabled="disabled">Load</button></label><br>
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSONLD")'>Done</button>
+				<button value="cancel" formmethod="dialog">Close</button>
+			</div>
+		</form>
+	</dialog>
+	
 	<dialog id="DialogSaveLayer">
 		<form>
 			<span id="DialogSaveLayerTitle"></span>

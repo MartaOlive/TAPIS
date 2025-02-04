@@ -8,7 +8,7 @@
 		"type": "object",
 		"properties": {
 			"type": {
-				"enum": ["boolean", "array", "null", "object", "undefined", "integer", "number", "string"]
+				"enum": ["boolean", "array", "object", "integer", "number", "string", "isodatetime", "null", "undefined"]
 			},
 			"description": { 
 				"description": "Description of the variable",

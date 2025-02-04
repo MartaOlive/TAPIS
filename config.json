@@ -311,6 +311,27 @@
 				"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime"
 			}
 			]
+		},
+		{
+			"group": "Geospatial",
+			"varUoMs": [
+			{
+				"varUoMdesc": "Latitude WGS84 in degrees",
+				"description": "Latitude",
+				"definition": "http://www.opengis.net/def/sensor-model-param/BODC/ALATZZ01",
+				"UoM": "degree",
+				"UoMSymbol": "°",
+				"UoMDefinition": "https://qudt.org/vocab/unit/DEG"
+			},
+			{
+				"varUoMdesc": "Longitude WGS84 in degrees",
+				"description": "Longitude",
+				"definition": "http://www.opengis.net/def/sensor-model-param/BODC/ALONZZ01",
+				"UoM": "degree",
+				"UoMSymbol": "°",
+				"UoMDefinition": "https://qudt.org/vocab/unit/DEG"
+			}
+			]
 		}
 	]
 }

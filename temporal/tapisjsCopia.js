@@ -58,7 +58,7 @@ const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", sta
 			ImportDBF: {name: "DBF", description: "Import DBF", startNode: true, help: "Imports data from a DBASE III+ or IV file and returns a table with them"},
 			ImportJSONLD: {name: "JSON-LD", description: "Import JSON-LD", startNode: true, help: "Imports data from a JSON-LD file and returns a table with them"},
 			ImportGeoJSON: {name: "GeoJSON", description: "Import GeoJSON", startNode: true, help: "Imports the features of a GeoJSON and returns a table where each feature is a record. One of the columns contains the geometry JSON object"},
-			staRoot: {name: "STA root", description: "STA root", help:"Returns to the root of the SensorThings API or STAplus service in use. In other words, removes the path and query parameters of the previous node"}};
+			staRoot: {name: "STA root", description: "STA root", help:"Returns to the root of the SensorThings API or STSTAplus service in use. In other words, removes the path and query parameters of the previous node"}};
 const ServicesAndAPIsArray = Object.keys(ServicesAndAPIs);
 const STAEntities = {
 	ObservedProperties: { singular: "ObservedProperty", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "definition", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help:"Visualize through a table the ObservedProperties of this STAPlus service" },
@@ -1188,9 +1188,7 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 			addSemanticsSTADataAttributes(node.STAdataAttributes, node.STAURL);
 		}
 		networkNodes.update(node);
-		if (currentNode.image!="FilterRowsByTime.png"){
-			showInfoMessage("Completed."); 
-		}
+		showInfoMessage("Completed.");
 		updateQueryAndTableArea(node);
 		await UpdateChildenLoadJSONCallback(node);
 		if (callback)
@@ -1268,12 +1266,8 @@ function RetrieveMeaningTable(event, type) {
 		if (confirm("No data has been loaded. Do you want to close this window anyway?"))
 			document.getElementById("DialogImport"+type).close();
 	}
-	else{
-		currentNode.STAdataAttributes= getDataAttributes(currentNode.STAdata); //It is necessary when you load new csv, because it remember dataAttributes from old csv
-		networkNodes.update(currentNode)
+	else
 		document.getElementById("DialogImport"+type).close();
-	}
-		
 }
 
 function TransformTextCSVWToDataAttributes(csvwText)
@@ -1513,7 +1507,7 @@ function ReadURLImportDBF() {
 			);	
 }
 
-function TransformTextJSONLDToTable(jsonldText, url) {
+function TransformTextJSONLDToTable(jsonldText, addGeo, addObs, url) {
 	try
 	{
 		var jsonld = JSON.parse(jsonldText);
@@ -1525,7 +1519,7 @@ function TransformTextJSONLDToTable(jsonldText, url) {
 		networkNodes.update(currentNode);
 		return;
 	}
-	var result=ParseJSONLD(jsonld)
+	var result=ParseJSONLD(jsonld, addGeo, addObs)
 	if (result.error) {
 		showInfoMessage("JSONLD parse error: " + result.error + "\n File content fragment:\n" + jsonldText.substring(0,1000));
 		return;
@@ -1555,7 +1549,7 @@ function ReadFileImportJSONLD(event) {
 
 	var reader = new FileReader();
 	reader.onload = function() {
-		TransformTextJSONLDToTable(reader.result, null);
+		TransformTextJSONLDToTable(reader.result, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, null);
 	};
 	reader.readAsText(input.files[0]);   //By default it assumes "UTF8" as encoding
 }
@@ -1578,7 +1572,7 @@ function ReadURLImportJSONLD() {
 	HTTPJSONData(currentNode.STAURL, null, null, null, locationSTAURL ? getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAAccessKey, currentNode.STASecretKey, currentNode.STAS3Service, "us-east-1") : null).then(
 				function(value) { 
 					showInfoMessage('Download JSONLD completed.'); 
-					TransformTextJSONLDToTable(value.text, document.getElementById("DialogImportJSONLDSourceURLInput").value);
+					TransformTextJSONLDToTable(value.text, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, document.getElementById("DialogImportJSONLDSourceURLInput").value);
 				},
 				function(error) { 
 					showInfoMessage('Error downloading JSONLD. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -1801,12 +1795,10 @@ function GetSTAURLEvent(event) {
 	
 
 	networkNodes.update(currentNode);	//https://visjs.github.io/vis-data/data/dataset.html#Data_Manipulation
-	
+
 	//if childen nodes have also STAURL
 	UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 	LoadJSONNodeSTAData(currentNode);
-	//currentNode.STAdataAttributes= getDataAttributes(currentNode.STAdata);
-	//networkNodes.update(currentNode);
 }
 
 function TransformS3ServiceResponseToDataAttributes(node, text) {
@@ -3814,7 +3806,7 @@ function GetFilterRowsSTA() {
 			if (parentNode.STAURL)
 				currentNode.STAURL = parentNode.STAURL;
 			if (parentNode.STAdata)
-				currentNode.STAdata = deapCopy(parentNode.STAdata);
+				currentNode.STAdata = parentNode.STAdata;
 		}
 		else
 			return;
@@ -3822,13 +3814,13 @@ function GetFilterRowsSTA() {
 		currentNode.STAUrlAPICounter = []; // I need to restart it 
 		var previousURL = parentNode.STAURL;//put URL ready to add things
 
-		var prevFilter = GetQueryParamFromURL(previousURL, "$filter");
+		var prevFilter = GetQueryParamFromURL(parentNode.STAURL, "$filter");
 		if (prevFilter) {
-			currentNode.STAUrlAPI = RemoveQueryParamFromURL(previousURL, "$filter");
+			currentNode.STAUrlAPI = RemoveQueryParamFromURL(parentNode.STAURL, "$filter");
 			currentNode.STAUrlAPI = AddQueryParamsToURL(currentNode.STAUrlAPI, "$filter=" + prevFilter + " and ");
 		}
 		else
-			currentNode.STAUrlAPI = AddQueryParamsToURL(previousURL, "$filter=");
+			currentNode.STAUrlAPI = AddQueryParamsToURL(parentNode.STAURL, "$filter=");
 
 		stopreadInformationRowFilterSTA = false;
 		var entity=getSTAURLLastEntity(currentNode.STAURL);
@@ -3936,7 +3928,7 @@ function DoGeoFilterRows(node) {
 	if (parentNode.STAURL)
 		node.STAURL = parentNode.STAURL;
 	if (parentNode.STAdata)
-		node.STAdata = deapCopy(parentNode.STAdata);
+		node.STAdata = parentNode.STAdata;
 
 	var previousURL = parentNode.STAURL;
 
@@ -4053,10 +4045,9 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 	var nodeIds = network.getConnectedNodes(parentNode.id, 'to');
 	for (var i = 0; i < nodeIds.length; i++) {
 		var node = networkNodes.get(nodeIds[i])
-		//if (node.image == "SeparateColumns.png")
-			//SeparateColumnsNode(node, parentNode); No se si te sentit perque ara hi ha més possibilitats que quan es va pensar això
-		//else 
-		if (node.image == "SelectColumnsTable.png")
+		if (node.image == "SeparateColumns.png")
+			SeparateColumnsNode(node, parentNode);
+		else if (node.image == "SelectColumnsTable.png")
 		{
 			//pensar com es podria fer.
 			showInfoMessage("Automatic update of SelectColumns not implemented for table nodes.");
@@ -4117,12 +4108,9 @@ function getJSONSchemaTypeFromAttributeType(t) {
 }
 
 function getJSONTypeOrISODatetime(s) {
-	var type=getJSONType(s), numberReturned;
-	if (type =="string" && (s.length==19 || s.length==20 || s.length==23 || s.length==25)){ //  If fragmentStartsWithISODate receives something that is not a string it fails
-		numberReturned= fragmentStartsWithISODate(s, 0);
-		if (numberReturned!=0)return "isodatetime";
-	}
-		
+	var type=getJSONType(s)
+	if (type=="string" && (s.length==19 || s.length==20) && fragmentStartsWithISODate(s, 0))
+		return "isodatetime";
 	return type;
 }
 
@@ -5143,22 +5131,10 @@ function fragmentStartsWithISODate(s, i) {
 		s.charAt(i+15) >= '0' && s.charAt(i+15) <= '9' &&
 		s.charAt(i+16) == ':' &&
 		s.charAt(i+17) >= '0' && s.charAt(i+17) <= '5' &&
-		s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9'){ 
-		
-			if (s.charAt(i+19) == 'Z') 	return 20; //2025-01-31T14:21:37Z
-			else if (s.charAt(i+19)=="."&& //2025-01-31T14:21:37.000
-			 s.charAt(i+20) >= '0' && s.charAt(i+20) <= '9' &&
-			 s.charAt(i+21) >= '0' && s.charAt(i+21) <= '9' &&
-			 s.charAt(i+22) >= '0' && s.charAt(i+22) <= '9' 
-			) return 23
-			else if (s.charAt(i+19) == '+'&&   //2025-01-31T14:21:37+00:00
-			s.charAt(i+20) >= '0' && s.charAt(i+20) <= '9' &&
-			s.charAt(i+21) == ':' &&
-			s.charAt(i+22) >= '0' && s.charAt(i+22) <= '9' &&
-			s.charAt(i+23) >= '0' && s.charAt(i+23) <= '9' &&
-			s.charAt(i+24) >= '0' && s.charAt(i+24) <= '9'
-			) return 25;
-		return 19; //2025-01-31T14:21:37
+		s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9'){
+		if (s.charAt(i+19) == 'Z')
+			return 20;
+		return 19;
 	}
 	return 0;
 }
@@ -5519,7 +5495,7 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 	var data = parentNode.STAdata;
 	node.STAdata=data; //Put all data from parent in this node 
 	networkNodes.update(node);
-	// var dataAttributes = getDataAttributes(data);
+	var dataAttributes = getDataAttributes(data);
 
 	if (parentNode.image != "FilterRowsTable.png") {
 			addTitleInRowFilterDialog("divTitleSelectRows");
@@ -5562,136 +5538,33 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 function SeparateColumns(event) {
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogSeparateColumns").close();
-	var options={}, data;
-	if (document.getElementById("DialogSeparateColumnsJSON").checked && document.getElementById("DialogSeparateColumnsAs_Records").checked ) //JSON records
+	var options={};
+	if (document.getElementById("DialogSeparateColumnsArrayAs_Records").checked)
 		options.arraysAsRecords=true;
 	if (document.getElementById("DialogSeparateColumns_RemovePresent").checked)
 		options.removeAlreadyPresent=true;
 	var parentNode=GetFirstParentNode(currentNode);
-	//Fer les funcions per larray
-	if (parentNode && document.getElementById("DialogSeparateColumnsJSON").checked) {//JSON columns
-		//SeparateColumnsNode(currentNode, parentNode, options);
-		data= SeparateColumnsData(currentNode.STAdata, deapCopy(parentNode.STAdataAttributes), currentNode.STAdataAttributes, options);
-		currentNode.STAdata=data;
-		networkNodes.update(currentNode);
-	}
-	else{ //ARRAY
-		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
-		var columnName= selectColumnName.options[selectColumnName.selectedIndex].value;
-		var delimiter=document.getElementById("SeparateColumsInput_column").value;
-		console.log(columnName+delimiter);
-		if (!parentNode.STAdata) {
-			showInfoMessage("No data loaded in the parent node.");
-			return;
-		}
-		if (parentNode.STAURL)
-			node.STAURL=parentNode.STAURL;
-	
-		currentNode.STAExpectedLength = parentNode.STAExpectedLength;
-		if (document.getElementById("DialogSeparateColumnsAs_Columns").checked && document.getElementById("DialogSeparateColumnsLists").checked ){ //array columns
-			SeparateColumnsNodeArrayColumns( columnName, delimiter);
-
-		}else{ //array records
-			SeparateColumnsNodeArrayRecords(columnName, delimiter);
-		}
-	}
+	if (parentNode)
+		SeparateColumnsNode(currentNode, parentNode, options);
 }
 
-function populateSelectCoulmnSeparateColumns(){
-	var parentNode= GetFirstParentNode(currentNode);
-	if (!parentNode.STAdata) {
+function SeparateColumnsNode(node, parentNode, options) {
+	var data=parentNode.STAdata;
+
+	if (!data) {
 		showInfoMessage("No data loaded in the parent node.");
 		return;
 	}
 	if (parentNode.STAURL)
-		currentNode.STAURL=parentNode.STAURL;
-	currentNode.STAExpectedLength =parentNode.STAExpectedLength;
-	currentNode.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-	currentNode.STAdata=deapCopy(parentNode.STAdata);
-	networkNodes.update(currentNode);
-	
-	var attributes= Object.keys(currentNode.STAdataAttributes);
-		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
-		selectColumnName.innerHTML="";
-		var cdns=[];
-		for (var i=0;i< attributes.length;i++){
-			cdns.push(`<option value="${attributes[i]}"> ${attributes[i]} (${currentNode.STAdataAttributes[attributes[i]].type})</option>`)
-		}
-		selectColumnName.innerHTML+=cdns.join("");
-		document.getElementById("SeparateColumsInput_column").value=",";
+		node.STAURL=parentNode.STAURL;
+
+	node.STAExpectedLength = parentNode.STAExpectedLength;
+	if (parentNode.STAdataAttributes)
+		node.STAdataAttributes={};
+
+	node.STAdata=SeparateColumnsData(data, parentNode.STAdataAttributes, node.STAdataAttributes, options);
+	networkNodes.update(node);
 }
-
-function SeparateColumnsNodeArrayColumns(columnName, delimiter){
-	var data= currentNode.STAdata;
-	var n= data.length, highestNumber=1, newvarColumn;
-	console.log(delimiter);
-	if (currentNode?.STAdataAttributes[columnName]["type"]!="string"){
-		alert("The content of column selected to separate must be string type");
-		return;
-	}
-	for (var i=0; i<n;i++){
-		data[i]["temporaryAttribute"]= data[i][columnName].split(delimiter);
-		if (highestNumber<data[i]["temporaryAttribute"].length)highestNumber=data[i]["temporaryAttribute"].length;
-
-	}
-	for (var e=0;e<n;e++){
-		if (highestNumber!=1){
-			for (var a=0;a<highestNumber;a++){
-				newvarColumn=columnName+(a+1);
-				if (data[e]["temporaryAttribute"][a])data[e][newvarColumn]=data[e]["temporaryAttribute"][a].trim();
-				else data[e][newvarColumn]="";
-			}
-		}
-		delete data[e][columnName]
-		delete data[e]["temporaryAttribute"];
-	}
-	
-	currentNode.STAdata= data;
-	uploadDataAttributesAddingNewColumns (currentNode.STAdataAttributes,data); //currentNode.STAdataAttributes upload and networkNodes.update
-	//UpdateChildenTable(currentNode);///???????????????
-
-}
-function SeparateColumnsNodeArrayRecords(columnName, delimiter){
-	var data= currentNode.STAdata;
-	var n= data.length, newDataArray=[], separateDataArray,newColumname;
-	if (currentNode?.STAdataAttributes[columnName]["type"]!="string"){
-		alert("The content of column selected to separate must be string type");
-		return;
-	}
-	for (var i=0;i<n;i++){
-		separateDataArray=data[i][columnName].split(delimiter);
-		newColumname=columnName+"-new";
-		for (var e=0;e<separateDataArray.length;e++){
-			delete data[i][columnName];
-			data[i][newColumname]=separateDataArray[e].trim();
-			newDataArray.push(deapCopy(data[i]))
-		}
-
-	}
-	currentNode.STAdata= newDataArray;
-	uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,newDataArray); //currentNode.STAdataAttributes upload and networkNodes.update
-
-	//UpdateChildenTable(currentNode);
-}
-
-// function SeparateColumnsNode(node, parentNode, options) { //JSON
-// 	//var data=parentNode.STAdata;
-
-// 	// if (!data) {
-// 	// 	showInfoMessage("No data loaded in the parent node.");
-// 	// 	return;
-// 	// }
-// 	// if (parentNode.STAURL)
-// 	// 	node.STAURL=parentNode.STAURL;
-
-// 	// node.STAExpectedLength = parentNode.STAExpectedLength;
-// 	// if (parentNode.STAdataAttributes)
-// 	// 	node.STAdataAttributes={};
-	
-
-// 	//node.STAdata=SeparateColumnsData(data, parentNode.STAdataAttributes, node.STAdataAttributes, options);
-// 	//networkNodes.update(node);
-// }
 
 function ShowQueryNode(node) {
 	if (node.STAURL) {
@@ -5808,8 +5681,7 @@ function StartCircularImage(nodeTo, nodeFrom, calUnir)
 	if (nodeTo.image == "SeparateColumns.png") {
 		if (calUnir)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		networkNodes.update(nodeTo);
-		//SeparateColumnsNode(nodeTo, nodeFrom);
+		SeparateColumnsNode(nodeTo, nodeFrom);
 		return true;
 	}
 	if (nodeTo.image == "CreateColumns.png") {
@@ -6105,11 +5977,11 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "ScatterPlot.png") {
 			var parentNodes=GetParentNodes(currentNode);
-			// if (parentNodes && parentNodes[0]) {
-			// 	if (parentNodes[0].STAdata)
-					ShowScatterPlotDialog(parentNodes); //This will check if any parentNode hasn't got data. It is possible that some nodes linked has data but some not...
+			if (parentNodes && parentNodes[0]) {
+				if (parentNodes[0].STAdata)
+					ShowScatterPlotDialog(parentNodes);
 				document.getElementById("DialogScatterPlot").showModal();
-			//}
+			}
 		}
 		else if (currentNode.image == "BarPlot.png") {
 			var parentNodes=GetParentNodes(currentNode);
@@ -6183,10 +6055,6 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "SeparateColumns.png") {
-			var parentNode=GetFirstParentNode(currentNode);
-			if (parentNode) {
-				populateSelectCoulmnSeparateColumns();
-			}
 			document.getElementById("DialogSeparateColumns").showModal();
 		}
 		else if (currentNode.image == "ExpandColumnsSTA.png") {
@@ -6257,7 +6125,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			createColumnListToAddColumns();//create columnsList including columns in the table 
 			if (parentNode.STAdata){
-				currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
+				currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
 				currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
 			}
 			 if (parentNode) {
@@ -6274,7 +6142,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			createColumnListToAddColumns();//create columnsList including columns in the table 
 			if (parentNode.STAdata){
-				currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
+				currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
 				currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent
 			}
 			fillAggregateColumVariablesList();
@@ -6293,7 +6161,7 @@ function networkDoubleClick(params) {
 			
 			if (parentNode.STAdata){
 				if (currentNode.STAdata){
-					currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
+					currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
 					createColumnListToAddColumns();//create columnsList including columns in the table
 					currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
 				}else{
@@ -6313,7 +6181,9 @@ function networkDoubleClick(params) {
 				document.getElementById("DialogColumnsCalculator").showModal();
 			}
 		}
-
+		else if (currentNode.image == "SeparateColumns.png") {
+			;
+		}
 		else if (currentNode.image =="ConcatenateTables.png") {
 			document.getElementById("DialogConcatenateTables").showModal();
 		}
@@ -6610,26 +6480,26 @@ function saveNetwork(event){
 	var pos=network.getPositions()
 	var posArray=Object.keys(pos);
 	var data={nodes:[], edges:[]};
-	data.nodes.push(...deapCopy(networkNodes.get())); //Hi ha  hagut canvis en el networNodes..per accedir als nodes es fa així, el ._data no conté res
 	for (var i=0; i<posArray.length; i++)
 	{
+		data.nodes.push(deapCopy(networkNodes._data[posArray[i]]));
 		data.nodes[i].x=pos[posArray[i]].x;
 		data.nodes[i].y=pos[posArray[i]].y;
 	}
-	var edgesArray=networkEdges.get();
+	var edgesArray=Object.keys(networkEdges._data);
 	for (var i=0; i<edgesArray.length; i++)
 	{
-		delete edgesArray[i].id;
+		data.edges.push(deapCopy(networkEdges._data[edgesArray[i]]));
+		delete data.edges[i].id;
 	}
-	data.edges.push(...deapCopy(edgesArray));
 	SaveLocalDataFile(JSON.stringify(data, null, "\t"), "network", ".json", "application/json");
 }
 
 async function reloadSTA(event) {
-	var nodesArray=networkNodes.get();
+	var nodesArray=Object.keys(networkNodes._data);
 	for (var i=0; i<nodesArray.length; i++)
 	{
-		var node=nodesArray[i];
+		var node=networkNodes._data[nodesArray[i]];
 		if (node.image=="sta.png")
 		{
 			showInfoMessage("Reload STA home page and dependencies...");
@@ -6791,7 +6661,7 @@ function drawTableInColumnBoxTableInCreateColumns(){
 }
 function addColumnsToTableInCreateColumns(){
 	event.preventDefault();
-		var n=currentNode.STAnewColumnsToAdd.length;
+		var datan,n=currentNode.STAnewColumnsToAdd.length;
 		for (var i=0;i<n;i++){
 
 		switch(currentNode.STAnewColumnsToAdd[i][0]) {
@@ -6809,7 +6679,6 @@ function addColumnsToTableInCreateColumns(){
 		networkNodes.update(currentNode);	
 			
 	}
-	uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes, currentNode.STAdata);
 	document.getElementById("DialogCreateColumns").close();
 	showInfoMessage("New columns have been added");
 }
@@ -6932,16 +6801,18 @@ function drawTableInColumnBoxTableInAggregateColumns(){
 	spanColumnsListAggregateColumns.innerHTML=cdns;
 }
 
-function addColumnsToTableInAggregateColumns(event) {
+function addColumnsToTableInAggregateColumns(event){
 	event.preventDefault();
-	var decimalNumber, n=currentNode.STAnewColumnsToAdd.length;
-	if (n!=0) {
+	var data;
+	var decimalNumber,n=currentNode.STAnewColumnsToAdd.length;
+	var dataAttributes= getDataAttributes(currentNode.STAdata)
+	if (n!=0){
 		for (var i=0;i<n;i++){
-			decimalNumber=""; //Restart 
-			if (currentNode.STAnewColumnsToAdd[i][3]){
-				decimalNumber=currentNode.STAnewColumnsToAdd[i][3];
-			}
-			switch(currentNode.STAnewColumnsToAdd[i][0]) {
+		decimalNumber=""; //Restart 
+		if (currentNode.STAnewColumnsToAdd[i][3]){
+		decimalNumber=currentNode.STAnewColumnsToAdd[i][3];
+	}
+		switch(currentNode.STAnewColumnsToAdd[i][0]) {
 				case  "Sum":
 				if (decimalNumber!=""){
 						addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
@@ -6949,119 +6820,119 @@ function addColumnsToTableInAggregateColumns(event) {
 				}else{
 						addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); //data, columnName,columnsToSum
 
-					}
-					break;
+				}
+				break;
 				case  "Product": //(s'ha de crear)
-					if (decimalNumber!=""){
+			if (decimalNumber!=""){
 						addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
 
 				}else{
 						addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); //data, columnName,columnsToSum
 
-					}
-					break;
+				}
+				break;
 				case  "MinValue":
-					if (decimalNumber!=""){
+			if (decimalNumber!=""){
 					addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes); 
 
 			}else{
 					addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); 
-					}
-					break;
+			}
+				break;
 				case  "MaxValue":
-					if (decimalNumber!=""){
+			if (decimalNumber!=""){
 					addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,dataAttributes); 
 			}else{
-					}
+			}
 					addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); 
 
-					break;
+				break;
 				case  "Mean":
-					if (decimalNumber!=""){
+			if (decimalNumber!=""){
 					addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 
 			}else{
 					addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
 
-					}
-					break;
+			}	
+				break;
 				case  "Variance":
-					if (decimalNumber!=""){
+			if (decimalNumber!=""){
 						addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 
 			}else{
 						addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
 
-					}
-					break;
+			}
+				break;
 				case  "Median":
-					if (decimalNumber!=""){
+				if (decimalNumber!=""){
 						addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 
 				}else{
 						addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
 
-					}
-					break;
+				}
+				break;
 				case  "Concatenate":
 				addnewColumnConcatenatingValues(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]);
-					break;
+				break;
 
 				case  "Mode":
-					if (decimalNumber!=""){
+				if (decimalNumber!=""){
 					addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
-					}
+				}
 					break;
 				case  "FirstValue":
-					if (decimalNumber!=""){
+				if (decimalNumber!=""){
 					addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
-					}
+				}
 					break;
 
 				case  "StandardDeviation":
-					if (decimalNumber!=""){
+				if (decimalNumber!=""){
 					addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,"", dataAttributes);
 				}else{
 					addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
-					}
+				}
 					break;
 				case  "LastValue":
-					if (decimalNumber!=""){
+				if (decimalNumber!=""){
 					addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
-					}
+				}
 					break;
 				case  "Q1":
-					if (decimalNumber!=""){
+				if (decimalNumber!=""){
 					addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
-					}
+				}
 					break;
 				case  "Q3":
-					if (decimalNumber!=""){
+				if (decimalNumber!=""){
 					addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
-					}
+				}
 					break;
 				case  "RandomValue":
-					if (decimalNumber!=""){
+				if (decimalNumber!=""){
 					addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,"", dataAttributes);
 				}else{
 					addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
-					}
-					break;
+				}
+					break;						
 				case  "Count": //TE SENTIT?
 					addnewColumnCount(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
 					break;
 				case  "CountDefined": //Falta fer la funció que conta
-
+					
 					break;
 				case  "Range": 						
 					if (decimalNumber!=""){
@@ -7069,56 +6940,25 @@ function addColumnsToTableInAggregateColumns(event) {
 					}else{
 						addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]),"", dataAttributes;
 					}
-					break;
+						break;
 				case  "ProportionDefined": //Falta fer la funció que conta
-					if (decimalNumber!=""){
+				if (decimalNumber!=""){
 					addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]),"", dataAttributes;
-					}
-
+				}
+					
 					break;
-			}
 		}
-		uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes,currentNode.STAdata);
-		showInfoMessage("New columns have been added");
-		document.getElementById("DialogAggregateColumns").close();
+	}
+	showInfoMessage("New columns have been added");
+	document.getElementById("DialogAggregateColumns").close();
 	}else{
 		alert("There are no columns in the list to add, nothing will be added to the table")
 	}
 
-
+	
 }
-function uploadDataAttributesAddingNewColumns(attributes, data,origin){
-	var columnNames= Object.keys(data[0]);
-	var oldAttributes= Object.keys(attributes);
-	var newAttributes={}, n=data.length, dataToAttribute=[], columnName, objToData, keysNewAttributes;
-
-	for (var i=0;i<columnNames.length;i++){
-		if (oldAttributes.includes(columnNames[i])){
-			keysNewAttributes=Object.keys(newAttributes); //avoid repetitions
-			if (!keysNewAttributes.includes(columnNames[i])){
-				newAttributes[columnNames[i]]= (attributes[columnNames[i]]);
-			}
-		}else{ //newColumns
-			if (origin!="calculator"){
-					for (var e=0;e<n;e++){
-						columnName=columnNames[i];
-						objToData={}
-						objToData[columnNames[i]]=data[e][columnNames[i]]
-						dataToAttribute.push(objToData)
-					}
-					newAttributes={...newAttributes,... getDataAttributes(dataToAttribute)};
-			}else{
-				newAttributes[columnNames[i]]={type: 'number'} // GetAttributes define type as string, but is number
-			}
-		
-		}
-	}
-	currentNode.STAdataAttributes=newAttributes;
-	networkNodes.update(currentNode);
-}
-
 function writeColumnNameInAggregatedColumns(event){
 	event.preventDefault();
 	var columnName=document.getElementById("columnNameAggregateColumns")
@@ -7205,7 +7045,7 @@ function fillCalculatorColumVariablesList(){ //omplir el desplegable
 
 	// var dataKeys= Object.keys(currentNode.STAdata[0]);
 	//var n= dataKeys.length;
-	var dataAttributes= currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);
+	var dataAttributes= getDataAttributes(currentNode.STAdata);
 	var dataAttributesKeys=Object.keys(dataAttributes)
 	var n= dataAttributesKeys.length;
 	
@@ -7250,8 +7090,6 @@ function addColumnsToTableInColumnsCalculator(){
 			addnewColumnWithFormula (currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][0]);
 		}
 	}
-
-	uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes, currentNode.STAdata, "calculator");
 	showInfoMessage("New columns have been added");
 	document.getElementById("DialogColumnsCalculator").close();
 
@@ -7260,7 +7098,7 @@ function createColumnStatistics(event){
 	event.preventDefault();
 	var parentNodes= GetParentNodes(currentNode);
 	var staData= parentNodes[0].STAdata;
-	var dataAttributes= parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(staData);
+	var dataAttributes= getDataAttributes(staData);
 	var keys = Object.keys(staData[0]);
 	var collectedData,obj, finallyArray=[],dataType;
 
@@ -7363,14 +7201,6 @@ function concatenateTables(){
 		
 	}
 	currentNode.STAdata=resultData;
-	var parentNodes= GetParentNodes(currentNode);
-	var allAttributes={}
-	for (var i=0;i<parentNodes.length;i++){
-		if (parentNodes[i].STAdata)	{
-			allAttributes={...allAttributes,...getDataAttributes(parentNodes[i].STAdata)}
-		}
-	}
-	uploadDataAttributesAddingNewColumns(allAttributes, currentNode.STAdata);
 	networkNodes.update(currentNode);
 	document.getElementById("DialogConcatenateTables").close();
 }
@@ -7410,14 +7240,14 @@ const RouteToFeature={
 
 function takeParentsInformationInGeoDistance(){
 	var parentNodes= GetParentNodes(currentNode);
-	var nodeWithUniqueRow=false, columns=[], columnsValues={}, parentNodeSTAEntity, nodeSTA=false,parentNode;
+	var nodeWithUniqueRow=false, columns=[], columnsValues={}, parentNodeSTAEntity, nodeSTA=false;
 
 	for (var i=0;i<parentNodes.length;i++){
-		parentNode=deapCopy(parentNodes[i])
-		if (parentNode.STAURL && parentNode.STAdata.length>1){ //STA to apply filter
-			var url=parentNode.STAURL, finalURL; 
+		
+		if (parentNodes[i].STAURL && parentNodes[i].STAdata.length>1){ //STA to apply filter
+			var url=parentNodes[i].STAURL, finalURL; 
 			nodeSTA=true;
-			parentNodeSTAEntity= getSTAURLLastEntity(parentNode.STAURL);
+			parentNodeSTAEntity= getSTAURLLastEntity(parentNodes[i].STAURL);
 			var prevFilter = GetQueryParamFromURL(url, "$filter"); //Same way that in filterRows
 			if  (prevFilter) {
 				finalURL = RemoveQueryParamFromURL(url, "$filter");
@@ -7427,7 +7257,7 @@ function takeParentsInformationInGeoDistance(){
 				finalURL = AddQueryParamsToURL(url, "$filter=");
 
 			currentNode.STAURL= finalURL;	
-		}else if (!parentNode.STAURL &&parentNode.STAdata.length>1){
+		}else if (!parentNodes[i].STAURL &&parentNodes[i].STAdata.length>1){
 			alert ("There is a node linked not STA with more than one register, if you want to use it, apply a select row to choose your register")
 			
 			return false;
@@ -7437,7 +7267,7 @@ function takeParentsInformationInGeoDistance(){
 				return false;
 			}
 			nodeWithUniqueRow=true;
-			var dataAttributes= getDataAttributes(parentNode.STAdata);
+			var dataAttributes= getDataAttributes(parentNodes[i].STAdata);
 			var dataAttributesKeys=Object.keys(dataAttributes);
 			var itIsGeoJSON="no", fatureOrLocation="no";
 
@@ -7445,25 +7275,25 @@ function takeParentsInformationInGeoDistance(){
 									
 					if (dataAttributesKeys[a]!="geometry" || (dataAttributesKeys[a]=="geometry"&& dataAttributesKeys.length>1 )){
 						if (dataAttributes[dataAttributesKeys[a]]['type']=="number"||dataAttributes[dataAttributesKeys[a]]['type']=="integer"){
-							columnsValues[dataAttributesKeys[a]]=parentNode.STAdata[0][dataAttributesKeys[a]];
+							columnsValues[dataAttributesKeys[a]]=parentNodes[i].STAdata[0][dataAttributesKeys[a]];
 							columns.push(dataAttributesKeys[a]);									
 						}
 					else if (dataAttributesKeys[a]=="feature"){
-						columnsValues["feature"]=parentNode.STAdata[0]["feature"]["coordinates"];
+						columnsValues["feature"]=parentNodes[i].STAdata[0]["feature"]["coordinates"];
 						columns.push("feature");
 						fatureOrLocation="feature";
 
 					}
 					else if (dataAttributesKeys[a]=="location"){
-						columnsValues["location"]=parentNode.STAdata[0]["location"]["coordinates"];
+						columnsValues["location"]=parentNodes[i].STAdata[0]["location"]["coordinates"];
 						columns.push("location");
 						fatureOrLocation="location";
 
 					}
 					}else{ //GeoJSON
-						columnsValues["geometry-coordinates"]=parentNode.STAdata[0]["geometry"]["coordinates"];
+						columnsValues["geometry-coordinates"]=parentNodes[i].STAdata[0]["geometry"]["coordinates"];
 						columns.push("geometry-coordinates");
-						(parentNode.STAdata[0]["geometry"]["type"]=="Point"||parentNode.STAdata[0]["geometry"]["type"]=="point")?itIsGeoJSON="Point": itIsGeoJSON="Poligon"; 
+						(parentNodes[i].STAdata[0]["geometry"]["type"]=="Point"||parentNodes[i].STAdata[0]["geometry"]["type"]=="point")?itIsGeoJSON="Point": itIsGeoJSON="Poligon"; 
 						
 					
 					}
@@ -7616,7 +7446,6 @@ async function filterRowsByTimeOkButton(){
 	var dateToValue= document.getElementById("filterRowsByTimeCalendarTo").value;
 	if (dateFromValue==""|| dateToValue =="")alert("It is necessary to select a Data");
 	else{
-		document.getElementById("DialogFilterRowsByTime").close();
 		var url= prepareUrlToApplyFilter();
 		await applyTemporalFilter(url, dateFromValue+"Z", dateToValue+"Z",selectedValue );
 		
@@ -7637,7 +7466,6 @@ async function filterRowsByTimeOkButton(){
 			}
 			currentNode.STAdata= aggregatedData[1];
 			currentNode.STAdataStatistics= statistics;
-			//currentNode.STAdataAttributes=getDataAttributes(aggregatedData[1]);
 			networkNodes.update(currentNode);
 			showInfoMessage("Filter applied");
 		} 
@@ -7680,6 +7508,7 @@ async function askForAllDataResults(property){
 		newUrl= currentNode.STAURL+ `&$top=${top} &$orderBy=${property}+asc`;
 		dataToPush= await loadAPIDataWithReturn(newUrl,"obtainAllData")
 		data.push(...dataToPush);
+		//console.log(newUrl)
 		
 		while (stop==false){ 
 
@@ -7695,7 +7524,9 @@ async function askForAllDataResults(property){
 			newUrl= currentNode.STAURL+ `&$skip=${skip} &$top=${top} &$orderBy=${property}+asc`;
 			dataToPush= await loadAPIDataWithReturn(newUrl,"obtainAllData")
 			data.push(...dataToPush);		
-	
+			// console.log(data)
+			// console.log(newUrl)
+
 		} 
 		currentNode.STAdata=data;
 		networkNodes.update(currentNode);			
@@ -7794,7 +7625,7 @@ function calculateMinMaxMeanDesvest(aggregatedData){
 	var n= aggregatedData.length, statisticsArray=[];
 
 	for (var i=0; i<n; i++){
-		statisticsArray.push({"date":aggregatedData[i][0],"Min. value":aggrFuncMinValue(aggregatedData[i][1]),"Max. value":aggrFuncMaxValue(aggregatedData[i][1]),"Mean":aggrFuncMean(aggregatedData[i][1]),"Standard deviation":aggrFuncStandardDeviation(aggregatedData[i][1])});
+		statisticsArray.push([aggregatedData[i][0],[aggrFuncMinValue(aggregatedData[i][1]),aggrFuncMaxValue(aggregatedData[i][1]),aggrFuncMean(aggregatedData[i][1]),aggrFuncStandardDeviation(aggregatedData[i][1])]]);
 	}
 	return statisticsArray
 }
@@ -7810,13 +7641,12 @@ function createAndLoadImportGeoJSONNode(data,url){
 	document.getElementById("DialogImportGeoJSONSourceExternalData").disabled= false;
 	document.getElementById("DialogImportGeoJSONSourceExternalData").checked= true;
 	document.getElementById("DialogImportGeoJSONSourceExternalDataText").value= url;
-
 	
 	TransformTextGeoJSONToTable(data);	
 }
-function giveMeNetworkInformation(event) {
+/*function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogContextMenu").close();
-			console.log(networkNodes.get());
-}
+			document.getElementById("DialogSelectColumns").close();
+			console.log(networkNodes);
+}*/
