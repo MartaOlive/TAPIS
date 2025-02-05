@@ -174,10 +174,16 @@
 		{
 			"group": "AD4GD",
 			"URLs": [
+			{"desc": "AD4GD EDC federated catalogue",
+				"url": "https://ad4gd-catalog-edc.dashboard-siba.store", 
+				"version": "v1alpha",
+				"consumerUrl": "https://consumer-edc-connector.apps.dcw1.paas.psnc.pl"
+			},
 			{
-				"desc": "AD4GD EDC PSNC",
-				"url": "https://connector-pscn.mlops.ari-aidata.eu/management/v2/catalog/request",
-				"counterPartyAddress": "https://connector-pscn.mlops.ari-aidata.eu/protocol"
+				"desc": "AD4GD EDC PSNC catalogue",
+				"url": "https://connector-pscn.mlops.ari-aidata.eu",
+				"version": "v2",
+				"consumerUrl": "https://consumer-edc-connector.apps.dcw1.paas.psnc.pl"
 			}]
 		}
 	],

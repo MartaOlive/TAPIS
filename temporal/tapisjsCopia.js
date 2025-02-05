@@ -53,11 +53,13 @@ const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", sta
 			csw: {name: "Catalogue", description: "OGC CSW", startNode: true, help: "Connects to a OGC CSW cataloge service. The result is a table with a list of records in the catalogue that have data associated with them"},
 			s3Service: {name: "S3 Service", description: "S3 Service", startNode: true, help: "Connects to a Amazon S3 compatible service (e.g. MinIO) and return the list of buckets available as a table"},
 			s3Bucket: {name: "S3 Bucket", description: "S3 Bucket", startNode: true, help: "Connects to a Amazon S3 backet (e.g. MinIO) and return the list of files available (in the root folder and all subfolders as a table"},
-			edc: {name: "DataSpace cat.", description: "DataSpace cat.", startNode: true, help: "Connects an Eclipse Data Connector (EDC) Catalogue and returns the list of assets available as a table. This is work in process"},
-			ImportCSV: {name: "CSV", description: "Import CSV", startNode: true, help: "Imports data from a CSV file and returns a table with them"},
-			ImportDBF: {name: "DBF", description: "Import DBF", startNode: true, help: "Imports data from a DBASE III+ or IV file and returns a table with them"},
-			ImportJSONLD: {name: "JSON-LD", description: "Import JSON-LD", startNode: true, help: "Imports data from a JSON-LD file and returns a table with them"},
-			ImportGeoJSON: {name: "GeoJSON", description: "Import GeoJSON", startNode: true, help: "Imports the features of a GeoJSON and returns a table where each feature is a record. One of the columns contains the geometry JSON object"},
+			edc: {name: "DataSpace cat.", description: "DataSpace cat.", startNode: true, help: "Connects an Eclipse Data Connector (EDC) Catalogue and returns the list of assets available as a table"},
+			edcAsset: {name: "DataSpace asset", description: "DataSpace asset", help: "Prepares an Eclipse Data Connector (EDC) Asset"},
+			ImportCSV: {name: "CSV", description: "CSV", startNode: true, help: "Imports data from a CSV file and returns a table"},
+			ImportDBF: {name: "DBF", description: "DBF", startNode: true, help: "Imports data from a DBASE III+ or IV file and returns a table"},
+			ImportJSONLD: {name: "JSON-LD", description: "JSON-LD", startNode: true, help: "Imports data from a JSON-LD file and returns a table"},
+			ImportJSON: {name: "JSON", description: "JSON", startNode: true, help: "Imports data from a JSON file and returns a table"},
+			ImportGeoJSON: {name: "GeoJSON", description: "GeoJSON", startNode: true, help: "Imports the features of a GeoJSON and returns a table where each feature is a record. One of the columns contains the geometry JSON object"},
 			staRoot: {name: "STA root", description: "STA root", help:"Returns to the root of the SensorThings API or STSTAplus service in use. In other words, removes the path and query parameters of the previous node"}};
 const ServicesAndAPIsArray = Object.keys(ServicesAndAPIs);
 const STAEntities = {
@@ -962,7 +964,7 @@ function standardStatusText(status){
 //Despite the name of the function, it can also be used for retrieving non-json files.
 //In fact, the response is an object with the following members: obj (only if the response is application/json), text: (only if the response is not application/json), responseHeaders: (only the ones listed in headersToGet), ok (always true);
 //To do GET it can be used with the first parameter only or with method=null.
-//It requests JSON content in 'Accept' by default. If you use headersToSend to specify headers then there is no default 'Accept' and you may specify it.
+//It requests JSON content in 'Accept' by default. If you use headersToSend to specify headers then there is no default 'Accept' and you may specify it. headersToSend is an object like this: {'Accept': '*/*', 'Authorization': "XXX"}
 //objToSend is a JavaScript object that will be stringify into JSON text and send as the body of the HTTP request.
 //headersToGet is an array of header names that will be part of the response.
 async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend) {
@@ -992,7 +994,7 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend)
 	// Uses the 'optional chaining' operator
 	if (!(response?.ok)) {
 		var body;
-		if (removeParamContentType(response.headers.get('Content-Type'))=="application/json" &&
+		if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
 			(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0)) {
 			body=await response.json();
 			body=JSON.stringify(body);
@@ -1011,7 +1013,7 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend)
 				headersObj[headersToGet[i]]=response.headers.get(headersToGet[i]);
 			//Enumetates all headers: for(let entry of response.headers.entries()) console.log(entry) })
 		}
-		if (removeParamContentType(response.headers.get('Content-Type'))=="application/json" &&
+		if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
 			(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0))
 			return {obj: await response.json(), text: null, responseHeaders: headersObj, ok: true};
 		else
@@ -1043,7 +1045,7 @@ async function HTTPBinaryData(url) {
 	// Uses the 'optional chaining' operator
 	if (!(response?.ok)) {
 		var body;
-		if (removeParamContentType(response.headers.get('Content-Type'))=="application/json" &&
+		if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
 			(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0)) {
 			body=await response.json();
 			body=JSON.stringify(body);
@@ -1211,7 +1213,7 @@ function MakeHrefData(data, mediatype)
 	return savedFile;
 }
 
-//type should be "CSV", "DBF", "JSONLD" or "GeoJSON"
+//type should be "CSV", "DBF", "JSON", "JSONLD" or "GeoJSON"
 function SelectImportFileSource(event, type) {
 	if (document.getElementById("DialogImport"+type+"SourceFile").checked) {
 		document.getElementById("DialogImport"+type+"SourceFileText").disabled=false;
@@ -1224,7 +1226,7 @@ function SelectImportFileSource(event, type) {
 	}
 }
 
-//type should be "CSV", "DBF", "JSONLD" or "GeoJSON"
+//type should be "CSV", "DBF", "JSON", "JSONLD" or "GeoJSON"
 function SelectImportMeaningFileSource(event, type) {
 	if (document.getElementById("DialogImportMeaning"+type+"SourceFile").checked) {
 		document.getElementById("DialogImportMeaning"+type+"SourceFileText").disabled=false;
@@ -1550,6 +1552,7 @@ function ReadFileImportJSONLD(event) {
 	var reader = new FileReader();
 	reader.onload = function() {
 		TransformTextJSONLDToTable(reader.result, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, null);
+		showInfoMessage("JSON-LD has been loaded.");
 	};
 	reader.readAsText(input.files[0]);   //By default it assumes "UTF8" as encoding
 }
@@ -1580,6 +1583,78 @@ function ReadURLImportJSONLD() {
 				}
 			);	
 }
+
+function TransformTextJSONToTable(jsonText, url) {
+	try
+	{
+		var json = JSON.parse(jsonText);
+	}
+	catch (e) 
+	{
+		showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0, 1000));
+		currentNode.STAdata=null;
+		networkNodes.update(currentNode);
+		return;
+	}
+	var result=ParseJSON(json)
+	currentNode.STAdata=result;
+	if (currentNode.STAdata.length==0)
+		showInfoMessage("JSON resulted in no records.");
+	else
+		showInfoMessage("JSON has been loaded.");
+	if (currentNode.STAdata) {
+		currentNode.STAdataAttributes=getDataAttributes(currentNode.STAdata);
+		if (url)
+			currentNode.STAfileUrl=url;
+		networkNodes.update(currentNode);
+		updateQueryAndTableArea(currentNode);
+		UpdateChildenTable(currentNode);
+	} else {
+		showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0,1000));
+		currentNode.STAdata=null;
+		networkNodes.update(currentNode);
+		return;
+	}
+}
+
+function ReadFileImportJSON(event) {
+	var input = event.target;
+
+	var reader = new FileReader();
+	reader.onload = function() {
+		TransformTextJSONToTable(reader.result, null);
+		showInfoMessage("JSON has been loaded.");
+	};
+	reader.readAsText(input.files[0]);   //By default it assumes "UTF8" as encoding
+}
+
+function ReadURLImportJSON() {
+	var locationSTAURL;
+	var parentNode=GetFirstParentNode(currentNode);
+	currentNode.STAURL = document.getElementById("DialogImportJSONSourceURLInput").value;
+	if (parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL) {
+		currentNode.STAAccessKey = parentNode.STAAccessKey;
+		currentNode.STASecretKey = parentNode.STASecretKey;
+		currentNode.STAS3Service = parentNode.STAS3Service;
+		locationSTAURL=transformStringIntoLocation(currentNode.STAURL);
+	} else {
+		currentNode.STAAccessKey = null;
+		currentNode.STASecretKey = null;
+		currentNode.STAS3Service = null;
+		locationSTAURL=null;
+	}
+	HTTPJSONData(currentNode.STAURL, null, null, null, locationSTAURL ? getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAAccessKey, currentNode.STASecretKey, currentNode.STAS3Service, "us-east-1") : null).then(
+				function(value) { 
+					showInfoMessage('Download JSON completed.'); 
+					TransformTextJSONToTable(value.text, document.getElementById("DialogImportJSONSourceURLInput").value);
+				},
+				function(error) { 
+					showInfoMessage('Error downloading JSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error) ;
+				}
+			);	
+}
+
 
 function TransformGeoJSONToTable(geojson) {
 	if (!geojson.type || geojson.type!="FeatureCollection")
@@ -1846,8 +1921,9 @@ function GetDialogS3BucketEvent(event) {
 			);	
 }
 
-function TransformEDCCatalogueResponseToDataAttributes(node, obj) {
-	node.STAdata=ParseEDCCatalog(obj);
+function TransformEDCCatalogResponseToDataAttributes(node, obj) {
+	node.STAdata = ParseEDCCatalog(obj);
+	node.OGCType = "EDCCatalogue";
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
 	UpdateChildenTable(node);
@@ -1855,41 +1931,222 @@ function TransformEDCCatalogueResponseToDataAttributes(node, obj) {
 
 function GetDialogEDCEvent(event) {
 	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogEDC").close(document.getElementById("DialogEDCURL").value);
+	document.getElementById("DialogEDC").close();
 
 	var previousSTAURL = currentNode.STAURL;
-	currentNode.STAURL = document.getElementById("DialogEDCURL").value;
-	currentNode.STACounterPartyAddress = document.getElementById("DialogEDCCounterPartyAddress").value;
+	currentNode.STAURL = document.getElementById("DialogEDCCatalogURL").value;
+	currentNode.EDCConsumerURL = document.getElementById("DialogEDCConsumerURL").value;
+	var version=document.getElementById("DialogEDCCatalogVersion").value
+	if (version=="v1alpha") {
+		currentNode.STAURL+="/catalog/v1alpha/catalog/query";
+		var obj=null;
+	} else if (version=="v2") {
+		currentNode.STAURL+="/management/v2/catalog/request";
+		var obj={
+			"@context": {
+				"@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+			},
+			"@type": "CatalogRequest",
+			"protocol": "dataspace-protocol-http",
+			"counterPartyAddress": "https://connector-pscn.mlops.ari-aidata.eu/protocol",
+			"querySpec": {
+				"@type": "QuerySpec",
+				"offset": 0,
+				"limit": 1000
+			}
+		};
+		if (document.getElementById("DialogEDCounterPartyAddress"))
+			obj.counterPartyAddress=document.getElementById("DialogEDCounterPartyAddress").value;
+	} else {
+		alert("Catalog version not supported.")
+		return;
+	}
 	networkNodes.update(currentNode);
 
 	//if childen nodes have also STAURL
-	UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+	//UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+
+	HTTPJSONData(currentNode.STAURL, null, "POST", obj).then(
+				function(value) { 
+					showInfoMessage('EDC catalog request completed.'); 
+					TransformEDCCatalogResponseToDataAttributes(currentNode, value.obj);
+				},
+				function(error) { 
+					showInfoMessage('Error in requesting EDC catalog. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error) ;
+				}
+			);
+}
+
+function EDCNegociateContract(node, EDCConsumerURL, offerId, counterPartyAddress) {
+	var obj={
+		"@context": {"edc": "https://w3id.org/edc/v0.0.1/ns/"},
+		"@type": "ContractRequest",
+		"counterPartyAddress": counterPartyAddress,
+		"protocol": "dataspace-protocol-http",
+		"policy": {
+			"@context": "http://www.w3.org/ns/odrl.jsonld",
+			"@id": offerId,
+			"@type": "Offer",
+			"assigner": "provider",
+			"target": "assetId",
+			"permission": []
+		}
+	};
+	HTTPJSONData(EDCConsumerURL+"/management/v3/contractnegotiations", null, "POST", obj).then(
+				function(value) {
+					if (value.obj && value.obj["@type"] && value.obj["@type"]=="IdResponse" && value.obj["@id"]) {
+						showInfoMessage('EDC contract negociation iniciated...');
+						EDCWaitForNegociationCompletition(node, EDCConsumerURL, value.obj["@id"], 0);
+					} else {
+						showInfoMessage('EDC contract negociation failed: '+ JSON.stringify(value.obj));
+					}
+				},
+				function(error) { 
+					showInfoMessage('EDC contract negociation failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error) ;
+				}
+			);
+}
+
+function EDCWaitForNegociationCompletition(node, EDCConsumerURL, id, n) {
+	setTimeout(EDCVerifyNegociationCompletition, 1000, node, EDCConsumerURL, id, n);
+}
+
+function EDCVerifyNegociationCompletition(node, EDCConsumerURL, id, n) {
+	HTTPJSONData(EDCConsumerURL+"/management/v2/contractnegotiations/"+id).then(
+				function(value) {
+					if (!value.obj || !value.obj["@type"] || value.obj["@type"]!="ContractNegotiation" || !value.obj.state) {
+						showInfoMessage('EDC contract negociation failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+						return;
+					}
+					if (value.obj.state!="FINALIZED") {
+						if (n==20) {
+							showInfoMessage('EDC contract negociation failed after ' + n + ' iterations');
+							return;
+						}
+						EDCWaitForNegociationCompletition(node, EDCConsumerURL, id, n++);
+						return;
+					} 	
+					if (!value.obj.contractAgreementId) {
+						showInfoMessage('EDC contract negociation failed: ' + JSON.stringify(value.obj));
+						return;
+					}				
+					showInfoMessage('EDC contract negociation successful.');
+					EDCRequestTransfer(node, EDCConsumerURL, value.obj.contractAgreementId, value.obj.counterPartyAddress)
+				},
+				function(error) { 
+					showInfoMessage('EDC contract negociation failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error);
+				}
+			);
+}
+
+function EDCRequestTransfer(node, EDCConsumerURL, contractAgreementId, counterPartyAddress) {
 	var obj={
 		"@context": {
 			"@vocab": "https://w3id.org/edc/v0.0.1/ns/"
 		},
-		"@type": "CatalogRequest",
+		"@type": "TransferRequestDto",
+		"connectorId": "provider",
+		"counterPartyAddress": counterPartyAddress,
+		"contractId": contractAgreementId,
+		"assetId": "assetId",
 		"protocol": "dataspace-protocol-http",
-		"counterPartyAddress": "https://connector-pscn.mlops.ari-aidata.eu/protocol",
-		"querySpec": {
-			"@type": "QuerySpec",
-			"offset": 0,
-			"limit": 1000
-		}
+		"transferType": "HttpData-PULL"
 	};
-	if (document.getElementById("DialogEDCounterPartyAddress"))
-		obj.counterPartyAddress=document.getElementById("DialogEDCounterPartyAddress").value;
-
-	HTTPJSONData(document.getElementById("DialogEDCURL").value, null, "POST", obj).then(
-				function(value) { 
-					showInfoMessage('EDC catalogue request completed.'); 
-					TransformEDCCatalogueResponseToDataAttributes(currentNode, value.obj);
+	HTTPJSONData(EDCConsumerURL+"/management/v3/transferprocesses", null, "POST", obj).then(
+				function(value) {
+					if (value.obj && value.obj["@type"] && value.obj["@type"]=="IdResponse" && value.obj["@id"]) {
+						showInfoMessage('EDC transfer requested...');
+						EDCWaitForTransferStarted(node, EDCConsumerURL, value.obj["@id"], 0);
+					} else {
+						showInfoMessage('EDC transfer request failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+					}
 				},
 				function(error) { 
-					showInfoMessage('Error in requesting EDC catalogue. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage('EDC trasnfer request failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
 					console.log(error) ;
 				}
-			);	
+			);
+}
+
+function EDCWaitForTransferStarted(node, EDCConsumerURL, id, n) {
+	setTimeout(EDCVerifyEDCTransferStarted, 1000, node, EDCConsumerURL, id, n);
+}
+
+function EDCVerifyEDCTransferStarted(node, EDCConsumerURL, id, n) {
+	HTTPJSONData(EDCConsumerURL+"/management/v3/transferprocesses/"+id).then(
+				function(value) {
+					if (!value.obj || !value.obj["@type"] || value.obj["@type"]!="TransferProcess" || !value.obj.state) {
+						showInfoMessage('EDC transfer request failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+						return;
+					}
+					if (value.obj.state!="STARTED") {
+						if (n==20) {
+							showInfoMessage('EDC transfer request failed after ' + n + ' iterations');
+							return;
+						}
+						EDCWaitForTransferStarted(node, EDCConsumerURL, id, n++);
+						return;
+					} 	
+					/*if (!value.obj.contractId) {
+						showInfoMessage('EDC transfer request failed: ' + JSON.stringify(value.obj));
+						return;
+					}*/				
+					showInfoMessage('EDC transfer request start confirmed.');
+					EDCGetAddressToTransfer(node, EDCConsumerURL, id);
+				},
+				function(error) { 
+					showInfoMessage('EDC transfer request failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error);
+				}
+			);
+}
+
+function EDCGetAddressToTransfer(node, EDCConsumerURL, id) {
+	HTTPJSONData(EDCConsumerURL+"/management/v3/edrs/"+id+"/dataaddress").then(
+				function(value) {
+					if (!value.obj || !value.obj["@type"] || value.obj["@type"]!="DataAddress" || !value.obj.endpoint || !value.obj.authorization) {
+						showInfoMessage('EDC getting URL for transfer request failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+						return;
+					}
+					showInfoMessage('EDC URL for transfer obtained.');
+					EDCExectuteTransfer(node, value.obj.endpoint, value.obj.authorization);
+				},
+				function(error) { 
+					showInfoMessage('EDC getting URL for transfer request failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error);
+				}
+			);
+}
+
+function EDCExectuteTransfer(node, url, authorization) {
+	HTTPJSONData(url, ["Content-Type", "Content-Length"], null, null, {'Accept': '*/*', 'Authorization': authorization}).then(
+				function(value) {
+					showInfoMessage('EDC Raw data transfer completed. It it is not automatically transformed into a table, use the relevant "format" tool to do so.');
+					node.STAURL=url;
+					var mediatype=removeParamContentType(value.responseHeaders["Content-Type"]);
+					node.STARawData=value;
+					if (mediatype=="application/json")
+						node.STAdata=ParseJSON(value.obj);
+					else if (mediatype=="application/ld+json")
+						node.STAdata=ParseJSONLD(value.obj);
+					else if (mediatype=="text/csv" || mediatype=="application/vnd.ms-excel") {
+						node.STAdata=Papa.parse(value.text, {header: true, dynamicTyping: true, skipEmptyLines: true}).data;
+						//Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
+						TransformDatesToISO(currentNode.STAdata);
+					}
+					else
+						node.STAdata=[{"Content-Type": value.responseHeaders["Content-Type"], "Content-Length": value.responseHeaders["Content-Length"]}]
+					networkNodes.update(node);
+					updateQueryAndTableArea(node);
+				},
+				function(error) { 
+					showInfoMessage('EDC contract negociation failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error);
+				}
+			);
 }
 
 function PopulateInputFromSelect(event, idPrefix) {
@@ -1912,6 +2169,17 @@ function PopulateURLSecurityFromSelect(event, idPrefix) {
 	if (document.getElementById(idPrefix))
 		document.getElementById(idPrefix).click();
 }
+
+function PopulateURLEDCFromSelect(event, idPrefix) {
+	event.preventDefault(); // We don't want to submit this form
+	var obj=JSON.parse(document.getElementById(idPrefix+"Select").value);
+	document.getElementById(idPrefix+"CatalogURL").value=obj.url;
+	document.getElementById(idPrefix+"CatalogVersion").value=obj.version;
+	document.getElementById(idPrefix+"ConsumerURL").value=obj.consumerUrl;
+	if (document.getElementById(idPrefix))
+		document.getElementById(idPrefix).click();
+}
+
 
 function GetOptionsSelectDialog(suggestedURLs) {
 	var cdns=[], stas;
@@ -3743,6 +4011,10 @@ function GetSelectRow(event) {
 			currentNode.STAURL = parentNode.STAURL;
 		if (parentNode.OGCType=="OGCAPIcollections")
 			currentNode.OGCType = "OGCAPIcollection";
+		if (parentNode.OGCType=="EDCCatalogue") {
+			currentNode.OGCType = "EDCAsset";
+			currentNode.EDCConsumerURL = parentNode.EDCConsumerURL;
+		}	
 		if (parentNode.OGCType=="S3Buckets" || parentNode.OGCType=="S3Bucket") {
 			currentNode.OGCType = parentNode.OGCType;
 			currentNode.STAAccessKey = parentNode.STAAccessKey;
@@ -3758,7 +4030,9 @@ function GetSelectRow(event) {
 		if (elems[i].checked)
 			break;
 	}
-	var requiresLoadJSON=currentNode.STAURL && (!parentNode || (parentNode.OGCType!="OGCCSW" && parentNode.OGCType!="S3Buckets" && parentNode.OGCType!="S3Bucket"));
+	var requiresLoadJSON=currentNode.STAURL && (!parentNode || 
+				(parentNode.OGCType!="OGCCSW" && parentNode.OGCType!="S3Buckets" && parentNode.OGCType!="S3Bucket"  && parentNode.OGCType!="EDCCatalogue")
+			);
 	if (i < elems.length) {
 		if (requiresLoadJSON) {
 			const s = elems[i].id.substring("SelectRow_".length);
@@ -4021,22 +4295,23 @@ function UpdateChildenSTAURL(parentNode, currentSTAURLroot, previousSTAURLroot) 
 	}
 }
 
-function UpdateChildTableNode(node, parentNode) {
+/*function UpdateChildTableNode(node, parentNode) {
 	node.STAdata = deapCopy(parentNode.STAdata);
 	if (parentNode.STAdataAttributes)
 		node.STAdataAttributes = deapCopy(parentNode.STAdataAttributes);
 	if (parentNode.STAfileUrl)
 		node.STAfileUrl = deapCopy(parentNode.STAfileUrl);
 	networkNodes.update(node);
-}
+}*/
 
 function UpdateChildenTable(parentNode) {
 	var nodeIds = network.getConnectedNodes(parentNode.id, 'to');
 	for (var i = 0; i < nodeIds.length; i++) {
 		var node=networkNodes.get(nodeIds[i]);
-		if (parentNode.STAdata && 
-			(node.image == "SelectColumnsTable.png" || node.image == "Meaning.png"))
-			UpdateChildTableNode(node, parentNode);
+		//if (parentNode.STAdata) { 
+		//	if (node.image == "SelectColumnsTable.png" || node.image == "Meaning.png"))
+		StartCircularImage(node, parentNode, false, false, true);  // Before was UpdateChildTableNode(node, parentNode);
+		//}
 		UpdateChildenTable(node);
 	 }
 }
@@ -5594,7 +5869,7 @@ function ShowTableNode(node)
 	null means connection should not be done.
 	true means all done
 	false means pending.*/
-function StartCircularImage(nodeTo, nodeFrom, calUnir)
+function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 {
 	var errorText=reasonNodeDoesNotFitWithPrevious(nodeTo, nodeFrom);
 	/*if (nodeFrom.STALastEntity) { //I will need it to know "where I am" in Row filter (To apply the filter)
@@ -5605,7 +5880,7 @@ function StartCircularImage(nodeTo, nodeFrom, calUnir)
 		alert("Incompatible node. " + errorText + ". It has not been added.");
 		return null;
 	}
-	if (nodeFrom.STAURL && IdOfSTAEntity(nodeTo) != -1) {
+	if (staNodes && nodeFrom.STAURL && IdOfSTAEntity(nodeTo) != -1) {
 		if (nodeFrom.image=="sta.png")
 			nodeTo.STAURL = nodeFrom.STAURL + "/" + STAEntitiesArray[IdOfSTAEntity(nodeTo)];
 		else 
@@ -5613,24 +5888,24 @@ function StartCircularImage(nodeTo, nodeFrom, calUnir)
 		nodeTo.STAExpectedLength = nodeFrom.STAExpectedLength;
 
 		networkNodes.update(nodeTo);
-		if (calUnir)
+		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		showInfoMessage("Requesting " + STAEntitiesArray[IdOfSTAEntity(nodeTo)] + " to STA...");
 		LoadJSONNodeSTAData(nodeTo);
 		//nodeTo.STALastEntity = STAEntitiesArray[IdOfSTAEntity(nodeTo)]; //I will need it to Row Filter
 		return true;
 	}
-	if (nodeFrom.STAURL && IdOfSTASpecialQueries(nodeTo) != -1) {
+	if (staNodes && nodeFrom.STAURL && IdOfSTASpecialQueries(nodeTo) != -1) {
 		nodeTo.STAURL = nodeFrom.STAURL + "/" + STASpecialQueries[STASpecialQueriesArray[IdOfSTASpecialQueries(nodeTo)]].query;
 		nodeTo.STAExpectedLength = nodeFrom.STAExpectedLength;
 		networkNodes.update(nodeTo);
-		if (calUnir)
+		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		showInfoMessage("Requesting " + STASpecialQueriesArray[IdOfSTASpecialQueries(nodeTo)] + " to STA...");
 		LoadJSONNodeSTAData(nodeTo);
 		return true;
 	}
-	if (nodeFrom.STAURL && (nodeTo.image == "SelectColumnsSTA.png" || nodeTo.image == "ExpandColumnsSTA.png" || nodeTo.image == "SelectRowSTA.png" || nodeTo.image == "FilterRowsSTA.png" || nodeTo.image == "SortBySTA.png")) {
+	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "SelectColumnsSTA.png" || nodeTo.image == "ExpandColumnsSTA.png" || nodeTo.image == "SelectRowSTA.png" || nodeTo.image == "FilterRowsSTA.png" || nodeTo.image == "SortBySTA.png")) {
 		nodeTo.STAURL = nodeFrom.STAURL;
 		nodeTo.STAExpectedLength = nodeFrom.STAExpectedLength;
 		if (nodeFrom.STAdata)
@@ -5638,18 +5913,11 @@ function StartCircularImage(nodeTo, nodeFrom, calUnir)
 		if (nodeFrom.STAdataAttributes)
 			nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
 		networkNodes.update(nodeTo);
-		if (calUnir)
+		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-			/*if (nodeFrom.OGCType){
-			if (nodeTo.image == "FilterRowsSTA.png"&& nodeFrom.OGCType=="OGCAPIitems"){
-				askForConformanceInOGCAPIFeatures();//OCGAPICconformande will be in select node
-			}
-		}*/
-		//showInfoMessage("Selecting " + (nodeTo.image == "SelectColumnsSTA.png" ? "columns" : "rows") + " to STA...");
-		//LoadJSONNodeSTAData(nodeTo);
 		return true;
 	}
-	if (nodeTo.image == "GeoFilterPolSTA.png") {
+	if (staNodes && nodeTo.image == "GeoFilterPolSTA.png") {
 		if (!GetFirstParentNode(nodeTo)){
 			nodeTo.STAURL = nodeFrom.STAURL;
 			nodeTo.STAExpectedLength = nodeFrom.STAExpectedLength;
@@ -5660,61 +5928,72 @@ function StartCircularImage(nodeTo, nodeFrom, calUnir)
 			networkNodes.update(nodeTo);
 		} else if (!nodeTo.STAURL)
 			return false;
-		if (calUnir)
+		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		DoGeoFilterRows(nodeTo);
 		return true;
 	}
-	if (nodeTo.image == "Meaning.png" || 
-					nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "SelectRowTable.png" || 
-		nodeTo.image == "FilterRowsTable.png" || nodeTo.image == "JoinTables.png"){
-		if (nodeFrom.STAdata)
-			nodeTo.STAdata = deapCopy(nodeFrom.STAdata);  //This copy will be done again in "SelectColumnsTable.png" and "SelectRowTable.png". We do it here to have the full table while the user does not enter any selection
-		if (nodeFrom.STAdataAttributes)
-			nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
-		networkNodes.update(nodeTo);
-		UpdateChildTableNode(nodeTo, nodeFrom);
-		if (calUnir)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		return true;
-	}
-	if (nodeTo.image == "SeparateColumns.png") {
-		if (calUnir)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		SeparateColumnsNode(nodeTo, nodeFrom);
-		return true;
-	}
-	if (nodeTo.image == "CreateColumns.png") {
-		 if (nodeFrom.STAdata){
-			nodeTo.STAdata = deapCopy(nodeFrom.STAdata); //necessary first time
-			networkNodes.update(nodeTo);
-		 }
-		if (calUnir)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		return true;
-	}
-	if (nodeTo.image == "AggregateColumns.png") {
-		if (nodeFrom.STAdata){
-			nodeTo.STAdata = deapCopy(nodeFrom.STAdata); //necessary first time
-			networkNodes.update(nodeTo);
-		}
-		if (calUnir)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		return true;
-	}
-	if (nodeTo.image == "staRoot.png") {
+	if (staNodes && nodeTo.image == "staRoot.png") {
 		if (nodeFrom) {
 			var previousSTAURL=nodeTo.STAURL;
 			nodeTo.STAURL=getSTAURLRoot(nodeFrom.STAURL);
 			nodeTo.STAExpectedLength = nodeFrom.STAExpectedLength;
 			networkNodes.update(nodeTo);
 		}
-		if (calUnir)
+		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		if (nodeFrom) {
 			UpdateChildenSTAURL(nodeTo, nodeTo.STAURL, previousSTAURL);
 			LoadJSONNodeSTAData(nodeTo);
 		}
+		return true;
+	}
+	if (tableNodes && nodeTo.image == "Meaning.png" || 
+				nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "SelectRowTable.png" || 
+				nodeTo.image == "FilterRowsTable.png" || nodeTo.image == "JoinTables.png"){
+		if (nodeFrom.STAdata)
+			nodeTo.STAdata = deapCopy(nodeFrom.STAdata);  //This copy will be done again in "SelectColumnsTable.png" and "SelectRowTable.png". We do it here to have the full table while the user does not enter any selection
+		if (nodeFrom.STAdataAttributes)
+			nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
+		if (nodeFrom.STAfileUrl)
+			nodeTo.STAfileUrl = deapCopy(nodeFrom.STAfileUrl);
+		networkNodes.update(nodeTo);
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		return true;
+	}
+	if (tableNodes && nodeTo.image == "SeparateColumns.png") {
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		SeparateColumnsNode(nodeTo, nodeFrom);
+		return true;
+	}
+	if (tableNodes && nodeTo.image == "CreateColumns.png") {
+		 if (nodeFrom.STAdata){
+			nodeTo.STAdata = deapCopy(nodeFrom.STAdata); //necessary first time
+			networkNodes.update(nodeTo);
+		 }
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		return true;
+	}
+	if (tableNodes && nodeTo.image == "AggregateColumns.png") {
+		if (nodeFrom.STAdata){
+			nodeTo.STAdata = deapCopy(nodeFrom.STAdata); //necessary first time
+			networkNodes.update(nodeTo);
+		}
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		return true;
+	}
+	if (tableNodes && nodeTo.image == "edcAsset.png") {
+		if (nodeFrom && !nodeFrom.STAdata || !(nodeFrom.STAdata.length>0))
+			return false;
+		networkNodes.update(nodeTo);
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		//nodeFrom.STAdata[0].assetId;
+		EDCNegociateContract(nodeTo, nodeFrom.EDCConsumerURL, nodeFrom.STAdata[0].offerId, nodeFrom.STAdata[0].counterPartyAddress);
 		return true;
 	}
 	return false;
@@ -5754,7 +6033,7 @@ var networkOptions = {
 				else {
 					networkEdges.add([{ from: data.to, to: data.from, arrows: "from"}]);
 					showInfoMessage("Connected.");
-					StartCircularImage(networkNodes.get(data.from), networkNodes.get(data.to), false);
+					StartCircularImage(networkNodes.get(data.from), networkNodes.get(data.to), false, true, true);
 				}
 				connectionInProcess = false;
 			}
@@ -5855,7 +6134,7 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "edc.png") {
 			document.getElementById("divTitleDialogEDC").innerHTML = "Eclipse DataSpace Connector";
 			if (currentNode.STAURL)
-				document.getElementById("DialogEDCURL").value = currentNode.STAURL;
+				document.getElementById("DialogEDCCatalogURL").value = currentNode.STAURL;
 			document.getElementById("DialogEDCSelect").innerHTML = GetOptionsObjectSelectDialog(config.suggestedEDCs);
 			document.getElementById("DialogEDC").showModal();
 		}
@@ -5927,6 +6206,30 @@ function networkDoubleClick(params) {
 				}
 			}
 			document.getElementById("DialogImportJSONLD").showModal();
+		}
+		else if (currentNode.image == "ImportJSON.png") {
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode) {
+				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
+				var data=parentNode.STAdata;
+				if (!data || !data.length) 
+					alert("Parent node has no data loaded. It will be ignored.");
+				else if (data.length>1)
+					alert("Parent node has more than one row. Please select on row first. It will be ignored.");
+				else {
+					var record=data[0];
+					var href=record.dataURL ? record.dataURL : record.href;
+					if (!href)
+						alert("Parent node has no 'dataURL' or 'href' column. It will be ignored.");
+					else {
+						document.getElementById("DialogImportJSONSourceFile").checked=false;
+						document.getElementById("DialogImportJSONSourceURL").checked=true;
+						document.getElementById("DialogImportJSONSourceURLInput").value=href;
+						document.getElementById("DialogImportJSONSourceURLButton").disabled=false;
+					}
+				}
+			}
+			document.getElementById("DialogImportJSON").showModal();
 		}
 		else if (currentNode.image == "ImportDBF.png") {
 			var parentNode=GetFirstParentNode(currentNode);
@@ -6351,7 +6654,7 @@ function addCircularImage(event, dialog, label, image) {
 		networkNodes.add(node);
 	else
 	{
-		returnStart=StartCircularImage(node, networkNodes.get(startingNodeContextId), true);
+		returnStart=StartCircularImage(node, networkNodes.get(startingNodeContextId), true, true, true);
 		if (returnStart==null)
 			return;
 		if (!returnStart)

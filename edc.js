@@ -47,61 +47,90 @@
 
 "use strict"
 
-function ParseEDCCatalog(catalog) {
-	if (catalog["@type"]!="dcat:Catalog")
-		return null;
-	var records=[], record, dataset, distribution;
-	if (!catalog["dcat:dataset"])
-		return null;
-	for (var r=0; r<(catalog["dcat:dataset"].length ? catalog["dcat:dataset"].length : 1); r++) {
-		record={};
-		dataset=catalog["dcat:dataset"].length ? catalog["dcat:dataset"][r] : catalog["dcat:dataset"];
-		if (dataset["@type"]!="dcat:Dataset")
+function ParseEDCCatalog(catalogs) {
+	var catalog;
+	var records=[], record, service, dataset, distribution, counterPartyAddress, policy;
+
+	for (var c=0; c<(typeof catalogs.length !== "undefined" ? catalogs.length : 1); c++) {
+		catalog=typeof catalogs.length !== "undefined" ? catalogs[c] : catalogs;
+		if (catalog["@type"]!="dcat:Catalog")
+			return null;
+
+		if (!catalog["dcat:dataset"])
 			continue;
-		record.id=dataset["@id"];
-		if (dataset["dcat:distribution"])
+
+		if (catalog["dcat:service"])
 		{
-			for (var i=0; i<(dataset["dcat:distribution"].length ? dataset["dcat:distribution"].length : 1); i++) {
-				distribution=dataset["dcat:distribution"].length ? dataset["dcat:distribution"][i] : dataset["dcat:distribution"];
-				if (distribution["@type"]!="dcat:Distribution")
+			counterPartyAddress=null;
+			for (var s=0; s<(catalog["dcat:service"].length ? catalog["dcat:service"].length : 1); s++) {
+				service=catalog["dcat:service"].length ? catalog["dcat:service"][s] : catalog["dcat:service"];
+				if (service["@type"]!="dcat:DataService" || service["dcat:endpointDescription"]!="dspace:connector")
 					continue;
-				if (distribution["dct:format"] && distribution["dct:format"]["@id"]=="HttpData-PULL" && distribution["dcat:accessService"] && 
-						distribution["dcat:accessService"]["@type"]=="dcat:DataService") {
-	        	                record.endpointDescription=distribution["dcat:accessService"]["dcat:endpointDescription"];
-        	        	        record.endpointUrl=distribution["dcat:accessService"]["dcat:endpointUrl"];
-					break;
+				counterPartyAddress=service["dcat:endpointUrl"];
+				break;
+			}
+		}
+		for (var r=0; r<(catalog["dcat:dataset"].length ? catalog["dcat:dataset"].length : 1); r++) {
+			dataset=catalog["dcat:dataset"].length ? catalog["dcat:dataset"][r] : catalog["dcat:dataset"];
+			if (dataset["@type"]!="dcat:Dataset")
+				continue;
+			record={};
+			if (counterPartyAddress)
+				record.counterPartyAddress=counterPartyAddress;
+			record.assetId=dataset["@id"];
+			if (dataset["dcat:distribution"]) {
+				for (var i=0; i<(dataset["dcat:distribution"].length ? dataset["dcat:distribution"].length : 1); i++) {
+					distribution=dataset["dcat:distribution"].length ? dataset["dcat:distribution"][i] : dataset["dcat:distribution"];
+					if (distribution["@type"]!="dcat:Distribution")
+						continue;
+					if (distribution["dct:format"] && distribution["dct:format"]["@id"]=="HttpData-PULL" && distribution["dcat:accessService"] && 
+							distribution["dcat:accessService"]["@type"]=="dcat:DataService" && distribution["dcat:accessService"]["dcat:endpointDescription"]=="dspace:connector") {
+        		        	        record.endpointUrl=distribution["dcat:accessService"]["dcat:endpointUrl"];
+						break;
+					}
 				}
 			}
-		}
-		if (dataset["dct:license"])
-			record.license=dataset["dct:license"];
-		if (dataset["dcat:keyword"])
-		{
-			for (var i=0; i<(dataset["dcat:keyword"].length ? dataset["dcat:keyword"].length : 1); i++) {
-				record["keyword"+(i+1)]=dataset["dcat:keyword"].length ? dataset["dcat:keyword"][i] : dataset["dcat:keyword"];	
+			if (dataset["odrl:hasPolicy"]) {
+				for (var i=0; i<(dataset["odrl:hasPolicy"].length ? dataset["odrl:hasPolicy"].length : 1); i++) {
+					policy=dataset["odrl:hasPolicy"].length ? dataset["odrl:hasPolicy"][i] : dataset["odrl:hasPolicy"];
+					if (policy["@type"]!="odrl:Offer")
+						continue;
+					if (policy["@id"]) {
+        		        	        record.offerId=policy["@id"];
+						break;
+					}
+				}
 			}
+			if (dataset["dct:license"])
+				record.license=dataset["dct:license"];
+			if (dataset["dcat:keyword"])
+			{
+				for (var i=0; i<(dataset["dcat:keyword"].length ? dataset["dcat:keyword"].length : 1); i++) {
+					record["keyword"+(i+1)]=dataset["dcat:keyword"].length ? dataset["dcat:keyword"][i] : dataset["dcat:keyword"];	
+				}
+			}
+			if (dataset["dct:language"])
+				record.language=dataset["dct:language"];
+			if (dataset["dct:name"])
+				record.description=dataset["dct:name"];
+			if (dataset["dct:description"])
+				record.description=dataset["dct:description"];
+			if (dataset["dct:title"])
+				record.title=dataset["dct:title"];
+			if (dataset["dct:publisher"] && dataset["dct:publisher"]["http://xmlns.com/foaf/0.1/homepage"])
+				record.publisher=dataset["dct:publisher"]["http://xmlns.com/foaf/0.1/homepage"];
+			if (dataset["dcat:version"])
+				record.version=dataset["dcat:version"];
+			if (dataset["dct:creator"] && dataset["dct:creator"]["http://xmlns.com/foaf/0.1/name"])
+				record.creator=dataset["dct:creator"] && dataset["dct:creator"]["http://xmlns.com/foaf/0.1/name"]
+			if (dataset["dcat:landingPage"])
+				record.landingPage=dataset["dcat:landingPage"];
+			if (dataset["dcat:mediaType"])
+				record.mediaType=dataset["dcat:mediaType"];
+			else if (dataset["contenttype"])
+				record.mediaType=dataset["contenttype"];
+			records.push(record);
 		}
-		if (dataset["dct:language"])
-			record.language=dataset["dct:language"];
-		if (dataset["dct:name"])
-			record.description=dataset["dct:name"];
-		if (dataset["dct:description"])
-			record.description=dataset["dct:description"];
-		if (dataset["dct:title"])
-			record.title=dataset["dct:title"];
-		if (dataset["dct:publisher"] && dataset["dct:publisher"]["http://xmlns.com/foaf/0.1/homepage"])
-			record.publisher=dataset["dct:publisher"]["http://xmlns.com/foaf/0.1/homepage"];
-		if (dataset["dcat:version"])
-			record.version=dataset["dcat:version"];
-		if (dataset["dct:creator"] && dataset["dct:creator"]["http://xmlns.com/foaf/0.1/name"])
-			record.creator=dataset["dct:creator"] && dataset["dct:creator"]["http://xmlns.com/foaf/0.1/name"]
-		if (dataset["dcat:landingPage"])
-			record.landingPage=dataset["dcat:landingPage"];
-		if (dataset["dcat:mediaType"])
-			record.mediaType=dataset["dcat:mediaType"];
-		else if (dataset["contenttype"])
-			record.mediaType=dataset["contenttype"];
-		records.push(record);
 	}
 	return records;
 }
