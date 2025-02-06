@@ -3801,13 +3801,23 @@ function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
 		alert("Parent node has no STA data associated");
 		return false;
 	}
-	var data=parentNode.STAdata;
+	
+	
+	if(currentNode.STAdata)var data= currentNode.STAdata;
+	else{
+		var data= deapCopy(parentNode.STAdata); //if this was modified before, take info modified, not parentnode (not modify)
+		currentNode.STAdata=data;
+	}
+	
 	if (iRecord<0 || iRecord>=data.length) {
 		alert("Parent node is out of range");
 		return false;
 	}
-	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
-	var dataAttributesArray=Object.keys(dataAttributes)
+
+	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes: getDataAttributes(data);
+	var dataAttributesArray=Object.keys(dataAttributes);
+	currentNode.STAdataAttributes=dataAttributes;
+	networkNodes.update(currentNode);
 
 	if (verify && document.getElementById("dlgCreateUpdateDeleteRecordInitialId"))
 	{
@@ -3896,12 +3906,12 @@ function GetLastRecord(event) {
 }
 
 function UpdateRecordId(node, iRecord) {
-	var data=node.STAdata;
+	var data=node.STAdata; //currentNode
 	if (iRecord<0 || iRecord>=data.length) {
 		alert("Parent node is out of range");
 		return false;
 	}
-	var dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
+	var dataAttributes = currentNode.STAdataAttributes;
 	var dataAttributesArray=Object.keys(dataAttributes)
 
 	var record=data[iRecord];
@@ -3936,6 +3946,7 @@ function UpdateRecordId(node, iRecord) {
 		}
 	}
 	if (updated==true)
+		currentNode.STAdata=data;
 		networkNodes.update(node);
 }
 
@@ -3951,13 +3962,13 @@ function GetCreateRecord(event) {
 		return false;
 	}
 	var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
-	var data=parentNode.STAdata;
+	var data=currentNode.STAdata;
 	if (iRecord<0 || iRecord>=data.length) {
 		alert("Parent node is out of range");
 		return false;
 	}
 	data.splice(iRecord+1, 0, deapCopy(data[iRecord]));
-	UpdateRecordId(parentNode, iRecord+1);
+	UpdateRecordId(currentNode, iRecord+1);
 	networkNodes.update(parentNode);
 	PopulateCreateUpdateDeleteRecord(currentNode, iRecord+1, false);
 }
@@ -3975,7 +3986,7 @@ function GetUpdateRecord(event) {
 		return false;
 	}
 	var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
-	UpdateRecordId(parentNode, iRecord);
+	UpdateRecordId(currentNode, iRecord);
 	PopulateCreateUpdateDeleteRecord(currentNode, iRecord, true);
 }
 
@@ -3994,7 +4005,7 @@ function AskForDeleteRecord(event) {
 		return false;
 	}
 	var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
-	var data=parentNode.STAdata;
+	var data=currentNode.STAdata;
 	if (iRecord<0 || iRecord>=data.length) {
 		alert("Parent node is out of range");
 		return false;
