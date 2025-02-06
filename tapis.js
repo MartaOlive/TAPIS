@@ -8144,7 +8144,7 @@ function calculateMinMaxMeanDesvest(aggregatedData){
 
 function createAndLoadImportGeoJSONNode(data,url){
 	
-	addCircularImage(null, "GeoJSON", "ImportGeoJSON.png");
+	addCircularImage(null, null, "GeoJSON", "ImportGeoJSON.png");
 
 	currentNode = networkNodes.get(network.getSelectedNodes()[0]);
 	document.getElementById("DialogImportGeoJSONSourceExternalData").disabled= false;
