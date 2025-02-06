@@ -5314,7 +5314,6 @@ function GetMeaningTable() {
 	return dataAttributes;
 }
 function changeAttributeNameAndData(data, newName,dataAttributes){ //newName (old att name, new)
-	console.log("difeerent")
 	var n=data.length, m=newName.length ;
 	for (var i=0;i<n;i++){ //change data
 		for (var e=0;e<m;e++){
@@ -5326,7 +5325,6 @@ function changeAttributeNameAndData(data, newName,dataAttributes){ //newName (ol
 		dataAttributes [newName[i][1]]=deapCopy(dataAttributes [newName[i][0]]);
 		delete dataAttributes [newName[i][0]];
 	}
-	console.log(data);
 	networkNodes.update(currentNode);
 }
 function SaveMeaningTable(event) {
@@ -5891,7 +5889,6 @@ function SeparateColumns(event) {
 		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
 		var columnName= selectColumnName.options[selectColumnName.selectedIndex].value;
 		var delimiter=document.getElementById("SeparateColumsInput_column").value;
-		console.log(columnName+delimiter);
 		if (!parentNode.STAdata) {
 			showInfoMessage("No data loaded in the parent node.");
 			return;
@@ -5936,7 +5933,6 @@ function populateSelectCoulmnSeparateColumns(){
 function SeparateColumnsNodeArrayColumns(columnName, delimiter){
 	var data= currentNode.STAdata;
 	var n= data.length, highestNumber=1, newvarColumn;
-	console.log(delimiter);
 	if (currentNode?.STAdataAttributes[columnName]["type"]!="string"){
 		alert("The content of column selected to separate must be string type");
 		return;
