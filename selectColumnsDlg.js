@@ -66,92 +66,93 @@ function ShowTableSelectColumnsDialog(div_id, parentNode, node, selectDef, feven
 }
 
 
-		function GetSelectColumns(event) {
-			event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogSelectColumns").close();
+function GetSelectColumns(event) {
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogSelectColumns").close();
 
-			//if (currentNode.image == "SelectColumnsSTA.png")
-			//{
-				var previousSTAURL=null;
-				var parentNode=GetFirstParentNode(currentNode);
-				if (parentNode) {
-					if (parentNode.STAURL)
-					{
-						previousSTAURL=currentNode.STAURL;
-						currentNode.STAURL = parentNode.STAURL;
-					}
-					if (parentNode.STAdata)
-						currentNode.STAdata = deapCopy(parentNode.STAdata);
-					if (parentNode.STAdataAttributes)
-						currentNode.STAdataAttributes = deapCopy(parentNode.STAdataAttributes);
-				}
-			//}
-			currentNode.STASelectedColumns=[];
-			var dataAttributes = currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);
-			const dataAttributesArray = Object.keys(dataAttributes);
+	//if (currentNode.image == "SelectColumnsSTA.png")
+	//{
+		var previousSTAURL=null;
+		var parentNode=GetFirstParentNode(currentNode);
+		if (parentNode) {
+			if (parentNode.STAURL)
+			{
+				previousSTAURL=currentNode.STAURL;
+				currentNode.STAURL = parentNode.STAURL;
+			}
+			if (parentNode.STAdata)
+				currentNode.STAdata = deapCopy(parentNode.STAdata);
+			if (parentNode.STAdataAttributes)
+				currentNode.STAdataAttributes = deapCopy(parentNode.STAdataAttributes);
+		}
+	//}
+	currentNode.STASelectedColumns=[];
+	var dataAttributes = currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);
+	const dataAttributesArray = Object.keys(dataAttributes);
+	for (var a = 0; a < dataAttributesArray.length; a++) {
+		if (!document.getElementById("SelectColumns_" + a).checked)
+			break;
+	}
+	if (a < dataAttributesArray.length) //A checked attribute has been found ("for" breaks before ending).
+	{
+		if (currentNode.image == "SelectColumnsSTA.png" && parentNode.STAURL)
+		{
+			var s;
+			currentNode.STAURL=AddQueryParamsToURL(currentNode.STAURL, "$select=");
 			for (var a = 0; a < dataAttributesArray.length; a++) {
-				if (!document.getElementById("SelectColumns_" + a).checked)
-					break;
-			}
-			if (a < dataAttributesArray.length) //A checked attribute has been found ("for" breaks before ending).
-			{
-				if (currentNode.image == "SelectColumnsSTA.png" && parentNode.STAURL)
-				{
-					var s;
-					currentNode.STAURL=AddQueryParamsToURL(currentNode.STAURL, "$select=");
-					for (var a = 0; a < dataAttributesArray.length; a++) {
-						if (document.getElementById("SelectColumns_" + a).checked) {
-							if (dataAttributesArray[a]=="@iot.selfLink")
-								s = dataAttributesArray[a];
-							else if (dataAttributesArray[a].startsWith("@iot."))
-								s = dataAttributesArray[a].substring(5);
-							else
-								s = dataAttributesArray[a].replace("@iot.", "/");  //Changes Datastreams@iot.navigationLink to Datastreams/navigationLink
+				if (document.getElementById("SelectColumns_" + a).checked) {
+					if (dataAttributesArray[a]=="@iot.selfLink")
+						s = dataAttributesArray[a];
+					else if (dataAttributesArray[a].startsWith("@iot."))
+						s = dataAttributesArray[a].substring(5);
+					else
+						s = dataAttributesArray[a].replace("@iot.", "/");  //Changes Datastreams@iot.navigationLink to Datastreams/navigationLink
 
-							currentNode.STAURL += s + ",";
-							currentNode.STASelectedColumns[a]=true;
-						}
-						else
-							currentNode.STASelectedColumns[a]=false;
-					}
-					currentNode.STAURL = currentNode.STAURL.slice(0, -1); //remove the last coma.
-					currentNode.STAExpectedLength = parentNode.STAExpectedLength;
-					networkNodes.update(currentNode);
-					showInfoMessage("Selecting STA columns...");
-					UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
-					LoadJSONNodeSTAData(currentNode);
-				}
-				else
-				{
-					//If there is no STA to query, the selection is done manually (table mode).
-					//currentNode.STAdata = deapCopy(currentNode.STAdata);
-					for (var a = 0; a < dataAttributesArray.length; a++) {
-						if (document.getElementById("SelectColumns_" + a).checked)
-							currentNode.STASelectedColumns[a]=true;
-						else
-							currentNode.STASelectedColumns[a]=false;
-					}
-
-					var data=currentNode.STAdata, record;
-					for (var i = 0; i < data.length; i++) {
-						record=data[i];
-						for (var a = 0; a < dataAttributesArray.length; a++) {
-							if (!currentNode.STASelectedColumns[a]) {
-								delete record[dataAttributesArray[a]];
-							}
-						}
-					}
-					for (var a = 0; a < dataAttributesArray.length; a++) {
-						if (!currentNode.STASelectedColumns[a])
-							delete dataAttributes[dataAttributesArray[a]];
-					}
-					networkNodes.update(currentNode);
-				}
-			}
-			else   //If no selected column has been found, no filter is done and all columns are selected
-			{
-				for (var a = 0; a < dataAttributesArray.length; a++) {
+					currentNode.STAURL += s + ",";
 					currentNode.STASelectedColumns[a]=true;
 				}
+				else
+					currentNode.STASelectedColumns[a]=false;
 			}
+			currentNode.STAURL = currentNode.STAURL.slice(0, -1); //remove the last coma.
+			currentNode.STAExpectedLength = parentNode.STAExpectedLength;
+			networkNodes.update(currentNode);
+			showInfoMessage("Selecting STA columns...");
+			UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+			LoadJSONNodeSTAData(currentNode);
 		}
+		else
+		{
+			//If there is no STA to query, the selection is done manually (table mode).
+			//currentNode.STAdata = deapCopy(currentNode.STAdata);
+			for (var a = 0; a < dataAttributesArray.length; a++) {
+				if (document.getElementById("SelectColumns_" + a).checked)
+					currentNode.STASelectedColumns[a]=true;
+				else
+					currentNode.STASelectedColumns[a]=false;
+			}
+
+			var data=currentNode.STAdata, record;
+			for (var i = 0; i < data.length; i++) {
+				record=data[i];
+				for (var a = 0; a < dataAttributesArray.length; a++) {
+					if (!currentNode.STASelectedColumns[a]) {
+						delete record[dataAttributesArray[a]];
+					}
+				}
+			}
+			for (var a = 0; a < dataAttributesArray.length; a++) {
+				if (!currentNode.STASelectedColumns[a])
+					delete dataAttributes[dataAttributesArray[a]];
+			}
+			networkNodes.update(currentNode);
+			updateQueryAndTableArea(currentNode);
+		}
+	}
+	else   //If no selected column has been found, no filter is done and all columns are selected
+	{
+		for (var a = 0; a < dataAttributesArray.length; a++) {
+			currentNode.STASelectedColumns[a]=true;
+		}
+	}
+}

@@ -174,7 +174,8 @@
 		{
 			"group": "AD4GD",
 			"URLs": [
-			{"desc": "AD4GD EDC federated catalogue",
+			{
+				"desc": "AD4GD EDC federated catalogue",
 				"url": "https://ad4gd-catalog-edc.dashboard-siba.store", 
 				"version": "v1alpha",
 				"consumerUrl": "https://consumer-edc-connector.apps.dcw1.paas.psnc.pl"
@@ -194,6 +195,10 @@
 			{
 				"desc": "Amount of water in Catalan reservoires",
 				"url": "https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.csv"
+			},
+			{
+				"desc": "G-reqs complete table",
+				"url": "https://discomap.eea.europa.eu/EuroGEO/G-reqs-api/GeneralExports/csvAllPublic"
 			}
 			]
 		}

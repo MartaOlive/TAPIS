@@ -195,13 +195,13 @@ function getAttributeTypeFromDBFType(datatype) {
 	switch (datatype) {
 		case 'C':
 			return "string";
-			case 'N':
-				case 'F':
-				case 'O':
-					return "number";
-				case 'I':
-				case '+':
-					return "integer";
+		case 'N':
+		case 'F':
+		case 'O':
+			return "number";
+		case 'I':
+		case '+':
+			return "integer";
 		case 'D':
 		case '@':  //Timestamp
 			return "isodatetime";

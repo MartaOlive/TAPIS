@@ -44,121 +44,35 @@
 */
 
 "use strict"
-		function populateSTAscatterPlotObject(parentNodes){
-			var STAscatterPlotObject=[], attributes, attributesKeys,attributesFiltered=[];
-			console.log ("populate")
-			for (var i=0;i<parentNodes.length;i++){
-				
-				attributes= parentNodes[i].STAdataAttributes ? parentNodes[i].STAdataAttributes :  parentNodes[i].STAdata?getDataAttributes(parentNodes[i].STAdata):"";
-				attributesKeys=Object.keys(attributes);
-				for (var e=0;e<attributesKeys.length;e++){
-					if (!attributesKeys[e].includes("@iot"))attributesFiltered.push(attributesKeys[e])
-				}
-				
-				STAscatterPlotObject.push({
-					axisX:"",
-					axisY:"",
-					variableName:"",
-					units:"",
-					attributes:attributesFiltered
-
-				})
-			}
-			currentNode.STAscatterPlotObject=STAscatterPlotObject;
-		}
-
-		function createTableScatterPlot(){
-			var ScatterPlotTableDiv= document.getElementById("ScatterPlotTableDiv");
-			ScatterPlotTableDiv.innerHTML=`<table border="0"><tbody>`
-
-
-			ScatterPlotTableDiv.innerHTML+=`</tbody></table>`
-		}
 
 		function ShowScatterPlotDialog(parentNodes) {
-
-			console.log(parentNodes);
-			for (var i=0;i<parentNodes.length;i++){
-				if (!parentNodes[i].STAdata || !parentNodes[i].STAdata.length) {
-					document.getElementById("DialogScatterPlot").innerHTML = `Some node (${parentNodes[i].label}) linked has no data, all nodes linked must have data to open this option <br>
-					<div class="center"><button value="ok" onClick="CloseDialogScatterPlot(event)" formmethod="dialog">Close</button></div></form>`;
-
-					return;
-				}
+			var data = parentNodes[0].STAdata;
+			if (!data || !data.length) {
+				document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
+				return;
 			}
-			populateSTAscatterPlotObject(parentNodes);
-			//createTableScatterPlot();
-			//drawTableScatterPlot();
+			document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
 
-		
+			var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
+			PopulateSelectSaveLayerDialog("DialogScatterPlotAxisX", dataAttributes, "phenomenonTime");
+			PopulateSelectSaveLayerDialog("DialogScatterPlotAxisY", dataAttributes, "result");
 
+			if (parentNodes.length<2)
+			{
+				document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
+				return;
+			}
+			document.getElementById("DialogScatterPlotVariableUoM").style.display = "inline-block"
 
-
-
-
-	// 	<!-- <table border="0"><tr><td>
-	// 	<span id="DialogScatterPlotTitle"></span>
-	// 	<form>
-	// 	<fieldset>
-	// 			<legend>Axes:</legend>
-	// 		<label>Axis x:
-	// 			<span id="DialogScatterPlotAxisX"></span>
-	// 		</label>
-	// 		<br>
-	// 		<label>Axis y:
-	// 			<span id="DialogScatterPlotAxisY"></span>
-	// 		</label>
-	// 	</fieldset>
-	// 	<br>
-	// 	<fieldset id="DialogScatterPlotVariableUoM">
-	// 			<legend>Title:</legend>
-	// 		<label>Variable name:
-	// 			<span id="DialogScatterPlotVariable"></span>
-	// 		</label>
-	// 		<br>
-	// 		<label>Units of measure:
-	// 			<span id="DialogScatterPlotUoM"></span>
-	// 		</label>
-	// 	</fieldset>
-	// 	<br>
-	// 	<div class="center">
-	// 		<button value="draw" onClick="DrawScatterPlot(event)">Draw</button>
-	// 		<button value="ok" onClick="CloseDialogScatterPlot(event)" formmethod="dialog">Close</button>
-	// 	</div>
-	// 	</form>
-	// </td> -->
-
-
-
-
-			// var data = parentNodes[0].STAdata;
-			// if (!data || !data.length) {
-			// 	document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
-			// 	return;
-			// }
-			// document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
-
-			// var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
-			// PopulateSelectSaveLayerDialog("DialogScatterPlotAxisX", dataAttributes, "phenomenonTime");
-			// PopulateSelectSaveLayerDialog("DialogScatterPlotAxisY", dataAttributes, "result");
-
-			// if (parentNodes.length<2)
-			// {
-			// 	document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
-			// 	return;
-			// }
-			// document.getElementById("DialogScatterPlotVariableUoM").style.display = "inline-block"
-
-			// data = parentNodes[1].STAdata;
-			// if (!data || data.length!=1) {
-			// 	document.getElementById("DialogScatterPlotTitle").innerHTML = "Second connection should only have one item. Continuing without title.";
-			// 	document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
-			// 	return;
-			// }
-			// var dataAttributes = parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(data);
-			// PopulateSelectSaveLayerDialog("DialogScatterPlotVariable", dataAttributes, "name");
-			// PopulateSelectSaveLayerDialog("DialogScatterPlotUoM", dataAttributes, "unitOfMeasurement/symbol");
-
+			data = parentNodes[1].STAdata;
+			if (!data || data.length!=1) {
+				document.getElementById("DialogScatterPlotTitle").innerHTML = "Second connection should only have one item. Continuing without title.";
+				document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
+				return;
+			}
+			var dataAttributes = parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(data);
+			PopulateSelectSaveLayerDialog("DialogScatterPlotVariable", dataAttributes, "name");
+			PopulateSelectSaveLayerDialog("DialogScatterPlotUoM", dataAttributes, "unitOfMeasurement/symbol");
 		}
 
 		function ShowBarPlotDialog(parentNodes) {
@@ -229,29 +143,23 @@
 
 					if (ScatterPlotGraph2d)
 						ScatterPlotGraph2d.destroy();
-					//for (var e=0;e<x;e++){
-
-					
-						for (var i = 0; i < data.length; i++) {
-							record=data[i];
-							if (i==0){
-								minx=maxx=record[selectedOptions.AxisX];
-								miny=maxy=record[selectedOptions.AxisY];
-							} else {
-								if (minx>record[selectedOptions.AxisX])
-									minx=record[selectedOptions.AxisX];
-								if (maxx<record[selectedOptions.AxisX])
-									maxx=record[selectedOptions.AxisX];
-								if (miny>record[selectedOptions.AxisY])
-									miny=record[selectedOptions.AxisY];
-								if (maxy<record[selectedOptions.AxisY])
-									maxy=record[selectedOptions.AxisY];
-								//aixo xo cada linea es un group
-							}
-							items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: 0 /*group:e*/})
+					for (var i = 0; i < data.length; i++) {
+						record=data[i];
+						if (i==0){
+							minx=maxx=record[selectedOptions.AxisX];
+							miny=maxy=record[selectedOptions.AxisY];
+						} else {
+							if (minx>record[selectedOptions.AxisX])
+								minx=record[selectedOptions.AxisX];
+							if (maxx<record[selectedOptions.AxisX])
+								maxx=record[selectedOptions.AxisX];
+							if (miny>record[selectedOptions.AxisY])
+								miny=record[selectedOptions.AxisY];
+							if (maxy<record[selectedOptions.AxisY])
+								maxy=record[selectedOptions.AxisY];
 						}
-					//}
-					
+						items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: 0})
+					}
 					var dataset = new vis.DataSet(items);
 					var groups = new vis.DataSet();
 					var options = {
