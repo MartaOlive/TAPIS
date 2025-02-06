@@ -4141,10 +4141,27 @@ async function GetFilterRowsOGCAPIFeatures(){
 }
 
 function GetFilterRows(event) {
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogFilterRows").close();
+	event.preventDefault(); // We don't want to submit this form	
 	//updateinfoFilter
 	takeSelectInformation(currentNode.id);
+
+	//ALERT
+	//currentNode.STAinfoFilter
+	var close=true;
+	for (var i=0;i<currentNode.STAinfoFilter.length;i++){
+		if (currentNode.STAinfoFilter[i][2][0]==" "){
+			alert ("There is at least one Property field not chosen ");
+			close=false;
+		}
+		else if (currentNode.STAinfoFilter[i][3]=="--- Choose operator ---"){
+			alert ("There is at least one operator field not chosen ");
+			close=false;
+		}
+		else if (currentNode.STAinfoFilter[i][4]==""){
+			alert ("There is at least one value empty ");
+			close=false;
+		}
+	}
 
 	if (currentNode.image == "FilterRowsTable.png" ) { //import CSV
 		GetFilterRowsTable();
@@ -4157,9 +4174,10 @@ function GetFilterRows(event) {
 	}else if (currentNode.image == "FilterRowsSTA.png"){ //STA
 		GetFilterRowsSTA();
 	}
-
+	if (close) document.getElementById("DialogFilterRows").close();
 	showInfoMessage("Filtering STA rows...");
 	networkNodes.update(currentNode);
+
 }
 
 function getGeospatialFilter(node, parentNode){
@@ -5116,7 +5134,10 @@ function GetHTMLVariableDefUoM(suffix, params) {
 	cdns.push('<fieldset>');
 	if (params.nameInLegend)
 		cdns.push('	<legend><span id="DialogSaveLayerVariable' + suffix + '"></span>',
-			'	</legend>');
+			'	</legend>',
+			'	<label>Name:',
+			'		<span id="DialogSaveLayerName' + suffix + '"></span>',
+			'	</label><br>',);
 	else	
 		cdns.push('	<legend>Observed property:</legend>',
 			'	<label>Name:',
@@ -5264,6 +5285,7 @@ function ShowMeaningTableDialog(node) {
 		cdns.push('</select>');				
 		document.getElementById("DialogMeaningVariableDropDown_"+i).innerHTML=cdns.join("");
 
+		document.getElementById("DialogSaveLayerName_"+i).innerHTML='<input id="DialogSaveLayerNameInput_' + i + '" type="text" size="50" value="'+dataAttributesArray[i]+'">';
 		document.getElementById("DialogMeaningVariableType_"+i).innerHTML=getHTMLCharacterAttributeType(dataAttributes[dataAttributesArray[i]].type);
 		document.getElementById("DialogMeaningVariableDescription_"+i).innerHTML='<input id="DialogMeaningVariableDescriptionInput_' + i + '" type="text" size="50" value="a">';
 		document.getElementById("DialogMeaningVariableDefinition_"+i).innerHTML='<input id="DialogMeaningVariableDefinitionInput_' + i + '" type="text" size="50" value="">';
@@ -5279,16 +5301,34 @@ function GetMeaningTable() {
 	var data = currentNode.STAdata;
 	var dataAttributes = currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(data);
 	var dataAttributesArray = Object.keys(dataAttributes);
+	var newName=[];
 	for (var i = 0; i < dataAttributesArray.length; i++) {
+		if (document.getElementById("DialogSaveLayerNameInput_"+i).value!=dataAttributesArray[i])newName.push([dataAttributesArray[i],document.getElementById("DialogSaveLayerNameInput_"+i).value]);
 		dataAttributes[dataAttributesArray[i]].description=document.getElementById("DialogMeaningVariableDescriptionInput_"+i).value;
 		dataAttributes[dataAttributesArray[i]].definition=document.getElementById("DialogMeaningVariableDefinitionInput_"+i).value;
 		dataAttributes[dataAttributesArray[i]].UoM=document.getElementById("DialogMeaningVariableUoMInput_"+i).value;
 		dataAttributes[dataAttributesArray[i]].UoMSymbol=document.getElementById("DialogMeaningVariableUoMSymbolInput_"+i).value;
 		dataAttributes[dataAttributesArray[i]].UoMDefinition=document.getElementById("DialogMeaningVariableUoMDefinitionInput_"+i).value;
 	}
+	if (newName.length!=0)	changeAttributeNameAndData(data, newName,dataAttributes);
 	return dataAttributes;
 }
-
+function changeAttributeNameAndData(data, newName,dataAttributes){ //newName (old att name, new)
+	console.log("difeerent")
+	var n=data.length, m=newName.length ;
+	for (var i=0;i<n;i++){ //change data
+		for (var e=0;e<m;e++){
+			data[i][newName[e][1]]=data[i][newName[e][0]];
+		delete data[i][newName[e][0]];
+		}
+	}
+	for (var i=0;i<m;i++){ //change dataAttributes
+		dataAttributes [newName[i][1]]=deapCopy(dataAttributes [newName[i][0]]);
+		delete dataAttributes [newName[i][0]];
+	}
+	console.log(data);
+	networkNodes.update(currentNode);
+}
 function SaveMeaningTable(event) {
 	event.preventDefault(); // We don't want to submit this form
 	currentNode.STAdataAttributes=GetMeaningTable();

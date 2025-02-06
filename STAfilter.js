@@ -45,9 +45,9 @@
 
 "use strict"
 
-const selectConditionContent = ['---Choose operator ---', ' = ', ' &ne; ', ' &ge; ', ' > ', ' &le; ', ' < ', ' [a,b] ', ' (a,b] ', ' [a,b) ', ' (a,b) ', 'contains', 'no contains', 'starts with', 'ends with', 'year', 'month', 'day', 'hour', 'minute', 'date'];
-const selectConditionContentText = ['---Choose operator ---', ' = ', ' &ne; ', 'contains', 'no contains', 'starts with', 'ends with'];
-const selectConditionContentOGCAPIFeatures = ['---Choose operator ---', ' = ', ' &ne; ', ' &ge; ', ' > ', ' &le; ', ' < ', ' [a,b] ', ' (a,b] ', ' [a,b) ', ' (a,b) '];
+const selectConditionContent = ['--- Choose operator ---', ' = ', ' &ne; ', ' &ge; ', ' > ', ' &le; ', ' < ', ' [a,b] ', ' (a,b] ', ' [a,b) ', ' (a,b) ', 'contains', 'no contains', 'starts with', 'ends with', 'year', 'month', 'day', 'hour', 'minute', 'date'];
+const selectConditionContentText = ['--- Choose operator ---', ' = ', ' &ne; ', 'contains', 'no contains', 'starts with', 'ends with'];
+const selectConditionContentOGCAPIFeatures = ['--- Choose operator ---', ' = ', ' &ne; ', ' &ge; ', ' > ', ' &le; ', ' < ', ' [a,b] ', ' (a,b] ', ' [a,b) ', ' (a,b) '];
 
 
 function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
@@ -162,8 +162,8 @@ function fillColumsSelectorFilterRows(selectorInfo, count) { //withoutEntities_3
 
 	var selectorColumns = document.getElementById("selectorColumns_" + count);
 	var option = document.createElement("option"); //First option
-	option.setAttribute("value", "-- choose a field--");
-	option.innerHTML = "-- choose a field--";
+	option.setAttribute("value", "--- Choose a field ---");
+	option.innerHTML = "--- Choose a field ---";
 	selectorColumns.appendChild(option);
 	//Real options 
 	//Which is the origin of the information to fill the selector
@@ -562,23 +562,16 @@ function fillPropertySelector(number, lastEntity, selectorInfo) { //lastEntity: 
 
 	var entity= getSTAEntityPlural(lastEntity, true);
 	var properties = [], n= STAEntities[entity].properties.length;
+
+	properties.push("id")
 	for (var p = 0; p < n; p++) {
-		properties.push(STAEntities[entity].properties[p].name)
+		properties.push(STAEntities[entity].properties[p].name);
+
 	}
-
-
-
-
-
 	var option = document.createElement("option"); //First option
 	option.setAttribute("value", " ");
-	option.innerHTML = "--- choose Property ---";
+	option.innerHTML = "--- Choose Property ---";
 	selectProperty.appendChild(option);
-
-	var option2 = document.createElement("option"); //First option
-	option2.setAttribute("value", "id");
-	option2.innerHTML = "id";
-	selectProperty.appendChild(option2);
 
 	for (var i = 0; i < properties.length; i++) {// to fill property/property
 		if (properties[i] == "unitOfMeasurement") {
