@@ -7774,6 +7774,8 @@ function takeParentsInformationInGeoDistance(){
 				finalURL = AddQueryParamsToURL(url, "$filter=");
 
 			currentNode.STAURL= finalURL;	
+			currentNode.STAdataAttributes=parentNode.STAdataAttributes;
+			networkNodes.update(currentNode);
 		}else if (!parentNode.STAURL &&parentNode.STAdata.length>1){
 			alert ("There is a node linked not STA with more than one register, if you want to use it, apply a select row to choose your register")
 			
@@ -7902,7 +7904,7 @@ async function GetGeoDistanceFilter(event){
 		
 
 	currentNode.STAURL= url;
-	currentNode.STAdata= await loadAPIDataWithReturn(url,"EntitiesFilterRow") 
+	currentNode.STAdata= await loadAPIDataWithReturn(url,"EntitiesFilterRow");
 	networkNodes.update(currentNode);
 	document.getElementById("DialogGeospatialFilterRowsByDistance").close();
 }
