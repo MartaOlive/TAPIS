@@ -465,16 +465,30 @@ function RemoveQueryParamFromURL(url, queryparam) {
 
 //https://stackoverflow.com/questions/50036922/change-a-css-stylesheets-selectors-properties/50036923#50036923
 function changeCSSStyle(selector, cssProp, cssVal) {
-	var ssMain = 0;  //The first stylesheet
+	//var ssMain = 0;  //The first stylesheet
 	var cssRules = (document.all) ? 'rules': 'cssRules';
 
-	for (var i=0, len=document.styleSheets[ssMain][cssRules].length; i<len; i++) {
-		if (document.styleSheets[ssMain][cssRules][i].selectorText === selector) {
-			document.styleSheets[ssMain][cssRules][i].style[cssProp] = cssVal;
-			return;
-		}
+	// for (var i=0, len=document.styleSheets.length; i<len; i++) {
+	// 	for(var e=0;e<document.styleSheets[i][cssRules].length;e++){
+	// 		if (document.styleSheets[i][cssRules][e].selectorText === selector) {
+	// 			document.styleSheets[i][cssRules][e].style[cssProp] = cssVal;
+	// 			return;
+	// 		}
+	// 	}
+
+	// }
+	var ssMain = 14;
+	 for (var i=0, len=document.styleSheets[ssMain][cssRules].length; i<len; i++) {
+	 	if (document.styleSheets[ssMain][cssRules][i].selectorText === selector) {
+	 	 document.styleSheets[ssMain][cssRules][i].style[cssProp] = cssVal;
+	 	 return;
+	  }
 	}
+
 }
+
+
+
 
 //Returns the protocol of a URL without the double slash
 function getProtocol(s){
