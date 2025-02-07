@@ -5906,8 +5906,10 @@ function SeparateColumns(event) {
 	//Fer les funcions per larray
 	if (parentNode && document.getElementById("DialogSeparateColumnsJSON").checked) {//JSON columns
 		//SeparateColumnsNode(currentNode, parentNode, options);
-		data= SeparateColumnsData(currentNode.STAdata, deapCopy(parentNode.STAdataAttributes), currentNode.STAdataAttributes, options);
+	
+		data= SeparateColumnsData(currentNode.STAdata, null, currentNode.STAdataAttributes, options);
 		currentNode.STAdata=data;
+		uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,currentNode.STAdata);
 		networkNodes.update(currentNode);
 	}
 	else{ //ARRAY
