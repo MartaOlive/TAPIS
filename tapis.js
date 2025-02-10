@@ -7254,28 +7254,28 @@ function addColumnsToTableInAggregateColumns(event) {
 			switch(currentNode.STAnewColumnsToAdd[i][0]) {
 				case  "Sum":
 				if (decimalNumber!=""){
-						addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
+						addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber); //data, columnName,columnsToSum, decimalnumber
 
 				}else{
-						addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); //data, columnName,columnsToSum
+						addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],""); //data, columnName,columnsToSum
 
 					}
 					break;
 				case  "Product": //(s'ha de crear)
 					if (decimalNumber!=""){
-						addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
+						addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber); //data, columnName,columnsToSum, decimalnumber
 
 				}else{
-						addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); //data, columnName,columnsToSum
+						addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],""); //data, columnName,columnsToSum
 
 					}
 					break;
 				case  "MinValue":
 					if (decimalNumber!=""){
-					addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes); 
+					addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber); 
 
 			}else{
-					addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); 
+					addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],""); 
 					}
 					break;
 				case  "MaxValue":
@@ -7283,33 +7283,33 @@ function addColumnsToTableInAggregateColumns(event) {
 					addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,dataAttributes); 
 			}else{
 					}
-					addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); 
+					addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],""); 
 
 					break;
 				case  "Mean":
 					if (decimalNumber!=""){
-					addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+					addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
 
 			}else{
-					addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+					addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"");
 
 					}
 					break;
 				case  "Variance":
 					if (decimalNumber!=""){
-						addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+						addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
 
 			}else{
-						addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+						addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"");
 
 					}
 					break;
 				case  "Median":
 					if (decimalNumber!=""){
-						addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+						addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
 
 				}else{
-						addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+						addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"");
 
 					}
 					break;
@@ -7319,72 +7319,72 @@ function addColumnsToTableInAggregateColumns(event) {
 
 				case  "Mode":
 					if (decimalNumber!=""){
-					addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+					addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
 				}else{
-					addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+					addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"");
 					}
 					break;
 				case  "FirstValue":
 					if (decimalNumber!=""){
-					addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+					addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
 				}else{
-					addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+					addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"");
 					}
 					break;
 
 				case  "StandardDeviation":
 					if (decimalNumber!=""){
-					addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,"", dataAttributes);
+					addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,"");
 				}else{
-					addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
+					addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]);
 					}
 					break;
 				case  "LastValue":
 					if (decimalNumber!=""){
-					addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+					addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
 				}else{
-					addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+					addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"");
 					}
 					break;
 				case  "Q1":
 					if (decimalNumber!=""){
-					addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+					addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
 				}else{
-					addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+					addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"");
 					}
 					break;
 				case  "Q3":
 					if (decimalNumber!=""){
-					addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+					addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
 				}else{
-					addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
+					addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"");
 					}
 					break;
 				case  "RandomValue":
 					if (decimalNumber!=""){
-					addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,"", dataAttributes);
+					addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,"");
 				}else{
-					addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
+					addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]);
 					}
 					break;
 				case  "Count": //TE SENTIT?
-					addnewColumnCount(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
+					addnewColumnCount(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]);
 					break;
 				case  "CountDefined": //Falta fer la funció que conta
 
 					break;
 				case  "Range": 						
 					if (decimalNumber!=""){
-						addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+						addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
 					}else{
-						addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]),"", dataAttributes;
+						addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]),"";
 					}
 					break;
 				case  "ProportionDefined": //Falta fer la funció que conta
 					if (decimalNumber!=""){
-					addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
+					addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber);
 				}else{
-					addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]),"", dataAttributes;
+					addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]),"";
 					}
 
 					break;

@@ -1069,7 +1069,7 @@ function addnewColumnAggr(data, columnName, columnsToEvaluate, aggrFunc, decimal
 			values.push(data[i][columnsToEvaluate[a]]);
 		}
 		aggr=aggrFunc(values); //Use function to be able to evaluate many columns
-		if (decimalNumber || decimalNumber!=""){
+		if (decimalNumber && decimalNumber!=""){
 			if (decimalNumber==0){ //round number
 				data[i][columnName]= Math.round(aggr);
 			}
