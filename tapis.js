@@ -465,30 +465,17 @@ function RemoveQueryParamFromURL(url, queryparam) {
 
 //https://stackoverflow.com/questions/50036922/change-a-css-stylesheets-selectors-properties/50036923#50036923
 function changeCSSStyle(selector, cssProp, cssVal) {
-	//var ssMain = 0;  //The first stylesheet
 	var cssRules = (document.all) ? 'rules': 'cssRules';
 
-	// for (var i=0, len=document.styleSheets.length; i<len; i++) {
-	// 	for(var e=0;e<document.styleSheets[i][cssRules].length;e++){
-	// 		if (document.styleSheets[i][cssRules][e].selectorText === selector) {
-	// 			document.styleSheets[i][cssRules][e].style[cssProp] = cssVal;
-	// 			return;
-	// 		}
-	// 	}
-
-	// }
-	var ssMain = 14;
-	 for (var i=0, len=document.styleSheets[ssMain][cssRules].length; i<len; i++) {
-	 	if (document.styleSheets[ssMain][cssRules][i].selectorText === selector) {
-	 	 document.styleSheets[ssMain][cssRules][i].style[cssProp] = cssVal;
+	for (var ss=0, sslen=document.styleSheets.length; ss<sslen; ss++) {
+		for (var i=0, ilen=document.styleSheets[ss][cssRules].length; i<ilen; i++) {
+			if (document.styleSheets[ss][cssRules][i].selectorText === selector) {
+				document.styleSheets[ss][cssRules][i].style[cssProp] = cssVal;
 	 	 return;
 	  }
 	}
-
+	}
 }
-
-
-
 
 //Returns the protocol of a URL without the double slash
 function getProtocol(s){
@@ -4186,8 +4173,6 @@ function GetFilterRows(event) {
 		//updateinfoFilter
 	takeSelectInformation(currentNode.id);
 
-	//ALERT
-	//currentNode.STAinfoFilter
 	var close=true;
 	for (var i=0;i<currentNode.STAinfoFilter.length;i++){
 		if (currentNode.STAinfoFilter[i][2][0]==" "){
@@ -4449,9 +4434,11 @@ function getJSONSchemaTypeFromAttributeType(t) {
 
 function getJSONTypeOrISODatetime(s) {
 	var type=getJSONType(s), numberReturned;
-	if (type =="string" && (s.length==19 || s.length==20 || s.length==23 || s.length==25)){ //  If fragmentStartsWithISODate receives something that is not a string it fails
-		numberReturned= fragmentStartsWithISODate(s, 0);
-		if (numberReturned!=0)return "isodatetime";
+	if (type =="string" && s.length>0)
+	{ 
+		numberReturned=fragmentStartsWithISODate(s, 0);
+		if (s.length==numberReturned) 
+			return "isodatetime";
 	}
 	return type;
 }
@@ -4528,9 +4515,29 @@ function getHTMLCharacterAttributeType(type) {
 	return cdns.join('');
 }
 
+function modifyDataAttributeTypeNewRecord(dataAttributeType, type) {	
+	if (dataAttributeType=="null" || dataAttributeType=="undefined")
+		dataAttributeType=type;
+	if (type!="null" && type!="undefined")
+	{
+		if ( (dataAttributeType=="boolean" && type!="boolean") ||
+			((dataAttributeType=="integer" || dataAttributeType=="number") && (type=="object" || type=="array" || type=="string")) ||
+			(dataAttributeType=="string" && (type=="object" || type=="array")) ||
+			(dataAttributeType=="array" && type=="object") )
+			return type;
+		if (dataAttributeType=="integer" && type=="number")
+			return "number";
+		if (dataAttributeType=="isodatetime" && (type=="string" || type=="number"))
+			return "string";
+	}
+	return dataAttributeType; 
+}
+
 //Creates dataAttributes and determines the "type" attribute.
 //Possible values are the usual JSON types ("string", "boolean", "array", "null", "object", "undefined", "integer", "number")
 // plus "isodatetime" and "anyURI"
+// Any changes to this function should be applied to getDataAttributeType(data)
+
 function getDataAttributes(data) {
 	var dataAttributes = {}, dataAttribute, type;
 
@@ -4540,35 +4547,37 @@ function getDataAttributes(data) {
 		for (var k = 0; k < keys.length; k++) {
 			if (dataAttributes[keys[k]]) {
 				dataAttribute=dataAttributes[keys[k]];
-				if (!isAttributeAnyURI(keys[k]))
-				{
-					type=getJSONTypeOrISODatetime(record[keys[k]]);
-					if (dataAttribute.type=="null" || dataAttribute.type=="undefined")
-						dataAttribute.type=type;
-					if (type!="null" && type!="undefined")
-					{
-						if ( (dataAttribute.type=="boolean" && type!="boolean") ||
-							((dataAttribute.type=="integer" || dataAttribute.type=="number") && (type=="object" || type=="array" || type=="string")) ||
-							(dataAttribute.type=="string" && (type=="object" || type=="array")) ||
-							(dataAttribute.type=="array" && type=="object") )
-							dataAttribute.type=type;
-						else if (dataAttribute.type=="integer" && type=="number")
-							dataAttribute.type="number";
-						else if (dataAttribute.type=="isodatetime" && (type=="string" || type=="number"))
-							dataAttribute.type="string";
-					}
-					if (dataAttribute.type=="object")
-						break;
-				}
+				if (!isAttributeAnyURI(keys[k]) && dataAttribute.type!="object")
+					dataAttribute.type=modifyDataAttributeTypeNewRecord(dataAttribute.type, getJSONTypeOrISODatetime(record[keys[k]]));
 			}
 			else
+			{
 				dataAttributes[keys[k]]={
 					type: isAttributeAnyURI(keys[k]) ? "anyURI" : getJSONTypeOrISODatetime(record[keys[k]])
 				};
+			}
 		}
 	}
 	return dataAttributes;
 }
+
+function getDataAttributeType(data, dataAttributeName) {
+	var type, dataAttributeType="undefined";
+
+	if (isAttributeAnyURI(dataAttributeName))
+		return "anyURI";
+
+	for (var i = 0; i < data.length; i++) {
+		var record=data[i];
+		if (typeof record[dataAttributeName] !== "undefined") {
+			dataAttributeType=modifyDataAttributeTypeNewRecord(dataAttributeType, getJSONTypeOrISODatetime(record[dataAttributeName]))
+			if (dataAttributeType=="object")
+				return dataAttributeType;
+		}
+	}
+	return dataAttributeType;
+}
+
 
 //Add the definition URL to a preexisting dataAttributes based on the STA Entity requested.
 function addSemanticsSTADataAttributes(dataAttributes, url) {
@@ -5917,14 +5926,12 @@ function SeparateColumns(event) {
 	if (document.getElementById("DialogSeparateColumns_RemovePresent").checked)
 		options.removeAlreadyPresent=true;
 	var parentNode=GetFirstParentNode(currentNode);
+	if (!parentNode)
+		return;
 	//Fer les funcions per larray
-	if (parentNode && document.getElementById("DialogSeparateColumnsJSON").checked) {//JSON columns
-		//SeparateColumnsNode(currentNode, parentNode, options);
-	
-		data= SeparateColumnsData(currentNode.STAdata, null, currentNode.STAdataAttributes, options);
-		currentNode.STAdata=data;
-		uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,currentNode.STAdata);
-		networkNodes.update(currentNode);
+	if (document.getElementById("DialogSeparateColumnsJSON").checked) {//JSON columns
+		currentNode.STAdataAttributes={};
+		var result=separateObjectColumns(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, currentNode.STAdataAttributes, options);
 	}
 	else{ //ARRAY
 		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
@@ -5934,113 +5941,38 @@ function SeparateColumns(event) {
 			showInfoMessage("No data loaded in the parent node.");
 			return;
 		}
-		if (parentNode.STAURL)
-			node.STAURL=parentNode.STAURL;
-	
-		currentNode.STAExpectedLength = parentNode.STAExpectedLength;
-		if (document.getElementById("DialogSeparateColumnsAs_Columns").checked && document.getElementById("DialogSeparateColumnsLists").checked ){ //array columns
-			SeparateColumnsNodeArrayColumns( columnName, delimiter);
-
-		}else{ //array records
-			SeparateColumnsNodeArrayRecords(columnName, delimiter);
+		if (document.getElementById("DialogSeparateColumnsAs_Columns").checked && document.getElementById("DialogSeparateColumnsLists").checked) //array columns
+			var result=separateColumnArrayColumns(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, columnName, delimiter);
+		else //array records
+			var result=separateColumnArrayRecords(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, columnName, delimiter);
 		}
-	}
+	currentNode.STAdata=result.data;
+	currentNode.STAdataAttributes=result.dataAttributes;
+	networkNodes.update(currentNode);
+	updateQueryAndTableArea(currentNode);
+	UpdateChildenTable(currentNode);
 }
 
 function populateSelectColumnSeparateColumns(){
 	var parentNode= GetFirstParentNode(currentNode);
-	if (!parentNode.STAdata) {
+	if (!parentNode || !parentNode.STAdata) {
 		showInfoMessage("No data loaded in the parent node.");
 		return;
 	}
-	if (parentNode.STAURL)
-		currentNode.STAURL=parentNode.STAURL;
-	currentNode.STAExpectedLength =parentNode.STAExpectedLength;
-	currentNode.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-	currentNode.STAdata=deapCopy(parentNode.STAdata);
+	currentNode.STAURL=null;
+	//currentNode.STAExpectedLength =parentNode.STAExpectedLength;
 	networkNodes.update(currentNode);
 	
-	var attributes= Object.keys(currentNode.STAdataAttributes);
+	var attributes= Object.keys(parentNode.STAdataAttributes);
 		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
 		selectColumnName.innerHTML="";
 		var cdns=[];
 		for (var i=0;i< attributes.length;i++){
-			cdns.push(`<option value="${attributes[i]}"> ${attributes[i]} (${currentNode.STAdataAttributes[attributes[i]].type})</option>`)
+		cdns.push(`<option value="${attributes[i]}"> ${attributes[i]} (${parentNode.STAdataAttributes[attributes[i]].type})</option>`)
 		}
 		selectColumnName.innerHTML+=cdns.join("");
 		document.getElementById("SeparateColumsInput_column").value=",";
 }
-
-function SeparateColumnsNodeArrayColumns(columnName, delimiter){
-	var data= currentNode.STAdata;
-	var n= data.length, highestNumber=1, newvarColumn;
-	if (currentNode?.STAdataAttributes[columnName]["type"]!="string"){
-		alert("The content of column selected to separate must be string type");
-		return;
-	}
-	for (var i=0; i<n;i++){
-		data[i]["temporaryAttribute"]= data[i][columnName].split(delimiter);
-		if (highestNumber<data[i]["temporaryAttribute"].length)highestNumber=data[i]["temporaryAttribute"].length;
-
-	}
-	for (var e=0;e<n;e++){
-		if (highestNumber!=1){
-			for (var a=0;a<highestNumber;a++){
-				newvarColumn=columnName+(a+1);
-				if (data[e]["temporaryAttribute"][a])data[e][newvarColumn]=data[e]["temporaryAttribute"][a].trim();
-				else data[e][newvarColumn]="";
-			}
-		}
-		delete data[e][columnName]
-		delete data[e]["temporaryAttribute"];
-	}
-	
-	currentNode.STAdata= data;
-	uploadDataAttributesAddingNewColumns (currentNode.STAdataAttributes,data); //currentNode.STAdataAttributes upload and networkNodes.update
-	UpdateChildenTable(currentNode);
-
-}
-function SeparateColumnsNodeArrayRecords(columnName, delimiter){
-	var data= currentNode.STAdata;
-	var n= data.length, newDataArray=[], separateDataArray,newColumname;
-	if (currentNode?.STAdataAttributes[columnName]["type"]!="string"){
-		alert("The content of column selected to separate must be string type");
-		return;
-	}
-	for (var i=0;i<n;i++){
-		separateDataArray=data[i][columnName].split(delimiter);
-		newColumname=columnName+"-new";
-		for (var e=0;e<separateDataArray.length;e++){
-			delete data[i][columnName];
-			data[i][newColumname]=separateDataArray[e].trim();
-			newDataArray.push(deapCopy(data[i]))
-		}
-
-	}
-	currentNode.STAdata= newDataArray;
-	uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes,newDataArray); //currentNode.STAdataAttributes upload and networkNodes.update
-
-	UpdateChildenTable(currentNode);
-}
-
-// function SeparateColumnsNode(node, parentNode, options) { //JSON
-// 	//var data=parentNode.STAdata;
-
-// 	// if (!data) {
-// 	// 	showInfoMessage("No data loaded in the parent node.");
-// 	// 	return;
-// 	// }
-// 	// if (parentNode.STAURL)
-// 	// 	node.STAURL=parentNode.STAURL;
-
-// 	// node.STAExpectedLength = parentNode.STAExpectedLength;
-// 	// if (parentNode.STAdataAttributes)
-// 	// 	node.STAdataAttributes={};
-	
-
-// 	//node.STAdata=SeparateColumnsData(data, parentNode.STAdataAttributes, node.STAdataAttributes, options);
-// 	//networkNodes.update(node);
-// }
 
 function ShowQueryNode(node) {
 	if (node.STAURL) {
@@ -7186,7 +7118,9 @@ function addColumnsToTableInCreateColumns(){
 		networkNodes.update(currentNode);	
 			
 	}
-	uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes, currentNode.STAdata);
+	var attributes= uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes, currentNode.STAdata);
+	currentNode.STAdataAttributes= attributes;
+	networkNodes.update(currentNode);
 	document.getElementById("DialogCreateColumns").close();
 	showInfoMessage("New columns have been added");
 }
@@ -7229,8 +7163,7 @@ event.preventDefault();
 var TypeOfOperation = document.getElementsByName("operationsRadioAggrgatedColumns"); //operation
 var STANewColumnsArray = [], attributesArray = [], attribute;
 var dataKeys = Object.keys(currentNode.STAdata[0]);
-var chooseNumberDecimalsInputRadio, chooseNumberDecimalsInput, typeOfOperationLenght = TypeOfOperation.length, dataKeysLenght = dataKeys.length;
-var columnList = currentNode.STAcolumnsList;
+var typeOfOperationLenght = TypeOfOperation.length, dataKeysLenght = dataKeys.length;
 var columnName;
 
 var typeOfOperationExist = false, atLeast2attributesSelected = false;
@@ -7457,7 +7390,9 @@ function addColumnsToTableInAggregateColumns(event) {
 					break;
 			}
 		}
-		uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes,currentNode.STAdata);
+		var attributes= uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes,currentNode.STAdata);
+		currentNode.STAdataAttributes=attributes;
+		networkNodes.update(currentNode);
 		showInfoMessage("New columns have been added");
 		document.getElementById("DialogAggregateColumns").close();
 	}else{
@@ -7471,15 +7406,15 @@ function uploadDataAttributesAddingNewColumns(attributes, data,origin){
 	var oldAttributes= Object.keys(attributes);
 	var newAttributes={}, n=data.length, dataToAttribute=[], columnName, objToData, keysNewAttributes;
 
-	for (var i=0;i<columnNames.length;i++){
-		if (oldAttributes.includes(columnNames[i])){
+	for (var i=0;i<columnNames.length;i++) {
+		if (oldAttributes.includes(columnNames[i])) {
 			keysNewAttributes=Object.keys(newAttributes); //avoid repetitions
 			if (!keysNewAttributes.includes(columnNames[i])){
 				newAttributes[columnNames[i]]= (attributes[columnNames[i]]);
 			}
 		}else{ //newColumns
 			if (origin!="calculator"){
-					for (var e=0;e<n;e++){
+					for (var e=0; e<n; e++){
 						columnName=columnNames[i];
 						objToData={}
 						objToData[columnNames[i]]=data[e][columnNames[i]]
@@ -7492,8 +7427,8 @@ function uploadDataAttributesAddingNewColumns(attributes, data,origin){
 		
 		}
 	}
-	currentNode.STAdataAttributes=newAttributes;
-	networkNodes.update(currentNode);
+	return newAttributes
+
 }
 
 function writeColumnNameInAggregatedColumns(event){
@@ -7628,7 +7563,9 @@ function addColumnsToTableInColumnsCalculator(){
 		}
 	}
 
-	uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes, currentNode.STAdata, "calculator");
+	var attributes= uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes, currentNode.STAdata, "calculator");
+	currentNode.STAdataAttributes=attributes;
+	networkNodes.update(currentNode);
 	showInfoMessage("New columns have been added");
 	document.getElementById("DialogColumnsCalculator").close();
 
@@ -7747,7 +7684,8 @@ function concatenateTables(){
 			allAttributes={...allAttributes,...getDataAttributes(parentNodes[i].STAdata)}
 		}
 	}
-	uploadDataAttributesAddingNewColumns(allAttributes, currentNode.STAdata);
+	var attributes= uploadDataAttributesAddingNewColumns(allAttributes, currentNode.STAdata);
+	currentNode.STAdataAttributes=attributes;
 	networkNodes.update(currentNode);
 	document.getElementById("DialogConcatenateTables").close();
 }

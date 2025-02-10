@@ -47,77 +47,86 @@
 
 var config;
 
-const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", startNode: true, help: "Connects to a SensorThings API or a STAplus instance and returns a table with the list of entities suported"},
-			ogcAPICols: {name: "OGC API cols", description: "OGC API collections", startNode: true, help: "Connects to the collections page of a OGC Web API instance and returns a table with the list collections available"},
-			ogcAPIItems: {name: "OGC API items", description: "OGC API items", startNode: true, help: "Connects to a collection page on an OGC Web API Features or derivatives and returns a table with the items available. One of the columns contains the geometry JSON object"},
-			csw: {name: "Catalogue", description: "OGC CSW", startNode: true, help: "Connects to a OGC CSW cataloge service. The result is a table with a list of records in the catalogue that have data associated with them"},
-			s3Service: {name: "S3 Service", description: "S3 Service", startNode: true, help: "Connects to a Amazon S3 compatible service (e.g. MinIO) and return the list of buckets available as a table"},
-			s3Bucket: {name: "S3 Bucket", description: "S3 Bucket", startNode: true, help: "Connects to a Amazon S3 backet (e.g. MinIO) and return the list of files available (in the root folder and all subfolders as a table"},
-			edc: {name: "DataSpace cat.", description: "DataSpace cat.", startNode: true, help: "Connects an Eclipse Data Connector (EDC) Catalogue and returns the list of assets available as a table"},
-			edcAsset: {name: "DataSpace asset", description: "DataSpace asset", help: "Prepares an Eclipse Data Connector (EDC) Asset"},
-			ImportCSV: {name: "CSV", description: "CSV", startNode: true, help: "Imports data from a CSV file and returns a table"},
-			ImportDBF: {name: "DBF", description: "DBF", startNode: true, help: "Imports data from a DBASE III+ or IV file and returns a table"},
-			ImportJSONLD: {name: "JSON-LD", description: "JSON-LD", startNode: true, help: "Imports data from a JSON-LD file and returns a table"},
-			ImportJSON: {name: "JSON", description: "JSON", startNode: true, help: "Imports data from a JSON file and returns a table"},
-			ImportGeoJSON: {name: "GeoJSON", description: "GeoJSON", startNode: true, help: "Imports the features of a GeoJSON and returns a table where each feature is a record. One of the columns contains the geometry JSON object"},
-			staRoot: {name: "STA root", description: "STA root", help:"Returns to the root of the SensorThings API or STSTAplus service in use. In other words, removes the path and query parameters of the previous node"}};
+const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", startNode: true, help: "Connects to a SensorThings API or a STAplus instance and returns a table with the list of entities suported by the API."},
+			ogcAPICols: {name: "OGC API cols", description: "OGC API collections", startNode: true, help: "Connects to the collections page of a OGC Web API instance and returns a table with the list collections available."},
+			ogcAPIItems: {name: "OGC API items", description: "OGC API items", startNode: true, help: "Connects to a collection page on an OGC Web API Features or derivatives and returns a table with the items available. One of the columns contains the geometry JSON object."},
+			csw: {name: "Catalogue", description: "OGC CSW", startNode: true, help: "Connects to a OGC CSW cataloge service. The result is a table with a list of records in the catalogue that have data associated with them."},
+			s3Service: {name: "S3 Service", description: "S3 Service", startNode: true, help: "Connects to a Amazon S3 compatible service (e.g. MinIO) and return the list of buckets available as a table."},
+			s3Bucket: {name: "S3 Bucket", description: "S3 Bucket", startNode: true, help: "Connects to a Amazon S3 backet (e.g. MinIO) and return the list of files available (in the root folder and all subfolders as a table."},
+			edc: {name: "DataSpace cat.", description: "DataSpace cat.", startNode: true, help: "Connects to an Eclipse Data Connector (EDC) Catalogue and returns the list of assets available as a table."},
+			edcAsset: {name: "DataSpace asset", description: "DataSpace asset", help: "Prepares an Eclipse Data Connector (EDC) Asset."},
+			ImportCSV: {name: "CSV", description: "CSV", startNode: true, help: "Imports data from a CSV file and returns a table."},
+			ImportDBF: {name: "DBF", description: "DBF", startNode: true, help: "Imports data from a DBASE III+ or IV file and returns a table."},
+			ImportJSONLD: {name: "JSON-LD", description: "JSON-LD", startNode: true, help: "Imports data from a JSON-LD file and returns a table."},
+			ImportJSON: {name: "JSON", description: "JSON", startNode: true, help: "Imports data from a JSON file and returns a table."},
+			ImportGeoJSON: {name: "GeoJSON", description: "GeoJSON", startNode: true, help: "Imports the features of a GeoJSON and returns a table where each feature is a record. One of the columns contains the geometry JSON object."},
+			staRoot: {name: "STA root", description: "STA root", help:"Returns to the root of the SensorThings API or STSTAplus service in use. In other words, removes the path and query parameters of the previous node."}};
 const ServicesAndAPIsArray = Object.keys(ServicesAndAPIs);
+const ServicesAndAPIsType = {singular: "Data input tool", plural: "Data input tools"};
+
 const STAEntities = {
-	ObservedProperties: { singular: "ObservedProperty", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "definition", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help:"Visualize through a table the ObservedProperties of this STAPlus service" },
-	Observations: { singular: "Observation", entities: [{ name: "Datastream", required: "true" }, { name: "MultiDatastream", required: "true" }, { name: "FeatureOfInterest", required: "false" }, { name: "ObservationGroups", required: "false" }, { name: "Subjects", required: "false" }, { name: "Objects", required: "false" }], properties: [{ name: "phenomenonTime", dataType: "object", required: "true" }, { name: "resultTime", dataType: "isodatetime", required: "true" }, { name: "result", dataType: "", required: "true" }, { name: "resultQuality", dataType: "object", required: "false" }, { name: "validTime", dataType: "data_isoperiod", required: "false" }, { name: "parameters", dataType: "JSON", required: "false" }], entityRelations: ["Object", "Subject"], help:"Visualize through a table the Observations of this STAPlus service" },
-	FeaturesOfInterest: { singular: "FeatureOfInterest", entities: [{ name: "Observations", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "encodingType", dataType: "string", required: "true" }, { name: "feature", dataType: "", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }],help:"Visualize through a table the FeaturesOfInterest of this STAPlus service" },
-	Sensors: { singular: "Sensor", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "encodingType", dataType: "string", required: "true" }, { name: "metadata", dataType: "", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help:"Visualize through a table the Sensors of this STAPlus service" },
-	Things: { singular: "Thing", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Party", required: "true" }, { name: "Locations", required: "false" }, { name: "HistoricalLocations", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help:"Visualize through a table the Things of this STAPlus service"},
-	Locations: { singular: "Location", entities: [{ name: "Things", required: "false" }, { name: "HistoricalLocations", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "encodingType", dataType: "string", required: "true" }, { name: "location", dataType: "", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help:"Visualize through a table the Locations of this STAPlus service"},
+	ObservedProperties: { singular: "ObservedProperty", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "definition", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help: "Visualize through a table the ObservedProperties of this STAPlus service.", helpEdit: "Create, edit or delete an ObservedProperty in a STAPlus service."},
+	Observations: { singular: "Observation", entities: [{ name: "Datastream", required: "true" }, { name: "MultiDatastream", required: "true" }, { name: "FeatureOfInterest", required: "false" }, { name: "ObservationGroups", required: "false" }, { name: "Subjects", required: "false" }, { name: "Objects", required: "false" }], properties: [{ name: "phenomenonTime", dataType: "object", required: "true" }, { name: "resultTime", dataType: "isodatetime", required: "true" }, { name: "result", dataType: "", required: "true" }, { name: "resultQuality", dataType: "object", required: "false" }, { name: "validTime", dataType: "data_isoperiod", required: "false" }, { name: "parameters", dataType: "JSON", required: "false" }], entityRelations: ["Object", "Subject"], help:"Visualize through a table the Observations of this STAPlus service.", helpEdit: "Create, edit or delete an Observation in a STAPlus service."},
+	FeaturesOfInterest: { singular: "FeatureOfInterest", entities: [{ name: "Observations", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "encodingType", dataType: "string", required: "true" }, { name: "feature", dataType: "", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }],help:"Visualize through a table the FeaturesOfInterest of this STAPlus service.", helpEdit: "Create, edit or delete a FeatureOFInterest in a STAPlus service." },
+	Sensors: { singular: "Sensor", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "encodingType", dataType: "string", required: "true" }, { name: "metadata", dataType: "", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help: "Visualize through a table the Sensors of this STAPlus service.", helpEdit: "Create, edit or delete a Sensor in a STAPlus service."},
+	Things: { singular: "Thing", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Party", required: "true" }, { name: "Locations", required: "false" }, { name: "HistoricalLocations", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help: "Visualize through a table the Things of this STAPlus service.", helpEdit: "Create, edit or delete a Thing in a STAPlus service."},
+	Locations: { singular: "Location", entities: [{ name: "Things", required: "false" }, { name: "HistoricalLocations", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "encodingType", dataType: "string", required: "true" }, { name: "location", dataType: "", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }], help: "Visualize through a table the Locations of this STAPlus service.", helpEdit: "Create, edit or delete a Location in a STAPlus service."},
 	HistoricalLocations: { singular: "HistoricalLocation", entities: [{ name: "Things", required: "true" }, { name: "Location", required: "true" }], properties: [{ name: "time", dataType: "isodatetime", required: "true" }], help:"Visualize through a table the HistoricalLocations of this STAPlus service" },
-	Datastreams: { singular: "Datastream", entities: [{ name: "Party", required: "true" }, { name: "Sensor", required: "true" }, { name: "ObservedProperty", required: "true" }, { name: "Campaigns", required: "false" }, { name: "License", required: "false" }, { name: "Observations", required: "false" }, { name: "Thing", required: "true" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "observationType", dataType: "string", required: "true" }, { name: "unitOfMeasurement", dataType: "JSON", required: "true" }, { name: "observedArea", dataType: "object", required: "false" }, { name: "phenomenonTime", dataType: "data_isoperiod", required: "false" }, { name: "resultTime", dataType: "data_isoperiod", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }], help:"Visualize through a table the Datastreams of this STAPlus service" },
-	MultiDatastreams: { singular: "MultiDatastream", entities: [{ name: "Party", required: "true" }, { name: "Sensor", required: "true" }, { name: "ObservedProperty", required: "true" }, { name: "Campaigns", required: "false" }, { name: "License", required: "false" }, { name: "Observations", required: "false" }, { name: "Thing", required: "true" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "observationType", dataType: "string", required: "true" }, { name: "unitOfMeasurement", dataType: "JSON", required: "true" }, { name: " observedArea", dataType: "object", required: "false" }, { name: "phenomenonTime", dataType: "data_isoperiod", required: "false" }, { name: "resultTime", dataType: "data_isoperiod", required: "false" }, { name: "multiObservationDataType", dataType: "JSON", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }],help:"Visualize through a table the MultiDatastreams of this STAPlus service"  },
-	Parties: { singular: "Party", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Campaigns", required: "false" }, { name: "ObservationGroups", required: "false" }, { name: "Things", required: "false" }], properties: [{ name: "description", dataType: "string", required: "false" }, { name: "authId", dataType: "string", required: "false" }, { name: "role", dataType: "PartyRoleCode", required: "true" }, { name: "displayName", dataType: "string", required: "false" }], help:"Visualize through a table the Parties of this STAPlus service"},
-	Campaigns: { singular: "Campaign", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Party", required: "true" }, { name: "License", required: "false" }, {name:"ObservationGroups", required:"false"}], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "classification", dataType: "string", required: "false" }, { name: "termsOfUse", dataType: "string", required: "true" }, { name: "privacyPolicy", dataType: "string", required: "false" }, { name: "creationTime", dataType: "isodatetime", required: "true" }, { name: "url", dataType: "URI", required: "false" }, { name: "startTime", dataType: "isodatetime", required: "false" }, { name: "endTime", dataType: "isodatetime", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }],help:"Visualize through a table the Campaigns of this STAPlus service"},
-	Licenses: { singular: "License", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Campaigns", required: "false" }, { name: "ObservationGroups", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "definition", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "logo", dataType: "string", required: "false" }, { name: "attributionText", dataType: "JSON", required: "false" }],help:"Visualize through a table the Licenses of this STAPlus service"},
-	ObservationGroups: { singular: "ObservationGroup", entities: [{ name: "Party", required: "true" }, { name: "Campaigns", required: "false" }, { name: "License", required: "false" }, { name: "Observations", required: "false" }, { name: "Relations", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "purpose", dataType: "string", required: "false" }, { name: "creationTime", dataType: "isodatetime", required: "false" }, { name: "endTime", dataType: "isodatetime", required: "false" }, { name: "termsOfUsed", dataType: "string", required: "false" }, { name: "privacyPolicy", dataType: "string", required: "false" }, { name: "dataQuality", dataType: "JSON", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }],help:"Visualize through a table the ObservationGroups of this STAPlus service" },
-	Relations: { singular: "Relation", entities: [{ name: "Object", required: "true" }, { name: "Subject", required: "true" }, { name: "ObservationGroups", required: "false" }], properties: [{ name: "role", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "false" }, { name: "externalObject", dataType: "URI", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }], entityRelations: ["Objects", "Subjects"],help:"Visualize through a table the Relations of this STAPlus service" }
+	Datastreams: { singular: "Datastream", entities: [{ name: "Party", required: "true" }, { name: "Sensor", required: "true" }, { name: "ObservedProperty", required: "true" }, { name: "Campaigns", required: "false" }, { name: "License", required: "false" }, { name: "Observations", required: "false" }, { name: "Thing", required: "true" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "observationType", dataType: "string", required: "true" }, { name: "unitOfMeasurement", dataType: "JSON", required: "true" }, { name: "observedArea", dataType: "object", required: "false" }, { name: "phenomenonTime", dataType: "data_isoperiod", required: "false" }, { name: "resultTime", dataType: "data_isoperiod", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }], help: "Visualize through a table the Datastreams of this STAPlus service.", helpEdit: "Create, edit or delete a Datastream in a STAPlus service."},
+	MultiDatastreams: { singular: "MultiDatastream", entities: [{ name: "Party", required: "true" }, { name: "Sensor", required: "true" }, { name: "ObservedProperty", required: "true" }, { name: "Campaigns", required: "false" }, { name: "License", required: "false" }, { name: "Observations", required: "false" }, { name: "Thing", required: "true" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "observationType", dataType: "string", required: "true" }, { name: "unitOfMeasurement", dataType: "JSON", required: "true" }, { name: " observedArea", dataType: "object", required: "false" }, { name: "phenomenonTime", dataType: "data_isoperiod", required: "false" }, { name: "resultTime", dataType: "data_isoperiod", required: "false" }, { name: "multiObservationDataType", dataType: "JSON", required: "true" }, { name: "properties", dataType: "JSON", required: "false" }],help:"Visualize through a table the MultiDatastreams of this STAPlus service.", helpEdit: "Create, edit or delete a MultiDatastream in a STAPlus service."},
+	Parties: { singular: "Party", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Campaigns", required: "false" }, { name: "ObservationGroups", required: "false" }, { name: "Things", required: "false" }], properties: [{ name: "description", dataType: "string", required: "false" }, { name: "authId", dataType: "string", required: "false" }, { name: "role", dataType: "PartyRoleCode", required: "true" }, { name: "displayName", dataType: "string", required: "false" }], help: "Visualize through a table the Parties of this STAPlus service.", helpEdit: "Create, edit or delete a Party in a STAPlus service."},
+	Campaigns: { singular: "Campaign", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Party", required: "true" }, { name: "License", required: "false" }, {name:"ObservationGroups", required:"false"}], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "classification", dataType: "string", required: "false" }, { name: "termsOfUse", dataType: "string", required: "true" }, { name: "privacyPolicy", dataType: "string", required: "false" }, { name: "creationTime", dataType: "isodatetime", required: "true" }, { name: "url", dataType: "URI", required: "false" }, { name: "startTime", dataType: "isodatetime", required: "false" }, { name: "endTime", dataType: "isodatetime", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }], help: "Visualize through a table the Campaigns of this STAPlus service.", helpEdit: "Create, edit or delete an Campaign in a STAPlus service."},
+	Licenses: { singular: "License", entities: [{ name: "Datastreams", required: "false" }, { name: "MultiDatastreams", required: "false" }, { name: "Campaigns", required: "false" }, { name: "ObservationGroups", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "definition", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "logo", dataType: "string", required: "false" }, { name: "attributionText", dataType: "JSON", required: "false" }],help: "Visualize through a table the Licenses of this STAPlus service.", helpEdit: "Create, edit or delete a License in a STAPlus service."},
+	ObservationGroups: { singular: "ObservationGroup", entities: [{ name: "Party", required: "true" }, { name: "Campaigns", required: "false" }, { name: "License", required: "false" }, { name: "Observations", required: "false" }, { name: "Relations", required: "false" }], properties: [{ name: "name", dataType: "string", required: "true" }, { name: "description", dataType: "string", required: "true" }, { name: "purpose", dataType: "string", required: "false" }, { name: "creationTime", dataType: "isodatetime", required: "false" }, { name: "endTime", dataType: "isodatetime", required: "false" }, { name: "termsOfUsed", dataType: "string", required: "false" }, { name: "privacyPolicy", dataType: "string", required: "false" }, { name: "dataQuality", dataType: "JSON", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }],help: "Visualize through a table the ObservationGroups of this STAPlus service.", helpEdit: "Create, edit or delete an ObservationGroup in a STAPlus service."},
+	Relations: { singular: "Relation", entities: [{ name: "Object", required: "true" }, { name: "Subject", required: "true" }, { name: "ObservationGroups", required: "false" }], properties: [{ name: "role", dataType: "URI", required: "true" }, { name: "description", dataType: "string", required: "false" }, { name: "externalObject", dataType: "URI", required: "false" }, { name: "properties", dataType: "JSON", required: "false" }], entityRelations: ["Objects", "Subjects"], help: "Visualize through a table the Relations of this STAPlus service", helpEdit: "Create, edit or delete an Relation in a STAPlus service."}
 };
 const STAEntitiesArray = Object.keys(STAEntities);
-const STASpecialQueries = {ObsLayer: {description: "Observations Layer", query: "Observations?$orderby=phenomenonTime%20desc&$expand=Datastream($select=unitOfMeasurement),Datastream/ObservedProperty($select=name,description,definition),FeatureOfInterest($select=description,feature)&$select=phenomenonTime,result", help: "Link to STAplus service to add a query to this url to obtain a table with phenomenomTime and results from Observations, unitsOfMeasurements and ObservedProperty from Datastreams and a description from the featureOfInterest related "}};
-const STASpecialQueriesArray = Object.keys(STASpecialQueries);
-const STAOperations = {SelectColumnsSTA: {description: "Select Columns", callSTALoad: true, help:"Obtains a table only with columns selected. Requeres to be connected to another SensorThings API or a STAplus entity"},
-			ExpandColumnsSTA: {description: "Expand Columns", callSTALoad: true, help: "Adds columns coming from properties from related entities. Requeres to be connected to another SensorThings API or a STAplus entity"},
-			SelectRowSTA: {description: "Select Row", callSTALoad: true, help: "Obtains a table only with the selected record. Requeres to be connected to another SensorThings API or a STAplus entity. A single record is required to related entities to this one and navegate the SensorThings API or a STAplus data model"},
-			FilterRowsSTA: {description: "Filter Rows", callSTALoad: true, help: "Obtains a table with the records that match your conditions. Requeres to be connected to another SensorThings API or a STAplus entity"},
-			FilterRowsByTime: {description: "Filter Rows by time", help: "Obtains a table with records that match with a time interval. It is possible to group them by time periods. Requeres to be connected to another SensorThings API or a STAplus entity"},
-			GeoFilterPolSTA: {description: "Filter Rows by Polygon", callSTALoad: true, help: "Obtains a table with the records within a polygon. Requeres to be connected to another SensorThings API or a STAplus entity and to a table with a record that has a geometry (polygon)"},
-			GeoFilterPntSTA: {description: "Filter Rows by Distance", callSTALoad: true, help: "Obtains a table with the records that are closer that a given distance of a point. Requeres to be connected to another SensorThings API or a STAplus entity"},
-			SortBySTA: {description: "Sort by", callSTALoad: true, help: "Obtains a table with data sorted by a given criteria. Requeres to be connected to another SensorThings API or a STAplus entity"},
-			UploadObservations: {description: "Upload in STA", leafNode: true, help: "Saves some observations to a SensorThings API or a STAplus server"},
-			//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
-			OneValueSTA: {description: "One Value", leafNode: true, help: "Shows the last posted value. This value is updated according to the time period you set. Requeres to be connected to another SensorThings API or a STAplus entity. Do not requre to connect to previous sort by time. This node can not be connected to other dependend nodes" },
-			CountResultsSTA: { description: "Count results", leafNode: true, help: "Returns the total number of records returned by the API query without loading them in a table. Only with STA data. Requeres to be connected to another SensorThings API or a STAplus entity. This node can not be connected to other dependend nodes"}};
-const STAOperationsArray = Object.keys(STAOperations);
+const STAEntitiesType = {singular: "STA entity reading tool", plural: "STA entities reading tool", 
+			singularEdit: "STA entity transaction tool", pluralEdit: "STA entities create, edit or delete tool"};
 
-const TableOperations = {Table: {description: "View Table", leafNode: true, help: "Shows a table of the dependent node in a dialog box. Since the table behind the active node is represented in the table area, the use of this operation is no longer recommended"},
-			ViewQuerySTA: {description: "View Query", leafNode: true, help: "Shows the completed URL that is used to make the query to obtain the data from a service or an API of the depended node in a dialog box. Since the URL behind the active node is always represented in the query and table area, the use of this operation is no longer recommended"},
-			EditRecord: {description: "Edit record", help: "Shows and allows editing a record in the table of the related node. NOTE: If you are using data from a web service and you ask for data again, this change will be lost"},
-			Meaning: {description: "Column meaning", help: "Shows and allows editing the semantics (definition and units of measure) of the table columns"},
-			SelectColumnsTable: {description: "Select Columns", help: "Obtains a table only with the selected columns. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL"},
-			SelectRowTable: {description: "Select Row", help: "Obtains a table only with the selected record. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL" },
-			FilterRowsTable: {description: "Filter Rows", help: "Obtain a table with the records that match the contitions. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL"},
-			JoinTables: {description: "Join Tables", help:"Creates a single table that is the result of joining two tables using some selected column values in both tables to defined the merge criteria"},
-			ConcatenateTables: {description: "Concatenate Columns", help: "Create a single table by adding the records of the second table to the first one. The columns with the same name in both tables are merged in a sigle column" },
-			GroupBy: {description: "GroupBy", help: "Creates a table will the columns containng selected statistics of the aggregation of some records that have the same values other selected columns"},
-			AggregateColumns: {description: "Aggregate Columns", help: "Adds a new column to a table with the aggregation of other previous selected columns"},
-			CreateColumns: {description: "Create Columns", help: "Adds a new column to your table. This column can be left empty, filled with a constant value or filled with an autoincremental value"},
-			ColumnsCalculator: {description: "Columns calculator", help: "Adds a new column to your table where for each record the new column contains the result of an operation involving other column values of that record"},
-			ColumnStatistics: {description:"Columns statistics", help: "Create a table where, for each column the main statistics for the column values of all records are recorded"},
-			SeparateColumns: {description: "Separate Columns", help: "Splits a column containing a JSON object into separated new columns and removes the original column." },
-			ScatterPlot: {description: "Scatter Plot", leafNode: true, help: "Creates a scatter plot with a the values of the collumn of a table"},
-			BarPlot: {description: "Bar Plot", leafNode: true, help: "Create a bar or pie chart with a the values of the collumn of a table"},
-			ImageViewer: {description: "Image Viewer", leafNode: true, help: "Shows the pictures referenced by a column. Assumes that the content of the column are url to images supported by the browser (commonly in JPEG or PNG format)"},
-			SaveTable: {description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the collumn definition is semantically enriched; see 'meaning')."},
-			SaveLayer: {description: "Save Layer", leafNode: true, help: "Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values"},
-			OpenMap: {description: "Open Map", leafNode: true, help: "Opens a table as a map in a map browser interface. It requires two columns with a latitude and longitude values"},
-			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface"}};
+const STASpecialQueries = {ObsLayer: {description: "Observations Layer", query: "Observations?$orderby=phenomenonTime%20desc&$expand=Datastream($select=unitOfMeasurement),Datastream/ObservedProperty($select=name,description,definition),FeatureOfInterest($select=description,feature)&$select=phenomenonTime,result", help: "Link to STAplus service to add a query to this url to obtain a table with phenomenomTime and results from Observations, unitsOfMeasurements and ObservedProperty from Datastreams and a description from the featureOfInterest related."}};
+const STASpecialQueriesArray = Object.keys(STASpecialQueries);
+const STASpecialQueriesType = {singular: "Complex query", plural: "Complex queries"};
+
+const STAOperations = {SelectColumnsSTA: {description: "Select Columns", callSTALoad: true, help:"Obtains a table only with columns selected. Requeres to be connected to another SensorThings API or a STAplus entity."},
+			ExpandColumnsSTA: {description: "Expand Columns", callSTALoad: true, help: "Adds columns coming from properties from related entities. Requeres to be connected to another SensorThings API or a STAplus entity."},
+			SelectRowSTA: {description: "Select Row", callSTALoad: true, help: "Obtains a table only with the selected record. Requeres to be connected to another SensorThings API or a STAplus entity. A single record is required to related entities to this one and navegate the SensorThings API or a STAplus data model."},
+			FilterRowsSTA: {description: "Filter Rows", callSTALoad: true, help: "Obtains a table with the records that match your conditions. Requeres to be connected to another SensorThings API or a STAplus entity."},
+			FilterRowsByTime: {description: "Filter Rows by time", help: "Obtains a table with records that match with a time interval. It is possible to group them by time periods. Requeres to be connected to another SensorThings API or a STAplus entity."},
+			GeoFilterPolSTA: {description: "Filter Rows by Polygon", callSTALoad: true, help: "Obtains a table with the records within a polygon. Requeres to be connected to another SensorThings API or a STAplus entity and to a table with a record that has a geometry (polygon)."},
+			GeoFilterPntSTA: {description: "Filter Rows by Distance", callSTALoad: true, help: "Obtains a table with the records that are closer that a given distance of a point. Requeres to be connected to another SensorThings API or a STAplus entity."},
+			SortBySTA: {description: "Sort by", callSTALoad: true, help: "Obtains a table with data sorted by a given criteria. Requeres to be connected to another SensorThings API or a STAplus entity."},
+			UploadObservations: {description: "Upload in STA", leafNode: true, help: "Saves some observations to a SensorThings API or a STAplus server."},
+			//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
+			OneValueSTA: {description: "One Value", leafNode: true, help: "Shows the last posted value. This value is updated according to the time period you set. Requeres to be connected to another SensorThings API or a STAplus entity. Do not requre to connect to previous sort by time. This node can not be connected to other dependend nodes."},
+			CountResultsSTA: { description: "Count results", leafNode: true, help: "Returns the total number of records returned by the API query without loading them in a table. Only with STA data. Requeres to be connected to another SensorThings API or a STAplus entity. This node can not be connected to other dependend nodes."}};
+const STAOperationsArray = Object.keys(STAOperations);
+const STAOperationsType = {singular: "STA tool", plural: "STA tools"};
+
+const TableOperations = {Table: {description: "View Table", leafNode: true, help: "Shows a table of the dependent node in a dialog box. Since the table behind the active node is represented in the table area, the use of this operation is no longer recommended."},
+			ViewQuerySTA: {description: "View Query", leafNode: true, help: "Shows the completed URL that is used to make the query to obtain the data from a service or an API of the depended node in a dialog box. Since the URL behind the active node is always represented in the query and table area, the use of this operation is no longer recommended."},
+			EditRecord: {description: "Edit record", help: "Shows and allows editing a record in the table of the related node. NOTE: If you are using data from a web service and you ask for data again, this change will be lost."},
+			Meaning: {description: "Column meaning", help: "Shows and allows editing the semantics (definition and units of measure) of the table columns."},
+			SelectColumnsTable: {description: "Select Columns", help: "Obtains a table only with the selected columns. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL."},
+			SelectRowTable: {description: "Select Row", help: "Obtains a table only with the selected record. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL."},
+			FilterRowsTable: {description: "Filter Rows", help: "Obtain a table with the records that match the contitions. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL."},
+			JoinTables: {description: "Join Tables", help:"Creates a single table that is the result of joining two tables using some selected column values in both tables to defined the merge criteria."},
+			ConcatenateTables: {description: "Concatenate Columns", help: "Create a single table by adding the records of the second table to the first one. The columns with the same name in both tables are merged in a sigle column."},
+			GroupBy: {description: "GroupBy", help: "Creates a table will the columns containng selected statistics of the aggregation of some records that have the same values other selected columns."},
+			AggregateColumns: {description: "Aggregate Columns", help: "Adds a new column to a table with the aggregation of other previous selected columns."},
+			CreateColumns: {description: "Create Columns", help: "Adds a new column to your table. This column can be left empty, filled with a constant value or filled with an autoincremental value."},
+			ColumnsCalculator: {description: "Columns calculator", help: "Adds a new column to your table where for each record the new column contains the result of an operation involving other column values of that record."},
+			ColumnStatistics: {description:"Columns statistics", help: "Create a table where, for each column the main statistics for the column values of all records are recorded."},
+			SeparateColumns: {description: "Separate Columns", help: "Splits a column containing a JSON object into separated new columns and removes the original column."},
+			ScatterPlot: {description: "Scatter Plot", leafNode: true, help: "Creates a scatter plot with a the values of the column of a table."},
+			BarPlot: {description: "Bar Plot", leafNode: true, help: "Create a bar or pie chart with a the values of the column of a table."},
+			ImageViewer: {description: "Image Viewer", leafNode: true, help: "Shows the pictures referenced by a column. Assumes that the content of the column are url to images supported by the browser (commonly in JPEG or PNG format)."},
+			SaveTable: {description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the column definition is semantically enriched; see &#39;meaning&#39;)."},
+			SaveLayer: {description: "Save Layer", leafNode: true, help: "Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values."},
+			OpenMap: {description: "Open Map", leafNode: true, help: "Opens a table as a map in a map browser interface. It requires two columns with a latitude and longitude values."},
+			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."}};
 const TableOperationsArray = Object.keys(TableOperations);
+const TableOperationsType = {singular: "Generic table tool", plural: "Generic table tools"};
 
 //If the two nodes cannot connect it returns null. It transforms a plural to singular if needed.
 function transformToSingularIfNeededSTAEntity(parentEntity, entityName) {
@@ -456,13 +465,14 @@ function RemoveQueryParamFromURL(url, queryparam) {
 
 //https://stackoverflow.com/questions/50036922/change-a-css-stylesheets-selectors-properties/50036923#50036923
 function changeCSSStyle(selector, cssProp, cssVal) {
-	var ssMain = 0;  //The first stylesheet
 	var cssRules = (document.all) ? 'rules': 'cssRules';
 
-	for (var i=0, len=document.styleSheets[ssMain][cssRules].length; i<len; i++) {
-		if (document.styleSheets[ssMain][cssRules][i].selectorText === selector) {
-			document.styleSheets[ssMain][cssRules][i].style[cssProp] = cssVal;
-			return;
+	for (var ss=0, sslen=document.styleSheets.length; ss<sslen; ss++) {
+		for (var i=0, ilen=document.styleSheets[ss][cssRules].length; i<ilen; i++) {
+			if (document.styleSheets[ss][cssRules][i].selectorText === selector) {
+				document.styleSheets[ss][cssRules][i].style[cssProp] = cssVal;
+				return;
+			}
 		}
 	}
 }
@@ -555,27 +565,27 @@ function PlaceButtonsSTAEntities() {
 	var s = "";
 	if (!document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked) {
 		for (var i = 0; i < ServicesAndAPIsArray.length; i++)
-			s += textOperationButton(null, "", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help);
+			s += textOperationButton(null, "", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], ServicesAndAPIsType.singular);
 		s += "<br>";
 		for (var i = 0; i < STAEntitiesArray.length; i++)
-			s += textOperationButton(null, "", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help);
+			s += textOperationButton(null, "", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular);
 		s += "<br>";
 		/*for (var i = 0; i < STAEntitiesArray.length; i++)
-			s += textOperationButton(null, "", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit);
+			s += textOperationButton(null, "", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit);
 		s += "<br>";*/
 		for (var i = 0; i < STASpecialQueriesArray.length; i++)
-			s += textOperationButton(null, "", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help);
+			s += textOperationButton(null, "", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help, null, STASpecialQueriesType.singular);
 		s += "<br>";
 	}
 
 	for (var i = 0; i < STAOperationsArray.length; i++) {
 		if (!document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked || STAOperations[STAOperationsArray[i]].startNode)
-			s += textOperationButton(null, "", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help);
+			s += textOperationButton(null, "", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help, STAOperations[STAOperationsArray[i]], STAOperationsType.singular);
 	}
 	s += "<br>";
 	for (var i = 0; i < TableOperationsArray.length; i++) {
 		if (!document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked || TableOperations[TableOperationsArray[i]].startNode)
-			s += textOperationButton(null, "", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help);
+			s += textOperationButton(null, "", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular);
 	}
 	if (!document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked)
 		s += "<br>";
@@ -614,11 +624,13 @@ function hideHelpToolTip(event, prefix) {
 	return false;
 }
 
-function textOperationButton(parentDivId, prefixDivId, operation, name, description, help) {
+function textOperationButton(parentDivId, prefixDivId, operation, name, description, help, options, type) {
 	var s = "<button ";
 	if (help)
-		s+="onmouseover='showHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\", \"" + help +"\")' onmousemove='moveHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\")' onmouseout='hideHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\")' "
-	return s + "onclick='addCircularImage(" + (parentDivId ? "event" : "null") + ", "+ (parentDivId ? ("\""+parentDivId+"\"") : "null") +", \"" + name + "\", \"" + operation + ".png\");'><img src='" + operation + ".png' height='20' valign='middle'> " + description + "</button> ";
+		s+="onmouseover='showHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\", \"" + 
+			"<b>" + (description ? description : name) + "</b><hr>" + help + "<hr>" + (type ? type + "<br>" : "") + (options?.startNode ? "<i>Start node</i><br>" : "") + (options?.leafNode ? "<i>Leaf node</i><br>" : "") + 
+			"\")' onmousemove='moveHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\")' onmouseout='hideHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\")' "
+	return s + "onclick='addCircularImage(" + (parentDivId ? "event" : "null") + ", "+ (parentDivId ? ("\""+parentDivId+"\"") : "null") +", \"" + name + "\", \"" + operation + ".png\");'><img src='" + operation + ".png' height='20' valign='middle'> " + (description ? description : name) + "</button> ";
 }
 
 async function InitSTAPage() {
@@ -632,38 +644,38 @@ async function InitSTAPage() {
 	}
 	
 	PlaceButtonsSTAEntities();
-	var s = "Data Inputs:<br>";
+	var s = ServicesAndAPIsType.plural + ":<br>";
 	for (var i = 0; i < ServicesAndAPIsArray.length; i++) {
-		s += textOperationButton("DialogContextMenu", "ContextMenu", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help);
+		s += textOperationButton("DialogContextMenu", "ContextMenu", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], "Data Input tool", ServicesAndAPIsType.singular);
 		s += (i+1)%nCol==0 || i == ServicesAndAPIsArray.length-1 ? "<br>" : " ";
 	}
-	s += "<small><br></small>Read STA entities:<br>";
+	s += "<small><br></small>" + STAEntitiesType.plural + ":<br>";
 	for (var i = 0; i < STAEntitiesArray.length; i++) {
-		s += textOperationButton("DialogContextMenu", "ContextMenu", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help);
+		s += textOperationButton("DialogContextMenu", "ContextMenu", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular);
 		s += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
 	}
-	s += "<small><br></small>Create, edit or delete STA entities:<br>";
+	s += "<small><br></small>" + STAEntitiesType.pluralEdit+ ":<br>";
 	for (var i = 0; i < STAEntitiesArray.length; i++)
 	{
-		s += textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit);
+		s += textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit);
 		s += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
 	}
-	s += "<small><br></small>Complex queries:<br>";
+	s += "<small><br></small>" + STASpecialQueriesType.plural + ":<br>";
 	for (var i = 0; i < STASpecialQueriesArray.length; i++)
 	{
-		s += textOperationButton("DialogContextMenu", "ContextMenu", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help);
+		s += textOperationButton("DialogContextMenu", "ContextMenu", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help, null, STASpecialQueriesType.singular);
 		s += (i+1)%nCol==0 || i == STASpecialQueriesArray.length-1 ? "<br>" : " ";
 	}
-	s += "<small><br></small>STA tools:<br>";
+	s += "<small><br></small>" + STAOperationsType.plural + ":<br>";
 	for (var i = 0; i < STAOperationsArray.length; i++)
 	{
-		s += textOperationButton("DialogContextMenu", "ContextMenu", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help);
+		s += textOperationButton("DialogContextMenu", "ContextMenu", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help, STAOperations[STAOperationsArray[i]], STAOperationsType.singular);
 		s += (i+1)%nCol==0 || i == STAOperationsArray.length-1 ? "<br>" : " ";
 	}
-	s += "<small><br></small>Table tools:<br>";
+	s += "<small><br></small>" + TableOperationsType.plural + "<br>";
 	for (var i = 0; i < TableOperationsArray.length; i++)
 	{
-		s += textOperationButton("DialogContextMenu", "ContextMenu", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help);
+		s += textOperationButton("DialogContextMenu", "ContextMenu", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular);
 		s += (i+1)%nCol==0 || i == TableOperationsArray.length-1 ? "<br>" : " ";
 	}
 
@@ -1014,7 +1026,7 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend)
 			//Enumetates all headers: for(let entry of response.headers.entries()) console.log(entry) })
 		}
 		if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
-			(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0))
+		(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0))
 			return {obj: await response.json(), text: null, responseHeaders: headersObj, ok: true};
 		else
 			return {obj: null, text: await response.text(), responseHeaders: headersObj, ok: true};
@@ -1190,7 +1202,9 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 			addSemanticsSTADataAttributes(node.STAdataAttributes, node.STAURL);
 		}
 		networkNodes.update(node);
-		showInfoMessage("Completed.");
+		if (currentNode.image!="FilterRowsByTime.png"){
+			showInfoMessage("Completed."); 
+		}
 		updateQueryAndTableArea(node);
 		await UpdateChildenLoadJSONCallback(node);
 		if (callback)
@@ -1268,8 +1282,12 @@ function RetrieveMeaningTable(event, type) {
 		if (confirm("No data has been loaded. Do you want to close this window anyway?"))
 			document.getElementById("DialogImport"+type).close();
 	}
-	else
+	else{
+		currentNode.STAdataAttributes= getDataAttributes(currentNode.STAdata); //It is necessary when you load new csv, because it remember dataAttributes from old csv
+		networkNodes.update(currentNode)
 		document.getElementById("DialogImport"+type).close();
+	}
+		
 }
 
 function TransformTextCSVWToDataAttributes(csvwText)
@@ -1440,6 +1458,7 @@ function ReadURLImportCSV() {
 	var locationSTAURL;
 	var parentNode=GetFirstParentNode(currentNode);
 	currentNode.STAURL = document.getElementById("DialogImportCSVSourceURLInput").value;
+	currentNode.OGCType = "fileURL";
 	if (parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL) {
 		currentNode.STAAccessKey = parentNode.STAAccessKey;
 		currentNode.STASecretKey = parentNode.STASecretKey;
@@ -1561,6 +1580,7 @@ function ReadURLImportJSONLD() {
 	var locationSTAURL;
 	var parentNode=GetFirstParentNode(currentNode);
 	currentNode.STAURL = document.getElementById("DialogImportJSONLDSourceURLInput").value;
+	currentNode.OGCType = "fileURL";
 	if (parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL) {
 		currentNode.STAAccessKey = parentNode.STAAccessKey;
 		currentNode.STASecretKey = parentNode.STASecretKey;
@@ -1632,6 +1652,7 @@ function ReadURLImportJSON() {
 	var locationSTAURL;
 	var parentNode=GetFirstParentNode(currentNode);
 	currentNode.STAURL = document.getElementById("DialogImportJSONSourceURLInput").value;
+	currentNode.OGCType = "fileURL";
 	if (parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL) {
 		currentNode.STAAccessKey = parentNode.STAAccessKey;
 		currentNode.STASecretKey = parentNode.STASecretKey;
@@ -1870,7 +1891,7 @@ function GetSTAURLEvent(event) {
 	
 
 	networkNodes.update(currentNode);	//https://visjs.github.io/vis-data/data/dataset.html#Data_Manipulation
-
+	
 	//if childen nodes have also STAURL
 	UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 	LoadJSONNodeSTAData(currentNode);
@@ -2056,7 +2077,7 @@ function EDCRequestTransfer(node, EDCConsumerURL, contractAgreementId, counterPa
 		"transferType": "HttpData-PULL"
 	};
 	HTTPJSONData(EDCConsumerURL+"/management/v3/transferprocesses", null, "POST", obj).then(
-				function(value) {
+				function(value) { 
 					if (value.obj && value.obj["@type"] && value.obj["@type"]=="IdResponse" && value.obj["@id"]) {
 						showInfoMessage('EDC transfer requested...');
 						EDCWaitForTransferStarted(node, EDCConsumerURL, value.obj["@id"], 0);
@@ -2068,7 +2089,7 @@ function EDCRequestTransfer(node, EDCConsumerURL, contractAgreementId, counterPa
 					showInfoMessage('EDC trasnfer request failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
 					console.log(error) ;
 				}
-			);
+			);	
 }
 
 function EDCWaitForTransferStarted(node, EDCConsumerURL, id, n) {
@@ -2126,6 +2147,7 @@ function EDCExectuteTransfer(node, url, authorization) {
 				function(value) {
 					showInfoMessage('EDC Raw data transfer completed. It it is not automatically transformed into a table, use the relevant "format" tool to do so.');
 					node.STAURL=url;
+					node.OGCType="fileURL";
 					var mediatype=removeParamContentType(value.responseHeaders["Content-Type"]);
 					node.STARawData=value;
 					if (mediatype=="application/json")
@@ -4031,7 +4053,7 @@ function GetSelectRow(event) {
 			break;
 	}
 	var requiresLoadJSON=currentNode.STAURL && (!parentNode || 
-				(parentNode.OGCType!="OGCCSW" && parentNode.OGCType!="S3Buckets" && parentNode.OGCType!="S3Bucket"  && parentNode.OGCType!="EDCCatalogue")
+				(parentNode.OGCType!="fileURL" && parentNode.OGCType!="OGCCSW" && parentNode.OGCType!="S3Buckets" && parentNode.OGCType!="S3Bucket"  && parentNode.OGCType!="EDCCatalogue")
 			);
 	if (i < elems.length) {
 		if (requiresLoadJSON) {
@@ -4065,12 +4087,13 @@ function GetSelectRow(event) {
 		currentNode.STAURL = null;
 		
 	networkNodes.update(currentNode);
-	if (requiresLoadJSON)
-	{
+	if (requiresLoadJSON) {
 		showInfoMessage("Selecting OGC row...");
 		UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 		LoadJSONNodeSTAData(currentNode);
 	}
+	else
+		updateQueryAndTableArea(currentNode);
 }
 
 function GetFilterRowsSTA() {
@@ -4080,7 +4103,7 @@ function GetFilterRowsSTA() {
 			if (parentNode.STAURL)
 				currentNode.STAURL = parentNode.STAURL;
 			if (parentNode.STAdata)
-				currentNode.STAdata = parentNode.STAdata;
+				currentNode.STAdata = deapCopy(parentNode.STAdata);
 		}
 		else
 			return;
@@ -4088,13 +4111,13 @@ function GetFilterRowsSTA() {
 		currentNode.STAUrlAPICounter = []; // I need to restart it 
 		var previousURL = parentNode.STAURL;//put URL ready to add things
 
-		var prevFilter = GetQueryParamFromURL(parentNode.STAURL, "$filter");
+		var prevFilter = GetQueryParamFromURL(previousURL, "$filter");
 		if (prevFilter) {
-			currentNode.STAUrlAPI = RemoveQueryParamFromURL(parentNode.STAURL, "$filter");
+			currentNode.STAUrlAPI = RemoveQueryParamFromURL(previousURL, "$filter");
 			currentNode.STAUrlAPI = AddQueryParamsToURL(currentNode.STAUrlAPI, "$filter=" + prevFilter + " and ");
 		}
 		else
-			currentNode.STAUrlAPI = AddQueryParamsToURL(parentNode.STAURL, "$filter=");
+			currentNode.STAUrlAPI = AddQueryParamsToURL(previousURL, "$filter=");
 
 		stopreadInformationRowFilterSTA = false;
 		var entity=getSTAURLLastEntity(currentNode.STAURL);
@@ -4202,7 +4225,7 @@ function DoGeoFilterRows(node) {
 	if (parentNode.STAURL)
 		node.STAURL = parentNode.STAURL;
 	if (parentNode.STAdata)
-		node.STAdata = parentNode.STAdata;
+		node.STAdata = deapCopy(parentNode.STAdata);
 
 	var previousURL = parentNode.STAURL;
 
@@ -4320,9 +4343,10 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 	var nodeIds = network.getConnectedNodes(parentNode.id, 'to');
 	for (var i = 0; i < nodeIds.length; i++) {
 		var node = networkNodes.get(nodeIds[i])
-		if (node.image == "SeparateColumns.png")
-			SeparateColumnsNode(node, parentNode);
-		else if (node.image == "SelectColumnsTable.png")
+		//if (node.image == "SeparateColumns.png")
+			//SeparateColumnsNode(node, parentNode); No se si te sentit perque ara hi ha més possibilitats que quan es va pensar això
+		//else 
+		if (node.image == "SelectColumnsTable.png")
 		{
 			//pensar com es podria fer.
 			showInfoMessage("Automatic update of SelectColumns not implemented for table nodes.");
@@ -4383,9 +4407,13 @@ function getJSONSchemaTypeFromAttributeType(t) {
 }
 
 function getJSONTypeOrISODatetime(s) {
-	var type=getJSONType(s)
-	if (type=="string" && (s.length==19 || s.length==20) && fragmentStartsWithISODate(s, 0))
-		return "isodatetime";
+	var type=getJSONType(s), numberReturned;
+	if (type =="string" && s.length>0)
+	{ 
+		numberReturned=fragmentStartsWithISODate(s, 0);
+		if (s.length==numberReturned) 
+			return "isodatetime";
+	}
 	return type;
 }
 
@@ -4461,9 +4489,29 @@ function getHTMLCharacterAttributeType(type) {
 	return cdns.join('');
 }
 
+function modifyDataAttributeTypeNewRecord(dataAttributeType, type) {	
+	if (dataAttributeType=="null" || dataAttributeType=="undefined")
+		dataAttributeType=type;
+	if (type!="null" && type!="undefined")
+	{
+		if ( (dataAttributeType=="boolean" && type!="boolean") ||
+			((dataAttributeType=="integer" || dataAttributeType=="number") && (type=="object" || type=="array" || type=="string")) ||
+			(dataAttributeType=="string" && (type=="object" || type=="array")) ||
+			(dataAttributeType=="array" && type=="object") )
+			return type;
+		if (dataAttributeType=="integer" && type=="number")
+			return "number";
+		if (dataAttributeType=="isodatetime" && (type=="string" || type=="number"))
+			return "string";
+	}
+	return dataAttributeType; 
+}
+
 //Creates dataAttributes and determines the "type" attribute.
 //Possible values are the usual JSON types ("string", "boolean", "array", "null", "object", "undefined", "integer", "number")
 // plus "isodatetime" and "anyURI"
+// Any changes to this function should be applied to getDataAttributeType(data)
+
 function getDataAttributes(data) {
 	var dataAttributes = {}, dataAttribute, type;
 
@@ -4473,35 +4521,37 @@ function getDataAttributes(data) {
 		for (var k = 0; k < keys.length; k++) {
 			if (dataAttributes[keys[k]]) {
 				dataAttribute=dataAttributes[keys[k]];
-				if (!isAttributeAnyURI(keys[k]))
-				{
-					type=getJSONTypeOrISODatetime(record[keys[k]]);
-					if (dataAttribute.type=="null" || dataAttribute.type=="undefined")
-						dataAttribute.type=type;
-					if (type!="null" && type!="undefined")
-					{
-						if ( (dataAttribute.type=="boolean" && type!="boolean") ||
-							((dataAttribute.type=="integer" || dataAttribute.type=="number") && (type=="object" || type=="array" || type=="string")) ||
-							(dataAttribute.type=="string" && (type=="object" || type=="array")) ||
-							(dataAttribute.type=="array" && type=="object") )
-							dataAttribute.type=type;
-						else if (dataAttribute.type=="integer" && type=="number")
-							dataAttribute.type="number";
-						else if (dataAttribute.type=="isodatetime" && (type=="string" || type=="number"))
-							dataAttribute.type="string";
-					}
-					if (dataAttribute.type=="object")
-						break;
-				}
+				if (!isAttributeAnyURI(keys[k]) && dataAttribute.type!="object")
+					dataAttribute.type=modifyDataAttributeTypeNewRecord(dataAttribute.type, getJSONTypeOrISODatetime(record[keys[k]]));
 			}
 			else
+			{
 				dataAttributes[keys[k]]={
 					type: isAttributeAnyURI(keys[k]) ? "anyURI" : getJSONTypeOrISODatetime(record[keys[k]])
 				};
+			}
 		}
 	}
 	return dataAttributes;
 }
+
+function getDataAttributeType(data, dataAttributeName) {
+	var type, dataAttributeType="undefined";
+
+	if (isAttributeAnyURI(dataAttributeName))
+		return "anyURI";
+
+	for (var i = 0; i < data.length; i++) {
+		var record=data[i];
+		if (typeof record[dataAttributeName] !== "undefined") {
+			dataAttributeType=modifyDataAttributeTypeNewRecord(dataAttributeType, getJSONTypeOrISODatetime(record[dataAttributeName]))
+			if (dataAttributeType=="object")
+				return dataAttributeType;
+		}
+	}
+	return dataAttributeType;
+}
+
 
 //Add the definition URL to a preexisting dataAttributes based on the STA Entity requested.
 function addSemanticsSTADataAttributes(dataAttributes, url) {
@@ -5406,10 +5456,22 @@ function fragmentStartsWithISODate(s, i) {
 		s.charAt(i+15) >= '0' && s.charAt(i+15) <= '9' &&
 		s.charAt(i+16) == ':' &&
 		s.charAt(i+17) >= '0' && s.charAt(i+17) <= '5' &&
-		s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9'){
-		if (s.charAt(i+19) == 'Z')
-			return 20;
-		return 19;
+		s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9'){ 
+		
+			if (s.charAt(i+19) == 'Z') 	return 20; //2025-01-31T14:21:37Z
+			else if (s.charAt(i+19)=="."&& //2025-01-31T14:21:37.000
+			 s.charAt(i+20) >= '0' && s.charAt(i+20) <= '9' &&
+			 s.charAt(i+21) >= '0' && s.charAt(i+21) <= '9' &&
+			 s.charAt(i+22) >= '0' && s.charAt(i+22) <= '9' 
+			) return 23
+			else if (s.charAt(i+19) == '+'&&   //2025-01-31T14:21:37+00:00
+			s.charAt(i+20) >= '0' && s.charAt(i+20) <= '9' &&
+			s.charAt(i+21) == ':' &&
+			s.charAt(i+22) >= '0' && s.charAt(i+22) <= '9' &&
+			s.charAt(i+23) >= '0' && s.charAt(i+23) <= '9' &&
+			s.charAt(i+24) >= '0' && s.charAt(i+24) <= '9'
+			) return 25;
+		return 19; //2025-01-31T14:21:37
 	}
 	return 0;
 }
@@ -5770,7 +5832,6 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 	var data = parentNode.STAdata;
 	node.STAdata=data; //Put all data from parent in this node 
 	networkNodes.update(node);
-	var dataAttributes = getDataAttributes(data);
 
 	if (parentNode.image != "FilterRowsTable.png") {
 			addTitleInRowFilterDialog("divTitleSelectRows");
@@ -5813,32 +5874,58 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 function SeparateColumns(event) {
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogSeparateColumns").close();
-	var options={};
-	if (document.getElementById("DialogSeparateColumnsArrayAs_Records").checked)
+	var options={}, data;
+	if (document.getElementById("DialogSeparateColumnsJSON").checked && document.getElementById("DialogSeparateColumnsAs_Records").checked ) //JSON records
 		options.arraysAsRecords=true;
 	if (document.getElementById("DialogSeparateColumns_RemovePresent").checked)
 		options.removeAlreadyPresent=true;
 	var parentNode=GetFirstParentNode(currentNode);
-	if (parentNode)
-		SeparateColumnsNode(currentNode, parentNode, options);
+	if (!parentNode)
+		return;
+	//Fer les funcions per larray
+	if (document.getElementById("DialogSeparateColumnsJSON").checked) {//JSON columns
+		currentNode.STAdataAttributes={};
+		var result=separateObjectColumns(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, currentNode.STAdataAttributes, options);
+	}
+	else{ //ARRAY
+		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
+		var columnName= selectColumnName.options[selectColumnName.selectedIndex].value;
+		var delimiter=document.getElementById("SeparateColumsInput_column").value;
+		if (!parentNode.STAdata) {
+			showInfoMessage("No data loaded in the parent node.");
+			return;
+		}
+		if (document.getElementById("DialogSeparateColumnsAs_Columns").checked && document.getElementById("DialogSeparateColumnsLists").checked) //array columns
+			var result=separateColumnArrayColumns(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, columnName, delimiter);
+		else //array records
+			var result=separateColumnArrayRecords(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, columnName, delimiter);
+	}
+	currentNode.STAdata=result.data;
+	currentNode.STAdataAttributes=result.dataAttributes;
+	networkNodes.update(currentNode);
+	updateQueryAndTableArea(currentNode);
+	UpdateChildenTable(currentNode);
 }
 
-function SeparateColumnsNode(node, parentNode, options) {
-	var data=parentNode.STAdata;
-
-	if (!data) {
+function populateSelectColumnSeparateColumns(){
+	var parentNode= GetFirstParentNode(currentNode);
+	if (!parentNode || !parentNode.STAdata) {
 		showInfoMessage("No data loaded in the parent node.");
 		return;
 	}
-	if (parentNode.STAURL)
-		node.STAURL=parentNode.STAURL;
-
-	node.STAExpectedLength = parentNode.STAExpectedLength;
-	if (parentNode.STAdataAttributes)
-		node.STAdataAttributes={};
-
-	node.STAdata=SeparateColumnsData(data, parentNode.STAdataAttributes, node.STAdataAttributes, options);
-	networkNodes.update(node);
+	currentNode.STAURL=null;
+	//currentNode.STAExpectedLength =parentNode.STAExpectedLength;
+	networkNodes.update(currentNode);
+	
+	var attributes= Object.keys(parentNode.STAdataAttributes);
+	var selectColumnName= document.getElementById("SeparateColumsSelect_column");
+	selectColumnName.innerHTML="";
+	var cdns=[];
+	for (var i=0;i< attributes.length;i++){
+		cdns.push(`<option value="${attributes[i]}"> ${attributes[i]} (${parentNode.STAdataAttributes[attributes[i]].type})</option>`)
+	}
+	selectColumnName.innerHTML+=cdns.join("");
+	document.getElementById("SeparateColumsInput_column").value=",";
 }
 
 function ShowQueryNode(node) {
@@ -5949,8 +6036,8 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		return true;
 	}
 	if (tableNodes && nodeTo.image == "Meaning.png" || 
-				nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "SelectRowTable.png" || 
-				nodeTo.image == "FilterRowsTable.png" || nodeTo.image == "JoinTables.png"){
+					nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "SelectRowTable.png" || 
+		nodeTo.image == "FilterRowsTable.png" || nodeTo.image == "JoinTables.png"){
 		if (nodeFrom.STAdata)
 			nodeTo.STAdata = deapCopy(nodeFrom.STAdata);  //This copy will be done again in "SelectColumnsTable.png" and "SelectRowTable.png". We do it here to have the full table while the user does not enter any selection
 		if (nodeFrom.STAdataAttributes)
@@ -5965,7 +6052,8 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 	if (tableNodes && nodeTo.image == "SeparateColumns.png") {
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		SeparateColumnsNode(nodeTo, nodeFrom);
+		networkNodes.update(nodeTo);
+		//SeparateColumnsNode(nodeTo, nodeFrom);
 		return true;
 	}
 	if (tableNodes && nodeTo.image == "CreateColumns.png") {
@@ -6358,6 +6446,10 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "SeparateColumns.png") {
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode) {
+				populateSelectColumnSeparateColumns();
+			}
 			document.getElementById("DialogSeparateColumns").showModal();
 		}
 		else if (currentNode.image == "ExpandColumnsSTA.png") {
@@ -6428,7 +6520,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			createColumnListToAddColumns();//create columnsList including columns in the table 
 			if (parentNode.STAdata){
-				currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
+				currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
 				currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
 			}
 			 if (parentNode) {
@@ -6445,7 +6537,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			createColumnListToAddColumns();//create columnsList including columns in the table 
 			if (parentNode.STAdata){
-				currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
+				currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
 				currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent
 			}
 			fillAggregateColumVariablesList();
@@ -6464,7 +6556,7 @@ function networkDoubleClick(params) {
 			
 			if (parentNode.STAdata){
 				if (currentNode.STAdata){
-					currentNode.STAdataCopy=currentNode.STAdata; //To recovery data if cancel is pressed
+					currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
 					createColumnListToAddColumns();//create columnsList including columns in the table
 					currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
 				}else{
@@ -6484,9 +6576,7 @@ function networkDoubleClick(params) {
 				document.getElementById("DialogColumnsCalculator").showModal();
 			}
 		}
-		else if (currentNode.image == "SeparateColumns.png") {
-			;
-		}
+
 		else if (currentNode.image =="ConcatenateTables.png") {
 			document.getElementById("DialogConcatenateTables").showModal();
 		}
@@ -6783,26 +6873,26 @@ function saveNetwork(event){
 	var pos=network.getPositions()
 	var posArray=Object.keys(pos);
 	var data={nodes:[], edges:[]};
+	data.nodes.push(...deapCopy(networkNodes.get())); //Hi ha  hagut canvis en el networNodes..per accedir als nodes es fa així, el ._data no conté res
 	for (var i=0; i<posArray.length; i++)
 	{
-		data.nodes.push(deapCopy(networkNodes._data[posArray[i]]));
 		data.nodes[i].x=pos[posArray[i]].x;
 		data.nodes[i].y=pos[posArray[i]].y;
 	}
-	var edgesArray=Object.keys(networkEdges._data);
+	var edgesArray=networkEdges.get();
 	for (var i=0; i<edgesArray.length; i++)
 	{
-		data.edges.push(deapCopy(networkEdges._data[edgesArray[i]]));
-		delete data.edges[i].id;
+		delete edgesArray[i].id;
 	}
+	data.edges.push(...deapCopy(edgesArray));
 	SaveLocalDataFile(JSON.stringify(data, null, "\t"), "network", ".json", "application/json");
 }
 
 async function reloadSTA(event) {
-	var nodesArray=Object.keys(networkNodes._data);
+	var nodesArray=networkNodes.get();
 	for (var i=0; i<nodesArray.length; i++)
 	{
-		var node=networkNodes._data[nodesArray[i]];
+		var node=nodesArray[i];
 		if (node.image=="sta.png")
 		{
 			showInfoMessage("Reload STA home page and dependencies...");
@@ -6964,7 +7054,7 @@ function drawTableInColumnBoxTableInCreateColumns(){
 }
 function addColumnsToTableInCreateColumns(){
 	event.preventDefault();
-		var datan,n=currentNode.STAnewColumnsToAdd.length;
+		var n=currentNode.STAnewColumnsToAdd.length;
 		for (var i=0;i<n;i++){
 
 		switch(currentNode.STAnewColumnsToAdd[i][0]) {
@@ -6982,6 +7072,8 @@ function addColumnsToTableInCreateColumns(){
 		networkNodes.update(currentNode);	
 			
 	}
+	currentNode.STAdataAttributes=uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes, currentNode.STAdata);
+	networkNodes.update(currentNode);
 	document.getElementById("DialogCreateColumns").close();
 	showInfoMessage("New columns have been added");
 }
@@ -7104,18 +7196,16 @@ function drawTableInColumnBoxTableInAggregateColumns(){
 	spanColumnsListAggregateColumns.innerHTML=cdns;
 }
 
-function addColumnsToTableInAggregateColumns(event){
+function addColumnsToTableInAggregateColumns(event) {
 	event.preventDefault();
-	var data;
-	var decimalNumber,n=currentNode.STAnewColumnsToAdd.length;
-	var dataAttributes= getDataAttributes(currentNode.STAdata)
-	if (n!=0){
+	var decimalNumber, n=currentNode.STAnewColumnsToAdd.length;
+	if (n!=0) {
 		for (var i=0;i<n;i++){
-		decimalNumber=""; //Restart 
-		if (currentNode.STAnewColumnsToAdd[i][3]){
-		decimalNumber=currentNode.STAnewColumnsToAdd[i][3];
-	}
-		switch(currentNode.STAnewColumnsToAdd[i][0]) {
+			decimalNumber=""; //Restart 
+			if (currentNode.STAnewColumnsToAdd[i][3]){
+				decimalNumber=currentNode.STAnewColumnsToAdd[i][3];
+			}
+			switch(currentNode.STAnewColumnsToAdd[i][0]) {
 				case  "Sum":
 				if (decimalNumber!=""){
 						addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
@@ -7123,119 +7213,119 @@ function addColumnsToTableInAggregateColumns(event){
 				}else{
 						addnewColumnSummingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); //data, columnName,columnsToSum
 
-				}
-				break;
+					}
+					break;
 				case  "Product": //(s'ha de crear)
-			if (decimalNumber!=""){
+					if (decimalNumber!=""){
 						addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],decimalNumber, dataAttributes); //data, columnName,columnsToSum, decimalnumber
 
 				}else{
 						addnewColumnMultiplyingColumns(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); //data, columnName,columnsToSum
 
-				}
-				break;
+					}
+					break;
 				case  "MinValue":
-			if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes); 
 
 			}else{
 					addnewColumnMinimalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); 
-			}
-				break;
+					}
+					break;
 				case  "MaxValue":
-			if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,dataAttributes); 
 			}else{
-			}
+					}
 					addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes); 
 
-				break;
+					break;
 				case  "Mean":
-			if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 
 			}else{
 					addnewColumnMeanValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
 
-			}	
-				break;
+					}
+					break;
 				case  "Variance":
-			if (decimalNumber!=""){
+					if (decimalNumber!=""){
 						addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 
 			}else{
 						addnewColumnVarianceValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
 
-			}
-				break;
+					}
+					break;
 				case  "Median":
-				if (decimalNumber!=""){
+					if (decimalNumber!=""){
 						addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 
 				}else{
 						addnewColumnMedianValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
 
-				}
-				break;
+					}
+					break;
 				case  "Concatenate":
 				addnewColumnConcatenatingValues(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]);
-				break;
+					break;
 
 				case  "Mode":
-				if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnModeValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
-				}
+					}
 					break;
 				case  "FirstValue":
-				if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnFirstValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
-				}
+					}
 					break;
 
 				case  "StandardDeviation":
-				if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,"", dataAttributes);
 				}else{
 					addnewColumnStandardDeviationValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
-				}
+					}
 					break;
 				case  "LastValue":
-				if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnLastValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
-				}
+					}
 					break;
 				case  "Q1":
-				if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnQ1Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
-				}
+					}
 					break;
 				case  "Q3":
-				if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnQ3Value(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],"", dataAttributes);
-				}
+					}
 					break;
 				case  "RandomValue":
-				if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,"", dataAttributes);
 				}else{
 					addnewColumnRandomValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
-				}
-					break;						
+					}
+					break;
 				case  "Count": //TE SENTIT?
 					addnewColumnCount(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], dataAttributes);
 					break;
 				case  "CountDefined": //Falta fer la funció que conta
-					
+
 					break;
 				case  "Range": 						
 					if (decimalNumber!=""){
@@ -7243,25 +7333,56 @@ function addColumnsToTableInAggregateColumns(event){
 					}else{
 						addnewColumnRange(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]),"", dataAttributes;
 					}
-						break;
+					break;
 				case  "ProportionDefined": //Falta fer la funció que conta
-				if (decimalNumber!=""){
+					if (decimalNumber!=""){
 					addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber, dataAttributes);
 				}else{
 					addnewColumnProportionDefined(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2]),"", dataAttributes;
-				}
-					
+					}
+
 					break;
+			}
 		}
-	}
-	showInfoMessage("New columns have been added");
-	document.getElementById("DialogAggregateColumns").close();
+		
+		currentNode.STAdataAttributes=uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes,currentNode.STAdata);
+		networkNodes.update(currentNode);
+		showInfoMessage("New columns have been added");
+		document.getElementById("DialogAggregateColumns").close();
 	}else{
 		alert("There are no columns in the list to add, nothing will be added to the table")
 	}
 
-	
+
 }
+function uploadDataAttributesAddingNewColumns(attributes, data, origin){
+	var columnNames= Object.keys(data[0]);
+	var oldAttributes= Object.keys(attributes);
+	var newAttributes={}, n=data.length, dataToAttribute=[], columnName, objToData, keysNewAttributes;
+
+	for (var i=0;i<columnNames.length;i++) {
+		if (oldAttributes.includes(columnNames[i])) {
+			keysNewAttributes=Object.keys(newAttributes); //avoid repetitions
+			if (!keysNewAttributes.includes(columnNames[i])){
+				newAttributes[columnNames[i]]= (attributes[columnNames[i]]);
+			}
+		} else { //newColumns
+			if (origin=="calculator") 
+				newAttributes[columnNames[i]]={type: 'number'} // GetAttributes define type as string, but is number
+			else {
+				for (var e=0; e<n; e++){
+					columnName=columnNames[i];
+					objToData={}
+					objToData[columnNames[i]]=data[e][columnNames[i]]
+					dataToAttribute.push(objToData)
+				}
+				newAttributes={...newAttributes,... getDataAttributes(dataToAttribute)};
+			}
+		}
+	}
+	return newAttributes;
+}
+
 function writeColumnNameInAggregatedColumns(event){
 	event.preventDefault();
 	var columnName=document.getElementById("columnNameAggregateColumns")
@@ -7348,7 +7469,7 @@ function fillCalculatorColumVariablesList(){ //omplir el desplegable
 
 	// var dataKeys= Object.keys(currentNode.STAdata[0]);
 	//var n= dataKeys.length;
-	var dataAttributes= getDataAttributes(currentNode.STAdata);
+	var dataAttributes= currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);
 	var dataAttributesKeys=Object.keys(dataAttributes)
 	var n= dataAttributesKeys.length;
 	
@@ -7393,6 +7514,9 @@ function addColumnsToTableInColumnsCalculator(){
 			addnewColumnWithFormula (currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][0]);
 		}
 	}
+	
+	currentNode.STAdataAttributes=uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes, currentNode.STAdata, "calculator");
+	networkNodes.update(currentNode);
 	showInfoMessage("New columns have been added");
 	document.getElementById("DialogColumnsCalculator").close();
 
@@ -7401,7 +7525,7 @@ function createColumnStatistics(event){
 	event.preventDefault();
 	var parentNodes= GetParentNodes(currentNode);
 	var staData= parentNodes[0].STAdata;
-	var dataAttributes= getDataAttributes(staData);
+	var dataAttributes= parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(staData);
 	var keys = Object.keys(staData[0]);
 	var collectedData,obj, finallyArray=[],dataType;
 
@@ -7504,6 +7628,14 @@ function concatenateTables(){
 		
 	}
 	currentNode.STAdata=resultData;
+	var parentNodes= GetParentNodes(currentNode);
+	var allAttributes={}
+	for (var i=0;i<parentNodes.length;i++){
+		if (parentNodes[i].STAdata)	{
+			allAttributes={...allAttributes,...getDataAttributes(parentNodes[i].STAdata)}
+		}
+	}
+	currentNode.STAdataAttributes=uploadDataAttributesAddingNewColumns(allAttributes, currentNode.STAdata);
 	networkNodes.update(currentNode);
 	document.getElementById("DialogConcatenateTables").close();
 }
@@ -7543,14 +7675,14 @@ const RouteToFeature={
 
 function takeParentsInformationInGeoDistance(){
 	var parentNodes= GetParentNodes(currentNode);
-	var nodeWithUniqueRow=false, columns=[], columnsValues={}, parentNodeSTAEntity, nodeSTA=false;
+	var nodeWithUniqueRow=false, columns=[], columnsValues={}, parentNodeSTAEntity, nodeSTA=false,parentNode;
 
 	for (var i=0;i<parentNodes.length;i++){
-		
-		if (parentNodes[i].STAURL && parentNodes[i].STAdata.length>1){ //STA to apply filter
-			var url=parentNodes[i].STAURL, finalURL; 
+		parentNode=deapCopy(parentNodes[i])
+		if (parentNode.STAURL && parentNode.STAdata.length>1){ //STA to apply filter
+			var url=parentNode.STAURL, finalURL; 
 			nodeSTA=true;
-			parentNodeSTAEntity= getSTAURLLastEntity(parentNodes[i].STAURL);
+			parentNodeSTAEntity= getSTAURLLastEntity(parentNode.STAURL);
 			var prevFilter = GetQueryParamFromURL(url, "$filter"); //Same way that in filterRows
 			if  (prevFilter) {
 				finalURL = RemoveQueryParamFromURL(url, "$filter");
@@ -7560,7 +7692,7 @@ function takeParentsInformationInGeoDistance(){
 				finalURL = AddQueryParamsToURL(url, "$filter=");
 
 			currentNode.STAURL= finalURL;	
-		}else if (!parentNodes[i].STAURL &&parentNodes[i].STAdata.length>1){
+		}else if (!parentNode.STAURL &&parentNode.STAdata.length>1){
 			alert ("There is a node linked not STA with more than one register, if you want to use it, apply a select row to choose your register")
 			
 			return false;
@@ -7570,7 +7702,7 @@ function takeParentsInformationInGeoDistance(){
 				return false;
 			}
 			nodeWithUniqueRow=true;
-			var dataAttributes= getDataAttributes(parentNodes[i].STAdata);
+			var dataAttributes= getDataAttributes(parentNode.STAdata);
 			var dataAttributesKeys=Object.keys(dataAttributes);
 			var itIsGeoJSON="no", fatureOrLocation="no";
 
@@ -7578,25 +7710,25 @@ function takeParentsInformationInGeoDistance(){
 									
 					if (dataAttributesKeys[a]!="geometry" || (dataAttributesKeys[a]=="geometry"&& dataAttributesKeys.length>1 )){
 						if (dataAttributes[dataAttributesKeys[a]]['type']=="number"||dataAttributes[dataAttributesKeys[a]]['type']=="integer"){
-							columnsValues[dataAttributesKeys[a]]=parentNodes[i].STAdata[0][dataAttributesKeys[a]];
+							columnsValues[dataAttributesKeys[a]]=parentNode.STAdata[0][dataAttributesKeys[a]];
 							columns.push(dataAttributesKeys[a]);									
 						}
 					else if (dataAttributesKeys[a]=="feature"){
-						columnsValues["feature"]=parentNodes[i].STAdata[0]["feature"]["coordinates"];
+						columnsValues["feature"]=parentNode.STAdata[0]["feature"]["coordinates"];
 						columns.push("feature");
 						fatureOrLocation="feature";
 
 					}
 					else if (dataAttributesKeys[a]=="location"){
-						columnsValues["location"]=parentNodes[i].STAdata[0]["location"]["coordinates"];
+						columnsValues["location"]=parentNode.STAdata[0]["location"]["coordinates"];
 						columns.push("location");
 						fatureOrLocation="location";
 
 					}
 					}else{ //GeoJSON
-						columnsValues["geometry-coordinates"]=parentNodes[i].STAdata[0]["geometry"]["coordinates"];
+						columnsValues["geometry-coordinates"]=parentNode.STAdata[0]["geometry"]["coordinates"];
 						columns.push("geometry-coordinates");
-						(parentNodes[i].STAdata[0]["geometry"]["type"]=="Point"||parentNodes[i].STAdata[0]["geometry"]["type"]=="point")?itIsGeoJSON="Point": itIsGeoJSON="Poligon"; 
+						(parentNode.STAdata[0]["geometry"]["type"]=="Point"||parentNode.STAdata[0]["geometry"]["type"]=="point")?itIsGeoJSON="Point": itIsGeoJSON="Poligon"; 
 						
 					
 					}
@@ -7749,6 +7881,7 @@ async function filterRowsByTimeOkButton(){
 	var dateToValue= document.getElementById("filterRowsByTimeCalendarTo").value;
 	if (dateFromValue==""|| dateToValue =="")alert("It is necessary to select a Data");
 	else{
+		document.getElementById("DialogFilterRowsByTime").close();
 		var url= prepareUrlToApplyFilter();
 		await applyTemporalFilter(url, dateFromValue+"Z", dateToValue+"Z",selectedValue );
 		
@@ -7769,6 +7902,7 @@ async function filterRowsByTimeOkButton(){
 			}
 			currentNode.STAdata= aggregatedData[1];
 			currentNode.STAdataStatistics= statistics;
+			//currentNode.STAdataAttributes=getDataAttributes(aggregatedData[1]);
 			networkNodes.update(currentNode);
 			showInfoMessage("Filter applied");
 		} 
@@ -7811,7 +7945,6 @@ async function askForAllDataResults(property){
 		newUrl= currentNode.STAURL+ `&$top=${top} &$orderBy=${property}+asc`;
 		dataToPush= await loadAPIDataWithReturn(newUrl,"obtainAllData")
 		data.push(...dataToPush);
-		//console.log(newUrl)
 		
 		while (stop==false){ 
 
@@ -7827,9 +7960,7 @@ async function askForAllDataResults(property){
 			newUrl= currentNode.STAURL+ `&$skip=${skip} &$top=${top} &$orderBy=${property}+asc`;
 			dataToPush= await loadAPIDataWithReturn(newUrl,"obtainAllData")
 			data.push(...dataToPush);		
-			// console.log(data)
-			// console.log(newUrl)
-
+	
 		} 
 		currentNode.STAdata=data;
 		networkNodes.update(currentNode);			
@@ -7928,7 +8059,7 @@ function calculateMinMaxMeanDesvest(aggregatedData){
 	var n= aggregatedData.length, statisticsArray=[];
 
 	for (var i=0; i<n; i++){
-		statisticsArray.push([aggregatedData[i][0],[aggrFuncMinValue(aggregatedData[i][1]),aggrFuncMaxValue(aggregatedData[i][1]),aggrFuncMean(aggregatedData[i][1]),aggrFuncStandardDeviation(aggregatedData[i][1])]]);
+		statisticsArray.push({"date":aggregatedData[i][0],"Min. value":aggrFuncMinValue(aggregatedData[i][1]),"Max. value":aggrFuncMaxValue(aggregatedData[i][1]),"Mean":aggrFuncMean(aggregatedData[i][1]),"Standard deviation":aggrFuncStandardDeviation(aggregatedData[i][1])});
 	}
 	return statisticsArray
 }
@@ -7944,12 +8075,14 @@ function createAndLoadImportGeoJSONNode(data,url){
 	document.getElementById("DialogImportGeoJSONSourceExternalData").disabled= false;
 	document.getElementById("DialogImportGeoJSONSourceExternalData").checked= true;
 	document.getElementById("DialogImportGeoJSONSourceExternalDataText").value= url;
+
 	
 	TransformTextGeoJSONToTable(data);	
 }
+
 /*function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogSelectColumns").close();
-			console.log(networkNodes);
+			document.getElementById("DialogContextMenu").close();
+			console.log(networkNodes.get());
 }*/

@@ -254,10 +254,10 @@ function separateObjectColumns(data, dataAttributesNull, options) { //JSON
 				SeparatePropertyIfNeeded(resultData[resultData.length-1], record[keys[k]], keys[k], removeAlreadyPresent);
 		}
 	}
-		var dataAttributes=getDataAttributes(resultData);
-		var dataAttributesArray=Object.keys(dataAttributes);
+	var dataAttributes=getDataAttributes(resultData);
+	var dataAttributesArray=Object.keys(dataAttributes);
 	var resultDataAttributes={};
-		for (var i = 0; i < dataAttributesArray.length; i++)
+	for (var i = 0; i < dataAttributesArray.length; i++)
 		resultDataAttributes[dataAttributesArray[i]]=deapCopy( (dataAttributesNull && dataAttributesNull[dataAttributesArray[i]]) ? dataAttributesNull[dataAttributesArray[i]] : dataAttributes[dataAttributesArray[i]]);
 	return {data: resultData, dataAttributes: resultDataAttributes};
 }
@@ -295,13 +295,17 @@ function separateColumnArrayRecords(data, dataAttributes, columnName, delimiter)
 	}
 	for (var i=0;i<n;i++){
 		separateDataArray=data[i][columnName].split(delimiter);
+		//newColumnName=columnName+"-new";
 		for (var e=0; e<separateDataArray.length; e++){
+			//delete data[i][columnName];
+			//data[i][columnName]=separateDataArray[e].trim();
 			resultData.push(deapCopy(data[i]))
 			resultData[resultData.length-1][columnName]=separateDataArray[e].trim();
 		}
 	}
 	var resultDataAttributes=deapCopy(dataAttributes);
 	resultDataAttributes[columnName].type=getDataAttributeType(resultData, columnName);
+	//currentNode.STAdataAttributes=uploadDataAttributesAddingNewColumns(currentNode.STAdataAttributes, resultData); //currentNode.STAdataAttributes upload and networkNodes.update
 	return {data: resultData, dataAttributes: resultDataAttributes};
 }
 
