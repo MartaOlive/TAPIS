@@ -46,33 +46,72 @@
 "use strict"
 
 		function ShowScatterPlotDialog(parentNodes) {
-			var data = parentNodes[0].STAdata;
-			if (!data || !data.length) {
+			var noData=true, attributesArray=[], allAttributes,allAttributesKeys, attributesToSelect=[];
+
+			for (var i=0;i<parentNodes.length;i++){
+				attributesArray=[];
+				if (parentNodes[i].STAdata){
+					noData=false;
+					allAttributes=parentNodes[i].STAdataAttributes ?parentNodes[i].STAdataAttributes:getDataAttributes(parentNodes[i].STAdata);
+					allAttributesKeys=Object.keys(allAttributes);
+					for (var c=0;c<allAttributesKeys.length;c++){
+						if (allAttributes[allAttributesKeys[c]].type=="number" || allAttributes[allAttributesKeys[c]].type=="isodatetime" || allAttributes[allAttributesKeys[c]].type=="integer"){
+							attributesArray.push(allAttributesKeys[c])
+						}
+						
+					}
+					attributesToSelect.push({att:attributesArray, nodeLabel:parentNodes[i].label});
+				}
+			}
+
+			if (noData){
 				document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
 				return;
-			}
+			} 
+
+			//var data = parentNodes[0].STAdata; //NO NOMES EL PRIMER
+			// if (!data || !data.length) {
+			// 	document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
+			// 	return;
+			// }
 			document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
 
-			var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
-			PopulateSelectSaveLayerDialog("DialogScatterPlotAxisX", dataAttributes, "phenomenonTime");
-			PopulateSelectSaveLayerDialog("DialogScatterPlotAxisY", dataAttributes, "result");
+			//var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
+			var dialogsToAddSelect= ["DialogScatterPlotAxisX", "DialogScatterPlotAxisY","DialogScatterPlotAxisY2"];
+			var dialog;
+			var optionsHTML=""
 
-			if (parentNodes.length<2)
-			{
-				document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
-				return;
+			for (var e=0;e<attributesToSelect.length;e++){ //options
+				optionsHTML+=`<optgroup label="${attributesToSelect[e].nodeLabel}">`;
+				for (var a=0;a<attributesToSelect[e].att.length;a++){
+					optionsHTML+=`<option value="${attributesToSelect[e].att[a]}">${attributesToSelect[e].att[a]}</option>`
+				}
+				optionsHTML+="</optgroup>";
 			}
-			document.getElementById("DialogScatterPlotVariableUoM").style.display = "inline-block"
+			for (var u=0;u<dialogsToAddSelect.length;u++){
+				dialog=document.getElementById(dialogsToAddSelect[u]);
+				dialog.innerHTML=`<select name="${dialogsToAddSelect[u]}Select" id="${dialogsToAddSelect[u]}Select">${optionsHTML}</select>`	
+			}
 
-			data = parentNodes[1].STAdata;
-			if (!data || data.length!=1) {
-				document.getElementById("DialogScatterPlotTitle").innerHTML = "Second connection should only have one item. Continuing without title.";
-				document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
-				return;
-			}
-			var dataAttributes = parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(data);
-			PopulateSelectSaveLayerDialog("DialogScatterPlotVariable", dataAttributes, "name");
-			PopulateSelectSaveLayerDialog("DialogScatterPlotUoM", dataAttributes, "unitOfMeasurement/symbol");
+			// PopulateSelectSaveLayerDialog("DialogScatterPlotAxisX", dataAttributes, "phenomenonTime");
+			// PopulateSelectSaveLayerDialog("DialogScatterPlotAxisY", dataAttributes, "result");
+
+			// if (parentNodes.length<2)
+			// {
+			// 	document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
+			// 	return;
+			// }
+			// document.getElementById("DialogScatterPlotVariableUoM").style.display = "inline-block"
+
+			// data = parentNodes[1].STAdata;
+			// if (!data || data.length!=1) {
+			// 	document.getElementById("DialogScatterPlotTitle").innerHTML = "Second connection should only have one item. Continuing without title.";
+			// 	document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
+			// 	return;
+			// }
+			// var dataAttributes = parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(data);
+			// PopulateSelectSaveLayerDialog("DialogScatterPlotVariable", dataAttributes, "name");
+			// PopulateSelectSaveLayerDialog("DialogScatterPlotUoM", dataAttributes, "unitOfMeasurement/symbol");
 		}
 
 		function ShowBarPlotDialog(parentNodes) {
