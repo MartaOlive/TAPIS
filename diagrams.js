@@ -103,22 +103,20 @@
 		function createSelectWithGroups(options, selectName, numberOfSelect){
 			var dialog=document.getElementById(selectName);
 			var cdns="";
-			cdns+=`<select name="${selectName}_${numberOfSelect}Select" id="${selectName}_${numberOfSelect}Select">`
+			cdns+=`<select name="${selectName}_${numberOfSelect}Select" id="${selectName}_${numberOfSelect}Select" style="margin-top:10px">`
 			cdns+=`<optgroup label="${options.nodeLabel}">`
 			for (var i =0;i<options.attr.length;i++){
 				cdns+=`<option value="${options.attr[i]}">${options.attr[i]}</option>`
 			}
 		
-			cdns+="</optgroup></select>";
-			//if (numberOfSelect=!1){
-				if (typeof numberOfSelect=="string") numberOfSelect=parseInt(numberOfSelect);
-				cdns+=`<button onclick="addNewSelectInScatterPlot('${selectName}', ${numberOfSelect+1})">Add</button>`;
-			//}
+			cdns+="</optgroup></select><br>";
 			dialog.innerHTML+=cdns;
 		}
-		function addNewSelectInScatterPlot(selectName, numberToNewSelect){
+		function addNewSelectInScatterPlot(selectName){
 			event.preventDefault();
-			createSelectWithGroups(currentNode.STAattributesToSelect,selectName,numberToNewSelect);
+			currentNode.numberOfSelects=currentNode.numberOfSelects+1;
+			networkNodes.update(currentNode)
+			createSelectWithGroups(currentNode.STAattributesToSelect,selectName,currentNode.numberOfSelects);
 		}
 		
 

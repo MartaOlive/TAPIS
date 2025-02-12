@@ -1152,16 +1152,27 @@
 			<fieldset>
     			<legend>Axes:</legend>
 				<label>Axis X:
+					<br>
 					<span id="DialogScatterPlotAxisX"></span>
 				</label>
-				
 				<br>
-				<label>Axis Y:
-					<span id="DialogScatterPlotAxisY"></span>
+				<hr>
+				<label>Axis Y (Left):
+					<br>
+					<span id="DialogScatterPlotAxisY">
+					</span>
+					<button onclick="addNewSelectInScatterPlot('DialogScatterPlotAxisY')" style="margin-top:10px">Add</button>
+
 				</label>
 				<br>
-				<label>(Optional) Second Axis Y:
-					<span id="DialogScatterPlotAxisY2"></span>
+				<hr>
+				<input type="checkbox" id="DialogScatterPlotAxisY2Checkbox" name="DialogScatterPlotAxisY2Checkbox"/>
+				<label>(Optional) Second Axis Y (Right):
+					<br>
+					<span id="DialogScatterPlotAxisY2">
+					</span>
+					<button onclick="addNewSelectInScatterPlot('DialogScatterPlotAxisY2')" style="margin-top:10px">Add</button>
+
 				</label>
 				
 			</fieldset>
