@@ -3806,34 +3806,14 @@ async function GetDeleteEntity(entityName, id){
 
 function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
 	var cdns=[];
-
-	var parentNode=GetFirstParentNode(currentNode);
-	if (!parentNode) {
-		alert("A parent node is needed to edit records");
-		return false;
-	}
-
-	if (!parentNode.STAdata || parentNode.STAdata.length==0) {
-		alert("Parent node has no STA data associated");
-		return false;
-	}
-	
-	
-	if(currentNode.STAdata)var data= currentNode.STAdata;
-	else{
-		var data= deapCopy(parentNode.STAdata); //if this was modified before, take info modified, not parentnode (not modify)
-		currentNode.STAdata=data;
-	}
-	
+	var data= currentNode.STAdata;
 	if (iRecord<0 || iRecord>=data.length) {
 		alert("Parent node is out of range");
 		return false;
 	}
 
-	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes: getDataAttributes(data);
+	var dataAttributes = currentNode.STAdataAttributes;
 	var dataAttributesArray=Object.keys(dataAttributes);
-	currentNode.STAdataAttributes=dataAttributes;
-	networkNodes.update(currentNode);
 
 	if (verify && document.getElementById("dlgCreateUpdateDeleteRecordInitialId"))
 	{
@@ -3860,6 +3840,7 @@ function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
 				return false;
 		}
 	}
+	
 	var record=data[iRecord];
 	for (var a=0; a<dataAttributesArray.length; a++) {
 		var cell=record[dataAttributesArray[a]];
@@ -3922,12 +3903,12 @@ function GetLastRecord(event) {
 }
 
 function UpdateRecordId(node, iRecord) {
-	var data=node.STAdata; //currentNode
+	var data=node.STAdata; 
 	if (iRecord<0 || iRecord>=data.length) {
 		alert("Parent node is out of range");
 		return false;
 	}
-	var dataAttributes = currentNode.STAdataAttributes;
+	var dataAttributes = node.STAdataAttributes;
 	var dataAttributesArray=Object.keys(dataAttributes)
 
 	var record=data[iRecord];
@@ -3962,21 +3943,12 @@ function UpdateRecordId(node, iRecord) {
 		}
 	}
 	if (updated==true)
-		currentNode.STAdata=data;
 		networkNodes.update(node);
 }
 
 function GetCreateRecord(event) {
 	event.preventDefault(); 
-	var parentNode=GetFirstParentNode(currentNode);
-	if (!parentNode) {
-		alert("A parent node is needed to edit records");
-		return false;
-	}
-	if (!parentNode.STAdata || parentNode.STAdata.length==0) {
-		alert("Parent node has no STA data associated");
-		return false;
-	}
+
 	var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
 	var data=currentNode.STAdata;
 	if (iRecord<0 || iRecord>=data.length) {
@@ -3985,22 +3957,12 @@ function GetCreateRecord(event) {
 	}
 	data.splice(iRecord+1, 0, deapCopy(data[iRecord]));
 	UpdateRecordId(currentNode, iRecord+1);
-	networkNodes.update(parentNode);
 	PopulateCreateUpdateDeleteRecord(currentNode, iRecord+1, false);
 }
 
 function GetUpdateRecord(event) {
 	event.preventDefault(); 
-	var parentNode=GetFirstParentNode(currentNode);
-	if (!parentNode) {
-		alert("A parent node is needed to edit records");
-		return false;
-	}
-
-	if (!parentNode.STAdata || parentNode.STAdata.length==0) {
-		alert("Parent node has no STA data associated");
-		return false;
-	}
+	
 	var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
 	UpdateRecordId(currentNode, iRecord);
 	PopulateCreateUpdateDeleteRecord(currentNode, iRecord, true);
@@ -4011,15 +3973,7 @@ function AskForDeleteRecord(event) {
 	event.preventDefault(); 
 	if (false==confirm("Do you want to erase this record?"))
 		return
-	var parentNode=GetFirstParentNode(currentNode);
-	if (!parentNode) {
-		alert("A parent node is needed to edit records");
-		return false;
-	}
-	if (!parentNode.STAdata || parentNode.STAdata.length==0) {
-		alert("Parent node has no STA data associated");
-		return false;
-	}
+
 	var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
 	var data=currentNode.STAdata;
 	if (iRecord<0 || iRecord>=data.length) {
@@ -4027,7 +3981,7 @@ function AskForDeleteRecord(event) {
 		return false;
 	}
 	data.splice(iRecord, 1);
-	networkNodes.update(parentNode);
+	networkNodes.update(currentNode);
 	PopulateCreateUpdateDeleteRecord(currentNode, iRecord, false);
 }
 
@@ -6120,6 +6074,23 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		return true;
 	}
+	if (tableNodes && nodeTo.image == "EditRecord.png") {
+		if (nodeFrom.STAdata){
+			nodeTo.STAdata = deapCopy(nodeFrom.STAdata); //necessary first time
+			if (nodeFrom.STAdataAttributes){
+						nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes); //necessary first time
+						
+			}else{
+						nodeTo.STAdataAttributes = getDataAttributes(nodeTo.STAdata);
+					
+			}
+		}
+		
+		networkNodes.update(nodeTo);
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		return true;
+	}
 	if (tableNodes && nodeTo.image == "edcAsset.png") {
 		if (nodeFrom && !nodeFrom.STAdata || !(nodeFrom.STAdata.length>0))
 			return false;
@@ -6416,7 +6387,7 @@ function networkDoubleClick(params) {
 			var parentNodes=GetParentNodes(currentNode);
 			// if (parentNodes && parentNodes[0]) { A mitges de canviar els gràfics
 			// 	if (parentNodes[0].STAdata)
-					ShowScatterPlotDialog(parentNodes); //This will check if any parentNode hasn't got data. It is possible that some nodes linked has data but some not...
+					ShowScatterPlotDialog(parentNodes, currentNode); //This will check if any parentNode hasn't got data. It is possible that some nodes linked has data but some not...
 				document.getElementById("DialogScatterPlot").showModal();
 			//}
 		}
@@ -6663,9 +6634,11 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "EditRecord.png") {
 			startingNodeContextId=currentNode.id;
-			if (GetFirstParentNode(currentNode)) {
+			if (currentNode.STAdata) {
 				if (PopulateCreateUpdateDeleteRecord(currentNode, 0, false))
 					document.getElementById("DialogCreateUpdateDeleteRecord").showModal();
+			}else{
+				alert("Parent node must have data to edite it");
 			}
 		}
 	}

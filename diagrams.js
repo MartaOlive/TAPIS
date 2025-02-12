@@ -45,8 +45,8 @@
 
 "use strict"
 
-		function ShowScatterPlotDialog(parentNodes) {
-			var noData=true, attributesArray=[], allAttributes,allAttributesKeys, attributesToSelect=[];
+		function ShowScatterPlotDialog(parentNodes, currentNode) {
+			var noData=true, attributesArray=[], allAttributes,allAttributesKeys, attributesToSelect;
 
 			for (var i=0;i<parentNodes.length;i++){
 				attributesArray=[];
@@ -60,59 +60,68 @@
 						}
 						
 					}
-					attributesToSelect.push({att:attributesArray, nodeLabel:parentNodes[i].label});
+					attributesToSelect={attr:attributesArray, nodeLabel:parentNodes[i].label};
 				}
 			}
+			attributesToSelect.numberOfSelects=1;
+			currentNode.STAattributesToSelect=attributesToSelect;
+			networkNodes.update(currentNode);
 
 			if (noData){
 				document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
 				return;
 			} 
 
-			//var data = parentNodes[0].STAdata; //NO NOMES EL PRIMER
-			// if (!data || !data.length) {
-			// 	document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
-			// 	return;
-			// }
 			document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
 
-			//var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
-			var dialogsToAddSelect= ["DialogScatterPlotAxisX", "DialogScatterPlotAxisY","DialogScatterPlotAxisY2"];
-			var dialog;
-			var optionsHTML=""
+			
+			document.getElementById("DialogScatterPlotAxisX").innerHTML=""; //Reset
+			document.getElementById("DialogScatterPlotAxisY").innerHTML="";
+			document.getElementById("DialogScatterPlotAxisY2").innerHTML="";
+			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisX",1);
+			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY",1);
+			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY2",1);
+			
+			// var dialog;
+			// var optionsHTML=""
 
-			for (var e=0;e<attributesToSelect.length;e++){ //options
-				optionsHTML+=`<optgroup label="${attributesToSelect[e].nodeLabel}">`;
-				for (var a=0;a<attributesToSelect[e].att.length;a++){
-					optionsHTML+=`<option value="${attributesToSelect[e].att[a]}">${attributesToSelect[e].att[a]}</option>`
-				}
-				optionsHTML+="</optgroup>";
-			}
-			for (var u=0;u<dialogsToAddSelect.length;u++){
-				dialog=document.getElementById(dialogsToAddSelect[u]);
-				dialog.innerHTML=`<select name="${dialogsToAddSelect[u]}Select" id="${dialogsToAddSelect[u]}Select">${optionsHTML}</select>`	
-			}
-
-			// PopulateSelectSaveLayerDialog("DialogScatterPlotAxisX", dataAttributes, "phenomenonTime");
-			// PopulateSelectSaveLayerDialog("DialogScatterPlotAxisY", dataAttributes, "result");
-
-			// if (parentNodes.length<2)
-			// {
-			// 	document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
-			// 	return;
+			// for (var e=0;e<attributesToSelect.length;e++){ //options
+			// 	optionsHTML+=`<optgroup label="${attributesToSelect[e].nodeLabel}">`;
+			// 	for (var a=0;a<attributesToSelect[e].att.length;a++){
+			// 		optionsHTML+=`<option value="${attributesToSelect[e].att[a]}">${attributesToSelect[e].att[a]}</option>`
+			// 	}
+			// 	optionsHTML+="</optgroup>";
 			// }
-			// document.getElementById("DialogScatterPlotVariableUoM").style.display = "inline-block"
-
-			// data = parentNodes[1].STAdata;
-			// if (!data || data.length!=1) {
-			// 	document.getElementById("DialogScatterPlotTitle").innerHTML = "Second connection should only have one item. Continuing without title.";
-			// 	document.getElementById("DialogScatterPlotVariableUoM").style.display = "none";
-			// 	return;
+			// for (var u=0;u<dialogsToAddSelect.length;u++){
+			// 	dialog=document.getElementById(dialogsToAddSelect[u]);
+			// 	dialog.innerHTML=`<select name="${dialogsToAddSelect[u]}Select" id="${dialogsToAddSelect[u]}Select">${optionsHTML}</select>`	
 			// }
-			// var dataAttributes = parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(data);
-			// PopulateSelectSaveLayerDialog("DialogScatterPlotVariable", dataAttributes, "name");
-			// PopulateSelectSaveLayerDialog("DialogScatterPlotUoM", dataAttributes, "unitOfMeasurement/symbol");
+
+
 		}
+
+		function createSelectWithGroups(options, selectName, numberOfSelect){
+			var dialog=document.getElementById(selectName);
+			var cdns="";
+			cdns+=`<select name="${selectName}_${numberOfSelect}Select" id="${selectName}_${numberOfSelect}Select">`
+			cdns+=`<optgroup label="${options.nodeLabel}">`
+			for (var i =0;i<options.attr.length;i++){
+				cdns+=`<option value="${options.attr[i]}">${options.attr[i]}</option>`
+			}
+		
+			cdns+="</optgroup></select>";
+			//if (numberOfSelect=!1){
+				if (typeof numberOfSelect=="string") numberOfSelect=parseInt(numberOfSelect);
+				cdns+=`<button onclick="addNewSelectInScatterPlot('${selectName}', ${numberOfSelect+1})">Add</button>`;
+			//}
+			dialog.innerHTML+=cdns;
+		}
+		function addNewSelectInScatterPlot(selectName, numberToNewSelect){
+			event.preventDefault();
+			createSelectWithGroups(currentNode.STAattributesToSelect,selectName,numberToNewSelect);
+		}
+		
+
 
 		function ShowBarPlotDialog(parentNodes) {
 			var data = parentNodes[0].STAdata;
