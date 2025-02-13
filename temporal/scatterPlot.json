@@ -1239,8 +1239,8 @@
 					"type": "anyURI"
 				}
 			},
-			"x": -58,
-			"y": 53
+			"x": -72,
+			"y": 27
 		},
 		{
 			"id": "4m2lo.jb97cl",
@@ -2449,9 +2449,28 @@
 					"Subjects@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations(7821863)/Subjects"
 				}
 			],
-			"x": 26,
-			"y": 62
+			"x": 109,
+			"y": 80
+		},
+		{
+			"id": "4qbgh.h2qeoa",
+			"label": "Scatter Plot",
+			"image": "ScatterPlot.png",
+			"shape": "circularImage",
+			"x": 34,
+			"y": -11
 		}
 	],
-	"edges": []
+	"edges": [
+		{
+			"from": "1u5qc.scsf8hg",
+			"to": "4qbgh.h2qeoa",
+			"arrows": "from"
+		},
+		{
+			"from": "4m2lo.jb97cl",
+			"to": "4qbgh.h2qeoa",
+			"arrows": "from"
+		}
+	]
 }

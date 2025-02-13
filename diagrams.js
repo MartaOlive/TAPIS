@@ -46,7 +46,7 @@
 "use strict"
 
 		function ShowScatterPlotDialog(parentNodes, currentNode) {
-			var noData=true, attributesArray=[], allAttributes,allAttributesKeys, attributesToSelect;
+			var noData=true, attributesArray=[], allAttributes,allAttributesKeys, attributesToSelect=[];
 
 			for (var i=0;i<parentNodes.length;i++){
 				attributesArray=[];
@@ -60,11 +60,11 @@
 						}
 						
 					}
-					attributesToSelect={attr:attributesArray, nodeLabel:parentNodes[i].label, nodeId:parentNodes[i].id};
+					attributesToSelect.push({attr:attributesArray, nodeLabel:parentNodes[i].label, nodeId:parentNodes[i].id});
 				}
 			}
-			attributesToSelect.numberOfSelects=1;
-			currentNode.STAattributesToSelect=attributesToSelect;
+			currentNode.STAattributesToSelect={};
+			currentNode.STAattributesToSelect.selectOptions=attributesToSelect;
 			currentNode.STAattributesToSelect.selects={
 				DialogScatterPlotAxisX:{DialogScatterPlotAxisXSelect_1:""},
 				DialogScatterPlotAxisY:{DialogScatterPlotAxisYSelect_1:""},
@@ -88,26 +88,31 @@
 			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY",1);
 			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY2",1);
 
-			document.getElementById("DialogScatterPlotAxisY2").disabled=true;
-			
+			document.getElementById("DialogScatterPlotAxisY2Select_1").disabled=true;
+			currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisX.DialogScatterPlotAxisXSelect_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
+			currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY.DialogScatterPlotAxisYSelect_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
+			currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2.DialogScatterPlotAxisY2Select_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
 		}
 		function isCheckBoxChechedInScaterPlot(event){
 			var Y2Selects= Object.keys(currentNode.STAattributesToSelect.selects["DialogScatterPlotAxisY2"]);
-			var checked=document.getElementById("DialogScatterPlotAxisY2Checkbox").checked
+			var checked=!document.getElementById("DialogScatterPlotAxisY2Checkbox").checked;
 				for(var i=0;i<Y2Selects.length;i++){
 					document.getElementById(Y2Selects[i]).disabled=checked;
 				}
 		}
 
-		function createSelectWithGroups(options, selectName, numberOfSelect){
+		function createSelectWithGroups(attributesToSelect, selectName, numberOfSelect){
 			var dialog=document.getElementById(selectName);
 			var cdns="";
-			cdns+=`<select name="${selectName}Select_${numberOfSelect}" id="${selectName}Select_${numberOfSelect}" style="margin-top:10px">`
-			cdns+=`<optgroup label="${options.nodeLabel}">`
-			for (var i =0;i<options.attr.length;i++){
-				cdns+=`<option value="${options.nodeId[i]}_${options.attr[i]}">${options.attr[i]}</option>`
+			cdns+=`<select name="${selectName}Select_${numberOfSelect}" id="${selectName}Select_${numberOfSelect}" style="margin-top:10px" onchange="updateSelectInformationScatterPlot('${selectName}Select_${numberOfSelect}','${selectName}')">`
+			for (var e=0;e<attributesToSelect.length;e++){
+					cdns+=`<optgroup label="${attributesToSelect[e].nodeLabel}">`
+				for (var i =0;i<attributesToSelect[e].attr.length;i++){
+					cdns+=`<option value="${attributesToSelect[e].nodeId}_${attributesToSelect[e].attr[i]}">${attributesToSelect[e].attr[i]}</option>`
+				}
+				cdns+="</optgroup>"
 			}
-			cdns+="</optgroup></select><br>";
+			cdns+="</select><br>";
 			dialog.innerHTML+=cdns;
 		}
 		function addNewSelectInScatterPlot(selectName){
@@ -116,10 +121,14 @@
 			var lastNumber= parseInt(selects[selects.length-1].split("_")[1])+1;
 			currentNode.STAattributesToSelect.selects[selectName][selectName+"Select_"+lastNumber]="";
 			networkNodes.update(currentNode);
-			createSelectWithGroups(currentNode.STAattributesToSelect,selectName,lastNumber);
+			createSelectWithGroups(currentNode.STAattributesToSelect.selectOptions,selectName,lastNumber);
 		}
 		
-
+		function updateSelectInformationScatterPlot(specificSelectName, generalSelectName){
+			var select= document.getElementById(specificSelectName);
+			var value=  select.options[select.selectedIndex].value;
+			currentNode.STAattributesToSelect.selects[generalSelectName][specificSelectName]=value;
+		}
 
 		function ShowBarPlotDialog(parentNodes) {
 			var data = parentNodes[0].STAdata;
@@ -169,14 +178,44 @@
 		var ScatterPlotGraph2d=null;
 		function DrawScatterPlot(event){
 			event.preventDefault(); // We don't want to submit this form
+			// currentNode.STAattributesToSelect.selects={
+			// 	DialogScatterPlotAxisX:{DialogScatterPlotAxisXSelect_1:""},
+			// 	DialogScatterPlotAxisY:{DialogScatterPlotAxisYSelect_1:""},
+			// 	DialogScatterPlotAxisY2:{DialogScatterPlotAxisY2Select_1:""}
+			// }
+			
+			
 			var selectedOptions={};
-			selectedOptions.AxisX=document.getElementById("DialogScatterPlotAxisXSelect").value;
-			selectedOptions.AxisY=document.getElementById("DialogScatterPlotAxisYSelect").value;
-			if (document.getElementById("DialogScatterPlotVariableUoM").style.display!="none")
-			{
-				selectedOptions.Variable=document.getElementById("DialogScatterPlotVariableSelect").value;
-				selectedOptions.UoM=document.getElementById("DialogScatterPlotUoMSelect").value;
+			var AxisYKeys=Object.keys(currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY);
+			selectedOptions.AxisX=[document.getElementById("DialogScatterPlotAxisXSelect_1").value];
+			var selectValue="";
+			selectedOptions.AxisY=[];
+			for (var i=0;i<AxisYKeys.length;i++){
+				selectValue=document.getElementById(AxisYKeys[i]).value;
+				selectedOptions.AxisY.push(selectValue);
+				currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY[AxisYKeys[i]]=selectValue;
 			}
+			if (document.getElementById("DialogScatterPlotAxisY2Checkbox").checked){
+				var AxisY2Keys=Object.keys(currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2);
+				selectedOptions.AxisY2=[];
+				for (var i=0;i<AxisY2Keys.length;i++){
+					selectValue=document.getElementById(AxisY2Keys[i]).value;
+					selectedOptions.AxisY2.push(selectValue);
+					currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2[AxisY2Keys[i]]=selectValue;
+				}
+			}
+
+
+			
+			
+			
+
+			selectedOptions.AxisY=document.getElementById("DialogScatterPlotAxisYSelect").value;
+			// if (document.getElementById("DialogScatterPlotVariableUoM").style.display!="none")
+			// {
+			// 	selectedOptions.Variable=document.getElementById("DialogScatterPlotVariableSelect").value;
+			// 	selectedOptions.UoM=document.getElementById("DialogScatterPlotUoMSelect").value;
+			// }
 
 			var nodes=GetParentNodes(currentNode);
 			if (nodes && nodes.length) {
