@@ -60,11 +60,16 @@
 						}
 						
 					}
-					attributesToSelect={attr:attributesArray, nodeLabel:parentNodes[i].label};
+					attributesToSelect={attr:attributesArray, nodeLabel:parentNodes[i].label, nodeId:parentNodes[i].id};
 				}
 			}
 			attributesToSelect.numberOfSelects=1;
 			currentNode.STAattributesToSelect=attributesToSelect;
+			currentNode.STAattributesToSelect.selects={
+				DialogScatterPlotAxisX:{DialogScatterPlotAxisXSelect_1:""},
+				DialogScatterPlotAxisY:{DialogScatterPlotAxisYSelect_1:""},
+				DialogScatterPlotAxisY2:{DialogScatterPlotAxisY2Select_1:""}
+			}
 			networkNodes.update(currentNode);
 
 			if (noData){
@@ -78,45 +83,40 @@
 			document.getElementById("DialogScatterPlotAxisX").innerHTML=""; //Reset
 			document.getElementById("DialogScatterPlotAxisY").innerHTML="";
 			document.getElementById("DialogScatterPlotAxisY2").innerHTML="";
+
 			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisX",1);
 			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY",1);
 			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY2",1);
+
+			document.getElementById("DialogScatterPlotAxisY2").disabled=true;
 			
-			// var dialog;
-			// var optionsHTML=""
-
-			// for (var e=0;e<attributesToSelect.length;e++){ //options
-			// 	optionsHTML+=`<optgroup label="${attributesToSelect[e].nodeLabel}">`;
-			// 	for (var a=0;a<attributesToSelect[e].att.length;a++){
-			// 		optionsHTML+=`<option value="${attributesToSelect[e].att[a]}">${attributesToSelect[e].att[a]}</option>`
-			// 	}
-			// 	optionsHTML+="</optgroup>";
-			// }
-			// for (var u=0;u<dialogsToAddSelect.length;u++){
-			// 	dialog=document.getElementById(dialogsToAddSelect[u]);
-			// 	dialog.innerHTML=`<select name="${dialogsToAddSelect[u]}Select" id="${dialogsToAddSelect[u]}Select">${optionsHTML}</select>`	
-			// }
-
-
+		}
+		function isCheckBoxChechedInScaterPlot(event){
+			var Y2Selects= Object.keys(currentNode.STAattributesToSelect.selects["DialogScatterPlotAxisY2"]);
+			var checked=document.getElementById("DialogScatterPlotAxisY2Checkbox").checked
+				for(var i=0;i<Y2Selects.length;i++){
+					document.getElementById(Y2Selects[i]).disabled=checked;
+				}
 		}
 
 		function createSelectWithGroups(options, selectName, numberOfSelect){
 			var dialog=document.getElementById(selectName);
 			var cdns="";
-			cdns+=`<select name="${selectName}_${numberOfSelect}Select" id="${selectName}_${numberOfSelect}Select" style="margin-top:10px">`
+			cdns+=`<select name="${selectName}Select_${numberOfSelect}" id="${selectName}Select_${numberOfSelect}" style="margin-top:10px">`
 			cdns+=`<optgroup label="${options.nodeLabel}">`
 			for (var i =0;i<options.attr.length;i++){
-				cdns+=`<option value="${options.attr[i]}">${options.attr[i]}</option>`
+				cdns+=`<option value="${options.nodeId[i]}_${options.attr[i]}">${options.attr[i]}</option>`
 			}
-		
 			cdns+="</optgroup></select><br>";
 			dialog.innerHTML+=cdns;
 		}
 		function addNewSelectInScatterPlot(selectName){
 			event.preventDefault();
-			currentNode.numberOfSelects=currentNode.numberOfSelects+1;
-			networkNodes.update(currentNode)
-			createSelectWithGroups(currentNode.STAattributesToSelect,selectName,currentNode.numberOfSelects);
+			var selects= Object.keys(currentNode.STAattributesToSelect.selects[selectName]);
+			var lastNumber= parseInt(selects[selects.length-1].split("_")[1])+1;
+			currentNode.STAattributesToSelect.selects[selectName][selectName+"Select_"+lastNumber]="";
+			networkNodes.update(currentNode);
+			createSelectWithGroups(currentNode.STAattributesToSelect,selectName,lastNumber);
 		}
 		
 
