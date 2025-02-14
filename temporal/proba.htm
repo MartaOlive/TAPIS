@@ -1,47 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../tapis.css">
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+	<title>Graph2d | Basic Example</title>
+  
+	<style type="text/css">
+	  body, html {
+		font-family: sans-serif;
+	  }
+	</style>
+  
+	  <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.15.1/vis.min.css" rel="stylesheet" type="text/css" />
+	  <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.15.1/vis.min.js"></script>
+  
+  <body>
+  <h2>Graph2d | Basic Example</h2>
+  <br />
+  <div id="visualization"></div>
+  <script type="text/javascript">
+	var container = document.getElementById('visualization');
+	  var names = ['graph1', 'graph2'];
+	  var groups = new vis.DataSet();
+	  groups.add({
+		  id: 0,
+		  className: '',
+		  options: {
+			  yAxisOrientation: 'left',
+			  drawPoints: {
+				  style: 'point' // square, circle
+			  }
+		  }});
+	  groups.add({
+		  id: 1,
+		  className: '',
+		  options: {
+			  yAxisOrientation: 'right', // right, left
+			  drawPoints: {
+				  style: 'circle' // square, circle
+			  }
+		  }});
 
-</head>
-
-<body>
-	<div id="DialogSeparateColumns">
-		<form>
-			Separate columns:
-			<fieldset>
-				<legend>JSON Objects as:</legend>
-				<input type="radio" id="DialogSeparateColumnJSON_Columns" name="SeparedBy" value="JSON_columns" checked> 
-				<label for="DialogSeparateColumnJSON_Columns">columns</label>
-				<input type="radio" id="DialogSeparateColumnJSON_Records" name="SeparedBy" value="JSON_records"> 
-				<label for="DialogSeparateColumnJSON_Records">records</label>
-			</fieldset>
-            <fieldset>
-				<legend>Arrays as:</legend>
-				<input type="radio" id="DialogSeparateColumnsArrayAs_Columns" name="SeparedBy" value="Array_columns" checked> 
-				<label for="DialogSeparateColumnsArrayAs_Columns">columns</label>
-				<input type="radio" id="DialogSeparateColumnsArrayAs_Records" name="SeparedBy" value="Array_records"> 
-				<label for="DialogSeparateColumnsArrayAs_Records">records</label>
-                <select id="SeparateColumsSelect_column"></select></select>
-                <label >Delimiter</label> <input type="text" id="SeparateColumsInput_column">
-			</fieldset>
-			<br>
-			<input type="checkbox" id="DialogSeparateColumns_RemovePresent" value="yes"> 
-			<label for="DialogSeparateColumns_RemovePresent">Remove already present elements</label>
-
-			<div class="center">
-				<button value="default" onClick="SeparateColumns(event)">OK</button>
-				<button value="cancel" formmethod="dialog">Cancel</button>
-			</div>
-		</form>
-	</div>
-    <script>
-       
-
-    </script>
-</body>
-
-</html>
+		  groups.add({
+		  id: 3,
+		  className: '',
+		  options: {
+			  yAxisOrientation: 'left',
+			  drawPoints: {
+				  style: 'point' // square, circle
+			  }
+		  }});
+		  groups.add({
+		  id: 4,
+		  className: '',
+		  options: {
+			  yAxisOrientation: 'right', // right, left
+			  drawPoints: {
+				  style: 'circle' // square, circle
+			  }
+		  }});
+  
+	var items = [
+	  {x: new Date(1469626499397), y: 110, group: 0},
+	  {x: new Date(1469626499497), y: 125, group: 0},
+	  {x: new Date(1469626499597), y: 130, group: 0},
+	  {x: new Date(1469626499697), y: 210, group: 0},
+	  {x: new Date(1469626499897), y: 115, group: 0},
+	  {x: new Date(1469626499997), y: 130, group: 0},
+	  {x: new Date(1469626499397), y: 1, group: 1},
+	  {x: new Date(1469626499597), y: 2, group: 1},
+	  {x: new Date(1469626499697), y: 3, group: 1},
+	  {x: new Date(1469626499797), y: 10, group: 1},
+	  {x: new Date(1469626499897), y: 15, group: 1},
+	  {x: new Date(1469626499997), y: 10, group: 1},
+	  {x: new Date(1469626499397), y: 100, group: 3},
+	  {x: new Date(1469626499497), y: 110, group: 3},
+	  {x: new Date(1469626499597), y: 110, group: 3},
+	  {x: new Date(1469626499697), y: 115, group: 3},
+	  {x: new Date(1469626499897), y: 115, group: 3},
+	  {x: new Date(1469626499997), y: 130, group: 3},
+	  {x: new Date(1469626499397), y: 3, group: 4},
+	  {x: new Date(1469626499597), y: 4, group: 4},
+	  {x: new Date(1469626499697), y: 5, group: 4},
+	  {x: new Date(1469626499797), y: 17, group: 4},
+	  {x: new Date(1469626499897), y: 15, group: 4},
+	  {x: new Date(1469626499997), y: 10, group: 4},
+	  {x: new Date(1469626499397), y: 9, group: 4},
+	];
+  
+	var dataset = new vis.DataSet(items);
+	var options = {
+	height:500,
+	//graphHeight:1500,
+			drawPoints: true,
+		  dataAxis: {
+			  right: {
+				  range: {min:-1, max:20}
+			  },
+			  left: {
+				  range: {min:100, max:250}
+			  },
+			  icons:true
+		  },
+	};
+	var graph2d = new vis.Graph2d(container, dataset, groups, options);
+  </script>
+  </body>
+  </html>

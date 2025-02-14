@@ -3232,12 +3232,15 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 				continue;
 
 			//special properties (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
-			if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") ||    (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature"))//Locations/Feature of Interest coordenates
-			 {
-				// //For the moment in supporting only a point
-				document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][0]?record[STAEntities[entityName].properties[i].name]["coordinates"][0]:"";
-				document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][1]?record[STAEntities[entityName].properties[i].name]["coordinates"][1]:"";
-				continue;	
+			 if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature")) //Locations/FeatureOfInterest coordenates
+			{
+				if (record[STAEntities[entityName].properties[i].name] && record[STAEntities[entityName].properties[i].name]["coordinates"] && record[STAEntities[entityName].properties[i].name]["coordinates"].length>1)
+				{
+					//For the moment in supporting only a point
+					document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][0]?record[STAEntities[entityName].properties[i].name]["coordinates"][0]:"";
+					document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][1]?record[STAEntities[entityName].properties[i].name]["coordinates"][1]:"";
+				}
+				continue;
 			}
 			if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
 		

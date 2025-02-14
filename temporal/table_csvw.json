@@ -1,0 +1,134 @@
+{
+	"tableSchema": {
+		"columns": [
+			{
+				"name": "Id",
+				"datatype": "integer"
+			},
+			{
+				"name": "Name",
+				"datatype": "string"
+			},
+			{
+				"name": "Description",
+				"datatype": "string"
+			},
+			{
+				"name": "Variable classes",
+				"datatype": "string"
+			},
+			{
+				"name": "Variable name",
+				"datatype": "string"
+			},
+			{
+				"name": "Variable name definition URI",
+				"datatype": "string"
+			},
+			{
+				"name": "Thematic uncertainty threshold",
+				"datatype": "number"
+			},
+			{
+				"name": "Thematic uncertainty goal",
+				"datatype": "number"
+			},
+			{
+				"name": "Thematic uncertainty unit of measure",
+				"datatype": "string"
+			},
+			{
+				"name": "Update frequency threshold",
+				"datatype": "integer"
+			},
+			{
+				"name": "Update frequency threshold unit of measure",
+				"datatype": "string"
+			},
+			{
+				"name": "Update frequency goal",
+				"datatype": "number"
+			},
+			{
+				"name": "Update frequency goal unit of measure",
+				"datatype": "string"
+			},
+			{
+				"name": "Even distribution",
+				"datatype": "string"
+			},
+			{
+				"name": "Coordinated measure",
+				"datatype": "string"
+			},
+			{
+				"name": "Horizontal resolution threshold",
+				"datatype": "number"
+			},
+			{
+				"name": "Horizontal resolution goal",
+				"datatype": "number"
+			},
+			{
+				"name": "Horizontal resolution unit of measure",
+				"datatype": "string"
+			},
+			{
+				"name": "Vertical resolution threshold",
+				"datatype": "number"
+			},
+			{
+				"name": "Vertical resolution goal",
+				"datatype": "number"
+			},
+			{
+				"name": "Vertical resolution unit of measure",
+				"datatype": "string"
+			},
+			{
+				"name": "Partial matching dataset",
+				"datatype": "string"
+			},
+			{
+				"name": "Reason partial matching",
+				"datatype": "string"
+			},
+			{
+				"name": "Need id",
+				"datatype": "integer"
+			},
+			{
+				"name": "Timeliness threshold",
+				"datatype": "number"
+			},
+			{
+				"name": "Timeliness threshold unit of measure",
+				"datatype": "string"
+			},
+			{
+				"name": "Timeliness goal",
+				"datatype": "number"
+			},
+			{
+				"name": "Timeliness goal unit of measure",
+				"datatype": "string"
+			},
+			{
+				"name": "Data accesses",
+				"datatype": "string"
+			},
+			{
+				"name": "Completely matching dataset",
+				"datatype": "string"
+			},
+			{
+				"name": "Citizen science acceptance",
+				"datatype": "string"
+			}
+		]
+	},
+	"dialect": {
+		"header": true,
+		"delimiter": ";"
+	}
+}

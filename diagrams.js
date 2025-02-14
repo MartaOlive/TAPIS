@@ -1,11 +1,11 @@
-/* 
-    This file is part of TAPIS. TAPIS is a web page and a Javascript code 
-    that builds queries and explore the STAplus content, saves it as CSV or 
-    GeoJSON and connects with the MiraMon Map Browser. While the project is 
-    completely independent from the Orange data mining software, it has been 
-    inspired by its GUI. The general idea of the application is to be able 
+/*
+    This file is part of TAPIS. TAPIS is a web page and a Javascript code
+    that builds queries and explore the STAplus content, saves it as CSV or
+    GeoJSON and connects with the MiraMon Map Browser. While the project is
+    completely independent from the Orange data mining software, it has been
+    inspired by its GUI. The general idea of the application is to be able
     to work with STA data as tables.
-  
+
     The TAPIS client is free software under the terms of the MIT License
 
     Copyright (c) 2023 Joan Masó
@@ -27,19 +27,19 @@
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
-    
+
     The TAPIS can be updated from https://github.com/joanma747/tapis.
 
-    Aquest codi JavaScript ha estat idea de Joan Masó Pau (joan maso at uab cat) 
-    dins del grup del MiraMon. MiraMon és un projecte del 
-    CREAF que elabora programari de Sistema d'Informació Geogràfica 
-    i de Teledetecció per a la visualització, consulta, edició i anàlisi 
+    Aquest codi JavaScript ha estat idea de Joan Masó Pau (joan maso at uab cat)
+    dins del grup del MiraMon. MiraMon és un projecte del
+    CREAF que elabora programari de Sistema d'Informació Geogràfica
+    i de Teledetecció per a la visualització, consulta, edició i anàlisi
     de mapes ràsters i vectorials. Aquest progamari programari inclou
     aplicacions d'escriptori i també servidors i clients per Internet.
-    No tots aquests productes són gratuïts o de codi obert. 
-    
+    No tots aquests productes són gratuïts o de codi obert.
+
     En particular, el TAPIS es distribueix sota els termes de la llicència MIT.
-    
+
     El TAPIS es pot actualitzar des de https://github.com/joanma747/tapis.
 */
 
@@ -58,40 +58,42 @@
 						if (allAttributes[allAttributesKeys[c]].type=="number" || allAttributes[allAttributesKeys[c]].type=="isodatetime" || allAttributes[allAttributesKeys[c]].type=="integer"){
 							attributesArray.push(allAttributesKeys[c])
 						}
-						
+
 					}
 					attributesToSelect.push({attr:attributesArray, nodeLabel:parentNodes[i].label, nodeId:parentNodes[i].id});
 				}
 			}
 			currentNode.STAattributesToSelect={};
 			currentNode.STAattributesToSelect.selectOptions=attributesToSelect;
-			currentNode.STAattributesToSelect.selects={
-				DialogScatterPlotAxisX:{DialogScatterPlotAxisXSelect_1:""},
-				DialogScatterPlotAxisY:{DialogScatterPlotAxisYSelect_1:""},
-				DialogScatterPlotAxisY2:{DialogScatterPlotAxisY2Select_1:""}
-			}
+			currentNode.STAattributesToSelect.groups=
+				[{x:attributesToSelect[0].attr[0], y:attributesToSelect[0].attr[0], selected:"left"}]
+				// DialogScatterPlotAxisX:{DialogScatterPlotAxisXSelect_1:""},
+				// DialogScatterPlotAxisY:{DialogScatterPlotAxisYSelect_1:""},
+				// DialogScatterPlotAxisY2:{DialogScatterPlotAxisY2Select_1:""}
+			
+			// currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisX.DialogScatterPlotAxisXSelect_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
+			// currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY.DialogScatterPlotAxisYSelect_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
+			// currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2.DialogScatterPlotAxisY2Select_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
 			networkNodes.update(currentNode);
 
 			if (noData){
 				document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
 				return;
-			} 
+			}
 
 			document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
 
-			
-			document.getElementById("DialogScatterPlotAxisX").innerHTML=""; //Reset
-			document.getElementById("DialogScatterPlotAxisY").innerHTML="";
-			document.getElementById("DialogScatterPlotAxisY2").innerHTML="";
 
-			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisX",1);
-			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY",1);
-			createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY2",1);
+			// document.getElementById("DialogScatterPlotAxisX").innerHTML=""; //Reset
+			// document.getElementById("DialogScatterPlotAxisY").innerHTML="";
+			// document.getElementById("DialogScatterPlotAxisY2").innerHTML="";
 
-			document.getElementById("DialogScatterPlotAxisY2Select_1").disabled=true;
-			currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisX.DialogScatterPlotAxisXSelect_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
-			currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY.DialogScatterPlotAxisYSelect_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
-			currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2.DialogScatterPlotAxisY2Select_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
+			createDialogWithSelectWithGroupsScatterPlot(currentNode);
+			// createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY",1);
+			// createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY2",1);
+
+			// document.getElementById("DialogScatterPlotAxisY2Select_1").disabled=true;
+
 		}
 		function isCheckBoxChechedInScaterPlot(event){
 			var Y2Selects= Object.keys(currentNode.STAattributesToSelect.selects["DialogScatterPlotAxisY2"]);
@@ -100,11 +102,32 @@
 					document.getElementById(Y2Selects[i]).disabled=checked;
 				}
 		}
+		function addNewDialogIn(event){
+			event.preventDefault();
+			var groupsKeys= Object.keys(currentNode.STAattributesToSelect.groups);
+			var newGroupNumber=parseInt(groupsKeys[groupsKeys.length-1].split("_")[1])+1;
+			currentNode.STAattributesToSelect.groups["group_"+newGroupNumber]={x:attributesToSelect[0].attr[0], y:attributesToSelect[0].attr[0], y2:attributesToSelect[0].attr[0], checked:"y"};
+			createDialogWithSelectWithGroupsScatterPlot (currentNode)
+		}
 
-		function createSelectWithGroups(attributesToSelect, selectName, numberOfSelect){
-			var dialog=document.getElementById(selectName);
+		function createDialogWithSelectWithGroupsScatterPlot(node){
+			var scatterPlotDiv=document.getElementById("DialogScatterPlotDiv");
+			scatterPlotDiv.innerHTML="";
+			var groups=node.STAattributesToSelect.groups;
+			var groupsKeys=Object.keys(groups);
 			var cdns="";
-			cdns+=`<select name="${selectName}Select_${numberOfSelect}" id="${selectName}Select_${numberOfSelect}" style="margin-top:10px" onchange="updateSelectInformationScatterPlot('${selectName}Select_${numberOfSelect}','${selectName}')">`
+			for (var i=0;i<groupsKeys.length;i++){
+				cdns+=`<fieldset><legend>Group ${i}</legend>
+				<label>Axis X</label><select name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="margin-top:10px" onchange="updateSelectInformationScatterPlot('${i}','x')">
+				<label>Axis X</label><select name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="margin-top:10px" onchange="updateSelectInformationScatterPlot('${i}','y')">
+				<input type='radio'</input>`
+			}
+			//
+			
+			
+			for (var i=0;i<)
+			cdns+=`<label>Axis X</label>			
+			<select name="DialogScatterPlotAxisXSelect_${numberOfGroup}" id="DialogScatterPlotAxisXSelect_${numberOfGroup}" style="margin-top:10px" onchange="updateSelectInformationScatterPlot('${selectName}Select_${numberOfSelect}','${selectName}')">`
 			for (var e=0;e<attributesToSelect.length;e++){
 					cdns+=`<optgroup label="${attributesToSelect[e].nodeLabel}">`
 				for (var i =0;i<attributesToSelect[e].attr.length;i++){
@@ -112,10 +135,10 @@
 				}
 				cdns+="</optgroup>"
 			}
-			cdns+="</select><br>";
+			cdns+="</select><fieldset><br>";
 			dialog.innerHTML+=cdns;
 		}
-		function addNewSelectInScatterPlot(selectName){
+		function addNewSelectInScatterPlot(selectName){ //Add button
 			event.preventDefault();
 			var selects= Object.keys(currentNode.STAattributesToSelect.selects[selectName]);
 			var lastNumber= parseInt(selects[selects.length-1].split("_")[1])+1;
@@ -123,11 +146,12 @@
 			networkNodes.update(currentNode);
 			createSelectWithGroups(currentNode.STAattributesToSelect.selectOptions,selectName,lastNumber);
 		}
-		
+
 		function updateSelectInformationScatterPlot(specificSelectName, generalSelectName){
 			var select= document.getElementById(specificSelectName);
 			var value=  select.options[select.selectedIndex].value;
 			currentNode.STAattributesToSelect.selects[generalSelectName][specificSelectName]=value;
+			networkNodes.update.update(currentNode);
 		}
 
 		function ShowBarPlotDialog(parentNodes) {
@@ -183,12 +207,16 @@
 			// 	DialogScatterPlotAxisY:{DialogScatterPlotAxisYSelect_1:""},
 			// 	DialogScatterPlotAxisY2:{DialogScatterPlotAxisY2Select_1:""}
 			// }
-			
-			
+
+			currentNode.STAattributesToSelect.selects
+
 			var selectedOptions={};
-			var AxisYKeys=Object.keys(currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY);
-			selectedOptions.AxisX=[document.getElementById("DialogScatterPlotAxisXSelect_1").value];
-			var selectValue="";
+			selectedOptions.AxisX= currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisX.DialogScatterPlotAxisXSelect_1;
+
+			var selectsY=Object.keys(currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY);
+			if(document.getElementById("DialogScatterPlotAxisY2Checkbox").checked) var selectsY2=Object.keys(currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2);
+
+
 			selectedOptions.AxisY=[];
 			for (var i=0;i<AxisYKeys.length;i++){
 				selectValue=document.getElementById(AxisYKeys[i]).value;
@@ -206,9 +234,8 @@
 			}
 
 
-			
-			
-			
+
+
 
 			selectedOptions.AxisY=document.getElementById("DialogScatterPlotAxisYSelect").value;
 			// if (document.getElementById("DialogScatterPlotVariableUoM").style.display!="none")
@@ -401,7 +428,7 @@ const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df
 										borderWidth: 0
 									}]
 								},
-								options: {	
+								options: {
 									legend: legend,
 									scales: scales,
 									plugins: plugins,
@@ -440,12 +467,12 @@ const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df
 						alert("Size is out of the [2,2000] range. Using 200 instead");
 						size=200;
 					}
-				
+
 					var ncol=Math.floor(900/(size+15));
 					var cdns=[];
 					data=node.STAdata;
 					dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
-					
+
 					cdns.push("<table>");
 					for (var i = 0; i < data.length; i++) {
 						record=data[i];
