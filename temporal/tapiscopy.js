@@ -3024,7 +3024,7 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 
 		cdns.push(`</span><br>`);
 		cdns.push(...entitiesRequired, ...entitiesNotRequired, "<br></fieldset>");
-		cdns.push('<fieldset id="fieldsetModificateEntities_Properties"><legend>Properties</legend>');
+		cdns.push('<fieldset id="fieldsetModificateEntities_Attributes"><legend>Attributes</legend>');
 		currentNode.STAEntitiesRequiredNotLinked = entitiesRequiedNotLinked;
 		currentNode.STAentitiesObject= entitiesObject;
 	}
@@ -3331,7 +3331,7 @@ function createEntitiesInCreateEntity(currentNode,entitiesParentArray){
 	currentNode.STAentitiesObject= entitiesObject;
 	var cdns=[]
 	cdns.push(...entitiesRequired,...entitiesNotRequired,"<br></fieldset>"); 
-	cdns.push('<fieldset id="fieldsetModificateEntities_Properties"><legend>Properties</legend>');
+	cdns.push('<fieldset id="fieldsetModificateEntities_Attributes"><legend>Attributes</legend>');
 	currentNode.STAEntitiesRequiredNotLinked=entitiesRequiedNotLinked;
 
 	return cdns;
@@ -3633,7 +3633,7 @@ async function GetUpdateEntity(event){
 	
 	
 	
-	var childrenNodes=document.getElementById("fieldsetModificateEntities_Properties").childNodes, childrenNodes2;
+	var childrenNodes=document.getElementById("fieldsetModificateEntities_Attributes").childNodes, childrenNodes2;
 	
 	var obj={}, obj2={},idSplited, allowToSend=true;
 	for (var i=0;i<childrenNodes.length;i++){

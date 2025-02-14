@@ -70,7 +70,7 @@
 				// DialogScatterPlotAxisX:{DialogScatterPlotAxisXSelect_1:""},
 				// DialogScatterPlotAxisY:{DialogScatterPlotAxisYSelect_1:""},
 				// DialogScatterPlotAxisY2:{DialogScatterPlotAxisY2Select_1:""}
-			
+
 			// currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisX.DialogScatterPlotAxisXSelect_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
 			// currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY.DialogScatterPlotAxisYSelect_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
 			// currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2.DialogScatterPlotAxisY2Select_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
@@ -123,10 +123,10 @@
 				<input type='radio'</input>`
 			}
 			//
-			
-			
-			for (var i=0;i<)
-			cdns+=`<label>Axis X</label>			
+
+// A MITGEEEEEEEEEESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+			// for (var i=0;i<)
+			cdns+=`<label>Axis X</label>
 			<select name="DialogScatterPlotAxisXSelect_${numberOfGroup}" id="DialogScatterPlotAxisXSelect_${numberOfGroup}" style="margin-top:10px" onchange="updateSelectInformationScatterPlot('${selectName}Select_${numberOfSelect}','${selectName}')">`
 			for (var e=0;e<attributesToSelect.length;e++){
 					cdns+=`<optgroup label="${attributesToSelect[e].nodeLabel}">`

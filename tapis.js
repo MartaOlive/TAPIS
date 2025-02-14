@@ -3024,7 +3024,7 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 
 		cdns.push(`</span><br>`);
 		cdns.push(...entitiesRequired, ...entitiesNotRequired, "<br></fieldset>");
-		cdns.push('<fieldset id="fieldsetModificateEntities_Properties"><legend>Properties</legend>');
+		cdns.push('<fieldset id="fieldsetModificateEntities_Attributes"><legend>Attributes</legend>');
 		currentNode.STAEntitiesRequiredNotLinked = entitiesRequiedNotLinked;
 		currentNode.STAentitiesObject= entitiesObject;
 	}
@@ -3164,6 +3164,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 	}
 
 	//PROPERTIES (create + Fill --> Update/delete)
+	if (actionToDo!="create")cdns.push('<fieldset id="fieldsetModificateEntities_Attributes"><legend>Attributes</legend>');
 	for (var i=0; i<STAEntities[entityName].properties.length; i++){
 		//Properties not added in dialog
 		if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
@@ -3234,13 +3235,17 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			//special properties (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
 			 if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature")) //Locations/FeatureOfInterest coordenates
 			{
-				if (record[STAEntities[entityName].properties[i].name] && record[STAEntities[entityName].properties[i].name]["coordinates"] && record[STAEntities[entityName].properties[i].name]["coordinates"].length>1)
-				{
+				var coordinates= searchCoordinatesInFeature(record[STAEntities[entityName].properties[i].name]);
+				if (record[STAEntities[entityName].properties[i].name]){
+					if (coordinates!=0)
+					{
 					//For the moment in supporting only a point
-					document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][0]?record[STAEntities[entityName].properties[i].name]["coordinates"][0]:"";
-					document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value= record[STAEntities[entityName].properties[i].name]["coordinates"][1]?record[STAEntities[entityName].properties[i].name]["coordinates"][1]:"";
+					
+						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value= coordinates[0];
+						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value= coordinates[1];
+						continue;
+					}
 				}
-				continue;
 			}
 			if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
 		
@@ -3286,6 +3291,23 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 	}
 	return true;
 }
+function searchCoordinatesInFeature(objectToEvaluate){ //feature or location
+	if (typeof objectToEvaluate ==="object"){
+		var objectToEvaluateToString= JSON.stringify(objectToEvaluate);
+		if (objectToEvaluateToString.search("Point")){ //If there is no point not suported
+			if (objectToEvaluateToString.search("coordinates"))
+				var coordinates=objectToEvaluateToString.split('"coordinates":')[1].split(']')[0].split('[')[1];
+			if (coordinates.search(","))coordinates=coordinates.split(","); //avoid empty []
+			else return 0;
+		}else{
+			return 0;
+		}
+	}else{
+		return 0;
+	}
+return coordinates;
+}
+
 function createEntitiesInCreateEntity(currentNode,entitiesParentArray){
 	var entitiesRequired=[],entitiesNotRequired=[];
 	var currentNodeEntityPlural=getSTAEntityPlural(currentNode.label,false);
@@ -3334,7 +3356,7 @@ function createEntitiesInCreateEntity(currentNode,entitiesParentArray){
 	currentNode.STAentitiesObject= entitiesObject;
 	var cdns=[]
 	cdns.push(...entitiesRequired,...entitiesNotRequired,"<br></fieldset>"); 
-	cdns.push('<fieldset id="fieldsetModificateEntities_Properties"><legend>Properties</legend>');
+	cdns.push('<fieldset id="fieldsetModificateEntities_Attributes"><legend>Attributes</legend>');
 	currentNode.STAEntitiesRequiredNotLinked=entitiesRequiedNotLinked;
 
 	return cdns;
@@ -3636,7 +3658,7 @@ async function GetUpdateEntity(event){
 	
 	
 	
-	var childrenNodes=document.getElementById("fieldsetModificateEntities_Properties").childNodes, childrenNodes2;
+	var childrenNodes=document.getElementById("fieldsetModificateEntities_Attributes").childNodes, childrenNodes2;
 	
 	var obj={}, obj2={},idSplited, allowToSend=true;
 	for (var i=0;i<childrenNodes.length;i++){
