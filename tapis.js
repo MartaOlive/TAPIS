@@ -3235,17 +3235,9 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			//special properties (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
 			 if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature")) //Locations/FeatureOfInterest coordenates
 			{
-				var coordinates= searchCoordinatesInFeature(record[STAEntities[entityName].properties[i].name]);
-				if (record[STAEntities[entityName].properties[i].name]){
-					if (coordinates!=0)
-					{
-					//For the moment in supporting only a point
+				searchCoordinatesInFeature(record[STAEntities[entityName].properties[i].name], "type",STAEntities[entityName].properties[i].name);
+				continue; //If have or not coordinates continue. If it have, they will be added in the function searchCoordinatesInFeature
 					
-						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value= coordinates[0];
-						document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value= coordinates[1];
-						continue;
-					}
-				}
 			}
 			if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
 		
@@ -3291,21 +3283,63 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 	}
 	return true;
 }
-function searchCoordinatesInFeature(objectToEvaluate){ //feature or location
-	if (typeof objectToEvaluate ==="object"){
-		var objectToEvaluateToString= JSON.stringify(objectToEvaluate);
-		if (objectToEvaluateToString.search("Point")){ //If there is no point not suported
-			if (objectToEvaluateToString.search("coordinates"))
-				var coordinates=objectToEvaluateToString.split('"coordinates":')[1].split(']')[0].split('[')[1];
-			if (coordinates.search(","))coordinates=coordinates.split(","); //avoid empty []
-			else return 0;
-		}else{
+function searchCoordinatesInFeature(objectToEvaluate, propertyToSearch, inputName) { //feature or location
+	if (objectToEvaluate){//It can be null
+		if (typeof objectToEvaluate === "object") {
+			if (propertyToSearch == "type") {
+				if (objectToEvaluate.hasOwnProperty(propertyToSearch)) { //type is a property
+					if (typeof objectToEvaluate.type === "string") {
+						if (objectToEvaluate.type == "Point") {
+							if (objectToEvaluate.hasOwnProperty("coordinates")) {//coordinates at same level
+								searchCoordinatesInFeature(objectToEvaluate, "coordinates",inputName);
+							} else {
+								return 0; //Not a point
+							}
+						} else if (typeof objectToEvaluate.type === "object") {
+							searchCoordinatesInFeature(objectToEvaluate.type, "type",inputName); //follow searching type:point
+						} else {
+							var objectKeys = Object.keys(objectToEvaluate)
+					for (var i = 0; i < objectKeys.length; i++) {
+						if (typeof objectToEvaluate[objectKeys[i]] === "object") {
+							searchCoordinatesInFeature(objectToEvaluate[objectKeys[i]], "type",inputName);
+						}
+					}
+						}
+					} else if ((typeof objectToEvaluate.type === "object")) { //"type contain an object"
+						searchCoordinatesInFeature(objectToEvaluate.type, "type",inputName); //keep searching deeper
+					}
+				} else { //keep searching deeper
+					var objectKeys = Object.keys(objectToEvaluate)
+					for (var i = 0; i < objectKeys.length; i++) {
+						if (typeof objectToEvaluate[objectKeys[i]] === "object") {
+							searchCoordinatesInFeature(objectToEvaluate[objectKeys[i]], "type",inputName);
+						}
+					}
+				}
+	
+			} else if (propertyToSearch == "coordinates") {
+				if (objectToEvaluate.hasOwnProperty(propertyToSearch)){
+					if (objectToEvaluate.length!=0){ //avoid empty
+						document.getElementById("dlgCreateUpdateDeleteEntity_"+inputName+"_longitude").value= objectToEvaluate.coordinates[0];
+						document.getElementById("dlgCreateUpdateDeleteEntity_"+inputName+"_latitude").value= objectToEvaluate.coordinates[1];
+					}
+	
+				}else{ //keep searching deper
+					var objectKeys = Object.keys(objectToEvaluate)
+					for (var i = 0; i < objectKeys.length; i++) {
+						if (typeof objectToEvaluate[objectKeys[i]] === "object") {
+							searchCoordinatesInFeature(objectToEvaluate[objectKeys[i]], "type",inputName);
+						}
+					}
+				}
+			}
+		}
+		else { //not an object
 			return 0;
 		}
-	}else{
-		return 0;
+	
 	}
-return coordinates;
+	
 }
 
 function createEntitiesInCreateEntity(currentNode,entitiesParentArray){
