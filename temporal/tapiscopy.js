@@ -3067,7 +3067,7 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 		cdns.push('</div>');
 	}
 	cdns.push('</fieldset>')
-	document.getElementById("dlgCreateUpdateDeleteEntityProperties_MultiDatastreams").innerHTML = cdns.join("");
+	document.getElementById("dlgCreateUpdateDeleteEntityAttributes_MultiDatastreams").innerHTML = cdns.join("");
 	
 	//Fill Inputs with information in update/delete
 	if (actionToDo!="create"){
@@ -3220,7 +3220,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 		}
 	}
 	cdns.push('</fieldset>')
-	document.getElementById("dlgCreateUpdateDeleteEntityProperties").innerHTML=cdns.join("");
+	document.getElementById("dlgCreateUpdateDeleteEntityAttributes").innerHTML=cdns.join("");
 
 	//Fill properties in update and delete
 	if (parentNodes[0].image != "sta.png" && parentEntityName==entityName) {

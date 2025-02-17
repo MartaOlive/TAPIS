@@ -3029,7 +3029,7 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 		currentNode.STAentitiesObject= entitiesObject;
 	}
 
-	//PROPERTIES (create + fill ->update/delete)
+	//Attributes(create + fill ->update/delete)
 	cdns.push('<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_name" data-STArequired="true" style=" font-weight: bold;">name*:</label>',
 		'<input id="dlgCreateUpdateDeleteEntity_MultiDatastreams_name" type="text" style="width:300px" data-STArequired="true"><br>', //name
 		'<label for="dlgCreateUpdateDeleteEntity_MultiDatastreams_description" data-STArequired="true" style=" font-weight: bold;">description*:</label>',
@@ -3067,7 +3067,7 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 		cdns.push('</div>');
 	}
 	cdns.push('</fieldset>')
-	document.getElementById("dlgCreateUpdateDeleteEntityProperties_MultiDatastreams").innerHTML = cdns.join("");
+	document.getElementById("dlgCreateUpdateDeleteEntityAttributes_MultiDatastreams").innerHTML = cdns.join("");
 	
 	//Fill Inputs with information in update/delete
 	if (actionToDo!="create"){
@@ -3163,14 +3163,14 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 		cdns.push(...createEntitiesInCreateEntity(currentNode,entitiesParentArray)); //only with create, not needed to update
 	}
 
-	//PROPERTIES (create + Fill --> Update/delete)
+	//Attributes (create + Fill --> Update/delete)
 	if (actionToDo!="create")cdns.push('<fieldset id="fieldsetModificateEntities_Attributes"><legend>Attributes</legend>');
 	for (var i=0; i<STAEntities[entityName].properties.length; i++){
-		//Properties not added in dialog
-		if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
+		//Attributes not added in dialog
+		if (/*(entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || */
 			((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
 			continue;
-		//special properties (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
+		//special attributes (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
 		if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || 
 			(entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature"))//Locations/Feature of Interest coordenates
 		{
@@ -3193,7 +3193,8 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 				'<br>');
 			continue;
 		}
-		//Properties in general
+
+		//Attributes in general
 		cdns.push('<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" data-STArequired='+STAEntities[entityName].properties[i].required+' style=" font-weight: bold;">', (STAEntities[entityName].properties[i].required=='true')? STAEntities[entityName].properties[i].name+'*':STAEntities[entityName].properties[i].name, ': </label>');
 
 
@@ -3217,13 +3218,21 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 
 		if (entityName=="MultiDatastreams" && STAEntities[entityName].properties[i].name=="multiObservationDataType") { //Multidatastream, multiObservationDataType
 			cdns.push(`<span style= "font-style: italic"> (separate them with ; )</span><br><textarea  id= "dlgCreateUpdateDeleteEntity_multiObservationDataType_textAreaList" rows="4" cols="50" style= "font-family: Arial;" data-starequired="${STAEntities[entityName].properties[i].required}"></textarea>`);
-		
 		}
+
+		if ( STAEntities[entityName].properties[i].name=="properties" ||  STAEntities[entityName].properties[i].name=="parameters" && actionToDo=="create"){
+			cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>${STAEntities[entityName].properties[i].name}</legend>
+				<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
+				<button onclick="addNewKVPonCreateUpdateDeleteEntity('0','${STAEntities[entityName].properties[i].name}','add','')"> Add more ${STAEntities[entityName].properties[i].name}</button>
+				</fieldset>`);
+			continue;
+		}
+
 	}
 	cdns.push('</fieldset>')
-	document.getElementById("dlgCreateUpdateDeleteEntityProperties").innerHTML=cdns.join("");
+	document.getElementById("dlgCreateUpdateDeleteEntityAttributes").innerHTML=cdns.join("");
 
-	//Fill properties in update and delete
+	//Fill Attributes in update and delete
 	if (parentNodes[0].image != "sta.png" && parentEntityName==entityName) {
 		for (var i=0; i<STAEntities[entityName].properties.length; i++) {
 			//properties to avoid
@@ -3232,7 +3241,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			if ((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime"))
 				continue;
 
-			//special properties (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
+			//special attributes (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
 			 if ((entityName=="Locations" && STAEntities[entityName].properties[i].name=="location") || (entityName=="FeaturesOfInterest" && STAEntities[entityName].properties[i].name=="feature")) //Locations/FeatureOfInterest coordenates
 			{
 				searchCoordinatesInFeature(record[STAEntities[entityName].properties[i].name], "type",STAEntities[entityName].properties[i].name);
@@ -3240,14 +3249,14 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 					
 			}
 			if (entityName=="Datastreams" && STAEntities[entityName].properties[i].name=="unitOfMeasurement") { //Datastream unitOfMeasurement
-		
+
 				document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+ "_name").value= record[STAEntities[entityName].properties[i].name]["name"]? record[STAEntities[entityName].properties[i].name]["name"]:"";
 				document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_symbol").value= record[STAEntities[entityName].properties[i].name]["symbol"]?record[STAEntities[entityName].properties[i].name]["symbol"]:"";
 				document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_definition").value= record[STAEntities[entityName].properties[i].name]["definition"]?record[STAEntities[entityName].properties[i].name]["definition"]:"";
 				continue;
 			}
-			//Properties in general
-			document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value=record[STAEntities[entityName].properties[i].name] ? record[STAEntities[entityName].properties[i].name] : ""; //Properties, completed with parentNodeInfo
+			//Attributes in general
+			document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value=record[STAEntities[entityName].properties[i].name] ? record[STAEntities[entityName].properties[i].name] : ""; //attributes, completed with parentNodeInfo
 		}
 		//buttons to hide/show
 		document.getElementById("dlgCreateUpdateDeleteEntityCreate").style.display="none";
@@ -3283,6 +3292,29 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 	}
 	return true;
 }
+
+function addNewKVPonCreateUpdateDeleteEntity(row,attributeName, action,toDelete){
+	event.preventDefault();
+	var number= parseInt(row);
+	var arrayResults=[];
+	for (var e=0;e<(number+1);e++){
+		if (action=="add" || (action=="delete" && e!=toDelete)){
+			arrayResults.push([document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[e]).value,document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[e]).value])
+		}
+	}
+	if (action=="add")arrayResults.push(["",""]);
+	var cdns="";
+	if (action=="delete")number=number-1;
+	if (action=="add")number=number+1;
+	cdns= `<legend>${attributeName}</legend>`
+	for (var i=0;i<(number+1);i++){
+		cdns+= `<br><input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_${i}'value='${arrayResults[i][0]}'></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_${i}'value='${arrayResults[i][1]}'>
+				<button><img src="trash.png" alt="Remove" title="Remove" onclick="addNewKVPonCreateUpdateDeleteEntity('${number}','${attributeName}','delete','${i}')"></button>`;
+		if (i==number)cdns+=`<br><button style="margin-top:10px"  onclick="addNewKVPonCreateUpdateDeleteEntity('${i}', '${attributeName}','add','')"> Add more ${attributeName}</button>` //last
+	}
+	
+	document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters").innerHTML= cdns;
+}
 function searchCoordinatesInFeature(objectToEvaluate, propertyToSearch, inputName) { //feature or location
 	if (objectToEvaluate){//It can be null
 		if (typeof objectToEvaluate === "object") {
@@ -3316,7 +3348,6 @@ function searchCoordinatesInFeature(objectToEvaluate, propertyToSearch, inputNam
 						}
 					}
 				}
-	
 			} else if (propertyToSearch == "coordinates") {
 				if (objectToEvaluate.hasOwnProperty(propertyToSearch)){
 					if (objectToEvaluate.length!=0){ //avoid empty
