@@ -3193,7 +3193,13 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 				'<br>');
 			continue;
 		}
-
+		if ( STAEntities[entityName].properties[i].name=="properties" ||  STAEntities[entityName].properties[i].name=="parameters" && actionToDo=="create"){
+			cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>${STAEntities[entityName].properties[i].name}</legend>
+				<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
+				<button onclick="addNewKVPonCreateUpdateDeleteEntity('0','${STAEntities[entityName].properties[i].name}','add','')"> Add more ${STAEntities[entityName].properties[i].name}</button>
+				</fieldset>`);
+			continue;
+		}
 		//Attributes in general
 		cdns.push('<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" data-STArequired='+STAEntities[entityName].properties[i].required+' style=" font-weight: bold;">', (STAEntities[entityName].properties[i].required=='true')? STAEntities[entityName].properties[i].name+'*':STAEntities[entityName].properties[i].name, ': </label>');
 
@@ -3220,13 +3226,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			cdns.push(`<span style= "font-style: italic"> (separate them with ; )</span><br><textarea  id= "dlgCreateUpdateDeleteEntity_multiObservationDataType_textAreaList" rows="4" cols="50" style= "font-family: Arial;" data-starequired="${STAEntities[entityName].properties[i].required}"></textarea>`);
 		}
 
-		if ( STAEntities[entityName].properties[i].name=="properties" ||  STAEntities[entityName].properties[i].name=="parameters" && actionToDo=="create"){
-			cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>${STAEntities[entityName].properties[i].name}</legend>
-				<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
-				<button onclick="addNewKVPonCreateUpdateDeleteEntity('0','${STAEntities[entityName].properties[i].name}','add','')"> Add more ${STAEntities[entityName].properties[i].name}</button>
-				</fieldset>`);
-			continue;
-		}
+
 
 	}
 	cdns.push('</fieldset>')
@@ -3235,7 +3235,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 	//Fill Attributes in update and delete
 	if (parentNodes[0].image != "sta.png" && parentEntityName==entityName) {
 		for (var i=0; i<STAEntities[entityName].properties.length; i++) {
-			//properties to avoid
+			//properties to avoid (·$·)
 			if (entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties")
 				continue;
 			if ((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime"))
@@ -3470,7 +3470,7 @@ function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
 	var prop, allowToSend=true;
 	for (var i=0; i<STAEntities[entityName].properties.length; i++) {
 		//avoid properties
-		if ((entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || 
+		if (/*(entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties") || */
 			((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime")))
 			continue;
 		//special properties (Locations: location, FeatureOfInterests: feature, Datastreams: unitOfMeasurement)
@@ -3515,7 +3515,24 @@ function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
 				}
 				continue;
 			}
-			//Properties in general	
+			if (STAEntities[entityName].properties[i].name=="parameters" || STAEntities[entityName].properties[i].name=="properties"){
+				var children= document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters").childNodes;
+				var objectProperties={}, property="";
+				for (var e=0;e<children.length;e++){
+					if (children[e].nodeName=="INPUT"){
+						if (children[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_")){
+							objectProperties[children[e].value]="";
+							property=children[e].value
+						}
+						if (children[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_")){
+							objectProperties[property]=children[e].value;
+						}
+					}
+				}
+				obj[STAEntities[entityName].properties[i].name]=objectProperties;
+				continue;
+			}
+			//attributes in general	
 			prop=document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value;
 			if (prop!=="") 	obj[STAEntities[entityName].properties[i].name]=(entityName=="Observations" && STAEntities[entityName].properties[i].name=="result" && !isNaN(prop)) ? parseFloat(prop) : prop;
 			else if (prop=="" && document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).getAttribute("data-starequired")=="true") {
@@ -3523,6 +3540,7 @@ function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
 				allowToSend=false;
 				break;
 			}
+
 		}
 		if (allowToSend==true){
 				return obj;
@@ -3682,7 +3700,7 @@ function GetCreateEntity(event) {
 		}
 		
 
-		//Properties
+		//Attributes
 		var obj = obtainDataInEntitiesCreationAndUpdate("create",entityName); //Entities already added when dialog was created
 		
 		if (obj != false) {
@@ -3726,8 +3744,7 @@ async function GetUpdateEntity(event){
 	var childrenNodes=document.getElementById("fieldsetModificateEntities_Attributes").childNodes, childrenNodes2;
 	
 	var obj={}, obj2={},idSplited, allowToSend=true;
-	for (var i=0;i<childrenNodes.length;i++){
-		
+	for (var i=0;i<childrenNodes.length;i++){		
 		if (currentNode.label=="Location"&&  childrenNodes[i].nodeName=="FIELDSET" ){
 			childrenNodes2=childrenNodes[i].childNodes;
 			console.log(childrenNodes2.length)
