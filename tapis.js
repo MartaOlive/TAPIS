@@ -3867,6 +3867,26 @@ async function GetUpdateEntity(event){
 	}
 
 	}
+	//properties
+	var childrenNodesProperties=document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters").childNodes;
+	var objectProperties={}, property="",propertiesOrParameters;
+	for (var e=0;e<childrenNodesProperties.length;e++){
+		if (childrenNodesProperties[e].nodeName=="INPUT"){
+			if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_")){
+				objectProperties[childrenNodesProperties[e].value]="";
+				property=childrenNodesProperties[e].value;
+				continue;
+			}
+			if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_")){
+				objectProperties[property]=childrenNodesProperties[e].value;
+				continue;
+			}
+		}
+		if (childrenNodesProperties[e].nodeName=="LEGEND")propertiesOrParameters=childrenNodesProperties[e].outerText;
+	}
+	if (objectProperties!={"":""})obj[propertiesOrParameters]=objectProperties; //avoid empty
+		
+
 	if (allowToSend==true){
 		showInfoMessage("Updating  "+ STAEntities[entityName].singular +" "+id+" ...");
 	 var response= await HTTPJSONData(url,null,"PUT",obj);
