@@ -1,0 +1,2438 @@
+{
+	"nodes": [
+		{
+			"id": "5g366.5gtbgf",
+			"label": "STA plus",
+			"image": "sta.png",
+			"shape": "circularImage",
+			"STAExpectedLength": 100,
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+			"STAdata": [
+				{
+					"name": "Campaigns",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Campaigns"
+				},
+				{
+					"name": "Datastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams"
+				},
+				{
+					"name": "FeaturesOfInterest",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest"
+				},
+				{
+					"name": "HistoricalLocations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/HistoricalLocations"
+				},
+				{
+					"name": "Licenses",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses"
+				},
+				{
+					"name": "Locations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations"
+				},
+				{
+					"name": "MultiDatastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams"
+				},
+				{
+					"name": "Observations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations"
+				},
+				{
+					"name": "ObservationGroups",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups"
+				},
+				{
+					"name": "ObservedProperties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties"
+				},
+				{
+					"name": "Parties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Parties"
+				},
+				{
+					"name": "Relations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Relations"
+				},
+				{
+					"name": "Sensors",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors"
+				},
+				{
+					"name": "Things",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
+				}
+			],
+			"x": 167,
+			"y": -12
+		},
+		{
+			"id": "97duv.0qidv",
+			"label": "Things",
+			"image": "Things.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things",
+			"STAExpectedLength": 400,
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1)",
+					"@iot.id": 1,
+					"name": "Smart Citizen Kit 2.1",
+					"description": "The Smart Citizen Kit that publishes on STAplus",
+					"properties": {
+						"sc_device_id": 16383
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(2)",
+					"@iot.id": 2,
+					"name": "FT-0310 Weather Station",
+					"description": "FT-0310 Weather Station that publishes on STAplus",
+					"properties": {
+						"sck_id": "99999"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(2)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(2)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(2)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(2)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(2)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(3)",
+					"@iot.id": 3,
+					"name": "UCD Sensor (1) 3B38-Indoor (5)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(3)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(3)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(3)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(3)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(3)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(4)",
+					"@iot.id": 4,
+					"name": "UCD Sensor (1) 3B38-Indoor (5)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(4)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(4)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(4)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(4)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(4)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(5)",
+					"@iot.id": 5,
+					"name": "UCD Sensor (1) 3B38-Indoor (5)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(5)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(5)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(5)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(5)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(5)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(6)",
+					"@iot.id": 6,
+					"name": "TestTWINAIRUE",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(6)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(6)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(6)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(6)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(6)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(7)",
+					"@iot.id": 7,
+					"name": "UCD Sensor 1-790D",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(7)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(7)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(7)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(7)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(7)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(8)",
+					"@iot.id": 8,
+					"name": "UCD Sensor 1 (036A)-Indoor",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(8)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(8)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(8)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(8)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(8)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(9)",
+					"@iot.id": 9,
+					"name": "HAROLD'S SCHOOL E5CF - Buzzard Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(9)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(9)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(9)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(9)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(9)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(10)",
+					"@iot.id": 10,
+					"name": "HAROLD'S SCHOOL 759D - Eagle Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(10)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(10)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(10)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(10)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(10)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(11)",
+					"@iot.id": 11,
+					"name": "HAROLD'S SCHOOL E665 - Eagle Class (PM)",
+					"description": "Smart Citizen Kit 2.1",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(11)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(11)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(11)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(11)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(11)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(12)",
+					"@iot.id": 12,
+					"name": "HAROLD'S SCHOOL D69B - Eagle Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(12)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(12)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(12)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(12)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(12)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(13)",
+					"@iot.id": 13,
+					"name": "HAROLD'S SCHOOL F080 - Teacher's room",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(13)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(13)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(13)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(13)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(13)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(14)",
+					"@iot.id": 14,
+					"name": "HAROLD'S SCHOOL 28A0 - Teacher's room table",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(14)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(14)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(14)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(14)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(14)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(15)",
+					"@iot.id": 15,
+					"name": "HAROLD'S SCHOOL E701 - Buzzard Class (PM)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(15)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(15)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(15)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(15)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(15)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(16)",
+					"@iot.id": 16,
+					"name": "CUS-IOT-Room1 (8E4C)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(16)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(16)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(16)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(16)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(16)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(17)",
+					"@iot.id": 17,
+					"name": "CUS-IOT-Room2 (42AD)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(17)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(17)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(17)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(17)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(17)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(18)",
+					"@iot.id": 18,
+					"name": "Broombridge ET (95EF) Room1 (GF)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(18)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(18)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(18)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(18)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(18)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(19)",
+					"@iot.id": 19,
+					"name": "Broombridge ET (EC60) Room2 (FF)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(19)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(19)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(19)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(19)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(19)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(20)",
+					"@iot.id": 20,
+					"name": "ETRA ROOM#1",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(20)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(20)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(20)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(20)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(20)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(21)",
+					"@iot.id": 21,
+					"name": "ETRA ROOM #1 - 3771",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(21)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(21)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(21)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(21)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(21)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(22)",
+					"@iot.id": 22,
+					"name": "UCD Sensor (1) 3B38-Indoor (5)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(22)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(22)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(22)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(22)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(22)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(23)",
+					"@iot.id": 23,
+					"name": "TestTWINAIRUE",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(23)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(23)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(23)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(23)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(23)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(24)",
+					"@iot.id": 24,
+					"name": "UCD Sensor 1-790D",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(24)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(24)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(24)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(24)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(24)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(25)",
+					"@iot.id": 25,
+					"name": "UCD Sensor 1 (036A)-Indoor",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(25)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(25)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(25)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(25)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(25)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(26)",
+					"@iot.id": 26,
+					"name": "HAROLD'S SCHOOL E5CF - Buzzard Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(26)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(26)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(26)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(26)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(26)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(27)",
+					"@iot.id": 27,
+					"name": "HAROLD'S SCHOOL 759D - Eagle Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(27)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(27)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(27)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(27)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(27)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(28)",
+					"@iot.id": 28,
+					"name": "HAROLD'S SCHOOL E665 - Eagle Class (PM)",
+					"description": "Smart Citizen Kit 2.1",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(28)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(28)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(28)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(28)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(28)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(29)",
+					"@iot.id": 29,
+					"name": "HAROLD'S SCHOOL D69B - Eagle Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(29)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(29)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(29)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(29)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(29)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(30)",
+					"@iot.id": 30,
+					"name": "HAROLD'S SCHOOL F080 - Teacher's room",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(30)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(30)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(30)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(30)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(30)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(31)",
+					"@iot.id": 31,
+					"name": "HAROLD'S SCHOOL 28A0 - Teacher's room table",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(31)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(31)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(31)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(31)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(31)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(32)",
+					"@iot.id": 32,
+					"name": "HAROLD'S SCHOOL E701 - Buzzard Class (PM)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(32)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(32)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(32)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(32)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(32)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(33)",
+					"@iot.id": 33,
+					"name": "CUS-IOT-Room1 (8E4C)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(33)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(33)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(33)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(33)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(33)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(34)",
+					"@iot.id": 34,
+					"name": "CUS-IOT-Room2 (42AD)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(34)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(34)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(34)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(34)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(34)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(35)",
+					"@iot.id": 35,
+					"name": "Broombridge ET (95EF) Room1 (GF)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(35)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(35)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(35)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(35)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(35)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(36)",
+					"@iot.id": 36,
+					"name": "Broombridge ET (EC60) Room2 (FF)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(36)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(36)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(36)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(36)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(36)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(37)",
+					"@iot.id": 37,
+					"name": "ETRA ROOM#1",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(37)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(37)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(37)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(37)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(37)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(38)",
+					"@iot.id": 38,
+					"name": "ETRA ROOM #1 - 3771",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(38)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(38)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(38)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(38)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(38)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(39)",
+					"@iot.id": 39,
+					"name": "UCD Sensor (1) 3B38-Indoor (5)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(39)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(39)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(39)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(39)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(39)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(40)",
+					"@iot.id": 40,
+					"name": "UCD Sensor (1) 3B38-Indoor (5)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(40)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(40)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(40)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(40)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(40)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(41)",
+					"@iot.id": 41,
+					"name": "UCD Sensor (1) 3B38-Indoor (5)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(41)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(41)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(41)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(41)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(41)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(42)",
+					"@iot.id": 42,
+					"name": "UCD Sensor (1) 3B38-Indoor (5)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(42)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(42)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(42)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(42)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(42)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(43)",
+					"@iot.id": 43,
+					"name": "UCD Sensor (1) 3B38-Indoor (5)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16521"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(43)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(43)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(43)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(43)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(43)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(44)",
+					"@iot.id": 44,
+					"name": "UCD Sensor 1(B6ED) -Outdoor",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16383"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(44)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(44)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(44)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(44)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(44)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(45)",
+					"@iot.id": 45,
+					"name": "TestTWINAIRUE",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16659"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(45)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(45)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(45)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(45)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(45)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(46)",
+					"@iot.id": 46,
+					"name": "UCD Sensor 1-790D",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16755"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(46)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(46)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(46)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(46)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(46)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(47)",
+					"@iot.id": 47,
+					"name": "UCD Sensor 1 (036A)-Indoor",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16759"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(47)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(47)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(47)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(47)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(47)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(48)",
+					"@iot.id": 48,
+					"name": "HAROLD'S SCHOOL E5CF - Buzzard Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {
+						"sc_device_id": "16767"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(48)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(48)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(48)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(48)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(48)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(49)",
+					"@iot.id": 49,
+					"name": "HAROLD'S SCHOOL 759D - Eagle Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {
+						"sc_device_id": "16768"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(49)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(49)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(49)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(49)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(49)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(50)",
+					"@iot.id": 50,
+					"name": "HAROLD'S SCHOOL E665 - Eagle Class (PM)",
+					"description": "Smart Citizen Kit 2.1",
+					"properties": {
+						"sc_device_id": "16769"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(50)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(50)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(50)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(50)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(50)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(51)",
+					"@iot.id": 51,
+					"name": "HAROLD'S SCHOOL D69B - Eagle Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {
+						"sc_device_id": "16770"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(51)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(51)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(51)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(51)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(51)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(52)",
+					"@iot.id": 52,
+					"name": "HAROLD'S SCHOOL F080 - Teacher's room",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16771"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(52)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(52)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(52)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(52)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(52)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(53)",
+					"@iot.id": 53,
+					"name": "HAROLD'S SCHOOL 28A0 - Teacher's room table",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {
+						"sc_device_id": "16772"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(53)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(53)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(53)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(53)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(53)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(54)",
+					"@iot.id": 54,
+					"name": "HAROLD'S SCHOOL E701 - Buzzard Class (PM)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16773"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(54)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(54)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(54)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(54)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(54)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(55)",
+					"@iot.id": 55,
+					"name": "CUS-IOT-Room1 (8E4C)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16814"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(55)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(55)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(55)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(55)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(55)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(56)",
+					"@iot.id": 56,
+					"name": "CUS-IOT-Room2 (42AD)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16815"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(56)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(56)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(56)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(56)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(56)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(57)",
+					"@iot.id": 57,
+					"name": "Broombridge ET (95EF) Room1 (GF)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16847"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(57)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(57)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(57)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(57)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(57)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(58)",
+					"@iot.id": 58,
+					"name": "Broombridge ET (EC60) Room2 (FF)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16848"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(58)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(58)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(58)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(58)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(58)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(59)",
+					"@iot.id": 59,
+					"name": "ETRA ROOM#1",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16864"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(59)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(59)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(59)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(59)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(59)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(60)",
+					"@iot.id": 60,
+					"name": "ETRA ROOM #1 - 3771",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16865"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(60)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(60)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(60)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(60)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(60)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(61)",
+					"@iot.id": 61,
+					"name": "ETRA ROOM #1 - DF87",
+					"description": "ETRA ROOM #1 - DF87",
+					"properties": {
+						"sc_device_id": "16866"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(61)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(61)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(61)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(61)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(61)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(62)",
+					"@iot.id": 62,
+					"name": "ETRA ROOM #3 - 0814",
+					"description": "ETRA ROOM #3 - 0814",
+					"properties": {
+						"sc_device_id": "16867"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(62)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(62)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(62)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(62)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(62)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(63)",
+					"@iot.id": 63,
+					"name": "ETRA ROOM #3 - 7169",
+					"description": "ETRA ROOM #3 - 7169",
+					"properties": {
+						"sc_device_id": "16868"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(63)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(63)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(63)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(63)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(63)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(64)",
+					"@iot.id": 64,
+					"name": "ETRA ROOM #2 - 653E",
+					"description": "ETRA ROOM #2 - 653E",
+					"properties": {
+						"sc_device_id": "16869"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(64)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(64)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(64)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(64)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(64)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(65)",
+					"@iot.id": 65,
+					"name": "ETRA ROOM #2 - E874",
+					"description": "ETRA ROOM #2 - E874",
+					"properties": {
+						"sc_device_id": "16870"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(65)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(65)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(65)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(65)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(65)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(66)",
+					"@iot.id": 66,
+					"name": "UCD-Indoor CO2 (337E)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16877"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(66)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(66)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(66)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(66)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(66)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(67)",
+					"@iot.id": 67,
+					"name": "UCD-Indoor CO2 (D48B)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16882"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(67)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(67)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(67)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(67)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(67)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(68)",
+					"@iot.id": 68,
+					"name": "UCD-Indoor CO2 (E1A8)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16883"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(68)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(68)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(68)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(68)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(68)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(69)",
+					"@iot.id": 69,
+					"name": "UCD-Indoor CO2 (9C9E)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16884"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(69)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(69)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(69)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(69)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(69)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(70)",
+					"@iot.id": 70,
+					"name": "UCD-Indoor CO2 (825B)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16885"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(70)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(70)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(70)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(70)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(70)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(71)",
+					"@iot.id": 71,
+					"name": "UCD-Indoor CO2 (063F)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16886"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(71)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(71)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(71)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(71)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(71)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(72)",
+					"@iot.id": 72,
+					"name": "UCD-Indoor CO2 (0BAF)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16887"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(72)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(72)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(72)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(72)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(72)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(73)",
+					"@iot.id": 73,
+					"name": "UCD-Indoor CO2 (36C9)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16888"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(73)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(73)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(73)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(73)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(73)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(74)",
+					"@iot.id": 74,
+					"name": "SCSS-Room1 (6BFB)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16902"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(74)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(74)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(74)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(74)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(74)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(75)",
+					"@iot.id": 75,
+					"name": "SCSS-Room2 (2C26)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16903"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(75)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(75)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(75)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(75)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(75)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(76)",
+					"@iot.id": 76,
+					"name": "SCSS-teacher's Room (5A61)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16904"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(76)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(76)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(76)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(76)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(76)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(77)",
+					"@iot.id": 77,
+					"name": "schooltesting23",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16909"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(77)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(77)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(77)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(77)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(77)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(78)",
+					"@iot.id": 78,
+					"name": "Dublin-Residence1 (B6F1)",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "16919"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(78)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(78)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(78)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(78)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(78)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(79)",
+					"@iot.id": 79,
+					"name": "UCD Sensor 1(B6ED) -Outdoor",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16383"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(79)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(79)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(79)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(79)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(79)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(80)",
+					"@iot.id": 80,
+					"name": "UCD Sensor (1) 3B38-Indoor (5)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16521"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(80)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(80)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(80)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(80)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(80)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(81)",
+					"@iot.id": 81,
+					"name": "TestTWINAIRUE",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16659"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(81)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(81)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(81)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(81)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(81)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(82)",
+					"@iot.id": 82,
+					"name": "UCD Sensor 1-790D",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16755"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(82)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(82)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(82)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(82)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(82)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(83)",
+					"@iot.id": 83,
+					"name": "UCD Sensor 1 (036A)-Indoor",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16759"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(83)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(83)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(83)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(83)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(83)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(84)",
+					"@iot.id": 84,
+					"name": "HAROLD'S SCHOOL E5CF - Buzzard Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {
+						"sc_device_id": "16767"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(84)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(84)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(84)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(84)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(84)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(85)",
+					"@iot.id": 85,
+					"name": "HAROLD'S SCHOOL 759D - Eagle Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {
+						"sc_device_id": "16768"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(85)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(85)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(85)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(85)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(85)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(86)",
+					"@iot.id": 86,
+					"name": "HAROLD'S SCHOOL E665 - Eagle Class (PM)",
+					"description": "Smart Citizen Kit 2.1",
+					"properties": {
+						"sc_device_id": "16769"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(86)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(86)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(86)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(86)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(86)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(87)",
+					"@iot.id": 87,
+					"name": "HAROLD'S SCHOOL D69B - Eagle Class",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {
+						"sc_device_id": "16770"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(87)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(87)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(87)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(87)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(87)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(88)",
+					"@iot.id": 88,
+					"name": "HAROLD'S SCHOOL F080 - Teacher's room",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16771"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(88)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(88)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(88)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(88)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(88)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(89)",
+					"@iot.id": 89,
+					"name": "HAROLD'S SCHOOL 28A0 - Teacher's room table",
+					"description": "Smart Citizen Kit 2.1 with CO2 and HCHO",
+					"properties": {
+						"sc_device_id": "16772"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(89)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(89)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(89)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(89)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(89)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(90)",
+					"@iot.id": 90,
+					"name": "HAROLD'S SCHOOL E701 - Buzzard Class (PM)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16773"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(90)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(90)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(90)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(90)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(90)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(91)",
+					"@iot.id": 91,
+					"name": "CUS-IOT-Room1 (8E4C)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16814"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(91)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(91)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(91)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(91)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(91)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(92)",
+					"@iot.id": 92,
+					"name": "CUS-IOT-Room2 (42AD)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16815"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(92)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(92)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(92)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(92)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(92)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(93)",
+					"@iot.id": 93,
+					"name": "Broombridge ET (95EF) Room1 (GF)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16847"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(93)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(93)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(93)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(93)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(93)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(94)",
+					"@iot.id": 94,
+					"name": "Broombridge ET (EC60) Room2 (FF)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16848"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(94)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(94)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(94)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(94)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(94)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(95)",
+					"@iot.id": 95,
+					"name": "ETRA ROOM#1",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16864"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(95)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(95)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(95)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(95)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(95)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(96)",
+					"@iot.id": 96,
+					"name": "ETRA ROOM #1 - 3771",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16865"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(96)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(96)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(96)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(96)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(96)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(97)",
+					"@iot.id": 97,
+					"name": "ETRA ROOM #1 - DF87",
+					"description": "ETRA ROOM #1 - DF87",
+					"properties": {
+						"sc_device_id": "16866"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(97)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(97)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(97)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(97)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(97)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(98)",
+					"@iot.id": 98,
+					"name": "ETRA ROOM #3 - 0814",
+					"description": "ETRA ROOM #3 - 0814",
+					"properties": {
+						"sc_device_id": "16867"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(98)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(98)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(98)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(98)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(98)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(99)",
+					"@iot.id": 99,
+					"name": "ETRA ROOM #3 - 7169",
+					"description": "ETRA ROOM #3 - 7169",
+					"properties": {
+						"sc_device_id": "16868"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(99)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(99)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(99)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(99)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(99)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(100)",
+					"@iot.id": 100,
+					"name": "ETRA ROOM #2 - 653E",
+					"description": "ETRA ROOM #2 - 653E",
+					"properties": {
+						"sc_device_id": "16869"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(100)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(100)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(100)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(100)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(100)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(101)",
+					"@iot.id": 101,
+					"name": "ETRA ROOM #2 - E874",
+					"description": "ETRA ROOM #2 - E874",
+					"properties": {
+						"sc_device_id": "16870"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(101)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(101)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(101)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(101)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(101)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(102)",
+					"@iot.id": 102,
+					"name": "UCD-Indoor CO2 (337E)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16877"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(102)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(102)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(102)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(102)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(102)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(103)",
+					"@iot.id": 103,
+					"name": "UCD-Indoor CO2 (D48B)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16882"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(103)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(103)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(103)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(103)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(103)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(104)",
+					"@iot.id": 104,
+					"name": "UCD-Indoor CO2 (E1A8)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16883"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(104)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(104)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(104)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(104)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(104)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(105)",
+					"@iot.id": 105,
+					"name": "UCD-Indoor CO2 (9C9E)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16884"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(105)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(105)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(105)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(105)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(105)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(106)",
+					"@iot.id": 106,
+					"name": "UCD-Indoor CO2 (825B)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16885"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(106)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(106)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(106)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(106)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(106)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(107)",
+					"@iot.id": 107,
+					"name": "UCD-Indoor CO2 (063F)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16886"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(107)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(107)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(107)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(107)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(107)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(108)",
+					"@iot.id": 108,
+					"name": "UCD-Indoor CO2 (0BAF)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16887"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(108)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(108)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(108)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(108)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(108)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(109)",
+					"@iot.id": 109,
+					"name": "UCD-Indoor CO2 (36C9)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16888"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(109)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(109)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(109)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(109)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(109)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(110)",
+					"@iot.id": 110,
+					"name": "SCSS-Room1 (6BFB)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16902"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(110)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(110)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(110)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(110)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(110)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(111)",
+					"@iot.id": 111,
+					"name": "SCSS-Room2 (2C26)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16903"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(111)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(111)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(111)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(111)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(111)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(112)",
+					"@iot.id": 112,
+					"name": "SCSS-teacher's Room (5A61)",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16904"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(112)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(112)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(112)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(112)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(112)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(113)",
+					"@iot.id": 113,
+					"name": "schooltesting23",
+					"description": "Smart Citizen Kit 2.1 with Urban Sensor Board",
+					"properties": {
+						"sc_device_id": "16909"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(113)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(113)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(113)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(113)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(113)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(114)",
+					"@iot.id": 114,
+					"name": "Dublin-Residence1 (B6F1)",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "16919"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(114)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(114)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(114)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(114)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(114)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(115)",
+					"@iot.id": 115,
+					"name": "Smart Citizen Kit 2.1",
+					"description": "The Smart Citizen Kit that publishes on STAplus",
+					"properties": {
+						"sck_id": "16526"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(115)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(115)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(115)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(115)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(115)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(116)",
+					"@iot.id": 116,
+					"name": "FT-0310 Weather Station",
+					"description": "FT-0310 Weather Station that publishes on STAplus",
+					"properties": {
+						"sck_id": "99999"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(116)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(116)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(116)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(116)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(116)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(117)",
+					"@iot.id": 117,
+					"name": "FT-0310 Weather Station",
+					"description": "FT-0310 Weather Station that publishes on STAplus",
+					"properties": {
+						"sck_id": "99999"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(117)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(117)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(117)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(117)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(117)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(118)",
+					"@iot.id": 118,
+					"name": "Thriassio emergency 1",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "16980"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(118)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(118)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(118)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(118)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(118)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(119)",
+					"@iot.id": 119,
+					"name": "Thriassio emergency II",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "16983"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(119)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(119)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(119)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(119)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(119)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(120)",
+					"@iot.id": 120,
+					"name": "Thriassio doctor's office",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "16984"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(120)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(120)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(120)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(120)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(120)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(121)",
+					"@iot.id": 121,
+					"name": "Thriassio doctor's office II",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "16985"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(121)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(121)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(121)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(121)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(121)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(122)",
+					"@iot.id": 122,
+					"name": "FT-0310 Weather Station",
+					"description": "FT-0310 Weather Station that publishes on STAplus",
+					"properties": {
+						"sck_id": "09ecabc3-636c-4b57-9806-5599b6d0adb5"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(122)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(122)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(122)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(122)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(122)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(123)",
+					"@iot.id": 123,
+					"name": "FT-0310 Weather Station",
+					"description": "FT-0310 Weather Station that publishes on STAplus",
+					"properties": {
+						"sck_id": "51cd06b9-c04b-4f84-a832-fce50f15388a"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(123)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(123)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(123)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(123)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(123)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(124)",
+					"@iot.id": 124,
+					"name": "Smart Citizen Kit 2.1",
+					"description": "The Smart Citizen Kit that publishes on STAplus",
+					"properties": {
+						"sck_id": "17044"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(124)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(124)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(124)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(124)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(124)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(125)",
+					"@iot.id": 125,
+					"name": "FT-0310 Weather Station",
+					"description": "FT-0310 Weather Station that publishes on STAplus",
+					"properties": {
+						"sck_id": "74d5856d-3796-460c-9009-b004e4fa75b4"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(125)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(125)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(125)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(125)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(125)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(126)",
+					"@iot.id": 126,
+					"name": "FT-0310 Weather Station",
+					"description": "FT-0310 Weather Station that publishes on STAplus",
+					"properties": {
+						"sck_id": "a5d6fd01-53d0-4c74-9192-425b79bbdcaf"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(126)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(126)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(126)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(126)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(126)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(127)",
+					"@iot.id": 127,
+					"name": "FT-0310 Weather Station",
+					"description": "FT-0310 Weather Station that publishes on STAplus",
+					"properties": {
+						"sck_id": "c51c7177-bc08-4a64-88d7-1d49ed30135c"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(127)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(127)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(127)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(127)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(127)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(128)",
+					"@iot.id": 128,
+					"name": "Smart Citizen Kit 2.1",
+					"description": "The Smart Citizen Kit that publishes on STAplus",
+					"properties": {
+						"sck_id": "17044"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(128)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(128)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(128)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(128)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(128)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(129)",
+					"@iot.id": 129,
+					"name": "Smart Citizen Kit 2.1",
+					"description": "The Smart Citizen Kit that publishes on STAplus",
+					"properties": {
+						"sck_id": "17209"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(129)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(129)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(129)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(129)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(129)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(130)",
+					"@iot.id": 130,
+					"name": "Smart Citizen Kit 2.1",
+					"description": "The Smart Citizen Kit that publishes on STAplus",
+					"properties": {
+						"sck_id": "16542"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(130)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(130)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(130)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(130)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(130)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(131)",
+					"@iot.id": 131,
+					"name": "Smart Citizen Kit 2.1",
+					"description": "The Smart Citizen Kit that publishes on STAplus",
+					"properties": {
+						"sck_id": "17220"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(131)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(131)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(131)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(131)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(131)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(132)",
+					"@iot.id": 132,
+					"name": "FT-0310 Weather Station",
+					"description": "FT-0310 Weather Station that publishes on STAplus",
+					"properties": {
+						"sck_id": "8f117a6e-8820-4d60-b27e-0896ad689994"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(132)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(132)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(132)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(132)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(132)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(133)",
+					"@iot.id": 133,
+					"name": "FT-0310 Weather Station",
+					"description": "FT-0310 Weather Station that publishes on STAplus",
+					"properties": {
+						"rtl_id": "4c60405f84a07b1e1bddb83cae5dccf0"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(133)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(133)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(133)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(133)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(133)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(134)",
+					"@iot.id": 134,
+					"name": "TRIKALA01 KHFH Office",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17035"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(134)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(134)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(134)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(134)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(134)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(135)",
+					"@iot.id": 135,
+					"name": "TRIKALA02 KHFH Main Room (Window)",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17037"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(135)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(135)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(135)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(135)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(135)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(136)",
+					"@iot.id": 136,
+					"name": "TRIKALA03 KHFH Main Room (Desk)",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17038"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(136)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(136)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(136)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(136)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(136)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(137)",
+					"@iot.id": 137,
+					"name": "TRIKALA04 27th Primary School Office",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17039"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(137)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(137)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(137)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(137)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(137)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(138)",
+					"@iot.id": 138,
+					"name": "TRIKALA05 27th Primary School E1",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17040"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(138)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(138)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(138)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(138)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(138)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(139)",
+					"@iot.id": 139,
+					"name": "TRIKALA06 27th Primary School D1",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17041"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(139)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(139)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(139)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(139)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(139)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(140)",
+					"@iot.id": 140,
+					"name": "TRIKALA07 27th Primary School C2",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17042"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(140)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(140)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(140)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(140)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(140)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(141)",
+					"@iot.id": 141,
+					"name": "TRIKALA08 27th Primary School C1",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17043"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(141)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(141)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(141)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(141)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(141)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(142)",
+					"@iot.id": 142,
+					"name": "Rathdown-Indoor 1 (3B38)",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17093"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(142)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(142)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(142)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(142)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(142)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(143)",
+					"@iot.id": 143,
+					"name": "Dominican College Indoor1 (2F71)",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17119"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(143)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(143)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(143)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(143)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(143)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(144)",
+					"@iot.id": 144,
+					"name": "Dominican College Indoor2 (3E2C)",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17120"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(144)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(144)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(144)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(144)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(144)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(145)",
+					"@iot.id": 145,
+					"name": "B6F1 juan house",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17207"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(145)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(145)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(145)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(145)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(145)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(146)",
+					"@iot.id": 146,
+					"name": "test juan FC18",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17215"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(146)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(146)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(146)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(146)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(146)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(147)",
+					"@iot.id": 147,
+					"name": "HAROLD'S SCHOOL E5CF - Buzzard Class",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17239"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(147)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(147)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(147)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(147)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(147)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(148)",
+					"@iot.id": 148,
+					"name": "Lindsay test 2f8e",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17259"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(148)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(148)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(148)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(148)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(148)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(149)",
+					"@iot.id": 149,
+					"name": "B6ED Portmarnock CS T4 Classroom",
+					"description": "Smart Citizen Kit",
+					"properties": {
+						"sc_device_id": "17267"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(149)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(149)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(149)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(149)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(149)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)",
+					"@iot.id": 150,
+					"name": "Cotech-367959",
+					"description": " ",
+					"properties": {
+						"rtl_id": "93",
+						"rtl_model": "Cotech-367959",
+						"rtl_uid": "d37e5ba91b9689f8d679b79271528f68"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(151)",
+					"@iot.id": 151,
+					"name": "Oregon-v1",
+					"description": " ",
+					"properties": {
+						"rtl_id": "2",
+						"rtl_model": "Oregon-v1",
+						"rtl_uid": "683ba4529ad0362ecb0cb98cd8bde580"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(151)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(151)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(151)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(151)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(151)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(152)",
+					"@iot.id": 152,
+					"name": "Prologue-TH",
+					"description": " ",
+					"properties": {
+						"rtl_id": "58",
+						"rtl_model": "Prologue-TH",
+						"rtl_subtype": "5",
+						"rtl_uid": "5d0499ca264833185be422f3f4d4c17f"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(152)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(152)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(152)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(152)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(152)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(153)",
+					"@iot.id": 153,
+					"name": "BROWNING DARK OPS PRO X 1080",
+					"description": "The Browning Trail Cameras Dark Ops Pro X 1080 (2023) featuring a 1.5” color view screen, less than a quarter second trigger speed, and an all-steel adjustable mounting bracket for easy set-up in the field.",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(153)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(153)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(153)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(153)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(153)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(154)",
+					"@iot.id": 154,
+					"name": "Citizen",
+					"description": "Citizen Scientist",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(154)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(154)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(154)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(154)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(154)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(155)",
+					"@iot.id": 155,
+					"name": "Albera camera",
+					"description": "Camera trap deployed in Albera",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(155)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(155)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(155)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(155)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(155)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(157)",
+					"@iot.id": 157,
+					"name": "Sensor3",
+					"description": "sensor3",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(157)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(157)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(157)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(157)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(157)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(158)",
+					"@iot.id": 158,
+					"name": "Sensor2",
+					"description": "sensor2",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(158)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(158)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(158)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(158)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(158)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(159)",
+					"@iot.id": 159,
+					"name": "TestThing2",
+					"description": "TestThing2",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(159)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(159)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(159)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(159)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(159)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(160)",
+					"@iot.id": 160,
+					"name": "TestThing10",
+					"description": "TestThing10",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(160)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(160)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(160)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(160)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(160)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(161)",
+					"@iot.id": 161,
+					"name": "TestThingWithHistoricalLocation",
+					"description": "TestThingWithHistoricalLocation",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(161)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(161)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(161)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(161)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(161)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(162)",
+					"@iot.id": 162,
+					"name": "TestThingsDiferentLocations",
+					"description": "TestThingsDiferentLocations",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(162)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(162)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(162)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(162)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(162)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(163)",
+					"@iot.id": 163,
+					"name": "gdfgdfg",
+					"description": "dfgfdg",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(163)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(163)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(163)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(163)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(163)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(164)",
+					"@iot.id": 164,
+					"name": "Smart Citizen Kit 2.1",
+					"description": "The Smart Citizen Kit that publishes on STAplus",
+					"properties": {
+						"sck_id": "17044"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(164)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(164)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(164)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(164)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(164)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(165)",
+					"@iot.id": 165,
+					"name": "TestThingNew",
+					"description": "TestThingNew",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(165)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(165)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(165)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(165)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(165)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(166)",
+					"@iot.id": 166,
+					"name": "TestPropertiesTapisThing",
+					"description": "TestPropertiesTapisThing",
+					"properties": {
+						"a": "1",
+						"b": "2"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(166)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(166)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(166)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(166)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(166)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1001)",
+					"@iot.id": 1001,
+					"name": "CitiObs Hackaton ",
+					"description": "Hackaton Test Quality control v1",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1001)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1001)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1001)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1001)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(1001)/Datastreams"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/description"
+				},
+				"properties": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/properties"
+				},
+				"Party@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Party@iot.navigationLink"
+				},
+				"HistoricalLocations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/HistoricalLocations@iot.navigationLink"
+				},
+				"Locations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Locations@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/MultiDatastreams@iot.navigationLink"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Datastreams@iot.navigationLink"
+				}
+			},
+			"x": 54,
+			"y": -68
+		},
+		{
+			"id": "3uu9g.n8j990g",
+			"label": "Select Row",
+			"image": "SelectRowSTA.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)",
+			"STAExpectedLength": "100",
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)",
+					"@iot.id": 150,
+					"name": "Cotech-367959",
+					"description": " ",
+					"properties": {
+						"rtl_id": "93",
+						"rtl_model": "Cotech-367959",
+						"rtl_uid": "d37e5ba91b9689f8d679b79271528f68"
+					},
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)/Party",
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)/HistoricalLocations",
+					"Locations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)/Locations",
+					"MultiDatastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things(150)/Datastreams"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/description"
+				},
+				"properties": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/properties"
+				},
+				"Party@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Party@iot.navigationLink"
+				},
+				"HistoricalLocations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/HistoricalLocations@iot.navigationLink"
+				},
+				"Locations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Locations@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/MultiDatastreams@iot.navigationLink"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Datastreams@iot.navigationLink"
+				}
+			},
+			"STAURLIdSelected": "150",
+			"x": -4,
+			"y": 7
+		},
+		{
+			"id": "1s0h5.r3v0dt",
+			"label": "Thing",
+			"image": "Thing.png",
+			"shape": "circularImage",
+			"x": -84,
+			"y": 96
+		}
+	],
+	"edges": [
+		{
+			"from": "5g366.5gtbgf",
+			"to": "97duv.0qidv",
+			"arrows": "from"
+		},
+		{
+			"from": "97duv.0qidv",
+			"to": "3uu9g.n8j990g",
+			"arrows": "from"
+		},
+		{
+			"from": "3uu9g.n8j990g",
+			"to": "1s0h5.r3v0dt",
+			"arrows": "from"
+		}
+	]
+}

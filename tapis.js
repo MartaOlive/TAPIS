@@ -3235,9 +3235,9 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 	//Fill Attributes in update and delete
 	if (parentNodes[0].image != "sta.png" && parentEntityName==entityName) {
 		for (var i=0; i<STAEntities[entityName].properties.length; i++) {
-			//properties to avoid (·$·)
-			if (entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties")
-				continue;
+			//attributes to avoid 
+			// if (entityName=="Observations" ? STAEntities[entityName].properties[i].name=="parameters" : STAEntities[entityName].properties[i].name=="properties")
+			// 	continue;
 			if ((entityName=="Datastreams" || entityName=="MultiDatastreams") && (STAEntities[entityName].properties[i].name=="observedArea" || STAEntities[entityName].properties[i].name=="phenomenonTime" || STAEntities[entityName].properties[i].name=="resultTime"))
 				continue;
 
@@ -3255,6 +3255,26 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 				document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_definition").value= record[STAEntities[entityName].properties[i].name]["definition"]?record[STAEntities[entityName].properties[i].name]["definition"]:"";
 				continue;
 			}
+			if (STAEntities[entityName].properties[i].name=="parameters" || STAEntities[entityName].properties[i].name=="properties"){
+				var propertiesOrParameters= STAEntities[entityName].properties[i].name;
+				if (record[propertiesOrParameters]){
+					var keys=Object.keys(record[propertiesOrParameters]);
+					if (keys.length==1){
+						//treure la clau 
+						document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0").value=keys[0];
+						document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0").value=record[propertiesOrParameters][keys[0]];
+					}else if (keys.length>1){ //avoid empty
+						addNewKVPonCreateUpdateDeleteEntity(keys.length-1,propertiesOrParameters, "addInUpdateDelete",""); //create keys values par that you need 
+						for (var u=0;u<keys.length;u++){
+							document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[u]).value=keys[u];
+							document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[u]).value=record[propertiesOrParameters][keys[u]];
+						}
+					}
+				}
+				continue;
+			}
+					
+
 			//Attributes in general
 			document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value=record[STAEntities[entityName].properties[i].name] ? record[STAEntities[entityName].properties[i].name] : ""; //attributes, completed with parentNodeInfo
 		}
@@ -3265,7 +3285,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 		return true;
 	}
 	else {
-		//Filling properties with "mandatory" data in CREATE mode
+		//Filling attributes with "mandatory" data in CREATE mode
 		if (entityName=="Parties") {
 			if (CriptoName && CriptoName!="Anonymous")
 				document.getElementById("dlgCreateUpdateDeleteEntity_authId").value=CriptoName;
@@ -3297,19 +3317,24 @@ function addNewKVPonCreateUpdateDeleteEntity(row,attributeName, action,toDelete)
 	event.preventDefault();
 	var number= parseInt(row);
 	var arrayResults=[];
-	for (var e=0;e<(number+1);e++){
-		if (action=="add" || (action=="delete" && e!=toDelete)){
-			arrayResults.push([document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[e]).value,document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[e]).value])
+	if (action!="addInUpdateDelete"){
+		for (var e=0;e<(number+1);e++){
+			if (action=="add" || (action=="delete" && e!=toDelete)){
+				arrayResults.push([document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[e]).value,document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[e]).value])
+			}
 		}
+		if (action=="add")arrayResults.push(["",""]);
+		var cdns="";
+		if (action=="delete")number=number-1;
+		if (action=="add")number=number+1;
 	}
-	if (action=="add")arrayResults.push(["",""]);
-	var cdns="";
-	if (action=="delete")number=number-1;
-	if (action=="add")number=number+1;
 	cdns= `<legend>${attributeName}</legend>`
 	for (var i=0;i<(number+1);i++){
-		cdns+= `<br><input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_${i}'value='${arrayResults[i][0]}'></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_${i}'value='${arrayResults[i][1]}'>
-				<button><img src="trash.png" alt="Remove" title="Remove" onclick="addNewKVPonCreateUpdateDeleteEntity('${number}','${attributeName}','delete','${i}')"></button>`;
+		cdns+= `<br><input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_${i}'`;
+		if (action!="addInUpdateDelete")cdns+=`value='${arrayResults[i][0]}'`;
+		cdns+=`></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_${i}'`
+		if (action!="addInUpdateDelete")cdns+=`value='${arrayResults[i][1]}'`
+		cdns+=`></input><button><img src="trash.png" alt="Remove" title="Remove" onclick="addNewKVPonCreateUpdateDeleteEntity('${number}','${attributeName}','delete','${i}')"></button>`;
 		if (i==number)cdns+=`<br><button style="margin-top:10px"  onclick="addNewKVPonCreateUpdateDeleteEntity('${i}', '${attributeName}','add','')"> Add more ${attributeName}</button>` //last
 	}
 	
