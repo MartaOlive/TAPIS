@@ -3067,6 +3067,11 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 		cdns.push('</div>');
 	}
 	cdns.push('</fieldset>')
+	//Properties
+	cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>Propertires</legend>
+		<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
+		<button onclick="addNewKVPonCreateUpdateDeleteEntity('0','properties','add','')"> Add more properties</button>
+		</fieldset>`);
 	document.getElementById("dlgCreateUpdateDeleteEntityAttributes_MultiDatastreams").innerHTML = cdns.join("");
 	
 	//Fill Inputs with information in update/delete
@@ -3085,6 +3090,23 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 		}
 
 	}
+	//Properties
+	var propertiesOrParameters= "properties";
+	if (STAdata[propertiesOrParameters]){
+		var keys=Object.keys(STAdata[propertiesOrParameters]);
+		if (keys.length==1){
+			//treure la clau 
+			document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0").value=keys[0];
+			document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0").value=STAdata[propertiesOrParameters][keys[0]];
+		}else if (keys.length>1){ //avoid empty
+			addNewKVPonCreateUpdateDeleteEntity(keys.length-1,propertiesOrParameters, "addInUpdateDelete",""); //create keys values par that you need 
+			for (var u=0;u<keys.length;u++){
+				document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[u]).value=keys[u];
+				document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[u]).value=STAdata[propertiesOrParameters][keys[u]];
+			}
+		}
+	}
+
 	//Show/hide buttons 
 	if (actionToDo == "create") {
 		document.getElementById("dlgCreateUpdateDeleteEntityCreate_MultiDatastreams").style.display = "inline-block";
@@ -3624,6 +3646,26 @@ function obtainDataInMultidatastreamsCreationAndUpdate(operation){
 	obj["multiObservationDataTypes"]=multiObservationDataTypes;
 	obj["unitOfMeasurements"]=unitOfMeasurements;	
 
+	//properties
+	var childrenNodesProperties=document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters").childNodes;
+	var objectProperties={}, property="",propertiesOrParameters;
+	for (var e=0;e<childrenNodesProperties.length;e++){
+		if (childrenNodesProperties[e].nodeName=="INPUT"){
+			if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_")){
+				if (childrenNodesProperties[e].value!="")objectProperties[childrenNodesProperties[e].value]="";
+				property=childrenNodesProperties[e].value;
+				continue;
+			}
+			if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_")){
+				if (property!="")objectProperties[property]=childrenNodesProperties[e].value;
+				continue;
+			}
+		}
+		if (childrenNodesProperties[e].nodeName=="LEGEND")propertiesOrParameters=childrenNodesProperties[e].outerText;
+	}
+	if (objectProperties!={"":""})obj[propertiesOrParameters]=objectProperties; //avoid empty
+	
+
 	if (allowToSend==true){
 		return obj;
 	}else{
@@ -3873,12 +3915,12 @@ async function GetUpdateEntity(event){
 	for (var e=0;e<childrenNodesProperties.length;e++){
 		if (childrenNodesProperties[e].nodeName=="INPUT"){
 			if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_")){
-				objectProperties[childrenNodesProperties[e].value]="";
+				if (childrenNodesProperties[e].value!="")objectProperties[childrenNodesProperties[e].value]="";
 				property=childrenNodesProperties[e].value;
 				continue;
 			}
 			if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_")){
-				objectProperties[property]=childrenNodesProperties[e].value;
+				if (property!="")objectProperties[property]=childrenNodesProperties[e].value;
 				continue;
 			}
 		}
@@ -3907,6 +3949,26 @@ async function GetUpdateEntityMultiDatastream(event){
 	var parentNodes=GetParentNodes(currentNode);
 	var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNodes[0].STAURL), false);
 	var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,id);
+
+		//properties
+		var childrenNodesProperties=document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters").childNodes;
+		var objectProperties={}, property="",propertiesOrParameters;
+		for (var e=0;e<childrenNodesProperties.length;e++){
+			if (childrenNodesProperties[e].nodeName=="INPUT"){
+				if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_")){
+					if (childrenNodesProperties[e].value!="")objectProperties[childrenNodesProperties[e].value]="";
+					property=childrenNodesProperties[e].value;
+					continue;
+				}
+				if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_")){
+					if (property!="")objectProperties[property]=childrenNodesProperties[e].value;
+					continue;
+				}
+			}
+			if (childrenNodesProperties[e].nodeName=="LEGEND")propertiesOrParameters=childrenNodesProperties[e].outerText;
+		}
+		if (objectProperties!={"":""})obj[propertiesOrParameters]=objectProperties; //avoid empty
+		
 
 	if (obj != false) {
 		showInfoMessage("Updating MultiDatastream " + id + " ...");
