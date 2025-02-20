@@ -14,12 +14,13 @@
 				"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1"
 			},
 			{
-				"desc": "CitiObs VirtualAir server",
-				"url": "https://api-virtualair.nilu.no/v1.1"
+				"desc": "NILU STA server",
+				"url": "https://nsdpstaplus.nilu.no/FROST-Server/v1.1",
+				"url2": "https://sensorsstaplus.nilu.no/api/v1.1"
 			},
 			{
-				"desc": "NILU STA server",
-				"url": "https://sensorsstaplus.nilu.no/api/v1.1"
+				"desc": "CitiObs VirtualAir server (integrating the 3 previous one)",
+				"url": "https://api-virtualair.nilu.no/v1.1"
 			},
 			{
 				"desc": "AD4GD STAplus server",
@@ -34,9 +35,17 @@
 				"url": "https://ogc.demo.secure-dimensions.de/staplus/v1.1"
 			},
 			{
-				"desc": "Air Quality in the Nederlands (Samenmeten RIVM) (v1.0)",
+				"desc": "Air Quality in the Nederlands (Samenmeten RIVM) (v1.0) (CORS problem)",
 				"url": "https://api-samenmeten.rivm.nl/v1.0"
-			}
+			},
+			{
+				"desc": "COS4Cloud Pl@ntNet (v1.1)",
+				"url": "https://thymerais.cirad.fr/cos4cloud/api-demo/v1.1"
+			},
+			{
+				"desc": "COS4Cloud STAplus test server", 
+				"url": "https://cos4cloud.demo.secure-dimensions.de/staplus/v1.1"
+			}			
 			]
 		},
 		{

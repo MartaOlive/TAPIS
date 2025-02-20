@@ -161,7 +161,7 @@
 
 	<dialog id="DialogCreateUpdateDeleteEntity">
 		<form>
-			<span id="dlgCreateUpdateDeleteEntityAttributes">
+			<span id="dlgCreateUpdateDeleteEntityProperties">
 			</span>
 			<div class="center">
 				<button value="default" id="dlgCreateUpdateDeleteEntityCreate" onClick="GetCreateEntity(event)">Create</button>
@@ -3270,7 +3270,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 				cdns.push('<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" data-STArequired='+STAEntities[entityName].properties[i].required+'>', (STAEntities[entityName].properties[i].required=='true')? STAEntities[entityName].properties[i].name+'*':STAEntities[entityName].properties[i].name, ': </label><input id="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" type="text"><br>');
 			}
 
-			document.getElementById("dlgCreateUpdateDeleteEntityAttributes").innerHTML=cdns.join("");
+			document.getElementById("dlgCreateUpdateDeleteEntityProperties").innerHTML=cdns.join("");
 
 			if (parentNodes[0].image != "sta.png" && parentEntityName==entityName) {
 				//Edit or delete
@@ -3429,7 +3429,7 @@ async function requestAndRefreshCountResults(currentNode, period) {
 			
 			showInfoMessage("Updating  "+ STAEntities[entityName].singular +" "+parentNodes[0].STAURLIdSelected+" ...");
 			
-			var childrenNodes=document.getElementById("dlgCreateUpdateDeleteEntityAttributes").childNodes;
+			var childrenNodes=document.getElementById("dlgCreateUpdateDeleteEntityProperties").childNodes;
 			console.log(childrenNodes)
 			var obj={}, idSplited
 			for (var i=0;i<childrenNodes.length;i++){

@@ -23,7 +23,7 @@
 	<script type="text/javascript" src="jsonld.js" async defer></script>
 	<script type="text/javascript" src="edc.js" async defer></script>
 	<script type="text/javascript" src="data_tables.js"></script>
-	<script type="text/javascript" src="STAselectExpand.js"></script>
+	<script type="text/javascript" src="STAqueryParam.js"></script>
 	<script type="text/javascript" src="selectColumnsDlg.js"></script>
 	<script type="text/javascript" src="groupByDlg.js"></script>
 	<script type="text/javascript" src="STAfilter.js"></script>
@@ -45,9 +45,8 @@
 						<td><img src="logo.png" height="70"></td>
 						<td>
 							<div style="font-size: 30px; font-weight: bold;">TAPIS</div>
-							<div style="font-size: 20px; font-weight: bold;">Tables from OGC APIs for Sensors</div>
-							<div style="font-size: 10px; font-weight: normal;"> or a Sensor Things API plus Explorer
-							</div>
+							<div style="font-size: 20px; font-weight: bold;">Tables from APIS</div>
+							<div style="font-size: 10px; font-weight: normal;">or an API Explerer and a Table Manager							</div>
 						</td>
 					</tr>
 				</table>
@@ -279,18 +278,6 @@
 				<button value="default" id="dlgCreateUpdateDeleteRecordCreate" onClick="GetCreateRecord(event)">Insert</button>
 				<button value="default" id="dlgCreateUpdateDeleteRecordUpdate" onClick="GetUpdateRecord(event)">Update</button>
 				<button value="default" id="dlgCreateUpdateDeleteRecordDelete" onClick="AskForDeleteRecord(event)">Delete</button>
-				<button value="cancel" formmethod="dialog">Cancel</button>
-			</div>
-		</form>
-	</dialog>
-
-	<dialog id="DialogSelectColumns">
-		<form>
-			Select columns:
-			<span id="DialogSelectColumnsHTML">
-			</span>
-			<div class="center">
-				<button value="default" onClick="GetSelectColumns(event)">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
@@ -656,21 +643,48 @@
 		</form>		
 	</dialog>
 	
+	<dialog id="DialogSelectColumns">
+		<form>
+			Select columns:
+			<span id="DialogSelectColumnsHTML">
+			</span>
+			<div class="center">
+				<button value="default" onClick="GetSelectColumns(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogSelectColumnsNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogExpandColumn">
+		<form>
+			Select column with the entity to see more details (expand):
+			<span id="DialogExpandColumnHTML">
+			</span>
+			<br>
+			<!--label>Number records to request:
+				<input type="text" id="ExpandColumnNumberOfRecords" size="6" maxlength="6" value="100"></input>
+			</label-->
+			<div class="center">
+				<button value="default" onClick="GetExpandColumn(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogExpandColumnNodeId"></input>
+		</form>
+	</dialog>
+
 	<dialog id="DialogSelectExpands">
 		<form>
 			<fieldset id="DialogSelectExpandsHTML">
-				<legend>Choose subclasses you want details (expand) and attributes to select</legend>
+				<legend>Choose entities you want details (expand) and attributes to select</legend>
 				<span id="DialogSelectExpandsCheckBoxes">
 				</span>
 			</fieldset>
-			<br>
-			<label>Number records to request:
-				<input type="text" id="SelectExpandsNumberOfRecords" size="6" maxlength="6" value="100"></input>
-			</label>
 			<div class="center">
 				<button value="default" onClick="GetSelectExpands(event)">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
+			<input type="hidden" id="DialogSelectExpandsNodeId"></input>
 		</form>
 	</dialog>
 	
@@ -711,17 +725,30 @@
 			<br>
 			<label><input type="radio" id="SelectSortByAsc" name="SelectSortByArcDesc" checked />ascending</label>
 			<label><input type="radio" id="SelectSortByDesc" name="SelectSortByArcDesc" />descending</label>
-			<br>
-			<label>Number records to request:
-				<input type="text" id="SelectSortByNumberOfRecords" size="6" maxlength="6" value="100"></input>
-			</label>
 			<div class="center">
 				<button value="default" onClick="GetSelectSortBy(event)">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
+			<input type="hidden" id="DialogSelectSortByNodeId"></input>
 		</form>
 	</dialog>
 
+	<dialog id="DialogSelectRangeSTA">
+		<form>
+			<label>Number records to skip from the start:
+				<input type="text" id="SelectRangeSkipSTA" size="6" maxlength="10" value="0"></input>
+			</label>
+			<br>
+			<label>Number records to request:
+				<input type="text" id="SelectRangeTopSTA" size="6" maxlength="10" value="100"></input>
+			</label>
+			<div class="center">
+				<button value="default" onClick="GetSelectRangeSTA(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogSelectRangeSTANodeId"></input>
+		</form>
+	</dialog>
 
 	<dialog id="DialogSelectRow">
 		<div id="divTitleSelectRow" class="center" style="font-size: large;"></div>
@@ -729,9 +756,6 @@
 			Select an element:
 			<span id="DialogSelectRowsTable">
 			</span>
-			<label id="SelectNumberOfRecordsSelectRowLabel">Number records to request:
-				<input type="text" id="SelectNumberOfRecordsSelectRow" size="6" maxlength="6" value="100"></input>
-			</label>
 			<div class="center">
 				<button value="default" onClick="GetSelectRow(event)">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
@@ -745,9 +769,6 @@
 			Filter:
 			<div id="DialogSelectRowsFilter">
 			</div>
-			<label id="SelectNumberOfRecordsFilterRowsLabel">Number records to request:
-				<input type="text" id="SelectNumberOfRecordsFilterRows" size="6" maxlength="6" value="100"></input>
-			</label>
 			<div class="center">
 				<button value="default" onClick="GetFilterRows(event)">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
@@ -1150,33 +1171,6 @@
 			<span id="DialogScatterPlotTitle"></span>
 			<form>
 				<div id="DialogScatterPlotDiv"></div>
-			<!-- <fieldset>
-    			<legend>Axes:</legend>
-				<label>Axis X:
-					<br>
-					<span id="DialogScatterPlotAxisX"></span>
-				</label>
-				<br>
-				<hr>
-				<label>Axis Y (Left):
-					<br>
-					<span id="DialogScatterPlotAxisY">
-					</span>
-					<button onclick="addNewSelectInScatterPlot('DialogScatterPlotAxisY')" style="margin-top:10px">Add new select</button>
-
-				</label>
-				<br>
-				<hr>
-				<input type="checkbox" id="DialogScatterPlotAxisY2Checkbox" name="DialogScatterPlotAxisY2Checkbox" onclick="isCheckBoxChechedInScaterPlot(event)"/>
-				<label>(Optional) Second Axis Y (Right):
-					<br>
-					<span id="DialogScatterPlotAxisY2">
-					</span>
-					<button onclick="addNewSelectInScatterPlot('DialogScatterPlotAxisY2')" style="margin-top:10px">Add</button>
-
-				</label>
-				
-			</fieldset> -->
 			<br>
 			<br>
 			<div class="center">

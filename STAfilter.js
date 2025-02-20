@@ -120,12 +120,13 @@ function createSelectorRowFilters(number) {
 			}
 		}
 	}
-	var parentNode = networkNodes.get(network.getConnectedNodes(currentNode.id, "from"));
+	//var parentNode = networkNodes.get(network.getConnectedNodes(currentNode.id, "from"));
+	var parentNode = GetFirstParentNode(currentNode);
 	var dialogType;
 
 	if (currentNodeLabel == "FilterRowsSTA.png") {
-		if (parentNode[0]["OGCType"]) { //OGCAPIFeatures
-			if (parentNode[0]["OGCType"] == "OGCAPIitems") {
+		if (parentNode.OGCType) { //OGCAPIFeatures
+			if (parentNode.OGCType == "OGCAPIitems") {
 				dialogType = "withoutEntities_3selectors"; //columns, condition, values
 			}
 		} else { //FilterRowSTA from STA API
@@ -1295,10 +1296,11 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 var stopSearchparentLabel = false;
 function searchParentLabel() {
 	var entity = "0";
-	var parentNodeId = network.getConnectedNodes(currentNode.id, "from");
-	var parentNode = networkNodes.get(parentNodeId);
+	//var parentNodeId = network.getConnectedNodes(currentNode.id, "from");
+	//var parentNode = networkNodes.get(parentNodeId);
+	parentNode=GetFirstParentNode(currentNode);
 	for (var i = 0; i < STAEntitiesArray.length; i++) {
-		if (parentNode[0].label == STAEntitiesArray[i]) {
+		if (parentNode.label == STAEntitiesArray[i]) {
 			entity = STAEntitiesArray[i];
 		}
 	}

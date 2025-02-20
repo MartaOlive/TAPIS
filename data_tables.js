@@ -254,10 +254,10 @@ function separateObjectColumns(data, dataAttributesNull, options) { //JSON
 				SeparatePropertyIfNeeded(resultData[resultData.length-1], record[keys[k]], keys[k], removeAlreadyPresent);
 		}
 	}
-		var dataAttributes=getDataAttributes(resultData);
-		var dataAttributesArray=Object.keys(dataAttributes);
+	var dataAttributes=getDataAttributes(resultData);
+	var dataAttributesArray=Object.keys(dataAttributes);
 	var resultDataAttributes={};
-		for (var i = 0; i < dataAttributesArray.length; i++)
+	for (var i = 0; i < dataAttributesArray.length; i++)
 		resultDataAttributes[dataAttributesArray[i]]=deapCopy( (dataAttributesNull && dataAttributesNull[dataAttributesArray[i]]) ? dataAttributesNull[dataAttributesArray[i]] : dataAttributes[dataAttributesArray[i]]);
 	return {data: resultData, dataAttributes: resultDataAttributes};
 }
