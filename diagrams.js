@@ -66,91 +66,101 @@
 			currentNode.STAattributesToSelect={};
 			currentNode.STAattributesToSelect.selectOptions=attributesToSelect;
 			currentNode.STAattributesToSelect.dataGroups=
-				[{X:attributesToSelect[0].attr[0], Y:attributesToSelect[0].attr[0], selected:"left"}]
-				// DialogScatterPlotAxisX:{DialogScatterPlotAxisXSelect_1:""},
-				// DialogScatterPlotAxisY:{DialogScatterPlotAxisYSelect_1:""},
-				// DialogScatterPlotAxisY2:{DialogScatterPlotAxisY2Select_1:""}
-
-			// currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisX.DialogScatterPlotAxisXSelect_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
-			// currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY.DialogScatterPlotAxisYSelect_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
-			// currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2.DialogScatterPlotAxisY2Select_1=attributesToSelect[0].nodeId+"_"+attributesToSelect[0].attr[0]; //First value charged
+				[{"X":parentNodes[0].id+"_"+attributesToSelect[0].attr[0], "Y":parentNodes[0].id+"_"+attributesToSelect[0].attr[0], selected:"left"}]
 			networkNodes.update(currentNode);
 
 			if (noData){
 				document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
 				return;
 			}
-
 			document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
-
-
-			// document.getElementById("DialogScatterPlotAxisX").innerHTML=""; //Reset
-			// document.getElementById("DialogScatterPlotAxisY").innerHTML="";
-			// document.getElementById("DialogScatterPlotAxisY2").innerHTML="";
-
 			createDialogWithSelectWithGroupsScatterPlot(currentNode);
-			// createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY",1);
-			// createSelectWithGroups(attributesToSelect,"DialogScatterPlotAxisY2",1);
-
-			// document.getElementById("DialogScatterPlotAxisY2Select_1").disabled=true;
 
 		}
-		function isCheckBoxChechedInScaterPlot(event){
-			var Y2Selects= Object.keys(currentNode.STAattributesToSelect.selects["DialogScatterPlotAxisY2"]);
-			var checked=!document.getElementById("DialogScatterPlotAxisY2Checkbox").checked;
-				for(var i=0;i<Y2Selects.length;i++){
-					document.getElementById(Y2Selects[i]).disabled=checked;
-				}
-		}
-		function addNewDialogIn(event){
-			event.preventDefault();
-			var groupsKeys= Object.keys(currentNode.STAattributesToSelect.dataGroups);
-			var newGroupNumber=parseInt(groupsKeys[groupsKeys.length-1].split("_")[1])+1;
-			currentNode.STAattributesToSelect.dataGroups["group_"+newGroupNumber]={x:attributesToSelect[0].attr[0], y:attributesToSelect[0].attr[0], y2:attributesToSelect[0].attr[0], checked:"y"};
-			createDialogWithSelectWithGroupsScatterPlot (currentNode)
-		}
+		// function isCheckBoxChechedInScaterPlot(event){
+		// 	var Y2Selects= Object.keys(currentNode.STAattributesToSelect.selects["DialogScatterPlotAxisY2"]);
+		// 	var checked=!document.getElementById("DialogScatterPlotAxisY2Checkbox").checked;
+		// 		for(var i=0;i<Y2Selects.length;i++){
+		// 			document.getElementById(Y2Selects[i]).disabled=checked;
+		// 		}
+		// }
+		//  function addNewDialogIn(event){
+		//  	event.preventDefault();
+		//  	var groupsKeys= Object.keys(currentNode.STAattributesToSelect.dataGroups);
+		// 	var newGroupNumber=parseInt(groupsKeys[groupsKeys.length-1].split("_")[1])+1;
+		//  	currentNode.STAattributesToSelect.dataGroups["group_"+newGroupNumber]={x:attributesToSelect[0].attr[0], y:attributesToSelect[0].attr[0], y2:attributesToSelect[0].attr[0], checked:"y"};
+		// // 	createDialogWithSelectWithGroupsScatterPlot (currentNode)
+		// // }
 
 		function createDialogWithSelectWithGroupsScatterPlot(node){
 			var scatterPlotDiv=document.getElementById("DialogScatterPlotDiv");
 			scatterPlotDiv.innerHTML="";
 			var groups=node.STAattributesToSelect.dataGroups, options="";
 			var groupsKeys=Object.keys(groups);
-			var cdns="";
-			//POSAR EL BUTON PER AFEGIR
-			var attributesToSelect=currentNode.STAattributesToSelect.selectOptions;
-			for (var e=0;e<attributesToSelect.length;e++){ //options
-				options+=`<optgroup label="${attributesToSelect[e].nodeLabel}">`
-				 	for (var i =0;i<attributesToSelect[e].attr.length;i++){
-						options+=`<option value="${attributesToSelect[e].nodeId}_${attributesToSelect[e].attr[i]}">${attributesToSelect[e].attr[i]}</option>`
-				 	}
-			 	options+="</optgroup>"
-			}
+			
+			var cdns=`<button onclick="addNewSelectGroupInScatterPlot('${node.id}')"> Add new data group</button>`
+			var attributesToSelect=node.STAattributesToSelect.selectOptions;
 
-			for (var i=0;i<groupsKeys.length;i++){
-				cdns+=`<fieldset><legend>Group ${i}</legend>
-				<label>Axis X</label><br><select name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X')">${options}</select><br>
-				<label>Axis Y</label><br><select name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y')">${options}</select><br>
-				<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}" checked name="DialogScatterPlotAxisYRadioButton_${i}"</input><label>Left axis</label><br>
-				<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}"</input><label>Right axis</label>`
+
+			//ARREGLAR AQUEST FULLONH
+			for (var i = 0; i < groupsKeys.length; i++) { //dialog groups of data
+				cdns += `<fieldset><legend>Group ${i}</legend>
+					<label>Axis X</label><br><select name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','${node.id}')">`
+				for (var e = 0; e < attributesToSelect.length; e++) { //groups of data origin (diferent nodes with information)
+					cdns += `<optgroup label="${attributesToSelect[e].nodeLabel}">`
+					for (var a=0;a<attributesToSelect[e].attr.length;a++){ //attributes per node to add to select options
+						cdns += `<option value="${attributesToSelect[e].nodeId}_${attributesToSelect[e].attr[a]}"`;
+						if (node.STAattributesToSelect.dataGroups[i].X== attributesToSelect[e].nodeId+"_"+attributesToSelect[e].attr[a]) cdns += " selected=true "; //checked option
+						cdns += `>${attributesToSelect[e].attr[a]}</option>`
+					}
+					cdns += "</optgroup>"
+				}
+				cdns +=`</select><br>
+					<label>Axis Y</label><br><select name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','${node.id}')">`
+					for (var e = 0;  e < attributesToSelect.length; e++) { //groups of data origin (diferent nodes with information)
+						cdns += `<optgroup label="${attributesToSelect[e].nodeLabel}">`
+						for (var a=0;a<attributesToSelect[e].attr.length;a++){ //attributes per node to add to select options
+							cdns += `<option value="${attributesToSelect[e].nodeId}_${attributesToSelect[e].attr[a]}"`;
+							if (node.STAattributesToSelect.dataGroups[i].Y== attributesToSelect[e].nodeId+"_"+attributesToSelect[e].attr[a]) cdns += " selected=true "; //checked option
+							cdns += `>${attributesToSelect[e].attr[a]}</option>`
+						}
+						cdns += "</optgroup>"
+					}
+				cdns += `</select><br>
+					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}"${(node.STAattributesToSelect.dataGroups[i].selected=="left")?"checked": ""} onclick="updateCheckInformationScatterPlot('${i}','left','${node.id}')" </input><label>Left axis</label><br>
+					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroups[i].selected=="right")?"checked": ""} onclick="updateCheckInformationScatterPlot('${i}','right','${node.id}')"</input><label>Right axis</label><br>
+					<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
 			}
 			scatterPlotDiv.innerHTML=cdns;
-			}
-		function addNewSelectInScatterPlot(selectName){ //Add button
+		}
+		function addNewSelectGroupInScatterPlot(nodeId){ //Add button
 			event.preventDefault();
-			var selects= Object.keys(currentNode.STAattributesToSelect.selects[selectName]);
-			var lastNumber= parseInt(selects[selects.length-1].split("_")[1])+1;
-			currentNode.STAattributesToSelect.selects[selectName][selectName+"Select_"+lastNumber]="";
-			networkNodes.update(currentNode);
-			createSelectWithGroups(currentNode.STAattributesToSelect.selectOptions,selectName,lastNumber);
+			var node = networkNodes.get(nodeId);
+			node.STAattributesToSelect.dataGroups.push({X: node.STAattributesToSelect.selectOptions[0].attr[0], Y: node.STAattributesToSelect.selectOptions[0].attr[0],selected: "left" });
+			networkNodes.update(node);
+			createDialogWithSelectWithGroupsScatterPlot(node);
+		}
+		function deleteSelectGroupInScatterPlot(nodeId, groupToDelete){
+			event.preventDefault();
+			var node = networkNodes.get(nodeId);
+			node.STAattributesToSelect.dataGroups=node.STAattributesToSelect.dataGroups.splice(parseInt(groupToDelete));
+			networkNodes.update(node);
+			createDialogWithSelectWithGroupsScatterPlot(node);
 		}
 
-		function updateSelectInformationScatterPlot(numberDialog, XorY){
+		function updateSelectInformationScatterPlot(numberDialog, XorY,nodeId){
+			var node = networkNodes.get(nodeId);
 			var select= document.getElementById("DialogScatterPlotAxis"+XorY+"Select_"+numberDialog);
 			var value=  select.options[select.selectedIndex].value;
-			currentNode.STAattributesToSelect.dataGroups[numberDialog][XorY]=value;
-			networkNodes.update.update(currentNode);
+			node.STAattributesToSelect.dataGroups[numberDialog][XorY]=value;
+			networkNodes.update(node);
 		}
-
+		function updateCheckInformationScatterPlot(numberDialog,leftOrRight,nodeId){
+			var node = networkNodes.get(nodeId);
+			var select= document.getElementById("DialogScatterPlotAxisYRadioButton_"+leftOrRight+"_"+numberDialog);
+			node.STAattributesToSelect.dataGroups[numberDialog]["selected"]=leftOrRight;
+			networkNodes.update(node);
+		}
 		function ShowBarPlotDialog(parentNodes) {
 			var data = parentNodes[0].STAdata;
 			if (!data || !data.length) {

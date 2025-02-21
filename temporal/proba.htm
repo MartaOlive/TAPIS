@@ -19,6 +19,20 @@
 	<h2>Graph2d | Basic Example</h2>
 	<br />
 	<div id="visualization"></div>
+
+
+	"<optgroup label="Joan">
+		<option value="1u5qc.scsf8hg_@iot.id">@iot.id</option>
+		<option value="1u5qc.scsf8hg_phenomenonTime">phenomenonTime</option>
+		<option value="1u5qc.scsf8hg_resultTime">resultTime</option>
+		<option value="1u5qc.scsf8hg_result">result</option>
+	</optgroup>
+	<optgroup label="Ivette">
+		<option value="4m2lo.jb97cl_@iot.id">@iot.id</option>
+		<option value="4m2lo.jb97cl_phenomenonTime">phenomenonTime</option>
+		<option value="4m2lo.jb97cl_resultTime">resultTime</option>
+		<option value="4m2lo.jb97cl_result">result</option>
+	</optgroup>"
 	<script type="text/javascript">
 		var container = document.getElementById('visualization');
 		var names = ['graph1', 'graph2'];
@@ -125,37 +139,37 @@
 						if (typeof objectToEvaluate.type === "string") {
 							if (objectToEvaluate.type == "Point") {
 								if (objectToEvaluate.hasOwnProperty("coordinates")) {//coordinates at same level
-									searchCoordinatesInFeature(objectToEvaluate, "coordinates",inputName);
+									searchCoordinatesInFeature(objectToEvaluate, "coordinates", inputName);
 								} else {
 									return 0; //Not a point
 								}
 							} else if (typeof objectToEvaluate.type === "object") {
-								searchCoordinatesInFeature(objectToEvaluate.type, "type",inputName); //follow searching type:point
+								searchCoordinatesInFeature(objectToEvaluate.type, "type", inputName); //follow searching type:point
 							} else {
 								return 0;
 							}
 						} else if ((typeof objectToEvaluate.type === "object")) { //"type contain an object"
-							searchCoordinatesInFeature(objectToEvaluate.type, "type",inputName); //keep searching deeper
+							searchCoordinatesInFeature(objectToEvaluate.type, "type", inputName); //keep searching deeper
 						}
 					} else { //keep searching deeper
 						var objectKeys = Object.keys(objectToEvaluate)
 						for (var i = 0; i < objectKeys.length; i++) {
 							if (typeof objectToEvaluate.objectKeys[i] === "object") {
-								searchCoordinatesInFeature(objectToEvaluate.objectKeys[i], "type",inputName);
+								searchCoordinatesInFeature(objectToEvaluate.objectKeys[i], "type", inputName);
 							}
 						}
 					}
 
 				} else if (propertyToSearch == "coordinates") {
-					if (objectToEvaluate.hasOwnProperty(propertyToSearch)){
-						document.getElementById("dlgCreateUpdateDeleteEntity_"+inputName+"_longitude").value= objectToEvaluate.coordinates[0];
-						document.getElementById("dlgCreateUpdateDeleteEntity_"+inputName+"_latitude").value= objectToEvaluate.coordinates[1];
-						
-					}else{ //keep searching deper
+					if (objectToEvaluate.hasOwnProperty(propertyToSearch)) {
+						document.getElementById("dlgCreateUpdateDeleteEntity_" + inputName + "_longitude").value = objectToEvaluate.coordinates[0];
+						document.getElementById("dlgCreateUpdateDeleteEntity_" + inputName + "_latitude").value = objectToEvaluate.coordinates[1];
+
+					} else { //keep searching deper
 						var objectKeys = Object.keys(objectToEvaluate)
 						for (var i = 0; i < objectKeys.length; i++) {
 							if (typeof objectToEvaluate.objectKeys[i] === "object") {
-								searchCoordinatesInFeature(objectToEvaluate.objectKeys[i], "type",inputName);
+								searchCoordinatesInFeature(objectToEvaluate.objectKeys[i], "type", inputName);
 							}
 						}
 					}
@@ -165,6 +179,40 @@
 				return 0;
 			}
 
+		}
+
+
+
+
+
+
+		for (var i = 0; i < groupsKeys.length; i++) {
+			cdns += `<fieldset><legend>Group ${i}</legend>
+				<label>Axis X</label><br><select name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','${node.id}')">`
+			for (var e = 0; e < e < attributesToSelect.length; e++) {
+				options += `<optgroup label="${attributesToSelect[e].nodeLabel}">`
+				for (var i = 0; i < attributesToSelect[e].attr.length; i++) {
+					options += `<option value="${attributesToSelect[e].nodeId}_${attributesToSelect[e].attr[i]}"`
+					if (node.STAattributesToSelect.dataGroups[i].X.includes(attributesToSelect[e].nodeId) && node.STAattributesToSelect.dataGroups[i].X.includes(attributesToSelect[e].attr[i])) options += "checked"; //checked option
+					options += `>${attributesToSelect[e].attr[i]}</option>`
+				}
+				options += "</optgroup>"
+			}
+			`</select><br>
+				<label>Axis Y</label><br><select name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','${node.id}')">`
+			for (var e = 0; e < e < attributesToSelect.length; e++) {
+				options += `<optgroup label="${attributesToSelect[e].nodeLabel}">`
+				for (var i = 0; i < attributesToSelect[e].attr.length; i++) {
+					options += `<option value="${attributesToSelect[e].nodeId}_${attributesToSelect[e].attr[i]}"`
+					if (node.STAattributesToSelect.dataGroups[i].Y.includes(attributesToSelect[e].nodeId) && node.STAattributesToSelect.dataGroups[i].Y.includes(attributesToSelect[e].attr[i])) options += "checked"; //checked option
+					options += `>${attributesToSelect[e].attr[i]}</option>`
+				}
+				options += "</optgroup>"
+			}
+			options += `</select><br>"
+				<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}" checked name="DialogScatterPlotAxisYRadioButton_${i}"</input><label>Left axis</label><br>
+				<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}"</input><label>Right axis</label><br>
+				<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
 		}
 	</script>
 </body>
