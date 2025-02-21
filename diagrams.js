@@ -95,14 +95,12 @@
 		function createDialogWithSelectWithGroupsScatterPlot(node){
 			var scatterPlotDiv=document.getElementById("DialogScatterPlotDiv");
 			scatterPlotDiv.innerHTML="";
-			var groups=node.STAattributesToSelect.dataGroups, options="";
+			var groups=node.STAattributesToSelect.dataGroups;
 			var groupsKeys=Object.keys(groups);
 			
 			var cdns=`<button onclick="addNewSelectGroupInScatterPlot('${node.id}')"> Add new data group</button>`
 			var attributesToSelect=node.STAattributesToSelect.selectOptions;
 
-
-			//ARREGLAR AQUEST FULLONH
 			for (var i = 0; i < groupsKeys.length; i++) { //dialog groups of data
 				cdns += `<fieldset><legend>Group ${i}</legend>
 					<label>Axis X</label><br><select name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','${node.id}')">`
@@ -136,14 +134,14 @@
 		function addNewSelectGroupInScatterPlot(nodeId){ //Add button
 			event.preventDefault();
 			var node = networkNodes.get(nodeId);
-			node.STAattributesToSelect.dataGroups.push({X: node.STAattributesToSelect.selectOptions[0].attr[0], Y: node.STAattributesToSelect.selectOptions[0].attr[0],selected: "left" });
+			node.STAattributesToSelect.dataGroups.push({X: node.STAattributesToSelect.selectOptions[0].nodeId+"_"+node.STAattributesToSelect.selectOptions[0].attr[0], Y:node.STAattributesToSelect.selectOptions[0].nodeId+"_"+node.STAattributesToSelect.selectOptions[0].attr[0],selected: "left" });
 			networkNodes.update(node);
 			createDialogWithSelectWithGroupsScatterPlot(node);
 		}
 		function deleteSelectGroupInScatterPlot(nodeId, groupToDelete){
 			event.preventDefault();
 			var node = networkNodes.get(nodeId);
-			node.STAattributesToSelect.dataGroups=node.STAattributesToSelect.dataGroups.splice(parseInt(groupToDelete));
+			node.STAattributesToSelect.dataGroups.splice(parseInt(groupToDelete),1);
 			networkNodes.update(node);
 			createDialogWithSelectWithGroupsScatterPlot(node);
 		}
@@ -157,7 +155,6 @@
 		}
 		function updateCheckInformationScatterPlot(numberDialog,leftOrRight,nodeId){
 			var node = networkNodes.get(nodeId);
-			var select= document.getElementById("DialogScatterPlotAxisYRadioButton_"+leftOrRight+"_"+numberDialog);
 			node.STAattributesToSelect.dataGroups[numberDialog]["selected"]=leftOrRight;
 			networkNodes.update(node);
 		}
@@ -209,6 +206,7 @@
 		var ScatterPlotGraph2d=null;
 		function DrawScatterPlot(event){
 			event.preventDefault(); // We don't want to submit this form
+			var ScatterPlotNode=networkNodes.get(network.getSelectedNodes())[0];
 			// currentNode.STAattributesToSelect.selects
 
 			// var selectedOptions={};
@@ -245,45 +243,94 @@
 			// // 	selectedOptions.UoM=document.getElementById("DialogScatterPlotUoMSelect").value;
 			// // }
 
-			var selectedOptions={};
-			selectedOptions.AxisX=document.getElementById("DialogScatterPlotAxisXSelect").value;
-			selectedOptions.AxisY=document.getElementById("DialogScatterPlotAxisYSelect").value;
-			if (document.getElementById("DialogScatterPlotVariableUoM").style.display!="none")
-			{
-				selectedOptions.Variable=document.getElementById("DialogScatterPlotVariableSelect").value;
-				selectedOptions.UoM=document.getElementById("DialogScatterPlotUoMSelect").value;
-			}
-
-			var nodes=GetParentNodes(currentNode);
-			if (nodes && nodes.length) {
-				var node=nodes[0];
-				var data, dataAttributes, record;
-				if (node.STAdata) {
-					var items=[], minx, maxx, miny, maxy;
-					data=node.STAdata;
-					dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
-
-					if (ScatterPlotGraph2d)
-						ScatterPlotGraph2d.destroy();
-					for (var i = 0; i < data.length; i++) {
-						record=data[i];
+			var dataGroups=ScatterPlotNode.STAattributesToSelect.dataGroups;
+			var nodeId, node, nodeData,selectedOptions={},record,items=[], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight;
+			var axisYSummary={left:[], right:[]}
+			for (var e=0;e<dataGroups.length;e++){
+				nodeId=dataGroups[e].X.split("_")[0];
+				if (nodeId!=dataGroups[e].Y.split("_")[0]){
+					alert("To be able to represent the graph, in each group of data the column of the X-axis and the column of the Y-axis must belong to the same node");
+					return;
+				}else{
+					selectedOptions.AxisX= dataGroups[e].X.substring(nodeId.length+1);
+					selectedOptions.AxisY= dataGroups[e].Y.substring(nodeId.length+1);
+					nodeData =networkNodes.get(nodeId).STAdata;
+					leftOrRight=dataGroups[e].selected;
+					for (var i = 0; i < nodeData.length; i++) {
+						record=nodeData[i];
 						if (i==0){
 							minx=maxx=record[selectedOptions.AxisX];
-							miny=maxy=record[selectedOptions.AxisY];
+							if(leftOrRight="left")minyLeft=maxyLeft=record[selectedOptions.AxisY];
+							else minyRight=maxyRight=record[selectedOptions.AxisY];
 						} else {
 							if (minx>record[selectedOptions.AxisX])
 								minx=record[selectedOptions.AxisX];
 							if (maxx<record[selectedOptions.AxisX])
 								maxx=record[selectedOptions.AxisX];
-							if (miny>record[selectedOptions.AxisY])
+							if(leftOrRight="left"){
+								if (minyLeft>record[selectedOptions.AxisY])
+									minyLeft=record[selectedOptions.AxisY];
+								if (maxyRight<record[selectedOptions.AxisY])
+									maxyRight=record[selectedOptions.AxisY];
+							}else{
+								if (miny>record[selectedOptions.AxisY])
 								miny=record[selectedOptions.AxisY];
-							if (maxy<record[selectedOptions.AxisY])
+								if (maxy<record[selectedOptions.AxisY])
 								maxy=record[selectedOptions.AxisY];
+							}
+							
 						}
-						items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: 0})
+						items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: e});
+						axisYSummary[leftOrRight].push(e);
 					}
-					var dataset = new vis.DataSet(items);
-					var groups = new vis.DataSet();
+
+				}
+			}
+			if (ScatterPlotGraph2d) //not destroyed before if there is a wrong match in a group between X and Y
+				ScatterPlotGraph2d.destroy();
+
+			var dataset = new vis.DataSet(items);
+			var groups = new vis.DataSet();
+
+			
+			// selectedOptions.AxisX=document.getElementById("DialogScatterPlotAxisXSelect").value;
+			// selectedOptions.AxisY=document.getElementById("DialogScatterPlotAxisYSelect").value;
+			// if (document.getElementById("DialogScatterPlotVariableUoM").style.display!="none")
+			// {
+			// 	selectedOptions.Variable=document.getElementById("DialogScatterPlotVariableSelect").value;
+			// 	selectedOptions.UoM=document.getElementById("DialogScatterPlotUoMSelect").value;
+			// }
+
+			// var nodes=GetParentNodes(currentNode);
+			// if (nodes && nodes.length) {
+			// 	var node=nodes[0];
+			// 	var data, dataAttributes, record;
+			// 	if (node.STAdata) {
+			// 		var items=[], minx, maxx, miny, maxy;
+			// 		data=node.STAdata;
+			// 		dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
+
+			// 		if (ScatterPlotGraph2d)
+			// 			ScatterPlotGraph2d.destroy();
+			// 		for (var i = 0; i < data.length; i++) {
+			// 			record=data[i];
+			// 			if (i==0){
+			// 				minx=maxx=record[selectedOptions.AxisX];
+			// 				miny=maxy=record[selectedOptions.AxisY];
+			// 			} else {
+			// 				if (minx>record[selectedOptions.AxisX])
+			// 					minx=record[selectedOptions.AxisX];
+			// 				if (maxx<record[selectedOptions.AxisX])
+			// 					maxx=record[selectedOptions.AxisX];
+			// 				if (miny>record[selectedOptions.AxisY])
+			// 					miny=record[selectedOptions.AxisY];
+			// 				if (maxy<record[selectedOptions.AxisY])
+			// 					maxy=record[selectedOptions.AxisY];
+			// 			}
+			// 			items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: 0})
+			// 		}
+					// var dataset = new vis.DataSet(items);
+					// var groups = new vis.DataSet();
 					var options = {
 						dataAxis: {left: {range: {min:miny-(maxy-miny)*0.025, max:maxy+(maxy-miny)*0.025}, title: {text: "Values"}, format: AdaptValueAxisY}},
 						drawPoints: {size: 1},
@@ -311,9 +358,9 @@
 						}
 					});
 					ScatterPlotGraph2d = new vis.Graph2d(document.getElementById('DialogScatterPlotVisualization'), dataset, groups, options);
-				}
-			}
 		}
+			//}
+	//	}
 
 		function CloseDialogScatterPlot(event) {
 			event.preventDefault(); // We don't want to submit this form
