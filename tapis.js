@@ -1603,7 +1603,9 @@ function ReadFileImportJSONLD(event) {
 function ReadURLImportJSONLD() {
 	var locationSTAURL;
 	var parentNode=GetFirstParentNode(currentNode);
-	currentNode.STAURL = document.getElementById("DialogImportJSONLDSourceURLInput").value;
+	if (!document.getElementById("DialogImportJSONLDSourceURLInput").value.trim())
+		return;
+	currentNode.STAURL = document.getElementById("DialogImportJSONLDSourceURLInput").value.trim();
 	currentNode.OGCType = "fileURL";
 	if (parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL) {
 		currentNode.STAAccessKey = parentNode.STAAccessKey;
@@ -1628,10 +1630,12 @@ function ReadURLImportJSONLD() {
 			);	
 }
 
-function TransformTextJSONToTable(jsonText, url) {
+function TransformTextJSONToTable(json, jsonText, url) {
+	if (!json)
+	{
 	try
 	{
-		var json = JSON.parse(jsonText);
+			json = JSON.parse(jsonText);
 	}
 	catch (e) 
 	{
@@ -1639,6 +1643,7 @@ function TransformTextJSONToTable(jsonText, url) {
 		currentNode.STAdata=null;
 		networkNodes.update(currentNode);
 		return;
+	}
 	}
 	var result=ParseJSON(json)
 	currentNode.STAdata=result;
@@ -1666,7 +1671,7 @@ function ReadFileImportJSON(event) {
 
 	var reader = new FileReader();
 	reader.onload = function() {
-		TransformTextJSONToTable(reader.result, null);
+		TransformTextJSONToTable(null, reader.result, null);
 		showInfoMessage("JSON has been loaded.");
 	};
 	reader.readAsText(input.files[0]);   //By default it assumes "UTF8" as encoding
@@ -1675,7 +1680,9 @@ function ReadFileImportJSON(event) {
 function ReadURLImportJSON() {
 	var locationSTAURL;
 	var parentNode=GetFirstParentNode(currentNode);
-	currentNode.STAURL = document.getElementById("DialogImportJSONSourceURLInput").value;
+	if (!document.getElementById("DialogImportJSONSourceURLInput").value.trim())
+		return;
+	currentNode.STAURL = document.getElementById("DialogImportJSONSourceURLInput").value.trim();
 	currentNode.OGCType = "fileURL";
 	if (parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL) {
 		currentNode.STAAccessKey = parentNode.STAAccessKey;
@@ -1691,7 +1698,7 @@ function ReadURLImportJSON() {
 	HTTPJSONData(currentNode.STAURL, null, null, null, locationSTAURL ? getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAAccessKey, currentNode.STASecretKey, currentNode.STAS3Service, "us-east-1") : null).then(
 				function(value) { 
 					showInfoMessage('Download JSON completed.'); 
-					TransformTextJSONToTable(value.text, document.getElementById("DialogImportJSONSourceURLInput").value);
+					TransformTextJSONToTable(value.obj, value.text, document.getElementById("DialogImportJSONSourceURLInput").value);
 				},
 				function(error) { 
 					showInfoMessage('Error downloading JSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -3076,9 +3083,9 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 	}
 	cdns.push('</fieldset>')
 	//Properties
-	cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>Propertires</legend>
-		<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
-		<button onclick="addNewKVPonCreateUpdateDeleteEntity('0','properties','add','')"> Add more properties</button>
+	cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>Propertires</legend>`)
+		//<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
+		cdns.push(`<button onclick="addNewKVPonCreateUpdateDeleteEntity('-1','properties','add','')"> Add more properties</button>
 		</fieldset>`);
 	document.getElementById("dlgCreateUpdateDeleteEntityAttributes_MultiDatastreams").innerHTML = cdns.join("");
 	
@@ -3096,24 +3103,24 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 			
 			document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_multiobservationDataType"+i).value= (STAdata.multiObservationDataTypes[i])?STAdata.multiObservationDataTypes[i]:"";
 		}
-
-	}
-	//Properties
-	var propertiesOrParameters= "properties";
-	if (STAdata[propertiesOrParameters]){
-		var keys=Object.keys(STAdata[propertiesOrParameters]);
-		if (keys.length==1){
-			//treure la clau 
-			document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0").value=keys[0];
-			document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0").value=STAdata[propertiesOrParameters][keys[0]];
-		}else if (keys.length>1){ //avoid empty
-			addNewKVPonCreateUpdateDeleteEntity(keys.length-1,propertiesOrParameters, "addInUpdateDelete",""); //create keys values par that you need 
-			for (var u=0;u<keys.length;u++){
-				document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[u]).value=keys[u];
-				document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[u]).value=STAdata[propertiesOrParameters][keys[u]];
-			}
+		//Properties
+		
+		if (record["properties"]){
+			var keys=Object.keys(record["properties"]);
+			// if (keys.length==1){
+			// 	//treure la clau 
+			// 	document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0").value=keys[0];
+			// 	document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0").value=STAdata[propertiesOrParameters][keys[0]];
+			// }else if (keys.length>1){ //avoid empty
+				addNewKVPonCreateUpdateDeleteEntity(keys.length-1,"properties", "addInUpdateDelete",""); //create keys values par that you need 
+				for (var u=0;u<keys.length;u++){
+					document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[u]).value=keys[u];
+					document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[u]).value=record["properties"][keys[u]];
+				}
+			//}
 		}
 	}
+
 
 	//Show/hide buttons 
 	if (actionToDo == "create") {
@@ -3224,9 +3231,9 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			continue;
 		}
 		if ( STAEntities[entityName].properties[i].name=="properties" ||  STAEntities[entityName].properties[i].name=="parameters" && actionToDo=="create"){
-			cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>${STAEntities[entityName].properties[i].name}</legend>
-				<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
-				<button onclick="addNewKVPonCreateUpdateDeleteEntity('0','${STAEntities[entityName].properties[i].name}','add','')"> Add more ${STAEntities[entityName].properties[i].name}</button>
+			cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>${STAEntities[entityName].properties[i].name}</legend>`)
+				//<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
+				cdns.push(`<button onclick="addNewKVPonCreateUpdateDeleteEntity('-1','${STAEntities[entityName].properties[i].name}','add','')"> Add more ${STAEntities[entityName].properties[i].name}</button>
 				</fieldset>`);
 			continue;
 		}
@@ -3289,17 +3296,17 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 				var propertiesOrParameters= STAEntities[entityName].properties[i].name;
 				if (record[propertiesOrParameters]){
 					var keys=Object.keys(record[propertiesOrParameters]);
-					if (keys.length==1){
-						//treure la clau 
-						document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0").value=keys[0];
-						document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0").value=record[propertiesOrParameters][keys[0]];
-					}else if (keys.length>1){ //avoid empty
+					// if (keys.length==1){
+					// 	//treure la clau 
+					// 	document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0").value=keys[0];
+					// 	document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0").value=record[propertiesOrParameters][keys[0]];
+					// // }else if (keys.length>1){ //avoid empty
 						addNewKVPonCreateUpdateDeleteEntity(keys.length-1,propertiesOrParameters, "addInUpdateDelete",""); //create keys values par that you need 
 						for (var u=0;u<keys.length;u++){
 							document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[u]).value=keys[u];
 							document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[u]).value=record[propertiesOrParameters][keys[u]];
 						}
-					}
+					//}
 				}
 				continue;
 			}
@@ -3349,7 +3356,7 @@ function addNewKVPonCreateUpdateDeleteEntity(row,attributeName, action, toDelete
 	var arrayResults=[];
 	if (action!="addInUpdateDelete"){
 		for (var e=0;e<(number+1);e++){
-			if (action=="add" || (action=="delete" && e!=toDelete)){
+			if ((action=="add" && row !=-1)|| (action=="delete" && e!=toDelete)){
 				arrayResults.push([document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[e]).value,document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[e]).value])
 			}
 		}
@@ -3361,9 +3368,9 @@ function addNewKVPonCreateUpdateDeleteEntity(row,attributeName, action, toDelete
 	cdns= `<legend>${attributeName}</legend>`
 	for (var i=0;i<(number+1);i++){
 		cdns+= `<br><input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_${i}'`;
-		if (action!="addInUpdateDelete")cdns+=`value='${arrayResults[i][0]}'`;
+		if (action!="addInUpdateDelete"&& row!=-1)cdns+=`value='${arrayResults[i][0]}'`;
 		cdns+=`></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_${i}'`
-		if (action!="addInUpdateDelete")cdns+=`value='${arrayResults[i][1]}'`
+		if (action!="addInUpdateDelete"&& row!=-1)cdns+=`value='${arrayResults[i][1]}'`
 		cdns+=`></input><button><img src="trash.png" alt="Remove" title="Remove" onclick="addNewKVPonCreateUpdateDeleteEntity('${number}','${attributeName}','delete','${i}')"></button>`;
 		if (i==number)cdns+=`<br><button style="margin-top:10px"  onclick="addNewKVPonCreateUpdateDeleteEntity('${i}', '${attributeName}','add','')"> Add more ${attributeName}</button>` //last
 	}
@@ -3554,8 +3561,8 @@ function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
 		{
 				obj[STAEntities[entityName].properties[i].name]={};
 				obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;
-				obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
-				obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value : null;					
+				obj[STAEntities[entityName].properties[i].name].symbol=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
+				obj[STAEntities[entityName].properties[i].name].definition=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value : null;					
 			continue;
 		}
 			if (STAEntities[entityName].properties[i].name=="multiObservationDataType"){
@@ -3576,15 +3583,15 @@ function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
 				for (var e=0;e<children.length;e++){
 					if (children[e].nodeName=="INPUT"){
 						if (children[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_")){
-							objectProperties[children[e].value]="";
-							property=children[e].value
+							if (children[e].value!="")objectProperties[children[e].value]="";
+							property=children[e].value;
 						}
 						if (children[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_")){
-							objectProperties[property]=children[e].value;
+							if (property!="")objectProperties[property]=children[e].value;
 						}
 					}
 				}
-				obj[STAEntities[entityName].properties[i].name]=objectProperties;
+				if (objectProperties!={})obj[STAEntities[entityName].properties[i].name]=objectProperties;
 				continue;
 			}
 			//attributes in general	
@@ -3609,7 +3616,7 @@ function obtainDataInMultidatastreamsCreationAndUpdate(operation){
 	}else{
 		var obj={}
 	}
-	var prop, allowToSend=true;
+	var allowToSend=true;
 	if (document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_name").value!=""){
 		obj["name"]=document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_name").value;
 
@@ -3753,11 +3760,11 @@ function GetCreateEntity(event) {
 			}
 
 			var parentEntityName = getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), true);
-			var entity;
+
 			if (returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName) != -1)
-				entity = parentEntityName;
+				var entity = parentEntityName;
 			else if (returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular) != -1)
-				entity = STAEntities[parentEntityName].singular;
+				var entity = STAEntities[parentEntityName].singular;
 			else {
 				alert("Parent node (" + STAEntities[parentEntityName].singular + ") is not directly related to a/an " + STAEntities[entityName].singular);
 				continue;

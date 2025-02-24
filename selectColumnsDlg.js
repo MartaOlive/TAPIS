@@ -46,6 +46,8 @@
 "use strict"
 
 function ShowTableSelectColumnsDialog(div_id, parentNode, node, selectDef, fevent) {
+	saveNodeDialog("DialogSelectColumns", node);
+
 	var data = parentNode.STAdata ? parentNode.STAdata : node.STAdata,
 	selectedColumns=node["STA"+div_id];
 
@@ -68,15 +70,20 @@ function ShowTableSelectColumnsDialog(div_id, parentNode, node, selectDef, feven
 
 function GetSelectColumns(event) {
 
-	var parentNode=GetFirstParentNode(currentNode);
-
-	if (parentNode.STAEntityName && currentNode.image == "SelectColumnsSTA.png" && parentNode.STAURL)
-		return GetSelectColumnsSTA(event);
-
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogSelectColumns").close();
 
-	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(currentNode.STAdata);		
+	var node=getNodeDialog("DialogSelectColumns");
+	if (!node)
+		return;
+
+	var parentNode=GetFirstParentNode(node);
+
+	if (parentNode.STAEntityName && node.image == "SelectColumnsSTA.png" && parentNode.STAURL)
+		return GetSelectColumnsSTA(event);
+
+
+	var dataAttributes = node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
 	var dataAttributesArray = Object.keys(dataAttributes);
 
 	for (var a = 0; a < dataAttributesArray.length; a++) {
@@ -86,27 +93,30 @@ function GetSelectColumns(event) {
 	if (a == dataAttributesArray.length) //A unchecked attribute has been found ("for" breaks before ending).
 		return;
 
+	if (!node.STASelectColumns)
+		node.STASelectColumns=[];
+
 	//If there is no STA to query, the selection is done manually (table mode).
 	for (var a = 0; a < dataAttributesArray.length; a++) {
 		if (document.getElementById("SelectColumns_" + a).checked)
-			currentNode.STASelectedColumns[a]=true;
+			node.STASelectColumns[a]=true;
 		else
-			currentNode.STASelectedColumns[a]=false;
+			node.STASelectColumns[a]=false;
 	}
 
-	var data=currentNode.STAdata, record;
+	var data=node.STAdata, record;
 	for (var i = 0; i < data.length; i++) {
 		record=data[i];
 		for (var a = 0; a < dataAttributesArray.length; a++) {
-			if (!currentNode.STASelectedColumns[a]) {
+			if (!node.STASelectColumns[a]) {
 				delete record[dataAttributesArray[a]];
 			}
 		}
 	}
 	for (var a = 0; a < dataAttributesArray.length; a++) {
-		if (!currentNode.STASelectedColumns[a])
+		if (!node.STASelectColumns[a])
 			delete dataAttributes[dataAttributesArray[a]];
 	}
-	networkNodes.update(currentNode);
-	updateQueryAndTableArea(currentNode);
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
 }
