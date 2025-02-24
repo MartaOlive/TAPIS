@@ -3295,18 +3295,18 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			if (STAEntities[entityName].properties[i].name=="parameters" || STAEntities[entityName].properties[i].name=="properties"){
 				var propertiesOrParameters= STAEntities[entityName].properties[i].name;
 				if (record[propertiesOrParameters]){
+					
 					var keys=Object.keys(record[propertiesOrParameters]);
-					// if (keys.length==1){
-					// 	//treure la clau 
-					// 	document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0").value=keys[0];
-					// 	document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0").value=record[propertiesOrParameters][keys[0]];
-					// // }else if (keys.length>1){ //avoid empty
+					if (keys.length!=0){
 						addNewKVPonCreateUpdateDeleteEntity(keys.length-1,propertiesOrParameters, "addInUpdateDelete",""); //create keys values par that you need 
 						for (var u=0;u<keys.length;u++){
 							document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[u]).value=keys[u];
 							document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[u]).value=record[propertiesOrParameters][keys[u]];
 						}
-					//}
+					}
+
+
+					
 				}
 				continue;
 			}
