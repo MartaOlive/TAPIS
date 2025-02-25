@@ -5,77 +5,117 @@
 	<meta content="utf-8" http-equiv="encoding">
 	<title>Graph2d | Basic Example</title>
 
+
+
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.15.1/vis.min.css" rel="stylesheet" type="text/css" />
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.15.1/vis.min.js"></script>
 	<style type="text/css">
 		body,
 		html {
 			font-family: sans-serif;
 		}
+
+		.vis-graph-group0 {
+			fill: #bdb24f;
+			fill-opacity: 0;
+			stroke-width: 2px;
+			stroke: #b6c52b
+		}
+
+		.vis-graph-group1 {
+			fill: #f79646;
+			fill-opacity: 0;
+			stroke-width: 2px;
+			stroke: #f79646
+		}
+
+		.vis-graph-group2 {
+			fill: #8c51cf;
+			fill-opacity: 0;
+			stroke-width: 2px;
+			stroke: #8c51cf
+		}
+
+		.vis-graph-group3 {
+			fill: #75c841;
+			fill-opacity: 0;
+			stroke-width: 2px;
+			stroke: #75c841
+		}
+
+		.pepito {
+			fill: #ff0100;
+			fill-opacity: 0;
+			stroke-width: 2px;
+			stroke: #00ff37
+		}
+
+		.vis-graph-group5 {
+			fill: #37d8e6;
+			fill-opacity: 0;
+			stroke-width: 2px;
+			stroke: #37d8e6
+		}
 	</style>
 
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.15.1/vis.min.css" rel="stylesheet" type="text/css" />
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.15.1/vis.min.js"></script>
-
-<body>
 	<h2>Graph2d | Basic Example</h2>
 	<br />
+	<input type="color" id="selectColor" value="#f79646" style="width:20px; height:22px">
+	<button onclick="canviaColor()">canvia</button>
 	<div id="visualization"></div>
 
 
-	"<optgroup label="Joan">
-		<option value="1u5qc.scsf8hg_@iot.id">@iot.id</option>
-		<option value="1u5qc.scsf8hg_phenomenonTime">phenomenonTime</option>
-		<option value="1u5qc.scsf8hg_resultTime">resultTime</option>
-		<option value="1u5qc.scsf8hg_result">result</option>
-	</optgroup>
-	<optgroup label="Ivette">
-		<option value="4m2lo.jb97cl_@iot.id">@iot.id</option>
-		<option value="4m2lo.jb97cl_phenomenonTime">phenomenonTime</option>
-		<option value="4m2lo.jb97cl_resultTime">resultTime</option>
-		<option value="4m2lo.jb97cl_result">result</option>
-	</optgroup>"
 	<script type="text/javascript">
 		var container = document.getElementById('visualization');
 		var names = ['graph1', 'graph2'];
 		var groups = new vis.DataSet();
 		groups.add({
 			id: 0,
-			className: '',
+			className: 'pepito',
 			options: {
 				yAxisOrientation: 'left',
 				drawPoints: {
 					style: 'point' // square, circle
-				}
+				},
+
 			}
 		});
 		groups.add({
 			id: 1,
-			className: '',
+			className: 'vis-graph-group2',
 			options: {
 				yAxisOrientation: 'right', // right, left
 				drawPoints: {
 					style: 'circle' // square, circle
-				}
+				},
+
 			}
 		});
 
 		groups.add({
 			id: 3,
-			className: '',
+			className: 'vis-graph-group1',
 			options: {
 				yAxisOrientation: 'left',
 				drawPoints: {
-					style: 'point' // square, circle
-				}
+					style: 'point', // square, circle
+
+				},
+
 			}
 		});
 		groups.add({
 			id: 4,
-			className: '',
+			className: 'vis-graph-group3',
 			options: {
 				yAxisOrientation: 'right', // right, left
 				drawPoints: {
-					style: 'circle' // square, circle
-				}
+					style: 'circle', // square, circle
+
+				},
+
 			}
 		});
 
@@ -108,13 +148,15 @@
 		];
 
 		var dataset = new vis.DataSet(items);
-		var options = {
+		var options = { //OPCIONS GENERALS 
 			height: 500,
 			//graphHeight:1500,
 			drawPoints: true,
 			dataAxis: {
 				right: {
 					range: { min: -1, max: 20 }
+					//title{text:""} llegenda
+
 				},
 				left: {
 					range: { min: 100, max: 250 }
@@ -124,97 +166,85 @@
 		};
 		var graph2d = new vis.Graph2d(container, dataset, groups, options);
 
-		var objecte = {
-			"type":
-				"Feature",
-			"geometry": {
-				"type": "Point",
-				"coordinates": [22.951011, 40.595293]
-			}, "properties": {}
+
+
+		// 		.vis-graph-group0 {
+		//     fill: #4f81bd;
+		//     fill-opacity: 0;
+		//     stroke-width: 2px;
+		//     stroke: #4f81bd
+		// }
+
+		function canviaColor() {
+			event.preventDefault();
+			var colorValue = document.getElementById("selectColor").value;
+			//crearClasseCSS(classe, regles)
+			console.log(colorValue)
 		}
-		function searchCoordinatesInFeature(objectToEvaluate, propertyToSearch, inputName) { //feature or location
-			if (typeof objectToEvaluate === "object") {
-				if (propertyToSearch == "type") {
-					if (objectToEvaluate.hasOwnProperty(propertyToSearch)) { //type is a property
-						if (typeof objectToEvaluate.type === "string") {
-							if (objectToEvaluate.type == "Point") {
-								if (objectToEvaluate.hasOwnProperty("coordinates")) {//coordinates at same level
-									searchCoordinatesInFeature(objectToEvaluate, "coordinates", inputName);
-								} else {
-									return 0; //Not a point
-								}
-							} else if (typeof objectToEvaluate.type === "object") {
-								searchCoordinatesInFeature(objectToEvaluate.type, "type", inputName); //follow searching type:point
-							} else {
-								return 0;
-							}
-						} else if ((typeof objectToEvaluate.type === "object")) { //"type contain an object"
-							searchCoordinatesInFeature(objectToEvaluate.type, "type", inputName); //keep searching deeper
-						}
-					} else { //keep searching deeper
-						var objectKeys = Object.keys(objectToEvaluate)
-						for (var i = 0; i < objectKeys.length; i++) {
-							if (typeof objectToEvaluate.objectKeys[i] === "object") {
-								searchCoordinatesInFeature(objectToEvaluate.objectKeys[i], "type", inputName);
-							}
-						}
-					}
 
-				} else if (propertyToSearch == "coordinates") {
-					if (objectToEvaluate.hasOwnProperty(propertyToSearch)) {
-						document.getElementById("dlgCreateUpdateDeleteEntity_" + inputName + "_longitude").value = objectToEvaluate.coordinates[0];
-						document.getElementById("dlgCreateUpdateDeleteEntity_" + inputName + "_latitude").value = objectToEvaluate.coordinates[1];
+		// Funció per crear una classe CSS dinàmica
+		function crearClasseCSS(classe, regles) {
+			// Crear un element <style>
+			var style = document.createElement('style');
+			style.innerHTML = `${classe} { ${regles} }`;
 
-					} else { //keep searching deper
-						var objectKeys = Object.keys(objectToEvaluate)
-						for (var i = 0; i < objectKeys.length; i++) {
-							if (typeof objectToEvaluate.objectKeys[i] === "object") {
-								searchCoordinatesInFeature(objectToEvaluate.objectKeys[i], "type", inputName);
-							}
-						}
-					}
+			// Afegir-ho a la capçalera del document
+			document.head.appendChild(style);
+		}
+
+		// Crear una classe CSS dinàmica
+		//crearClasseCSS('.dinamica', 'background-color: yellow; color: red; padding: 10px;');
+
+		// Aplicar la classe CSS al botó
+		// document.getElementById('btn').classList.add('dinamica');
+
+
+		function createDialogWithSelectWithGroupsScatterPlot(node) {
+			var scatterPlotDiv = document.getElementById("DialogScatterPlotDiv");
+			scatterPlotDiv.innerHTML = "";
+			var groups = node.STAattributesToSelect.dataGroups;
+			var attributesToSelect = node.STAattributesToSelect.selectOptions;
+			var attributesToSelectKeys = Object.keys(attributesToSelect);
+
+			var cdns = `<button onclick="addNewSelectGroupInScatterPlot('${node.id}')"> Add new data group</button>`
+
+			for (var i = 0; i < groups.length; i++) { //dialog groups of data
+				cdns += `<fieldset><legend>Serie ${i + 1}</legend><select>`
+
+				for (var u = 0; u < attributesToSelectKeys.length; u++) {
+					cdns += `<option value="${attributesToSelectKeys[u]}" ${(groups[i].nodeSelected == attributesToSelectKeys[u]) ? "selected=true" : ""}>${node.STAattributesToSelect.selectOptions[attributesToSelectKeys[u]].label}</option>`
 				}
-			}
-			else { //not an object
-				return 0;
-			}
-
-		}
-
-
-
-
-
-
-		for (var i = 0; i < groupsKeys.length; i++) {
-			cdns += `<fieldset><legend>Group ${i}</legend>
+				cdns += `<select>
 				<label>Axis X</label><br><select name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','${node.id}')">`
-			for (var e = 0; e < e < attributesToSelect.length; e++) {
-				options += `<optgroup label="${attributesToSelect[e].nodeLabel}">`
-				for (var i = 0; i < attributesToSelect[e].attr.length; i++) {
-					options += `<option value="${attributesToSelect[e].nodeId}_${attributesToSelect[e].attr[i]}"`
-					if (node.STAattributesToSelect.dataGroups[i].X.includes(attributesToSelect[e].nodeId) && node.STAattributesToSelect.dataGroups[i].X.includes(attributesToSelect[e].attr[i])) options += "checked"; //checked option
-					options += `>${attributesToSelect[e].attr[i]}</option>`
+
+				for (var e = 0; e < attributesToSelect[groups[i].nodeSelected].attr.length; e++) { //Select X
+					cdns += `<option value="${attributesToSelect[groups[i].nodeSelected].attr[e]}"`;
+					if (node.STAattributesToSelect.dataGroups[i].X == attributesToSelect[groups[i].nodeSelected].attr[e]) cdns += " selected=true "; //checked option
+					cdns += `>${attributesToSelect[groups[i].nodeSelected].attr[e]}</option>`
 				}
-				options += "</optgroup>"
-			}
-			`</select><br>
+
+				cdns += `</select><br>
 				<label>Axis Y</label><br><select name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','${node.id}')">`
-			for (var e = 0; e < e < attributesToSelect.length; e++) {
-				options += `<optgroup label="${attributesToSelect[e].nodeLabel}">`
-				for (var i = 0; i < attributesToSelect[e].attr.length; i++) {
-					options += `<option value="${attributesToSelect[e].nodeId}_${attributesToSelect[e].attr[i]}"`
-					if (node.STAattributesToSelect.dataGroups[i].Y.includes(attributesToSelect[e].nodeId) && node.STAattributesToSelect.dataGroups[i].Y.includes(attributesToSelect[e].attr[i])) options += "checked"; //checked option
-					options += `>${attributesToSelect[e].attr[i]}</option>`
+				for (var e = 0; e < attributesToSelect[groups[i].nodeSelected].attr.length; e++) { //Select X
+					cdns += `<option value="${attributesToSelect[groups[i].nodeSelected].attr[e]}"`;
+					if (node.STAattributesToSelect.dataGroups[i].Y == attributesToSelect[groups[i].nodeSelected].attr[e]) cdns += " selected=true "; //checked option
+					cdns += `>${attributesToSelect[groups[i].nodeSelected].attr[e]}</option>`
 				}
-				options += "</optgroup>"
+
+				cdns += `</select><br>
+					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}"${(node.STAattributesToSelect.dataGroups[i].selected == "left") ? "checked" : ""} onclick="updateCheckInformationScatterPlot('${i}','left','${node.id}')" </input><label>Left axis</label><br>
+					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroups[i].selected == "right") ? "checked" : ""} onclick="updateCheckInformationScatterPlot('${i}','right','${node.id}')"</input><label>Right axis</label><br>
+					<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
 			}
-			options += `</select><br>"
-				<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}" checked name="DialogScatterPlotAxisYRadioButton_${i}"</input><label>Left axis</label><br>
-				<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}"</input><label>Right axis</label><br>
-				<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
+			scatterPlotDiv.innerHTML = cdns;
 		}
+
+
+
+
+
+
 	</script>
-</body>
+	</body>
 
 </html>

@@ -46,7 +46,7 @@
 "use strict"
 
 		function ShowScatterPlotDialog(parentNodes, currentNode) {
-			var noData=true, attributesArray=[], allAttributes,allAttributesKeys, attributesToSelect=[];
+			var noData=true, attributesArray=[], allAttributes,allAttributesKeys, attributesToSelect=[],parentNodeId, objectWithParentNodesInfo={};
 
 			for (var i=0;i<parentNodes.length;i++){
 				attributesArray=[];
@@ -60,13 +60,14 @@
 						}
 
 					}
-					attributesToSelect.push({attr:attributesArray, nodeLabel:parentNodes[i].label, nodeId:parentNodes[i].id});
+					objectWithParentNodesInfo[parentNodes[i].id]= {attr:attributesArray, nodeLabel:parentNodes[i].label}
+					
 				}
 			}
 			currentNode.STAattributesToSelect={};
-			currentNode.STAattributesToSelect.selectOptions=attributesToSelect;
-			currentNode.STAattributesToSelect.dataGroups=
-				[{"X":parentNodes[0].id+"_"+attributesToSelect[0].attr[0], "Y":parentNodes[0].id+"_"+attributesToSelect[0].attr[0], selected:"left"}]
+			currentNode.STAattributesToSelect.parentNodesInformation=objectWithParentNodesInfo;
+			currentNode.STAattributesToSelect.dataGroupsSelectedToScatterPlot=
+				[{"nodeSelected":parentNodes[0].id,"X":attributesToSelect[parentNodes[i].id].attr[0], "Y": attributesToSelect[parentNodes[i].id].attr[0],  selectedYaxis:"left", color:"#f79646", legendText:""}]
 			networkNodes.update(currentNode);
 
 			if (noData){
@@ -92,44 +93,47 @@
 		// // 	createDialogWithSelectWithGroupsScatterPlot (currentNode)
 		// // }
 
-		function createDialogWithSelectWithGroupsScatterPlot(node){
-			var scatterPlotDiv=document.getElementById("DialogScatterPlotDiv");
-			scatterPlotDiv.innerHTML="";
-			var groups=node.STAattributesToSelect.dataGroups;
-			var groupsKeys=Object.keys(groups);
-			
-			var cdns=`<button onclick="addNewSelectGroupInScatterPlot('${node.id}')"> Add new data group</button>`
-			var attributesToSelect=node.STAattributesToSelect.selectOptions;
+		function createDialogWithSelectWithGroupsScatterPlot(node) {
+			var scatterPlotDiv = document.getElementById("DialogScatterPlotDiv");
+			scatterPlotDiv.innerHTML = "";
+			var groups = node.STAattributesToSelect.dataGroups;
+			var attributesToSelect = node.STAattributesToSelect.selectOptions;
+			var attributesToSelectKeys = Object.keys(attributesToSelect);
 
-			for (var i = 0; i < groupsKeys.length; i++) { //dialog groups of data
-				cdns += `<fieldset><legend>Group ${i}</legend>
-					<label>Axis X</label><br><select name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','${node.id}')">`
-				for (var e = 0; e < attributesToSelect.length; e++) { //groups of data origin (diferent nodes with information)
-					cdns += `<optgroup label="${attributesToSelect[e].nodeLabel}">`
-					for (var a=0;a<attributesToSelect[e].attr.length;a++){ //attributes per node to add to select options
-						cdns += `<option value="${attributesToSelect[e].nodeId}_${attributesToSelect[e].attr[a]}"`;
-						if (node.STAattributesToSelect.dataGroups[i].X== attributesToSelect[e].nodeId+"_"+attributesToSelect[e].attr[a]) cdns += " selected=true "; //checked option
-						cdns += `>${attributesToSelect[e].attr[a]}</option>`
-					}
-					cdns += "</optgroup>"
+			var cdns = `<button onclick="addNewSelectGroupInScatterPlot('${node.id}')"> Add new data group</button>`
+
+			for (var i = 0; i < groups.length; i++) { //dialog groups of data
+				cdns += `<fieldset><legend>Serie ${i + 1}</legend><select>`
+
+				for (var u = 0; u < attributesToSelectKeys.length; u++) {
+					cdns += `<option value="${attributesToSelectKeys[u]}" ${(groups[i].nodeSelected == attributesToSelectKeys[u]) ? "selected=true" : ""}>${node.STAattributesToSelect.selectOptions[attributesToSelectKeys[u]].label}</option>`
 				}
-				cdns +=`</select><br>
-					<label>Axis Y</label><br><select name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','${node.id}')">`
-					for (var e = 0;  e < attributesToSelect.length; e++) { //groups of data origin (diferent nodes with information)
-						cdns += `<optgroup label="${attributesToSelect[e].nodeLabel}">`
-						for (var a=0;a<attributesToSelect[e].attr.length;a++){ //attributes per node to add to select options
-							cdns += `<option value="${attributesToSelect[e].nodeId}_${attributesToSelect[e].attr[a]}"`;
-							if (node.STAattributesToSelect.dataGroups[i].Y== attributesToSelect[e].nodeId+"_"+attributesToSelect[e].attr[a]) cdns += " selected=true "; //checked option
-							cdns += `>${attributesToSelect[e].attr[a]}</option>`
-						}
-						cdns += "</optgroup>"
-					}
+				cdns += `<select>
+				<label>Axis X</label><br><select name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','${node.id}')">`
+
+				for (var e = 0; e < attributesToSelect[groups[i].nodeSelected].attr.length; e++) { //Select X
+					cdns += `<option value="${attributesToSelect[groups[i].nodeSelected].attr[e]}"`;
+					if (node.STAattributesToSelect.dataGroups[i].X == attributesToSelect[groups[i].nodeSelected].attr[e]) cdns += " selected=true "; //checked option
+					cdns += `>${attributesToSelect[groups[i].nodeSelected].attr[e]}</option>`
+				}
+
 				cdns += `</select><br>
-					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}"${(node.STAattributesToSelect.dataGroups[i].selected=="left")?"checked": ""} onclick="updateCheckInformationScatterPlot('${i}','left','${node.id}')" </input><label>Left axis</label><br>
-					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroups[i].selected=="right")?"checked": ""} onclick="updateCheckInformationScatterPlot('${i}','right','${node.id}')"</input><label>Right axis</label><br>
+				<label>Axis Y</label><br><select name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','${node.id}')">`
+				for (var e = 0; e < attributesToSelect[groups[i].nodeSelected].attr.length; e++) { //Select Y
+					cdns += `<option value="${attributesToSelect[groups[i].nodeSelected].attr[e]}"`;
+					if (node.STAattributesToSelect.dataGroups[i].Y == attributesToSelect[groups[i].nodeSelected].attr[e]) cdns += " selected=true "; //checked option
+					cdns += `>${attributesToSelect[groups[i].nodeSelected].attr[e]}</option>`
+				}
+
+				cdns += `</select><br>
+					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}"${(node.STAattributesToSelect.dataGroups[i].selected == "left") ? "checked" : ""} onclick="updateCheckInformationScatterPlot('${i}','left','${node.id}')" </input><label>Left axis</label><br>
+					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroups[i].selected == "right") ? "checked" : ""} onclick="updateCheckInformationScatterPlot('${i}','right','${node.id}')"</input><label>Right axis</label><br>
+					<label>Line Color: </label> <input type="color" id="selectColorScatterPlot_${i}" value="#f79646" style="width:20px; height:22px"><br>
+					<label>Text in legend:</label><input type="text" id="legendTextScatterPlot_${i}">
+					
 					<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
 			}
-			scatterPlotDiv.innerHTML=cdns;
+			scatterPlotDiv.innerHTML = cdns;
 		}
 		function addNewSelectGroupInScatterPlot(nodeId){ //Add button
 			event.preventDefault();
@@ -207,42 +211,6 @@
 		function DrawScatterPlot(event){
 			event.preventDefault(); // We don't want to submit this form
 			var ScatterPlotNode=networkNodes.get(network.getSelectedNodes())[0];
-			// currentNode.STAattributesToSelect.selects
-
-			// var selectedOptions={};
-			// selectedOptions.AxisX= currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisX.DialogScatterPlotAxisXSelect_1;
-
-			// var selectsY=Object.keys(currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY);
-			// if(document.getElementById("DialogScatterPlotAxisY2Checkbox").checked) var selectsY2=Object.keys(currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2);
-
-
-			// selectedOptions.AxisY=[];
-			// for (var i=0;i<AxisYKeys.length;i++){
-			// 	selectValue=document.getElementById(AxisYKeys[i]).value;
-			// 	selectedOptions.AxisY.push(selectValue);
-			// 	currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY[AxisYKeys[i]]=selectValue;
-			// }
-			// if (document.getElementById("DialogScatterPlotAxisY2Checkbox").checked){
-			// 	var AxisY2Keys=Object.keys(currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2);
-			// 	selectedOptions.AxisY2=[];
-			// 	for (var i=0;i<AxisY2Keys.length;i++){
-			// 		selectValue=document.getElementById(AxisY2Keys[i]).value;
-			// 		selectedOptions.AxisY2.push(selectValue);
-			// 		currentNode.STAattributesToSelect.selects.DialogScatterPlotAxisY2[AxisY2Keys[i]]=selectValue;
-			// 	}
-			// }
-
-
-
-
-
-			// selectedOptions.AxisY=document.getElementById("DialogScatterPlotAxisYSelect").value;
-			// // if (document.getElementById("DialogScatterPlotVariableUoM").style.display!="none")
-			// // {
-			// // 	selectedOptions.Variable=document.getElementById("DialogScatterPlotVariableSelect").value;
-			// // 	selectedOptions.UoM=document.getElementById("DialogScatterPlotUoMSelect").value;
-			// // }
-
 			var dataGroups=ScatterPlotNode.STAattributesToSelect.dataGroups;
 			var nodeId, node, nodeData,selectedOptions={},record,items=[], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight;
 			var axisYSummary={left:[], right:[]}
@@ -273,10 +241,10 @@
 								if (maxyRight<record[selectedOptions.AxisY])
 									maxyRight=record[selectedOptions.AxisY];
 							}else{
-								if (miny>record[selectedOptions.AxisY])
-								miny=record[selectedOptions.AxisY];
-								if (maxy<record[selectedOptions.AxisY])
-								maxy=record[selectedOptions.AxisY];
+								if (minyRight>record[selectedOptions.AxisY])
+								minyRight=record[selectedOptions.AxisY];
+								if (maxyRight<record[selectedOptions.AxisY])
+								maxyRight=record[selectedOptions.AxisY];
 							}
 							
 						}
