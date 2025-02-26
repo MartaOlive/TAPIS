@@ -166,11 +166,7 @@
 			networkNodes.update(node);
 			createDialogWithSelectWithGroupsScatterPlot(node)
 		}
-		function updateCheckInformationScatterPlot(numberDialog,leftOrRight,nodeId){
-			var node = networkNodes.get(nodeId);
-			node.STAattributesToSelect.dataGroups[numberDialog]["selected"]=leftOrRight;
-			networkNodes.update(node);
-		}
+
 		function ShowBarPlotDialog(parentNodes) {
 			var data = parentNodes[0].STAdata;
 			if (!data || !data.length) {
@@ -220,48 +216,45 @@
 		function DrawScatterPlot(event){
 			event.preventDefault(); // We don't want to submit this form
 			var ScatterPlotNode=networkNodes.get(network.getSelectedNodes())[0];
-			var dataGroups=ScatterPlotNode.STAattributesToSelect.dataGroups;
+			var dataGroups=ScatterPlotNode.STAattributesToSelect.dataGroupsSelectedToScatterPlot;
 			var nodeId, node, nodeData,selectedOptions={},record,items=[], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight;
 			var axisYSummary={left:[], right:[]}
 			for (var e=0;e<dataGroups.length;e++){
-				nodeId=dataGroups[e].X.split("_")[0];
-				if (nodeId!=dataGroups[e].Y.split("_")[0]){
-					alert("To be able to represent the graph, in each group of data the column of the X-axis and the column of the Y-axis must belong to the same node");
-					return;
-				}else{
-					selectedOptions.AxisX= dataGroups[e].X.substring(nodeId.length+1);
-					selectedOptions.AxisY= dataGroups[e].Y.substring(nodeId.length+1);
-					nodeData =networkNodes.get(nodeId).STAdata;
-					leftOrRight=dataGroups[e].selected;
-					for (var i = 0; i < nodeData.length; i++) {
-						record=nodeData[i];
-						if (i==0){
-							minx=maxx=record[selectedOptions.AxisX];
-							if(leftOrRight="left")minyLeft=maxyLeft=record[selectedOptions.AxisY];
-							else minyRight=maxyRight=record[selectedOptions.AxisY];
-						} else {
-							if (minx>record[selectedOptions.AxisX])
-								minx=record[selectedOptions.AxisX];
-							if (maxx<record[selectedOptions.AxisX])
-								maxx=record[selectedOptions.AxisX];
-							if(leftOrRight="left"){
-								if (minyLeft>record[selectedOptions.AxisY])
-									minyLeft=record[selectedOptions.AxisY];
-								if (maxyRight<record[selectedOptions.AxisY])
-									maxyRight=record[selectedOptions.AxisY];
-							}else{
-								if (minyRight>record[selectedOptions.AxisY])
-								minyRight=record[selectedOptions.AxisY];
-								if (maxyRight<record[selectedOptions.AxisY])
-								maxyRight=record[selectedOptions.AxisY];
-							}
-							
-						}
-						items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: e});
-						axisYSummary[leftOrRight].push(e);
-					}
+				nodeId=dataGroups[e].nodeSelected;
 
+				selectedOptions.AxisX= dataGroups[e].X
+				selectedOptions.AxisY= dataGroups[e].Y;
+				nodeData =networkNodes.get(nodeId).STAdata;
+				leftOrRight=dataGroups[e].selectedYaxis;
+				for (var i = 0; i < nodeData.length; i++) {
+					record=nodeData[i];
+					if (i==0){
+						minx=maxx=record[selectedOptions.AxisX];
+						if(leftOrRight="left")minyLeft=maxyLeft=record[selectedOptions.AxisY];
+						else minyRight=maxyRight=record[selectedOptions.AxisY];
+					} else {
+						if (minx>record[selectedOptions.AxisX])
+							minx=record[selectedOptions.AxisX];
+						if (maxx<record[selectedOptions.AxisX])
+							maxx=record[selectedOptions.AxisX];
+						if(leftOrRight="left"){
+							if (minyLeft>record[selectedOptions.AxisY])
+								minyLeft=record[selectedOptions.AxisY];
+							if (maxyRight<record[selectedOptions.AxisY])
+								maxyRight=record[selectedOptions.AxisY];
+						}else{
+							if (minyRight>record[selectedOptions.AxisY])
+							minyRight=record[selectedOptions.AxisY];
+							if (maxyRight<record[selectedOptions.AxisY])
+							maxyRight=record[selectedOptions.AxisY];
+						}
+						
+					}
+					items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: e});
+					
 				}
+
+				
 			}
 			if (ScatterPlotGraph2d) //not destroyed before if there is a wrong match in a group between X and Y
 				ScatterPlotGraph2d.destroy();
