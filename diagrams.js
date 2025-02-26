@@ -126,8 +126,8 @@
 				}
 
 				cdns += `</select><br>
-					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "left") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYAxis','radio','DialogScatterPlotAxisYRadioButton_Left_${i}','${node.id}')" value="left" </input><label>Left axis</label><br>
-					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "right") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYAxis','radio','DialogScatterPlotAxisYRadioButton_Right_${i}','${node.id}')" value="right"</input><label>Right axis</label><br>
+					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "left") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Left_${i}','${node.id}')" value="left" </input><label>Left axis</label><br>
+					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "right") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Right_${i}','${node.id}')" value="right"</input><label>Right axis</label><br>
 					<label>Line Color: </label> <input type="color" id="selectColorScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].color}" style="width:20px; height:22px" onchange="updateSelectInformationScatterPlot('${i}','color','radio','selectColorScatterPlot_${i}','${node.id}')"><br>
 					<label>Text in legend:</label><input type="text" id="legendTextScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].legendText} " onchange="updateSelectInformationScatterPlot('${i}','legendText','radio','legendTextScatterPlot_${i}','${node.id}')">
 					
@@ -139,14 +139,15 @@
 		function addNewSelectGroupInScatterPlot(nodeId){ //Add button
 			event.preventDefault();
 			var node = networkNodes.get(nodeId);
-			node.STAattributesToSelect.dataGroups.push({X: node.STAattributesToSelect.selectOptions[0].nodeId+"_"+node.STAattributesToSelect.selectOptions[0].attr[0], Y:node.STAattributesToSelect.selectOptions[0].nodeId+"_"+node.STAattributesToSelect.selectOptions[0].attr[0],selected: "left" });
+			var dataGroupsSelected= node.STAattributesToSelect;
+			node.STAattributesToSelect.dataGroupsSelectedToScatterPlot.push({"nodeSelected":Object.keys(dataGroupsSelected.parentNodesInformation)[0],"X":dataGroupsSelected.parentNodesInformation[dataGroupsSelected.dataGroupsSelectedToScatterPlot[0].nodeSelected].attr[0], "Y":dataGroupsSelected.parentNodesInformation[dataGroupsSelected.dataGroupsSelectedToScatterPlot[0].nodeSelected].attr[0],  selectedYaxis:"left", color:"#f79646", legendText:""});
 			networkNodes.update(node);
 			createDialogWithSelectWithGroupsScatterPlot(node);
 		}
 		function deleteSelectGroupInScatterPlot(nodeId, groupToDelete){
 			event.preventDefault();
 			var node = networkNodes.get(nodeId);
-			node.STAattributesToSelect.dataGroups.splice(parseInt(groupToDelete),1);
+			node.STAattributesToSelect.dataGroupsSelectedToScatterPlot.splice(parseInt(groupToDelete),1);
 			networkNodes.update(node);
 			createDialogWithSelectWithGroupsScatterPlot(node);
 		}
