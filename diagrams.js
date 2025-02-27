@@ -103,13 +103,13 @@
 			var cdns = `<button onclick="addNewSelectGroupInScatterPlot('${node.id}')"> Add new data group</button>` 
 
 			for (var i = 0; i < dialogGroups.length; i++) { //dialog groups of data
-				cdns += `<fieldset><legend>Serie ${i + 1}</legend><select id="DialogScatterPlotAxisNodesSelect_${i}" onchange="updateSelectInformationScatterPlot('${i}','nodeSelected','select','DialogScatterPlotAxisNodesSelect_${i}','${node.id}')">`
+				cdns += `<fieldset><legend>Serie ${i + 1}</legend><label  style="margin-right: 10px;margin-bottom:20px">Node with data: </label><select style="margin-bottom:10px" id="DialogScatterPlotAxisNodesSelect_${i}" onchange="updateSelectInformationScatterPlot('${i}','nodeSelected','select','DialogScatterPlotAxisNodesSelect_${i}','${node.id}')">`
 
 				for (var u = 0; u < parentNodesInformationKeys.length; u++) {
 					cdns += `<option value="${parentNodesInformationKeys[u]}" ${(dialogGroups[i].nodeSelected == parentNodesInformationKeys[u]) ? "selected=true" : ""} onchange="updateSelectInformationScatterPlot('${i}','nodeSelected','select','DialogScatterPlotAxisNodesSelect_${i}','${node.id}')">${parentNodesInformation[parentNodesInformationKeys[u]].nodeLabel}</option>`
 				}
 				cdns += `</select><br>
-				<label>Axis X</label><select name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','select','DialogScatterPlotAxisXSelect_${i}','${node.id}')">`
+				<label  style="margin-right: 10px;margin-bottom:20px">Axis X</label><select style="margin-bottom:10px" name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','select','DialogScatterPlotAxisXSelect_${i}','${node.id}')">`
 
 				for (var e = 0; e < parentNodesInformation[dialogGroups[i].nodeSelected].attr.length; e++) { //Select X
 					cdns += `<option value="${parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]}"`;
@@ -118,7 +118,7 @@
 				}
 
 				cdns += `</select><br>
-				<label>Axis Y</label><select name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','select','DialogScatterPlotAxisYSelect_${i}','${node.id}')">`
+				<label style="margin-right: 10px;margin-bottom:20px">Axis Y</label><select style="margin-bottom:10px" name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','select','DialogScatterPlotAxisYSelect_${i}','${node.id}')">`
 				for (var e = 0; e < parentNodesInformation[dialogGroups[i].nodeSelected].attr.length; e++) { //Select Y
 					cdns += `<option value="${parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]}"`;
 					if (node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].Y == parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]) cdns += " selected=true "; //checked option
@@ -128,10 +128,10 @@
 				cdns += `</select><br>
 					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "left") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Left_${i}','${node.id}')" value="left" </input><label>Left axis</label><br>
 					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "right") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Right_${i}','${node.id}')" value="right" </input><label>Right axis</label><br>
-					<label>Line Color: </label> <input type="color" id="selectColorScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].color}" style="width:20px; height:22px" onchange="updateSelectInformationScatterPlot('${i}','color','radio','selectColorScatterPlot_${i}','${node.id}')"><br>
-					<label>Text in legend:</label><input type="text" id="legendTextScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].legendText} " onchange="updateSelectInformationScatterPlot('${i}','legendText','radio','legendTextScatterPlot_${i}','${node.id}')">
+					<label style="margin-top: 20px">Line Color: </label> <input type="color" id="selectColorScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].color}" style="width:20px; height:22px" onchange="updateSelectInformationScatterPlot('${i}','color','radio','selectColorScatterPlot_${i}','${node.id}')"><br>
+					<label>Text in legend:   </label><input type="text" id="legendTextScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].legendText} " onchange="updateSelectInformationScatterPlot('${i}','legendText','radio','legendTextScatterPlot_${i}','${node.id}')">
 					
-					<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
+					<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"style="background-color:white; border-color:white"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
 			}
 			scatterPlotDiv.innerHTML = cdns;
 		}
@@ -271,7 +271,7 @@
 				groups.add({
 					id: n,
 					className:"classGraphGroup"+n, //A canviar segons el color
-					 content: title,
+					 content: dataGroups[n].legendText,
 					 interpolation: {
 					 	parametrization: 'chordal'
 					 },
@@ -293,39 +293,31 @@
 			var finalMaxYLeft=maxyLeft+(maxyLeft-minyLeft)*0.025;
 			var finalMaxYRight= maxyRight+(maxyRight-minyRight)*0.025;
 
+			var DialogScatterPlotLegendLocationSelect= document.getElementById("DialogScatterPlotLegendLocationSelect")	
+			//var axisXLabel= document.getElementById("DialogScatterPlotAxisXLabel").value;
+			var axisYLabel= document.getElementById("DialogScatterPlotAxisYLabel").value;
+			//faltarà un si fem eix dret
+			
 			var options = {
-				// dataAxis: {
-				// left: {
-				// 	range: { min: -1, max: 300}
-				// 	//title{text:""} llegenda
 
-				// },
-				// right: {
-				// 	range: { min: 100, max: 270 }
-				// },
 				  dataAxis: {
 				 	right: {
 						range: { min:finalMinYRight, max:finalMaxYRight }
-				// 		//title{text:""} llegenda
+						,format: AdaptValueAxisY
+				 			
 	
 				 	},
 				 	left: {
-				 		range: { min: finalMinYLeft, max: finalMaxYLeft }
+				 		range: { min: finalMinYLeft, max: finalMaxYLeft },
+						 format: AdaptValueAxisY,
+						 title: {text:axisYLabel} 
 				 	},
-				 	// left: {range: {min:finalMinYLeft, max:finalMaxYLeft}},
-				 	// 		//title: {text: "Values2"}, 
-				 	// 		//format: AdaptValueAxisY
-				 
-				 	// right:{range: {min: 15, max:50} }
-				 	// 		//title: {text: "Values"}, 
-				 	// 		//format: AdaptValueAxisY
-				 		
 
 				},
 				drawPoints: {size: 1},
-				legend: {left:{position:"bottom-left"}},
-				//  start: minx,
-				//  end: maxx
+				legend: {left:{position:DialogScatterPlotLegendLocationSelect.options[DialogScatterPlotLegendLocationSelect.selectedIndex].value}},
+				start: minx,
+				end: maxx
 			};
 			var title="Results";
 
