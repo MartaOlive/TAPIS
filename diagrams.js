@@ -127,7 +127,7 @@
 
 				cdns += `</select><br>
 					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "left") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Left_${i}','${node.id}')" value="left" </input><label>Left axis</label><br>
-					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "right") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Right_${i}','${node.id}')" value="right"</input><label>Right axis</label><br>
+					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "right") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Right_${i}','${node.id}')" value="right" </input><label>Right axis</label><br>
 					<label>Line Color: </label> <input type="color" id="selectColorScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].color}" style="width:20px; height:22px" onchange="updateSelectInformationScatterPlot('${i}','color','radio','selectColorScatterPlot_${i}','${node.id}')"><br>
 					<label>Text in legend:</label><input type="text" id="legendTextScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].legendText} " onchange="updateSelectInformationScatterPlot('${i}','legendText','radio','legendTextScatterPlot_${i}','${node.id}')">
 					
@@ -218,7 +218,7 @@
 			var ScatterPlotNode=networkNodes.get(network.getSelectedNodes())[0];
 			var dataGroups=ScatterPlotNode.STAattributesToSelect.dataGroupsSelectedToScatterPlot;
 			var nodeId, node, nodeData,selectedOptions={},record,items=[], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight;
-			var axisYSummary={left:[], right:[]}
+			//var axisYSummary={left:[], right:[]}
 			for (var e=0;e<dataGroups.length;e++){
 				nodeId=dataGroups[e].nodeSelected;
 
@@ -228,20 +228,25 @@
 				leftOrRight=dataGroups[e].selectedYaxis;
 				for (var i = 0; i < nodeData.length; i++) {
 					record=nodeData[i];
-					if (i==0){
+					if (i==0 && e==0){
 						minx=maxx=record[selectedOptions.AxisX];
-						if(leftOrRight="left")minyLeft=maxyLeft=record[selectedOptions.AxisY];
+						if(leftOrRight=="left")minyLeft=maxyLeft=record[selectedOptions.AxisY];
 						else minyRight=maxyRight=record[selectedOptions.AxisY];
 					} else {
+						if(leftOrRight=="left" && minyLeft==undefined){
+							minyLeft=maxyLeft=record[selectedOptions.AxisY];
+						}else if (leftOrRight=="right" && minyRight==undefined){
+							minyRight=maxyRight=record[selectedOptions.AxisY];
+						}
 						if (minx>record[selectedOptions.AxisX])
 							minx=record[selectedOptions.AxisX];
 						if (maxx<record[selectedOptions.AxisX])
 							maxx=record[selectedOptions.AxisX];
-						if(leftOrRight="left"){
+						if(leftOrRight=="left"){
 							if (minyLeft>record[selectedOptions.AxisY])
 								minyLeft=record[selectedOptions.AxisY];
-							if (maxyRight<record[selectedOptions.AxisY])
-								maxyRight=record[selectedOptions.AxisY];
+							if (maxyLeft<record[selectedOptions.AxisY])
+								maxyLeft=record[selectedOptions.AxisY];
 						}else{
 							if (minyRight>record[selectedOptions.AxisY])
 							minyRight=record[selectedOptions.AxisY];
@@ -252,9 +257,7 @@
 					}
 					items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: e});
 					
-				}
-
-				
+				}				
 			}
 			if (ScatterPlotGraph2d) //not destroyed before if there is a wrong match in a group between X and Y
 				ScatterPlotGraph2d.destroy();
@@ -262,72 +265,83 @@
 			var dataset = new vis.DataSet(items);
 			var groups = new vis.DataSet();
 
-			
-			// selectedOptions.AxisX=document.getElementById("DialogScatterPlotAxisXSelect").value;
-			// selectedOptions.AxisY=document.getElementById("DialogScatterPlotAxisYSelect").value;
-			// if (document.getElementById("DialogScatterPlotVariableUoM").style.display!="none")
-			// {
-			// 	selectedOptions.Variable=document.getElementById("DialogScatterPlotVariableSelect").value;
-			// 	selectedOptions.UoM=document.getElementById("DialogScatterPlotUoMSelect").value;
+			//mirar si existeixen els dos axis
+			var stylesheet,newRule;
+			for (var n=0;n<dataGroups.length;n++){
+				groups.add({
+					id: n,
+					className:"classGraphGroup"+n, //A canviar segons el color
+					 content: title,
+					 interpolation: {
+					 	parametrization: 'chordal'
+					 },
+					options: {
+						yAxisOrientation:dataGroups[n].selectedYaxis , // right, left
+						drawPoints: {
+							style: 'circle' // square, circle
+						}
+					}
+				});
+				
+				//create Style (class)
+				stylesheet = document.styleSheets[0];
+				newRule = `.classGraphGroup${n} {fill:${dataGroups[n].color};fill-opacity:0;stroke-width:2px;stroke:${dataGroups[n].color} }`;
+				stylesheet.insertRule(newRule, stylesheet.cssRules.length);
+			}
+			var finalMinYLeft =minyLeft-(maxyLeft-minyLeft)*0.025;
+			var finalMinYRight=  minyRight-(maxyRight-minyRight)*0.025;
+			var finalMaxYLeft=maxyLeft+(maxyLeft-minyLeft)*0.025;
+			var finalMaxYRight= maxyRight+(maxyRight-minyRight)*0.025;
+
+			var options = {
+				// dataAxis: {
+				// left: {
+				// 	range: { min: -1, max: 300}
+				// 	//title{text:""} llegenda
+
+				// },
+				// right: {
+				// 	range: { min: 100, max: 270 }
+				// },
+				  dataAxis: {
+				 	right: {
+						range: { min:finalMinYRight, max:finalMaxYRight }
+				// 		//title{text:""} llegenda
+	
+				 	},
+				 	left: {
+				 		range: { min: finalMinYLeft, max: finalMaxYLeft }
+				 	},
+				 	// left: {range: {min:finalMinYLeft, max:finalMaxYLeft}},
+				 	// 		//title: {text: "Values2"}, 
+				 	// 		//format: AdaptValueAxisY
+				 
+				 	// right:{range: {min: 15, max:50} }
+				 	// 		//title: {text: "Values"}, 
+				 	// 		//format: AdaptValueAxisY
+				 		
+
+				},
+				drawPoints: {size: 1},
+				legend: {left:{position:"bottom-left"}},
+				//  start: minx,
+				//  end: maxx
+			};
+			var title="Results";
+
+			// if (nodes.length>1 && nodes[1].STAURL) {
+			// 	node=nodes[1];
+			// 	data=node.STAdata;
+			// 	if (data.length)
+			// 		record=data[0];
+			// 	if (record[selectedOptions.Variable])
+			// 		title=record[selectedOptions.Variable];
+			// 	if (record[selectedOptions.UoM])
+			// 		title+=" (" + record[selectedOptions.UoM] + ")";
 			// }
 
-			// var nodes=GetParentNodes(currentNode);
-			// if (nodes && nodes.length) {
-			// 	var node=nodes[0];
-			// 	var data, dataAttributes, record;
-			// 	if (node.STAdata) {
-			// 		var items=[], minx, maxx, miny, maxy;
-			// 		data=node.STAdata;
-			// 		dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
 
-			// 		if (ScatterPlotGraph2d)
-			// 			ScatterPlotGraph2d.destroy();
-			// 		for (var i = 0; i < data.length; i++) {
-			// 			record=data[i];
-			// 			if (i==0){
-			// 				minx=maxx=record[selectedOptions.AxisX];
-			// 				miny=maxy=record[selectedOptions.AxisY];
-			// 			} else {
-			// 				if (minx>record[selectedOptions.AxisX])
-			// 					minx=record[selectedOptions.AxisX];
-			// 				if (maxx<record[selectedOptions.AxisX])
-			// 					maxx=record[selectedOptions.AxisX];
-			// 				if (miny>record[selectedOptions.AxisY])
-			// 					miny=record[selectedOptions.AxisY];
-			// 				if (maxy<record[selectedOptions.AxisY])
-			// 					maxy=record[selectedOptions.AxisY];
-			// 			}
-			// 			items.push({x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: 0})
-			// 		}
-					// var dataset = new vis.DataSet(items);
-					// var groups = new vis.DataSet();
-					var options = {
-						dataAxis: {left: {range: {min:miny-(maxy-miny)*0.025, max:maxy+(maxy-miny)*0.025}, title: {text: "Values"}, format: AdaptValueAxisY}},
-						drawPoints: {size: 1},
-						legend: {left:{position:"bottom-left"}},
-						start: minx,
-						end: maxx
-					};
-					var title="Results";
-
-					if (nodes.length>1 && nodes[1].STAURL) {
-						node=nodes[1];
-						data=node.STAdata;
-						if (data.length)
-							record=data[0];
-						if (record[selectedOptions.Variable])
-							title=record[selectedOptions.Variable];
-						if (record[selectedOptions.UoM])
-							title+=" (" + record[selectedOptions.UoM] + ")";
-					}
-					groups.add({
-						id: 0,
-						content: title,
-						interpolation: {
-							parametrization: 'chordal'
-						}
-					});
-					ScatterPlotGraph2d = new vis.Graph2d(document.getElementById('DialogScatterPlotVisualization'), dataset, groups, options);
+			ScatterPlotGraph2d = new vis.Graph2d(document.getElementById('DialogScatterPlotVisualization'), dataset, groups, options);
 		}
 			//}
 	//	}

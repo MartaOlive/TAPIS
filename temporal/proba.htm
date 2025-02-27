@@ -96,7 +96,7 @@
 
 		groups.add({
 			id: 3,
-			className: 'vis-graph-group1',
+			className: 'pepito',
 			options: {
 				yAxisOrientation: 'left',
 				drawPoints: {
@@ -125,7 +125,7 @@
 			{ x: new Date(1469626499597), y: 130, group: 0 },
 			{ x: new Date(1469626499697), y: 210, group: 0 },
 			{ x: new Date(1469626499897), y: 115, group: 0 },
-			{ x: new Date(1469626499997), y: 130, group: 0 },
+			{ x: new Date(1469626499997), y: 330, group: 0 },
 			{ x: new Date(1469626499397), y: 1, group: 1 },
 			{ x: new Date(1469626499597), y: 2, group: 1 },
 			{ x: new Date(1469626499697), y: 3, group: 1 },
@@ -159,21 +159,16 @@
 
 				},
 				left: {
-					range: { min: 100, max: 250 }
+					range: { min: 100, max: 500 }
 				},
 				icons: true
 			},
 		};
 		var graph2d = new vis.Graph2d(container, dataset, groups, options);
 
+	
 
 
-		// 		.vis-graph-group0 {
-		//     fill: #4f81bd;
-		//     fill-opacity: 0;
-		//     stroke-width: 2px;
-		//     stroke: #4f81bd
-		// }
 
 		function canviaColor() {
 			event.preventDefault();
