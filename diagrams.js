@@ -301,6 +301,7 @@
 			var options = {
 
 				  dataAxis: {
+
 				 	right: {
 						range: { min:finalMinYRight, max:finalMaxYRight }
 						,format: AdaptValueAxisY
