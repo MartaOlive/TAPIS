@@ -1184,16 +1184,31 @@
 		<tr>
 			<td></td>
 			<td>
-			
-				<label>Legend position:  </label>
-				<select id="DialogScatterPlotLegendLocationSelect">
-					<option value="bottom-left">Bottom left</option>
-					<option value="bottom-right">Bottom right</option>
-					<option value="top-left">Top left</option>
-					<option value="top-right">Top right</option>
-				</select> <br>
-				<!-- <label>Axis X Label: </label><input value ="" type="text" id="DialogScatterPlotAxisXLabel"></input><br> -->
-				<label>Axis Y Label: </label><input value="" type="text" id="DialogScatterPlotAxisYLabel"></input>
+				<fieldset>
+					<legend>
+						Graphic configurations
+					</legend>
+					<label style="font-weight: bold;">Left Y axis:  </label><br>
+					<label>Legend position</label>
+					<select id="DialogScatterPlotLegendLocationSelectLeft">
+						<option value="bottom-left">Bottom left</option>
+						<option value="bottom-right">Bottom right</option>
+						<option value="top-left">Top left</option>
+						<option value="top-right">Top right</option>
+					</select>
+					<label>Axis label: </label><input value="" type="text" id="DialogScatterPlotAxisYLabelLeft"></input><br><br>
+					<label style="font-weight: bold;">Right Y axis:  </label><br>
+					<label>Legend position</label>
+					<select id="DialogScatterPlotLegendLocationSelectRight">
+						<option value="bottom-left">Bottom left</option>
+						<option value="bottom-right">Bottom right</option>
+						<option value="top-left">Top left</option>
+						<option value="top-right" selected>Top right</option>
+					</select>
+					<label>Axis label:</label>
+					<input value="" type="text" id="DialogScatterPlotAxisYLabelRight"></input>
+				</fieldset>
+
 			</td>
 		</tr>
 	</table> 

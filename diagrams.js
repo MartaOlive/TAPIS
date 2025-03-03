@@ -293,9 +293,10 @@
 			var finalMaxYLeft=maxyLeft+(maxyLeft-minyLeft)*0.025;
 			var finalMaxYRight= maxyRight+(maxyRight-minyRight)*0.025;
 
-			var DialogScatterPlotLegendLocationSelect= document.getElementById("DialogScatterPlotLegendLocationSelect")	
-			//var axisXLabel= document.getElementById("DialogScatterPlotAxisXLabel").value;
-			var axisYLabel= document.getElementById("DialogScatterPlotAxisYLabel").value;
+			var DialogScatterPlotLegendLocationSelectLeft= document.getElementById("DialogScatterPlotLegendLocationSelectLeft");
+			var DialogScatterPlotLegendLocationSelectRight= document.getElementById("DialogScatterPlotLegendLocationSelectRight");
+			var axisYLabelRight= document.getElementById("DialogScatterPlotAxisYLabelRight").value;
+			var axisYLabelLeft= document.getElementById("DialogScatterPlotAxisYLabelLeft").value;
 			//faltarà un si fem eix dret
 			
 			var options = {
@@ -304,19 +305,23 @@
 
 				 	right: {
 						range: { min:finalMinYRight, max:finalMaxYRight }
-						,format: AdaptValueAxisY
+						,format: AdaptValueAxisY,
+						title: {text:axisYLabelRight} 
 				 			
 	
 				 	},
 				 	left: {
 				 		range: { min: finalMinYLeft, max: finalMaxYLeft },
 						 format: AdaptValueAxisY,
-						 title: {text:axisYLabel} 
+						 title: {text:axisYLabelLeft} 
 				 	},
 
 				},
 				drawPoints: {size: 1},
-				legend: {left:{position:DialogScatterPlotLegendLocationSelect.options[DialogScatterPlotLegendLocationSelect.selectedIndex].value}},
+				legend: {
+					left:{position:DialogScatterPlotLegendLocationSelectLeft.options[DialogScatterPlotLegendLocationSelectLeft.selectedIndex].value},
+					right:{position:DialogScatterPlotLegendLocationSelectRight.options[DialogScatterPlotLegendLocationSelectRight.selectedIndex].value} 	
+				},
 				start: minx,
 				end: maxx
 			};
