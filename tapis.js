@@ -6036,22 +6036,14 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 	}
 
 	document.getElementById("DialogSelectRowsFilter").innerHTML = "<div id='selectorRowsContainer'><div id='divSelectorRowsFilter'></div></div>"; 
-	var SelectNumberOfRecordsFilterRows=document.getElementById("SelectNumberOfRecordsFilterRows");
-	var SelectNumberOfRecordsFilterRowsLabel=document.getElementById("SelectNumberOfRecordsFilterRowsLabel");
 
-	if (node.image=="FilterRowsTable.png"){ //Hide number request
-		SelectNumberOfRecordsFilterRows.style.display="none";
-		SelectNumberOfRecordsFilterRowsLabel.style.display="none";
-	}else{
-		SelectNumberOfRecordsFilterRows.style.display="inline-block";
-		SelectNumberOfRecordsFilterRowsLabel.style.display="inline-block";
-	}
-	
 	addNecessaryVariablesToFilterRowsSTANode(node);
 	
 	if (node.image=="FilterRowsSTA.png" && node.STAOGCAPIconformance){
 		if (node.STAOGCAPIconformance.includes("filter")){ //Create Filters if the API allows to filter its information
+			saveNodeDialog("DialogFilterRows", node);
 			ShowFilterTable();
+			
 
 		}else{
 		showFilterTableWithoutFilters(); //OGCAPIFeatures without filter option		

@@ -45,7 +45,7 @@
 
 "use strict"
 
-		function ShowScatterPlotDialog(parentNodes, currentNode) {
+		function ShowScatterPlotDialog(parentNodes, node) {
 			var noData=true, attributesArray=[], allAttributes,allAttributesKeys, objectWithParentNodesInfo={};
 
 			for (var i=0;i<parentNodes.length;i++){
@@ -64,34 +64,20 @@
 					
 				}
 			}
-			currentNode.STAattributesToSelect={};
-			currentNode.STAattributesToSelect.parentNodesInformation=objectWithParentNodesInfo;
-			currentNode.STAattributesToSelect.dataGroupsSelectedToScatterPlot=
+			node.STAattributesToSelect={};
+			node.STAattributesToSelect.parentNodesInformation=objectWithParentNodesInfo;
+			node.STAattributesToSelect.dataGroupsSelectedToScatterPlot=
 				[{"nodeSelected":parentNodes[0].id,"X":objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0],  selectedYaxis:"left", color:"#f79646", legendText:""}]
-			networkNodes.update(currentNode);
+			networkNodes.update(node);
 
 			if (noData){
 				document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
 				return;
 			}
 			document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
-			createDialogWithSelectWithGroupsScatterPlot(currentNode);
+			createDialogWithSelectWithGroupsScatterPlot(node);
 
 		}
-		// function isCheckBoxChechedInScaterPlot(event){
-		// 	var Y2Selects= Object.keys(currentNode.STAattributesToSelect.selects["DialogScatterPlotAxisY2"]);
-		// 	var checked=!document.getElementById("DialogScatterPlotAxisY2Checkbox").checked;
-		// 		for(var i=0;i<Y2Selects.length;i++){
-		// 			document.getElementById(Y2Selects[i]).disabled=checked;
-		// 		}
-		// }
-		//  function addNewDialogIn(event){
-		//  	event.preventDefault();
-		//  	var groupsKeys= Object.keys(currentNode.STAattributesToSelect.dataGroups);
-		// 	var newGroupNumber=parseInt(groupsKeys[groupsKeys.length-1].split("_")[1])+1;
-		//  	currentNode.STAattributesToSelect.dataGroups["group_"+newGroupNumber]={x:attributesToSelect[0].attr[0], y:attributesToSelect[0].attr[0], y2:attributesToSelect[0].attr[0], checked:"y"};
-		// // 	createDialogWithSelectWithGroupsScatterPlot (currentNode)
-		// // }
 
 		function createDialogWithSelectWithGroupsScatterPlot(node) {
 			var scatterPlotDiv = document.getElementById("DialogScatterPlotDiv");
@@ -218,10 +204,8 @@
 			var ScatterPlotNode=networkNodes.get(network.getSelectedNodes())[0];
 			var dataGroups=ScatterPlotNode.STAattributesToSelect.dataGroupsSelectedToScatterPlot;
 			var nodeId, node, nodeData,selectedOptions={},record,items=[], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight;
-			//var axisYSummary={left:[], right:[]}
 			for (var e=0;e<dataGroups.length;e++){
 				nodeId=dataGroups[e].nodeSelected;
-
 				selectedOptions.AxisX= dataGroups[e].X
 				selectedOptions.AxisY= dataGroups[e].Y;
 				nodeData =networkNodes.get(nodeId).STAdata;
@@ -259,18 +243,17 @@
 					
 				}				
 			}
-			if (ScatterPlotGraph2d) //not destroyed before if there is a wrong match in a group between X and Y
+			if (ScatterPlotGraph2d) 
 				ScatterPlotGraph2d.destroy();
 
 			var dataset = new vis.DataSet(items);
 			var groups = new vis.DataSet();
 
-			//mirar si existeixen els dos axis
 			var stylesheet,newRule;
 			for (var n=0;n<dataGroups.length;n++){
 				groups.add({
 					id: n,
-					className:"classGraphGroup"+n, //A canviar segons el color
+					className:"classGraphGroup"+n, //every class define the color of the line (classes will be added above to the stylesheet)
 					 content: dataGroups[n].legendText,
 					 interpolation: {
 					 	parametrization: 'chordal'
@@ -283,7 +266,7 @@
 					}
 				});
 				
-				//create Style (class)
+				//create Style (class) to define color of the lines
 				stylesheet = document.styleSheets[0];
 				newRule = `.classGraphGroup${n} {fill:${dataGroups[n].color};fill-opacity:0;stroke-width:2px;stroke:${dataGroups[n].color} }`;
 				stylesheet.insertRule(newRule, stylesheet.cssRules.length);
@@ -297,8 +280,7 @@
 			var DialogScatterPlotLegendLocationSelectRight= document.getElementById("DialogScatterPlotLegendLocationSelectRight");
 			var axisYLabelRight= document.getElementById("DialogScatterPlotAxisYLabelRight").value;
 			var axisYLabelLeft= document.getElementById("DialogScatterPlotAxisYLabelLeft").value;
-			//faltarà un si fem eix dret
-			
+						
 			var options = {
 
 				  dataAxis: {
@@ -325,24 +307,11 @@
 				start: minx,
 				end: maxx
 			};
-			var title="Results";
-
-			// if (nodes.length>1 && nodes[1].STAURL) {
-			// 	node=nodes[1];
-			// 	data=node.STAdata;
-			// 	if (data.length)
-			// 		record=data[0];
-			// 	if (record[selectedOptions.Variable])
-			// 		title=record[selectedOptions.Variable];
-			// 	if (record[selectedOptions.UoM])
-			// 		title+=" (" + record[selectedOptions.UoM] + ")";
-			// }
-
 
 			ScatterPlotGraph2d = new vis.Graph2d(document.getElementById('DialogScatterPlotVisualization'), dataset, groups, options);
 		}
-			//}
-	//	}
+		
+
 
 		function CloseDialogScatterPlot(event) {
 			event.preventDefault(); // We don't want to submit this form
