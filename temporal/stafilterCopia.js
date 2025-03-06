@@ -72,7 +72,7 @@ function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
 		};
 
 	if (typeof actualNode.STACounter === "undefined")
-		actualNode.STACounter = [];
+		actualNode.STACounter = "";
 
 	if (actualNodeLabel == "FilterRowsSTA.png") { //Only necessary in STA Filter, not in CSV
 		if (typeof actualNode.STAUrlAPI === "undefined")
@@ -81,7 +81,7 @@ function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
 			actualNode.STAUrlAPICounter = [];
 		if (!actualNode.STAFilterRowEntities)
 			actualNode.STAFilterRowEntities = {
-				optionsRow0: [getSTAEntityPlural(actualNode.STAEntityName)]
+				optionsRow0: [actualNode.STAURL ? getSTAURLLastEntity(actualNode.STAURL) : ""]
 			};
 
 	}
@@ -91,8 +91,8 @@ function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
 function addTitleInRowFilterDialog(divName) {
 	var divTitleSelectRows = document.getElementById(divName);
 	divTitleSelectRows.innerHTML = ""; //Erase old title saved
-	var entityName= getSTAEntityPlural(getNodeDialog("DialogFilterRows").STAEntityName);
-	divTitleSelectRows.innerHTML = entityName ? "<img src='" + entityName + ".png' style='height:30px' />" + entityName : "";
+	var node= getNodeDialog("DialogFilterRows");
+	divTitleSelectRows.innerHTML = node.STAEntityName ? "<img src='" + node.STAEntityName + ".png' style='height:30px' />" + node.STAEntityName : "";
 }
 
 
@@ -100,9 +100,8 @@ function addTitleInRowFilterDialog(divName) {
 //Build selectors
 function createSelectorRowFilters(number) {
 	var selectorInfo = [];
-	var node= getNodeDialog("DialogFilterRows");
-	var infoFilter = node.STAinfoFilter;
-	var nodeLabel = node.image;
+	var infoFilter = currentNode.STAinfoFilter;
+	var currentNodeLabel = currentNode.image;
 	if (infoFilter.length != 0) {
 
 		for (var i = 0; i < infoFilter.length; i++) {
@@ -111,12 +110,12 @@ function createSelectorRowFilters(number) {
 			}
 		}
 	}
-	var parentNode = GetFirstParentNode(node);
+	var parentNode = networkNodes.get(network.getConnectedNodes(currentNode.id, "from"));
 	var dialogType;
 
-	if (nodeLabel == "FilterRowsSTA.png") {
-		if (parentNode.OGCType) { //OGCAPIFeatures
-			if (parentNode.OGCType == "OGCAPIitems") {
+	if (currentNodeLabel == "FilterRowsSTA.png") {
+		if (parentNode[0]["OGCType"]) { //OGCAPIFeatures
+			if (parentNode[0]["OGCType"] == "OGCAPIitems") {
 				dialogType = "withoutEntities_3selectors"; //columns, condition, values
 			}
 		} else { //FilterRowSTA from STA API
@@ -159,9 +158,8 @@ function fillColumsSelectorFilterRows(selectorInfo, count) { //withoutEntities_3
 	//Real options 
 	//Which is the origin of the information to fill the selector
 	var queryableOrDataAlreadyCharged;
-	var node= getNodeDialog("DialogFilterRows");
-	if (node.STAOGCAPIqueryable) {
-		if (node.STAOGCAPIqueryable == "no") {
+	if (currentNode.STAOGCAPIqueryable) {
+		if (currentNode.STAOGCAPIqueryable == "no") {
 			queryableOrDataAlreadyCharged = "dataCharged"; //OGCAPIFeatures not queryable
 		} else {
 			queryableOrDataAlreadyCharged = "queryableData"; // OGCAPIFeatures queryable
@@ -171,8 +169,8 @@ function fillColumsSelectorFilterRows(selectorInfo, count) { //withoutEntities_3
 	}
 
 	if (queryableOrDataAlreadyCharged == "queryableData") {
-		if (node.STAOGCAPIqueryable.length != 0) {
-			var queryables = Object.keys(node.STAOGCAPIqueryable);
+		if (currentNode.STAOGCAPIqueryable.length != 0) {
+			var queryables = Object.keys(currentNode.STAOGCAPIqueryable);
 			for (var i = 0; i < queryables.length; i++) {
 				var option = document.createElement("option");
 				option.setAttribute("value", queryables[i]);
@@ -186,8 +184,8 @@ function fillColumsSelectorFilterRows(selectorInfo, count) { //withoutEntities_3
 			}
 		}
 
-	} else { //data charged (node.STAdata)
-		var columns = Object.keys(node.STAdata[0]);
+	} else { //data charged (currentNode.STAdata)
+		var columns = Object.keys(currentNode.STAdata[0]);
 		for (var i = 0; i < columns.length; i++) {
 			option = document.createElement("option"); //First option
 			option.setAttribute("value", columns[i]);
@@ -204,8 +202,7 @@ function fillColumsSelectorFilterRows(selectorInfo, count) { //withoutEntities_3
 }
 
 function obtainValuesFromSTAdataInCSV(column) {
-	var node= getNodeDialog("DialogFilterRows");
-	var data = node.STAdata;
+	var data = currentNode.STAdata;
 	var valuesArray = []
 	for (var i = 0; i < data.length; i++) {
 		if (i != 0) {
@@ -266,8 +263,7 @@ async function loadAPIDataWithReturn(url, reasonForData) { // Ask API to  "FIllS
 }
 async function askForConformanceInOGCAPIFeatures() {
 	const filterInConformance = ["filter", "features-filter", "simple-cql", "cql-text", "cql-json"];//What I need for filter
-	var node= getNodeDialog("DialogFilterRows");
-	var url = node.STAURL;
+	var url = currentNode.STAURL;
 	var index = url.indexOf("/collection");
 	url = url.slice(0, index);
 	url += "/conformance?f=json";
@@ -284,24 +280,23 @@ async function askForConformanceInOGCAPIFeatures() {
 		}
 
 	}
-	node.STAOGCAPIconformance = conformanceArray; //Only keeps what I need for filter
-	networkNodes.update(node);
+	currentNode.STAOGCAPIconformance = conformanceArray; //Only keeps what I need for filter
+	networkNodes.update(currentNode);
 }
 async function askForCollectionQueryables() {
-	var node= getNodeDialog("DialogFilterRows");
-	var url = node.STAURL;
+	var url = currentNode.STAURL;
 	var index = url.indexOf("/items");
 	url = url.slice(0, index);
 	url += "/queryables?f=json";
 	var queryablesInformation = await loadAPIDataWithReturn(url, "OGCAPIqueryables");
 	if (Object.keys(queryablesInformation).length != 0) {
-		node.STAOGCAPIqueryable = queryablesInformation;
+		currentNode.STAOGCAPIqueryable = queryablesInformation;
 	} else {
-		node.STAOGCAPIqueryable = "no";
+		currentNode.STAOGCAPIqueryable = "no";
 	}
 
 
-	networkNodes.update(node);
+	networkNodes.update(currentNode);
 }
 
 
@@ -323,10 +318,9 @@ function createEntitySelectorInFilterRows(selectorInfo, count) {
 		inputForEntityFilterRow.style.cursor = "auto";
 		inputForEntityFilterRow.style.background = "#d8dfd6";
 	});
-	var entityToInput ;
-	var node= getNodeDialog("DialogFilterRows");
-	if (node.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
-		entityToInput = getSTAEntityPlural(getNodeDialog("DialogFilterRows").STAEntityName);
+	var entityToInput;
+	if (currentNode.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
+		entityToInput = currentNode.STAURL ? getSTAURLLastEntity(currentNode.STAURL) : "";
 	} else {
 		entityToInput = selectorInfo[0][1];
 	}
@@ -343,8 +337,7 @@ function openModalRowFilterEntities(number) { //To open Modat to see and select 
 }
 
 function updateSTAFilterRowEntities(number, counter, entitySelected) { //Modify or erase what is necessary
-	var node= getNodeDialog("DialogFilterRows");
-	var filterRowEntities = node.STAFilterRowEntities;
+	var filterRowEntities = currentNode.STAFilterRowEntities;
 
 	if (filterRowEntities["optionsRow" + number].length + 1 == counter) {
 		filterRowEntities["optionsRow" + number].push(entitySelected); //If there is no entity in this position, just add it
@@ -368,8 +361,7 @@ function updateSTAFilterRowEntities(number, counter, entitySelected) { //Modify 
 
 function takeEntitiesAndFilterThemInFilterRow(filterRowEntities, i) { //avoid duplications
 	//var entities = STAEntities[getSTAEntityPlural(filterRowEntities[i], true)].entities;
-	var node= getNodeDialog("DialogFilterRows");
-	var entityInPlural=getSTAEntityPlural(node.STAEntityName);
+	var entityInPlural=getSTAEntityPlural(filterRowEntities[i], true);
 	var n= STAEntities[entityInPlural].entities.length, entitiesConnectedArray=[];
 	for (var t=0;t<n;t++){
 		entitiesConnectedArray.push(STAEntities[entityInPlural].entities[t].name);
@@ -390,12 +382,11 @@ function takeEntitiesAndFilterThemInFilterRow(filterRowEntities, i) { //avoid du
 function AddEntitiesSelectedBelowInFilterRow(number) {
 	var entitiesFiltered;
 	var optionsRow = "optionsRow" + number;
-	var node= getNodeDialog("DialogFilterRows");
-	var filterRowEntities = node.STAFilterRowEntities[optionsRow];
+	var filterRowEntities = currentNode.STAFilterRowEntities[optionsRow];
 	var nextEntity;
 
-	//first Entity (node)
-	var entity = node.STAEntityName;
+	//first Entity (currentNode)
+	var entity = searchParentLabel();
 	var DialogFilterRowEntitiesCheckBoxes = document.getElementById("DialogFilterRowEntitiesCheckBoxes");
 	var div = document.createElement("div");
 	var input = document.createElement("input");
@@ -467,7 +458,7 @@ function fillDialogFilterRowEntities(number, row, selected) { //Ok in DialogFilt
 	dialogFilterRowEntitiesCheckBoxes.innerHTML = ""; //Empty DialogFilterRowEntitiesCheckBoxes
 
 	if (selected != "") { //avoid first time
-		updateSTAFilterRowEntities(number, row, selected);//Update node.STAFilterRowEntities
+		updateSTAFilterRowEntities(number, row, selected);//Update currentNode.STAFilterRowEntities
 	}
 	AddEntitiesSelectedBelowInFilterRow(number);
 }
@@ -478,21 +469,20 @@ function OkButtonInRowFilterEntities(event) { //Ok in DialogFilterRowEntities
 	var inputForEntityFilterRow = document.getElementById("inputForEntityFilterRow_" + number);
 	var inputValue;
 	var lastEntity;
-	var node= getNodeDialog("DialogFilterRows");
-	for (var i = 0; i < node.STAFilterRowEntities["optionsRow" + number].length; i++) {
+	for (var i = 0; i < currentNode.STAFilterRowEntities["optionsRow" + number].length; i++) {
 		if (i == 0) {
-			inputValue = node.STAFilterRowEntities["optionsRow" + number][i];
-			lastEntity = node.STAFilterRowEntities["optionsRow" + number][i];
+			inputValue = currentNode.STAFilterRowEntities["optionsRow" + number][i];
+			lastEntity = currentNode.STAFilterRowEntities["optionsRow" + number][i];
 		} else {
 			var entity = searchParentLabel();
 
-			if (entity != node.STAFilterRowEntities["optionsRow" + number][i]) {
-				inputValue += "/" + node.STAFilterRowEntities["optionsRow" + number][i];
+			if (entity != currentNode.STAFilterRowEntities["optionsRow" + number][i]) {
+				inputValue += "/" + currentNode.STAFilterRowEntities["optionsRow" + number][i];
 
 			} else {
-				inputValue = node.STAFilterRowEntities["optionsRow" + number][i];
+				inputValue = currentNode.STAFilterRowEntities["optionsRow" + number][i];
 			}
-			lastEntity = node.STAFilterRowEntities["optionsRow" + number][i];
+			lastEntity = currentNode.STAFilterRowEntities["optionsRow" + number][i];
 		}
 	}
 	inputForEntityFilterRow.value = inputValue;
@@ -510,9 +500,8 @@ function createPropertySelectInFilterRows(selectorInfo, count) {
 	select.setAttribute("id", "selectorProperty_" + count);
 	select.setAttribute("onChange", "onchangePropertySelect('" + count + "')");
 	select.style.marginLeft = "10px";
-	var node= getNodeDialog("DialogFilterRows");
-	if (node.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
-		var entity = getSTAEntityPlural(getNodeDialog("DialogFilterRows").STAEntityName);
+	if (currentNode.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
+		var entity = getSTAURLLastEntity(currentNode.STAURL);
 	} else {
 		var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(selectorInfo[0][1]), true);
 	}
@@ -656,7 +645,6 @@ function createConditionSelectInFilterRows(selectorInfo, count) {
 	select.setAttribute("id", "selectorCondition_" + count);
 	select.style.marginLeft = "10px";
 	var selectConditionContent2;
-	var node= getNodeDialog("DialogFilterRows");
 	if (selectorInfo.length != 0) {
 		var typeOfValues = typeOfValueFromInput("simple", selectorInfo[0][4]);
 		if (typeOfValues == "text") {
@@ -667,7 +655,7 @@ function createConditionSelectInFilterRows(selectorInfo, count) {
 	} else {
 		selectConditionContent2 = selectConditionContent;
 	}
-	if (node.OGCType == "OGCAPIitem") {
+	if (currentNode.OGCType == "OGCAPIitem") {
 		selectConditionContent2 = selectConditionContentOGCAPIFeatures;
 	}
 	
@@ -972,25 +960,24 @@ async function fillValueSelectorFilterRow(count) {
 	if (selectProperty) { //It is STA data? (4selectors)
 		var inputForEntityFilterRowValue = document.getElementById("inputForEntityFilterRow_" + count).value;
 		var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(inputForEntityFilterRowValue, true));
-		var node= getNodeDialog("DialogFilterRows");
-		var url = getURLWithoutQueryParams(node.STAURL);
+		var url = getURLWithoutQueryParams(currentNode.STAURL);
 		//Find the entity to search values
 		var parentLabel = searchParentLabel();
 		if (parentLabel != entity) {
 			url = url.replace(parentLabel, entity);
 		}
-		if (typeof node.STAentityValuesForSelect !== "undefined") {
-			if (entity != node.STAentityValuesForSelect[0]) { //avoid to call to API for same entity
+		if (typeof currentNode.STAentityValuesForSelect !== "undefined") {
+			if (entity != currentNode.STAentityValuesForSelect[0]) { //avoid to call to API for same entity
 				dataToFillSelect = await loadAPIDataWithReturn(url, "EntitiesFilterRow");
-				node.STAentityValuesForSelect = [entity, dataToFillSelect];
-				dataToFillSelect = node.STAentityValuesForSelect[1];
+				currentNode.STAentityValuesForSelect = [entity, dataToFillSelect];
+				dataToFillSelect = currentNode.STAentityValuesForSelect[1];
 			} else {
-				dataToFillSelect = node.STAentityValuesForSelect[1];
+				dataToFillSelect = currentNode.STAentityValuesForSelect[1];
 			}
 		} else {
 			dataToFillSelect = await loadAPIDataWithReturn(url, "EntitiesFilterRow");
-			node.STAentityValuesForSelect = [entity, dataToFillSelect];
-			dataToFillSelect = node.STAentityValuesForSelect[1];
+			currentNode.STAentityValuesForSelect = [entity, dataToFillSelect];
+			dataToFillSelect = currentNode.STAentityValuesForSelect[1];
 		}
 		var selectProperty = document.getElementById("selectorProperty_" + count);
 		var selectPropertyValue = selectProperty.options[selectProperty.selectedIndex].value;
@@ -1046,7 +1033,38 @@ async function fillValueSelectorFilterRow(count) {
 
 	showAndHiddeSelectorAndInputsFilterRow(count);
 }
+// function sortValuesForSelect(arrayValues) { //Està a data_tables (sortValuesNumbersOrText())
+// 	var arrayNumbers = [];
+// 	var arrayText = [];
+// 	var arrayNumbersArranged, arrayTextsArranged, arrayValuesArranged;
+// 	var isNumber, punctuationMark;
+// 	for (var i = 0; i < arrayValues.length; i++) { //Separate numbers and text
+// 		if (typeof arrayValues[i] !== "undefined") {
+// 			isNumber = true;
+// 			punctuationMark = false;
+// 			for (var a = 0; a < arrayValues[i].length; a++) { //check each character
+// 				if (isNumber == true && arrayValues[i] != "," && arrayValues[i] != "." && punctuationMark != true) {
+// 					if (isNaN(arrayValues[i][a])) {//is not a number 
+// 						isNumber = false;
 
+// 					}
+// 					if (arrayValues[i] != "," || arrayValues[i] != ".") {
+// 						punctuationMark = true;
+// 					}
+// 				}
+// 			}
+// 			if (isNumber == true) {
+// 				arrayNumbers.push(arrayValues[i]);
+// 			} else {
+// 				arrayText.push(arrayValues[i]);
+// 			}
+// 		}
+// 		arrayNumbersArranged = arrayNumbers.sort((a, b) => a - b);
+// 		arrayTextsArranged = arrayText.sort();
+// 		arrayValuesArranged = arrayNumbersArranged.concat(arrayTextsArranged); //join arrays
+// 	}
+// 	return arrayValuesArranged;
+// }
 function changeWriteToSelect(number, selector) {  //To take the text in input
 	event.preventDefault();
 
@@ -1177,8 +1195,8 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 	} else {
 		selectorValueHasChildren = false;
 	}
-	var node= getNodeDialog("DialogFilterRows");
-	if (node.image == "FilterRowsSTA.png") {
+
+	if (currentNode.image == "FilterRowsSTA.png") {
 		if (selectorProperty) { //!OGCAPI
 			var selectorPropertyValue = selectorProperty.options[selectorProperty.selectedIndex].value;
 			if (selectorPropertyValue.charAt(selectorPropertyValue.length - 1) == "/") {
@@ -1203,7 +1221,7 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 				inputTextInterval2STA.style.display = "inline-block";
 			}
 			//PropertySelect finals with "/" . Selector for value has to be hidden
-			if (node.image == "FilterRowsSTA.png") {
+			if (currentNode.image == "FilterRowsSTA.png") {
 				if (selectorPropertyValue.charAt(selectorPropertyValue.length - 1) == "/") {
 					inputTextInterval1STA.style.display = "inline-block";
 					inputTextInterval2STA.style.display = "inline-block";
@@ -1241,7 +1259,7 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 			}
 			//PropertySelect finals with "/" . Selector for value has to be hidden
 
-			if (node.image == "FilterRowsSTA.png") {
+			if (currentNode.image == "FilterRowsSTA.png") {
 				if (selectorPropertyValue.charAt(selectorPropertyValue.length - 1) == "/") {
 					inputText.style.display = "inline-block";
 					selectorValue.style.display = "none"
@@ -1267,10 +1285,10 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 var stopSearchparentLabel = false;
 function searchParentLabel() {
 	var entity = "0";
-	var node= getNodeDialog("DialogFilterRows");
-	var parentNode=GetFirstParentNode(node);
+	var parentNodeId = network.getConnectedNodes(currentNode.id, "from");
+	var parentNode = networkNodes.get(parentNodeId);
 	for (var i = 0; i < STAEntitiesArray.length; i++) {
-		if (parentNode.label == STAEntitiesArray[i]) {
+		if (parentNode[0].label == STAEntitiesArray[i]) {
 			entity = STAEntitiesArray[i];
 		}
 	}
@@ -1322,18 +1340,15 @@ function GetFilterTable(elem, nodeId, first) //Built table //The second will be 
 	return s;
 }
 function GetFilterCondition(elem) {
-	var node= getNodeDialog("DialogFilterRows");
-	node.STACounter.push(elem);
-	return node.STAconditionsFilter[elem].property + '<div class="buttonsInFilterRow"><button onClick="DeleteElementButton(' + elem + ')"><img src="trash.png" alt="Remove" title="Remove"></button></div>';
+	currentNode.STACounter.push(elem);
+	return currentNode.STAconditionsFilter[elem].property + '<div class="buttonsInFilterRow"><button onClick="DeleteElementButton(' + elem + ')"><img src="trash.png" alt="Remove" title="Remove"></button></div>';
 }
 function ShowFilterTable() //This is who iniciates the table
 {
-	var node= getNodeDialog("DialogFilterRows");
-	node.STACounter = []; //To not acumulate
-	networkNodes.update(node);
-	document.getElementById("divSelectorRowsFilter").innerHTML = GetFilterTable(node.STAelementFilter, node.id, true); //I need to pass node.elemFilter because it is a recursive function an need to start in this point
-	for (var i = 0; i < node.STACounter.length; i++) {//Adding Selectors
-		createSelectorRowFilters(node.STACounter[i]);
+	currentNode.STACounter = []; //To not acumulate
+	document.getElementById("divSelectorRowsFilter").innerHTML = GetFilterTable(currentNode.STAelementFilter, currentNode.id, true); //I need to pass currentNode.elemFilter because it is a recursive function an need to start in this point
+	for (var i = 0; i < currentNode.STACounter.length; i++) {//Adding Selectors
+		createSelectorRowFilters(currentNode.STACounter[i]);
 	}
 
 }
@@ -1344,9 +1359,8 @@ function showFilterTableWithoutFilters() {
 //Select Nexus (And, or, not)
 function actualizeSelectChoice(boxName) { //When select nexus changes (put selected option in STAelementFilter)
 	var select = document.getElementById("selectAndOrNot_" + boxName);
-	var option = select.options[select.selectedIndex].value;
-	var node= getNodeDialog("DialogFilterRows");
-	searchGroupToChangeSelectChoice(boxName, node.STAelementFilter, option);
+	var option = select.options[select.selectedIndex].value
+	searchGroupToChangeSelectChoice(boxName, currentNode.STAelementFilter, option);
 }
 function searchGroupToChangeSelectChoice(boxName, elem, option) {
 	if (typeof elem === "object") {
@@ -1359,8 +1373,7 @@ function searchGroupToChangeSelectChoice(boxName, elem, option) {
 	}
 }
 function resizeBottomPartSelectAndOrNot() {
-	var node= getNodeDialog("DialogFilterRows");
-	var boxNames = node.STAboxNames;
+	var boxNames = currentNode.STAboxNames;
 	for (var i = 0; i < boxNames.length; i++) {
 		var tdSelectAndOrNot = document.getElementById("tdSelectAndOrNot_" + boxNames[i]);
 		if (tdSelectAndOrNot != null) {
@@ -1378,8 +1391,7 @@ function addNewCondition(boxName, fromBiggest) {
 	if (typeof fromBiggest === "undefined") {
 		fromBiggest = false;
 	}
-	var node= getNodeDialog("DialogFilterRows");
-	searchFilterBoxName(boxName, node.STAelementFilter, node.Id, fromBiggest);
+	searchFilterBoxName(boxName, currentNode.STAelementFilter, currentNode.Id, fromBiggest);
 }
 function searchFilterBoxName(boxNamee, elem, paramsNodeId, fromBiggest) { //the elem has  boxName ...
 	if (typeof elem === "object") {
@@ -1393,15 +1405,14 @@ function searchFilterBoxName(boxNamee, elem, paramsNodeId, fromBiggest) { //the 
 }
 function addNewElement(elem, fromBiggest) {
 	var elements = elem.elems;
-	var node= getNodeDialog("DialogFilterRows");
-	var conditionsFilter = node.STAconditionsFilter;
+	var conditionsFilter = currentNode.STAconditionsFilter;
 	var lastNumber = conditionsFilter[conditionsFilter.length - 1].number;
 	var nextNumber = parseInt(lastNumber) + 1; //for those who are within the 0_...
 	if (elem.boxName.charAt(0) != 0) {//groups other than 0 and must create a group and not an element
 		var newBoxName = elem.boxName;
 		var firstNumberBoxNameInside = parseInt(elem.boxName.charAt(0)) - 1; //First number: inside group
 		//search, split , arrange iand the lastone, plus one i add boxNames
-		var boxNames = node.STAboxNames;
+		var boxNames = currentNode.STAboxNames;
 		var boxNamesFiltered = boxNames.filter(element => element.charAt(0) == firstNumberBoxNameInside); //filter those that already exist in the group that will be created
 		var nextBoxNumber;
 		if (boxNamesFiltered.length != 0) {
@@ -1426,7 +1437,7 @@ function addNewElement(elem, fromBiggest) {
 					boxName: newBoxName,
 				})
 		}
-		node.STAboxNames.push(newBoxName);
+		currentNode.STAboxNames.push(newBoxName);
 		//If it's the second one, you must create a higher level and change the nexus so that it will be not null
 	}
 	else { //inside group 0_...
@@ -1443,14 +1454,14 @@ function addNewElement(elem, fromBiggest) {
 		var levelBox = newBoxName.charAt(0);
 		var boxNameToPass = newBoxName;
 		for (var i = levelBox; i > 0; i--) {
-			addNewCondition(boxNameToPass, node.id);
+			addNewCondition(boxNameToPass, currentNode.id);
 			boxNameToPass = boxNames[boxNames.length - 1]; //must be the last to be created (the one that was just created)
 		}
 	}
 
-	if (node.image == "FilterRowsSTA.png") {
-		var entity = getSTAURLLastEntity(node.STAURL);
-		node.STAFilterRowEntities["optionsRow" + nextNumber] = [entity];
+	if (currentNode.image == "FilterRowsSTA.png") {
+		var entity = getSTAURLLastEntity(currentNode.STAURL);
+		currentNode.STAFilterRowEntities["optionsRow" + nextNumber] = [entity];
 
 	}
 
@@ -1463,14 +1474,13 @@ function addNewElement(elem, fromBiggest) {
 //Delete element
 function DeleteElementButton(numberOfElement) {
 	event.preventDefault();
-	//Delete elemen from node.STAFilterRowEntities 
-	var node= getNodeDialog("DialogFilterRows");
-	var nodeLabel = node.image;
-	if (nodeLabel == "FilterRowsSTA.png") {
-		delete node.STAFilterRowEntities["optionsRow" + numberOfElement];
+	//Delete elemen from currentNode.STAFilterRowEntities 
+	var currentNodeLabel = currentNode.image;
+	if (currentNodeLabel == "FilterRowsSTA.png") {
+		delete currentNode.STAFilterRowEntities["optionsRow" + numberOfElement];
 	}
 
-	searchElementToDelete(numberOfElement, node.STAelementFilter, node.id);
+	searchElementToDelete(numberOfElement, currentNode.STAelementFilter, currentNode.id);
 }
 function searchElementToDelete(numberOfElement, elem, paramsNodeId) { //elem has boxname...
 	if (typeof elem === "object") {
@@ -1499,8 +1509,7 @@ function DeleteElementInElemFilter(elem, numberOfElement) {
 //Delete group (necesary when it is the last condition in the group)
 function deleteGroup(numberOfElement) {
 	event.preventDefault();
-	var node= getNodeDialog("DialogFilterRows");
-	searchBoxNameGroup(numberOfElement, node.STAelementFilter, "no", "fromDeleteGrup");
+	searchBoxNameGroup(numberOfElement, currentNode.STAelementFilter, "no", "fromDeleteGrup");
 	takeSelectInformation();//get selector values and update an external variable 
 	drawTableAgain();//repaint the selects
 }
@@ -1537,7 +1546,6 @@ function searchBoxNameGroup(numberOfElement, elem, fatherElem, originFunction) {
 
 function DeleteGroupInElemFilter(elem, fatherElem) {
 	var newArray = [];
-	var node= getNodeDialog("DialogFilterRows");
 	if (fatherElem != "no") {
 		for (var i = 0; i < fatherElem.elems.length; i++) {
 			if (fatherElem.elems[i].boxName != elem.boxName) {
@@ -1550,10 +1558,10 @@ function DeleteGroupInElemFilter(elem, fatherElem) {
 		if (newArray.length == 1) { //if it is the last one, delete the nexus and the parent
 			fatherElem.nexus = null;
 			var copyFather = Object.assign(fatherElem.elems);
-			node.STAelementFilter = copyFather[0];
+			currentNode.STAelementFilter = copyFather[0];
 		}
-		//var boxNames = node.STAboxNames;
-		var boxNames = actualizeBoxNames(node.STAelementFilter, arrayBoxNumbers);  //It is necesary?
+		//var boxNames = currentNode.STAboxNames;
+		var boxNames = actualizeBoxNames(currentNode.STAelementFilter, arrayBoxNumbers);  //It is necesary?
 	}
 }
 function actualizeBoxNames(elem, arrayBoxNumbers) {
@@ -1579,8 +1587,7 @@ function takeSelectInformation() {
 	var inputForEntityFilterRowValue, selectorPropertyValue = [], selectorConditionValue, inputTextValue, inputTextInterval1Value, inputTextInterval2Value;
 	var arrayInfo;
 	var infoFilter = [];
-	var node= getNodeDialog("DialogFilterRows");
-	var counter = node.STACounter;
+	var counter = currentNode.STACounter;
 
 
 	for (var i = 0; i < counter.length; i++) {
@@ -1589,7 +1596,7 @@ function takeSelectInformation() {
 		arrayInfo.push(counter[i]); //they are out of order, it is necessary to put each info in its place when painting the select
 
 		if (optionsRow != null) {
-			if (node.image == "FilterRowsSTA.png" && !node.STAOGCAPIconformance) {
+			if (currentNode.image == "FilterRowsSTA.png" && !currentNode.STAOGCAPIconformance) {
 
 				inputForEntityFilterRow = document.getElementById("inputForEntityFilterRow_" + counter[i]);
 				inputForEntityFilterRowValue = inputForEntityFilterRow.value;
@@ -1644,24 +1651,23 @@ function takeSelectInformation() {
 		arrayInfo.push(typeOfValue)
 		infoFilter.push(arrayInfo);
 	}
-	node.STAinfoFilter = infoFilter;
+	currentNode.STAinfoFilter = infoFilter;
 }
 
 function biggestLevelButton(boxName) {
 	event.preventDefault();
-	var node= getNodeDialog("DialogFilterRows");
 	var newBoxName = (parseInt(boxName.charAt(0)) + 1) + "_0";
 	var newInsert = {
 		elems: [],
 		nexus: null,
 		boxName: newBoxName
 	};
-	var copy = Object.assign(node.STAelementFilter);
+	var copy = Object.assign(currentNode.STAelementFilter);
 	newInsert.elems.push(copy);
-	node.STAboxNames.push(newBoxName);
-	node.STAelementFilter = newInsert;
+	currentNode.STAboxNames.push(newBoxName);
+	currentNode.STAelementFilter = newInsert;
 	var boxNameToPass = newBoxName;
-	addNewCondition(boxNameToPass, node.id, true); //fromBiggest=true -> To avoid TakeSelect ...etc in addNewElement function
+	addNewCondition(boxNameToPass, currentNode.id, true); //fromBiggest=true -> To avoid TakeSelect ...etc in addNewElement function
 	takeSelectInformation();//take the values ​​of the selectors and update an external variable
 	drawTableAgain();
 	resizeBottomPartSelectAndOrNot();//correct size to select(AndOrNot) div
@@ -1670,15 +1676,14 @@ function biggestLevelButton(boxName) {
 var stopreadInformationRowFilterSTA = false;
 
 function readInformationRowFilterSTA(elem, entity, nexus, parent) {  //STA
-	var node= getNodeDialog("DialogFilterRows");
-	var infoFilter = node.STAinfoFilter;
+	var infoFilter = currentNode.STAinfoFilter;
 	if (stopreadInformationRowFilterSTA == false) {
 		if (typeof elem === "object") {
 			for (var i = 0; i < elem.elems.length; i++) {
 				readInformationRowFilterSTA(elem.elems[i], entity, elem.nexus, elem);
 			}
-			if (node.STAUrlAPICounter.length != infoFilter.length && node.STAUrlAPICounter.length != 0 && nexus != "no" && parent != "no") {
-				node.STAUrlAPI += " " + nexus + " ";
+			if (currentNode.STAUrlAPICounter.length != infoFilter.length && currentNode.STAUrlAPICounter.length != 0 && nexus != "no" && parent != "no") {
+				currentNode.STAUrlAPI += " " + nexus + " ";
 			}
 		}
 		else { //Build URL
@@ -1818,14 +1823,14 @@ function readInformationRowFilterSTA(elem, entity, nexus, parent) {  //STA
 					if ((indexOf + 1) == parentLenght) {
 						data += ")";
 					}
-					node.STAUrlAPI += data
-					node.STAUrlAPICounter.push(infoFilter[i][0]);
+					currentNode.STAUrlAPI += data
+					currentNode.STAUrlAPICounter.push(infoFilter[i][0]);
 				}
 			}
 		}
-		if (node.STAUrlAPICounter.length == infoFilter.length) {
-			node.STAUrlAPI.slice(0, "(");
-			node.STAUrlAPI.slice(node.STAUrlAPI.length + 1, ")");
+		if (currentNode.STAUrlAPICounter.length == infoFilter.length) {
+			currentNode.STAUrlAPI.slice(0, "(");
+			currentNode.STAUrlAPI.slice(currentNode.STAUrlAPI.length + 1, ")");
 			stopreadInformationRowFilterSTA = true;
 		}
 	}
@@ -1835,8 +1840,7 @@ function readInformationRowFilterSTA(elem, entity, nexus, parent) {  //STA
 var stopreadInformationRowFilterTable = false;
 
 function readInformationRowFilterTable(elem, nexus, parent) {  //Table
-	var node= getNodeDialog("DialogFilterRows");
-	var infoFilter = node.STAinfoFilter;
+	var infoFilter = currentNode.STAinfoFilter;
 
 	switch (nexus) {
 		case "and":
@@ -1855,8 +1859,8 @@ function readInformationRowFilterTable(elem, nexus, parent) {  //Table
 			for (var i = 0; i < elem.elems.length; i++) {
 				readInformationRowFilterTable(elem.elems[i], elem.nexus, elem);
 			}
-			if (node.STAtableCounter.length != infoFilter.length && node.STAtableCounter.length != 0 && nexus != "no" && parent != "no") {
-				node.STAtable += " " + nexus + " ";
+			if (currentNode.STAtableCounter.length != infoFilter.length && currentNode.STAtableCounter.length != 0 && nexus != "no" && parent != "no") {
+				currentNode.STAtable += " " + nexus + " ";
 			}
 		}
 		else { //Build URL
@@ -1967,12 +1971,12 @@ function readInformationRowFilterTable(elem, nexus, parent) {  //Table
 					if ((indexOf + 1) == parentLenght) {
 						data += ")";
 					}
-					node.STAtable += data
-					node.STAtableCounter.push(infoFilter[i][0]);
+					currentNode.STAtable += data
+					currentNode.STAtableCounter.push(infoFilter[i][0]);
 				}
 			}
 		}
-		if (node.STAtableCounter.length == infoFilter.length) {
+		if (currentNode.STAtableCounter.length == infoFilter.length) {
 			stopreadInformationRowFilterTable = true;
 		}
 	}
@@ -1980,15 +1984,14 @@ function readInformationRowFilterTable(elem, nexus, parent) {  //Table
 
 var stopreadInformationRowFilterOGCAPIFeatures = false;
 function readInformationRowFilterOGCAPIFeatures(elem, entity, nexus, parent) { //OGCAPIFeatures
-	var node= getNodeDialog("DialogFilterRows");
-	var infoFilter = node.STAinfoFilter;
+	var infoFilter = currentNode.STAinfoFilter;
 	if (stopreadInformationRowFilterOGCAPIFeatures == false) {
 		if (typeof elem === "object") {
 			for (var i = 0; i < elem.elems.length; i++) {
 				readInformationRowFilterOGCAPIFeatures(elem.elems[i], entity, elem.nexus, elem);
 			}
-			if (node.STAUrlAPICounter.length != infoFilter.length && node.STAUrlAPICounter.length != 0 && nexus != "no" && parent != "no") {
-				node.STAUrlAPI += " " + nexus + " ";
+			if (currentNode.STAUrlAPICounter.length != infoFilter.length && currentNode.STAUrlAPICounter.length != 0 && nexus != "no" && parent != "no") {
+				currentNode.STAUrlAPI += " " + nexus + " ";
 			}
 		}
 		else { //Build URL
@@ -2037,24 +2040,23 @@ function readInformationRowFilterOGCAPIFeatures(elem, entity, nexus, parent) { /
 					// if ((indexOf + 1) == parentLenght) {
 					// 	data += ")";
 					// }
-					node.STAUrlAPI += data
-					node.STAUrlAPICounter.push(infoFilter[i][0]);
+					currentNode.STAUrlAPI += data
+					currentNode.STAUrlAPICounter.push(infoFilter[i][0]);
 				}
 			}
 		}
-		if (node.STAUrlAPICounter.length == infoFilter.length) {
-			node.STAUrlAPI.slice(0, "(");
-			node.STAUrlAPI.slice(node.STAUrlAPI.length + 1, ")");
+		if (currentNode.STAUrlAPICounter.length == infoFilter.length) {
+			currentNode.STAUrlAPI.slice(0, "(");
+			currentNode.STAUrlAPI.slice(currentNode.STAUrlAPI.length + 1, ")");
 			stopreadInformationRowFilterSTA = true;
 		}
 	}
 }
 
 function applyEvalAndFilterData() {
-	var node= getNodeDialog("DialogFilterRows");
-	var infoFilter = node.STAinfoFilter;
-	var data = node.STAdata;
-	var sentenceToEvalInSTAtable = node.STAtable;
+	var infoFilter = currentNode.STAinfoFilter;
+	var data = currentNode.STAdata;
+	var sentenceToEvalInSTAtable = currentNode.STAtable;
 	var columnsUsedArray = [], resultsFiltered = [];
 
 	for (var i = 0; i < infoFilter.length; i++) {
@@ -2064,7 +2066,7 @@ function applyEvalAndFilterData() {
 		}
 
 	}
-	var sentence = node.STAtable;
+	var sentence = currentNode.STAtable;
 	var dataValue, dataValueWithoutZ;
 	for (var e = 0; e < data.length; e++) {
 
@@ -2090,12 +2092,11 @@ function applyEvalAndFilterData() {
 	}
 
 	//update STAdata
-	node.STAdata = resultsFiltered;
+	currentNode.STAdata = resultsFiltered;
 }
 async function askForConformanceInOGCAPIFeatures() {
 	const filterInConformance = ["filter", "features-filter", "simple-cql", "cql-text", "cql-json"];//What I need for filter
-	var node= getNodeDialog("DialogFilterRows");
-	var url = node.STAURL;
+	var url = currentNode.STAURL;
 	var index = url.indexOf("/collection");
 	url = url.slice(0, index);
 	url += "/conformance?f=json";
@@ -2112,20 +2113,22 @@ async function askForConformanceInOGCAPIFeatures() {
 		}
 
 	}
-	node.STAOGCAPIconformance = conformanceArray; //Only keeps what I need for filter
-	networkNodes.update(node);
+	currentNode.STAOGCAPIconformance = conformanceArray; //Only keeps what I need for filter
+	networkNodes.update(currentNode);
 }
 
 async function askForCollectionQueryables() {
-	var node= getNodeDialog("DialogFilterRows");
-	var url = node.STAURL;
+	var url = currentNode.STAURL;
 	var index = url.indexOf("/items");
 	url = url.slice(0, index);
 	url += "/queryables?f=json";
 	var queryablesInformation = await loadAPIDataWithReturn(url, "OGCAPIqueryables");
 	if (Object.keys(queryablesInformation).length != 0) {
-		node.STAOGCAPIqueryable = queryablesInformation;
+		currentNode.STAOGCAPIqueryable = queryablesInformation;
 	} else {
-		node.STAOGCAPIqueryable = "no";
+		currentNode.STAOGCAPIqueryable = "no";
 	}
+
+
+	//networkNodes.update(currentNode);
 }

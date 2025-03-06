@@ -4285,35 +4285,36 @@ function GetSelectRow(event) {
 }
 
 function GetFilterRowsSTA() {
-		var previousSTAURL = currentNode.STAURL;
-		var parentNode = GetFirstParentNode(currentNode);
-		if (parentNode) {
-			if (parentNode.STAURL)
-				currentNode.STAURL = parentNode.STAURL;
-			if (parentNode.STAdata)
-				currentNode.STAdata = deapCopy(parentNode.STAdata);
-		}
-		else
-			return;
+	var node= getNodeDialog("DialogFilterRows");
+	var previousSTAURL = node.STAURL;
+	// var parentNode = GetFirstParentNode(node);
+	// if (parentNode) {
+	// 	if (parentNode.STAURL)
+	// 		node.STAURL = parentNode.STAURL;
+	// 	if (parentNode.STAdata)
+	// 		node.STAdata = deapCopy(parentNode.STAdata);
+	// }
+	// else
+	// 	return;
 
-		currentNode.STAUrlAPICounter = []; // I need to restart it 
-		var previousURL = parentNode.STAURL;//put URL ready to add things
+	node.STAUrlAPICounter = []; // I need to restart it 
+	var previousURL = parentNode.STAURL;//put URL ready to add things
 
-		var prevFilter = GetQueryParamFromURL(previousURL, "$filter");
-		if (prevFilter) {
-			currentNode.STAUrlAPI = RemoveQueryParamFromURL(previousURL, "$filter");
-			currentNode.STAUrlAPI = AddQueryParamsToURL(currentNode.STAUrlAPI, "$filter=" + prevFilter + " and ");
-		}
-		else
-			currentNode.STAUrlAPI = AddQueryParamsToURL(previousURL, "$filter=");
+	var prevFilter = GetQueryParamFromURL(previousURL, "$filter");
+	if (prevFilter) {
+		node.STAUrlAPI = RemoveQueryParamFromURL(previousURL, "$filter");
+		node.STAUrlAPI = AddQueryParamsToURL(node.STAUrlAPI, "$filter=" + prevFilter + " and ");
+	}
+	else
+		node.STAUrlAPI = AddQueryParamsToURL(previousURL, "$filter=");
 
-		stopreadInformationRowFilterSTA = false;
-		var entity=getSTAURLLastEntity(currentNode.STAURL);
+	stopreadInformationRowFilterSTA = false;
+	var entity=getSTAURLLastEntity(node.STAURL);
 
-		readInformationRowFilterSTA(currentNode.STAelementFilter, entity, "no", "no"); //apply filter
-		currentNode.STAURL = currentNode.STAUrlAPI;
-		LoadJSONNodeSTAData(currentNode);
-		UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+	readInformationRowFilterSTA(node.STAelementFilter, entity, "no", "no"); //apply filter
+	node.STAURL = node.STAUrlAPI;
+	LoadJSONNodeSTAData(node);
+	UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
 	}
 function GetFilterRowsTable() {
 	stopreadInformationRowFilterTable = false;
@@ -4346,38 +4347,39 @@ async function GetFilterRowsOGCAPIFeatures(){
 function GetFilterRows(event) {
 	event.preventDefault(); // We don't want to submit this form
 		//updateinfoFilter
-	takeSelectInformation(currentNode.id);
+	var node= getNodeDialog("DialogFilterRows");
+	takeSelectInformation(node.id);
 
 	var close=true;
-	for (var i=0;i<currentNode.STAinfoFilter.length;i++){
-		if (currentNode.STAinfoFilter[i][2][0]==" "){
+	for (var i=0;i<node.STAinfoFilter.length;i++){
+		if (node.STAinfoFilter[i][2][0]==" "){
 			alert ("There is at least one Property field not chosen ");
 			close=false;
 		}
-		else if (currentNode.STAinfoFilter[i][3]=="--- Choose operator ---"){
+		else if (node.STAinfoFilter[i][3]=="--- Choose operator ---"){
 			alert ("There is at least one operator field not chosen ");
 			close=false;
 		}
-		else if (currentNode.STAinfoFilter[i][4]==""){
+		else if (node.STAinfoFilter[i][4]==""){
 			alert ("There is at least one value empty ");
 			close=false;
 		}
 	}
 
-	if (currentNode.image == "FilterRowsTable.png" ) { //import CSV
+	if (node.image == "FilterRowsTable.png" ) { //import CSV
 		GetFilterRowsTable();
-	}else if (currentNode.STAOGCAPIconformance){//OGCAPIFeatures
-		if (currentNode.STAOGCAPIconformance?.includes("filter")){
+	}else if (node.STAOGCAPIconformance){//OGCAPIFeatures
+		if (node.STAOGCAPIconformance?.includes("filter")){
 			GetFilterRowsOGCAPIFeatures()// we can apply filter from API
 		}else{
 			GetFilterRowsTable(); //No filter, use table filter
 		}
-	}else if (currentNode.image == "FilterRowsSTA.png"){ //STA
+	}else if (node.image == "FilterRowsSTA.png"){ //STA
 		GetFilterRowsSTA();
 	}
 	if (close) document.getElementById("DialogFilterRows").close();
 	showInfoMessage("Filtering STA rows...");
-	networkNodes.update(currentNode);
+	networkNodes.update(node);
 }
 
 function getGeospatialFilter(node, parentNode){
@@ -6023,7 +6025,8 @@ function ShowTableSelectRowDialog(parentNode, node) {
 
 function ShowTableFilterRowsDialog(parentNode, node) {
 	var data = parentNode.STAdata;
-	node.STAdata=data; //Put all data from parent in this node 
+	saveNodeDialog("DialogFilterRows", node);
+	node.STAdata=deapCopy(data); //Put all data from parent in this node 
 	networkNodes.update(node);
 
 	if (parentNode.image != "FilterRowsTable.png") {
@@ -6040,12 +6043,9 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 	addNecessaryVariablesToFilterRowsSTANode(node);
 	
 	if (node.image=="FilterRowsSTA.png" && node.STAOGCAPIconformance){
-		if (node.STAOGCAPIconformance.includes("filter")){ //Create Filters if the API allows to filter its information
-			saveNodeDialog("DialogFilterRows", node);
+		if (node.STAOGCAPIconformance.includes("filter")){ //Create Filters if the API allows to filter its information	
 			ShowFilterTable();
-			
-
-		}else{
+		}else{			
 		showFilterTableWithoutFilters(); //OGCAPIFeatures without filter option		
 		}
 	}else{
@@ -6183,6 +6183,8 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 			nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
 		if (nodeFrom.STAdataAttributes)
 			nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
+		if (nodeFrom.STAEntityName)
+			nodeTo.STAEntityName = deapCopy(nodeFrom.STAEntityName);
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
