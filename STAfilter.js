@@ -326,7 +326,7 @@ function createEntitySelectorInFilterRows(selectorInfo, count) {
 	var entityToInput ;
 	var node= getNodeDialog("DialogFilterRows");
 	if (node.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
-		entityToInput = getSTAEntityPlural(getNodeDialog("DialogFilterRows").STAEntityName);
+		entityToInput = getSTAEntityPlural(node.STAEntityName);
 	} else {
 		entityToInput = selectorInfo[0][1];
 	}
@@ -1449,7 +1449,7 @@ function addNewElement(elem, fromBiggest) {
 	}
 
 	if (node.image == "FilterRowsSTA.png") {
-		var entity = getSTAURLLastEntity(node.STAURL);
+		var entity = getSTAEntityPlural(getNodeDialog("DialogFilterRows").STAEntityName);
 		node.STAFilterRowEntities["optionsRow" + nextNumber] = [entity];
 
 	}
@@ -1501,6 +1501,14 @@ function deleteGroup(numberOfElement) {
 	event.preventDefault();
 	var node= getNodeDialog("DialogFilterRows");
 	searchBoxNameGroup(numberOfElement, node.STAelementFilter, "no", "fromDeleteGrup");
+	var newSTAboxNames=[];
+	for (var i = 0; i< node.STAboxNames.length;i++){
+		if (node.STAboxNames[i]!=numberOfElement) newSTAboxNames.push(node.STAboxNames[i])
+		
+
+	}
+	node.STAboxNames= newSTAboxNames;
+	networkNodes.update(node);
 	takeSelectInformation();//get selector values and update an external variable 
 	drawTableAgain();//repaint the selects
 }
@@ -1645,6 +1653,7 @@ function takeSelectInformation() {
 		infoFilter.push(arrayInfo);
 	}
 	node.STAinfoFilter = infoFilter;
+	networkNodes.update(node);
 }
 
 function biggestLevelButton(boxName) {
@@ -1656,19 +1665,20 @@ function biggestLevelButton(boxName) {
 		nexus: null,
 		boxName: newBoxName
 	};
-	var copy = Object.assign(node.STAelementFilter);
-	newInsert.elems.push(copy);
+	
+	newInsert.elems.push(Object.assign(node.STAelementFilter));
 	node.STAboxNames.push(newBoxName);
 	node.STAelementFilter = newInsert;
-	var boxNameToPass = newBoxName;
-	addNewCondition(boxNameToPass, node.id, true); //fromBiggest=true -> To avoid TakeSelect ...etc in addNewElement function
+	networkNodes.update(node);
+	addNewCondition(newBoxName, node.id, true); //fromBiggest=true -> To avoid TakeSelect ...etc in addNewElement function
 	takeSelectInformation();//take the values ​​of the selectors and update an external variable
 	drawTableAgain();
 	resizeBottomPartSelectAndOrNot();//correct size to select(AndOrNot) div
 }
 //Applying the filter
-var stopreadInformationRowFilterSTA = false;
+//var stopreadInformationRowFilterSTA = false;
 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 function readInformationRowFilterSTA(elem, entity, nexus, parent) {  //STA
 	var node= getNodeDialog("DialogFilterRows");
 	var infoFilter = node.STAinfoFilter;
@@ -1831,7 +1841,35 @@ function readInformationRowFilterSTA(elem, entity, nexus, parent) {  //STA
 	}
 }
 
+//
 
+function createObjectToKeepForFilter(node, objectToExplore, objectToBuild) {
+
+	var boxNamesArrays = [];
+	for (var i = 0; i < objectToExplore.elems.length; i++) {
+		 (objectToExplore.elems[i].boxName)?boxNamesArrays.push(objectToExplore.elems[i].boxName):boxNamesArrays.push(objectToExplore.elems[i]) ;
+	}
+
+	objectToBuild[objectToExplore.boxName] = {
+		["items"]: boxNamesArrays,
+		["nexus"]: objectToExplore.nexus
+	}
+	if (typeof objectToExplore.elems[0] === "object") {
+		for (var i = 0; i < objectToExplore.elems.length; i++) {
+			createObjectToKeepForFilter(node, objectToExplore.elems[i], objectToBuild);
+		}
+	}else{
+		node.STAFilterSchema= objectToBuild;
+		networkNodes.update(node);
+	}		
+}
+
+
+
+
+
+
+//
 var stopreadInformationRowFilterTable = false;
 
 function readInformationRowFilterTable(elem, nexus, parent) {  //Table

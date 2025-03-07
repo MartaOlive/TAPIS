@@ -68,176 +68,78 @@
 
 
 	<script type="text/javascript">
-		var container = document.getElementById('visualization');
-		var names = ['graph1', 'graph2'];
-		var groups = new vis.DataSet();
-		groups.add({
-			id: 0,
-			className: 'pepito',
-			options: {
-				yAxisOrientation: 'left',
-				drawPoints: {
-					style: 'point' // square, circle
+
+		var STAelementFilter = {
+			"elems": [
+				{
+					"elems": [
+						{
+							"elems": [
+								0,
+								1
+							],
+							"nexus": " not ",
+							"boxName": "0_0"
+						},
+						{
+							"elems": [
+								2,
+								6
+							],
+							"nexus": " not ",
+							"boxName": "0_1"
+						},
+						{
+							"elems": [
+								5
+							],
+							"nexus": null,
+							"boxName": "0_3"
+						}
+					],
+					"nexus": " and ",
+					"boxName": "1_0"
 				},
-
-			}
-		});
-		groups.add({
-			id: 1,
-			className: 'vis-graph-group2',
-			options: {
-				yAxisOrientation: 'right', // right, left
-				drawPoints: {
-					style: 'circle' // square, circle
-				},
-
-			}
-		});
-
-		groups.add({
-			id: 3,
-			className: 'pepito',
-			options: {
-				yAxisOrientation: 'left',
-				drawPoints: {
-					style: 'point', // square, circle
-
-				},
-
-			}
-		});
-		groups.add({
-			id: 4,
-			className: 'vis-graph-group3',
-			options: {
-				yAxisOrientation: 'right', // right, left
-				drawPoints: {
-					style: 'circle', // square, circle
-
-				},
-
-			}
-		});
-
-		var items = [
-			{ x: new Date(1469626499397), y: 110, group: 0 },
-			{ x: new Date(1469626499497), y: 125, group: 0 },
-			{ x: new Date(1469626499597), y: 130, group: 0 },
-			{ x: new Date(1469626499697), y: 210, group: 0 },
-			{ x: new Date(1469626499897), y: 115, group: 0 },
-			{ x: new Date(1469626499997), y: 330, group: 0 },
-			{ x: new Date(1469626499397), y: 1, group: 1 },
-			{ x: new Date(1469626499597), y: 2, group: 1 },
-			{ x: new Date(1469626499697), y: 3, group: 1 },
-			{ x: new Date(1469626499797), y: 10, group: 1 },
-			{ x: new Date(1469626499897), y: 15, group: 1 },
-			{ x: new Date(1469626499997), y: 10, group: 1 },
-			{ x: new Date(1469626499397), y: 100, group: 3 },
-			{ x: new Date(1469626499497), y: 110, group: 3 },
-			{ x: new Date(1469626499597), y: 110, group: 3 },
-			{ x: new Date(1469626499697), y: 115, group: 3 },
-			{ x: new Date(1469626499897), y: 115, group: 3 },
-			{ x: new Date(1469626499997), y: 130, group: 3 },
-			{ x: new Date(1469626499397), y: 3, group: 4 },
-			{ x: new Date(1469626499597), y: 4, group: 4 },
-			{ x: new Date(1469626499697), y: 5, group: 4 },
-			{ x: new Date(1469626499797), y: 17, group: 4 },
-			{ x: new Date(1469626499897), y: 15, group: 4 },
-			{ x: new Date(1469626499997), y: 10, group: 4 },
-			{ x: new Date(1469626499397), y: 9, group: 4 },
-		];
-
-		var dataset = new vis.DataSet(items);
-		var options = { //OPCIONS GENERALS 
-			height: 500,
-			//graphHeight:1500,
-			drawPoints: true,
-			dataAxis: {
-				right: {
-					range: { min: -1, max: 20 }
-					//title{text:""} llegenda
-
-				},
-				left: {
-					range: { min: 100, max: 500 }
-				},
-				icons: true
-			},
-		};
-		var graph2d = new vis.Graph2d(container, dataset, groups, options);
-
-	
-
-
-
-		function canviaColor() {
-			event.preventDefault();
-			var colorValue = document.getElementById("selectColor").value;
-			//crearClasseCSS(classe, regles)
-			console.log(colorValue)
-		}
-
-		// Funció per crear una classe CSS dinàmica
-		function crearClasseCSS(classe, regles) {
-			// Crear un element <style>
-			var style = document.createElement('style');
-			style.innerHTML = `${classe} { ${regles} }`;
-
-			// Afegir-ho a la capçalera del document
-			document.head.appendChild(style);
-		}
-
-		// Crear una classe CSS dinàmica
-		//crearClasseCSS('.dinamica', 'background-color: yellow; color: red; padding: 10px;');
-
-		// Aplicar la classe CSS al botó
-		// document.getElementById('btn').classList.add('dinamica');
-
-
-		function createDialogWithSelectWithGroupsScatterPlot(node) {
-			var scatterPlotDiv = document.getElementById("DialogScatterPlotDiv");
-			scatterPlotDiv.innerHTML = "";
-			var groups = node.STAattributesToSelect.dataGroups;
-			var attributesToSelect = node.STAattributesToSelect.selectOptions;
-			var attributesToSelectKeys = Object.keys(attributesToSelect);
-
-			var cdns = `<button onclick="addNewSelectGroupInScatterPlot('${node.id}')"> Add new data group</button>`
-
-			for (var i = 0; i < groups.length; i++) { //dialog groups of data
-				cdns += `<fieldset><legend>Serie ${i + 1}</legend><select>`
-
-				for (var u = 0; u < attributesToSelectKeys.length; u++) {
-					cdns += `<option value="${attributesToSelectKeys[u]}" ${(groups[i].nodeSelected == attributesToSelectKeys[u]) ? "selected=true" : ""}>${node.STAattributesToSelect.selectOptions[attributesToSelectKeys[u]].label}</option>`
+				{
+					"elems": [
+						{
+							"elems": [
+								8,
+								9
+							],
+							"nexus": " and ",
+							"boxName": "0_4"
+						}
+					],
+					"nexus": null,
+					"boxName": "1_1"
 				}
-				cdns += `<select>
-				<label>Axis X</label><br><select name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','${node.id}')">`
-
-				for (var e = 0; e < attributesToSelect[groups[i].nodeSelected].attr.length; e++) { //Select X
-					cdns += `<option value="${attributesToSelect[groups[i].nodeSelected].attr[e]}"`;
-					if (node.STAattributesToSelect.dataGroups[i].X == attributesToSelect[groups[i].nodeSelected].attr[e]) cdns += " selected=true "; //checked option
-					cdns += `>${attributesToSelect[groups[i].nodeSelected].attr[e]}</option>`
-				}
-
-				cdns += `</select><br>
-				<label>Axis Y</label><br><select name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','${node.id}')">`
-				for (var e = 0; e < attributesToSelect[groups[i].nodeSelected].attr.length; e++) { //Select X
-					cdns += `<option value="${attributesToSelect[groups[i].nodeSelected].attr[e]}"`;
-					if (node.STAattributesToSelect.dataGroups[i].Y == attributesToSelect[groups[i].nodeSelected].attr[e]) cdns += " selected=true "; //checked option
-					cdns += `>${attributesToSelect[groups[i].nodeSelected].attr[e]}</option>`
-				}
-
-				cdns += `</select><br>
-					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}"${(node.STAattributesToSelect.dataGroups[i].selected == "left") ? "checked" : ""} onclick="updateCheckInformationScatterPlot('${i}','left','${node.id}')" </input><label>Left axis</label><br>
-					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroups[i].selected == "right") ? "checked" : ""} onclick="updateCheckInformationScatterPlot('${i}','right','${node.id}')"</input><label>Right axis</label><br>
-					<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
-			}
-			scatterPlotDiv.innerHTML = cdns;
+			],
+			"nexus": " or ",
+			"boxName": "2_0"
 		}
+		createObjectToKeepForFilter("node", STAelementFilter, {});
 
 
+		function createObjectToKeepForFilter(node, objectToExplore, objectToBuild) {
 
+			var boxNamesArrays = [];
+			for (var i = 0; i < objectToExplore.elems.length; i++) {
+				 (objectToExplore.elems[i].boxName)?boxNamesArrays.push(objectToExplore.elems[i].boxName):boxNamesArrays.push(objectToExplore.elems[i]) ;
+			}
 
-
+			objectToBuild[objectToExplore.boxName] = {
+				["items"]: boxNamesArrays,
+				["nexus"]: objectToExplore.nexus
+			}
+			if (typeof objectToExplore.elems[0] === "object") {
+				for (var i = 0; i < objectToExplore.elems.length; i++) {
+					createObjectToKeepForFilter(node, objectToExplore.elems[i], objectToBuild);
+				}
+			}else{
+				console.log(objectToBuild);
+			}		
+		}
 
 	</script>
 	</body>

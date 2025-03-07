@@ -4298,21 +4298,29 @@ function GetFilterRowsSTA() {
 	// 	return;
 
 	node.STAUrlAPICounter = []; // I need to restart it 
-	var previousURL = parentNode.STAURL;//put URL ready to add things
+	//var previousURL = parentNode.STAURL;//put URL ready to add things ARREGLAR AIXOOOOOOO I LO D?ABAIX ·$·
 
-	var prevFilter = GetQueryParamFromURL(previousURL, "$filter");
-	if (prevFilter) {
-		node.STAUrlAPI = RemoveQueryParamFromURL(previousURL, "$filter");
-		node.STAUrlAPI = AddQueryParamsToURL(node.STAUrlAPI, "$filter=" + prevFilter + " and ");
+	// var prevFilter = GetQueryParamFromURL(previousURL, "$filter");
+	// if (prevFilter) {
+	// 	node.STAUrlAPI = RemoveQueryParamFromURL(previousURL, "$filter");
+	// 	node.STAUrlAPI = AddQueryParamsToURL(node.STAUrlAPI, "$filter=" + prevFilter + " and ");
+	// }
+	// else
+	// 	node.STAUrlAPI = AddQueryParamsToURL(previousURL, "$filter=");
+
+	//stopreadInformationRowFilterSTA = false;
+	//var entity=getSTAURLLastEntity(node.STAURL);
+
+	//readInformationRowFilterSTA(node.STAelementFilter, entity, "no", "no"); //apply filter
+	createObjectToKeepForFilter(node, STAelementFilter, {});
+	//POSAR al STASelectedExpands (buscar la funció per fer-ho)
+	STAFilter={
+		filterSchema:node.STAFilterSchema,
+		filterData: node.STAinfoFilter,
 	}
-	else
-		node.STAUrlAPI = AddQueryParamsToURL(previousURL, "$filter=");
-
-	stopreadInformationRowFilterSTA = false;
-	var entity=getSTAURLLastEntity(node.STAURL);
-
-	readInformationRowFilterSTA(node.STAelementFilter, entity, "no", "no"); //apply filter
-	node.STAURL = node.STAUrlAPI;
+	//FALTARÀ fer la funció que construeix el filtre a partir de la readInformationRowFilterSTA
+	//node.STAURL = node.STAUrlAPI;
+	//Funció que construeix ña url o algo aixi
 	LoadJSONNodeSTAData(node);
 	UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
 	}
