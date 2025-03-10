@@ -4312,12 +4312,38 @@ function GetFilterRowsSTA() {
 	//var entity=getSTAURLLastEntity(node.STAURL);
 
 	//readInformationRowFilterSTA(node.STAelementFilter, entity, "no", "no"); //apply filter
-	createObjectToKeepForFilter(node, STAelementFilter, {});
-	//POSAR al STASelectedExpands (buscar la funció per fer-ho)
+	createObjectToKeepForFilter(node, node.STAelementFilter, {});
+	var parentNode=GetFirstParentNode(node);
+	if (!parentNode)
+		return;
+	node.STASelectedExpands= deapCopy(parentNode.STASelectedExpands);
+	node.STASelectExpandNextOrigin= deapCopy(parentNode.STASelectExpandNextOrigin);
+	networkNodes.update(node)
+	var {dataAttributesArray, previousSTAURL}=GetPropagateNodeSelectedSelectExpands(node, parentNode);
+	var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
+	if (!selectedExpands)
+		selectedExpands=node.STASelectedExpands={selected: [], expanded: {}};
+	selectedExpands.STAFilter={};
+	FinalizeSelectedSelectExpands(node, previousSTAURL, "Filtering STA by ");
+
+	//POSAR al STASelectedExpands (buscar la funció per fer-ho) ·$·
+
+	/*
+	console.log(node.STASelectedExpands);
+	var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
+	if (!selectedExpands)
+		selectedExpands=node.STASelectedExpands={selected: [], expanded: {}};
+
+	selectedExpands.STAFilter={};
+	networkNodes.update(node)
+	console.log(node.STASelectedExpands);
+	*/
+	/*
 	STAFilter={
 		filterSchema:node.STAFilterSchema,
 		filterData: node.STAinfoFilter,
 	}
+		*/
 	//FALTARÀ fer la funció que construeix el filtre a partir de la readInformationRowFilterSTA
 	//node.STAURL = node.STAUrlAPI;
 	//Funció que construeix ña url o algo aixi
@@ -6730,6 +6756,12 @@ function networkDoubleClick(params) {
 				}
 				if (parentNode.STAOGCAPIqueryable){
 					currentNode.STAOGCAPIqueryable=parentNode.STAOGCAPIqueryable;
+				}
+				if (parentNode.STASelectedExpands){
+					if (!currentNode.STASelectedExpands)currentNode.STASelectedExpands= deapCopy(parentNode.STASelectedExpands);
+				}
+				if (parentNode.STASelectExpandNextOrigin){
+					currentNode.STASelectExpandNextOrigin= deapCopy(parentNode.STASelectExpandNextOrigin);
 				}
 				/*if (parentNode.OGCType){
 					currentNode.OGCType="OGCAPIitem";
