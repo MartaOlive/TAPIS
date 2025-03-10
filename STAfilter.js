@@ -88,10 +88,11 @@ function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
 
 	networkNodes.update(actualNode);
 }
-function addTitleInRowFilterDialog(divName) {
+function addTitleInRowFilterDialog(divName,nodeId) {
 	var divTitleSelectRows = document.getElementById(divName);
 	divTitleSelectRows.innerHTML = ""; //Erase old title saved
-	var entityName= getSTAEntityPlural(getNodeDialog("DialogFilterRows").STAEntityName);
+	var node= networkNodes.get(nodeId)
+	var entityName= getSTAEntityPlural(node.STAEntityName);
 	divTitleSelectRows.innerHTML = entityName ? "<img src='" + entityName + ".png' style='height:30px' />" + entityName : "";
 }
 

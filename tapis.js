@@ -6017,10 +6017,11 @@ function ProcessMessageFromMiraMonMapBrowser(event)
 }
 
 function ShowTableSelectRowDialog(parentNode, node) {
+	saveNodeDialog("DialogSelectRow", node);
 	var data = parentNode.STAdata;
 	
 	if (node.STAURL)
-		addTitleInRowFilterDialog("divTitleSelectRow");
+		addTitleInRowFilterDialog("divTitleSelectRow",node.id);
 
 	//document.getElementById("SelectNumberOfRecordsSelectRowLabel").style.display=(node.image == "SelectRowTable.png") ? "none" : "inline-block";
 
@@ -6038,7 +6039,7 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 	networkNodes.update(node);
 
 	if (parentNode.image != "FilterRowsTable.png") {
-			addTitleInRowFilterDialog("divTitleSelectRows");
+			addTitleInRowFilterDialog("divTitleSelectRows",node.id);
 	}
 
 	if (!data || !data.length) {
