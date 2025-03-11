@@ -18038,7 +18038,132 @@
 						"expanded": {
 							"Party": {
 								"selected": [],
-								"expanded": {}
+								"expanded": {},
+								"STAFilter": {
+									"filterSchema": {
+										"2_0": {
+											"items": [
+												"1_0",
+												"1_1"
+											],
+											"nexus": " or "
+										},
+										"1_0": {
+											"items": [
+												"0_0",
+												"0_1",
+												"0_3"
+											],
+											"nexus": " and "
+										},
+										"0_0": {
+											"items": [
+												0,
+												1
+											],
+											"nexus": " not "
+										},
+										"0_1": {
+											"items": [
+												2,
+												6
+											],
+											"nexus": " not "
+										},
+										"0_3": {
+											"items": [
+												5
+											],
+											"nexus": null
+										},
+										"1_1": {
+											"items": [
+												"0_4"
+											],
+											"nexus": null
+										},
+										"0_4": {
+											"items": [
+												8,
+												9
+											],
+											"nexus": " and "
+										}
+									},
+									"filterData": [
+										[
+											0,
+											"Parties/Datastreams",
+											[
+												"name"
+											],
+											" &ne; ",
+											"mjhkhjkhj",
+											"text"
+										],
+										[
+											1,
+											"Parties",
+											[
+												"description"
+											],
+											" &ne; ",
+											"22222",
+											"number"
+										],
+										[
+											2,
+											"Parties",
+											[
+												"id"
+											],
+											" [a,b] ",
+											"1",
+											"5",
+											"number"
+										],
+										[
+											6,
+											"Parties",
+											[
+												"description"
+											],
+											" = ",
+											"43757435",
+											"number"
+										],
+										[
+											5,
+											"Parties",
+											[
+												"displayName"
+											],
+											" > ",
+											"5",
+											"number"
+										],
+										[
+											8,
+											"Parties",
+											[
+												"description"
+											],
+											" = ",
+											"jhhg",
+											"text"
+										],
+										[
+											9,
+											"Parties",
+											[
+												"authId"
+											],
+											" = ",
+											"ggkjgkg",
+											"text"
+										]
+									]
+								}
 							}
 						},
 						"orderBy": {
@@ -22242,9 +22367,9 @@
 			"STAinfoFilter": [
 				[
 					0,
-					"Parties",
+					"Parties/Datastreams",
 					[
-						"description"
+						"name"
 					],
 					" &ne; ",
 					"mjhkhjkhj",
@@ -22264,10 +22389,11 @@
 					2,
 					"Parties",
 					[
-						"description"
+						"id"
 					],
-					" &ge; ",
-					"4",
+					" [a,b] ",
+					"1",
+					"5",
 					"number"
 				],
 				[
@@ -22284,7 +22410,7 @@
 					5,
 					"Parties",
 					[
-						"id"
+						"displayName"
 					],
 					" > ",
 					"5",
@@ -22373,7 +22499,8 @@
 			"STAUrlAPICounter": [],
 			"STAFilterRowEntities": {
 				"optionsRow0": [
-					"Parties"
+					"Parties",
+					"Datastreams"
 				],
 				"optionsRow1": [
 					"Parties"
@@ -22396,6 +22523,60 @@
 				"optionsRow9": [
 					"Parties"
 				]
+			},
+			"STASelectExpandNextOrigin": [
+				"Datastream",
+				"Party"
+			],
+			"STAFilterSchema": {
+				"2_0": {
+					"items": [
+						"1_0",
+						"1_1"
+					],
+					"nexus": " or "
+				},
+				"1_0": {
+					"items": [
+						"0_0",
+						"0_1",
+						"0_3"
+					],
+					"nexus": " and "
+				},
+				"0_0": {
+					"items": [
+						0,
+						1
+					],
+					"nexus": " not "
+				},
+				"0_1": {
+					"items": [
+						2,
+						6
+					],
+					"nexus": " not "
+				},
+				"0_3": {
+					"items": [
+						5
+					],
+					"nexus": null
+				},
+				"1_1": {
+					"items": [
+						"0_4"
+					],
+					"nexus": null
+				},
+				"0_4": {
+					"items": [
+						8,
+						9
+					],
+					"nexus": " and "
+				}
 			}
 		}
 	],

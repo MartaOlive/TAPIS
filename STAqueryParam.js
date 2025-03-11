@@ -103,6 +103,10 @@ function GetQueryParamSelectedSelectExpands(selectedExpands, recursive) {
 			cdns.push(recursive ? ";" : "&");
 		cdns.push("$orderby=", selectedExpands.orderBy.attribute, " ", (selectedExpands.orderBy.desc ? "desc": "asc"));
 	}
+	if (selectedExpands.STAFilter){
+		console.log("stafilterrr")
+		builtFilterSTAsentence(selectedExpands.STAFilter);
+	}
 	var expandedArray=Object.keys(selectedExpands.expanded)
 	if (expandedArray.length){
 		if (cdns.length)
@@ -119,6 +123,198 @@ function GetQueryParamSelectedSelectExpands(selectedExpands, recursive) {
 	}
 	return cdns.join("");
 }
+function builtFilterSTAsentence(STAFilter){
+	var STAFilterSchemaKeys= Object.keys(STAFilter.filterSchema);
+	STAFilterSchemaKeys= STAFilterSchemaKeys.sort();
+	var url="";
+	var node= getNodeDialog("DialogFilterRows");
+	var STAFilterCopia=deapCopy(STAFilter.filterSchema);
+	var group;
+
+	for (var i=0;i<STAFilterSchemaKeys.length;i++){
+		group=STAFilterSchemaKeys[i]
+		if (group.charAt(0)=="0"){
+
+			
+			url= builtFilterSTAsentenceByparts(STAFilterCopia[group], STAFilter.filterData,node.STAEntityName);
+			STAFilterCopia[group] = url;
+		}else{
+			url="";
+			for (var e=0;e<STAFilterCopia[group].items.length;e++){
+				if (e!=0 && STAFilterCopia[group].nexus!=null)url+=" "+STAFilterCopia[group].nexus +" "; //avoid nexus at the beginning
+				url+=STAFilterCopia[STAFilterCopia[group].items[e]];
+				if(e==STAFilterCopia[group].items.length-1){ //last one 
+					if(STAFilterCopia[group].items.length>1 && i!=STAFilterSchemaKeys.length-1) url="("+url+")";
+					STAFilterCopia[group]=url;
+					break;
+				}
+			}
+			
+			
+		}
+	}
+
+	return url;
+ }
+
+
+ function builtFilterSTAsentenceByparts(filterSchemaItems, filterData, entity) {
+	//console.log(filterSchemaItems);
+	var  urlPart="", infoFilter;
+	if (filterSchemaItems.items.length > 1) urlPart += "(";
+
+	for (var i = 0; i < filterSchemaItems.items.length; i++) {
+		if(i!=0 && !filterSchemaItems.items.length-1)urlPart+=" " + filterSchemaItems.nexus + " " ;
+		for (var e= 0;e<filterData.length;e++){
+			if (filterData[e][0]==filterSchemaItems.items[i]){
+				infoFilter=filterData[e];
+				break;
+			}
+		}
+
+		var valueOfEntity = infoFilter[1];
+		var lengthEntity = valueOfEntity.indexOf("/")
+		if (-1 != lengthEntity) { //Erase first entity name in the path
+			valueOfEntity = valueOfEntity.slice(lengthEntity + 1); //Erase entity and "/"
+		}
+		///Apply filter depending on Select Condition
+		if (infoFilter[3] == ' = ' || infoFilter[3] == ' &ne; ' || infoFilter[3] == ' &ge; ' || infoFilter[3] == ' > ' || infoFilter[3] == ' &le; ' || infoFilter[3] == ' < ') { //passarho a com STA+
+			
+			if (entity != valueOfEntity) { //If it's not the entity of the node and it is a connected box need "node entity name "
+				urlPart += valueOfEntity + "/";
+			}
+			urlPart += infoFilter[2][0];
+			if (infoFilter[2].length == 2) {
+				urlPart += infoFilter[2][1];
+			}
+			var typeOfValue = infoFilter[5];
+			var apostropheOrSpace;
+			(typeOfValue == "text") ? apostropheOrSpace = "'" : apostropheOrSpace = "";
+			switch (infoFilter[3]) {
+				case ' = ':
+					urlPart += " eq " + apostropheOrSpace + infoFilter[4] + apostropheOrSpace ;
+					break;
+				case ' &ne; ':
+					urlPart += " ne " + apostropheOrSpace + infoFilter[4] + apostropheOrSpace ;
+					break;
+				case ' &ge; ':
+					urlPart += " ge " + apostropheOrSpace + infoFilter[4] + apostropheOrSpace ;
+					break;
+				case ' > ':
+					urlPart += " gt " + apostropheOrSpace + infoFilter[4] + apostropheOrSpace ;
+					break;
+				case ' &le; ':
+					urlPart += " le " + apostropheOrSpace + infoFilter[4] + apostropheOrSpace ;
+					break;
+				case ' < ':
+					urlPart += " lt " + apostropheOrSpace + infoFilter[4] + apostropheOrSpace ;
+					break;
+				default:
+			}
+		}
+		else if (infoFilter[3] == ' [a,b] ' || infoFilter[3] == ' (a,b] ' || infoFilter[3] == ' [a,b) ' || infoFilter[3] == ' (a,b) ') {
+			if (entity != valueOfEntity) {
+				valueOfEntity = valueOfEntity + "/" + infoFilter[2];
+			} else {
+				valueOfEntity = infoFilter[2];
+			}
+			if (infoFilter[2].length == 2) {
+				valueOfEntity += infoFilter[2][1];
+			}
+			urlPart += "( " + valueOfEntity; //parentesis because is an interval
+			switch (infoFilter[3]) {
+				case ' [a,b] ':
+					urlPart += " ge " + infoFilter[4] + " and " + valueOfEntity + " le " + infoFilter[5] + ")";
+					break;
+				case ' (a,b] ':
+					urlPart += " gt " + infoFilter[4] + " and " + valueOfEntity + " le " + infoFilter[5] + ")";
+					break;
+				case ' [a,b) ':
+					urlPart += " ge " + infoFilter[4] + " and " + valueOfEntity + " lt " + infoFilter[5] + ")";
+					break;
+				case ' (a,b) ':
+					urlPart += " gt " + infoFilter[4] + " and " + valueOfEntity + " lt " + infoFilter[5] + ")";
+					break;
+				default:
+			}
+		}
+		else if (infoFilter[3] == 'contains' || infoFilter[3] == 'no contains' || infoFilter[3] == 'starts with' || infoFilter[3] == 'ends with') {
+			if (entity != valueOfEntity) {
+				valueOfEntity = valueOfEntity + "/" + infoFilter[2];
+			} else {
+				valueOfEntity = infoFilter[2];
+			}
+			if (infoFilter[2].length == 2) {
+				valueOfEntity += infoFilter[2][1];
+			}
+			switch (infoFilter[3]) {
+				case 'contains':
+					urlPart += "substringof('" + infoFilter[4] + "'," + valueOfEntity ;
+					break;
+				case 'no contains':
+					urlPart += "not substringof('" + infoFilter[4] + "'," + valueOfEntity ;
+					break;
+				case 'starts with':
+					urlPart += "startswith(" + valueOfEntity + ",'" + infoFilter[4] + "'";
+					break;
+				case 'ends with':
+					urlPart += "endswith(" + valueOfEntity + ",'" + infoFilter[4] + "'";
+					break;
+				default:
+			}
+		}
+		else if (infoFilter[3] == 'year' || infoFilter[3] == 'month' || infoFilter[3] == 'day' || infoFilter[3] == 'hour' || infoFilter[3] == 'minute' || infoFilter[3] == 'date') {
+			var newValue = "";
+			for (var a = 0; a < infoFilter[4].length; a++) {//erase 0 if starts with 0. 
+				if (infoFilter[4].charAt(a) != 0) {
+					newValue += infoFilter[4].charAt(a)
+				}
+			}
+			infoFilter[4] = newValue;
+			switch (infoFilter[3]) {
+				case 'year':
+					urlPart += "year(resultTime) eq " + infoFilter[4];
+					break;
+				case 'month':
+					urlPart += "month(resultTime) eq " + infoFilter[4];
+					break;
+				case 'day':
+					urlPart += "day(resultTime) eq " + infoFilter[4];
+					break;
+				case 'hour':
+					urlPart += "hour(resultTime) eq " + infoFilter[4];
+					break;
+				case 'minute':
+					urlPart += "minute(resultTime) eq " + infoFilter[4];
+					break;
+				case 'date':
+					urlPart += "date(resultTime) eq date('" + infoFilter[4] + "')";
+					break;
+				default:
+			}
+		}
+		// if ((indexOf + 1) != parentLenght) {
+		// 	urlPart += nexus
+		// }
+		// if ((indexOf + 1) == parentLenght) {
+		// 	urlPart += ")";
+		// }
+		// node.STAUrlAPI += urlPart
+		// node.STAUrlAPICounter.push(infoFilter[0]);
+	}
+
+	if (filterSchemaItems.items.length > 1) urlPart += ")";
+
+	console.log(urlPart)
+	return (urlPart)
+		
+	
+}
+
+
+
+
+
 
 function ShowPropagateNodeSelectedSelectExpands(node, parentNode) {
 

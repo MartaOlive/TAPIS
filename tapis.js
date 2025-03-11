@@ -4323,27 +4323,12 @@ function GetFilterRowsSTA() {
 	var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
 	if (!selectedExpands)
 		selectedExpands=node.STASelectedExpands={selected: [], expanded: {}};
-	selectedExpands.STAFilter={};
-	FinalizeSelectedSelectExpands(node, previousSTAURL, "Filtering STA by ");
-
-	//POSAR al STASelectedExpands (buscar la funció per fer-ho) ·$·
-
-	/*
-	console.log(node.STASelectedExpands);
-	var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
-	if (!selectedExpands)
-		selectedExpands=node.STASelectedExpands={selected: [], expanded: {}};
-
-	selectedExpands.STAFilter={};
-	networkNodes.update(node)
-	console.log(node.STASelectedExpands);
-	*/
-	/*
-	STAFilter={
+	selectedExpands.STAFilter={
 		filterSchema:node.STAFilterSchema,
 		filterData: node.STAinfoFilter,
-	}
-		*/
+	};
+	FinalizeSelectedSelectExpands(node, previousSTAURL, "Filtering STA by ");
+
 	//FALTARÀ fer la funció que construeix el filtre a partir de la readInformationRowFilterSTA
 	//node.STAURL = node.STAUrlAPI;
 	//Funció que construeix ña url o algo aixi
