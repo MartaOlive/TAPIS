@@ -443,7 +443,6 @@ function removeExtraAmpersand(queryparams) {
 
 //Before it was called AddKVPToURL
 function AddQueryParamsToURL(url, kvp) {
-	console.log(url)
 	kvp=removeExtraAmpersand(kvp);
 	if (!kvp)
 		return url;
@@ -1636,17 +1635,17 @@ function ReadURLImportJSONLD() {
 function TransformTextJSONToTable(json, jsonText, url) {
 	if (!json)
 	{
-	try
-	{
+		try
+		{
 			json = JSON.parse(jsonText);
-	}
-	catch (e) 
-	{
-		showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0, 1000));
-		currentNode.STAdata=null;
-		networkNodes.update(currentNode);
-		return;
-	}
+		}
+		catch (e) 
+		{
+			showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0, 1000));
+			currentNode.STAdata=null;
+			networkNodes.update(currentNode);
+			return;
+		}
 	}
 	var result=ParseJSON(json)
 	currentNode.STAdata=result;
@@ -3086,9 +3085,9 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 	}
 	cdns.push('</fieldset>')
 	//Properties
-	cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>Propertires</legend>`)
-		//<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
-		cdns.push(`<button onclick="addNewKVPonCreateUpdateDeleteEntity('-1','properties','add','')"> Add more properties</button>
+	cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>Propertires</legend>
+		<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
+		<button onclick="addNewKVPonCreateUpdateDeleteEntity('0','properties','add','')"> Add more properties</button>
 		</fieldset>`);
 	document.getElementById("dlgCreateUpdateDeleteEntityAttributes_MultiDatastreams").innerHTML = cdns.join("");
 	
@@ -3106,24 +3105,24 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 			
 			document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_multiobservationDataType"+i).value= (STAdata.multiObservationDataTypes[i])?STAdata.multiObservationDataTypes[i]:"";
 		}
-		//Properties
-		
-		if (record["properties"]){
-			var keys=Object.keys(record["properties"]);
-			// if (keys.length==1){
-			// 	//treure la clau 
-			// 	document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0").value=keys[0];
-			// 	document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0").value=STAdata[propertiesOrParameters][keys[0]];
-			// }else if (keys.length>1){ //avoid empty
-				addNewKVPonCreateUpdateDeleteEntity(keys.length-1,"properties", "addInUpdateDelete",""); //create keys values par that you need 
-				for (var u=0;u<keys.length;u++){
-					document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[u]).value=keys[u];
-					document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[u]).value=record["properties"][keys[u]];
-				}
-			//}
+
+	}
+	//Properties
+	var propertiesOrParameters= "properties";
+	if (STAdata[propertiesOrParameters]){
+		var keys=Object.keys(STAdata[propertiesOrParameters]);
+		if (keys.length==1){
+			//treure la clau 
+			document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0").value=keys[0];
+			document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0").value=STAdata[propertiesOrParameters][keys[0]];
+		}else if (keys.length>1){ //avoid empty
+			addNewKVPonCreateUpdateDeleteEntity(keys.length-1,propertiesOrParameters, "addInUpdateDelete",""); //create keys values par that you need 
+			for (var u=0;u<keys.length;u++){
+				document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[u]).value=keys[u];
+				document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[u]).value=STAdata[propertiesOrParameters][keys[u]];
+			}
 		}
 	}
-
 
 	//Show/hide buttons 
 	if (actionToDo == "create") {
@@ -3234,9 +3233,9 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			continue;
 		}
 		if ( STAEntities[entityName].properties[i].name=="properties" ||  STAEntities[entityName].properties[i].name=="parameters" && actionToDo=="create"){
-			cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>${STAEntities[entityName].properties[i].name}</legend>`)
-				//<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
-				cdns.push(`<button onclick="addNewKVPonCreateUpdateDeleteEntity('-1','${STAEntities[entityName].properties[i].name}','add','')"> Add more ${STAEntities[entityName].properties[i].name}</button>
+			cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>${STAEntities[entityName].properties[i].name}</legend>
+				<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
+				<button onclick="addNewKVPonCreateUpdateDeleteEntity('0','${STAEntities[entityName].properties[i].name}','add','')"> Add more ${STAEntities[entityName].properties[i].name}</button>
 				</fieldset>`);
 			continue;
 		}
@@ -3298,18 +3297,18 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			if (STAEntities[entityName].properties[i].name=="parameters" || STAEntities[entityName].properties[i].name=="properties"){
 				var propertiesOrParameters= STAEntities[entityName].properties[i].name;
 				if (record[propertiesOrParameters]){
-					
 					var keys=Object.keys(record[propertiesOrParameters]);
-					if (keys.length!=0){
+					if (keys.length==1){
+						//treure la clau 
+						document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0").value=keys[0];
+						document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0").value=record[propertiesOrParameters][keys[0]];
+					}else if (keys.length>1){ //avoid empty
 						addNewKVPonCreateUpdateDeleteEntity(keys.length-1,propertiesOrParameters, "addInUpdateDelete",""); //create keys values par that you need 
 						for (var u=0;u<keys.length;u++){
 							document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[u]).value=keys[u];
 							document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[u]).value=record[propertiesOrParameters][keys[u]];
 						}
 					}
-
-
-					
 				}
 				continue;
 			}
@@ -3359,7 +3358,7 @@ function addNewKVPonCreateUpdateDeleteEntity(row,attributeName, action, toDelete
 	var arrayResults=[];
 	if (action!="addInUpdateDelete"){
 		for (var e=0;e<(number+1);e++){
-			if ((action=="add" && row !=-1)|| (action=="delete" && e!=toDelete)){
+			if (action=="add" || (action=="delete" && e!=toDelete)){
 				arrayResults.push([document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[e]).value,document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[e]).value])
 			}
 		}
@@ -3371,9 +3370,9 @@ function addNewKVPonCreateUpdateDeleteEntity(row,attributeName, action, toDelete
 	cdns= `<legend>${attributeName}</legend>`
 	for (var i=0;i<(number+1);i++){
 		cdns+= `<br><input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_${i}'`;
-		if (action!="addInUpdateDelete"&& row!=-1)cdns+=`value='${arrayResults[i][0]}'`;
+		if (action!="addInUpdateDelete")cdns+=`value='${arrayResults[i][0]}'`;
 		cdns+=`></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_${i}'`
-		if (action!="addInUpdateDelete"&& row!=-1)cdns+=`value='${arrayResults[i][1]}'`
+		if (action!="addInUpdateDelete")cdns+=`value='${arrayResults[i][1]}'`
 		cdns+=`></input><button><img src="trash.png" alt="Remove" title="Remove" onclick="addNewKVPonCreateUpdateDeleteEntity('${number}','${attributeName}','delete','${i}')"></button>`;
 		if (i==number)cdns+=`<br><button style="margin-top:10px"  onclick="addNewKVPonCreateUpdateDeleteEntity('${i}', '${attributeName}','add','')"> Add more ${attributeName}</button>` //last
 	}
@@ -3564,8 +3563,8 @@ function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
 		{
 				obj[STAEntities[entityName].properties[i].name]={};
 				obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_name").value : null;
-				obj[STAEntities[entityName].properties[i].name].symbol=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
-				obj[STAEntities[entityName].properties[i].name].definition=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value : null;					
+				obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_symbol").value : null;					
+				obj[STAEntities[entityName].properties[i].name].name=document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value ? document.getElementById("dlgCreateUpdateDeleteEntity_" + STAEntities[entityName].properties[i].name + "_definition").value : null;					
 			continue;
 		}
 			if (STAEntities[entityName].properties[i].name=="multiObservationDataType"){
@@ -3586,15 +3585,15 @@ function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
 				for (var e=0;e<children.length;e++){
 					if (children[e].nodeName=="INPUT"){
 						if (children[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_")){
-							if (children[e].value!="")objectProperties[children[e].value]="";
-							property=children[e].value;
+							objectProperties[children[e].value]="";
+							property=children[e].value
 						}
 						if (children[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_")){
-							if (property!="")objectProperties[property]=children[e].value;
+							objectProperties[property]=children[e].value;
 						}
 					}
 				}
-				if (objectProperties!={})obj[STAEntities[entityName].properties[i].name]=objectProperties;
+				obj[STAEntities[entityName].properties[i].name]=objectProperties;
 				continue;
 			}
 			//attributes in general	
@@ -3619,7 +3618,7 @@ function obtainDataInMultidatastreamsCreationAndUpdate(operation){
 	}else{
 		var obj={}
 	}
-	var allowToSend=true;
+	var prop, allowToSend=true;
 	if (document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_name").value!=""){
 		obj["name"]=document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_name").value;
 
@@ -3763,11 +3762,11 @@ function GetCreateEntity(event) {
 			}
 
 			var parentEntityName = getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), true);
-
+			var entity;
 			if (returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName) != -1)
-				var entity = parentEntityName;
+				entity = parentEntityName;
 			else if (returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular) != -1)
-				var entity = STAEntities[parentEntityName].singular;
+				entity = STAEntities[parentEntityName].singular;
 			else {
 				alert("Parent node (" + STAEntities[parentEntityName].singular + ") is not directly related to a/an " + STAEntities[entityName].singular);
 				continue;
@@ -4288,7 +4287,7 @@ function GetSelectRow(event) {
 		LoadJSONNodeSTAData(node);
 	}
 	else
-		updateQueryAndTableArea(currentNode);
+		updateQueryAndTableArea(node);
 }
 
 function getGeospatialFilter(node, parentNode){
@@ -5919,12 +5918,11 @@ function ProcessMessageFromMiraMonMapBrowser(event)
 
 function ShowTableSelectRowDialog(parentNode, node) {
 	saveNodeDialog("DialogSelectRow", node);
+
 	var data = parentNode.STAdata;
 	
 	if (node.STAURL)
-		addSTAEntityNameAsTitleDialog("divTitleSelectRow",node);
-
-	//document.getElementById("SelectNumberOfRecordsSelectRowLabel").style.display=(node.image == "SelectRowTable.png") ? "none" : "inline-block";
+		addSTAEntityNameAsTitleDialog("divTitleSelectRow", node);
 
 	if (!data || !data.length) {
 		document.getElementById("DialogSelectRowTable").innerHTML = "No data to show.";
@@ -5932,8 +5930,6 @@ function ShowTableSelectRowDialog(parentNode, node) {
 	}
 	document.getElementById("DialogSelectRowTable").innerHTML = GetHTMLTable(data, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data), false, "SelectRow_", node.STAURLIdSelected ? node.STAURLIdSelected : 0, null, "", isAttributeAnyURI);
 }
-
-
 
 function SeparateColumns(event) {
 	event.preventDefault(); // We don't want to submit this form
@@ -6152,23 +6148,6 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 			nodeTo.STAdata = deapCopy(nodeFrom.STAdata); //necessary first time
 			networkNodes.update(nodeTo);
 		}
-		if (addEdge)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		return true;
-	}
-	if (tableNodes && nodeTo.image == "EditRecord.png") {
-		if (nodeFrom.STAdata){
-			nodeTo.STAdata = deapCopy(nodeFrom.STAdata); //necessary first time
-			if (nodeFrom.STAdataAttributes){
-						nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes); //necessary first time
-						
-			}else{
-						nodeTo.STAdataAttributes = getDataAttributes(nodeTo.STAdata);
-					
-			}
-		}
-		
-		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		return true;
@@ -6467,8 +6446,11 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "ScatterPlot.png") {
 			var parentNodes=GetParentNodes(currentNode);
-					ShowScatterPlotDialog(parentNodes, currentNode); //This will check if any parentNode hasn't got data. It is possible that some nodes linked has data but some not...
+			if (parentNodes && parentNodes[0]) {
+				if (parentNodes[0].STAdata)
+					ShowScatterPlotDialog(parentNodes);
 				document.getElementById("DialogScatterPlot").showModal();
+			}
 		}
 		else if (currentNode.image == "BarPlot.png") {
 			var parentNodes=GetParentNodes(currentNode);
@@ -6599,14 +6581,6 @@ function networkDoubleClick(params) {
 				if (parentNode.STAOGCAPIqueryable){
 					currentNode.STAOGCAPIqueryable=parentNode.STAOGCAPIqueryable;
 				}
-				if (parentNode.STASelectedExpands){
-					if (!currentNode.STASelectedExpands)currentNode.STASelectedExpands= deapCopy(parentNode.STASelectedExpands);
-				}
-				if (parentNode.STASelectExpandNextOrigin){
-					currentNode.STASelectExpandNextOrigin= deapCopy(parentNode.STASelectExpandNextOrigin);
-				}
-				if (parentNode.STAEntityName)
-					currentNode.STAEntityName = deapCopy(parentNode.STAEntityName);
 				/*if (parentNode.OGCType){
 					currentNode.OGCType="OGCAPIitem";
 				}*/
