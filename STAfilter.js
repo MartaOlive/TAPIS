@@ -976,7 +976,7 @@ async function fillValueSelectorFilterRow(count) {
 		var inputForEntityFilterRowValue = document.getElementById("inputForEntityFilterRow_" + count).value;
 		var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(inputForEntityFilterRowValue, true));
 		var node= getNodeDialog("DialogFilterRows");
-		var url = getURLWithoutQueryParams(node.STAURL);
+		var url = getURLWithoutQueryParams(node.STAURL); //He de treure lo dle principi tmb /observations
 		//Find the entity to search values
 		var parentLabel = searchParentLabel();
 		if (parentLabel != entity) {
@@ -2168,6 +2168,8 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 
 	var data = parentNode.STAdata;
 		node.STAdata=deapCopy(data); //Put all data from parent in this node 
+		node.STAURL=deapCopy(parentNode.STAURL); //Put all data from parent in this node 
+	
 	networkNodes.update(node);
 
 	//if (parentNode.image != "FilterRowsTable.png") {
@@ -2263,6 +2265,7 @@ function GetFilterRowsSTA(node) {
 	if (!selectedExpands)
 		selectedExpands=node.STASelectedExpands={selected: [], expanded: {}};
 	selectedExpands.STAFilter={
+		entity:node.STAEntityName,
 		filterSchema:node.STAFilterSchema,
 		filterData: node.STAinfoFilter,
 	};

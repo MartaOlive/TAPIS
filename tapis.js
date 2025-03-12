@@ -4403,7 +4403,7 @@ function IdOfSTASpecialQueries(node) {
 }
 
 function UpdateChildenSTAURL(parentNode, currentSTAURLroot, previousSTAURLroot) {
-	var nodeIds = network.getConnectedNodes(parentNode.id, 'to');
+	var nodeIds = network.getConnectedNodes(parentNode.id, 'to'); //El que falla amb la llibreria dels graph2d.
 	for (var i = 0; i < nodeIds.length; i++) {
 		var node = networkNodes.get(nodeIds[i])
 		if (node.STAURL && currentSTAURLroot && previousSTAURLroot) {

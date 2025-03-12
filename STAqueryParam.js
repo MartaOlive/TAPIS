@@ -57,7 +57,7 @@ function GetSTASelectExpandNextOrigin(selectedExpands, selectExpandNextOrigin)
 }
 
 function RemoveQueryParamSelectExpands(url) {
-	return RemoveQueryParamFromURL(RemoveQueryParamFromURL(RemoveQueryParamFromURL(RemoveQueryParamFromURL(RemoveQueryParamFromURL(url, "$select"), "$expand"), "$top"), "$skip"), "$orderby");
+	return RemoveQueryParamFromURL(RemoveQueryParamFromURL(RemoveQueryParamFromURL(RemoveQueryParamFromURL(RemoveQueryParamFromURL(RemoveQueryParamFromURL(url, "$select"), "$expand"), "$top"), "$skip"), "$orderby"),"$filter") ;
 }
 
 function GetQueryParamSelectedSelectExpands(selectedExpands, recursive) {
@@ -139,7 +139,7 @@ function builtFilterSTAsentence(STAFilter){
 		if (group.charAt(0)=="0"){
 
 			
-			url= builtFilterSTAsentenceByparts(STAFilterCopia[group], STAFilter.filterData,node.STAEntityName);
+			url= builtFilterSTAsentenceByparts(STAFilterCopia[group], STAFilter.filterData,STAFilter.entity);
 			STAFilterCopia[group] = url;
 		}else{
 			url="";
