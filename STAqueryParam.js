@@ -103,12 +103,13 @@ function GetQueryParamSelectedSelectExpands(selectedExpands, recursive) {
 			cdns.push(recursive ? ";" : "&");
 		cdns.push("$orderby=", selectedExpands.orderBy.attribute, " ", (selectedExpands.orderBy.desc ? "desc": "asc"));
 	}
-	// if (selectedExpands.STAFilter){
-	// 	console.log("stafilterrr")
-	// 	var urlFilterPart=builtFilterSTAsentence(selectedExpands.STAFilter);
-	// 	cdns.push("$filter=");
-	// 	cdns.push(urlFilterPart);
-	// }
+	 if (selectedExpands.STAFilter){
+	 	console.log("stafilterrr")
+	 	var urlFilterPart=builtFilterSTAsentence(selectedExpands.STAFilter);
+		 if (cdns.length)cdns.push(recursive ? ";" : "&");
+	 	cdns.push("$filter=");
+	 	cdns.push(urlFilterPart);
+	 }
 	var expandedArray=Object.keys(selectedExpands.expanded)
 	if (expandedArray.length){
 		if (cdns.length)
