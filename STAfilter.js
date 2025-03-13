@@ -1546,7 +1546,7 @@ function searchBoxNameGroup(numberOfElement, elem, fatherElem, originFunction,no
 function DeleteGroupInElemFilter(elem, fatherElem,node) {
 	var newArray = [];
 	//var node= getNodeDialog("DialogFilterRows");
-	if (fatherElem != "no") {
+	if (fatherElem != "no") { //is not the lastone
 		for (var i = 0; i < fatherElem.elems.length; i++) {
 			if (fatherElem.elems[i].boxName != elem.boxName) {
 				newArray.push(fatherElem.elems[i])
@@ -1561,10 +1561,12 @@ function DeleteGroupInElemFilter(elem, fatherElem,node) {
 			//node.STAelementFilter = copyFather[0];
 			fatherElem.elems=[copyFather[0]];
 			
+		}else if (newArray.length ==0){
+			//s'ha de borrar el pare
 		}
 		//var boxNames = node.STAboxNames;
-	var boxNames = updateBoxNames(node.STAelementFilter, arrayBoxNumbers,node);  //It is necesary?
-		
+		var boxNames = updateBoxNames(node.STAelementFilter, arrayBoxNumbers,node);  //It is necesary?
+		eraseEmptyGroupsInFilterRowsSTA(node.STAelementFilter,"no",node);
 	}
 }
 function updateBoxNames(elem, arrayBoxNumbers,node) {
@@ -1577,6 +1579,20 @@ function updateBoxNames(elem, arrayBoxNumbers,node) {
 	//var node= getNodeDialog("DialogFilterRows");
 	//networkNodes.update(node);
 	return arrayBoxNumbers;
+}
+function eraseEmptyGroupsInFilterRowsSTA(elem,fatherElem,node){
+	if (typeof elem === "object") {
+		if(elem.elems.length ==0){	
+			DeleteGroupInElemFilter(elem, fatherElem,node);
+		}else{
+			for (var i = 0; i < elem.elems.length; i++) {
+				eraseEmptyGroupsInFilterRowsSTA(elem.elems[i], elem,node);
+			}	
+			
+		}
+	}
+	
+	
 }
 //DrawTable
 function drawTableAgain() {
