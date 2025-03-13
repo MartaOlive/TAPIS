@@ -582,6 +582,11 @@ function fillPropertySelector(number, lastEntity, selectorInfo) { //lastEntity: 
 	var option2 = document.createElement("option"); //First option FALTA POSAR EL SELECTEDDDDDD
 	option2.setAttribute("value", "id");
 	option2.innerHTML = "id";
+	if(selectorInfo.length!=0){
+		if(selectorInfo[0][2][0]=="id"){
+			option2.setAttribute("selected", true);
+		}
+	}
 	selectProperty.appendChild(option2);
 
 	for (var i = 0; i < properties.length; i++) {// to fill property/property
