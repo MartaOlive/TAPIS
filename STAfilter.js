@@ -1508,31 +1508,31 @@ function DeleteElementInElemFilter(elem, numberOfElement) {
 function deleteGroup(numberOfElement) {
 	event.preventDefault();
 	var node= getNodeDialog("DialogFilterRows");
-	searchBoxNameGroup(numberOfElement, node.STAelementFilter, "no", "fromDeleteGrup");
-		takeSelectInformation();//get selector values and update an external variable 
+	searchBoxNameGroup(numberOfElement, node.STAelementFilter, "no", "fromDeleteGrup",node);
+	takeSelectInformation();//get selector values and update an external variable 
 	drawTableAgain();//repaint the selects
 }
 
-function searchBoxNameGroupForGetFilterRowsTable(numberOfElement, elem, originFunction) { //elem has boxes ...
+// function searchBoxNameGroupForGetFilterRowsTable(numberOfElement, elem, originFunction) { //elem has boxes ...
+// 	if (typeof elem === "object") {
+// 		for (var i = 0; i < elem.elems.length; i++) {
+// 			searchBoxNameGroupForGetFilterRowsTable(numberOfElement, elem.elems[i], originFunction);
+// 		}
+// 		if (elem.boxName == numberOfElement) { //add to elems => elems[0,1...]
+// 			builtSummaryToFilterTable(elem);
+
+// 		}
+// 	}
+// }
+function searchBoxNameGroup(numberOfElement, elem, fatherElem, originFunction,node) { //elem has boxes ...
+
 	if (typeof elem === "object") {
 		for (var i = 0; i < elem.elems.length; i++) {
-			searchBoxNameGroupForGetFilterRowsTable(numberOfElement, elem.elems[i], originFunction);
-		}
-		if (elem.boxName == numberOfElement) { //add to elems => elems[0,1...]
-			builtSummaryToFilterTable(elem);
-
-		}
-	}
-}
-function searchBoxNameGroup(numberOfElement, elem, fatherElem, originFunction) { //elem has boxes ...
-
-	if (typeof elem === "object") {
-		for (var i = 0; i < elem.elems.length; i++) {
-			searchBoxNameGroup(numberOfElement, elem.elems[i], elem, originFunction);
+			searchBoxNameGroup(numberOfElement, elem.elems[i], elem, originFunction,node);
 		}
 		if (elem.boxName == numberOfElement) { //add to elems => elems[0,1...]
 			if (originFunction == "fromDeleteGrup") {
-				DeleteGroupInElemFilter(elem, fatherElem);
+				DeleteGroupInElemFilter(elem, fatherElem,node);
 			} else if (originFunction == "getFilterRowsTable") {
 
 				return elem;
@@ -1543,9 +1543,9 @@ function searchBoxNameGroup(numberOfElement, elem, fatherElem, originFunction) {
 	}
 }
 
-function DeleteGroupInElemFilter(elem, fatherElem) {
+function DeleteGroupInElemFilter(elem, fatherElem,node) {
 	var newArray = [];
-	var node= getNodeDialog("DialogFilterRows");
+	//var node= getNodeDialog("DialogFilterRows");
 	if (fatherElem != "no") {
 		for (var i = 0; i < fatherElem.elems.length; i++) {
 			if (fatherElem.elems[i].boxName != elem.boxName) {
@@ -1558,19 +1558,24 @@ function DeleteGroupInElemFilter(elem, fatherElem) {
 		if (newArray.length == 1) { //if it is the last one, delete the nexus and the parent
 			fatherElem.nexus = null;
 			var copyFather = Object.assign(fatherElem.elems);
-			node.STAelementFilter = copyFather[0];
+			//node.STAelementFilter = copyFather[0];
+			fatherElem.elems=[copyFather[0]];
+			
 		}
 		//var boxNames = node.STAboxNames;
-		var boxNames = updateBoxNames(node.STAelementFilter, arrayBoxNumbers);  //It is necesary?
+	var boxNames = updateBoxNames(node.STAelementFilter, arrayBoxNumbers,node);  //It is necesary?
+		
 	}
 }
-function updateBoxNames(elem, arrayBoxNumbers) {
+function updateBoxNames(elem, arrayBoxNumbers,node) {
 	if (typeof elem === "object") {
 		arrayBoxNumbers.push(elem.boxName)
 		for (var i = 0; i < elem.elems.length; i++) {
 			updateBoxNames(elem.elems[i], arrayBoxNumbers);
 		}
 	}
+	//var node= getNodeDialog("DialogFilterRows");
+	//networkNodes.update(node);
 	return arrayBoxNumbers;
 }
 //DrawTable
