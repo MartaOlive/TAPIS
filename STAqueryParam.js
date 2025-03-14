@@ -104,7 +104,6 @@ function GetQueryParamSelectedSelectExpands(selectedExpands, recursive) {
 		cdns.push("$orderby=", selectedExpands.orderBy.attribute, " ", (selectedExpands.orderBy.desc ? "desc": "asc"));
 	}
 	 if (selectedExpands.STAFilter){
-	 	console.log("stafilterrr")
 	 	var urlFilterPart=builtFilterSTAsentence(selectedExpands.STAFilter);
 		 if (cdns.length)cdns.push(recursive ? ";" : "&");
 	 	cdns.push("$filter=");
@@ -162,7 +161,6 @@ function builtFilterSTAsentence(STAFilter){
 
 
  function builtFilterSTAsentenceByparts(filterSchemaItems, filterData, entity) {
-	//console.log(filterSchemaItems);
 	var  urlPart="", infoFilter;
 	if (filterSchemaItems.items.length > 1) urlPart += "(";
 
@@ -296,19 +294,10 @@ function builtFilterSTAsentence(STAFilter){
 				default:
 			}
 		}
-		// if ((indexOf + 1) != parentLenght) {
-		// 	urlPart += nexus
-		// }
-		// if ((indexOf + 1) == parentLenght) {
-		// 	urlPart += ")";
-		// }
-		// node.STAUrlAPI += urlPart
-		// node.STAUrlAPICounter.push(infoFilter[0]);
 	}
 
 	if (filterSchemaItems.items.length > 1) urlPart += ")";
 
-	console.log(urlPart)
 	return (urlPart)
 		
 	

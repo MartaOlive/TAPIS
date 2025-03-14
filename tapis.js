@@ -2937,7 +2937,6 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 	var actionToDo = "";
 	for (var i = 0; i < parentNodes.length; i++) {
 		var parentNode = parentNodes[i];
-		//console.log(parentNode.STAdata[0]["@iot.id"])
 		var parentEntityName = getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), false);
 		if (!parentNode.STAdata || parentNode.STAdata.length == 0) {
 			alert("Parent node has no STA data associated");
@@ -3831,7 +3830,6 @@ async function GetUpdateEntity(event){
 	for (var i=0;i<childrenNodes.length;i++){		
 		if (currentNode.label=="Location"&&  childrenNodes[i].nodeName=="FIELDSET" ){
 			childrenNodes2=childrenNodes[i].childNodes;
-			console.log(childrenNodes2.length)
 			for (var e=0;e<childrenNodes2.length;e++){
 				if (childrenNodes2[e].nodeName=="INPUT"){
 					idSplited=childrenNodes2[e].id.split("dlgCreateUpdateDeleteEntity_")[1];
@@ -3866,8 +3864,6 @@ async function GetUpdateEntity(event){
 
 		if (currentNode.label=="Datastream"&&  childrenNodes[i].nodeName=="FIELDSET" ){
 			childrenNodes2=childrenNodes[i].childNodes;
-			console.log(childrenNodes2.length)
-
 			for (var e=0;e<childrenNodes2.length;e++){
 				if (childrenNodes2[e].nodeName=="INPUT"){
 					idSplited=childrenNodes2[e].id.split("dlgCreateUpdateDeleteEntity_")[1];
@@ -4012,7 +4008,6 @@ function AskForDeleteEntity(event){
 
 async function GetDeleteEntity(entityName, id){
 	event.preventDefault(); 
-	//console.log("borrant")
 	if (entityName=="MultiDatastreams"){
 		document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").close();
 	}else{
@@ -4028,7 +4023,6 @@ async function GetDeleteEntity(entityName, id){
 	var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,id);
 
 	var response= await HTTPJSONData(url,null,"DELETE",null);
-	console.log(response)
 	if (response?.ok)
 		showInfoMessage(STAEntities[entityName].singular +" "+id+" has been deleted.");
 	else
@@ -7892,7 +7886,6 @@ function takeParentsInformationInGeoDistance(){
 				
 			currentNode.STAcolumnsValuesGeoDistance= columnsValues;
 			networkNodes.update(currentNode);
-			console.log(columns)
 		}
 	}
 	if ((parentNodes.length==1 && nodeSTA) || (itIsGeoJSON=="Point"||itIsGeoJSON=="Poligon")||fatureOrLocation=="location"||fatureOrLocation=="feature"){ 
@@ -8046,10 +8039,8 @@ async function filterRowsByTimeOkButton(){
 			showInfoMessage("Applying filter ... It may take a while, please wait")
 			await askForAllDataResults(selectedValue);
 			var necessaryData= await prepareSTAdataToAggregateDataByChosenPeriodFunction(currentNode.STAdata, [selectedValue, "result"]); //await because can contain a lot of data 
-			// console.log(necessaryData)
 			var aggregatedData= await AggregateDataByChosenPeriod(necessaryData, selectedAggregationValue, true);
 			var statistics= calculateMinMaxMeanDesvest(aggregatedData[0]);
-			console.log(statistics);
 			
 			var data=[], n=statistics.length; //data = array of observations. Every statistic has their observation
 			for (var i=0;i<n;i++){ //Put results in every observation
@@ -8121,7 +8112,6 @@ async function askForAllDataResults(property){
 		currentNode.STAdata=data;
 		networkNodes.update(currentNode);			
 	}
-	console.log(numberOfResults);
 }
 
 function prepareSTAdataToAggregateDataByChosenPeriodFunction(data, properties){
@@ -8204,8 +8194,6 @@ function AggregateDataByChosenPeriod(necessaryData, period,STA){//year, month, d
 					}
 				}
 		}
-		console.log (aggregedData);
-		console.log (observationsArray);
 		if (STA) return [aggregedData,observationsArray]
 		else return aggregedData;
 }

@@ -1513,17 +1513,6 @@ function deleteGroup(numberOfElement) {
 	drawTableAgain();//repaint the selects
 }
 
-// function searchBoxNameGroupForGetFilterRowsTable(numberOfElement, elem, originFunction) { //elem has boxes ...
-// 	if (typeof elem === "object") {
-// 		for (var i = 0; i < elem.elems.length; i++) {
-// 			searchBoxNameGroupForGetFilterRowsTable(numberOfElement, elem.elems[i], originFunction);
-// 		}
-// 		if (elem.boxName == numberOfElement) { //add to elems => elems[0,1...]
-// 			builtSummaryToFilterTable(elem);
-
-// 		}
-// 	}
-// }
 function searchBoxNameGroup(numberOfElement, elem, fatherElem, originFunction,node) { //elem has boxes ...
 
 	if (typeof elem === "object") {
@@ -1545,7 +1534,6 @@ function searchBoxNameGroup(numberOfElement, elem, fatherElem, originFunction,no
 
 function DeleteGroupInElemFilter(elem, fatherElem,node) {
 	var newArray = [];
-	//var node= getNodeDialog("DialogFilterRows");
 	if (fatherElem != "no") { //is not the lastone
 		for (var i = 0; i < fatherElem.elems.length; i++) {
 			if (fatherElem.elems[i].boxName != elem.boxName) {
@@ -1558,26 +1546,21 @@ function DeleteGroupInElemFilter(elem, fatherElem,node) {
 		if (newArray.length == 1) { //if it is the last one, delete the nexus and the parent
 			fatherElem.nexus = null;
 			var copyFather = Object.assign(fatherElem.elems);
-			//node.STAelementFilter = copyFather[0];
 			fatherElem.elems=[copyFather[0]];
 			
 		}else if (newArray.length ==0){
-			//s'ha de borrar el pare
 		}
-		//var boxNames = node.STAboxNames;
-		var boxNames = updateBoxNames(node.STAelementFilter, arrayBoxNumbers,node);  //It is necesary?
+		var boxNames = updateBoxNames(node.STAelementFilter, arrayBoxNumbers);  //It is necesary?
 		eraseEmptyGroupsInFilterRowsSTA(node.STAelementFilter,"no",node);
 	}
 }
-function updateBoxNames(elem, arrayBoxNumbers,node) {
+function updateBoxNames(elem, arrayBoxNumbers) {
 	if (typeof elem === "object") {
 		arrayBoxNumbers.push(elem.boxName)
 		for (var i = 0; i < elem.elems.length; i++) {
 			updateBoxNames(elem.elems[i], arrayBoxNumbers);
 		}
 	}
-	//var node= getNodeDialog("DialogFilterRows");
-	//networkNodes.update(node);
 	return arrayBoxNumbers;
 }
 function eraseEmptyGroupsInFilterRowsSTA(elem,fatherElem,node){
@@ -1599,8 +1582,6 @@ function drawTableAgain() {
 	document.getElementById("divSelectorRowsFilter").innerHTML = "";
 	ShowFilterTable()
 }
-
-
 
 function takeSelectInformation() {
 	var optionsRow;
@@ -1696,173 +1677,7 @@ function biggestLevelButton(boxName) {
 	drawTableAgain();
 	resizeBottomPartSelectAndOrNot();//correct size to select(AndOrNot) div
 }
-//Applying the filter
-//var stopreadInformationRowFilterSTA = false;
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// function readInformationRowFilterSTA(elem, entity, nexus, parent) {  //STA
-// 	var node= getNodeDialog("DialogFilterRows");
-// 	var infoFilter = node.STAinfoFilter;
-// 	if (stopreadInformationRowFilterSTA == false) {
-// 		if (typeof elem === "object") {
-// 			for (var i = 0; i < elem.elems.length; i++) {
-// 				readInformationRowFilterSTA(elem.elems[i], entity, elem.nexus, elem);
-// 			}
-// 			if (node.STAUrlAPICounter.length != infoFilter.length && node.STAUrlAPICounter.length != 0 && nexus != "no" && parent != "no") {
-// 				node.STAUrlAPI += " " + nexus + " ";
-// 			}
-// 		}
-// 		else { //Build URL
-// 			//Last Array, which contains the filters 
-// 			var data = "";
-// 			for (var i = 0; i < infoFilter.length; i++) {
-// 				if (infoFilter[i][0] == elem) { //To search the array that contains the info that we want
-// 					var parentLenght = parent.elems.length;
-// 					var indexOf = parent.elems.indexOf(elem);
-// 					if (indexOf == 0) {
-// 						data += "(";
-// 					}
-// 					var valueOfEntity = infoFilter[i][1];
-// 					var lengthEntity = valueOfEntity.indexOf("/")
-// 					if (-1 != lengthEntity) { //Erase first entity name in the path
-// 						valueOfEntity = valueOfEntity.slice(lengthEntity + 1); //Erase entity and "/"
-// 					}
-// 					///Apply filter depending on Select Condition
-// 					if (infoFilter[i][3] == ' = ' || infoFilter[i][3] == ' &ne; ' || infoFilter[i][3] == ' &ge; ' || infoFilter[i][3] == ' > ' || infoFilter[i][3] == ' &le; ' || infoFilter[i][3] == ' < ') { //passarho a com STA+
-// 						data += "(";
-// 						if (entity != valueOfEntity) { //If it's not the entity of the node and it is a connected box need "node entity name "
-// 							data += valueOfEntity + "/";
-// 						}
-// 						data += infoFilter[i][2][0];
-// 						if (infoFilter[i][2].length == 2) {
-// 							data += infoFilter[i][2][1];
-// 						}
-// 						var typeOfValue = infoFilter[i][5];
-// 						var apostropheOrSpace;
-// 						(typeOfValue == "text") ? apostropheOrSpace = "'" : apostropheOrSpace = "";
-// 						switch (infoFilter[i][3]) {
-// 							case ' = ':
-// 								data += " eq " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-// 								break;
-// 							case ' &ne; ':
-// 								data += " ne " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-// 								break;
-// 							case ' &ge; ':
-// 								data += " ge " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-// 								break;
-// 							case ' > ':
-// 								data += " gt " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-// 								break;
-// 							case ' &le; ':
-// 								data += " le " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-// 								break;
-// 							case ' < ':
-// 								data += " lt " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-// 								break;
-// 							default:
-// 						}
-// 					}
-// 					else if (infoFilter[i][3] == ' [a,b] ' || infoFilter[i][3] == ' (a,b] ' || infoFilter[i][3] == ' [a,b) ' || infoFilter[i][3] == ' (a,b) ') {
-// 						if (entity != valueOfEntity) {
-// 							valueOfEntity = valueOfEntity + "/" + infoFilter[i][2];
-// 						} else {
-// 							valueOfEntity = infoFilter[i][2];
-// 						}
-// 						if (infoFilter[i][2].length == 2) {
-// 							valueOfEntity += infoFilter[i][2][1];
-// 						}
-// 						data += "( " + valueOfEntity;
-// 						switch (infoFilter[i][3]) {
-// 							case ' [a,b] ':
-// 								data += " ge " + infoFilter[i][4] + " and " + valueOfEntity + " le " + infoFilter[i][5] + ")";
-// 								break;
-// 							case ' (a,b] ':
-// 								data += " gt " + infoFilter[i][4] + " and " + valueOfEntity + " le " + infoFilter[i][5] + ")";
-// 								break;
-// 							case ' [a,b) ':
-// 								data += " ge " + infoFilter[i][4] + " and " + valueOfEntity + " lt " + infoFilter[i][5] + ")";
-// 								break;
-// 							case ' (a,b) ':
-// 								data += " gt " + infoFilter[i][4] + " and " + valueOfEntity + " lt " + infoFilter[i][5] + ")";
-// 								break;
-// 							default:
-// 						}
-// 					}
-// 					else if (infoFilter[i][3] == 'contains' || infoFilter[i][3] == 'no contains' || infoFilter[i][3] == 'starts with' || infoFilter[i][3] == 'ends with') {
-// 						if (entity != valueOfEntity) {
-// 							valueOfEntity = valueOfEntity + "/" + infoFilter[i][2];
-// 						} else {
-// 							valueOfEntity = infoFilter[i][2];
-// 						}
-// 						if (infoFilter[i][2].length == 2) {
-// 							valueOfEntity += infoFilter[i][2][1];
-// 						}
-// 						switch (infoFilter[i][3]) {
-// 							case 'contains':
-// 								data += "substringof('" + infoFilter[i][4] + "'," + valueOfEntity + ")";
-// 								break;
-// 							case 'no contains':
-// 								data += "not substringof('" + infoFilter[i][4] + "'," + valueOfEntity + ")";
-// 								break;
-// 							case 'starts with':
-// 								data += "startswith(" + valueOfEntity + ",'" + infoFilter[i][4] + "')";
-// 								break;
-// 							case 'ends with':
-// 								data += "endswith(" + valueOfEntity + ",'" + infoFilter[i][4] + "')";
-// 								break;
-// 							default:
-// 						}
-// 					}
-// 					else if (infoFilter[i][3] == 'year' || infoFilter[i][3] == 'month' || infoFilter[i][3] == 'day' || infoFilter[i][3] == 'hour' || infoFilter[i][3] == 'minute' || infoFilter[i][3] == 'date') {
-// 						var newValue = "";
-// 						for (var a = 0; a < infoFilter[i][4].length; a++) {//erase 0 if starts with 0. 
-// 							if (infoFilter[i][4].charAt(a) != 0) {
-// 								newValue += infoFilter[i][4].charAt(a)
-// 							}
-// 						}
-// 						infoFilter[i][4] = newValue;
-// 						switch (infoFilter[i][3]) {
-// 							case 'year':
-// 								data += "year(resultTime) eq " + infoFilter[i][4];
-// 								break;
-// 							case 'month':
-// 								data += "month(resultTime) eq " + infoFilter[i][4];
-// 								break;
-// 							case 'day':
-// 								data += "day(resultTime) eq " + infoFilter[i][4];
-// 								break;
-// 							case 'hour':
-// 								data += "hour(resultTime) eq " + infoFilter[i][4];
-// 								break;
-// 							case 'minute':
-// 								data += "minute(resultTime) eq " + infoFilter[i][4];
-// 								break;
-// 							case 'date':
-// 								data += "date(resultTime) eq date('" + infoFilter[i][4] + "')";
-// 								break;
-// 							default:
-// 						}
-// 					}
-// 					if ((indexOf + 1) != parentLenght) {
-// 						data += nexus
-// 					}
-// 					if ((indexOf + 1) == parentLenght) {
-// 						data += ")";
-// 					}
-// 					node.STAUrlAPI += data
-// 					node.STAUrlAPICounter.push(infoFilter[i][0]);
-// 				}
-// 			}
-// 		}
-// 		if (node.STAUrlAPICounter.length == infoFilter.length) {
-// 			node.STAUrlAPI.slice(0, "(");
-// 			node.STAUrlAPI.slice(node.STAUrlAPI.length + 1, ")");
-// 			stopreadInformationRowFilterSTA = true;
-// 		}
-// 	}
-// }
-
-//
 
 function createObjectToKeepForFilter(node, objectToExplore, objectToBuild) {
 
@@ -1885,12 +1700,6 @@ function createObjectToKeepForFilter(node, objectToExplore, objectToBuild) {
 	}		
 }
 
-
-
-
-
-
-//
 var stopreadInformationRowFilterTable = false;
 
 function readInformationRowFilterTable(elem, nexus, parent) {  //Table (not STA)
