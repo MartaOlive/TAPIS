@@ -6059,21 +6059,36 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "RecursiveExpandSTA.png" || nodeTo.image == "SelectRowSTA.png" || nodeTo.image == "FilterRowsSTA.png")) {
 		var plural;
 		(getSTAEntityPlural(nodeFrom.STAEntityName) == nodeFrom.STAEntityName)? plural=true: plural=false;
-		if(nodeTo.image == "FilterRowsSTA.png" && plural==true){
-			nodeTo.STAURL = nodeFrom.STAURL;
-			if (nodeFrom.STASelectedExpands)
-				nodeTo.STASelectedExpands=deapCopy(nodeFrom.STASelectedExpands);
-			if (nodeFrom.STAdata)
-				nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
-			if (nodeFrom.STAdataAttributes)
-				nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
-			networkNodes.update(nodeTo);
-			if (addEdge)
-				networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-			return true;
+		if(nodeTo.image == "FilterRowsSTA.png"){
+			if (plural==true){
+					nodeTo.STAURL = nodeFrom.STAURL;
+				if (nodeFrom.STASelectedExpands)
+					nodeTo.STASelectedExpands=deapCopy(nodeFrom.STASelectedExpands);
+				if (nodeFrom.STAdata)
+					nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
+				if (nodeFrom.STAdataAttributes)
+					nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
+				networkNodes.update(nodeTo);
+				if (addEdge)
+					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+				return true;
+			}else{
+				alert ("The entity expanded must be a list to apply the filter.")
+				return null;
+			}
+			
 		}else{
-			alert ("The entity expanded must be a list to apply the filter.")
-			return null;
+			nodeTo.STAURL = nodeFrom.STAURL;
+				if (nodeFrom.STASelectedExpands)
+					nodeTo.STASelectedExpands=deapCopy(nodeFrom.STASelectedExpands);
+				if (nodeFrom.STAdata)
+					nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
+				if (nodeFrom.STAdataAttributes)
+					nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
+				networkNodes.update(nodeTo);
+				if (addEdge)
+					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+				return true;
 		}
 
 	}

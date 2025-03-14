@@ -10,289 +10,141 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.15.1/vis.min.css" rel="stylesheet" type="text/css" />
 
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.15.1/vis.min.js"></script>
+
+	<script src="../vis-timeline-graph2d.min.js"></script>
+	<script src="../vis-network.min.js"></script>
 	<style type="text/css">
 		body,
 		html {
 			font-family: sans-serif;
 		}
 
-		.vis-graph-group0 {
-			fill: #bdb24f;
+		.custom-style1 {
+			fill: #0df200;
 			fill-opacity: 0;
 			stroke-width: 2px;
-			stroke: #b6c52b
+			stroke: #0df200;
 		}
 
-		.vis-graph-group1 {
-			fill: #f79646;
+		.custom-style2 {
+			fill: #f23303;
 			fill-opacity: 0;
 			stroke-width: 2px;
-			stroke: #f79646
-		}
-
-		.vis-graph-group2 {
-			fill: #8c51cf;
-			fill-opacity: 0;
-			stroke-width: 2px;
-			stroke: #8c51cf
-		}
-
-		.vis-graph-group3 {
-			fill: #75c841;
-			fill-opacity: 0;
-			stroke-width: 2px;
-			stroke: #75c841
-		}
-
-		.pepito {
-			fill: #ff0100;
-			fill-opacity: 0;
-			stroke-width: 2px;
-			stroke: #00ff37
-		}
-
-		.vis-graph-group5 {
-			fill: #37d8e6;
-			fill-opacity: 0;
-			stroke-width: 2px;
-			stroke: #37d8e6
+			stroke: #ff0004;
 		}
 	</style>
 
-	<h2>Graph2d | Basic Example</h2>
+<body>
+	<h2>Graph2d | Right Axis Example</h2>
+	<div style="width:700px; font-size:14px; text-align: justify;">
+		This example shows the all of the graphs outlined on the right side using the <code>yAxisOrientation</code>
+		option.
+		We also show a few custom styles for the graph and show icons on the axis, which are adhering to the custom
+		styling.
+		Finally, the legend is manually positioned. Both the left and right axis
+		have their own legend. If one of the axis is unused, the legend is not shown. The options for the legend have
+		been split
+		in a <code>left</code> and a <code>right</code> segment. Since this example shows the right axis, the right
+		legend is configured.
+
+
+	</div>
 	<br />
-	<input type="color" id="selectColor" value="#f79646" style="width:20px; height:22px">
-	<button onclick="canviaColor()">canvia</button>
 	<div id="visualization"></div>
 
-
 	<script type="text/javascript">
-
-		var STAelementFilter = {
-			"elems": [
-				{
-					"elems": [
-						{
-							"elems": [
-								0,
-								1
-							],
-							"nexus": " not ",
-							"boxName": "0_0"
-						},
-						{
-							"elems": [
-								2,
-								6
-							],
-							"nexus": " not ",
-							"boxName": "0_1"
-						},
-						{
-							"elems": [
-								5
-							],
-							"nexus": null,
-							"boxName": "0_3"
-						}
-					],
-					"nexus": " and ",
-					"boxName": "1_0"
+		// create a dataSet with groups
+		var names = ['Custom1', 'Custom2', 'Blank', 'CircleShaded'];
+		var groups = new vis.DataSet();
+		var options = {
+			legend: { right: { position: 'top-left' } },
+			dataAxis: { icons: true },
+			start: '2014-06-10',
+			end: '2014-07-04',
+			moveable: false
+		};
+		groups.add({
+			id: 0,
+			content: names[0],
+			className: 'custom-style1',
+			options: {
+				yAxisOrientation:'right',
+				drawPoints: {
+					style: 'square' // square, circle
 				},
-				{
-					"elems": [
-						{
-							"elems": [
-								8,
-								9
-							],
-							"nexus": " and ",
-							"boxName": "0_4"
-						}
-					],
-					"nexus": null,
-					"boxName": "1_1"
+				yAxisOrientation:'right',
+				shaded: {
+					orientation: 'bottom' // top, bottom
 				}
-			],
-			"nexus": " or ",
-			"boxName": "2_0"
-		}
-		createObjectToKeepForFilter("node", STAelementFilter, {});
-
-
-		function createObjectToKeepForFilter(node, objectToExplore, objectToBuild) {
-
-			var boxNamesArrays = [];
-			for (var i = 0; i < objectToExplore.elems.length; i++) {
-				(objectToExplore.elems[i].boxName) ? boxNamesArrays.push(objectToExplore.elems[i].boxName) : boxNamesArrays.push(objectToExplore.elems[i]);
 			}
+		});
 
-			objectToBuild[objectToExplore.boxName] = {
-				["items"]: boxNamesArrays,
-				["nexus"]: objectToExplore.nexus
+		groups.add({
+			id: 1,
+			content: names[1],
+			className: 'custom-style2',
+			options: {
+				style: 'bar',
+				
+				drawPoints: {
+					style: 'circle',
+					size: 10
+				},
+				yAxisOrientation:'right',
 			}
-			if (typeof objectToExplore.elems[0] === "object") {
-				for (var i = 0; i < objectToExplore.elems.length; i++) {
-					createObjectToKeepForFilter(node, objectToExplore.elems[i], objectToBuild);
-				}
-			} else {
-				console.log(objectToBuild);
+		});
+
+		groups.add({
+			id: 2,
+			content: names[2],
+			options: {
+				drawPoints: false,
+				
 			}
-		}
+		});
 
+		groups.add({
+			id: 3,
+			content: names[3],
+			options: {
+				drawPoints: {
+					style: 'circle' // square, circle
 
-
-		function builtFilterSTAsentenceByparts(filterSchemaItems, filterData) {
-			console.log(filterSchemaItems);
-			var url = "";
-			if (filterSchemaItems.items.length > 1) url += "("
-
-			for (var i = 0; i < filterSchemaItems.length; i++) {
-
-				var valueOfEntity = infoFilter[i][1];
-				var lengthEntity = valueOfEntity.indexOf("/")
-				if (-1 != lengthEntity) { //Erase first entity name in the path
-					valueOfEntity = valueOfEntity.slice(lengthEntity + 1); //Erase entity and "/"
+				},
+				
+				shaded: {
+					orientation: 'top' // top, bottom
 				}
-				///Apply filter depending on Select Condition
-				if (infoFilter[i][3] == ' = ' || infoFilter[i][3] == ' &ne; ' || infoFilter[i][3] == ' &ge; ' || infoFilter[i][3] == ' > ' || infoFilter[i][3] == ' &le; ' || infoFilter[i][3] == ' < ') { //passarho a com STA+
-					data += "(";
-					if (entity != valueOfEntity) { //If it's not the entity of the node and it is a connected box need "node entity name "
-						data += valueOfEntity + "/";
-					}
-					data += infoFilter[i][2][0];
-					if (infoFilter[i][2].length == 2) {
-						data += infoFilter[i][2][1];
-					}
-					var typeOfValue = infoFilter[i][5];
-					var apostropheOrSpace;
-					(typeOfValue == "text") ? apostropheOrSpace = "'" : apostropheOrSpace = "";
-					switch (infoFilter[i][3]) {
-						case ' = ':
-							data += " eq " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-							break;
-						case ' &ne; ':
-							data += " ne " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-							break;
-						case ' &ge; ':
-							data += " ge " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-							break;
-						case ' > ':
-							data += " gt " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-							break;
-						case ' &le; ':
-							data += " le " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-							break;
-						case ' < ':
-							data += " lt " + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
-							break;
-						default:
-					}
-				}
-				else if (infoFilter[i][3] == ' [a,b] ' || infoFilter[i][3] == ' (a,b] ' || infoFilter[i][3] == ' [a,b) ' || infoFilter[i][3] == ' (a,b) ') {
-					if (entity != valueOfEntity) {
-						valueOfEntity = valueOfEntity + "/" + infoFilter[i][2];
-					} else {
-						valueOfEntity = infoFilter[i][2];
-					}
-					if (infoFilter[i][2].length == 2) {
-						valueOfEntity += infoFilter[i][2][1];
-					}
-					data += "( " + valueOfEntity;
-					switch (infoFilter[i][3]) {
-						case ' [a,b] ':
-							data += " ge " + infoFilter[i][4] + " and " + valueOfEntity + " le " + infoFilter[i][5] + ")";
-							break;
-						case ' (a,b] ':
-							data += " gt " + infoFilter[i][4] + " and " + valueOfEntity + " le " + infoFilter[i][5] + ")";
-							break;
-						case ' [a,b) ':
-							data += " ge " + infoFilter[i][4] + " and " + valueOfEntity + " lt " + infoFilter[i][5] + ")";
-							break;
-						case ' (a,b) ':
-							data += " gt " + infoFilter[i][4] + " and " + valueOfEntity + " lt " + infoFilter[i][5] + ")";
-							break;
-						default:
-					}
-				}
-				else if (infoFilter[i][3] == 'contains' || infoFilter[i][3] == 'no contains' || infoFilter[i][3] == 'starts with' || infoFilter[i][3] == 'ends with') {
-					if (entity != valueOfEntity) {
-						valueOfEntity = valueOfEntity + "/" + infoFilter[i][2];
-					} else {
-						valueOfEntity = infoFilter[i][2];
-					}
-					if (infoFilter[i][2].length == 2) {
-						valueOfEntity += infoFilter[i][2][1];
-					}
-					switch (infoFilter[i][3]) {
-						case 'contains':
-							data += "substringof('" + infoFilter[i][4] + "'," + valueOfEntity + ")";
-							break;
-						case 'no contains':
-							data += "not substringof('" + infoFilter[i][4] + "'," + valueOfEntity + ")";
-							break;
-						case 'starts with':
-							data += "startswith(" + valueOfEntity + ",'" + infoFilter[i][4] + "')";
-							break;
-						case 'ends with':
-							data += "endswith(" + valueOfEntity + ",'" + infoFilter[i][4] + "')";
-							break;
-						default:
-					}
-				}
-				else if (infoFilter[i][3] == 'year' || infoFilter[i][3] == 'month' || infoFilter[i][3] == 'day' || infoFilter[i][3] == 'hour' || infoFilter[i][3] == 'minute' || infoFilter[i][3] == 'date') {
-					var newValue = "";
-					for (var a = 0; a < infoFilter[i][4].length; a++) {//erase 0 if starts with 0. 
-						if (infoFilter[i][4].charAt(a) != 0) {
-							newValue += infoFilter[i][4].charAt(a)
-						}
-					}
-					infoFilter[i][4] = newValue;
-					switch (infoFilter[i][3]) {
-						case 'year':
-							data += "year(resultTime) eq " + infoFilter[i][4];
-							break;
-						case 'month':
-							data += "month(resultTime) eq " + infoFilter[i][4];
-							break;
-						case 'day':
-							data += "day(resultTime) eq " + infoFilter[i][4];
-							break;
-						case 'hour':
-							data += "hour(resultTime) eq " + infoFilter[i][4];
-							break;
-						case 'minute':
-							data += "minute(resultTime) eq " + infoFilter[i][4];
-							break;
-						case 'date':
-							data += "date(resultTime) eq date('" + infoFilter[i][4] + "')";
-							break;
-						default:
-					}
-				}
-				if ((indexOf + 1) != parentLenght) {
-					data += nexus
-				}
-				if ((indexOf + 1) == parentLenght) {
-					data += ")";
-				}
-				node.STAUrlAPI += data
-				node.STAUrlAPICounter.push(infoFilter[i][0]);
 			}
+		});
 
+		var container = document.getElementById('visualization');
+		var items = [
+			{ x: '2014-06-13', y: 300, group: 0 },
+			{ x: '2014-06-14', y: 100, group: 0 },
+			{ x: '2014-06-15', y: 150, group: 1 },
+			{ x: '2014-06-16', y: 300, group: 1 },
+			{ x: '2014-06-17', y: 100, group: 1 },
+			{ x: '2014-06-18', y: 150, group: 1 },
+			{ x: '2014-06-19', y: 52, group: 1 },
+			{ x: '2014-06-20', y: 100, group: 1 },
+			{ x: '2014-06-21', y: 20, group: 2 },
+			{ x: '2014-06-22', y: 60, group: 2 },
+			{ x: '2014-06-23', y: 10, group: 2 },
+			{ x: '2014-06-24', y: 50, group: 2 },
+			{ x: '2014-06-25', y: 30, group: 2 },
+			{ x: '2014-06-26', y: 20, group: 3 },
+			{ x: '2014-06-27', y: 60, group: 3 },
+			{ x: '2014-06-28', y: 10, group: 3 },
+			{ x: '2014-06-29', y: 85, group: 3 },
+			{ x: '2014-06-30', y: 30, group: 3 }
+		];
 
+		var dataset = new vis.DataSet(items);
 
+		var graph2d = new vis.Graph2d(container, dataset, groups, options);
 
-
-
-
-
-
-
-			if (filterSchemaItems.items.length > 1) url += ")"
-		}
 	</script>
-	</body>
+</body>
 
 </html>
