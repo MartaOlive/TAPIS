@@ -1702,8 +1702,7 @@ function createObjectToKeepForFilter(node, objectToExplore, objectToBuild) {
 
 var stopreadInformationRowFilterTable = false;
 
-function readInformationRowFilterTable(elem, nexus, parent) {  //Table (not STA)
-	var node= getNodeDialog("DialogFilterRows");
+function readInformationRowFilterTable(elem, nexus, parent,node) {  //Table (not STA)
 	var infoFilter = node.STAinfoFilter;
 
 	switch (nexus) {
@@ -1721,7 +1720,7 @@ function readInformationRowFilterTable(elem, nexus, parent) {  //Table (not STA)
 	if (stopreadInformationRowFilterTable == false) {
 		if (typeof elem === "object") {
 			for (var i = 0; i < elem.elems.length; i++) {
-				readInformationRowFilterTable(elem.elems[i], elem.nexus, elem);
+				readInformationRowFilterTable(elem.elems[i], elem.nexus, elem,node);
 			}
 			if (node.STAtableCounter.length != infoFilter.length && node.STAtableCounter.length != 0 && nexus != "no" && parent != "no") {
 				node.STAtable += " " + nexus + " ";
@@ -1838,10 +1837,12 @@ function readInformationRowFilterTable(elem, nexus, parent) {  //Table (not STA)
 					node.STAtable += data
 					node.STAtableCounter.push(infoFilter[i][0]);
 				}
+				
 			}
 		}
 		if (node.STAtableCounter.length == infoFilter.length) {
 			stopreadInformationRowFilterTable = true;
+			networkNodes.update(node);
 		}
 	}
 }
@@ -1958,6 +1959,7 @@ function applyEvalAndFilterData(node) {
 
 	//update STAdata
 	node.STAdata = resultsFiltered;
+	networkNodes.update(node);
 }
 async function askForConformanceInOGCAPIFeatures() {
 	const filterInConformance = ["filter", "features-filter", "simple-cql", "cql-text", "cql-json"];//What I need for filter
@@ -2003,8 +2005,9 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 
 	var data = parentNode.STAdata;
 		node.STAdata=deapCopy(data); //Put all data from parent in this node 
+	if (node.image != "FilterRowsTable.png") {
 		node.STAURL=deapCopy(parentNode.STAURL); //Put all data from parent in this node 
-	
+	}
 	networkNodes.update(node);
 
 	//if (parentNode.image != "FilterRowsTable.png") {
@@ -2076,7 +2079,8 @@ function GetFilterRowsTable(node) {
 	stopreadInformationRowFilterTable = false;
 	node.STAtableCounter = [];
 	node.STAtable = "";
-	readInformationRowFilterTable(node.STAelementFilter, "no", "no"); //apply filter
+	networkNodes.update(node);
+	readInformationRowFilterTable(node.STAelementFilter, "no", "no", node); //apply filter
 	applyEvalAndFilterData(node);
 	UpdateChildenTable(node);		
 }
