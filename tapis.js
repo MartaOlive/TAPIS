@@ -443,7 +443,6 @@ function removeExtraAmpersand(queryparams) {
 
 //Before it was called AddKVPToURL
 function AddQueryParamsToURL(url, kvp) {
-	console.log(url)
 	kvp=removeExtraAmpersand(kvp);
 	if (!kvp)
 		return url;
@@ -6058,17 +6057,25 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		return true;
 	}
 	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "RecursiveExpandSTA.png" || nodeTo.image == "SelectRowSTA.png" || nodeTo.image == "FilterRowsSTA.png")) {
-		nodeTo.STAURL = nodeFrom.STAURL;
-		if (nodeFrom.STASelectedExpands)
-			nodeTo.STASelectedExpands=deapCopy(nodeFrom.STASelectedExpands);
-		if (nodeFrom.STAdata)
-			nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
-		if (nodeFrom.STAdataAttributes)
-			nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
-		networkNodes.update(nodeTo);
-		if (addEdge)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		return true;
+		var plural;
+		(getSTAEntityPlural(nodeFrom.STAEntityName) == nodeFrom.STAEntityName)? plural=true: plural=false;
+		if(nodeTo.image == "FilterRowsSTA.png" && plural==true){
+			nodeTo.STAURL = nodeFrom.STAURL;
+			if (nodeFrom.STASelectedExpands)
+				nodeTo.STASelectedExpands=deapCopy(nodeFrom.STASelectedExpands);
+			if (nodeFrom.STAdata)
+				nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
+			if (nodeFrom.STAdataAttributes)
+				nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
+			networkNodes.update(nodeTo);
+			if (addEdge)
+				networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+			return true;
+		}else{
+			alert ("The entity expanded must be a list to apply the filter.")
+			return null;
+		}
+
 	}
 	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "SelectColumnsSTA.png" || nodeTo.image == "ExpandColumnSTA.png") || 
 						nodeTo.image == "SortBySTA.png" || nodeTo.image == "RangeSTA.png") {
