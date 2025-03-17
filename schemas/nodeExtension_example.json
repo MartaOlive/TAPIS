@@ -1,0 +1,124 @@
+{
+    "id": "57opt.4g8l04",
+    "label": "Merge Expands",
+    "image": "MergeExpandsSTA.png",
+    "shape": "circularImage",
+    "STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things?$expand=HistoricalLocations($top=5;$orderby=time desc),Datastreams($top=2)",
+    "STASelectedExpands": {
+        "selected": [],
+        "expanded": {
+            "HistoricalLocations": {
+                "selected": [],
+                "expanded": {},
+                "skip": 0,
+                "top": 5,
+                "orderBy": {
+                    "attribute": "time",
+                    "desc": true
+                }
+            },
+            "Datastreams": {
+                "selected": [],
+                "expanded": {},
+                "skip": 0,
+                "top": 2,
+                "STAFilter": {
+                    "entity": "Datastreams",
+                    "filterSchema": {
+                        "0_0": {
+                            "items": [
+                                0,
+                                1
+                            ],
+                            "nexus": " or "
+                        }
+                    },
+                    "filterData": [
+                        [
+                            0,
+                            "Datastreams",
+                            [
+                                "name"
+                            ],
+                            " = ",
+                            "Air Temperature",
+                            "text"
+                        ],
+                        [
+                            1,
+                            "Datastreams",
+                            [
+                                "name"
+                            ],
+                            " = ",
+                            "Noise Level",
+                            "text"
+                        ]
+                    ]
+                }
+            }
+        }
+    },
+    "STAEntityName": "Things",
+    "STASelectExpandNextOrigin": [],
+    "STAdata": [
+    ],
+    "STAdataAttributes": {
+        "@iot.selfLink": {
+            "type": "anyURI",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/@iot.selfLink"
+        },
+        "@iot.id": {
+            "type": "integer",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/@iot.id"
+        },
+        "name": {
+            "type": "string",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/name"
+        },
+        "description": {
+            "type": "string",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/description"
+        },
+        "properties": {
+            "type": "object",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/properties"
+        },
+        "HistoricalLocations": {
+            "type": "array",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/HistoricalLocations"
+        },
+        "HistoricalLocations@iot.nextLink": {
+            "type": "string",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/HistoricalLocations@iot.nextLink"
+        },
+        "Datastreams": {
+            "type": "array",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Datastreams"
+        },
+        "Datastreams@iot.nextLink": {
+            "type": "string",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Datastreams@iot.nextLink"
+        },
+        "Party@iot.navigationLink": {
+            "type": "anyURI",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Party@iot.navigationLink"
+        },
+        "HistoricalLocations@iot.navigationLink": {
+            "type": "anyURI",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/HistoricalLocations@iot.navigationLink"
+        },
+        "Locations@iot.navigationLink": {
+            "type": "anyURI",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Locations@iot.navigationLink"
+        },
+        "MultiDatastreams@iot.navigationLink": {
+            "type": "anyURI",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/MultiDatastreams@iot.navigationLink"
+        },
+        "Datastreams@iot.navigationLink": {
+            "type": "anyURI",
+            "definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Datastreams@iot.navigationLink"
+        }
+    }
+}

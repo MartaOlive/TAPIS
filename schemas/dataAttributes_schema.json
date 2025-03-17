@@ -1,36 +1,41 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "title": "data attributes",
-    "description": "'Data attributes' (commonly referenced with the parameter 'dataAttributes' or derivates), are an object. Every keys of the main object is an object that defines the 'type', 'description', 'definition', 'UoM', 'UoMSymbol' and 'UoMDefinition'",
-	"type": "object",
-	"additionalProperties": { 
-		"description": "",
-		"type": "object",
-		"properties": {
-			"type": {
-				"enum": ["boolean", "array", "object", "integer", "number", "string", "isodatetime", "null", "undefined"]
-			},
-			"description": { 
-				"description": "Description of the variable",
-				"type": "string"
-			},
-			"definition": {
-				"description": "URI of the definition of the variable, e.g. QUDT URI",
-				"type": "string",
-				"format": "uri"
-			},
-			"UoM": { 
-				"description": "Description of the units of measurement",
-				"type": "string"
-			},
-			"UoMSymbol": { 
-				"description": "Simbol of the units of measurement",
-				"type": "string"
-			},
-			"UoMDefinition": {
-				"description": "URI of the definition of the units or measurement, e.g. QUDT URI",
-				"type": "string",
-				"format": "uri"
+    "$ref": "#/definitions/dataAttributes",
+    "definitions": {
+		"dataAttributes": {     
+			"description": "'Data attributes' (commonly referenced with the parameter 'dataAttributes' or derivates), are an object. Every keys of the main object is an object that defines the 'type', 'description', 'definition', 'UoM', 'UoMSymbol' and 'UoMDefinition'",
+			"type": "object",
+			"additionalProperties": { 
+				"description": "Definition of a key in the objects of the array. In practice is the definition of tha column in the table",
+				"type": "object",
+				"properties": {
+					"type": {
+						"enum": ["boolean", "array", "object", "integer", "number", "string", "anyURI", "isodatetime", "null", "undefined"]
+					},
+					"description": { 
+						"description": "Description of the variable",
+						"type": "string"
+					},
+					"definition": {
+						"description": "URI of the definition of the variable, e.g. QUDT URI",
+						"type": "string",
+						"format": "uri"
+					},
+					"UoM": { 
+						"description": "Description of the units of measurement",
+						"type": "string"
+					},
+					"UoMSymbol": { 
+						"description": "Simbol of the units of measurement",
+						"type": "string"
+					},
+					"UoMDefinition": {
+						"description": "URI of the definition of the units or measurement, e.g. QUDT URI",
+						"type": "string",
+						"format": "uri"
+					}
+				}
 			}
 		}
 	}

@@ -1,13 +1,18 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "data table",
-    "description": "'Data tables' (commonly referenced with the parameter 'data' or derivates) are an array of records, each on being an object of key and value pairs. Normaly, the same keys are present in every record, but this is not required. values are not restricted being numbers, strings or objects",
-	"type": "array",
-	"items": {
-		"type": "object",
-		"additionalProperties": { 
-			"description": "",
-			"type": ["number", "string", "object"]
+    "title": "Data table obtained from the service or the file",
+    "$ref": "#/definitions/data",
+    "definitions": {
+		"data": {
+			"description": "'Data tables' (commonly referenced with the parameter 'data' or derivates) are an array of records, each on being an object of key and value pairs. Normaly, the same keys are present in every record, but this is not required. values are not restricted being numbers, strings or objects",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"additionalProperties": { 
+					"description": "",
+					"type": ["number", "string", "object", "array"]
+				}
+			}
 		}
 	}
 }
