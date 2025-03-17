@@ -250,16 +250,16 @@ function builtFilterSTAsentence(STAFilter){
 			}
 			switch (infoFilter[3]) {
 				case 'contains':
-					urlPart += "substringof('" + infoFilter[4] + "'," + valueOfEntity ;
+					urlPart += "substringof('" + infoFilter[4] + "'," + valueOfEntity +")";
 					break;
 				case 'no contains':
-					urlPart += "not substringof('" + infoFilter[4] + "'," + valueOfEntity ;
+					urlPart += "not substringof('" + infoFilter[4] + "'," + valueOfEntity +")";
 					break;
 				case 'starts with':
-					urlPart += "startswith(" + valueOfEntity + ",'" + infoFilter[4] + "'";
+					urlPart += "startswith(" + valueOfEntity + ",'" + infoFilter[4] + "')";
 					break;
 				case 'ends with':
-					urlPart += "endswith(" + valueOfEntity + ",'" + infoFilter[4] + "'";
+					urlPart += "endswith(" + valueOfEntity + ",'" + infoFilter[4] + "')";
 					break;
 				default:
 			}
