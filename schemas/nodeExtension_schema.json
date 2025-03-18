@@ -46,7 +46,40 @@
 		},
 		"STAdataAttributes": {
 			"$ref": "dataAttributes_schema.json#/definitions/dataAttributes"
+		},
+		"STACounter": {
+			"description": "Set of the identification numbers of the elements in FilterRows dialog. Every element is a row used to indicate the conditions of the filter. Every element contains the entity, the property, the condition and the value",
+			"type": "array"
+		},
+		"STAFilterRowEntities": {
+			"description": "The entities selected in every element of the filter in FilterRows dialog",
+			"type": "array"
+		},
+		"STAFilterSchema": {
+			"description": "Scheme to be able to set filter priorities",
+			"type": "object"
+		},
+		"STAboxNames": {
+			"description": "Set of the identifications of the 'boxes' that make up FilterRows dialog ",
+			"type": "array"
+		},
+		"STAconditionsFilter": {
+			"description": "Set of Div elements used in every element of the FilterRows dialog",
+			"type": "array"
+		},
+		"STAelementFilter": {
+			"description": "Scheme of the position of every element in Filter Rows dialog. This set of 'boxes' and elements allows to establish the priorities to build the filter query",
+			"type": "object"
+		},
+		"STAentityValuesForSelect": {
+			"description": "Array with two elements, first one store the name of the entity queried to the API. Second element is the data recived in this query",
+			"type": "array"
+		},
+		"STAinfoFilter": {
+			"description": "The information to form the filter, such as entities, properties, conditions and values",
+			"type": "array"
 		}
+
 	},
 	"definitions": { 
 		"selectedExpands": {
