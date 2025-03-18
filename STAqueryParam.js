@@ -67,25 +67,27 @@ function GetQueryParamSelectedSelectExpands(selectedExpands, recursive) {
 		recursive=0;
 	if (!selectedExpands)
 		return "";
-	var selectedArray=Object.keys(selectedExpands.selected);
-	if (selectedArray.length) {
-		for (var i=0; i<selectedArray.length; i++) {
-			if (!selectedExpands.selected[selectedArray[i]])
-				continue;
+	if (selectedExpands.selected) {
+		var selectedArray=(typeof selectedExpands.selected.length === "undefined") ? Object.keys(selectedExpands.selected): selectedExpands.selected;
+		if (selectedArray.length) {
+			for (var i=0; i<selectedArray.length; i++) {
+				if (typeof selectedExpands.selected.length === "undefined" && !selectedExpands.selected[selectedArray[i]])
+					continue;
 		
-			if (selectedArray[i]=="@iot.selfLink")
-				s = selectedArray[i];
-			else if (selectedArray[i].startsWith("@iot."))
-				s = selectedArray[i].substring(5);
-			else
-				s = selectedArray[i].replace("@iot.", "/");  //Changes Datastreams@iot.navigationLink to Datastreams/navigationLink
-			cdns.push(s);
-			cdns.push(',');
-		}
-		if (cdns.length)
-		{
-			cdns.unshift("$select=");
-			cdns.pop(); //Treu la ','
+				if (selectedArray[i]=="@iot.selfLink")
+					s = selectedArray[i];
+				else if (selectedArray[i].startsWith("@iot."))
+					s = selectedArray[i].substring(5);
+				else
+					s = selectedArray[i].replace("@iot.", "/");  //Changes Datastreams@iot.navigationLink to Datastreams/navigationLink
+				cdns.push(s);
+				cdns.push(',');
+			}
+			if (cdns.length)
+			{
+				cdns.unshift("$select=");
+				cdns.pop(); //Treu la ','
+			}
 		}
 	}
 	if (selectedExpands.skip) {

@@ -274,34 +274,6 @@ function showInfoMessage(msg){
 	elem.scrollTop=elem.scrollHeight;  //https://stackoverflow.com/questions/11715646/scroll-automatically-to-the-bottom-of-the-page
 }
 
-function getURLWithoutQueryParams(s)
-{
-	var i=s.indexOf('?')
-	if (i==-1)
-		return s;
-	return s.substring(0, i);
-}
-
-function getURLQueryParams(s)
-{
-	var i=s.indexOf('?')
-	if (i==-1)
-		return "";
-	return s.substring(i+1);
-}
-
-//https://stackoverflow.com/questions/736513/how-do-i-parse-a-url-into-hostname-and-path-in-javascript
-function transformStringIntoLocation(href) {
-	var location = document.createElement("a");
-	location.href = href;
-	// IE doesn't populate all link properties when setting .href with a relative URL,
-	// however .href will return an absolute URL which then can be used on itself
-	// to populate these additional fields.
-	if (location.host == "") {
-		location.href = location.href;
-	}
-	return location;
-}
 
 //Returns the id of the selected resource in the last part of the path. So extracts in the "entities(id)" extracts the id
 function getSTAURLSelectingARow(url)
@@ -379,45 +351,6 @@ function getSTAURLRoot(url) {
 	return urlRoot;
 }
 
-//From the MiraMon Map Browser TreuAdreca()
-function getFileName(s)
-{
-	var i=s.lastIndexOf('/');
-	if (i==-1)
-		i=s.lastIndexOf('\\');
-	if (i==-1)
-		return s;
-	return s.substring(i+1);
-}
-
-//From the MiraMon Map Browser DonaAdreca()
-function getAddressPath(s)
-{
-	if (s.charAt(s.length-1)=='/')
-		return s;
-	var i=s.lastIndexOf('/');
-	if (i==-1)
-		return "";
-	return s.substring(0, i);
-}
-
-//from the MiraMon Map Browser DonaAdrecaAbsoluta()
-function getAbsoluteURL(url)
-{
-	if (url.length>8 && (url.substring(0, 7)=="http://" || url.substring(0, 8)=="https://"))
-		return url;
-	if (url.charAt(0)=="/")
-		return location.protocol+"//"+location.host+url;
-	return location.protocol+"//"+location.host+getAddressPath(location.pathname)+url;
-}
-
-function removeExtension(name){
-	var i=name.lastIndexOf(".");
-	if (i==-1)
-		return name;
-	return name.substring(0, i);
-}
-
 
 function getLang() {
 	if (navigator.languages != undefined)
@@ -441,48 +374,6 @@ function removeExtraAmpersand(queryparams) {
 	return s;
 }
 
-//Before it was called AddKVPToURL
-function AddQueryParamsToURL(url, kvp) {
-	kvp=removeExtraAmpersand(kvp);
-	if (!kvp)
-		return url;
-	if (url.indexOf('?')==-1)
-		return url + "?" + kvp;
-	return url + "&" + kvp;
-}
-
-function GetQueryParamFromURL(url, queryparam) {
-	var queryparams=getURLQueryParams(url);
-	var kvp=queryparams.split("&");
-	for(var i=0; i<kvp.length; i++) {
-		var j = kvp[i].indexOf("=");  // Gets the first index where a space occours
-		if (j==-1)
-			continue;
-		if (kvp[i].substring(0, j)==queryparam)
-			return kvp[i].substring(j+1);
-	}
-	return null;
-}
-
-function RemoveQueryParamFromURL(url, queryparam) {
-	var queryparams=getURLQueryParams(url);
-	if (!queryparams)
-		return url;
-	var kvp=queryparams.split("&");
-	for(var i=0; i<kvp.length; i++) {
-		var j = kvp[i].indexOf("=");  // Gets the first index where a space occours
-		if (j==-1)
-			continue;
-		if (kvp[i].substring(0, j)==queryparam){
-			kvp.splice(i, 1);
-			if (kvp.length)
-				return getURLWithoutQueryParams(url)+'?'+kvp.join('&');
-			return getURLWithoutQueryParams(url)
-		}
-	}
-	return url;
-}
-
 //https://stackoverflow.com/questions/50036922/change-a-css-stylesheets-selectors-properties/50036923#50036923
 function changeCSSStyle(selector, cssProp, cssVal) {
 	var cssRules = (document.all) ? 'rules': 'cssRules';
@@ -494,66 +385,6 @@ function changeCSSStyle(selector, cssProp, cssVal) {
 				return;
 			}
 		}
-	}
-}
-
-//Returns the protocol of a URL without the double slash
-function getProtocol(s){
-	var pos_barrabarra;
-	if (-1!=(pos_barrabarra=s.indexOf("://")))
-		return s.substring(0, pos_barrabarra+1);
-	return "";
-}
-
-var IdGPSPosition=0;
-function InitGPSPosition() {
-	if (navigator.geolocation)
-		IdGPSPosition=navigator.geolocation.watchPosition(UpdateGPSPosition, ErrorGPSPosition, {enableHighAccuracy: true, maximumAge: 8000});
-	else
-	{
-		showInfoMessage("Geolocation not supported by the web browser");
-		CancelGPSPosition();
-	}
-}
-
-var PreviousGPSPoint=null;
-
-function CancelGPSPosition() {
-	if (IdGPSPosition) {
-		navigator.geolocation.clearWatch(IdGPSPosition);
-		IdGPSPosition=0;
-	}
-	PreviousGPSPoint=null;
-}
-
-var GPSPositionReported=false;
-function UpdateGPSPosition(position) {
-	PreviousGPSPoint={long: position.coords.longitude, lat: position.coords.latitude};
-	if (!GPSPositionReported)
-	{
-		showInfoMessage("Geolocation is long: " + PreviousGPSPoint.long + " lat: " + PreviousGPSPoint.lat);
-		GPSPositionReported=true;
-	}
-}
-
-function ErrorGPSPosition(error) {
-	switch(error.code) {
-		case error.PERMISSION_DENIED:
-			showInfoMessage("User denied request location.");
-			CancelGPSPosition();
-			break;
-		case error.POSITION_UNAVAILABLE:
-			showInfoMessage("Location information is unavailable.");
-			CancelGPSPosition();
-			break;
-		case error.TIMEOUT:
-			showInfoMessage("Request location timeOut.");
-			CancelGPSPosition();
-			break;
-		case error.UNKNOWN_ERROR:
-		default:
-			showInfoMessage("Unknown error obtaining Location (" + error.code + ").");
-			break;
 	}
 }
 
@@ -706,33 +537,8 @@ async function InitSTAPage() {
 		window.opener.postMessage(JSON.stringify({msg: "Tapis is listening"}), "*");
 }
 
-function removeParamContentType(contentType) {
-	if (!contentType)
-		return contentType;
-	var i=contentType.indexOf(';')
-	if (i<0)
-		return contentType;
-	else
-		return contentType.substring(0, i);
-}
 
-var CriptoName=null, DisplayName="";
-function AddHeadersIfNeeded(options) {
-	if (CriptoName &&
-		hello("authenix").getAuthResponse() &&
-		hello("authenix").getAuthResponse().access_token) {
-		if (!options.headers)
-			options.headers={};
-		options.headers['Authorization']='Bearer ' + hello("authenix").getAuthResponse().access_token;
-	}
-	if (PreviousGPSPoint)
-	{
-		if (!options.headers)
-			options.headers={};
-		options.headers['Geolocation']='geo:' + PreviousGPSPoint.lat + ',' + PreviousGPSPoint.long;
-	}
-}
-
+//Works with JSON links.
 //'type' is optional
 function getLinkRelInLinks(links, rel, type) {
 	if (!links)
@@ -950,160 +756,6 @@ async function getSimplifyGUFRecords(metadatas){
 		simpleUrlRecords.push(await getSimplifyGUFRecord(metadatas));
 	return simpleUrlRecords;
 }
-
-function standardStatusText(status){
-	switch (status){
-		case 400:
-			return "Bad Request. The request cannot be fulfilled due to bad syntax.";
-		case 401: 
-			return "Unauthorized. The request was a legal request, but the server is refusing to respond to it. Please authenticate using the Login button and try again.";
-		case 403:
-			return "Forbidden. The request was a legal request, but the server is refusing to respond to it.";
-		case 404: 
-			return "Not Found. The requested page could not be found but may be available again in the future.";
-		case 405: 
-			return "Method Not Allowed. A request was made of a page using a request method not supported by that page.";
-		case 406: 
-			return "Not Acceptable. The server can only generate a response that is not accepted by the client.";
-		case 407: 
-			return "Proxy Authentication Required. The client must first authenticate itself with the proxy.";
-		case 408: 
-			return "Request Timeout. The server timed out waiting for the request.";
-		case 409: 
-			return "Conflict. The request could not be completed because of a conflict in the request.";
-		case 410: 
-			return "Gone. The requested page is no longer available.";
-		case 411: 
-			return "Length Required. The \"Content-Length\" is not defined. The server will not accept the request without it.";
-		case 412: 
-			return "Precondition Failed. The precondition given in the request evaluated to false by the server.";
-		case 413: 
-			return "Request Too Large. The server will not accept the request, because the request entity is too large.";
-		case 414: 
-			return "Request-URI Too Long. The server will not accept the request, because the URI is too long. Occurs when you convert a POST request to a GET request with a long query information.";
-		case 415: 
-			return "Unsupported Media Type	The server will not accept the request, because the media type is not supported."; 
-		case 416: 
-			return "Range Not Satisfiable. The client has asked for a portion of the file, but the server cannot supply that portion.";
-		case 417: 
-			return "Expectation Failed.";
-		default:
-			return "";
-	}
-}
-
-//https://web.dev/fetch-api-error-handling/
-//Despite the name of the function, it can also be used for retrieving non-json files.
-//In fact, the response is an object with the following members: obj (only if the response is application/json), text: (only if the response is not application/json), responseHeaders: (only the ones listed in headersToGet), ok (always true);
-//To do GET it can be used with the first parameter only or with method=null.
-//It requests JSON content in 'Accept' by default. If you use headersToSend to specify headers then there is no default 'Accept' and you may specify it. headersToSend is an object like this: {'Accept': '*/*', 'Authorization': "XXX"}
-//objToSend is a JavaScript object that will be stringify into JSON text and send as the body of the HTTP request.
-//headersToGet is an array of header names that will be part of the response.
-async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend) {
-	var response, jsonData, options={};
-	try {
-		if (method)
-			options.method=method;
-		
-		if (headersToSend)
-			options.headers=headersToSend;
-		else
-			options.headers={'Accept': 'application/json, */*;q=0.8'};
-
-		AddHeadersIfNeeded(options);
-		if (objToSend)
-		{
-			options.headers['Content-Type']='application/json';
-			options.body=JSON.stringify(objToSend);
-		}
-		response = await fetch(url, options);
-	}
-	catch (error) {
-		showInfoMessage('There was an error with ' + url + ": " + error.message);
-		console.log('There was an error', error);
-		return;
-	}
-	// Uses the 'optional chaining' operator
-	if (!(response?.ok)) {
-		var body;
-		if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
-			(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0)) {
-			body=await response.json();
-			body=JSON.stringify(body);
-		}
-		else
-			body=await response.text();
-		showInfoMessage("Error: HTTP " + (method ? method : "GET") + " URL: " + url + ", HTTP code: " + response?.status + ", Description: "+ (response.statusText ? response.statusText : standardStatusText(response.status)) + (body ? ", " + body : ""));
-		console.log("HTTP Response Code: " + response?.status + ": " + response?.statusText + (body ? JSON.stringify(body) : ""));
-		return response;
-	}
-	try {
-		var headersObj={};
-		if (headersToGet)
-		{
-			for (var i=0; i<headersToGet.length; i++)
-				headersObj[headersToGet[i]]=response.headers.get(headersToGet[i]);
-			//Enumetates all headers: for(let entry of response.headers.entries()) console.log(entry) })
-		}
-		if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
-		(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0))
-			return {obj: await response.json(), text: null, responseHeaders: headersObj, ok: true};
-		else
-			return {obj: null, text: await response.text(), responseHeaders: headersObj, ok: true};
-	} catch (error) {
-		if (error instanceof SyntaxError) {
-			showInfoMessage('Syntax error reading ' + url + ": " + error.message);
-			console.log('There was a SyntaxError', error);
-			return;
-		}
-		else {
-			showInfoMessage('Error interpreting ' + url + ": " + error.message);
-			console.log('There was an error', error);
-			return;
-		}
-	}
-}
-
-async function HTTPBinaryData(url) {
-	var response, jsonData, options={};
-	try {
-		response = await fetch(url, options);
-	}
-	catch (error) {
-		showInfoMessage('There was an error with ' + url + ": " + error.message);
-		console.log('There was an error', error);
-		return;
-	}
-	// Uses the 'optional chaining' operator
-	if (!(response?.ok)) {
-		var body;
-		if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
-			(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0)) {
-			body=await response.json();
-			body=JSON.stringify(body);
-		}
-		else
-			body=await response.text();
-		showInfoMessage("Error: HTTP " + (method ? method : "GET") + " URL: " + url + ", HTTP code: " + response?.status + ", Description: "+ (response.statusText ? response.statusText : standardStatusText(response.status)) + (body ? ", " + body : ""));
-		console.log("HTTP Response Code: " + response?.status + ": " + response?.statusText + (body ? JSON.stringify(body) : ""));
-		return response;
-	}
-	try {
-		return await response.arrayBuffer();
-	} catch (error) {
-		if (error instanceof SyntaxError) {
-			showInfoMessage('Syntax error reading ' + url + ": " + error.message);
-			console.log('There was a SyntaxError', error);
-			return;
-		}
-		else {
-			showInfoMessage('Error interpreting ' + url + ": " + error.message);
-			console.log('There was an error', error);
-			return;
-		}
-	}
-}
-
 
 function updateQueryAndTableArea(node) {
 	var nodeId = network.getSelectedNodes();
@@ -1635,17 +1287,17 @@ function ReadURLImportJSONLD() {
 function TransformTextJSONToTable(json, jsonText, url) {
 	if (!json)
 	{
-	try
-	{
+		try
+		{
 			json = JSON.parse(jsonText);
-	}
-	catch (e) 
-	{
-		showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0, 1000));
-		currentNode.STAdata=null;
-		networkNodes.update(currentNode);
-		return;
-	}
+		}
+		catch (e) 
+		{
+			showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0, 1000));
+			currentNode.STAdata=null;
+			networkNodes.update(currentNode);
+			return;
+		}
 	}
 	var result=ParseJSON(json)
 	currentNode.STAdata=result;
@@ -2119,7 +1771,7 @@ function EDCRequestTransfer(node, EDCConsumerURL, contractAgreementId, counterPa
 					}
 				},
 				function(error) { 
-					showInfoMessage('EDC trasnfer request failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage('Error in requesting EDC catalog. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
 					console.log(error) ;
 				}
 			);	
@@ -2437,11 +2089,21 @@ function ShowJoinTablesDialog(parentNodes, node) {
 	AddJoinTablesRowMatching(parentNodes[0], parentNodes[1], node, false);
 }
 
+function UpdateNodeId(nodeId, record){
+	var node=networkNodes.get(nodeId);
+	if (!node)
+		return;
+	if (node.image=="OneValueSTA.png")
+		getOneValueLabel(node, record);
+}
 
-function ShowOneValueDialog(currentNode) {
-	var parentNode=GetFirstParentNode(currentNode);
+function ShowOneValueDialog(node) {
+	var parentNode=GetFirstParentNode(node);
 	if (!parentNode)
 		return;
+
+	saveNodeDialog("DialogOneValue", node);
+
 	var data = parentNode.STAdata;
 
 	if (!data || !data.length) {
@@ -2450,22 +2112,22 @@ function ShowOneValueDialog(currentNode) {
 	}
 	document.getElementById("DialogOneValueTitle").innerHTML = "Select value to see the last value";
 
-	startingNodeContextId=currentNode.id;
 	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
-	PopulateSelectSaveLayerDialog("DialogOneValueVariable", dataAttributes, currentNode.STAvariable ? currentNode.STAvariable : "result");
-	PopulateSelectSaveLayerDialog("DialogOneValueTime", dataAttributes, currentNode.STAtimeVariable ? currentNode.STAtimeVariable : "phenomenonTime");
-	if (currentNode.STAredrawPeriod)
-		document.getElementById("DialogOneValueRefreshPeriod").value=currentNode.STAredrawPeriod;
+	PopulateSelectSaveLayerDialog("DialogOneValueVariable", dataAttributes, node.STAvariable ? node.STAvariable : "result");
+	document.getElementById("DialogOneValueAlertValue").value=typeof node.STAalertValue === "undefined" ? "" : node.STAalertValue;
+	PopulateSelectSaveLayerDialog("DialogOneValueTime", dataAttributes, node.STAtimeVariable ? node.STAtimeVariable : "phenomenonTime");
+	if (node.STAredrawPeriod)
+		document.getElementById("DialogOneValueRefreshPeriod").value=node.STAredrawPeriod;
 }
 
 function PrepareRefreshOneValue(event) {
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogOneValue").close();
 
-	var node=networkNodes.get(startingNodeContextId);
+	var node=getNodeDialog("DialogOneValue");
 	if (!node)
-		return;
-	startingNodeContextId = null;
+		return;	
+
 	if (node.STAtimeOut) {
 		clearTimeout(node.STAtimeOut);
 		node.STAtimeOut=null;
@@ -2473,22 +2135,25 @@ function PrepareRefreshOneValue(event) {
 	node.STAvariable=document.getElementById("DialogOneValueVariableSelect").value;
 	node.STAtimeVariable=document.getElementById("DialogOneValueTimeSelect").value;
 	node.STAredrawPeriod=document.getElementById("DialogOneValueRefreshPeriod").value;
+	node.STAalertValue=document.getElementById("DialogOneValueAlertValue").value;
 	networkNodes.update(node);
 
-	RequestLastObservationAndRefreshOneValue(node, node.STAvariable, node.STAtimeVariable, node.STAredrawPeriod);
+	RequestLastObservationAndRefreshOneValue(node);
 }
 
 function StopRefreshOneValue(event) {
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogOneValue").close();
 
-	var node=networkNodes.get(startingNodeContextId);
+	var node=getNodeDialog("DialogOneValue");
 	if (!node)
-		return;
-	if (node.STAtimeOut)
-	{
+		return;	
+
+	if (node.STAtimeOut) {
 		clearTimeout(node.STAtimeOut);
 		showInfoMessage("Refresh cancelled.");
+	} else {
+		UnSubscribeTopicToWebHub(node.id);
 	}
 }
 
@@ -2497,10 +2162,10 @@ function prepareRefreshCountResults(event) {
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogCountResults").close();
 
-	var node=networkNodes.get(startingNodeContextId);
+	var node=getNodeDialog("DialogCountResults");
 	if (!node)
-		return;
-	startingNodeContextId = null;
+		return;	
+
 	if (node.STACountTimeOut) {
 		clearTimeout(node.STACountTimeOut);
 		node.STACountTimeOut=null;
@@ -2513,25 +2178,37 @@ function prepareRefreshCountResults(event) {
 }
 
 function stopRefreshCountResults(event) {
-event.preventDefault(); // We don't want to submit this form
-document.getElementById("DialogCountResults").close();
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogCountResults").close();
 
-if (!currentNode)
-return;
-if (currentNode.STACountTimeOut) {
-clearInterval(currentNode.STACountTimeOut);
-showInfoMessage("Refresh cancelled.");
-}
+	var node=getNodeDialog("DialogCountResults");
+	if (!node)
+		return;	
+
+	if (node.STACountTimeOut) {
+		clearInterval(node.STACountTimeOut);
+		showInfoMessage("Refresh cancelled.");
+	}
 }
 
 function closeDialogCountResults(event) {
-event.preventDefault(); // We don't want to submit this form
-document.getElementById("DialogCountResults").close();
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogCountResults").close();
 }
 
 function getTimeISOTime(isodatetime) {
 	var d=new Date(isodatetime);
 	return d.getHours()+":"+(d.getMinutes()<10 ? "0" : "")+d.getMinutes()+":"+(d.getSeconds()<10 ? "0" : "")+d.getSeconds();
+}
+
+function getDateTimeISOTime(isodatetime) {
+	var d=new Date(isodatetime);
+	return d.getFullYear() + "-" + (d.getMonth()<9 ? "0" : "") + (d.getMonth()+1) + "-" + (d.getDate()<10 ? "0" : "") + d.getDate() + " " + d.getHours() + ":" + (d.getMinutes()<10 ? "0" : "") + d.getMinutes()+":" + (d.getSeconds()<10 ? "0" : "") + d.getSeconds();
+}
+
+function isISOTimeToday(isodatetime) {
+	var d=new Date(isodatetime), today=new Date();
+	return (d.getFullYear()==today.getFullYear() && d.getMonth()==today.getMonth() && d.getDate()==today.getDate())
 }
 
 function GetObservationResultAsString(v) {
@@ -2542,71 +2219,108 @@ function GetObservationResultAsString(v) {
 	return v;
 }
 
-async function RequestLastObservationAndRefreshOneValue(currentNode, variable, timeVariable, period) {
-	var parentNode=GetFirstParentNode(currentNode);
-	if (!parentNode)
-		return;
-	currentNode.STAURL = AddQueryParamsToURL(parentNode.STAURL, "$orderby="+timeVariable+" desc");
-	if (removeExtension(parentNode.image)=="Observations")
-		currentNode.STAURL = AddQueryParamsToURL(currentNode.STAURL, "$expand=Datastream,MultiDatastream")
-	if (!currentNode.selectExpands)
-		currentNode.STASelectedExpands={selected: [], expanded: {}, top: 1};
-	else
-		currentNode.STASelectedExpands.top=1;
-	networkNodes.update(currentNode);
-	showInfoMessage("Getting the last observation...");
-	await LoadJSONNodeSTAData(currentNode);
-
-	//Redraw the label
-
-	var data=currentNode.STAdata;
-	if (!data || data.length<1)
-		return;
-
-	if (data[0]["MultiDatastream"]) {
-		currentNode.label="";
-		for (var i=0; i<data[0][variable].length; i++)
+function getOneValueLabel(node, record) {
+var label, value;
+	if (record["MultiDatastream"] && typeof record[node.STAvariable].length !== "undefined") {
+		label="";
+		if (record[node.STAvariable].length)
+			value=GetObservationResultAsString(record[node.STAvariable][0]);
+		for (var i=0; i<record[node.STAvariable].length; i++)
 		{
-			currentNode.label+=GetObservationResultAsString(data[0][variable][i]);
-			if (data[0]["MultiDatastream"]?.unitOfMeasurements[i]?.symbol)
-				currentNode.label+=data[0]["MultiDatastream"]?.unitOfMeasurements[i]?.symbol;
-			if (i+1!=data[0][variable].length)
-				currentNode.label+=", ";
+			label+=GetObservationResultAsString(record[node.STAvariable][i]);
+			if (record["MultiDatastream"]?.unitOfMeasurements[i]?.symbol)
+				label+=record["MultiDatastream"]?.unitOfMeasurements[i]?.symbol;
+			if (i+1!=record[node.STAvariable].length)
+				label+=", ";
 		}
 	} else {
-		currentNode.label=GetObservationResultAsString(data[0][variable]);
-		if (data[0]["Datastream"] && data[0]["Datastream"]?.unitOfMeasurement?.symbol)
-			currentNode.label+=data[0]["Datastream"].unitOfMeasurement.symbol;
+		label=value=GetObservationResultAsString(record[node.STAvariable]);
+		if (record["Datastream"] && record["Datastream"]?.unitOfMeasurement?.symbol)
+			label+=record["Datastream"].unitOfMeasurement.symbol;
 	}
-	currentNode.label+=" (" + getTimeISOTime(data[0][timeVariable]) + ")";
+	node.label=label + " (" + (isISOTimeToday(record[node.STAtimeVariable]) ? getTimeISOTime(record[node.STAtimeVariable]) : getDateTimeISOTime(record[node.STAtimeVariable])) + ")";
+	if ((isNaN(value) || isNaN(node.STAalertValue)) ? value>=node.STAalertValue : parseFloat(value)>=parseFloat(node.STAalertValue)) {
+		node.color={background: '#f36971', /*border: '...', */highlight: { background: '#f9a8ac' /*'#97c2fc', border: '...'*/ }, hover: { background: '#f9a8ac'}};
+		node.font={color: "#ff0000" /*, size: */};
+	} else {
+		node.color=null;  //	={background: '#d2e5ff', highlight: { background: '#97c2fc' }};
+		node.font=null;
+	}
+	networkNodes.update(node);
+	if (node.STAtimeOut)
+		showInfoMessage(node.label + ". Waiting " + node.STAredrawPeriod + " seconds ...");
+	else
+		showInfoMessage(node.label + ". Waiting for updates ...");
 
-	//Redraw
-	showInfoMessage(currentNode.label + ". Waiting " + period + " seconds ...");
-	currentNode.STAtimeOut=setTimeout(RequestLastObservationAndRefreshOneValue, period*1000, currentNode, variable, timeVariable, period);
-	networkNodes.update(currentNode);
+	return node.label;
 }
 
+async function RequestLastObservationAndRefreshOneValue(node) {
 
-async function requestAndRefreshCountResults(currentNode, period) {
-	var parentNode = GetFirstParentNode(currentNode);
+	var parentNode=GetFirstParentNode(node);
 	if (!parentNode)
 		return;
-	var url=parentNode.STAURL;
-	currentNode.STAURL = AddQueryParamsToURL(RemoveQueryParamFromURL(RemoveQueryParamFromURL(url, "$count"), "$top"), "$count=true&$top=0");
-	if (!currentNode.selectExpands)
-		currentNode.STASelectedExpands={selected: [], expanded: {}, top: 0};
-	else
-		currentNode.STASelectedExpands.top=0;	networkNodes.update(currentNode);
+
+	//Previous query parametres are not considered deliverately as we will not use them anyway.
+	node.STASelectedExpands={selected: [node.STAtimeVariable, node.STAvariable],
+				expanded: {"Datastream": {selected: [], expanded: {}}, 
+					"MultiDatastream": {selected: [], expanded: {}}},
+				top: 1,
+				orderBy: {attribute: node.STAtimeVariable, desc: true}};
+	
+	//PRevious path parameters are preserved
+	node.STAURL = AddQueryParamsToURL(RemoveQueryParamSelectExpands(parentNode.STAURL), 
+					GetQueryParamSelectedSelectExpands(node.STASelectedExpands));
+
+	networkNodes.update(node);
+	showInfoMessage("Getting the last observation...");
+	await LoadJSONNodeSTAData(node);
+
+	//Redraw the label
+	if (!node.STAdata || node.STAdata.length<1)
+		return;
+
+	var selectedExpands=deapCopy(node.STASelectedExpands);
+	delete selectedExpands.top;
+	delete selectedExpands.skip;
+	delete selectedExpands.orderBy;
+	var topic = AddQueryParamsToURL(RemoveQueryParamSelectExpands(parentNode.STAURL), 
+					GetQueryParamSelectedSelectExpands(selectedExpands));
+
+	var websub=await DiscoverSTATopic(topic);
+
+	if (websub && websub.hub && websub.self && config.WebSocketUrl && config.WebHookUrl) {
+		SubscribeTopicToWebHub(config.WebSocketUrl, config.WebHookUrl, websub.hub, websub.self, node.id, 300, UpdateNodeId, showInfoMessage);
+	} else {
+		//Redraw
+		node.STAtimeOut=setTimeout(RequestLastObservationAndRefreshOneValue, node.STAredrawPeriod*1000, node);
+	}
+	getOneValueLabel(node, node.STAdata[0]);
+}
+
+async function requestAndRefreshCountResults(node, period) {
+	var parentNode = GetFirstParentNode(node);
+	if (!parentNode)
+		return;
+
+	node.STASelectedExpands={selected: [],
+				expanded: {},
+				top: 0};
+
+	node.STAURL = AddQueryParamsToURL(RemoveQueryParamSelectExpands(parentNode.STAURL), 
+					GetQueryParamSelectedSelectExpands(node.STASelectedExpands));
+	node.STAURL = AddQueryParamsToURL(RemoveQueryParamFromURL(node.STAURL, "$count"), "$count=true");
+
 	showInfoMessage("Getting number of items");
-	var numberOfResults = await loadAPIDataWithReturn(currentNode.STAURL, "CountResults");
+	var numberOfResults = await loadAPIDataWithReturn(node.STAURL, "CountResults");
 
 	//Redraw the label	
-	currentNode.label = "Items: " + numberOfResults;
+	node.label = "Items: " + numberOfResults;
 
 	//Redraw	
-	showInfoMessage(currentNode.label + ". Waiting " + period + " seconds ...");
-	currentNode.STACountTimeOut=setTimeout(requestAndRefreshCountResults, period*1000, currentNode, period);
-	networkNodes.update(currentNode);
+	showInfoMessage(node.label + ". Waiting " + period + " seconds ...");
+	node.STACountTimeOut=setTimeout(requestAndRefreshCountResults, period*1000, node, period);
+	networkNodes.update(node);
 }
 
 function CloseDialogOneValue(event) {
@@ -4281,7 +3995,7 @@ function GetSelectRow(event) {
 		LoadJSONNodeSTAData(node);
 	}
 	else
-		updateQueryAndTableArea(currentNode);
+		updateQueryAndTableArea(node);
 }
 
 function getGeospatialFilter(node, parentNode){
@@ -4467,7 +4181,7 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 				clearTimeout(node.STAtimeOut);
 				node.STAtimeOut=null;
 			}
-			await RequestLastObservationAndRefreshOneValue(node, node.STAvariable, node.STAtimeVariable, node.STAredrawPeriod);
+			await RequestLastObservationAndRefreshOneValue(node);
 		}
 		else if (node.image == "CountResultsSTA.png")
 		{
@@ -5910,14 +5624,28 @@ function ProcessMessageFromMiraMonMapBrowser(event)
 	}*/
 }
 
+// function addSTAEntityNameAsTitleDialog(div_id, node) { //Repetida al STAFilter
+// 	var entity;
+// 	if (node.STAEntityName)
+// 		entity = getSTAEntityPlural(node.STAEntityName);
+// 	else if (node.STAURL && getSTAURLLastEntity(node.STAURL)) {
+// 		entity = getSTAURLLastEntity(node.STAURL);
+// 		for (var i = 0; i < STAEntitiesArray.length; i++) {
+// 			if (STAEntitiesArray[i] == entity) {
+// 				break;
+// 			}
+// 		}
+// 	}
+// 	document.getElementById(div_id).innerHTML = entity ? "<img src='" + entity + ".png' style='height:30px;' />" + entity : "";
+// }
+
 function ShowTableSelectRowDialog(parentNode, node) {
 	saveNodeDialog("DialogSelectRow", node);
+
 	var data = parentNode.STAdata;
 	
 	if (node.STAURL)
-		addSTAEntityNameAsTitleDialog("divTitleSelectRow",node);
-
-	//document.getElementById("SelectNumberOfRecordsSelectRowLabel").style.display=(node.image == "SelectRowTable.png") ? "none" : "inline-block";
+		addSTAEntityNameAsTitleDialog("divTitleSelectRow", node);
 
 	if (!data || !data.length) {
 		document.getElementById("DialogSelectRowTable").innerHTML = "No data to show.";
@@ -5925,8 +5653,6 @@ function ShowTableSelectRowDialog(parentNode, node) {
 	}
 	document.getElementById("DialogSelectRowTable").innerHTML = GetHTMLTable(data, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data), false, "SelectRow_", node.STAURLIdSelected ? node.STAURLIdSelected : 0, null, "", isAttributeAnyURI);
 }
-
-
 
 function SeparateColumns(event) {
 	event.preventDefault(); // We don't want to submit this form
@@ -6507,7 +6233,7 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogOneValue").showModal();
 		}
 		else if (currentNode.image == "CountResultsSTA.png") {
-			startingNodeContextId=currentNode.id;
+			saveNodeDialog("DialogCountResults", currentNode);
 			document.getElementById("DialogCountResults").showModal();
 		}
 		else if (currentNode.image == "SaveLayer.png") {

@@ -1,6 +1,8 @@
 {
 	"MMNpath": "../mmn",
 	"STAurl": "https://citiobs.demo.secure-dimensions.de/staplus/v1.1",
+	"WebSocketUrl": "wss://callus.ddns.net/WSMM",
+	"WebHookUrl": "https://callus.ddns.net/WSMM",
 	"suggestedSTAurls": [
 		{
 			"group": "Releated to CREAF projects",
@@ -29,6 +31,10 @@
 			{
 				"desc": "AD4GD STAplus secured server",
 				"url": "https://frost.iotlab.com/sensorthings2/v1.1/"
+			},
+			{
+				"desc": "AD4GD PSNC automatic STA server generation example (water in Berlin lakes)",
+				"url": "https://sensor-things-api-sensor-things-api.apps.dcw1.paas.psnc.pl/WasserPortalDaily/api/v1.0"
 			},
 			{
 				"desc": "OGC sprint STAplus demo server",

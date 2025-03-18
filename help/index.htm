@@ -253,13 +253,17 @@ Now we can link this split record into the scatter plot with the "Connect two no
 <img src="recipe02_01_scatterPlotUoM.png" width="800" class="center">
 
 <p>
-Another way of showing the current value (last value) is to use the "One value" tool. Allow to represent the last captured value directly in the main screen and refresh its value a fix number of seconds (what is particularly useful for datastreams that are constantly adding new values).
+Another way of showing the last observation value (the current value, if the sensor is live) is to use the "One value" tool. This tool represents the last captured value directly below the node icon as a title. If the selected STA service is websub enabled, the implementation refreshes the value everytime a new observation arrives. That is particularly useful for datastreams that are constantly incorporating new observations. If the STA is not websub enabled, it refreshes its value the indicated fixed number of seconds. The websub implementation is much more efficient than repeated HTTP requests, as it keeps a websocket connection with a webhook server permanently open. The refreshing can be stopped by double clicking in the same node and pressing [Stop refresh].
 <br>
 <img src="recipe02_01_oneValue.png" width="600" class="center">
 
 <p>
-We can see the last temperature captured in the icon in the center of the pentagon. We can also see the value in the information window, as well as the promise to see a refreshed value in a 20 seconds time.<br>
+We can see the last temperature captured in the icon in the center of the pentagon. We can also see the value in the information window, as well as the promise to see a refreshed when the value is updated.<br>
 <img src="recipe02_01_oneValueView.png" width="800" class="center">
+
+<p>
+If the value is over the alerting value, the color of the icon and the text changes.<br>
+<img src="recipe02_01_oneValueAlert.png" width="300" class="center">
 
 <br><br><br>
 <hr width="30%">

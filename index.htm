@@ -23,6 +23,9 @@
 	<script type="text/javascript" src="jsonld.js" async defer></script>
 	<script type="text/javascript" src="edc.js" async defer></script>
 	<script type="text/javascript" src="data_tables.js"></script>
+	<script type="text/javascript" src="HTTPdata.js"></script>
+	<script type="text/javascript" src="gps.js"></script>
+	<script type="text/javascript" src="websubhook.js"></script>
 	<script type="text/javascript" src="STAqueryParam.js"></script>
 	<script type="text/javascript" src="selectColumnsDlg.js"></script>
 	<script type="text/javascript" src="groupByDlg.js"></script>
@@ -32,9 +35,8 @@
 	<script type="text/javascript" src="tapis.js"></script>
 
 	<link rel="stylesheet" href="tapis.css">
-	<link rel="stylesheet" href="vis-timeline-graph2d.min.css">
 	<link rel="stylesheet" href="vis.network.css">
-	
+	<link rel="stylesheet" href="vis-timeline-graph2d.min.css">
 </head>
 
 <body onLoad="StartSTAPage();" onkeydown="KeySTAPage(event);">
@@ -74,7 +76,7 @@
 	</table>
 
 	<span id="ButtonsSTAEntities"></span>
-	<button onclick="addEdge();">Connect two nodes</button><br>
+	<button onclick='addEdge();' onmouseover='showHelpToolTip(event, "", "Connect two nodes.<hr> Click on the end node and drop it on the previous node")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="connect.png" height="20" valign="middle">Connect two nodes</button><br>
 
 	<div>
 		<div id="mynetwork" style="float: left; width: 59.4%; height: 400px;"></div>
@@ -875,8 +877,9 @@
 			<p>
 				<span id="ButtonsContextMenuObjects"></span><br>
 				Node operations:<br>
-				<button onclick='removeCircularImage(event, "DialogContextMenu")'>Remove</button>
-				<button onclick='renameCircularImage(event, "DialogContextMenu")'>Rename</button><br>
+				<button onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a node and any connection to previous nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
+				<button onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Renames de node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.<small>")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="rename.png" height="20" valign="middle">Rename</button>
+				<br>
 			</p>
 			<div class="center">
 				<button value="cancel" onClick="startingNodeContextId=null;" formmethod="dialog">Cancel</button>
@@ -888,7 +891,7 @@
 	<dialog id="DialogEdgeContextMenu">
 		<form>
 			<p>
-				<button onclick='removeEdge(event, "DialogEdgeContextMenu")'>Remove</button>
+				<button onclick='removeEdge(event, "DialogEdgeContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a connection between two nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
 			</p>
 			<div class="center">
 				<button value="cancel" onClick="startingEdgeContextId=null;" formmethod="dialog">Cancel</button>
@@ -1287,11 +1290,15 @@
 				<span id="DialogOneValueVariable"></span>
 			</label>
 			<br>
+			<label>Alerting value (optional):
+				<input type="text" id="DialogOneValueAlertValue" size="5" value=""></input>
+			</label>
+			<br>
 			<label>Observation time:
 				<span id="DialogOneValueTime"></span>
 			</label>
 			<br>
-			<label>Refresh time:
+			<label>Refresh time (<small>not applicable with WebSub enabled</smcall>):
 				<input type="text" id="DialogOneValueRefreshPeriod" size="3" value="20"></input> seconds
 			</label>
 		</fieldset>
@@ -1301,8 +1308,10 @@
 			<button value="stop" onClick="StopRefreshOneValue(event)">Stop refresh</button>
 			<button value="cancel" onClick="CloseDialogOneValue(event)" formmethod="dialog">Close</button>
 		</div>
+		<input type="hidden" id="DialogOneValueNodeId"></input>
 		</form>
 	</dialog>
+
 	<dialog id="DialogCountResults">
 		<span id="DialogCountResultsTitle"></span>
 		<form>
@@ -1317,6 +1326,7 @@
 			<button value="ok"  onClick="stopRefreshCountResults(event)" >Stop refresh</button>
 			<button value="cancel" onClick="closeDialogCountResults(event)" formmethod="dialog">Close</button>
 		</div>
+		<input type="hidden" id="DialogCountResultsNodeId"></input>
 		</form>
 	</dialog>
 

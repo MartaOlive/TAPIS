@@ -89,7 +89,7 @@
 						"$ref": "#/definitions/selectedExpands"
 					}
 				},
-					"STAFilter":{
+				"STAFilter":{
 					"type": "object",
 					"description": "Schema and data to built filter query", 
 					"properties": { 
@@ -107,7 +107,7 @@
 						}
 					}
 				}
-				}
+			}
 		}
 	}
 }

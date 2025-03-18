@@ -10834,7 +10834,7 @@
                         (this.yAxisLeft = new l(this.body, this.options.dataAxis, this.svg, this.options.groups)),
                         (this.options.dataAxis.orientation = "right"),
                         (this.yAxisRight = new l(this.body, this.options.dataAxis, this.svg, this.options.groups)),
-                        delete this.options.dataAxis.orientation,
+                       delete this.options.dataAxis.orientation,
                         (this.legendLeft = new u(this.body, this.options.legend, "left", this.options.groups)),
                         (this.legendRight = new u(this.body, this.options.legend, "right", this.options.groups)),
                         this.show();
