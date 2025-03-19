@@ -6216,7 +6216,7 @@ function networkDoubleClick(params) {
 			var parentNodes=GetParentNodes(currentNode);
 			if (parentNodes && parentNodes[0]) {
 				if (parentNodes[0].STAdata)
-					ShowBarPlotDialog(parentNodes);
+					ShowBarPlotDialog(parentNodes,currentNode);
 				document.getElementById("DialogBarPlot").showModal();
 			}
 		}

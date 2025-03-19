@@ -153,7 +153,8 @@
 			createDialogWithSelectWithGroupsScatterPlot(node)
 		}
 
-		function ShowBarPlotDialog(parentNodes) {
+		function ShowBarPlotDialog(parentNodes,node) {
+			saveNodeDialog("DialogBarPlot", node);
 			var data = parentNodes[0].STAdata;
 			if (!data || !data.length) {
 				document.getElementById("DialogBarPlotTitle").innerHTML = "No data to show.";
@@ -326,8 +327,8 @@ const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df
 			var selectedOptions={};
 			selectedOptions.AxisX=document.getElementById("DialogBarPlotAxisXSelect").value;
 			selectedOptions.AxisY=document.getElementById("DialogBarPlotAxisYSelect").value;
-
-			var nodes=GetParentNodes(currentNode);
+			var node= getNodeDialog("DialogBarPlot");
+			var nodes=GetParentNodes(node);
 			if (nodes && nodes.length) {
 				var node=nodes[0];
 				var data, dataAttributes, record;
@@ -455,8 +456,8 @@ const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df
 
 		function DrawImageViewer(event){
 			event.preventDefault(); // We don't want to submit this form
-			
-			var node=GetFirstParentNode(currentNode);
+			var node= getNodeDialog("DialogBarPlot");
+			var node=GetFirstParentNode(node);
 			if (node) {
 				var data, dataAttributes, record;
 				if (node.STAdata) {
