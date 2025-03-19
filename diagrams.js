@@ -455,7 +455,7 @@ const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df
 
 		function DrawImageViewer(event){
 			event.preventDefault(); // We don't want to submit this form
-
+			
 			var node=GetFirstParentNode(currentNode);
 			if (node) {
 				var data, dataAttributes, record;

@@ -158,6 +158,7 @@
 
 
 		function ShowGroupByDialog(parentNode, node) {
+			saveNodeDialog("DialogGroupBy", node);
 			ShowTableSelectColumnsDialog("GroupBySelects", parentNode, node, false, null);
 			ShowTableSelectColumnsDialog("GroupByAttributesAggr", parentNode, node, false, "CheckSelectedAggrGroupBy(event, '"+node.id+"')");
 			ShowTableAttributesAndAgrregationsDialog("GroupByAttributesAggr", parentNode, node);
@@ -171,16 +172,18 @@
 			var groupByParams={groupByAttr: [], groupByDate:[], aggregationAttr:{}};
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogGroupBy").close();
-			var parentNode=GetFirstParentNode(currentNode), s;
+			
+			var node= getNodeDialog("DialogGroupBy");
+			var parentNode=GetFirstParentNode(node);
 
-			var data = parentNode.STAdata ? parentNode.STAdata : currentNode.STAdata;
+			var data = parentNode.STAdata ? parentNode.STAdata : node.STAdata;
 
 			if (!data || !data.length) {
 				return;
 			}
 			var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 			const dataAttributesArray = Object.keys(dataAttributes);
-			var dateTypeAttr=[];
+			var dateTypeAttr=[],s;
 
 			for (var a = 0; a < dataAttributesArray.length; a++) {
 				if (document.getElementById("GroupBySelects_" + a).checked) //groupBy
@@ -209,7 +212,7 @@
 			else if(groupByParams.groupByDate.length==1 && dateTypeAttr.length==0)alert ("To apply date rounding one date type attribute is has to be selected");
 
 			var dataCurrentAttributes={};
-			currentNode.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, groupByParams);
-			currentNode.STAdataAttributes=dataCurrentAttributes;
-			networkNodes.update(currentNode);
+			node.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, groupByParams);
+			node.STAdataAttributes=dataCurrentAttributes;
+			networkNodes.update(node);
 		}
