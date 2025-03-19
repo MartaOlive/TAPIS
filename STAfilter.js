@@ -359,8 +359,8 @@ function updateSTAFilterRowEntities(number, counter, entitySelected) { //Modify 
 
 		var index = filterRowEntities["optionsRow" + number].indexOf(entitySelected);
 		if (index == (-1)) { //it doesnt exists yet
-			var elementsToSplice = filterRowEntities["optionsRow" + number].length - counter; //Elements to erase to final. If entity changes, the rest has no sense
-			filterRowEntities["optionsRow" + number].splice(counter, elementsToSplice, entitySelected);
+			var elementsToSplice = filterRowEntities["optionsRow" + number].length - (counter-1); //Elements to erase to final. If entity changes, the rest has no sense
+			filterRowEntities["optionsRow" + number].splice((counter-1), elementsToSplice, entitySelected);
 		} else { //it exist previously
 			var newArray = [];
 			for (var a = 0; a < (index + 1); a++) {
@@ -376,7 +376,7 @@ function updateSTAFilterRowEntities(number, counter, entitySelected) { //Modify 
 function takeEntitiesAndFilterThemInFilterRow(filterRowEntities, i) { //avoid duplications
 	//var entities = STAEntities[getSTAEntityPlural(filterRowEntities[i], true)].entities;
 	var node= getNodeDialog("DialogFilterRows");
-	var entityInPlural=getSTAEntityPlural(node.STAEntityName);
+	var entityInPlural=getSTAEntityPlural(filterRowEntities[i], true);
 	var n= STAEntities[entityInPlural].entities.length, entitiesConnectedArray=[];
 	for (var t=0;t<n;t++){
 		entitiesConnectedArray.push(STAEntities[entityInPlural].entities[t].name);
@@ -402,7 +402,7 @@ function AddEntitiesSelectedBelowInFilterRow(number) {
 	var nextEntity;
 
 	//first Entity (node)
-	var entity = node.STAEntityName;
+	var entity= node.STAEntityName;
 	var DialogFilterRowEntitiesCheckBoxes = document.getElementById("DialogFilterRowEntitiesCheckBoxes");
 	var div = document.createElement("div");
 	var input = document.createElement("input");
@@ -421,7 +421,7 @@ function AddEntitiesSelectedBelowInFilterRow(number) {
 	div.appendChild(input);
 	div.appendChild(label);
 
-
+	//Next entities.
 	for (var i = 0; i < filterRowEntities.length; i++) {
 		entitiesFiltered = takeEntitiesAndFilterThemInFilterRow(filterRowEntities, i);
 
@@ -582,9 +582,11 @@ function fillPropertySelector(number, lastEntity, selectorInfo) { //lastEntity: 
 	var option2 = document.createElement("option"); //First option FALTA POSAR EL SELECTEDDDDDD
 	option2.setAttribute("value", "id");
 	option2.innerHTML = "id";
-	if(selectorInfo.length!=0){
-		if(selectorInfo[0][2][0]=="id"){
-			option2.setAttribute("selected", true);
+	if (selectorInfo){
+		if(selectorInfo.length!=0){
+			if(selectorInfo[0][2][0]=="id"){
+				option2.setAttribute("selected", true);
+			}
 		}
 	}
 	selectProperty.appendChild(option2);
@@ -981,12 +983,14 @@ async function fillValueSelectorFilterRow(count) {
 		var inputForEntityFilterRowValue = document.getElementById("inputForEntityFilterRow_" + count).value;
 		var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(inputForEntityFilterRowValue, true));
 		var node= getNodeDialog("DialogFilterRows");
-		var url = getURLWithoutQueryParams(node.STAURL); //He de treure lo dle principi tmb /observations
+		var url = getURLWithoutQueryParams(node.STAURL); //Erase first entitie ex: https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/observations. Erase observations
+		url= removeFirstEntityInURL(url);
+		url+=entity;
 		//Find the entity to search values
-		var parentLabel = searchParentLabel();
-		if (parentLabel != entity) {
-			url = url.replace(parentLabel, entity);
-		}
+		// var parentLabel = node.STAEntityName;
+		// if (parentLabel != entity) {
+		// 	url = url.replace(parentLabel, entity);
+		// }
 		if (typeof node.STAentityValuesForSelect !== "undefined") {
 			if (entity != node.STAentityValuesForSelect[0]) { //avoid to call to API for same entity
 				dataToFillSelect = await loadAPIDataWithReturn(url, "EntitiesFilterRow");
@@ -1054,7 +1058,15 @@ async function fillValueSelectorFilterRow(count) {
 
 	showAndHiddeSelectorAndInputsFilterRow(count);
 }
-
+function removeFirstEntityInURL(url){ //To use with api url/entity 
+ for (var i=0;i<STAEntitiesArray.length;i++){
+	if (url.includes("/"+STAEntitiesArray[i])){
+		url=url.replace("/"+STAEntitiesArray[i], "/");
+		break;
+	}
+ }
+ return url;
+}
 function changeWriteToSelect(number, selector) {  //To take the text in input
 	event.preventDefault();
 
