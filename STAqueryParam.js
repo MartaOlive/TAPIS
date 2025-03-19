@@ -105,8 +105,8 @@ function GetQueryParamSelectedSelectExpands(selectedExpands, recursive) {
 			cdns.push(recursive ? ";" : "&");
 		cdns.push("$orderby=", selectedExpands.orderBy.attribute, " ", (selectedExpands.orderBy.desc ? "desc": "asc"));
 	}
-	 if (selectedExpands.STAFilter){
-	 	var urlFilterPart=builtFilterSTAsentence(selectedExpands.STAFilter);
+	 if (selectedExpands.filter){
+	 	var urlFilterPart=builtFilterSTAsentence(selectedExpands.filter);
 		 if (cdns.length)cdns.push(recursive ? ";" : "&");
 	 	cdns.push("$filter=");
 	 	cdns.push(urlFilterPart);

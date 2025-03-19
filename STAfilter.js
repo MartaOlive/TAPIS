@@ -2115,7 +2115,7 @@ function GetFilterRowsSTA(node) {
 	var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
 	if (!selectedExpands)
 		selectedExpands=node.STASelectedExpands={selected: [], expanded: {}};
-	selectedExpands.STAFilter={
+	selectedExpands.filter={
 		entity:node.STAEntityName,
 		filterSchema:node.STAFilterSchema,
 		filterData: node.STAinfoFilter,

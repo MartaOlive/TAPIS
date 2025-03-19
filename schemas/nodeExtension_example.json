@@ -22,7 +22,7 @@
                 "expanded": {},
                 "skip": 0,
                 "top": 2,
-                "STAFilter": {
+                "filter": {
                     "entity": "Datastreams",
                     "filterSchema": {
                         "0_0": {
