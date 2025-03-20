@@ -6241,6 +6241,10 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogSaveLayer").showModal();
 		}
 		else if (currentNode.image == "OpenMap.png") {
+			var parentNodes=GetParentNodes(currentNode);
+			if (parentNodes[0]){
+				currentNode.STAdataAttributes=deapCopy(parentNodes[0].STAdataAttributes);
+			}
 			ShowOpenMapDialog(currentNode);
 			document.getElementById("DialogSaveLayer").showModal();
 		}
@@ -7948,13 +7952,13 @@ function createAndLoadImportGeoJSONNode(data,url){
 	document.getElementById("DialogImportGeoJSONSourceExternalData").checked= true;
 	document.getElementById("DialogImportGeoJSONSourceExternalDataText").value= url;
 
-	
-	TransformTextGeoJSONToTable(data);	
-
-	var attributes= getDataAttributes(data);
+	var geojson = JSON.parse(data);
+	var dataTrasnformed= TransformGeoJSONToTable(geojson);	
+	node.STAdata=dataTrasnformed
+	var attributes= getDataAttributes(dataTrasnformed);
 	node.STAdataAttributes=attributes;
-	
-networkNodes.update(node);
+	updateQueryAndTableArea(node);
+	networkNodes.update(node);
 	
 }
 
