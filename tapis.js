@@ -7940,14 +7940,22 @@ function calculateMinMaxMeanDesvest(aggregatedData){
 function createAndLoadImportGeoJSONNode(data,url){
 	
 	addCircularImage(null, null, "GeoJSON", "ImportGeoJSON.png");
-
-	currentNode = networkNodes.get(network.getSelectedNodes()[0]);
+	console.log(data)
+	var node = networkNodes.get(network.getSelectedNodes()[0]);
+	currentNode=node;
+	saveNodeDialog("DialogImportGeoJSON", node);
 	document.getElementById("DialogImportGeoJSONSourceExternalData").disabled= false;
 	document.getElementById("DialogImportGeoJSONSourceExternalData").checked= true;
 	document.getElementById("DialogImportGeoJSONSourceExternalDataText").value= url;
 
 	
 	TransformTextGeoJSONToTable(data);	
+
+	var attributes= getDataAttributes(data);
+	node.STAdataAttributes=attributes;
+	
+networkNodes.update(node);
+	
 }
 
 /*function giveMeNetworkInformation(event) {
