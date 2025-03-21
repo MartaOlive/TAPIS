@@ -7445,63 +7445,67 @@ function createColumnStatistics(event){
 
 function concatenateTables(){
 	event.preventDefault();
-	var selected= (document.getElementById("concatenationType_allColumns").checked ==true)?"allColumns":"repeatedColumns";			//agafar les data de tots els pares i juntar
+	var selected= (document.getElementById("concatenationType_allColumns").checked ==true)?"allColumns":"repeatedColumns";
 	var parentNodes= GetParentNodes(currentNode);
-	var parentNodesArrayData=[], parentNodesArrayKeys=[];
+	var parentNodesArrayData=[], parentNodesArrayKeys=[], parentNodesArrayData=[];
+
 
 	for(var i=0;i<parentNodes.length;i++){
-		parentNodesArrayData.push(...parentNodes[i].STAdata);
-		parentNodesArrayKeys.push(Object.keys(parentNodes[i].STAdata[0]));
+	 	parentNodesArrayData.push(...parentNodes[i].STAdata);
+	 	parentNodesArrayKeys.push(...Object.keys(parentNodes[i].STAdata[0]));
 	}
-	//llista de les keys
-	var allkeysWithOutRepetitions=parentNodesArrayKeys[0];
-	var repitedKeys=[];
 
-	for (var i=1;i<parentNodesArrayKeys.length;i++){
-		for (var e=0;e<parentNodesArrayKeys[i].length;e++){
-			if (allkeysWithOutRepetitions.indexOf(parentNodesArrayKeys[i][e])==-1){ //All different keys
-				allkeysWithOutRepetitions.push(parentNodesArrayKeys[i][e]); 
+	var finalKeys=[], sharedKeys=[];
+	if (selected=="allColumns"){
+		var keysSet = new Set(parentNodesArrayKeys);
+		finalKeys = [...keysSet];
+
+	}else{
+		parentNodesArrayKeys=parentNodesArrayKeys.sort();
+		var lastKey=parentNodesArrayKeys[0], count=1;
+
+		for (var e=1;e<parentNodesArrayKeys.length;e++){
+			
+			if (parentNodesArrayKeys[e]==lastKey){
+				if (e== parentNodesArrayKeys.length-1){ //last one
+					if(count+1==parentNodes.length) //save last key (same as previous)
+						sharedKeys.push(lastKey);
+				}else{
+					count++;
+				}
 				
 			}else{
-				repitedKeys.push(parentNodesArrayKeys[i][e]); //only repeated keys
-			}
+				if (e!= parentNodesArrayKeys.length-1){
+					if (count==parentNodes.length){ //repited in all parents
+						sharedKeys.push(lastKey);
+						count=1;
+						lastKey=parentNodesArrayKeys[e];
+					}else{
+						lastKey=parentNodesArrayKeys[e];
+						count=1;
+					}
+				}else{ //lastone
+					if (count==parentNodes.length){ //Save previous key
+						sharedKeys.push(lastKey);
+					}
+				}
+
+			}			
 		}
-	}
-	var necessaryRepetitions= parentNodes.length-1;// repitedKeys shan de repetir un cop menys q elements hi ha
-	repitedKeys=repitedKeys.sort();
-	var count=1, lastKey=repitedKeys[0], repitedKeysDefinitive=[];
-	for (var i=0;i<repitedKeys.length;i++){
-
-		if (lastKey==repitedKeys[i]){
-			count+=1;
-			lastKey=repitedKeys[i];
-		}else{
-			if(count==necessaryRepetitions){repitedKeysDefinitive.push(repitedKeys[i])};
-			count=0;
-			lastKey=repitedKeys[i];
-		}
-	}
-
-	var keysToNewTable;
-	if (selected=="allColumns"){
-		keysToNewTable= allkeysWithOutRepetitions;
-
-	}else{ //repeatedColumns
-		keysToNewTable= repitedKeysDefinitive;
+		finalKeys=sharedKeys;
 	}
 
 	var resultData=[], obj;
 	for (var i=0;i<parentNodesArrayData.length;i++){
 		obj={}
-		for (var e=0;e<keysToNewTable.length;e++){
-			if(parentNodesArrayData[i].hasOwnProperty(keysToNewTable[e])){
-				obj[keysToNewTable[e]]= parentNodesArrayData[i][keysToNewTable[e]];
+		for (var e=0;e<finalKeys.length;e++){
+			if(parentNodesArrayData[i].hasOwnProperty(finalKeys[e])){
+				obj[finalKeys[e]]= parentNodesArrayData[i][finalKeys[e]];
 			}else{
-				obj[keysToNewTable[e]]= "";
+				obj[finalKeys[e]]= "";
 			}
 		}
 		resultData.push(obj);
-		
 	}
 	currentNode.STAdata=resultData;
 	var parentNodes= GetParentNodes(currentNode);
@@ -7515,6 +7519,8 @@ function concatenateTables(){
 	currentNode.STAdataAttributes=attributes;
 	networkNodes.update(currentNode);
 	document.getElementById("DialogConcatenateTables").close();
+
+
 }
 
 const RouteToLocation={

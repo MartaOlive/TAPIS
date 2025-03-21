@@ -1,5 +1,5 @@
 {
-	"MMNpath": "../mmn",
+	"MMNpath": "https://www.ogc.grumets.cat/bestmap/",
 	"STAurl": "https://citiobs.demo.secure-dimensions.de/staplus/v1.1",
 	"WebSocketUrl": "wss://callus.ddns.net/WSMM",
 	"WebHookUrl": "https://callus.ddns.net/WSMM",
