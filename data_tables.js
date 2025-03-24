@@ -1195,3 +1195,42 @@ function sortValuesNumbersOrText(arrayValues) {
 	}
 	return arrayNumbers.sort((a, b) => a - b).concat(arrayText.sort());  //join arrays
 }
+
+function SortTableByColumn(data, attributeSelected, AscOrDesc) {
+	// if (AscOrDesc=="asc"){
+	// 	if ()
+	// } 	return data.sort((a, b) => a[attributeSelected] - b[attributeSelected]);
+	// else return data.sort((a, b) => b[attributeSelected] - a[attributeSelected]);
+	var attributes = getDataAttributesSimple(data);
+	if (attributes[attributeSelected].type == "string") {
+		if (AscOrDesc == "asc") {
+			data.sort(function (a, b) {
+				if (a[attributeSelected] > b[attributeSelected]) {
+					return 1;
+				}
+				if (a[attributeSelected] < b[attributeSelected]) {
+					return -1;
+				}
+				return 0;
+			})
+		} else {
+			data.sort(function (a, b) {
+				if (a[attributeSelected] < b[attributeSelected]) {
+					return 1;
+				}
+				if (a[attributeSelected] > b[attributeSelected]) {
+					return -1;
+				}
+				return 0;
+			})
+		}
+	} else { //number
+		if (AscOrDesc == "asc") {
+			data.sort((a, b) => a[attributeSelected] - b[attributeSelected]);
+		}else{
+			data.sort((a, b) => b[attributeSelected] - a[attributeSelected]);
+		}
+	}
+	return data;
+}
+
