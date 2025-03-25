@@ -159,8 +159,8 @@
 
 		function ShowGroupByDialog(parentNode, node) {
 			saveNodeDialog("DialogGroupBy", node);
-			ShowTableSelectColumnsDialog("GroupBySelects", parentNode, node, false, null);
-			ShowTableSelectColumnsDialog("GroupByAttributesAggr", parentNode, node, false, "CheckSelectedAggrGroupBy(event, '"+node.id+"')");
+			ShowTableSelectColumnsDialogSelect("GroupBySelects", parentNode, node, node.groupByParams && node.groupByParams.groupByAttr ? node.groupByParams.groupByAttr : null, null);
+			ShowTableSelectColumnsDialogSelect("GroupByAttributesAggr", parentNode, node, node.groupByParams && node.groupByParams.aggregationAttr ? node.groupByParams.aggregationAttr : null, "CheckSelectedAggrGroupBy(event, \""+node.id+"\")");
 			ShowTableAttributesAndAgrregationsDialog("GroupByAttributesAggr", parentNode, node);
 			showCheckRadioOptions("DialogGroupByDateTimeOptionsHTML", "DialogGroupByDateTime", GroupByDateTimeOptions, 1, "DialogGroupByDateTimeOption");
 			showCheckRadioOptions("DialogGroupByAggregationOptionsHTML", "DialogGroupByAggr", AggregationsOptions, 3, null, "AddSelectedOptionsToAggrGroupBy(event, '"+node.id+"')");
@@ -169,11 +169,11 @@
 		}
 
 		function GetGroupBy(event) {
-			var groupByParams={groupByAttr: [], groupByDate:[], aggregationAttr:{}};
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogGroupBy").close();
 			
 			var node= getNodeDialog("DialogGroupBy");
+			node.groupByParams={groupByAttr: [], groupByDate:[], aggregationAttr:{}};
 			var parentNode=GetFirstParentNode(node);
 
 			var data = parentNode.STAdata ? parentNode.STAdata : node.STAdata;
@@ -186,33 +186,35 @@
 			var dateTypeAttr=[],s;
 
 			for (var a = 0; a < dataAttributesArray.length; a++) {
-				if (document.getElementById("GroupBySelects_" + a).checked) //groupBy
-					
+				if (document.getElementById("GroupBySelects_" + a).checked) { //groupBy				
 					if(dataAttributes[dataAttributesArray[a]]["type"]=="isodatetime"){
 						dateTypeAttr.push(dataAttributesArray[a]);
 					} else{
-						groupByParams.groupByAttr.push(dataAttributesArray[a]);
+						node.groupByParams.groupByAttr.push(dataAttributesArray[a]);
 					}
+				}
 				s=document.getElementById("GroupByAttributesAggr"+"_" + a).value; //Attributes
 				if (s)
-					groupByParams.aggregationAttr[dataAttributesArray[a]]=JSON.parse(s);
+					node.groupByParams.aggregationAttr[dataAttributesArray[a]]=JSON.parse(s);
 				
 			}
 
 			for (var i = 0; i < GroupByDateTimeOptions.length; i++) { //radioButtons (time period to groupBy)
 				if (document.getElementById("DialogGroupByDateTime" + GroupByDateTimeOptions[i].name).checked) {
-					groupByParams.groupByDate.push(GroupByDateTimeOptions[i].name);
+					node.groupByParams.groupByDate.push(GroupByDateTimeOptions[i].name);
 					break;
 				}
 			}
 
 
-			if (groupByParams.groupByDate.length==1 && dateTypeAttr.length>1) alert("To apply date rounding only one date type attribute is allowed to be selected");
-			else if  (groupByParams.groupByDate.length==1 && dateTypeAttr.length==1)groupByParams.groupByDate.push(...dateTypeAttr);
-			else if(groupByParams.groupByDate.length==1 && dateTypeAttr.length==0)alert ("To apply date rounding one date type attribute is has to be selected");
+			if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length>1) alert("To apply date rounding only one date type attribute is allowed to be selected");
+			else if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==1) node.groupByParams.groupByDate.push(...dateTypeAttr);
+			else if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==0) alert ("To apply date rounding one date type attribute is has to be selected");
 
 			var dataCurrentAttributes={};
-			node.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, groupByParams);
+			node.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, node.groupByParams);
 			node.STAdataAttributes=dataCurrentAttributes;
 			networkNodes.update(node);
+			updateQueryAndTableArea(node);
+			UpdateChildenTable(node);
 		}

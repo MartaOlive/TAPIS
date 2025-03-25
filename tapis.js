@@ -49,10 +49,10 @@ var config;
 
 const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", startNode: true, help: "Connects to a SensorThings API or a STAplus instance and returns a table with the list of entities suported by the API."},
 			ogcAPICols: {name: "OGC API cols", description: "OAPI Collections", startNode: true, help: "Connects to the collections page of a OGC Web API instance and returns a table with the list collections available."},
-			ogcAPIItems: {name: "OGC API items", description: "OAPI items", startNode: true, help: "Connects to a collection page on an OGC Web API Features or derivatives and returns a table with the items available. One of the columns contains the geometry JSON object."},
+			ogcAPIItems: {name: "OGC API items", description: "OAPI items", help: "Connects to a collection page on an OGC Web API Features or derivatives and returns a table with the items available. One of the columns contains the geometry JSON object."},
 			csw: {name: "Catalogue", description: "OGC CSW", startNode: true, help: "Connects to a OGC CSW cataloge service. The result is a table with a list of records in the catalogue that have data associated with them."},
 			s3Service: {name: "S3 Service", description: "S3 Service", startNode: true, help: "Connects to a Amazon S3 compatible service (e.g. MinIO) and return the list of buckets available as a table."},
-			s3Bucket: {name: "S3 Bucket", description: "S3 Bucket", startNode: true, help: "Connects to a Amazon S3 backet (e.g. MinIO) and return the list of files available (in the root folder and all subfolders as a table."},
+			s3Bucket: {name: "S3 Bucket", description: "S3 Bucket", help: "Connects to a Amazon S3 backet (e.g. MinIO) and return the list of files available (in the root folder and all subfolders as a table."},
 			edc: {name: "DataSpace cat.", description: "DataSpace cat.", startNode: true, help: "Connects to an Eclipse Data Connector (EDC) Catalogue and returns the list of assets available as a table."},
 			edcAsset: {name: "DataSpace asset", description: "DataSpace asset", help: "Prepares an Eclipse Data Connector (EDC) Asset."},
 			ImportCSV: {name: "CSV", description: "CSV", startNode: true, help: "Imports data from a CSV file and returns a table."},
@@ -251,7 +251,7 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 		return "Parent node is a leaf node and cannot be connected with any other node";
 	if (node.image == "SelectRowSTA.png" && parentNode.STASelectedExpands && parentNode.STASelectedExpands.expanded && Object.keys(parentNode.STASelectedExpands.expanded).length)
 		return "'Select Row' for STA node cannot be connected to an expanded branch. Use 'Filter row' for STA instead or select a row before expanding";
-	if (node.image == "OneValueSTA.png" && parentNode.image!="Observations.png")
+	if (node.image == "OneValueSTA.png" && parentNode.STAEntityName!="Observations" && parentNode.image!="Observations.png")
 		return "'One value' node is designed be connected to an 'Observations' node only.";
 	var idNode=IdOfSTAEntity(node);
 	if (idNode<0)
@@ -414,35 +414,38 @@ function StartSTAPage() {
 }
 
 function PlaceButtonsSTAEntities() {
-	var s = "";
-	if (!document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked) {
-		for (var i = 0; i < ServicesAndAPIsArray.length; i++)
-			s += textOperationButton(null, "", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], ServicesAndAPIsType.singular);
-		s += "<br>";
+	var cdns = [];
+	var startButtonsOnly=document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked
+	for (var i = 0; i < ServicesAndAPIsArray.length; i++) {
+		if (!startButtonsOnly || ServicesAndAPIs[ServicesAndAPIsArray[i]].startNode)
+			cdns.push(textOperationButton(null, "", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], ServicesAndAPIsType.singular));
+	}
+	cdns.push("<br>");
+	if (!startButtonsOnly) {
 		for (var i = 0; i < STAEntitiesArray.length; i++)
-			s += textOperationButton(null, "", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular);
-		s += "<br>";
+			cdns.push(textOperationButton(null, "", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular));
+		cdns.push("<br>");
 		/*for (var i = 0; i < STAEntitiesArray.length; i++)
-			s += textOperationButton(null, "", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit);
-		s += "<br>";*/
+			cdns.push(textOperationButton(null, "", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit));
+		cdns.push("<br>");*/
 		for (var i = 0; i < STASpecialQueriesArray.length; i++)
-			s += textOperationButton(null, "", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help, null, STASpecialQueriesType.singular);
-		s += "<br>";
+			cdns.push(textOperationButton(null, "", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help, null, STASpecialQueriesType.singular));
+		cdns.push("<br>");
 	}
 
 	for (var i = 0; i < STAOperationsArray.length; i++) {
-		if (!document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked || STAOperations[STAOperationsArray[i]].startNode)
-			s += textOperationButton(null, "", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help, STAOperations[STAOperationsArray[i]], STAOperationsType.singular);
+		if (!startButtonsOnly || STAOperations[STAOperationsArray[i]].startNode)
+			cdns.push(textOperationButton(null, "", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help, STAOperations[STAOperationsArray[i]], STAOperationsType.singular));
 	}
-	s += "<br>";
+	cdns.push("<br>");
 	for (var i = 0; i < TableOperationsArray.length; i++) {
-		if (!document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked || TableOperations[TableOperationsArray[i]].startNode)
-			s += textOperationButton(null, "", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular);
+		if (!startButtonsOnly || TableOperations[TableOperationsArray[i]].startNode)
+			cdns.push(textOperationButton(null, "", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular));
 	}
-	if (!document.getElementById("DialogConfigurationOnlyStartNodeButtons").checked)
-		s += "<br>";
+	if (!startButtonsOnly)
+		cdns.push("<br>");
 
-	document.getElementById("ButtonsSTAEntities").innerHTML = s;
+	document.getElementById("ButtonsSTAEntities").innerHTML = cdns.join("");
 }
 
 var timeoutHelpToolTip=null;
@@ -2268,7 +2271,9 @@ async function RequestLastObservationAndRefreshOneValue(node) {
 					"MultiDatastream": {selected: [], expanded: {}}},
 				top: 1,
 				orderBy: {attribute: node.STAtimeVariable, desc: true}};
-	
+	if (parentNode.STASelectedExpands && parentNode.STASelectedExpands.filter)
+		node.STASelectedExpands.filter=deapCopy(parentNode.STASelectedExpands.filter);
+
 	//PRevious path parameters are preserved
 	node.STAURL = AddQueryParamsToURL(RemoveQueryParamSelectExpands(parentNode.STAURL), 
 					GetQueryParamSelectedSelectExpands(node.STASelectedExpands));
@@ -5625,20 +5630,6 @@ function ProcessMessageFromMiraMonMapBrowser(event)
 	}*/
 }
 
-// function addSTAEntityNameAsTitleDialog(div_id, node) { //Repetida al STAFilter
-// 	var entity;
-// 	if (node.STAEntityName)
-// 		entity = getSTAEntityPlural(node.STAEntityName);
-// 	else if (node.STAURL && getSTAURLLastEntity(node.STAURL)) {
-// 		entity = getSTAURLLastEntity(node.STAURL);
-// 		for (var i = 0; i < STAEntitiesArray.length; i++) {
-// 			if (STAEntitiesArray[i] == entity) {
-// 				break;
-// 			}
-// 		}
-// 	}
-// 	document.getElementById(div_id).innerHTML = entity ? "<img src='" + entity + ".png' style='height:30px;' />" + entity : "";
-// }
 
 function ShowTableSelectRowDialog(parentNode, node) {
 	saveNodeDialog("DialogSelectRow", node);
@@ -5670,7 +5661,7 @@ function SeparateColumns(event) {
 			options.removeAlreadyPresent=true;
 		currentNode.STAdataAttributes={};
 		var result=separateObjectColumns(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, options);
-	} else { /document.getElementById("DialogSeparateColumnsAs_Columns").checked //ARRAY
+	} else { //document.getElementById("DialogSeparateColumnsAs_Columns").checked //ARRAY
 		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
 		var columnName= selectColumnName.options[selectColumnName.selectedIndex].value;
 		var delimiter=document.getElementById("SeparateColumsInput_column").value;
@@ -5678,7 +5669,7 @@ function SeparateColumns(event) {
 			showInfoMessage("No data loaded in the parent node.");
 			return;
 		}
-		if (document.getElementById("DialogSeparateColumnsLists").checked) //array columns
+		if (document.getElementById("DialogSeparateColumnsAs_Columns").checked) //array columns
 			var result=separateColumnArrayColumns(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, columnName, delimiter);
 		else //array records
 			var result=separateColumnArrayRecords(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, columnName, delimiter);
@@ -6224,7 +6215,7 @@ function networkDoubleClick(params) {
 			var parentNodes=GetParentNodes(currentNode);
 			if (parentNodes && parentNodes[0]) {
 				if (parentNodes[0].STAdata)
-					ShowBarPlotDialog(parentNodes,currentNode);
+					ShowBarPlotDialog(parentNodes, currentNode);
 				document.getElementById("DialogBarPlot").showModal();
 			}
 		}
@@ -6428,7 +6419,7 @@ function networkDoubleClick(params) {
 				currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
 				currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent
 			}
-			fillAggregateColumVariablesList();
+			fillAggregateColumVariablesList(currentNode);
 			showCheckRadioOptions("operationsFieldSet", "operationsRadioAggrgatedColumns_", AggregationColumnsOptions, 3, "operationsRadioAggrgatedColumns", "writeColumnNameInAggregatedColumns (event)");
 			if (parentNode) {
 				if (!currentNode.STAnewColumnsToAdd){
@@ -6980,81 +6971,73 @@ function deselectColumnNameRadioButton(radiobutton){
 	}
 }
 
-function fillAggregateColumVariablesList(){
+function fillAggregateColumVariablesList(node){
 
-	var dataKeys= Object.keys(currentNode.STAdata[0]);
- //var n= dataKeys.length;
-// var dataKeysObject=[];
-// for (var i=0;i<n;i++){
-// 	dataKeysObject.push({name:dataKeys[i], desc:dataKeys[i] });
-// }
-//showCheckRadioOptions("columnsFielset", "attributesRadioAggrgatedColumns_", dataKeysObject, 1, null, "writeColumnNameInAggregatedColumns (event)");
-	var parentNode=GetFirstParentNode(currentNode);
-	ShowTableSelectColumnsDialog("columnsFielset", parentNode, currentNode, false,"writeColumnNameInAggregatedColumns (event)" );
+	var dataKeys= Object.keys(node.STAdata[0]);
+	var parentNode=GetFirstParentNode(node);
+	ShowTableSelectColumnsDialog("columnsFielset", parentNode, node, false,"writeColumnNameInAggregatedColumns (event)" );
 
 	//Create list of columns to avoid repetitions
-	currentNode.STAcolumnsList=dataKeys;
-
+	node.STAcolumnsList=dataKeys;
 }
 
 function checkRadioButtonColumName(event){
-event.preventDefault();
-document.getElementById("columnNameRadioAggregateColumns_personalized").setAttribute("checked", true);
-document.getElementById("columnNameRadioAggregateColumns_suggested").setAttribute("checked", false);
+	event.preventDefault();
+	document.getElementById("columnNameRadioAggregateColumns_personalized").setAttribute("checked", true);
+	document.getElementById("columnNameRadioAggregateColumns_suggested").setAttribute("checked", false);
 }
+
 function addColumnToListAggregateColumns(event) {
-event.preventDefault();
-var TypeOfOperation = document.getElementsByName("operationsRadioAggrgatedColumns"); //operation
-var STANewColumnsArray = [], attributesArray = [], attribute;
-var dataKeys = Object.keys(currentNode.STAdata[0]);
-var typeOfOperationLenght = TypeOfOperation.length, dataKeysLenght = dataKeys.length;
-var columnName;
+	event.preventDefault();
+	var TypeOfOperation = document.getElementsByName("operationsRadioAggrgatedColumns"); //operation
+	var STANewColumnsArray = [], attributesArray = [], attribute;
+	var dataKeys = Object.keys(currentNode.STAdata[0]);
+	var typeOfOperationLenght = TypeOfOperation.length, dataKeysLenght = dataKeys.length;
+	var columnName;
 
-var typeOfOperationExist = false, atLeast2attributesSelected = false;
-//Operation
-for (var i = 0; i < typeOfOperationLenght; i++) { //Take operation 
-	if (TypeOfOperation[i].checked) {
-	STANewColumnsArray.push(TypeOfOperation[i].id.split("AggrgatedColumns_")[1]);
-	typeOfOperationExist = true;
-			}
+	var typeOfOperationExist = false, atLeast2attributesSelected = false;
+	//Operation
+	for (var i = 0; i < typeOfOperationLenght; i++) { //Take operation 
+		if (TypeOfOperation[i].checked) {
+			STANewColumnsArray.push(TypeOfOperation[i].id.split("AggrgatedColumns_")[1]);
+			typeOfOperationExist = true;
 		}
-//attributes
-for (var a = 0; a < dataKeysLenght; a++) {
-	attribute = document.getElementById("columnsFielset_" + a);
-	if (attribute.checked) {
-	attributesArray.push(dataKeys[a]);
 	}
-}
-if (attributesArray.length >= 2) {
-	atLeast2attributesSelected = true;
+
+//attributes
+	for (var a = 0; a < dataKeysLenght; a++) {
+		attribute = document.getElementById("columnsFielset_" + a);
+		if (attribute.checked)
+			attributesArray.push(dataKeys[a]);
+	}
+	if (attributesArray.length >= 2)
+		atLeast2attributesSelected = true;
+
+	if (typeOfOperationExist == false || atLeast2attributesSelected == false) {
+		alert("At least two attributes and one aggregation method have to be selected");
+	} else {//All is correct, new column can be added to the list
+		//columnName
+		if (document.getElementById("columnNameRadioAggregateColumns_personalized").checked) {
+			columnName = document.getElementById("columnNameAggregateColumns").value;
+			if (columnName.length == 0) columnName = "noname";
+		} else {
+			columnName = document.getElementById("columnNameAggregateColumns_span").value;
+		}
+		var columnNameExist = columnExistInTheTable(columnName); //Search if name for column is not repeated
+	
+		if (columnNameExist) { //It will not be added because column name already exist
+			alert("Chosen column name already exists, change it to add column to the list ");
+		} else { //It can be added
+			STANewColumnsArray.push(columnName, attributesArray);
+			if (document.getElementById("chooseNumberDecimals_0").checked)
+				STANewColumnsArray.push(document.getElementById("chooseNumberDecimals_0_input").value);
+			currentNode.STAnewColumnsToAdd.push(STANewColumnsArray); //[typeOfOperation,columnName,[attributes]]
+			networkNodes.update(currentNode);
+			drawTableInColumnBoxTableInAggregateColumns();
+		}
+	}
 }
 
-if (typeOfOperationExist == false || atLeast2attributesSelected == false) {
-	alert("At least two attributes and one aggregation method have to be selected");
-} else {//All is correct, new column can be added to the list
-	//columnName
-	if (document.getElementById("columnNameRadioAggregateColumns_personalized").checked) {
-	columnName = document.getElementById("columnNameAggregateColumns").value;
-	if (columnName.length == 0) columnName = "noname";
-	} else {
-	columnName = document.getElementById("columnNameAggregateColumns_span").value;
-	}
-	var columnNameExist = columnExistInTheTable(columnName); //Search if name for column is not repeated
-	
-	if (columnNameExist) { //It will not be added because column name already exist
-	alert("Chosen column name already exists, change it to add column to the list ");
-			}
-	else { //It can be added
-	STANewColumnsArray.push(columnName, attributesArray);
-	if (document.getElementById("chooseNumberDecimals_0").checked) {
-			STANewColumnsArray.push(document.getElementById("chooseNumberDecimals_0_input").value)
-		}	
-	currentNode.STAnewColumnsToAdd.push(STANewColumnsArray); //[typeOfOperation,columnName,[attributes]]
-		networkNodes.update(currentNode);
-		drawTableInColumnBoxTableInAggregateColumns();
-	}
-}
-}
 function drawTableInColumnBoxTableInAggregateColumns(){
 	var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListAggregateColumns");
 	var cdns;
@@ -7459,7 +7442,7 @@ function createColumnStatistics(event){
 }
 
 
-function concatenateTables(){
+function concatenateTables(){ //!!! Arreglat perque no funcionava bé
 	event.preventDefault();
 	var selected= (document.getElementById("concatenationType_allColumns").checked ==true)?"allColumns":"repeatedColumns";
 	var parentNodes= GetParentNodes(currentNode);
@@ -7467,7 +7450,7 @@ function concatenateTables(){
 
 
 	for(var i=0;i<parentNodes.length;i++){
-	 	parentNodesArrayData.push(...parentNodes[i].STAdata);
+		parentNodesArrayData.push(...parentNodes[i].STAdata);
 	 	parentNodesArrayKeys.push(...Object.keys(parentNodes[i].STAdata[0]));
 	}
 
@@ -7475,18 +7458,18 @@ function concatenateTables(){
 	if (selected=="allColumns"){
 		var keysSet = new Set(parentNodesArrayKeys);
 		finalKeys = [...keysSet];
-
-	}else{
+				
+			}else{
 		parentNodesArrayKeys=parentNodesArrayKeys.sort();
 		var lastKey=parentNodesArrayKeys[0], count=1;
 
 		for (var e=1;e<parentNodesArrayKeys.length;e++){
-			
+
 			if (parentNodesArrayKeys[e]==lastKey){
 				if (e== parentNodesArrayKeys.length-1){ //last one
 					if(count+1==parentNodes.length) //save last key (same as previous)
 						sharedKeys.push(lastKey);
-				}else{
+		}else{
 					count++;
 				}
 				
@@ -7535,8 +7518,6 @@ function concatenateTables(){
 	currentNode.STAdataAttributes=attributes;
 	networkNodes.update(currentNode);
 	document.getElementById("DialogConcatenateTables").close();
-
-
 }
 
 const RouteToLocation={

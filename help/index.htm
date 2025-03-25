@@ -58,6 +58,7 @@
 <li><a href="#recipe06">Recipe 6: Creating a new stream of observations</a></li>
 <li><a href="#recipe07">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</a></li>
 <li><a href="#recipe08">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
+<li><a href="#recipe09">Recipe 9: Drawing a stacked bar chart</a></li>
 </ul>
 </ul>
 
@@ -117,6 +118,7 @@ Since almost all nodes represent data in tabular form, the "Table" button is a g
 Some operations are performed by TAPIS directly (the ones that has grey icons) and some others are performed by the STA (the ones that has blue elements in the icon). For the STA icons, TAPIS will only build queries and wait for the STA server to return the new table. A blue node can commonly be a source node for a grey node but a grey node cannot be a source node for a blue node.
 
 <hr>
+<a id="recipes"></a>
 <H2>Recipes</H2>
 Just a few collection of recipes are provided. The steps of the recipes can be reproduced by you or can be shown  More recipes to come soon!
 <br><br><br>
@@ -1144,6 +1146,34 @@ We can select one of these files with the [select row] tool.<br>
 
 Now, depending on the format we can select a tool to open the file. In this case we use the [ImportCSV]. By double-clicking in the tool, we can immediately open the resource without having to write the URL of the resource. We only need to press the two [load] buttons next to the URLs.<br>
 <img src="recipe08_importCSVTable.png" width="1000" class="center">
+<p>
+
+<br><br><br>
+<br>
+<hr width="30%">
+<a id="recipe09"></a>
+<h3>Recipe 9: Drawing a stacked bar chart</h3>
+In this example, we illustrate how to create a stacked plot counting records by two criteria.
+
+<p>
+First we load a table as CSV.<br>
+<img src="recipe09_openCSV.png" width="600" class="center">
+<p>
+
+We select the [Group By] tool.<br>
+<img src="recipe09_groupBy.png" width="200" class="center">
+<p>
+
+We select grouping by two columns: "Need Type" and "Area". We select to aggregate the column "User requirement id" and we request the "Count defined" as operation.<br>
+<img src="recipe09_groupByDlg.png" width="600" class="center">
+<p>
+
+The result is a table that has 3 columns. The thirt column represent the number of records that has the same "Need Type" and "Area".<br>
+<img src="recipe09_groupByResult.png" width="400" class="center">
+<p>
+
+We select the [Bar plot] tool and we ask for Categories (the bar labels) "Need Type", the Classifications (the data series names that are going to be stacked segements in diferent colors in the bar chart) as "Area" and the Values (the size of the segments of the bars in the chart) as "User requirement id_CouldDefined". After presing "plot, you will see the actual stacked bar chart.<br>
+<img src="recipe09_StackedBarChart.png" width="900" class="center">
 <p>
 
 

@@ -273,13 +273,12 @@ function separateColumnArrayColumns(data, dataAttributes, columnName, delimiter)
 	resultData=[];
 	for (var i=0; i<n; i++) {
 		resultData[i]=deapCopy(data[i]);
-		delete resultData[i][columnName];
-		if (typeof data[i][columnName] === "undefined")
+		if (!data[i][columnName] || typeof data[i][columnName] !== "string") 
 			continue;
+		delete resultData[i][columnName];
 		separateDataArray=data[i][columnName].split(delimiter);
-		for (var a=0; a<separateDataArray.length; a++) {
+		for (var a=0; a<separateDataArray.length; a++) 
 			resultData[i][columnName+(a+1)]=separateDataArray[a].trim();
-		}
 	}
 	resultDataAttributes=uploadDataAttributesAddingNewColumns(dataAttributes, resultData);
 
@@ -289,13 +288,15 @@ function separateColumnArrayColumns(data, dataAttributes, columnName, delimiter)
 function separateColumnArrayRecords(data, dataAttributes, columnName, delimiter) {
 	var n= data.length, resultData=[], separateDataArray;  //, newColumnName;
 
-	if (dataAttributes[columnName].type!="string"){
+	if (dataAttributes[columnName].type!="string") {
 		alert("The content of column selected to separate must be 'string' type");
 		return;
 	}
-	for (var i=0;i<n;i++){
+	for (var i=0;i<n;i++) {
+		if (!data[i][columnName] || typeof data[i][columnName] !== "string") 
+			continue;
 		separateDataArray=data[i][columnName].split(delimiter);
-		for (var e=0; e<separateDataArray.length; e++){
+		for (var e=0; e<separateDataArray.length; e++) {
 			resultData.push(deapCopy(data[i]))
 			resultData[resultData.length-1][columnName]=separateDataArray[e].trim();
 		}
@@ -631,10 +632,10 @@ var r_max,r_min, n=values.length;
 /*function aggrFuncProportionDefined(values){
 }*/
 
-function GroupRecordsData(dataSorted, i_ini, i_end, dataAttributesArray, groupByParams, date) {
+function GroupRecordsData(dataSorted, i_ini, i_end, dataAttributesArray, groupByParams) {
 	var record={}, recordSorted=dataSorted[i_ini], aggrFuncName, valuesString=null, values=null, r, countDefined=-1;
 	//Populate groupByAttr
-	if (date) groupByParams.groupByAttr.push(groupByParams.groupByDate[1]) //Add date attribute
+	//if (date) groupByParams.groupByAttr.push(groupByParams.groupByDate[1]) //Add date attribute
 	for (var j=0; j<dataAttributesArray.length; j++) {
 		if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1)
 			record[dataAttributesArray[j]]=recordSorted[dataAttributesArray[j]];
@@ -825,7 +826,7 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 		iniRecord=dataSorted[i_ini];
 		if (0!=sortRecords(iniRecord, dataSorted[i])){ 
 			//records i_ini to i-1 are grouped			
-			dataCurrent.push(GroupRecordsData(dataSorted, i_ini, i-1, dataAttributesArray, groupByParams,true));  //Add the record to the result
+			dataCurrent.push(GroupRecordsData(dataSorted, i_ini, i-1, dataAttributesArray, groupByParams));  //Add the record to the result
 			i_ini=i;
 		}
 	}
@@ -1197,10 +1198,7 @@ function sortValuesNumbersOrText(arrayValues) {
 }
 
 function SortTableByColumn(data, attributeSelected, AscOrDesc) {
-	// if (AscOrDesc=="asc"){
-	// 	if ()
-	// } 	return data.sort((a, b) => a[attributeSelected] - b[attributeSelected]);
-	// else return data.sort((a, b) => b[attributeSelected] - a[attributeSelected]);
+
 	var attributes = getDataAttributesSimple(data);
 	if (attributes[attributeSelected].type == "string") {
 		if (AscOrDesc == "asc") {

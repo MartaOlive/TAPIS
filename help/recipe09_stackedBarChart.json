@@ -1,0 +1,1007 @@
+{
+	"nodes": [
+		{
+			"id": "18oq6.635r0v8",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Need id": 31,
+					"Timestamp": "2023-10-09 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Exploring elevational dependencies in climate change ",
+					"Area": "Global",
+					"User requirement id": 25,
+					"Name": "Climate variables"
+				},
+				{
+					"Need id": 32,
+					"Timestamp": "2023-10-10 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": " In-situ data in order to Calibrate and Validate the Remote Sensing Products aimed to Crop monitoring",
+					"Area": "Global",
+					"User requirement id": 26,
+					"Name": "Harmonize in-situ data"
+				},
+				{
+					"Need id": 33,
+					"Timestamp": "2023-10-13 00:00",
+					"Need type": "Policy Monitoring",
+					"Need description": "Integration of soil organic carbon monitoring",
+					"Area": "Global",
+					"User requirement id": 27,
+					"Name": "SOC stocks in the topsoil (to 30 cm depth)"
+				},
+				{
+					"Need id": 34,
+					"Timestamp": "2023-10-17 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "Risk assessment for human health ",
+					"Area": "Global",
+					"User requirement id": 28,
+					"Name": "Fish consumption"
+				},
+				{
+					"Need id": 35,
+					"Timestamp": "2023-12-06 00:00",
+					"Need type": "Decision Making",
+					"Need description": "Decision making for wildfire risk assessment",
+					"Area": "Continental",
+					"User requirement id": 30,
+					"Name": "Citizen science data"
+				},
+				{
+					"Need id": 87,
+					"Timestamp": "2022-06-10 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "Since NEED refers to the remote sensing side, rather than to a general need, eLTER would need a) reliable and standardized EO products that can be used to provide spatial information on certain variables (LAI, Phenology, Soil Moisture, Biomass etc) to complement our discrete in-situ data, b) that would also be input to our model on the European Scale, and c) that could be used to fill temporal gaps in our time series data.",
+					"Area": "Continental",
+					"User requirement id": 80,
+					"Name": "Biomass"
+				},
+				{
+					"Need id": 88,
+					"Timestamp": "2022-06-11 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "To properly use crop models these models need to be calibrated for local conditions and therefore in-situ data are necessary",
+					"Area": "Global",
+					"User requirement id": 81,
+					"Name": "Phenology"
+				},
+				{
+					"Need id": 89,
+					"Timestamp": "2022-06-23 00:00",
+					"Need type": "Other in-situ CalVal",
+					"Need description": "Atmopsheric composition / AQ data around CH assets. As in UHCO we need to asses the impact of chemical deterioration risks for monuments, we would need to have access to local in situ data from sampling and chemical anlyses, when available.",
+					"Area": "Global",
+					"User requirement id": 82,
+					"Name": "Chemical composition in European cities"
+				},
+				{
+					"Need id": 90,
+					"Timestamp": "2022-10-13 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Water Quality data of Estonian inland waterbodies. Monitor and evaluate the status of Estonian waterbodies.",
+					"Area": "Global",
+					"User requirement id": 83,
+					"Name": "Water quality and quantity data in Estonia, Europe, Globe"
+				},
+				{
+					"Need id": 92,
+					"Timestamp": "2022-12-01 00:00",
+					"Need type": "Other",
+					"Need description": "Climate Adaptation Indicators. Develop indicators based on in situ data to achieve climate resilience in cities",
+					"Area": "Continental",
+					"User requirement id": 85,
+					"Name": "Species tree per city"
+				},
+				{
+					"Need id": 95,
+					"Timestamp": "2022-12-08 00:00",
+					"Need type": "Other",
+					"Need description": "Physical parameters in the Bay of Biscay (Physical EOVs).",
+					"Area": "Subnational",
+					"User requirement id": 88,
+					"Name": "Physical water parameters"
+				},
+				{
+					"Need id": 96,
+					"Timestamp": "2022-12-13 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Water quality validation data. Needs vary a lot per project. In general we need validation data for water quality parameters anywhere in the world",
+					"Area": "Global",
+					"User requirement id": 89,
+					"Name": "Bio-physical water quality parameters anywhere in the world"
+				},
+				{
+					"Need id": 97,
+					"Timestamp": "2022-12-14 00:00",
+					"Need type": "Other in-situ CalVal",
+					"Need description": "Calibration, validation and quality check of in-situ data in the Mediterranean Sea. Also, in-situ measurements in these area are difficult to find.  In-situ measurements in the Mediterranean Sea may not be quality checked. Also, they may have gaps.",
+					"Area": "Global",
+					"User requirement id": 90,
+					"Name": "Wind Speed and Direction in the Mediterranean Sea"
+				},
+				{
+					"Need id": 98,
+					"Timestamp": "2022-12-14 00:00",
+					"Need type": "Other",
+					"Need description": "Air quality: long-term exposure to PM in cities. Seasonal/Annual mean levels of fine particulate matter (e.g. PM2.5 and PM10) in cities (population-weighted). Intra-urban scale evaluation.",
+					"Area": "Subnational",
+					"User requirement id": 91,
+					"Name": "Fine particulate matter concentrations (e.g. PM2.5 and PM10)"
+				},
+				{
+					"Need id": 99,
+					"Timestamp": "2022-12-14 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "Evaluation of atmospheric numerical modeling outputs. In situ monitoring data of atmospheric (meteorological and air quality) parameters are necessary for comparisons against the respective predictions by numerical atmospheric models.",
+					"Area": "National",
+					"User requirement id": 92,
+					"Name": "Air pollution over European cities (Athens etc)"
+				},
+				{
+					"Need id": 100,
+					"Timestamp": "2022-12-15 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation and calibration of EO data for agriculture",
+					"Area": "Continental",
+					"User requirement id": 93,
+					"Name": "Soil samples around Europe"
+				},
+				{
+					"Need id": 100,
+					"Timestamp": "2022-12-15 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation and calibration of EO data for agriculture",
+					"Area": "Continental",
+					"User requirement id": 94,
+					"Name": "Yield from harvesters around Europe"
+				},
+				{
+					"Need id": 100,
+					"Timestamp": "2022-12-15 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation and calibration of EO data for agriculture",
+					"Area": "Continental",
+					"User requirement id": 95,
+					"Name": "Phenology data around Europe"
+				},
+				{
+					"Need id": 100,
+					"Timestamp": "2022-12-15 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation and calibration of EO data for agriculture",
+					"Area": "Continental",
+					"User requirement id": 96,
+					"Name": "Tree damaging / vitality loss events around Europe"
+				},
+				{
+					"Need id": 101,
+					"Timestamp": "2022-12-19 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "High resolution air quality modelization. Validate high resolution model based on low resolution satellite data.",
+					"Area": "Continental",
+					"User requirement id": 97,
+					"Name": "Air quality in Europe"
+				},
+				{
+					"Need id": 102,
+					"Timestamp": "2023-01-19 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "In the renewable energy sector and in particular in the solar energy domain in-situ measurement are of key importance. In conjunction with satellite and meteorological models supporting data fusion, validation and calibration, long time in-situ measurements have proven to provide informed decision making supporting the solar energy sector for transitioning toward a carbon-free energy supply by 2050.",
+					"Area": "Global",
+					"User requirement id": 98,
+					"Name": "Solar radiation worldwide"
+				},
+				{
+					"Need id": 105,
+					"Timestamp": "2023-04-25 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "Multiple lineal regressions of precipitacion with DEM, distance to the SEA, and NDVI and NDWI remote sensing data.",
+					"Area": "Subnational",
+					"User requirement id": 101,
+					"Name": "Total monthly Precipitacions data in Spain"
+				},
+				{
+					"Need id": 106,
+					"Timestamp": "2023-04-25 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "In Situ data is used to train several machine learning models and validate existing maps",
+					"Area": "Global",
+					"User requirement id": 102,
+					"Name": "Field boundaries with crop type and date"
+				},
+				{
+					"Need id": 107,
+					"Timestamp": "2023-04-27 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Correlation with remote sensing phenologial products",
+					"Area": "Global",
+					"User requirement id": 103,
+					"Name": "Flowering DOY"
+				},
+				{
+					"Need id": 108,
+					"Timestamp": "2023-07-07 00:00",
+					"Need type": "Decision Making",
+					"Need description": "Define actions to transform Leipzig energy system to renewed energies.",
+					"Area": "National",
+					"User requirement id": 104,
+					"Name": "Energy assets in Leipzig"
+				},
+				{
+					"Need id": 109,
+					"Timestamp": "2023-09-07 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Biomass maps",
+					"Area": "National",
+					"User requirement id": 105,
+					"Name": "Forest biomass sampled in tropical countries"
+				},
+				{
+					"Need id": 110,
+					"Timestamp": "2023-09-07 00:00",
+					"Need type": "Commercial Prod Serv",
+					"Need description": "Capture future water quality in an ecosystem",
+					"Area": "Global",
+					"User requirement id": 106,
+					"Name": "Chlorophyll or turbidity"
+				},
+				{
+					"Need id": 112,
+					"Timestamp": "2024-02-07 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "Validation and calibration of urban air quality model",
+					"Area": "Local",
+					"User requirement id": 108,
+					"Name": "Urban PM"
+				},
+				{
+					"Need id": 114,
+					"Timestamp": "2024-02-07 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Detailed characterisation of CitizenScience data",
+					"Area": "Global",
+					"User requirement id": 110,
+					"Name": "PM on high spatiotemporal resolution"
+				},
+				{
+					"Need id": 116,
+					"Timestamp": "2024-02-07 00:00",
+					"Need type": "Share Data",
+					"Need description": "Make a network of data to support decision making and modeling",
+					"Area": "Local",
+					"User requirement id": 111,
+					"Name": "Fine particulate matter"
+				},
+				{
+					"Need id": 117,
+					"Timestamp": "2024-02-07 00:00",
+					"Need type": "Decision Making",
+					"Need description": "I need to know air quality data in order to know where and what are the issues and attemp to resolve them",
+					"Area": "Subnational",
+					"User requirement id": 112,
+					"Name": "Agriculture ammonia waste"
+				},
+				{
+					"Need id": 118,
+					"Timestamp": "2024-02-07 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Water oxygen concentration sensors to calibrate trophic state models by sentinel-2 data",
+					"Area": "Local",
+					"User requirement id": 113,
+					"Name": "Oxygen Data in Water"
+				},
+				{
+					"Need id": 119,
+					"Timestamp": "2024-02-07 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "oxygen in surface water",
+					"Area": "National",
+					"User requirement id": 114,
+					"Name": "Oxygen lakes Berlin"
+				},
+				{
+					"Need id": 120,
+					"Timestamp": "2024-02-07 00:00",
+					"Need type": "Decision Making",
+					"Need description": "Collection, merge and analysis of citizen science and \"authoritative\" data about urban summer flooding due to heavy rains in Ferrara",
+					"Area": "Local",
+					"User requirement id": 115,
+					"Name": "Hydrological model in Ferrara neighborhood"
+				},
+				{
+					"Need id": 121,
+					"Timestamp": "2024-09-19 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation and calibration of RS data for phenological monitoring",
+					"Area": "Local",
+					"User requirement id": 116,
+					"Name": "Phenological data"
+				},
+				{
+					"Need id": 122,
+					"Timestamp": "2024-09-19 00:00",
+					"Need type": "Prepare EV product or matrix",
+					"Need description": "EV to study habitat quality",
+					"Area": "Continental",
+					"User requirement id": 117,
+					"Name": "Habitat quality in the Iberian Peninsula "
+				},
+				{
+					"Need id": 126,
+					"Timestamp": "2024-10-02 00:00",
+					"Need type": "Prepare EV product or matrix",
+					"Need description": "Prepare a datacube of places where species where not seen.",
+					"Area": "Global",
+					"User requirement id": 121,
+					"Name": "Absence observations"
+				},
+				{
+					"Need id": 127,
+					"Timestamp": "2024-10-02 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Analyse distribution and frequency of pollinators in agricultural areas",
+					"Area": "Local",
+					"User requirement id": 122,
+					"Name": "Biodiversity in Mostviertel"
+				},
+				{
+					"Need id": 128,
+					"Timestamp": "2024-10-08 00:00",
+					"Need type": "Commercial Prod Serv",
+					"Need description": "Climate data",
+					"Area": "Local",
+					"User requirement id": 123,
+					"Name": "Meteorological data in Banyoles (Girona)"
+				},
+				{
+					"Need id": 132,
+					"Timestamp": "2024-10-08 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Long term provision of CO2 fluxes ",
+					"Area": "Continental",
+					"User requirement id": 124,
+					"Name": "Biotic and abiotic essential variables"
+				},
+				{
+					"Need id": 136,
+					"Timestamp": "2024-10-08 18:01",
+					"Need type": "Share Data",
+					"Need description": "Identification of wetlands area ",
+					"Area": "Continental",
+					"User requirement id": 125,
+					"Name": "Nature protegeres areas"
+				},
+				{
+					"Need id": 137,
+					"Timestamp": "2024-10-08 00:00",
+					"Need type": "Decision Making",
+					"Need description": "Counterfactuals for biodiversity finance markets",
+					"Area": "Global",
+					"User requirement id": 126,
+					"Name": "Biodiversity measures across ecosystems"
+				},
+				{
+					"Need id": 138,
+					"Timestamp": "2024-10-08 00:00",
+					"Need type": "Share Data",
+					"Need description": "data once collected they are not necessarily available (for different reasons), so in practice there are no data for users",
+					"Area": "Global",
+					"User requirement id": 127,
+					"Name": "Biomass"
+				},
+				{
+					"Need id": 140,
+					"Timestamp": "2024-10-08 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation and calibration of satellite derived (Landsat/Sentinel-2) surface albedo",
+					"Area": "National",
+					"User requirement id": 129,
+					"Name": "Surface albedo of Poland"
+				},
+				{
+					"Need id": 141,
+					"Timestamp": "2024-10-08 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Data for training ML model",
+					"Area": "Subnational",
+					"User requirement id": 130,
+					"Name": "EarthSurface"
+				},
+				{
+					"Need id": 143,
+					"Timestamp": "2024-10-16 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "Meteorological data ( precipitation, temperature)",
+					"Area": "Local",
+					"User requirement id": 132,
+					"Name": "Climatic data for Ebro basin"
+				},
+				{
+					"Need id": 146,
+					"Timestamp": "2024-11-27 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation of remotely sensed forest biomass maps",
+					"Area": "Global",
+					"User requirement id": 134,
+					"Name": "stand level above ground biomass "
+				},
+				{
+					"Need id": 146,
+					"Timestamp": "2024-11-27 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation of remotely sensed forest biomass maps",
+					"Area": "Global",
+					"User requirement id": 135,
+					"Name": "landscape above ground biomass"
+				},
+				{
+					"Need id": 148,
+					"Timestamp": "2024-12-02 00:00",
+					"Need type": "Other in-situ CalVal",
+					"Need description": "EU Natura2000 Habitats extension",
+					"Area": "Continental",
+					"User requirement id": 138,
+					"Name": "Wheat croplands in Europe"
+				},
+				{
+					"Need id": 150,
+					"Timestamp": "2024-12-03 00:00",
+					"Need type": "Decision Making",
+					"Need description": "Help policy makers make informed decisions regarding POPs regulation. ",
+					"Area": "Continental",
+					"User requirement id": 140,
+					"Name": "Persistent Organic Pollutants levels in environment"
+				},
+				{
+					"Need id": 151,
+					"Timestamp": "2024-12-03 00:00",
+					"Need type": "Other",
+					"Need description": "Create a building stock model to estimate building energy performance at building/building block level",
+					"Area": "Continental",
+					"User requirement id": 141,
+					"Name": "Building and household census"
+				},
+				{
+					"Need id": 151,
+					"Timestamp": "2024-12-03 00:00",
+					"Need type": "Other",
+					"Need description": "Create a building stock model to estimate building energy performance at building/building block level",
+					"Area": "Continental",
+					"User requirement id": 142,
+					"Name": "Building footprint"
+				},
+				{
+					"Need id": 151,
+					"Timestamp": "2024-12-03 00:00",
+					"Need type": "Other",
+					"Need description": "Create a building stock model to estimate building energy performance at building/building block level",
+					"Area": "Continental",
+					"User requirement id": 143,
+					"Name": "Google street view"
+				},
+				{
+					"Need id": 153,
+					"Timestamp": "2024-12-04 00:00",
+					"Need type": "Share Data",
+					"Need description": "In order to estimate losses and damages of a forest fire event, detailed in situ data are required beyond extent of burnt area. It may also be utilized for CalVal of EO-derived forest fire information.",
+					"Area": "Local",
+					"User requirement id": 147,
+					"Name": "Post-fire in situ assessment and documention of affected assets"
+				},
+				{
+					"Need id": 154,
+					"Timestamp": "2024-12-04 00:00",
+					"Need type": "Share Data",
+					"Need description": "Flood related fatalities and the circumstances surrounding them are imperative for raising awareness, increasing overall coping capacity and also for calibrating flood impact models",
+					"Area": "Local",
+					"User requirement id": 148,
+					"Name": "Profiling of individual fatalities"
+				},
+				{
+					"Need id": 155,
+					"Timestamp": "2024-12-04 00:00",
+					"Need type": "Share Data",
+					"Need description": "Damage and Loss Inventory for Heritage to be used in reporting and evaluation of impact models",
+					"Area": "Global",
+					"User requirement id": 149,
+					"Name": "Database for recording climate-related damages on cultural heritage"
+				},
+				{
+					"Need id": 156,
+					"Timestamp": "2024-12-09 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Forest monitoring for impact and risk assesment",
+					"Area": "Continental",
+					"User requirement id": 150,
+					"Name": "Rainfall chemistry"
+				},
+				{
+					"Need id": 156,
+					"Timestamp": "2024-12-09 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Forest monitoring for impact and risk assesment",
+					"Area": "Continental",
+					"User requirement id": 151,
+					"Name": "Air chemistry"
+				},
+				{
+					"Need id": 157,
+					"Timestamp": "2024-12-10 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Monitoring the hydrological system over the ice sheet to investigate the influence on the ice dynamics (Polar regions)",
+					"Area": "Global",
+					"User requirement id": 152,
+					"Name": "Geophysical observations in Antactica "
+				},
+				{
+					"Need id": 158,
+					"Timestamp": "2024-12-10 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Forest monitoring for impact and risk assesment",
+					"Area": "Continental",
+					"User requirement id": 153,
+					"Name": "Precipitation chemistry"
+				},
+				{
+					"Need id": 158,
+					"Timestamp": "2024-12-10 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Forest monitoring for impact and risk assesment",
+					"Area": "Continental",
+					"User requirement id": 154,
+					"Name": "Foliage chemistry"
+				},
+				{
+					"Need id": 158,
+					"Timestamp": "2024-12-10 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Forest monitoring for impact and risk assesment",
+					"Area": "Continental",
+					"User requirement id": 155,
+					"Name": "Litterfall chemistry"
+				},
+				{
+					"Need id": 112,
+					"Timestamp": "2024-02-07 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "Validation and calibration of urban air quality model",
+					"Area": "Local",
+					"User requirement id": 157,
+					"Name": "Urban PM"
+				},
+				{
+					"Need id": 114,
+					"Timestamp": "2024-02-07 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Detailed characterisation of CitizenScience data",
+					"Area": "Global",
+					"User requirement id": 158,
+					"Name": "PM on high spatiotemporal resolution"
+				},
+				{
+					"Need id": 161,
+					"Timestamp": "2025-01-10 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "Bias correction of the global hydrological forecast to local conditions",
+					"Area": "Global",
+					"User requirement id": 159,
+					"Name": "Discharge"
+				},
+				{
+					"Need id": 35,
+					"Timestamp": "2023-12-06 00:00",
+					"Need type": "Decision Making",
+					"Need description": "Decision making for wildfire risk assessment",
+					"Area": "Continental",
+					"User requirement id": 160,
+					"Name": "Citizen science data"
+				},
+				{
+					"Need id": 88,
+					"Timestamp": "2022-06-11 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "To properly use crop models these models need to be calibrated for local conditions and therefore in-situ data are necessary",
+					"Area": "Global",
+					"User requirement id": 161,
+					"Name": "Phenology"
+				},
+				{
+					"Need id": 98,
+					"Timestamp": "2022-12-14 00:00",
+					"Need type": "Other",
+					"Need description": "Air quality: long-term exposure to PM in cities. Seasonal/Annual mean levels of fine particulate matter (e.g. PM2.5 and PM10) in cities (population-weighted). Intra-urban scale evaluation.",
+					"Area": "Subnational",
+					"User requirement id": 162,
+					"Name": "Fine particulate matter concentrations (e.g. PM2.5 and PM10)"
+				},
+				{
+					"Need id": 106,
+					"Timestamp": "2023-04-25 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "In Situ data is used to train several machine learning models and validate existing maps",
+					"Area": "Global",
+					"User requirement id": 164,
+					"Name": "Field boundaries with crop type and date"
+				},
+				{
+					"Need id": 106,
+					"Timestamp": "2023-04-25 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "In Situ data is used to train several machine learning models and validate existing maps",
+					"Area": "Global",
+					"User requirement id": 165,
+					"Name": "Field boundaries with crop type and date"
+				},
+				{
+					"Need id": 122,
+					"Timestamp": "2024-09-19 00:00",
+					"Need type": "Prepare EV product or matrix",
+					"Need description": "EV to study habitat quality",
+					"Area": "Continental",
+					"User requirement id": 166,
+					"Name": "Habitat quality in the Iberian Peninsula "
+				},
+				{
+					"Need id": 162,
+					"Timestamp": "2025-01-17 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Presence or absence of mangrove vegetation",
+					"Area": "Global",
+					"User requirement id": 167,
+					"Name": "Presence / absence of mangrove"
+				},
+				{
+					"Need id": 163,
+					"Timestamp": "2025-01-17 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Field data measurements of tree height, to validate global and regional tree height models",
+					"Area": "Global",
+					"User requirement id": 168,
+					"Name": "Tree Height Data "
+				},
+				{
+					"Need id": 143,
+					"Timestamp": "2024-10-16 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "Meteorological data ( precipitation, temperature)",
+					"Area": "Local",
+					"User requirement id": 172,
+					"Name": "Climatic data for Ebro basin"
+				},
+				{
+					"Need id": 100,
+					"Timestamp": "2022-12-15 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation and calibration of EO data for agriculture",
+					"Area": "Continental",
+					"User requirement id": 173,
+					"Name": "Phenology data around Europe"
+				},
+				{
+					"Need id": 100,
+					"Timestamp": "2022-12-15 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation and calibration of EO data for agriculture",
+					"Area": "Continental",
+					"User requirement id": 174,
+					"Name": "Phenology data around Europe"
+				},
+				{
+					"Need id": 100,
+					"Timestamp": "2022-12-15 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "Validation and calibration of EO data for agriculture",
+					"Area": "Continental",
+					"User requirement id": 175,
+					"Name": "Phenology data around Europe"
+				},
+				{
+					"Need id": 133,
+					"Timestamp": "2024-10-08 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Soil carbon database",
+					"Area": "Global",
+					"User requirement id": 176,
+					"Name": "Biotic and abiotic essential variables"
+				},
+				{
+					"Need id": 167,
+					"Timestamp": "2025-02-12 00:00",
+					"Need type": "Numerical Model",
+					"Need description": "Want to simulate infection networks between aquaculture locations based on numerical particle transport.",
+					"Area": "Subnational",
+					"User requirement id": 177,
+					"Name": "High-quality in situ sea-water-temperature observations"
+				},
+				{
+					"Need id": 168,
+					"Timestamp": "2025-02-12 00:00",
+					"Need type": "Scientific Research",
+					"Need description": "Understand plankton diversity and distribution over time through repeated observations",
+					"Area": "Local",
+					"User requirement id": 178,
+					"Name": "Plankton imaging"
+				},
+				{
+					"Need id": 169,
+					"Timestamp": "2025-02-19 00:00",
+					"Need type": "Remote Sensing CalVal",
+					"Need description": "For the Land Productivity sub-indicator we are lacking in-situ measuremetns to prorerly validate Land Producvity maps that could be genereated from various methodologies.",
+					"Area": "Global",
+					"User requirement id": 179,
+					"Name": "Land Productivity in-situ measurements"
+				},
+				{
+					"Need id": 170,
+					"Timestamp": "2025-02-24 00:00",
+					"Need type": "Share Data",
+					"Need description": "Surface precipitation gauge data",
+					"Area": "Global",
+					"User requirement id": 180,
+					"Name": "Surface precipitation gauge "
+				},
+				{
+					"Need id": 171,
+					"Timestamp": "2025-02-27 00:00",
+					"Need type": "Share Data",
+					"Need description": "Monitor ASGM data at the site level, primarily mercury use. Potentially other information such as gold production, number of workers, presence of bad practices, proportion of women/children",
+					"Area": "Global",
+					"User requirement id": 181,
+					"Name": "ASGM data on mercury"
+				},
+				{
+					"Need id": 173,
+					"Timestamp": "2025-03-03 00:00",
+					"Need type": "Other in-situ CalVal",
+					"Need description": "Validation and calibration of RS based data on crop disease ",
+					"Area": "Subnational",
+					"User requirement id": 183,
+					"Name": "Level of disease in wheat ad maize"
+				}
+			],
+			"STAdataAttributes": {
+				"Need id": {
+					"type": "integer"
+				},
+				"Timestamp": {
+					"type": "string"
+				},
+				"Need type": {
+					"type": "string"
+				},
+				"Need description": {
+					"type": "string"
+				},
+				"Area": {
+					"type": "string"
+				},
+				"User requirement id": {
+					"type": "integer"
+				},
+				"Name": {
+					"type": "string"
+				}
+			},
+			"x": -104,
+			"y": -19
+		},
+		{
+			"id": "9cb2h.pk1hf6",
+			"label": "GroupBy",
+			"image": "GroupBy.png",
+			"shape": "circularImage",
+			"groupByParams": {
+				"groupByAttr": [
+					"Need type",
+					"Area"
+				],
+				"groupByDate": [],
+				"aggregationAttr": {
+					"User requirement id": [
+						"CountDefined"
+					]
+				}
+			},
+			"STAdata": [
+				{
+					"Need type": "Commercial Prod Serv",
+					"Area": "Global",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Commercial Prod Serv",
+					"Area": "Local",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Decision Making",
+					"Area": "Continental",
+					"User requirement id_CountDefined": 3
+				},
+				{
+					"Need type": "Decision Making",
+					"Area": "Global",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Decision Making",
+					"Area": "Local",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Decision Making",
+					"Area": "National",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Decision Making",
+					"Area": "Subnational",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Numerical Model",
+					"Area": "Continental",
+					"User requirement id_CountDefined": 2
+				},
+				{
+					"Need type": "Numerical Model",
+					"Area": "Global",
+					"User requirement id_CountDefined": 4
+				},
+				{
+					"Need type": "Numerical Model",
+					"Area": "Local",
+					"User requirement id_CountDefined": 4
+				},
+				{
+					"Need type": "Numerical Model",
+					"Area": "National",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Numerical Model",
+					"Area": "Subnational",
+					"User requirement id_CountDefined": 2
+				},
+				{
+					"Need type": "Other",
+					"Area": "Continental",
+					"User requirement id_CountDefined": 4
+				},
+				{
+					"Need type": "Other",
+					"Area": "Subnational",
+					"User requirement id_CountDefined": 3
+				},
+				{
+					"Need type": "Other in-situ CalVal",
+					"Area": "Continental",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Other in-situ CalVal",
+					"Area": "Global",
+					"User requirement id_CountDefined": 2
+				},
+				{
+					"Need type": "Other in-situ CalVal",
+					"Area": "Subnational",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Policy Monitoring",
+					"Area": "Global",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Prepare EV product or matrix",
+					"Area": "Continental",
+					"User requirement id_CountDefined": 2
+				},
+				{
+					"Need type": "Prepare EV product or matrix",
+					"Area": "Global",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Remote Sensing CalVal",
+					"Area": "Continental",
+					"User requirement id_CountDefined": 7
+				},
+				{
+					"Need type": "Remote Sensing CalVal",
+					"Area": "Global",
+					"User requirement id_CountDefined": 11
+				},
+				{
+					"Need type": "Remote Sensing CalVal",
+					"Area": "Local",
+					"User requirement id_CountDefined": 2
+				},
+				{
+					"Need type": "Remote Sensing CalVal",
+					"Area": "National",
+					"User requirement id_CountDefined": 3
+				},
+				{
+					"Need type": "Scientific Research",
+					"Area": "Continental",
+					"User requirement id_CountDefined": 6
+				},
+				{
+					"Need type": "Scientific Research",
+					"Area": "Global",
+					"User requirement id_CountDefined": 7
+				},
+				{
+					"Need type": "Scientific Research",
+					"Area": "Local",
+					"User requirement id_CountDefined": 2
+				},
+				{
+					"Need type": "Scientific Research",
+					"Area": "Subnational",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Share Data",
+					"Area": "Continental",
+					"User requirement id_CountDefined": 1
+				},
+				{
+					"Need type": "Share Data",
+					"Area": "Global",
+					"User requirement id_CountDefined": 4
+				},
+				{
+					"Need type": "Share Data",
+					"Area": "Local",
+					"User requirement id_CountDefined": 3
+				}
+			],
+			"STAdataAttributes": {
+				"Need type": {
+					"type": "string"
+				},
+				"Area": {
+					"type": "string"
+				},
+				"User requirement id_CountDefined": {
+					"type": "integer"
+				}
+			},
+			"x": 2,
+			"y": -31
+		},
+		{
+			"id": "3vpng.nm381m",
+			"label": "Bar Plot",
+			"image": "BarPlot.png",
+			"shape": "circularImage",
+			"barPlotOptions": {
+				"axisX": "Need type",
+				"series": "Area",
+				"axisY": "User requirement id_CountDefined",
+				"plotType": "bar"
+			},
+			"x": 110,
+			"y": -28
+		}
+	],
+	"edges": [
+		{
+			"from": "18oq6.635r0v8",
+			"to": "9cb2h.pk1hf6",
+			"arrows": "from"
+		},
+		{
+			"from": "9cb2h.pk1hf6",
+			"to": "3vpng.nm381m",
+			"arrows": "from"
+		}
+	]
+}

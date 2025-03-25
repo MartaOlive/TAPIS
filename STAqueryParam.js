@@ -758,9 +758,9 @@ function ShowTableSelectSortByDialog(parentNode, node,origin) {
 	var dataAttributesArray;
 	if (!origin){ //STA
 		dataAttributesArray=ShowPropagateNodeSelectedSelectExpands(node, parentNode)
-		var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
+	var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
 	}else{ //tables
-		
+
 		node.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) :  getDataAttributes(data);
 		dataAttributesArray= Object.keys(node.STAdataAttributes);
 		networkNodes.update(node);
@@ -770,17 +770,17 @@ function ShowTableSelectSortByDialog(parentNode, node,origin) {
 	for (var a = 0; a < dataAttributesArray.length; a++)
 	{
 		if (!origin){
-			if (dataAttributesArray[a].endsWith("@iot.navigationLink") || dataAttributesArray[a].charAt(0)=='@')
-				continue;
-			s += "<label><input type='radio'" + (selectedExpands && selectedExpands.orderBy ? 
-					(selectedExpands.orderBy.attribute=dataAttributesArray[a] ? 'checked="checked"' : '') : 
-					(first ? 'checked="checked"' : '')) + " id='SelectSortByEntity_" + a + "' name='SelectSortByEntity'/> " + dataAttributesArray[a] + "</label><br>";
-			first=false;
+		if (dataAttributesArray[a].endsWith("@iot.navigationLink") || dataAttributesArray[a].charAt(0)=='@')
+			continue;
+		s += "<label><input type='radio'" + (selectedExpands && selectedExpands.orderBy ? 
+				(selectedExpands.orderBy.attribute=dataAttributesArray[a] ? 'checked="checked"' : '') : 
+				(first ? 'checked="checked"' : '')) + " id='SelectSortByEntity_" + a + "' name='SelectSortByEntity'/> " + dataAttributesArray[a] + "</label><br>";
+		first=false;
 		}else{
 			s += "<label><input type='radio'" + 
 					(first ? 'checked="checked"' : '') + " id='SelectSortByEntity_" + a + "' name='SelectSortByEntity'/> " + dataAttributesArray[a] + "</label><br>";
 			first=false;
-		}
+	}
 
 
 	}
@@ -795,10 +795,7 @@ function ShowTableSelectSortByDialog(parentNode, node,origin) {
 	}
 }
 
-
-
 function GetSelectSortBy(event) {
-	
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogSelectSortBy").close();
 
@@ -815,7 +812,6 @@ function GetSelectSortBy(event) {
 	}else {
 		GetSelectSortBySTables(parentNode,node);
 	}
-	
 }
 function GetSelectSortBySTA(parentNode,node){
 	var {dataAttributesArray, previousSTAURL}=GetPropagateNodeSelectedSelectExpands(node, parentNode);

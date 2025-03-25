@@ -303,7 +303,9 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend,
 				headersObj[headersToGet[i]]=response.headers.get(headersToGet[i]);
 			//Enumetates all headers: for(let entry of response.headers.entries()) console.log(entry) })
 		}
-		if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
+		if (method=="HEAD")
+			return {obj: null, text: null, responseHeaders: headersObj, ok: true};
+		else if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
 		(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0))
 			return {obj: await response.json(), text: null, responseHeaders: headersObj, ok: true};
 		else

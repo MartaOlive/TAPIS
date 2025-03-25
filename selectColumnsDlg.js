@@ -45,6 +45,7 @@
 
 "use strict"
 
+//Deprecated: This funcion should be replaced by ShowTableSelectColumnsDialogSelect() and removed in the near future.
 function ShowTableSelectColumnsDialog(div_id, parentNode, node, selectDef, fevent) {
 	saveNodeDialog("DialogSelectColumns", node);
 
@@ -67,6 +68,38 @@ function ShowTableSelectColumnsDialog(div_id, parentNode, node, selectDef, feven
 	document.getElementById("Dialog"+div_id+"HTML").innerHTML = cdns.join('');
 }
 
+/*selected can be 
+	null, 
+	an array of selected columns names, 
+	an object with properties that are column names that are arrays of operation names (Only used by ShowGroupByDialog() for aggregationAttr)
+*/
+function ShowTableSelectColumnsDialogSelect(div_id, parentNode, node, selected, fevent) {
+	saveNodeDialog("DialogSelectColumns", node);
+
+	var data = parentNode.STAdata ? parentNode.STAdata : node.STAdata
+
+	if (!data || !data.length) {
+		document.getElementById("Dialog"+div_id+"HTML").innerHTML = "No data to show.";
+		return;
+	}
+	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
+	const dataAttributesArray = Object.keys(dataAttributes);
+
+	var cdns=[];
+	cdns.push('<table>');
+	for (var a = 0; a < dataAttributesArray.length; a++){
+		var s=selected && selected[dataAttributesArray[a]] ? getAttributesAndAgrregationsJSONAsText(selected[dataAttributesArray[a]]) : "";
+		cdns.push("<tr><td><input type='checkbox' ", 
+			(selected && Array.isArray(selected) && selected.indexOf(dataAttributesArray[a])!=-1 ? "checked='checked'" : "")
+			, " value='",
+			(selected && selected[dataAttributesArray[a]] ? JSON.stringify(selected[dataAttributesArray[a]]) : "")
+			,"' id='", div_id, "_", a, "' name='", div_id, "_", a, "'", (fevent ? " onchange='"+ fevent +"'": ""), " /> <label id='", div_id, "_label_", a, "' for='", div_id, "_", a, "'>", 
+			getHTMLCharacterAttributeType(dataAttributes[dataAttributesArray[a]].type), " ", dataAttributesArray[a], (s=='' ? '' : ', ' + s),
+			"</label></td></tr>");
+	}
+	cdns.push('</table>');
+	document.getElementById("Dialog"+div_id+"HTML").innerHTML = cdns.join('');
+}
 
 function GetSelectColumns(event) {
 

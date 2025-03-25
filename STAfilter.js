@@ -2070,7 +2070,7 @@ function GetFilterRows(event) {
 			return;
 		}
 	}
-	showInfoMessage("Filtering rows...");
+
 	if (node.image == "FilterRowsTable.png") { //import CSV
 		GetFilterRowsTable(node);
 	} else if (node.STAOGCAPIconformance) {//OGCAPIFeatures
@@ -2093,8 +2093,8 @@ function GetFilterRowsTable(node) {
 	networkNodes.update(node);
 	readInformationRowFilterTable(node.STAelementFilter, "no", "no", node); //apply filter
 	applyEvalAndFilterData(node);
-	UpdateChildenTable(node);	
-	showInfoMessage("Completed");	
+	UpdateChildenTable(node);		
+	
 }
 
 function GetFilterRowsSTA(node) {

@@ -54,20 +54,41 @@ objects. See a json schema and examples in /schemas/data_*.json
 */
 
 "use strict"
+
+function FindGraphIDJSONLD(items, id) {
+	for (var i=0; i<(items.length ? items.length : 1) ; i++) {
+		var item=items.length ? items[i] : items;
+		if (item["@id"]==id)
+			return item;
+	}
+	return null;
+}
+
 function ParseJSONLD(jsonld, addGeo, addObs) {
 	if (!jsonld["@graph"])
 		return {"error": "Encoding not supported. Expected element '@graph' missing"};
 	var dataAttributes={}, records=[], record, item, members, member;
-	var wkt = new Wkt.Wkt(), wkt2 = new Wkt.Wkt();
+	var wkt = new Wkt.Wkt(), wkt2 = new Wkt.Wkt(), foi;
 	for (var i=0; i<(jsonld["@graph"].length ? jsonld["@graph"].length : 1) ; i++) {
 		item=jsonld["@graph"].length ? jsonld["@graph"][i] : jsonld["@graph"];
-		if (!item.hasFeatureOfInterest)
-			return {"error": "Encoding not supported. '@graph' item without 'hasFeatureOfInterest'"};
-		var foi=item.hasFeatureOfInterest;
+		var foi=null;
+		if (item.hasFeatureOfInterest)
+			var foi=item.hasFeatureOfInterest;
+		else {
+			for (var j=0; j<(item["@type"].length ? item["@type"].length : 1) ; j++) {
+				var type=item["@type"].length ? item["@type"][j] : item["@type"];
+				if (type=="http://www.w3.org/ns/sosa/FeatureOfInterest") {
+					var foi=item;
+					break;
+				}
+			}
+			if (!foi)
+				return {"error": "Encoding not supported. '@graph' item without 'hasFeatureOfInterest'"};
+		}
 		var lat=null, long=null, hasWKT=false;
 		if (addGeo)
 		{
-			if (typeof foi.lat !== "undefined" && typeof foi.lang !== "undefined") {
+			if (typeof foi.lat !== "undefined" && typeof foi.long !== "undefined") {
 				if (!dataAttributes.lat)
 					dataAttributes.lat={type: "number", description: "Latitude", definition: "http://www.opengis.net/def/sensor-model-param/BODC/ALATZZ01", 
 							"UoM": "degree", "UoMSymbol": "°", "UoMDefinition": "https://qudt.org/vocab/unit/DEG"};
@@ -78,7 +99,9 @@ function ParseJSONLD(jsonld, addGeo, addObs) {
 				long=foi.long;			
 			} else if (foi.hasGeometry || foi["http://www.opengis.net/ont/geosparql#hasGeometry"]) {
 				var geom=foi.hasGeometry ? foi.hasGeometry : foi["http://www.opengis.net/ont/geosparql#hasGeometry"];
-				if (geom.asWKT || geom["http://www.opengis.net/ont/geosparql#asWKT"]) {
+				if (typeof geom === "string")
+					geom=FindGraphIDJSONLD(jsonld["@graph"], geom);					
+				if (geom && (geom.asWKT || geom["http://www.opengis.net/ont/geosparql#asWKT"])) {
 					var asWKTs=geom.asWKT ? geom.asWKT : geom["http://www.opengis.net/ont/geosparql#asWKT"];
 					for (var g=0; g<(typeof asWKTs !== "string" && asWKTs.length ? asWKTs.length : 1); g++) {
 						hasWKT=true;

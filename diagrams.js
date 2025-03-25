@@ -153,7 +153,7 @@
 			createDialogWithSelectWithGroupsScatterPlot(node)
 		}
 
-		function ShowBarPlotDialog(parentNodes,node) {
+		function ShowBarPlotDialog(parentNodes, node) {
 			saveNodeDialog("DialogBarPlot", node);
 			var data = parentNodes[0].STAdata;
 			if (!data || !data.length) {
@@ -163,23 +163,34 @@
 			document.getElementById("DialogBarPlotTitle").innerHTML = "Bar and pie plot";
 
 			var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
-			PopulateSelectSaveLayerDialog("DialogBarPlotAxisX", dataAttributes, "phenomenonTime");
-			PopulateSelectSaveLayerDialog("DialogBarPlotAxisY", dataAttributes, "result");
+			PopulateSelectSaveLayerDialog("DialogBarPlotAxisX", dataAttributes, node && node.barPlotOptions && node.barPlotOptions.axisX ? node.barPlotOptions.axisX :  "phenomenonTime");
+			PopulateSelectSaveLayerDialog("DialogBarPlotSeries", dataAttributes, node && node.barPlotOptions && node.barPlotOptions.series ? node.barPlotOptions.series :  "");
+			PopulateSelectSaveLayerDialog("DialogBarPlotAxisY", dataAttributes, node && node.barPlotOptions && node.barPlotOptions.axisY ? node.barPlotOptions.axisY : "result");
 
 
-			if (parentNodes.length<2){
-				document.getElementById("DialogBarPlotVariable").innerHTML='<input id="DialogBarPlotVariableInput" value="">';
-				return;
+			if (parentNodes.length<2)
+				document.getElementById("DialogBarPlotVariable").innerHTML='<input id="DialogBarPlotVariableInput" value="' + (node && node.barPlotOptions && node.barPlotOptions.labelY ? node.barPlotOptions.labelY : '') + '">';
+			else {
+				data = parentNodes[1].STAdata;
+				if (!data || data.length!=1) {
+					document.getElementById("DialogBarPlotTitle").innerHTML = "Second connection should only have one item. Continuing without title.";
+					return;
+				}
+
+				var dataAttributes = parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(data);
+				PopulateSelectSaveLayerDialog("DialogBarPlotVariable", dataAttributes, node && node.barPlotOptions && node.barPlotOptions.labelY ? node.barPlotOptions.labelY : "name");
+			}
+			if (node.barPlotOptions && node.barPlotOptions.plotType=="pie") {
+				document.getElementById("DialogBarPlotTypePie").checked=true;
+				document.getElementById("DialogBarPlotTypeBar").checked=false;
+			} else {
+				document.getElementById("DialogBarPlotTypePie").checked=false;
+				document.getElementById("DialogBarPlotTypeBar").checked=true;
 			}
 
-			data = parentNodes[1].STAdata;
-			if (!data || data.length!=1) {
-				document.getElementById("DialogBarPlotTitle").innerHTML = "Second connection should only have one item. Continuing without title.";
-				return;
-			}
-
-			var dataAttributes = parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(data);
-			PopulateSelectSaveLayerDialog("DialogBarPlotVariable", dataAttributes, "name");
+			if (document.getElementById("DialogBarPlotAxisXSelect").value && 
+				document.getElementById("DialogBarPlotAxisYSelect").value)
+				DrawBarPlot();
 		}
 
 		function ShowImageViewerDialog(parentNodes) {
@@ -323,129 +334,190 @@ const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df
 
 		var BarPlotGraph2d=null;
 		function DrawBarPlot(event){
-			event.preventDefault(); // We don't want to submit this form
-			var selectedOptions={};
-			selectedOptions.AxisX=document.getElementById("DialogBarPlotAxisXSelect").value;
-			selectedOptions.AxisY=document.getElementById("DialogBarPlotAxisYSelect").value;
-			var node= getNodeDialog("DialogBarPlot");
+			if (event)
+				event.preventDefault(); // We don't want to submit this form
+			var node=getNodeDialog("DialogBarPlot");
+			if (!node)
+				return;
+			node.barPlotOptions={};
+			node.barPlotOptions.axisX=document.getElementById("DialogBarPlotAxisXSelect").value;
+			node.barPlotOptions.series=document.getElementById("DialogBarPlotSeriesSelect").value;
+			node.barPlotOptions.axisY=document.getElementById("DialogBarPlotAxisYSelect").value;
 			var nodes=GetParentNodes(node);
-			if (nodes && nodes.length) {
-				var node=nodes[0];
-				var data, dataAttributes, record;
-				if (node.STAdata) {
-					var labels=[], dataY=[], backgroundColor=[], labelY="Magnitude", plotType, scales, legend, plugins;
-					data=node.STAdata;
-					dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
+			if (!nodes || !nodes.length)
+				return;
+			var parentNode=nodes[0];
+			var data, dataAttributes, record;
+			if (parentNode.STAdata) {
+				var labels=[], dataY=[], backgroundColor=[], labelY="Magnitude", scales, legend, plugins, data;
+				data=parentNode.STAdata;
+				dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 
+				if (node.barPlotOptions.series) {
+					var series=[], seriesFull=[], labelsFull=[];
 					for (var i = 0; i < data.length; i++) {
 						record=data[i];
-						labels.push(record[selectedOptions.AxisX]);
-						dataY.push(record[selectedOptions.AxisY]);
+						if (-1==labelsFull.indexOf(record[node.barPlotOptions.axisX])) {
+							labelsFull.push(record[node.barPlotOptions.axisX]);
+							labels.push(record[node.barPlotOptions.axisX].length>35 ? record[node.barPlotOptions.axisX].substring(0,32) + "..." : record[node.barPlotOptions.axisX]);
+						}
+					}
+					for (var i = 0; i < data.length; i++) {
+						record=data[i];
+						var c=series.indexOf(record[node.barPlotOptions.series]);
+						if (c==-1) {
+							seriesFull.push(record[node.barPlotOptions.series]);
+							c=seriesFull.length-1;
+							series.push(seriesFull[c].length>35 ? seriesFull[c].substring(0,32) + "..." : seriesFull[c]);
+							dataY.push(new Array(labelsFull.length).fill(0));
+						}
+						dataY[c][labelsFull.indexOf(record[node.barPlotOptions.axisX])]+=record[node.barPlotOptions.axisY];
+					}	
+				} else {
+					for (var i = 0; i < data.length; i++) {
+						record=data[i];
+						labels.push(record[node.barPlotOptions.axisX].length>35 ? record[node.barPlotOptions.axisX].substring(0,32) + "..." : record[node.barPlotOptions.axisX]);
+						dataY.push(record[node.barPlotOptions.axisY]);
 						backgroundColor.push(ColorsForBarPlot[i%ColorsForBarPlot.length]);
 					}
-					if (document.getElementById("DialogBarPlotVariableSelect"))
-						labelY=document.getElementById("DialogBarPlotVariableSelect").value;
-					else if (document.getElementById("DialogBarPlotVariableInput") && document.getElementById("DialogBarPlotVariableInput").value)
-						labelY=document.getElementById("DialogBarPlotVariableInput").value;
-					else if (dataAttributes[selectedOptions.AxisY].description) {
-						labelY=dataAttributes[selectedOptions.AxisY].description;
-						if (dataAttributes[selectedOptions.AxisY].UoMSymbol)
-							labelY+=" (" + dataAttributes[selectedOptions.AxisY].UoMSymbol + ")";
-						else if (dataAttributes[selectedOptions.AxisY].UoM)
-							labelY+=" (" + dataAttributes[selectedOptions.AxisY].UoM + ")";
-					}
-					if (document.getElementById("DialogBarPlotTypePie").checked) {
-						plotType="pie";
-						scales=null;
-						legend={
-							position: "right",
-							labels: {
-								fontSize: 10,
-								padding: 3
-							}
-						};
-						plugins={
-							labels: {
-								render: 'value',
-								precision: 0,
-								showZero: true,
-								fontSize: 12,
-								fontColor: '#fff',
-								fontStyle: 'normal',
-								fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-								textShadow: true,
-								shadowOffsetX: -5,
-								shadowOffsetY: 5,
-								shadowColor: 'rgba(255,0,0,0.75)',
-								arc: true,
-								position: 'default',
-								overlap: true,
-								showActualPercentages: true,
-								images: [{
-								  src: 'image.png',
-								  width: 16,
-								  height: 16
-								}],
-								outsidePadding: 4,
-								textMargin: 4
-							}
-						};
-					} else {
-						plotType="bar";
-						scales={
-							xAxes: [{
-								scaleLabel: {display: true, labelString: dataAttributes[selectedOptions.AxisX].description ? dataAttributes[selectedOptions.AxisX].description : selectedOptions.AxisX},
-								categoryPercentage: 1,
-								barPercentage: 1,
-								gridLines: { display: false},
-								ticks: { autoSkip: false /*, maxRotation: 0 */}
-							}],
-							yAxes: [{
-								//type: "logarithmic",
-								scaleLabel: {display: true, labelString: labelY},
-							ticks: { beginAtZero:true }
-							}]
-						};
-						legend={
-							display: false
-						};
-						plugins={
-							labels: {
-								render: 'value',
-								precision: 0,
-								showZero: true,
-								fontSize: 12,
-								fontStyle: 'normal',
-								fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
-								position: 'default',
-								overlap: true,
-								showActualPercentages: false,
-								outsidePadding: 4,
-								textMargin: 4
-							}
-						};
-					}
-					if (BarPlotGraph2d)
-						BarPlotGraph2d.destroy();
-					BarPlotGraph2d = new Chart(document.getElementById('DialogBarPlotVisualizationCanvas'), {
-								type: plotType,
-								data: {
-									labels: labels,
-									datasets: [{
-										data: dataY,
-										backgroundColor: backgroundColor,
-										borderWidth: 0
-									}]
-								},
-								options: {	
-									legend: legend,
-									scales: scales,
-									plugins: plugins,
-									maintainAspectRatio: false,
-									resizeDelay: 100
-								}
-							});
 				}
+				if (document.getElementById("DialogBarPlotVariableSelect"))
+					labelY=node.barPlotOptions.labelY=document.getElementById("DialogBarPlotVariableSelect").value;
+				else if (document.getElementById("DialogBarPlotVariableInput") && document.getElementById("DialogBarPlotVariableInput").value)
+					labelY=node.barPlotOptions.labelY=document.getElementById("DialogBarPlotVariableInput").value;
+				else if (dataAttributes[node.barPlotOptions.axisY].description) {
+					labelY=dataAttributes[node.barPlotOptions.axisY].description;
+					if (dataAttributes[node.barPlotOptions.axisY].UoMSymbol)
+						labelY+=" (" + dataAttributes[node.barPlotOptions.axisY].UoMSymbol + ")";
+					else if (dataAttributes[node.barPlotOptions.axisY].UoM)
+						labelY+=" (" + dataAttributes[node.barPlotOptions.axisY].UoM + ")";
+				}
+				if (document.getElementById("DialogBarPlotTypePie").checked) {
+					node.barPlotOptions.plotType="pie";
+					scales=null;
+					legend={
+						position: "right",
+						labels: {
+							fontSize: 10,
+							padding: 3
+						}
+					};
+					plugins={
+						legend: legend,
+						labels: {
+							render: 'value',
+							precision: 0,
+							showZero: true,
+							fontSize: 12,
+							fontColor: '#fff',
+							fontStyle: 'normal',
+							fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+							textShadow: true,
+							shadowOffsetX: -5,
+							shadowOffsetY: 5,
+							shadowColor: 'rgba(255,0,0,0.75)',
+							arc: true,
+							position: 'default',
+							overlap: true,
+							showActualPercentages: true,
+							images: [{
+							  src: 'image.png',
+							  width: 16,
+							  height: 16
+							}],
+							outsidePadding: 4,
+							textMargin: 4
+						}
+					};
+				} else {
+					node.barPlotOptions.plotType="bar";
+					scales={
+						x: {
+							title: {
+								display: true, 
+								text: dataAttributes[node.barPlotOptions.axisX].description ? dataAttributes[node.barPlotOptions.axisX].description : node.barPlotOptions.axisX
+							},
+							grid: { display: false},
+							ticks: { autoSkip: false /*, maxRotation: 0 */}
+						},
+						y: {
+							//type: "logarithmic",
+							title: {
+								display: true, 
+								text: labelY
+							},
+							beginAtZero:true
+						}
+					};
+					legend={
+						display: node.barPlotOptions.series ? true : false
+					};
+					plugins={
+						legend: legend,
+						labels: {
+							render: 'value',
+							precision: 0,
+							showZero: true,
+							fontSize: 12,
+							fontStyle: 'normal',
+							fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+							position: 'default',
+							overlap: true,
+							showActualPercentages: false,
+							outsidePadding: 4,
+							textMargin: 4
+						}
+					};
+				}
+				data={
+					labels: labels
+				}
+
+				if (node.barPlotOptions.series) {
+					data.datasets=[];
+					for (var c=0; c<seriesFull.length; c++) {
+						data.datasets.push({
+								label: series[c],
+								data: dataY[c],
+								backgroundColor: ColorsForBarPlot[c%ColorsForBarPlot.length],
+								borderWidth: 0
+							});
+						if (node.barPlotOptions.plotType=="bar") {
+							data.datasets[c].categoryPercentage=0.9;
+							data.datasets[c].barPercentage=0.9;
+						}
+					}
+					if (node.barPlotOptions.plotType=="bar") {
+						scales.x.stacked=true;
+						scales.y.stacked=true;
+						plugins.labels.outsidePadding=-14;
+						plugins.labels.textMargin=-14;
+					}
+				} else {
+					data.datasets=[{
+							data: dataY,
+							backgroundColor: backgroundColor,
+							borderWidth: 0
+						}];
+					if (node.barPlotOptions.plotType=="bar") {
+						data.datasets[0].categoryPercentage=1;
+						data.datasets[0].barPercentage=1;
+					}
+				};
+
+				if (BarPlotGraph2d)
+					BarPlotGraph2d.destroy();
+				BarPlotGraph2d = new Chart(document.getElementById('DialogBarPlotVisualizationCanvas'), {
+							type: node.barPlotOptions.plotType,
+							data: data,
+							options: {	
+								scales: scales,
+								plugins: plugins,
+								maintainAspectRatio: false,
+								resizeDelay: 100
+							}
+						});
+				networkNodes.update(node);
 			}
 		}
 
@@ -505,4 +577,3 @@ const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogImageViewer").close();
 		}
-

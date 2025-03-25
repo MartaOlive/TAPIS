@@ -1,8 +1,8 @@
 {
-	"MMNpath": "https://www.ogc.grumets.cat/bestmap/",
+	"MMNpath": "../mmn",
 	"STAurl": "https://citiobs.demo.secure-dimensions.de/staplus/v1.1",
-	"WebSocketUrl": "wss://callus.ddns.net/WSMM",
-	"WebHookUrl": "https://callus.ddns.net/WSMM",
+	"WebSocketUrl": "wss://ogc.grumets.cat/WSMM",
+	"WebHookUrl": "https://ogc.grumets.cat/WSMM",
 	"suggestedSTAurls": [
 		{
 			"group": "Releated to CREAF projects",
