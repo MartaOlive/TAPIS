@@ -5,87 +5,198 @@
 	<meta content="utf-8" http-equiv="encoding">
 	<title>Graph2d | Basic Example</title>
 
+	<script type="text/javascript" src="../Chart.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
 
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.15.1/vis.min.css" rel="stylesheet" type="text/css" />
 
 
 
-	<script src="../vis-timeline-graph2d.min.js"></script>
-	<script src="../vis-network.min.js"></script>
+
+	<!-- <script src="../vis-timeline-graph2d.min.js"></script>
+	<script src="../vis-network.min.js"></script> -->
 	<style type="text/css">
 		body,
 		html {
 			font-family: sans-serif;
-		}
-
-		.custom-style1 {
-			fill: #0df200;
-			fill-opacity: 0;
-			stroke-width: 2px;
-			stroke: #0df200;
-		}
-
-		.custom-style2 {
-			fill: #f23303;
-			fill-opacity: 0;
-			stroke-width: 2px;
-			stroke: #ff0004;
 		}
 	</style>
 
 <body>
 	<h2>Graph2d | Right Axis Example</h2>
 	<div style="width:700px; font-size:14px; text-align: justify;">
-		This example shows the all of the graphs outlined on the right side using the <code>yAxisOrientation</code>
-		option.
-		We also show a few custom styles for the graph and show icons on the axis, which are adhering to the custom
-		styling.
-		Finally, the legend is manually positioned. Both the left and right axis
-		have their own legend. If one of the axis is unused, the legend is not shown. The options for the legend have
-		been split
-		in a <code>left</code> and a <code>right</code> segment. Since this example shows the right axis, the right
-		legend is configured.
-
+		<canvas id="llocpelgrafic"></canvas>
 
 	</div>
 	<br />
 	<div id="visualization"></div>
 
 	<script type="text/javascript">
-		function SortTableByColumn(data, attributeSelected, AscOrDesc) {
-			// if (AscOrDesc=="asc"){
-			// 	if ()
-			// } 	return data.sort((a, b) => a[attributeSelected] - b[attributeSelected]);
-			// else return data.sort((a, b) => b[attributeSelected] - a[attributeSelected]);
-			var attributes = getDataAttributesSimple(data);
-			if (attributes[attributeSelected] == "string") {
-				if (AscOrDesc == "asc") {
-					data.sort(function (a, b) {
-						if (a.name > b.name) {
-							return 1;
-						}
-						if (a.name < b.name) {
-							return -1;
-						}
-						return 0;
-					})
-				} else {
-					data.sort(function (a, b) {
-						if (a.name < b.name) {
-							return 1;
-						}
-						if (a.name > b.name) {
-							return -1;
-						}
-						return 0;
-					})
-				}
-			} else {
 
+		var data = { //L'Eix en total? S'ha de crear?
+			//labels: [ // Date Objects
+			// 	"2023-03-01",
+			// 	"2023-03-02",
+			// 	"2023-03-03",
+			// 	"2023-03-04",
+			// 	"2023-03-05",
+
+			// ],
+			datasets: [
+				{
+					label: 'My First dataset',
+					backgroundColor: 'rgba(255, 99, 132)',
+					borderColor: 'rgba(255, 99, 132)',
+					fill: false,
+					data: [{ x: '2025-03-26T08:00:00', y: 10 },
+					{ x: '2025-03-26T08:30:00', y: 20 },
+					{ x: '2025-03-26T09:00:00', y: 15 },
+					{ x: '2025-03-26T09:30:00', y: 30 },
+					{ x: '2025-03-26T10:00:00', y: 25 },
+					{ x: '2025-03-26T10:30:00', y: 10 },
+					{ x: '2025-03-26T11:00:00', y: 30 }
+					],
+					yAxisID: 'yAxisLeft',
+				}
+				// ,
+				//  {
+				// 	label: 'My Second dataset',
+				// 	backgroundColor: 'rgba(255, 99, 200)',
+				// 	borderColor: 'rgba(255, 99, 200)',
+				// 	fill: false,
+				// 	data: [{ //LES DADES Cada dataset tindrà les seves 
+				// 		x: 15,
+				// 		y: 39
+				// 	}, {
+				// 		x: 20,
+				// 		y: 12
+				// 	}, {
+				// 		x: 25,
+				// 		y: 1
+				// 	}, {
+				// 		x: 30,
+				// 		y: 50
+
+				// 	}
+				// 	],
+				// 	yAxisID: 'yAxisLeft',
+				// },
+				// {
+				// 	label: 'Dataset with point data',
+				// 	backgroundColor: 'rgba(0, 99, 132)',
+				// 	borderColor: 'rgba(0, 99, 132)',
+				// 	fill: false,
+				// 	data:
+				// 		[{ //LES DADES Cada dataset tindrà les seves 
+				// 			x: 0,
+				// 			y: 300
+				// 		}, {
+				// 			x: 10,
+				// 			y: 200
+				// 		}, {
+				// 			x: 20,
+				// 			y: 100
+				// 		}, {
+				// 			x: 30,
+				// 			y: 500
+
+				// 		}
+				// ],
+				// 	yAxisID: 'yAxisRight',
+				// }
+			]
+
+
+		};
+
+		var config = {
+			type: 'line',
+			data: data,
+			options: {
+				plugins: {
+					title: {
+						text: 'Chart.js Time Scale', //Titol adalt de tot
+						display: true
+					}
+				},
+				scales: { //EIXOS
+					x: {
+						type: "time",
+						time: {
+							unit: 'minute',  // Utilitza 'minute' per mostrar dates fins al minut
+							stepSize: 1,  // Assegura que es mostrin les dates en intervals de 1 minut
+							tooltipFormat: 'yyyy-MM-dd HH:mm',  // El format del tooltip per mostrar data i hora
+							displayFormats: {
+								minute: 'yyyy-MM-dd HH:mm',  // El format de visualització de l'eix X
+							}
+
+						},
+						title: {
+							display: true,
+							text: 'Date'
+						},
+						ticks: {
+							maxTicksLimit: 7,  // Limita el nombre màxim d'etiquetes a 5
+							autoSkip: false,  // Les etiquetes es saltaran automàticament si és necessari
+							// callback: function (value, index, values) {
+							// 	// Retorna les etiquetes per als punts de dades específics
+							// 	return value;
+							// },
+							//stepSize: 600 //Funciona amb la unitat especificada, en aquest cas minuts
+						},
+						yAxisLeft: {
+
+							type: 'linear',
+							position: 'left',
+							title: {
+								display: true,
+								text: 'leftt'
+							}
+						},
+						yAxisRight: {
+
+							type: 'linear',
+							position: 'right',
+							title: {
+								display: true,
+								text: 'righttttt',
+							},
+
+							grid: {
+								drawOnChartArea: false
+							}
+						},
+					}
+				},
 			}
-			console.log(attributes)
-		}
+		};
+		var ScatterPlotGraph2d = new Chart(document.getElementById('llocpelgrafic'), config
+
+		);
+		// const actions = [
+		// 	{
+		// 		name: 'Randomize',
+		// 		handler(chart) {
+		// 			chart.data.datasets.forEach(dataset => {
+		// 				dataset.data.forEach(function (dataObj, j) {
+		// 					const newVal = Utils.rand(0, 100);
+
+		// 					if (typeof dataObj === 'object') {
+		// 						dataObj.y = newVal;
+		// 					} else {
+		// 						dataset.data[j] = newVal;
+		// 					}
+		// 				});
+		// 			});
+		// 			chart.update(); //" aqui l'actualitzar "
+		// 		}
+		// 	},
+		// ];
+
+		// <a data-v-2afd21f1="" class="chart-action">    Randomize  </a>
+
+
 	</script>
 </body>
 

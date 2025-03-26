@@ -46,6 +46,7 @@
 "use strict"
 
 		function ShowScatterPlotDialog(parentNodes, node) {
+			saveNodeDialog("DialogScatterPlot", node);
 			var noData=true, attributesArray=[], allAttributes,allAttributesKeys, objectWithParentNodesInfo={};
 
 			for (var i=0;i<parentNodes.length;i++){
@@ -213,8 +214,18 @@
 		var ScatterPlotGraph2d=null;
 		function DrawScatterPlot(event){
 			event.preventDefault(); // We don't want to submit this form
-			var ScatterPlotNode=networkNodes.get(network.getSelectedNodes())[0];
-			var dataGroups=ScatterPlotNode.STAattributesToSelect.dataGroupsSelectedToScatterPlot;
+			var node=getNodeDialog("DialogScatterPlot");
+			if (!node)
+				return;
+			// node.scatterPlotOptions={};
+			// node.scatterPlotOptions.axisX=
+			// node.scatterPlotOptions.axisYLeft=
+			// node.scatterPlotOptions.axisYRight=
+			// node.scatterPlotOptions.series=
+
+
+		
+			var dataGroups=node.STAattributesToSelect.dataGroupsSelectedToScatterPlot; //Options selected
 			var nodeId, node, nodeData,selectedOptions={},record,items=[], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight;
 			for (var e=0;e<dataGroups.length;e++){
 				nodeId=dataGroups[e].nodeSelected;

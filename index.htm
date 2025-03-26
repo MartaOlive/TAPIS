@@ -1177,14 +1177,6 @@
 	</dialog>
 
 	<dialog id="DialogScatterPlot">
-		<!-- <form>
-			<div id="ScatterPlotTableDiv">
-
-			</div>
-			<div class="center">
-				<button value="ok" onClick="CloseDialogScatterPlot(event)" formmethod="dialog">Close</button>
-			</div>
-		</form> -->
 		<table border="0"><tr><td>
 			<span id="DialogScatterPlotTitle"></span>
 			<form>
@@ -1195,6 +1187,7 @@
 				<button value="draw" onClick="DrawScatterPlot(event)">Draw</button>
 				<button value="ok" onClick="CloseDialogScatterPlot(event)" formmethod="dialog">Close</button>
 			</div>
+			<input type="hidden" id="DialogScatterPlotNodeId"></input>
 			</form>
 		</td>
 		<td><div id="DialogScatterPlotVisualization" style="width:600px; height:500px;"></div></td>
