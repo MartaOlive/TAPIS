@@ -6,8 +6,7 @@
 	<title>Graph2d | Basic Example</title>
 
 	<script type="text/javascript" src="../Chart.min.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+	<script	src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
 
 
@@ -46,7 +45,7 @@
 			datasets: [
 				{
 					label: 'My First dataset',
-					backgroundColor: 'rgba(255, 99, 132)',
+					backgroundColor: 'rgba(0, 99, 132)',
 					borderColor: 'rgba(255, 99, 132)',
 					fill: false,
 					data: [{ x: '2025-03-26T08:00:00', y: 10 },
@@ -145,35 +144,36 @@
 							// },
 							//stepSize: 600 //Funciona amb la unitat especificada, en aquest cas minuts
 						},
-						yAxisLeft: {
+						min: '2025-03-26T08:00:00', // Mínim de l'eix X (data inicial)
+						max: '2025-03-26T12:20:00'
+					},  // Màxim de l'eix X (data final)
+					yAxisLeft: {
 
-							type: 'linear',
-							position: 'left',
-							title: {
-								display: true,
-								text: 'leftt'
-							}
+						type: 'linear',
+						position: 'left',
+						title: {
+							display: true,
+							text: 'leftt'
+						}
+					},
+					yAxisRight: {
+
+						type: 'linear',
+						position: 'right',
+						title: {
+							display: true,
+							text: 'righttttt',
 						},
-						yAxisRight: {
 
-							type: 'linear',
-							position: 'right',
-							title: {
-								display: true,
-								text: 'righttttt',
-							},
+						grid: {
+							drawOnChartArea: false
+						}
+					},
+				}
+			},
 
-							grid: {
-								drawOnChartArea: false
-							}
-						},
-					}
-				},
-			}
 		};
-		var ScatterPlotGraph2d = new Chart(document.getElementById('llocpelgrafic'), config
-
-		);
+		var ScatterPlotGraph2d = new Chart(document.getElementById('llocpelgrafic'), config	);
 		// const actions = [
 		// 	{
 		// 		name: 'Randomize',

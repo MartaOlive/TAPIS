@@ -11,6 +11,7 @@
 	<!--Thanks to https://github.com/DavideViolante/chartjs-plugin-labels and downloaded from:
 		https://www.npmjs.com/package/chart.js-plugin-labels-dv/v/3.3.0 -->
 	<script type="text/javascript" src="chartjs-plugin-labels.min.js"></script>
+	<script	src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script> <!--to use time in chart axis -->
 
 	<script	type="text/javascript" src="vis-network.min.js"></script>
 	<script type="text/javascript" src="vis-timeline-graph2d.min.js"></script>
@@ -1190,7 +1191,7 @@
 			<input type="hidden" id="DialogScatterPlotNodeId"></input>
 			</form>
 		</td>
-		<td><div id="DialogScatterPlotVisualization" style="width:600px; height:500px;"></div></td>
+		<td><canvas id="DialogScatterPlotVisualization" style="width:600px; height:500px;"></canvas></td>
 		</tr>
 		<tr>
 			<td></td>
@@ -1199,23 +1200,28 @@
 					<legend>
 						Graphic configurations
 					</legend>
+					<label style="font-weight: bold;">Graphic title:</label>
+					<input value="" type="text" id="DialogScatterPlotAxisTitle"></input> <br>
+					<label style="font-weight: bold;">X axis:  </label><br>
+					<input value="" type="text" id="DialogScatterPlotAxisXLabel"></input><br>
+
 					<label style="font-weight: bold;">Left Y axis:  </label><br>
-					<label>Legend position</label>
+					<!-- <label>Legend position</label>
 					<select id="DialogScatterPlotLegendLocationSelectLeft">
 						<option value="bottom-left">Bottom left</option>
 						<option value="bottom-right">Bottom right</option>
 						<option value="top-left">Top left</option>
 						<option value="top-right">Top right</option>
-					</select>
+					</select> -->
 					<label>Axis label: </label><input value="" type="text" id="DialogScatterPlotAxisYLabelLeft"></input><br><br>
 					<label style="font-weight: bold;">Right Y axis:  </label><br>
-					<label>Legend position</label>
+					<!-- <label>Legend position</label>
 					<select id="DialogScatterPlotLegendLocationSelectRight">
 						<option value="bottom-left">Bottom left</option>
 						<option value="bottom-right">Bottom right</option>
 						<option value="top-left">Top left</option>
 						<option value="top-right" selected>Top right</option>
-					</select>
+					</select> -->
 					<label>Axis label:</label>
 					<input value="" type="text" id="DialogScatterPlotAxisYLabelRight"></input>
 				</fieldset>
