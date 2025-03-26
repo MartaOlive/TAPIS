@@ -2081,6 +2081,7 @@ function GetFilterRows(event) {
 		}
 	} else if (node.image == "FilterRowsSTA.png") { //STA
 		GetFilterRowsSTA(node);
+		showInfoMessage("Filtering STA rows...");
 	}
 	document.getElementById("DialogFilterRows").close();
 	networkNodes.update(node);
@@ -2094,7 +2095,6 @@ function GetFilterRowsTable(node) {
 	readInformationRowFilterTable(node.STAelementFilter, "no", "no", node); //apply filter
 	applyEvalAndFilterData(node);
 	UpdateChildenTable(node);		
-	
 }
 
 function GetFilterRowsSTA(node) {

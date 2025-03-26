@@ -94,7 +94,9 @@ function ShowTableSelectColumnsDialogSelect(div_id, parentNode, node, selected, 
 			, " value='",
 			(selected && selected[dataAttributesArray[a]] ? JSON.stringify(selected[dataAttributesArray[a]]) : "")
 			,"' id='", div_id, "_", a, "' name='", div_id, "_", a, "'", (fevent ? " onchange='"+ fevent +"'": ""), " /> <label id='", div_id, "_label_", a, "' for='", div_id, "_", a, "'>", 
+			(selected && !Array.isArray(selected) && !selected[dataAttributesArray[a]] ? "<span style='color: grey'>" : ""),
 			getHTMLCharacterAttributeType(dataAttributes[dataAttributesArray[a]].type), " ", dataAttributesArray[a], (s=='' ? '' : ', ' + s),
+			(selected && !Array.isArray(selected) && !selected[dataAttributesArray[a]] ? "</span>" : ""),
 			"</label></td></tr>");
 	}
 	cdns.push('</table>');

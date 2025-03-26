@@ -577,3 +577,4 @@ const ColorsForBarPlot=["#1f77b4","#aec7e8","#ff7f0e","#ffbb78","#2ca02c","#98df
 			event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogImageViewer").close();
 		}
+

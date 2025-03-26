@@ -97,7 +97,7 @@ const STAOperations = {RecursiveExpandSTA: {description: "Recursive Expand", cal
 			FilterRowsByTime: {description: "Filter Rows by time", help: "Gets a table with records that match with a time interval. It is possible to group them by time periods. Requeres to be connected to a SensorThings API or a STAplus node."},
 			GeoFilterPolSTA: {description: "Filter Rows by Polygon", callSTALoad: true, help: "Gets a table with the records within a polygon. Requeres to be connected to another SensorThings API or a STAplus entity and to a table with a record that has a geometry (polygon)."},
 			GeoFilterPntSTA: {description: "Filter Rows by Distance", callSTALoad: true, help: "Gets a table with the records that are closer that a given distance of a point. Requeres to be connected to a SensorThings API or a STAplus node."},
-			SortBySTA: {description: "Sort by STA", callSTALoad: true, help: "Gets a table with data sorted by a given criteria. Requeres to be connected to a SensorThings API or a STAplus node."},
+			SortBySTA: {description: "Sort by", callSTALoad: true, help: "Gets a table with data sorted by a given criteria. Requeres to be connected to a SensorThings API or a STAplus node."},
 			RangeSTA: {description: "Record range", callSTALoad: true, help: "Gets a table with a subset of the records limiting the number of records and skiping some initial records. <hr><small>Implements $top and $skip. Requeres to be connected to a SensorThings API or a STAplus node</small>."},
 			UploadObservations: {description: "Upload in STA", leafNode: true, help: "Saves some observations to a SensorThings API or a STAplus server."},
 			//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
@@ -115,8 +115,8 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			FilterRowsTable: {description: "Filter Rows", help: "Obtain a table with the records that match the contitions. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL."},
 			JoinTables: {description: "Join Tables", help:"Creates a single table that is the result of joining two tables using some selected column values in both tables to defined the merge criteria."},
 			ConcatenateTables: {description: "Concatenate Columns", help: "Create a single table by adding the records of the second table to the first one. The columns with the same name in both tables are merged in a sigle column."},
-			GroupBy: {description: "GroupBy", help: "Creates a table will the columns containng selected statistics of the aggregation of some records that have the same values other selected columns."},
-			SortByTables: {description: "Sort by tables", callSTALoad: true, help: "Gets a table with data sorted by a given criteria."},
+			GroupBy: {description: "Group by", help: "Creates a table will the columns containng selected statistics of the aggregation of some records that have the same values other selected columns."},
+			SortByTables: {description: "Sort by", callSTALoad: true, help: "Gets a table with data sorted by a given criteria."},
 			AggregateColumns: {description: "Aggregate Columns", help: "Adds a new column to a table with the aggregation of other previous selected columns."},
 			CreateColumns: {description: "Create Columns", help: "Adds a new column to your table. This column can be left empty, filled with a constant value or filled with an autoincremental value."},
 			ColumnsCalculator: {description: "Columns calculator", help: "Adds a new column to your table where for each record the new column contains the result of an operation involving other column values of that record."},
@@ -6376,7 +6376,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				if (parentNode.STAdata)
-					ShowTableSelectSortByDialog(parentNode, currentNode,"tables");
+					ShowTableSelectSortByDialog(parentNode, currentNode);
 				document.getElementById("DialogSelectSortBy").showModal();
 			}
 		}
@@ -6460,6 +6460,7 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogConcatenateTables").showModal();
 		}
 		else if (currentNode.image =="ColumnStatistics.png") {
+			saveNodeDialog("DialogColumnStatistics", currentNode);
 			document.getElementById("DialogColumnStatistics").showModal();
 		}
 		
@@ -7396,13 +7397,15 @@ function addColumnsToTableInColumnsCalculator(){
 	document.getElementById("DialogColumnsCalculator").close();
 
 }
+
 function createColumnStatistics(event){
+	var node=getNodeDialog("DialogColumnStatistics");
 	event.preventDefault();
-	var parentNodes= GetParentNodes(currentNode);
+	var parentNodes= GetParentNodes(node);
 	var staData= parentNodes[0].STAdata;
 	var dataAttributes= parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(staData);
 	var keys = Object.keys(staData[0]);
-	var collectedData,obj, finallyArray=[],dataType;
+	var collectedData,obj, finalArray=[],dataType;
 
 	for (var i=0;i<keys.length;i++){
 		obj={};
@@ -7431,18 +7434,18 @@ function createColumnStatistics(event){
 		obj["Count"]= aggrFuncCount(collectedData);
 		//obj["ProportionDefined"]= aggrFuncProportionDefined(collectedData); 
 
-		finallyArray.push(obj);
+		finalArray.push(obj);
 	}
 
-	currentNode.STAdata=finallyArray;
-	networkNodes.update(currentNode);
-	document.getElementById("DialogColumnStatistics").close();
+	node.STAdata=finalArray;
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
 
-	
+	document.getElementById("DialogColumnStatistics").close();	
 }
 
 
-function concatenateTables(){ //!!! Arreglat perque no funcionava bé
+function concatenateTables() {
 	event.preventDefault();
 	var selected= (document.getElementById("concatenationType_allColumns").checked ==true)?"allColumns":"repeatedColumns";
 	var parentNodes= GetParentNodes(currentNode);

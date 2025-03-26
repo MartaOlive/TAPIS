@@ -140,7 +140,9 @@
 						<option value="help/recipe05_01_spatialFilterTemperature.json">Recipe 5a: Selecting temperatures from an area</option>
 						<option value="help/recipe05_02_FilteringByDistance.json">Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
 						<option value="help/recipe06_creatingTwoDatastreamOfObservations.json">Recipe 6: Creating a new stream of observations</option>
-						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>
+						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>						<option value="help/recipe09_stackedBarChart.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>
+						<option value="help/recipe08_s3BucketViewCSV.json">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</option>
+						<option value="help/recipe09_stackedBarChart.json">Recipe 9: Drawing a stacked bar chart</option>
 					</select>
 				</label>
 			</p>
@@ -280,7 +282,7 @@
 			<div class="center">
 				<button value="prev" id="dlgCreateUpdateDeleteRecordFirst" onClick="GetFirstRecord(event)">&lt;&lt;</button>
 				<button value="prev" id="dlgCreateUpdateDeleteRecordPrevious" onClick="GetPreviousRecord(event)">&nbsp&lt;&nbsp;</button>
-				<input type="text" id="dlgCreateUpdateDeleteRecordNumber" onChange="GetNumberRecord(event)"> /> / <span id="dlgCreateUpdateDeleteRecordLength"></span> 
+				<input type="text" id="dlgCreateUpdateDeleteRecordNumber" onChange="GetNumberRecord(event)" /> / <span id="dlgCreateUpdateDeleteRecordLength"></span> 
 				<button value="next" id="dlgCreateUpdateDeleteRecordNext" onClick="GetNextRecord(event)">&nbsp;&gt;&nbsp;</button>
 				<button value="next" id="dlgCreateUpdateDeleteRecordLast" onClick="GetLastRecord(event)">&gt;&gt;</button>
 				<br>
@@ -608,7 +610,7 @@
 	</dialog>
 	
 	<dialog id="DialogColumnStatistics">
-		<form >
+		<form>
  				<span>For each column, rows with the follow statistics will be created:</span><br>
 				<div style="display: inline-block;">
 					<ul type="square">
@@ -631,6 +633,7 @@
 				<button value="default" onClick="createColumnStatistics(event)">Ok</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
+			<input type="hidden" id="DialogColumnStatisticsNodeId"></input>
 		</form>
 	</dialog>
 	
@@ -1244,11 +1247,15 @@
 					<span id="DialogBarPlotAxisX"></span>
 				</label>
 				<br>
+				<label>Classification (optional):
+					<span id="DialogBarPlotSeries"></span>
+				</label>
+				<br>
 				<label>Values:
 					<span id="DialogBarPlotAxisY"></span>
 				</label>
 				<br>
-				<label>Variable name:
+				<label>Variable name (optional):
 					<span id="DialogBarPlotVariable"></span>
 				</label>
 			</fieldset>

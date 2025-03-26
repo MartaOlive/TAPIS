@@ -744,7 +744,7 @@ function GetSelectRangeSTA(event) {
 
 ////////////// SortBy (orderBy)
 
-function ShowTableSelectSortByDialog(parentNode, node,origin) {
+function ShowTableSelectSortByDialog(parentNode, node) {
 
 	saveNodeDialog("DialogSelectSortBy", node);
 
@@ -756,9 +756,9 @@ function ShowTableSelectSortByDialog(parentNode, node,origin) {
 	}
 
 	var dataAttributesArray;
-	if (!origin){ //STA
+	if (node.image == "SortBySTA.png"){ //STA
 		dataAttributesArray=ShowPropagateNodeSelectedSelectExpands(node, parentNode)
-	var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
+		var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
 	}else{ //tables
 
 		node.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) :  getDataAttributes(data);
@@ -769,20 +769,18 @@ function ShowTableSelectSortByDialog(parentNode, node,origin) {
 	var first=true;
 	for (var a = 0; a < dataAttributesArray.length; a++)
 	{
-		if (!origin){
-		if (dataAttributesArray[a].endsWith("@iot.navigationLink") || dataAttributesArray[a].charAt(0)=='@')
-			continue;
-		s += "<label><input type='radio'" + (selectedExpands && selectedExpands.orderBy ? 
-				(selectedExpands.orderBy.attribute=dataAttributesArray[a] ? 'checked="checked"' : '') : 
-				(first ? 'checked="checked"' : '')) + " id='SelectSortByEntity_" + a + "' name='SelectSortByEntity'/> " + dataAttributesArray[a] + "</label><br>";
-		first=false;
+		if (node.image == "SortBySTA.png"){
+			if (dataAttributesArray[a].endsWith("@iot.navigationLink") || dataAttributesArray[a].charAt(0)=='@')
+				continue;
+			s += "<label><input type='radio'" + (selectedExpands && selectedExpands.orderBy ? 
+					(selectedExpands.orderBy.attribute=dataAttributesArray[a] ? 'checked="checked"' : '') : 
+					(first ? 'checked="checked"' : '')) + " id='SelectSortByEntity_" + a + "' name='SelectSortByEntity'/> " + dataAttributesArray[a] + "</label><br>";
+			first=false;
 		}else{
 			s += "<label><input type='radio'" + 
 					(first ? 'checked="checked"' : '') + " id='SelectSortByEntity_" + a + "' name='SelectSortByEntity'/> " + dataAttributesArray[a] + "</label><br>";
 			first=false;
-	}
-
-
+		}
 	}
 
 	document.getElementById("DialogSelectSortByRadioButtons").innerHTML = s;
@@ -807,13 +805,15 @@ function GetSelectSortBy(event) {
 	if (!parentNode)
 		return;
 
-	if (parentNode.STAEntityName){
-		GetSelectSortBySTA(parentNode,node);
-	}else {
-		GetSelectSortBySTables(parentNode,node);
+	if (node.image == "SortBySTA.png") {
+		GetSelectSortBySTA(parentNode, node);
+	} else {
+		GetSelectSortBySTables(parentNode, node);
 	}
+	updateQueryAndTableArea(node);
 }
-function GetSelectSortBySTA(parentNode,node){
+
+function GetSelectSortBySTA(parentNode, node){
 	var {dataAttributesArray, previousSTAURL}=GetPropagateNodeSelectedSelectExpands(node, parentNode);
 	var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
 	if (!selectedExpands)
@@ -835,7 +835,8 @@ function GetSelectSortBySTA(parentNode,node){
 	}
 	FinalizeSelectedSelectExpands(node, previousSTAURL, "Sorting STA by "+ selectedExpands.orderBy.attribute + " (" + (selectedExpands.orderBy.desc ? "descending" : "ascending") + ")...");
 }
-function GetSelectSortBySTables(parentNode,node){
+
+function GetSelectSortBySTables(parentNode, node){
 	if (document.getElementById("DialogSelectSortByHTML").style.display != "none"){
 		var dataAttributesArray= Object.keys(node.STAdataAttributes);
 		var attributeSelected, AscOrDesc="asc";
@@ -852,9 +853,9 @@ function GetSelectSortBySTables(parentNode,node){
 		var newData= SortTableByColumn(deapCopy(parentNode.STAdata), attributeSelected, AscOrDesc);
 		node.STAdata=newData;
 		networkNodes.update(node);
-		//updateQueryAndTableArea(node);
 	}
 }
+
 ////////////// Merge expands circle
 //Return the common items in two arrays. It respects the order of the first array. The list can contain repetitions that are also respected.
 function findCommonElementsArray(a, b) {
