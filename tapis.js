@@ -120,6 +120,7 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			AggregateColumns: {description: "Aggregate Columns", help: "Adds a new column to a table with the aggregation of other previous selected columns."},
 			CreateColumns: {description: "Create Columns", help: "Adds a new column to your table. This column can be left empty, filled with a constant value or filled with an autoincremental value."},
 			ColumnsCalculator: {description: "Columns calculator", help: "Adds a new column to your table where for each record the new column contains the result of an operation involving other column values of that record."},
+			pivotTable: {description: "Pivot table", help:"Create a new table with a custom distribution of columns and rows" },
 			ColumnStatistics: {description:"Columns statistics", help: "Create a table where, for each column the main statistics for the column values of all records are recorded."},
 			SeparateColumns: {description: "Separate Columns", help: "Splits a column containing a JSON object into separated new columns and removes the original column."},
 			ScatterPlot: {description: "Scatter Plot", leafNode: true, help: "Creates a scatter plot with a the values of the column of a table."},
@@ -6459,6 +6460,10 @@ function networkDoubleClick(params) {
 		else if (currentNode.image =="ConcatenateTables.png") {
 			document.getElementById("DialogConcatenateTables").showModal();
 		}
+		else if (currentNode.image=="pivotTable.png"){
+			populatePivotTableDialog(currentNode);
+			document.getElementById("DialogPivotTable").showModal();
+		}
 		else if (currentNode.image =="ColumnStatistics.png") {
 			saveNodeDialog("DialogColumnStatistics", currentNode);
 			document.getElementById("DialogColumnStatistics").showModal();
@@ -7966,6 +7971,57 @@ function createAndLoadImportGeoJSONNode(data,url){
 	updateQueryAndTableArea(node);
 	networkNodes.update(node);
 	
+}
+
+function populatePivotTableDialog(node){
+	saveNodeDialog("DialogPivotTable", node);
+	var parentNode=GetParentNodes(node)[0];
+	node.STAdataAttributes=deapCopy(parentNode.STAdataAttributes);
+	node.STAdata= deapCopy(parentNode.STAdata);
+	if (!node.STApivotTable)node.STApivotTable={Columns:[], Rows:[], Values:[]};
+	networkNodes.update(node);
+	var attributes=Object.keys(node.STAdataAttributes);
+
+	var options="";
+
+	for (var i=0;i< attributes.length;i++){
+		options+=` <option value="${attributes[i]}">${attributes[i]}</option>`;
+	}
+
+	document.getElementById("pivotTableColumns_select").innerHTML=options;
+	document.getElementById("pivotTableRows_select").innerHTML=options;
+	document.getElementById("pivotTableValues_select").innerHTML=options;
+
+	
+	var columnsRowsValues=["Columns", "Rows", "Values"];
+	var elementsInTable;
+
+	for (var e= 0;e<columnsRowsValues.length;e++){
+		elementsInTable="";
+		if (node.STApivotTable[columnsRowsValues[e]].length==0){
+			elementsInTable=`<tr style="border: 1px solid black;"> 
+								<td style="font-style: italic; color:rgba(145, 143, 141, 0.51); border: 1px solid black;""> ${columnsRowsValues[e]} to table ... </td>
+								<td style="border: 1px solid black;"><button onclick="deleteTableRowInPivotTable("${columnsRowsValues[e]}",0)"><img src="trash.png" alt="Remove" title="Remove" style="width:20px"></button></td>
+							</tr>`
+		}else{
+
+		}
+		document.getElementById("pivotTable"+columnsRowsValues[e]+"_table").innerHTML=elementsInTable;
+
+
+	}
+}
+function addTableRowInPivotTable(place){
+	event.preventDefault();
+
+	////
+}
+function deleteTableRowInPivotTable(column,number){
+	event.preventDefault();
+}
+function buildPivotTable(event){
+	event.preventDefault();
+
 }
 
 /*function giveMeNetworkInformation(event) {

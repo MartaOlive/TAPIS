@@ -637,7 +637,58 @@
 			<input type="hidden" id="DialogColumnStatisticsNodeId"></input>
 		</form>
 	</dialog>
-	
+
+	<dialog id="DialogPivotTable">
+		<form>
+ 			<div> 
+				<fieldset>
+					<legend>Columns</legend>
+					<table>
+						<tr>
+							<td>
+								<select id= "pivotTableColumns_select"></select><button id="pivotTableColumns_addButton" onclick="addTableRowInPivotTable('Columns')">Add a Column</button>
+							</td>
+							<td>
+								<table type="text" id="pivotTableColumns_table"></table>
+							</td>
+						</tr>
+					</table>
+					
+				</fieldset>
+				<fieldset>
+					<legend>Rows</legend>
+					<table>
+						<tr>
+							<td>
+								<select id= "pivotTableRows_select"></select><button id="pivotTableRows_addButton" onclick="addTableRowInPivotTable('Rows')">Add a Column</button>
+							</td>
+							<td>
+								<table type="text" id="pivotTableRows_table"></table>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+				<fieldset>
+					<legend>Values</legend>
+					<table>
+						<tr>
+							<td>
+								<select id= "pivotTableValues_select"></select><button id="pivotTableValues_addButton" onclick="addTableRowInPivotTable('Values')">Add a Column</button>
+							</td>
+							<td>
+								<table type="text" id="pivotTableValues_table"></table>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</div>
+			<div  style="text-align: center">
+				<button value="default" onClick="buildPivotTable(event)">Ok</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogPivotTableNodeId"></input>
+		</form>
+	</dialog>
 	<dialog id="DialogConcatenateTables">
 		<form >
 			<fieldset> 
