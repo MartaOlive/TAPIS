@@ -1251,30 +1251,22 @@
 					<legend>
 						Graphic configurations
 					</legend>
-					<label style="font-weight: bold;">Graphic title:</label>
-					<input value="" type="text" id="DialogScatterPlotAxisTitle"></input> <br>
-					<label style="font-weight: bold;">X axis:  </label><br>
-					<input value="" type="text" id="DialogScatterPlotAxisXLabel"></input><br>
-
-					<label style="font-weight: bold;">Left Y axis:  </label><br>
-					<!-- <label>Legend position</label>
-					<select id="DialogScatterPlotLegendLocationSelectLeft">
-						<option value="bottom-left">Bottom left</option>
-						<option value="bottom-right">Bottom right</option>
-						<option value="top-left">Top left</option>
-						<option value="top-right">Top right</option>
-					</select> -->
-					<label>Axis label: </label><input value="" type="text" id="DialogScatterPlotAxisYLabelLeft"></input><br><br>
-					<label style="font-weight: bold;">Right Y axis:  </label><br>
-					<!-- <label>Legend position</label>
-					<select id="DialogScatterPlotLegendLocationSelectRight">
-						<option value="bottom-left">Bottom left</option>
-						<option value="bottom-right">Bottom right</option>
-						<option value="top-left">Top left</option>
-						<option value="top-right" selected>Top right</option>
-					</select> -->
-					<label>Axis label:</label>
-					<input value="" type="text" id="DialogScatterPlotAxisYLabelRight"></input>
+					<table>
+						<tr>
+							<td>
+								<label style="font-weight: bold;">Graphic title:</label>
+								<input value="" type="text" id="DialogScatterPlotAxisTitle"></input> <br>
+								<label style="font-weight: bold;">X axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisXLabel"></input><br>
+								<label style="font-weight: bold;">Left Y axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisYLabelLeft"></input><br>
+								<label style="font-weight: bold;">Right Y axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisYLabelRight"></input>
+							</td>
+							<td> //CENTRAR AL MIG"
+								<label style="font-weight: bold;">Chart type</label> <br>
+								<label ><input type="radio" name="DialogCharType" id="DialogCharTypeLine" checked="checked"></input>Line</label>
+								<label><input type="radio" name="DialogCharType" id="DialogCharTypeScatter"></input>Scatter</label>
+							</td>
+						</tr>
+					</table>
 				</fieldset>
 
 			</td>

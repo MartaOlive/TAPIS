@@ -327,9 +327,10 @@ function DrawScatterPlot(event) {
 		}
 	}
 
-
+	var type;
+	(document.getElementById("DialogCharTypeLine").checked)? type="line": type="scatter";
 	var config = {
-		type: "line",
+		type: type,
 		data: data,
 		options: {
 			plugins: {
@@ -348,7 +349,7 @@ function DrawScatterPlot(event) {
 
 	if (yAxisTodisplay.right){
 		config.options.scales.yAxisright= {
-			type: 'linear',
+			type: 'linear', //Axys type
 			position: 'right',
 			title: {
 				display: (axisYLabelRight!="")?true:false,
