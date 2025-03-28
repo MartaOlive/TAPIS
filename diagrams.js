@@ -294,8 +294,8 @@ function DrawScatterPlot(event) {
 
 	var axisYLabelRight = document.getElementById("DialogScatterPlotAxisYLabelRight").value;
 	var axisYLabelLeft = document.getElementById("DialogScatterPlotAxisYLabelLeft").value;
+	
 	var axisX;
-
 	if (axisXType=="isodatetime"){
 		axisX={
 			type: "time",
@@ -328,10 +328,6 @@ function DrawScatterPlot(event) {
 	}
 
 
-
-
-
-
 	var config = {
 		type: "line",
 		data: data,
@@ -344,37 +340,43 @@ function DrawScatterPlot(event) {
 				}
 			},
 			scales: {
-				x:axisX
-
-				,
-				yAxisleft: {
-					type: 'linear',
-					position: 'left',
-					title: {
-						display: (axisYLabelLeft!="")?true:false,
-						text: axisYLabelLeft
-					},
-					max:finalMaxYLeft,
-					min:finalMinYLeft
-
-				},
-				yAxisright: {
-					type: 'linear',
-					position: 'right',
-					title: {
-						display: (axisYLabelRight!="")?true:false,
-						text: axisYLabelRight
-					},
-					grid: { //To display lines from left axis only
-						drawOnChartArea: false
-					},
-					max:finalMaxYRight,
-					min:finalMinYRight
-				}
+				x:axisX,
 			}
 		}
 
 	};
+
+	if (yAxisTodisplay.right){
+		config.options.scales.yAxisright= {
+			type: 'linear',
+			position: 'right',
+			title: {
+				display: (axisYLabelRight!="")?true:false,
+				text: axisYLabelRight
+			},
+			grid: { //To display lines from left axis only
+				drawOnChartArea: false
+			},
+			max:finalMaxYRight,
+			min:finalMinYRight
+		} 
+	}
+	if (yAxisTodisplay.left) {
+		config.options.scales.yAxisleft={
+			type: 'linear',
+			position: 'left',
+			title: {
+				display: (axisYLabelLeft!="")?true:false,
+				text: axisYLabelLeft
+			},
+			max:finalMaxYLeft,
+			min:finalMinYLeft
+
+		}
+
+	}
+
+
 		
 		ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), config);
 	}
