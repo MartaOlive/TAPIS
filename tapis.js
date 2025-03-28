@@ -8004,6 +8004,12 @@ function populatePivotTableDialog(node){
 								<td style="border: 1px solid black;"><button onclick="deleteTableRowInPivotTable("${columnsRowsValues[e]}",0)"><img src="trash.png" alt="Remove" title="Remove" style="width:20px"></button></td>
 							</tr>`
 		}else{
+			for (var u=0;u<node.STApivotTable[columnsRowsValues[e]].length;u++){
+				elementsInTable+=`<tr style="border: 1px solid black;"> 
+				<td style="border: 1px solid black;""> ${node.STApivotTable[columnsRowsValues[e]][u]} </td>
+				<td style="border: 1px solid black;"><button onclick="deleteTableRowInPivotTable("${node.STApivotTable[columnsRowsValues[e]][u]}",0)"><img src="trash.png" alt="Remove" title="Remove" style="width:20px"></button></td>
+			</tr>`
+			}
 
 		}
 		document.getElementById("pivotTable"+columnsRowsValues[e]+"_table").innerHTML=elementsInTable;
@@ -8013,11 +8019,24 @@ function populatePivotTableDialog(node){
 }
 function addTableRowInPivotTable(place){
 	event.preventDefault();
-
-	////
+	var node= getNodeDialog("DialogPivotTable");
+	var select= document.getElementById("pivotTable"+place+"_select");
+	node.STApivotTable[place].push(select.options[select.selectedIndex].value);
+	networkNodes.update(node);
+	if (place=="Rows") document.getElementById("pivotTableRows_addButton").disabled=true;
+	populatePivotTableDialog(node);
 }
-function deleteTableRowInPivotTable(column,number){
+
+function deleteTableRowInPivotTable(place,number){
 	event.preventDefault();
+	var node= getNodeDialog("DialogPivotTable");
+	node.STApivotTable
+
+
+
+
+
+	if (place=="Rows") document.getElementById("pivotTableRows_addButton").disabled=false;
 }
 function buildPivotTable(event){
 	event.preventDefault();
