@@ -217,21 +217,24 @@ function DrawScatterPlot(event) {
 	var node = getNodeDialog("DialogScatterPlot");
 	if (!node)
 		return;
-	// node.scatterPlotOptions={};
-	// node.scatterPlotOptions.axisX=
-	// node.scatterPlotOptions.axisYLeft=
-	// node.scatterPlotOptions.axisYRight=
-	// node.scatterPlotOptions.series=
-
-
-
 	var dataGroups = node.STAattributesToSelect.dataGroupsSelectedToScatterPlot; //Options selected
 	var nodeId, node, nodeData, selectedOptions = {}, record, items = [], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight;
-	var yAxisTodisplay={left:false, right:false};
+	var yAxisTodisplay={left:false, right:false}, axisXType="",curentAttributeType;
 	var data = {datasets:[]};
+
 	for (var e = 0; e < dataGroups.length; e++) {
 		nodeId = dataGroups[e].nodeSelected;
-		selectedOptions.AxisX = dataGroups[e].X
+		selectedOptions.AxisX = dataGroups[e].X;
+		curentAttributeType=networkNodes.get(dataGroups[e].nodeSelected).STAdataAttributes[dataGroups[e].X].type;
+		if (curentAttributeType=="integer")curentAttributeType="number"; //coded as sameAxis
+
+		if (e==0)axisXType= curentAttributeType;
+		else{
+			if (axisXType!=curentAttributeType){ //avoid different types of X axis
+				alert("All series in X axis has to have same type of data");
+				return;
+			}
+		}
 		selectedOptions.AxisY = dataGroups[e].Y;
 		nodeData = networkNodes.get(nodeId).STAdata;
 		leftOrRight = dataGroups[e].selectedYaxis;
@@ -276,9 +279,11 @@ function DrawScatterPlot(event) {
 				data: items,
 				yAxisID: "yAxis" + dataGroups[e].selectedYaxis
 			},
-			//yAxisTodisplay.selectedYaxis=true
+			
 		);
+		yAxisTodisplay[dataGroups[e].selectedYaxis]=true
 	}
+
 	if (ScatterPlotChart)
 		ScatterPlotChart.destroy();
 
@@ -289,6 +294,43 @@ function DrawScatterPlot(event) {
 
 	var axisYLabelRight = document.getElementById("DialogScatterPlotAxisYLabelRight").value;
 	var axisYLabelLeft = document.getElementById("DialogScatterPlotAxisYLabelLeft").value;
+	var axisX;
+
+	if (axisXType=="isodatetime"){
+		axisX={
+			type: "time",
+			time: {
+				unit: 'minute',  
+				stepSize: 1,  // Assegura que es mostrin les dates en intervals de 1 minut
+				tooltipFormat: 'yyyy-MM-dd HH:mm',  
+				displayFormats: {
+					minute: 'yyyy-MM-dd HH:mm',  
+				}
+			},
+			title: {
+				text: document.getElementById("DialogScatterPlotAxisXLabel").value,
+				display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
+			},
+			min: minx,
+			max:maxx
+		}
+	}
+	else{
+		axisX={type: "linear",
+
+			title: {
+				text: document.getElementById("DialogScatterPlotAxisXLabel").value,
+				display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
+			},
+			min: minx,
+			max:maxx
+		}
+	}
+
+
+
+
+
 
 	var config = {
 		type: "line",
@@ -302,33 +344,9 @@ function DrawScatterPlot(event) {
 				}
 			},
 			scales: {
-				x:{
-					type: "time",
-					time: {
-						unit: 'minute',  
-						stepSize: 1,  // Assegura que es mostrin les dates en intervals de 1 minut
-						tooltipFormat: 'yyyy-MM-dd HH:mm',  
-						displayFormats: {
-							minute: 'yyyy-MM-dd HH:mm',  
-						}
-					},
-					title: {
-						text: document.getElementById("DialogScatterPlotAxisXLabel").value,
-						display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
-					},
-					// ticks: {
-					// 	maxTicksLimit: 7,  // Limita el nombre màxim d'etiquetes a 5
-					// 	autoSkip: false,  // Les etiquetes es saltaran automàticament si és necessari
-					// 	// callback: function (value, index, values) {
-					// 	// 	// Retorna les etiquetes per als punts de dades específics
-					// 	// 	return value;
-					// 	// },
-					// 	//stepSize: 600 //Funciona amb la unitat especificada, en aquest cas minuts
-					// },
-					min: minx,
-					max:maxx
+				x:axisX
 
-				},
+				,
 				yAxisleft: {
 					type: 'linear',
 					position: 'left',
