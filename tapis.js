@@ -8021,16 +8021,21 @@ function addTableRowInPivotTable(place){
 	event.preventDefault();
 	var node= getNodeDialog("DialogPivotTable");
 	var select= document.getElementById("pivotTable"+place+"_select");
-	node.STApivotTable[place].push(select.options[select.selectedIndex].value);
-	networkNodes.update(node);
-	if (place=="Rows") document.getElementById("pivotTableRows_addButton").disabled=true;
-	populatePivotTableDialog(node);
+	if (node.STApivotTable[place].includes(select.options[select.selectedIndex].value)){
+		alert("This attribute has already been added in "+place);
+	}else{
+		node.STApivotTable[place].push(select.options[select.selectedIndex].value);
+		networkNodes.update(node);
+		if (place=="Rows") document.getElementById("pivotTableRows_addButton").disabled=true;
+		populatePivotTableDialog(node);
+	}
+
 }
 
 function deleteTableRowInPivotTable(place,number){
 	event.preventDefault();
 	var node= getNodeDialog("DialogPivotTable");
-	node.STApivotTable
+	//node.STApivotTable
 
 
 
