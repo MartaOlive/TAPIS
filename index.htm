@@ -1242,7 +1242,7 @@
 			<input type="hidden" id="DialogScatterPlotNodeId"></input>
 			</form>
 		</td>
-		<td><canvas id="DialogScatterPlotVisualization" style="width:600px; height:500px;"></canvas></td>
+		<td style="vertical-align: top;"><canvas id="DialogScatterPlotVisualization" style="width:600px; height:500px;max-height:500px; "></canvas></td>
 		</tr>
 		<tr>
 			<td></td>
@@ -1251,22 +1251,11 @@
 					<legend>
 						Graphic configurations
 					</legend>
-					<table>
-						<tr>
-							<td>
-								<label style="font-weight: bold;">Graphic title:</label>
-								<input value="" type="text" id="DialogScatterPlotAxisTitle"></input> <br>
-								<label style="font-weight: bold;">X axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisXLabel"></input><br>
-								<label style="font-weight: bold;">Left Y axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisYLabelLeft"></input><br>
-								<label style="font-weight: bold;">Right Y axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisYLabelRight"></input>
-							</td>
-							<td> 
-								<label style="font-weight: bold;">Chart type</label> <br>
-								<label ><input type="radio" name="DialogCharType" id="DialogCharTypeLine" checked="checked"></input>Line</label>
-								<label><input type="radio" name="DialogCharType" id="DialogCharTypeScatter"></input>Scatter</label>
-							</td>
-						</tr>
-					</table>
+						<label style="font-weight: bold;">Graphic title:</label>
+						<input value="" type="text" id="DialogScatterPlotAxisTitle"></input> <br>
+						<label style="font-weight: bold;">X axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisXLabel"></input><br>
+						<label style="font-weight: bold;">Left Y axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisYLabelLeft"></input><br>
+						<label style="font-weight: bold;">Right Y axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisYLabelRight"></input>
 				</fieldset>
 
 			</td>

@@ -68,7 +68,7 @@ function ShowScatterPlotDialog(parentNodes, node) {
 	node.STAattributesToSelect = {};
 	node.STAattributesToSelect.parentNodesInformation = objectWithParentNodesInfo;
 	node.STAattributesToSelect.dataGroupsSelectedToScatterPlot =
-		[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "" }]
+		[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "",graphicType: "line"}]
 	networkNodes.update(node);
 
 	if (noData) {
@@ -113,11 +113,25 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 		}
 
 		cdns += `</select><br>
-					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "left") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Left_${i}','${node.id}')" value="left" </input><label>Left axis</label><br>
-					<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "right") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Right_${i}','${node.id}')" value="right" </input><label>Right axis</label><br>
-					<label style="margin-top: 20px">Line Color: </label> <input type="color" id="selectColorScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].color}" style="width:20px; height:22px" onchange="updateSelectInformationScatterPlot('${i}','color','radio','selectColorScatterPlot_${i}','${node.id}')"><br>
+					<table style="width: 100%;margin-bottom: 10px">
+						<tr>
+							<td>
+								<label style="font-weight: bold"> Y axis position </label><br>
+								<input type='radio'id="DialogScatterPlotAxisYRadioButton_Left_${i}"  name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "left") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Left_${i}','${node.id}')" value="left">
+								<label>Left axis</label><br>
+								<input type='radio'id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "right") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Right_${i}','${node.id}')" value="right">
+								<label>Right axis</label><br>
+								
+							</td>							
+							<td> 
+								<label style="font-weight: bold;">Chart type</label> <br>
+								<label ><input type="radio" name="DialogCharType_${i}" id="DialogCharTypeLine_${i}"  ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].graphicType == "line") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','graphicType','radio','"DialogCharTypeLine_${i}','${node.id}')" value="line"><label>Line</label><br>
+								<label><input type="radio" name="DialogCharType_${i}" id="DialogCharTypeScatter_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].graphicType == "scatter") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','graphicType','radio','DialogCharTypeScatter_${i}','${node.id}')" value="scatter"><label>Dots</label>
+							</td>
+						</tr>
+					</table>
+					<label>Line Color: </label> <input type="color" id="selectColorScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].color}" style="width:20px; height:22px" onchange="updateSelectInformationScatterPlot('${i}','color','radio','selectColorScatterPlot_${i}','${node.id}')"><br>
 					<label>Text in legend:   </label><input type="text" id="legendTextScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].legendText} " onchange="updateSelectInformationScatterPlot('${i}','legendText','radio','legendTextScatterPlot_${i}','${node.id}')">
-					
 					<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"style="background-color:white; border-color:white"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
 	}
 	scatterPlotDiv.innerHTML = cdns;
@@ -127,7 +141,7 @@ function addNewSelectGroupInScatterPlot(nodeId) { //Add button
 	event.preventDefault();
 	var node = networkNodes.get(nodeId);
 	var dataGroupsSelected = node.STAattributesToSelect;
-	node.STAattributesToSelect.dataGroupsSelectedToScatterPlot.push({ "nodeSelected": Object.keys(dataGroupsSelected.parentNodesInformation)[0], "X": dataGroupsSelected.parentNodesInformation[dataGroupsSelected.dataGroupsSelectedToScatterPlot[0].nodeSelected].attr[0], "Y": dataGroupsSelected.parentNodesInformation[dataGroupsSelected.dataGroupsSelectedToScatterPlot[0].nodeSelected].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "" });
+	node.STAattributesToSelect.dataGroupsSelectedToScatterPlot.push({ "nodeSelected": Object.keys(dataGroupsSelected.parentNodesInformation)[0], "X": dataGroupsSelected.parentNodesInformation[dataGroupsSelected.dataGroupsSelectedToScatterPlot[0].nodeSelected].attr[0], "Y": dataGroupsSelected.parentNodesInformation[dataGroupsSelected.dataGroupsSelectedToScatterPlot[0].nodeSelected].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "", graphicType:"line" });
 	networkNodes.update(node);
 	createDialogWithSelectWithGroupsScatterPlot(node);
 }
@@ -219,7 +233,7 @@ function DrawScatterPlot(event) {
 		return;
 	var dataGroups = node.STAattributesToSelect.dataGroupsSelectedToScatterPlot; //Options selected
 	var nodeId, node, nodeData, selectedOptions = {}, record, items = [], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight;
-	var yAxisTodisplay={left:false, right:false}, axisXType="",curentAttributeType;
+	var yAxisTodisplay={left:false, right:false}, axisXType="",curentAttributeType,label,type, pointRadius;
 	var data = {datasets:[]};
 
 	for (var e = 0; e < dataGroups.length; e++) {
@@ -239,6 +253,8 @@ function DrawScatterPlot(event) {
 		nodeData = networkNodes.get(nodeId).STAdata;
 		leftOrRight = dataGroups[e].selectedYaxis;
 		items = [];
+		
+		
 		for (var i = 0; i < nodeData.length; i++) {
 			record = nodeData[i];
 			if (i == 0 && e == 0) {
@@ -270,14 +286,21 @@ function DrawScatterPlot(event) {
 			}
 			items.push({ x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: e });
 		}
+			type=  dataGroups[e].graphicType;
+			(type=="line")?pointRadius=0:pointRadius=2;
+			(dataGroups[e].legendText=="")?label= node.STAattributesToSelect.parentNodesInformation[dataGroups[e].nodeSelected].nodeLabel+"_"+dataGroups[e].Y: label=dataGroups[e].legendText;
+			
 		data.datasets.push(
 			{
-				label: dataGroups[e].legendText,
+				label: label,
 				backgroundColor: dataGroups[e].color,
 				borderColor: dataGroups[e].color,
 				fill: false,
 				data: items,
-				yAxisID: "yAxis" + dataGroups[e].selectedYaxis
+				yAxisID: "yAxis" + dataGroups[e].selectedYaxis,
+				pointRadius:pointRadius,
+				type:type
+
 			},
 			
 		);
@@ -327,10 +350,9 @@ function DrawScatterPlot(event) {
 		}
 	}
 
-	var type;
-	(document.getElementById("DialogCharTypeLine").checked)? type="line": type="scatter";
+
 	var config = {
-		type: type,
+		//type: type, //general diagram. If it have different types it is specified in the datasets
 		data: data,
 		options: {
 			plugins: {
@@ -342,7 +364,7 @@ function DrawScatterPlot(event) {
 			},
 			scales: {
 				x:axisX,
-			}
+			},
 		}
 
 	};
@@ -374,11 +396,7 @@ function DrawScatterPlot(event) {
 			min:finalMinYLeft
 
 		}
-
 	}
-
-
-		
 		ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), config);
 	}
 
