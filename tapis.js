@@ -8001,14 +8001,15 @@ function populatePivotTableDialog(node){
 		if (node.STApivotTable[columnsRowsValues[e]].length==0){
 			elementsInTable=`<tr style="border: 1px solid black;"> 
 								<td style="font-style: italic; color:rgba(145, 143, 141, 0.51); border: 1px solid black;""> ${columnsRowsValues[e]} to table ... </td>
-								<td style="border: 1px solid black;"><button onclick="deleteTableRowInPivotTable("${columnsRowsValues[e]}",0)"><img src="trash.png" alt="Remove" title="Remove" style="width:20px"></button></td>
+								<td style="border: 1px solid black;"><button onclick="deleteTableRowInPivotTable('${columnsRowsValues[e]}',0)"><img src="trash.png" alt="Remove" title="Remove" style="width:20px"></button></td>
 							</tr>`
 		}else{
 			for (var u=0;u<node.STApivotTable[columnsRowsValues[e]].length;u++){
 				elementsInTable+=`<tr style="border: 1px solid black;"> 
 				<td style="border: 1px solid black;""> ${node.STApivotTable[columnsRowsValues[e]][u]} </td>
-				<td style="border: 1px solid black;"><button onclick="deleteTableRowInPivotTable("${node.STApivotTable[columnsRowsValues[e]][u]}",0)"><img src="trash.png" alt="Remove" title="Remove" style="width:20px"></button></td>
-			</tr>`
+				<td style="border: 1px solid black;"><button onclick="deleteTableRowInPivotTable('${columnsRowsValues[e]}',${u})"><img src="trash.png" alt="Remove" title="Remove" style="width:20px"></button></td>
+			</tr>`;
+			console.log (node.STApivotTable[columnsRowsValues[e]][u])
 			}
 
 		}
@@ -8035,13 +8036,15 @@ function addTableRowInPivotTable(place){
 function deleteTableRowInPivotTable(place,number){
 	event.preventDefault();
 	var node= getNodeDialog("DialogPivotTable");
-	//node.STApivotTable
-
-
-
-
-
+	var elements= node.STApivotTable[place];
+	var elementsFiltered=[];
+	for (var i=0;i<elements.length;i++){
+		if (i!=number)elementsFiltered.push(elements[i]);
+	}
+	node.STApivotTable[place]=elementsFiltered;
+	networkNodes.update(node);
 	if (place=="Rows") document.getElementById("pivotTableRows_addButton").disabled=false;
+	populatePivotTableDialog(node);
 }
 function buildPivotTable(event){
 	event.preventDefault();
