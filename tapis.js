@@ -8014,7 +8014,8 @@ function populatePivotTableDialog(node){
 
 		}
 		document.getElementById("pivotTable"+columnsRowsValues[e]+"_table").innerHTML=elementsInTable;
-
+		showCheckRadioOptions("DialogPivotTableAggregationsSpan", "DialogPivotTable", AggregationsOptions, 3, "DialogPivotTableAggregatedBy");
+		document.getElementById("DialogPivotTableSum").checked=true; //Mirar quin hi ha guardat
 
 	}
 }
@@ -8046,9 +8047,21 @@ function deleteTableRowInPivotTable(place,number){
 	if (place=="Rows") document.getElementById("pivotTableRows_addButton").disabled=false;
 	populatePivotTableDialog(node);
 }
-function buildPivotTable(event){
+function okButtonInPivotTable(event){
 	event.preventDefault();
-
+	var node= getNodeDialog("DialogPivotTable");
+	var radioButtonsAggregatted = document.getElementsByName('DialogPivotTableAggregatedBy');
+	var aggregation;
+	for (let i = 0; i < radioButtonsAggregatted.length; i++) {
+		if (radioButtonsAggregatted[i].checked) {
+			aggregation=radioButtonsAggregatted[i].id.split("DialogPivotTable")[1];
+			node.STApivotTable.aggregation= aggregation
+			networkNodes.update(node);
+		 break;
+		}
+	}
+	buildPivotTable(node.STAdata, node.STApivotTable.Rows, node.STApivotTable.Columns, node.STApivotTable.Values, aggregation);
+	//actualitzar atributs
 }
 
 /*function giveMeNetworkInformation(event) {

@@ -681,9 +681,13 @@
 						</tr>
 					</table>
 				</fieldset>
+				<fieldset>
+					<legend>Repited values aggregated by: </legend>
+					<span id="DialogPivotTableAggregationsSpan"></span>
+				</fieldset>
 			</div>
 			<div  style="text-align: center">
-				<button value="default" onClick="buildPivotTable(event)">Ok</button>
+				<button value="default" onClick="okButtonInPivotTable(event)">Ok</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogPivotTableNodeId"></input>

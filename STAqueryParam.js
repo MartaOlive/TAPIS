@@ -850,7 +850,7 @@ function GetSelectSortBySTables(parentNode, node){
 		if (document.getElementById("SelectSortByDesc") && document.getElementById("SelectSortByDesc").checked)
 			AscOrDesc="desc";	
 
-		var newData= SortTableByColumn(deapCopy(parentNode.STAdata), attributeSelected, AscOrDesc);
+		var newData= SortTableByColumns(deapCopy(parentNode.STAdata), [attributeSelected], AscOrDesc);
 		node.STAdata=newData;
 		networkNodes.update(node);
 	}

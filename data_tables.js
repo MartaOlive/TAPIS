@@ -1197,38 +1197,79 @@ function sortValuesNumbersOrText(arrayValues) {
 	return arrayNumbers.sort((a, b) => a - b).concat(arrayText.sort());  //join arrays
 }
 
-function SortTableByColumn(data, columnSelected, AscOrDesc) {
-
-	//var attributes = getDataAttributesSimple(data);
-	//if (attributes[columnSelected].type == "string") {
-		if (AscOrDesc && AscOrDesc == "asc") {
+function SortTableByColumns(data, columnsSelected, AscOrDesc) { //as many columns as you want. columnsSelected allways an array
+	var column;	
+	if (AscOrDesc && AscOrDesc == "asc") {
 			data.sort(function (a, b) {
-				if (a[columnSelected] > b[columnSelected]) {
-					return 1;
+				
+				for (var i=0;i<columnsSelected.length;i++){
+					column= columnsSelected[i];
+					if (a[column] > b[column]) {
+						return 1;
+					}
+					if (a[column] < b[column]) {
+						return -1;
+					}
 				}
-				if (a[columnSelected] < b[columnSelected]) {
-					return -1;
-				}
+
 				return 0;
 			})
 		} else {
 			data.sort(function (a, b) {
-				if (a[columnSelected] < b[columnSelected]) {
-					return 1;
-				}
-				if (a[columnSelected] > b[columnSelected]) {
-					return -1;
+				for (var i=0;i<columnsSelected.length;i++){
+					column= columnsSelected[i];
+					if (a[column] < b[column]) {
+						return 1;
+					}
+					if (a[column] > b[column]) {
+						return -1;
+					}
 				}
 				return 0;
 			})
 		}
-	/*} else { //number
-		if (AscOrDesc == "asc") {
-			data.sort((a, b) => a[columnSelected] - b[columnSelected]);
-		}else{
-			data.sort((a, b) => b[columnSelected] - a[columnSelected]);
-		}
-	}*/
 	return data;
+}
+//////
+//function 
+
+function buildPivotTable(data, Rows, Columns, Values, aggregation){
+	if (!data || !Rows|| Rows.length!=1|| !Columns|| Columns.length==0||!Values||Values.length==0||!aggregation){
+		return("At the moment to use this function it is necessary to send data, rows (only one), columns, values and a type of aggregation")
+	}else{
+		//rows (only 1)
+		data = SortTableByColumns(data, Rows[0]);
+		var filteredRowsValues=[],AllfilteredRowsValues={};
+		var filteredColumnsValues=[], AllfilteredColumnsValues={};	
+	for (var d=0;d<data.length;d++){
+		//rows
+		if (Rows){
+			for (var r=0;r<Rows.length;r++){
+				if (!AllfilteredRowsValues[Rows[r]]) AllfilteredRowsValues[Rows[r]]=[];
+				if (!AllfilteredRowsValues[Rows[r]].includes(data[d][Rows[r]]))AllfilteredRowsValues[Rows[r]].push(data[d][Rows[r]]);
+			}
+
+		}
+
+		//columns
+		if (Columns){
+			for (var c=0;c<Columns.length;c++){
+				if (!AllfilteredColumnsValues[Columns[c]]) AllfilteredColumnsValues[Columns[c]]=[];
+				if (!AllfilteredColumnsValues[Columns[c]].includes(data[d][Columns[c]]))AllfilteredColumnsValues[Columns[c]].push(data[d][Columns[c]]);
+			}
+		}
+	}
+	//create columns
+	var newColumns;
+	
+	
+	for (var c=0;c<columns.length;c++){
+		
+		if (!filteredRowsValues.includes(data[r][columns[0]]))filteredcolumnsValues.push(data[r][rows[0]]);
+	}
+
+
+	}
+
 }
 

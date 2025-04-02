@@ -7,6 +7,7 @@
 
 	<script type="text/javascript" src="../Chart.min.js"></script>
 	<script	src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+	<script type="text/javascript" src="../data_tables.js"></script>
 
 
 
@@ -33,170 +34,21 @@
 
 	<script type="text/javascript">
 
-		var data = { //L'Eix en total? S'ha de crear?
-			//labels: [ // Date Objects
-			// 	"2023-03-01",
-			// 	"2023-03-02",
-			// 	"2023-03-03",
-			// 	"2023-03-04",
-			// 	"2023-03-05",
+var cotxes = [
+    { marca: "Toyota", model: "Corolla", any: 2020, color: "blau" },
+    { marca: "Honda", model: "Civic", any: 2018, color: "negre" },
+    { marca: "Nissan", model: "Focus", any: 2019, color: "blanc" },
+    { marca: "Nissan", model: "Serie 3", any: 2021, color: "blanc" },
+    { marca: "Audi", model: "A4", any: 2022, color: "vermell" },
+    { marca: "Mercedes", model: "Classe A", any: 2020, color: "plata" },
+    { marca: "Toyota", model: "bbb", any: 2020, color: "verd" },
+    { marca: "Toyota", model: "aaa", any: 2019, color: "blau marí" },
+    { marca: "Seat", model: "Leon", any: 2021, color: "groc" },
+    { marca: "Nissan", model: "Qashqai", any: 2019, color: "negre metàl·lic" }
+];
 
-			// ],
-			datasets: [
-				{
-					label: 'My First dataset',
-					backgroundColor: 'rgba(0, 99, 132)',
-					borderColor: 'rgba(255, 99, 132)',
-					fill: false,
-					data: [{ x: '2025-03-26T08:00:00', y: 10 },
-					{ x: '2025-03-26T08:30:00', y: 20 },
-					{ x: '2025-03-26T09:00:00', y: 15 },
-					{ x: '2025-03-26T09:30:00', y: 30 },
-					{ x: '2025-03-26T10:00:00', y: 25 },
-					{ x: '2025-03-26T10:30:00', y: 10 },
-					{ x: '2025-03-26T11:00:00', y: 30 }
-					],
-					yAxisID: 'yAxisLeft',
-				}
-				// ,
-				//  {
-				// 	label: 'My Second dataset',
-				// 	backgroundColor: 'rgba(255, 99, 200)',
-				// 	borderColor: 'rgba(255, 99, 200)',
-				// 	fill: false,
-				// 	data: [{ //LES DADES Cada dataset tindrà les seves 
-				// 		x: 15,
-				// 		y: 39
-				// 	}, {
-				// 		x: 20,
-				// 		y: 12
-				// 	}, {
-				// 		x: 25,
-				// 		y: 1
-				// 	}, {
-				// 		x: 30,
-				// 		y: 50
-
-				// 	}
-				// 	],
-				// 	yAxisID: 'yAxisLeft',
-				// },
-				// {
-				// 	label: 'Dataset with point data',
-				// 	backgroundColor: 'rgba(0, 99, 132)',
-				// 	borderColor: 'rgba(0, 99, 132)',
-				// 	fill: false,
-				// 	data:
-				// 		[{ //LES DADES Cada dataset tindrà les seves 
-				// 			x: 0,
-				// 			y: 300
-				// 		}, {
-				// 			x: 10,
-				// 			y: 200
-				// 		}, {
-				// 			x: 20,
-				// 			y: 100
-				// 		}, {
-				// 			x: 30,
-				// 			y: 500
-
-				// 		}
-				// ],
-				// 	yAxisID: 'yAxisRight',
-				// }
-			]
-
-
-		};
-
-		var config = {
-			type: 'scatter',
-			data: data,
-			options: {
-				plugins: {
-					title: {
-						text: 'Chart.js Time Scale', //Titol adalt de tot
-						display: true
-					}
-				},
-				scales: { //EIXOS
-					x: {
-						type: "time",
-						time: {
-							unit: 'minute',  // Utilitza 'minute' per mostrar dates fins al minut
-							stepSize: 1,  // Assegura que es mostrin les dates en intervals de 1 minut
-							tooltipFormat: 'yyyy-MM-dd HH:mm',  // El format del tooltip per mostrar data i hora
-							displayFormats: {
-								minute: 'yyyy-MM-dd HH:mm',  // El format de visualització de l'eix X
-							}
-
-						},
-						title: {
-							display: true,
-							text: 'Date'
-						},
-						ticks: {
-							maxTicksLimit: 7,  // Limita el nombre màxim d'etiquetes a 5
-							autoSkip: false,  // Les etiquetes es saltaran automàticament si és necessari
-							// callback: function (value, index, values) {
-							// 	// Retorna les etiquetes per als punts de dades específics
-							// 	return value;
-							// },
-							//stepSize: 600 //Funciona amb la unitat especificada, en aquest cas minuts
-						},
-						min: '2025-03-26T08:00:00', // Mínim de l'eix X (data inicial)
-						max: '2025-03-26T12:20:00'
-					},  // Màxim de l'eix X (data final)
-					yAxisLeft: {
-
-						type: 'linear',
-						position: 'left',
-						title: {
-							display: true,
-							text: 'leftt'
-						}
-					},
-					yAxisRight: {
-
-						type: 'linear',
-						position: 'right',
-						title: {
-							display: true,
-							text: 'righttttt',
-						},
-
-						grid: {
-							drawOnChartArea: false
-						}
-					},
-				}
-			},
-
-		};
-		var ScatterPlotGraph2d = new Chart(document.getElementById('llocpelgrafic'), config	);
-		// const actions = [
-		// 	{
-		// 		name: 'Randomize',
-		// 		handler(chart) {
-		// 			chart.data.datasets.forEach(dataset => {
-		// 				dataset.data.forEach(function (dataObj, j) {
-		// 					const newVal = Utils.rand(0, 100);
-
-		// 					if (typeof dataObj === 'object') {
-		// 						dataObj.y = newVal;
-		// 					} else {
-		// 						dataset.data[j] = newVal;
-		// 					}
-		// 				});
-		// 			});
-		// 			chart.update(); //" aqui l'actualitzar "
-		// 		}
-		// 	},
-		// ];
-
-		// <a data-v-2afd21f1="" class="chart-action">    Randomize  </a>
-
-
+var taulaOrdenada = SortTableByColumns(cotxes, ["any","marca", "color"], "des");
+console.log(taulaOrdenada);
 	</script>
 </body>
 
