@@ -1230,46 +1230,66 @@ function SortTableByColumns(data, columnsSelected, AscOrDesc) { //as many column
 		}
 	return data;
 }
-//////
-//function 
 
 function buildPivotTable(data, Rows, Columns, Values, aggregation){
-	if (!data || !Rows|| Rows.length!=1|| !Columns|| Columns.length==0||!Values||Values.length==0||!aggregation){
+	if (!data || !Rows|| Rows.length==0|| !Columns|| Columns.length==0||!Values||Values.length==0||!aggregation){
 		return("At the moment to use this function it is necessary to send data, rows (only one), columns, values and a type of aggregation")
 	}else{
 		//rows (only 1)
-		data = SortTableByColumns(data, Rows[0]);
-		var filteredRowsValues=[],AllfilteredRowsValues={};
-		var filteredColumnsValues=[], AllfilteredColumnsValues={};	
-	for (var d=0;d<data.length;d++){
+		var rowsAndColumnsResume={rows:[], columns:[], rowsTemporalArrays:[], columnsTemporalArrays:[] };
+		var rowValue,rowValueTemporalArray , columnValue,columnValueTemporalArray;
+		var dataLenght= data.length, newData=[], newObject,currentValues, columnsCopy=[], columnsArrayCopy=[];
 		//rows
 		if (Rows){
-			for (var r=0;r<Rows.length;r++){
-				if (!AllfilteredRowsValues[Rows[r]]) AllfilteredRowsValues[Rows[r]]=[];
-				if (!AllfilteredRowsValues[Rows[r]].includes(data[d][Rows[r]]))AllfilteredRowsValues[Rows[r]].push(data[d][Rows[r]]);
+			for (var d=0;d<dataLenght;d++){
+				rowValue="";
+				rowValueTemporalArray=[];
+				for (var r=0;r<Rows.length;r++){ //build row value
+					rowValue+=((r==0)?"":"_")+data[d][Rows[r]];
+					rowValueTemporalArray.push(data[d][Rows[r]]);			
+				}
+				if (!rowsAndColumnsResume.rows.includes(rowValue)){
+					rowsAndColumnsResume.rows.push(rowValue); //add row value if not exist
+					rowsAndColumnsResume.rowsTemporalArrays.push(rowValueTemporalArray);
+				}
 			}
-
 		}
-
-		//columns
 		if (Columns){
-			for (var c=0;c<Columns.length;c++){
-				if (!AllfilteredColumnsValues[Columns[c]]) AllfilteredColumnsValues[Columns[c]]=[];
-				if (!AllfilteredColumnsValues[Columns[c]].includes(data[d][Columns[c]]))AllfilteredColumnsValues[Columns[c]].push(data[d][Columns[c]]);
+			for (var d=0;d<dataLenght;d++){
+				columnValue="";
+				columnValueTemporalArray=[];
+				for (var c=0;c<Columns.length;c++){ //build column value
+					columnValue+=((c==0)?"":"_")+data[d][Columns[c]];
+					columnValueTemporalArray.push(data[d][Columns[c]]);				
+				}
+				if (!rowsAndColumnsResume.columns.includes(columnValue)){
+					rowsAndColumnsResume.columns.push(columnValue); //add column value if not exist
+					rowsAndColumnsResume.columnsTemporalArrays.push(columnValueTemporalArray);
+				}
+				
 			}
 		}
+		// console.log (rowsAndColumnsResume.columns);
+		// console.log (rowsAndColumnsResume.rows);
 	}
-	//create columns
-	var newColumns;
+	//addig values to columns
+	if (Columns){
+		columnsCopy=[];
+		columnsArrayCopy=[];
+		for (var v=0; v<Values.length;v++){
+			for (var c=0;c<rowsAndColumnsResume.columns.length;c++){
+				columnsCopy.push(rowsAndColumnsResume.columns[c]+"_"+Values[v]);
+				columnsArrayCopy.push([...rowsAndColumnsResume.columnsTemporalArrays[c],Values[v]]);
+			}
+		}
+		rowsAndColumnsResume.columns=columnsCopy
+		rowsAndColumnsResume.columnsTemporalArrays=columnsArrayCopy;
+	}
+	console.log (rowsAndColumnsResume.columns);
+	console.log (rowsAndColumnsResume.columnsTemporalArrays);
+
 	
-	
-	for (var c=0;c<columns.length;c++){
-		
-		if (!filteredRowsValues.includes(data[r][columns[0]]))filteredcolumnsValues.push(data[r][rows[0]]);
-	}
-
-
-	}
-
 }
+
+
 

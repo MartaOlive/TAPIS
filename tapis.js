@@ -8009,7 +8009,6 @@ function populatePivotTableDialog(node){
 				<td style="border: 1px solid black;""> ${node.STApivotTable[columnsRowsValues[e]][u]} </td>
 				<td style="border: 1px solid black;"><button onclick="deleteTableRowInPivotTable('${columnsRowsValues[e]}',${u})"><img src="trash.png" alt="Remove" title="Remove" style="width:20px"></button></td>
 			</tr>`;
-			console.log (node.STApivotTable[columnsRowsValues[e]][u])
 			}
 
 		}
@@ -8028,7 +8027,7 @@ function addTableRowInPivotTable(place){
 	}else{
 		node.STApivotTable[place].push(select.options[select.selectedIndex].value);
 		networkNodes.update(node);
-		if (place=="Rows") document.getElementById("pivotTableRows_addButton").disabled=true;
+		//if (place=="Rows") document.getElementById("pivotTableRows_addButton").disabled=true;
 		populatePivotTableDialog(node);
 	}
 
