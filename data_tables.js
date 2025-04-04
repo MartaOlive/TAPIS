@@ -1238,9 +1238,9 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 		//rows (only 1)
 		var rowsAndColumnsResume={rows:[], columns:[], rowsTemporalArrays:[], columnsTemporalArrays:[] };
 		var rowValue,rowValueTemporalArray , columnValue,columnValueTemporalArray;
-		var dataLenght= data.length, newData=[], newObject,currentValues, columnsCopy=[], columnsArrayCopy=[];
+		var dataLenght= data.length,columnsCopy=[], columnsArrayCopy=[];
 		//rows
-		if (Rows){
+		if (Rows&& Rows.length!=0){
 			for (var d=0;d<dataLenght;d++){
 				rowValue="";
 				rowValueTemporalArray=[];
@@ -1253,8 +1253,12 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 					rowsAndColumnsResume.rowsTemporalArrays.push(rowValueTemporalArray);
 				}
 			}
+			var firstColumn=""
+			for (var rr=0;rr<Rows.length;rr++){
+				firstColumn+=Rows[rr];
+			}
 		}
-		if (Columns){
+		if (Columns && Columns.length!=0){
 			for (var d=0;d<dataLenght;d++){
 				columnValue="";
 				columnValueTemporalArray=[];
@@ -1269,11 +1273,9 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 				
 			}
 		}
-		// console.log (rowsAndColumnsResume.columns);
-		// console.log (rowsAndColumnsResume.rows);
 	}
 	//addig values to columns
-	if (Columns){
+	if (Columns && Columns.length!=0){
 		columnsCopy=[];
 		columnsArrayCopy=[];
 		for (var v=0; v<Values.length;v++){
@@ -1288,6 +1290,28 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 	console.log (rowsAndColumnsResume.columns);
 	console.log (rowsAndColumnsResume.columnsTemporalArrays);
 
+	//buildig array of new objects
+	var newObjectsArray=[],rowValue, attName;
+	if (rowsAndColumnsResume.rows.length!=0){
+		for (var r=0;r<rowsAndColumnsResume.rows.length;r++){
+			newObjectsArray.push({firstColumn:rowsAndColumnsResume.rows[r]});
+		}
+	}if (rowsAndColumnsResume.columns.length!=0){
+		if (newObjectsArray.length==0){ //No rows
+			var newObject={};
+			for (var cc=0;cc<rowsAndColumnsResume.columns.length;cc++){
+				newObject[rowsAndColumnsResume.columns[cc]]="";
+			}
+			newObjectsArray.push([{newObject}]);
+		}else{
+			for (var i=0;i<newObjectsArray.length;i++){
+				for (var cc=0;cc<rowsAndColumnsResume.columns.length;cc++){
+					newObjectsArray[i][rowsAndColumnsResume.columns[cc]]="";
+				}
+			}
+		}
+	}
+	console.log (newObjectsArray)
 	
 }
 

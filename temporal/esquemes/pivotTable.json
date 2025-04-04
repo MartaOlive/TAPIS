@@ -12,6 +12,123 @@
 			"STAS3Service": null,
 			"STAdata": [
 				{
+					"dia": "2024-06-26T00:00:00.000",
+					"Lletra": "A",
+					"estaci": "Embassament de Sau (Vilanova de Sau)",
+					"nivell_absolut": 405.27,
+					"percentatge_volum_embassat": 44.5
+				},
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"Lletra": "A",
+					"estaci": "Embassament de Susqueda (Osor)",
+					"nivell_absolut": 314.66,
+					"percentatge_volum_embassat": 34.7
+				},
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"Lletra": "B",
+					"estaci": "Embassament de Darnius Boadella (Darnius)",
+					"nivell_absolut": 139,
+					"percentatge_volum_embassat": 22.9
+				},
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"Lletra": "C",
+					"estaci": "Embassament de Siurana (Cornudella de Montsant)",
+					"nivell_absolut": 452.04,
+					"percentatge_volum_embassat": 2.1
+				},
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"Lletra": "D",
+					"estaci": "Embassament de la Baells (Cercs)",
+					"nivell_absolut": 611.89,
+					"percentatge_volum_embassat": 51
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"Lletra": "A",
+					"estaci": "Embassament de Sau (Vilanova de Sau)",
+					"nivell_absolut": 405.27,
+					"percentatge_volum_embassat": 44.6
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"Lletra": "B",
+					"estaci": "Embassament de Susqueda (Osor)",
+					"nivell_absolut": 314.66,
+					"percentatge_volum_embassat": 34.6
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"Lletra": "C",
+					"estaci": "Embassament de Darnius Boadella (Darnius)",
+					"nivell_absolut": 139,
+					"percentatge_volum_embassat": 22.6
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"Lletra": "D",
+					"estaci": "Embassament de Siurana (Cornudella de Montsant)",
+					"nivell_absolut": 452.04,
+					"percentatge_volum_embassat": 2.6
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"Lletra": "E",
+					"estaci": "Embassament de la Baells (Cercs)",
+					"nivell_absolut": 611.89,
+					"percentatge_volum_embassat": 56
+				}
+			],
+			"STAfileUrl": "https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.csv",
+			"STAdataAttributes": {
+				"dia": {
+					"type": "isodatetime"
+				},
+				"Lletra": {
+					"type": "string"
+				},
+				"estaci": {
+					"type": "string"
+				},
+				"nivell_absolut": {
+					"type": "number"
+				},
+				"percentatge_volum_embassat": {
+					"type": "number"
+				}
+			},
+			"x": 58,
+			"y": -7
+		},
+		{
+			"id": "8au0b.io071e",
+			"label": "Pivot table",
+			"image": "pivotTable.png",
+			"shape": "circularImage",
+			"x": -53,
+			"y": 24,
+			"STAdataAttributes": {
+				"dia": {
+					"type": "isodatetime"
+				},
+				"estaci": {
+					"type": "string"
+				},
+				"nivell_absolut": {
+					"type": "number"
+				},
+				"percentatge_volum_embassat": {
+					"type": "number"
+				},
+				"volum_embassat": {
+					"type": "number"
+				}
+			},
+			"STAdata": [
+				{
 					"dia": "2025-03-26T00:00:00.000",
 					"estaci": "Embassament de la Baells (Cercs)",
 					"nivell_absolut": 628.61,
@@ -7012,34 +7129,11 @@
 					"volum_embassat": 11.4
 				}
 			],
-			"STAfileUrl": "https://analisi.transparenciacatalunya.cat/resource/gn9e-3qhr.csv",
-			"STAdataAttributes": {
-				"dia": {
-					"type": "isodatetime"
-				},
-				"estaci": {
-					"type": "string"
-				},
-				"nivell_absolut": {
-					"type": "number"
-				},
-				"percentatge_volum_embassat": {
-					"type": "number"
-				},
-				"volum_embassat": {
-					"type": "number"
-				}
-			},
-			"x": 58,
-			"y": -7
-		},
-		{
-			"id": "8au0b.io071e",
-			"label": "Pivot table",
-			"image": "pivotTable.png",
-			"shape": "circularImage",
-			"x": -53,
-			"y": 24
+			"STApivotTable": {
+				"Columns": [],
+				"Rows": [],
+				"Values": []
+			}
 		}
 	],
 	"edges": [
