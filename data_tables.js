@@ -1292,13 +1292,17 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 
 	//buildig array of new objects
 	var newObjectsArray=[],rowValue, attName;
+	var newObject;
 	if (rowsAndColumnsResume.rows.length!=0){
+		
 		for (var r=0;r<rowsAndColumnsResume.rows.length;r++){
-			newObjectsArray.push({firstColumn:rowsAndColumnsResume.rows[r]});
+			newObject={};
+			newObject[firstColumn]=rowsAndColumnsResume.rows[r]
+			newObjectsArray.push(newObject);
 		}
 	}if (rowsAndColumnsResume.columns.length!=0){
 		if (newObjectsArray.length==0){ //No rows
-			var newObject={};
+			newObject={};
 			for (var cc=0;cc<rowsAndColumnsResume.columns.length;cc++){
 				newObject[rowsAndColumnsResume.columns[cc]]="";
 			}
