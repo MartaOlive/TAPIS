@@ -1315,7 +1315,43 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 			}
 		}
 	}
-	console.log (newObjectsArray)
+
+	if(Values){
+		var dataRow,dataCol,colValue, temporalArray;
+		for (var d=0;d<data.length;d++){
+			dataRow="";
+			dataCol="";
+			
+			if (rowsAndColumnsResume.columns.length!=0 && rowsAndColumnsResume.rows.length!=0){ //columns and rows
+				for (var ro=0;ro<Rows.length;ro++){
+					if (ro==0)dataRow=data[d][Rows[ro]];
+					else dataRow+="_"+data[d][Rows[ro]];
+				}
+				for (var co=0;co<Columns.length;co++){
+					//except lastone
+						if (co==0)dataCol=data[d][Columns[co]];
+						else dataCol+="_"+data[d][Columns[co]];				
+				}
+				
+				for (var obj=0;obj<newObjectsArray.length;obj++){
+					if (newObjectsArray[obj][firstColumn]=dataRow){//search row
+						if (newObjectsArray[obj][dataCol]==""){
+							newObjectsArray[obj][dataCol]=colValue; //first value introduced
+						}else if (typeof newObjectsArray[obj][dataCol]=="string"){
+							newObjectsArray[obj][dataCol]=[newObjectsArray[obj][dataCol],colValue]
+						}else{//array, more trhan one
+							temporalArray=newObjectsArray[obj][dataCol];
+							temporalArray.push(colValue)
+							newObjectsArray[obj][dataCol]=temporalArray ;
+						}
+
+					}
+				}
+				console.log (newObjectsArray);
+			}
+		}
+	}
+
 	
 }
 
