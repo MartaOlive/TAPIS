@@ -1235,7 +1235,7 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 	if (!data || !Rows|| Rows.length==0|| !Columns|| Columns.length==0||!Values||Values.length==0||!aggregation){
 		return("At the moment to use this function it is necessary to send data, rows (only one), columns, values and a type of aggregation")
 	}else{
-		var newdataArray=[], newOject, rowName="", rowsValue,columnName;
+		var newdataArray=[], newOject, rowName="", rowsValue,columnName, arrayAllColumns=[];
 		if (Rows.length>1){
 			for (var r=0;r<Rows.length;r++){
 				if(r!=0)rowName+="_";
@@ -1261,13 +1261,47 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 					columnName+=data[d][Columns[c]];
 				}
 				for (var v=0;v<Values.length;v++){
+					if (!arrayAllColumns.includes(columnName+"_"+Values[v]))arrayAllColumns.push(columnName+"_"+Values[v]);
 					newOject[columnName+"_"+Values[v]]=data[d][Values[v]];
 				}
 				
 			}
 			newdataArray.push(newOject);
 		}
+		//add all columns to all objects
+		for (var n=0;n<newdataArray.length;n++){
+			for (var c = 0;c<arrayAllColumns.length;c++){
+				if (!newdataArray[n].hasOwnProperty(arrayAllColumns[c])){
+					newdataArray[n][arrayAllColumns[c]]=undefined;
+				}
+			}
+		}
+		//GroupingBy all columns to unify repetitions 
+		var attributes= getDataAttributesSimple(newdataArray);
+		var groupByParams, attr, finalArrayObjects, options,newData,aggregationAttr={};
+		for (var c = 0;c<arrayAllColumns.length;c++){
+			attr=arrayAllColumns[c];
+			aggregationAttr={}
+			aggregationAttr[attr]=[aggregation];
+			groupByParams={};
+			groupByParams={
+				aggregationAttr: aggregationAttr,
+				groupByAttr: [rowName],
+				groupByDate:[]
+			}
+			if (c==0)finalArrayObjects=GroupByTableData(newdataArray, attributes, {}, groupByParams);
+			else{
+				newData=GroupByTableData(newdataArray, attributes, {}, groupByParams);
+				options={NotMatch: "BothTables",RowMatching:[{left: rowName, right: rowName}]};
+				finalArrayObjects=JoinTablesData(finalArrayObjects,newData,getDataAttributesSimple(finalArrayObjects),getDataAttributesSimple(newData),{},options)
+			}
+				
+		}
+	
 		console.log(newdataArray);
+		console.log(finalArrayObjects);
+
+
 	// 	//rows (only 1)
 	// 	var rowsAndColumnsResume={rows:[], columns:[], rowsTemporalArrays:[], columnsTemporalArrays:[] };
 	// 	var rowValue,rowValueTemporalArray , columnValue,columnValueTemporalArray;

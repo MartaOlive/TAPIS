@@ -1,0 +1,57 @@
+{
+	"nodes": [
+		{
+			"id": "6ps1i.kk46g1",
+			"label": "1",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"Embassament de Sau (Vilanova de Sau)": 405.27
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"Embassament de Sau (Vilanova de Sau)": 200
+				}
+			],
+			"STAdataAttributes": {
+				"dia": {
+					"type": "isodatetime"
+				},
+				"Embassament de Sau (Vilanova de Sau)": {
+					"type": "number"
+				}
+			},
+			"x": 3,
+			"y": 8
+		},
+		{
+			"id": "4kko.gmga7g8",
+			"label": "2",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"Embassament deDarnius": 300
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"Embassament deDarnius": 100
+				}
+			],
+			"STAdataAttributes": {
+				"dia": {
+					"type": "isodatetime"
+				},
+				"Embassament deDarnius": {
+					"type": "integer"
+				}
+			},
+			"x": 130,
+			"y": 32
+		}
+	],
+	"edges": []
+}
