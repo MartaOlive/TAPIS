@@ -8060,7 +8060,6 @@ function okButtonInPivotTable(event){
 		}
 	}
 	var newData=buildPivotTable(node.STAdata, node.STApivotTable.Rows, node.STApivotTable.Columns, node.STApivotTable.Values, aggregation);
-	//actualitzar atributs
 	node.STAdata=newData;
 	node.STAdataAttributes=uploadDataAttributesAddingNewColumns(node.STAdataAttributes, newData, "");
 	networkNodes.update(node);
