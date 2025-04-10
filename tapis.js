@@ -8060,10 +8060,14 @@ function okButtonInPivotTable(event){
 		}
 	}
 	var newData=buildPivotTable(node.STAdata, node.STApivotTable.Rows, node.STApivotTable.Columns, node.STApivotTable.Values, aggregation);
-	node.STAdata=newData;
-	node.STAdataAttributes=uploadDataAttributesAddingNewColumns(node.STAdataAttributes, newData, "");
-	networkNodes.update(node);
-	document.getElementById("DialogPivotTable").close();
+	if ( typeof newData != "string"){
+		node.STAdata=newData;
+		node.STAdataAttributes=uploadDataAttributesAddingNewColumns(node.STAdataAttributes, newData, "");
+		networkNodes.update(node);
+		document.getElementById("DialogPivotTable").close();
+	}else{
+		alert (newData) //Error
+	}
 }
 
 /*function giveMeNetworkInformation(event) {

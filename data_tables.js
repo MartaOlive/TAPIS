@@ -1232,10 +1232,28 @@ function SortTableByColumns(data, columnsSelected, AscOrDesc) { //as many column
 }
 
 function buildPivotTable(data, Rows, Columns, Values, aggregation){
-	// if (!data || !Rows|| Rows.length==0|| !Columns|| Columns.length==0||!Values||Values.length==0||!aggregation){
-	// 	return("At the moment to use this function it is necessary to send data, rows (only one), columns, values and a type of aggregation")
-	// }else{
+	var allowedKey=false;
+	for (var i=0;i<AggregationsOptions.length;i++){ //To check if it is an aggregation type allowed
+		if (AggregationsOptions[i].name==aggregation) {
+			allowedKey=true;
+			break;
+		}
+	}
+	var applyFunction=true;
+	for (var i=0;i< Rows.length;i++){
+ 			if (Columns.includes(Rows[i])){
+				applyFunction=false;
+				break;
+			}
+	}
+	if (applyFunction==false) return "Error: Attributes betwen columns and rows can't be repited "
+	else if (!Values || Values.length==0) return "Error:It is necessary to send values";
+	else if((!Columns|| Columns.length==0) && (!Rows|| Rows.length==0 )) return "Error: It is necessary to send Columns or Rows";
+	else if(!aggregation ||allowedKey==false ) return "Error: It is necessary to send an allowed aggfregation type";
+ 	else{
+
 		var newdataArray=[], newOject, rowName="", rowsValue,columnName, arrayAllColumns=[];
+		//RowsName with or withoutRows
 		if (Rows.length>1){
 			for (var r=0;r<Rows.length;r++){
 				if(r!=0)rowName+="_";
@@ -1243,38 +1261,60 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 			}
 		}else if (Rows.length==1){
 			rowName=Rows[0];
+		}else{
+			rowName="aggregation"
 		}
+
+		//Reorganize data to groupBy and join 
 		for (var d=0;d<data.length;d++){
 			newOject={};
 			rowsValue="";
 			columnName="";
-			if (Rows.length!=0){
+			if (Rows.length!=0){  //Rows with or without columns
 				for (var r=0;r<Rows.length;r++){
 					if(r!=0)rowsValue+="_";
 					rowsValue+=data[d][Rows[r]];
 				}
 				newOject[rowName]=rowsValue;
-			}
-			if (Columns.length!=0){
-				for (var c=0;c<Columns.length;c++){
-					if(c!=0)columnName+="_";
-					columnName+=data[d][Columns[c]];
-				}
-				for (var v=0;v<Values.length;v++){
-					if (!arrayAllColumns.includes(columnName+"_"+Values[v]))arrayAllColumns.push(columnName+"_"+Values[v]);
-					newOject[columnName+"_"+Values[v]]=data[d][Values[v]];
+
+				if (Columns.length!=0){ //with columns
+					for (var c=0;c<Columns.length;c++){
+						if(c!=0)columnName+="_";
+						columnName+=data[d][Columns[c]];
+					}
+					for (var v=0;v<Values.length;v++){
+						if (!arrayAllColumns.includes(columnName+"_"+Values[v]))arrayAllColumns.push(columnName+"_"+Values[v]);
+						newOject[columnName+"_"+Values[v]]=data[d][Values[v]];
+					}
+					newdataArray.push(newOject);
+					
+				}else if (Values.length!=0 ){ //Without columns (Use values to build columns names)
+					var ColumnsAsValues=[];
+					for (var v=0;v<Values.length;v++){
+						ColumnsAsValues.push(Values[v]);
+						newOject[Values[v]]=data[d][Values[v]];
+					}
+					newdataArray.push(newOject);
 				}
 				
-			}else if (Values.length!=0){
-				var ColumnsAsValues=[];
-				for (var v=0;v<Values.length;v++){
-					ColumnsAsValues.push(Values[v]);
-					newOject[Values[v]]=data[d][Values[v]];
+			}else{ //Without rows
+				if (Columns.length!=0){ 
+					for (var c=0;c<Columns.length;c++){
+						if(c!=0)columnName+="_";
+						columnName+=data[d][Columns[c]];	
+					}
+					if (!arrayAllColumns.includes(columnName))arrayAllColumns.push(columnName);
+					for (var v=0;v<Values.length;v++){ //Values as rows names
+						newOject={}
+						newOject.aggregation=Values[v];
+						newOject[columnName]=data[d][Values[v]];
+						newdataArray.push(newOject);
+					}
 				}
-				
 			}
-			newdataArray.push(newOject);
+
 		}
+
 		//add all columns to all objects
 		if (Columns.length!=0){
 			for (var n=0;n<newdataArray.length;n++){
@@ -1311,10 +1351,10 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 			}
 				
 		}
-		console.log(finalArrayObjects);
+
 		//add all columns again, because GroupByTableData can "erase" some columns in some objects 
-		//add new Parameter added by GroupBy
-		for (var a =0;a<arrayAllColumns.length;a++){
+		
+		for (var a =0;a<arrayAllColumns.length;a++){ //add new Parameter added by GroupBy
 			arrayAllColumns[a]=arrayAllColumns[a]+"_"+aggregation;
 		}
 
@@ -1330,6 +1370,8 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 		return finalArrayObjects;
 	
 
+ 	}
+		
 }
 
 
