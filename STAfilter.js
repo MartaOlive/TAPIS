@@ -194,7 +194,7 @@ function fillColumsSelectorFilterRows(selectorInfo, count) { //withoutEntities_3
 		}
 
 	} else { //data charged (node.STAdata)
-		var columns = Object.keys(node.STAdata[0]);
+		var columns = Object.keys(node.STAdataAttributes);
 		for (var i = 0; i < columns.length; i++) {
 			option = document.createElement("option"); //First option
 			option.setAttribute("value", columns[i]);
@@ -740,13 +740,13 @@ function typeOfValueFromInput(wichinputText, value1, value2) {
 			var value1Array = value1.split("-");
 			if (value1.includes("/")) {
 				if (value1Array.length == 5) {
-					if (value1Array[0].length == 4 && value1Array[1].length == 2 && value1Array[2][2] == "T" && value1.endsWith("Z")) {
+					if (value1Array[0].length == 4 && value1Array[1].length == 2 && value1Array[2][2] == "T" ) {
 						typeOfValues = "date";
 					}
 				}
 			} else {
 				if (value1Array.length == 3) {
-					if (value1Array[0].length == 4 && value1Array[1].length == 2 && value1Array[2][2] == "T" && value1.endsWith("Z")) {
+					if (value1Array[0].length == 4 && value1Array[1].length == 2 && value1Array[2][2] == "T" ) {
 						typeOfValues = "date";
 					} else if (value1Array[0].length == 4 && value1Array[1].length == 2 && value1Array[2].length == 2 && !isNaN(parseInt(value1Array[0])) && !isNaN(parseInt(value1Array[1])) && !isNaN(parseInt(value1Array[2]))) { //only date without Time
 						typeOfValues = "date";
