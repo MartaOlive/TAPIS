@@ -284,7 +284,8 @@ function DrawScatterPlot(event) {
 				}
 
 			}
-			items.push({ x: record[selectedOptions.AxisX], y: record[selectedOptions.AxisY], group: e });
+			//var type= typeof  parseFloat(record[selectedOptions.AxisY].toFixed(1));
+			items.push({ x: record[selectedOptions.AxisX], y:record[selectedOptions.AxisY], group: e });
 		}
 			type=  dataGroups[e].graphicType;
 			(type=="line")?pointRadius=0:pointRadius=2;
@@ -310,10 +311,32 @@ function DrawScatterPlot(event) {
 	if (ScatterPlotChart)
 		ScatterPlotChart.destroy();
 
+	//Y axis
 	var finalMinYLeft = minyLeft - (maxyLeft - minyLeft) * 0.025;
 	var finalMinYRight = minyRight - (maxyRight - minyRight) * 0.025;
 	var finalMaxYLeft = maxyLeft + (maxyLeft - minyLeft) * 0.025;
 	var finalMaxYRight = maxyRight + (maxyRight - minyRight) * 0.025;
+	if (finalMinYLeft==finalMaxYLeft){
+		finalMinYLeft++;
+		finalMaxYLeft--;
+	}
+	if (finalMinYRight==finalMaxYRight){
+		finalMinYRight++;
+		finalMaxYRight--;
+	}
+
+	//X axis
+	if (minx==maxx){
+		if ((axisXType=="isodatetime")){
+			maxx=new Date(maxx);
+			minx= new Date(minx);
+			maxx.setDate(maxx.getDate() + 1);
+			minx.setDate(minx.getDate() - 1);
+		}else{
+			maxx++;
+			minx--;
+		}
+	}
 
 	var axisYLabelRight = document.getElementById("DialogScatterPlotAxisYLabelRight").value;
 	var axisYLabelLeft = document.getElementById("DialogScatterPlotAxisYLabelLeft").value;
@@ -325,9 +348,9 @@ function DrawScatterPlot(event) {
 			time: {
 				unit: 'minute',  
 				stepSize: 1,  // Assegura que es mostrin les dates en intervals de 1 minut
-				tooltipFormat: 'yyyy-MM-dd HH:mm',  
+				tooltipFormat: 'yyyy-MM-dd HH:mm:ss',  
 				displayFormats: {
-					minute: 'yyyy-MM-dd HH:mm',  
+					minute: 'yyyy-MM-dd HH:mm:ss',  
 				}
 			},
 			title: {
