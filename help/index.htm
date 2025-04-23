@@ -59,6 +59,7 @@
 <li><a href="#recipe07">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</a></li>
 <li><a href="#recipe08">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
 <li><a href="#recipe09">Recipe 9: Drawing a stacked bar chart</a></li>
+<li><a href="#recipe10">Recipe 10: Pivoting a table, from registers of a column to new columns</a></li>
 </ul>
 </ul>
 
@@ -1175,7 +1176,41 @@ The result is a table that has 3 columns. The thirt column represent the number 
 We select the [Bar plot] tool and we ask for Categories (the bar labels) "Need Type", the Classifications (the data series names that are going to be stacked segements in diferent colors in the bar chart) as "Area" and the Values (the size of the segments of the bars in the chart) as "User requirement id_CouldDefined". After presing "plot, you will see the actual stacked bar chart.<br>
 <img src="recipe09_StackedBarChart.png" width="900" class="center">
 <p>
+<br><br><br>
+<br>
+<hr width="30%">
+<a id="recipe09"></a>
+<h3>Recipe 10: Pivoting a table, from registers of a column to new columns</h3>
+<p>In this example, we have a list of registers, but we need to reorganize them. In this table, every register is the amount of water from a station on a concrete day, but for some analysis is needed to transform the values from a column (Station) to new columns. This is the original table: 
+	This tool can be used with all origins of data because TAPIS always works with tables. In this example, data is imported by Import CSV. Part of the original table is shown below, it is longer, but it doesn't feed into the image (total registers: 1000):
+<img src="recipe10_initialTable.png" width="900" class="center">
+</p>
+<p>
+	Link the pivot table tool to apply the desired changes to the current table. After clicking it, the dialogue allows you to add the attributes to different final places. It is not allowed to repeat values from Columns and Rows and always is needed to add an attribute to values. This tool is similar to Excel pivot tables tool, so attributes that need to be preserved from the current table should be added to the new table. <br><br>
+There are three different sections to add to the new table:
+<ol>
+	<li><b>Columns:</b> The different values of your attribute selected will be transformed into new columns on the new table. It is possible to add more than one (it will be shown after). If more than one attribute is chosen, the new column names will be the concatenation of these values in the given order, the first selected takes precedence over the second and the following ones. </li>
+	<li><b>Rows:</b> This parameter defines which column will rest similar to a column in the new table. The difference is that values will not be repeated. Same as columns, more than one attribute can be selected, but the concatenation will occur in the values of the columns. </li>
+	<li><b>Values:</b> This attribute will be the value that converges from columns and rows, taking reference from the current table values. If there is more than one register that matches in the same place in the new table, the aggregation selected will be applied. If there is more than one attribute selected in this section, it will create new columns, every column created in Columns will be repeated so many times as values are selected. </li>
+</ol>
 
+The <b><i>"Repited values aggregated by"</i> </b> section defines the kind of aggregation applied if more than one values converge in the same "square". <br><br>
+
+	<img src="recipe10_pivotTableDialog.png" width="900" class="center">
+	
+</p>
+<p> Here there is part of the result of this application (it is longer, but it doesn't feed into the image. Total registers: 112). In this case, the "reference column" is "Day", with all different values, not repeated, in the first column (attribute selected in Row section). 
+	The rest of the columns are all the different values in the old Station column (attribute selected in Column section). Every of these values are now new columns. As only one value attribute has been selected, these columns only appear one time each other, with the value selected in the name. Every result in the confluence was aggreged by the selected option chosen. 
+	<img src="recipe10_resultTable_Simple.png"  class="center">
+	With this distribution, it is now possible to create scatterplot graphics. 
+</p>
+
+<p>Here are different examples with different combinations of columns and row selected</p>
+//Only columns and values
+//Only rows and values
+//2 columns 
+//2 rows
+//2 values
 
 </body>
 </html>

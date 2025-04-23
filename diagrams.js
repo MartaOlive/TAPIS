@@ -387,6 +387,10 @@ function DrawScatterPlot(event) {
 			},
 			scales: {
 				x:axisX,
+				 ticks: { //!!!!!!! 
+					maxTicksLimit: 30,
+				 	autoSkip: true
+				  }
 			},
 		}
 
@@ -416,7 +420,10 @@ function DrawScatterPlot(event) {
 				text: axisYLabelLeft
 			},
 			max:finalMaxYLeft,
-			min:finalMinYLeft
+			min:finalMinYLeft,
+			// ticks: {
+			// 	maxTicksLimit: 30 // 👈 només 10 valors a l’eix
+			//   }
 
 		}
 	}
