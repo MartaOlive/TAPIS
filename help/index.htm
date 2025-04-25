@@ -1195,11 +1195,13 @@ There are three different sections to add to the new table:
 </ol>
 
 The <b><i>"Repited values aggregated by"</i> </b> section defines the kind of aggregation applied if more than one values converge in the same "square". <br><br>
-
+<u><li><b><i></i>Exemple 1: All sections with one attribute added</b></li></u>
+In this first example, one attribute has been added to every part (Columns, Rows and Values). It is the simplest example, there are no combinations of Columns, neither Rows or Values, these will be shown after. The resulting table will be the result of maintaining one column, but erasing the values repetitied (the "reference column", here Day), and transforming values in Column added as new columns (without repetitions). The intersection created in the new table will be filled by values from the current table, if there is more than one that matches in the same place (this doesn't happen in this example), the aggregation chosen will be applied. <br>
 	<img src="recipe10_pivotTableDialog.png" width="900" class="center">
 	
 </p>
-<p> Here there is part of the result of this application (it is longer, but it doesn't feed into the image. Total registers: 112). In this case, the "reference column" is "Day", with all different values, not repeated, in the first column (attribute selected in Row section). 
+<p> 
+	Here there is part of the result of this application (it is longer, but it doesn't feed into the image. Total registers: 112). In this case, the "reference column" is "Day", with all different values, not repeated, in the first column (attribute selected in Row section). 
 	The rest of the columns are all the different values in the old Station column (attribute selected in Column section). Every of these values are now new columns. As only one value attribute has been selected, these columns only appear one time each other, with the value selected in the name. Every result in the confluence was aggreged by the selected option chosen. 
 	<br>	<br>
 	List of new columns (attributes)
@@ -1220,11 +1222,10 @@ The <b><i>"Repited values aggregated by"</i> </b> section defines the kind of ag
 	With this distribution, it is now possible to create scatterplot graphics. 
 </p>
 <br>
-<p><u>Here are different examples with different possible combinations:</u><br>
-<ul><li><b><i></i>Adding 2 attributes to Values</i></b> <br></li></ul>
+<ul><li><b><i></i>Example 2: adding 2 attributes to Values</i></b> <br></li></ul>
 As mentioned before, adding an attribute creates a new set of columns. This set of columns is the result of adding the new parameter value to every column formed with different values of the Column attributes selected. 
 <br>
-<img src="recipe10_pivotTableDialog_2_values.png"  > <br><br>
+<img src="recipe10_pivotTableDialog_2_values.png"  height="450px"> <br><br>
 List of new columns (attributes)
 <ul><li>Day <i>(Preserved from the previous table)</i></li>
 	<li>Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean</li>
@@ -1248,9 +1249,9 @@ List of new columns (attributes)
 </ul>
 <img src="recipe10_resultTable_2_values.png"  class="center">
 
-<ul><li><b><i></i>Adding 2 attributes to Columns</i></b> <br></li></ul>
+<ul><li><b><i></i>Example 3: adding 2 attributes to Columns</i></b> <br></li></ul>
 New columns will be the existing combination of values from old table columns. In other words, every different value from the first added attribute will be concatenated to every value of the next added attributes (not all possible combinations, only existing combinations in the current table). 
-<br><img src="recipe10_pivotTableDialog_2_columns.png"  class="center">
+<br><img src="recipe10_pivotTableDialog_2_columns.png"  height="450px">
 <br><br>
 List of new columns (attributes)
 <ul><li>Day <i>(Preserved from the previous table)</i></li>
@@ -1267,9 +1268,9 @@ List of new columns (attributes)
 <img src="recipe10_resultTable_2_columns.png"  class="center">
 
 
-<ul><li><b><i></i>Adding 2 attributes to Rows</i></b> <br></li></ul>
+<ul><li><b><i></i>Example 4: adding 2 attributes to Rows</i></b> <br></li></ul>
 Same way of combination explained in "combination of more than one Column", but in this case the combination will be the result of "reference column" values. Name of this new column will be the result of the combination of the name of the attrributes used. 
-<br><img src="recipe10_pivotTableDialog_2_rows.png"  class="center">
+<br><img src="recipe10_pivotTableDialog_2_rows.png"  height="450px">
 <br>
 The names of the resulting columns are the same as explained in the first example, where all values from the column of the attribute selected will become new columns.<br>
 Examples of values from the first column, the result of the combination of the values from attributes selected in Row case (Day + Province): 
@@ -1286,18 +1287,18 @@ Examples of values from the first column, the result of the combination of the v
 
 <img src="recipe10_resultTable_2_rows.png"  class="center">
 
-<ul><li><b><i></i>Adding Columns and values, without any Row</i></b> <br></li></ul>
+<ul><li><b><i></i>Example 5: adding Columns and values, without any Row</i></b> <br></li></ul>
 This tool always returns a table. It is possible to create a table without adding attributes to Rows or Columns, but one of the two is always needed. In this example, it will be shown which is the result if any attribute is added in Row part. 
-<br><img src="recipe10_pivotTableDialog_without_rows.png"  class="center"> <br>
+<br><img src="recipe10_pivotTableDialog_without_rows.png"  height="450px"> <br>
 The resulting table will contain same columns as first example without "reference column"(in that case, Day) and  with an added column (Aggregation) whose value is the name of the attribute selected in Value part. If there was more than one attributed added in Value part, every value will be a new row. 
 Values in the other columns will be the result of the aggregation selected.
 
 <img src="recipe10_resultTable_without_rows.png"  class="center">
 
 
-<ul><li><b><i></i>Adding Rows and values, without any Column</i></b> <br></li></ul>
+<ul><li><b><i></i>Example 6: adding Rows and values, without any Column</i></b> <br></li></ul>
 This example is similar to the example above, but "switched". In this case, there are Rows, so values come from the values of Row attributes added. Similar to what has happened before, every new column (no Columns have been added in this example) will be every attribute added in Value part. The values in these columns will be the result of the aggregation selected.<br>
-<img src="recipe10_pivotTableDialog_without_columns.png"  class="center">
+<img src="recipe10_pivotTableDialog_without_columns.png"  height="450px"> <br>
 <img src="recipe10_resultTable_without_columns.png"  class="center">
 
 </p>
