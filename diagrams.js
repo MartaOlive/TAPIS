@@ -305,6 +305,7 @@ function DrawScatterPlot(event) {
 			},
 			
 		);
+		
 		yAxisTodisplay[dataGroups[e].selectedYaxis]=true
 	}
 
@@ -347,7 +348,6 @@ function DrawScatterPlot(event) {
 			type: "time",
 			time: {
 				unit: 'minute',  
-				stepSize: 1,  // Assegura que es mostrin les dates en intervals de 1 minut
 				tooltipFormat: 'yyyy-MM-dd HH:mm:ss',  
 				displayFormats: {
 					minute: 'yyyy-MM-dd HH:mm:ss',  
@@ -373,7 +373,7 @@ function DrawScatterPlot(event) {
 		}
 	}
 
-
+	
 	var config = {
 		//type: type, //general diagram. If it have different types it is specified in the datasets
 		data: data,
