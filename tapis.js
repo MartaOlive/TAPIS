@@ -421,32 +421,40 @@ function PlaceButtonsSTAEntities() {
 		if (!startButtonsOnly || ServicesAndAPIs[ServicesAndAPIsArray[i]].startNode)
 			cdns.push(textOperationButton(null, "", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], ServicesAndAPIsType.singular));
 	}
-	cdns.push("<br>");
+	document.getElementById("ButtonsSTAEntities").innerHTML = cdns.join("");
+	//cdns.push("<br>");
+	cdns=[];
 	if (!startButtonsOnly) {
 		for (var i = 0; i < STAEntitiesArray.length; i++)
 			cdns.push(textOperationButton(null, "", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular));
-		cdns.push("<br>");
+		//cdns.push("<br>");
+		document.getElementById("sideButtons_Buttons_STAEntities").innerHTML = cdns.join("");
 		/*for (var i = 0; i < STAEntitiesArray.length; i++)
 			cdns.push(textOperationButton(null, "", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit));
 		cdns.push("<br>");*/
+		cdns=[];
 		for (var i = 0; i < STASpecialQueriesArray.length; i++)
 			cdns.push(textOperationButton(null, "", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help, null, STASpecialQueriesType.singular));
-		cdns.push("<br>");
+		//cdns.push("<br>");
+		
 	}
-
+	
 	for (var i = 0; i < STAOperationsArray.length; i++) {
 		if (!startButtonsOnly || STAOperations[STAOperationsArray[i]].startNode)
 			cdns.push(textOperationButton(null, "", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help, STAOperations[STAOperationsArray[i]], STAOperationsType.singular));
 	}
-	cdns.push("<br>");
+	document.getElementById("sideButtons_Buttons_STATools").innerHTML = cdns.join("");
+	//cdns.push("<br>");
+	cdns=[];
 	for (var i = 0; i < TableOperationsArray.length; i++) {
 		if (!startButtonsOnly || TableOperations[TableOperationsArray[i]].startNode)
 			cdns.push(textOperationButton(null, "", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular));
 	}
-	if (!startButtonsOnly)
-		cdns.push("<br>");
+	document.getElementById("sideButtons_Buttons_TablesEdition").innerHTML = cdns.join("");
+	// if (!startButtonsOnly)
+	// 	cdns.push("<br>");
 
-	document.getElementById("ButtonsSTAEntities").innerHTML = cdns.join("");
+	//document.getElementById("ButtonsSTAEntities").innerHTML = cdns.join("");
 }
 
 var timeoutHelpToolTip=null;
@@ -1517,13 +1525,19 @@ function UpdateConfiguration()
 	changeCSSStyle(".tablesmall", 'font-size', document.getElementById("DialogConfigurationFontSize").value/100+"em");
 
 	if (document.getElementById("DialogConfigurationDivSideBySide").checked) {
-		document.getElementById("mynetwork").style.float="left";
-		document.getElementById("mynetwork").style.width="59.4%";
+		document.getElementById("sideButtons").style.width="19%";
+		document.getElementById("sideButtons").style.height="400px";
+		document.getElementById("sideButtons").style.display="inline-block";
+		//document.getElementById("mynetwork").style.float="left";
+		document.getElementById("mynetwork").style.width="59%";
 		document.getElementById("mynetwork").style.height="400px";
-		document.getElementById("clarification").style.float="left";
-		document.getElementById("clarification").style.width="39.5%";
+		document.getElementById("mynetwork").style.display="inline-block";
+		//document.getElementById("clarification").style.float="left";
+		document.getElementById("clarification").style.width="19%";
 		document.getElementById("clarification").style.marginLeft="0.2%";
 		document.getElementById("clarification").style.height="400px";
+		document.getElementById("clarification").style.display="inline-block";
+
 	} else {
 		document.getElementById("mynetwork").style.float="left";
 		document.getElementById("mynetwork").style.width="100%";
