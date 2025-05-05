@@ -1,0 +1,38 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+            [1.78,41.78],
+            [1.79,41.78],
+            [1.79,41.79],
+            [1.78,41.79],
+            [1.78,41.78]
+        ]]
+      },
+      "properties": {
+        "name": "callus"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+            [11.50,48.11],
+            [11.51,48.11],
+            [11.51,48.12],
+            [11.50,48.12],
+            [11.50,48.11]
+          ]
+        ]
+      },
+      "properties": {
+        "name": "Muninc"
+      }
+    }
+  ]
+}

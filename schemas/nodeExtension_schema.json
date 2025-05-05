@@ -26,12 +26,36 @@
 			"type": "string",
 			"format": "uri"
 		},
+		"STAdata": {
+			"$ref": "data_schema.json#/definitions/data"
+		},
+		"STAdataAttributes": {
+			"$ref": "dataAttributes_schema.json#/definitions/dataAttributes"
+		},
 		"STASelectedExpands": {
 			"$ref": "#/definitions/selectedExpands"
 		},
 		"STAEntityName": {
 			"description": "Last name of the entity in the path or expanded. Defines the scope of the node query parameters",
 			"type": "string"
+		},
+		"STAsecurity": {
+			"description": "Security parameters",
+			"type": "object",
+			"properties": {
+				"authorization": {
+					"description": "'authorization' header parameter to be used in the EDC",
+					"type": "string"					
+				}
+			} 
+		},
+		"OGCType": {
+			"description": "OGC type of service",
+			"enum": ["fileURL", "OGCAPIcollections", "OGCAPIcollection", "OGCAPIitem", "OGCAPIitems", "GUF", "OGCCSW",  "S3Buckets", "S3Bucket", "EDCCatalogue", "EDCAsset"]
+		},
+		"STAResourceId": {
+			"description": "Text representing the Id of a selected resource (e.g. in SelectRow or SelectResource)",
+			"type": "string"		
 		},
 		"STASelectExpandNextOrigin": {
 			"description": "Points to the the recursive STASelectedExpands expanded entity that is the focus of the node query parameters. If empty, points to the root of STASelectedExpands",
@@ -93,11 +117,31 @@
 				}
 			}
 		},
-		"STAdata": {
-			"$ref": "data_schema.json#/definitions/data"
+		"STAtimeOut": {
+			"description": "Javascript TimeOut handle for the subscriptions to update data",
+			"type": "string"
 		},
-		"STAdataAttributes": {
-			"$ref": "dataAttributes_schema.json#/definitions/dataAttributes"
+		"STAOneValue": {
+			"description": "Saves the configuration of the OneValue box",
+			"type": "object",
+			"properties": {
+				"variable": {
+					"description": "Name of the collumn that contains the variable value to represent",
+					"type": "string"
+				},
+				"timeVariable": {
+					"description": "Name of the collumn that contains the time to the value to represent",
+					"type": "string"
+				},
+				"redrawPeriod": {
+					"description": "Number of seconds to refresh the value",
+					"type": "integer"
+				},
+				"alertValue": {
+					"description": "If the variable value is above this numerial value, the text and the node are represented in red",
+					"type": "number"
+				}
+			}
 		}
 	},
 	"definitions": { 

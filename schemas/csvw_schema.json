@@ -25,7 +25,7 @@
 							},
 							"titles": {
 								"description": "Description of the column. Can be an array but it is not implemented in Tapis",
-								"type": "string"
+								"$ref": "#/definitions/titles"
 							},
 							"propertyUrl": {
 								"description": "URI of the definition of the variable, e.g. QUDT URI",
@@ -34,7 +34,7 @@
 							},
 							"unitMeasureTitles": {
 								"description": "Description of the units of measurement. Extension of the CSVW based on W3C datacubes. Can be an array but it is not implemented in Tapis.",
-								"type": "string"
+								"$ref": "#/definitions/titles"
 							},
 							"unitMeasureSymbol": { 
 								"description": "Simbol of the units of measurement. Extension of the CSVW based on W3C datacubes. ",
@@ -48,26 +48,41 @@
 						}
 					}
 				}
-			},
-			"dialect": { 
-				"description": "Hints to parser the described file",
-				"type": "object",
-				"properties": {
-					"delimiter": {
-						"description": "Sets the delimiter character in a CSV file. Use '\t' if the delimiter is a tab character.",
-						"type": "string"
-					},
-					"header": {
-						"description": "Indicates if the CSV has a header first row, unless headerRowCount is provided, in which case the value provided for the header property is ignored.",
-						"type": "boolean"
-					},
-					"headerRowCount": {
-						"description":  "Number of rows in the csv table that are headers. Not implemented in Tapis",
-						"type": "integer",
-						"minimum": 0
-					}
-				} 
 			}
+		},
+		"dialect": { 
+			"description": "Hints to parser the described file",
+			"type": "object",
+			"properties": {
+				"delimiter": {
+					"description": "Sets the delimiter character in a CSV file. Use '\t' if the delimiter is a tab character.",
+					"type": "string"
+				},
+				"header": {
+					"description": "Indicates if the CSV has a header first row, unless headerRowCount is provided, in which case the value provided for the header property is ignored.",
+					"type": "boolean"
+				},
+				"headerRowCount": {
+					"description":  "Number of rows in the csv table that are headers. Not implemented in Tapis",
+					"type": "integer",
+					"minimum": 0
+				}
+			} 
+		}
+	},
+	"definitions": {
+		"titles": {
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			]
 		}
 	}
 }

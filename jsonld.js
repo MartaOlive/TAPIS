@@ -64,13 +64,10 @@ function FindGraphIDJSONLD(items, id) {
 	return null;
 }
 
-function ParseJSONLD(jsonld, addGeo, addObs) {
-	if (!jsonld["@graph"])
-		return {"error": "Encoding not supported. Expected element '@graph' missing"};
-	var dataAttributes={}, records=[], record, item, members, member;
-	var wkt = new Wkt.Wkt(), wkt2 = new Wkt.Wkt(), foi;
-	for (var i=0; i<(jsonld["@graph"].length ? jsonld["@graph"].length : 1) ; i++) {
-		item=jsonld["@graph"].length ? jsonld["@graph"][i] : jsonld["@graph"];
+function ParseSOSAGraphElement(item, addGeo, addObs, dataAttributes) {
+	var records=[], record, item, members, member;
+	var wkt = new Wkt.Wkt(), wkt2 = new Wkt.Wkt(), foi;	
+	
 		var foi=null;
 		if (item.hasFeatureOfInterest)
 			var foi=item.hasFeatureOfInterest;
@@ -120,13 +117,12 @@ function ParseJSONLD(jsonld, addGeo, addObs) {
 					}
 					if (!dataAttributes.geometry)
 						dataAttributes.geometry={type: "object", description: "Geometry"};
-	
 				} else {
-					continue  //return {"error": "Encoding not supported. 'hasGeometry' item without 'asWKT'"};
+					return null;  //return {"error": "Encoding not supported. 'hasGeometry' item without 'asWKT'"};
 				}	
 			}
 			else
-				continue;   //return {"error": "Encoding not supported. 'hasFeatureOfInterest' item without 'lat' or 'long" or geometry"};
+				return null;   //return {"error": "Encoding not supported. 'hasFeatureOfInterest' item without 'lat' or 'long" or geometry"};
 		}
 			
 		if (foi.identifier && !dataAttributes.id)
@@ -142,8 +138,7 @@ function ParseJSONLD(jsonld, addGeo, addObs) {
 				record.geometry=wkt.toJson();
 			if (typeof foi.identifier !== "undefined")
 				record.id=foi.identifier;
-			records.push(record);
-			continue;
+			return [record];
 		}
 		members=item.hasMember;
 		for (var j=0; j<(members.length ? members.length : 1) ; j++) {
@@ -162,9 +157,17 @@ function ParseJSONLD(jsonld, addGeo, addObs) {
 			if (typeof foi.identifier !== "undefined")
 				record.id=foi.identifier;
 
-			record.value=member.hasResult.numericValue;
-			if (!dataAttributes.value)
-				dataAttributes.value={type: "number", description: "Value", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/result"};
+			if (typeof member.hasResult.numericValue === "string") {
+				if (!isNaN(member.hasResult.numericValue)) {
+					record.value=parseFloat(member.hasResult.numericValue);
+					if (!dataAttributes.value)
+						dataAttributes.value={type: "number", description: "Value", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/result"};
+				}
+			} else {
+				record.value=member.hasResult.numericValue;
+				if (!dataAttributes.value)
+					dataAttributes.value={type: "number", description: "Value", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/result"};
+			}
 			if (member.hasResult.unit) {
 				record.UoMDefinition=member.hasResult.unit;
 				if (!dataAttributes.UoMDefinition)
@@ -190,9 +193,25 @@ function ParseJSONLD(jsonld, addGeo, addObs) {
 				if (!dataAttributes.resultTime)
 					dataAttributes.resultTime={type: "isodatetime", description: "Result time", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/resultTime"};
 			}
-			
 			records.push(record);
 		}
+		return records;			
 	}
-	return {data: records, dataAttributes: dataAttributes};
+
+function ParseJSONLD(jsonld, addGeo, addObs) {
+	var dataAttributes={}, records=[], SOSArecords;
+
+	if (jsonld["@graph"]) {
+		for (var i=0; i<(jsonld["@graph"].length ? jsonld["@graph"].length : 1) ; i++) {
+			SOSArecords=ParseSOSAGraphElement(jsonld["@graph"].length ? jsonld["@graph"][i] : jsonld["@graph"], addGeo, addObs, dataAttributes);
+			if (SOSArecords)
+				records.push(...SOSArecords);
+		}
+		return {data: records, dataAttributes: dataAttributes};
+	} else {
+		SOSArecords=ParseSOSAGraphElement(jsonld, addGeo, addObs, dataAttributes);
+		if (SOSArecords)
+			return {data: SOSArecords, dataAttributes: dataAttributes};
+	}
+	return {data: [], dataAttributes: dataAttributes};
 }

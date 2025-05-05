@@ -88,18 +88,17 @@ const STASpecialQueries = {ObsLayer: {description: "Observations Layer", query: 
 const STASpecialQueriesArray = Object.keys(STASpecialQueries);
 const STASpecialQueriesType = {singular: "Complex query", plural: "Complex queries"};
 
-const STAOperations = {RecursiveExpandSTA: {description: "Recursive Expand", callSTALoad: true, addSTAQuery: true, help: "Gets a table by selecting some columns and adding columns by expanding the properties of linked entities recursively. Needs to be connected to a SensorThings API or a STAplus node."},
-			ExpandColumnSTA: {description: "Expand entity", callSTALoad: true, addSTAQuery: true, help: "Gets a table by adding columns resulting of the expansion of the properties of a linked entity. For example, in a Datastream add properties of ObservedProperties. Requeres to be connected to a SensorThings API or a STAplus node."},
-			MergeExpandsSTA: {description: "Merge Expands", callSTALoad: true, addSTAQuery: true, help: "Gets a table by merging the fields of two branches originated as an expansion of the same entity. For example, in a Datastream node, a branch started by expanding ObservedProperties properties and a branch started by expanding Thing properties can be merged in a single branch by connecting the two branches as inputs to this node."},
-			SelectColumnsSTA: {description: "Select Columns", callSTALoad: true, addSTAQuery: true, help:"Gets a table only with columns selected. Requeres to be connected to a SensorThings API or a STAplus node."},
+const STAOperations = {RecursiveExpandSTA: {description: "Recursive Expand", callSTALoad: true, help: "Gets a table by selecting some columns and adding columns by expanding the properties of linked entities recursively. Needs to be connected to a SensorThings API or a STAplus node."},
+			ExpandColumnSTA: {description: "Expand entity", callSTALoad: true, help: "Gets a table by adding columns resulting of the expansion of the properties of a linked entity. For example, in a Datastream add properties of ObservedProperties. Requeres to be connected to a SensorThings API or a STAplus node."},
+			MergeExpandsSTA: {description: "Merge Expands", callSTALoad: true, help: "Gets a table by merging the fields of two branches originated as an expansion of the same entity. For example, in a Datastream node, a branch started by expanding ObservedProperties properties and a branch started by expanding Thing properties can be merged in a single branch by connecting the two branches as inputs to this node."},
+			SelectColumnsSTA: {description: "Select Columns", callSTALoad: true, help:"Gets a table only with columns selected. Requeres to be connected to a SensorThings API or a STAplus node."},
 			SelectRowSTA: {description: "Select Row", callSTALoad: true, help: "Gets a table only with the selected record. Requeres to be connected to another SensorThings API or a STAplus entity. A single record is required to related entities to this one and navegate the SensorThings API or a STAplus data model."},
-			SelectResourceSTA: {description: "Select Resource", callSTALoad: true, help: "Gets a table only with the selected resource. Requeres to be connected to another SensorThings API or a STAplus entity. A single record is required to related entities to this one and navegate the SensorThings API or a STAplus data model."},
-			FilterRowsSTA: {description: "Filter Rows", callSTALoad: true, addSTAQuery: true, help: "Gets a table with the records that match your conditions. Requeres to be connected to a SensorThings API or a STAplus node."},
-			FilterRowsByTime: {description: "Filter Rows by time", addSTAQuery: true, help: "Gets a table with records that match with a time interval. It is possible to group them by time periods. Requeres to be connected to a SensorThings API or a STAplus node."},
-			GeoFilterPolSTA: {description: "Filter Rows by Polygon", addSTAQuery: true, callSTALoad: true, help: "Gets a table with the records within a polygon. Requeres to be connected to another SensorThings API or a STAplus entity and to a table with a record that has a geometry (polygon)."},
-			GeoFilterPntSTA: {description: "Filter Rows by Distance", addSTAQuery: true, callSTALoad: true, help: "Gets a table with the records that are closer that a given distance of a point. Requeres to be connected to a SensorThings API or a STAplus node."},
-			SortBySTA: {description: "Sort by", callSTALoad: true, addSTAQuery: true, help: "Gets a table with data sorted by a given criteria. Requeres to be connected to a SensorThings API or a STAplus node."},
-			RangeSTA: {description: "Record range", callSTALoad: true, addSTAQuery: true, help: "Gets a table with a subset of the records limiting the number of records and skiping some initial records. <hr><small>Implements $top and $skip. Requeres to be connected to a SensorThings API or a STAplus node</small>."},
+			FilterRowsSTA: {description: "Filter Rows", callSTALoad: true, help: "Gets a table with the records that match your conditions. Requeres to be connected to a SensorThings API or a STAplus node."},
+			FilterRowsByTime: {description: "Filter Rows by time", help: "Gets a table with records that match with a time interval. It is possible to group them by time periods. Requeres to be connected to a SensorThings API or a STAplus node."},
+			GeoFilterPolSTA: {description: "Filter Rows by Polygon", callSTALoad: true, help: "Gets a table with the records within a polygon. Requeres to be connected to another SensorThings API or a STAplus entity and to a table with a record that has a geometry (polygon)."},
+			GeoFilterPntSTA: {description: "Filter Rows by Distance", callSTALoad: true, help: "Gets a table with the records that are closer that a given distance of a point. Requeres to be connected to a SensorThings API or a STAplus node."},
+			SortBySTA: {description: "Sort by", callSTALoad: true, help: "Gets a table with data sorted by a given criteria. Requeres to be connected to a SensorThings API or a STAplus node."},
+			RangeSTA: {description: "Record range", callSTALoad: true, help: "Gets a table with a subset of the records limiting the number of records and skiping some initial records. <hr><small>Implements $top and $skip. Requeres to be connected to a SensorThings API or a STAplus node</small>."},
 			UploadObservations: {description: "Upload in STA", leafNode: true, help: "Saves some observations to a SensorThings API or a STAplus server."},
 			//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
 			OneValueSTA: {description: "One Value", leafNode: true, help: "Shows the last posted value. This value is updated according to the time period you set. Requeres to be connected to another SensorThings API or a STAplus entity. Do not requre to connect to previous sort by time. This node can not be connected to other dependend nodes."},
@@ -121,7 +120,7 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			AggregateColumns: {description: "Aggregate Columns", help: "Adds a new column to a table with the aggregation of other previous selected columns."},
 			CreateColumns: {description: "Create Columns", help: "Adds a new column to your table. This column can be left empty, filled with a constant value or filled with an autoincremental value."},
 			ColumnsCalculator: {description: "Columns calculator", help: "Adds a new column to your table where for each record the new column contains the result of an operation involving other column values of that record."},
-			PivotTable: {description: "Pivot table", help:"Create a new table where some column content is transponsed into new columns" },
+			pivotTable: {description: "Pivot table", help:"Create a new table with a custom distribution of columns and rows" },
 			ColumnStatistics: {description:"Columns statistics", help: "Create a table where, for each column the main statistics for the column values of all records are recorded."},
 			SeparateColumns: {description: "Separate Columns", help: "Splits a column containing a JSON object into separated new columns and removes the original column."},
 			ScatterPlot: {description: "Scatter Plot", leafNode: true, help: "Creates a scatter plot with a the values of the column of a table."},
@@ -133,26 +132,6 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."}};
 const TableOperationsArray = Object.keys(TableOperations);
 const TableOperationsType = {singular: "Generic table tool", plural: "Generic table tools"};
-
-function IdOfSTAEntity(node) {
-	for (var i = 0; i < STAEntitiesArray.length; i++) {
-		if (node.image == STAEntitiesArray[i] + ".png")
-			return i;
-	}
-	/*Perhaps this node is a filter of a previous node. The URL can help me to find the entity to use
-	This is creating problems in other parts of the code!
-	if (node.STAURL)
-		return STAEntitiesArray.indexOf(getSTAURLLastEntity(node.STAURL));*/
-	return -1;
-}
-
-function IdOfSTASpecialQueries(node) {
-	for (var i = 0; i < STASpecialQueriesArray.length; i++) {
-		if (node.image == STASpecialQueriesArray[i] + ".png")
-			return i;
-	}
-	return -1;
-}
 
 //If the two nodes cannot connect it returns null. It transforms a plural to singular if needed.
 function transformToSingularIfNeededSTAEntity(parentEntity, entityName) {
@@ -264,15 +243,15 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" ) )
+	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "CountResultsSTA.png" ) )
 		return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
-	if (parentNode.image=="sta.png" || parentNode.image=="staRoot.png" || parentNode.image=="edcAsset.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
+	if (parentNode.image=="sta.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
 		return null;
 	if ((STAOperations[removeExtension(parentNode.image)] && STAOperations[removeExtension(parentNode.image)].leafNode==true) ||
 		(TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true))
 		return "Parent node is a leaf node and cannot be connected with any other node";
-	if ((node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png") && parentNode.STASelectedExpands && parentNode.STASelectedExpands.expanded && Object.keys(parentNode.STASelectedExpands.expanded).length)
-		return "'Select Row' or 'Select Resource' for STA node cannot be connected to an expanded branch. Use 'Filter row' for STA instead or select a row before expanding";
+	if (node.image == "SelectRowSTA.png" && parentNode.STASelectedExpands && parentNode.STASelectedExpands.expanded && Object.keys(parentNode.STASelectedExpands.expanded).length)
+		return "'Select Row' for STA node cannot be connected to an expanded branch. Use 'Filter row' for STA instead or select a row before expanding";
 	if (node.image == "OneValueSTA.png" && parentNode.STAEntityName!="Observations" && parentNode.image!="Observations.png")
 		return "'One value' node is designed be connected to an 'Observations' node only.";
 	var idNode=IdOfSTAEntity(node);
@@ -413,23 +392,12 @@ function changeCSSStyle(selector, cssProp, cssVal) {
 
 var currentNode=null, connectionInProcess=false, startingNodeContextId=null, startingEdgeContextId=null;
 
-function ChangeToHTTPS(question) {
-	var response=true, s_protocol=getProtocol(location.href);
-	if (s_protocol && s_protocol.toLowerCase()!="https:") {
-		if (!question)
-			location.replace("https:" + location.href.substring(s_protocol.length));
-		else {
-			response=confirm("The page is not using secured HTTPS. Do you want to change to HTTPS?")
-			if (response)
-				location.replace("https:" + location.href.substring(s_protocol.length));
-		}
-	}	
-	return response;
-}
-
 function StartSTAPage() {
 
-	ChangeToHTTPS(true);
+	var s_protocol=getProtocol(location.href);
+
+	if (s_protocol && s_protocol.toLowerCase()!="https:")
+		location.replace("https:" + location.href.substring(s_protocol.length));
 
 	//document.getElementById("UserInfoText").innerHTML="";
 	network=new vis.Network(document.getElementById("mynetwork"), {
@@ -438,6 +406,8 @@ function StartSTAPage() {
 	}, networkOptions);
 	setEventFunctionsNetwork();
 	PrepareTextAreaCalculator();
+
+	hello.init({"authenix": "662eb5eb-e706-40a4-baf8-51016fec5a05"}, {redirect_uri: ((location.pathname.charAt(location.pathname.length-1)=='/') ? location.pathname.substring(0, location.pathname.length-1) : location.pathname)});
 
 	UpdateConfiguration();
 
@@ -822,7 +792,7 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 			url_fetch=AddQueryParamsToURL(node.STAURL, "$top=" + node.STASelectedExpands.top);
 		else
 			url_fetch=AddQueryParamsToURL(node.STAURL, ((node.OGCType == "OGCAPIcollections" || node.OGCType == "OGCAPIitems") ? "limit=" : ((node.OGCType == "GUF") ? "COUNT=" : "$top=")) + node.OGCExpectedLength);
-		AddHeadersIfNeeded(options, node.STAsecurity);
+		AddHeadersIfNeeded(options);
 
 		if (options.headers)
 			response = await fetch(url_fetch, options);
@@ -865,7 +835,6 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 			return;
 		}
 	}
-	var nextLink;
 	if (url && (typeof node.OGCExpectedLength!=="undefined" || (node.STASelectedExpands && typeof node.STASelectedExpands.top!=="undefined"))) {
 		if (node.OGCType=="OGCAPIcollections")
 			node.STAdata.push(...simplifyOGCAPICollections(jsonData.collections));
@@ -877,23 +846,15 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 			node.STAdata.push(...getSimplifyOGCCSWRecord(jsonData['csw:GetRecordsResponse']['csw:SearchResults']['gmd:MD_Metadata']));
 		else if (node.OGCType=="GUF")
 			node.STAdata.push(...await getSimplifyGUFRecords(jsonData['feed']['entry']));
-		else {
+		else
 			node.STAdata.push(...jsonData.value);
-			nextLink = jsonData["@iot.nextLink"];
-		}
-
-		if (node.STASelectedExpands && typeof node.STASelectedExpands.top!=="undefined") {
-			if (node.STAdata.length>node.STASelectedExpands.top) {
-				node.STAdata.length=node.STASelectedExpands.top;  //too much data. Trucating
-				nextLink=null;
-			}
-		} else if (node.STAdata.length>node.OGCExpectedLength && node.STAdata.length>node.OGCExpectedLength) {
-			if (node.STAdata.length>node.OGCExpectedLength) {
-				node.STAdata.length=node.OGCExpectedLength;  //too much data. Trucating
-				nextLink=null;
-			}
-		}
+			
+		if (node.STASelectedExpands && typeof node.STASelectedExpands.top!=="undefined")
+			node.STAdata.length=node.STASelectedExpands.top;
+		else if (node.STAdata.length>node.OGCExpectedLength)  //too much data. Trucating
+			node.STAdata.length=node.OGCExpectedLength;
 	} else { 
+		var nextLink;
 		if (node.OGCType=="OGCAPIcollections") {
 			node.STAdata = (typeof jsonData.collections!=="undefined") ? simplifyOGCAPICollections(jsonData.collections) : [jsonData];
 			nextLink = getLinkRelInLinks(jsonData["links"], "next", "application/json");
@@ -1495,7 +1456,7 @@ function SaveLocalDataFile(data, fileName, extension, mediatype)   //Saves a mem
 	if (fileName.substring(fileName.length-extension.length) != extension)
 		fileName+=extension;
 	link.setAttribute('download', fileName);
-	link.setAttribute('href', MakeHrefData(data, mediatype));
+	link.setAttribute('href', MakeHrefData(data));
 	document.body.appendChild(link);
 
 	// wait for the link to be added to the document
@@ -1523,18 +1484,7 @@ function parseJwt(token) {
 	return JSON.parse(atob(base64));
 };
 
-var loginInit=false;
-
 function OpenLogin(event) {
-
-	if (false==ChangeToHTTPS(true))
-		return;
-
-	if (!loginInit) {
-		hello.init({"authenix": "662eb5eb-e706-40a4-baf8-51016fec5a05"}, {redirect_uri: ((location.pathname.charAt(location.pathname.length-1)=='/') ? location.pathname.substring(0, location.pathname.length-1) : location.pathname)});
-		loginInit=false;
-	}
-
 	hello("authenix").login({redirect_uri: location.pathname, lang: getLang(), scope: "openid profile idp citiobs.secd.eu%23read citiobs.secd.eu%23create citiobs.secd.eu%23update citiobs.secd.eu%23delete", display: "popup"}).then(
 		function(success) {
 			document.getElementById("buttonOpenLogin").style.display="none";
@@ -1665,9 +1615,6 @@ function GetDialogS3BucketEvent(event) {
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogS3Bucket").close(document.getElementById("DialogS3BucketURL").value);
 
-	if (false==ChangeToHTTPS(true))
-		return;
-
 	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode && parentNode.OGCType=="S3Buckets")
 		currentNode.OGCType = "S3Bucket";
@@ -1756,6 +1703,177 @@ function GetDialogEDCEvent(event) {
 			);
 }
 
+function EDCNegociateContract(node, EDCConsumerURL, offerId, counterPartyAddress) {
+	var obj={
+		"@context": {"edc": "https://w3id.org/edc/v0.0.1/ns/"},
+		"@type": "ContractRequest",
+		"counterPartyAddress": counterPartyAddress,
+		"protocol": "dataspace-protocol-http",
+		"policy": {
+			"@context": "http://www.w3.org/ns/odrl.jsonld",
+			"@id": offerId,
+			"@type": "Offer",
+			"assigner": "provider",
+			"target": "assetId",
+			"permission": []
+		}
+	};
+	HTTPJSONData(EDCConsumerURL+"/management/v3/contractnegotiations", null, "POST", obj).then(
+				function(value) {
+					if (value.obj && value.obj["@type"] && value.obj["@type"]=="IdResponse" && value.obj["@id"]) {
+						showInfoMessage('EDC contract negociation iniciated...');
+						EDCWaitForNegociationCompletition(node, EDCConsumerURL, value.obj["@id"], 0);
+					} else {
+						showInfoMessage('EDC contract negociation failed: '+ JSON.stringify(value.obj));
+					}
+				},
+				function(error) { 
+					showInfoMessage('EDC contract negociation failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error) ;
+				}
+			);
+}
+
+function EDCWaitForNegociationCompletition(node, EDCConsumerURL, id, n) {
+	setTimeout(EDCVerifyNegociationCompletition, 1000, node, EDCConsumerURL, id, n);
+}
+
+function EDCVerifyNegociationCompletition(node, EDCConsumerURL, id, n) {
+	HTTPJSONData(EDCConsumerURL+"/management/v2/contractnegotiations/"+id).then(
+				function(value) {
+					if (!value.obj || !value.obj["@type"] || value.obj["@type"]!="ContractNegotiation" || !value.obj.state) {
+						showInfoMessage('EDC contract negociation failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+						return;
+					}
+					if (value.obj.state!="FINALIZED") {
+						if (n==20) {
+							showInfoMessage('EDC contract negociation failed after ' + n + ' iterations');
+							return;
+						}
+						EDCWaitForNegociationCompletition(node, EDCConsumerURL, id, n++);
+						return;
+					} 	
+					if (!value.obj.contractAgreementId) {
+						showInfoMessage('EDC contract negociation failed: ' + JSON.stringify(value.obj));
+						return;
+					}				
+					showInfoMessage('EDC contract negociation successful.');
+					EDCRequestTransfer(node, EDCConsumerURL, value.obj.contractAgreementId, value.obj.counterPartyAddress)
+				},
+				function(error) { 
+					showInfoMessage('EDC contract negociation failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error);
+				}
+			);
+}
+
+function EDCRequestTransfer(node, EDCConsumerURL, contractAgreementId, counterPartyAddress) {
+	var obj={
+		"@context": {
+			"@vocab": "https://w3id.org/edc/v0.0.1/ns/"
+		},
+		"@type": "TransferRequestDto",
+		"connectorId": "provider",
+		"counterPartyAddress": counterPartyAddress,
+		"contractId": contractAgreementId,
+		"assetId": "assetId",
+		"protocol": "dataspace-protocol-http",
+		"transferType": "HttpData-PULL"
+	};
+	HTTPJSONData(EDCConsumerURL+"/management/v3/transferprocesses", null, "POST", obj).then(
+				function(value) { 
+					if (value.obj && value.obj["@type"] && value.obj["@type"]=="IdResponse" && value.obj["@id"]) {
+						showInfoMessage('EDC transfer requested...');
+						EDCWaitForTransferStarted(node, EDCConsumerURL, value.obj["@id"], 0);
+					} else {
+						showInfoMessage('EDC transfer request failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+					}
+				},
+				function(error) { 
+					showInfoMessage('Error in requesting EDC catalog. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error) ;
+				}
+			);	
+}
+
+function EDCWaitForTransferStarted(node, EDCConsumerURL, id, n) {
+	setTimeout(EDCVerifyEDCTransferStarted, 1000, node, EDCConsumerURL, id, n);
+}
+
+function EDCVerifyEDCTransferStarted(node, EDCConsumerURL, id, n) {
+	HTTPJSONData(EDCConsumerURL+"/management/v3/transferprocesses/"+id).then(
+				function(value) {
+					if (!value.obj || !value.obj["@type"] || value.obj["@type"]!="TransferProcess" || !value.obj.state) {
+						showInfoMessage('EDC transfer request failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+						return;
+					}
+					if (value.obj.state!="STARTED") {
+						if (n==20) {
+							showInfoMessage('EDC transfer request failed after ' + n + ' iterations');
+							return;
+						}
+						EDCWaitForTransferStarted(node, EDCConsumerURL, id, n++);
+						return;
+					} 	
+					/*if (!value.obj.contractId) {
+						showInfoMessage('EDC transfer request failed: ' + JSON.stringify(value.obj));
+						return;
+					}*/				
+					showInfoMessage('EDC transfer request start confirmed.');
+					EDCGetAddressToTransfer(node, EDCConsumerURL, id);
+				},
+				function(error) { 
+					showInfoMessage('EDC transfer request failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error);
+				}
+			);
+}
+
+function EDCGetAddressToTransfer(node, EDCConsumerURL, id) {
+	HTTPJSONData(EDCConsumerURL+"/management/v3/edrs/"+id+"/dataaddress").then(
+				function(value) {
+					if (!value.obj || !value.obj["@type"] || value.obj["@type"]!="DataAddress" || !value.obj.endpoint || !value.obj.authorization) {
+						showInfoMessage('EDC getting URL for transfer request failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+						return;
+					}
+					showInfoMessage('EDC URL for transfer obtained.');
+					EDCExectuteTransfer(node, value.obj.endpoint, value.obj.authorization);
+				},
+				function(error) { 
+					showInfoMessage('EDC getting URL for transfer request failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error);
+				}
+			);
+}
+
+function EDCExectuteTransfer(node, url, authorization) {
+	HTTPJSONData(url, ["Content-Type", "Content-Length"], null, null, {'Accept': '*/*', 'Authorization': authorization}).then(
+				function(value) {
+					showInfoMessage('EDC Raw data transfer completed. It it is not automatically transformed into a table, use the relevant "format" tool to do so.');
+					node.STAURL=url;
+					node.OGCType="fileURL";
+					var mediatype=removeParamContentType(value.responseHeaders["Content-Type"]);
+					node.STARawData=value;
+					if (mediatype=="application/json")
+						node.STAdata=ParseJSON(value.obj);
+					else if (mediatype=="application/ld+json")
+						node.STAdata=ParseJSONLD(value.obj);
+					else if (mediatype=="text/csv" || mediatype=="application/vnd.ms-excel") {
+						node.STAdata=Papa.parse(value.text, {header: true, dynamicTyping: true, skipEmptyLines: true}).data;
+						//Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
+						TransformDatesToISO(currentNode.STAdata);
+					}
+					else
+						node.STAdata=[{"Content-Type": value.responseHeaders["Content-Type"], "Content-Length": value.responseHeaders["Content-Length"]}]
+					networkNodes.update(node);
+					updateQueryAndTableArea(node);
+				},
+				function(error) { 
+					showInfoMessage('EDC contract negociation failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					console.log(error);
+				}
+			);
+}
 
 function PopulateInputFromSelect(event, idPrefix) {
 	event.preventDefault(); // We don't want to submit this form
@@ -2014,11 +2132,11 @@ function ShowOneValueDialog(node) {
 	document.getElementById("DialogOneValueTitle").innerHTML = "Select value to see the last value";
 
 	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
-	PopulateSelectSaveLayerDialog("DialogOneValueVariable", dataAttributes, node.STAOneValue && node.STAOneValue.variable ? node.STAOneValue.variable : "result");
-	document.getElementById("DialogOneValueAlertValue").value=!node.STAOneValue || typeof node.STAOneValue.alertValue === "undefined" ? "" : node.STAOneValue.alertValue;
-	PopulateSelectSaveLayerDialog("DialogOneValueTime", dataAttributes, node.STAOneValue && node.STAOneValue.timeVariable ? node.STAOneValue.timeVariable : "phenomenonTime");
-	if (node.STAOneValue && node.STAOneValue.redrawPeriod)
-		document.getElementById("DialogOneValueRefreshPeriod").value=node.STAOneValue.redrawPeriod;
+	PopulateSelectSaveLayerDialog("DialogOneValueVariable", dataAttributes, node.STAvariable ? node.STAvariable : "result");
+	document.getElementById("DialogOneValueAlertValue").value=typeof node.STAalertValue === "undefined" ? "" : node.STAalertValue;
+	PopulateSelectSaveLayerDialog("DialogOneValueTime", dataAttributes, node.STAtimeVariable ? node.STAtimeVariable : "phenomenonTime");
+	if (node.STAredrawPeriod)
+		document.getElementById("DialogOneValueRefreshPeriod").value=node.STAredrawPeriod;
 }
 
 function PrepareRefreshOneValue(event) {
@@ -2033,11 +2151,10 @@ function PrepareRefreshOneValue(event) {
 		clearTimeout(node.STAtimeOut);
 		node.STAtimeOut=null;
 	}
-	node.STAOneValue={};
-	node.STAOneValue.variable=document.getElementById("DialogOneValueVariableSelect").value;
-	node.STAOneValue.timeVariable=document.getElementById("DialogOneValueTimeSelect").value;
-	node.STAOneValue.redrawPeriod=document.getElementById("DialogOneValueRefreshPeriod").value;
-	node.STAOneValue.alertValue=document.getElementById("DialogOneValueAlertValue").value;
+	node.STAvariable=document.getElementById("DialogOneValueVariableSelect").value;
+	node.STAtimeVariable=document.getElementById("DialogOneValueTimeSelect").value;
+	node.STAredrawPeriod=document.getElementById("DialogOneValueRefreshPeriod").value;
+	node.STAalertValue=document.getElementById("DialogOneValueAlertValue").value;
 	networkNodes.update(node);
 
 	RequestLastObservationAndRefreshOneValue(node);
@@ -2068,9 +2185,9 @@ function prepareRefreshCountResults(event) {
 	if (!node)
 		return;	
 
-	if (node.STAtimeOut) {
-		clearTimeout(node.STAtimeOut);
-		node.STAtimeOut=null;
+	if (node.STACountTimeOut) {
+		clearTimeout(node.STACountTimeOut);
+		node.STACountTimeOut=null;
 	}
 	node.STAredrawPeriodCount=document.getElementById("DialogCountResultsRefreshPeriod").value;
 	networkNodes.update(node);
@@ -2087,8 +2204,8 @@ function stopRefreshCountResults(event) {
 	if (!node)
 		return;	
 
-	if (node.STAtimeOut) {
-		clearInterval(node.STAtimeOut);
+	if (node.STACountTimeOut) {
+		clearInterval(node.STACountTimeOut);
 		showInfoMessage("Refresh cancelled.");
 	}
 }
@@ -2123,25 +2240,25 @@ function GetObservationResultAsString(v) {
 
 function getOneValueLabel(node, record) {
 var label, value;
-	if (record["MultiDatastream"] && typeof record[node.STAOneValue.variable].length !== "undefined") {
+	if (record["MultiDatastream"] && typeof record[node.STAvariable].length !== "undefined") {
 		label="";
-		if (record[node.STAOneValue.variable].length)
-			value=GetObservationResultAsString(record[node.STAOneValue.variable][0]);
-		for (var i=0; i<record[node.STAOneValue.variable].length; i++)
+		if (record[node.STAvariable].length)
+			value=GetObservationResultAsString(record[node.STAvariable][0]);
+		for (var i=0; i<record[node.STAvariable].length; i++)
 		{
-			label+=GetObservationResultAsString(record[node.STAOneValue.variable][i]);
+			label+=GetObservationResultAsString(record[node.STAvariable][i]);
 			if (record["MultiDatastream"]?.unitOfMeasurements[i]?.symbol)
 				label+=record["MultiDatastream"]?.unitOfMeasurements[i]?.symbol;
-			if (i+1!=record[node.STAOneValue.variable].length)
+			if (i+1!=record[node.STAvariable].length)
 				label+=", ";
 		}
 	} else {
-		label=value=GetObservationResultAsString(record[node.STAOneValue.variable]);
+		label=value=GetObservationResultAsString(record[node.STAvariable]);
 		if (record["Datastream"] && record["Datastream"]?.unitOfMeasurement?.symbol)
 			label+=record["Datastream"].unitOfMeasurement.symbol;
 	}
-	node.label=label + " (" + (isISOTimeToday(record[node.STAOneValue.timeVariable]) ? getTimeISOTime(record[node.STAOneValue.timeVariable]) : getDateTimeISOTime(record[node.STAOneValue.timeVariable])) + ")";
-	if ((isNaN(value) || isNaN(node.STAOneValue.alertValue)) ? value>=node.STAOneValue.alertValue : parseFloat(value)>=parseFloat(node.STAOneValue.alertValue)) {
+	node.label=label + " (" + (isISOTimeToday(record[node.STAtimeVariable]) ? getTimeISOTime(record[node.STAtimeVariable]) : getDateTimeISOTime(record[node.STAtimeVariable])) + ")";
+	if ((isNaN(value) || isNaN(node.STAalertValue)) ? value>=node.STAalertValue : parseFloat(value)>=parseFloat(node.STAalertValue)) {
 		node.color={background: '#f36971', /*border: '...', */highlight: { background: '#f9a8ac' /*'#97c2fc', border: '...'*/ }, hover: { background: '#f9a8ac'}};
 		node.font={color: "#ff0000" /*, size: */};
 	} else {
@@ -2150,7 +2267,7 @@ var label, value;
 	}
 	networkNodes.update(node);
 	if (node.STAtimeOut)
-		showInfoMessage(node.label + ". Waiting " + node.STAOneValue.redrawPeriod + " seconds ...");
+		showInfoMessage(node.label + ". Waiting " + node.STAredrawPeriod + " seconds ...");
 	else
 		showInfoMessage(node.label + ". Waiting for updates ...");
 
@@ -2164,11 +2281,11 @@ async function RequestLastObservationAndRefreshOneValue(node) {
 		return;
 
 	//Previous query parametres are not considered deliverately as we will not use them anyway.
-	node.STASelectedExpands={selected: [node.STAOneValue.timeVariable, node.STAOneValue.variable],
+	node.STASelectedExpands={selected: [node.STAtimeVariable, node.STAvariable],
 				expanded: {"Datastream": {selected: [], expanded: {}}, 
 					"MultiDatastream": {selected: [], expanded: {}}},
 				top: 1,
-				orderBy: {attribute: node.STAOneValue.timeVariable, desc: true}};
+				orderBy: {attribute: node.STAtimeVariable, desc: true}};
 	if (parentNode.STASelectedExpands && parentNode.STASelectedExpands.filter)
 		node.STASelectedExpands.filter=deapCopy(parentNode.STASelectedExpands.filter);
 
@@ -2197,7 +2314,7 @@ async function RequestLastObservationAndRefreshOneValue(node) {
 		SubscribeTopicToWebHub(config.WebSocketUrl, config.WebHookUrl, websub.hub, websub.self, node.id, 300, UpdateNodeId, showInfoMessage);
 	} else {
 		//Redraw
-		node.STAtimeOut=setTimeout(RequestLastObservationAndRefreshOneValue, node.STAOneValue.redrawPeriod*1000, node);
+		node.STAtimeOut=setTimeout(RequestLastObservationAndRefreshOneValue, node.STAredrawPeriod*1000, node);
 	}
 	getOneValueLabel(node, node.STAdata[0]);
 }
@@ -2223,7 +2340,7 @@ async function requestAndRefreshCountResults(node, period) {
 
 	//Redraw	
 	showInfoMessage(node.label + ". Waiting " + period + " seconds ...");
-	node.STAtimeOut=setTimeout(requestAndRefreshCountResults, period*1000, node, period);
+	node.STACountTimeOut=setTimeout(requestAndRefreshCountResults, period*1000, node, period);
 	networkNodes.update(node);
 }
 
@@ -2704,7 +2821,7 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 	//Properties
 	cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>Propertires</legend>`)
 		//<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
-		cdns.push(`<button onclick="addNewKVPonCreateUpdateDeleteEntity(-1,'properties','add','')"> Add more properties</button>
+		cdns.push(`<button onclick="addNewKVPonCreateUpdateDeleteEntity('-1','properties','add','')"> Add more properties</button>
 		</fieldset>`);
 	document.getElementById("dlgCreateUpdateDeleteEntityAttributes_MultiDatastreams").innerHTML = cdns.join("");
 	
@@ -2852,7 +2969,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 		if ( STAEntities[entityName].properties[i].name=="properties" ||  STAEntities[entityName].properties[i].name=="parameters" && actionToDo=="create"){
 			cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>${STAEntities[entityName].properties[i].name}</legend>`)
 				//<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
-				cdns.push(`<button onclick="addNewKVPonCreateUpdateDeleteEntity(-1,'${STAEntities[entityName].properties[i].name}','add','')"> Add more ${STAEntities[entityName].properties[i].name}</button>
+				cdns.push(`<button onclick="addNewKVPonCreateUpdateDeleteEntity('-1','${STAEntities[entityName].properties[i].name}','add','')"> Add more ${STAEntities[entityName].properties[i].name}</button>
 				</fieldset>`);
 			continue;
 		}
@@ -2969,29 +3086,29 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 	return true;
 }
 
-function addNewKVPonCreateUpdateDeleteEntity(iRecord, attributeName, action, toDelete){
+function addNewKVPonCreateUpdateDeleteEntity(row,attributeName, action, toDelete){
 	event.preventDefault();
-	//var number= parseInt(row);
+	var number= parseInt(row);
 	var arrayResults=[];
 	if (action!="addInUpdateDelete"){
-		for (var e=0;e<(iRecord+1);e++){
-			if ((action=="add" && iRecord !=-1)|| (action=="delete" && e!=toDelete)){
+		for (var e=0;e<(number+1);e++){
+			if ((action=="add" && row !=-1)|| (action=="delete" && e!=toDelete)){
 				arrayResults.push([document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_"+[e]).value,document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_"+[e]).value])
 			}
 		}
-		if (action=="add") arrayResults.push(["",""]);
+		if (action=="add")arrayResults.push(["",""]);
 		var cdns="";
-		if (action=="delete") iRecord=iRecord-1;
-		if (action=="add") iRecord=iRecord+1;
+		if (action=="delete")number=number-1;
+		if (action=="add")number=number+1;
 	}
 	cdns= `<legend>${attributeName}</legend>`
-	for (var i=0;i<(iRecord+1);i++){
+	for (var i=0;i<(number+1);i++){
 		cdns+= `<br><input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_${i}'`;
-		if (action!="addInUpdateDelete"&& iRecord!=-1)cdns+=`value='${arrayResults[i][0]}'`;
+		if (action!="addInUpdateDelete"&& row!=-1)cdns+=`value='${arrayResults[i][0]}'`;
 		cdns+=`></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_${i}'`
-		if (action!="addInUpdateDelete"&& iRecord!=-1)cdns+=`value='${arrayResults[i][1]}'`
-		cdns+=`></input><button><img src="trash.png" alt="Remove" title="Remove" onclick="addNewKVPonCreateUpdateDeleteEntity(${iRecord},'${attributeName}','delete','${i}')"></button>`;
-		if (i==iRecord)cdns+=`<br><button style="margin-top:10px"  onclick="addNewKVPonCreateUpdateDeleteEntity(${i}, '${attributeName}','add','')"> Add more ${attributeName}</button>` //last
+		if (action!="addInUpdateDelete"&& row!=-1)cdns+=`value='${arrayResults[i][1]}'`
+		cdns+=`></input><button><img src="trash.png" alt="Remove" title="Remove" onclick="addNewKVPonCreateUpdateDeleteEntity('${number}','${attributeName}','delete','${i}')"></button>`;
+		if (i==number)cdns+=`<br><button style="margin-top:10px"  onclick="addNewKVPonCreateUpdateDeleteEntity('${i}', '${attributeName}','add','')"> Add more ${attributeName}</button>` //last
 	}
 	
 	document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters").innerHTML= cdns;
@@ -3617,9 +3734,9 @@ function AskForDeleteEntity(event){
 	var parentNodes=GetParentNodes(currentNode);
 	var entityName=getSTAEntityPlural(document.getElementById("dlgCreateUpdateDeleteEntityType").innerHTML);
 	var entityNameSingular= STAEntities[entityName].singular;
-	var id= parentNodes[0].STAResourceId;
+	var id= parentNodes[0].STAURLIdSelected;
 
-	if (true==confirm("Do you want to erase "+entityNameSingular+" "+parentNodes[0].STAResourceId))
+	if (true==confirm("Do you want to erase "+entityNameSingular+" "+parentNodes[0].STAURLIdSelected))
 		GetDeleteEntity(entityName, id)
 }
 
@@ -3700,7 +3817,7 @@ function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
 		cdns.push('<label for="dlgCreateUpdateDeleteRecord_', dataAttributesArray[a], '">', GetHTMLdataAttribute(dataAttributesArray[a], dataAttributes[dataAttributesArray[a]]), ': </label>',
 			'<input id="dlgCreateUpdateDeleteRecord_', dataAttributesArray[a], '" type="text" value="', value , '"><br>');
 	}
-	cdns.push('<input id="dlgCreateUpdateDeleteRecordInitialId" type="" value="', iRecord, '">');
+	cdns.push('<input id="dlgCreateUpdateDeleteRecordInitialId" type="hidden" value="', iRecord, '">');
 	document.getElementById("dlgCreateUpdateDeleteRecordNumber").value=iRecord+1;
 	document.getElementById("dlgCreateUpdateDeleteRecordLength").innerHTML=data.length;
 	document.getElementById("dlgCreateUpdateDeleteRecordProperties").innerHTML=cdns.join("");
@@ -3829,8 +3946,7 @@ function AskForDeleteRecord(event) {
 }
 
 function GetSelectRow(event) {
-	
-	if (event) event.preventDefault(); // We don't want to submit this form
+	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogSelectRow").close();
 
 	var node=getNodeDialog("DialogSelectRow");
@@ -3846,10 +3962,11 @@ function GetSelectRow(event) {
 			node.STAURL = parentNode.STAURL;
 		if (parentNode.OGCType=="OGCAPIcollections")
 			node.OGCType = "OGCAPIcollection";
-		else if (parentNode.OGCType=="EDCCatalogue") {
+		if (parentNode.OGCType=="EDCCatalogue") {
 			node.OGCType = "EDCAsset";
 			node.EDCConsumerURL = parentNode.EDCConsumerURL;
-		} else if (parentNode.OGCType=="S3Buckets" || parentNode.OGCType=="S3Bucket") {
+		}	
+		if (parentNode.OGCType=="S3Buckets" || parentNode.OGCType=="S3Bucket") {
 			node.OGCType = parentNode.OGCType;
 			node.STAAccessKey = parentNode.STAAccessKey;
 			node.STASecretKey = parentNode.STASecretKey;
@@ -3870,12 +3987,12 @@ function GetSelectRow(event) {
 	if (i < elems.length) {
 		if (requiresLoadJSON) {
 			const s = elems[i].id.substring("SelectRow_".length);
-			node.STAResourceId=s;
+			node.STAURLIdSelected=s;
+
 			//if (node?.OGCType=="OGCAPIitems")
 			//	node.STAURL = parentNode.STAdata ? (parentNode.STAdata[i].link ? getURLWithoutQueryParams(parentNode.STAdata[i].link) : node.STAURL+"/"+parentNode.STAdata[i].id) + "/items"  : parentNode.STAURL;
 			if (parentNode?.OGCType=="OGCAPIcollections"){
-				//node.STAURL = RemoveQueryParamFromURL(parentNode.STAdata[s].link, "f");
-				node.STAURL = parentNode.STAURL + "/" + parentNode.STAdata[s].id;
+				node.STAURL = RemoveQueryParamFromURL(parentNode.STAdata[s].link, "f");
 			} else {
 				const n = Number(s);
 				node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(node.STAURL) + (Number.isInteger(n) ? "(" + n + ")" : "('" + s + "')"), getURLQueryParams(node.STAURL));
@@ -3900,51 +4017,6 @@ function GetSelectRow(event) {
 	}
 	else
 		updateQueryAndTableArea(node);
-}
-
-function GetSelectResource(event, resourceId) {
-	
-	if (event)
-		event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogSelectResource").close();
-
-	var node=getNodeDialog("DialogSelectResource");
-	if (!node)
-		return;
-
-	if (node.STAURL)
-		var previousSTAURL=node.STAURL;
-
-	var parentNode=GetFirstParentNode(node);
-	if (parentNode) {
-		if (parentNode.STAURL)
-			node.STAURL = parentNode.STAURL;
-		if (parentNode.OGCType=="OGCAPIcollections")
-			node.OGCType = "OGCAPIcollection";
-		else if (parentNode.OGCType=="EDCCatalogue") {
-			node.OGCType = "EDCAsset";
-			node.EDCConsumerURL = parentNode.EDCConsumerURL;
-		} else if (parentNode.OGCType=="S3Buckets" || parentNode.OGCType=="S3Bucket") {
-			node.OGCType = parentNode.OGCType;
-			node.STAAccessKey = parentNode.STAAccessKey;
-			node.STASecretKey = parentNode.STASecretKey;
-			node.STAS3Service = parentNode.STAS3Service;
-		}
-	}
-	else
-		return;
-
-	node.STAResourceId=(typeof resourceId !== "undefined") ? resourceId : document.getElementById("DialogSelectResourceId").value;
-	if (parentNode?.OGCType=="OGCAPIcollections"){
-		node.STAURL = parentNode.STAURL + "/" + parentNode.STAdata[node.STAResourceId].id;
-	} else {
-		const n = Number(node.STAResourceId);
-		node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(node.STAURL) + (Number.isInteger(n) ? "(" + n + ")" : "('" + node.STAResourceId + "')"), getURLQueryParams(node.STAURL));
-	}
-		
-	showInfoMessage("Selecting OGC resource...");
-	UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
-	LoadJSONNodeSTAData(node);
 }
 
 function getGeospatialFilter(node, parentNode){
@@ -4038,8 +4110,28 @@ function GetJoinTables(event) {
 	networkNodes.update(currentNode);
 }
 
+function IdOfSTAEntity(node) {
+	for (var i = 0; i < STAEntitiesArray.length; i++) {
+		if (node.image == STAEntitiesArray[i] + ".png")
+			return i;
+	}
+	/*Perhaps this node is a filter of a previous node. The URL can help me to find the entity to use
+	This is creating problems in other parts of the code!
+	if (node.STAURL)
+		return STAEntitiesArray.indexOf(getSTAURLLastEntity(node.STAURL));*/
+	return -1;
+}
+
+function IdOfSTASpecialQueries(node) {
+	for (var i = 0; i < STASpecialQueriesArray.length; i++) {
+		if (node.image == STASpecialQueriesArray[i] + ".png")
+			return i;
+	}
+	return -1;
+}
+
 function UpdateChildenSTAURL(parentNode, currentSTAURLroot, previousSTAURLroot) {
-	var nodeIds = network.getConnectedNodes(parentNode.id, 'to');
+	var nodeIds = network.getConnectedNodes(parentNode.id, 'to'); //El que falla amb la llibreria dels graph2d.
 	for (var i = 0; i < nodeIds.length; i++) {
 		var node = networkNodes.get(nodeIds[i])
 		if (node.STAURL && currentSTAURLroot && previousSTAURLroot) {
@@ -4114,9 +4206,9 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 		}
 		else if (node.image == "CountResultsSTA.png")
 		{
-			if (node.STAtimeOut) {
-				clearTimeout(node.STAtimeOut);
-				node.STAtimeOut=null;
+			if (node.STACountTimeOut) {
+				clearTimeout(node.STACountTimeOut);
+				node.STACountTimeOut=null;
 			}
 			await requestAndRefreshCountResults(node, node.STAredrawPeriodCount);
 		}
@@ -4165,6 +4257,78 @@ function getJSONTypeOrISODatetime(s) {
 	return type;
 }
 
+function getHTMLCharacterAttributeType(type) {
+	var cdns=[];
+	cdns.push('<span class="roundCorner" style="background-color: ');
+	switch(type) {
+		case "boolean":
+			cdns.push('DarkGrey');
+			break;
+		case "array":
+			cdns.push('DarkOrange');
+			break;
+		case "null":
+			cdns.push('LightSlateGrey');
+			break;
+		case "object":
+			cdns.push('Fuchsia');
+			break;
+		case "undefined": 
+			cdns.push('LightGrey');
+			break;
+		case "integer": 
+			cdns.push('IndianRed');
+			break;
+		case "number":
+			cdns.push('Red');
+			break;
+		case "isodatetime":
+			cdns.push('BlueViolet');					
+			break;
+		case "anyURI":
+			cdns.push('Coral');
+			break;
+		case "string":
+		default:
+			cdns.push('ForestGreen');
+	}
+	cdns.push('" title="', type,'">');
+	switch(type) {
+		case "boolean":
+			cdns.push('B');
+			break;
+		case "array":
+			cdns.push('A');
+			break;
+		case "null":
+			cdns.push('N');
+			break;
+		case "object":
+			cdns.push('O');
+			break;
+		case "undefined":
+			cdns.push('U'); 
+			break;
+		case "integer": 
+			cdns.push('I');
+			break;
+		case "number":
+			cdns.push('N');
+			break;
+		case "isodatetime":
+			cdns.push('D');
+			break;
+		case "anyURI":
+			cdns.push('L');
+			break;
+		case "string":
+		default:
+			cdns.push('C');
+	}
+	cdns.push('</span>');
+	return cdns.join('');
+}
+
 function modifyDataAttributeTypeNewRecord(dataAttributeType, type) {	
 	if (dataAttributeType=="null" || dataAttributeType=="undefined")
 		dataAttributeType=type;
@@ -4211,16 +4375,16 @@ function getDataAttributes(data) {
 	return dataAttributes;
 }
 
-function getDataAttributeType(data, columnName) {
+function getDataAttributeType(data, dataAttributeName) {
 	var type, dataAttributeType="undefined";
 
-	if (isAttributeAnyURI(columnName))
+	if (isAttributeAnyURI(dataAttributeName))
 		return "anyURI";
 
 	for (var i = 0; i < data.length; i++) {
 		var record=data[i];
-		if (typeof record[columnName] !== "undefined") {
-			dataAttributeType=modifyDataAttributeTypeNewRecord(dataAttributeType, getJSONTypeOrISODatetime(record[columnName]))
+		if (typeof record[dataAttributeName] !== "undefined") {
+			dataAttributeType=modifyDataAttributeTypeNewRecord(dataAttributeType, getJSONTypeOrISODatetime(record[dataAttributeName]))
 			if (dataAttributeType=="object")
 				return dataAttributeType;
 		}
@@ -4239,18 +4403,12 @@ function addSemanticsSTADataAttributes(dataAttributes, url) {
 	}
 }
 
-function isAttributeAnyURI(s) {
+function isAttributeAnyURI(s){
 	return (s == "url" || s == "definition" || s.endsWith("@iot.selfLink") || s.endsWith("@iot.navigationLink"));
 }
 
-function isAttributeSelfNavLink(s) {
+function isAttributeSelfNavLink(s){
 	return (s.endsWith("@iot.selfLink") || s.endsWith("@iot.navigationLink"));
-}
-
-function getSTAEntityNavLink(s) {
-	if (s.endsWith("@iot.navigationLink"))
-		return s.substring(0, s.length-"@iot.navigationLink".length);
-	return null;
 }
 
 function ShowTableOptionsDiv(node, optionsDiv, fn_showTable) {
@@ -4269,11 +4427,9 @@ function ShowTableDialog(node) {
 		return;
 	}
 
-	document.getElementById("DialogOKHTML").innerHTML = getHTMLTable(data, node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data),
+	document.getElementById("DialogOKHTML").innerHTML = GetHTMLTable(data, node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data),
 		document.getElementById("DialogOKOptionsRowNumber").checked ? true : false,
-		"", null, null, "", 
-		null, node.id, isAttributeAnyURI, 
-		document.getElementById("DialogOKOptionsSelfNavLink").checked ? null : isAttributeSelfNavLink);
+		"", null, null, "", isAttributeAnyURI, document.getElementById("DialogOKOptionsSelfNavLink").checked ? null : isAttributeSelfNavLink);
 }
 
 function StringifyObjectElements(data, dataAttributesInput) {
@@ -5502,26 +5658,7 @@ function ShowTableSelectRowDialog(parentNode, node) {
 		document.getElementById("DialogSelectRowTable").innerHTML = "No data to show.";
 		return;
 	}
-	document.getElementById("DialogSelectRowTable").innerHTML = getHTMLTable(data, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data), 
-		false, 
-		"SelectRow_", node.STAResourceId ? node.STAResourceId : 0, null, "",
-		null, node.id, "", 
-		isAttributeAnyURI);
-}
-
-function ShowSelectResourceDialog(parentNode, node) {
-	saveNodeDialog("DialogSelectResource", node);
-
-	var data = parentNode.STAdata;
-	
-	if (node.STAURL)
-		addSTAEntityNameAsTitleDialog("divTitleSelectResource", node);
-
-	if (!data || !data.length) {
-		document.getElementById("DialogSelectResourceId").value = "No data to show.";
-		return;
-	}
-	document.getElementById("DialogSelectResourceId").value = (node.STAResourceId) ? node.STAResourceId : "";
+	document.getElementById("DialogSelectRowTable").innerHTML = GetHTMLTable(data, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data), false, "SelectRow_", node.STAURLIdSelected ? node.STAURLIdSelected : 0, null, "", isAttributeAnyURI);
 }
 
 function SeparateColumns(event) {
@@ -5559,7 +5696,7 @@ function SeparateColumns(event) {
 	UpdateChildenTable(currentNode);
 }
 
-function populateSelectColumnSeparateColumns() {
+function populateSelectColumnSeparateColumns(){
 	var parentNode= GetFirstParentNode(currentNode);
 	if (!parentNode || !parentNode.STAdata) {
 		showInfoMessage("No data loaded in the parent node.");
@@ -5568,14 +5705,12 @@ function populateSelectColumnSeparateColumns() {
 	currentNode.STAURL=null;
 	networkNodes.update(currentNode);
 	
-	var dataAttributes=(parentNode.STAdataAttributes) ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
-
-	var attributes= Object.keys(dataAttributes);
-	var selectColumnName= document.getElementById("SeparateColumsSelect_column");
-	selectColumnName.innerHTML="";
-	var cdns=[];
-	for (var i=0;i< attributes.length;i++) {
-		cdns.push(`<option value="${attributes[i]}"> ${attributes[i]} (${dataAttributes[attributes[i]].type})</option>`);
+	var attributes= Object.keys(parentNode.STAdataAttributes);
+		var selectColumnName= document.getElementById("SeparateColumsSelect_column");
+		selectColumnName.innerHTML="";
+		var cdns=[];
+		for (var i=0;i< attributes.length;i++){
+		cdns.push(`<option value="${attributes[i]}"> ${attributes[i]} (${parentNode.STAdataAttributes[attributes[i]].type})</option>`)
 	}
 	selectColumnName.innerHTML+=cdns.join("");
 	document.getElementById("SeparateColumsInput_column").value=",";
@@ -5592,166 +5727,13 @@ function ShowQueryNode(node) {
 	}
 }
 
-function getNoQueryParentNodeSTAEntity(node) {
-	if (-1!=IdOfSTAEntity(node))
-		return node;
-	if (node.image=="SelectRowSTA.png" || node.image=="SelectResourceSTA.png")
-		return node;
-	//Is one of the nodes that adds a query param?
-	var staOperation=STAOperations[removeExtension(node.image)];
-	if (!staOperation || !staOperation.addSTAQuery)
-		return null;
-	var parentNode=GetFirstParentNode(node);
-	if (!parentNode)
-		return null;
-	return getNoQueryParentNodeSTAEntity(parentNode);
-}
-
-function getRootParentNodeSTAEntity(node) {
-	if (node.image=="sta.png" || node.image=="staRoot.png")
-		return node;
-
-	var parentNode=GetFirstParentNode(node);
-	if (!parentNode)
-		return null;
-	if (-1!=IdOfSTAEntity(node))
-		return getRootParentNodeSTAEntity(parentNode);
-	var staOperation=STAOperations[removeExtension(node.image)];
-	if (staOperation)
-		return getRootParentNodeSTAEntity(parentNode);
-	return null;
-}
-
-function OpenLinkSTAEntity(startingNode, resourceId, columnName) {
-var node;
-	startingNodeContextId=startingNode.id;
-	if (startingNode.image=="SelectRowSTA.png" || startingNode.image=="SelectResourceSTA.png") {
-		node=startingNode;   //A row is already selected so it could be that one only
-	} else {
-		var nodeIds = network.getConnectedNodes(startingNode.id, 'to'); 
-		for (var i = 0; i < nodeIds.length; i++) {
-			var nodeChild = networkNodes.get(nodeIds[i])
-			if (nodeChild.image=="SelectResourceSTA.png" || nodeChild?.STAResourceId==resourceId) {
-				node=nodeChild;
-				break;
-			}
-		}
-		if (i==nodeIds.length) {  //Avoid to creat a node that already exist
-			node=addCircularImage(null, null, "SelectResourceSTA", "SelectResourceSTA.png");
-			//Select the right row and excute it
-			saveNodeDialog("DialogSelectResource", node);
-			node.label="Select "+resourceId;
-			GetSelectResource(null, resourceId);
-		}
-	}	
-	if (columnName=="@iot.selfLink")
-		return;  //No need to do anything
-	//Depending on the link
-	var elementName=getSTAEntityNavLink(columnName); 
-	if (!elementName)
-		return;
-	elementName=getSTAEntityPlural(elementName, false);
-	if (!elementName)
-		return;
-	var nodeIds = network.getConnectedNodes(node.id, 'to'); 
-	for (var i = 0; i < nodeIds.length; i++) {
-		var nodeChild = networkNodes.get(nodeIds[i])
-		if (nodeChild.image==elementName+".png") 
-			return;  //No need to create a node that already exists
-	}
-	startingNodeContextId=node.id;
-	addCircularImage(null, null, elementName, elementName+".png");
-}
-
-function OpenLink(event) {
-	event.preventDefault(); // We don't want to submit this form
-	var iEntity;
-	var node=getNodeDialog("DialogLink");
-	var iRecord=document.getElementById("DialogLinkIRecord").value;
-	var columnName=document.getElementById("DialogLinkColumnName").value;
-
-	var data=node.STAdata;
-	if (iRecord>=data.length)
-		return;
-
-	if (document.getElementById("DialogLinkOpenWindow").checked)
-		window.open(data[iRecord][columnName], "_blank"); 
-	else { //if (document.getElementById("DialogLinkAddGraph").checked)
-		//Look for the root node.
-		//Add node and connection
-		var rootNode;
-		if ((node.image=="sta.png" || node.image=="staRoot.png") && columnName=="url") {
-			var elementName=getFileName(data[iRecord][columnName]);
-			startingNodeContextId=node.id;
-			addCircularImage(null, null, elementName, elementName+".png");
-		} else {
-			if (typeof data[iRecord]["@iot.id"]==="undefined")  //If this was not selected it is not possible to do this (or we could look for alternative ways to know it)
-				return;
-			/*if (-1!=IdOfSTAEntity(node)) {
-				OpenLinkSTAEntity(node, data[iRecord]["@iot.id"]);			
-			} else if (null!=(noQueryNode=getNoQueryParentNodeSTAEntity(node))) {
-				OpenLinkSTAEntity(noQueryNode, data[iRecord]["@iot.id"]);
-			}*/
-			if (null!=(rootNode=getRootParentNodeSTAEntity(node))) {
-				var entityName = getSTAEntityPlural(getSTAURLLastEntity(node.STAURL), false);
-				var nodeIds = network.getConnectedNodes(rootNode.id, 'to'); 
-				for (var i = 0; i < nodeIds.length; i++) {
-					var nodeChild = networkNodes.get(nodeIds[i])
-					if (nodeChild==node) {
-						OpenLinkSTAEntity(node, data[iRecord]["@iot.id"], columnName);
-						break;
-					}
-				}
-				if (i==nodeIds.length) {
-					for (var i = 0; i < nodeIds.length; i++) {
-						var nodeChild = networkNodes.get(nodeIds[i])
-						if (removeExtension(nodeChild.image)==entityName) {
-							OpenLinkSTAEntity(nodeChild, data[iRecord]["@iot.id"], columnName);
-							break;
-						}
-					}
-				}
-				if (i==nodeIds.length) {
-					//No general node for this STA entity directly connected to the root exists yet. It needs to be created before we can add the requested filter
-					startingNodeContextId=rootNode.id;
-					OpenLinkSTAEntity(addCircularImage(null, null, entityName, entityName+".png"), data[iRecord]["@iot.id"], columnName);
-				}
-			}
-		}
-	}
-	document.getElementById("DialogLink").close();
-	return false;
-}
-
-function ShowLinkDialog(nodeId, columnName, iRecord) {
-	var node=networkNodes.get(nodeId);
-	var data=node.STAdata;
-	if (iRecord>=data.length)
-		return;
-	if (((node.image=="sta.png" || node.image=="staRoot.png") && columnName=="url") ||
-	    ((-1!=IdOfSTAEntity(node) || STAOperations[removeExtension(node.image)]) && 
-		 (columnName=="@iot.selfLink" || getSTAEntityNavLink(columnName)))
-	   ) {
-		document.getElementById("DialogLinkLink").innerHTML=data[iRecord][columnName];
-		saveNodeDialog("DialogLink", node);
-		document.getElementById("DialogLinkIRecord").value=iRecord;
-		document.getElementById("DialogLinkColumnName").value=columnName;
-
-		document.getElementById("DialogLink").showModal();
-	} else {
-		window.open(data[iRecord][columnName], "_blank");
-	}
-	return false;
-}
-
-function ShowTableNode(node) {
+function ShowTableNode(node)
+{
 	if (node.STAdata && node.STAdata.length) {
 		ShowTableOptionsDiv(node, "showTableOptions", "ShowTableNode");
-		document.getElementById("showTable").innerHTML = getHTMLTable(node.STAdata, node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(node.STAdata),
+		document.getElementById("showTable").innerHTML = GetHTMLTable(node.STAdata, node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(node.STAdata),
 			document.getElementById("showTableOptionsRowNumber").checked ? true : false,
-			"", null, null, "", 
-			(node.image=="sta.png" || node.image=="staRoot.png" || -1!=IdOfSTAEntity(node) || getNoQueryParentNodeSTAEntity(node)) ? ShowLinkDialog : null, node.id, isAttributeAnyURI, 
-			document.getElementById("showTableOptionsSelfNavLink").checked ? null : isAttributeSelfNavLink);
+			"", null, null, "", isAttributeAnyURI, document.getElementById("showTableOptionsSelfNavLink").checked ? null : isAttributeSelfNavLink);
 	} else {
 		document.getElementById("showTableOptions").innerHTML="";
 		document.getElementById("showTable").innerHTML="";
@@ -5774,15 +5756,13 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		return null;
 	}
 	if (staNodes && nodeFrom.STAURL && IdOfSTAEntity(nodeTo) != -1) {
-		if (nodeFrom.image=="sta.png" || nodeFrom.image=="staRoot.png" || nodeFrom.image=="edcAsset.png")
+		if (nodeFrom.image=="sta.png")
 			nodeTo.STAURL = nodeFrom.STAURL + "/" + STAEntitiesArray[IdOfSTAEntity(nodeTo)];
 		else 
 			nodeTo.STAURL = nodeFrom.STAURL + "/" + getConnectionSTAEntity(nodeFrom, nodeTo).entity;
 		if (nodeFrom.STASelectedExpands)
 			nodeTo.STASelectedExpands=deapCopy(nodeFrom.STASelectedExpands);
 		nodeTo.STAEntityName = STAEntitiesArray[IdOfSTAEntity(nodeTo)];
-		if (nodeFrom.STAsecurity)
-			nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
 
 		networkNodes.update(nodeTo);
 		if (addEdge)
@@ -5796,9 +5776,6 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		nodeTo.STAURL = nodeFrom.STAURL + "/" + STASpecialQueries[STASpecialQueriesArray[IdOfSTASpecialQueries(nodeTo)]].query;
 		if (nodeFrom.STASelectedExpands)
 			nodeTo.STASelectedExpands=deapCopy(nodeFrom.STASelectedExpands);
-		if (nodeFrom.STAsecurity)
-			nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
-
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
@@ -5806,21 +5783,18 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		LoadJSONNodeSTAData(nodeTo);
 		return true;
 	}
-	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "RecursiveExpandSTA.png" || nodeTo.image == "SelectRowSTA.png" || nodeTo.image=="SelectResourceSTA.png" || nodeTo.image == "FilterRowsSTA.png")) {
+	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "RecursiveExpandSTA.png" || nodeTo.image == "SelectRowSTA.png" || nodeTo.image == "FilterRowsSTA.png")) {
 		var plural;
 		(getSTAEntityPlural(nodeFrom.STAEntityName) == nodeFrom.STAEntityName)? plural=true: plural=false;
 		if(nodeTo.image == "FilterRowsSTA.png"){
 			if (plural==true){
-				nodeTo.STAURL = nodeFrom.STAURL;
+					nodeTo.STAURL = nodeFrom.STAURL;
 				if (nodeFrom.STASelectedExpands)
 					nodeTo.STASelectedExpands=deapCopy(nodeFrom.STASelectedExpands);
 				if (nodeFrom.STAdata)
 					nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
 				if (nodeFrom.STAdataAttributes)
 					nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
-				if (nodeFrom.STAsecurity)
-					nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
-
 				networkNodes.update(nodeTo);
 				if (addEdge)
 					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
@@ -5838,19 +5812,16 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 					nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
 				if (nodeFrom.STAdataAttributes)
 					nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
-				if (nodeFrom.STAsecurity)
-					nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
 				networkNodes.update(nodeTo);
 				if (addEdge)
 					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 				return true;
 		}
+
 	}
 	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "SelectColumnsSTA.png" || nodeTo.image == "ExpandColumnSTA.png") || 
 						nodeTo.image == "SortBySTA.png" || nodeTo.image == "RangeSTA.png") {
 		nodeTo.STAURL = nodeFrom.STAURL;
-		if (nodeFrom.STAsecurity)
-			nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
@@ -5858,8 +5829,6 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 	}
 	if (staNodes && nodeFrom.STAURL && nodeTo.image == "MergeExpandsSTA.png") {
 		nodeTo.STAURL = nodeFrom.STAURL;
-		if (nodeFrom.STAsecurity)
-			nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
@@ -5880,8 +5849,6 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 				nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
 			if (nodeFrom.STAdataAttributes)
 				nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);		
-			if (nodeFrom.STAsecurity)
-				nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
 			networkNodes.update(nodeTo);
 		} else if (!nodeTo.STAURL)
 			return false;
@@ -5896,8 +5863,6 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 			nodeTo.STAURL=getSTAURLRoot(nodeFrom.STAURL);
 			if (nodeFrom.STASelectedExpands)
 				nodeTo.STASelectedExpands=={selected: [], expanded: {}, top: nodeFrom.STASelectedExpands ? nodeFrom.STASelectedExpands : 100};
-			if (nodeFrom.STAsecurity)
-				nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
 			networkNodes.update(nodeTo);
 		}
 		if (addEdge)
@@ -5908,17 +5873,15 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		}
 		return true;
 	}
-	if (tableNodes && (nodeTo.image == "Meaning.png" || 
-				nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "SelectRowTable.png" || 
-				nodeTo.image == "FilterRowsTable.png" || nodeTo.image == "JoinTables.png")){
+	if (tableNodes && nodeTo.image == "Meaning.png" || 
+					nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "SelectRowTable.png" || 
+		nodeTo.image == "FilterRowsTable.png" || nodeTo.image == "JoinTables.png"){
 		if (nodeFrom.STAdata)
 			nodeTo.STAdata = deapCopy(nodeFrom.STAdata);  //This copy will be done again in "SelectColumnsTable.png" and "SelectRowTable.png". We do it here to have the full table while the user does not enter any selection
 		if (nodeFrom.STAdataAttributes)
 			nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
 		if (nodeFrom.STAfileUrl)
 			nodeTo.STAfileUrl = deapCopy(nodeFrom.STAfileUrl);
-		if (nodeFrom.STAsecurity)
-			nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
@@ -5972,29 +5935,8 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		//nodeFrom.STAdata[0].assetId;
 		EDCNegociateContract(nodeTo, nodeFrom.EDCConsumerURL, nodeFrom.STAdata[0].offerId, nodeFrom.STAdata[0].counterPartyAddress);
-		return true;
-	}
-	if (tableNodes && nodeTo.image == "ogcAPICols.png") {
-		if (nodeFrom && nodeFrom.STAURL) {
-			nodeTo.STAURL=nodeFrom.STAURL;
-			if (nodeFrom.STAsecurity)
-				nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
-		}
-		networkNodes.update(nodeTo);
-
-		if (addEdge)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		return true;
-	}
-	if (tableNodes && nodeTo.image == "ogcAPIItems.png") {
-		if (nodeFrom && nodeFrom.STAsecurity)
-			nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
-
-		networkNodes.update(nodeTo);
-
-		if (addEdge)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		return true;
 	}
 	return false;
@@ -6109,8 +6051,6 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogSTAURL").showModal();
 		}
 		else if (currentNode.image == "s3Service.png") {
-			if (false==ChangeToHTTPS(true))
-				return;
 			document.getElementById("divTitleDialogS3Bucket").innerHTML = "S3 Service";
 			if (currentNode.STAURL)
 				document.getElementById("DialogS3BucketURL").value = currentNode.STAURL;
@@ -6118,8 +6058,6 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogS3Bucket").showModal();
 		}
 		else if (currentNode.image == "s3Bucket.png") {
-			if (false==ChangeToHTTPS(true))
-				return;
 			document.getElementById("divTitleDialogS3Bucket").innerHTML = "S3 Bucket";
 			if (currentNode.STAURL)
 				document.getElementById("DialogS3BucketURL").value = currentNode.STAURL;
@@ -6137,8 +6075,6 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogS3Bucket").showModal();
 		}
 		else if (currentNode.image == "edc.png") {
-			if (false==ChangeToHTTPS(true))
-				return;
 			document.getElementById("divTitleDialogEDC").innerHTML = "Eclipse DataSpace Connector";
 			if (currentNode.STAURL)
 				document.getElementById("DialogEDCCatalogURL").value = currentNode.STAURL;
@@ -6314,10 +6250,6 @@ function networkDoubleClick(params) {
 			saveNodeDialog("DialogCountResults", currentNode);
 			document.getElementById("DialogCountResults").showModal();
 		}
-		else if (currentNode.image == "SubscribeSTA.png") {
-			saveNodeDialog("DialogSubscribe", currentNode);
-			document.getElementById("DialogSubscribe").showModal();
-		}
 		else if (currentNode.image == "SaveLayer.png") {
 			ShowSaveLayerDialog(currentNode);
 			document.getElementById("DialogSaveLayer").showModal();
@@ -6416,20 +6348,6 @@ function networkDoubleClick(params) {
 					ShowTableSelectRowDialog(parentNode, currentNode);
 				}
 				document.getElementById("DialogSelectRow").showModal();
-			}
-		}
-		else if (currentNode.image == "SelectResourceSTA.png" || currentNode.image == "SelectResourceTable.png") {
-			var parentNode=GetFirstParentNode(currentNode);
-			if (parentNode) {
-				if (parentNode.STAOGCAPIconformance){
-					currentNode.STAOGCAPIconformance=parentNode.STAOGCAPIconformance;
-				}
-				
-				if ((currentNode.image == "SelectResourceSTA.png" || currentNode.image == "SelectResourceTable.png") && 
-					parentNode.STAURL) {
-					ShowSelectResourceDialog(parentNode, currentNode);
-				}
-				document.getElementById("DialogSelectResource").showModal();
 			}
 		}
 		else if (currentNode.image == "FilterRowsSTA.png" || currentNode.image == "FilterRowsTable.png") {
@@ -6556,7 +6474,7 @@ function networkDoubleClick(params) {
 		else if (currentNode.image =="ConcatenateTables.png") {
 			document.getElementById("DialogConcatenateTables").showModal();
 		}
-		else if (currentNode.image=="PivotTable.png"){
+		else if (currentNode.image=="pivotTable.png"){
 			populatePivotTableDialog(currentNode);
 			document.getElementById("DialogPivotTable").showModal();
 		}
@@ -6710,7 +6628,7 @@ network.on("blurEdge", function (params) {
 	console.log("blurEdge Event:", params);
 });*/
 
-//Returns the created node.
+
 function addCircularImage(event, dialog, label, image) {
 	var returnStart=false;
 	if (event)
@@ -6741,7 +6659,6 @@ function addCircularImage(event, dialog, label, image) {
 		startingNodeContextId = null;
 
 	network.selectNodes([newId]);
-	return node;
 }
 
 function removeNode(nodeId)
@@ -6877,7 +6794,7 @@ async function reloadSTA(event) {
 	for (var i=0; i<nodesArray.length; i++)
 	{
 		var node=nodesArray[i];
-		if (node.image=="sta.png" || node.image=="staRoot.png")
+		if (node.image=="sta.png")
 		{
 			showInfoMessage("Reload STA home page and dependencies...");
 			showInfoMessage("Requesting STA page...");
@@ -6885,7 +6802,7 @@ async function reloadSTA(event) {
 				showInfoMessage("Reload STA home page and dependencies completed.");
 			});
 		}
-		else if (node.image=="ogcAPICols.png")
+		else if (node.image=="ogcSTAs.png")
 		{
 			showInfoMessage("Reload OGC API collections page and dependencies...");
 			showInfoMessage("Requesting OGC API collections page...");

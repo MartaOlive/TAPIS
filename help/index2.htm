@@ -42,11 +42,7 @@
 </ul>
 <li><a href="#recipes">Recipes</a></li>
 <ul>
-<li><a href="#recipe01">Recipe 1: Connecting to a STA or STAplus
-<ul>
-<li><a href="#recipe01_01">Cooking method 1: Understanding the concept of Datastream in STAplus</a></li>
-<li><a href="#recipe01_02">Cooking method 2: Visiting the same entity from different paths</a></li>
-</ul>
+<li><a href="#recipe01">Recipe 1: Understanding the concept of Datastream in STAplus</a></li>
 <li><a href="#recipe02">Recipe 2: Show the current evolution of a variable captured by a particular party</a></li>
 <ul>
 <li><a href="#recipe02_01">Cooking method 1: Recurrently selecting a row using entity identifiers</a>
@@ -54,17 +50,17 @@
 </ul>
 <li><a href="#recipe03">Recipe 3: Show a map of all observation features in an STA service</a></li>
 <li><a href="#recipe04">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</a></li>
-<li><a href="#recipe05">Recipe 5: Selecting temperatures from an area </a></li>
+<li> <a href="#recipe05_01">Recipe 5: Selecting temperatures from an area </a></li>
 <ul>
-<li><a href="#recipe05_01">Cooking method 1: Selecting temperatures with a determined polygon</a></li>
-<li><a href="#recipe05_02">Cooking method 2: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</a></li>
+<li><a href="#recipe05_01">Recipe 5_1: Selecting temperatures with a determined polygon</a></li>
+<li><a href="#recipe05_02">Recipe 5_2: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</a></li>
 </ul>
 <li><a href="#recipe06">Recipe 6: Creating a new stream of observations</a></li>
 <li><a href="#recipe07">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</a></li>
 <li><a href="#recipe08">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
 <li><a href="#recipe09">Recipe 9: Drawing a stacked bar chart</a></li>
-<li><a href="#recipe10">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</a></li>
-<li><a href="#recipe11">Recipe 11: Pivoting a table, from registers of a column to new columns</a></li>
+<li><a href="#recipe10">Recipe 10: Pivoting a table, from registers of a column to new columns</a></li>
+</ul>
 </ul>
 
 <hr>
@@ -123,136 +119,72 @@ Since almost all nodes represent data in tabular form, the "Table" button is a g
 Some operations are performed by TAPIS directly (the ones that has grey icons) and some others are performed by the STA (the ones that has blue elements in the icon). For the STA icons, TAPIS will only build queries and wait for the STA server to return the new table. A blue node can commonly be a source node for a grey node but a grey node cannot be a source node for a blue node.
 
 <hr>
-
 <a id="recipes"></a>
 <H2>Recipes</H2>
-
 Just a few collection of recipes are provided. The steps of the recipes can be reproduced by you or can be shown  More recipes to come soon!
 <br><br><br>
 <hr width="30%">
 <a id="recipe01"></a>
-<h3>Recipe 1: Connecting to a STA or STAplus</h3>
-In this example, we illustrate how to connect to a STA and navegate the basic entities modifying the URLs.<br>
-
-<p>
-We will start by using the "Add STA service" tool to type the URL of the root page (landing page) of our favorite STAplus service. Instead, we can select one from the list of suggested STA services.<br>
-<img src="recipe01_openstaSugg.png" width="600" class="center">.
-
-<br><br><br>
-<hr width="30%">
-<a id="recipe01_01"></a>
-<h4>Cooking method 1: Understanding the concept of Datastream in STAplus</h4>
+<h3>Recipe 1: Understanding the concept of Datastream in STAplus</h3>
 In this example, we would like to illustate what is a Datastream and how to use it. A <i>Datastream</i> is "container" entity; a convenience that contains a collection of observations of a single <i>ObservedProperty</i>, captured by a single <i>Thing</i> using a single <i>Sensor</i> managed by a single <i>Party</i> and shared with the same <i>license</i>. The relation with the different entities in the STAplus data model is illustrated in the following UML diagram. We will use TAPIS to generate an equivalent diagram an explore the content of each entity.<br>
 <br>
 <img src="STAplusSensingEntities.png" width="800" class="center">
-<br>
+
 We will start by selecting by connecting to our favourite Sensor Things API plus service. We do that by using the [Add STA service]. By double-clicking in the creating icon you can select the service or type the URL of th landing page.
 <p>
 From the landing page, all entity types are available. This give us the flexibility to explore the model from different points of view. In our case we would like to explore Datastreams. We will right-click in the STA service and we will select the [DataStreams] button. This will give us access to all Datastreams.<br>
-<img src="recipe01_01_pressDatastreams.png" width="600" class="center">
+<img src="recipe01_pressDatastreams.png" width="600" class="center">
 <p>
 While it is possible to use [View table] to see the properties of the available datastreams, we will use the [Select Row] button (the blue one) to directly select a particular Datastream.<br>
-<img src="recipe01_01_pressSelectRow.png" width="600" class="center">
+<img src="recipe01_pressSelectRow.png" width="600" class="center">
 
 <p>
 We will select a datastream that we like to start exploring its content. While we selecting it we can see that the description of the units of measure is part of the Datastream.<br>
-<img src="recipe01_01_selectDatastream.png" width="800" class="center">
+<img src="recipe01_selectDatastream.png" width="800" class="center">
 <p>
 Now we are ready to reproduce the UML diagram by connecting Datastream with all entities directly connected to it. We can do it by rigth clicking on Datastream and selecting the entity as we did before.<br>
-<img src="recipe01_01_entitiesConnectedToDataStream.png" width="400" class="center">
+<img src="recipe01_entitiesConnectedToDataStream.png" width="400" class="center">
 <p>
 The content of the node as a table can be seen in the <i>Query and table area</i> directly by selecting the node by a single left click. It is also possible (but no longuer necessary) to add a connection to [View table] to any of this entities to open a dialog with its content.<br>
-<img src="recipe01_01_entitiesToDataStreamTable.png" width="800" class="center">
+<img src="recipe01_entitiesToDataStreamTable.png" width="800" class="center">
 <p>
 A Datastream is a collection of observations. This allows us to see the observations as a table.<br>
-<img src="recipe01_01_datastreamObservations.png" width="600" class="center">
+<img src="recipe01_datastreamObservations.png" width="600" class="center">
 <p>
 All the observations in a datastream are done by the same Party...<br>
-<img src="recipe01_01_datastreamParty.png" width="600" class="center">
+<img src="recipe01_datastreamParty.png" width="600" class="center">
 <p>
 ...with the same device (Thing)...<br>
-<img src="recipe01_01_datastreamThing.png" width="600" class="center">
+<img src="recipe01_datastreamThing.png" width="600" class="center">
 <p>
 ...in the same current location...<br>
-<img src="recipe01_01_datastreamLocation.png" width="800" class="center">
+<img src="recipe01_datastreamLocation.png" width="800" class="center">
 <p>
 ...observing the same observed property...<br>
-<img src="recipe01_01_datastreamObservedProperty.png" width="800" class="center">
+<img src="recipe01_datastreamObservedProperty.png" width="800" class="center">
 <p>
 ...shared with the same License.<br>
-<img src="recipe01_01_datastreamLicense.png" width="800" class="center">
+<img src="recipe01_datastreamLicense.png" width="800" class="center">
 <p>
 and that is why they are a coherent time series that can be represented in a single scatter plot by adding the [scatter plot] tool to the observations node.<br>
-<img src="recipe01_01_datastreamScatterPlot.png" width="800" class="center">
+<img src="recipe01_datastreamScatterPlot.png" width="800" class="center">
 <p>
 We can extend the diagram further by selecting one observation with the blue [select row]...<br>
-<img src="recipe01_01_observationSelectOne.png" width="800" class="center">
+<img src="recipe01_observationSelectOne.png" width="800" class="center">
 <p>
 ... and then add a [FeaturesOfInterest] and a [observationsGroup]
 <br>
-<img src="recipe01_01_entitiesConnectedToObservation.png" width="800" class="center">
+<img src="recipe01_entitiesConnectedToObservation.png" width="800" class="center">
 <p>
 This way we can know the position ofot he feature of interest...<br>
-<img src="recipe01_01_observationFeatureOfInterest.png" width="800" class="center">
+<img src="recipe01_observationFeatureOfInterest.png" width="800" class="center">
 <p>
 ... and read about the observation group.<br>
-<img src="recipe01_01_observationObsGroup.png" width="600" class="center">
+<img src="recipe01_observationObsGroup.png" width="600" class="center">
 <p>
-
 <br><br><br>
 <hr width="30%">
-<a id="recipe01_02"></a>
-<h4>Cooking method 2: Visiting the same entity from different paths</h4>
 
-We will start by looking at Observations. This time, instead of manually connecting the "Observations" tool to the STA server we will simply click in the Observations link of the table representing the landing page of the server.
-<br>
-<img src="recipe01_02_addObservationsToGraph.png" width="800" class="center">
-
-<p>
-This will create the "Observations" tool and give us access to all observations intermixed, regardless who produced the data, or what is the observed variable. 
-<br>
-<img src="recipe01_02_allObservations.png" width="600" class="center">
-
-<p>
-To know about the "Datastream" of the first Observation in the table we can click on the link in the table under the "Datastream@iot.navigationLink" column name. As a result the graph will be enriched with a "select resource" tool (with the label indicating the id of the Observation) and a "datastreams" tool
-<br>
-<img src="recipe01_02_ObservationsDatastream.png" width="600" class="center">
-
-<p>
-To know about the "ObservedProperty" linked to the "Datastream" we will add the "ObservedProperties" tool manually with the right click on the "Datastream"
-<br>
-<img src="recipe01_02_ObservationsDatastreamObsProperty.png" width="600" class="center">
-
-<p>
-However there are other ways to get the same "ObservedProperty". The "Datastream" also contains a link to the "ObservedProperty". This link is different from the one used before. 
-<br>
-<img src="recipe01_02_ObservationsDatastreamObsPropertyLink.png" width="600" class="center">
-
-<p>
-By clicking the link we will get a new "Datastreams" tool linked to the root of the STA server, a selection of the correct resource and the "ObservedProperties" tool automatically.
-<br>
-<img src="recipe01_02_DatastreamObsProperty.png" width="600" class="center">
-
-<p>
-Finally, there is still an obvious way to present the same "ObservedProperty" and this is by clicking of the "@iot.selfLink" one of the two representations of the "ObservedProperty".
-<br>
-<img src="recipe01_02_ObsPropertySelfLink.png" width="600" class="center">
-
-<p>
-As a result, a "ObservedProperties" tool is added to the STA root and a selection of the correct resource is also added.
-<br>
-<img src="recipe01_02_ObsProperty.png" width="600" class="center">
-
-<p>
-The final graph shows 3 branches with 3 leaf nodes that contain the same information because they are the same entity, despite the fact that they have 3 different URLs.
-<ul>
-<li>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations(342685)/Datastream/ObservedProperty
-<li>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(1820)/ObservedProperty
-<li>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1828)
-</ul>
-
-<br><br><br>
-<hr width="30%">
 <a id="recipe02"></a>
 <h3>Recipe 2: Show the current evolution of a variable captured by a particular party</h3>
 In this example, we illustrate how to monitor a variable capture by a particular party. The way this is done, is conditioned by the STAplus entities data model (see the figure below) that relates Observations to Party through Datastream.<br>
@@ -392,7 +324,7 @@ And this is the result as a scatter plot.
 <hr width="30%">
 <a id="recipe03"></a>
 <h3>Recipe 3: Show a map of all observation features in an STA service</h3>
-This example illustrates how TAPIS is connected to the MiraMon Map Browser and how it can be used to show a map of all features of interest stored in the STA showing the last observations. This example, shows how to expand the observations to indicate the datastream and the observed property they are part of. The tool to generate the map is capable of sorting the data by feature of interest and observed property before sending the data to the map browser.
+In this example, we illustrate how to show a map of all observation features stored in the STA with a view of the last observations. 
 
 <p>
 We will start by using the "Add STA service" tool to type the URL of the landing page of our favorite STAplus service. We will connect it to observations to get the "Observations" stored in the service.
@@ -400,7 +332,7 @@ We will start by using the "Add STA service" tool to type the URL of the landing
 <img src="recipe03_observationsTable.png" width="800" class="center">
 
 <p>
-The problem with "Observations" is that it only shows values and times with no mention of the meaning of the values. "Observations" returns links to the "Datastream" and the "FeatureOfInterest" that can be visited to get the actual properties of them. To reveal the actual meaning of the values in the same table, we need expand the units of measure stored in the "Datastream" as well as the variable name stored in "ObservedProperties". We will also need to get the actual positions of the observed variable that are stored in "FeaturesOfInterest". All this can be achieved by using the "Recursive expand" tool that allow us to select the needed properties (in practice removing the non-selected ones from the result) and expand the needed objects to see the properties directly in the table.<br>
+The problem with "Observations" is that it only shows values and times with no mention of the meaning of the values. "Observations" returns links to the "Datastream" and the "FeatureOfInterest" that can be visited to get the actual properties of them. To reveal the actual meaning of the values in the same table, we need expand the units of measure stored in the "Datastream" as well as the variable name stored in "ObservedProperties". We will also need to get the actual positions of the observed variable that are stored in "FeaturesOfInterest". All this can be achieved by using the "Expand Columns" tools that allow us to select the needed properties (in practice removing the non-selected ones from the result) and expand the needed objects to see the properties directly in the table.<br>
 <br>
 <img src="recipe03_selectExpand.png" width="600" class="center">
 
@@ -787,10 +719,9 @@ This is the result of saving the CSV (fragment) and the CSVW.
 <br><br><br>
 
 <hr width="30%">
-<a id="recipe05"></a>
-<h3>Recipe 5: Selecting temperatures from an area </h3>
 <a id="recipe05_01"></a>
-<h4>Cooking method 1:Selecting temperatures with a determined polygon</h4>
+<h3>Recipe 5: Selecting temperatures from an area </h3>
+<h4> Recipe 5_1:Selecting temperatures with a determined polygon</h4>
 In this example, we illustrate how to apply spatial and non-spatial filters (and easily generate complex queries) to extract temperatures of an area.
 
 <p>
@@ -851,7 +782,7 @@ Now that we have a time series we can use the scater plot tool to generate a tem
 <br><br><br><br>
 <hr width="30%">
 <a id="recipe05_02"></a>
-<h4>Cooking method 2: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</h4>
+<h4>Recipe 5_2: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</h4>
 In this example, we will illustrate how to apply spatial filter based on the distance between a certain point and the location of our observations.
 <p>To apply this filter, we need to select an entity where we want to apply this filter (in this case, we will use Observations), the coordinates  from a point used as a reference and indicate the distance we want to use.<br>
 To start, we have to indicate the STA service that we want to use by adding the "Add STA service" tool and typing there the URL of this service. We will connect it to observations to get the "Observations" stored in the service.</p>
@@ -1223,7 +1154,7 @@ Now, depending on the format we can select a tool to open the file. In this case
 <hr width="30%">
 <a id="recipe09"></a>
 <h3>Recipe 9: Drawing a stacked bar chart</h3>
-In this example, we illustrate how to create a stacked bar char plot by counting the number of records that have the same values in two columns, and represent the values of first column in the table as the bar titles and the values of the second criteria as the colors of the stacked fragments of each bar.
+In this example, we illustrate how to create a stacked plot counting records by two criteria.
 
 <p>
 First we load a table as CSV.<br>
@@ -1245,183 +1176,132 @@ The result is a table that has 3 columns. The thirt column represent the number 
 We select the [Bar plot] tool and we ask for Categories (the bar labels) "Need Type", the Classifications (the data series names that are going to be stacked segements in diferent colors in the bar chart) as "Area" and the Values (the size of the segments of the bars in the chart) as "User requirement id_CouldDefined". After presing "plot, you will see the actual stacked bar chart.<br>
 <img src="recipe09_StackedBarChart.png" width="900" class="center">
 <p>
-
 <br><br><br>
 <br>
 <hr width="30%">
-<a id="recipe10"></a>
-<h3>Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</h3>
-In this example, we illustrate how to connect to a Eclipse Data Connector using the Data Space Protocol proposed by the International Data Space Assotiation. The Eclipse Data Connector implements an API that allows TAPIS to dialog with the data space and request data assets.
+<a id="recipe09"></a>
+<h3>Recipe 10: Pivoting a table, from registers of a column to new columns</h3>
+<p>In this example, we have a list of registers, but we need to reorganize them. In this table, every register is the amount of water from a station on a concrete day, but for some analysis is needed to transform the values from a column (Station) to new columns. This is the original table: 
+	This tool can be used with all origins of data because TAPIS always works with tables. In this example, data is imported by Import CSV. Part of the original table is shown below, it is longer, but it doesn't feed into the image (total registers: 1000):
+<img src="recipe10_initialTable.png" width="900" class="center">
+</p>
 <p>
-In preparation for this example, we configured a SensorThings API (STA) endpoint as a asset available in the data space. Our demonstrative data space is composed by two nodes, each one with an Eclipse Data Connector instance. To get access to the STA asset a sequence of steps need to be conducted. Fortunately, TAPIS takes case of those steps automatically. The steps are:
+	Link the pivot table tool to apply the desired changes to the current table. After clicking it, the dialogue allows you to add the attributes to different final places. It is not allowed to repeat values from Columns and Rows and always is needed to add an attribute to values. This tool is similar to Excel pivot tables tool, so attributes that need to be preserved from the current table should be added to the new table. <br><br>
+There are three different sections to add to the new table:
 <ol>
-<li>Asset discovery
-<li>Contract negotiation
-<li>Request transfer URL
-<li>Data transfer
+	<li><b>Columns:</b> The different values of your attribute selected will be transformed into new columns on the new table. It is possible to add more than one (it will be shown after). If more than one attribute is chosen, the new column names will be the concatenation of these values in the given order, the first selected takes precedence over the second and the following ones. </li>
+	<li><b>Rows:</b> This parameter defines which column will rest similar to a column in the new table. The difference is that values will not be repeated. Same as columns, more than one attribute can be selected, but the concatenation will occur in the values of the columns. </li>
+	<li><b>Values:</b> This attribute will be the value that converges from columns and rows, taking reference from the current table values. If there is more than one register that matches in the same place in the new table, the aggregation selected will be applied. If there is more than one attribute selected in this section, it will create new columns, every column created in Columns will be repeated so many times as values are selected. </li>
 </ol>
-<br>
-<img src="recipe10_dataSpaceSteps.png" width="800" class="center">
-<p>
 
-First we need to select the data space catalogue.<br>
-<img src="recipe10_dataSpaceCatalogueURL.png" width="700" class="center">
-<p>
-
-The result is a list or assets that can be negotiated.<br>
-<img src="recipe10_dataSpaceCatalogueList.png" width="800" class="center">
-<p>
-
-Now, we have to select the asset that we want to have access to. As the result of the catalogue query is a table, we will use the black "select row" tool to do it. By double clicking on the node, we will be able to select the row representing the asset<br>
-<img src="recipe10_dataSpaceCatalogueSelectRow.png" width="800" class="center">
-<p>
-
-Now, we have to operate with the asset using the "Dataspace asset" tool. The three remaining steps related to contract negociation and data transfer are exectuted automatically (in this particular case, we are providing a blank contract to negotiate because we know that the dataset has no restritions)<br>
-<img src="recipe10_dataSpaceAsset.png" width="500" class="center">
-<p>
-
-If the resource type is recogniced automatically, the resulting table will be shown. Note that the original URL of the asset is hidden to the client that always get the same endpoint. In this case we can see the result of the UL request as a STA root page listing all suported endpoints<br>
-<img src="recipe10_dataSpaceSTARoot.png" width="700" class="center">
-<p>
-
-Now that we know, we can start proceeding as if ths resource really was a STA endpoint. For example we will request the Observations with the right STA node. Note that the navigationLinks in the STA response show the original ULR. TAPIS will not use the original URL but it will build on the negociated URL.<br>
-<img src="recipe10_dataSpaceSTAObservations.png" width="700" class="center">
-<p>
-
-We can continue exploring the STA service by selecting a particular observation with the blue "SelectRow".<br>
-<img src="recipe10_dataSpaceSTAObsSelectRow.png" width="700" class="center">
-<p>
-
-Finally, We can request the Datastream of this observation in the STA service by selecting the "Datastreams" node to see the units of measurements and a description of this Datastream.<br>
-<img src="recipe10_dataSpaceSTADatastreams.png" width="900" class="center">
-<p>
-This recipe has demosntrated that is possible to connect ot a STA endpoint from a data space that contains the root of the STA service as a asset in the data space catalog.
-<p>
-	<br><br><br>
-	<br>
-	<hr width="30%">
-	<a id="recipe11"></a>
-	<h3>Recipe 11: Pivoting a table, from registers of a column to new columns</h3>
-	<p>In this example, we have a list of registers, but we need to reorganize them. In this table, every register is the amount of water from a station on a concrete day, but for some analysis is needed to transform the values from a column (Station) to new columns. This is the original table: 
-		This tool can be used with all origins of data because TAPIS always works with tables. In this example, data is imported by Import CSV. Part of the original table is shown below, it is longer, but it doesn't feed into the image (total registers: 1000):
-	<br><img src="recipe11_initialTable.png" width="900" class="center">
-	</p>
-	<p>
-		Link the pivot table tool to apply the desired changes to the current table. After clicking it, the dialogue allows you to add the attributes to different final places. It is not allowed to repeat values from Columns and Rows and always is needed to add an attribute to values. This tool is similar to Excel pivot tables tool, so attributes that need to be preserved from the current table should be added to the new table. <br><br>
-	There are three different sections to add to the new table:
-	<ol>
-		<li><b>Columns:</b> The different values of your attribute selected will be transformed into new columns on the new table. It is possible to add more than one (it will be shown after). If more than one attribute is chosen, the new column names will be the concatenation of these values in the given order, the first selected takes precedence over the second and the following ones. </li>
-		<li><b>Rows:</b> This parameter defines which column will rest similar to a column in the new table. The difference is that values will not be repeated. Same as columns, more than one attribute can be selected, but the concatenation will occur in the values of the columns. </li>
-		<li><b>Values:</b> This attribute will be the value that converges from columns and rows, taking reference from the current table values. If there is more than one register that matches in the same place in the new table, the aggregation selected will be applied. If there is more than one attribute selected in this section, it will create new columns, every column created in Columns will be repeated so many times as values are selected. </li>
-	</ol>
+The <b><i>"Repited values aggregated by"</i> </b> section defines the kind of aggregation applied if more than one values converge in the same "square". <br><br>
+<u><li><b><i></i>Exemple 1: All sections with one attribute added</b></li></u>
+In this first example, one attribute has been added to every part (Columns, Rows and Values). It is the simplest example, there are no combinations of Columns, neither Rows or Values, these will be shown after. The resulting table will be the result of maintaining one column, but erasing the values repetitied (the "reference column", here Day), and transforming values in Column added as new columns (without repetitions). The intersection created in the new table will be filled by values from the current table, if there is more than one that matches in the same place (this doesn't happen in this example), the aggregation chosen will be applied. <br>
+	<img src="recipe10_pivotTableDialog.png" width="900" class="center">
 	
-	The <b><i>"Repited values aggregated by"</i> </b> section defines the kind of aggregation applied if more than one values converge in the same "square". <br><br>
-	<u><li><b><i></i>Exemple 1: All sections with one attribute added</b></li></u>
-	In this first example, one attribute has been added to every part (Columns, Rows and Values). It is the simplest example, there are no combinations of Columns, neither Rows or Values, these will be shown after. The resulting table will be the result of maintaining one column, but erasing the values repetitied (the "reference column", here Day), and transforming values in Column added as new columns (without repetitions). The intersection created in the new table will be filled by values from the current table, if there is more than one that matches in the same place (this doesn't happen in this example), the aggregation chosen will be applied. <br>
-		<img src="recipe11_pivotTableDialog.png" width="900" class="center">
-		
-	</p>
-	<p> 
-		Here there is part of the result of this application (it is longer, but it doesn't feed into the image. Total registers: 112). In this case, the "reference column" is "Day", with all different values, not repeated, in the first column (attribute selected in Row section). 
-		The rest of the columns are all the different values in the old Station column (attribute selected in Column section). Every of these values are now new columns. As only one value attribute has been selected, these columns only appear one time each other, with the value selected in the name. Every result in the confluence was aggreged by the selected option chosen. 
-		<br>	<br>
-		List of new columns (attributes)
-		<ul><li>Day <i>(Preserved from the previous table)</i></li>
-			<li>Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean</li>
-			<li>Reservoir of la Llosa del Cavall (Nav…s)_Absolute_level_Mean</li>
-			<li>Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean</li>
-			<li>Reservoir of Susqueda (Osor)_Absolute_level_Mean</li>
-			<li>Reservoir of Sau (Vilanova de Sau)_Absolute_level_Mean</li>
-			<li>Reservoir of Foix (Castellet i la Gornal)_Absolute_level_Mean</li>
-			<li>Reservoir of la Baells (Cercs)_Absolute_level_Mean</li>
-			<li>Reservoir of Riudecanyes_Absolute_level_Mean</li>
-			<li>Reservoir of Sant Pon‡ (Clariana de Cardener)_Absolute_level_Mean</li>
-		</ul>
-		<img src="recipe11_resultTable_Simple.png"  class="center">
-		
-		
-		With this distribution, it is now possible to create scatterplot graphics. 
-	</p>
-	<br>
-	<u><li><b><i></i>Example 2: adding 2 attributes to Values</i></b> <br></li></u>
-	As mentioned before, adding an attribute creates a new set of columns. This set of columns is the result of adding the new parameter value to every column formed with different values of the Column attributes selected. 
-	<br>
-	<img src="recipe11_pivotTableDialog_2_values.png"  height="450px"> <br><br>
+</p>
+<p> 
+	Here there is part of the result of this application (it is longer, but it doesn't feed into the image. Total registers: 112). In this case, the "reference column" is "Day", with all different values, not repeated, in the first column (attribute selected in Row section). 
+	The rest of the columns are all the different values in the old Station column (attribute selected in Column section). Every of these values are now new columns. As only one value attribute has been selected, these columns only appear one time each other, with the value selected in the name. Every result in the confluence was aggreged by the selected option chosen. 
+	<br>	<br>
 	List of new columns (attributes)
 	<ul><li>Day <i>(Preserved from the previous table)</i></li>
 		<li>Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean</li>
-		<li>Reservoir of Darnius Boadella (Darnius)_volume_stored_Mean</li>
 		<li>Reservoir of la Llosa del Cavall (Nav…s)_Absolute_level_Mean</li>
-		<li>Reservoir of la Llosa del Cavall (Nav…s)_volume_stored_Mean</li>
 		<li>Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean</li>
-		<li>Reservoir of Siurana (Cornudella de Montsant)_volume_stored_Mean</li>
 		<li>Reservoir of Susqueda (Osor)_Absolute_level_Mean</li>
-		<li>Reservoir of Susqueda (Osor)_volume_stored_Mean</li>
 		<li>Reservoir of Sau (Vilanova de Sau)_Absolute_level_Mean</li>
-		<li>Reservoir of Sau (Vilanova de Sau)_volume_stored_Mean</li>
 		<li>Reservoir of Foix (Castellet i la Gornal)_Absolute_level_Mean</li>
-		<li>Reservoir of Foix (Castellet i la Gornal)_volume_stored_Mean</li>
 		<li>Reservoir of la Baells (Cercs)_Absolute_level_Mean</li>
-		<li>Reservoir of la Baells (Cercs)_volume_stored_Mean</li>
 		<li>Reservoir of Riudecanyes_Absolute_level_Mean</li>
-		<li>Reservoir of Riudecanyes_volume_stored_Mean</li>
 		<li>Reservoir of Sant Pon‡ (Clariana de Cardener)_Absolute_level_Mean</li>
-		<li>Reservoir of Sant Pon‡ (Clariana de Cardener)_volume_stored_Mean</li>
 	</ul>
-	<img src="recipe11_resultTable_2_values.png"  class="center">
-	
-	<u><li><b><i></i>Example 3: adding 2 attributes to Columns</i></b> <br></li></u>
-	New columns will be the existing combination of values from old table columns. In other words, every different value from the first added attribute will be concatenated to every value of the next added attributes (not all possible combinations, only existing combinations in the current table). 
-	<br><img src="recipe11_pivotTableDialog_2_columns.png"  height="450px">
-	<br><br>
-	List of new columns (attributes)
-	<ul><li>Day <i>(Preserved from the previous table)</i></li>
-		<li>Alt Empord…_Reservoir of Darnius Boadella (Darnius)_Absolute_level_Sum</li>
-		<li>SolsonŠs_Reservoir of la Llosa del Cavall (Nav…s)_Absolute_level_Sum</li>
-		<li>Priorat_Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Sum</li>
-		<li>La Selva_Reservoir of Susqueda (Osor)_Absolute_level_Sum/li>
-		<li>Osona_Reservoir of Sau (Vilanova de Sau)_Absolute_level_Sum</li>
-		<li>Alt Pened‚s_Reservoir of Foix (Castellet i la Gornal)_Absolute_level_Sum</li>
-		<li>Bergued…_Reservoir of la Baells (Cercs)_Absolute_level_Sum</li>
-		<li>Baix Camp_Reservoir of Riudecanyes_Absolute_level_Sum</li>
-		<li>SolsonŠs_Reservoir of Sant Pon‡ (Clariana de Cardener)_Absolute_level_Sum</li>
-	</li></ul>
-	<img src="recipe11_resultTable_2_columns.png"  class="center">
+	<img src="recipe10_resultTable_Simple.png"  class="center">
 	
 	
-	<u><li><b><i></i>Example 4: adding 2 attributes to Rows</i></b> <br></li></u>
-	Same way of combination explained in "combination of more than one Column", but in this case the combination will be the result of "reference column" values. Name of this new column will be the result of the combination of the name of the attrributes used. 
-	<br><img src="recipe11_pivotTableDialog_2_rows.png"  height="450px">
-	<br>
-	The names of the resulting columns are the same as explained in the first example, where all values from the column of the attribute selected will become new columns.<br>
-	Examples of values from the first column, the result of the combination of the values from attributes selected in Row case (Day + Province): 
-	<ul>
-		<li>2024-12-31T00:00:00.000_Girona</li>
-		<li>2024-12-31T00:00:00.000_Lleida</li>
-		<li>2024-12-31T00:00:00.000_Tarragona</li>
-		<li>2024-12-31T00:00:00.000_Barcelona</li>
-		<li>2025-01-01T00:00:00.000_Girona</li>
-		<li>2025-01-01T00:00:00.000_Lleida</li>
-		<li>2025-01-01T00:00:00.000_Tarragona</li>
-		<li>2025-01-01T00:00:00.000_Barcelona</li>
-	</ul>
-	
-	<img src="recipe11_resultTable_2_rows.png"  class="center">
-	
-	<u><li><b><i></i>Example 5: adding Columns and Values, without any Row</i></b> <br></li></u>
-	This tool always returns a table. It is possible to create a table without adding attributes to Rows or Columns, but one of the two is always needed. In this example, it will be shown which is the result if any attribute is added in Row part. 
-	<br><img src="recipe11_pivotTableDialog_without_rows.png"  height="450px"> <br>
-	The resulting table will contain same columns as first example without "reference column"(in that case, Day) and  with an added column (Aggregation) whose value is the name of the attribute selected in Value part. If there was more than one attributed added in Value part, every value will be a new row. 
-	Values in the other columns will be the result of the aggregation selected.
-	
-	<img src="recipe11_resultTable_without_rows.png"  class="center">
-	
-	
-	<u><li><b><i></i>Example 6: adding Rows and Values, without any Column</i></b> <br></li></u>
-	This example is similar to the example above, but "switched". In this case, there are Rows, so values come from the values of Row attributes added. Similar to what has happened before, every new column (no Columns have been added in this example) will be every attribute added in Value part. The values in these columns will be the result of the aggregation selected.<br>
-	<img src="recipe11_pivotTableDialog_without_columns.png"  height="450px"> <br>
-	<img src="recipe11_resultTable_without_columns.png"  class="center">
-	
-	</p>
+	With this distribution, it is now possible to create scatterplot graphics. 
+</p>
+<br>
+<ul><li><b><i></i>Example 2: adding 2 attributes to Values</i></b> <br></li></ul>
+As mentioned before, adding an attribute creates a new set of columns. This set of columns is the result of adding the new parameter value to every column formed with different values of the Column attributes selected. 
+<br>
+<img src="recipe10_pivotTableDialog_2_values.png"  height="450px"> <br><br>
+List of new columns (attributes)
+<ul><li>Day <i>(Preserved from the previous table)</i></li>
+	<li>Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean</li>
+	<li>Reservoir of Darnius Boadella (Darnius)_volume_stored_Mean</li>
+	<li>Reservoir of la Llosa del Cavall (Nav…s)_Absolute_level_Mean</li>
+	<li>Reservoir of la Llosa del Cavall (Nav…s)_volume_stored_Mean</li>
+	<li>Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean</li>
+	<li>Reservoir of Siurana (Cornudella de Montsant)_volume_stored_Mean</li>
+	<li>Reservoir of Susqueda (Osor)_Absolute_level_Mean</li>
+	<li>Reservoir of Susqueda (Osor)_volume_stored_Mean</li>
+	<li>Reservoir of Sau (Vilanova de Sau)_Absolute_level_Mean</li>
+	<li>Reservoir of Sau (Vilanova de Sau)_volume_stored_Mean</li>
+	<li>Reservoir of Foix (Castellet i la Gornal)_Absolute_level_Mean</li>
+	<li>Reservoir of Foix (Castellet i la Gornal)_volume_stored_Mean</li>
+	<li>Reservoir of la Baells (Cercs)_Absolute_level_Mean</li>
+	<li>Reservoir of la Baells (Cercs)_volume_stored_Mean</li>
+	<li>Reservoir of Riudecanyes_Absolute_level_Mean</li>
+	<li>Reservoir of Riudecanyes_volume_stored_Mean</li>
+	<li>Reservoir of Sant Pon‡ (Clariana de Cardener)_Absolute_level_Mean</li>
+	<li>Reservoir of Sant Pon‡ (Clariana de Cardener)_volume_stored_Mean</li>
+</ul>
+<img src="recipe10_resultTable_2_values.png"  class="center">
+
+<ul><li><b><i></i>Example 3: adding 2 attributes to Columns</i></b> <br></li></ul>
+New columns will be the existing combination of values from old table columns. In other words, every different value from the first added attribute will be concatenated to every value of the next added attributes (not all possible combinations, only existing combinations in the current table). 
+<br><img src="recipe10_pivotTableDialog_2_columns.png"  height="450px">
+<br><br>
+List of new columns (attributes)
+<ul><li>Day <i>(Preserved from the previous table)</i></li>
+	<li>Alt Empord…_Reservoir of Darnius Boadella (Darnius)_Absolute_level_Sum</li>
+	<li>SolsonŠs_Reservoir of la Llosa del Cavall (Nav…s)_Absolute_level_Sum</li>
+	<li>Priorat_Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Sum</li>
+	<li>La Selva_Reservoir of Susqueda (Osor)_Absolute_level_Sum/li>
+	<li>Osona_Reservoir of Sau (Vilanova de Sau)_Absolute_level_Sum</li>
+	<li>Alt Pened‚s_Reservoir of Foix (Castellet i la Gornal)_Absolute_level_Sum</li>
+	<li>Bergued…_Reservoir of la Baells (Cercs)_Absolute_level_Sum</li>
+	<li>Baix Camp_Reservoir of Riudecanyes_Absolute_level_Sum</li>
+	<li>SolsonŠs_Reservoir of Sant Pon‡ (Clariana de Cardener)_Absolute_level_Sum</li>
+</li></ul>
+<img src="recipe10_resultTable_2_columns.png"  class="center">
+
+
+<ul><li><b><i></i>Example 4: adding 2 attributes to Rows</i></b> <br></li></ul>
+Same way of combination explained in "combination of more than one Column", but in this case the combination will be the result of "reference column" values. Name of this new column will be the result of the combination of the name of the attrributes used. 
+<br><img src="recipe10_pivotTableDialog_2_rows.png"  height="450px">
+<br>
+The names of the resulting columns are the same as explained in the first example, where all values from the column of the attribute selected will become new columns.<br>
+Examples of values from the first column, the result of the combination of the values from attributes selected in Row case (Day + Province): 
+<ul>
+	<li>2024-12-31T00:00:00.000_Girona</li>
+	<li>2024-12-31T00:00:00.000_Lleida</li>
+	<li>2024-12-31T00:00:00.000_Tarragona</li>
+	<li>2024-12-31T00:00:00.000_Barcelona</li>
+	<li>2025-01-01T00:00:00.000_Girona</li>
+	<li>2025-01-01T00:00:00.000_Lleida</li>
+	<li>2025-01-01T00:00:00.000_Tarragona</li>
+	<li>2025-01-01T00:00:00.000_Barcelona</li>
+</ul>
+
+<img src="recipe10_resultTable_2_rows.png"  class="center">
+
+<ul><li><b><i></i>Example 5: adding Columns and Values, without any Row</i></b> <br></li></ul>
+This tool always returns a table. It is possible to create a table without adding attributes to Rows or Columns, but one of the two is always needed. In this example, it will be shown which is the result if any attribute is added in Row part. 
+<br><img src="recipe10_pivotTableDialog_without_rows.png"  height="450px"> <br>
+The resulting table will contain same columns as first example without "reference column"(in that case, Day) and  with an added column (Aggregation) whose value is the name of the attribute selected in Value part. If there was more than one attributed added in Value part, every value will be a new row. 
+Values in the other columns will be the result of the aggregation selected.
+
+<img src="recipe10_resultTable_without_rows.png"  class="center">
+
+
+<ul><li><b><i></i>Example 6: adding Rows and Values, without any Column</i></b> <br></li></ul>
+This example is similar to the example above, but "switched". In this case, there are Rows, so values come from the values of Row attributes added. Similar to what has happened before, every new column (no Columns have been added in this example) will be every attribute added in Value part. The values in these columns will be the result of the aggregation selected.<br>
+<img src="recipe10_pivotTableDialog_without_columns.png"  height="450px"> <br>
+<img src="recipe10_resultTable_without_columns.png"  class="center">
+
+</p>
+
 </body>
 </html>

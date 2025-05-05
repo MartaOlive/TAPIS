@@ -25,12 +25,12 @@
 				"url": "https://api-virtualair.nilu.no/v1.1"
 			},
 			{
-				"desc": "AD4GD STAplus server",
-				"url": "https://frost.iotlab.com/sensorthings/v1.1"
-			},
-			{
 				"desc": "AD4GD STAplus secured server",
 				"url": "https://frost.iotlab.com/sensorthings2/v1.1/"
+			},
+			{
+				"desc": "AD4GD STAplus open server",
+				"url": "https://frost.iotlab.com/sensorthings3/v1.1/"
 			},
 			{
 				"desc": "AD4GD PSNC automatic STA server generation example (water in Berlin lakes)",

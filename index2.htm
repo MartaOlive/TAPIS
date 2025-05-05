@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>TAPIS: Tables from APIs for Sensors (Sensor Things API plus Explorer)</title>
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+	<!--Thanks to https://github.com/chartjs/Chart.js and downloaded from:
+		https://cdnjs.com/libraries/Chart.js/3.9.1 -->
+	<script type="text/javascript" src="Chart.min.js"></script> 
+	<!--Thanks to https://github.com/DavideViolante/chartjs-plugin-labels and downloaded from:
+		https://www.npmjs.com/package/chart.js-plugin-labels-dv/v/3.3.0 -->
+	<script type="text/javascript" src="chartjs-plugin-labels.min.js"></script>
+	<script	src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script> <!--to use time in chart axis -->
+
+	<script	type="text/javascript" src="vis-network.min.js"></script>
+	<script type="text/javascript" src="vis-timeline-graph2d.min.js"></script>
+
+	<script type="text/javascript" src="papaparse.min.js" async defer></script>
+	<script type="text/javascript" src="crypto-js.min.js" async defer></script> 
+	<script type="text/javascript" src="wicket.js" async defer></script>
+	<script type="text/javascript" src="hello.all.min.js"></script>
+	<script type="text/javascript" src="authenix.js" async defer></script>
+	<script type="text/javascript" src="mmn_postmessage.js" async defer></script>
+	<script type="text/javascript" src="guf.js" async defer></script>
+	<script type="text/javascript" src="xml2json.js" async defer></script>
+	<script type="text/javascript" src="oem.js" async defer></script>
+	<script type="text/javascript" src="dbf.js" async defer></script>
+	<script type="text/javascript" src="json.js" async defer></script>
+	<script type="text/javascript" src="jsonld.js" async defer></script>
+	<script type="text/javascript" src="edc.js" async defer></script>
+	<script type="text/javascript" src="data_tables.js"></script>
+	<script type="text/javascript" src="HTTPdata.js"></script>
+	<script type="text/javascript" src="gps.js"></script>
+	<script type="text/javascript" src="websubhook.js"></script>
+	<script type="text/javascript" src="STAqueryParam.js"></script>
+	<script type="text/javascript" src="selectColumnsDlg.js"></script>
+	<script type="text/javascript" src="groupByDlg.js"></script>
+	<script type="text/javascript" src="STAfilter.js"></script>
+	<script type="text/javascript" src="diagrams.js"></script>
+	<script type="text/javascript" src="aws.js"></script>
+	<script type="text/javascript" src="tapis.js"></script>
+
+	<link rel="stylesheet" href="tapis.css">
+	<link rel="stylesheet" href="vis.network.css">
+	<link rel="stylesheet" href="vis-timeline-graph2d.min.css">
+</head>
+
+<body onLoad="StartSTAPage();" onkeydown="KeySTAPage(event);">
+	<table border="0" style="width:100%">
+		<tr>
+			<td>
+				<table>
+					<tr>
+						<td><img src="logo.png" height="70"></td>
+						<td>
+							<div style="font-size: 30px; font-weight: bold;">TAPIS</div>
+							<div style="font-size: 20px; font-weight: bold;">Tables from APIS</div>
+							<div style="font-size: 10px; font-weight: normal;">or an API Explerer and a Table Manager							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td align="right" valign="top">
+				<span id="UserInfoText"></span>
+				<button id="buttonReloadSTA" onclick='reloadSTA(event);'onmouseover='showHelpToolTip(event, "", "Reload all schema to upload the data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="reload.png" height="20" valign="middle"> Refresh</button>
+				<label class=labelbotton onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenNetwork.png" height="20" valign="middle" > Open
+				<input type="file" id="openNetworkFileName" hidden onchange='openFileNetwork(event);'/>
+				</label> <!-- https://dev.to/faddalibrahim/how-to-create-a-custom-file-upload-button-using-html-css-and-javascript-1c03 -->
+				<button onclick='document.getElementById("DialogOpenURLNetwork").showModal();' onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data from a webside or from Help examples" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenURLNetwork.png" height="20" valign="middle"> Open URL</button>
+				<button onclick='saveNetwork(event);'onmouseover='showHelpToolTip(event, "", "Save your Tapis schema with nodes and data as a JSON to be able to open it later" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="SaveNetwork.png" height="20" valign="middle"> Save</button>
+				<button id="buttonOpenLogin" onclick='OpenLogin(event);' onmouseover='showHelpToolTip(event, "", "Login to be able to have access to certain places")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Login</button>
+				<button id="buttonOpenLogout" onclick='OpenLogout(event);' style="display: none");' onmouseover='showHelpToolTip(event, "", "Close your sesion")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Logout</button>
+				<button onclick='OpenConfiguration(event);'onmouseover='showHelpToolTip(event, "", "To modify display configurations")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )' ><img src="config.png" height="20" valign="middle">Configuration</button>
+				<button onclick='OpenHelp(event);' onmouseover='showHelpToolTip(event, "", "Explanations of how to use TAPIS and Examples")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="help.png" height="20" valign="middle">Help</button>
+				<br>
+				<span style="font-size: 10px;"><a href="TermsOfUse.htm">Terms of Use</a><br>
+					<a href="PrivacyStatement.htm">Privacy Statement</a><br>
+					<a href="AccessPolicy.htm">Access Policy</a><br>
+				</span>
+			</td>
+		</tr>
+	</table>
+
+	<span id="ButtonsSTAEntities"></span>
+	<button onclick='addEdge();' onmouseover='showHelpToolTip(event, "", "Connect two nodes.<hr> Click on the end node and drop it on the previous node")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="connect.png" height="20" valign="middle">Connect two nodes</button><br>
+
+	<div style="margin-top: 20px;">
+		<!--  style configurations also in this function: function UpdateConfiguration() -->
+		<div id ="sideButtons" style="overflow-y:scroll; border:1px solid #ccc; height: 400px;width:10%;">
+			<div id="sideButtons_STAEntities">
+				<div id="sideButtons_Title_STAEntities" style="height:20px; background-color: rgb(0,179,255,0.5); text-align: center; " >STA Entities </div>
+				<div id="sideButtons_Buttons_STAEntities" style=""></div> 
+			</div>
+			<div id="sideButtons_STATools">
+				<div id="sideButtons_Title_STATools" style="height:20px; background-color: rgb(0,179,255,0.5); text-align: center; " >STA Tools </div>
+				<div id="sideButtons_Buttons_STATools" style=""></div> 
+			</div>
+			<div id="sideButtons_TablesEdition">
+				<div id="sideButtons_Title_TablesEdition" style="height:20px; background-color: rgb(183,183,183); text-align: center; " >Edit Tables </div>
+				<div id="sideButtons_Buttons_TablesEdition" style=""></div> 
+			</div>
+			<div id="sideButtons_TablesAnalysis">
+				<div id="sideButtons_Title_TablesAnalysis" style="height:20px; background-color: rgb(183,183,183); text-align: center; " >Analysis</div>
+				<div id="sideButtons_Buttons_TablesAnalysis" style=""></div> 
+			</div>
+		</div>
+		<div id="mynetwork" style=" width: 59%; height: 400px;"></div>
+		<div id="clarification" style="width: 19%; margin-left: 0.2%; height: 400px; border: 1px solid gray; overflow-y: auto; overflow-x: scroll;"></div>
+	</div>
+	<div style="width: 99%; margin-left: 0.2%; height: 400px; border: 1px solid gray; overflow: auto">
+		<div id="showQuery" style="display: none;">OGC query URL: <a id="showQueryLink" href="" target="_blank"></a></div>
+
+		<div id="showTableOptions"></div>
+		<div id="showTable"></div>
+	</div>
+
+	<div id="HelpToolTip" style="min-height: 1px; overflow: hidden; display:none; position: fixed; background-color: #f6eba3; width:300px; border-style: ridge; padding: 5px; text-align:left">help</div>
+
+	<dialog id="DialogConfiguration">
+		<form>
+			<p>
+				<label>Table font size ratio:
+					<input type="text" id="DialogConfigurationFontSize" size="3" value="50"></input>%
+				</label>
+				<br>
+				<span style="display: flex;align-items: center;">Window disposition: 
+				<label style="display: flex;align-items: center;"><input type="radio" name="DialogConfigurationDiv" id="DialogConfigurationDivSideBySide" checked="checked"></input><img src="SideBySide.png"></label>
+				<label style="display: flex;align-items: center;"><input type="radio" name="DialogConfigurationDiv" id="DialogConfigurationDivOverUnder"></input><img src="OverUnder.png"></label>
+				</span>
+				<br>
+				<label><input type="checkbox" id="DialogConfigurationAddGeolocationHeader"></input>Add geolocation header</label><br>
+				<label><input type="checkbox" id="DialogConfigurationOnlyStartNodeButtons"></input>Show start node buttons only</label>
+			</p>
+			<div class="center">
+				<button value="default" onClick="ChangeConfiguration(event)">OK</button>
+				<button value="default" onClick="ApplyConfiguration(event)">Apply</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+
+	<dialog id="DialogOpenURLNetwork">
+		<form>
+			<p>
+				<label>Network URL:
+					<input type="text" id="DialogOpenURLNetworkInput" size="100"></input>
+				</label>
+				<br>
+				<label>Suggested stored networks:
+					<select id="DialogOpenURLNetworkSelect" onChange="PopulateInputFromSelect(event, 'DialogOpenURLNetwork');">
+						<option "">-- Select an option--</option>
+						<option value="help/recipe01_STA_UML_model.json">Recipe 1: Understanding the concept of Datastream in STAplus</option>
+						<option value="help/recipe02_PartyObservationsParty.json">Recipe 2, both methods: Show the current evolution of a variable captured by a particular party</option>
+						<option value="help/recipe02_01_PartyObservations.json">Recipe 2, cooking method 1: Recurrently selecting a row using entity identifiers</option>
+						<option value="help/recipe02_02_ObservationsParty.json">Recipe 2, cooking method 2: Filtering observations</option>
+						<option value="help/recipe03_OpenMap.json">Recipe 3: Show a map of all observation features in an STA service</option>
+						<option value="help/recipe04_CSV_meaning.json">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</option>
+						<option value="help/recipe05_01_spatialFilterTemperature.json">Recipe 5a: Selecting temperatures from an area</option>
+						<option value="help/recipe05_02_FilteringByDistance.json">Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
+						<option value="help/recipe06_creatingTwoDatastreamOfObservations.json">Recipe 6: Creating a new stream of observations</option>
+						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>						<option value="help/recipe09_stackedBarChart.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>
+						<option value="help/recipe08_s3BucketViewCSV.json">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</option>
+						<option value="help/recipe09_stackedBarChart.json">Recipe 9: Drawing a stacked bar chart</option>
+						<option value="help/recipe10_pivotTables.json">Recipe 10: Pivoting a table, from registers of a column to new columns</option>
+					</select>
+				</label>
+			</p>
+			<div class="center">
+				<button value="default" id="DialogDialogOpenURLNetworkInputOk" onClick="openURLNetwork(event)" formmethod="dialog">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogSTAURL">
+		<div id="divTitleDialogSTAURL" class="center" style="font-size: large;"></div>
+		<form>
+			<p>
+				<label>Landing page URL:
+					<input type="text" id="DialogSTAURLInput" size="100"></input>
+				</label>
+				<br>
+				<label>Suggested services:
+					<select id="DialogSTAURLSelect" onChange="PopulateInputFromSelect(event, 'DialogSTAURL')"></select>
+				</label>
+			</p>
+			<div class="center">
+				<button value="default" id="DialogSTAURLOk" onClick="GetSTAURLEvent(event)" formmethod="dialog">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogS3Bucket">
+		<div id="divTitleDialogS3Bucket" class="center" style="font-size: large;"></div>
+		<form>
+			<p>
+				<label>Landing page URL:
+					<input type="text" id="DialogS3BucketURL" size="100"></input>
+				</label>
+				<br>
+				<label>Access Key:
+					<input type="password" id="DialogS3BucketAccessKey" size="100"></input>
+				</label>
+				<br>
+				<label>Secret Key:
+					<input type="password" id="DialogS3BucketSecretKey" size="100"></input>
+				<br>
+				<label>S3 Service:
+					<input type="text" id="DialogS3BucketS3Service" size="30"></input>
+				<br>
+				<label>Suggested services:
+					<select id="DialogS3BucketSelect" onChange="PopulateURLSecurityFromSelect(event, 'DialogS3Bucket')"></select>
+				</label>
+			</p>
+			<div class="center">
+				<button value="default" id="DialogS3BucketOk" onClick="GetDialogS3BucketEvent(event)" formmethod="dialog">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogEDC">
+		<div id="divTitleDialogEDC" class="center" style="font-size: large;"></div>
+		<form>
+			<p>
+				<label>Catalog URL:
+					<input type="text" id="DialogEDCCatalogURL" size="100"></input>
+				</label>
+				<br>
+				<label>Catalog version:
+					<input type="text" id="DialogEDCCatalogVersion" size="10"></input>
+				</label>
+				<br>
+				<label>Consumer URL:
+					<input type="text" id="DialogEDCConsumerURL" size="100"></input>
+				</label>
+				<br>
+				<label>Suggested services:
+					<select id="DialogEDCSelect" onChange="PopulateURLEDCFromSelect(event, 'DialogEDC')"></select>
+				</label>
+			</p>
+			<div class="center">
+				<button value="default" id="DialogEDCOk" onClick="GetDialogEDCEvent(event)" formmethod="dialog">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogSTAViewQuery">
+		<form>
+			<p>
+				STA query URL:
+					<a id="DialogSTAViewQueryLink" href="" target="_blank"></a>
+			</p>
+			<div class="center">
+				<button value="cancel" formmethod="dialog">Close</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogCreateUpdateDeleteEntity">
+		<form>
+			<span id="dlgCreateUpdateDeleteEntityAttributes">
+			</span>
+			<div class="center">
+				<button value="default" id="dlgCreateUpdateDeleteEntityCreate" onClick="GetCreateEntity(event)">Create</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityUpdate" onClick="GetUpdateEntity(event)">Update</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityDelete" onClick="AskForDeleteEntity(event)">Delete</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+	<dialog id="DialogCreateUpdateDeleteEntity_MultiDatastreams">
+		<form>
+			<span id="dlgCreateUpdateDeleteEntityAttributes_MultiDatastreams">
+			</span>
+			<div class="center">
+				<button value="default" id="dlgCreateUpdateDeleteEntityCreate_MultiDatastreams" onClick="GetCreateEntityMultiDatastream(event)">Create</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityUpdate_MultiDatastreams" onClick="GetUpdateEntityMultiDatastream(event)">Update</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityDelete_MultiDatastreams" onClick="AskForDeleteEntity(event)">Delete</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+
+	<dialog id="DialogCreateUpdateDeleteEntity_numberOfMultiDatastream" >
+		<form>
+			<label for ="DialogOpenMultiDatastream_input">How many multidatastreams do you want to introduce?</label>
+			<input type="number" id ="DialogOpenMultiDatastream_input" min="2" name="DialogOpenMultiDatastream_input" value=2> </input>
+			<button value="default" id="DialogOpenMultiDatastream" onClick="openMultiDatastreamDialog(event)" formmethod="dialog" value="2">OK</button>
+			<button value="cancel" formmethod="dialog">Cancel</button>
+		</form>
+	</dialog>
+
+	<dialog id="DialogCreateUpdateDeleteRecord">
+		<form>
+			<span id="dlgCreateUpdateDeleteRecordProperties">
+			</span>
+			<div class="center">
+				<button value="prev" id="dlgCreateUpdateDeleteRecordFirst" onClick="GetFirstRecord(event)">&lt;&lt;</button>
+				<button value="prev" id="dlgCreateUpdateDeleteRecordPrevious" onClick="GetPreviousRecord(event)">&nbsp&lt;&nbsp;</button>
+				<input type="text" id="dlgCreateUpdateDeleteRecordNumber" onChange="GetNumberRecord(event)" /> / <span id="dlgCreateUpdateDeleteRecordLength"></span> 
+				<button value="next" id="dlgCreateUpdateDeleteRecordNext" onClick="GetNextRecord(event)">&nbsp;&gt;&nbsp;</button>
+				<button value="next" id="dlgCreateUpdateDeleteRecordLast" onClick="GetLastRecord(event)">&gt;&gt;</button>
+				<br>
+				<button value="default" id="dlgCreateUpdateDeleteRecordCreate" onClick="GetCreateRecord(event)">Insert</button>
+				<button value="default" id="dlgCreateUpdateDeleteRecordUpdate" onClick="GetUpdateRecord(event)">Update</button>
+				<button value="default" id="dlgCreateUpdateDeleteRecordDelete" onClick="AskForDeleteRecord(event)">Delete</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogSeparateColumns">
+		<form>
+			Separate columns:
+			<br><br>
+			<fieldset>
+				<legend>Columns to separate:</legend>
+				<input type="radio" id="DialogSeparateColumnsJSON" name="Origin" value="JSON" checked> 
+				<label for="DialogSeparateColumnsJSON">Columns with JSON objects</label><br>
+				<input type="radio" id="DialogSeparateColumnsLists" name="Origin" value="Lists" > 
+				<label for="DialogSeparateColumnsLists">Lists in columns: </label>
+				<select id="SeparateColumsSelect_column"></select></select>
+                <label >delimited by:</label> <input type="text" id="SeparateColumsInput_column" style="width: 50px;" value=",">
+			</fieldset>
+			<fieldset>
+				<legend>Result</legend>
+				<input type="radio" id="DialogSeparateColumnsAs_Records" name="SeparedBy" value="Records" > 
+				<label for="DialogSeparateColumnsAs_Records">separed into new records</label><br>
+				<input type="radio" id="DialogSeparateColumnsAs_Columns" name="SeparedBy" value="Columns" checked> 
+				<label for="DialogSeparateColumnsAs_Columns">separed into new columns</label><br>
+			</fieldset>
+			<br>
+			<input type="checkbox" id="DialogSeparateColumns_RemovePresent" value="yes"> 
+			<label for="DialogSeparateColumns_RemovePresent">Remove already present elements</label>
+
+			<div class="center">
+				<button value="default" onClick="SeparateColumns(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogGroupBy">
+		<form>
+			<table border="0">
+			<tr>
+			<td rowspan="2">
+			<fieldset>
+				<legend>GroupBy:</legend>
+				<span id="DialogGroupBySelectsHTML">
+				</span>
+			</fieldset>
+			<br>
+			<fieldset>
+				<legend>GroupBy date rounding:</legend>
+				<span id="DialogGroupByDateTimeOptionsHTML">
+				</span>
+			</fieldset>
+
+			</td>
+			<td>
+			<fieldset>
+				<legend>Attributes to aggregate:</legend>
+				<span id="DialogGroupByAttributesAggrHTML">
+				</span>
+			</fieldset>
+			</td>
+			</tr>
+			<tr>
+			<td>
+			<fieldset>
+				<legend>Aggregations:</legend>
+				<span id="DialogGroupByAggregationOptionsHTML">
+				</span>
+			</fieldset>
+			</td>
+			</tr>
+			</table>
+			<div class="center">
+				<button value="default" onClick="GetGroupBy(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogGroupByNodeId"></input>
+		</form>
+	</dialog>
+	<dialog id="DialogCreateColumns">
+		<form>
+			<span id="DialogCreateColumnsHTML">
+
+				<div>
+				  <fieldset>
+					  <legend>Select your operation:</legend>
+					  <input type="radio" id="columnNameRadioType_constantValue" name="TypeOfValues" value="constantValue" checked> 
+					  <label for="columnNameRadioType_constantValue">Constant value</label><input id="inputText_constantValue" type="text" style="margin-left:10px" ><br>
+					  <input type="radio" id="columnNameRadioType_autoincrementalValue" name="TypeOfValues" value="autoincrementalValue">
+					  <label for="columnNameRadioType_autoincrementalValue">Autoincemental value</label><input id="inputText_autoincrementalValue" type="text" style="margin-left:10px"  placeholder="Initial value" ><br>
+					  <input type="radio" id="columnNameRadioType_empty" name="TypeOfValues" value="empty">
+					  <label for="columnNameRadioType_empty">Empty column</label><br>
+				  </fieldset>
+				  <br>
+				  <fieldset>
+					  <legend>Column name:</legend>
+					  <input type="radio" name="columnNameRadioCreateColumns" id ="columnNameRadioACreateColumns_personalized" checked="checked"> <!--Function has no sense, it is only to mimic aggregated columns dialog-->
+					  <label for ="columnNameRadioACreateColumns_personalized" >Personalized</label>
+					  <input id="columnNameCreateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
+				  </fieldset>
+				  <br>
+				  <button value="add" onClick="addColumnToListCreateColumn(event)"style="margin-bottom:10px">Add column to list </button>
+				  <br><br><hr>
+				  <div style="width:auto;" >
+					  <label>List of columns to add</label>
+					  <span id= spanColumnsListCreateColumns></span>
+			  </div>
+			  
+		
+			</span>
+			<div class="center" style="margin-top: 10px">
+			  <button value="default" onClick="addColumnsToTableInCreateColumns()">Ok</button>
+			  <button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
+			</div>
+		  </form>
+	</dialog>
+
+	<dialog id="DialogAggregateColumns">
+		<form>
+			<span id="DialogAggregateColumnsHTML">
+			  <br>
+			<div>
+			<fieldset style="display:inline-block">
+			  <legend>Select attributes:</legend>
+			  <span id="DialogcolumnsFielsetHTML"></span>
+				</fieldset>		
+			<fieldset style="display:inline-block">
+			  <legend>Aggregations:</legend>
+			  <span id="operationsFieldSet"></span>
+			  </fieldset>
+			<br>
+			<fieldset style="display:inline-block">
+				<legend>Set number of decimal figures:</legend>
+				<span>
+					<input type="checkbox" id="chooseNumberDecimals_0" name="chooseNumberDecimals" value="yes"> 
+					<label for="chooseNumberDecimals_0">Yes: </label>
+					<input id="chooseNumberDecimals_0_input" type="number" max="10" min="0">
+
+				</span>
+			</fieldset>
+		</div>
+			  <br>
+			<fieldset style="display:inline-block">
+			  <legend>Column name: </legend>
+			  <input type="radio" name="columnNameRadioAggregateColumns" id="columnNameRadioAggregateColumns_personalized" onchange="deselectColumnNameRadioButton('personalized')">
+			  <label for="columnNameRadioAggregateColumns_personalized">Personalized</label>
+			  <input disabled=true id="columnNameAggregateColumns" type="text" style="margin-top: 10px; margin-bottom: 10px; " >
+			  <br>
+			  <input type="radio" name="columnNameRadioAggregateColumns" checked="checked" id="columnNameRadioAggregateColumns_suggested" onchange="deselectColumnNameRadioButton('suggested')">
+			  <label for="columnNameRadioAggregateColumns_suggested">Suggested: </label>
+			  <span id="columnNameAggregateColumns_span"></span>
+			</fieldset>
+			<br>
+			<br>	
+			<button value="add" onClick="addColumnToListAggregateColumns(event)" style="margin-bottom:10px">Add column to
+			  list </button>
+	
+			<br><br><hr>
+			<div style="width:auto;">
+			  <label>List of columns to add</label>
+			  <span id=spanColumnsListAggregateColumns></span>
+			  </div>
+			</span>
+			<div class="center" style="margin-top: 10px">
+			<button value="default" onClick="addColumnsToTableInAggregateColumns(event)">Ok</button>
+			  <button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
+			</div>
+		  </form>
+	</dialog>
+
+
+
+
+	<dialog id="DialogColumnsCalculator">
+		<form >
+			<br>
+			<label for="calculator_selectColumns">Attribute:</label>
+			<select id="calculator_selectColumns" name="calculator_selectColumnsValue" style="width:400px;" onchange="">
+			</select>
+		
+			<button onclick="WriteInTheFormulaButtons('attributeSelected')" >Write in the formula</button>
+			<br><br>
+			<fieldset>
+			  <legend>Operators and functions for the formula: </legend>
+			  <input type="button" style="width:40px" value="&#40;" onclick="WriteInTheFormulaButtons('&#40;')">
+			  <input type="button" style="width:40px" value="&#41;" onclick="WriteInTheFormulaButtons('&#41;')">
+			  <input type="button" style="width:40px" value="If" onclick="WriteInTheFormulaButtons('? :')">
+			  <br>
+			  <input type="button" style="width:40px" value="=" onclick="WriteInTheFormulaButtons('==')">
+			  <input type="button" style="width:40px" value="&gt;=" onclick="WriteInTheFormulaButtons('>=')">
+			  <input type="button" style="width:40px" value="&lt;" onclick="WriteInTheFormulaButtons('<')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+		
+			  <input type="button" style="width:30px" value="7" onclick="WriteInTheFormulaButtons('7')">
+			  <input type="button" style="width:30px" value="8" onclick="WriteInTheFormulaButtons('8')">
+			  <input type="button" style="width:30px" value="9" onclick="WriteInTheFormulaButtons('9')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="/" onclick="WriteInTheFormulaButtons('/')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:40px" value="and" onclick="WriteInTheFormulaButtons('&&')">
+		
+			  <br>
+			  <input type="button" style="width:40px" value="≠" onclick="WriteInTheFormulaButtons('!=')">
+			  <input type="button" style="width:40px" value="&lt;=" onclick="WriteInTheFormulaButtons('<=')">
+			  <input type="button" style="width:40px" value="&gt;" 	onclick="WriteInTheFormulaButtons('>')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:30px" value="4" onclick="WriteInTheFormulaButtons('4')">
+			  <input type="button" style="width:30px" value="5" onclick="WriteInTheFormulaButtons('5')">
+			  <input type="button" style="width:30px" value="6" onclick="WriteInTheFormulaButtons('6')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="×" onclick="WriteInTheFormulaButtons('*')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:40px" value="or" onclick="WriteInTheFormulaButtons('||')">
+			  <br>
+		
+			  <input type="button" style="width:40px" value="Log" onclick="WriteInTheFormulaButtons('Math.log10()')">
+			  <input type="button" style="width:40px" value="Ln" onclick="WriteInTheFormulaButtons('Math.log()')">
+			  <input type="button" style="width:40px" value="xⁿ"
+				onclick="WriteInTheFormulaButtons('**')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:30px" value="1" onclick="WriteInTheFormulaButtons('1')">
+			  <input type="button" style="width:30px" value="2" onclick="WriteInTheFormulaButtons('2')">
+			  <input type="button" style="width:30px" value="3" onclick="WriteInTheFormulaButtons('3')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="-" onclick="WriteInTheFormulaButtons('-')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:40px" value="not" onclick="WriteInTheFormulaButtons('!')">
+		
+			  <br>
+			  <input type="button" style="width:40px" value="Exp" onclick="WriteInTheFormulaButtons('Math.exp()')">
+			  <input type="button" style="width:40px" value="%" onclick="WriteInTheFormulaButtons('%')">
+			  <input type="button" style="width:40px" value="√¯" onclick="WriteInTheFormulaButtons('Math.sqrt()')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:30px" value="&#928;" onclick="WriteInTheFormulaButtons('Math.PI')">
+			  <input type="button" style="width:30px" value="0" onclick="WriteInTheFormulaButtons('0')">
+			  <input type="button" style="width:30px" value="." onclick="WriteInTheFormulaButtons('.')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="+" onclick="WriteInTheFormulaButtons('+')">
+			  &nbsp;&nbsp;&nbsp;&nbsp;
+		
+		
+			  <input type="button" style="width:40px" value="xor" onclick="WriteInTheFormulaButtons('^')">
+		
+			  <br>
+		
+			  <input type="button" style="width:40px" value="1/x" onclick="WriteInTheFormulaButtons('1/()')">
+			  <input type="button" style="width:40px" value="Ent" onclick="WriteInTheFormulaButtons('Math.trunc()')">
+			  <input type="button" style="width:40px" value="Abs"
+				onclick="WriteInTheFormulaButtons('Math.abs()')">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+			  <input type="button" style="width:30px" value="e" onclick="WriteInTheFormulaButtons('Math.E')">
+		
+			  <br><br>
+			  <input type="button" style="width:62px" value="sin" onclick="WriteInTheFormulaButtons('Math.sin()')">
+			  <input type="button" style="width:62px" value="asin" onclick="WriteInTheFormulaButtons('Math.asin()')">
+			  <input type="button" style="width:62px" value="cos" onclick="WriteInTheFormulaButtons('Math.cos()')">
+			  <input type="button" style="width:62px" value="acos" onclick="WriteInTheFormulaButtons('Math.acos()')">
+			  <input type="button" style="width:62px" value="tan" onclick="WriteInTheFormulaButtons('Math.tan()')">
+			  <input type="button" style="width:62px" value="atan" onclick="WriteInTheFormulaButtons('Math.atan()')">
+		
+			  <br>
+			  <input type="button" style="width:62px" value="sing"
+				onclick="WriteInTheFormulaButtons('Math.sin( *Math.PI/180)')"> 
+			  <input type="button" style="width:62px" value="asing"
+				onclick="WriteInTheFormulaButtons('Math.asin()*180/Math.PI')">
+			  <input type="button" style="width:62px" value="cosg"
+				onclick="WriteInTheFormulaButtons('Math.cos( *Math.PI/180)')">
+			  <input type="button" style="width:62px" value="acosg"
+				onclick="WriteInTheFormulaButtons('Math.acos( *Math.PI/180)')">
+			  <input type="button" style="width:62px" value="tang"
+				onclick="WriteInTheFormulaButtons('Math.tan( *Math.PI/180)	')">
+			  <input type="button" style="width:62px" value="atang"
+				onclick="WriteInTheFormulaButtons('Math.atan( *Math.PI/180)')">
+			</fieldset>
+			<div>
+			<label style="position:relative;top:22px">Formula:</label>
+			<br>
+			
+			<textarea id="textAreaFormulaColumnsCalculator" style="width:350px;height:100px;display:inline-block;position:relative;top:27px"></textarea>
+			<fieldset  style="display:inline-block;position:relative; top:10px" >
+				<legend>Set number of decimal figures:</legend>
+				<span>
+					<input type="checkbox" id="chooseNumberDecimalsCalculator_0" name="chooseNumberDecimalsCalculator" value="yes"> 
+					<label for="chooseNumberDecimalsCalculator_0">Yes: </label>
+					<input id="chooseNumberDecimalsCalculator_0_input" type="number" max="10" min="0">
+				</span> 
+			</fieldset>
+		</div>
+		<br>
+		<fieldset>
+			<legend>Column name:</legend>
+			<input type="radio" name="columnNameRadioCalculatorColumns" id ="columnNameRadioACalculatorColumns_personalized" checked="checked"> <!--Function has no sense, it is only to mimic aggregated columns dialog-->
+			<label for ="columnNameRadioACalculatorColumns_personalized" >Personalized</label>
+			<input id="columnNameColumnsCalculator" type="text" style="margin-top: 10px; margin-bottom: 10px; "> 
+		</fieldset>
+			<br>
+			
+			<button value="add" onClick="addColumnToListColumnsCalculator(event)" style="margin-bottom:10px">Add column to list
+			</button>
+			<br>
+			<hr>
+			<div style="width:auto;" >
+				<label>List of columns to add</label>
+				<span id= spanColumnsListCalculatorColumns></span>
+			  </div>
+			<br>
+			<div class="center" style="margin-top: 10px">
+			  <button value="default" onClick="addColumnsToTableInColumnsCalculator()">Ok</button>
+				<button value="cancel" formmethod="dialog" onclick="cancelButtonRecoveryOldData(event)">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+	
+	<dialog id="DialogColumnStatistics">
+		<form>
+ 				<span>For each column, rows with the follow statistics will be created:</span><br>
+				<div style="display: inline-block;">
+					<ul type="square">
+						<li>Mean</li><li>Median</li><li>Q1</li><li>Q3</li><li>Min. value</li><li>Max value</li>
+					</ul>
+				</div>
+				<div style="display: inline-block;">
+					<ul type="square">
+						<li>Mode</li><li>Standard deviation</li><li>Variance</li><li>Sum</li><li>Range</li><li>First value</li>
+					</ul>
+				</div>
+				<div style="display: inline-block;">
+					<ul type="square">
+						<li>Last value</li><li>Random value</li><li>Count</li><!-- <li>Proportion defined</li><li>Count defined</li> -->
+					</ul>
+				</div>
+
+			<br>
+			<div  style="text-align: center">
+				<button value="default" onClick="createColumnStatistics(event)">Ok</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogColumnStatisticsNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogPivotTable">
+		<form>
+ 			<div> 
+				<fieldset>
+					<legend>Columns</legend>
+					<table>
+						<tr>
+							<td>
+								<select id= "pivotTableColumns_select"></select><button id="pivotTableColumns_addButton" onclick="addTableRowInPivotTable('Columns')">Add a Column</button>
+							</td>
+							<td>
+								<table type="text" id="pivotTableColumns_table"></table>
+							</td>
+						</tr>
+					</table>
+					
+				</fieldset>
+				<fieldset>
+					<legend>Rows</legend>
+					<table>
+						<tr>
+							<td>
+								<select id= "pivotTableRows_select"></select><button id="pivotTableRows_addButton" onclick="addTableRowInPivotTable('Rows')">Add a Row</button>
+							</td>
+							<td>
+								<table type="text" id="pivotTableRows_table"></table>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+				<fieldset>
+					<legend>Values</legend>
+					<table>
+						<tr>
+							<td>
+								<select id= "pivotTableValues_select"></select><button id="pivotTableValues_addButton" onclick="addTableRowInPivotTable('Values')">Add a Value</button>
+							</td>
+							<td>
+								<table type="text" id="pivotTableValues_table"></table>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+				<fieldset>
+					<legend>Repited values aggregated by: </legend>
+					<span id="DialogPivotTableAggregationsSpan"></span>
+				</fieldset>
+			</div>
+			<div  style="text-align: center">
+				<button value="default" onClick="okButtonInPivotTable(event)">Ok</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogPivotTableNodeId"></input>
+		</form>
+	</dialog>
+	<dialog id="DialogConcatenateTables">
+		<form >
+			<fieldset> 
+				<legend> Choose one option</legend>
+				<input type="radio" name="concatenationType" value="allColumns" id="concatenationType_allColumns" checked> <label for="concatenationType_allColumns">Concatenate all columns</label> 
+				<br>
+				<input type="radio" name="concatenationType" value="repeatedColumns" id="concatenationType_repeatedColumns"> <label for="concatenationType_repeatedColumns">Concatenate only repeated columns</label> 
+				
+			</fieldset>
+
+			<br>
+			<div  style="text-align: center">
+				<button value="default" onClick="concatenateTables()">Ok</button>
+				<button value="cancel" formmethod="dialog" >Cancel</button>
+			</div>			
+		</form>		
+	</dialog>
+	
+	<dialog id="DialogSelectColumns">
+		<form>
+			Select columns:
+			<span id="DialogSelectColumnsHTML">
+			</span>
+			<div class="center">
+				<button value="default" onClick="GetSelectColumns(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogSelectColumnsNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogExpandColumn">
+		<form>
+			Select column with the entity to see more details (expand):
+			<span id="DialogExpandColumnHTML">
+			</span>
+			<br>
+			<!--label>Number records to request:
+				<input type="text" id="ExpandColumnNumberOfRecords" size="6" maxlength="6" value="100"></input>
+			</label-->
+			<div class="center">
+				<button value="default" onClick="GetExpandColumn(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogExpandColumnNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogSelectExpands">
+		<form>
+			<fieldset id="DialogSelectExpandsHTML">
+				<legend>Choose entities you want details (expand) and attributes to select</legend>
+				<span id="DialogSelectExpandsCheckBoxes">
+				</span>
+			</fieldset>
+			<div class="center">
+				<button value="default" onClick="GetSelectExpands(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogSelectExpandsNodeId"></input>
+		</form>
+	</dialog>
+	
+	<dialog id="DialogFilterRowEntities">
+		<form>
+			<fieldset id="DialogFilterRowEntitiesHTML">
+				<legend>Choose the way to get to the Entity you want to filter</legend>
+				<span id="DialogFilterRowEntitiesCheckBoxes"> 
+				</span>
+			</fieldset>
+			
+			<div class="center">
+				<button value="default" onClick="OkButtonInRowFilterEntities(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogSelectNRecords">
+		<form>
+			<label>Number records to request:
+				<input type="text" id="SelectNumberOfRecords" size="6" maxlength="6" value="100"></input>
+			</label>
+			<div class="center">
+				<button value="default" onClick="GetSelectNRecords(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogSelectSortBy">
+		<form>
+			<fieldset id="DialogSelectSortByHTML">
+				<legend>Select the criteria for sorting:</legend>
+				<span id="DialogSelectSortByRadioButtons">
+				</span>
+			</fieldset>
+			<br>
+			<label><input type="radio" id="SelectSortByAsc" name="SelectSortByArcDesc" checked />ascending</label>
+			<label><input type="radio" id="SelectSortByDesc" name="SelectSortByArcDesc" />descending</label>
+			<div class="center">
+				<button value="default" onClick="GetSelectSortBy(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogSelectSortByNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogSelectRangeSTA">
+		<form>
+			<label>Number records to skip from the start:
+				<input type="text" id="SelectRangeSkipSTA" size="6" maxlength="10" value="0"></input>
+			</label>
+			<br>
+			<label>Number records to request:
+				<input type="text" id="SelectRangeTopSTA" size="6" maxlength="10" value="100"></input>
+			</label>
+			<div class="center">
+				<button value="default" onClick="GetSelectRangeSTA(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogSelectRangeSTANodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogSelectRow">
+		<div id="divTitleSelectRow" class="center" style="font-size: large;"></div>
+		<form>
+			Select an element:
+			<span id="DialogSelectRowTable">
+			</span>
+			<div class="center">
+				<button value="default" onClick="GetSelectRow(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogSelectRowNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogFilterRows">
+		<div id="divTitleSelectRows" class="center" style="font-size: large;"></div>
+		<form>
+			Filter:
+			<div id="DialogSelectRowsFilter">
+			</div>
+			<div class="center">
+				<button value="default" onClick="GetFilterRows(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogFilterRowsNodeId"></input>
+		</form>
+	</dialog>
+	<dialog id="DialogFilterRowsByTime"> 
+		
+		<form>
+
+			<fieldset>
+				<legend>Period</legend>
+				<label>Property:</label>
+				<select id="filterRowsByTimeSelectProperty"></select>
+				<label>From: </label>
+				<input type="datetime-local" id="filterRowsByTimeCalendarFrom">
+				<label>To: </label>
+				<input type="datetime-local" id="filterRowsByTimeCalendarTo">
+			</fieldset>
+			<fieldset>
+			<legend>To aggregate data by (Optional. Only available with "Observations"): </legend>
+			<input type="checkbox" id="aggregateDataYes" /><label id="aggregateDataYes_label"> Aggregate data by:</label>
+			<select id="filterRowsByTimeSelectAggregation"> 
+				<option value="year">Year</option>
+				<option value="month">Month</option>
+				<option value="day">Day</option>
+				<option value="hour">Hour</option>
+				<option value="minute">Minute</option>
+			</select>
+			</fieldset>
+				<div class="center">
+					<button value="default" onClick="filterRowsByTimeOkButton()">OK</button>
+					<button value="cancel" formmethod="dialog">Cancel</button>
+				</div>
+		</form>
+
+	</dialog>
+	<dialog id="DialogGeospatialFilterRowsByDistance">
+		
+		<form>
+			<fieldset>
+				<legend>Position source </legend>
+				<input type="radio" id="geoDistance_FOI_Feature" name="geoDistanceRadios" value="Feature" checked> 
+			 	<label for="geoDistance_FOI_Feature">FeatureOfInterest-feature</label>
+				<span style="font-size: 10px; font-style: italic" id="geoDistance_FOI_Feature_span" >Path: </span>
+				<select id="geoDistance_FOI_Feature_select" name="geoDistance_FOI_Feature_select"></select><br>
+				<input type="radio" id="geoDistance_Location" name="geoDistanceRadios" value="Location" >
+				<label for="geoDistance_Location">Locations-location</label>
+				<span style="font-size: 10px; font-style: italic" id="geoDistance_Location_span" >Path: </span>
+				<select id="geoDistance_Location_select" name="geoDistance_Location_select"></select><br>
+			</fieldset>
+			<fieldset>
+				<legend>Center Point</legend>
+				<label> Coordinate X:</label><select id="geoDistance_input_coordinate1_select" name="geoDistance_input_coordinate1_select" onChange="writeValueInInputGeoDistance('1')"></select><input type="text" id ="geoDistance_input_coordinate1" style="margin-left: 10px"></input><br>
+				<label> Coordinate Y:</label><select id="geoDistance_input_coordinate2_select" name="geoDistance_input_coordinate2_select" onChange="writeValueInInputGeoDistance('2')"></select><input type="text" id ="geoDistance_input_coordinate2" style="margin-left: 10px"> </input></select><br>
+		
+			</fieldset>
+
+			<label for="geoDistance_select_operator">Operator</label>
+			<select id="geoDistance_select_operator" name="geoDistance_select_operator" >
+				<option value="eq"> =</option>
+				<option value="ne">  ≠ </option>
+				<option value="gt"> > </option>
+				<option value="lt"> < </option>
+				<option value="ge">  ≥  </option>
+				<option value="le">   ≤   </option>
+			</select>
+
+			<label for="geoDistance_value">Distance</label><input type="number" id ="geoDistance_input_value" style="width:50px" min="0" value="0">
+
+			<div class="center">
+				<button value="default" onClick="GetGeoDistanceFilter(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogJoinTables">
+		<form>
+			<fieldset>
+				<legend>Row matching fields</legend>
+				<span id="DialogJoinTablesRowMatching"></span>
+				</label>
+			</fieldset>
+			<fieldset>
+				<legend>Merged records that do not match</legend>
+				<label><input type="radio" id="DialogJoinTablesNotMatchRemove" name="JoinTablesNotMatch" />Discard</label>
+				<label><input type="radio" id="DialogJoinTablesNotMatchLeftTable" name="JoinTablesNotMatch" checked />Add records of 1st table</label>
+				<label><input type="radio" id="DialogJoinTablesNotMatchBothTables" name="JoinTablesNotMatch" />Add records from both tables</label>
+			</fieldset>
+			<div class="center">
+				<button value="default" onClick="GetJoinTables(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+
+	<dialog id="DialogContextMenu">
+		<form>
+			<p>
+				<span id="ButtonsContextMenuObjects"></span><br>
+				Node operations:<br>
+				<button onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a node and any connection to previous nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
+				<button onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Renames de node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.<small>")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="rename.png" height="20" valign="middle">Rename</button>
+				<br>
+			</p>
+			<div class="center">
+				<button value="cancel" onClick="startingNodeContextId=null;" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+		<div id="ContextMenuHelpToolTip" style="min-height: 1px; overflow: hidden; display:none; position: fixed; background-color: yellow; width:300px; border-style: groove; padding: 5px;">help</div>
+	</dialog>
+
+	<dialog id="DialogEdgeContextMenu">
+		<form>
+			<p>
+				<button onclick='removeEdge(event, "DialogEdgeContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a connection between two nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
+			</p>
+			<div class="center">
+				<button value="cancel" onClick="startingEdgeContextId=null;" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogOK">
+		<form>
+			<span id="DialogOKOptions"></span><br>
+			<span id="DialogOKHTML">
+			</span>
+			<div class="center">
+				<button value="cancel" formmethod="dialog">Close</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogImportCSV">
+		<form>
+			Import CSV file table
+			<br>
+			<fieldset style="display: inline;">
+				<legend>Delimiter</legend>
+				<label><input type="radio" name="DialogImportCSVDelimiter" id="DialogImportCSVDelimiterText" checked></input><input type="text" id="DialogImportCSVDelimiter" size="1" maxlength="1" value=";"></input></label> &ensp;
+				<label><input type="radio" name="DialogImportCSVDelimiter" id="DialogImportCSVDelimiterTab"></input> Tab</label> &ensp;
+				<label><input type="radio" name="DialogImportCSVDelimiter" id="DialogImportCSVDelimiterAuto" checked="checked"></input> Auto</label>
+			</fieldset>
+			Encoding: <select id="DialogImportCSVEncoding">
+				<option value="windows-1252">Windows 1252 (Western Latin)</option>
+				<!-- This is not suported by browsers. If we need it in the future we should use de work "binary", read the text and convert it ourselves. option value="ibm850">OEM 850 (MS-DOS Latin-1)</option-->
+				<option value="">UTF-8</option>
+				<option value="iso8859-2">ISO-8859-2 (Latin 2)</option>
+				<option value="iso-8859-3">ISO-8859-3 (Latin 3)</option>
+				<option value="iso-8859-4">ISO-8859-4 (Latin 4)</option>
+				<option value="iso-8859-5">ISO-8859-5 (Cyrillic)</option>
+				<option value="iso-8859-6">ISO-8859-6, ecma-114 (Arabic)</option>
+				<option value="iso-8859-7"> ISO-8859-7 (greek)</option>
+				<option value="iso-8859-8">"ISO-8859-8 (hebrew)</option>
+				<option value="iso-8859-8-i">ISO-8859-8-I (logical)</option>
+				<option value="iso-8859-10">ISO-8859-10 (Latin 6)</option>
+				<option value="iso-8859-11">Windows-874, DOS-874</option>
+				<option value="iso-8859-13">ISO-8859-13</option>
+				<option value="iso-8859-14">ISO-8859-14</option>
+				<option value="iso-8859-15">ISO-8859-15 (Latin 9)</option>
+				<option value="iso-8859-16">ISO-8859-16</option>
+				<option value="windows-1250">Windows-1250</option>
+				<option value="windows-1251">Windows-1251</option>
+				<option value="windows-1253">Windows-1253</option>
+				<option value="iso-8859-9">ISO 8859-9, windows-1254, Latin 5</option>
+				<option value="windows-1255">Windows-1255</option>
+				<option value="windows-1256">Windows-1256</option>
+				<option value="windows-1257">Windows-1257</option>
+				<option value="windows-1258">Windows-1258</option>
+				<option value="cp866">IBM866</option>
+				<option value="koi8">KOI8-R</option>
+				<option value="koi8-ru">KOI8-U</option>
+				<option value="macintosh">Macintosh</option>
+				<option value="x-mac-cyrillic">X-MAC-Cyrillic</option>
+			</select>
+			<br>
+			<label><input type="checkbox" id="DialogImportCSVHeader" checked="checked"></input>The first line contains field names</label><br>
+			<label><input type="checkbox" id="DialogImportCSVStringTyping"></input>Import numbers as strings</label>
+			<br>
+			<fieldset>
+				<legend>Meaning source</legend>
+				<label><input type="radio" id="DialogImportMeaningCSVSourceFile" name="DialogImportMeaningCSVSource" value="file" checked="checked" onClick="SelectImportMeaningCSVSource(event)">
+				Local CSVW file: <input type="file" id="DialogImportMeaningCSVSourceFileText" accept=".csvw,.json" onChange="ReadFileImportCSVW(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportMeaningCSVSourceURL" name="DialogImportMeaningCSVSource" value="url" onClick='SelectImportMeaningFileSource(event, "CSV")'>
+				CSVW URL: <input type="text" size="70" id="DialogImportMeaningCSVSourceURLInput" onChange="ReadURLImportCSVW(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningCSVSourceURLButton" onClick="ReadURLImportCSVW(event)" disabled="disabled">Load</button></label><br>
+				<label><input type="radio" id="DialogImportMeaningCSVSourceAuto" name="DialogImportMeaningCSVSource" value="auto" onClick='SelectImportMeaningFileSource(event, "CSV")'>
+				Automatic retrieve of shared meaning</label><br>
+			</fieldset>
+			<br>
+			<fieldset>
+				<legend>CSV source</legend>
+				<label><input type="radio" id="DialogImportCSVSourceFile" name="DialogImportCSVSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "CSV")'>
+				Local file: <input type="file" accept=".csv,*.txt" id="DialogImportCSVSourceFileText" onChange="ReadFileImportCSV(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportCSVSourceURL" name="DialogImportCSVSource" value="url" onClick='SelectImportFileSource(event, "CSV")'>
+				URL: <input type="text" size="70" id="DialogImportCSVSourceURLInput" onChange="ReadURLImportCSV(event)" disabled="disabled"></input> <button type="button" id="DialogImportCSVSourceURLButton" onClick="ReadURLImportCSV(event)" disabled="disabled">Load</button></label><br>
+				<label>Suggested CSV URLs:
+					<select id="DialogImportCSVSourceURLSelect" onChange="PopulateInputFromSelect(event, 'DialogImportCSVSourceURL')"></select>
+				</label>
+
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "CSV")'>Done</button>
+				<button value="cancel" formmethod="dialog">Close</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogSaveTable">
+		<form>
+			Save the table as CSV
+			<br>
+			<label>CSV delimiter:
+				<input type="text" id="DialogSaveTableDelimiter" size="2" maxlength="1" value=";"></input>
+			</label>
+			<!--span id="DialogSaveTableOptions"></span--><br>
+			<div class="center">
+				<button value="default" onClick="SaveTable(event)">Save CSV</button>
+				<button value="csvw" onClick="SaveCSVW(event)">Save CSVW</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogMeaningTable">
+		<form>
+			<span id="DialogMeaningTableTitle"></span>
+			<br>
+			<span id="DialogMeaningFields"></span>
+			<div class="center">
+				<button value="default" onClick="SaveMeaningTable(event)">Ok</button>
+				<button value="share" onClick="ShareMeaningTable(event)">Share</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogImportGeoJSON">
+		<form>
+			Import GeoJSON
+			<br>
+
+			<!-- tres variants d'importacio 
+				* As is
+				* Diferent variables in a time series as columns
+                                * A time series variable per row
+			-->
+			
+			<fieldset>
+				<legend>Meaning source</legend>
+				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceFile" name="DialogImportMeaningGeoJSONSource" value="file" checked="checked" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
+				Local GeoJSON schema file: <input type="file" id="DialogImportMeaningGeoJSONSourceFileText" accept=".json" onChange="ReadFileImportGeoJSONSchema(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceURL" name="DialogImportMeaningGeoJSONSource" value="url" onClick='SelectImportMeaningFileSource(event, "GeoJSON")'>
+				GeoJSON schema URL: <input type="text" size="70" id="DialogImportMeaningGeoJSONSourceURLInput" onChange="ReadURLImportGeoJSONSchema(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSONSchema(event)" disabled="disabled">Load</button></label><br>
+				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceAuto" name="DialogImportMeaningGeoJSONSource" value="auto" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
+				Automatic retrieve of shared meaning</label><br>
+			</fieldset>
+			<br>
+			<fieldset>
+				<legend>GeoJSON source</legend>
+				<label><input type="radio" id="DialogImportGeoJSONSourceFile" name="DialogImportGeoJSONSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "GeoJSON")'>
+				Local file: <input type="file" accept=".geojson,*.json" id="DialogImportGeoJSONSourceFileText" onChange="ReadFileImportGeoJSON(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportGeoJSONSourceURL" name="DialogImportGeoJSONSource" value="url" onClick='SelectImportFileSource(event, "GeoJSON")'>
+				URL: <input type="text" size="70" id="DialogImportGeoJSONSourceURLInput" onChange="ReadURLImportGeoJSON(event)" disabled="disabled"></input> <button type="button" id="DialogImportGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSON(event)" disabled="disabled">Load</button></label><br>
+				<label>Suggested GeoJSON URLs:
+					<select id="DialogImportGeoJSONSourceURLSelect" onChange="PopulateInputFromSelect(event, 'DialogImportGeoJSONSourceURL')"></select>
+				</label><br>
+				<label><input type="radio" id="DialogImportGeoJSONSourceExternalData" name="DialogImportGeoJSONSource" value="externalData" disabled="disabled" >
+					External data from: <input type="text" size="70" id="DialogImportGeoJSONSourceExternalDataText" disabled="disabled"></input>
+				</label>
+
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GeoJSON")'>Done</button>
+				<button value="cancel" formmethod="dialog">Close</button>
+			</div>
+			
+			<input type="hidden" id="DialogImportGeoJSONNodeId"></input>
+
+		</form>
+	</dialog>
+
+	<dialog id="DialogImportDBF">
+		<form>
+			Import dBASE III+, IV and MiraMon DBF Extended
+			<br>
+			
+			<fieldset>
+				<legend>DBF source</legend>
+				<label><input type="radio" id="DialogImportDBFSourceFile" name="DialogImportDBFSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "DBF")'>
+				Local file: <input type="file" accept=".dbf" id="DialogImportDBFSourceFileText" onChange="ReadFileImportDBF(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportDBFSourceURL" name="DialogImportDBFSource" value="url" onClick='SelectImportFileSource(event, "DBF")'>
+				URL: <input type="text" size="70" id="DialogImportDBFSourceURLInput" onChange="ReadURLImportDBF(event)" disabled="disabled"></input> <button type="button" id="DialogImportDBFSourceURLButton" onClick="ReadURLImportDBF(event)" disabled="disabled">Load</button></label><br>
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "DBF")'>Done</button>
+				<button value="cancel" formmethod="dialog">Close</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogImportJSONLD">
+		<form>
+			Import JSON-LD
+			<br>
+			
+			<fieldset>
+				<legend>Include</legend>
+				<label><input type="checkbox" id="DialogImportJSONLDAddGeo" checked="chacked"></input>Add geometry</label> <small>(Sometimes is too big to be imported)</small><br>
+				<label><input type="checkbox" id="DialogImportJSONLDAddObs" checked="chacked"></input>Add observations</label> <small>(Forces to duplicate the geometry, if included)</small><br>
+			</fieldset>
+			<fieldset>
+				<legend>JSON-LD source</legend>
+				<label><input type="radio" id="DialogImportJSONLDSourceFile" name="DialogImportJSONLDSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "JSONLD")'>
+				Local file: <input type="file" accept=".json;*.jsonld" id="DialogImportJSONLDSourceFileText" onChange="ReadFileImportJSONLD(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportJSONLDSourceURL" name="DialogImportJSONLDSource" value="url" onClick='SelectImportFileSource(event, "JSONLD")'>
+				URL: <input type="text" size="70" id="DialogImportJSONLDSourceURLInput" onChange="ReadURLImportJSONLD(event)" disabled="disabled"></input> <button type="button" id="DialogImportJSONLDSourceURLButton" onClick="ReadURLImportJSONLD(event)" disabled="disabled">Load</button></label><br>
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSONLD")'>Done</button>
+				<button value="cancel" formmethod="dialog">Close</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogImportJSON">
+		<form>
+			Import JSON
+			<fieldset>
+				<legend>JSON source</legend>
+				<label><input type="radio" id="DialogImportJSONSourceFile" name="DialogImportJSONSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "JSON")'>
+				Local file: <input type="file" accept=".json" id="DialogImportJSONSourceFileText" onChange="ReadFileImportJSON(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportJSONSourceURL" name="DialogImportJSONSource" value="url" onClick='SelectImportFileSource(event, "JSON")'>
+				URL: <input type="text" size="70" id="DialogImportJSONSourceURLInput" onChange="ReadURLImportJSON(event)" disabled="disabled"></input> <button type="button" id="DialogImportJSONSourceURLButton" onClick="ReadURLImportJSON(event)" disabled="disabled">Load</button></label><br>
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSON")'>Done</button>
+				<button value="cancel" formmethod="dialog">Close</button>
+			</div>
+		</form>
+	</dialog>
+	
+	<dialog id="DialogSaveLayer">
+		<form>
+			<span id="DialogSaveLayerTitle"></span>
+			<fieldset>
+				<legend>Position:</legend>
+				<label>Place description:
+					<span id="DialogSaveLayerPlace"></span>
+				</label>
+				<br>
+				<label>Longitude:
+					<span id="DialogSaveLayerLongitude"></span>
+				</label>
+				<br>
+				<label>Latitude:
+					<span id="DialogSaveLayerLatitude"></span>
+				</label>
+			</fieldset>
+			<br>
+			<label>Date and time:
+				<span id="DialogSaveLayerTime"></span>
+			</label>
+			<span id="DialogSaveLayerVariableDefUoM"></span>
+			<br>
+			<div class="center">
+				<span id="DialogSaveLayerSave"></span>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogGUF">
+		<form>
+			Geospatial user feedback
+			<fieldset>
+				<legend>Target:</legend>
+				<label>Title <small>(mandatory to add)</small>: <input type="text" id="DialogGUFTitleInput"></input></label><br>
+				<label>Code*: <input type="text" id="DialogGUFCodeInput"></input></label><br>
+				<label>Codespace*: <input type="text" id="DialogGUFCodespaceInput"></input></label>
+			</fieldset>
+			<br>
+			<div class="center">
+				<button value="add" onClick="AddGUF(event)">Add feedback</button>
+				<button value="edit" onClick='EditGUF(event)'>Edit previous feedback</button>
+				<button value="ok" formmethod="dialog" onClick="ShowGUF(event)">Get feedback</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogScatterPlot">
+		<table border="0"><tr><td>
+			<span id="DialogScatterPlotTitle"></span>
+			<form>
+				<div id="DialogScatterPlotDiv"></div>
+			<br>
+			<br>
+			<div class="center">
+				<button value="draw" onClick="DrawScatterPlot(event)">Draw</button>
+				<button value="ok" onClick="CloseDialogScatterPlot(event)" formmethod="dialog">Close</button>
+			</div>
+			<input type="hidden" id="DialogScatterPlotNodeId"></input>
+			</form>
+		</td>
+		<td style="vertical-align: top;"><canvas id="DialogScatterPlotVisualization" style="width:600px; height:500px;max-height:500px; "></canvas></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<fieldset>
+					<legend>
+						Graphic configurations
+					</legend>
+						<label style="font-weight: bold;">Graphic title:</label>
+						<input value="" type="text" id="DialogScatterPlotAxisTitle"></input> <br>
+						<label style="font-weight: bold;">X axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisXLabel"></input><br>
+						<label style="font-weight: bold;">Left Y axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisYLabelLeft"></input><br>
+						<label style="font-weight: bold;">Right Y axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisYLabelRight"></input>
+				</fieldset>
+
+			</td>
+		</tr>
+	</table> 
+	</dialog>
+
+	<dialog id="DialogBarPlot">
+		<table border="0"><tr><td>
+			<span id="DialogBarPlotTitle"></span>
+			<form>
+			<fieldset>
+    				<legend>Plot type:</legend>
+				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypeBar" checked="checked"></input>Bar</label>
+				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypePie"></input>Pie</label>
+			</fieldset>
+			<fieldset>
+    				<legend>Axes:</legend>
+				<label>Categories:
+					<span id="DialogBarPlotAxisX"></span>
+				</label>
+				<br>
+				<label>Classification (optional):
+					<span id="DialogBarPlotSeries"></span>
+				</label>
+				<br>
+				<label>Values:
+					<span id="DialogBarPlotAxisY"></span>
+				</label>
+				<br>
+				<label>Variable name (optional):
+					<span id="DialogBarPlotVariable"></span>
+				</label>
+			</fieldset>
+			<br>
+			<div class="center">
+				<button value="draw" onClick="DrawBarPlot(event)">Draw</button>
+				<button value="ok" onClick="CloseDialogBarPlot(event)" formmethod="dialog">Close</button>
+			</div>
+			<input type="hidden" id="DialogBarPlotNodeId"></input>
+			</form>
+		</td>
+		<td><div id="DialogBarPlotVisualization" style="width:600px; height:500px;">
+				<canvas id="DialogBarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas></div></td>
+		</tr></table>
+	</dialog>
+
+	<dialog id="DialogImageViewer">
+		<table border="0"><tr><td>
+			<span id="DialogImageViewerTitle"></span>
+			<form>
+			<fieldset>
+    				<legend>Image Sources:</legend>
+				<label>Image URL:
+					<span id="DialogImageViewerURL"></span>
+				</label><br>
+				<label>Label:
+					<span id="DialogImageViewerLabel"></span>
+				</label>
+			</fieldset>
+			<label>Image size (px):
+				<input type="text" id="DialogImageViewerSizeInput" value="200"></input>
+			</label>
+			<br>
+			<div class="center">
+				<button value="draw" onClick="DrawImageViewer(event)">Draw</button>
+				<button value="ok" onClick="CloseDialogImageViewer(event)" formmethod="dialog">Close</button>
+			</div>
+			</form>
+		</td></tr>
+		<tr><td><div id="DialogImageViewerVisualization" style="width:900px; height:550px;"></div></td>
+		</tr></table>
+	</dialog>
+
+	<dialog id="DialogOneValue">
+		<span id="DialogOneValueTitle"></span>
+		<form>
+		<fieldset>
+			<label>Variable:
+				<span id="DialogOneValueVariable"></span>
+			</label>
+			<br>
+			<label>Alerting value (optional):
+				<input type="text" id="DialogOneValueAlertValue" size="5" value=""></input>
+			</label>
+			<br>
+			<label>Observation time:
+				<span id="DialogOneValueTime"></span>
+			</label>
+			<br>
+			<label>Refresh time (<small>not applicable with WebSub enabled</smcall>):
+				<input type="text" id="DialogOneValueRefreshPeriod" size="3" value="20"></input> seconds
+			</label>
+		</fieldset>
+		<br>
+		<div class="center">
+			<button value="ok" onClick="PrepareRefreshOneValue(event)">Ok</button>
+			<button value="stop" onClick="StopRefreshOneValue(event)">Stop refresh</button>
+			<button value="cancel" onClick="CloseDialogOneValue(event)" formmethod="dialog">Close</button>
+		</div>
+		<input type="hidden" id="DialogOneValueNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogCountResults">
+		<span id="DialogCountResultsTitle"></span>
+		<form>
+		<fieldset>
+			<label>Refresh time:
+				<input type="text" id="DialogCountResultsRefreshPeriod" size="3" value="20"></input> seconds
+			</label>
+		</fieldset>
+		<br>
+		<div class="center">
+			<button value="ok" onClick="prepareRefreshCountResults(event)" >Ok</button>
+			<button value="ok"  onClick="stopRefreshCountResults(event)" >Stop refresh</button>
+			<button value="cancel" onClick="closeDialogCountResults(event)" formmethod="dialog">Close</button>
+		</div>
+		<input type="hidden" id="DialogCountResultsNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogUploadObservations">
+		<div id="DialogUploadObservationsLoginFirst" style="display: none;">
+			<form>
+				To upload data in a STA server, you should Login first.<br>
+				<div class="center">
+					<button value="cancel" formmethod="dialog">Cancel</button>
+				</div>
+			</form>
+		</div>
+		<form id="DialogUploadObservationsForm">
+			Upload table as STA observations
+			<br>
+			<label><input type="radio" name="DialogUploadObservationsRadio" id="DialogUploadObservationsObsPropsInARow" checked="checked"></input>Each row represents a feature of interest with several observed properties</label>
+			<br>
+			<label><input type="radio" name="DialogUploadObservationsRadio" id="DialogUploadObservationsObsPropsInAColumn" disabled></input>Several observed properties of the same feature in a single column and in multiple rows</label>
+			<fieldset>
+				<legend>Position:</legend>
+				<label>Place description:
+					<span id="DialogUploadObservationsPlace"></span>
+				</label>
+				<br>
+				<label>Longitude:
+					<span id="DialogUploadObservationsLongitude"></span>
+				</label>
+				<br>
+				<label>Latitude:
+					<span id="DialogUploadObservationsLatitude"></span>
+				</label>
+			</fieldset>
+			<label>Date and time:
+				<span id="DialogUploadObservationsTime"></span>
+			</label>
+			<br>
+			<label>Sensor instance id or name:
+				<span id="DialogUploadObservationsSensorName"></span>
+			</label>
+			<br>
+			<label>Sensor reference or type:
+				<span id="DialogUploadObservationsSensorType"></span>
+			</label>
+			<br>
+			<label>STA service URL:
+				<input type="text" id="DialogSTAUploadURLInput" size="100"></input>
+			</label>
+			<div class="center">
+				<button value="ok" onClick="UploadObservationsSTAURL(event)" formmethod="dialog">Upload</button>
+			</div>
+		</form>
+	</dialog>
+
+	<!--dialog id="UploadTimeAverages">
+		<div id="UploadTimeAveragesLoginFirst" style="display: none;">
+		<form>
+			To upload data in a STA server, you should Login first.<br>
+			<div class="center">
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+		</div>
+		<form id="UploadTimeAveragesForm">
+			Upload Datastream as STA time averages
+			<br>
+			<label>STA target service URL:
+				<input type="text" id="DialogTimeAveragesSTAUploadURLInput" size="100"></input>
+			</label>
+			<div class="center">
+				<button value="ok" onClick="UploadTimeAveragesSTAURL(event)" formmethod="dialog">Upload</button>
+			</div>
+		</form>
+	</dialog-->
+
+
+	<!--h2 id="eventSpanHeading"></h2>
+	<pre id="eventSpanContent"></pre-->
+
+</body>
+
+
+</html>

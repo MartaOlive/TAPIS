@@ -854,64 +854,144 @@ function GetHTMLdataAttribute(dataAttributeName, dataAttribute) {
 	return cdns.join("");
 }
 
-//rowNumbers: Show two numbers as first collumn
+function getHTMLCharacterAttributeType(type) {
+	var cdns=[];
+	cdns.push('<span class="roundCorner" style="background-color: ');
+	switch(type) {
+		case "boolean":
+			cdns.push('DarkGrey');
+			break;
+		case "array":
+			cdns.push('DarkOrange');
+			break;
+		case "null":
+			cdns.push('LightSlateGrey');
+			break;
+		case "object":
+			cdns.push('Fuchsia');
+			break;
+		case "undefined": 
+			cdns.push('LightGrey');
+			break;
+		case "integer": 
+			cdns.push('IndianRed');
+			break;
+		case "number":
+			cdns.push('Red');
+			break;
+		case "isodatetime":
+			cdns.push('BlueViolet');					
+			break;
+		case "anyURI":
+			cdns.push('Coral');
+			break;
+		case "string":
+		default:
+			cdns.push('ForestGreen');
+	}
+	cdns.push('" title="', type,'">');
+	switch(type) {
+		case "boolean":
+			cdns.push('B');
+			break;
+		case "array":
+			cdns.push('A');
+			break;
+		case "null":
+			cdns.push('N');
+			break;
+		case "object":
+			cdns.push('O');
+			break;
+		case "undefined":
+			cdns.push('U'); 
+			break;
+		case "integer": 
+			cdns.push('I');
+			break;
+		case "number":
+			cdns.push('N');
+			break;
+		case "isodatetime":
+			cdns.push('D');
+			break;
+		case "anyURI":
+			cdns.push('L');
+			break;
+		case "string":
+		default:
+			cdns.push('C');
+	}
+	cdns.push('</span>');
+	return cdns.join('');
+}
+
+//rowNumbers: Show row numbers as first collumn
 //prefix_selectedEntityId, in the radio buttons to select use prefix_selectedEntityId+i as an identifier, 
 //selectedEntityId index of the selected radio button, 
 //f_onclickselectEntity: on click function for the radio buttons
-//f_onclickselectEntityParam: on click function for the radio buttons parameter (it is an string)
+//onclickselectEntityParam: on click function for the radio buttons parameter (it is an string)
+//f_onclickInsteadOfLink: on click function that will govern the reaction to a click on a link
+//onclickInsteadOfLinkParam: on click function that will govern the reaction to a click on a link
 //f_isAttributeAnyURI: function to determine if an attribute is a URI
 //f_attributeToHide: function to determine if an attribute should be hidden in the view
-		function GetHTMLTable(data, dataAttributesInput, rowNumbers, prefix_selectedEntityId, selectedEntityId, f_onclickselectEntity, f_onclickselectEntityParam, f_isAttributeAnyURI, f_attributeToHide) {
-			var dataAttributes = dataAttributesInput ? dataAttributesInput : getDataAttributesSimple(data); 
-			var cdns=[], needhref=[], record, cell, dataAttribute;
-			var dataAttributesArray = Object.keys(dataAttributes);
+function getHTMLTable(data, dataAttributesInput, 
+		rowNumbers, 
+		prefix_selectedEntityId, selectedEntityId, f_onclickselectEntity, onclickselectEntityParam, 
+		f_onclickInsteadOfLink, onclickInsteadOfLinkParam, f_isAttributeAnyURI, 
+		f_attributeToHide) {
+	var dataAttributes = dataAttributesInput ? dataAttributesInput : getDataAttributesSimple(data); 
+	var cdns=[], needhref=[], record, cell, dataAttribute;
+	var dataAttributesArray = Object.keys(dataAttributes);
 
-			cdns.push("<table class='tablesmall'><tr>");
-			if (rowNumbers)
-				cdns.push("<th></th>");
-			if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
-				cdns.push("<th></th>");
-			for (var a = 0; a < dataAttributesArray.length; a++) {
-				if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
-					continue;
-				cdns.push("<th>");
-				cdns.push(GetHTMLdataAttribute(dataAttributesArray[a], dataAttributes[dataAttributesArray[a]]));
-				cdns.push("</th>");
-				if (f_isAttributeAnyURI)
-					needhref[a]=f_isAttributeAnyURI(dataAttributesArray[a]);
-			}
+	cdns.push("<table class='tablesmall'><tr>");
+	if (rowNumbers)
+		cdns.push("<th></th>");
+	if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
+		cdns.push("<th></th>");
+	for (var a = 0; a < dataAttributesArray.length; a++) {
+		if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
+			continue;
+		cdns.push("<th>",
+			GetHTMLdataAttribute(dataAttributesArray[a], dataAttributes[dataAttributesArray[a]]),
+			" ",
+			getHTMLCharacterAttributeType(dataAttributes[dataAttributesArray[a]].type),
+			"</th>");
+		if (f_isAttributeAnyURI)
+			needhref[a]=f_isAttributeAnyURI(dataAttributesArray[a]);
+	}
 
-			cdns.push("</tr>");
-			for (var i = 0; i < data.length; i++) {
-				record=data[i];
-				cdns.push("<tr>");
-				if (rowNumbers)
-					cdns.push("<td align='right'>", i + 1, "</td>");
-				if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
-				{
-					var s=record["@iot.id"] ? record["@iot.id"] : i;
-					cdns.push("<td><input type='radio' name='SelectRowRadio' id='", prefix_selectedEntityId, s, "' ", f_onclickselectEntity ? "onClick='" + f_onclickselectEntity.name + "(\"" + f_onclickselectEntityParam+ "\");' " : "", s == selectedEntityId ? "checked='checked'" : "", "/></td>");
-				}
-				for (var a = 0; a < dataAttributesArray.length; a++) {
-					if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
-						continue;
-					cell=record[dataAttributesArray[a]];
-					cdns.push((dataAttributes[dataAttributesArray[a]].type=="number" || dataAttributes[dataAttributesArray[a]].type=="integer") ? "<td align='right'>" :  "<td>");
-					if (typeof cell !== "undefined") {
-						if (f_isAttributeAnyURI && needhref[a] && cell.length)
-							cdns.push("<a href='", cell, "' target='_blank'>", cell, "</a>");
-						else if (typeof cell === "object")
-							cdns.push(JSON.stringify(cell));
-						else
-							cdns.push(cell);
-					}
-					cdns.push("</td>");
-				}
-				cdns.push("</tr>");
-			}
-			cdns.push("</table>");
-			return cdns.join("");
+	cdns.push("</tr>");
+	for (var i = 0; i < data.length; i++) {
+		record=data[i];
+		cdns.push("<tr>");
+		if (rowNumbers)
+			cdns.push("<td align='right'>", i + 1, "</td>");
+		if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
+		{
+			var s=record["@iot.id"] ? record["@iot.id"] : i;
+			cdns.push("<td><input type='radio' name='SelectRowRadio' id='", prefix_selectedEntityId, s, "' ", f_onclickselectEntity ? "onClick='" + f_onclickselectEntity.name + "(\"" + onclickselectEntityParam+ "\");' " : "", s == selectedEntityId ? "checked='checked'" : "", "/></td>");
 		}
+		for (var a = 0; a < dataAttributesArray.length; a++) {
+			if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
+				continue;
+			cell=record[dataAttributesArray[a]];
+			cdns.push((dataAttributes[dataAttributesArray[a]].type=="number" || dataAttributes[dataAttributesArray[a]].type=="integer") ? "<td align='right'>" :  "<td>");
+			if (typeof cell !== "undefined") {
+				if (f_isAttributeAnyURI && needhref[a] && cell.length)
+					cdns.push("<a href='", f_onclickInsteadOfLink ? "javascript:void();" : cell.replaceAll("'", "%27"), "' target='_blank'", (f_onclickInsteadOfLink ? " onClick='return " + f_onclickInsteadOfLink.name + "(\"" + onclickInsteadOfLinkParam + "\", \"" + dataAttributesArray[a] + "\", " + i +");'" : ""), ">", cell, "</a>");
+				else if (typeof cell === "object")
+					cdns.push(JSON.stringify(cell));
+				else
+					cdns.push(cell);
+			}
+			cdns.push("</td>");
+		}
+		cdns.push("</tr>");
+	}
+	cdns.push("</table>");
+	return cdns.join("");
+}
 
 function addNewEmptyColumn(data,columnName){
 	for (var i=0;i<data.length;i++){
@@ -1197,11 +1277,15 @@ function sortValuesNumbersOrText(arrayValues) {
 	return arrayNumbers.sort((a, b) => a - b).concat(arrayText.sort());  //join arrays
 }
 
-function SortTableByColumns(data, columnsSelected, AscOrDesc) { //as many columns as you want. columnsSelected allways an array
+/* 
+'data' is the data to be sorted. This input is modified.
+'columnsSelected' is a list of column names
+'AscOrDesc' can be "asc" or "desc" and applies for all columns (what is questionable and might change in the future.
+*/
+function SortTableByColumns(data, columnsSelected, AscOrDesc) { 
 	var column;	
 	if (AscOrDesc && AscOrDesc == "asc") {
 			data.sort(function (a, b) {
-				
 				for (var i=0;i<columnsSelected.length;i++){
 					column= columnsSelected[i];
 					if (a[column] > b[column]) {
@@ -1211,7 +1295,6 @@ function SortTableByColumns(data, columnsSelected, AscOrDesc) { //as many column
 						return -1;
 					}
 				}
-
 				return 0;
 			})
 		} else {
@@ -1231,7 +1314,8 @@ function SortTableByColumns(data, columnsSelected, AscOrDesc) { //as many column
 	return data;
 }
 
-function buildPivotTable(data, Rows, Columns, Values, aggregation){
+//Marta, please describe the inputs and outputs and what the function does.
+function buildPivotTable(data, rows, columns, values, aggregation){
 	var allowedKey=false;
 	for (var i=0;i<AggregationsOptions.length;i++){ //To check if it is an aggregation type allowed
 		if (AggregationsOptions[i].name==aggregation) {
@@ -1240,27 +1324,27 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 		}
 	}
 	var applyFunction=true;
-	for (var i=0;i< Rows.length;i++){
- 			if (Columns.includes(Rows[i])){
+	for (var i=0;i< rows.length;i++){
+ 			if (columns.includes(rows[i])){
 				applyFunction=false;
 				break;
 			}
 	}
 	if (applyFunction==false) return "Error: Attributes betwen columns and rows can't be repited "
-	else if (!Values || Values.length==0) return "Error:It is necessary to send values";
-	else if((!Columns|| Columns.length==0) && (!Rows|| Rows.length==0 )) return "Error: It is necessary to send Columns or Rows";
+	else if (!values || values.length==0) return "Error:It is necessary to send values";
+	else if((!columns|| columns.length==0) && (!rows|| rows.length==0 )) return "Error: It is necessary to send columns or rows";
 	else if(!aggregation ||allowedKey==false ) return "Error: It is necessary to send an allowed aggfregation type";
  	else{
 
 		var newdataArray=[], newOject, rowName="", rowsValue,columnName, arrayAllColumns=[];
-		//RowsName with or withoutRows
-		if (Rows.length>1){
-			for (var r=0;r<Rows.length;r++){
+		//rowsName with or withoutrows
+		if (rows.length>1){
+			for (var r=0;r<rows.length;r++){
 				if(r!=0)rowName+="_";
-				rowName+=Rows[r];
+				rowName+=rows[r];
 			}
-		}else if (Rows.length==1){
-			rowName=Rows[0];
+		}else if (rows.length==1){
+			rowName=rows[0];
 		}else{
 			rowName="aggregation"
 		}
@@ -1270,44 +1354,44 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 			newOject={};
 			rowsValue="";
 			columnName="";
-			if (Rows.length!=0){  //Rows with or without columns
-				for (var r=0;r<Rows.length;r++){
+			if (rows.length!=0){  //rows with or without columns
+				for (var r=0;r<rows.length;r++){
 					if(r!=0)rowsValue+="_";
-					rowsValue+=data[d][Rows[r]];
+					rowsValue+=data[d][rows[r]];
 				}
 				newOject[rowName]=rowsValue;
 
-				if (Columns.length!=0){ //with columns
-					for (var c=0;c<Columns.length;c++){
+				if (columns.length!=0){ //with columns
+					for (var c=0;c<columns.length;c++){
 						if(c!=0)columnName+="_";
-						columnName+=data[d][Columns[c]];
+						columnName+=data[d][columns[c]];
 					}
-					for (var v=0;v<Values.length;v++){
-						if (!arrayAllColumns.includes(columnName+"_"+Values[v]))arrayAllColumns.push(columnName+"_"+Values[v]);
-						newOject[columnName+"_"+Values[v]]=data[d][Values[v]];
+					for (var v=0;v<values.length;v++){
+						if (!arrayAllColumns.includes(columnName+"_"+values[v]))arrayAllColumns.push(columnName+"_"+values[v]);
+						newOject[columnName+"_"+values[v]]=data[d][values[v]];
 					}
 					newdataArray.push(newOject);
 					
-				}else if (Values.length!=0 ){ //Without columns (Use values to build columns names)
-					var ColumnsAsValues=[];
-					for (var v=0;v<Values.length;v++){
-						ColumnsAsValues.push(Values[v]);
-						newOject[Values[v]]=data[d][Values[v]];
+				}else if (values.length!=0 ){ //Without columns (Use values to build columns names)
+					var columnsAsValues=[];
+					for (var v=0;v<values.length;v++){
+						columnsAsValues.push(values[v]);
+						newOject[values[v]]=data[d][values[v]];
 					}
 					newdataArray.push(newOject);
 				}
 				
 			}else{ //Without rows
-				if (Columns.length!=0){ 
-					for (var c=0;c<Columns.length;c++){
+				if (columns.length!=0){ 
+					for (var c=0;c<columns.length;c++){
 						if(c!=0)columnName+="_";
-						columnName+=data[d][Columns[c]];	
+						columnName+=data[d][columns[c]];	
 					}
 					if (!arrayAllColumns.includes(columnName))arrayAllColumns.push(columnName);
-					for (var v=0;v<Values.length;v++){ //Values as rows names
+					for (var v=0;v<values.length;v++){ //values as rows names
 						newOject={}
-						newOject.aggregation=Values[v];
-						newOject[columnName]=data[d][Values[v]];
+						newOject.aggregation=values[v];
+						newOject[columnName]=data[d][values[v]];
 						newdataArray.push(newOject);
 					}
 				}
@@ -1316,7 +1400,7 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 		}
 
 		//add all columns to all objects
-		if (Columns.length!=0){
+		if (columns.length!=0){
 			for (var n=0;n<newdataArray.length;n++){
 				for (var c = 0;c<arrayAllColumns.length;c++){
 					if (!newdataArray[n].hasOwnProperty(arrayAllColumns[c])){
@@ -1329,8 +1413,8 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 		//GroupingBy all columns to unify repetitions 
 		var attributes= getDataAttributesSimple(newdataArray);
 		var finalArrayObjects;
-		if (Columns.length==0){ //WithOunt columns
-			arrayAllColumns=ColumnsAsValues;
+		if (columns.length==0){ //WithOunt columns
+			arrayAllColumns=columnsAsValues;
 		}
 		var groupByParams, attr, options,newData,aggregationAttr={};
 		for (var c = 0;c<arrayAllColumns.length;c++){
@@ -1366,13 +1450,9 @@ function buildPivotTable(data, Rows, Columns, Values, aggregation){
 			}
 		}
 
-		console.log(finalArrayObjects);
+		//console.log(finalArrayObjects);
 		return finalArrayObjects;
-	
-
- 	}
-		
+ 	}		
 }
-
 
 

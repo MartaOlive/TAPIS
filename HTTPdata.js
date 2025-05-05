@@ -175,13 +175,21 @@ function removeParamContentType(contentType) {
 
 
 var CriptoName=null, DisplayName="";
-function AddHeadersIfNeeded(options) {
-	if (CriptoName &&
-		hello("authenix").getAuthResponse() &&
-		hello("authenix").getAuthResponse().access_token) {
+function AddHeadersIfNeeded(options, security) {
+	if (security && security.authorization) {
 		if (!options.headers)
 			options.headers={};
-		options.headers['Authorization']='Bearer ' + hello("authenix").getAuthResponse().access_token;
+		options.headers['Authorization']=security.authorization;
+	}
+	else
+	{
+		if (CriptoName &&
+			hello("authenix").getAuthResponse() &&
+			hello("authenix").getAuthResponse().access_token) {
+			if (!options.headers)
+				options.headers={};
+			options.headers['Authorization']='Bearer ' + hello("authenix").getAuthResponse().access_token;
+		}
 	}
 	if (PreviousGPSPoint)
 	{

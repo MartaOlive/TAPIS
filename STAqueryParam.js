@@ -684,7 +684,9 @@ function GetSelectColumnsSTA(event)
 	var previousSTAURL=null;
 
 	var {dataAttributesArray, previousSTAURL}=GetPropagateNodeSelectedSelectExpands(node, parentNode);
-	var selectedColumns=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin).selected;
+	var selectExpand=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
+	selectExpand.selected={};
+	var selectedColumns=selectExpand.selected;
 
 	for (var a = 0; a < dataAttributesArray.length; a++) {
 		if (!document.getElementById("SelectColumns_" + a).checked)

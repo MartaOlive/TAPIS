@@ -11,10 +11,11 @@
 	<!--Thanks to https://github.com/DavideViolante/chartjs-plugin-labels and downloaded from:
 		https://www.npmjs.com/package/chart.js-plugin-labels-dv/v/3.3.0 -->
 	<script type="text/javascript" src="chartjs-plugin-labels.min.js"></script>
-	<script	src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script> <!--to use time in chart axis -->
+	<!--Thanks to chartjs-adapter-date-fns v3.0.0; to use time in chart axis -->
+	<script	type="text/javascript" src="chartjs-adapter-date-fns.bundle.min.js"></script>
 
 	<script	type="text/javascript" src="vis-network.min.js"></script>
-	<script type="text/javascript" src="vis-timeline-graph2d.min.js"></script>
+	<!--script type="text/javascript" src="vis-timeline-graph2d.min.js"></script Replaced by chartjs in 2025-04-01-->
 
 	<script type="text/javascript" src="papaparse.min.js" async defer></script>
 	<script type="text/javascript" src="crypto-js.min.js" async defer></script> 
@@ -43,7 +44,7 @@
 
 	<link rel="stylesheet" href="tapis.css">
 	<link rel="stylesheet" href="vis.network.css">
-	<link rel="stylesheet" href="vis-timeline-graph2d.min.css">
+	<!--link rel="stylesheet" href="vis-timeline-graph2d.min.css"-->
 </head>
 
 <body onLoad="StartSTAPage();" onkeydown="KeySTAPage(event);">
@@ -55,8 +56,19 @@
 						<td><img src="logo.png" height="70"></td>
 						<td>
 							<div style="font-size: 30px; font-weight: bold;">TAPIS</div>
-							<div style="font-size: 20px; font-weight: bold;">Tables from APIS</div>
-							<div style="font-size: 10px; font-weight: normal;">or an API Explerer and a Table Manager							</div>
+							<div style="font-size: 20px; font-weight: bold;">Tables from APIs</div>
+							<div style="font-size: 10px; font-weight: normal;">or an API Explorer and a Table Manager							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td align="center">
+				<table>
+					<tr>
+						<td><img src="github-mark.png" height="35"></td>
+						<td>
+							<div style="font-size: 15px;"><a href="https://github.com/grumets/tapis" target="_blank" style="text-decoration: none;">Open source on GitHub</a></div>
+							<div style="font-size: 10px;"><a href="https://github.com/grumets/tapis/issues" target="_blank" style="text-decoration: none;">Report issues or suggestions</a></div>
 						</td>
 					</tr>
 				</table>
@@ -64,20 +76,15 @@
 			<td align="right" valign="top">
 				<span id="UserInfoText"></span>
 				<button id="buttonReloadSTA" onclick='reloadSTA(event);'onmouseover='showHelpToolTip(event, "", "Reload all schema to upload the data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="reload.png" height="20" valign="middle"> Refresh</button>
-				<label class=labelbotton onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenNetwork.png" height="20" valign="middle" > Open
+				<label class=labelbotton onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenNetwork.png" height="20" valign="middle" > Open...
 				<input type="file" id="openNetworkFileName" hidden onchange='openFileNetwork(event);'/>
 				</label> <!-- https://dev.to/faddalibrahim/how-to-create-a-custom-file-upload-button-using-html-css-and-javascript-1c03 -->
-				<button onclick='document.getElementById("DialogOpenURLNetwork").showModal();' onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data from a webside or from Help examples" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenURLNetwork.png" height="20" valign="middle"> Open URL</button>
-				<button onclick='saveNetwork(event);'onmouseover='showHelpToolTip(event, "", "Save your Tapis schema with nodes and data as a JSON to be able to open it later" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="SaveNetwork.png" height="20" valign="middle"> Save</button>
+				<button onclick='document.getElementById("DialogOpenURLNetwork").showModal();' onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data from a webside or from Help examples" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenURLNetwork.png" height="20" valign="middle"> Open URL...</button>
+				<button onclick='saveNetwork(event);'onmouseover='showHelpToolTip(event, "", "Save your Tapis schema with nodes and data as a JSON to be able to open it later" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="SaveNetwork.png" height="20" valign="middle"> Save as...</button>
 				<button id="buttonOpenLogin" onclick='OpenLogin(event);' onmouseover='showHelpToolTip(event, "", "Login to be able to have access to certain places")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Login</button>
 				<button id="buttonOpenLogout" onclick='OpenLogout(event);' style="display: none");' onmouseover='showHelpToolTip(event, "", "Close your sesion")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Logout</button>
 				<button onclick='OpenConfiguration(event);'onmouseover='showHelpToolTip(event, "", "To modify display configurations")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )' ><img src="config.png" height="20" valign="middle">Configuration</button>
 				<button onclick='OpenHelp(event);' onmouseover='showHelpToolTip(event, "", "Explanations of how to use TAPIS and Examples")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="help.png" height="20" valign="middle">Help</button>
-				<br>
-				<span style="font-size: 10px;"><a href="TermsOfUse.htm">Terms of Use</a><br>
-					<a href="PrivacyStatement.htm">Privacy Statement</a><br>
-					<a href="AccessPolicy.htm">Access Policy</a><br>
-				</span>
 			</td>
 		</tr>
 	</table>
@@ -114,6 +121,20 @@
 		<div id="showTableOptions"></div>
 		<div id="showTable"></div>
 	</div>
+	
+	<div>
+		<table border="0" style="width:99%">
+			<tr>
+				<td style="width:60px"><img src="eu_flag.jpg" width="60px"></td>
+				<td style="width:130px; font-size: 10px;">Co-funded by the European Union, Switzerland and the United Kingdom.</td>
+				<td align="right" valign="top" style="font-size: 10px;">
+					<a href="TermsOfUse.htm" style="text-decoration: none;">Terms of Use</a><br>
+						<a href="PrivacyStatement.htm" style="text-decoration: none;">Privacy Statement</a><br>
+						<a href="AccessPolicy.htm" style="text-decoration: none;">Access Policy</a><br>
+				</td>
+			</tr>
+		</table>
+		</div>
 
 	<div id="HelpToolTip" style="min-height: 1px; overflow: hidden; display:none; position: fixed; background-color: #f6eba3; width:300px; border-style: ridge; padding: 5px; text-align:left">help</div>
 
@@ -140,6 +161,23 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogLink">
+		<form>
+			<p>
+				Link to: <span id="DialogLinkLink"></span><p>
+				<label><input type="radio" name="DialogLinkHowOpen" id="DialogLinkAddGraph" checked="checked"></input>Add to the graph</label><br>
+				<label><input type="radio" name="DialogLinkHowOpen" id="DialogLinkOpenWindow"></input>Open as JSON in a separate window</label>
+			</p>
+			<div class="center">
+				<button value="default" onClick="OpenLink(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogLinkNodeId"></input>
+			<input type="hidden" id="DialogLinkIRecord"></input>
+			<input type="hidden" id="DialogLinkColumnName"></input>
+		</form>
+	</dialog>
+
 
 	<dialog id="DialogOpenURLNetwork">
 		<form>
@@ -163,7 +201,8 @@
 						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>						<option value="help/recipe09_stackedBarChart.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>
 						<option value="help/recipe08_s3BucketViewCSV.json">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</option>
 						<option value="help/recipe09_stackedBarChart.json">Recipe 9: Drawing a stacked bar chart</option>
-						<option value="help/recipe10_pivotTables.json">Recipe 10: Pivoting a table, from registers of a column to new columns</option>
+						<option value="">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</option>
+						<option value="help/recipe11_pivotTables.json">Recipe 10: Pivoting a table, from registers of a column to new columns</option>
 					</select>
 				</label>
 			</p>
@@ -852,6 +891,20 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogSelectResource">
+		<div id="divTitleSelectResource" class="center" style="font-size: large;"></div>
+		<form>
+			<label>Identifier of resource to select: 
+				<input type="text" id="DialogSelectResourceId"></label>
+			</span>
+			<div class="center">
+				<button value="default" onClick="GetSelectResource(event)">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogSelectResourceNodeId"></input>
+		</form>
+	</dialog>
+
 	<dialog id="DialogFilterRows">
 		<div id="divTitleSelectRows" class="center" style="font-size: large;"></div>
 		<form>
@@ -873,10 +926,10 @@
 				<legend>Period</legend>
 				<label>Property:</label>
 				<select id="filterRowsByTimeSelectProperty"></select>
-				<label>From: </label>
-				<input type="datetime-local" id="filterRowsByTimeCalendarFrom">
-				<label>To: </label>
-				<input type="datetime-local" id="filterRowsByTimeCalendarTo">
+				<label>From: 
+				<input type="datetime-local" id="filterRowsByTimeCalendarFrom"></label>
+				<label>To: 
+				<input type="datetime-local" id="filterRowsByTimeCalendarTo"></label>
 			</fieldset>
 			<fieldset>
 			<legend>To aggregate data by (Optional. Only available with "Observations"): </legend>
@@ -1478,6 +1531,4 @@
 	<pre id="eventSpanContent"></pre-->
 
 </body>
-
-
 </html>

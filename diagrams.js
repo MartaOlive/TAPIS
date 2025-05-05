@@ -386,11 +386,11 @@ function DrawScatterPlot(event) {
 				}
 			},
 			scales: {
-				x:axisX,
-				 ticks: { //!!!!!!! 
-					maxTicksLimit: 30,
-				 	autoSkip: true
-				  }
+				// x:axisX,
+				//  ticks: { //!!!!!!! 
+				// 	maxTicksLimit: 30,
+				//  	autoSkip: true
+				//   }
 			},
 		}
 
