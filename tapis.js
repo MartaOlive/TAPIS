@@ -270,9 +270,11 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" ) )
+	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" || node.image == "FilterRowsByTime.png" || node.image == "GeoFilterPntSTA.png" ) )
 		return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
-	if (parentNode.image=="sta.png" || parentNode.image=="staRoot.png" || parentNode.image=="edcAsset.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
+	if ((parentNode.image=="ogcAPICols.png"||parentNode.image=="ogcAPIItems.png"|| parentNode.image=="s3Service.png"||parentNode.image=="s3Bucket.png"||parentNode.image=="edc.png"||parentNode.image=="edcAsset.png"||parentNode.image=="ImportCSV.png"||parentNode.image=="ImportDBF.png"||parentNode.image=="ImportJSONLD.png"||parentNode.image=="ImportJSON.png"||parentNode.image=="ImportGeoJSON.png") && STAEntities[removeExtension(node.image)])
+		return "Entities only belong to STA service. This is not a STAservice."
+		if (parentNode.image=="sta.png" || parentNode.image=="staRoot.png" || parentNode.image=="edcAsset.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
 		return null;
 	if ((STAOperations[removeExtension(parentNode.image)] && STAOperations[removeExtension(parentNode.image)].leafNode==true) ||
 		(TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true) ||
@@ -282,6 +284,10 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 		return "'Select Row' or 'Select Resource' for STA node cannot be connected to an expanded branch. Use 'Filter row' for STA instead or select a row before expanding";
 	if (node.image == "OneValueSTA.png" && parentNode.STAEntityName!="Observations" && parentNode.image!="Observations.png")
 		return "'One value' node is designed be connected to an 'Observations' node only.";
+	
+	
+	
+	
 	var idNode=IdOfSTAEntity(node);
 	if (idNode<0)
 		return null;
@@ -566,7 +572,7 @@ function PopulateContextMenu(nodeId){
 	const nCol=4;
 	var provisional="";
 	var s = ServicesAndAPIsType.plural + ":<br>";
-	for (var i = 0; i < ServicesAndAPIsArray.length; i++) {
+	for (var i = 0; i < ServicesAndAPIsArray.length; i++) { //mirar com gestionar aquests
 			s += textOperationButton("DialogContextMenu", "ContextMenu", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], "Data Input tool", ServicesAndAPIsType.singular);
 			s += (i+1)%nCol==0 || i == ServicesAndAPIsArray.length-1 ? "<br>" : " ";
 	}
@@ -574,13 +580,12 @@ function PopulateContextMenu(nodeId){
 	
 	provisional="";
 	for (var i = 0; i < STAEntitiesArray.length; i++) {
-		if (nodeId){
-			node.image= ServicesAndAPIsArray[i]+".png";
-			if ( reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+			node.image= STAEntitiesArray[i]+".png";
+			if (!nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
 				provisional += textOperationButton("DialogContextMenu", "ContextMenu", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular);
 				provisional += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
 			}
-		}
+	
 	}
 	if (provisional.length>1){
 		s += "<small><br></small>" + STAEntitiesType.plural + ":<br>";
@@ -590,7 +595,8 @@ function PopulateContextMenu(nodeId){
 	provisional="";
 	for (var i = 0; i < STAEntitiesArray.length; i++)
 	{
-		if ( reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+		node.image= STAEntitiesArray[i]+".png";
+		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
 			provisional += textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit);
 			provisional += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
 		}
@@ -603,7 +609,8 @@ function PopulateContextMenu(nodeId){
 	provisional="";
 	for (var i = 0; i < STASpecialQueriesArray.length; i++)
 	{
-		if ( reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+		node.image= STASpecialQueriesArray[i]+".png";
+		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
 			provisional += textOperationButton("DialogContextMenu", "ContextMenu", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help, null, STASpecialQueriesType.singular);
 			provisional += (i+1)%nCol==0 || i == STASpecialQueriesArray.length-1 ? "<br>" : " ";
 		}
@@ -616,7 +623,8 @@ function PopulateContextMenu(nodeId){
 	provisional="";
 	for (var i = 0; i < STAOperationsArray.length; i++)
 	{
-		if ( reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+		node.image= STAOperationsArray[i]+".png";
+		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
 			provisional += textOperationButton("DialogContextMenu", "ContextMenu", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help, STAOperations[STAOperationsArray[i]], STAOperationsType.singular);
 			provisional += (i+1)%nCol==0 || i == STAOperationsArray.length-1 ? "<br>" : " ";
 		}
@@ -629,7 +637,8 @@ function PopulateContextMenu(nodeId){
 	provisional="";
 	for (var i = 0; i < TableOperationsArray.length; i++)
 	{
-		if ( reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+		node.image= TableOperationsArray[i]+".png";
+		if ( !nodeId || reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
 			provisional += textOperationButton("DialogContextMenu", "ContextMenu", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular);
 			provisional += (i+1)%nCol==0 || i == TableOperationsArray.length-1 ? "<br>" : " ";
 		}
@@ -642,9 +651,10 @@ function PopulateContextMenu(nodeId){
 	provisional="";
 	for (var i = 0; i < tableStatisticsVisualizeArray.length; i++)
 		{
-			if ( reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
-				s += textOperationButton("DialogContextMenu", "ContextMenu", tableStatisticsVisualizeArray[i], tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].help, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]], tableStatisticsVisualizeType.singular);
-				s += (i+1)%nCol==0 || i == tableStatisticsVisualizeArray.length-1 ? "<br>" : " ";
+			node.image= tableStatisticsVisualizeArray[i]+".png";
+			if (!nodeId || reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+				provisional += textOperationButton("DialogContextMenu", "ContextMenu", tableStatisticsVisualizeArray[i], tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].help, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]], tableStatisticsVisualizeType.singular);
+				provisional += (i+1)%nCol==0 || i == tableStatisticsVisualizeArray.length-1 ? "<br>" : " ";
 		
 			}	
 		}
