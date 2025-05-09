@@ -235,7 +235,7 @@
 				<button value="default" id="DialogSTAURLOk" onClick="GetSTAURLEvent(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
-			<input type="hidden" id="DialogSTAURLNodeId"></input>
+			
 		</form>
 	</dialog>
 
@@ -1019,13 +1019,17 @@
 
 	<dialog id="DialogContextMenu">
 		<form>
-			<div>
-				<div id="ButtonsContextMenuObjects"></div><br>
-				Node operations:<br>
-				<button onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a node and any connection to previous nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
-				<button onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Renames de node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.<small>")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="rename.png" height="20" valign="middle">Rename</button>
-				<br>
-			</div>
+			<p>
+				<span id="ButtonsContextMenuObjects"></span><br>
+				<div style="border: 1px solid #d5d5d6; margin-top: 5px;" >
+					<div style="height:30px; background-color: rgb(183,183,183); display: flex; justify-content: center; align-items: center;margin-top:5px ; margin-right: 3px; margin-left: 3px;margin-bottom: 5px ; border-radius: 5px;">Node operations</div>
+					<div style="padding: 5px;" >
+						<button onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a node and any connection to previous nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
+						<button onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Renames de node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.<small>")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="rename.png" height="20" valign="middle">Rename</button>
+					</div>
+				</div>
+
+			</p>
 			<div class="center">
 				<button value="cancel" onClick="startingNodeContextId=null;" formmethod="dialog">Cancel</button>
 			</div>
