@@ -90,11 +90,12 @@
 	</table>
 
 	<span id="ButtonsSTAEntities"></span>
-	<button onclick='addEdge();' onmouseover='showHelpToolTip(event, "", "Connect two nodes.<hr> Click on the end node and drop it on the previous node")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="connect.png" height="20" valign="middle">Connect two nodes</button><br>
 
 	<div style="margin-top: 20px;">
 		<!--  style configurations also in this function: function UpdateConfiguration() -->
 		<div id ="sideButtons" style="overflow-y:scroll; border:1px solid #ccc; height: 400px;width:10%;">
+			<button onclick='addEdge();' onmouseover='showHelpToolTip(event, "", "Connect two nodes.<hr> Click on the end node and drop it on the previous node")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="connect.png" height="20" valign="middle">Connect two nodes</button><br>
+			<br>
 			<div id="sideButtons_STAEntities" style="border: 1px solid #d5d5d6;">
 				<div id="sideButtons_Title_STAEntities" style="height:30px; background-color: rgb(0,179,255,0.5); display: flex; justify-content: center; align-items: center; margin-top:5px; margin-right: 3px; margin-left: 3px; margin-bottom: 5px ; border-radius: 5px;" >STA entities reading tool </div>
 				<div id="sideButtons_Buttons_STAEntities" style="padding: 5px;"></div> 
@@ -196,7 +197,7 @@
 						<option value="help/recipe03_OpenMap.json">Recipe 3: Show a map of all observation features in an STA service</option>
 						<option value="help/recipe04_CSV_meaning.json">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</option>
 						<option value="help/recipe05_01_spatialFilterTemperature.json">Recipe 5a: Selecting temperatures from an area</option>
-						<option value="help/recipe05_02_FilteringByDistance.json">Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
+						<option value="help/recipe05_02_FilteringByDistance.json">Recipe 5b: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
 						<option value="help/recipe06_creatingTwoDatastreamOfObservations.json">Recipe 6: Creating a new stream of observations</option>
 						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>						<option value="help/recipe09_stackedBarChart.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>
 						<option value="help/recipe08_s3BucketViewCSV.json">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</option>

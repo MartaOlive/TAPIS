@@ -952,7 +952,7 @@ function getHTMLTable(data, dataAttributesInput,
 	for (var a = 0; a < dataAttributesArray.length; a++) {
 		if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
 			continue;
-		cdns.push("<th>",
+		cdns.push(`<th style='white-space: nowrap;'>`,
 			GetHTMLdataAttribute(dataAttributesArray[a], dataAttributes[dataAttributesArray[a]]),
 			" ",
 			getHTMLCharacterAttributeType(dataAttributes[dataAttributesArray[a]].type),
