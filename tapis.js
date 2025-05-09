@@ -106,7 +106,7 @@ const STAOperations = {RecursiveExpandSTA: {description: "Recursive Expand", cal
 			CountResultsSTA: { description: "Count results", leafNode: true, help: "Returns the total number of records returned by the API query without loading them in a table. Only with STA data. Requeres to be connected to another SensorThings API or a STAplus entity. This node can not be connected to other dependend nodes."},
 			ViewQuerySTA: {description: "View Query", leafNode: true, help: "Shows the completed URL that is used to make the query to obtain the data from a service or an API of the depended node in a dialog box. Since the URL behind the active node is always represented in the query and table area, the use of this operation is no longer recommended."}};
 
-			const STAOperationsArray = Object.keys(STAOperations);
+const STAOperationsArray = Object.keys(STAOperations);
 const STAOperationsType = {singular: "STA tool", plural: "STA tools"};
 
 const TableOperations = {Table: {description: "View Table", leafNode: true, help: "Shows a table of the dependent node in a dialog box. Since the table behind the active node is represented in the table area, the use of this operation is no longer recommended."},	
@@ -552,13 +552,22 @@ async function InitSTAPage() {
 function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 	var parentNode= networkNodes.get(nodeId);
 	var node = {image:""};
-	const nCol=4;
+	const nCol=5;
 	var provisional="";
-	var s = ServicesAndAPIsType.plural + ":<br>";
+	var s = "<div>"; //general
+	var generalBox= `<div style='border: 1px solid #d5d5d6;'> 
+	<div style='height:30px; background-color: rgb(0,179,255,0.5); display: flex; justify-content: center; align-items: center; margin-top:5px; margin-right: 3px; margin-left: 3px; margin-bottom: 5px ; border-radius: 5px;'>TITLE</div>
+	<div style='padding: 5px;''>`;
+	var generalBoxCopy=generalBox;
+	s+=generalBox.replace("TITLE",ServicesAndAPIsType.plural);
+
 	for (var i = 0; i < ServicesAndAPIsArray.length; i++) { //mirar com gestionar aquests
+			
 			s += textOperationButton("DialogContextMenu", "ContextMenu", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], "Data Input tool", ServicesAndAPIsType.singular);
 			s += (i+1)%nCol==0 || i == ServicesAndAPIsArray.length-1 ? "<br>" : " ";
+
 	}
+	s+="</div></div></div><br>";
 
 	
 	provisional="";
@@ -568,12 +577,14 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 				provisional += textOperationButton("DialogContextMenu", "ContextMenu", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular);
 				provisional += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
 			}
-	
 	}
 	if (provisional.length>1){
-		s += "<small><br></small>" + STAEntitiesType.plural + ":<br>";
+		generalBoxCopy=generalBox;
+		s+=generalBoxCopy.replace("TITLE",STAEntitiesType.plural);
 		s +=provisional;
+		s+="</div></div></div><br>";
 	}
+
 
 	provisional="";
 	for (var i = 0; i < STAEntitiesArray.length; i++)
@@ -585,8 +596,10 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 		}
 	}
 	if (provisional.length>1){
-		s += "<small><br></small>" + STAEntitiesType.pluralEdit+ ":<br>";
-		s+= provisional;
+		generalBoxCopy=generalBox;
+		s+=generalBoxCopy.replace("TITLE",STAEntitiesType.pluralEdit);
+		s +=provisional;
+		s+="</div></div></div><br>";
 	}
 
 	provisional="";
@@ -599,8 +612,11 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 		}
 	}
 	if (provisional.length>1){
-		s += "<small><br></small>" + STASpecialQueriesType.plural + ":<br>";
-		s+= provisional;
+		generalBoxCopy=generalBox;
+		s+= generalBoxCopy.replace("TITLE",STASpecialQueriesType.plural); //Title
+		s +=provisional;
+		s+="</div></div></div><br>";
+
 	}
 
 	provisional="";
@@ -613,8 +629,10 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 		}
 	}
 	if (provisional.length>1){
-		s += "<small><br></small>" + STAOperationsType.plural + ":<br>";
-		s+= provisional;
+		generalBoxCopy=generalBox;
+		s+=generalBoxCopy.replace("TITLE",STAOperationsType.plural); //Title
+		s +=provisional;
+		s+="</div></div></div><br>";
 	}
 
 	provisional="";
@@ -627,8 +645,11 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 		}
 	}
 	if (provisional.length>1){
-		s += "<small><br></small>" + TableOperationsType.plural + "<br>";
-		s+= provisional;
+		generalBoxCopy=generalBox;
+		generalBoxCopy= generalBoxCopy.replace("TITLE",TableOperationsType.plural); //Title
+		s+=generalBoxCopy.replace("rgb(0,179,255,0.5)","rgb(183,183,183)"); //color
+		s +=provisional;
+		s+="</div></div></div><br>";
 	}
 
 	provisional="";
@@ -640,11 +661,15 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 				provisional += (i+1)%nCol==0 || i == tableStatisticsVisualizeArray.length-1 ? "<br>" : " ";
 		
 			}	
-		}
-	if (provisional.length>1){
-		s += "<small><br></small>" + tableStatisticsVisualizeType.plural + "<br>";
-		s+= provisional;
 	}
+if (provisional.length>1){
+	generalBoxCopy=generalBox;
+	generalBoxCopy= generalBoxCopy.replace("TITLE",tableStatisticsVisualizeType.plural); //Title
+	s+=generalBoxCopy.replace("rgb(0,179,255,0.5)","rgb(183,183,183)"); //color
+		s +=provisional;
+		s+="</div></div></div><br>";
+	}
+	s+="</div>"
 	document.getElementById("ButtonsContextMenuObjects").innerHTML = s;
 }
 
