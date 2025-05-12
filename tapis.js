@@ -109,7 +109,7 @@ const STAOperations = {RecursiveExpandSTA: {description: "Recursive Expand", cal
 const STAOperationsArray = Object.keys(STAOperations);
 const STAOperationsType = {singular: "STA tool", plural: "STA tools"};
 
-const TableOperations = {Table: {description: "View Table", leafNode: true, help: "Shows a table of the dependent node in a dialog box. Since the table behind the active node is represented in the table area, the use of this operation is no longer recommended."},	
+const TableOperations = {Table: {description: "View Table", leafNode: true, help: "Shows a table of the dependent node in a dialog box. Since the table behind the active node is represented in the table area, the use of this operation is no longer recommended."},
 			EditRecord: {description: "Edit record", help: "Shows and allows editing a record in the table of the related node. NOTE: If you are using data from a web service and you ask for data again, this change will be lost."},
 			Meaning: {description: "Column meaning", help: "Shows and allows editing the semantics (definition and units of measure) of the table columns."},
 			SelectColumnsTable: {description: "Select Columns", help: "Obtains a table only with the selected columns. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL."},
@@ -274,7 +274,7 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 		return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
 	if ((parentNode.image=="ogcAPICols.png"||parentNode.image=="ogcAPIItems.png"|| parentNode.image=="s3Service.png"||parentNode.image=="s3Bucket.png"||parentNode.image=="edc.png"||parentNode.image=="edcAsset.png"||parentNode.image=="ImportCSV.png"||parentNode.image=="ImportDBF.png"||parentNode.image=="ImportJSONLD.png"||parentNode.image=="ImportJSON.png"||parentNode.image=="ImportGeoJSON.png") && (STAEntities[removeExtension(node.image)]||STAOperations[removeExtension(node.image)] || node.image=="ObsLayer.png"))
 		return "Entities only belong to STA service. This is not a STAservice."
-		if (parentNode.image=="sta.png" || parentNode.image=="staRoot.png" || parentNode.image=="edcAsset.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
+	if (parentNode.image=="sta.png" || parentNode.image=="staRoot.png" || parentNode.image=="edcAsset.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
 		return null;
 	if ((STAOperations[removeExtension(parentNode.image)] && STAOperations[removeExtension(parentNode.image)].leafNode==true) ||
 		(TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true) ||
@@ -552,7 +552,7 @@ async function InitSTAPage() {
 function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 	var parentNode= networkNodes.get(nodeId);
 	var node = {image:""};
-	const nCol=5;
+	const nCol=7;
 	var provisional="";
 	var s = "<div>"; //general
 	var generalBox= `<div style='border: 1px solid #d5d5d6;'> 
@@ -563,8 +563,8 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 
 	for (var i = 0; i < ServicesAndAPIsArray.length; i++) { //mirar com gestionar aquests
 			
-			s += textOperationButton("DialogContextMenu", "ContextMenu", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], "Data Input tool", ServicesAndAPIsType.singular);
-			s += (i+1)%nCol==0 || i == ServicesAndAPIsArray.length-1 ? "<br>" : " ";
+		s += textOperationButton("DialogContextMenu", "ContextMenu", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], "Data Input tool", ServicesAndAPIsType.singular);
+		s += (i+1)%nCol==0 || i == ServicesAndAPIsArray.length-1 ? "<br>" : " ";
 
 	}
 	s+="</div></div></div><br>";
@@ -576,7 +576,7 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 			if (!nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
 				provisional += textOperationButton("DialogContextMenu", "ContextMenu", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular);
 				provisional += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
-			}
+	}
 	}
 	if (provisional.length>1){
 		generalBoxCopy=generalBox;
@@ -593,7 +593,7 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
 			provisional += textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit);
 			provisional += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
-		}
+	}
 	}
 	if (provisional.length>1){
 		generalBoxCopy=generalBox;
@@ -609,7 +609,7 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
 			provisional += textOperationButton("DialogContextMenu", "ContextMenu", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help, null, STASpecialQueriesType.singular);
 			provisional += (i+1)%nCol==0 || i == STASpecialQueriesArray.length-1 ? "<br>" : " ";
-		}
+	}
 	}
 	if (provisional.length>1){
 		generalBoxCopy=generalBox;
@@ -626,7 +626,7 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
 			provisional += textOperationButton("DialogContextMenu", "ContextMenu", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help, STAOperations[STAOperationsArray[i]], STAOperationsType.singular);
 			provisional += (i+1)%nCol==0 || i == STAOperationsArray.length-1 ? "<br>" : " ";
-		}
+	}
 	}
 	if (provisional.length>1){
 		generalBoxCopy=generalBox;
@@ -642,7 +642,7 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 		if ( !nodeId || reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
 			provisional += textOperationButton("DialogContextMenu", "ContextMenu", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular);
 			provisional += (i+1)%nCol==0 || i == TableOperationsArray.length-1 ? "<br>" : " ";
-		}
+	}
 	}
 	if (provisional.length>1){
 		generalBoxCopy=generalBox;
@@ -689,17 +689,35 @@ function getLinkRelInLinks(links, rel, type) {
 }
 
 function simplifyOGCAPICollections(collections){
-	var simpleCollecs=[], len=collections.length ? collections.length : 1;
+	var simpleCollecs=[], simpleCollec, s, len=collections.length ? collections.length : 1;
 	for (var i=0; i<len; i++) {
 		var collection=collections.length ? collections[i] : collections;
 		simpleCollecs.push({id: collection?.id,
 				title: collection?.title,
-				link: getLinkRelInLinks(collection?.links, "self", "application/json"),
-				itemsLink: getLinkRelInLinks(collection?.links, "items", "application/geo+json"),
-				extent: collection?.extent,
-				itemType: collection?.itemType,
-					storageCrs: collection?.storageCrs,
-				defaultStyle: collection?.defaultStyle});
+				link: getLinkRelInLinks(collection?.links, "self", "application/json")});
+		simpleCollec=simpleCollecs[simpleCollecs.length-1];
+		s=getLinkRelInLinks(collection?.links, "items", "application/geo+json");
+		if (s)
+			simpleCollec.itemsLink=s;
+		else {
+			s=getLinkRelInLinks(collection?.links, "items", "application/json");
+			if (s)
+				simpleCollec.itemsLink=s;
+		}
+		s=getLinkRelInLinks(collection?.links, "http://www.opengis.net/def/rel/ogc/1.0/coverage", "image/tiff; application=geotiff");
+		if (s)
+			simpleCollec.coverageLink=s;
+		s=getLinkRelInLinks(collection?.links, "http://www.opengis.net/def/rel/ogc/1.0/map", "image/png");
+		if (s)
+			simpleCollec.mapLink=s;
+		if (collection?.extent)
+			simpleCollec.extent=collection?.extent;
+		if (collection?.itemType)
+			simpleCollec.itemType=collection?.itemType;
+		if (collection?.storageCrs)
+			simpleCollec.storageCrs=collection?.storageCrs;
+		if (collection?.defaultStyle)
+			simpleCollec.defaultStyle=collection?.defaultStyle;
 	}
 	return simpleCollecs;
 }
@@ -904,7 +922,7 @@ function updateQueryAndTableArea(node) {
 }
 
 async function LoadJSONNodeSTAData(node, callback, url) {
-	var response, jsonData, options={};
+	var response, jsonData, options={headers:{"Accept": "application/json"}};
 	try {
 		var url_fetch;
 		if (url)
@@ -1900,6 +1918,7 @@ function GetOptionsSelectDialog(suggestedURLs) {
 			stas=suggestedURLs[g].STAs;
 			for (var i=0; i<stas.length; i++)
 				cdns.push('<option value="', stas[i].url, '">', stas[i].desc, '</option>');
+			cdns.push('</optgroup>');
 		}
 	}
 	return cdns.join("");  
@@ -1915,6 +1934,7 @@ function GetOptionsObjectSelectDialog(suggestedURLs) {
 			stas=suggestedURLs[g].URLs;
 			for (var i=0; i<stas.length; i++)
 				cdns.push("<option value='", JSON.stringify(stas[i], ""), "'>", stas[i].desc, "</option>");
+			cdns.push('</optgroup>');
 		}
 	}
 	return cdns.join("");  
@@ -5092,6 +5112,7 @@ function ShowMeaningTableDialog(node) {
 			vus=config.suggestedVarUoMs[g].varUoMs;
 			for (var j=0; j<vus.length; j++)
 				cdns.push("<option value='{\"g\":", g, ",\"i\":", j, "}'>", vus[j].varUoMdesc, "</option>");
+			cdns.push('<optgroup>');
 		}
 		cdns.push('</select>');				
 		document.getElementById("DialogMeaningVariableDropDown_"+i).innerHTML=cdns.join("");
@@ -5728,21 +5749,21 @@ function getRootParentNodeSTAEntity(node) {
 }
 
 function AddSelectResourceIfNoThere(startingNode, resourceId) {
-		var nodeIds = network.getConnectedNodes(startingNode.id, 'to'); 
-		for (var i = 0; i < nodeIds.length; i++) {
-			var nodeChild = networkNodes.get(nodeIds[i])
-			if (nodeChild.image=="SelectResourceSTA.png" || nodeChild?.STAResourceId==resourceId) {
+	var nodeIds = network.getConnectedNodes(startingNode.id, 'to'); 
+	for (var i = 0; i < nodeIds.length; i++) {
+		var nodeChild = networkNodes.get(nodeIds[i])
+		if (nodeChild.image=="SelectResourceSTA.png" || nodeChild?.STAResourceId==resourceId) {
 			return nodeChild;  //Avoid to creat a node that already exist
-			}
 		}
+	}
 	var node=addCircularImage(null, null, "SelectResourceSTA", "SelectResourceSTA.png");
-			//Select the right row and excute it
-			saveNodeDialog("DialogSelectResource", node);
-			node.label="Select "+resourceId;
+	//Select the right row and excute it
+	saveNodeDialog("DialogSelectResource", node);
+	node.label="Select "+resourceId;
 	networkNodes.update(node);
-			GetSelectResource(null, resourceId);
+	GetSelectResource(null, resourceId);
 	return node;
-	}	
+}
 
 function OpenLinkSTAEntity(startingNode, resourceId, columnName) {
 var node;
@@ -6233,7 +6254,7 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "ogcAPIItems.png") {
 			saveNodeDialog("DialogSTAURL", currentNode);
 			document.getElementById("divTitleDialogSTAURL").innerHTML = "OGC API collection to extract items";
-				document.getElementById("DialogSTAURLInput").value = currentNode.STAURL;
+			document.getElementById("DialogSTAURLInput").value = currentNode.STAURL;
 			document.getElementById("DialogSTAURL").showModal();
 		}
 		else if (currentNode.image == "csw.png") {

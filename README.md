@@ -23,5 +23,5 @@ But there are some differences with Orange:
 ![STA Plus Explorer](STAplusExplorer.png)
 
 
-![EuropeanFlag](eu_flag.jpg)  Co-funded by the European Union, Switzerland and the United Kingdom.s
+![EuropeanFlag](eu_flag.jpg)  Co-funded by the European Union, Switzerland and the United Kingdom.
 

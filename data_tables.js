@@ -977,7 +977,7 @@ function getHTMLTable(data, dataAttributesInput,
 				continue;
 			cell=record[dataAttributesArray[a]];
 			cdns.push((dataAttributes[dataAttributesArray[a]].type=="number" || dataAttributes[dataAttributesArray[a]].type=="integer") ? "<td align='right'>" :  "<td>");
-			if (typeof cell !== "undefined") {
+			if (typeof cell !== "undefined" && cell!=null) {
 				if (f_isAttributeAnyURI && needhref[a] && cell.length)
 					cdns.push("<a href='", f_onclickInsteadOfLink ? "javascript:void();" : cell.replaceAll("'", "%27"), "' target='_blank'", (f_onclickInsteadOfLink ? " onClick='return " + f_onclickInsteadOfLink.name + "(\"" + onclickInsteadOfLinkParam + "\", \"" + dataAttributesArray[a] + "\", " + i +");'" : ""), ">", cell, "</a>");
 				else if (typeof cell === "object")

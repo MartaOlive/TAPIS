@@ -65,11 +65,15 @@ function ShowScatterPlotDialog(parentNodes, node) {
 
 		}
 	}
-	node.STAattributesToSelect = {};
-	node.STAattributesToSelect.parentNodesInformation = objectWithParentNodesInfo;
-	node.STAattributesToSelect.dataGroupsSelectedToScatterPlot =
+	if (!node.STAattributesToSelect){
+		node.STAattributesToSelect = {};
+		node.STAattributesToSelect.parentNodesInformation = objectWithParentNodesInfo;
+		node.STAattributesToSelect.dataGroupsSelectedToScatterPlot =
 		[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "",graphicType: "line"}]
-	networkNodes.update(node);
+		networkNodes.update(node);
+	}else{
+		
+	}
 
 	if (noData) {
 		document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";

@@ -119,7 +119,7 @@
 	],
 	"suggestedOGCAPIurls": [
 		{
-			"group": "Testing Instances",
+			"group": "OGC API Features",
 			"STAs": [
 			{
 				"desc": "CubeWerx Daraa demo service (has filter)",
@@ -144,6 +144,34 @@
 			{
 				"desc": "geoserver (has filter)",
 				"url": "https://ogc.heig-vd.ch/geoserver/ogc/features"
+			}]
+		},
+		{
+			"group": "OGC API Coverages",
+			"STAs": [
+			{
+				"desc": "AD4GD Open Data Cube",
+				"url": "https://callus.ddns.net/cgi-bin/mmdc.py"
+			},
+			{
+				"desc": "Ecere, Gnosis",
+				"url": "https://maps.gnosis.earth/ogcapi"
+			}]
+		},
+		{
+			"group": "STAC",
+			"STAs": [
+			{
+				"desc": "AD4GD immutable catalog",
+				"url": "https://immutable-catalog.dataspace.secd.eu/stac"
+			},
+			{
+				"desc": "General immutable catalog",
+				"url": "https://immutable-catalog.ogc.secd.eu/stac"
+			},
+			{
+				"desc": "ECODataCube",
+				"url": "https://s3.ecodatacube.eu/arco/stac/catalog.json"
 			}]
 		}
 	],

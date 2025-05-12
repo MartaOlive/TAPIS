@@ -271,12 +271,11 @@ async function loadAPIDataWithReturn(url, reasonForData) { // Ask API to  "FIllS
 
 
 }
-async function askForConformanceInOGCAPIFeatures() {
+
+//JM: I do not like this. It could be better to read it as part of the OGC Colections process instead of doing it apart.
+async function askForConformanceInOGCAPIFeatures(node) {
 	const filterInConformance = ["filter", "features-filter", "simple-cql", "cql-text", "cql-json"];//What I need for filter
-	var node= getNodeDialog("DialogFilterRows");
-	var url = node.STAURL;
-	var index = url.indexOf("/collection");
-	url = url.slice(0, index);
+	var url = node.STAURL.endsWith("/collections") ? node.STAURL.substring(0, node.STAURL.length-"/collections".length) : node.STAURL;
 	url += "/conformance?f=json";
 	var conformanceInformation = await loadAPIDataWithReturn(url, "OGCAPIConformance"); //ask for conformance (what can I do with this API)
 	var conformanceArray = []
@@ -286,14 +285,14 @@ async function askForConformanceInOGCAPIFeatures() {
 				if (!conformanceArray.includes(filterInConformance[a])) {
 					conformanceArray.push(filterInConformance[a])
 				}
-
 			}
 		}
-
 	}
+	node=networkNodes.get(node.id);  //Since this is an asyncornous function I cannot be sure that node has not change its content while doing this.
 	node.STAOGCAPIconformance = conformanceArray; //Only keeps what I need for filter
 	networkNodes.update(node);
 }
+
 async function askForCollectionQueryables() {
 	var node= getNodeDialog("DialogFilterRows");
 	var url = node.STAURL;
@@ -1971,29 +1970,6 @@ function applyEvalAndFilterData(node) {
 
 	//update STAdata
 	node.STAdata = resultsFiltered;
-	networkNodes.update(node);
-}
-async function askForConformanceInOGCAPIFeatures() {
-	const filterInConformance = ["filter", "features-filter", "simple-cql", "cql-text", "cql-json"];//What I need for filter
-	var node= getNodeDialog("DialogFilterRows");
-	var url = node.STAURL;
-	var index = url.indexOf("/collection");
-	url = url.slice(0, index);
-	url += "/conformance?f=json";
-	var conformanceInformation = await loadAPIDataWithReturn(url, "OGCAPIConformance"); //ask for conformance (what can I do with this API)
-	var conformanceArray = []
-	for (var i = 0; i < conformanceInformation.length; i++) {
-		for (var a = 0; a < filterInConformance.length; a++) {
-			if (conformanceInformation[i].includes(filterInConformance[a])) {
-				if (!conformanceArray.includes(filterInConformance[a])) {
-					conformanceArray.push(filterInConformance[a])
-				}
-
-			}
-		}
-
-	}
-	node.STAOGCAPIconformance = conformanceArray; //Only keeps what I need for filter
 	networkNodes.update(node);
 }
 
