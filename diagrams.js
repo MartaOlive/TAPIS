@@ -71,8 +71,6 @@ function ShowScatterPlotDialog(parentNodes, node) {
 		node.STAattributesToSelect.dataGroupsSelectedToScatterPlot =
 		[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "",graphicType: "line"}]
 		networkNodes.update(node);
-	}else{
-
 	}
 
 	if (noData) {
@@ -147,8 +145,6 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 				datasets: [{
 					label: '',
 					data: [], // Dades buides
-					borderColor: 'rgba(75, 192, 192, 1)',
-					backgroundColor: 'rgba(75, 192, 192, 0.2)',
 					borderWidth: 2,
 					fill: false
 				}]
@@ -167,11 +163,16 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 		}
 		node.STAattributesToSelect.config=config;
 		networkNodes.update(node);
-	}else{ //scatterplotalready exist
-		ScatterPlotChart.destroy();
+		if (ScatterPlotChart)ScatterPlotChart.destroy();
 	}
-			
-		
+	else{ //scatterplotalready exist
+		ScatterPlotChart.destroy();
+		document.getElementById("DialogScatterPlotAxisTitle").value= "";
+		document.getElementById("DialogScatterPlotAxisXLabel").value= "";
+		document.getElementById("DialogScatterPlotAxisYLabelLeft").value= "";
+		document.getElementById("DialogScatterPlotAxisYLabelRight").value= "";
+
+	}
 	ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), node.STAattributesToSelect.config);
 }
 
