@@ -72,7 +72,7 @@ function ShowScatterPlotDialog(parentNodes, node) {
 		[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "",graphicType: "line"}]
 		networkNodes.update(node);
 	}else{
-		
+
 	}
 
 	if (noData) {
@@ -139,6 +139,40 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 					<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"style="background-color:white; border-color:white"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
 	}
 	scatterPlotDiv.innerHTML = cdns;
+	if (!node.STAattributesToSelect.config){
+		var config = {
+			type: 'line', // Pots canviar-ho a 'bar', 'pie', etc.
+			data: {
+				labels: [], // Etiquetes buides
+				datasets: [{
+					label: '',
+					data: [], // Dades buides
+					borderColor: 'rgba(75, 192, 192, 1)',
+					backgroundColor: 'rgba(75, 192, 192, 0.2)',
+					borderWidth: 2,
+					fill: false
+				}]
+			},
+			options: {
+				responsive: true,
+				scales: {
+					x: {
+						beginAtZero: true
+					},
+					y: {
+						beginAtZero: true
+					}
+				}
+			}
+		}
+		node.STAattributesToSelect.config=config;
+		networkNodes.update(node);
+	}else{ //scatterplotalready exist
+		ScatterPlotChart.destroy();
+	}
+			
+		
+	ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), node.STAattributesToSelect.config);
 }
 
 function addNewSelectGroupInScatterPlot(nodeId) { //Add button
@@ -230,7 +264,7 @@ function AdaptValueAxisY(value) {
 }
 
 var ScatterPlotChart = null;
-function DrawScatterPlot(event) {
+function UpdateScatterPlot(event) {
 	event.preventDefault(); // We don't want to submit this form
 	var node = getNodeDialog("DialogScatterPlot");
 	if (!node)
@@ -288,7 +322,6 @@ function DrawScatterPlot(event) {
 				}
 
 			}
-			//var type= typeof  parseFloat(record[selectedOptions.AxisY].toFixed(1));
 			items.push({ x: record[selectedOptions.AxisX], y:record[selectedOptions.AxisY], group: e });
 		}
 			type=  dataGroups[e].graphicType;
@@ -431,10 +464,10 @@ function DrawScatterPlot(event) {
 
 		}
 	}
+		node.STAattributesToSelect.config=config;
+		networkNodes.update(node);
 		ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), config);
 	}
-
-
 
 function CloseDialogScatterPlot(event) {
 	event.preventDefault(); // We don't want to submit this form
