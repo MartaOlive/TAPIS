@@ -7,7 +7,10 @@
 	<link rel="icon" type="image/x-icon" href="favicon.ico">
 	<!--Thanks to https://github.com/chartjs/Chart.js and downloaded from:
 		https://cdnjs.com/libraries/Chart.js/3.9.1 -->
+		
+	<script src="moment.js"></script>
 	<script type="text/javascript" src="Chart.min.js"></script> 
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
 	<!--Thanks to https://github.com/DavideViolante/chartjs-plugin-labels and downloaded from:
 		https://www.npmjs.com/package/chart.js-plugin-labels-dv/v/3.3.0 -->
 	<script type="text/javascript" src="chartjs-plugin-labels.min.js"></script>
@@ -123,7 +126,7 @@
 		<form>
 			<p>
 				<label>Table font size ratio:
-					<input type="text" id="DialogConfigurationFontSize" size="3" value="50"></input>%
+					<input type="text" id="DialogConfigurationFontSize" size="3" value="80"></input>%
 				</label>
 				<br>
 				<span style="display: flex;align-items: center;">Window disposition: 
@@ -1306,7 +1309,7 @@
 			<input type="hidden" id="DialogScatterPlotNodeId"></input>
 			</form>
 		</td>
-		<td style="vertical-align: top;"><canvas id="DialogScatterPlotVisualization" style="width:600px; height:500px;max-height:500px; "></canvas></td>
+		<td style="vertical-align: top;"><div style="width: 100%; overflow-x: auto;"><canvas id="DialogScatterPlotVisualization" style="width:1700px; height:700px;max-height:700px;min-width:1000px"></canvas></div></td>
 		</tr>
 		<tr>
 			<td></td>

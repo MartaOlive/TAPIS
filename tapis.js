@@ -7614,7 +7614,7 @@ function fillCalculatorColumVariablesList(){ //omplir el desplegable
 
 	for (var i=0;i<n;i++){
 		//cdns.push(`<option value= ${dataKeys[i]}>${dataKeys[i]}</option>`);
-		if (dataAttributes[dataAttributesKeys[i]]['type']=="number"||dataAttributes[dataAttributesKeys[i]]['type']=="integer") cdns.push(`<option value= ${dataAttributesKeys[i]}>${dataAttributesKeys[i]}</option>`);
+		if (dataAttributes[dataAttributesKeys[i]]['type']=="number"||dataAttributes[dataAttributesKeys[i]]['type']=="integer"||dataAttributes[dataAttributesKeys[i]]['type']=="isodatetime") cdns.push(`<option value= ${dataAttributesKeys[i]}>${dataAttributesKeys[i]}</option>`);
 	}
 	select.innerHTML=cdns.join("");
 

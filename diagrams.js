@@ -44,8 +44,8 @@
 */
 
 "use strict"
-
-function ShowScatterPlotDialog(parentNodes, node) {
+var ScatterPlotChart = null;
+function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.png
 	saveNodeDialog("DialogScatterPlot", node);
 	var noData = true, attributesArray = [], allAttributes, allAttributesKeys, objectWithParentNodesInfo = {};
 
@@ -77,6 +77,7 @@ function ShowScatterPlotDialog(parentNodes, node) {
 		document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
 		return;
 	}
+
 	document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
 	createDialogWithSelectWithGroupsScatterPlot(node);
 
@@ -137,14 +138,15 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 					<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"style="background-color:white; border-color:white"><img src="trash.png" alt="Remove" title="Remove"></button></fieldset>`
 	}
 	scatterPlotDiv.innerHTML = cdns;
+
 	if (!node.STAattributesToSelect.config){
 		var config = {
-			type: 'line', // Pots canviar-ho a 'bar', 'pie', etc.
+			type: 'line', // 'bar', 'pie', etc.
 			data: {
-				labels: [], // Etiquetes buides
+				labels: [], 
 				datasets: [{
 					label: '',
-					data: [], // Dades buides
+					data: [], 
 					borderWidth: 2,
 					fill: false
 				}]
@@ -163,16 +165,19 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 		}
 		node.STAattributesToSelect.config=config;
 		networkNodes.update(node);
-		if (ScatterPlotChart)ScatterPlotChart.destroy();
+
 	}
 	else{ //scatterplotalready exist
-		ScatterPlotChart.destroy();
+
 		document.getElementById("DialogScatterPlotAxisTitle").value= "";
 		document.getElementById("DialogScatterPlotAxisXLabel").value= "";
 		document.getElementById("DialogScatterPlotAxisYLabelLeft").value= "";
 		document.getElementById("DialogScatterPlotAxisYLabelRight").value= "";
 
 	}
+
+	var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'))
+	if (chart)ScatterPlotChart.destroy();
 	ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), node.STAattributesToSelect.config);
 }
 
@@ -264,14 +269,14 @@ function AdaptValueAxisY(value) {
 	return '' + value.toPrecision(5);
 }
 
-var ScatterPlotChart = null;
+
 function UpdateScatterPlot(event) {
 	event.preventDefault(); // We don't want to submit this form
 	var node = getNodeDialog("DialogScatterPlot");
 	if (!node)
 		return;
 	var dataGroups = node.STAattributesToSelect.dataGroupsSelectedToScatterPlot; //Options selected
-	var nodeId, node, nodeData, selectedOptions = {}, record, items = [], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight;
+	var nodeId, node, nodeData, selectedOptions = {}, record, items = [], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight, date, dateSeconds;
 	var yAxisTodisplay={left:false, right:false}, axisXType="",curentAttributeType,label,type, pointRadius;
 	var data = {datasets:[]};
 
@@ -296,8 +301,12 @@ function UpdateScatterPlot(event) {
 		
 		for (var i = 0; i < nodeData.length; i++) {
 			record = nodeData[i];
+			//date=record[selectedOptions.AxisX]
+			date=moment( new Date(record[selectedOptions.AxisX])).format (); //MIRAR SI ES TEMPS
+			// date = new Date (record[selectedOptions.AxisX]);
+			// dateSeconds= Math.floor(date.getTime() / 1000);
 			if (i == 0 && e == 0) {
-				minx = maxx = record[selectedOptions.AxisX];
+				minx = maxx = date;
 				if (leftOrRight == "left") minyLeft = maxyLeft = record[selectedOptions.AxisY];
 				else minyRight = maxyRight = record[selectedOptions.AxisY];
 			} else {
@@ -306,10 +315,10 @@ function UpdateScatterPlot(event) {
 				} else if (leftOrRight == "right" && minyRight == undefined) {
 					minyRight = maxyRight = record[selectedOptions.AxisY];
 				}
-				if (minx > record[selectedOptions.AxisX])
-					minx = record[selectedOptions.AxisX];
-				if (maxx < record[selectedOptions.AxisX])
-					maxx = record[selectedOptions.AxisX];
+				if (minx > date)
+					minx = date;
+				if (maxx < date)
+					maxx = date;
 				if (leftOrRight == "left") {
 					if (minyLeft > record[selectedOptions.AxisY])
 						minyLeft = record[selectedOptions.AxisY];
@@ -323,7 +332,8 @@ function UpdateScatterPlot(event) {
 				}
 
 			}
-			items.push({ x: record[selectedOptions.AxisX], y:record[selectedOptions.AxisY], group: e });
+			
+			items.push({ x: date, y:record[selectedOptions.AxisY], group: e });
 		}
 			type=  dataGroups[e].graphicType;
 			(type=="line")?pointRadius=0:pointRadius=2;
@@ -347,8 +357,8 @@ function UpdateScatterPlot(event) {
 		yAxisTodisplay[dataGroups[e].selectedYaxis]=true
 	}
 
-	if (ScatterPlotChart)
-		ScatterPlotChart.destroy();
+	var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'));
+	if (chart)ScatterPlotChart.destroy();
 
 	//Y axis
 	var finalMinYLeft = minyLeft - (maxyLeft - minyLeft) * 0.025;
@@ -364,6 +374,7 @@ function UpdateScatterPlot(event) {
 		finalMaxYRight--;
 	}
 
+	
 	//X axis
 	if (minx==maxx){
 		if ((axisXType=="isodatetime")){
@@ -381,35 +392,37 @@ function UpdateScatterPlot(event) {
 	var axisYLabelLeft = document.getElementById("DialogScatterPlotAxisYLabelLeft").value;
 	
 	var axisX;
-	if (axisXType=="isodatetime"){
-		axisX={
-			type: "time",
-			time: {
-				unit: 'minute',  
-				tooltipFormat: 'yyyy-MM-dd HH:mm:ss',  
-				displayFormats: {
-					minute: 'yyyy-MM-dd HH:mm:ss',  
-				}
-			},
-			title: {
-				text: document.getElementById("DialogScatterPlotAxisXLabel").value,
-				display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
-			},
-			min: minx,
-			max:maxx
-		}
-	}
-	else{
-		axisX={type: "linear",
+	 if (axisXType=="isodatetime"){
+	 	axisX={
+	 		type: "time",
+	 		time: {
+	 			unit: 'minute',  
+	 			tooltipFormat: 'yyyy-MM-dd HH:mm:ss',  
+	 			displayFormats: {
+	 				minute: 'yyyy-MM-dd HH:mm:ss',  
+	 			}
+	 		},
+	 		title: {
+	 			text: document.getElementById("DialogScatterPlotAxisXLabel").value,
+	 			display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
+	 		},
+	 		min: minx,
+	 		max:maxx
+	 	}
+	 }
+	 else{
+	 	axisX={type: "linear",
 
-			title: {
-				text: document.getElementById("DialogScatterPlotAxisXLabel").value,
-				display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
-			},
-			min: minx,
-			max:maxx
-		}
-	}
+	 		title: {
+	 			text: document.getElementById("DialogScatterPlotAxisXLabel").value,
+	 			display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
+	 		},
+	 		min: minx,
+	 		max:maxx
+	 	}
+	 }
+
+	
 
 	
 	var config = {
@@ -421,15 +434,30 @@ function UpdateScatterPlot(event) {
 					text: document.getElementById("DialogScatterPlotAxisTitle").value,
 					display: (document.getElementById("DialogScatterPlotAxisTitle").value != "") ? true : false
 
+				},
+				zoom: {
+					pan: {
+						enabled: true,
+						mode: 'x',
+					},
+					zoom: {
+						wheel: {
+						enabled: true,
+						},
+						pinch: {
+						enabled: true,
+						},
+						mode: 'x',
+					}
 				}
 			},
 			scales: {
-				// x:axisX,
-				//  ticks: { //!!!!!!! 
-				// 	maxTicksLimit: 30,
-				//  	autoSkip: true
-				//   }
-			},
+				 x:axisX
+			// 	//  ticks: { //!!!!!!! 
+			// 	// 	maxTicksLimit: 30,
+			// 	//  	autoSkip: true
+				
+			}
 		}
 
 	};
@@ -460,13 +488,14 @@ function UpdateScatterPlot(event) {
 			max:finalMaxYLeft,
 			min:finalMinYLeft,
 			// ticks: {
-			// 	maxTicksLimit: 30 // 👈 només 10 valors a l’eix
+			// 	maxTicksLimit: 30 // 
 			//   }
 
 		}
 	}
 		node.STAattributesToSelect.config=config;
 		networkNodes.update(node);
+		//document.getElementById('DialogScatterPlotVisualization').getContext("2d").clearRect(0, 0, 0, 0);
 		ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), config);
 	}
 
