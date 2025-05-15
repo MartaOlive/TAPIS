@@ -285,7 +285,7 @@ function UpdateScatterPlot(event) {
 	if (!node)
 		return;
 	var dataGroups = node.STAattributesToSelect.dataGroupsSelectedToScatterPlot; //Options selected
-	var nodeId, node, nodeData, selectedOptions = {}, record, items = [], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight, date, dateSeconds;
+	var nodeId, node, nodeData, selectedOptions = {}, record, items = [], minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight, dataRecord;
 	var yAxisTodisplay={left:false, right:false}, axisXType="",curentAttributeType,label,type, pointRadius;
 	var data = {datasets:[]};
 
@@ -310,12 +310,14 @@ function UpdateScatterPlot(event) {
 		
 		for (var i = 0; i < nodeData.length; i++) {
 			record = nodeData[i];
-			//date=record[selectedOptions.AxisX]
-			date=moment( new Date(record[selectedOptions.AxisX])).format (); //MIRAR SI ES TEMPS
-			// date = new Date (record[selectedOptions.AxisX]);
-			// dateSeconds= Math.floor(date.getTime() / 1000);
+			if (axisXType=="isodatetime"){
+				dataRecord=moment( new Date(record[selectedOptions.AxisX])).format (); 
+			}else{
+				dataRecord=record[selectedOptions.AxisX]
+			}
+
 			if (i == 0 && e == 0) {
-				minx = maxx = date;
+				minx = maxx = dataRecord;
 				if (leftOrRight == "left") minyLeft = maxyLeft = record[selectedOptions.AxisY];
 				else minyRight = maxyRight = record[selectedOptions.AxisY];
 			} else {
@@ -324,10 +326,10 @@ function UpdateScatterPlot(event) {
 				} else if (leftOrRight == "right" && minyRight == undefined) {
 					minyRight = maxyRight = record[selectedOptions.AxisY];
 				}
-				if (minx > date)
-					minx = date;
-				if (maxx < date)
-					maxx = date;
+				if (minx > dataRecord)
+					minx = dataRecord;
+				if (maxx < dataRecord)
+					maxx = dataRecord;
 				if (leftOrRight == "left") {
 					if (minyLeft > record[selectedOptions.AxisY])
 						minyLeft = record[selectedOptions.AxisY];
@@ -342,7 +344,7 @@ function UpdateScatterPlot(event) {
 
 			}
 			
-			items.push({ x: date, y:record[selectedOptions.AxisY], group: e });
+			items.push({ x: dataRecord, y:record[selectedOptions.AxisY], group: e });
 		}
 			type=  dataGroups[e].graphicType;
 			(type=="line")?pointRadius=0:pointRadius=2;
