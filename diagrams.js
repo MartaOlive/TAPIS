@@ -80,6 +80,7 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 
 	document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
 	createDialogWithSelectWithGroupsScatterPlot(node);
+	drawScatterPlot(node);
 
 }
 
@@ -176,9 +177,9 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 
 	}
 
-	var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'))
-	if (chart)ScatterPlotChart.destroy();
-	ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), node.STAattributesToSelect.config);
+	// var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'))
+	// if (chart)ScatterPlotChart.destroy();
+	// ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), node.STAattributesToSelect.config);
 }
 
 function addNewSelectGroupInScatterPlot(nodeId) { //Add button
@@ -209,7 +210,14 @@ function updateSelectInformationScatterPlot(numberDialog, keyToChange, typeOfSel
 
 	node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[numberDialog][keyToChange] = value;
 	networkNodes.update(node);
-	createDialogWithSelectWithGroupsScatterPlot(node)
+	createDialogWithSelectWithGroupsScatterPlot(node);
+	
+
+}
+function drawScatterPlot(node){
+		var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'))
+	if (chart)ScatterPlotChart.destroy();
+	ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), node.STAattributesToSelect.config);
 }
 
 function ShowBarPlotDialog(parentNodes, node) {
@@ -251,6 +259,7 @@ function ShowBarPlotDialog(parentNodes, node) {
 		document.getElementById("DialogBarPlotAxisYSelect").value)
 		DrawBarPlot();
 }
+
 
 function ShowImageViewerDialog(parentNodes) {
 	var data = parentNodes[0].STAdata;
@@ -495,8 +504,7 @@ function UpdateScatterPlot(event) {
 	}
 		node.STAattributesToSelect.config=config;
 		networkNodes.update(node);
-		//document.getElementById('DialogScatterPlotVisualization').getContext("2d").clearRect(0, 0, 0, 0);
-		ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), config);
+		drawScatterPlot(node);
 	}
 
 function CloseDialogScatterPlot(event) {
