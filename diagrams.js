@@ -368,8 +368,6 @@ function UpdateScatterPlot(event) {
 		yAxisTodisplay[dataGroups[e].selectedYaxis]=true
 	}
 
-	var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'));
-	if (chart)ScatterPlotChart.destroy();
 
 	//Y axis
 	var finalMinYLeft = minyLeft - (maxyLeft - minyLeft) * 0.025;
@@ -398,116 +396,158 @@ function UpdateScatterPlot(event) {
 			minx--;
 		}
 	}
+	if (axisXType=="isodatetime"){
+		var unit= "minute"; //minute, hour, day 
+		var date1= new Date(minx).getTime();
+		var date2 =new Date(maxx).getTime();
+		var milisecondsDifference= date2-date1;
+		var executable=true;
+		switch(unit){
+			case "second": 
+				if (milisecondsDifference/1000 > 1e5) executable= false;
+				break;
+			case "minute": 
+				if (milisecondsDifference/(1000*60) > 1e5) executable= false;
+				break;
+			case "hour": 
+				if (milisecondsDifference/(1000*60*60) > 1e5) executable= false;
+				break;
+			case "day": 
+				if (milisecondsDifference/(1000*60*60*24) > 1e5) executable= false;
+				break;
+			case "week": 
+			if (milisecondsDifference/ (1000 * 60 * 60 * 24 * 7) > 1e5) executable= false;
+				break;
+			case "month": 
+			if (milisecondsDifference/(1000 * 60 * 60 * 24 * 30.44) > 1e5) executable= false;
+				break;
+			case "year": 
+			if (milisecondsDifference/(1000 * 60 * 60 * 24 * 365.25) > 1e5) executable= false;
+				break;
+		}
 
-	var axisYLabelRight = document.getElementById("DialogScatterPlotAxisYLabelRight").value;
-	var axisYLabelLeft = document.getElementById("DialogScatterPlotAxisYLabelLeft").value;
-	
-	var axisX;
-	 if (axisXType=="isodatetime"){
-	 	axisX={
-	 		type: "time",
-	 		time: {
-	 			unit: 'minute',  
-	 			tooltipFormat: 'yyyy-MM-dd HH:mm:ss',  
-	 			displayFormats: {
-	 				minute: 'yyyy-MM-dd HH:mm:ss',  
-	 			}
-	 		},
-	 		title: {
-	 			text: document.getElementById("DialogScatterPlotAxisXLabel").value,
-	 			display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
-	 		},
-	 		min: minx,
-	 		max:maxx
-	 	}
-	 }
-	 else{
-	 	axisX={type: "linear",
+	}
 
-	 		title: {
-	 			text: document.getElementById("DialogScatterPlotAxisXLabel").value,
-	 			display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
-	 		},
-	 		min: minx,
-	 		max:maxx
-	 	}
-	 }
+	if (executable) {
+		var axisYLabelRight = document.getElementById("DialogScatterPlotAxisYLabelRight").value;
+		var axisYLabelLeft = document.getElementById("DialogScatterPlotAxisYLabelLeft").value;
+		
 
-	
 
-	
-	var config = {
-		//type: type, //general diagram. If it have different types it is specified in the datasets
-		data: data,
-		options: {
-			plugins: {
-				title: {
-					text: document.getElementById("DialogScatterPlotAxisTitle").value,
-					display: (document.getElementById("DialogScatterPlotAxisTitle").value != "") ? true : false
-
-				},
-				zoom: {
-					pan: {
-						enabled: true,
-						mode: 'x',
-					},
-					zoom: {
-						wheel: {
-						enabled: true,
-						},
-						pinch: {
-						enabled: true,
-						},
-						mode: 'x',
+		var axisX;
+		if (axisXType=="isodatetime"){
+			axisX={
+				type: "time",
+				time: {
+					unit: unit,  //change the interval
+					tooltipFormat: 'yyyy-MM-dd HH:mm:ss',  
+					displayFormats: {
+						minute: 'yyyy-MM-dd HH:mm:ss',  
+						hour: 'yyyy-MM-dd HH:mm',
+						day: 'yyyy-MM-dd'
 					}
-				}
-			},
-			scales: {
-				 x:axisX
-			// 	//  ticks: { //!!!!!!! 
-			// 	// 	maxTicksLimit: 30,
-			// 	//  	autoSkip: true
-				
+				},
+				title: {
+					text: document.getElementById("DialogScatterPlotAxisXLabel").value,
+					display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
+				},
+				min: minx,
+				max:maxx
+			}
+		}
+		else{
+			axisX={type: "linear",
+
+				title: {
+					text: document.getElementById("DialogScatterPlotAxisXLabel").value,
+					display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
+				},
+				min: minx,
+				max:maxx
 			}
 		}
 
-	};
+		
 
-	if (yAxisTodisplay.right){
-		config.options.scales.yAxisright= {
-			type: 'linear', //Axys type
-			position: 'right',
-			title: {
-				display: (axisYLabelRight!="")?true:false,
-				text: axisYLabelRight
-			},
-			grid: { //To display lines from left axis only
-				drawOnChartArea: false
-			},
-			max:finalMaxYRight,
-			min:finalMinYRight
-		} 
-	}
-	if (yAxisTodisplay.left) {
-		config.options.scales.yAxisleft={
-			type: 'linear',
-			position: 'left',
-			title: {
-				display: (axisYLabelLeft!="")?true:false,
-				text: axisYLabelLeft
-			},
-			max:finalMaxYLeft,
-			min:finalMinYLeft,
-			// ticks: {
-			// 	maxTicksLimit: 30 // 
-			//   }
+		
+		var config = {
+			//type: type, //general diagram. If it have different types it is specified in the datasets
+			data: data,
+			options: {
+				plugins: {
+					title: {
+						text: document.getElementById("DialogScatterPlotAxisTitle").value,
+						display: (document.getElementById("DialogScatterPlotAxisTitle").value != "") ? true : false
 
+					},
+					zoom: {
+						pan: {
+							enabled: true,
+							mode: 'x',
+						},
+						zoom: {
+							wheel: {
+							enabled: true,
+							},
+							pinch: {
+							enabled: true,
+							},
+							mode: 'x',
+						}
+					}
+				},
+				scales: {
+					x:axisX
+				// 	//  ticks: { //!!!!!!! 
+				// 	// 	maxTicksLimit: 30,
+				// 	//  	autoSkip: true
+					
+				}
+			}
+
+		};
+
+		if (yAxisTodisplay.right){
+			config.options.scales.yAxisright= {
+				type: 'linear', //Axys type
+				position: 'right',
+				title: {
+					display: (axisYLabelRight!="")?true:false,
+					text: axisYLabelRight
+				},
+				grid: { //To display lines from left axis only
+					drawOnChartArea: false
+				},
+				max:finalMaxYRight,
+				min:finalMinYRight
+			} 
+		}
+		if (yAxisTodisplay.left) {
+			config.options.scales.yAxisleft={
+				type: 'linear',
+				position: 'left',
+				title: {
+					display: (axisYLabelLeft!="")?true:false,
+					text: axisYLabelLeft
+				},
+				max:finalMaxYLeft,
+				min:finalMinYLeft,
+				// ticks: {
+				// 	maxTicksLimit: 30 // 
+				//   }
+
+			}
+		}
+			node.STAattributesToSelect.config=config;
+			networkNodes.update(node);
+			drawScatterPlot(node);
+		}else{
+			alert("The interval of the data selected is too long to apply to the graphic. Filter interval to make it shorter or choose a bigger interval to X axis");
 		}
 	}
-		node.STAattributesToSelect.config=config;
-		networkNodes.update(node);
-		drawScatterPlot(node);
-	}
+
+	
+	
 
 function CloseDialogScatterPlot(event) {
 	event.preventDefault(); // We don't want to submit this form
