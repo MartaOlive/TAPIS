@@ -47,6 +47,25 @@
 var ScatterPlotChart = null;
 function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.png
 	saveNodeDialog("DialogScatterPlot", node);
+	if ('STAattributesToSelect'in node){
+		if ('sorted' in node.STAattributesToSelect) {
+			if (node.STAattributesToSelect.sorted==true){
+				document.getElementById("DialogScatterPlotAxisXSort").checked=true;	
+				document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display="none";	
+			}else{
+				document.getElementById("DialogScatterPlotAxisXSort").checked=false;
+				document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display="inline-block";	
+				
+			}
+			
+		}
+	}else{
+		document.getElementById("DialogScatterPlotAxisXSort").checked=true;	
+		document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display="none";
+	}
+	
+
+	
 	var noData = true, attributesArray = [], allAttributes, allAttributesKeys, objectWithParentNodesInfo = {};
 
 	for (var i = 0; i < parentNodes.length; i++) {
@@ -65,13 +84,15 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 
 		}
 	}
-	if (!node.STAattributesToSelect){
-		node.STAattributesToSelect = {};
-		node.STAattributesToSelect.parentNodesInformation = objectWithParentNodesInfo;
-		node.STAattributesToSelect.dataGroupsSelectedToScatterPlot =
-		[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "",graphicType: "line"}]
-		networkNodes.update(node);
-	}
+		if (!node.STAattributesToSelect){
+			node.STAattributesToSelect = {};
+			node.STAattributesToSelect.parentNodesInformation = objectWithParentNodesInfo;
+			node.STAattributesToSelect.dataGroupsSelectedToScatterPlot =
+			[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "",graphicType: "line"}]
+			node.STAattributesToSelect.sorted= true;
+			
+			networkNodes.update(node);
+		}
 
 	if (noData) {
 		document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
@@ -289,6 +310,18 @@ function UpdateScatterPlot(event) {
 	var yAxisTodisplay={left:false, right:false}, axisXType="",curentAttributeType,label,type, pointRadius;
 	var data = {datasets:[]};
 
+	//x axis in sorted?
+	var sortXaxis=(document.getElementById("DialogScatterPlotAxisXSort").checked)?true:false;
+	if (sortXaxis){
+		node.STAattributesToSelect.sorted= true;
+		 document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display = "none";
+	}else{
+		node.STAattributesToSelect.sorted= false;
+		document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display = "inline-block";
+	}
+	
+	
+
 	for (var e = 0; e < dataGroups.length; e++) {
 		nodeId = dataGroups[e].nodeSelected;
 		selectedOptions.AxisX = dataGroups[e].X;
@@ -303,11 +336,9 @@ function UpdateScatterPlot(event) {
 			}
 		}
 		selectedOptions.AxisY = dataGroups[e].Y;
-		nodeData = networkNodes.get(nodeId).STAdata;
+		(sortXaxis)?nodeData = SortTableByColumns (networkNodes.get(nodeId).STAdata,dataGroups[e].X, "asc"): nodeData= networkNodes.get(nodeId).STAdata;
 		leftOrRight = dataGroups[e].selectedYaxis;
 		items = [];
-		
-		
 		for (var i = 0; i < nodeData.length; i++) {
 			record = nodeData[i];
 			if (axisXType=="isodatetime"){
@@ -396,12 +427,17 @@ function UpdateScatterPlot(event) {
 			minx--;
 		}
 	}
+	var executable=true;
+	
+
+
 	if (axisXType=="isodatetime"){
-		var unit= "minute"; //minute, hour, day 
+		var selectAxisX=document.getElementById("DialogScatterPlotAxisXSelectInterval");
+		var unit=selectAxisX.options[selectAxisX.selectedIndex].value ; //minute, hour, day ...
 		var date1= new Date(minx).getTime();
 		var date2 =new Date(maxx).getTime();
 		var milisecondsDifference= date2-date1;
-		var executable=true;
+		
 		switch(unit){
 			case "second": 
 				if (milisecondsDifference/1000 > 1e5) executable= false;
@@ -442,9 +478,13 @@ function UpdateScatterPlot(event) {
 					unit: unit,  //change the interval
 					tooltipFormat: 'yyyy-MM-dd HH:mm:ss',  
 					displayFormats: {
+						second: 'yyyy-MM-dd HH:mm:ss', 
 						minute: 'yyyy-MM-dd HH:mm:ss',  
 						hour: 'yyyy-MM-dd HH:mm',
-						day: 'yyyy-MM-dd'
+						day: 'yyyy-MM-dd',
+						week: 'yyyy-MM-dd',
+						month: 'yyyy-MM-dd',
+						year: 'yyyy-MM-dd'
 					}
 				},
 				title: {
