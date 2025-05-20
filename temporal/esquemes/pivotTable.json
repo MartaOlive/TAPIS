@@ -11425,62 +11425,6 @@
 			},
 			"x": 2,
 			"y": 0
-		},
-		{
-			"id": "9at10.hftlaa",
-			"label": "Scatter Plot",
-			"image": "ScatterPlot.png",
-			"shape": "circularImage",
-			"STAattributesToSelect": {
-				"parentNodesInformation": {
-					"2ho4n.4oc483g": {
-						"attr": [
-							"Day",
-							"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Sum",
-							"Reservoir of la Llosa del Cavall (Nav…s)_Absolute_level_Sum",
-							"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Sum",
-							"Reservoir of Susqueda (Osor)_Absolute_level_Sum",
-							"Reservoir of Sau (Vilanova de Sau)_Absolute_level_Sum",
-							"Reservoir of Foix (Castellet i la Gornal)_Absolute_level_Sum",
-							"Reservoir of la Baells (Cercs)_Absolute_level_Sum",
-							"Reservoir of Riudecanyes_Absolute_level_Sum",
-							"Reservoir of Sant Pon‡ (Clariana de Cardener)_Absolute_level_Sum"
-						],
-						"nodeLabel": "Pivot table"
-					}
-				},
-				"dataGroupsSelectedToScatterPlot": [
-					{
-						"nodeSelected": "2ho4n.4oc483g",
-						"X": "Day",
-						"Y": "Reservoir of Darnius Boadella (Darnius)_Absolute_level_Sum",
-						"selectedYaxis": "left",
-						"color": "#f79646",
-						"legendText": "",
-						"graphicType": "line"
-					},
-					{
-						"nodeSelected": "2ho4n.4oc483g",
-						"X": "Day",
-						"Y": "Reservoir of la Llosa del Cavall (Nav…s)_Absolute_level_Sum",
-						"selectedYaxis": "right",
-						"color": "#6c45f7",
-						"legendText": "",
-						"graphicType": "line"
-					},
-					{
-						"nodeSelected": "2ho4n.4oc483g",
-						"X": "Day",
-						"Y": "Reservoir of Sau (Vilanova de Sau)_Absolute_level_Sum",
-						"selectedYaxis": "left",
-						"color": "#f7459b",
-						"legendText": "",
-						"graphicType": "line"
-					}
-				]
-			},
-			"x": 73,
-			"y": -72
 		}
 	],
 	"edges": [

@@ -63,6 +63,7 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 		document.getElementById("DialogScatterPlotAxisXSort").checked=true;	
 		document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display="none";
 	}
+
 	
 
 	
@@ -90,10 +91,29 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 			node.STAattributesToSelect.dataGroupsSelectedToScatterPlot =
 			[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "",graphicType: "line"}]
 			node.STAattributesToSelect.sorted= true;
-			
 			networkNodes.update(node);
 		}
+		var options = [["second","Seconds"],["minute","Minutes"],["hour","Hours"],["day","Days"],["week","Weeks"],["month","Month"],["year","Years"]];
+		if (node.STAattributesToSelect.config){
+			var unitValue = node.STAattributesToSelect.config.options.scales.x.time.unit;
+		}else{
+			var unitValue="minute";
+		}	
+		var selectInterval = document.getElementById("DialogScatterPlotAxisXSelectInterval");
+		var s ="";
+		for (var i = 0; i < options.length; i++) {
+				
+				s+= "<option value="+options[i][0];
 
+				if (options[i][0] === unitValue) {
+					s+=" selected";
+				} 
+				s+= ">"+options[i][1]+ "</option>"
+				
+		}
+		selectInterval.innerHTML=s;
+		
+		
 	if (noData) {
 		document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
 		return;
