@@ -85,34 +85,51 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 
 		}
 	}
-		if (!node.STAattributesToSelect){
-			node.STAattributesToSelect = {};
-			node.STAattributesToSelect.parentNodesInformation = objectWithParentNodesInfo;
-			node.STAattributesToSelect.dataGroupsSelectedToScatterPlot =
-			[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "",graphicType: "line"}]
-			node.STAattributesToSelect.sorted= true;
-			networkNodes.update(node);
-		}
-		var options = [["second","Seconds"],["minute","Minutes"],["hour","Hours"],["day","Days"],["week","Weeks"],["month","Month"],["year","Years"]];
-		if (node.STAattributesToSelect.config){
+	if (!node.STAattributesToSelect){
+		node.STAattributesToSelect = {};
+		node.STAattributesToSelect.parentNodesInformation = objectWithParentNodesInfo;
+		node.STAattributesToSelect.dataGroupsSelectedToScatterPlot =
+		[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "",graphicType: "line"}]
+		node.STAattributesToSelect.sorted= true;
+		networkNodes.update(node);
+	}
+	var options = [["second","Seconds"],["minute","Minutes"],["hour","Hours"],["day","Days"],["week","Weeks"],["month","Month"],["year","Years"]];
+	if (node.STAattributesToSelect.config){
+		if (node.STAattributesToSelect.config.options.scales.x.time){
 			var unitValue = node.STAattributesToSelect.config.options.scales.x.time.unit;
-		}else{
+		} else{
 			var unitValue="minute";
-		}	
-		var selectInterval = document.getElementById("DialogScatterPlotAxisXSelectInterval");
-		var s ="";
-		for (var i = 0; i < options.length; i++) {
-				
-				s+= "<option value="+options[i][0];
+		}		
+	}else{
+		var unitValue="minute";
+	}	
+	var selectInterval = document.getElementById("DialogScatterPlotAxisXSelectInterval");
+	var s ="";
+	for (var i = 0; i < options.length; i++) {
+			
+			s+= "<option value="+options[i][0];
 
-				if (options[i][0] === unitValue) {
-					s+=" selected";
-				} 
-				s+= ">"+options[i][1]+ "</option>"
-				
-		}
-		selectInterval.innerHTML=s;
-		
+			if (options[i][0] === unitValue) {
+				s+=" selected";
+			} 
+			s+= ">"+options[i][1]+ "</option>"
+			
+	}
+	selectInterval.innerHTML=s;
+
+	if (node.STAattributesToSelect.config){
+	
+		(Object.keys(node.STAattributesToSelect.config.options.plugins).length!=0)?document.getElementById("DialogScatterPlotAxisTitle").value=node.STAattributesToSelect.config.options.plugins.title.text: document.getElementById("DialogScatterPlotAxisTitle").value="" ;
+		if (node.STAattributesToSelect.config.options.scales.x.title.text)document.getElementById("DialogScatterPlotAxisXLabel").value=node.STAattributesToSelect.config.options.scales.x.title.text;
+		(node.STAattributesToSelect.config.options.scales.yAxisleft)?document.getElementById("DialogScatterPlotAxisYLabelLeft").value=node.STAattributesToSelect.config.options.scales.yAxisleft.title.text:document.getElementById("DialogScatterPlotAxisYLabelLeft").value="";
+		(node.STAattributesToSelect.config.options.scales.yAxisright)?document.getElementById("DialogScatterPlotAxisYLabelRight").value=node.STAattributesToSelect.config.options.scales.yAxisright.title.text:document.getElementById("DialogScatterPlotAxisYLabelRight").value="";
+	}else{
+		document.getElementById("DialogScatterPlotAxisTitle").value="";
+		document.getElementById("DialogScatterPlotAxisXLabel").value="";
+		document.getElementById("DialogScatterPlotAxisYLabelLeft").value="";
+		document.getElementById("DialogScatterPlotAxisYLabelRight").value="";
+	
+	}
 		
 	if (noData) {
 		document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
@@ -122,6 +139,7 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 	document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
 	createDialogWithSelectWithGroupsScatterPlot(node);
 	drawScatterPlot(node);
+	
 
 }
 
@@ -209,18 +227,7 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 		networkNodes.update(node);
 
 	}
-	else{ //scatterplotalready exist
-
-		document.getElementById("DialogScatterPlotAxisTitle").value= "";
-		document.getElementById("DialogScatterPlotAxisXLabel").value= "";
-		document.getElementById("DialogScatterPlotAxisYLabelLeft").value= "";
-		document.getElementById("DialogScatterPlotAxisYLabelRight").value= "";
-
-	}
-
-	// var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'))
-	// if (chart)ScatterPlotChart.destroy();
-	// ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), node.STAattributesToSelect.config);
+	
 }
 
 function addNewSelectGroupInScatterPlot(nodeId) { //Add button
