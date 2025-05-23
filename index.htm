@@ -1238,13 +1238,13 @@
 				Local file: <input type="file" accept=".json" id="DialogImportJSONSourceFileText" onChange="ReadFileImportJSON(event)" multiple></input></label><br>
 				<label><input type="radio" id="DialogImportJSONSourceURL" name="DialogImportJSONSource" value="url" onClick='SelectImportFileSource(event, "JSON")'>
 				URL single: 
-				 <input type="text" size="70" id="DialogImportJSONSourceURLInput" onChange="ReadURLImportJSON(event)" disabled="disabled"></input> 
-				 
+				 <input type="text" size="70" id="DialogImportJSONSourceURLInput" onChange="ReadURLImportJSON(event,'JSON')" disabled="disabled"></input> 
+				 <button type="button" id="DialogImportJSONSourceURLButton" onclick="ReadURLImportJSON(event)" disabled="disabled">Load</button> 
 				<br>
 				<input type="radio" id="DialogImportJSONSourceURLList" name="DialogImportJSONSource" value="urlList" onClick='SelectImportFileSource(event, "JSON")'>
 				<label> URL list: <i>Separated by comma</i> </label> <br>
-				<textarea  type="text" cols="100" rows="10" style="margin-top:10px" id="DialogImportJSONInputSeveralRecords"></textarea>
-				<button type="button" id="DialogImportJSONSourceURLButton" onClick="ReadURLImportJSONMultiple(event)" >Load</button></label><br> 
+				<textarea  type="text" cols="100" rows="10" style="margin-top:10px" id="DialogImportJSONInputSeveralRecords" disabled="disabled"></textarea>
+				<button type="button" id="DialogImportJSONSourceURLButtonMulti" onClick="ReadURLImportJSONMultiple(event)" disabled="disabled" >Load</button></label><br> 
 			</fieldset>
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSON")'>Done</button>

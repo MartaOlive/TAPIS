@@ -1074,10 +1074,28 @@ function SelectImportFileSource(event, type) {
 		document.getElementById("DialogImport"+type+"SourceFileText").disabled=false;
 		document.getElementById("DialogImport"+type+"SourceURLInput").disabled=true;
 		document.getElementById("DialogImport"+type+"SourceURLButton").disabled=true;
+		if (type=="JSON"){
+			document.getElementById("DialogImportJSONInputSeveralRecords").disabled=true;
+			document.getElementById("DialogImportJSONSourceURLButtonMulti").disabled=true;
+		}
+
 	} else /*if (document.getElementById("DialogImport"+type+"SourceURL").checked)*/ {
-		document.getElementById("DialogImport"+type+"SourceFileText").disabled=true;
-		document.getElementById("DialogImport"+type+"SourceURLInput").disabled=false;
-		document.getElementById("DialogImport"+type+"SourceURLButton").disabled=false;
+		if (document.getElementById("DialogImportJSONSourceURLList").checked){
+			document.getElementById("DialogImportJSONSourceFileText").disabled=true;
+			document.getElementById("DialogImportJSONSourceURLInput").disabled=true;
+			document.getElementById("DialogImportJSONSourceURLButton").disabled=true;
+			document.getElementById("DialogImportJSONInputSeveralRecords").disabled=false;
+			document.getElementById("DialogImportJSONSourceURLButtonMulti").disabled=false;
+		}else{
+			document.getElementById("DialogImport"+type+"SourceFileText").disabled=true;
+			document.getElementById("DialogImport"+type+"SourceURLInput").disabled=false;
+			document.getElementById("DialogImport"+type+"SourceURLButton").disabled=false;
+			if (type=="JSON"){
+				document.getElementById("DialogImportJSONInputSeveralRecords").disabled=true;
+				document.getElementById("DialogImportJSONSourceURLButtonMulti").disabled=true;
+			}
+		}
+
 	}
 }
 
