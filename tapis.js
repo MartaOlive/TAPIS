@@ -1526,7 +1526,7 @@ function ReadURLImportJSON() {
 
 
 async function ReadURLImportJSONMultiple() {
-	var locationSTAURL, data=[];
+	var locationSTAURL, data=[], dataRecibed, attributes=[], attributesRecibed, newAttribute=false;
 	var node= getNodeDialog("DialogImportJSON");
 	if (!document.getElementById("DialogImportJSONInputSeveralRecords").value.trim())
 		return;
@@ -1534,11 +1534,34 @@ async function ReadURLImportJSONMultiple() {
 	node.OGCType = "fileURL"; //és en plural, el deixem així?
 	var urlsArray= document.getElementById("DialogImportJSONInputSeveralRecords").value.trim().split(",");
 	for (var i=0;i<urlsArray.length;i++){
-		//mirar si no hi ha data
-		data.push(...await loadAPIDataWithReturn(urlsArray[i], "ImportJSONMultiple"));
+		dataRecibed= await loadAPIDataWithReturn(urlsArray[i], "ImportJSONMultiple")
+		if (dataRecibed!= null && dataRecibed!=undefined && Object.keys(dataRecibed).length!=0){
+			attributesRecibed= Object.keys(getDataAttributesSimple(dataRecibed));
+			if (attributes.length!=0){
+				for (var e=0;e<attributesRecibed.length;e++){
+					if (!attributes.includes(attributesRecibed[e])){
+						attributes.push(attributesRecibed[e]);
+						newAttribute=true;
+					}
+				}
+			}else{
+				attributes.push(...attributesRecibed);
+			}
+			data.push(...dataRecibed);
+		}
 	}
+	if (newAttribute==true){ //add all columns in all records
+		for (var a =0;a<data.length;a++){
+			for (var c = 0;c<attributes.length;c++){
+				if (!data[a].hasOwnProperty(attributes[c])){
+					data[a][attributes[c]]=undefined;
+				}
+			}
+		}
+	};
+
 	node.STAdata= data;
-	network.node(updated);
+	networkNodes.update(node);
 	//Fer els attributes...
 }
 

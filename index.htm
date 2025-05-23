@@ -1244,13 +1244,13 @@
 				<input type="radio" id="DialogImportJSONSourceURLList" name="DialogImportJSONSource" value="urlList" onClick='SelectImportFileSource(event, "JSON")'>
 				<label> URL list: <i>Separated by comma</i> </label> <br>
 				<textarea  type="text" cols="100" rows="10" style="margin-top:10px" id="DialogImportJSONInputSeveralRecords"></textarea>
-				<button type="button" id="DialogImportJSONSourceURLButton" onClick="ReadURLImportJSONMultiple(event)" disabled="disabled">Load</button></label><br> 
+				<button type="button" id="DialogImportJSONSourceURLButton" onClick="ReadURLImportJSONMultiple(event)" >Load</button></label><br> 
 			</fieldset>
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSON")'>Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
-			<input type="hidden" id="DialogImportJSONId"></input>
+			<input type="hidden" id="DialogImportJSONNodeId"></input>
 		</form>
 	</dialog>
 	
