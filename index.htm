@@ -1235,14 +1235,22 @@
 			<fieldset>
 				<legend>JSON source</legend>
 				<label><input type="radio" id="DialogImportJSONSourceFile" name="DialogImportJSONSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "JSON")'>
-				Local file: <input type="file" accept=".json" id="DialogImportJSONSourceFileText" onChange="ReadFileImportJSON(event)"></input></label><br>
+				Local file: <input type="file" accept=".json" id="DialogImportJSONSourceFileText" onChange="ReadFileImportJSON(event)" multiple></input></label><br>
 				<label><input type="radio" id="DialogImportJSONSourceURL" name="DialogImportJSONSource" value="url" onClick='SelectImportFileSource(event, "JSON")'>
-				URL: <input type="text" size="70" id="DialogImportJSONSourceURLInput" onChange="ReadURLImportJSON(event)" disabled="disabled"></input> <button type="button" id="DialogImportJSONSourceURLButton" onClick="ReadURLImportJSON(event)" disabled="disabled">Load</button></label><br>
+				URL single: 
+				 <input type="text" size="70" id="DialogImportJSONSourceURLInput" onChange="ReadURLImportJSON(event)" disabled="disabled"></input> 
+				 
+				<br>
+				<input type="radio" id="DialogImportJSONSourceURLList" name="DialogImportJSONSource" value="urlList" onClick='SelectImportFileSource(event, "JSON")'>
+				<label> URL list: <i>Separated by comma</i> </label> <br>
+				<textarea  type="text" cols="100" rows="10" style="margin-top:10px" id="DialogImportJSONInputSeveralRecords"></textarea>
+				<button type="button" id="DialogImportJSONSourceURLButton" onClick="ReadURLImportJSONMultiple(event)" disabled="disabled">Load</button></label><br> 
 			</fieldset>
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSON")'>Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
+			<input type="hidden" id="DialogImportJSONId"></input>
 		</form>
 	</dialog>
 	

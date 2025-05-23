@@ -1463,7 +1463,7 @@ function TransformTextJSONToTable(json, jsonText, url) {
 		}
 	}
 	var result=ParseJSON(json)
-	currentNode.STAdata=result;
+		currentNode.STAdata=result;
 	if (currentNode.STAdata.length==0)
 		showInfoMessage("JSON resulted in no records.");
 	else
@@ -1480,7 +1480,7 @@ function TransformTextJSONToTable(json, jsonText, url) {
 		currentNode.STAdata=null;
 		networkNodes.update(currentNode);
 		return;
-	}
+		}
 }
 
 function ReadFileImportJSON(event) {
@@ -1522,6 +1522,24 @@ function ReadURLImportJSON() {
 					console.log(error) ;
 				}
 			);	
+}
+
+
+async function ReadURLImportJSONMultiple() {
+	var locationSTAURL, data=[];
+	var node= getNodeDialog("DialogImportJSON");
+	if (!document.getElementById("DialogImportJSONInputSeveralRecords").value.trim())
+		return;
+	node.STAURL = document.getElementById("DialogImportJSONSourceURLInput").value.trim(); // i això, perque en seran diverses?? 
+	node.OGCType = "fileURL"; //és en plural, el deixem així?
+	var urlsArray= document.getElementById("DialogImportJSONInputSeveralRecords").value.trim().split(",");
+	for (var i=0;i<urlsArray.length;i++){
+		//mirar si no hi ha data
+		data.push(...await loadAPIDataWithReturn(urlsArray[i], "ImportJSONMultiple"));
+	}
+	node.STAdata= data;
+	network.node(updated);
+	//Fer els attributes...
 }
 
 function TransformGeoJSONFeatureToTable(feature, url) {
@@ -6393,6 +6411,7 @@ function networkDoubleClick(params) {
 					}
 				}
 			}
+			saveNodeDialog("DialogImportJSON", currentNode);
 			document.getElementById("DialogImportJSON").showModal();
 		}
 		else if (currentNode.image == "ImportDBF.png") {

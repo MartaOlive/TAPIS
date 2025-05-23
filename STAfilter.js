@@ -250,7 +250,7 @@ async function loadAPIDataWithReturn(url, reasonForData) { // Ask API to  "FIllS
 
 	try {
 		data = await response.json();
-		if (reasonForData == "EntitiesFilterRow") {
+		if (reasonForData == "EntitiesFilterRow"|| reasonForData=="ImportJSONMultiple") {
 			data = (typeof data.value !== "undefined") ? data.value : [data];
 		} else if (reasonForData == "OGCAPIConformance") {
 			data = (typeof data !== "undefined") ? data["conformsTo"] : [data];

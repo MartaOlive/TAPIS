@@ -1,0 +1,274 @@
+{
+	"tableSchema": {
+		"columns": [
+			{
+				"name": "id",
+				"datatype": "integer"
+			},
+			{
+				"name": "observed_on",
+				"datatype": "string"
+			},
+			{
+				"name": "description",
+				"datatype": "json"
+			},
+			{
+				"name": "latitude",
+				"datatype": "string"
+			},
+			{
+				"name": "longitude",
+				"datatype": "string"
+			},
+			{
+				"name": "map_scale",
+				"datatype": "json"
+			},
+			{
+				"name": "timeframe",
+				"datatype": "json"
+			},
+			{
+				"name": "species_guess",
+				"datatype": "string"
+			},
+			{
+				"name": "user_id",
+				"datatype": "integer"
+			},
+			{
+				"name": "taxon_id",
+				"datatype": "integer"
+			},
+			{
+				"name": "created_at",
+				"datatype": "string"
+			},
+			{
+				"name": "updated_at",
+				"datatype": "string"
+			},
+			{
+				"name": "place_guess",
+				"datatype": "string"
+			},
+			{
+				"name": "id_please",
+				"datatype": "boolean"
+			},
+			{
+				"name": "observed_on_string",
+				"datatype": "string"
+			},
+			{
+				"name": "iconic_taxon_id",
+				"datatype": "integer"
+			},
+			{
+				"name": "num_identification_agreements",
+				"datatype": "integer"
+			},
+			{
+				"name": "num_identification_disagreements",
+				"datatype": "integer"
+			},
+			{
+				"name": "time_observed_at",
+				"datatype": "string"
+			},
+			{
+				"name": "time_zone",
+				"datatype": "string"
+			},
+			{
+				"name": "location_is_exact",
+				"datatype": "boolean"
+			},
+			{
+				"name": "delta",
+				"datatype": "boolean"
+			},
+			{
+				"name": "positional_accuracy",
+				"datatype": "integer"
+			},
+			{
+				"name": "private_latitude",
+				"datatype": "json"
+			},
+			{
+				"name": "private_longitude",
+				"datatype": "json"
+			},
+			{
+				"name": "geoprivacy",
+				"datatype": "json"
+			},
+			{
+				"name": "quality_grade",
+				"datatype": "string"
+			},
+			{
+				"name": "positioning_method",
+				"datatype": "json"
+			},
+			{
+				"name": "positioning_device",
+				"datatype": "json"
+			},
+			{
+				"name": "out_of_range",
+				"datatype": "json"
+			},
+			{
+				"name": "license",
+				"datatype": "string"
+			},
+			{
+				"name": "uri",
+				"datatype": "string"
+			},
+			{
+				"name": "observation_photos_count",
+				"datatype": "integer"
+			},
+			{
+				"name": "comments_count",
+				"datatype": "integer"
+			},
+			{
+				"name": "zic_time_zone",
+				"datatype": "json"
+			},
+			{
+				"name": "oauth_application_id",
+				"datatype": "integer"
+			},
+			{
+				"name": "observation_sounds_count",
+				"datatype": "integer"
+			},
+			{
+				"name": "identifications_count",
+				"datatype": "integer"
+			},
+			{
+				"name": "captive",
+				"datatype": "boolean"
+			},
+			{
+				"name": "community_taxon_id",
+				"datatype": "integer"
+			},
+			{
+				"name": "site_id",
+				"datatype": "integer"
+			},
+			{
+				"name": "old_uuid",
+				"datatype": "json"
+			},
+			{
+				"name": "public_positional_accuracy",
+				"datatype": "integer"
+			},
+			{
+				"name": "mappable",
+				"datatype": "boolean"
+			},
+			{
+				"name": "cached_votes_total",
+				"datatype": "integer"
+			},
+			{
+				"name": "last_indexed_at",
+				"datatype": "string"
+			},
+			{
+				"name": "private_place_guess",
+				"datatype": "json"
+			},
+			{
+				"name": "uuid",
+				"datatype": "string"
+			},
+			{
+				"name": "taxon_geoprivacy",
+				"datatype": "json"
+			},
+			{
+				"name": "tag_list",
+				"datatype": "json"
+			},
+			{
+				"name": "user_login",
+				"datatype": "string"
+			},
+			{
+				"name": "iconic_taxon_name",
+				"datatype": "string"
+			},
+			{
+				"name": "captive_flag",
+				"datatype": "boolean"
+			},
+			{
+				"name": "created_at_utc",
+				"datatype": "string"
+			},
+			{
+				"name": "updated_at_utc",
+				"datatype": "string"
+			},
+			{
+				"name": "time_observed_at_utc",
+				"datatype": "string"
+			},
+			{
+				"name": "faves_count",
+				"datatype": "integer"
+			},
+			{
+				"name": "owners_identification_from_vision",
+				"datatype": "json"
+			},
+			{
+				"name": "user",
+				"datatype": "json"
+			},
+			{
+				"name": "observation_field_values",
+				"datatype": "json"
+			},
+			{
+				"name": "project_observations",
+				"datatype": "json"
+			},
+			{
+				"name": "observation_photos",
+				"datatype": "json"
+			},
+			{
+				"name": "comments",
+				"datatype": "json"
+			},
+			{
+				"name": "taxon",
+				"datatype": "json"
+			},
+			{
+				"name": "identifications",
+				"datatype": "json"
+			},
+			{
+				"name": "faves",
+				"datatype": "json"
+			}
+		]
+	},
+	"dialect": {
+		"header": true,
+		"delimiter": ";"
+	}
+}
