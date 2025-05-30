@@ -282,6 +282,7 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend,
 			options.headers['Content-Type']=(mediaToSend) ? (mediaToSend) : "application/json";
 			options.body=(typeof objToSend === "object") ? JSON.stringify(objToSend) : objToSend;
 		}
+		//options.credentials='include';
 		response = await fetch(url, options);
 	}
 	catch (error) {
@@ -314,7 +315,7 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend,
 		if (method=="HEAD")
 			return {obj: null, text: null, responseHeaders: headersObj, ok: true};
 		else if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
-		(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0))
+				(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0))
 			return {obj: await response.json(), text: null, responseHeaders: headersObj, ok: true};
 		else
 			return {obj: null, text: await response.text(), responseHeaders: headersObj, ok: true};
@@ -336,9 +337,21 @@ async function HTTPHead(url, headersToGet) {
 	return await HTTPJSONData(url, headersToGet, "HEAD");
 }
 
-async function HTTPBinaryData(url) {
+async function HTTPBinaryData(url, headersToGet, method, objToSend, headersToSend, mediaToSend) {
 	var response, jsonData, options={};
 	try {
+		if (method)
+			options.method=method;
+		
+		if (headersToSend)
+			options.headers=headersToSend;
+
+		//AddHeadersIfNeeded(options);
+		if (objToSend)
+		{
+			options.headers['Content-Type']=(mediaToSend) ? (mediaToSend) : "application/json";
+			options.body=(typeof objToSend === "object") ? JSON.stringify(objToSend) : objToSend;
+		}
 		response = await fetch(url, options);
 	}
 	catch (error) {
@@ -361,7 +374,18 @@ async function HTTPBinaryData(url) {
 		return response;
 	}
 	try {
-		return await response.arrayBuffer();
+		if (headersToGet)
+		{
+			for (var i=0; i<headersToGet.length; i++)
+				headersObj[headersToGet[i]]=response.headers.get(headersToGet[i]);
+			//Enumetates all headers: for(let entry of response.headers.entries()) console.log(entry) })
+		}
+		if (removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json" || 
+				removeParamContentType(response.headers.get('Content-Type'))=="text/html" || removeParamContentType(response.headers.get('Content-Type'))=="text/plain" || 
+				(response.headers.get('Content-Length')!=null && parseInt(response.headers.get('Content-Length'))==0))
+			return {arrayBuf: null, text: await response.text(), responseHeaders: headersObj, ok: true};
+		else
+			return {arrayBuf: await response.arrayBuffer(), text: null, responseHeaders: headersObj, ok: true};
 	} catch (error) {
 		if (error instanceof SyntaxError) {
 			showInfoMessage('Syntax error reading ' + url + ": " + error.message);

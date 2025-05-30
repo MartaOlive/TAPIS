@@ -8,9 +8,9 @@
 	<!--Thanks to https://github.com/chartjs/Chart.js and downloaded from:
 		https://cdnjs.com/libraries/Chart.js/3.9.1 -->
 		
-	<script src="moment.js"></script>
+	<script src="moment.js"></script> <!--Correct X axis in chart.js-->
 	<script type="text/javascript" src="Chart.min.js"></script> 
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script> <!--Allow zoom in chart-->
 	<!--Thanks to https://github.com/DavideViolante/chartjs-plugin-labels and downloaded from:
 		https://www.npmjs.com/package/chart.js-plugin-labels-dv/v/3.3.0 -->
 	<script type="text/javascript" src="chartjs-plugin-labels.min.js"></script>
@@ -19,6 +19,9 @@
 
 	<script	type="text/javascript" src="vis-network.min.js"></script>
 	<!--script type="text/javascript" src="vis-timeline-graph2d.min.js"></script Replaced by chartjs in 2025-04-01-->
+
+	<!--Thanks to https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.58.1/mode/sql/sql.min.js-->
+	<script type="text/javascript" src="sql-wasm.js"></script>
 
 	<script type="text/javascript" src="papaparse.min.js" async defer></script>
 	<script type="text/javascript" src="crypto-js.min.js" async defer></script> 
@@ -30,6 +33,7 @@
 	<script type="text/javascript" src="xml2json.js" async defer></script>
 	<script type="text/javascript" src="oem.js" async defer></script>
 	<script type="text/javascript" src="dbf.js" async defer></script>
+	<script type="text/javascript" src="gpkg.js" async defer></script>
 	<script type="text/javascript" src="json.js" async defer></script>
 	<script type="text/javascript" src="jsonld.js" async defer></script>
 	<script type="text/javascript" src="edc.js" async defer></script>
@@ -1205,6 +1209,25 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogImportGPKG">
+		<form>
+			Import Geopackage
+			<br>
+			
+			<fieldset>
+				<legend>Geopackage source</legend>
+				<label><input type="radio" id="DialogImportGPKGSourceFile" name="DialogImportGPKGSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "GPKG")'>
+				Local file: <input type="file" accept=".gpkg" id="DialogImportGPKGSourceFileText" onChange="ReadFileImportGPKG(event)"></input></label><br>
+				<label><input type="radio" id="DialogImportGPKGSourceURL" name="DialogImportGPKGSource" value="url" onClick='SelectImportFileSource(event, "GPKG")'>
+				URL: <input type="text" size="70" id="DialogImportGPKGSourceURLInput" onChange="ReadURLImportGPKG(event)" disabled="disabled"></input> <button type="button" id="DialogImportGPKGSourceURLButton" onClick="ReadURLImportGPKG(event)" disabled="disabled">Load</button></label><br>
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GPKG")'>Done</button>
+				<button value="cancel" formmethod="dialog">Close</button>
+			</div>
+		</form>
+	</dialog>
+
 	<dialog id="DialogImportJSONLD">
 		<form>
 			Import JSON-LD
@@ -1344,7 +1367,7 @@
 
 							</div>
 						</div>
-</fieldset>
+				</fieldset>
 
 			</td>
 		</tr>

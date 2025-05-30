@@ -82,7 +82,7 @@ But there are some differences with Orange:
 <ul>
 <li>TAPIS is a JavaScript interface that does not required installation
 <li>Columns can be semantically tagged adding meaning to the data fields
-<li>TAPIS connect with external APIS such as SensorThings API (STA) and STAplus as sources for tabular data. 
+<li>TAPIS connects with external APIs such as SensorThings API (STA) and STAplus as sources for tabular data. 
 </ul>
 
 <a id="helpStart"></a>
@@ -895,54 +895,6 @@ At the bottom, we will indicate the distance and the operator we want to use to 
 <p>Unlike the previous cases, we have more than one column that can contain our coordinates, therefore, we will have to choose them in the selectors that will appear in "Filter Row by Distance" window. When we select the columns, its information will be added automatically. The next steps will be as explained before, so they will be not repeated. 
 </p>
 <img src="recipe05_02_csvfilterRowWindow.png" width="800" class="center">
-<br><br><br>
-<br>
-<hr width="30%">
-<a id="recipe05b"></a>
-<h3>Recipe 5b: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</h3>
-In this example, we will illustrate how to apply spatial filter based on the distance between a certain point and the location of our observations.
-<p>To apply this filter, we need to select an entity where we want to apply this filter (in this case, we will use Observations), the coordinates  from a point used as a reference and indicate the distance we want to use.<br>
-To start, we have to indicate the STA service that we want to use by adding the "Add STA service" tool and typing there the URL of this service. We will connect it to observations to get the "Observations" stored in the service.</p>
-	 
-<img src="recipe05b_observationsTable.png" width="600" class="center">
-<p>Then, to apply this filter we need to select the "Filter Rows by Distance" tool.</p>
-<img src="recipe05b_applyFilterRowsByDistance.png" width="600" class="center">
-<p style="text-decoration:underline">Adding a point manually</p>
-<p>Let's start by adding a point manually. If we don't link any additional node, we will have a window like this.</p>
-<img src="recipe05b_applyFilterRowsByDistanceWindow.png" width="800" class="center">
-
-<p>On the top, we have to select with which entity we want to apply the filter in our observations, and which way we want to follow. In other words, do we want to use coordinates from feature (in FeatureOfInterest) or coordinates in location (in Locations) from each of our observation to compare them with the reference point that we will choose later? In this case, we select feature from FeatureOfInterest, that there is only one way to achieve it.   </p>
-<img src="recipe05b_chooseAWay.png" width="600" class="center">
-<p>In the middle, we have to write the coordinates from the reference point, the point with every observation coordinate (in this case, the feature of these observations) will be compared to to apply the filter.
-At the bottom, we will indicate the distance and the operator we want to use to apply the filter. In this case we want to obtain the observations which feature is in a distance lower than 5. </p>
-<img src="recipe05b_coordinatesWithOutPoint.png" width="600" class="center">
-<p> Click Ok button to see the results. The filter has been applied:</p>
-<img src="recipe05b_results.png" width="700" class="center">
-
-<p> Now let's see different ways to indicate the reference point by linking different nodes with different sources origins. </p>
-<p> In all cases, we need to take into account that nodes with only one register can be linked with the "Filter Rows by Distance" node (apart from our reference entity node where we want to apply the filter). </p>
-<p style="text-decoration:underline">Using a GeoJSON to indicate the point</p>
-<p>We have already prepared a GeoJSON file with the coordinates with a reference point, so now let's import it with [Import GeoJSON] tool.</p>
-<img src="recipe05b_geojsonPicture.png" width="400">
-<img src="recipe05b_importGeoJsonpng.png" width="800">
-<p> As you can see below, when you link the "import GeoJSON" with "Filter Rows by Distance" you will have the same window as before, but the coordinates have been automatically added. The next steps will be as explained before, so they will be not repeated.   </p>
-<img src="recipe05b_geoJsonWindowFilterRowsByDistance.png" width="800" class="center">
-<p style="text-decoration:underline">Using a service STA and FeatureOfInterest as a reference to indicate the point</p>
-<p>Let's use the same STA service to choose one FeatureOfInterest. Link FeatureOfInterest node to STA service and then select only one record using "select row" (STA) to obtain only one feature. </p>
-<img src="recipe05b_STAfeatureOfInterest.png" width="800" class="center">
-<img src="recipe05b_STAfeatureOfInterestSelectedRow.png" width="800" class="center">
-<p>Link this to "Filter Rows by Distance" and observe that again, you have already your point added automatically. The next steps will be as explained before, so they will be not repeated. The same procedure can be applied with Locations entity (location)</p>
-<img src="recipe05b_STAfeatureOfInterestWindow.png" width="800" class="center">
-<p style="text-decoration:underline">Using a CSV to indicate the point</p>
-<p>For this example, we will use a CSV containing the coordinates in two of its columns. We have chosen a totally random CSV that has this information. First of all, let's add this CSV with "Import CVS" tool.</p>
-<img src="recipe05b_CSVwindow.png" width="800" class="center">
-<p> In our case, we have more than one register, so we have to select only one, with "Select Row" tool (for tables). As you can see below, in this example, columns that contain coordinates are " and "long". </p>
-<img src="recipe05b_csvSelectRow.png" width="800" class="center">
-<p>After selecting one row (one register) link it to "Filter Rows by Distance".  </p>
-<img src="recipe05b_csvlinked.png" width="800" class="center">
-<p>Unlike the previous cases, we have more than one column that can contain our coordinates, therefore, we will have to choose them in the selectors that will appear in "Filter Row by Distance" window. When we select the columns, its information will be added automatically. The next steps will be as explained before, so they will be not repeated. 
-</p>
-<img src="recipe05b_csvfilterRowWindow.png" width="800" class="center">
 <br><br><br>
 <br>
 <hr width="30%">
