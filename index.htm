@@ -314,6 +314,34 @@
 			</div>
 		</form>
 	</dialog>
+	<dialog id="DialogCreateUpdateDeleteEntity">
+		<form>
+			<span id="dlgCreateUpdateDeleteEntityAttributes">
+			</span>
+			<div class="center">
+				<button value="default" id="dlgCreateUpdateDeleteEntityCreate" onClick="GetCreateEntity(event)">Create</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityUpdate" onClick="GetUpdateEntity(event)">Update</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityDelete" onClick="AskForDeleteEntity(event)">Delete</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogReplaceTextInTable">
+		<form>
+			<span id="dlgDialogReplaceTextInTable">
+			</span>
+			<div class="center">
+				<button value="default" id="dlgReplaceOkButton" onClick="ReplaceTextInTable(event)">Ok</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+		</form>
+	</dialog>
+
+
+
+
+
 
 
 	<dialog id="DialogCreateUpdateDeleteEntity_numberOfMultiDatastream" >

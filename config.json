@@ -359,11 +359,17 @@
 		{
 			"group": "Sensor Things API",
 			"varUoMs": [
-			{
+				{
 				"varUoMdesc": "Observation/phenomenonTime",
 				"description": "phenomenonTime",
 				"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime"
 			}
+			
+
+
+
+
+
 			]
 		},
 		{

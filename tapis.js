@@ -128,7 +128,10 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			SeparateColumns: {description: "Separate Columns", help: "Splits a column containing a JSON object into separated new columns and removes the original column."},
 			SaveTable: {description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the column definition is semantically enriched; see &#39;meaning&#39;)."},
 			SaveLayer: {description: "Save Layer", leafNode: true, help: "Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values."},
-			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."}};
+			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."},
+			replace:{description:"replace", help: "Find and replace text, numbers, or data in one column or across the whole table"}
+		};
+	
 const TableOperationsArray = Object.keys(TableOperations);
 const TableOperationsType = {singular: "Generic table tool", plural: "Generic table tools"};
 
@@ -7065,6 +7068,14 @@ function networkDoubleClick(params) {
 					document.getElementById("DialogCreateUpdateDeleteRecord").showModal();
 			}else{
 				alert("Parent node must have data to edite it");
+			}
+		}else if (currentNode.image == "replace.png") {
+			var firstparentNode=GetFirstParentNode(currentNode);
+			//startingNodeContextId=currentNode.id;
+			if (firstparentNode.STAdata) {
+					document.getElementById("DialogReplaceTextInTable").showModal();
+			}else{
+				alert("Parent node must have data to replace it");
 			}
 		}
 	}
