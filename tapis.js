@@ -3971,7 +3971,23 @@ async function GetDeleteEntity(entityName, id){
 	else
 		showInfoMessage("Error deleting"+ STAEntities[entityName].singular +" "+id);
 }
-
+function changeDialogReplaceTextInTableRadiobutton(source){
+	if (source=="all"){
+		document.getElementById("dlgDialogReplaceTextInTable_select").disabled=true;
+	}else{ //column
+		document.getElementById("dlgDialogReplaceTextInTable_select").disabled=false;
+	}
+}
+function populateReplace(node){
+	saveNodeDialog("DialogReplaceTextInTable", node);
+	var select= document.getElementById("dlgDialogReplaceTextInTable_select");
+	var attributes=Object.keys(node.STAdataAttributes);
+	var c=""
+	for (var i=0;i<attributes.length;i++){
+		c+=`<option value="${attributes[i]}">${attributes[i]} </option>`
+	}
+	select.innerHTML=c
+}
 function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
 	var cdns=[];
 	var data= currentNode.STAdata;
@@ -6405,6 +6421,23 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		return true;
 	}
+	if (tableNodes && nodeTo.image == "replace.png") {
+		if (nodeFrom.STAdata){
+			nodeTo.STAdata = deapCopy(nodeFrom.STAdata); 
+			if (nodeFrom.STAdataAttributes){
+						nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes); //necessary first time
+						
+			}else{
+						nodeTo.STAdataAttributes = getDataAttributes(nodeTo.STAdata);
+					
+			}
+		}
+		
+		networkNodes.update(nodeTo);
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		return true;
+	}
 	if (tableNodes && nodeTo.image == "edcAsset.png") {
 		if (nodeFrom && !nodeFrom.STAdata || !(nodeFrom.STAdata.length>0))
 			return false;
@@ -7070,9 +7103,9 @@ function networkDoubleClick(params) {
 				alert("Parent node must have data to edite it");
 			}
 		}else if (currentNode.image == "replace.png") {
-			var firstparentNode=GetFirstParentNode(currentNode);
 			//startingNodeContextId=currentNode.id;
-			if (firstparentNode.STAdata) {
+			if (currentNode.STAdata) {
+					populateReplace(currentNode);
 					document.getElementById("DialogReplaceTextInTable").showModal();
 			}else{
 				alert("Parent node must have data to replace it");

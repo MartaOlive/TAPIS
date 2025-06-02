@@ -314,27 +314,27 @@
 			</div>
 		</form>
 	</dialog>
-	<dialog id="DialogCreateUpdateDeleteEntity">
-		<form>
-			<span id="dlgCreateUpdateDeleteEntityAttributes">
-			</span>
-			<div class="center">
-				<button value="default" id="dlgCreateUpdateDeleteEntityCreate" onClick="GetCreateEntity(event)">Create</button>
-				<button value="default" id="dlgCreateUpdateDeleteEntityUpdate" onClick="GetUpdateEntity(event)">Update</button>
-				<button value="default" id="dlgCreateUpdateDeleteEntityDelete" onClick="AskForDeleteEntity(event)">Delete</button>
-				<button value="cancel" formmethod="dialog">Cancel</button>
-			</div>
-		</form>
-	</dialog>
-
 	<dialog id="DialogReplaceTextInTable">
 		<form>
 			<span id="dlgDialogReplaceTextInTable">
+				<fieldset>
+				<input type="radio" id="dlgDialogReplaceTextInTable_radiobutton_all" name="dlgDialogReplaceTextInTable_radiobutton" value="all" checked onclick="changeDialogReplaceTextInTableRadiobutton('all')">
+				<label for="dlgDialogReplaceTextInTable_radiobutton_all">In all table</label><br>
+				<input type="radio" id="dlgDialogReplaceTextInTable_radiobutton_column" name="dlgDialogReplaceTextInTable_radiobutton" value="column" onclick="changeDialogReplaceTextInTableRadiobutton('column')">
+				<label for="dlgDialogReplaceTextInTable_radiobutton_column">In one column</label>
+				<select id="dlgDialogReplaceTextInTable_select" disabled></select><br>
+				</fieldset>
+				<fieldset>
+					<label>Search:</label><input type="text" id="dlgDialogReplaceTextInTable_input_search" value="">
+					<label>Replace:</label><input type="text" id="dlgDialogReplaceTextInTable_input_replace" value="">
+				</fieldset>
+
 			</span>
 			<div class="center">
-				<button value="default" id="dlgReplaceOkButton" onClick="ReplaceTextInTable(event)">Ok</button>
+				<button value="default" id="dlgReplaceOkButton" onClick="ReplaceTextInTable(event)">Apply</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
+			<input type="hidden" id="DialogReplaceTextInTableNodeId"></input>
 		</form>
 	</dialog>
 
