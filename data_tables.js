@@ -1455,4 +1455,94 @@ function buildPivotTable(data, rows, columns, values, aggregation){
  	}		
 }
 
+function ReplaceTextInTable(data,searchValue, replaceValue,numbersAsText,datesAsText,column){
+	var dataLenght=data.length;
+	var attributes=getDataAttributesSimple(data);
+	var textToCompare;
+	
+
+	if (column){
+			for (var i=0;i<dataLenght;i++){
+				if (attributes[column].type=="string" || attributes[column].type== "anyURI" ){
+					if (data[i][column].includes(searchValue))data[i][column]=data[i][column].replaceAll(searchValue,replaceValue);
+				}if ( attributes[column].type=="isodatetype"){
+					if (datesAsText="yes"){ // No validation of the final result will be performed,  since it just returns a text!!
+						textToCompare=data[i][column].toString();
+						if (textToCompare.includes(searchValue)){	
+							data[i][column]=textToCompare.replaceAll (searchValue, replaceValue);
+						}
+					}else{ //evaluate all result
+						if (data[i][column] ==searchValue) data[i][column] == replaceValue;
+						//validation?
+					}
+					//Error (no format data)
+				}if (attributes[column].type=="number" || attributes[column].type=="integer"){ //integer: ni NaN ni decimal
+					if (numbersAsText=="no"){
+						if (attributes[column].type=="number" ){
+							if (data[i][column] ==parseFloat(searchValue)) data[i][column] = parseFloat(replaceValue);
+						}else{ //integer
+							if (data[i][column] ==parseInt(searchValue)) data[i][column] = parseInt(replaceValue);
+						}
+					}else{
+						textToCompare=data[i][column].toString();
+						if (textToCompare!= null && textToCompare!=undefined){
+							if (textToCompare.includes(searchValue)){
+								textToCompare=textToCompare.replaceAll (searchValue, replaceValue);
+								if (attributes[column].type=="integer"){
+									data[i][column] =textToCompare=parseInt(textToCompare);
+								}else{
+									data[i][column] =textToCompare=parseFloat(textToCompare);
+								}
+							}
+						}
+
+					}
+				}
+				
+			}
+	}else{
+		var attributesAsKeys=Object.keys(attributes);
+		for (var i=0;i<dataLenght;i++){
+			for (var e=0;e<attributesAsKeys.length;e++){
+				column=attributesAsKeys[e];
+				if (attributes[column].type=="string" || attributes[column].type== "anyURI" ){
+					if (data[i][column].includes(searchValue))data[i][column]=data[i][column].replaceAll(searchValue,replaceValue);
+				}if ( attributes[column].type=="isodatetype"){
+					if (datesAsText="yes"){ // No validation of the final result will be performed,  since it just returns a text!!
+						textToCompare=data[i][column].toString();
+						if (textToCompare.includes(searchValue)){	
+							data[i][column]=textToCompare.replaceAll (searchValue, replaceValue);
+						}
+					}else{ //evaluate all result
+						if (data[i][column] ==searchValue) data[i][column] == replaceValue;
+					}
+					//Error (no format data)
+				}if (attributes[column].type=="number" || attributes[column].type=="integer"){ //integer: ni NaN ni decimal
+					if (numbersAsText=="no"){
+						if (attributes[column].type=="number" ){
+							if (data[i][column] ==parseFloat(searchValue))data[i][column] = parseFloat(replaceValue);
+						}else{ //integer
+							if (data[i][column] ==parseInt(searchValue))data[i][column] = parseInt(replaceValue);
+						}
+					}else{
+						textToCompare=data[i][column].toString();
+						if (textToCompare!= null && textToCompare!=undefined){
+							if (textToCompare.includes(searchValue)){
+								textToCompare=textToCompare.replaceAll (searchValue, replaceValue);
+								if (attributes[column].type=="integer"){
+									data[i][column] =textToCompare=parseInt(textToCompare);
+								}else{
+									data[i][column] =textToCompare=parseFloat(textToCompare);
+								}
+							}
+						}
+
+					}
+				}
+								
+			}
+		}
+	}
+	return data;
+}
 

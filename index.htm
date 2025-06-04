@@ -326,12 +326,14 @@
 				</fieldset>
 				<fieldset>
 					<label>Search:</label><input type="text" id="dlgDialogReplaceTextInTable_input_search" value="">
-					<label>Replace:</label><input type="text" id="dlgDialogReplaceTextInTable_input_replace" value="">
+					<label>Replace:</label><input type="text" id="dlgDialogReplaceTextInTable_input_replace" value=""><br>
+					<input type="checkbox" id="dlgDialogReplaceTextInTable_checkbox_numbersAsText" value="numbersAsText" checked><label>Treat numbers as text</label> <br>
+					<input type="checkbox" id="dlgDialogReplaceTextInTable_checkbox_datesAsText" value="datesAsText" checked><label>Treat dates as text</label>    
 				</fieldset>
 
 			</span>
 			<div class="center">
-				<button value="default" id="dlgReplaceOkButton" onClick="ReplaceTextInTable(event)">Apply</button>
+				<button value="default" id="dlgReplaceOkButton" onClick="ReplaceTextInTableApplyButton(event)">Apply</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogReplaceTextInTableNodeId"></input>
