@@ -4039,13 +4039,31 @@ function ReplaceTextInTableApplyButton(event){
 	(document.getElementById("dlgDialogReplaceTextInTable_checkbox_numbersAsText").checked)?numbersAsText="yes":numbersAsText="no";
 	(document.getElementById("dlgDialogReplaceTextInTable_checkbox_datesAsText").checked)?datesAsText="yes":datesAsText="no";
 	if (document.getElementById("dlgDialogReplaceTextInTable_radiobutton_all").checked){ //all
-		ReplaceTextInTable(node.STAdata,searchValue, replaceValue,numbersAsText,datesAsText);
+		var data= ReplaceTextInTable(node.STAdata,searchValue, replaceValue,numbersAsText,datesAsText, node.STAdataAttributes);
+		if (typeof data=="string")alert (data);
+		else{
+			node.STAdata=data;
+			networkNodes.update(node);
+			updateQueryAndTableArea(node);
+			UpdateChildenTable(node);
+			document.getElementById("DialogReplaceTextInTable").close()
+		}
+
 	}
 	else{ //column
 		var select=document.getElementById("dlgDialogReplaceTextInTable_select");
 		var column= select.options[select.selectedIndex].value;
-		ReplaceTextInTable(node.STAdata,searchValue, replaceValue,numbersAsText,datesAsText,column);
+		var data= ReplaceTextInTable(node.STAdata,searchValue, replaceValue,numbersAsText,datesAsText,node.STAdataAttributes,column);
+		if (typeof data=="string")alert (data);
+		else{
+			node.STAdata=data;
+			networkNodes.update(node);
+			updateQueryAndTableArea(node);
+			UpdateChildenTable(node);
+			document.getElementById("DialogReplaceTextInTable").close()
+		}
 	}
+	
 
 
 

@@ -6,7 +6,8 @@
 	<title>Graph2d | Basic Example</title>
 
 	<script type="text/javascript" src="../Chart.min.js"></script>
-	<script	src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 	<script type="text/javascript" src="../data_tables.js"></script>
 
 
@@ -24,49 +25,21 @@
 	</style>
 
 <body>
-	<div class="sc-509753a1-5 laBPrS"><div class="sc-8f0614a2-0 dpPsin"><div class="lg-react-element "><h1>File</h1>
-		<p>Reads attribute-value data from an input file.</p>
-		<p><strong>Outputs</strong></p>
-		<ul>
-		<li>Data: dataset from the file</li>
-		</ul>
-		<p>The <strong>File</strong> widget <a href="https://docs.biolab.si/3/visual-programming/loading-your-data/index.html">reads the input data file</a> (data table with data instances) and sends the dataset to its output channel. The history of most recently opened files is maintained in the widget. The widget also includes a directory with sample datasets that come pre-installed with Orange.</p>
-		<p>The widget reads data from Excel (<strong>.xlsx</strong>), simple tab-delimited (<strong>.txt</strong>), comma-separated files (<strong>.csv</strong>) or URLs. For other formats see Other Formats section below.</p>
-		<a href="/widget-catalog/data/images/__optimized-images__/File-stamped.png" data-gallery="true" data-lg-id="98a5000d-31c4-4dcb-9d72-3170e24690ee"><img alt="" loading="lazy" width="622" height="595" decoding="async" data-nimg="1" src="/widget-catalog/data/images/__optimized-images__/File-stamped.png" style="color: transparent;"></a>
-		<ol>
-		<li>Browse through previously opened data files, or load any of the sample ones.</li>
-		<li>Browse for a data file.</li>
-		<li>Reloads currently selected data file.</li>
-		<li>Insert data from URL addresses, including data from Google Sheets.</li>
-		<li>Information on the loaded dataset: dataset size, number and types of data features.</li>
-		<li>Additional information on the features in the dataset. Features can be edited by double-clicking on them. The user can change the attribute names, select the type of variable per each attribute (<em>Continuous</em>, <em>Nominal</em>, <em>String</em>, <em>Datetime</em>), and choose how to further define the attributes (as <em>Features</em>, <em>Targets</em> or <em>Meta</em>). The user can also decide to ignore an attribute.</li>
-		<li>Browse documentation datasets.</li>
-		<li>Produce a report.</li>
-		</ol>
-		<h2>Example</h2>
-		<p>Most Orange workflows would probably start with the <strong>File</strong> widget. In the schema below, the widget is used to read the data that is sent to both the <a href="../data/datatable.md">Data Table</a> and the <a href="/widget-catalog/data/../visualize/boxplot">Box Plot</a> widget.</p>
-		<a href="/widget-catalog/data/images/__optimized-images__/File-Workflow.png" data-gallery="true" data-lg-id="a0213afd-0236-47da-a912-436c6c1306e8"><img alt="" loading="lazy" width="314" height="180" decoding="async" data-nimg="1" src="/widget-catalog/data/images/__optimized-images__/File-Workflow.png" style="color: transparent;"></a>
-		<h3>Loading your data</h3>
-		<ul>
-		<li>Orange can import any comma, .xlsx or tab-delimited data file or URL. Use the <strong>File</strong> widget and then, if needed, select class and meta attributes.</li>
-		<li>To specify the domain and the type of the attribute, attribute names can be preceded with a label followed by a hash. Use c for class and m for meta attribute, i to ignore a column, and C, D, S for continuous, discrete and string attribute types. Examples: C#mpg, mS#name, i#dummy.</li>
-		<li>Orange's native format is a tab-delimited text file with three header rows. The first row contains attribute names, the second the type (<em>continuous</em>, <em>discrete</em> or <em>string</em>), and the third the optional element (<em>class</em>, <em>meta</em> or <em>time</em>).</li>
-		</ul>
-		<a href="/widget-catalog/data/images/__optimized-images__/spreadsheet-simple-head1.png" data-gallery="true" data-lg-id="6c971404-0187-4b1f-9435-ba83974ffaad"><img alt="" loading="lazy" width="732" height="458" decoding="async" data-nimg="1" src="/widget-catalog/data/images/__optimized-images__/spreadsheet-simple-head1.png" style="color: transparent;"></a>
-		<p>Read more on loading your data <a href="https://docs.biolab.si/3/visual-programming/loading-your-data/index.html">here</a>.</p>
-		<h3>Other Formats</h3>
-		<p>Supported formats and the widgets to load them:</p>
-		<ul>
-		<li>distance matrix: <a href="/widget-catalog/data/../unsupervised/distancefile">Distance File</a></li>
-		<li>predictive model: <a href="/widget-catalog/data/../model/loadmodel">Load Model</a></li>
-		<li>network: Network File from Network add-on</li>
-		<li>images: Import Images from Image Analytics add-on</li>
-		<li>text/corpus: Corpus or Import Documents from Text add-on</li>
-		<li>single cell data: Load Data from Single Cell add-on</li>
-		<li>several spectroscopy files: Multifile from Spectroscopy add-on</li>
-		</ul></div></div></div>
 
 
+	<script>
+		var searchDate = new Date("202a-04-31");
+		var replaceValue = new Date("2025-04-31T22:28:46");
+		function esData() {
+			if (!isNaN(searchDate.getTime()) && !isNaN(replaceValue.getTime())) {
+				console.log("son dates")
+			}else{
+				console.log("no")
+			}
+		}
+		esData()
+
+	</script>
 </body>
 
 </html>
