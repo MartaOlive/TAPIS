@@ -363,15 +363,395 @@
 				"varUoMdesc": "Observation/phenomenonTime",
 				"description": "phenomenonTime",
 				"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime"
-			}
+			},
+			{
+				"varUoMdesc": "Party/description",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Partydescription"
 			
+			},
+						{
+				"varUoMdesc": "Party/role",
+				"description": "role",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Partyrole"
+			
+			},
+						{
+				"varUoMdesc": "Party/displayName",
+				"description": "displayName",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/PartydisplayName"
+			
+			},
+			{
+				"varUoMdesc": "Sensor/name",
+				"description": "name",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Sensorname"
+			
+			},
+			{
+				"varUoMdesc": "Sensor/description",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Sensordescription"
+			
+			},
+			{
+				"varUoMdesc": "Sensor/encodingType",
+				"description": "encodingType",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/SensorencodingType"
+			
+			},
+			{
+				"varUoMdesc": "Sensor/metadata",
+				"description": "metadata",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Sensormetadata"
+			
+			},
+			{
+				"varUoMdesc": "Sensor/properties",
+				"description": "properties",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Sensorproperties"
+			
+			},
+			{
+				"varUoMdesc": "ObservedProperty/name",
+				"description": "name",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedPropertyname"
+			
+			},
+			{
+				"varUoMdesc": "ObservedProperty/definition",
+				"description": "definition",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedPropertydefinition"
+			
+			},
+			{
+				"varUoMdesc": "ObservedProperty/properties",
+				"description": "properties",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservedPropertyproperties"
+			
+			},
+			{
+				"varUoMdesc": "Thing/name",
+				"description": "name",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Thingname"
+			
+			},
+			{
+				"varUoMdesc": "Thing/description",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Thingdescription"
+			
+			},
+			{
+				"varUoMdesc": "Thing/properties",
+				"description": "properties",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Thingproperties"
+			
+			},
+			{
+				"varUoMdesc": "Location/name",
+				"description": "name",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Locationname"
+			
+			},
+			{
+				"varUoMdesc": "Location/description",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Locationdescription"
+			
+			},
+			{
+				"varUoMdesc": "Location/encodingType",
+				"description": "encodingType",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/LocationencodingType"
+			
+			},
+			{
+				"varUoMdesc": "Location/location",
+				"description": "location",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Locationlocation"
+			
+			},
+			{
+				"varUoMdesc": "Location/properties",
+				"description": "properties",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Locationproperties"
+			
+			},
+						{
+				"varUoMdesc": "HistoricalLocation/time",
+				"description": "time",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/HistoricalLocationtime"
+			
+			},
+									{
+				"varUoMdesc": "Datastream/name",
+				"description": "name",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Datastreamname"
+			
+			},
+									{
+				"varUoMdesc": "Datastream/description",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Datastreamdescription"
+			
+			},
+									{
+				"varUoMdesc": "Datastream/observationType",
+				"description": "observationType",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/DatastreamobservationType"
+			
+			},
+									{
+				"varUoMdesc": "Datastream/unitOfMeasurement",
+				"description": "unitOfMeasurement",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/DatastreamunitOfMeasurement"
+			
+			},
+									{
+				"varUoMdesc": "Datastream/observedArea",
+				"description": "observedArea",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/DatastreamobservedArea"
+			
+			},
+									{
+				"varUoMdesc": "Datastream/phenomenonTime",
+				"description": "phenomenonTime",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/DatastreamphenomenonTime"
+			
+			},
+									{
+				"varUoMdesc": "Datastream/properties",
+				"description": "properties",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Datastreamproperties"
+			
+			},
+									{
+				"varUoMdesc": "Observation/phenomenonTime",
+				"description": "phenomenonTime",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationphenomenonTime"
+			
+			},
+									{
+				"varUoMdesc": "Observation/resultTime",
+				"description": "resultTime",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationresultTime"
+			
+			},
+									{
+				"varUoMdesc": "Observation/resultQuality",
+				"description": "resultQuality",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationresultQuality"
+			
+			},									{
+				"varUoMdesc": "Observation/validTime",
+				"description": "validTime",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationvalidTime"
+			
+			},
+									{
+				"varUoMdesc": "Observation/parameters",
+				"description": "parameters",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Observationparameters"
+			
+			},
+												{
+				"varUoMdesc": "FeatureOfInterest/name",
+				"description": "name",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/FeatureOfInterestname"
+			
+			},
+									{
+				"varUoMdesc": "FeatureOfInterest/description",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/FeatureOfInterestdescription"
+			
+			},									{
+				"varUoMdesc": "FeatureOfInterest/encodingType",
+				"description": "encodingType",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/FeatureOfInterestencodingType"
+			
+			},
+									{
+				"varUoMdesc": "FeatureOfInterest/feature",
+				"description": "feature",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/FeatureOfInterestfeature"
+			
+			},
 
+												{
+				"varUoMdesc": "FeatureOfInterest/properties",
+				"description": "properties",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/FeatureOfInterestproperties"
+			
+			},
+									{
+				"varUoMdesc": "License/name",
+				"description": "name",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Licensename"
+			
+			},									{
+				"varUoMdesc": "License/description",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Licensedescription"
+			
+			},
+									{
+				"varUoMdesc": "License/definition",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Licensedescription"
+			
+			},
 
+												{
+				"varUoMdesc": "License/logo",
+				"description": "logo",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Licenselogo"
+			
+			},
+									{
+				"varUoMdesc": "License/properties",
+				"description": "properties",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Licenseproperties"
+			
+			},									{
+				"varUoMdesc": "Campaign/description",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Campaigndescription"
+			
+			},
+									{
+				"varUoMdesc": "Campaign/classification",
+				"description": "classification",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Campaignclassification"
+			
+			},
+				{
+				"varUoMdesc": "Campaign/termsOfUse",
+				"description": "termsOfUse",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/CampaigntermsOfUse"
+			
+			},
+									{
+				"varUoMdesc": "Campaign/privacyPolicy",
+				"description": "privacyPolicy",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/CampaignprivacyPolicy"
+			
+			},
+				{
+				"varUoMdesc": "Campaign/url",
+				"description": "url",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Campaignurl"
+			
+			},
+									{
+				"varUoMdesc": "Campaign/creationTime",
+				"description": "creationTime",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/CampaigncreationTime"
+			
+			},
+				{
+				"varUoMdesc": "Campaign/startTime",
+				"description": "startTime",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/CampaignstartTime"
+			
+			},
+									{
+				"varUoMdesc": "Campaign/endTime",
+				"description": "endTime",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/CampaignendTime"
+			
+			},
 
-
+				{
+				"varUoMdesc": "Campaign/properties",
+				"description": "properties",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Campaignproperties"
+			
+			},
+									{
+				"varUoMdesc": "ObservationGroup/name",
+				"description": "name",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationGroupname"
+			
+			},
+				{
+				"varUoMdesc": "ObservationGroup/description",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationGroupdescription"
+			
+			},
+									{
+				"varUoMdesc": "ObservationGroup/purpose",
+				"description": "purpose",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationGrouppurpose"
+			
+			},
+				{
+				"varUoMdesc": "ObservationGroup/creationTime",
+				"description": "creationTime",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationGroupcreationTime"
+			
+			},
+									{
+				"varUoMdesc": "ObservationGroup/endTime",
+				"description": "endTime",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationGroupendTime"
+			
+			},
+				{
+				"varUoMdesc": "ObservationGroup/termsOfUse",
+				"description": "termsOfUse",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationGrouptermsOfUse"
+			
+			},
+									{
+				"varUoMdesc": "ObservationGroup/privacyPolicy",
+				"description": "privacyPolicy",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationGroupprivacyPolicy"
+			
+			},
+				{
+				"varUoMdesc": "ObservationGroup/dataQuality",
+				"description": "dataQuality",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationGroupdataQuality"
+			
+			},
+									{
+				"varUoMdesc": "ObservationGroup/properties",
+				"description": "properties",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/ObservationGroupproperties"
+			
+			},
+				{
+				"varUoMdesc": "Relation/role",
+				"description": "role",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Relationrole"
+			
+			},
+									{
+				"varUoMdesc": "Relation/description",
+				"description": "description",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Relationdescription"
+			
+			},
+				{
+				"varUoMdesc": "Relation/externalObject",
+				"description": "externalObject",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/RelationexternalObject"
+			
+			},
+									{
+				"varUoMdesc": "Relation/properties",
+				"description": "properties",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Relationproperties"
+			
+			}		
 
 			]
+
 		},
+
 		{
 			"group": "Geospatial",
 			"varUoMs": [
