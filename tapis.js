@@ -106,7 +106,9 @@ const STAOperations = {RecursiveExpandSTA: {description: "Recursive Expand", cal
 			//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
 			OneValueSTA: {description: "One Value", leafNode: true, help: "Shows the last posted value. This value is updated according to the time period you set. Requeres to be connected to another SensorThings API or a STAplus entity. Do not requre to connect to previous sort by time. This node can not be connected to other dependend nodes."},
 			CountResultsSTA: { description: "Count results", leafNode: true, help: "Returns the total number of records returned by the API query without loading them in a table. Only with STA data. Requeres to be connected to another SensorThings API or a STAplus entity. This node can not be connected to other dependend nodes."},
-			ViewQuerySTA: {description: "View Query", leafNode: true, help: "Shows the completed URL that is used to make the query to obtain the data from a service or an API of the depended node in a dialog box. Since the URL behind the active node is always represented in the query and table area, the use of this operation is no longer recommended."}};
+			ViewQuerySTA: {description: "View Query", leafNode: true, help: "Shows the completed URL that is used to make the query to obtain the data from a service or an API of the depended node in a dialog box. Since the URL behind the active node is always represented in the query and table area, the use of this operation is no longer recommended."},
+			MultiCreateSTA: { description: "Multi create STA", leafNode: true, help:"Create and send to STAPlus service several records at the same time. It is necessary to take into account the obligations of the different entities."}
+		};
 
 const STAOperationsArray = Object.keys(STAOperations);
 const STAOperationsType = {singular: "STA tool", plural: "STA tools"};
@@ -1663,7 +1665,7 @@ function ReadURLImportJSON() {
 	HTTPJSONData(currentNode.STAURL, null, null, null, locationSTAURL ? getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAsecurity.S3) : null).then(
 				function(value) { 
 					showInfoMessage('Download JSON completed.'); 
-					TransformTextJSONToTable(value.obj, value.text, document.getElementById("DialogImportJSONSourceURLInput").value);
+					TransformTextJSONToTable(value.obj, value.text, document.getElementById("DialogImportJSONSourceURLInput").value, currentNode, "onlyOne");
 				},
 				function(error) { 
 					showInfoMessage('Error downloading JSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -6458,6 +6460,12 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		return true;
 	}
+	if (nodeTo.image=="MultiCreateSTA.png"){
+		populateMultiCreateSTADialog(nodeTo);
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		return true;
+	}
 	if (tableNodes && nodeTo.image == "SeparateColumns.png") {
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
@@ -6942,6 +6950,9 @@ function networkDoubleClick(params) {
 				ShowTableSelectColumnsDialog("SelectColumns", parentNode, currentNode, true);
 				document.getElementById("DialogSelectColumns").showModal();
 			}
+		}
+		else if(nodeTo.image=="MultiCreateSTA.png"){
+			document.getElementById("DialogMultiCreateSTA").showModal();
 		}
 		else if (currentNode.image == "SeparateColumns.png") {
 			var parentNode=GetFirstParentNode(currentNode);
@@ -8750,7 +8761,13 @@ function okButtonInPivotTable(event){
 		alert (newData) //Error
 	}
 }
+function populateMultiCreateSTADialog(node){
+	saveNodeDialog("DialogMultiCreateSTA", node);
 
+	//meaning, pot haver varios
+	//la resta, tots igual 
+
+}
 /*function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
