@@ -277,6 +277,7 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
+	if ((TableOperations[removeExtension(parentNode.image)]||parentNode.image=="ImportCSV.png" ||parentNode.image=="ImportDBF.png"  ||parentNode.image=="ImportGPKG.png"  ||parentNode.image=="ImportJSONLD.png"   ||parentNode.image=="ImportJSON.png"  ||parentNode.image=="ImportGeoJSON.png" )&& node.image=="MultiCreateSTA.png") return null;
 	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" || node.image == "FilterRowsByTime.png" || node.image == "GeoFilterPntSTA.png" ) )
 		return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
 	if ((parentNode.image=="ogcAPICols.png"||parentNode.image=="ogcAPIItems.png"|| parentNode.image=="s3Service.png"||parentNode.image=="s3Bucket.png"||parentNode.image=="edc.png"||parentNode.image=="edcAsset.png"||parentNode.image=="ImportCSV.png"||parentNode.image=="ImportDBF.png"||parentNode.image=="ImportJSONLD.png"||parentNode.image=="ImportJSON.png"||parentNode.image=="ImportGeoJSON.png") && (STAEntities[removeExtension(node.image)]||STAOperations[removeExtension(node.image)] || node.image=="ObsLayer.png"))
@@ -291,9 +292,6 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 		return "'Select Row' or 'Select Resource' for STA node cannot be connected to an expanded branch. Use 'Filter row' for STA instead or select a row before expanding";
 	if (node.image == "OneValueSTA.png" && parentNode.STAEntityName!="Observations" && parentNode.image!="Observations.png")
 		return "'One value' node is designed be connected to an 'Observations' node only.";
-	
-	
-	
 	
 	var idNode=IdOfSTAEntity(node);
 	if (idNode<0)
@@ -6461,9 +6459,10 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		return true;
 	}
 	if (nodeTo.image=="MultiCreateSTA.png"){
-		populateMultiCreateSTADialog(nodeTo);
+		
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		networkNodes.update(nodeTo);
 		return true;
 	}
 	if (tableNodes && nodeTo.image == "SeparateColumns.png") {
@@ -6951,7 +6950,9 @@ function networkDoubleClick(params) {
 				document.getElementById("DialogSelectColumns").showModal();
 			}
 		}
-		else if(nodeTo.image=="MultiCreateSTA.png"){
+		else if(currentNode.image=="MultiCreateSTA.png"){
+			//comrpobar si hi ha info en els parents...
+			populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
 			document.getElementById("DialogMultiCreateSTA").showModal();
 		}
 		else if (currentNode.image == "SeparateColumns.png") {
@@ -8763,6 +8764,29 @@ function okButtonInPivotTable(event){
 }
 function populateMultiCreateSTADialog(node){
 	saveNodeDialog("DialogMultiCreateSTA", node);
+	var STAMultiCreateInformation={}, keys={};
+
+	
+	var parentNodes=GetParentNodes(node);
+
+	for (var i=0;i<parentNodes.length;i++){
+		for (var key in parentNodes[i].STAdataAttributes) {
+			keys[key] = parentNodes[i].STAdataAttributes[key].definition;
+		}
+		STAMultiCreateInformation[parentNodes[i].id]= {
+			data: parentNodes[i].STAdata,
+			attibutes: keys
+		}
+
+		//QUANTS PARES?? MEANING SOL? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	}
+	console.log(STAMultiCreateInformation);
+
+	//node.STAMultiCreateInformation=STAMultiCreateInformation;
+
+	
+
+
 
 	//meaning, pot haver varios
 	//la resta, tots igual 
