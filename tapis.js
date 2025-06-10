@@ -8764,9 +8764,18 @@ function okButtonInPivotTable(event){
 }
 function populateMultiCreateSTADialog(node){
 	saveNodeDialog("DialogMultiCreateSTA", node);
-	var STAMultiCreateInformation={}, keys={};
+	var STAMultiCreateInformation={}, keys={}; //node.STASTAMultiCreateInformation.previousNodesInfo
+	var infoSaved;//node.STASTAMultiCreateInformation.infoSaved
+	if (node.STASTAMultiCreateInformation.infoSaved){
+		infoSaved= node.STASTAMultiCreateInformation.infoSaved
+	}else{
+		infoSaved= {
+			origin: ["general"], //["general"] or ["entity", entitySelected];
+			entities:{} //only entities and properties with informarion. Every entity an object
+		}
+	}
 
-	
+
 	var parentNodes=GetParentNodes(node);
 
 	for (var i=0;i<parentNodes.length;i++){
@@ -8775,11 +8784,41 @@ function populateMultiCreateSTADialog(node){
 		}
 		STAMultiCreateInformation[parentNodes[i].id]= {
 			data: parentNodes[i].STAdata,
+			lenght: parentNodes[i].STAdata.lenght,
 			attibutes: keys
 		}
-
 		//QUANTS PARES?? MEANING SOL? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
+
+	//Build Dialog
+	var spanMultiCreateSTA= document.getElementById("DialogMultiCreateSTA_span");
+	var c;
+	c+=`<fieldset><legend>Multirecords origin</legend>
+	<input type="radio" value="general" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_general"><label>General introduction </label>
+	<input type="radio" value="entity" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_entity"><label>Entity </label>
+	<select name="DialogMultiCreateSTA_selectOrigin" id="DialogMultiCreateSTA_selectOrigin">`;
+
+	for (var i=0;i<STAEntitiesArray.length;i++){
+		c+=`<option value="${STAEntitiesArray[i]}" ${infoSaved?}> ${STAEntitiesArray[i]}</option>`
+	}
+
+	<option value="Campaigns"> Campaigns</option>
+	<option value="Datastreams"> Datastreams</option>
+	<option value="FeaturesOfInterest"> FeaturesOfInterest</option>
+	<option value="HistoricalLocations"> HistoricalLocations</option>
+	<option value="Licenses"> Licenses</option>
+	<option value="Locations"> Locations</option>
+	<option value="MultiDatastreams"> MultiDatastreams</option>
+	<option value="ObservationGroups"> ObservationGroups</option>
+	<option value="Observations" selected> Observations</option>
+	<option value="Campaigns"> Campaigns</option>
+	<option value="Campaigns"> Campaigns</option>
+	<option value="Campaigns"> Campaigns</option>
+	<option value="Campaigns"> Campaigns</option>
+	<option value="Campaigns"> Campaigns</option>
+	</select> 
+	</fieldset>`
+
 	console.log(STAMultiCreateInformation);
 
 	//node.STAMultiCreateInformation=STAMultiCreateInformation;
