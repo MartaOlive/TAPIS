@@ -46,6 +46,15 @@
 				"authorization": {
 					"description": "'authorization' header parameter to be used in the EDC",
 					"type": "string"					
+				},
+				"S3": {
+					"description": "Security parameters to be used in the S3 and MinIO",
+					"type": "object",
+					"properties": {
+						"accessKey": {"type": "string"},
+						"secretKey": {"type": "string"},
+						"service": {"type": "string"}
+					} 
 				}
 			} 
 		},

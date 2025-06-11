@@ -343,15 +343,14 @@
 
 	<dialog id="DialogMultiCreateSTA" >
 		<form>
-			<span id="DialogMultiCreateSTA_span">
-			</span>
+			<span id="DialogMultiCreateSTA_span"></span>
 			<button value="default" id="" onClick="" formmethod="dialog" value="">OK</button>
 			<button value="cancel" formmethod="dialog">Cancel</button>
 			<input type="hidden" id="DialogMultiCreateSTANodeId"></input>
 		</form>
 	</dialog>
 
-		<dialog id="DialogCreateUpdateDeleteEntity_numberOfMultiDatastream" >
+	<dialog id="DialogCreateUpdateDeleteEntity_numberOfMultiDatastream" >
 		<form>
 			<label for ="DialogOpenMultiDatastream_input">How many multidatastreams do you want to introduce?</label>
 			<input type="number" id ="DialogOpenMultiDatastream_input" min="2" name="DialogOpenMultiDatastream_input" value=2> </input>
@@ -1148,6 +1147,7 @@
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "CSV")'>Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
+			<input type="hidden" id="DialogImportCSVNodeId"></input>
 		</form>
 	</dialog>
 
@@ -1218,10 +1218,8 @@
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GeoJSON")'>Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
-			</div>
-			
+			</div>			
 			<input type="hidden" id="DialogImportGeoJSONNodeId"></input>
-
 		</form>
 	</dialog>
 
@@ -1241,6 +1239,7 @@
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "DBF")'>Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
+			<input type="hidden" id="DialogImportDBFNodeId"></input>
 		</form>
 	</dialog>
 
@@ -1260,6 +1259,7 @@
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GPKG")'>Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
+			<input type="hidden" id="DialogImportGPKGNodeId"></input>
 		</form>
 	</dialog>
 
@@ -1284,6 +1284,7 @@
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSONLD")'>Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
+			<input type="hidden" id="DialogImportJSONLDNodeId"></input>
 		</form>
 	</dialog>
 
@@ -1470,6 +1471,7 @@
 				<button value="draw" onClick="DrawImageViewer(event)">Draw</button>
 				<button value="ok" onClick="CloseDialogImageViewer(event)" formmethod="dialog">Close</button>
 			</div>
+			<input type="hidden" id="DialogImageViewerNodeId"></input>
 			</form>
 		</td></tr>
 		<tr><td><div id="DialogImageViewerVisualization" style="width:900px; height:550px;"></div></td>

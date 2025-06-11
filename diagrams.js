@@ -819,7 +819,7 @@ function CloseDialogBarPlot(event) {
 
 function DrawImageViewer(event) {
 	event.preventDefault(); // We don't want to submit this form
-	var node = getNodeDialog("DialogBarPlot");
+	var node = getNodeDialog("DialogImageViewer");
 	var node = GetFirstParentNode(node);
 	if (node) {
 		var data, dataAttributes, record;

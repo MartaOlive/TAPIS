@@ -117,6 +117,8 @@ function getDataAttributesSimple(data) {
 	return dataAttributes;
 }
 
+
+
 //Return the index on the sorted list array where the value exists. If it does not find ti it returns null.
 //If there are repeated hits, it returns the first one
 function binarySearch(list, value, fcompare, fparam) {
@@ -931,17 +933,21 @@ function getHTMLCharacterAttributeType(type) {
 //selectedEntityId index of the selected radio button, 
 //f_onclickselectEntity: on click function for the radio buttons
 //onclickselectEntityParam: on click function for the radio buttons parameter (it is an string)
-//f_onclickInsteadOfLink: on click function that will govern the reaction to a click on a link
-//onclickInsteadOfLinkParam: on click function that will govern the reaction to a click on a link
 //f_isAttributeAnyURI: function to determine if an attribute is a URI
+//isAttributeAnyURIParam; extra param for function to determine if an attribute is a URI
+//f_onclickInsteadOfLink: on click function that will govern the reaction to a click on a link
+//onclickInsteadOfLinkParam: extra param for the on click function that will govern the reaction to a click on a link
+//f_isAttributeClickInsteadOfLink, function to determine if this link should use f_onclickInsteadOfLink
+//isAttributeClickInsteadOfLinkParam: extra param function to determine if this link should use f_onclickInsteadOfLink
 //f_attributeToHide: function to determine if an attribute should be hidden in the view
 function getHTMLTable(data, dataAttributesInput, 
 		rowNumbers, 
 		prefix_selectedEntityId, selectedEntityId, f_onclickselectEntity, onclickselectEntityParam, 
-		f_onclickInsteadOfLink, onclickInsteadOfLinkParam, f_isAttributeAnyURI, 
+		f_isAttributeAnyURI, isAttributeAnyURIParam,
+		f_onclickInsteadOfLink, onclickInsteadOfLinkParam, f_isAttributeClickInsteadOfLink, isAttributeClickInsteadOfLinkParam,
 		f_attributeToHide) {
 	var dataAttributes = dataAttributesInput ? dataAttributesInput : getDataAttributesSimple(data); 
-	var cdns=[], needhref=[], record, cell, dataAttribute;
+	var cdns=[], needhref=[], needOnClick=[], record, cell, dataAttribute;
 	var dataAttributesArray = Object.keys(dataAttributes);
 
 	cdns.push("<table class='tablesmall'><tr>");
@@ -952,13 +958,15 @@ function getHTMLTable(data, dataAttributesInput,
 	for (var a = 0; a < dataAttributesArray.length; a++) {
 		if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
 			continue;
-cdns.push(`<th style='white-space: nowrap;'>`,
+		cdns.push("<th>",
 			GetHTMLdataAttribute(dataAttributesArray[a], dataAttributes[dataAttributesArray[a]]),
 			" ",
 			getHTMLCharacterAttributeType(dataAttributes[dataAttributesArray[a]].type),
 			"</th>");
 		if (f_isAttributeAnyURI)
-			needhref[a]=f_isAttributeAnyURI(dataAttributesArray[a]);
+			needhref[a]=f_isAttributeAnyURI(dataAttributesArray[a], isAttributeAnyURIParam);
+		if (f_isAttributeClickInsteadOfLink)
+			needOnClick[a]=f_isAttributeClickInsteadOfLink(dataAttributesArray[a], isAttributeAnyURIParam);
 	}
 
 	cdns.push("</tr>");
@@ -978,8 +986,8 @@ cdns.push(`<th style='white-space: nowrap;'>`,
 			cell=record[dataAttributesArray[a]];
 			cdns.push((dataAttributes[dataAttributesArray[a]].type=="number" || dataAttributes[dataAttributesArray[a]].type=="integer") ? "<td align='right'>" :  "<td>");
 			if (typeof cell !== "undefined" && cell!=null) {
-				if (f_isAttributeAnyURI && needhref[a] && cell.length)
-					cdns.push("<a href='", f_onclickInsteadOfLink ? "javascript:void();" : cell.replaceAll("'", "%27"), "' target='_blank'", (f_onclickInsteadOfLink ? " onClick='return " + f_onclickInsteadOfLink.name + "(\"" + onclickInsteadOfLinkParam + "\", \"" + dataAttributesArray[a] + "\", " + i +");'" : ""), ">", cell, "</a>");
+				if ((needhref[a] || (f_onclickInsteadOfLink && needOnClick[a])) && cell.length)
+					cdns.push("<a href='", (f_onclickInsteadOfLink && needOnClick[a]) ? "javascript:void();" : cell.replaceAll("'", "%27"), "' target='_blank'", ((f_onclickInsteadOfLink && needOnClick[a]) ? " onClick='return " + f_onclickInsteadOfLink.name + "(\"" + onclickInsteadOfLinkParam + "\", \"" + dataAttributesArray[a] + "\", " + i +");'" : ""), ">", cell, "</a>");
 				else if (typeof cell === "object")
 					cdns.push(JSON.stringify(cell));
 				else
@@ -1454,7 +1462,6 @@ function buildPivotTable(data, rows, columns, values, aggregation){
 		return finalArrayObjects;
  	}		
 }
-
 function ReplaceTextInTable(data,searchValue, replaceValue,numbersAsText,datesAsText,dataAttributes,column){
 	var dataLenght=data.length;
 	var attributes=(dataAttributes)?dataAttributes:getDataAttributesSimple(data);
@@ -1557,4 +1564,6 @@ function ReplaceTextInTable(data,searchValue, replaceValue,numbersAsText,datesAs
 	}
 	return data;
 }
+
+
 

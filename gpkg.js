@@ -119,13 +119,30 @@ function ParseGPKGTable(db, tableName){
 
 function getAttributeTypeFromGPKGType(datatype) {
 	switch (datatype) {
-		case 'TEST':
-			return "string";
 		case 'NUMERIC':
+		case 'NUMERIC':
+		case 'DECIMAL(10,5)':
 		case 'REAL':
+		case 'DOUBLE':
+		case 'DOUBLE PRECISION':
+		case 'FLOAT':
 			return "number";
+		case 'INT':
 		case 'INTEGER':
+		case 'TINYINT':
+		case 'SMALLINT':
+		case 'MEDIUMINT':
+		case 'BIGINT':
+		case 'UNSIGNED BIG INT':
+		case 'INT2':
+		case 'INT8':
 			return "integer";
+		case 'BOOLEAN':
+			return "boolean";
+		case 'DATE':
+		case 'DATETIME':
+			return "isodatetime";
+		case 'TEXT':
 		default:
 			return "string";
 	}

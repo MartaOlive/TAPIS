@@ -51,12 +51,11 @@
 function createSHA256Hash(input) {
 	return CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(input))
 }
-
-//test: getAWSSignedHeaders("minio-ad4gd-api.mlops.ari-aidata.eu", "Ij3X86wXIhSBtDarOgOg", "QrfVQPA4ZYOLQHhexArtAeOqq1jQtlRU4jN5h3us", "s3", "us-east-1");
-function getAWSSignedHeaders(host, path, accessKeyId, secretAccessKey, service, region) {
-
-	if (!region)
-		region="us-east-1";
+/*test: getAWSSignedHeaders("minio-ad4gd-api.mlops.ari-aidata.eu", null, {"accessKey": "Ij3X86wXIhSBtDarOgOg",
+						"secretKey": "QrfVQPA4ZYOLQHhexArtAeOqq1jQtlRU4jN5h3us",
+						"service", "s3"});*/
+function getAWSSignedHeaders(host, path, s3security) {
+	var region="us-east-1";
 
     // Task 1: Create a canonical request for Signature Version 4
     // Arrange the contents of your request (host, action, headers, etc.) into a standard (canonical) format. The canonical request is one of the inputs used to create a string to sign.
@@ -92,7 +91,7 @@ function getAWSSignedHeaders(host, path, accessKeyId, secretAccessKey, service, 
 	const algorithm = 'AWS4-HMAC-SHA256'
 	const requestDateTime = amzDate
 	const dateStamp = amzDate.split("T")[0] // Date w/o time, used in credential scope
-	const credentialScope = dateStamp + '/' + region + '/' + service + '/' + 'aws4_request'
+	const credentialScope = dateStamp + '/' + region + '/' + s3security.service + '/' + 'aws4_request'
 
 	const stringToSign =
         	algorithm + '\n' +
@@ -103,9 +102,9 @@ function getAWSSignedHeaders(host, path, accessKeyId, secretAccessKey, service, 
 	// Task 3: Calculate the signature for AWS Signature Version 4
 	// Derive a signing key by performing a succession of keyed hash operations (HMAC operations) on the request date, Region, and service, with your AWS secret access key as the key for the initial hashing operation. After you derive the signing key, you then calculate the signature by performing a keyed hash operation on the string to sign. Use the derived signing key as the hash key for this operation.
 
-	var kDate = CryptoJS.HmacSHA256(dateStamp, "AWS4" + secretAccessKey);
+	var kDate = CryptoJS.HmacSHA256(dateStamp, "AWS4" + s3security.secretKey);
 	var kRegion = CryptoJS.HmacSHA256(region, kDate);
-	var kService = CryptoJS.HmacSHA256(service, kRegion);
+	var kService = CryptoJS.HmacSHA256(s3security.service, kRegion);
 	var kSigning = CryptoJS.HmacSHA256("aws4_request", kService);
 	//console.log('kSigning: ', CryptoJS.enc.Hex.stringify(kSigning))
 
@@ -113,7 +112,7 @@ function getAWSSignedHeaders(host, path, accessKeyId, secretAccessKey, service, 
 
 	// Task 4: Add the signature to the HTTP request
 	// After you calculate the signature, add it to an HTTP header or to the query string of the request.
-	const authorizationHeader = algorithm + ' Credential=' + accessKeyId + '/' + credentialScope + ', SignedHeaders=' + signedHeaders + ', Signature=' + signature
+	const authorizationHeader = algorithm + ' Credential=' + s3security.accessKey + '/' + credentialScope + ', SignedHeaders=' + signedHeaders + ', Signature=' + signature
 
 	const headers = {
 		'Accept': '*/*',

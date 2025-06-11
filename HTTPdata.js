@@ -175,20 +175,34 @@ function removeParamContentType(contentType) {
 
 
 var CriptoName=null, DisplayName="";
-function AddHeadersIfNeeded(options, security) {
-	if (security && security.authorization) {
-		if (!options.headers)
-			options.headers={};
-		options.headers['Authorization']=security.authorization;
+
+function getHeadersFromSecurity(security, url) {
+	if (security.S3 /* && parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL*/) {
+		var locationURL=transformStringIntoLocation(url);
+		return getAWSSignedHeaders(locationURL.hostname, locationURL.pathname, security.S3);
 	}
-	else
-	{
-		if (CriptoName &&
-			hello("authenix").getAuthResponse() &&
-			hello("authenix").getAuthResponse().access_token) {
+	if (security.Authorization)
+		return {Authorization: security.Authorization};
+	if (security.facts)
+		return currentNode.STAsecurity.facts;
+}
+
+function AddHeadersIfNeeded(options, security, url) {
+	if (!options.headers['Authorization'] && !options.headers['x-facts-key']) {
+		if (security) {
 			if (!options.headers)
 				options.headers={};
-			options.headers['Authorization']='Bearer ' + hello("authenix").getAuthResponse().access_token;
+			Object.assign(options.headers, getHeadersFromSecurity(security, url));
+		}
+		else
+		{
+			if (CriptoName &&
+				hello("authenix").getAuthResponse() &&
+				hello("authenix").getAuthResponse().access_token) {
+				if (!options.headers)
+					options.headers={};
+				options.headers['Authorization']='Bearer ' + hello("authenix").getAuthResponse().access_token;
+			}
 		}
 	}
 	if (PreviousGPSPoint)
@@ -258,7 +272,7 @@ In fact, the response is an object with the following members: obj (only if the 
 */
 //url is the URL to request. To do GET it can be used with the first parameter only.
 //headersToGet is an array of header names that are extracted to the response and included in the responseHeaders memeber of the function return. Can be null.
-//method is the name of the method in capitals. E.g. "POST". Default is "GET".
+//method is the name of the method in capitals. E.g. "POST". Default is "GET". The special method "GET-HEAD" is used to retrieve the headers without getting the data when HEAD is not allowed by the server.
 //objToSend is a JavaScript object that will be stringify into JSON text and send as the body of the HTTP request (e.g. HTTP POST) or a string that will be send directly.
 //headersToSend is an object with the headers to include in the request. It requests JSON content in 'Accept' by default. If you use headersToSend to specify headers then there is no default 'Accept' and you may specify it. headersToSend is an object like this: {'Accept': '*/*', 'Authorization': "XXX"}
 //mediaToSend is the media type declared for the body content (based on objToSend). If undefined, null or blank, "application/json" is assumed
@@ -268,7 +282,7 @@ When all is OK response is an object {obj: , text: , responseHeaders: , ok: };
 async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend, mediaToSend) {
 	var response, jsonData, options={};
 	try {
-		if (method)
+		if (method && method!="GET-HEAD")
 			options.method=method;
 		
 		if (headersToSend)
@@ -300,19 +314,19 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend,
 		}
 		else
 			body=await response.text();
-		showInfoMessage("Error: HTTP " + (method ? method : "GET") + " URL: " + url + ", HTTP code: " + response?.status + ", Description: "+ (response.statusText ? response.statusText : standardStatusText(response.status)) + (body ? ", " + body : ""));
+		showInfoMessage("Error: HTTP " + (method && method!="GET-HEAD" ? method : "GET") + " URL: " + url + ", HTTP code: " + response?.status + ", Description: "+ (response.statusText ? response.statusText : standardStatusText(response.status)) + (body ? ", " + body : ""));
 		console.log("HTTP Response Code: " + response?.status + ": " + response?.statusText + (body ? JSON.stringify(body) : ""));
 		return response;
 	}
 	try {
+		//console.log(...response.headers); //Enumerate the headers for debugging. It does not work directly in the console of Chrome
 		var headersObj={};
 		if (headersToGet)
 		{
 			for (var i=0; i<headersToGet.length; i++)
 				headersObj[headersToGet[i]]=response.headers.get(headersToGet[i]);
-			//Enumetates all headers: for(let entry of response.headers.entries()) console.log(entry) })
 		}
-		if (method=="HEAD")
+		if (method=="HEAD" || method=="GET-HEAD")
 			return {obj: null, text: null, responseHeaders: headersObj, ok: true};
 		else if ((removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json") &&
 				(response.headers.get('Content-Length')==null || parseInt(response.headers.get('Content-Length'))>0))
@@ -333,20 +347,20 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend,
 	}
 }
 
-async function HTTPHead(url, headersToGet) {
-	return await HTTPJSONData(url, headersToGet, "HEAD");
+async function HTTPHead(url, headersToGet, headersToSend) {
+	return await HTTPJSONData(url, headersToGet, "HEAD", null, headersToSend);
 }
 
 async function HTTPBinaryData(url, headersToGet, method, objToSend, headersToSend, mediaToSend) {
 	var response, jsonData, options={};
 	try {
-		if (method)
+		if (method && method!="GET-HEAD")
 			options.method=method;
 		
 		if (headersToSend)
 			options.headers=headersToSend;
 
-		//AddHeadersIfNeeded(options);
+		AddHeadersIfNeeded(options);
 		if (objToSend)
 		{
 			options.headers['Content-Type']=(mediaToSend) ? (mediaToSend) : "application/json";
@@ -369,18 +383,20 @@ async function HTTPBinaryData(url, headersToGet, method, objToSend, headersToSen
 		}
 		else
 			body=await response.text();
-		showInfoMessage("Error: HTTP " + (method ? method : "GET") + " URL: " + url + ", HTTP code: " + response?.status + ", Description: "+ (response.statusText ? response.statusText : standardStatusText(response.status)) + (body ? ", " + body : ""));
+		showInfoMessage("Error: HTTP " + (method && method!="GET-HEAD" ? method : "GET") + " URL: " + url + ", HTTP code: " + response?.status + ", Description: "+ (response.statusText ? response.statusText : standardStatusText(response.status)) + (body ? ", " + body : ""));
 		console.log("HTTP Response Code: " + response?.status + ": " + response?.statusText + (body ? JSON.stringify(body) : ""));
 		return response;
 	}
 	try {
+		var headersObj={};
 		if (headersToGet)
 		{
 			for (var i=0; i<headersToGet.length; i++)
 				headersObj[headersToGet[i]]=response.headers.get(headersToGet[i]);
-			//Enumetates all headers: for(let entry of response.headers.entries()) console.log(entry) })
 		}
-		if (removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json" || 
+		if (method=="HEAD" || method=="GET-HEAD")
+			return {obj: null, text: null, responseHeaders: headersObj, ok: true};
+		else if (removeParamContentType(response.headers.get('Content-Type'))=="application/json" || removeParamContentType(response.headers.get('Content-Type'))=="application/ld+json" || 
 				removeParamContentType(response.headers.get('Content-Type'))=="text/html" || removeParamContentType(response.headers.get('Content-Type'))=="text/plain" || 
 				(response.headers.get('Content-Length')!=null && parseInt(response.headers.get('Content-Length'))==0))
 			return {arrayBuf: null, text: await response.text(), responseHeaders: headersObj, ok: true};

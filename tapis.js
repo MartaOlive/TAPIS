@@ -45,6 +45,17 @@
 	El TAPIS es pot actualitzar des de https://github.com/joanma747/tapis.
 */
 
+/*
+Some things that I'm always looking for:
+Function to get the nodeId from a dialog: getNodeDialog(div_id) 
+Fucntion to include the nodeId as a hidden value in a dialog: saveNodeDialog(div_id, node)
+
+Function to execute a special table link in the graph: ShowLinkDialog(nodeId, columnName, iRecord)
+Function to open a link in the graph: OpenLink(event)
+Function to decide what is a link in the table view: isAttributeAnyURI(s)
+Function to decide what is a link in the table that is a special link in the graph: isAttributeAnyURINode()
+*/
+
 var config;
 
 const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", startNode: true, help: "Connects to a SensorThings API or a STAplus instance and returns a table with the list of entities suported by the API."},
@@ -950,7 +961,7 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 			url_fetch=AddQueryParamsToURL(node.STAURL, "$top=" + node.STASelectedExpands.top);
 		else
 			url_fetch=AddQueryParamsToURL(node.STAURL, ((node.OGCType == "OGCAPIcollections" || node.OGCType == "OGCAPIitems") ? "limit=" : ((node.OGCType == "GUF") ? "COUNT=" : "$top=")) + node.OGCExpectedLength);
-		AddHeadersIfNeeded(options, node.STAsecurity);
+		AddHeadersIfNeeded(options, node.STAsecurity, url_fetch);
 
 		if (options.headers)
 			response = await fetch(url_fetch, options);
@@ -1110,14 +1121,14 @@ function SelectImportFileSource(event, type) {
 			if (type=="JSON"){
 				document.getElementById("DialogImportJSONInputSeveralRecords").disabled=true;
 				document.getElementById("DialogImportJSONSourceURLButtonMulti").disabled=true;
-			}
-		}
+	}
+}
 
 	}
 }
 //type should be "CSV", "DBF", "GPKG", "JSON", "JSONLD" or "GeoJSON"
 function SelectImportMeaningFileSource(event, type) {
-if (document.getElementById("DialogImportMeaning"+type+"SourceFile").checked) {
+	if (document.getElementById("DialogImportMeaning"+type+"SourceFile").checked) {
 		document.getElementById("DialogImportMeaning"+type+"SourceFileText").disabled=false;
 		document.getElementById("DialogImportMeaning"+type+"SourceURLInput").disabled=true;
 		document.getElementById("DialogImportMeaning"+type+"SourceURLButton").disabled=true;
@@ -1165,12 +1176,13 @@ function RetrieveMeaningTable(event, type) {
 		
 }
 
-function TransformTextCSVWToDataAttributes(csvwText)
+function TransformTextCSVWToDataAttributes(csvwText, node)
 {
 	var data_csvw=JSON.parse(csvwText);
-	currentNode.STAdataAttributes=getDataAttributesCSVW(data_csvw);
-	networkNodes.update(currentNode);
-	UpdateChildenTable(currentNode);
+
+	node.STAdataAttributes=getDataAttributesCSVW(data_csvw);
+	networkNodes.update(node);
+	UpdateChildenTable(node);
 	var csvReadParams = getCSVReadParams(data_csvw);
 	if (csvReadParams.delimiter) {
 		document.getElementById("DialogImportCSVDelimiterAuto").checked=false;
@@ -1197,19 +1209,19 @@ function TransformTextCSVWToDataAttributes(csvwText)
 
 function ReadFileImportCSVW(event) {
 	var input = event.target;
-
+	var node=getNodeDialog("DialogImportCSV");
 	var reader = new FileReader();
 	reader.onload = function() {
 		//Transform the JSON text into a STAdataAttributes structure in memory
 		try
 		{
-			TransformTextCSVWToDataAttributes(reader.result);
+			TransformTextCSVWToDataAttributes(reader.result, node);
 		}
 		catch (e) 
 		{
 			showInfoMessage("JSON message parse error: " + e + " The file content is:\n" + reader.result);
-			currentNode.STAdataAttributes=null;
-			networkNodes.update(currentNode);
+			node.STAdataAttributes=null;
+			networkNodes.update(node);
 			return;
 		}
 	};
@@ -1217,10 +1229,11 @@ function ReadFileImportCSVW(event) {
 }
 
 function ReadURLImportCSVW() {
+	var node=getNodeDialog("DialogImportCSV");
 	HTTPJSONData(document.getElementById("DialogImportMeaningCSVSourceURLInput").value).then(
 				function(value) { 
 					showInfoMessage('Download CSVW completed.'); 
-					TransformTextCSVWToDataAttributes(value.text);
+					TransformTextCSVWToDataAttributes(value.text, node);
 				},
 				function(error) { 
 					showInfoMessage('Error downloading CSVW. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -1237,21 +1250,21 @@ function TransformTextGeoJSONSchemaToDataAttributes(jsonText)
 
 function ReadFileImportGeoJSONSchema(event) {
 	var input = event.target;
-
+	var node=getNodeDialog("DialogImportGeoJSON");
 	var reader = new FileReader();
 	reader.onload = function() {
 		//Transform the JSON text into a STAdataAttributes structure in memory
 		try
 		{
-			currentNode.STAdataAttributes=TransformTextGeoJSONSchemaToDataAttributes(reader.result);
-			networkNodes.update(currentNode);
-			UpdateChildenTable(currentNode);
+			node.STAdataAttributes=TransformTextGeoJSONSchemaToDataAttributes(reader.result);
+			networkNodes.update(node);
+			UpdateChildenTable(node);
 		}
 		catch (e) 
 		{
 			showInfoMessage("JSON message parse error: " + e + " The file content is:\n" + reader.result);
-			currentNode.STAdataAttributes=null;
-			networkNodes.update(currentNode);
+			node.STAdataAttributes=null;
+			networkNodes.update(node);
 			return;
 		}
 	};
@@ -1259,12 +1272,13 @@ function ReadFileImportGeoJSONSchema(event) {
 }
 
 function ReadURLImportGeoJSONSchema() {
+	var node=getNodeDialog("DialogImportGeoJSON");
 	HTTPJSONData(document.getElementById("DialogImportMeaningGeoJSONSourceURLInput").value).then(
 				function(value) { 
 					showInfoMessage('Download GeoJSON schema completed.'); 
-					currentNode.STAdataAttributes=TransformTextGeoJSONSchemaToDataAttributes(value.text);
-					networkNodes.update(currentNode);
-					UpdateChildenTable(currentNode);
+					node.STAdataAttributes=TransformTextGeoJSONSchemaToDataAttributes(value.text);
+					networkNodes.update(node);
+					UpdateChildenTable(node);
 				},
 				function(error) { 
 					showInfoMessage('Error downloading GeoJSON Schema. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -1294,57 +1308,58 @@ function TransformDatesToISO(data) {
 	}
 }
 
-function TransformTextCSVToTable(csvText, url) {
+function TransformTextCSVToTable(csvText, url, node) {
 	try
 	{
 		var result = Papa.parse(csvText, {delimiter: (document.getElementById("DialogImportCSVDelimiterAuto").checked ? null : (document.getElementById("DialogImportCSVDelimiterText").checked ? document.getElementById("DialogImportCSVDelimiter").value : '\t')),
 			header: document.getElementById("DialogImportCSVHeader").checked,
 			dynamicTyping: document.getElementById("DialogImportCSVStringTyping").checked ? false : true,
 			skipEmptyLines: true});
-		currentNode.STAdata=result.data;
+		var node=getNodeDialog("DialogImportCSV");
+		node.STAdata=result.data;
 		//Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
-		TransformDatesToISO(currentNode.STAdata);
+		TransformDatesToISO(node.STAdata);
 		if (url)
-			currentNode.STAfileUrl=url;
-		networkNodes.update(currentNode);
-		updateQueryAndTableArea(currentNode);
-		UpdateChildenTable(currentNode);
+			node.STAfileUrl=url;
+		networkNodes.update(node);
+		updateQueryAndTableArea(node);
+		UpdateChildenTable(node);
 	}
 	catch (e) 
 	{
 		showInfoMessage("CSV parse error: " + e + " The file content fragment:\n" + csvText.substring(0, 1000));
-		currentNode.STAdata=null;
-		networkNodes.update(currentNode);
+		node.STAdata=null;
+		networkNodes.update(node);
 		return;
 	}
 }
 
 function ReadFileImportCSV(event) {
 	var input = event.target;
-
+	var node=getNodeDialog("DialogImportCSV");
 	var reader = new FileReader();
 	reader.onload = function() {
-		TransformTextCSVToTable(reader.result, null);
+		TransformTextCSVToTable(reader.result, null, node);
 	};
 	reader.readAsText(input.files[0], document.getElementById("DialogImportCSVEncoding").value);
 }
 
-function ReadURLImportCSV() {
-	var locationSTAURL;
-	var parentNode=GetFirstParentNode(currentNode);
-	currentNode.STAURL = document.getElementById("DialogImportCSVSourceURLInput").value;
-	currentNode.OGCType = "fileURL";
-	if (parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL && parentNode.STAsecurity) {
-		currentNode.STAsecurity=deapCopy(parentNode.STAsecurity);
-		locationSTAURL=transformStringIntoLocation(currentNode.STAURL);
-	} else {
-		currentNode.STAsecurity=null;
-		locationSTAURL=null;
-	}
-	HTTPJSONData(currentNode.STAURL, null, null, null, locationSTAURL ? getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAsecurity.S3) : null).then(
+function ReadURLImportCSV(event, url, security) {
+	var node=getNodeDialog("DialogImportCSV");
+	var parentNode=GetFirstParentNode(node);
+	node.STAURL = url ? url : document.getElementById("DialogImportCSVSourceURLInput").value;
+	node.OGCType = "fileURL";
+	if (security)
+		node.STAsecurity=security;
+	else if (parentNode.STAsecurity)
+		node.STAsecurity=deapCopy(parentNode.STAsecurity);
+	else
+		node.STAsecurity=null;
+
+	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, url)).then(
 				function(value) { 
 					showInfoMessage('Download CSV completed.'); 
-					TransformTextCSVToTable(value.text, document.getElementById("DialogImportCSVSourceURLInput").value);
+					TransformTextCSVToTable(value.text, document.getElementById("DialogImportCSVSourceURLInput").value, node);
 				},
 				function(error) { 
 					showInfoMessage('Error downloading CSV. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -1355,22 +1370,23 @@ function ReadURLImportCSV() {
 
 function TransformBinaryDBFToTable(buffer, url) {
 	var dbf=ParseDBF(buffer)
-	currentNode.STAdata=dbf.records;
-	currentNode.STAdataAttributes=getDataAttributesDBF(dbf);
+	var node=getNodeDialog("DialogImportDBF");
+	node.STAdata=dbf.records;
+	node.STAdataAttributes=getDataAttributesDBF(dbf);
 	if (dbf.records.length==0)
 		showInfoMessage("DBF table has no records.");
 	else
 		showInfoMessage("DBF table has been loaded.");
-	if (currentNode.STAdata) {
+	if (node.STAdata) {
 		if (url)
-			currentNode.STAfileUrl=url;
-		networkNodes.update(currentNode);
-		updateQueryAndTableArea(currentNode);
-		UpdateChildenTable(currentNode);
+			node.STAfileUrl=url;
+		networkNodes.update(node);
+		updateQueryAndTableArea(node);
+		UpdateChildenTable(node);
 	} else {
 		showInfoMessage("DBF parse error: " + e);
-		currentNode.STAdata=null;
-		networkNodes.update(currentNode);
+		node.STAdata=null;
+		networkNodes.update(node);
 		return;
 	}
 }
@@ -1399,26 +1415,26 @@ function ReadURLImportDBF() {
 			);	
 }
 
-function TransformBinaryGPKGToTable(buffer, url) {
+function TransformBinaryGPKGToTable(buffer, url, node) {
 	ParseGPKGDatabase(buffer).then(function(gpkg) {
-		currentNode.STAdata=gpkg.records;
-		currentNode.STAdataAttributes=gpkg.attributes;
+		node.STAdata=gpkg.records;
+		node.STAdataAttributes=gpkg.attributes;
 		if (gpkg.records.length==0)
 			showInfoMessage("GeoPackage database has no tables.");
 		else
 			showInfoMessage("GeoPackage database table has been loaded.");
-		if (currentNode.STAdata) {
+		if (node.STAdata) {
 			if (url)
-				currentNode.STAfileUrl=url;
+				node.STAfileUrl=url;
 			if (gpkg.db)
-				currentNode.SQLiteDB=gpkg.db;  //This is an object with functions that cannot be saved as JSON afterwards
-			networkNodes.update(currentNode);
-			updateQueryAndTableArea(currentNode);
-			UpdateChildenTable(currentNode);
+				node.SQLiteDB=gpkg.db;  //This is an object with functions that cannot be saved as JSON afterwards
+			networkNodes.update(node);
+			updateQueryAndTableArea(node);
+			UpdateChildenTable(node);
 		} else {
 			showInfoMessage("Geopackage parse error: " + e);
-			currentNode.STAdata=null;
-			networkNodes.update(currentNode);
+			node.STAdata=null;
+			networkNodes.update(node);
 			return;
 		}
 	});
@@ -1447,15 +1463,16 @@ function TransformBinaryGPKGTableToTable(node, tableName) {
 
 function ReadFileImportGPKG(event) {
 	var input = event.target;
-
+	var node=getNodeDialog("DialogImportGPKG");
 	var reader = new FileReader();
 	reader.onload = function() {
-		TransformBinaryGPKGToTable(reader.result, null);
+		TransformBinaryGPKGToTable(reader.result, null, node);
 	};
 	reader.readAsArrayBuffer(input.files[0]);
 }
 
 function ReadURLImportGPKG(event, url, security) {
+	var node=getNodeDialog("DialogImportGPKG");
 	HTTPBinaryData(url ? url : document.getElementById("DialogImportGPKGSourceURLInput").value, ["Content-type"], null, null, security).then(
 				function(value) { 
 					if (value.arrayBuf) {
@@ -1464,7 +1481,7 @@ function ReadURLImportGPKG(event, url, security) {
 							console.log('Error downloading GPKG. Unexpected media type: ' + value.responseHeaders["Content-type"]);
 						} else {
 							showInfoMessage('Download GPKG completed.'); 
-							TransformBinaryGPKGToTable(value.arrayBuf, url ? url : document.getElementById("DialogImportGPKGSourceURLInput").value);
+							TransformBinaryGPKGToTable(value.arrayBuf, url ? url : document.getElementById("DialogImportGPKGSourceURLInput").value, node);
 						}
 					} else {
 						showInfoMessage('Error downloading GPKG. <br>Response: ' + value.text);
@@ -1478,7 +1495,7 @@ function ReadURLImportGPKG(event, url, security) {
 			);	
 }
 
-function TransformTextJSONLDToTable(jsonldText, addGeo, addObs, url) {
+function TransformTextJSONLDToTable(jsonldText, addGeo, addObs, url, node) {
 	try
 	{
 		var jsonld = typeof jsonldText === "object" ? jsonldText : JSON.parse(jsonldText);
@@ -1486,8 +1503,8 @@ function TransformTextJSONLDToTable(jsonldText, addGeo, addObs, url) {
 	catch (e) 
 	{
 		showInfoMessage("JSONLD parse error: " + e + "\n File content fragment:\n" + jsonldText.substring(0, 1000));
-		currentNode.STAdata=null;
-		networkNodes.update(currentNode);
+		node.STAdata=null;
+		networkNodes.update(node);
 		return;
 	}
 	var result=ParseJSONLD(jsonld, addGeo, addObs)
@@ -1495,55 +1512,56 @@ function TransformTextJSONLDToTable(jsonldText, addGeo, addObs, url) {
 		showInfoMessage("JSONLD parse error: " + result.error + "\n File content fragment:\n" + jsonldText.substring(0,1000));
 		return;
 	}
-	currentNode.STAdata=result.data;
-	currentNode.STAdataAttributes=result.dataAttributes;
-	if (currentNode.STAdata.length==0)
+	node.STAdata=result.data;
+	node.STAdataAttributes=result.dataAttributes;
+	if (node.STAdata.length==0)
 		showInfoMessage("JSON-LD resulted in no records.");
 	else
 		showInfoMessage("JSON-LD has been loaded.");
-	if (currentNode.STAdata) {
+	if (node.STAdata) {
 		if (url)
-			currentNode.STAfileUrl=url;
-		networkNodes.update(currentNode);
-		updateQueryAndTableArea(currentNode);
-		UpdateChildenTable(currentNode);
+			node.STAfileUrl=url;
+		networkNodes.update(node);
+		updateQueryAndTableArea(node);
+		UpdateChildenTable(node);
 	} else {
 		showInfoMessage("JSONLD parse error: " + e + "\n File content fragment:\n" + jsonldText.substring(0,1000));
-		currentNode.STAdata=null;
-		networkNodes.update(currentNode);
+		node.STAdata=null;
+		networkNodes.update(node);
 		return;
 	}
 }
 
 function ReadFileImportJSONLD(event) {
 	var input = event.target;
-
+	var node=getNodeDialog("DialogImportJSONLD");
 	var reader = new FileReader();
 	reader.onload = function() {
-		TransformTextJSONLDToTable(reader.result, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, null);
+		TransformTextJSONLDToTable(reader.result, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, null, node);
 		showInfoMessage("JSON-LD has been loaded.");
 	};
 	reader.readAsText(input.files[0]);   //By default it assumes "UTF8" as encoding
 }
 
-function ReadURLImportJSONLD() {
-	var locationSTAURL;
-	var parentNode=GetFirstParentNode(currentNode);
-	if (!document.getElementById("DialogImportJSONLDSourceURLInput").value.trim())
+function ReadURLImportJSONLD(event, url, security) {
+	var node=getNodeDialog("DialogImportJSONLD");
+	var parentNode=GetFirstParentNode(node);
+	if (!url && !document.getElementById("DialogImportJSONLDSourceURLInput").value.trim())
 		return;
-	currentNode.STAURL = document.getElementById("DialogImportJSONLDSourceURLInput").value.trim();
-	currentNode.OGCType = "fileURL";
-	if (parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL && parentNode.STAsecurity) {
-		currentNode.STAsecurity = deapCopy(parentNode.STAsecurity);
-		locationSTAURL=transformStringIntoLocation(currentNode.STAURL);
-	} else {
-		currentNode.STAsecurity = null;
-		locationSTAURL=null;
-	}
-	HTTPJSONData(currentNode.STAURL, null, null, null, locationSTAURL ? getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAsecurity.S3) : null).then(
+	node.STAURL = url ? url : document.getElementById("DialogImportJSONLDSourceURLInput").value.trim();
+	node.OGCType = "fileURL";
+
+	if (security)
+		node.STAsecurity=security;
+	else if (parentNode.STAsecurity)
+		node.STAsecurity=deapCopy(parentNode.STAsecurity);
+	else
+		node.STAsecurity=null;
+
+	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, url)).then(
 				function(value) { 
 					showInfoMessage('Download JSONLD completed.'); 
-					TransformTextJSONLDToTable(value.obj ? value.obj : value.text, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, document.getElementById("DialogImportJSONLDSourceURLInput").value);
+					TransformTextJSONLDToTable(value.obj ? value.obj : value.text, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, document.getElementById("DialogImportJSONLDSourceURLInput").value, node);
 				},
 				function(error) { 
 					showInfoMessage('Error downloading JSONLD. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -1572,25 +1590,25 @@ function TransformTextJSONToTable(json, jsonText, url,node,lastOne) {
 	if(node.STAdata && lastOne!="onlyOne"&& lastOne!="firstOne"){
 		node.STAdata.push(...result);
 	}else{
-		node.STAdata=result;
+	node.STAdata=result;
 	}
 
 	if (lastOne=="yes"|| lastOne=="onlyOne"){
-		if (node.STAdata.length==0)
+	if (node.STAdata.length==0)
 		showInfoMessage("JSON resulted in no records.");
 	else
 		showInfoMessage("JSON has been loaded.");
-		if (node.STAdata) {
-			node.STAdataAttributes=getDataAttributes(node.STAdata);
+	if (node.STAdata) {
+		node.STAdataAttributes=getDataAttributes(node.STAdata);
 		if (url)
-				node.STAfileUrl=url;
-			networkNodes.update(node);
-			updateQueryAndTableArea(node);
-			UpdateChildenTable(node);
+			node.STAfileUrl=url;
+		networkNodes.update(node);
+		updateQueryAndTableArea(node);
+		UpdateChildenTable(node);
 	} else {
 		showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0,1000));
-			node.STAdata=null;
-			networkNodes.update(node);
+		node.STAdata=null;
+		networkNodes.update(node);
 						
 		return;
 	}
@@ -1626,7 +1644,7 @@ async function ReadFileImportJSON(event) {
 						for (var c = 0;c<attributes.length;c++){
 							if (!data[a].hasOwnProperty(attributes[c])){
 								data[a][attributes[c]]=undefined;
-							}
+		}
 						}	
 					}
 				}
@@ -1661,8 +1679,8 @@ function ReadURLImportJSON() {
 		locationSTAURL=null;
 	}
 	HTTPJSONData(currentNode.STAURL, null, null, null, locationSTAURL ? getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAsecurity.S3) : null).then(
-				function(value) { 
-					showInfoMessage('Download JSON completed.'); 
+				function(value) {
+					showInfoMessage('Download JSON completed.');
 					TransformTextJSONToTable(value.obj, value.text, document.getElementById("DialogImportJSONSourceURLInput").value, currentNode, "onlyOne");
 				},
 				function(error) { 
@@ -1752,7 +1770,7 @@ var data=[], feature;
 	return data;
 }
 
-function TransformTextGeoJSONToTable(jsonText, url) {
+function TransformTextGeoJSONToTable(jsonText, url, node) {
 	try
 	{
 		var geojson = JSON.parse(jsonText);
@@ -1760,52 +1778,53 @@ function TransformTextGeoJSONToTable(jsonText, url) {
 	catch (e) 
 	{
 		showInfoMessage("GeoJSON parse error: " + e + " The file content fragment:\n" + jsonText.substring(0, 1000));
-		currentNode.STAdata=null;
-		networkNodes.update(currentNode);
+		node.STAdata=null;
+		networkNodes.update(node);
 		return;
 	}
-	currentNode.STAdata=TransformGeoJSONToTable(geojson);
-	if (!currentNode.STAdata)
+	node.STAdata=TransformGeoJSONToTable(geojson);
+	if (!node.STAdata)
 	{
 		showInfoMessage("GeoJSON parse error. The only supported GeoJSONs are the ones containing a root type FeatureCollection.");
-		networkNodes.update(currentNode);
+		networkNodes.update(node);
 		return;
 	}
-	if (currentNode.STAdataAttributes)
+	if (node.STAdataAttributes)
 	{
-		var retorn=transformTimeSeriesTemplateIntoObservedPropertyTimeValue(currentNode.STAdata, currentNode.STAdataAttributes);
+		var retorn=transformTimeSeriesTemplateIntoObservedPropertyTimeValue(node.STAdata, node.STAdataAttributes);
 		if (retorn) {
-			currentNode.STAdata=retorn.data
-			currentNode.STAdataAttributes=retorn.dataAttributes;
-			retorn=transformObservedPropertyTimeValueIntoTimeSemanticValues(currentNode.STAdata, currentNode.STAdataAttributes, retorn.dataAttributesValues, "extractedObservedProperty", "extractedPhenomenonTime", "extractedValue");
+			node.STAdata=retorn.data
+			node.STAdataAttributes=retorn.dataAttributes;
+			retorn=transformObservedPropertyTimeValueIntoTimeSemanticValues(node.STAdata, node.STAdataAttributes, retorn.dataAttributesValues, "extractedObservedProperty", "extractedPhenomenonTime", "extractedValue");
 			if (retorn) {
-				currentNode.STAdata=retorn.data
-				currentNode.STAdataAttributes=retorn.dataAttributes;
+				node.STAdata=retorn.data
+				node.STAdataAttributes=retorn.dataAttributes;
 			}
 		}
 	}
 	if (url)
-		currentNode.STAfileUrl=url;				
-	networkNodes.update(currentNode);
-	UpdateChildenTable(currentNode);
+		node.STAfileUrl=url;				
+	networkNodes.update(node);
+	UpdateChildenTable(node);
 }
 
 function ReadFileImportGeoJSON(event) {
 	var input = event.target;
-
+	var node=getNodeDialog("DialogImportGeoJSON");
 	var reader = new FileReader();
 	reader.onload = function() {
-		TransformTextGeoJSONToTable(reader.result, null);
+		TransformTextGeoJSONToTable(reader.result, null, node);
 	};
 	reader.readAsText(input.files[0]);  //By default it assumes "UTF8" as encoding
 }
 
 
 function ReadURLImportGeoJSON() {
+	var node=getNodeDialog("DialogImportGeoJSON");
 	HTTPJSONData(document.getElementById("DialogImportGeoJSONSourceURLInput").value).then(
 				function(value) { 
 					showInfoMessage('Download GeoJSON completed.'); 
-					TransformTextGeoJSONToTable(value.text, document.getElementById("DialogImportGeoJSONSourceURLInput").value);
+					TransformTextGeoJSONToTable(value.text, document.getElementById("DialogImportGeoJSONSourceURLInput").value, node);
 				},
 				function(error) { 
 					showInfoMessage('Error downloading GeoJSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -2082,8 +2101,8 @@ function GetDialogEDCEvent(event) {
 	if (version=="v1alpha") {
 		currentNode.STAURL+="/catalog/v1alpha/catalog/query";
 		var obj=null;
-	} else if (version=="v2") {
-		currentNode.STAURL+="/management/v2/catalog/request";
+	} else if (version=="v2" || version=="v3") {
+		currentNode.STAURL+="/management/"+version+"/catalog/request";
 		var obj={
 			"@context": {
 				"@vocab": "https://w3id.org/edc/v0.0.1/ns/"
@@ -4252,7 +4271,7 @@ function AskForDeleteRecord(event) {
 	PopulateCreateUpdateDeleteRecord(currentNode, iRecord, false);
 }
 
-function GetSelectRow(event) {
+function GetSelectRow(event, iToSelect) {
 	
 	if (event) event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogSelectRow").close();
@@ -4286,9 +4305,13 @@ function GetSelectRow(event) {
 		return;
 
 	var elems = document.getElementsByName("SelectRowRadio");
-	for (var i = 0; i < elems.length; i++) {
-		if (elems[i].checked)
-			break;
+	if (iToSelect)
+		i=iToSelect;
+	else {
+		for (var i = 0; i < elems.length; i++) {
+			if (elems[i].checked)
+				break;
+		}
 	}
 	var requiresLoadJSON=node.STAURL && (!parentNode || 
 				(parentNode.OGCType!="fileURL" && parentNode.OGCType!="OGCCSW" && parentNode.OGCType!="S3Buckets" && parentNode.OGCType!="S3Bucket"  && parentNode.OGCType!="EDCCatalogue")
@@ -4665,21 +4688,6 @@ function addSemanticsSTADataAttributes(dataAttributes, url) {
 	}
 }
 
-function isAttributeAnyURI(s) {
-	return (s == "url" || s == "link" || s == "itemsLink" || s == "itemLink" || s == "input_url" || s == "definition" || 
-		s.endsWith("OpenLink") || s.endsWith("AssetLink") || s.endsWith("WalletUrl") || s.endsWith("@iot.selfLink") || s.endsWith("@iot.navigationLink"));
-}
-
-function isAttributeSelfNavLink(s) {
-	return (s.endsWith("@iot.selfLink") || s.endsWith("@iot.navigationLink"));
-}
-
-function getSTAEntityNavLink(s) {
-	if (s.endsWith("@iot.navigationLink"))
-		return s.substring(0, s.length-"@iot.navigationLink".length);
-	return null;
-}
-
 function ShowTableOptionsDiv(node, optionsDiv, fn_showTable) {
 	if (node.STAdata && node.STAdata.length)
 		document.getElementById(optionsDiv).innerHTML = "<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "RowNumber") || document.getElementById(optionsDiv + "RowNumber").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "RowNumber' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> Show row numbers</label> &ensp;" +
@@ -4699,7 +4707,8 @@ function ShowTableDialog(node) {
 	document.getElementById("DialogOKHTML").innerHTML = getHTMLTable(data, node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data),
 		document.getElementById("DialogOKOptionsRowNumber").checked ? true : false,
 		"", null, null, "", 
-		null, node.id, isAttributeAnyURI, 
+		isAttributeAnyURI, node.id,
+		null, node.id, isAttributeAnyURINodeId, node.id,
 		document.getElementById("DialogOKOptionsSelfNavLink").checked ? null : isAttributeSelfNavLink);
 }
 
@@ -5855,31 +5864,64 @@ function OpenMapMMN(url, geojson, geojsonSchema, geojsonStyle, geojsonDates){
 	}
 }
 
-function MessageSTAPage(event) {
-	if (event.origin === walletURL) {
-		//console.log("data received: ", event.data);
-		if (event.data.message) {
-			if (event.data.message != "You must select a connection in your Wallet first!")
-				showInfoMessage("Error in wallet: " + event.data.message);
-		} else {
-			showInfoMessage("Credentials received");
-                	showInfoMessage(event.data['x-facts-key']);
-	                walletWindow.close();
-        	        walletWindow = null;
-                	for (var t of walletPostMessageTimer)
-                        	clearInterval(t);
+function AddCircularImageInterpretingURL(url, mediatype, security) {
+	if (mediatype=="application/geopackage+sqlite3") {
+		startingNodeContextId=currentNode.id;
+		var node=addCircularImage(null, null, "ImportGPKG", "ImportGPKG.png");
+		saveNodeDialog("DialogImportGPKG", node);
+		currentNode=node;
+		ReadURLImportGPKG(null, url, security.facts);
+	} else if (mediatype=="application/json") {
+		startingNodeContextId=currentNode.id;
+		var node=addCircularImage(null, null, "ImportJSON", "ImportJSON.png");
+		saveNodeDialog("DialogImportJSON", node);
+		currentNode=node;
+		ReadURLImportJSON(event, url, security)
+		//node.STAdata=ParseJSON(value.obj);
+	} else if (mediatype=="application/ld+json") {
+		startingNodeContextId=currentNode.id;
+		var node=addCircularImage(null, null, "ImportJSONLD", "ImportJSONLD.png");
+		saveNodeDialog("DialogImportJSONLD", node);
+		currentNode=node;
+		ReadURLImportJSONLD(event, url, security)
+		//node.STAdata=ParseJSONLD(value.obj);
+	} else if (mediatype=="text/csv" || mediatype=="application/vnd.ms-excel") {
+		startingNodeContextId=currentNode.id;
+		var node=addCircularImage(null, null, "ImportCSV", "ImportCSV.png");
+		saveNodeDialog("DialogImportCSV", node);
+		currentNode=node;
+		ReadURLImportCSV(event, url, security)
+		//node.STAdata=Papa.parse(value.text, {header: true, dynamicTyping: true, skipEmptyLines: true}).data;
+		//Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
+		//TransformDatesToISO(currentNode.STAdata);
+	} else {
+		node.STAdata=[{"Content-Type": value.responseHeaders["Content-Type"], "Content-Length": value.responseHeaders["Content-Length"]}];
+		showInfoMessage("Media type (a.k.a format) not supported in this itinerary")  //We need to work on extending support for other formats.
+	}
+}
 
-			if (assetType=="application/geopackage+sqlite3") {
-				startingNodeContextId=currentNode.id;
-				var node=addCircularImage(null, null, "ImportGPKG", "ImportGPKG.png");
-				saveNodeDialog("DialogSelectResource", node);
-				currentNode=node;
-				ReadURLImportGPKG(null, assetURL, {"x-facts-key" : event.data['x-facts-key']})
+function MessageSTAPage(event) {
+	
+	if (factsAsset?.walletURL)
+	{
+		var locationURL=transformStringIntoLocation(factsAsset.walletURL)
+		if (event.origin === locationURL.protocol + "//" + locationURL.hostname + (locationURL.port ? ":"+locationURL.port : "")) {
+			//console.log("data received: ", event.data);
+			if (event.data.message) {
+				if (event.data.message != "You must select a connection in your Wallet first!")
+					showInfoMessage("Error in wallet: " + event.data.message);
 			} else {
-				alert("Format not supported in this itinerary")  //We need to work on extending support for other formats.
+				showInfoMessage("Credentials received");
+                		showInfoMessage(event.data['x-facts-key']);
+		                factsAsset.walletWindow.close();
+        		        factsAsset.walletWindow = null;
+                		for (var t of factsAsset.walletPostMessageTimer)
+                        		clearInterval(t);
+				factsAsset.walletPostMessageTimer=null;
+				AddCircularImageInterpretingURL(factsAsset.assetURL, factsAsset.assetType, {facts: {"x-facts-key" : event.data['x-facts-key']}});
 			}
+			return;
 		}
-		return;
 	}
 
 	if (MiraMonMapBrowserVars.mmnURL)  //Tapis has open MMN and is getting feedback
@@ -5955,8 +5997,9 @@ function ShowTableSelectRowDialog(parentNode, node) {
 	document.getElementById("DialogSelectRowTable").innerHTML = getHTMLTable(data, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data), 
 		false, 
 		"SelectRow_", node.STAResourceId ? node.STAResourceId : 0, null, "",
-		null, node.id, "", 
-		isAttributeAnyURI);
+		null, "",
+		null, "", null, "", 
+		null);
 }
 
 function ShowSelectResourceDialog(parentNode, node) {
@@ -6076,16 +6119,33 @@ function AddSelectResourceIfNoThere(startingNode, resourceId) {
 	var nodeIds = network.getConnectedNodes(startingNode.id, 'to'); 
 	for (var i = 0; i < nodeIds.length; i++) {
 		var nodeChild = networkNodes.get(nodeIds[i])
-		if (nodeChild.image=="SelectResourceSTA.png" || nodeChild?.STAResourceId==resourceId) {
-			return nodeChild;  //Avoid to creat a node that already exist
+		if (nodeChild.image=="SelectResourceSTA.png" && nodeChild?.STAResourceId==resourceId) {
+			return nodeChild;  //Avoid to create a node that already exist
 		}
 	}
 	var node=addCircularImage(null, null, "SelectResourceSTA", "SelectResourceSTA.png");
-	//Select the right row and excute it
+	//Select the right resource and execute it
 	saveNodeDialog("DialogSelectResource", node);
-	node.label="Select "+resourceId;
+	node.label="Select " + resourceId;
 	networkNodes.update(node);
 	GetSelectResource(null, resourceId);
+	return node;
+}
+
+function AddSelectRowIfNoThere(startingNode, resourceId, iToSelect) {
+	var nodeIds = network.getConnectedNodes(startingNode.id, 'to'); 
+	for (var i = 0; i < nodeIds.length; i++) {
+		var nodeChild = networkNodes.get(nodeIds[i])
+		if ((nodeChild.image=="SelectRowSTA.png" || nodeChild.image=="SelectRowTable.png") && nodeChild?.STAResourceId==resourceId) {
+			return nodeChild;  //Avoid to creat a node that already exist
+		}
+	}
+	var node=addCircularImage(null, null, "SelectRowTable", "SelectRowTable.png");
+	node.label="Select " + resourceId;
+	networkNodes.update(node);
+	//Select the right row and excute it
+	ShowTableSelectRowDialog(startingNode, node);
+	GetSelectRow(null, iToSelect);
 	return node;
 }
 
@@ -6116,23 +6176,26 @@ var node;
 	addCircularImage(null, null, elementName, elementName+".png");
 }
 
-var walletURL=null;
+var factsAsset={};
+/*var walletURL=null;
 var walletWindow=null;
 var assetURL = null;
 var assetType = null;
 var walletPostMessageTimer=[];
-var walletPostMessageCloseTimer=null;
+var walletPostMessageCloseTimer=null;*/
 
 function walletPostMessageGetCredentials() {
 	//message to message window... "Requesting credentials."
-	walletWindow.postMessage('Please select a connection to be used by Tapis', 'https://wallet.dataspace.secd.eu');
+	factsAsset.walletWindow.postMessage('Please select a connection to be used by Tapis', 'https://wallet.dataspace.secd.eu');
 }
 
 function walletPostMessageClose() {
-	if (walletPostMessageCloseTimer && walletWindow && walletWindow.closed) {
+	if (factsAsset.walletPostMessageCloseTimer && factsAsset.walletWindow && factsAsset.walletWindow.closed) {
 		clearInterval(walletPostMessageCloseTimer);
-                for (var t of walletPostMessageTimer)
+		factsAsset.walletPostMessageCloseTimer=null;
+                for (var t of factsAsset.walletPostMessageTimer)
 			clearInterval(t);
+		factsAsset.walletPostMessageTimer=null;
 	}
 }
 
@@ -6140,7 +6203,7 @@ function OpenLink(event) {
 	event.preventDefault(); // We don't want to submit this form
 	var iEntity;
 	var node=getNodeDialog("DialogLink");
-	var iRecord=document.getElementById("DialogLinkIRecord").value;
+	var iRecord=parseInt(document.getElementById("DialogLinkIRecord").value);
 	var columnName=document.getElementById("DialogLinkColumnName").value;
 
 	var data=node.STAdata;
@@ -6159,15 +6222,14 @@ function OpenLink(event) {
 			var elementName=getFileName(data[iRecord][columnName]);
 			startingNodeContextId=node.id;
 			addCircularImage(null, null, elementName, elementName+".png");
-		} else if (
-			((node.image=="ogcAPICols.png" || 
-					(parentNode?.image=="ogcAPICols.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-				) && (columnName=="link" || columnName=="itemsLink")) || 
-			((node.image=="ogcAPIItems.png" || 
-					(parentNode?.image=="ogcAPIItems.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-				) && (columnName=="itemLink" || columnName.endsWith("AssetLink") ))
-			)
-		{
+		} else if (  //FACTS
+				((node.image=="ogcAPICols.png" || 
+						(parentNode?.image=="ogcAPICols.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
+					) && (columnName=="link" || columnName=="itemsLink")) || 
+				((node.image=="ogcAPIItems.png" || 
+						(parentNode?.image=="ogcAPIItems.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
+					) && (columnName=="itemLink" || columnName.endsWith("AssetLink") ))
+				){
 			if (columnName=="link") {
 				startingNodeContextId=node.id;
 				AddSelectResourceIfNoThere(node, data[iRecord]["id"]);
@@ -6191,15 +6253,41 @@ function OpenLink(event) {
 					data[iRecord][columnName.substring(0,columnName.length-"AssetLink".length)+"WalletUrl"]) {
 				startingNodeContextId=node.id;
 				currentNode=(node.image=="ogcAPIItems.png") ? AddSelectResourceIfNoThere(node, data[iRecord]["id"]) : node;
-				walletURL=data[iRecord][columnName.substring(0,columnName.length-"AssetLink".length)+"WalletUrl"];
+				factsAsset.walletURL=data[iRecord][columnName.substring(0,columnName.length-"AssetLink".length)+"WalletUrl"];
 				showInfoMessage("Opening wallet...");
-				walletWindow = window.open(walletURL + "/connections/select", "_WALLET", 'popup=true');
-				assetURL = data[iRecord][columnName];
-				assetType =  data[iRecord][columnName.substring(0,columnName.length-"AssetLink".length)+"AssetType"] ? data[iRecord][columnName.substring(0,columnName.length-"AssetLink".length)+"AssetType"] : "application/geopackage+sqlite3";
+				var locationURL=transformStringIntoLocation(factsAsset.walletURL)
+				factsAsset.walletWindow = window.open(locationURL.protocol + "//" + locationURL.hostname + (locationURL.port ? ":"+locationURL.port : "") + "/connections/select", "_WALLET", 'popup=true');
+				factsAsset.assetURL = data[iRecord][columnName];
+				factsAsset.assetType =  data[iRecord][columnName.substring(0,columnName.length-"AssetLink".length)+"AssetType"] ? data[iRecord][columnName.substring(0,columnName.length-"AssetLink".length)+"AssetType"] : "application/geopackage+sqlite3";
 
 				// We cannot add an event handler here to wait for the page to be ready :(
-				walletPostMessageTimer.push(setInterval(walletPostMessageGetCredentials, "500"));
-				walletPostMessageCloseTimer = setInterval(walletPostMessageClose, 1000);				
+				if (!factsAsset.walletPostMessageTimer)
+					factsAsset.walletPostMessageTimer=[];
+				factsAsset.walletPostMessageTimer.push(setInterval(walletPostMessageGetCredentials, "500"));
+				factsAsset.walletPostMessageCloseTimer = setInterval(walletPostMessageClose, 1000);
+			}
+		} else if (  //EDC
+				((node.image=="edc.png" || 
+						(parentNode?.image=="edc.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
+					) && (columnName=="assetId")) || 
+				((node.image=="edcAsset.png" || 
+						(parentNode?.image=="edcAsset.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
+					) && (columnName=="assetId"))
+				){
+			if (
+				(node.image=="edc.png" || 
+						(parentNode?.image=="edc.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
+					) && (columnName=="assetId")) {
+				startingNodeContextId=node.id;
+				var nodeSelect=AddSelectRowIfNoThere(node, data[iRecord]["assetId"], iRecord); //Select the iRecord 
+				startingNodeContextId=nodeSelect.id;
+				currentNode=addCircularImage(null, null, "edcAsset", "edcAsset.png");
+			} else if (
+				(node.image=="edcAsset.png" || 
+						(parentNode?.image=="edcAsset.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
+					) && (columnName=="assetId")) {
+				startingNodeContextId=node.id;
+				//AddSelectResourceIfNoThere(node, data[iRecord]["id"]); Select the iRecord 
 			}
 		} else {  //STA Entity
 			if (typeof data[iRecord]["@iot.id"]==="undefined")  //If this was not selected it is not possible to do this (or we could look for alternative ways to know it)
@@ -6240,22 +6328,53 @@ function OpenLink(event) {
 	return false;
 }
 
+function isAttributeSelfNavLink(s) {
+	return (s.endsWith("@iot.selfLink") || s.endsWith("@iot.navigationLink"));
+}
+
+function isAttributeAnyURI(s) {
+	return (s == "url" || s == "link" || s == "itemsLink" || s == "itemLink" || s == "input_url" || s == "definition" || 
+		s.endsWith("OpenLink") || s.endsWith("AssetLink") || s.endsWith("WalletUrl") || isAttributeSelfNavLink(s));
+}
+
+function getSTAEntityNavLink(s) {
+	if (s.endsWith("@iot.navigationLink"))
+		return s.substring(0, s.length-"@iot.navigationLink".length);
+	return null;
+}
+
+function isAttributeAnyURINodeId(columnName, nodeId) {
+	var node=networkNodes.get(nodeId);
+	return isAttributeAnyURINode(columnName, node, GetFirstParentNode(node) || isAttributeAnyURI(columnName));
+}
+
+function isAttributeAnyURINode(columnName, node, parentNode) {
+	if ((node.image=="sta.png" || node.image=="staRoot.png") && columnName=="url")
+		return true;
+	if ((-1!=IdOfSTAEntity(node) || STAOperations[removeExtension(node.image)]) && 
+	          (columnName=="@iot.selfLink" || getSTAEntityNavLink(columnName)))
+		return true;
+	if ((node.image=="ogcAPICols.png" || 
+			(parentNode?.image=="ogcAPICols.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
+		) && (columnName=="link" || columnName=="itemsLink"))
+		return true;
+        if ((node.image=="ogcAPIItems.png" || 
+			(parentNode?.image=="ogcAPIItems.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
+		) && (columnName=="itemLink" || columnName.endsWith("AssetLink") ))
+		return true;
+	if (node.image=="edc.png" && columnName=="assetId")  //This is not a link per se so it is not in isAttributeAnyURI()
+		return true;
+	return false;
+}
+
+
 function ShowLinkDialog(nodeId, columnName, iRecord) {
 	var node=networkNodes.get(nodeId);
 	var data=node.STAdata;
 	if (iRecord>=data.length)
 		return;
 	var parentNode=GetFirstParentNode(node);
-	if (((node.image=="sta.png" || node.image=="staRoot.png") && columnName=="url") ||
-	    ((-1!=IdOfSTAEntity(node) || STAOperations[removeExtension(node.image)]) && 
-	          (columnName=="@iot.selfLink" || getSTAEntityNavLink(columnName)) || 
-	    ((node.image=="ogcAPICols.png" || 
-			(parentNode?.image=="ogcAPICols.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-		) && (columnName=="link" || columnName=="itemsLink")) || 
-            ((node.image=="ogcAPIItems.png" || 
-			(parentNode?.image=="ogcAPIItems.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-		) && (columnName=="itemLink" || columnName.endsWith("AssetLink") ))
-	   )) {
+	if (isAttributeAnyURINode(columnName, node, parentNode)) {
 		document.getElementById("DialogLinkLink").innerHTML=data[iRecord][columnName];
 		saveNodeDialog("DialogLink", node);
 		document.getElementById("DialogLinkIRecord").value=iRecord;
@@ -6274,7 +6393,8 @@ function ShowTableNode(node) {
 		document.getElementById("showTable").innerHTML = getHTMLTable(node.STAdata, node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(node.STAdata),
 			document.getElementById("showTableOptionsRowNumber").checked ? true : false,
 			"", null, null, "", 
-			(node.image=="sta.png" || node.image=="staRoot.png" || -1!=IdOfSTAEntity(node) || getNoQueryParentNodeSTAEntity(node) || node.image=="ogcAPICols.png" || node.image=="ogcAPIItems.png") ? ShowLinkDialog : null, node.id, isAttributeAnyURI, 
+			isAttributeAnyURI, node.id, 
+			ShowLinkDialog, node.id, isAttributeAnyURINodeId, node.id, 
 			document.getElementById("showTableOptionsSelfNavLink").checked ? null : isAttributeSelfNavLink);
 	} else {
 		document.getElementById("showTableOptions").innerHTML="";
@@ -6390,7 +6510,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		DoMergeExpandSTA(nodeTo);
 		return true;
 	}
-	if (tableNodes && nodeTo.image == "SortByTables.png") {  //I believe this is not necessary because is not doing anything but the default. Marta, can you please try to remove it? Vale, miro que fa i com ho he de borrar
+	if (tableNodes && nodeTo.image == "SortByTables.png") {  //I believe this is not necessary because is not doing anything but the default. Marta, can you please try to remove it?
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
@@ -6494,10 +6614,10 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		if (nodeFrom.STAdata){
 			nodeTo.STAdata = deapCopy(nodeFrom.STAdata); //necessary first time
 			if (nodeFrom.STAdataAttributes)
-						nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes); //necessary first time
+				nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes); //necessary first time
 			else
-						nodeTo.STAdataAttributes = getDataAttributes(nodeTo.STAdata);
-		}
+				nodeTo.STAdataAttributes = getDataAttributes(nodeTo.STAdata);
+		}		
 		
 		networkNodes.update(nodeTo);
 		if (addEdge)
@@ -6527,7 +6647,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		EDCNegociateContract(nodeTo, nodeFrom.EDCConsumerURL, nodeFrom.STAdata[0].offerId, nodeFrom.STAdata[0].counterPartyAddress);
+		EDCNegociateContract(nodeTo, nodeFrom.EDCConsumerURL, nodeFrom.STAdata[0].offerId, nodeFrom.STAdata[0].counterPartyAddress, nodeFrom.STAdata[0].mediaType);
 		return true;
 	}
 	if (tableNodes && nodeTo.image == "ogcAPICols.png") {
@@ -6714,6 +6834,7 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogSTAViewQuery").showModal();
 		}
 		else if (currentNode.image == "ImportCSV.png") {
+			saveNodeDialog("DialogImportCSV", currentNode);
 			document.getElementById("DialogImportCSVSourceURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedCSVurls);
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
@@ -6748,6 +6869,7 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogImportCSV").showModal();
 		}
 		else if (currentNode.image == "ImportJSONLD.png") {
+			saveNodeDialog("DialogImportJSONLD", currentNode);
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
@@ -6772,6 +6894,7 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogImportJSONLD").showModal();
 		}
 		else if (currentNode.image == "ImportJSON.png") {
+			saveNodeDialog("DialogImportJSON", currentNode);
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
@@ -6797,6 +6920,7 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogImportJSON").showModal();
 		}
 		else if (currentNode.image == "ImportDBF.png") {
+			saveNodeDialog("DialogImportDBF", currentNode);
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
@@ -6820,6 +6944,7 @@ function networkDoubleClick(params) {
 			document.getElementById("DialogImportDBF").showModal();
 		}
 		else if (currentNode.image == "ImportGPKG.png") {
+			saveNodeDialog("DialogImportGPKG", currentNode);
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
@@ -8766,7 +8891,7 @@ function populateMultiCreateSTADialog(node){
 	saveNodeDialog("DialogMultiCreateSTA", node);
 	var STAMultiCreateInformation={}, keys={}; //node.STASTAMultiCreateInformation.previousNodesInfo
 	var infoSaved;//node.STASTAMultiCreateInformation.infoSaved
-	if (node.STASTAMultiCreateInformation.infoSaved){
+	if (node.STASTAMultiCreateInformation?.infoSaved){
 		infoSaved= node.STASTAMultiCreateInformation.infoSaved
 	}else{
 		infoSaved= {
@@ -8785,42 +8910,75 @@ function populateMultiCreateSTADialog(node){
 		STAMultiCreateInformation[parentNodes[i].id]= {
 			data: parentNodes[i].STAdata,
 			lenght: parentNodes[i].STAdata.lenght,
-			attibutes: keys
+			attibutes: keys,
+			label: parentNodes[i].label
 		}
-		//QUANTS PARES?? MEANING SOL? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 
 	//Build Dialog
 	var spanMultiCreateSTA= document.getElementById("DialogMultiCreateSTA_span");
-	var c;
+	var c="";
 	c+=`<fieldset><legend>Multirecords origin</legend>
-	<input type="radio" value="general" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_general"><label>General introduction </label>
-	<input type="radio" value="entity" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_entity"><label>Entity </label>
+	<input type="radio" value="general" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_general" ${(infoSaved.origin[0]=="general")? "checked": ""}><label>General introduction </label>
+	<input type="radio" value="entity" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_entity" ${(infoSaved.origin[0]=="entity")? "checked": ""}><label>Entity </label>
 	<select name="DialogMultiCreateSTA_selectOrigin" id="DialogMultiCreateSTA_selectOrigin">`;
 
 	for (var i=0;i<STAEntitiesArray.length;i++){
-		c+=`<option value="${STAEntitiesArray[i]}" ${infoSaved?}> ${STAEntitiesArray[i]}</option>`
+		c+=`<option value="${STAEntitiesArray[i]}"`;
+		if (infoSaved.origin[0]=="entity"){
+			if (infoSaved.origin[1]==STAEntitiesArray[i]) c+="selected"
+		}
+		c+=`> ${STAEntitiesArray[i]}</option>`
 	}
+	c+="</select></fieldset>"; 
+	c+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
+  	<legend>Selecciona entitats STA</legend>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Party" checked disabled> Party</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Campaign"> Campaign </label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Datastream"> Datastream</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="FeatureOfInterest"> FeatureOfInterest  </label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="HistoricalLocation"> HistoricalLocation</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="License"> License</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Location"> Location</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="MultiDatastream"> MultiDatastream  </label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="ObservationGroup"> ObservationGroup </label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Observation"> Observation</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="ObservedProperty"> ObservedProperty</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Relation"> Relation </label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Sensor"> Sensor</label>
+	<label style="display: flex; align-items: center;"> <input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Thing"> Thing</label>
+	</fieldset>`;
+	//Posar uns checkbox perque em posi quins vol afegir.. Datastream, campaings.. i al estar marcat es desplega 
+	//El de party no es pot deseleccionar
+	//build select
+	// var options="";
+	// var parentNodesIdKeys= Object.keys(STAMultiCreateInformation);
 
-	<option value="Campaigns"> Campaigns</option>
-	<option value="Datastreams"> Datastreams</option>
-	<option value="FeaturesOfInterest"> FeaturesOfInterest</option>
-	<option value="HistoricalLocations"> HistoricalLocations</option>
-	<option value="Licenses"> Licenses</option>
-	<option value="Locations"> Locations</option>
-	<option value="MultiDatastreams"> MultiDatastreams</option>
-	<option value="ObservationGroups"> ObservationGroups</option>
-	<option value="Observations" selected> Observations</option>
-	<option value="Campaigns"> Campaigns</option>
-	<option value="Campaigns"> Campaigns</option>
-	<option value="Campaigns"> Campaigns</option>
-	<option value="Campaigns"> Campaigns</option>
-	<option value="Campaigns"> Campaigns</option>
-	</select> 
-	</fieldset>`
 
+	// var n;
+	// for (var i=0;i<STAEntitiesArray.length;i++){
+	// 	c+=`<fieldset> <legend>${STAEntitiesArray[i]}</legend>`;
+	// 	n= STAEntities[STAEntitiesArray[i]].properties.lenght;
+
+	// 	for (var p=0;p<n;p++){ //
+	// 		c+= ``
+	// 		//el select lhaure de crar x tenir el id
+	// 		for (var e=0;e<parentNodesIdKeys.length;e++){
+	// 			c+=<optgroup label=""></optgroup>
+	// 		}
+	// 	//selecciona
+	// }
+	
+
+	// 	}
+
+
+	// 	c+=`</fieldset>`
+	// }
+
+	// c+="</div>"
 	console.log(STAMultiCreateInformation);
-
+	spanMultiCreateSTA.innerHTML=c;
 	//node.STAMultiCreateInformation=STAMultiCreateInformation;
 
 	

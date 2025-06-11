@@ -1953,14 +1953,14 @@ function applyEvalAndFilterData(node) {
 
 		}
 
-		//it is a date?
-		var ItIsADate = new Date(dataValue);
+			//it is a date?
+			var ItIsADate = new Date(dataValue);
 		if (eval(ItIsADate)) {
-			if (dataValue[dataValue.length - 1] == "Z" && sentenceToEvalInSTAtable.includes("getHours")) { //Erase Z in date to obtain the correct hour
-				dataValueWithoutZ = dataValue.slice(0, -1);
-				sentenceToEvalInSTAtable = sentenceToEvalInSTAtable.replaceAll(dataValue, dataValueWithoutZ.toString());
+				if (dataValue[dataValue.length - 1] == "Z" && sentenceToEvalInSTAtable.includes("getHours")) { //Erase Z in date to obtain the correct hour
+					dataValueWithoutZ = dataValue.slice(0, -1);
+					sentenceToEvalInSTAtable = sentenceToEvalInSTAtable.replaceAll(dataValue, dataValueWithoutZ.toString());
+				}
 			}
-		}
 
 		if (eval(sentenceToEvalInSTAtable)) {
 			resultsFiltered.push(data[e]);
@@ -1992,7 +1992,7 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 	saveNodeDialog("DialogFilterRows", node);
 
 	var data = parentNode.STAdata;
-		node.STAdata=deapCopy(data); //Put all data from parent in this node 
+	node.STAdata=deapCopy(data); //Put all data from parent in this node 
 	if (node.image != "FilterRowsTable.png") {
 		node.STAURL=deapCopy(parentNode.STAURL); //Put all data from parent in this node 
 	}
