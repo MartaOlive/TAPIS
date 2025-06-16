@@ -33,12 +33,47 @@
 		function esData() {
 			if (!isNaN(searchDate.getTime()) && !isNaN(replaceValue.getTime())) {
 				console.log("son dates")
-			}else{
+			} else {
 				console.log("no")
 			}
 		}
 		esData()
-
+		var c = `<fieldset><legend>Multirecords origin</legend>
+			< input type = "radio" value = "general" name = "DialogMultiCreateSTA_inputOrigin" id = "DialogMultiCreateSTA_inputOrigin_general" checked><label>General introduction </label>
+	<input type="radio" value="entity" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_entity" ><label>Entity </label>
+	<select name="DialogMultiCreateSTA_selectOrigin" id="DialogMultiCreateSTA_selectOrigin"><option value="Campaigns"> Campaigns</option><option value="Datastreams"> Datastreams</option><option value="FeaturesOfInterest"> FeaturesOfInterest</option><option value="HistoricalLocations"> HistoricalLocations</option><option value="Licenses"> Licenses</option><option value="Locations"> Locations</option><option value="MultiDatastreams"> MultiDatastreams</option><option value="ObservationGroups"> ObservationGroups</option><option value="Observations"> Observations</option><option value="ObservedProperties"> ObservedProperties</option><option value="Parties"> Parties</option><option value="Relations"> Relations</option><option value="Sensors"> Sensors</option><option value="Things"> Things</option></select></fieldset><fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
+  	<legend>Selecciona entitats STA</legend>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Party" checked disabled> Party</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Campaign"> Campaign </label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Datastream"> Datastream</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="FeatureOfInterest"> FeatureOfInterest  </label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="HistoricalLocation"> HistoricalLocation</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="License"> License</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Location"> Location</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="MultiDatastream"> MultiDatastream  </label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="ObservationGroup"> ObservationGroup </label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Observation"> Observation</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="ObservedProperty"> ObservedProperty</label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Relation"> Relation </label>
+	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Sensor"> Sensor</label>
+	<label style="display: flex; align-items: center;"> <input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Thing"> Thing</label>
+	</fieldset>
+	<fieldset> 
+		<legend>Campaigns</legend>
+		<label>name</label>
+		 <select id="DialogMultiCreateSTA_selectFoProperties_Campaigns_name"><optgroup label="CSV">
+			<option value="@iot.selfLink">@iot.selfLink</option>
+			<option value="@iot.id">@iot.id</option>
+			<option value="phenomenonTime">phenomenonTime</option>
+			<option value="resultTime">resultTime</option
+				<option value="result">result</option>
+				<option value="parameters">parameters</option>
+				<option value="Datastream@iot.navigationLink">Datastream@iot.navigationLink</option>
+				<option value="FeatureOfInterest@iot.navigationLink">FeatureOfInterest@iot.navigationLink</option>
+				<option value="Objects@iot.navigationLink">Objects@iot.navigationLink</option>
+				<option value="ObservationGroups@iot.navigationLink">ObservationGroups@iot.navigationLink</option>
+				<option value="Subjects@iot.navigationLink">Subjects@iot.navigationLink</option></optgroup>
+			</select><br>`
 	</script>
 </body>
 

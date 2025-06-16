@@ -8889,107 +8889,143 @@ function okButtonInPivotTable(event){
 }
 function populateMultiCreateSTADialog(node){
 	saveNodeDialog("DialogMultiCreateSTA", node);
-	var STAMultiCreateInformation={}, keys={}; //node.STASTAMultiCreateInformation.previousNodesInfo
+	var parentsInformation={}, keys={}; //node.STASTAMultiCreateInformation.previousNodesInfo
 	var infoSaved;//node.STASTAMultiCreateInformation.infoSaved
-	if (node.STASTAMultiCreateInformation?.infoSaved){
-		infoSaved= node.STASTAMultiCreateInformation.infoSaved
-	}else{
-		infoSaved= {
-			origin: ["general"], //["general"] or ["entity", entitySelected];
-			entities:{} //only entities and properties with informarion. Every entity an object
-		}
-	}
 
+	infoSaved= {
+		origin: ["general", "Campaigns"], //["general"] or ["entity", entitySelected];
+		entities:{}, //only entities and properties with informarion. Every entity an object
+		checked: ["Parties"]
+	}
+	
 
 	var parentNodes=GetParentNodes(node);
-
 	for (var i=0;i<parentNodes.length;i++){
 		for (var key in parentNodes[i].STAdataAttributes) {
 			keys[key] = parentNodes[i].STAdataAttributes[key].definition;
 		}
-		STAMultiCreateInformation[parentNodes[i].id]= {
+
+		parentsInformation[parentNodes[i].id]= {
 			data: parentNodes[i].STAdata,
 			lenght: parentNodes[i].STAdata.lenght,
-			attibutes: keys,
-			label: parentNodes[i].label
+			attibutesDefinitions: keys, //every attribute with the definition (to associate it with select options)
+			label: parentNodes[i].label,
+			attributesKeys: Object.keys (parentNodes[i].STAdataAttributes)
+
 		}
 	}
+	node.STAMultiCreateInformation={} //first time 
+	node.STAMultiCreateInformation.infoSaved=infoSaved;
+	node.STAMultiCreateInformation.parentsInformation=parentsInformation;
+	networkNodes.update(node);
+	drawMultiCreateSTADialog(node);
+}
 
-	//Build Dialog
+function drawMultiCreateSTADialog(node){
+	var parentsInformation= node.STAMultiCreateInformation.parentsInformation;
+	var infoSaved= node.STAMultiCreateInformation.infoSaved;
 	var spanMultiCreateSTA= document.getElementById("DialogMultiCreateSTA_span");
 	var c="";
 	c+=`<fieldset><legend>Multirecords origin</legend>
-	<input type="radio" value="general" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_general" ${(infoSaved.origin[0]=="general")? "checked": ""}><label>General introduction </label>
-	<input type="radio" value="entity" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_entity" ${(infoSaved.origin[0]=="entity")? "checked": ""}><label>Entity </label>
-	<select name="DialogMultiCreateSTA_selectOrigin" id="DialogMultiCreateSTA_selectOrigin">`;
+	<input type="radio" value="general" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_general" ${(infoSaved.origin[0]=="general")? "checked": ""} onclick="addOriginCheckedValueMulticreateSTA('general')"><label>General introduction </label>
+	<input type="radio" value="entity" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_entity" ${(infoSaved.origin[0]=="entity")? "checked": ""} onclick="addOriginCheckedValueMulticreateSTA('entity')"><label>Entity </label>
+	<select name="DialogMultiCreateSTA_selectOrigin" id="DialogMultiCreateSTA_selectOrigin" onchange="addOriginSelectedValueMulticreateSTA()">`;
 
 	for (var i=0;i<STAEntitiesArray.length;i++){
 		c+=`<option value="${STAEntitiesArray[i]}"`;
-		if (infoSaved.origin[0]=="entity"){
-			if (infoSaved.origin[1]==STAEntitiesArray[i]) c+="selected"
-		}
+		if (infoSaved.origin[1]==STAEntitiesArray[i]) c+="selected"
 		c+=`> ${STAEntitiesArray[i]}</option>`
 	}
+
 	c+="</select></fieldset>"; 
 	c+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
-  	<legend>Selecciona entitats STA</legend>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Party" checked disabled> Party</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Campaign"> Campaign </label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Datastream"> Datastream</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="FeatureOfInterest"> FeatureOfInterest  </label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="HistoricalLocation"> HistoricalLocation</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="License"> License</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Location"> Location</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="MultiDatastream"> MultiDatastream  </label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="ObservationGroup"> ObservationGroup </label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Observation"> Observation</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="ObservedProperty"> ObservedProperty</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Relation"> Relation </label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Sensor"> Sensor</label>
-	<label style="display: flex; align-items: center;"> <input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Thing"> Thing</label>
-	</fieldset>`;
-	//Posar uns checkbox perque em posi quins vol afegir.. Datastream, campaings.. i al estar marcat es desplega 
-	//El de party no es pot deseleccionar
-	//build select
-	// var options="";
-	// var parentNodesIdKeys= Object.keys(STAMultiCreateInformation);
+  	<legend>Selecciona entitats STA</legend>`
 
+	var checkboxCheked=infoSaved.checked;
+	for (var u=0;u<STAEntitiesArray.length;u++){
+		c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}')" value="${STAEntitiesArray[u]}" ${(checkboxCheked.includes(STAEntitiesArray[u]))?"checked":""} ${(STAEntitiesArray[u]=="Parties")?"disabled":""}> ${STAEntitiesArray[u]}</label>`;
+	}
 
-	// var n;
-	// for (var i=0;i<STAEntitiesArray.length;i++){
-	// 	c+=`<fieldset> <legend>${STAEntitiesArray[i]}</legend>`;
-	// 	n= STAEntities[STAEntitiesArray[i]].properties.lenght;
+	c+=`</fieldset>`;
 
-	// 	for (var p=0;p<n;p++){ //
-	// 		c+= ``
-	// 		//el select lhaure de crar x tenir el id
-	// 		for (var e=0;e<parentNodesIdKeys.length;e++){
-	// 			c+=<optgroup label=""></optgroup>
-	// 		}
-	// 	//selecciona
-	// }
-	
+	var parentsInformationKeys=Object.keys(parentsInformation), n;
+	for (var i=0;i<STAEntitiesArray.length;i++){ //Every entity
+		
+		if (checkboxCheked.includes(STAEntitiesArray[i])){ //Create only entities cheched
+			c+=`<fieldset> <legend>${STAEntitiesArray[i]}</legend>`; //Entity box
+			n= STAEntities[STAEntitiesArray[i]].properties.length;
+			for (var e=0;e<n;e++){ //Properties
+				c+=`<label style="font-weight: bold;">${STAEntities[STAEntitiesArray[i]].properties[e].name}: </label> 
+				<select id="DialogMultiCreateSTA_selectFoProperties_${STAEntitiesArray[i]}_${STAEntities[STAEntitiesArray[i]].properties[e].name}">` //property: Selectid:"DialogMultiCreateSTA_selectFoProperties_Entity_property 
+					for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
+						c+=`<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
+						for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
+							//Que posi el selected al que vindria de serie pels attributs o el seleccionat 
+							//El primer cop al fer cliqui cliuqui per obrirlo q estableixi quins aniran marcats i si selecciona un altre, q es guardi
+							c+=`<option value="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}">${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
+						}
+						c+="</optgroup>"
+					}
+					c+="</select><br>"
+			}
+			c+="</fieldset>"
+		}
+	}
+	console.log(parentsInformation);
+	spanMultiCreateSTA.innerHTML=c;	
+}
+function addOrDeleteCheckedValueMulticreateSTA(entity){
+	var node= getNodeDialog("DialogMultiCreateSTA");
+	var entities=node.STAMultiCreateInformation.infoSaved.checked;
+	var checkbox= document.getElementById("DialogMultiCreateSTA_checkboxEntities_"+entity);
+	var index;
 
-	// 	}
+	if (checkbox.checked){ //need to add
+		if (!entities.includes(entity)){
+			entities.push(entity)
+		}
+	}else{ //need to remove
+		index= entities.indexOf(entity)
+		if (index!=-1){
+			entities.splice(index,1)
+		}
+	}
 
-
-	// 	c+=`</fieldset>`
-	// }
-
-	// c+="</div>"
-	console.log(STAMultiCreateInformation);
-	spanMultiCreateSTA.innerHTML=c;
-	//node.STAMultiCreateInformation=STAMultiCreateInformation;
-
-	
-
-
-
-	//meaning, pot haver varios
-	//la resta, tots igual 
+	node.STAMultiCreateInformation.infoSaved.checked= entities;
+	networkNodes.update(node);
+	drawMultiCreateSTADialog(node);
 
 }
-/*function giveMeNetworkInformation(event) {
+function addOriginCheckedValueMulticreateSTA(originRadioButton){
+	var node= getNodeDialog("DialogMultiCreateSTA");
+	var origin=node.STAMultiCreateInformation.infoSaved.origin;
+	var select= document.getElementById("DialogMultiCreateSTA_selectOrigin");
+	var selected= select.options[select.selectedIndex].value;
+	
+
+	if (originRadioButton=="general"){
+		origin =["general", selected]
+	}else{ //entity
+
+		origin=["entity", selected]
+	}
+
+		node.STAMultiCreateInformation.infoSaved.origin= origin;
+		networkNodes.update(node);
+		drawMultiCreateSTADialog(node);
+}
+function addOriginSelectedValueMulticreateSTA(){
+		var node= getNodeDialog("DialogMultiCreateSTA");
+		var origin=node.STAMultiCreateInformation.infoSaved.origin;
+		var select= document.getElementById("DialogMultiCreateSTA_selectOrigin");
+		var selected= select.options[select.selectedIndex].value;
+		origin[1]=selected;
+		node.STAMultiCreateInformation.infoSaved.origin= origin;
+		networkNodes.update(node);
+		drawMultiCreateSTADialog(node);
+}
+
+	/*function giveMeNetworkInformation(event) {
 			if (event)
 				event.preventDefault(); // We don't want to submit this form
 			document.getElementById("DialogContextMenu").close();
