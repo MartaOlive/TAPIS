@@ -8894,8 +8894,15 @@ function populateMultiCreateSTADialog(node){
 
 	infoSaved= {
 		origin: ["general", "Campaigns"], //["general"] or ["entity", entitySelected];
-		entities:{}, //only entities and properties with informarion. Every entity an object
-		checked: ["Parties"]
+		entities:{Parties:{
+			
+			id:{value:"",checked:"false" },
+			description:{value:"",checked:"false" },
+			authId:{value:"",checked:"false" },
+			role:{value:"",checked:"false" },
+			DisplayName:{value:"",checked:"false" }
+
+		}}, //only entities and properties with informarion. Every entity an object
 	}
 	
 
@@ -8941,23 +8948,30 @@ function drawMultiCreateSTADialog(node){
 	c+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
   	<legend>Selecciona entitats STA</legend>`
 
-	var checkboxCheked=infoSaved.checked;
+	var checkboxCheked=Object.keys(infoSaved.entities);
 	for (var u=0;u<STAEntitiesArray.length;u++){
 		c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}')" value="${STAEntitiesArray[u]}" ${(checkboxCheked.includes(STAEntitiesArray[u]))?"checked":""} ${(STAEntitiesArray[u]=="Parties")?"disabled":""}> ${STAEntitiesArray[u]}</label>`;
 	}
 
 	c+=`</fieldset>`;
 
-	var parentsInformationKeys=Object.keys(parentsInformation), n;
+	var parentsInformationKeys=Object.keys(parentsInformation), n, properties;
 	for (var i=0;i<STAEntitiesArray.length;i++){ //Every entity
 		
 		if (checkboxCheked.includes(STAEntitiesArray[i])){ //Create only entities cheched
-			c+=`<fieldset> <legend>${STAEntitiesArray[i]}</legend>`; //Entity box
-			n= STAEntities[STAEntitiesArray[i]].properties.length;
+			c+=`<fieldset> <legend>${STAEntitiesArray[i]}</legend>`; //Entity box	
+			properties=[...STAEntities[STAEntitiesArray[i]].properties];
+			properties.unshift({name:"id", required: "false"}); //Adding id as a property
+			n= properties.length;
+
 			for (var e=0;e<n;e++){ //Properties
-				c+=`<label style="font-weight: bold;">${STAEntities[STAEntitiesArray[i]].properties[e].name}: </label> 
-				<select id="DialogMultiCreateSTA_selectFoProperties_${STAEntitiesArray[i]}_${STAEntities[STAEntitiesArray[i]].properties[e].name}">` //property: Selectid:"DialogMultiCreateSTA_selectFoProperties_Entity_property 
-					for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
+
+				c+=`<input type="checkbox" value="id" name="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}" id="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}_${properties[e].name }" ${(infoSaved.entities[STAEntitiesArray[i]][properties[e].name].checked=="true")? "checked": ""} onclick="addPropertyCheckedValueMulticreateSTA('${STAEntitiesArray[i]}', '${properties[e].name}')">`
+				
+				c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required=="true")?"*":""}: </label> 
+				<select id="DialogMultiCreateSTA_selectFoProperties_${STAEntitiesArray[i]}_${properties[e].name}">` //property: Selectid:"DialogMultiCreateSTA_selectFoProperties_Entity_property 
+				c+=`<option value="">-- Select the corresponding attribute -- </option>`
+				for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
 						c+=`<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
 						for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
 							//Que posi el selected al que vindria de serie pels attributs o el seleccionat 
@@ -8974,29 +8988,30 @@ function drawMultiCreateSTADialog(node){
 	console.log(parentsInformation);
 	spanMultiCreateSTA.innerHTML=c;	
 }
-function addOrDeleteCheckedValueMulticreateSTA(entity){
+function addOrDeleteCheckedValueMulticreateSTA(entity){ //If and entity appears in dialog 
 	var node= getNodeDialog("DialogMultiCreateSTA");
-	var entities=node.STAMultiCreateInformation.infoSaved.checked;
+	var entities=node.STAMultiCreateInformation.infoSaved.entities
+	var entitiesKeys= Object.keys(entities);
 	var checkbox= document.getElementById("DialogMultiCreateSTA_checkboxEntities_"+entity);
-	var index;
 
 	if (checkbox.checked){ //need to add
-		if (!entities.includes(entity)){
-			entities.push(entity)
-		}
+			
+			entities[entity]={id:{value:"", checked:"false"}};
+			for (var i=0;i< STAEntities[entity].properties.length;i++){
+				entities[entity][STAEntities[entity].properties[i].name]={value:"",checked:"false" }
+			}	
 	}else{ //need to remove
-		index= entities.indexOf(entity)
-		if (index!=-1){
-			entities.splice(index,1)
+		if (entitiesKeys.includes(entity)){
+			delete entities[entity];
 		}
 	}
 
-	node.STAMultiCreateInformation.infoSaved.checked= entities;
+	node.STAMultiCreateInformation.infoSaved.entities= entities;
 	networkNodes.update(node);
 	drawMultiCreateSTADialog(node);
 
 }
-function addOriginCheckedValueMulticreateSTA(originRadioButton){
+function addOriginCheckedValueMulticreateSTA(originRadioButton){ //Radiobuttons, General or Entity
 	var node= getNodeDialog("DialogMultiCreateSTA");
 	var origin=node.STAMultiCreateInformation.infoSaved.origin;
 	var select= document.getElementById("DialogMultiCreateSTA_selectOrigin");
@@ -9009,12 +9024,11 @@ function addOriginCheckedValueMulticreateSTA(originRadioButton){
 
 		origin=["entity", selected]
 	}
-
 		node.STAMultiCreateInformation.infoSaved.origin= origin;
 		networkNodes.update(node);
 		drawMultiCreateSTADialog(node);
 }
-function addOriginSelectedValueMulticreateSTA(){
+function addOriginSelectedValueMulticreateSTA(){ //Select from origin radionbuttons
 		var node= getNodeDialog("DialogMultiCreateSTA");
 		var origin=node.STAMultiCreateInformation.infoSaved.origin;
 		var select= document.getElementById("DialogMultiCreateSTA_selectOrigin");
@@ -9024,10 +9038,32 @@ function addOriginSelectedValueMulticreateSTA(){
 		networkNodes.update(node);
 		drawMultiCreateSTADialog(node);
 }
+function addPropertyCheckedValueMulticreateSTA(entity, property){ //Properties in entities checkboxes
+	var node= getNodeDialog("DialogMultiCreateSTA");
+	var properties=node.STAMultiCreateInformation.infoSaved.entities[entity];
+	var checkbox= document.getElementById("DialogMultiCreateSTA_entitiesProperty_"+entity+"_"+property);
+	var select= document.getElementById("DialogMultiCreateSTA_selectFoProperties_"+entity+"_"+property)
+	var selectedValue=  select.options[select.selectedIndex].value;
 
-	/*function giveMeNetworkInformation(event) {
-			if (event)
-				event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogContextMenu").close();
-			console.log(networkNodes.get());
+	if (checkbox.checked){ //need to add
+		properties.checked="true"
+		properties[property]=selectedValue;
+	}else{ //need to remove
+		if (properties.checked=="true"){
+			properties.checked="false"
+		}
+	}
+
+	node.STAMultiCreateInformation.infoSaved.entities[entity]= properties;
+	networkNodes.update(node);
+	drawMultiCreateSTADialog(node);
+
+
+}
+
+/*function giveMeNetworkInformation(event) {
+		if (event)
+			event.preventDefault(); // We don't want to submit this form
+		document.getElementById("DialogContextMenu").close();
+		console.log(networkNodes.get());
 }*/
