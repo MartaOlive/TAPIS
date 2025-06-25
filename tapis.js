@@ -8895,12 +8895,11 @@ function populateMultiCreateSTADialog(node){
 	infoSaved= {
 		origin: ["general", "Campaigns"], //["general"] or ["entity", entitySelected];
 		entities:{Parties:{
-			
 			id:{value:"",checked:"false" },
 			description:{value:"",checked:"false" },
 			authId:{value:"",checked:"false" },
 			role:{value:"",checked:"false" },
-			DisplayName:{value:"",checked:"false" }
+			displayName:{value:"",checked:"false" }
 
 		}}, //only entities and properties with informarion. Every entity an object
 	}
@@ -8969,14 +8968,17 @@ function drawMultiCreateSTADialog(node){
 				c+=`<input type="checkbox" value="id" name="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}" id="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}_${properties[e].name }" ${(infoSaved.entities[STAEntitiesArray[i]][properties[e].name].checked=="true")? "checked": ""} onclick="addPropertyCheckedValueMulticreateSTA('${STAEntitiesArray[i]}', '${properties[e].name}')">`
 				
 				c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required=="true")?"*":""}: </label> 
-				<select id="DialogMultiCreateSTA_selectFoProperties_${STAEntitiesArray[i]}_${properties[e].name}">` //property: Selectid:"DialogMultiCreateSTA_selectFoProperties_Entity_property 
+				<select id="DialogMultiCreateSTA_selectFoProperties_${STAEntitiesArray[i]}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${STAEntitiesArray[i]}','${properties[e].name}' )">` //property: Selectid:"DialogMultiCreateSTA_selectFoProperties_Entity_property 
 				c+=`<option value="">-- Select the corresponding attribute -- </option>`
 				for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
 						c+=`<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
 						for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
-							//Que posi el selected al que vindria de serie pels attributs o el seleccionat 
-							//El primer cop al fer cliqui cliuqui per obrirlo q estableixi quins aniran marcats i si selecciona un altre, q es guardi
-							c+=`<option value="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}">${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
+
+							c+=`<option value="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`
+							if (node.STAMultiCreateInformation.infoSaved.entities[STAEntitiesArray[i]][properties[e].name].value==parentsInformation[parentsInformationKeys[s]].attributesKeys[att]){ //Options of select
+								c+= " selected "
+							}
+							c+=`>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
 						}
 						c+="</optgroup>"
 					}
@@ -9042,22 +9044,27 @@ function addPropertyCheckedValueMulticreateSTA(entity, property){ //Properties i
 	var node= getNodeDialog("DialogMultiCreateSTA");
 	var properties=node.STAMultiCreateInformation.infoSaved.entities[entity];
 	var checkbox= document.getElementById("DialogMultiCreateSTA_entitiesProperty_"+entity+"_"+property);
-	var select= document.getElementById("DialogMultiCreateSTA_selectFoProperties_"+entity+"_"+property)
-	var selectedValue=  select.options[select.selectedIndex].value;
 
-	if (checkbox.checked){ //need to add
-		properties.checked="true"
-		properties[property]=selectedValue;
+	if (checkbox.checked){ //need to add		
+		properties[property].checked="true";
 	}else{ //need to remove
-		if (properties.checked=="true"){
-			properties.checked="false"
-		}
+		properties[property].checked="false";
 	}
 
 	node.STAMultiCreateInformation.infoSaved.entities[entity]= properties;
 	networkNodes.update(node);
 	drawMultiCreateSTADialog(node);
 
+
+}
+
+function savePropertyInEntitiesSelectedValueMulticreateSTA (entity, property){
+	var node= getNodeDialog("DialogMultiCreateSTA");
+	var select= document.getElementById("DialogMultiCreateSTA_selectFoProperties_"+entity+"_"+property);
+	var selected= select.options[select.selectedIndex].value;
+	node.STAMultiCreateInformation.infoSaved.entities[entity][property].value=selected;
+	networkNodes.update(node);
+	drawMultiCreateSTADialog(node);
 
 }
 
