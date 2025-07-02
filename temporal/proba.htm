@@ -39,10 +39,10 @@
 		}
 		esData()
 		var c = `<fieldset><legend>Multirecords origin</legend>
-			< input type = "radio" value = "general" name = "DialogMultiCreateSTA_inputOrigin" id = "DialogMultiCreateSTA_inputOrigin_general" checked><label>General introduction </label>
+			< input type = "radio" value = "general" name = "DialogMultiCreateSTA_inputOrigin" id = "DialogMultiCreateSTA_inputOrigin_general" checked><label>General input </label>
 	<input type="radio" value="entity" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_entity" ><label>Entity </label>
 	<select name="DialogMultiCreateSTA_selectOrigin" id="DialogMultiCreateSTA_selectOrigin"><option value="Campaigns"> Campaigns</option><option value="Datastreams"> Datastreams</option><option value="FeaturesOfInterest"> FeaturesOfInterest</option><option value="HistoricalLocations"> HistoricalLocations</option><option value="Licenses"> Licenses</option><option value="Locations"> Locations</option><option value="MultiDatastreams"> MultiDatastreams</option><option value="ObservationGroups"> ObservationGroups</option><option value="Observations"> Observations</option><option value="ObservedProperties"> ObservedProperties</option><option value="Parties"> Parties</option><option value="Relations"> Relations</option><option value="Sensors"> Sensors</option><option value="Things"> Things</option></select></fieldset><fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
-  	<legend>Selecciona entitats STA</legend>
+  	<legend>Select entities STA</legend>
 	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Party" checked disabled> Party</label>
 	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Campaign"> Campaign </label>
 	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Datastream"> Datastream</label>
@@ -61,7 +61,7 @@
 	<fieldset> 
 		<legend>Campaigns</legend>
 		<label>name</label>
-		 <select id="DialogMultiCreateSTA_selectFoProperties_Campaigns_name"><optgroup label="CSV">
+		 <select id="DialogMultiCreateSTA_selectForProperties_Campaigns_name"><optgroup label="CSV">
 			<option value="@iot.selfLink">@iot.selfLink</option>
 			<option value="@iot.id">@iot.id</option>
 			<option value="phenomenonTime">phenomenonTime</option>

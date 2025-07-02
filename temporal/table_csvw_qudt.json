@@ -1,0 +1,98 @@
+{
+	"tableSchema": {
+		"columns": [
+			{
+				"name": "@iot.selfLink",
+				"datatype": "anyURI",
+				"titles": "Air Temperature",
+				"propertyUrl": "http://vocabs.lter-europe.net/EnvThes/22035",
+				"unitMeasureTitles": "Celsius",
+				"unitMeasureSymbol": "C",
+				"unitMeasureUrl": "https://qudt.org/vocab/unit/DEG_C"
+			},
+			{
+				"name": "@iot.id",
+				"datatype": "integer",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/@iot.id"
+			},
+			{
+				"name": "name",
+				"datatype": "string",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/name"
+			},
+			{
+				"name": "description",
+				"datatype": "string",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/description"
+			},
+			{
+				"name": "observationType",
+				"datatype": "string",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/observationType"
+			},
+			{
+				"name": "unitOfMeasurement",
+				"datatype": "json",
+				"titles": "Air Temperature",
+				"propertyUrl": "http://vocabs.lter-europe.net/EnvThes/22035",
+				"unitMeasureTitles": "Celsius",
+				"unitMeasureSymbol": "C",
+				"unitMeasureUrl": "https://qudt.org/vocab/unit/DEG_C"
+			},
+			{
+				"name": "ObservedProperty@iot.navigationLink",
+				"datatype": "anyURI",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/ObservedProperty@iot.navigationLink"
+			},
+			{
+				"name": "Sensor@iot.navigationLink",
+				"datatype": "anyURI",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/Sensor@iot.navigationLink"
+			},
+			{
+				"name": "Thing@iot.navigationLink",
+				"datatype": "anyURI",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/Thing@iot.navigationLink"
+			},
+			{
+				"name": "Campaigns@iot.navigationLink",
+				"datatype": "anyURI",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/Campaigns@iot.navigationLink"
+			},
+			{
+				"name": "Observations@iot.navigationLink",
+				"datatype": "anyURI",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/Observations@iot.navigationLink"
+			},
+			{
+				"name": "License@iot.navigationLink",
+				"datatype": "anyURI",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/License@iot.navigationLink"
+			},
+			{
+				"name": "Party@iot.navigationLink",
+				"datatype": "anyURI",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/Party@iot.navigationLink"
+			},
+			{
+				"name": "observedArea",
+				"datatype": "json",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/observedArea"
+			},
+			{
+				"name": "phenomenonTime",
+				"datatype": "string",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/phenomenonTime"
+			},
+			{
+				"name": "resultTime",
+				"datatype": "string",
+				"propertyUrl": "http://www.opengis.net/def/docs/15-078r6/Datastream/resultTime"
+			}
+		]
+	},
+	"dialect": {
+		"header": true,
+		"delimiter": ";"
+	}
+}
