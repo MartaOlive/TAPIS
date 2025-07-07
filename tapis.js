@@ -8984,7 +8984,13 @@ function drawMultiCreateSTADialog(node){
 	for (var i=0;i<STAEntitiesArray.length;i++){ //Every entity
 		
 		if (checkboxCheked.includes(STAEntitiesArray[i])){ //Create only entities cheched
-			c+=`<fieldset> <legend>${STAEntitiesArray[i]}</legend>`; //Entity box	
+			c+=`<fieldset> <legend>` //Entity box	
+			if ((infoSaved.origin[0]== "entity" && infoSaved.origin[1]==STAEntitiesArray[i])|| infoSaved.origin[0]== "general" ){ //plural
+				c+=`${STAEntitiesArray[i]}</legend>`; 
+			}else{ //singular
+				c+=`${STAEntities[STAEntitiesArray[i]].singular}</legend>`;
+			}
+
 			properties=[...STAEntities[STAEntitiesArray[i]].properties];
 			properties.unshift({name:"id", required: "false"}); //Adding id as a property
 			n= properties.length;
