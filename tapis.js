@@ -8996,28 +8996,31 @@ function drawMultiCreateSTADialog(node){
 			n= properties.length;
 
 			for (var e=0;e<n;e++){ //Properties
-				if (e==0) c+=`<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
-				c+=`<input type="checkbox" value="id" name="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}" id="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}_${properties[e].name }" ${(infoSaved.entities[STAEntitiesArray[i]][properties[e].name].checked=="true")? "checked": ""} onclick="addPropertyCheckedValueMulticreateSTA('${STAEntitiesArray[i]}', '${properties[e].name}')">`
-				
-				c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required=="true")?"*":""}: </label> 
-				<select id="DialogMultiCreateSTA_selectForProperties_${STAEntitiesArray[i]}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${STAEntitiesArray[i]}','${properties[e].name}' )">` //·$· property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
-				//(node.STAMultiCreateInformation.infoSaved.entities[STAEntitiesArray[i]].id.checked ==true
-				
-				c+=`<option value="">-- Select the corresponding attribute -- </option>`
-				for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
-						c+=`<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
-						for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
+				if ((STAEntitiesArray[i]!="Datastreams" &&  STAEntitiesArray[i]!="MultiDatastreams") || ((STAEntitiesArray[i]=="Datastreams" ||  STAEntitiesArray[i]!="MultiDatastreams") && (properties[e].name!= "observedArea" && properties[e].name!= "phenomenonTime" && properties[e].name!= "resultTime"))){
+					if (e==0) c+=`<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
+					c+=`<input type="checkbox" value="id" name="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}" id="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}_${properties[e].name }" ${(infoSaved.entities[STAEntitiesArray[i]][properties[e].name].checked=="true")? "checked": ""} onclick="addPropertyCheckedValueMulticreateSTA('${STAEntitiesArray[i]}', '${properties[e].name}')">`
+					
+					c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required=="true")?"*":""}: </label> 
+					<select id="DialogMultiCreateSTA_selectForProperties_${STAEntitiesArray[i]}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${STAEntitiesArray[i]}','${properties[e].name}' )">` //·$· property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
+					//(node.STAMultiCreateInformation.infoSaved.entities[STAEntitiesArray[i]].id.checked ==true
+					
+					c+=`<option value="">-- Select the corresponding attribute -- </option>`
+					for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
+							c+=`<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
+							for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
 
-							c+=`<option value="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`
-							if (node.STAMultiCreateInformation.infoSaved.entities[STAEntitiesArray[i]][properties[e].name].value==parentsInformation[parentsInformationKeys[s]].attributesKeys[att]){ //Options of select
-								c+= " selected "
+								c+=`<option value="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`
+								if (node.STAMultiCreateInformation.infoSaved.entities[STAEntitiesArray[i]][properties[e].name].value==parentsInformation[parentsInformationKeys[s]].attributesKeys[att]){ //Options of select
+									c+= " selected "
+								}
+								c+=`>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
 							}
-							c+=`>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
-						}
-						c+="</optgroup>"
+							c+="</optgroup>"
+					}
+					c+="</select><br>"
+					if (e==0) c+=` </div>` //after id
 				}
-				c+="</select><br>"
-				if (e==0) c+=` </div>` //after id
+				
 			}
 			c+="</fieldset>"
 		}
