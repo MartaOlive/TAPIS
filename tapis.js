@@ -7078,7 +7078,7 @@ function networkDoubleClick(params) {
 		else if(currentNode.image=="MultiCreateSTA.png"){
 			//comrpobar si hi ha info en els parents...
 			populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
-			document.getElementById("DialogMultiCreateSTA").showModal();
+			
 		}
 		else if (currentNode.image == "SeparateColumns.png") {
 			var parentNode=GetFirstParentNode(currentNode);
@@ -8907,25 +8907,47 @@ function populateMultiCreateSTADialog(node){
 		needed:["Parties"]	//A MODIFICAR
 	}
 	var parentNodes=GetParentNodes(node);
-	for (var i=0;i<parentNodes.length;i++){
-		for (var key in parentNodes[i].STAdataAttributes) {
-			keys[key] = parentNodes[i].STAdataAttributes[key].definition;
-		}
+	var STAService="", open=true;
+	if (parentNodes!=null){
+		for (var i=0;i<parentNodes.length;i++){
+			if (parentNodes[i].image=="sta.png" && parentNodes[i].STAURL){ //Node with STA service url
+			if (STAService!=""){ //more than one
+				alert("There is more than one STA plus Service origin connected. Only one can be linked");
+				open=false;
+			}else{
+				STAService= parentNodes[i].STAURL;
+			}
 
-		parentsInformation[parentNodes[i].id]= {
-			data: parentNodes[i].STAdata,
-			lenght: parentNodes[i].STAdata.lenght,
-			attributesDefinitions: keys, //every attribute with the definition (to associate it with select options)
-			label: parentNodes[i].label,
-			attributesKeys: Object.keys (parentNodes[i].STAdataAttributes)
+			}else{ //Nodes with data
+				for (var key in parentNodes[i].STAdataAttributes) {
+					keys[key] = parentNodes[i].STAdataAttributes[key].definition;
+				}
 
+				parentsInformation[parentNodes[i].id]= {
+					data: parentNodes[i].STAdata,
+					lenght: parentNodes[i].STAdata.lenght,
+					attributesDefinitions: keys, //every attribute with the definition (to associate it with select options)
+					label: parentNodes[i].label,
+					attributesKeys: Object.keys (parentNodes[i].STAdataAttributes)
+
+				}
+			}
 		}
+	}else{
+		alert("It is necessary to link nodes with data");
+		open=false;
 	}
-	node.STAMultiCreateInformation={} //first time 
-	node.STAMultiCreateInformation.infoSaved=infoSaved;
-	node.STAMultiCreateInformation.parentsInformation=parentsInformation;
-	networkNodes.update(node);
-	drawMultiCreateSTADialog(node);
+
+	if (open){
+		node.STAMultiCreateInformation={} //first time 
+		node.STAMultiCreateInformation. STAService= STAService;
+		node.STAMultiCreateInformation.infoSaved=infoSaved;
+		node.STAMultiCreateInformation.parentsInformation=parentsInformation;
+		networkNodes.update(node);
+		drawMultiCreateSTADialog(node);
+		document.getElementById("DialogMultiCreateSTA").showModal();
+	}
+
 }
 
 function drawMultiCreateSTADialog(node){
@@ -8933,6 +8955,9 @@ function drawMultiCreateSTADialog(node){
 	var infoSaved= deapCopy(node.STAMultiCreateInformation.infoSaved);
 	var spanMultiCreateSTA= document.getElementById("DialogMultiCreateSTA_span");
 	var c="";
+	c+= `<fieldset><legend>STAService connected: </legend>
+	<label><b>url:</b> ${node.STAMultiCreateInformation.STAService}</label>
+	</fieldset>`
 	c+=`<fieldset><legend>Multirecords origin</legend>
 	<input type="radio" value="general" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_general" ${(infoSaved.origin[0]=="general")? " checked ": ""} onclick="addOriginCheckedValueMulticreateSTA('general')"><label>General input </label>
 	<input type="radio" value="entity" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_entity" ${(infoSaved.origin[0]=="entity")? " checked ": ""} onclick="addOriginCheckedValueMulticreateSTA('entity')"><label>Entity </label>
@@ -8945,6 +8970,10 @@ function drawMultiCreateSTADialog(node){
 	}
 
 	c+="</select></fieldset>"; 
+	c+= `<fieldset> <legend>Autocomplete: </legend>
+	<select id=""DialogMultiCreateSTA_selectAutocomplete">
+	</select> <button onclick="autocompleteFieldsMultiCreateSTADialog()"> Apply </button>
+	</fieldset>`;
 	c+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
   	<legend>Select entities STA</legend>`
 
