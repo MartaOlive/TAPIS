@@ -8937,6 +8937,17 @@ function populateMultiCreateSTADialog(node){
 				}
 			}
 		}
+		//built selector info with config information (suggestedAutoCompleteSTAMultiCreate) and meanings 
+		var autocompleteSelectOptions=[], configSuggestedAutoCompleteSTAMultiCreateLength=config.suggestedAutoCompleteSTAMultiCreate.length ;
+		for (var i=0;i<configSuggestedAutoCompleteSTAMultiCreateLength;i++){
+			autocompleteSelectOptions.push([config.suggestedAutoCompleteSTAMultiCreate[i].name, config.suggestedAutoCompleteSTAMultiCreate[i].origin]);
+		}
+		var parentInformation= node.STAMultiCreateInformation.parentsInformation;
+		var parentsInformationKeys = Object.keys(parentInformation);
+		for (var e=0;e<parentsInformationKeys.length;e++){
+			if (parentInformation[parentsInformationKeys[e]].lenght!=0)autocompleteSelectOptions.push(["Attributes from "+parentInformation[parentsInformationKeys[e]].label,""]);
+		}
+		
 	}else{
 		alert("It is necessary to link nodes with data");
 		open=false;
@@ -8947,6 +8958,7 @@ function populateMultiCreateSTADialog(node){
 		node.STAMultiCreateInformation. STAService= STAService;
 		node.STAMultiCreateInformation.infoSaved=infoSaved;
 		node.STAMultiCreateInformation.parentsInformation=parentsInformation;
+		node.STAMultiCreateInformation.autocompleteSelectOptions= autocompleteSelectOptions;
 		networkNodes.update(node);
 		drawMultiCreateSTADialog(node);
 		document.getElementById("DialogMultiCreateSTA").showModal();
@@ -8974,31 +8986,20 @@ function drawMultiCreateSTADialog(node){
 	}
 
 	c+="</select></fieldset>"; 
-	c+= `<fieldset> <legend>Autocomplete: </legend>
-	<select id=""DialogMultiCreateSTA_selectAutocomplete">`
-
-	//built selector with config information (suggestedAutoCompleteSTAMultiCreate) and meanings 
-	var autocompleteSelectOptions=[], configSuggestedAutoCompleteSTAMultiCreateLength=config.suggestedAutoCompleteSTAMultiCreate.length ;
-	for (var i=0;i<configSuggestedAutoCompleteSTAMultiCreateLength;i++){
-		autocompleteSelectOptions.push([config.suggestedAutoCompleteSTAMultiCreate[i].name, config.suggestedAutoCompleteSTAMultiCreate[i].origin]);
-	}
+	//autocomplite
+	c+= `<fieldset> <legend>Autocomplete: </legend> <select id=""DialogMultiCreateSTA_selectAutocomplete">`;
 	var parentInformation= node.STAMultiCreateInformation.parentsInformation;
 	var parentsInformationKeys = Object.keys(parentInformation);
-	for (var e=0;e<parentsInformationKeys.length;e++){
-		if (parentInformation[parentsInformationKeys[e]].lenght!=0)autocompleteSelectOptions.push(["Attributes from "+parentInformation[parentsInformationKeys[e]].label,""]);
-	}
-
-	//add options
+	var autocompleteSelectOptions= node.STAMultiCreateInformation.autocompleteSelectOptions; 
+	var configSuggestedAutoCompleteSTAMultiCreateLength=config.suggestedAutoCompleteSTAMultiCreate.length;
 	for (var u=0;u<autocompleteSelectOptions.length;u++){
 		if (u==0)c+=`<optgroup label="config options">`;
 		if (u==configSuggestedAutoCompleteSTAMultiCreateLength)c+=`<optgroup label="linked nodes meaning">`;
 		c+= `<option value="${autocompleteSelectOptions[u][0]}" data-origin="${autocompleteSelectOptions[u][1]}">${autocompleteSelectOptions[u][0]} </option>`
 		if (u==0)c+=`</optgroup>`;
 	}
-	c+= `<option></option>`
-
-
-	c+=`</select> <button onclick="autocompleteFieldsMultiCreateSTADialog()"> Apply </button>
+	
+	c+=`</select> <button onclick="autocompleteFieldsMultiCreateSTADialog(event)"> Apply </button>
 	</fieldset>`;
 	c+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
   	<legend>Select entities STA</legend>`
@@ -9126,7 +9127,7 @@ function addOriginCheckedValueMulticreateSTA(originRadioButton){ //Radiobuttons,
 		addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(selected, node);		
 	}
 
-		drawMultiCreateSTADialog(node);
+	drawMultiCreateSTADialog(node);
 }
 function addOriginSelectedValueMulticreateSTA(){ //Select from origin radionbuttons
 		var node= getNodeDialog("DialogMultiCreateSTA");
@@ -9225,6 +9226,10 @@ function savePropertyInEntitiesSelectedValueMulticreateSTA (entity, property){
 
 }
 
+function autocompleteFieldsMultiCreateSTADialog(event){ 
+	event.preventDefault();
+
+}
 /*function giveMeNetworkInformation(event) {
 		if (event)
 			event.preventDefault(); // We don't want to submit this form
