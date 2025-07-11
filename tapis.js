@@ -8919,8 +8919,12 @@ function populateMultiCreateSTADialog(node){
 			}
 
 			}else{ //Nodes with data
+				var keyWord, substringToErase="http://www.opengis.net/def/docs/15-078r6/";
+				keys={};
 				for (var key in parentNodes[i].STAdataAttributes) {
-					keys[key] = parentNodes[i].STAdataAttributes[key].definition;
+					keyWord=parentNodes[i].STAdataAttributes[key].definition;
+
+					if (keyWord!="" && keyWord!=undefined)keys[key] = keyWord.substring(substringToErase.length);
 				}
 
 				parentsInformation[parentNodes[i].id]= {
@@ -8971,8 +8975,30 @@ function drawMultiCreateSTADialog(node){
 
 	c+="</select></fieldset>"; 
 	c+= `<fieldset> <legend>Autocomplete: </legend>
-	<select id=""DialogMultiCreateSTA_selectAutocomplete">
-	</select> <button onclick="autocompleteFieldsMultiCreateSTADialog()"> Apply </button>
+	<select id=""DialogMultiCreateSTA_selectAutocomplete">`
+
+	//built selector with config information (suggestedAutoCompleteSTAMultiCreate) and meanings 
+	var autocompleteSelectOptions=[], configSuggestedAutoCompleteSTAMultiCreateLength=config.suggestedAutoCompleteSTAMultiCreate.length ;
+	for (var i=0;i<configSuggestedAutoCompleteSTAMultiCreateLength;i++){
+		autocompleteSelectOptions.push([config.suggestedAutoCompleteSTAMultiCreate[i].name, config.suggestedAutoCompleteSTAMultiCreate[i].origin]);
+	}
+	var parentInformation= node.STAMultiCreateInformation.parentsInformation;
+	var parentsInformationKeys = Object.keys(parentInformation);
+	for (var e=0;e<parentsInformationKeys.length;e++){
+		if (parentInformation[parentsInformationKeys[e]].lenght!=0)autocompleteSelectOptions.push(["Attributes from "+parentInformation[parentsInformationKeys[e]].label,""]);
+	}
+
+	//add options
+	for (var u=0;u<autocompleteSelectOptions.length;u++){
+		if (u==0)c+=`<optgroup label="config options">`;
+		if (u==configSuggestedAutoCompleteSTAMultiCreateLength)c+=`<optgroup label="linked nodes meaning">`;
+		c+= `<option value="${autocompleteSelectOptions[u][0]}" data-origin="${autocompleteSelectOptions[u][1]}">${autocompleteSelectOptions[u][0]} </option>`
+		if (u==0)c+=`</optgroup>`;
+	}
+	c+= `<option></option>`
+
+
+	c+=`</select> <button onclick="autocompleteFieldsMultiCreateSTADialog()"> Apply </button>
 	</fieldset>`;
 	c+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
   	<legend>Select entities STA</legend>`
@@ -9009,7 +9035,7 @@ function drawMultiCreateSTADialog(node){
 	}
 	c+=`</fieldset>`;
 
-	var parentsInformationKeys=Object.keys(parentsInformation), n, properties;
+	var n, properties;
 	for (var i=0;i<STAEntitiesArray.length;i++){ //Every entity
 		
 		if (checkboxCheked.includes(STAEntitiesArray[i])){ //Create only entities cheched

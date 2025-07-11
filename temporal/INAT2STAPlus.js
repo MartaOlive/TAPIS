@@ -1,5 +1,7 @@
 //13 entities
 
+
+
 var party = {
     "displayName": (obj.iIdentification == -1 ? obj.natObs.user_login : obj.natObs.identifications[obj.iIdentification].user.login),
     "role": "individual",  //"institution"
