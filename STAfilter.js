@@ -1953,14 +1953,17 @@ function applyEvalAndFilterData(node) {
 
 		}
 
+		if (dataValue)
+		{
 			//it is a date?
 			var ItIsADate = new Date(dataValue);
-		if (eval(ItIsADate)) {
+			if (ItIsADate) {
 				if (dataValue[dataValue.length - 1] == "Z" && sentenceToEvalInSTAtable.includes("getHours")) { //Erase Z in date to obtain the correct hour
 					dataValueWithoutZ = dataValue.slice(0, -1);
 					sentenceToEvalInSTAtable = sentenceToEvalInSTAtable.replaceAll(dataValue, dataValueWithoutZ.toString());
 				}
 			}
+		}
 
 		if (eval(sentenceToEvalInSTAtable)) {
 			resultsFiltered.push(data[e]);
@@ -1993,6 +1996,8 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 
 	var data = parentNode.STAdata;
 	node.STAdata=deapCopy(data); //Put all data from parent in this node 
+	if (!node.STAdataAttributes)
+		node.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(data);
 	if (node.image != "FilterRowsTable.png") {
 		node.STAURL=deapCopy(parentNode.STAURL); //Put all data from parent in this node 
 	}

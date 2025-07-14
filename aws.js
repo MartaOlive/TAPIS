@@ -139,7 +139,7 @@ function ParseS3BucketsList(url, bucketsListXMLText) {
 		bucket=buckets.length ? buckets[r] : buckets;
 		if (!bucket.Name)
 			continue;
-		record.name=bucket.Name;
+		record.bucketName=bucket.Name;
 		record.creationDate=bucket.CreationDate;
 		record.href=url + (url.charAt(url.length - 1) == '/' ? '':'/') + bucket.Name;
 		records.push(record);

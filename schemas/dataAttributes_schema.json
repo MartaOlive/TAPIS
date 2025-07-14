@@ -11,7 +11,7 @@
 				"type": "object",
 				"properties": {
 					"type": {
-						"enum": ["boolean", "array", "object", "integer", "number", "string", "anyURI", "isodatetime", "null", "undefined"]
+						"enum": ["boolean", "array", "object", "integer", "number", "string", "anyURI", "isodatetime", "geometry", "null", "undefined"]
 					},
 					"description": { 
 						"description": "Description of the variable",

@@ -10,7 +10,7 @@
 		
 	<script src="moment.js"></script> <!--Correct X axis in chart.js-->
 	<script type="text/javascript" src="Chart.min.js"></script> 
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1"></script> <!--Allow zoom in chart-->
+	<script src="chartjs-plugin-zoom.js"></script> <!--Allow zoom in chart. Downloaded from: "https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1-->
 	<!--Thanks to https://github.com/DavideViolante/chartjs-plugin-labels and downloaded from:
 		https://www.npmjs.com/package/chart.js-plugin-labels-dv/v/3.3.0 -->
 	<script type="text/javascript" src="chartjs-plugin-labels.min.js"></script>
@@ -26,6 +26,7 @@
 	<script type="text/javascript" src="papaparse.min.js" async defer></script>
 	<script type="text/javascript" src="crypto-js.min.js" async defer></script> 
 	<script type="text/javascript" src="wicket.js" async defer></script>
+	<script type="text/javascript" src="ngeohash.js" async defer></script>
 	<script type="text/javascript" src="hello.all.min.js"></script>
 	<script type="text/javascript" src="authenix.js" async defer></script>
 	<script type="text/javascript" src="mmn_postmessage.js" async defer></script>
@@ -34,6 +35,7 @@
 	<script type="text/javascript" src="oem.js" async defer></script>
 	<script type="text/javascript" src="dbf.js" async defer></script>
 	<script type="text/javascript" src="gpkg.js" async defer></script>
+	<script type="text/javascript" src="geojson.js" async defer></script>
 	<script type="text/javascript" src="json.js" async defer></script>
 	<script type="text/javascript" src="jsonld.js" async defer></script>
 	<script type="text/javascript" src="edc.js" async defer></script>
@@ -139,7 +141,7 @@
 				</span>
 				<br>
 				<label><input type="checkbox" id="DialogConfigurationAddGeolocationHeader"></input>Add geolocation header</label><br>
-				<label><input type="checkbox" id="DialogConfigurationOnlyStartNodeButtons"></input>Show start node buttons only</label>
+				<label><input type="checkbox" checked="checked" id="DialogConfigurationOnlyStartNodeButtons"></input>Show start node buttons only</label>
 			</p>
 			<div class="center">
 				<button value="default" onClick="ChangeConfiguration(event)">OK</button>
@@ -191,7 +193,7 @@
 						<option value="help/recipe08_s3BucketViewCSV.json">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</option>
 						<option value="help/recipe09_stackedBarChart.json">Recipe 9: Drawing a stacked bar chart</option>
 						<!--option value="help/recipe10_edcsta.json">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</option-->
-						<option value="help/recipe11_pivotTables.json">Recipe 11: Pivoting a table, from registers of a column to new columns</option>
+						<option value="help/recipe11_pivotTables.json">Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns</option>
 					</select>
 				</label>
 			</p>
@@ -248,6 +250,7 @@
 				<button value="default" id="DialogS3BucketOk" onClick="GetDialogS3BucketEvent(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
+			<input type="hidden" id="DialogS3BucketNodeId"></input>
 		</form>
 	</dialog>
 
@@ -314,6 +317,7 @@
 			</div>
 		</form>
 	</dialog>
+
 	<dialog id="DialogReplaceTextInTable">
 		<form>
 			<span id="dlgDialogReplaceTextInTable">
@@ -1038,9 +1042,9 @@
 		<form>
 			<p>
 				<span id="ButtonsContextMenuObjects"></span><br>
-				<div style="border: 1px solid #d5d5d6; margin-top: 5px;" >
-					<div style="height:30px; background-color: rgb(183,183,183); display: flex; justify-content: center; align-items: center;margin-top:5px ; margin-right: 3px; margin-left: 3px;margin-bottom: 5px ; border-radius: 5px;">Node operations</div>
-					<div style="padding: 5px;" >
+				<div class="SectionButtonsContextMenu">
+					<div class="TitleButtonsContextMenu">Node operations</div>
+					<div class="ButtonsButtonsContextMenu" >
 				<button onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a node and any connection to previous nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
 				<button onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Renames de node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.<small>")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="rename.png" height="20" valign="middle">Rename</button>
 					</div>
@@ -1318,10 +1322,16 @@
 			<span id="DialogSaveLayerTitle"></span>
 			<fieldset>
 				<legend>Position:</legend>
-				<label>Place description:
+				<label>Place description*:
 					<span id="DialogSaveLayerPlace"></span>
 				</label>
 				<br>
+				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerGeo">Geometry*:
+					<span id="DialogSaveLayerGeometry"></span>
+				</label>
+				<br>
+				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerLL" checked="checked">Point coordinates*:</label>
+				<fieldset>
 				<label>Longitude:
 					<span id="DialogSaveLayerLongitude"></span>
 				</label>
@@ -1329,6 +1339,7 @@
 				<label>Latitude:
 					<span id="DialogSaveLayerLatitude"></span>
 				</label>
+				</fieldset>
 			</fieldset>
 			<br>
 			<label>Date and time:
@@ -1340,6 +1351,55 @@
 				<span id="DialogSaveLayerSave"></span>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
+		</form>
+	</dialog>
+
+	<dialog id="DialogAddColumnGeo">
+		<form name="DialogAddColumnGeoForm">
+			Add column with tranformed geometry
+			<fieldset>
+				<legend>Input</legend>
+				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="JSON" id="DialogAddColumnGeoRadioJSON">GeoJSON Geometry:
+					<span id="DialogAddColumnGeoJSON"></span>
+				</label>
+				<br>
+				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="WKT" id="DialogAddColumnGeoRadioWKT">Well Known Text:
+					<span id="DialogAddColumnGeoWKT"></span>
+				</label>
+				<br>
+				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="Geohash" id="DialogAddColumnGeoRadioGeohash">Geohash:
+					<span id="DialogAddColumnGeoGeohash"></span>
+				</label>
+				<br>
+				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="LL" id="DialogAddColumnGeoRadioLL" checked="checked">Point coordinates:</label>
+				<fieldset>
+				<label>Longitude:
+					<span id="DialogAddColumnGeoLongitude"></span>
+				</label>
+				<br>
+				<label>Latitude:
+					<span id="DialogAddColumnGeoLatitude"></span>
+				</label>
+				</fieldset>
+			</fieldset>
+			<br>
+			<fieldset>
+				<fieldset>
+					<legend>Type:</legend>
+					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="JSON" id="DialogAddColumnGeoRadioJSONOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioJSONOut");' checked="checked">GeoJSON Geometry</label><br>
+					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="WKT" id="DialogAddColumnGeoRadioWKTOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioWKTOut");' >Well Known Text</label><br>
+					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="Geohash" id="DialogAddColumnGeoRadioGeohashOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioGeohashOut");' >Geohash</label><br>
+					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="LL" id="DialogAddColumnGeoRadioLLOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioLLOut");' >Point coordinates</label>
+				</fieldset>
+				<legend>New columns</legend>
+				<label><span id="DialogAddColumnGeoNameOut">Column name:</span><input type="text" size="30" id="DialogAddColumnGeoNameText" value="Geometry"></input><br>
+				<label><span id="DialogAddColumnGeoLatitudeNameOut" style="display:none;">Latitude:</span><input type="text" size="30" id="DialogAddColumnGeoLatitudeNameText" value="Latitude" style="display:none;"></input> 
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick="GetAddColumnGeo(event)">Add</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogAddColumnGeoNodeId"></input>
 		</form>
 	</dialog>
 

@@ -76,7 +76,7 @@ async function ParseGPKGDatabase(buffer) {
 			continue;
 		table = gpkg.db.exec("pragma table_info('" + tableName + "')");
 		count = gpkg.db.exec("SELECT COUNT(*) FROM " + tableName);
-		gpkg.records.push({name: tableName,
+		gpkg.records.push({tableName: tableName,
 				nRows: count[0].values[0][0],
 				nColumns: table[0].columns.length});
 		if (contents) {
@@ -85,7 +85,7 @@ async function ParseGPKGDatabase(buffer) {
 			gpkg.records[gpkg.records.length-1].lastChange=contents[0].values[i][4];
 		}
 	}
-	gpkg.attributes={name: {type:"string"},
+	gpkg.attributes={tableName: {type:"string"},
 			nRows: {type:"integer"},
 			nColumns: {type:"integer"}};
 	if (contents) {

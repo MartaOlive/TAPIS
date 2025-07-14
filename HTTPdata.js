@@ -45,16 +45,14 @@
 	El TAPIS es pot actualitzar des de https://github.com/joanma747/tapis.
 */
 
-function getURLWithoutQueryParams(s)
-{
+function getURLWithoutQueryParams(s) {
 	var i=s.indexOf('?')
 	if (i==-1)
 		return s;
 	return s.substring(0, i);
 }
 
-function getURLQueryParams(s)
-{
+function getURLQueryParams(s) {
 	var i=s.indexOf('?')
 	if (i==-1)
 		return "";
@@ -75,8 +73,7 @@ function transformStringIntoLocation(href) {
 }
 
 //From the MiraMon Map Browser TreuAdreca()
-function getFileName(s)
-{
+function getFileName(s) {
 	var i=s.lastIndexOf('/');
 	if (i==-1)
 		i=s.lastIndexOf('\\');
@@ -86,8 +83,7 @@ function getFileName(s)
 }
 
 //From the MiraMon Map Browser DonaAdreca()
-function getAddressPath(s)
-{
+function getAddressPath(s) {
 	if (s.charAt(s.length-1)=='/')
 		return s;
 	var i=s.lastIndexOf('/');
@@ -97,8 +93,7 @@ function getAddressPath(s)
 }
 
 //from the MiraMon Map Browser DonaAdrecaAbsoluta()
-function getAbsoluteURL(url)
-{
+function getAbsoluteURL(url) {
 	if (url.length>8 && (url.substring(0, 7)=="http://" || url.substring(0, 8)=="https://"))
 		return url;
 	if (url.charAt(0)=="/")
@@ -106,11 +101,33 @@ function getAbsoluteURL(url)
 	return location.protocol+"//"+location.host+getAddressPath(location.pathname)+url;
 }
 
-function removeExtension(name){
+function removeFileExtension(name) {
 	var i=name.lastIndexOf(".");
 	if (i==-1)
 		return name;
 	return name.substring(0, i);
+}
+
+function getFileExtension(name) {
+	var i=name.lastIndexOf(".");
+	if (i==-1)
+		return name;
+	return name.substring(i+1);
+}
+
+function getMediaTypeForURLExtension(url){
+	var ext=getFileExtension(url.toLowerCase());
+	if (ext=="gpkg")
+		return "application/geopackage+sqlite3";
+	if (ext=="json")
+		return "application/json";
+	if (ext=="jsonld")
+		return "application/ld+json";
+	if (ext=="csv")
+		return "text/csv";
+	if (ext=="dbf")
+		return "application/dbase";
+	return null;
 }
 
 //Before it was called AddKVPToURL

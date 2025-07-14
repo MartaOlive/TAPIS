@@ -43,7 +43,7 @@
 			"description": "Security parameters",
 			"type": "object",
 			"properties": {
-				"authorization": {
+				"Authorization": {
 					"description": "'authorization' header parameter to be used in the EDC",
 					"type": "string"					
 				},
@@ -56,6 +56,13 @@
 						"service": {"type": "string"}
 					} 
 				}
+				"facts": { 
+					"description": "Security parameters to be used in the FACTS",
+					"type": "object",
+					"properties": {
+						"x-facts-key": {"type": "string"}
+					} 
+				} 
 			} 
 		},
 		"OGCType": {

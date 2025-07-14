@@ -49,7 +49,7 @@
 
 function ParseEDCCatalog(catalogs) {
 	var catalog;
-	var records=[], record, service, dataset, distribution, counterPartyAddress, policy;
+	var records=[], record, service, dataset, distribution, counterPartyAddress, participantId, /*originator,*/ policy;
 
 	for (var c=0; c<(typeof catalogs.length !== "undefined" ? catalogs.length : 1); c++) {
 		catalog=typeof catalogs.length !== "undefined" ? catalogs[c] : catalogs;
@@ -61,6 +61,8 @@ function ParseEDCCatalog(catalogs) {
 
 		if (catalog["dcat:service"])
 		{
+			participantId=catalog["dspace:participantId"] ? catalog["dspace:participantId"] : null;
+			//originator=catalog["originator"] ? catalog["originator"] : null;
 			counterPartyAddress=null;
 			for (var s=0; s<(catalog["dcat:service"].length ? catalog["dcat:service"].length : 1); s++) {
 				service=catalog["dcat:service"].length ? catalog["dcat:service"][s] : catalog["dcat:service"];
@@ -75,8 +77,6 @@ function ParseEDCCatalog(catalogs) {
 			if (dataset["@type"]!="dcat:Dataset")
 				continue;
 			record={};
-			if (counterPartyAddress)
-				record.counterPartyAddress=counterPartyAddress;
 			record.assetId=dataset["@id"];
 			if (dataset["dcat:distribution"]) {
 				for (var i=0; i<(dataset["dcat:distribution"].length ? dataset["dcat:distribution"].length : 1); i++) {
@@ -90,6 +90,34 @@ function ParseEDCCatalog(catalogs) {
 					}
 				}
 			}
+			if (counterPartyAddress)
+				record.counterPartyAddress=counterPartyAddress;
+			if (participantId)
+				record.participantId=participantId;
+			/*if (originator)
+				record.originator=originator;*/
+			
+			if (dataset["dcat:mediaType"])
+				record.mediaType=dataset["dcat:mediaType"];
+			else if (dataset["mediaType"])
+				record.mediaType=dataset["mediaType"];
+			else if (dataset["contenttype"])
+				record.mediaType=dataset["contenttype"];
+
+			if (dataset["dct:name"])
+				record.description=dataset["dct:name"];
+			else if (dataset["dct:description"])
+				record.description=dataset["dct:description"];
+			else if (dataset["name"])
+				record.description=dataset["name"];
+			else if (dataset["description"])
+				record.description=dataset["description"];
+
+			if (dataset["dct:title"])
+				record.title=dataset["dct:title"];
+			else if (dataset["title"])
+				record.title=dataset["title"]; 
+
 			if (dataset["odrl:hasPolicy"]) {
 				for (var i=0; i<(dataset["odrl:hasPolicy"].length ? dataset["odrl:hasPolicy"].length : 1); i++) {
 					policy=dataset["odrl:hasPolicy"].length ? dataset["odrl:hasPolicy"][i] : dataset["odrl:hasPolicy"];
@@ -111,18 +139,6 @@ function ParseEDCCatalog(catalogs) {
 			}
 			if (dataset["dct:language"])
 				record.language=dataset["dct:language"];
-			if (dataset["dct:name"])
-				record.description=dataset["dct:name"];
-			else if (dataset["dct:description"])
-				record.description=dataset["dct:description"];
-			else if (dataset["name"])
-				record.description=dataset["name"];
-			else if (dataset["description"])
-				record.description=dataset["description"];
-			if (dataset["dct:title"])
-				record.title=dataset["dct:title"];
-			else if (dataset["title"])
-				record.title=dataset["title"]; 
 			if (dataset["dct:publisher"] && dataset["dct:publisher"]["http://xmlns.com/foaf/0.1/homepage"])
 				record.publisher=dataset["dct:publisher"]["http://xmlns.com/foaf/0.1/homepage"];
 			if (dataset["dcat:version"])
@@ -186,19 +202,13 @@ function ParseEDCCatalog(catalogs) {
 			}
 			if (dataset["dcat:landingPage"])
 				record.landingPage=dataset["dcat:landingPage"];
-			if (dataset["dcat:mediaType"])
-				record.mediaType=dataset["dcat:mediaType"];
-			else if (dataset["mediaType"])
-				record.mediaType=dataset["mediaType"];
-			else if (dataset["contenttype"])
-				record.mediaType=dataset["contenttype"];
 			records.push(record);
 		}
 	}
 	return records;
 }
 
-function EDCNegociateContract(node, EDCConsumerURL, offerId, counterPartyAddress, mediaType) {
+function EDCNegociateContract(node, EDCConsumerURL, assetId, offerId, counterPartyAddress, participantId, mediaType) {
 	var obj={
 		"@context": {"edc": "https://w3id.org/edc/v0.0.1/ns/"},
 		"@type": "ContractRequest",
@@ -208,8 +218,8 @@ function EDCNegociateContract(node, EDCConsumerURL, offerId, counterPartyAddress
 			"@context": "http://www.w3.org/ns/odrl.jsonld",
 			"@id": offerId,
 			"@type": "Offer",
-			"assigner": "provider",
-			"target": "assetId",
+			"assigner": participantId,
+			"target": assetId,
 			"permission": []
 		}
 	};

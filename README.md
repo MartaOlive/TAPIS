@@ -22,6 +22,9 @@ But there are some differences with Orange:
 
 ![STA Plus Explorer](STAplusExplorer.png)
 
+## Read more about TAPIS
+* CitiObs press release: [TAPIS: A Simple Web Tool for Analyzing Citizen-Generated Data](https://citiobs.eu/tapis-a-simple-web-tool-for-analyzing-citizen-generated-data/)
+* EGU 2025 poster abstract: [Tables as a way to deal with a variety of data formats and APIs in data spaces](https://meetingorganizer.copernicus.org/EGU25/EGU25-13567.html)
 
 ![EuropeanFlag](eu_flag.jpg)  Co-funded by the European Union, Switzerland and the United Kingdom.
 

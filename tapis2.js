@@ -48,22 +48,18 @@
 /*
 Some things that I'm always looking for:
 Function to get the nodeId from a dialog: getNodeDialog(div_id) 
-Function to include the nodeId as a hidden value in a dialog: saveNodeDialog(div_id, node)
+Fucntion to include the nodeId as a hidden value in a dialog: saveNodeDialog(div_id, node)
 
-Function to redraw the table view: updateQueryAndTableArea(node);
-Function to show and informative message in the screen: showInfoMessage();
-
-Function to get the character representing the column type getHTMLCharacterAttributeType();
-
+Function to execute a special table link in the graph: ShowLinkDialog(nodeId, columnName, iRecord)
 Function to open a link in the graph: OpenLink(event)
 Function to decide what is a link in the table view: isAttributeAnyURI(s)
-Function to decide what is a link in the table that is a special link in the graph: isAttributeAnyURINode() (used in isAttributeAnyURINodeId() that is used in ShowLinkDialog(nodeId, columnName, iRecord))
+Function to decide what is a link in the table that is a special link in the graph: isAttributeAnyURINode()
 */
 
 var config;
 
 const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", startNode: true, help: "Connects to a SensorThings API or a STAplus instance and returns a table with the list of entities suported by the API."},
-			ogcAPICols: {name: "OGC API collections", description: "OAPI Collections", startNode: true, help: "Connects to the collections page of a OGC Web API instance and returns a table with the list collections available."},
+			ogcAPICols: {name: "OGC API cols", description: "OAPI Collections", startNode: true, help: "Connects to the collections page of a OGC Web API instance and returns a table with the list collections available."},
 			ogcAPIItems: {name: "OGC API items", description: "OAPI items", help: "Connects to a collection page on an OGC Web API Features or derivatives and returns a table with the items available. One of the columns contains the geometry JSON object."},
 			csw: {name: "Catalogue", description: "OGC CSW", startNode: true, help: "Connects to a OGC CSW cataloge service. The result is a table with a list of records in the catalogue that have data associated with them."},
 			s3Service: {name: "S3 Service", description: "S3 Service", startNode: true, help: "Connects to a Amazon S3 compatible service (e.g. MinIO) and return the list of buckets available as a table."},
@@ -73,7 +69,7 @@ const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", sta
 			ImportCSV: {name: "CSV", description: "CSV", startNode: true, help: "Imports data from a CSV file and returns a table."},
 			ImportDBF: {name: "DBF", description: "DBF", startNode: true, help: "Imports data from a DBASE III+, IV or a extended DBF file and returns a table."},
 			ImportGPKG: {name: "GeoPackage", description: "GeoPackage", startNode: true, help: "Imports a GeoPackage Database into a list of of tables."},
-			ImportGPKGTable: {name: "GeoPackageTable", description: "GeoPack Table", help: "Imports a table in a GeoPackage database."},
+			ImportGPKGTable: {name: "GeoPackageTable", description: "GeoPack Table", startNode: true, help: "Imports a table in a GeoPackage database."},
 			ImportJSONLD: {name: "JSON-LD", description: "JSON-LD", startNode: true, help: "Imports data from a JSON-LD file and returns a table."},
 			ImportJSON: {name: "JSON", description: "JSON", startNode: true, help: "Imports data from a JSON file and returns a table."},
 			ImportGeoJSON: {name: "GeoJSON", description: "GeoJSON", startNode: true, help: "Imports the features of a GeoJSON and returns a table where each feature is a record. One of the columns contains the geometry JSON object."},
@@ -133,21 +129,19 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			SelectColumnsTable: {description: "Select Columns", help: "Obtains a table only with the selected columns. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL."},
 			SelectRowTable: {description: "Select Row", help: "Obtains a table only with the selected record. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL."},
 			FilterRowsTable: {description: "Filter Rows", help: "Obtain a table with the records that match the contitions. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL."},
-			Replace:{description:"Replace", help: "Find and replace text, numbers, or data in one column or across the whole table"},
 			JoinTables: {description: "Join Tables", help:"Creates a single table that is the result of joining two tables using some selected column values in both tables to defined the merge criteria."},
 			ConcatenateTables: {description: "Concatenate Columns", help: "Create a single table by adding the records of the second table to the first one. The columns with the same name in both tables are merged in a sigle column."},
 			GroupBy: {description: "Group by", help: "Creates a table will the columns containng selected statistics of the aggregation of some records that have the same values other selected columns."},
 			SortByTables: {description: "Sort by", callSTALoad: true, help: "Gets a table with data sorted by a given criteria."},
 			AggregateColumns: {description: "Aggregate Columns", help: "Adds a new column to a table with the aggregation of other previous selected columns."},
 			CreateColumns: {description: "Create Columns", help: "Adds a new column to your table. This column can be left empty, filled with a constant value or filled with an autoincremental value."},
-			AddColumnGeo: {description: "Add geospatial column", help: "Adds a new geospatial column to your table that is a format transformation of a preexisting geospatial column. The column can be a GeoJSON geometry, a Well Known Text, a Geohash or a pair of longitude/latitude columns."},
 			ColumnsCalculator: {description: "Columns calculator", help: "Adds a new column to your table where for each record the new column contains the result of an operation involving other column values of that record."},
 			PivotTable: {description: "Pivot table", help:"Create a new table where some column content is transponsed into new columns" },
-			ColumnStatistics: {description:"Columns statistics", help: "Create a table where, for each column the main statistics for the column values of all records are recorded."},
 			SeparateColumns: {description: "Separate Columns", help: "Splits a column containing a JSON object into separated new columns and removes the original column."},
 			SaveTable: {description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the column definition is semantically enriched; see &#39;meaning&#39;)."},
 			SaveLayer: {description: "Save Layer", leafNode: true, help: "Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values."},
-			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."}
+			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."},
+			replace:{description:"replace", help: "Find and replace text, numbers, or data in one column or across the whole table"}
 		};
 	
 const TableOperationsArray = Object.keys(TableOperations);
@@ -252,7 +246,7 @@ function getConnectionSTAEntity(parentNode, node) {
 			return {error: "Parent node is not a STA entity"};
 	}
 
-	var nextEntity=removeFileExtension(node.image);
+	var nextEntity=removeExtension(node.image);
 
 	if (!STAEntities[nextEntity])
 		return {error: "Child node is not a STA entity"};
@@ -293,23 +287,28 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" ) )
+	if ((TableOperations[removeExtension(parentNode.image)]||parentNode.image=="ImportCSV.png" ||parentNode.image=="ImportDBF.png"  ||parentNode.image=="ImportGPKG.png"  ||parentNode.image=="ImportJSONLD.png"   ||parentNode.image=="ImportJSON.png"  ||parentNode.image=="ImportGeoJSON.png" )&& node.image=="MultiCreateSTA.png") return null;
+	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" || node.image == "FilterRowsByTime.png" || node.image == "GeoFilterPntSTA.png" ) )
 		return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
+	if ((parentNode.image=="ogcAPICols.png"||parentNode.image=="ogcAPIItems.png"|| parentNode.image=="s3Service.png"||parentNode.image=="s3Bucket.png"||parentNode.image=="edc.png"||parentNode.image=="edcAsset.png"||parentNode.image=="ImportCSV.png"||parentNode.image=="ImportDBF.png"||parentNode.image=="ImportJSONLD.png"||parentNode.image=="ImportJSON.png"||parentNode.image=="ImportGeoJSON.png") && (STAEntities[removeExtension(node.image)]||STAOperations[removeExtension(node.image)] || node.image=="ObsLayer.png"))
+		return "Entities only belong to STA service. This is not a STAservice."
 	if (parentNode.image=="sta.png" || parentNode.image=="staRoot.png" || parentNode.image=="edcAsset.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
 		return null;
-	if ((STAOperations[removeFileExtension(parentNode.image)] && STAOperations[removeFileExtension(parentNode.image)].leafNode==true) ||
-		(TableOperations[removeFileExtension(parentNode.image)] && TableOperations[removeFileExtension(parentNode.image)].leafNode==true))
+	if ((STAOperations[removeExtension(parentNode.image)] && STAOperations[removeExtension(parentNode.image)].leafNode==true) ||
+		(TableOperations[removeExtension(parentNode.image)] && TableOperations[removeExtension(parentNode.image)].leafNode==true) ||
+		(tableStatisticsVisualize[removeExtension(parentNode.image)]))
 		return "Parent node is a leaf node and cannot be connected with any other node";
 	if ((node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png") && parentNode.STASelectedExpands && parentNode.STASelectedExpands.expanded && Object.keys(parentNode.STASelectedExpands.expanded).length)
 		return "'Select Row' or 'Select Resource' for STA node cannot be connected to an expanded branch. Use 'Filter row' for STA instead or select a row before expanding";
 	if (node.image == "OneValueSTA.png" && parentNode.STAEntityName!="Observations" && parentNode.image!="Observations.png")
 		return "'One value' node is designed be connected to an 'Observations' node only.";
+	
 	var idNode=IdOfSTAEntity(node);
 	if (idNode<0)
 		return null;
 	if (!parentNode.STAURL)
 		return null;
-	if (node.image == "MergeExpandsSTA.png" && STAOperations[removeFileExtension(parentNode.image)])
+	if (node.image == "MergeExpandsSTA.png" && STAOperations[removeExtension(parentNode.image)])
 		return null;
 	var getCon=getConnectionSTAEntity(parentNode, node)
 	if (getCon.error)
@@ -550,7 +549,7 @@ function textOperationButton(parentDivId, prefixDivId, operation, name, descript
 
 async function InitSTAPage() {
 	var response=await HTTPJSONData("config.json");
-	const nCol=4;
+	
 	config=(response && response.obj) ? response.obj : null;
 	if (!config)
 	{
@@ -570,78 +569,123 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 	var node = {image:""};
 	const nCol=7;
 	var provisional="";
-	var cdns=[];
-	var generalBox= "<div class='SectionButtonsContextMenu'><div class='TitleButtonsContextMenu' style='background-color: COLOR;'>TITLE</div><div class='ButtonsButtonsContextMenu'>CONTENT</div></div><br>";
+	var s = "<div>"; //general
+	var generalBox= `<div style='border: 1px solid #d5d5d6;'> 
+	<div style='height:30px; background-color: rgb(0,179,255,0.5); display: flex; justify-content: center; align-items: center; margin-top:5px; margin-right: 3px; margin-left: 3px; margin-bottom: 5px ; border-radius: 5px;'>TITLE</div>
+	<div style='padding: 5px;''>`;
+	var generalBoxCopy=generalBox;
+	s+=generalBox.replace("TITLE",ServicesAndAPIsType.plural);
 
-	provisional=[];
-	for (var i = 0; i < ServicesAndAPIsArray.length; i++) { //mirar com gestionar aquests			
-		provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], "Data Input tool", ServicesAndAPIsType.singular),
-				(i+1)%nCol==0 || i == ServicesAndAPIsArray.length-1 ? "<br>" : " ");
+	for (var i = 0; i < ServicesAndAPIsArray.length; i++) { //mirar com gestionar aquests
+			
+		s += textOperationButton("DialogContextMenu", "ContextMenu", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], "Data Input tool", ServicesAndAPIsType.singular);
+		s += (i+1)%nCol==0 || i == ServicesAndAPIsArray.length-1 ? "<br>" : " ";
+
 	}
-	cdns.push(generalBox.replace("TITLE", ServicesAndAPIsType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+	s+="</div></div></div><br>";
+
 	
-	provisional=[];
+	provisional="";
 	for (var i = 0; i < STAEntitiesArray.length; i++) {
-		node.image= STAEntitiesArray[i]+".png";
-		if (!nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
-			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular), 
-				(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
+			node.image= STAEntitiesArray[i]+".png";
+			if (!nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+				provisional += textOperationButton("DialogContextMenu", "ContextMenu", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular);
+				provisional += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
 	}
-	if (provisional.length>1)
-		cdns.push(generalBox.replace("TITLE", STAEntitiesType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
-
-	provisional=[];
-	for (var i = 0; i < STAEntitiesArray.length; i++) {
-		node.image= STAEntitiesArray[i]+".png";
-		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
-			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit),
-				(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
 	}
-	if (provisional.length>1)
-		cdns.push(generalBox.replace("TITLE", STAEntitiesType.pluralEdit).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+	if (provisional.length>1){
+		generalBoxCopy=generalBox;
+		s+=generalBoxCopy.replace("TITLE",STAEntitiesType.plural);
+		s +=provisional;
+		s+="</div></div></div><br>";
+	}
 
-	provisional=[];
-	for (var i = 0; i < STASpecialQueriesArray.length; i++) {
+
+	provisional="";
+	for (var i = 0; i < STAEntitiesArray.length; i++)
+	{
+		node.image= STAEntitiesArray[i]+".png";
+		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+			provisional += textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit);
+			provisional += (i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ";
+	}
+	}
+	if (provisional.length>1){
+		generalBoxCopy=generalBox;
+		s+=generalBoxCopy.replace("TITLE",STAEntitiesType.pluralEdit);
+		s +=provisional;
+		s+="</div></div></div><br>";
+	}
+
+	provisional="";
+	for (var i = 0; i < STASpecialQueriesArray.length; i++)
+	{
 		node.image= STASpecialQueriesArray[i]+".png";
-		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
-			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help, null, STASpecialQueriesType.singular),
-				(i+1)%nCol==0 || i == STASpecialQueriesArray.length-1 ? "<br>" : " ");
+		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+			provisional += textOperationButton("DialogContextMenu", "ContextMenu", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help, null, STASpecialQueriesType.singular);
+			provisional += (i+1)%nCol==0 || i == STASpecialQueriesArray.length-1 ? "<br>" : " ";
 	}
-	if (provisional.length>1)
-		cdns.push(generalBox.replace("TITLE",STASpecialQueriesType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+	}
+	if (provisional.length>1){
+		generalBoxCopy=generalBox;
+		s+= generalBoxCopy.replace("TITLE",STASpecialQueriesType.plural); //Title
+		s +=provisional;
+		s+="</div></div></div><br>";
 
-	provisional=[];
-	for (var i = 0; i < STAOperationsArray.length; i++) {
+	}
+
+	provisional="";
+	for (var i = 0; i < STAOperationsArray.length; i++)
+	{
 		node.image= STAOperationsArray[i]+".png";
-		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
-			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help, STAOperations[STAOperationsArray[i]], STAOperationsType.singular),
-				(i+1)%nCol==0 || i == STAOperationsArray.length-1 ? "<br>" : " ");
+		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+			provisional += textOperationButton("DialogContextMenu", "ContextMenu", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help, STAOperations[STAOperationsArray[i]], STAOperationsType.singular);
+			provisional += (i+1)%nCol==0 || i == STAOperationsArray.length-1 ? "<br>" : " ";
 	}
-	if (provisional.length>1)
-		cdns.push(generalBox.replace("TITLE",STAOperationsType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+	}
+	if (provisional.length>1){
+		generalBoxCopy=generalBox;
+		s+=generalBoxCopy.replace("TITLE",STAOperationsType.plural); //Title
+		s +=provisional;
+		s+="</div></div></div><br>";
+	}
 
-	provisional=[];
-	for (var i = 0; i < TableOperationsArray.length; i++) {
+	provisional="";
+	for (var i = 0; i < TableOperationsArray.length; i++)
+	{
 		node.image= TableOperationsArray[i]+".png";
-		if ( !nodeId || reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
-			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular),
-				(i+1)%nCol==0 || i == TableOperationsArray.length-1 ? "<br>" : " ");
+		if ( !nodeId || reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+			provisional += textOperationButton("DialogContextMenu", "ContextMenu", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular);
+			provisional += (i+1)%nCol==0 || i == TableOperationsArray.length-1 ? "<br>" : " ";
 	}
-	if (provisional.length>1)
-		cdns.push(generalBox.replace("TITLE",TableOperationsType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
-
-	provisional=[];
-	for (var i = 0; i < tableStatisticsVisualizeArray.length; i++) {
-		node.image= tableStatisticsVisualizeArray[i]+".png";
-		if (!nodeId || reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
-			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", tableStatisticsVisualizeArray[i], tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].help, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]], tableStatisticsVisualizeType.singular),
-				(i+1)%nCol==0 || i == tableStatisticsVisualizeArray.length-1 ? "<br>" : " ");
 	}
-	if (provisional.length>1)
-		cdns.push(generalBox.replace("TITLE",tableStatisticsVisualizeType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
+	if (provisional.length>1){
+		generalBoxCopy=generalBox;
+		generalBoxCopy= generalBoxCopy.replace("TITLE",TableOperationsType.plural); //Title
+		s+=generalBoxCopy.replace("rgb(0,179,255,0.5)","rgb(183,183,183)"); //color
+		s +=provisional;
+		s+="</div></div></div><br>";
+	}
 
-	//cdns.push("</div>");
-	document.getElementById("ButtonsContextMenuObjects").innerHTML = cdns.join("");
+	provisional="";
+	for (var i = 0; i < tableStatisticsVisualizeArray.length; i++)
+		{
+			node.image= tableStatisticsVisualizeArray[i]+".png";
+			if (!nodeId || reasonNodeDoesNotFitWithPrevious(node, parentNode)==null){
+				provisional += textOperationButton("DialogContextMenu", "ContextMenu", tableStatisticsVisualizeArray[i], tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].help, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]], tableStatisticsVisualizeType.singular);
+				provisional += (i+1)%nCol==0 || i == tableStatisticsVisualizeArray.length-1 ? "<br>" : " ";
+		
+			}	
+	}
+if (provisional.length>1){
+	generalBoxCopy=generalBox;
+	generalBoxCopy= generalBoxCopy.replace("TITLE",tableStatisticsVisualizeType.plural); //Title
+	s+=generalBoxCopy.replace("rgb(0,179,255,0.5)","rgb(183,183,183)"); //color
+		s +=provisional;
+		s+="</div></div></div><br>";
+	}
+	s+="</div>"
+	document.getElementById("ButtonsContextMenuObjects").innerHTML = s;
 }
 
 //Works with JSON links.
@@ -1070,17 +1114,13 @@ function SelectImportFileSource(event, type) {
 			document.getElementById("DialogImportJSONInputSeveralRecords").disabled=false;
 			document.getElementById("DialogImportJSONSourceURLButtonMulti").disabled=false;
 		}else{
-			document.getElementById("DialogImport"+type+"SourceFileText").disabled=true;
-			document.getElementById("DialogImport"+type+"SourceURLInput").disabled=false;
-			document.getElementById("DialogImport"+type+"SourceURLButton").disabled=false;
-			if (type=="JSON"){
-				document.getElementById("DialogImportJSONInputSeveralRecords").disabled=true;
-				document.getElementById("DialogImportJSONSourceURLButtonMulti").disabled=true;
-			}
-		}
+		document.getElementById("DialogImport"+type+"SourceFileText").disabled=true;
+		document.getElementById("DialogImport"+type+"SourceURLInput").disabled=false;
+		document.getElementById("DialogImport"+type+"SourceURLButton").disabled=false;
+
+	}
 	}
 }
-
 //type should be "CSV", "DBF", "GPKG", "JSON", "JSONLD" or "GeoJSON"
 function SelectImportMeaningFileSource(event, type) {
 	if (document.getElementById("DialogImportMeaning"+type+"SourceFile").checked) {
@@ -1357,19 +1397,8 @@ function ReadFileImportDBF(event) {
 }
 
 
-function ReadURLImportDBF(event, url, security) {
-	var node=getNodeDialog("DialogImportDBF");
-	var parentNode=GetFirstParentNode(node);
-	node.STAURL = url ? url : document.getElementById("DialogImportDBFSourceURLInput").value;
-	node.OGCType = "fileURL";
-	if (security)
-		node.STAsecurity=security;
-	else if (parentNode.STAsecurity)
-		node.STAsecurity=deapCopy(parentNode.STAsecurity);
-	else
-		node.STAsecurity=null;
-
-	HTTPBinaryData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, url)).then(
+function ReadURLImportDBF() {
+	HTTPBinaryData(document.getElementById("DialogImportDBFSourceURLInput").value).then(
 				function(value) { 
 					showInfoMessage('Download DBF completed.'); 
 					TransformBinaryDBFToTable(value.arrayBuf, document.getElementById("DialogImportDBFSourceURLInput").value);
@@ -1560,24 +1589,24 @@ function TransformTextJSONToTable(json, jsonText, url,node,lastOne) {
 	}
 
 	if (lastOne=="yes" || lastOne=="onlyOne"){
-		if (node.STAdata.length==0)
-			showInfoMessage("JSON resulted in no records.");
-		else
-			showInfoMessage("JSON has been loaded.");
-		if (node.STAdata) {
-			node.STAdataAttributes=getDataAttributes(node.STAdata);
-			if (url)
-				node.STAfileUrl=url;
-			networkNodes.update(node);
-			updateQueryAndTableArea(node);
-			UpdateChildenTable(node);
-		} else {
-			showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0,1000));
-			node.STAdata=null;
-			networkNodes.update(node);
-			return;
-		}
+	if (node.STAdata.length==0)
+		showInfoMessage("JSON resulted in no records.");
+	else
+		showInfoMessage("JSON has been loaded.");
+	if (node.STAdata) {
+		node.STAdataAttributes=getDataAttributes(node.STAdata);
+		if (url)
+			node.STAfileUrl=url;
+		networkNodes.update(node);
+		updateQueryAndTableArea(node);
+		UpdateChildenTable(node);
+	} else {
+		showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0,1000));
+		node.STAdata=null;
+		networkNodes.update(node);						
+		return;
 	}
+}
 }
 
 async function ReadFileImportJSON(event) {
@@ -1622,112 +1651,30 @@ async function ReadFileImportJSON(event) {
 		file= input.files[0];
 		text=await  file.text();
 		TransformTextJSONToTable(null, text, null,node, lastOne);
-		updateQueryAndTableArea(node);
 		showInfoMessage("JSON has been loaded.");
 	}
+
+
 }
 
-
-//I was forced to implement it like this because STA 1.0 does not have any conformance section.
-function IsJSONaSTARootPage(json, jsonText) {
-	if (!json)
-	{
-		try
-		{
-			json = JSON.parse(jsonText);
-		}
-		catch (e) 
-		{
-			showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0, 1000));
-			return false;
-		}
-	}
-	if (!json.value || !json.value.length)
-		return false;
-	var found=0;
-	for (var i=0; i<json.value.length; i++) {
-		if (!json.value[i] || !json.value[i].name)
-			continue;
-		for  (var j=0; j<STAEntitiesArray.length; j++) {
-			if (json.value[i].name==STAEntitiesArray[j]) {
-				found++;
-				break;
-			}
-		}
-	}
-	if (found>7)
-		return true;
-	return false;
-}
-
-async function IsJSONaOGCAPI(json, jsonText) {
-	if (!json)
-	{
-		try
-		{
-			json = JSON.parse(jsonText);
-		}
-		catch (e) 
-		{
-			showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0, 1000));
-			return false;
-		}
-	}
-	if (!json.links || !json.links.length)
-		return false;
-	for (var i=0; i<json.links.length; i++) {
-		if (json.links[i] && json.links[i].rel.endsWith("http://www.opengis.net/def/rel/ogc/1.0/conformance") && json.links[i].href)
-		{
-			var response=await HTTPJSONData(json.links[i].href);
-			if (response.obj && response.obj.conformsTo && response.obj.conformsTo.length && 
-				(0<=response.obj.conformsTo.indexOf("http://www.opengis.net/spec/ogcapi-common-1/1.0/conf/core") || 
-				 0<=response.obj.conformsTo.indexOf("http://www.opengis.net/spec/ogcapi-features-1/1.0/conf/core") || 
-				 0<=response.obj.conformsTo.indexOf("http://www.opengis.net/spec/ogcapi-coverage-1/1.0/conf/core")
-				))
-				return true;
-			return false;
-		}
-	}
-	return false;
-}
-
-
-function ReadURLImportJSON(event, url, security) {
-	var node=getNodeDialog("DialogImportJSON");
-	var parentNode=GetFirstParentNode(node);
-	if (!url && !document.getElementById("DialogImportJSONSourceURLInput").value.trim())
+function ReadURLImportJSON() {
+	var locationSTAURL;
+	var parentNode=GetFirstParentNode(currentNode);
+	if (!document.getElementById("DialogImportJSONSourceURLInput").value.trim())
 		return;
-	node.STAURL = url ? url : document.getElementById("DialogImportJSONSourceURLInput").value.trim();
-	node.OGCType = "fileURL";
-	if (security)
-		node.STAsecurity=security;
-	else if (parentNode.STAsecurity)
-		node.STAsecurity=deapCopy(parentNode.STAsecurity);
-	else
-		node.STAsecurity=null;
-
-	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, url)).then(
-				async function(value) {
-					if (typeof value.ok !== undefined && value.ok===false) {
-						showInfoMessage('Error downloading JSON');
-						return; 
-					}
+	currentNode.STAURL = document.getElementById("DialogImportJSONSourceURLInput").value.trim();
+	currentNode.OGCType = "fileURL";
+	if (parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL && parentNode.STAsecurity) {
+		currentNode.STAsecurity = deapCopy(parentNode.STAsecurity);
+		locationSTAURL=transformStringIntoLocation(currentNode.STAURL);
+	} else {
+		currentNode.STAsecurity = null;
+		locationSTAURL=null;
+	}
+	HTTPJSONData(currentNode.STAURL, null, null, null, locationSTAURL ? getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAsecurity.S3) : null).then(
+				function(value) {
 					showInfoMessage('Download JSON completed.');
-					if (IsJSONaSTARootPage(value.obj, value.text)) {
-						delete node.OGCType;
-						node.image = "staRoot.png";
-						node.label = "STA root";
-						networkNodes.update(node);
-						LoadJSONNodeSTAData(node);
-					} else if (await IsJSONaOGCAPI(value.obj, value.text)) {
-						node.OGCType = "OGCAPIcollections";
-						node.image = "ogcAPICols.png";
-						node.label = "OGC API Collections";
-						node.STAURL += "/collections";
-						networkNodes.update(node);
-						LoadJSONNodeSTAData(node);
-					} else  //Pending: If the response is a JSONLD, we should redirect it to the other transformation and change the node image.
-						TransformTextJSONToTable(value.obj, value.text, document.getElementById("DialogImportJSONSourceURLInput").value, node);
+					TransformTextJSONToTable(value.obj, value.text, document.getElementById("DialogImportJSONSourceURLInput").value, currentNode, "onlyOne");
 				},
 				function(error) { 
 					showInfoMessage('Error downloading JSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -1779,6 +1726,43 @@ async function ReadURLImportJSONMultiple(event){
 	UpdateChildenTable(node);
 }
 
+function TransformGeoJSONFeatureToTable(feature, url) {
+	var record={};
+	if (feature.id)
+		record.id=feature.id;
+	if (url)
+		record.itemLink=url+"/"+feature.id;
+	if (feature.assets) {  //STAC extension
+		var keys=Object.keys(feature.assets);
+		for (var k = 0; k < keys.length; k++) {
+			if (feature.assets[keys[k]].href)
+				record[keys[k]+"OpenLink"]=feature.assets[keys[k]].href;
+			if (feature.assets[keys[k]].alternate && feature.assets[keys[k]].alternate.FACTS_API_Key && feature.assets[keys[k]].alternate.FACTS_API_Key.href) {
+				record[keys[k]+"AssetLink"]=feature.assets[keys[k]].alternate.FACTS_API_Key.href;
+				record[keys[k]+"AssetType"]=feature.assets[keys[k]].alternate.FACTS_API_Key?.type ? feature.assets[keys[k]].alternate.FACTS_API_Key.type : "application/geopackage+sqlite3";
+				record[keys[k]+"WalletUrl"]=feature.assets[keys[k]].alternate.FACTS_API_Key?.auth?.schemes?.flows?.authorizationCode?.authorizationApi ? feature.assets[keys[k]].alternate.FACTS_API_Key.auth.schemes.flows.authorizationCode.authorizationApi : "https://wallet.dataspace.secd.eu";
+			}
+		}
+	}
+	Object.assign(record, deapCopy(feature.properties)); //JSON properties are directly copied into STAdata
+	record.geometry=deapCopy(feature.geometry);  //JSON geometry are directly copied into STAdata
+	return record;
+}
+
+function TransformGeoJSONToTable(geojson, url) {
+var data=[], feature;				
+
+	if (geojson.type && geojson.type=="FeatureCollection") {
+		for (var i=0; i<geojson.features.length; i++)
+			data.push(TransformGeoJSONFeatureToTable(geojson.features[i], url))
+	} else if (geojson.type && geojson.type=="Feature") {
+		data.push(TransformGeoJSONFeatureToTable(geojson, url))
+	} else 
+		return null;
+	
+	return data;
+}
+
 function TransformTextGeoJSONToTable(jsonText, url, node) {
 	try
 	{
@@ -1810,13 +1794,10 @@ function TransformTextGeoJSONToTable(jsonText, url, node) {
 				node.STAdataAttributes=retorn.dataAttributes;
 			}
 		}
-	} else {
-		node.STAdataAttributes=getDataAttributes(node.STAdata);
 	}
 	if (url)
 		node.STAfileUrl=url;				
 	networkNodes.update(node);
-	updateQueryAndTableArea(node);
 	UpdateChildenTable(node);
 }
 
@@ -2056,38 +2037,36 @@ function TransformS3ServiceResponseToDataAttributes(node, text) {
 	UpdateChildenTable(node);
 }
 
-function GetDialogS3BucketEvent(event, url, security) {
-	if (event)
-		event.preventDefault(); // We don't want to submit this form
+function GetDialogS3BucketEvent(event) {
+	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogS3Bucket").close(document.getElementById("DialogS3BucketURL").value);
-	var node=getNodeDialog("DialogS3Bucket");
 
 	if (false==ChangeToHTTPS(true))
 		return;
 
-	var parentNode=GetFirstParentNode(node);
+	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode && parentNode.OGCType=="S3Buckets")
-		node.OGCType = "S3Bucket";
+		currentNode.OGCType = "S3Bucket";
 	else
-		node.OGCType = "S3Buckets";
+		currentNode.OGCType = "S3Buckets";
 	
-	var previousSTAURL = node.STAURL;
-	node.STAURL = url ? url : document.getElementById("DialogS3BucketURL").value;
-	node.STAsecurity=security ? security : {S3: {accessKey: document.getElementById("DialogS3BucketAccessKey").value,
+	var previousSTAURL = currentNode.STAURL;
+	currentNode.STAURL = document.getElementById("DialogS3BucketURL").value;
+	currentNode.STAsecurity={S3: {accessKey: document.getElementById("DialogS3BucketAccessKey").value,
 				secretKey: document.getElementById("DialogS3BucketSecretKey").value,
 				service: document.getElementById("DialogS3BucketS3Service").value}};
-	networkNodes.update(node);
+	networkNodes.update(currentNode);
 
 	//if childen nodes have also STAURL
-	UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
-	var locationSTAURL=transformStringIntoLocation(node.STAURL);
-	HTTPJSONData(node.STAURL, null, null, null, getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, node.STAsecurity.S3)).then(
+	UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
+	var locationSTAURL=transformStringIntoLocation(currentNode.STAURL);
+	HTTPJSONData(currentNode.STAURL, null, null, null, getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, currentNode.STAsecurity.S3)).then(
 				function(value) {
-					if (node.OGCType == "S3Buckets")
+					if (currentNode.OGCType == "S3Buckets")
 						showInfoMessage('S3 Service bucket list request completed.'); 
 					else
 						showInfoMessage('S3 Bucket content request completed.'); 
-					TransformS3ServiceResponseToDataAttributes(node, value.text);
+					TransformS3ServiceResponseToDataAttributes(currentNode, value.text);
 				},
 				function(error) { 
 					showInfoMessage('Error in requesting S3 Bucket root folder. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -2278,7 +2257,6 @@ function ShowUploadObservationsSelects(node) {
 		var data = parentNode.STAdata;
 		var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsPlace", dataAttributes, "place");
-		//PopulateSelectSaveLayerDialog("DialogUploadObservationsGeometry", dataAttributes, "feature");
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsLongitude", dataAttributes, "long");
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsLatitude", dataAttributes, "lat");
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsTime", dataAttributes, "phenomenonTime");
@@ -2290,7 +2268,6 @@ function ShowUploadObservationsSelects(node) {
 function GetSelectedOptionsUploadObservations(){
 	var selectedOptions={};
 	selectedOptions.place=document.getElementById("DialogUploadObservationsPlaceSelect").value;
-	//selectedOptions.geometry=document.getElementById("DialogUploadObservationsGeoemetrySelect").value;
 	selectedOptions.longitude=document.getElementById("DialogUploadObservationsLongitudeSelect").value;
 	selectedOptions.latitude=document.getElementById("DialogUploadObservationsLatitudeSelect").value;
 	selectedOptions.time=document.getElementById("DialogUploadObservationsTimeSelect").value;
@@ -4048,8 +4025,6 @@ async function GetDeleteEntity(entityName, id){
 	else
 		showInfoMessage("Error deleting"+ STAEntities[entityName].singular +" "+id);
 }
-
-
 function changeDialogReplaceTextInTableRadiobutton(source){
 	if (source=="all"){
 		document.getElementById("dlgDialogReplaceTextInTable_select").disabled=true;
@@ -4057,30 +4032,28 @@ function changeDialogReplaceTextInTableRadiobutton(source){
 		document.getElementById("dlgDialogReplaceTextInTable_select").disabled=false;
 	}
 }
-
 function populateReplace(node){
 	saveNodeDialog("DialogReplaceTextInTable", node);
 	var select= document.getElementById("dlgDialogReplaceTextInTable_select");
 	var attributes=Object.keys(node.STAdataAttributes);
-	var cdns=[];
+	var c=""
 	for (var i=0;i<attributes.length;i++){
-		cdns.push(`<option value="${attributes[i]}">${attributes[i]} </option>`);
+		c+=`<option value="${attributes[i]}">${attributes[i]} </option>`
 	}
-	select.innerHTML=cdns.join("");
+	select.innerHTML=c
 }
-
 function ReplaceTextInTableApplyButton(event){
 	event.preventDefault();
 	var node= getNodeDialog("DialogReplaceTextInTable");
 	var searchValue=document.getElementById("dlgDialogReplaceTextInTable_input_search").value;
 	var replaceValue=document.getElementById("dlgDialogReplaceTextInTable_input_replace").value;
-	var numbersAsText=(document.getElementById("dlgDialogReplaceTextInTable_checkbox_numbersAsText").checked) ? true : false;
-	var datesAsText=(document.getElementById("dlgDialogReplaceTextInTable_checkbox_datesAsText").checked) ? true : false;
+	var numbersAsText,datesAsText;
+	(document.getElementById("dlgDialogReplaceTextInTable_checkbox_numbersAsText").checked)?numbersAsText="yes":numbersAsText="no";
+	(document.getElementById("dlgDialogReplaceTextInTable_checkbox_datesAsText").checked)?datesAsText="yes":datesAsText="no";
 	if (document.getElementById("dlgDialogReplaceTextInTable_radiobutton_all").checked){ //all
-		var data=ReplaceTextInTable(node.STAdata, node.STAdataAttributes, searchValue, replaceValue, numbersAsText, datesAsText);
-		if (typeof data === "string") 
-			alert(data);
-		else {
+		var data= ReplaceTextInTable(node.STAdata,searchValue, replaceValue,numbersAsText,datesAsText, node.STAdataAttributes);
+		if (typeof data=="string")alert (data);
+		else{
 			node.STAdata=data;
 			networkNodes.update(node);
 			updateQueryAndTableArea(node);
@@ -4088,12 +4061,13 @@ function ReplaceTextInTableApplyButton(event){
 			document.getElementById("DialogReplaceTextInTable").close()
 		}
 
-	} else { //column
+	}
+	else{ //column
 		var select=document.getElementById("dlgDialogReplaceTextInTable_select");
-		var data=ReplaceTextInTable(node.STAdata, node.STAdataAttributes, searchValue, replaceValue, numbersAsText, datesAsText, select.options[select.selectedIndex].value);
-		if (typeof data === "string") 
-			alert(data);
-		else {
+		var column= select.options[select.selectedIndex].value;
+		var data= ReplaceTextInTable(node.STAdata,searchValue, replaceValue,numbersAsText,datesAsText,node.STAdataAttributes,column);
+		if (typeof data=="string")alert (data);
+		else{
 			node.STAdata=data;
 			networkNodes.update(node);
 			updateQueryAndTableArea(node);
@@ -4101,8 +4075,12 @@ function ReplaceTextInTableApplyButton(event){
 			document.getElementById("DialogReplaceTextInTable").close()
 		}
 	}
-}
+	
 
+
+
+
+}
 function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
 	var cdns=[];
 	var data= currentNode.STAdata;
@@ -4563,9 +4541,9 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 			//pensar com es podria fer.
 			showInfoMessage("Automatic update of SelectColumns not implemented for table nodes.");
 		}
-		else if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || STAOperations[removeFileExtension(node.image)].callSTALoad)
+		else if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || STAOperations[removeExtension(node.image)].callSTALoad)
 		{
-			showInfoMessage("Updating "+ removeFileExtension(node.image) + " ...");
+			showInfoMessage("Updating "+ removeExtension(node.image) + " ...");
 			await LoadJSONNodeSTAData(node);
 		}
 		else if (node.image == "OneValueSTA.png")
@@ -4618,17 +4596,13 @@ function getJSONSchemaTypeFromAttributeType(t) {
 	return t;
 }
 
-//It also detects objects that are geometries.
 function getJSONTypeOrISODatetime(s) {
 	var type=getJSONType(s), numberReturned;
-	if (type =="string" && s.length>0) { 
+	if (type =="string" && s.length>0)
+	{ 
 		numberReturned=fragmentStartsWithISODate(s, 0);
 		if (s.length==numberReturned) 
 			return "isodatetime";
-	}
-	else if (type =="object" && s.coordinates && s.type && isGeoJSONGeometryType(s.type))
-	{ 
-		return "geometry";
 	}
 	return type;
 }
@@ -4652,7 +4626,7 @@ function modifyDataAttributeTypeNewRecord(dataAttributeType, type) {
 }
 
 //Creates dataAttributes and determines the "type" attribute.
-//Possible values are the usual JSON types ("string", "boolean", "array", "null", "object", "geometry" "undefined", "integer", "number")
+//Possible values are the usual JSON types ("string", "boolean", "array", "null", "object", "undefined", "integer", "number")
 // plus "isodatetime" and "anyURI"
 // Any changes to this function should be applied to getDataAttributeType(data)
 
@@ -4809,15 +4783,7 @@ function GetGeoJSON(data, selectedOptions) {
 	{
 		for (var i = 0; i < data.length; i++) {
 			var a=data[i];
-			if (selectedOptions.geometry)
-				geojson.features.push({
-					"type": "Feature",
-					"geometry": (a[selectedOptions.geometry] && typeof a[selectedOptions.geometry]==="string" ? JSON.parse(a[selectedOptions.geometry]) : a[selectedOptions.geometry]),
-					"properties": {
-					}
-				});				
-			else
-				geojson.features.push({
+			geojson.features.push({
 					"type": "Feature",
 					"geometry": {
 						"type": "Point",
@@ -5364,7 +5330,6 @@ function ShowSaveLayerDialogSelects(node, descripUoM) {
 		var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 		var s, elem;
 		PopulateSelectSaveLayerDialog("DialogSaveLayerPlace", dataAttributes, "FeatureOfInterest/description");
-		PopulateSelectSaveLayerDialog("DialogSaveLayerGeometry", dataAttributes, "FeatureOfInterest/feature");
 		PopulateSelectSaveLayerDialog("DialogSaveLayerLongitude", dataAttributes, "FeatureOfInterest/feature/coordinates_0");
 		PopulateSelectSaveLayerDialog("DialogSaveLayerLatitude", dataAttributes, "FeatureOfInterest/feature/coordinates_1");
 		PopulateSelectSaveLayerDialog("DialogSaveLayerTime", dataAttributes, "phenomenonTime");
@@ -5387,7 +5352,6 @@ function ShowSaveLayerDialogSelects(node, descripUoM) {
 function GetSelectedOptionsSaveLayer(descripUoM){
 	var selectedOptions={};
 	selectedOptions.place=document.getElementById("DialogSaveLayerPlaceSelect").value;
-	selectedOptions.geometry=document.getElementById("DialogSaveLayerGeometrySelect").value;
 	selectedOptions.longitude=document.getElementById("DialogSaveLayerLongitudeSelect").value;
 	selectedOptions.latitude=document.getElementById("DialogSaveLayerLatitudeSelect").value;
 	selectedOptions.time=document.getElementById("DialogSaveLayerTimeSelect").value;
@@ -5485,7 +5449,6 @@ function GetMeaningTable() {
 	if (newName.length!=0)	changeAttributeNameAndData(data, newName,dataAttributes);
 	return dataAttributes;
 }
-
 function changeAttributeNameAndData(data, newName,dataAttributes){ //newName (old att name, new)
 	var n=data.length, m=newName.length ;
 	for (var i=0;i<n;i++){ //change data
@@ -5805,66 +5768,6 @@ function getCSVReadParams(csvw){
 	return csvw.dialect;
 }
 
-function GetSelectedOptionsAddColumnGeo(){
-	var selectedOptions={};
-	//selectedOptions.radioIn=document.getElementById("DialogAddColumnGeoRadioJSON_WKT_geohash_LL").value;
-	selectedOptions.radioIn=document.DialogAddColumnGeoForm.DialogAddColumnGeoRadioJSON_WKT_geohash_LL.value;
-	selectedOptions.JSONIn=document.getElementById("DialogAddColumnGeoJSONSelect").value;
-	selectedOptions.WKTIn=document.getElementById("DialogAddColumnGeoWKTSelect").value;
-	selectedOptions.geohashIn=document.getElementById("DialogAddColumnGeoGeohashSelect").value;
-	selectedOptions.longitudeIn=document.getElementById("DialogAddColumnGeoLongitudeSelect").value;
-	selectedOptions.latitudeIn=document.getElementById("DialogAddColumnGeoLatitudeSelect").value;
-
-	selectedOptions.radioOut=document.DialogAddColumnGeoForm.DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut.value;
-	selectedOptions.nameOut=document.getElementById("DialogAddColumnGeoNameText").value;
-	selectedOptions.latitudeOut=document.getElementById("DialogAddColumnGeoLatitudeNameText").value;
-
-	return selectedOptions;
-}
-
-function GetAddColumnGeo(event) {
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogAddColumnGeo").close();
-	var node=getNodeDialog("DialogAddColumnGeo");
-	var selectedOptions=GetSelectedOptionsAddColumnGeo();
-	AddColumnGeoFromAnother(node.STAdata, node.STAdataAttributes, selectedOptions);
-	networkNodes.update(node);
-	updateQueryAndTableArea(node);
-	UpdateChildenTable(node);
-}
-
-function ShowAddColumnGeoDialog(node) {
-	var dataAttributes=currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(node.STAdata);
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoJSON", dataAttributes, "geometry");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoWKT", dataAttributes, "wkt");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoGeohash", dataAttributes, "geohash");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoLongitude", dataAttributes, "long");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoLatitude", dataAttributes, "lat");
-
-	saveNodeDialog("DialogAddColumnGeo", node);
-	ChangeAddColumnGeoRadioOut();
-}
-
-function ChangeAddColumnGeoRadioOut(event) {
-	if (document.getElementById("DialogAddColumnGeoRadioJSONOut").checked || 
-	    document.getElementById("DialogAddColumnGeoRadioWKTOut").checked ||
-	    document.getElementById("DialogAddColumnGeoRadioGeohashOut").checked) {
-		document.getElementById("DialogAddColumnGeoNameOut").innerHTML="Column name:";
-		//document.getElementById("DialogAddColumnGeoLatitudeNameOut").innetHTML=""; 
-		document.getElementById("DialogAddColumnGeoLatitudeNameOut").style.display="none";
-		document.getElementById("DialogAddColumnGeoLatitudeNameText").style.display="none";
-	}
-	else
-	{
-		document.getElementById("DialogAddColumnGeoNameOut").innerHTML="Longitude:";
-		document.getElementById("DialogAddColumnGeoNameText").value="Longitude";
-		document.getElementById("DialogAddColumnGeoLatitudeNameOut").innetHTML="Latitude";
-		document.getElementById("DialogAddColumnGeoLatitudeNameOut").style.display="inline-block";
-		document.getElementById("DialogAddColumnGeoLatitudeNameText").style.display="inline-block";
-	}
-}
-
-
 function SaveLayer(event) {
 	event.preventDefault(); // We don't want to submit this form
 	document.getElementById("DialogSaveLayer").close();
@@ -5955,8 +5858,6 @@ function OpenMapMMN(url, geojson, geojsonSchema, geojsonStyle, geojsonDates){
 }
 
 function AddCircularImageInterpretingURL(url, mediatype, security) {
-	if (!mediatype)
-		mediatype=getMediaTypeForURLExtension(url);
 	if (mediatype=="application/geopackage+sqlite3") {
 		startingNodeContextId=currentNode.id;
 		var node=addCircularImage(null, null, "ImportGPKG", "ImportGPKG.png");
@@ -5986,12 +5887,6 @@ function AddCircularImageInterpretingURL(url, mediatype, security) {
 		//node.STAdata=Papa.parse(value.text, {header: true, dynamicTyping: true, skipEmptyLines: true}).data;
 		//Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
 		//TransformDatesToISO(currentNode.STAdata);
-	} else if (mediatype=="application/dbase" || mediatype=="application/x-dbase" || mediatype=="application/dbf" || mediatype=="application/x-dbf") {
-		startingNodeContextId=currentNode.id;
-		var node=addCircularImage(null, null, "ImportDBF", "ImportDBF.png");
-		saveNodeDialog("DialogImportDBF", node);
-		currentNode=node;
-		ReadURLImportDBF(event, url, security);
 	} else {
 		node.STAdata=[{"Content-Type": value.responseHeaders["Content-Type"], "Content-Length": value.responseHeaders["Content-Length"]}];
 		showInfoMessage("Media type (a.k.a format) not supported in this itinerary")  //We need to work on extending support for other formats.
@@ -6189,7 +6084,7 @@ function getNoQueryParentNodeSTAEntity(node) {
 	if (node.image=="SelectRowSTA.png" || node.image=="SelectResourceSTA.png")
 		return node;
 	//Is one of the nodes that adds a query param?
-	var staOperation=STAOperations[removeFileExtension(node.image)];
+	var staOperation=STAOperations[removeExtension(node.image)];
 	if (!staOperation || !staOperation.addSTAQuery)
 		return null;
 	var parentNode=GetFirstParentNode(node);
@@ -6207,7 +6102,7 @@ function getRootParentNodeSTAEntity(node) {
 		return null;
 	if (-1!=IdOfSTAEntity(node))
 		return getRootParentNodeSTAEntity(parentNode);
-	var staOperation=STAOperations[removeFileExtension(node.image)];
+	var staOperation=STAOperations[removeExtension(node.image)];
 	if (staOperation)
 		return getRootParentNodeSTAEntity(parentNode);
 	return null;
@@ -6326,16 +6221,11 @@ function OpenLink(event) {
 					) && (columnName=="link" || columnName=="itemsLink")) || 
 				((node.image=="ogcAPIItems.png" || 
 						(parentNode?.image=="ogcAPIItems.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-
 					) && (columnName=="itemLink" || columnName.endsWith("AssetLink") ))
 				){
 			if (columnName=="link") {
-				if (parentNode?.image=="ogcAPICols.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-					;
-				else {
-					startingNodeContextId=node.id;
-					AddSelectResourceIfNoThere(node, data[iRecord]["id"]);
-				}
+				startingNodeContextId=node.id;
+				AddSelectResourceIfNoThere(node, data[iRecord]["id"]);
 			} else if (columnName=="itemsLink" || columnName=="itemLink") {
 				startingNodeContextId=node.id;
 				var nodeResource=(node.image=="ogcAPICols.png") ? AddSelectResourceIfNoThere(node, data[iRecord]["id"]) : node;				
@@ -6385,49 +6275,13 @@ function OpenLink(event) {
 				var nodeSelect=AddSelectRowIfNoThere(node, data[iRecord]["assetId"], iRecord); //Select the iRecord 
 				startingNodeContextId=nodeSelect.id;
 				currentNode=addCircularImage(null, null, "edcAsset", "edcAsset.png");
-			} else /*if (
+			} else if (
 				(node.image=="edcAsset.png" || 
 						(parentNode?.image=="edcAsset.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-					) && (columnName=="assetId"))*/ {
+					) && (columnName=="assetId")) {
 				startingNodeContextId=node.id;
 				//AddSelectResourceIfNoThere(node, data[iRecord]["id"]); Select the iRecord 
 			}
-		} else if (  //S3Service
-				((node.image=="s3Service.png" || 
-						(parentNode?.image=="s3Service.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-					) && (columnName=="bucketName")) || 
-				((node.image=="s3Bucket.png" || 
-						(parentNode?.image=="s3Bucket.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-					) && (columnName=="assetId"))
-				){
-			if (
-				(node.image=="s3Service.png" || 
-						(parentNode?.image=="s3Service.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-					) && (columnName=="bucketName")) {
-				startingNodeContextId=node.id;
-				var nodeSelect=AddSelectRowIfNoThere(node, data[iRecord]["bucketName"], iRecord); //Select the iRecord 
-				startingNodeContextId=nodeSelect.id;
-				currentNode=addCircularImage(null, null, "s3Bucket", "s3Bucket.png");
-			} else /*if (
-				(node.image=="edcAsset.png" || 
-						(parentNode?.image=="edcAsset.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-					) && (columnName=="assetId"))*/ {
-				startingNodeContextId=node.id;
-				//AddSelectResourceIfNoThere(node, data[iRecord]["id"]); Select the iRecord 
-			}
-		} else if (node.image=="s3Bucket.png" && columnName=="href") {
-			startingNodeContextId=node.id;
-			currentNode=AddSelectRowIfNoThere(node, data[iRecord]["href"], iRecord); //Select the iRecord 
-			startingNodeContextId=currentNode.id;
-			AddCircularImageInterpretingURL(data[iRecord]["href"], null, currentNode.STAsecurity);
-		} else if (  //GeoPackage
-				(node.image=="ImportGPKG.png" || 
-						(parentNode?.image=="ImportGPKG.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-					) && (columnName=="tableName")){
-			startingNodeContextId=node.id;
-			var nodeSelect=AddSelectRowIfNoThere(node, data[iRecord]["tableName"], iRecord); //Select the iRecord 
-			startingNodeContextId=nodeSelect.id;
-			currentNode=addCircularImage(null, null, "ImportGPKGTable", "ImportGPKGTable.png");
 		} else {  //STA Entity
 			if (typeof data[iRecord]["@iot.id"]==="undefined")  //If this was not selected it is not possible to do this (or we could look for alternative ways to know it)
 				return;
@@ -6449,7 +6303,7 @@ function OpenLink(event) {
 				if (i==nodeIds.length) {
 					for (var i = 0; i < nodeIds.length; i++) {
 						var nodeChild = networkNodes.get(nodeIds[i])
-						if (removeFileExtension(nodeChild.image)==entityName) {
+						if (removeExtension(nodeChild.image)==entityName) {
 							OpenLinkSTAEntity(nodeChild, data[iRecord]["@iot.id"], columnName);
 							break;
 						}
@@ -6490,7 +6344,7 @@ function isAttributeAnyURINodeId(columnName, nodeId) {
 function isAttributeAnyURINode(columnName, node, parentNode) {
 	if ((node.image=="sta.png" || node.image=="staRoot.png") && columnName=="url")
 		return true;
-	if ((-1!=IdOfSTAEntity(node) || STAOperations[removeFileExtension(node.image)]) && 
+	if ((-1!=IdOfSTAEntity(node) || STAOperations[removeExtension(node.image)]) && 
 	          (columnName=="@iot.selfLink" || getSTAEntityNavLink(columnName)))
 		return true;
 	if ((node.image=="ogcAPICols.png" || 
@@ -6500,16 +6354,6 @@ function isAttributeAnyURINode(columnName, node, parentNode) {
         if ((node.image=="ogcAPIItems.png" || 
 			(parentNode?.image=="ogcAPIItems.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
 		) && (columnName=="itemLink" || columnName.endsWith("AssetLink") ))
-		return true;
-	if ((node.image=="s3Service.png" || 
-			(parentNode?.image=="s3Service.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-		) && columnName=="bucketName")
-		return true;
-	if (node.image=="s3Bucket.png" && columnName=="href")
-		return true;
-	if ((node.image=="ImportGPKG.png" || 
-			(parentNode?.image=="ImportGPKG.png" && (node.image=="SelectRowsTable.png" || node.image=="SelectRowsSTA.png" || node.image=="SelectResourceSTA.png"))
-		) && columnName=="tableName")
 		return true;
 	if (node.image=="edc.png" && columnName=="assetId")  //This is not a link per se so it is not in isAttributeAnyURI()
 		return true;
@@ -6673,30 +6517,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		TransformBinaryGPKGTableToTable(nodeTo, nodeFrom.STAdata[0].tableName);
-		return true;
-	}
-	if (nodeTo.image == "s3Bucket.png") {
-		if (nodeFrom.STAsecurity)
-			nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
-		nodeTo.STAURL = nodeFrom.STAdata[0].href;
-		nodeTo.OGCType = "S3Bucket";
-		networkNodes.update(nodeTo);
-		if (addEdge)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		//GetDialogS3BucketEvent(null, nodeFrom.STAdata[0].href, nodeTo.STAsecurity)
-
-		var locationSTAURL=transformStringIntoLocation(nodeTo.STAURL);
-		HTTPJSONData(nodeTo.STAURL, null, null, null, getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, nodeTo.STAsecurity.S3)).then(
-				function(value) {
-					showInfoMessage('S3 Bucket content request completed.'); 
-					TransformS3ServiceResponseToDataAttributes(nodeTo, value.text);
-				},
-				function(error) { 
-					showInfoMessage('Error in requesting S3 Bucket root folder. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
-					console.log(error) ;
-				}
-			);	
+		TransformBinaryGPKGTableToTable(nodeTo, nodeFrom.STAdata[0].name);
 		return true;
 	}
 	if (staNodes && nodeTo.image == "GeoFilterPolSTA.png") {
@@ -6750,7 +6571,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		return true;
 	}
-		if (nodeTo.image=="MultiCreateSTA.png"){
+	if (nodeTo.image=="MultiCreateSTA.png"){
 		
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
@@ -6790,12 +6611,13 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 			else
 				nodeTo.STAdataAttributes = getDataAttributes(nodeTo.STAdata);
 		}		
+		
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		return true;
 	}
-	if (tableNodes && nodeTo.image == "Replace.png") {
+	if (tableNodes && nodeTo.image == "replace.png") {
 		if (nodeFrom.STAdata){
 			nodeTo.STAdata = deapCopy(nodeFrom.STAdata); 
 			if (nodeFrom.STAdataAttributes){
@@ -6818,7 +6640,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		EDCNegociateContract(nodeTo, nodeFrom.EDCConsumerURL, nodeFrom.STAdata[0].assetId, nodeFrom.STAdata[0].offerId, nodeFrom.STAdata[0].counterPartyAddress, nodeFrom.STAdata[0].participantId, nodeFrom.STAdata[0].mediaType);
+		EDCNegociateContract(nodeTo, nodeFrom.EDCConsumerURL, nodeFrom.STAdata[0].offerId, nodeFrom.STAdata[0].counterPartyAddress, nodeFrom.STAdata[0].mediaType);
 		return true;
 	}
 	if (tableNodes && nodeTo.image == "ogcAPICols.png") {
@@ -6959,7 +6781,6 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "s3Service.png") {
 			if (false==ChangeToHTTPS(true))
 				return;
-			saveNodeDialog("DialogS3Bucket", currentNode);
 			document.getElementById("divTitleDialogS3Bucket").innerHTML = "S3 Service";
 			if (currentNode.STAURL)
 				document.getElementById("DialogS3BucketURL").value = currentNode.STAURL;
@@ -6969,7 +6790,6 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "s3Bucket.png") {
 			if (false==ChangeToHTTPS(true))
 				return;
-			saveNodeDialog("DialogS3Bucket", currentNode);
 			document.getElementById("divTitleDialogS3Bucket").innerHTML = "S3 Bucket";
 			if (currentNode.STAURL)
 				document.getElementById("DialogS3BucketURL").value = currentNode.STAURL;
@@ -7089,6 +6909,7 @@ function networkDoubleClick(params) {
 					}
 				}
 			}
+			saveNodeDialog("DialogImportJSON", currentNode);
 			document.getElementById("DialogImportJSON").showModal();
 		}
 		else if (currentNode.image == "ImportDBF.png") {
@@ -7141,7 +6962,6 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "ImportGeoJSON.png") {
 			document.getElementById("DialogImportGeoJSONSourceURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedGeoJSONurls);
-			saveNodeDialog("DialogImportGeoJSON", currentNode);
 			document.getElementById("DialogImportGeoJSON").showModal();
 		}
 		else if (currentNode.image == "Table.png") {
@@ -7392,6 +7212,7 @@ function networkDoubleClick(params) {
 				document.getElementById("DialogCreateColumns").showModal();
 			 }		
 		}
+
 		else if (currentNode.image == "AggregateColumns.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			createColumnListToAddColumns();//create columnsList including columns in the table 
@@ -7435,17 +7256,7 @@ function networkDoubleClick(params) {
 				document.getElementById("DialogColumnsCalculator").showModal();
 			}
 		}
-		else if (currentNode.image == "AddColumnGeo.png") {
-			var parentNode=GetFirstParentNode(currentNode);
-			
-			if (parentNode.STAdata && !currentNode.STAdata)
-				currentNode.STAdata=deapCopy(parentNode.STAdata);
-			if (parentNode.STAdataAttributes && !currentNode.STAdataAttributes)
-				currentNode.STAdataAttributes=deapCopy(parentNode.STAdataAttributes);
 
-			ShowAddColumnGeoDialog(currentNode);
-			document.getElementById("DialogAddColumnGeo").showModal();
-		}
 		else if (currentNode.image =="ConcatenateTables.png") {
 			document.getElementById("DialogConcatenateTables").showModal();
 		}
@@ -7476,7 +7287,7 @@ function networkDoubleClick(params) {
 			currentNode.image == "ObservationGroup.png" || currentNode.image == "Relation.png") {
 			startingNodeContextId=currentNode.id;
 			if (GetFirstParentNode(currentNode)) {
-				if (PopulateCreateUpdateDeleteEntity(getSTAEntityPlural(removeFileExtension(currentNode.image), true), currentNode))
+				if (PopulateCreateUpdateDeleteEntity(getSTAEntityPlural(removeExtension(currentNode.image), true), currentNode))
 					document.getElementById("DialogCreateUpdateDeleteEntity").showModal();
 			}
 		}else if (currentNode.image == "MultiDatastream.png"){
@@ -7497,7 +7308,7 @@ function networkDoubleClick(params) {
 			}else{
 				alert("Parent node must have data to edite it");
 			}
-		}else if (currentNode.image == "Replace.png") {
+		}else if (currentNode.image == "replace.png") {
 			//startingNodeContextId=currentNode.id;
 			if (currentNode.STAdata) {
 					populateReplace(currentNode);
@@ -7756,7 +7567,7 @@ function openURLNetwork(event) {
 			);	
 }
 
-function saveNetwork(event) {
+function saveNetwork(event){
 	var pos=network.getPositions()
 	var posArray=Object.keys(pos);
 	var data={nodes:[], edges:[]};
@@ -7806,7 +7617,6 @@ async function reloadSTA(event) {
 		}
 	}
 }
-
 //General to addColumns
 function cancelButtonRecoveryOldData(event){
 	event.preventDefault();
@@ -7821,7 +7631,6 @@ function cancelButtonRecoveryOldData(event){
 		document.getElementById("DialogColumnsCalculator").close();
 	}
 }
-
 function deleteRowInColumnsBoxTable(number){
 	event.preventDefault(); 
 	var copyWithoutNumber=[],n=currentNode.STAcolumnsList.length, c=currentNode.STAnewColumnsToAdd.length,columsnListNew=[];
@@ -7849,9 +7658,9 @@ function deleteRowInColumnsBoxTable(number){
 		drawTableInColumnBoxTableInAggregateColumns();
 	} else{
 		drawTableInColumnBoxTableInCalculatorColumns();
-	}	
+	}
+	
 }
-
 function columnExistInTheTable(columnName){
 	var columnList=	currentNode.STAcolumnsList;
 	var n= columnList.length, columnNameExist=false;
@@ -7869,7 +7678,6 @@ function columnExistInTheTable(columnName){
 
 	return columnNameExist;
 }
-
 function createColumnListToAddColumns(){
 	var dataKeys= Object.keys(currentNode.STAdata[0]);
 	currentNode.STAcolumnsList=dataKeys;
@@ -7942,7 +7750,6 @@ function drawTableInColumnBoxTableInCreateColumns(){
 	cdns=[tableHTML];
 	spanColumnsListAggregateColumns.innerHTML=cdns;
 }
-
 function addColumnsToTableInCreateColumns(){
 	event.preventDefault();
 		var n=currentNode.STAnewColumnsToAdd.length;
@@ -8320,12 +8127,15 @@ var mousePosition = textAreaFormulaColumnsCalculator.getAttribute("data-mousePos
 		character==")"
 	}
 
-	if (character == "attributeSelected") {
-		var selector = document.getElementById("calculator_selectColumns");
-		character = selector.options[selector.selectedIndex].value;
-	}
-	textAreaFormulaColumnsCalculator.value = [text.slice(0, mousePosition), character, text.slice(mousePosition)].join('');
-	textAreaFormulaColumnsCalculator.setAttribute("data-mousePosition", parseInt(mousePosition) + character.length); //If there is no click, next button will be written after this.
+
+
+
+if (character == "attributeSelected") {
+	var selector = document.getElementById("calculator_selectColumns");
+	character = selector.options[selector.selectedIndex].value;
+}
+textAreaFormulaColumnsCalculator.value = [text.slice(0, mousePosition), character, text.slice(mousePosition)].join('');
+textAreaFormulaColumnsCalculator.setAttribute("data-mousePosition", parseInt(mousePosition) + character.length); //If there is no click, next button will be written after this.
 }
 
 function addColumnToListColumnsCalculator(event){
@@ -8365,7 +8175,6 @@ function fillCalculatorColumVariablesList(){ //omplir el desplegable
 
 	
 }
-
 function drawTableInColumnBoxTableInCalculatorColumns(){
 	var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListCalculatorColumns");
 	var cdns;
@@ -8402,6 +8211,7 @@ function addColumnsToTableInColumnsCalculator(){
 	networkNodes.update(currentNode);
 	showInfoMessage("New columns have been added");
 	document.getElementById("DialogColumnsCalculator").close();
+
 }
 
 function createColumnStatistics(event){
@@ -8678,9 +8488,11 @@ function takeParentsInformationInGeoDistance(){
 		cdns.push(`<option value="${entityRouteToFeature[i]}">${entityRouteToFeature[i]}</option>`);
 	}
 	entityRouteToFeatureSelect.innerHTML=cdns.join(""); 
+
+
+	
 	return true;
 }
-
 async function GetGeoDistanceFilter(event){
 	event.preventDefault(); 
 	var distanceValue= document.getElementById("geoDistance_input_value").value;
@@ -8719,7 +8531,7 @@ function writeValueInInputGeoDistance(value){
 	document.getElementById("geoDistance_input_coordinate"+value).value= currentNode.STAcolumnsValuesGeoDistance[selectValue]
 }
 
-function PopulateFilterRowsByTimePropertySelect() {
+function PopulateFilterRowsByTimePropertySelect(){
 	var parentNodes= GetParentNodes(currentNode)
 	if (parentNodes && parentNodes.length==1){
 		var idNode=IdOfSTAEntity(parentNodes[0]);  //There is new member to do this. (JM) Need to correct this.
@@ -8760,7 +8572,6 @@ function PopulateFilterRowsByTimePropertySelect() {
 	}
 
 }
-
 async function filterRowsByTimeOkButton(){
 	event.preventDefault();
 	//agafar la info del select i les dates
@@ -8799,7 +8610,6 @@ async function filterRowsByTimeOkButton(){
 	}
 	
 }
-
 function prepareUrlToApplyFilter(){
 	var url;
 	//var previousSTAURL = currentNode.STAURL;
@@ -8815,7 +8625,6 @@ function prepareUrlToApplyFilter(){
 
 	return url;
 }
-
 function applyTemporalFilter(url, dateFrom, dateTo, property){
 	currentNode.STAURL=url +" "+ property+ " ge "+dateFrom +" and "+ property+ " le "+dateTo;
 	LoadJSONNodeSTAData(currentNode);
@@ -9415,8 +9224,8 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 
 }
 /*function giveMeNetworkInformation(event) {
-			if (event)
-				event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogContextMenu").close();
-			console.log(networkNodes.get());
+		if (event)
+			event.preventDefault(); // We don't want to submit this form
+		document.getElementById("DialogContextMenu").close();
+		console.log(networkNodes.get());
 }*/

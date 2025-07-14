@@ -308,13 +308,14 @@ function ShowBarPlotDialog(parentNodes, node) {
 		DrawBarPlot();
 }
 
-
-function ShowImageViewerDialog(parentNodes) {
+function ShowImageViewerDialog(node, parentNodes) {
 	var data = parentNodes[0].STAdata;
 	if (!data || !data.length) {
 		document.getElementById("DialogImageViewerTitle").innerHTML = "No data to show.";
 		return;
 	}
+	saveNodeDialog("DialogImageViewer", node);
+
 	document.getElementById("DialogImageViewerTitle").innerHTML = "Image viewer";
 
 	var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
