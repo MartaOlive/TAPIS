@@ -134,10 +134,90 @@
 				"STAService": "http://localhost:8080/FROST-Server/v1.1",
 				"infoSaved": {
 					"origin": [
-						"general",
+						"entity",
 						"Campaigns"
 					],
 					"entities": {
+						"Datastreams": {
+							"name": {
+								"value": "",
+								"checked": "false"
+							},
+							"description": {
+								"value": "",
+								"checked": "false"
+							},
+							"observationType": {
+								"value": "",
+								"checked": "false"
+							},
+							"unitOfMeasurement": {
+								"value": "",
+								"checked": "false"
+							},
+							"observedArea": {
+								"value": "",
+								"checked": "false"
+							},
+							"phenomenonTime": {
+								"value": "",
+								"checked": "false"
+							},
+							"resultTime": {
+								"value": "",
+								"checked": "false"
+							},
+							"properties": {
+								"value": "",
+								"checked": "false"
+							},
+							"id": {
+								"value": "",
+								"checked": "false"
+							}
+						},
+						"MultiDatastreams": {
+							"name": {
+								"value": "",
+								"checked": "false"
+							},
+							"description": {
+								"value": "",
+								"checked": "false"
+							},
+							"observationType": {
+								"value": "",
+								"checked": "false"
+							},
+							"unitOfMeasurement": {
+								"value": "",
+								"checked": "false"
+							},
+							" observedArea": {
+								"value": "",
+								"checked": "false"
+							},
+							"phenomenonTime": {
+								"value": "",
+								"checked": "false"
+							},
+							"resultTime": {
+								"value": "",
+								"checked": "false"
+							},
+							"multiObservationDataType": {
+								"value": "",
+								"checked": "false"
+							},
+							"properties": {
+								"value": "",
+								"checked": "false"
+							},
+							"id": {
+								"value": "",
+								"checked": "false"
+							}
+						},
 						"Parties": {
 							"id": {
 								"value": "",
@@ -159,10 +239,129 @@
 								"value": "",
 								"checked": "false"
 							}
+						},
+						"Licenses": {
+							"name": {
+								"value": "",
+								"checked": "false"
+							},
+							"definition": {
+								"value": "",
+								"checked": "false"
+							},
+							"description": {
+								"value": "",
+								"checked": "false"
+							},
+							"logo": {
+								"value": "",
+								"checked": "false"
+							},
+							"attributionText": {
+								"value": "",
+								"checked": "false"
+							},
+							"id": {
+								"value": "",
+								"checked": "false"
+							}
+						},
+						"ObservationGroups": {
+							"name": {
+								"value": "",
+								"checked": "false"
+							},
+							"description": {
+								"value": "",
+								"checked": "false"
+							},
+							"purpose": {
+								"value": "",
+								"checked": "false"
+							},
+							"creationTime": {
+								"value": "",
+								"checked": "false"
+							},
+							"endTime": {
+								"value": "",
+								"checked": "false"
+							},
+							"termsOfUsed": {
+								"value": "",
+								"checked": "false"
+							},
+							"privacyPolicy": {
+								"value": "",
+								"checked": "false"
+							},
+							"dataQuality": {
+								"value": "",
+								"checked": "false"
+							},
+							"properties": {
+								"value": "",
+								"checked": "false"
+							},
+							"id": {
+								"value": "",
+								"checked": "false"
+							}
+						},
+						"Campaigns": {
+							"name": {
+								"value": "",
+								"checked": "false"
+							},
+							"description": {
+								"value": "",
+								"checked": "false"
+							},
+							"classification": {
+								"value": "",
+								"checked": "false"
+							},
+							"termsOfUse": {
+								"value": "",
+								"checked": "false"
+							},
+							"privacyPolicy": {
+								"value": "",
+								"checked": "false"
+							},
+							"creationTime": {
+								"value": "",
+								"checked": "false"
+							},
+							"url": {
+								"value": "",
+								"checked": "false"
+							},
+							"startTime": {
+								"value": "",
+								"checked": "false"
+							},
+							"endTime": {
+								"value": "",
+								"checked": "false"
+							},
+							"properties": {
+								"value": "",
+								"checked": "false"
+							},
+							"id": {
+								"value": "",
+								"checked": "false"
+							}
 						}
 					},
 					"needed": [
-						"Parties"
+						"Datastreams",
+						"MultiDatastreams",
+						"Parties",
+						"Licenses",
+						"ObservationGroups",
+						"Campaigns"
 					]
 				},
 				"parentsInformation": {
@@ -252,7 +451,7 @@
 							"resultTime": "Observation/resultTime",
 							"result": "Observation/result"
 						},
-						"label": "Column meaning",
+						"label": "Observations",
 						"attributesKeys": [
 							"@iot.selfLink",
 							"@iot.id",
@@ -10275,7 +10474,7 @@
 							"Station": "Location/description",
 							"Absolute_level": "Datastream/observationType"
 						},
-						"label": "Column meaning",
+						"label": "embassaments",
 						"attributesKeys": [
 							"Day",
 							"Station",
@@ -10287,7 +10486,23 @@
 							"Province"
 						]
 					}
-				}
+				},
+				"autocompleteSelectOptions": [
+					[
+						"iNaturalist",
+						"general"
+					],
+					[
+						"Attributes from Observations",
+						"",
+						"3v90h.p8gb78g"
+					],
+					[
+						"Attributes from embassaments",
+						"",
+						"10r4n.nle6kq"
+					]
+				]
 			}
 		},
 		{
@@ -20332,64 +20547,7 @@
 			"image": "sta.png",
 			"shape": "circularImage",
 			"STAURL": "http://localhost:8080/FROST-Server/v1.1",
-			"STAdata": [
-				{
-					"name": "Campaigns",
-					"url": "http://localhost:8080/FROST-Server/v1.1/Campaigns"
-				},
-				{
-					"name": "Datastreams",
-					"url": "http://localhost:8080/FROST-Server/v1.1/Datastreams"
-				},
-				{
-					"name": "FeaturesOfInterest",
-					"url": "http://localhost:8080/FROST-Server/v1.1/FeaturesOfInterest"
-				},
-				{
-					"name": "HistoricalLocations",
-					"url": "http://localhost:8080/FROST-Server/v1.1/HistoricalLocations"
-				},
-				{
-					"name": "Licenses",
-					"url": "http://localhost:8080/FROST-Server/v1.1/Licenses"
-				},
-				{
-					"name": "Locations",
-					"url": "http://localhost:8080/FROST-Server/v1.1/Locations"
-				},
-				{
-					"name": "MultiDatastreams",
-					"url": "http://localhost:8080/FROST-Server/v1.1/MultiDatastreams"
-				},
-				{
-					"name": "Observations",
-					"url": "http://localhost:8080/FROST-Server/v1.1/Observations"
-				},
-				{
-					"name": "ObservationGroups",
-					"url": "http://localhost:8080/FROST-Server/v1.1/ObservationGroups"
-				},
-				{
-					"name": "ObservedProperties",
-					"url": "http://localhost:8080/FROST-Server/v1.1/ObservedProperties"
-				},
-				{
-					"name": "Parties",
-					"url": "http://localhost:8080/FROST-Server/v1.1/Parties"
-				},
-				{
-					"name": "Relations",
-					"url": "http://localhost:8080/FROST-Server/v1.1/Relations"
-				},
-				{
-					"name": "Sensors",
-					"url": "http://localhost:8080/FROST-Server/v1.1/Sensors"
-				},
-				{
-					"name": "Things",
-					"url": "http://localhost:8080/FROST-Server/v1.1/Things"
-				}
-			],
+			"STAdata": null,
 			"x": 143,
 			"y": 42
 		},
@@ -20521,8 +20679,8 @@
 				},
 				"parameters": {
 					"type": "string",
-					"description": "",
-					"definition": "",
+					"description": "result",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/result",
 					"UoM": "",
 					"UoMSymbol": "",
 					"UoMDefinition": ""

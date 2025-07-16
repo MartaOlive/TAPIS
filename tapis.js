@@ -9016,7 +9016,7 @@ function populatePivotTableDialog(node){
 		}
 		document.getElementById("pivotTable"+columnsRowsValues[e]+"_table").innerHTML=elementsInTable;
 		showCheckRadioOptions("DialogPivotTableAggregationsSpan", "DialogPivotTable", AggregationsOptions, 3, "DialogPivotTableAggregatedBy");
-		document.getElementById("DialogPivotTableSum").checked=true; //Mirar quin hi ha guardat
+		document.getElementById("DialogPivotTableSum").checked=true; 
 
 	}
 }
@@ -9129,7 +9129,7 @@ function populateMultiCreateSTADialog(node){
 		var parentInformation= node.STAMultiCreateInformation.parentsInformation;
 		var parentsInformationKeys = Object.keys(parentInformation);
 		for (var e=0;e<parentsInformationKeys.length;e++){
-			if (parentInformation[parentsInformationKeys[e]].lenght!=0)autocompleteSelectOptions.push(["Attributes from "+parentInformation[parentsInformationKeys[e]].label,""]);
+			if (parentInformation[parentsInformationKeys[e]].lenght!=0)autocompleteSelectOptions.push(["Attributes from "+parentInformation[parentsInformationKeys[e]].label,"",parentsInformationKeys[e]]);
 		}
 		
 	}else{
@@ -9171,7 +9171,7 @@ function drawMultiCreateSTADialog(node){
 
 	c+="</select></fieldset>"; 
 	//autocomplite
-	c+= `<fieldset> <legend>Autocomplete: </legend> <select id=""DialogMultiCreateSTA_selectAutocomplete">`;
+	c+= `<fieldset> <legend>Autocomplete: </legend> <select id="DialogMultiCreateSTA_selectAutocomplete">`;
 	var parentInformation= node.STAMultiCreateInformation.parentsInformation;
 	var parentsInformationKeys = Object.keys(parentInformation);
 	var autocompleteSelectOptions= node.STAMultiCreateInformation.autocompleteSelectOptions; 
@@ -9179,7 +9179,7 @@ function drawMultiCreateSTADialog(node){
 	for (var u=0;u<autocompleteSelectOptions.length;u++){
 		if (u==0)c+=`<optgroup label="config options">`;
 		if (u==configSuggestedAutoCompleteSTAMultiCreateLength)c+=`<optgroup label="linked nodes meaning">`;
-		c+= `<option value="${autocompleteSelectOptions[u][0]}" data-origin="${autocompleteSelectOptions[u][1]}">${autocompleteSelectOptions[u][0]} </option>`
+		c+= `<option value="${autocompleteSelectOptions[u][0]}" data-origin="${autocompleteSelectOptions[u][1]}"data-id="${autocompleteSelectOptions[u][2]}">${autocompleteSelectOptions[u][0]} </option>`
 		if (u==0)c+=`</optgroup>`;
 	}
 	
@@ -9412,6 +9412,60 @@ function savePropertyInEntitiesSelectedValueMulticreateSTA (entity, property){
 
 function autocompleteFieldsMultiCreateSTADialog(event){ 
 	event.preventDefault();
+	var node= getNodeDialog("DialogMultiCreateSTA");
+	var select= document.getElementById("DialogMultiCreateSTA_selectAutocomplete");
+	var selectedOption= select.options[select.selectedIndex];
+	var selectedValue= selectedOption.getAttribute('value');
+	var dataSelected= selectedOption.getAttribute('data-origin'); //only in Configuration options
+	var dataId= selectedOption.getAttribute('data-id');
+	var configOptions=[];
+	for (var i=0; i<config.suggestedAutoCompleteSTAMultiCreate.length;i++){
+		configOptions.push(config.suggestedAutoCompleteSTAMultiCreate[i].name);
+	}
+	//it is a config option? --> Necessary to call functions from other files
+	var isItconfigOption=(configOptions.includes(selectedValue)?true:false);
+
+	if (isItconfigOption){
+		if(typeof window[applyAutocompleteFunction+selectedValue] === 'function')window[applyAutocompleteFunction+selectedValue](STAMultiCreateInformation.infoSaved.entities,dataSelected); //Functions to apply iNaturalist to STAPlus for example
+		else alert("The selected option is defined only as a configuration value and has no associated functions. These must be implemented before it can be used.");
+	}else{ //From previous nodes
+		//If an entity is selected will load only the entities opened. 
+		//If general is selected. Cornfirm element: "Do you want to apply the changes only to the entities that are already expanded, or expand all entities that contain information?".
+		//Build object from meaning and chack if there are duplicates
+
+		var attributesDefinitions=node.STAMultiCreateInformation.parentsInformation[dataId].attributesDefinitions;
+		var attributesDefinitionsKeys=Object.keys(attributesDefinitions);
+		if (attributesDefinitionsKeys.length!=0){
+			var objectWithAttributes={};
+			var objectValue;
+	
+			for (var i=0;i<attributesDefinitionsKeys.length;i++){
+				objectValue=attributesDefinitions[attributesDefinitionsKeys[i]].split("/");
+				if (!objectWithAttributes[objectValue[0]])objectWithAttributes[objectValue[0]]={};
+				if (!objectWithAttributes[objectValue[0]][objectValue[1]]) objectWithAttributes[objectValue[0]][objectValue[1]]=attributesDefinitionsKeys[i];
+				else {
+					objectWithAttributes[objectValue[0]][objectValue[1]]=[objectWithAttributes[objectValue[0]][objectValue[1]]]; //Transform to array
+					objectWithAttributes[objectValue[0]][objectValue[1]].push(attributesDefinitionsKeys[i]); //Add new value
+				}
+				// if (objectWithAttributes[])
+			}
+			console.log(objectWithAttributes);
+		}else alert("There aren't attributes associated with STAplus schema");
+		// var generalOrEntity= (document.getElementById("DialogMultiCreateSTA_inputOrigin_general")?"general": "entity");
+		// if (generalOrEntity=="general"){
+
+		// }else{
+
+		// }
+	}
+	
+
+	//Si ho es , cridar a la funcio que toca.. que pot ser algo tipu. applyAutocompleteFunction+ el nom (iNaturalist )--> Aquesta sempre serà la funció inici en l'arxiu de funcions...
+	//Enviar l'objecte actual per poder agafar les entities que ja estan obertes. Si hi ha marcat algo de les que hauré de posar, es sobreescriurà amb la info del inaturalist
+	//Haurà de retornar l'objecte per posar a STAMultiCreateInformation.infoSaved.entities
+	//Si es general o res, agafarà el que hi hagi i ho completarà amb la info que sigui. 
+	///Si no posa re si hi ha la entity seleccionada, nomes carregarà les que siguin de la entity
+
 
 }
 /*function giveMeNetworkInformation(event) {
