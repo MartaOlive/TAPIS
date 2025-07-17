@@ -9458,10 +9458,12 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 				for (var e=0;e<repeatedEntitiesKeys.length;e++){
 					c.push(`<fieldSet><legend>${repeatedEntitiesKeys[e]}</legend>`);
 					for (var u=0;u<repeatedEntities[repeatedEntitiesKeys[e]].length;u++){
-						// c.push(`<label>${repeatedEntities[repeatedEntitiesKeys[e]][u]}`);
+						c.push(`<label style="font-weight: bold;">${repeatedEntities[repeatedEntitiesKeys[e]][u]}:  </label>`);
+						c.push(`<select  id="DialogMultiCreateSTARepeatedEntities_radiobutton_${repeatedEntitiesKeys[e]}_${repeatedEntities[repeatedEntitiesKeys[e]][u]}" >`);
 						for (var r=0;r<objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]].length;r++){
-							c.push(`<input type="radio" ${(r==0)?" checked ":""} id="DialogMultiCreateSTARepeatedEntities_radiobutton_${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]]][u]}" name="${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]]][u]}" value="${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]]][u][r]}"><label for="${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]]][u][r]}">${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r]}</label><br>`)
+								c.push(`<option value= "${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r]}">${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r]}</option>`)
 						}
+						c.push(`</select>`);
 					
 					}
 					c.push(`</fieldSet>`);
@@ -9481,6 +9483,7 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 
 		// }
 	}
+
 	
 
 	//Si ho es , cridar a la funcio que toca.. que pot ser algo tipu. applyAutocompleteFunction+ el nom (iNaturalist )--> Aquesta sempre serà la funció inici en l'arxiu de funcions...
@@ -9488,6 +9491,12 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 	//Haurà de retornar l'objecte per posar a STAMultiCreateInformation.infoSaved.entities
 	//Si es general o res, agafarà el que hi hagi i ho completarà amb la info que sigui. 
 	///Si no posa re si hi ha la entity seleccionada, nomes carregarà les que siguin de la entity
+
+
+}
+function chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(event){
+	event.preventDefault();
+	document.getElementById("DialogMultiCreateSTARepeatedEntities").close();
 
 
 }
