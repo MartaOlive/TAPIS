@@ -134,90 +134,10 @@
 				"STAService": "http://localhost:8080/FROST-Server/v1.1",
 				"infoSaved": {
 					"origin": [
-						"entity",
+						"general",
 						"Campaigns"
 					],
 					"entities": {
-						"Datastreams": {
-							"name": {
-								"value": "",
-								"checked": "false"
-							},
-							"description": {
-								"value": "",
-								"checked": "false"
-							},
-							"observationType": {
-								"value": "",
-								"checked": "false"
-							},
-							"unitOfMeasurement": {
-								"value": "",
-								"checked": "false"
-							},
-							"observedArea": {
-								"value": "",
-								"checked": "false"
-							},
-							"phenomenonTime": {
-								"value": "",
-								"checked": "false"
-							},
-							"resultTime": {
-								"value": "",
-								"checked": "false"
-							},
-							"properties": {
-								"value": "",
-								"checked": "false"
-							},
-							"id": {
-								"value": "",
-								"checked": "false"
-							}
-						},
-						"MultiDatastreams": {
-							"name": {
-								"value": "",
-								"checked": "false"
-							},
-							"description": {
-								"value": "",
-								"checked": "false"
-							},
-							"observationType": {
-								"value": "",
-								"checked": "false"
-							},
-							"unitOfMeasurement": {
-								"value": "",
-								"checked": "false"
-							},
-							" observedArea": {
-								"value": "",
-								"checked": "false"
-							},
-							"phenomenonTime": {
-								"value": "",
-								"checked": "false"
-							},
-							"resultTime": {
-								"value": "",
-								"checked": "false"
-							},
-							"multiObservationDataType": {
-								"value": "",
-								"checked": "false"
-							},
-							"properties": {
-								"value": "",
-								"checked": "false"
-							},
-							"id": {
-								"value": "",
-								"checked": "false"
-							}
-						},
 						"Parties": {
 							"id": {
 								"value": "",
@@ -239,129 +159,10 @@
 								"value": "",
 								"checked": "false"
 							}
-						},
-						"Licenses": {
-							"name": {
-								"value": "",
-								"checked": "false"
-							},
-							"definition": {
-								"value": "",
-								"checked": "false"
-							},
-							"description": {
-								"value": "",
-								"checked": "false"
-							},
-							"logo": {
-								"value": "",
-								"checked": "false"
-							},
-							"attributionText": {
-								"value": "",
-								"checked": "false"
-							},
-							"id": {
-								"value": "",
-								"checked": "false"
-							}
-						},
-						"ObservationGroups": {
-							"name": {
-								"value": "",
-								"checked": "false"
-							},
-							"description": {
-								"value": "",
-								"checked": "false"
-							},
-							"purpose": {
-								"value": "",
-								"checked": "false"
-							},
-							"creationTime": {
-								"value": "",
-								"checked": "false"
-							},
-							"endTime": {
-								"value": "",
-								"checked": "false"
-							},
-							"termsOfUsed": {
-								"value": "",
-								"checked": "false"
-							},
-							"privacyPolicy": {
-								"value": "",
-								"checked": "false"
-							},
-							"dataQuality": {
-								"value": "",
-								"checked": "false"
-							},
-							"properties": {
-								"value": "",
-								"checked": "false"
-							},
-							"id": {
-								"value": "",
-								"checked": "false"
-							}
-						},
-						"Campaigns": {
-							"name": {
-								"value": "",
-								"checked": "false"
-							},
-							"description": {
-								"value": "",
-								"checked": "false"
-							},
-							"classification": {
-								"value": "",
-								"checked": "false"
-							},
-							"termsOfUse": {
-								"value": "",
-								"checked": "false"
-							},
-							"privacyPolicy": {
-								"value": "",
-								"checked": "false"
-							},
-							"creationTime": {
-								"value": "",
-								"checked": "false"
-							},
-							"url": {
-								"value": "",
-								"checked": "false"
-							},
-							"startTime": {
-								"value": "",
-								"checked": "false"
-							},
-							"endTime": {
-								"value": "",
-								"checked": "false"
-							},
-							"properties": {
-								"value": "",
-								"checked": "false"
-							},
-							"id": {
-								"value": "",
-								"checked": "false"
-							}
 						}
 					},
 					"needed": [
-						"Datastreams",
-						"MultiDatastreams",
-						"Parties",
-						"Licenses",
-						"ObservationGroups",
-						"Campaigns"
+						"Parties"
 					]
 				},
 				"parentsInformation": {
@@ -449,7 +250,9 @@
 						"attributesDefinitions": {
 							"phenomenonTime": "Datastream/phenomenonTime",
 							"resultTime": "Observation/resultTime",
-							"result": "Observation/result"
+							"result": "Observation/result",
+							"parameters": "Observation/result",
+							"Datastream@iot.navigationLink": "Datastream/phenomenonTime"
 						},
 						"label": "Observations",
 						"attributesKeys": [
@@ -10472,7 +10275,9 @@
 						"attributesDefinitions": {
 							"Day": "Observation/resultTime",
 							"Station": "Location/description",
-							"Absolute_level": "Datastream/observationType"
+							"Absolute_level": "Datastream/observationType",
+							"Percentage_volume_stored": "Location/description",
+							"volume_stored": "Datastream/observationType"
 						},
 						"label": "embassaments",
 						"attributesKeys": [
@@ -20687,8 +20492,8 @@
 				},
 				"Datastream@iot.navigationLink": {
 					"type": "anyURI",
-					"description": "",
-					"definition": "",
+					"description": "phenomenonTime",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/phenomenonTime",
 					"UoM": "",
 					"UoMSymbol": "",
 					"UoMDefinition": ""
@@ -30763,16 +30568,16 @@
 				},
 				"Percentage_volume_stored": {
 					"type": "number",
-					"description": "",
-					"definition": "",
+					"description": "description",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/description",
 					"UoM": "",
 					"UoMSymbol": "",
 					"UoMDefinition": ""
 				},
 				"volume_stored": {
 					"type": "number",
-					"description": "",
-					"definition": "",
+					"description": "observationType",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/observationType",
 					"UoM": "",
 					"UoMSymbol": "",
 					"UoMDefinition": ""

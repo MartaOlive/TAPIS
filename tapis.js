@@ -9419,8 +9419,8 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 	var dataSelected= selectedOption.getAttribute('data-origin'); //only in Configuration options
 	var dataId= selectedOption.getAttribute('data-id');
 	var configOptions=[];
-	for (var i=0; i<config.suggestedAutoCompleteSTAMultiCreate.length;i++){
-		configOptions.push(config.suggestedAutoCompleteSTAMultiCreate[i].name);
+	for (var a=0; a<config.suggestedAutoCompleteSTAMultiCreate.length;a++){
+		configOptions.push(config.suggestedAutoCompleteSTAMultiCreate[a].name);
 	}
 	//it is a config option? --> Necessary to call functions from other files
 	var isItconfigOption=(configOptions.includes(selectedValue)?true:false);
@@ -9437,7 +9437,7 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 		var attributesDefinitionsKeys=Object.keys(attributesDefinitions);
 		if (attributesDefinitionsKeys.length!=0){
 			var objectWithAttributes={};
-			var objectValue;
+			var objectValue, repeatedEntities={};
 	
 			for (var i=0;i<attributesDefinitionsKeys.length;i++){
 				objectValue=attributesDefinitions[attributesDefinitionsKeys[i]].split("/");
@@ -9446,8 +9446,31 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 				else {
 					objectWithAttributes[objectValue[0]][objectValue[1]]=[objectWithAttributes[objectValue[0]][objectValue[1]]]; //Transform to array
 					objectWithAttributes[objectValue[0]][objectValue[1]].push(attributesDefinitionsKeys[i]); //Add new value
+					(repeatedEntities[objectValue[0]])? repeatedEntities[objectValue[0]].push(objectValue[1]): repeatedEntities[objectValue[0]]=[objectValue[1]]
+				}				 
+			}
+			if (repeatedEntities.length!=0){
+				console.log(repeatedEntities);
+				var dialogRepeatedEntities= document.getElementById("DialogMultiCreateSTARepeatedEntities_span");
+				var c=[];
+				c.push(`<span>There are attributes repeated: Choose attributes to use below</span>`);
+				var repeatedEntitiesKeys= Object.keys(repeatedEntities);
+				for (var e=0;e<repeatedEntitiesKeys.length;e++){
+					c.push(`<fieldSet><legend>${repeatedEntitiesKeys[e]}</legend>`);
+					for (var u=0;u<repeatedEntities[repeatedEntitiesKeys[e]].length;u++){
+						// c.push(`<label>${repeatedEntities[repeatedEntitiesKeys[e]][u]}`);
+						for (var r=0;r<objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]].length;r++){
+							c.push(`<input type="radio" ${(r==0)?" checked ":""} id="DialogMultiCreateSTARepeatedEntities_radiobutton_${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]]][u]}" name="${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]]][u]}" value="${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]]][u][r]}"><label for="${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]]][u][r]}">${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r]}</label><br>`)
+						}
+					
+					}
+					c.push(`</fieldSet>`);
 				}
-				// if (objectWithAttributes[])
+				dialogRepeatedEntities.innerHTML= c.join("");
+				document.getElementById("DialogMultiCreateSTARepeatedEntities").showModal();
+				
+			}else{
+				//FUNCIO DE Montar l'objecte. Anira a aquesta funcio despres de tanca rel dialog de les entities repeated tmb 
 			}
 			console.log(objectWithAttributes);
 		}else alert("There aren't attributes associated with STAplus schema");
