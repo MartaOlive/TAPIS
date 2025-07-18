@@ -9474,6 +9474,8 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 			}else{
 				//FUNCIO DE Montar l'objecte. Anira a aquesta funcio despres de tanca rel dialog de les entities repeated tmb 
 			}
+			node.STAMultiCreateInformation.objectFromAutocomplete={objectWithAttributes:objectWithAttributes,repeatedEntitied:repeatedEntities}; //save to use after ok button in DialogMultiCreateSTARepeatedEntities 
+			networkNodes.update(node);
 			console.log(objectWithAttributes);
 		}else alert("There aren't attributes associated with STAplus schema");
 		// var generalOrEntity= (document.getElementById("DialogMultiCreateSTA_inputOrigin_general")?"general": "entity");
@@ -9497,7 +9499,19 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 function chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(event){
 	event.preventDefault();
 	document.getElementById("DialogMultiCreateSTARepeatedEntities").close();
-
+	var node= getNodeDialog("DialogMultiCreateSTA");
+	var objectAttributes= node.STAMultiCreateInformation.objectFromAutocomplete[objectAttributes];
+	var repeatedEntities= node.STAMultiCreateInformation.objectFromAutocomplete[repeatedEntities];
+	var repeatedEntitiesKeys= Object.keys(repeatedEntities);
+	var select;
+	for (var i=0;i<repeatedEntitiesKeys.length;i++){ //Put the option selected. 
+		for (var e=0;e<repeatedEntities[repeatedEntitiesKeys[i]].length;e++){
+			select=document.getElementById(`DialogMultiCreateSTARepeatedEntities_radiobutton_${repeatedEntitiesKeys[i]}_${repeatedEntities[repeatedEntitiesKeys[i]][e]}`);
+			objectAttributes[repeatedEntitiesKeys[i]][repeatedEntities[repeatedEntitiesKeys[i]][e]]=select.options[select.selectedIndex].value; 
+		}
+	}
+	//node.STAMultiCreateInformation.infoSaved.entities --> Add these values to charge it in select.
+	//fer la funcio
 
 }
 /*function giveMeNetworkInformation(event) {
