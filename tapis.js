@@ -9220,7 +9220,7 @@ function drawMultiCreateSTADialog(node){
 	}
 	c+=`</fieldset>`;
 
-	var n, properties;
+	var n, properties, value;
 	for (var i=0;i<STAEntitiesArray.length;i++){ //Every entity
 		
 		if (checkboxCheked.includes(STAEntitiesArray[i])){ //Create only entities cheched
@@ -9234,6 +9234,7 @@ function drawMultiCreateSTADialog(node){
 			properties=[...STAEntities[STAEntitiesArray[i]].properties];
 			properties.unshift({name:"id", required: "false"}); //Adding id as a property
 			n= properties.length;
+			
 
 			for (var e=0;e<n;e++){ //Properties
 				if ((STAEntitiesArray[i]!="Datastreams" &&  STAEntitiesArray[i]!="MultiDatastreams") || ((STAEntitiesArray[i]=="Datastreams" ||  STAEntitiesArray[i]!="MultiDatastreams") && (properties[e].name!= "observedArea" && properties[e].name!= "phenomenonTime" && properties[e].name!= "resultTime"))){
@@ -9248,9 +9249,10 @@ function drawMultiCreateSTADialog(node){
 					for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
 							c+=`<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
 							for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
+								value= `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
+								c+=`<option value="${value}"`; //value: idNode_attributeValue
 
-								c+=`<option value="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`
-								if (node.STAMultiCreateInformation.infoSaved.entities[STAEntitiesArray[i]][properties[e].name].value==parentsInformation[parentsInformationKeys[s]].attributesKeys[att]){ //Options of select
+								if (node.STAMultiCreateInformation.infoSaved.entities[STAEntitiesArray[i]][properties[e].name].value==value){ //Options of select
 									c+= " selected "
 								}
 								c+=`>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
@@ -9428,29 +9430,24 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 	if (isItconfigOption){
 		if(typeof window[applyAutocompleteFunction+selectedValue] === 'function')window[applyAutocompleteFunction+selectedValue](STAMultiCreateInformation.infoSaved.entities,dataSelected); //Functions to apply iNaturalist to STAPlus for example
 		else alert("The selected option is defined only as a configuration value and has no associated functions. These must be implemented before it can be used.");
-	}else{ //From previous nodes
-		//If an entity is selected will load only the entities opened. 
-		//If general is selected. Cornfirm element: "Do you want to apply the changes only to the entities that are already expanded, or expand all entities that contain information?".
-		//Build object from meaning and chack if there are duplicates
-
+	}else{ //From previous nodes 
+	
 		var attributesDefinitions=node.STAMultiCreateInformation.parentsInformation[dataId].attributesDefinitions;
 		var attributesDefinitionsKeys=Object.keys(attributesDefinitions);
-		if (attributesDefinitionsKeys.length!=0){
+		if (attributesDefinitionsKeys.length!=0){ //If there is information in "meaning"
 			var objectWithAttributes={};
 			var objectValue, repeatedEntities={};
-	
-			for (var i=0;i<attributesDefinitionsKeys.length;i++){
+			for (var i=0;i<attributesDefinitionsKeys.length;i++){	//Build object from meaning and check if there are duplicates
 				objectValue=attributesDefinitions[attributesDefinitionsKeys[i]].split("/");
-				if (!objectWithAttributes[objectValue[0]])objectWithAttributes[objectValue[0]]={};
-				if (!objectWithAttributes[objectValue[0]][objectValue[1]]) objectWithAttributes[objectValue[0]][objectValue[1]]=attributesDefinitionsKeys[i];
+				if (!objectWithAttributes[getSTAEntityPlural(objectValue[0])])objectWithAttributes[getSTAEntityPlural(objectValue[0])]={};
+				if (!objectWithAttributes[getSTAEntityPlural(objectValue[0])][objectValue[1]]) objectWithAttributes[getSTAEntityPlural(objectValue[0])][objectValue[1]]=attributesDefinitionsKeys[i];
 				else {
-					objectWithAttributes[objectValue[0]][objectValue[1]]=[objectWithAttributes[objectValue[0]][objectValue[1]]]; //Transform to array
-					objectWithAttributes[objectValue[0]][objectValue[1]].push(attributesDefinitionsKeys[i]); //Add new value
-					(repeatedEntities[objectValue[0]])? repeatedEntities[objectValue[0]].push(objectValue[1]): repeatedEntities[objectValue[0]]=[objectValue[1]]
+					objectWithAttributes[getSTAEntityPlural(objectValue[0])][objectValue[1]]=[objectWithAttributes[getSTAEntityPlural(objectValue[0])][objectValue[1]]]; //Transform to array
+					objectWithAttributes[getSTAEntityPlural(objectValue[0])][objectValue[1]].push(attributesDefinitionsKeys[i]); //Add new value
+					(repeatedEntities[getSTAEntityPlural(objectValue[0])])? repeatedEntities[getSTAEntityPlural(objectValue[0])].push(objectValue[1]): repeatedEntities[getSTAEntityPlural(objectValue[0])]=[objectValue[1]]
 				}				 
 			}
-			if (repeatedEntities.length!=0){
-				console.log(repeatedEntities);
+			if (repeatedEntities.length!=0){ //There are duplicates, need to select one
 				var dialogRepeatedEntities= document.getElementById("DialogMultiCreateSTARepeatedEntities_span");
 				var c=[];
 				c.push(`<span>There are attributes repeated: Choose attributes to use below</span>`);
@@ -9461,47 +9458,33 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 						c.push(`<label style="font-weight: bold;">${repeatedEntities[repeatedEntitiesKeys[e]][u]}:  </label>`);
 						c.push(`<select  id="DialogMultiCreateSTARepeatedEntities_radiobutton_${repeatedEntitiesKeys[e]}_${repeatedEntities[repeatedEntitiesKeys[e]][u]}" >`);
 						for (var r=0;r<objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]].length;r++){
-								c.push(`<option value= "${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r]}">${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r]}</option>`)
+								c.push(`<option value= "${dataId}_${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r]}">${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r]}</option>`)
 						}
 						c.push(`</select>`);
-					
 					}
 					c.push(`</fieldSet>`);
 				}
 				dialogRepeatedEntities.innerHTML= c.join("");
-				document.getElementById("DialogMultiCreateSTARepeatedEntities").showModal();
+				node.STAMultiCreateInformation.objectFromAutocomplete={objectWithAttributes:objectWithAttributes,repeatedEntities:repeatedEntities}; //save to use after ok button in DialogMultiCreateSTARepeatedEntities 
+				networkNodes.update(node);
+				document.getElementById("DialogMultiCreateSTARepeatedEntities").showModal(); //open a dialog to choose which you want to choose
+				//updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node) --> The access to this function will be through ok button in this dialog
 				
 			}else{
-				//FUNCIO DE Montar l'objecte. Anira a aquesta funcio despres de tanca rel dialog de les entities repeated tmb 
-			}
-			node.STAMultiCreateInformation.objectFromAutocomplete={objectWithAttributes:objectWithAttributes,repeatedEntitied:repeatedEntities}; //save to use after ok button in DialogMultiCreateSTARepeatedEntities 
-			networkNodes.update(node);
-			console.log(objectWithAttributes);
+				node.STAMultiCreateInformation.objectFromAutocomplete={objectWithAttributes:objectWithAttributes,repeatedEntities:repeatedEntities}; //save to use after ok button in DialogMultiCreateSTARepeatedEntities 
+				networkNodes.update(node);
+				updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node);
+			}		
 		}else alert("There aren't attributes associated with STAplus schema");
-		// var generalOrEntity= (document.getElementById("DialogMultiCreateSTA_inputOrigin_general")?"general": "entity");
-		// if (generalOrEntity=="general"){
 
-		// }else{
-
-		// }
 	}
-
-	
-
-	//Si ho es , cridar a la funcio que toca.. que pot ser algo tipu. applyAutocompleteFunction+ el nom (iNaturalist )--> Aquesta sempre serà la funció inici en l'arxiu de funcions...
-	//Enviar l'objecte actual per poder agafar les entities que ja estan obertes. Si hi ha marcat algo de les que hauré de posar, es sobreescriurà amb la info del inaturalist
-	//Haurà de retornar l'objecte per posar a STAMultiCreateInformation.infoSaved.entities
-	//Si es general o res, agafarà el que hi hagi i ho completarà amb la info que sigui. 
-	///Si no posa re si hi ha la entity seleccionada, nomes carregarà les que siguin de la entity
-
-
 }
 function chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(event){
 	event.preventDefault();
 	document.getElementById("DialogMultiCreateSTARepeatedEntities").close();
 	var node= getNodeDialog("DialogMultiCreateSTA");
-	var objectAttributes= node.STAMultiCreateInformation.objectFromAutocomplete[objectAttributes];
-	var repeatedEntities= node.STAMultiCreateInformation.objectFromAutocomplete[repeatedEntities];
+	var objectAttributes= node.STAMultiCreateInformation.objectFromAutocomplete.objectWithAttributes;
+	var repeatedEntities= node.STAMultiCreateInformation.objectFromAutocomplete.repeatedEntities;
 	var repeatedEntitiesKeys= Object.keys(repeatedEntities);
 	var select;
 	for (var i=0;i<repeatedEntitiesKeys.length;i++){ //Put the option selected. 
@@ -9510,13 +9493,30 @@ function chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(even
 			objectAttributes[repeatedEntitiesKeys[i]][repeatedEntities[repeatedEntitiesKeys[i]][e]]=select.options[select.selectedIndex].value; 
 		}
 	}
-	//node.STAMultiCreateInformation.infoSaved.entities --> Add these values to charge it in select.
-	//fer la funcio
+
+	node.STAMultiCreateInformation.objectFromAutocomplete[objectAttributes]=objectAttributes ;
+	node.STAMultiCreateInformation.objectFromAutocomplete[repeatedEntities]=[];
+	networkNodes.update(node);
+	updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node);
 
 }
-/*function giveMeNetworkInformation(event) {
-			if (event)
-				event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogContextMenu").close();
-			console.log(networkNodes.get());
-}*/
+function updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node){
+
+	var entitiesSaved= node.STAMultiCreateInformation.infoSaved.entities;
+	var objectWithAttributes=  node.STAMultiCreateInformation.objectFromAutocomplete.objectWithAttributes;
+	var objectWithAttributesKeys=Object.keys(objectWithAttributes);
+	var propertiesKeys;
+
+	for (var i=0; i< objectWithAttributesKeys.length;i++){
+		propertiesKeys=Object.keys(objectWithAttributes[objectWithAttributesKeys[i]]);
+	 	for (var e=0;e<propertiesKeys.length;e++){
+			if (entitiesSaved[objectWithAttributesKeys[i]])entitiesSaved[objectWithAttributesKeys[i]][propertiesKeys[e]].value= objectWithAttributes[objectWithAttributesKeys[i]][propertiesKeys[e]];
+		}
+	}
+
+	networkNodes.update(node);
+	drawMultiCreateSTADialog(node);	
+}
+
+
+
