@@ -9232,15 +9232,25 @@ function drawMultiCreateSTADialog(node){
 			}
 
 			properties=[...STAEntities[STAEntitiesArray[i]].properties];
-			properties.unshift({name:"id", required: "false"}); //Adding id as a property
+			if (!properties.includes("id"))properties.unshift({name:"id", required: "false"}); //Adding id as a property
 			n= properties.length;
+			var firstPropertyAdded=false;
 			
 
 			for (var e=0;e<n;e++){ //Properties
 				if ((STAEntitiesArray[i]!="Datastreams" &&  STAEntitiesArray[i]!="MultiDatastreams") || ((STAEntitiesArray[i]=="Datastreams" ||  STAEntitiesArray[i]!="MultiDatastreams") && (properties[e].name!= "observedArea" && properties[e].name!= "phenomenonTime" && properties[e].name!= "resultTime"))){
-					if (e==0) c+=`<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
-					c+=`<input type="checkbox" value="id" name="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}" id="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}_${properties[e].name }" ${(infoSaved.entities[STAEntitiesArray[i]][properties[e].name].checked=="true")? "checked": ""} onclick="addPropertyCheckedValueMulticreateSTA('${STAEntitiesArray[i]}', '${properties[e].name}')">`
-					
+					if (properties[e].name=="id") {
+						c+=`<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
+						c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}" id="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}_${properties[e].name }" ${(infoSaved.entities[STAEntitiesArray[i]][properties[e].name].checked=="true")? "checked": ""} onclick="addPropertyCheckedValueMulticreateSTA('${STAEntitiesArray[i]}', '${properties[e].name}')">`
+					}
+					else if (firstPropertyAdded==false){
+						c+=`<div style="border: 1px solid black;">`;
+						firstPropertyAdded=true;
+						c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}" id="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}_${properties[e].name }" ${(infoSaved.entities[STAEntitiesArray[i]][properties[e].name].checked=="true")? "checked": ""} onclick="addPropertyCheckedValueMulticreateSTA('${STAEntitiesArray[i]}', '${properties[e].name}')">
+						<span style="font-weight: bold;">Properties</span><ul>`;
+					} 
+					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}" id="DialogMultiCreateSTA_entitiesProperty_${STAEntitiesArray[i]}_${properties[e].name }" ${(infoSaved.entities[STAEntitiesArray[i]][properties[e].name].checked=="true")? "checked": ""} onclick="addPropertyCheckedValueMulticreateSTA('${STAEntitiesArray[i]}', '${properties[e].name}')">`
+					if (properties[e].name!="id")c+=`<li>`
 					c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required=="true")?"*":""}: </label> 
 					<select id="DialogMultiCreateSTA_selectForProperties_${STAEntitiesArray[i]}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${STAEntitiesArray[i]}','${properties[e].name}' )">` //·$· property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
 					//(node.STAMultiCreateInformation.infoSaved.entities[STAEntitiesArray[i]].id.checked ==true
@@ -9260,7 +9270,8 @@ function drawMultiCreateSTADialog(node){
 							c+="</optgroup>"
 					}
 					c+="</select><br>"
-					if (e==0) c+=` </div>` //after id
+					if (properties[e].name=="id")  c+=`</div>` //after id
+					else if(e==n-1) c+=` </ul></div>` // after ast propety 
 				}
 				
 			}
@@ -9428,7 +9439,7 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 	var isItconfigOption=(configOptions.includes(selectedValue)?true:false);
 
 	if (isItconfigOption){
-		if(typeof window[applyAutocompleteFunction+selectedValue] === 'function')window[applyAutocompleteFunction+selectedValue](STAMultiCreateInformation.infoSaved.entities,dataSelected); //Functions to apply iNaturalist to STAPlus for example
+		if(typeof window[applyAutocompleteFunction+selectedValue] === 'function')window[applyAutocompleteFunction+selectedValue](node); //Functions to apply iNaturalist to STAPlus for example
 		else alert("The selected option is defined only as a configuration value and has no associated functions. These must be implemented before it can be used.");
 	}else{ //From previous nodes 
 	
