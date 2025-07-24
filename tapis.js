@@ -1073,10 +1073,10 @@ function SelectImportFileSource(event, type) {
 			document.getElementById("DialogImport"+type+"SourceFileText").disabled=true;
 			document.getElementById("DialogImport"+type+"SourceURLInput").disabled=false;
 			document.getElementById("DialogImport"+type+"SourceURLButton").disabled=false;
-			if (type=="JSON"){
-				document.getElementById("DialogImportJSONInputSeveralRecords").disabled=true;
-				document.getElementById("DialogImportJSONSourceURLButtonMulti").disabled=true;
-			}
+			// if (type=="JSON"){
+			// 	document.getElementById("DialogImportJSONInputSeveralRecords").disabled=true;
+			// 	document.getElementById("DialogImportJSONSourceURLButtonMulti").disabled=true;
+			// }
 		}
 	}
 }
@@ -1306,15 +1306,15 @@ function ReadURLImportCSV(event, url, security) {
 	node.OGCType = "fileURL";
 	if (security)
 		node.STAsecurity=security;
-	else if (parentNode.STAsecurity)
+	else if (parentNode?.STAsecurity)
 		node.STAsecurity=deapCopy(parentNode.STAsecurity);
 	else
 		node.STAsecurity=null;
 
-	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, url)).then(
+	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, node.STAURL)).then(
 				function(value) { 
 					showInfoMessage('Download CSV completed.'); 
-					TransformTextCSVToTable(value.text, document.getElementById("DialogImportCSVSourceURLInput").value, node);
+					TransformTextCSVToTable(value.text, node.STAURL, node);
 				},
 				function(error) { 
 					showInfoMessage('Error downloading CSV. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -1364,12 +1364,12 @@ function ReadURLImportDBF(event, url, security) {
 	node.OGCType = "fileURL";
 	if (security)
 		node.STAsecurity=security;
-	else if (parentNode.STAsecurity)
+	else if (parentNode?.STAsecurity)
 		node.STAsecurity=deapCopy(parentNode.STAsecurity);
 	else
 		node.STAsecurity=null;
 
-	HTTPBinaryData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, url)).then(
+	HTTPBinaryData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, node.STAURL)).then(
 				function(value) { 
 					showInfoMessage('Download DBF completed.'); 
 					TransformBinaryDBFToTable(value.arrayBuf, document.getElementById("DialogImportDBFSourceURLInput").value);
@@ -1519,15 +1519,15 @@ function ReadURLImportJSONLD(event, url, security) {
 
 	if (security)
 		node.STAsecurity=security;
-	else if (parentNode.STAsecurity)
+	else if (parentNode?.STAsecurity)
 		node.STAsecurity=deapCopy(parentNode.STAsecurity);
 	else
 		node.STAsecurity=null;
 
-	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, url)).then(
+	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, node.STAURL)).then(
 				function(value) { 
 					showInfoMessage('Download JSONLD completed.'); 
-					TransformTextJSONLDToTable(value.obj ? value.obj : value.text, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, document.getElementById("DialogImportJSONLDSourceURLInput").value, node);
+					TransformTextJSONLDToTable(value.obj ? value.obj : value.text, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, node.STAURL, node);
 				},
 				function(error) { 
 					showInfoMessage('Error downloading JSONLD. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -1536,7 +1536,7 @@ function ReadURLImportJSONLD(event, url, security) {
 			);	
 }
 
-function TransformTextJSONToTable(json, jsonText, url,node,lastOne) {
+function TransformTextJSONToTable(json, jsonText, url, node, lastOne) {
 	if (!json)
 	{
 		try
@@ -1598,7 +1598,7 @@ async function ReadFileImportJSON(event) {
 			};
 			file= input.files[filesKeys[i]];
 			text=await  file.text();
-			TransformTextJSONToTable(null, text, null,node, lastOne);
+			TransformTextJSONToTable(null, text, null, node, lastOne);
 			
 			if (i == filesKeys.length-1){
 				if (node.STAdata){
@@ -1621,7 +1621,7 @@ async function ReadFileImportJSON(event) {
 	}else{
 		file= input.files[0];
 		text=await  file.text();
-		TransformTextJSONToTable(null, text, null,node, lastOne);
+		TransformTextJSONToTable(null, text, null, node, "onlyOne");
 		updateQueryAndTableArea(node);
 		showInfoMessage("JSON has been loaded.");
 	}
@@ -1701,12 +1701,12 @@ function ReadURLImportJSON(event, url, security) {
 	node.OGCType = "fileURL";
 	if (security)
 		node.STAsecurity=security;
-	else if (parentNode.STAsecurity)
+	else if (parentNode?.STAsecurity)
 		node.STAsecurity=deapCopy(parentNode.STAsecurity);
 	else
 		node.STAsecurity=null;
 
-	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, url)).then(
+	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, node.STAURL)).then(
 				async function(value) {
 					if (typeof value.ok !== undefined && value.ok===false) {
 						showInfoMessage('Error downloading JSON');
@@ -1727,7 +1727,7 @@ function ReadURLImportJSON(event, url, security) {
 						networkNodes.update(node);
 						LoadJSONNodeSTAData(node);
 					} else  //Pending: If the response is a JSONLD, we should redirect it to the other transformation and change the node image.
-						TransformTextJSONToTable(value.obj, value.text, document.getElementById("DialogImportJSONSourceURLInput").value, node);
+						TransformTextJSONToTable(value.obj, value.text, node.STAURL, node, "onlyOne");
 				},
 				function(error) { 
 					showInfoMessage('Error downloading JSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -4313,7 +4313,7 @@ function GetSelectRow(event, iToSelect) {
 			node.EDCConsumerURL = parentNode.EDCConsumerURL;
 		} else if (parentNode.OGCType=="S3Buckets" || parentNode.OGCType=="S3Bucket") {
 			node.OGCType = parentNode.OGCType;
-			node.STAsecurity = parentNode.STAsecurity ? deapCopy(parentNode.STAsecurity) : null;
+			node.STAsecurity = parentNode?.STAsecurity ? deapCopy(parentNode.STAsecurity) : null;
 		}
 	}
 	else
@@ -4392,7 +4392,7 @@ function GetSelectResource(event, resourceId) {
 			node.EDCConsumerURL = parentNode.EDCConsumerURL;
 		} else if (parentNode.OGCType=="S3Buckets" || parentNode.OGCType=="S3Bucket") {
 			node.OGCType = parentNode.OGCType;
-			node.STAsecurity = parentNode.STAsecurity ? deapCopy(parentNode.STAsecurity) : null;
+			node.STAsecurity = parentNode?.STAsecurity ? deapCopy(parentNode.STAsecurity) : null;
 		}
 	}
 	else
@@ -9439,7 +9439,8 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 	var isItconfigOption=(configOptions.includes(selectedValue)?true:false);
 
 	if (isItconfigOption){
-		if(typeof window[applyAutocompleteFunction+selectedValue] === 'function')window[applyAutocompleteFunction+selectedValue](node); //Functions to apply iNaturalist to STAPlus for example
+		
+		 if(typeof window["applyAutocompleteFunction"+selectedValue] === 'function')window["applyAutocompleteFunction"+selectedValue](node); //Functions to apply iNaturalist to STAPlus for example
 		else alert("The selected option is defined only as a configuration value and has no associated functions. These must be implemented before it can be used.");
 	}else{ //From previous nodes 
 	

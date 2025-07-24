@@ -50,6 +50,7 @@
 	<script type="text/javascript" src="diagrams.js"></script>
 	<script type="text/javascript" src="aws.js"></script>
 	<script type="text/javascript" src="tapis.js"></script>
+	<script type="text/javascript" src="autocompleteMultiCreate.js"></script>
 
 	<link rel="stylesheet" href="tapis.css">
 	<link rel="stylesheet" href="vis.network.css">
@@ -347,11 +348,28 @@
 	<dialog id="DialogMultiCreateSTARepeatedEntities" >
 		<form>
 			<span id="DialogMultiCreateSTARepeatedEntities_span"></span>
+			</span>
 			<br>
-			<button  onClick="chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(event)" formmethod="dialog" >OK</button>
+			<button  onClick="ChooseObservationsToCreateINAT2STAPlus(event)" formmethod="dialog" >OK</button>
 			<input type="hidden" id="DialogMultiCreateSTARepeatedEntitiesNodeId"></input>
 		</form>
 	</dialog>
+		<dialog id="DialogMultiCreateSTAINaturalist" >
+		<form>
+			<span id="DialogMultiCreateSTAINaturalist_span">
+				<fieldset><legend>Observations to create in STA Plus Service</legend>
+				<label><input type="checkbox" name="ObservationsToCreate" value="photo" checked>Photos</label><br>
+				<label><input type="checkbox" name="ObservationsToCreate" value="userIdentification" checked>Specie, identification by user</label><br>
+				<label><input type="checkbox" name="ObservationsToCreate" value="othersIdentification" checked>Identification by other users (comments)</label><br>
+				</fieldset>
+			</span>
+			<br>
+			<button  onClick="chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(event)" formmethod="dialog" >OK</button>
+			<button value="cancel" formmethod="dialog">Cancel</button>
+			<input type="hidden" id="DialogMultiCreateSTAINaturalistNodeId"></input>
+		</form>
+	</dialog>
+
 	<dialog id="DialogMultiCreateSTA" >
 		<form>
 			<span id="DialogMultiCreateSTA_span"></span>
@@ -1308,7 +1326,8 @@
 				Local file: <input type="file" accept=".json" id="DialogImportJSONSourceFileText" onChange="ReadFileImportJSON(event)" multiple></input></label><br>
 				<label><input type="radio" id="DialogImportJSONSourceURL" name="DialogImportJSONSource" value="url" onClick='SelectImportFileSource(event, "JSON")'>
 				URL single: 
-				 <input type="text" size="70" id="DialogImportJSONSourceURLInput" onChange="ReadURLImportJSON(event,'JSON')" disabled="disabled"></input> 
+				 <input type="text" size="70" id="DialogImportJSONSourceURLInput" onChange="ReadURLImportJSON(event)" disabled="disabled"></input> 
+
 				 <button type="button" id="DialogImportJSONSourceURLButton" onclick="ReadURLImportJSON(event)" disabled="disabled">Load</button> 
 				<br>
 				<input type="radio" id="DialogImportJSONSourceURLList" name="DialogImportJSONSource" value="urlList" onClick='SelectImportFileSource(event, "JSON")'>

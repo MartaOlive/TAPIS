@@ -1,26 +1,29 @@
 //iNaturalistToSTA+
-function applyAutocompleteFunctionINaturalist(node) {
-    var entities = {
-        Parties: {
-            authId: { value: '', checked: 'false', text: [""] },
-            description: { value: '', checked: 'false' },
-            displayName: { value: '', checked: 'false' },
-            id: { value: '', checked: 'false' },
-            role: { value: '', checked: 'false' }
-        }
-    }
+function applyAutocompleteFunctioniNaturalist(node) {
 
-var party = {
-    "displayName": (obj.iIdentification == -1 ? obj.natObs.user_login : obj.natObs.identifications[obj.iIdentification].user.login),
-    "role": "individual",  //"institution"
-    "@iot.id": create_UUID(true)  //Only specify if you want to have control on the @iot.id value.
+    document.getElementById("DialogMultiCreateSTAINaturalist").showModal();
+
+    //valueToShowText = [true or false, if true, only when this column is selected. False with "", always, value is text]
+    // var entitiesForTaxon = {
+
+
+    // };
+    // var entitiesForPicture={
+
+    // }
+
+    // var party = {
+    //     "displayName": (obj.iIdentification == -1 ? obj.natObs.user_login : obj.natObs.identifications[obj.iIdentification].user.login),
+    //     "role": "individual",  //"institution"
+    //     "@iot.id": create_UUID(true)  //Only specify if you want to have control on the @iot.id value.
+    // }
+    // var sensor = {
+    //     "name": "Human Eye",
+    //     "description": "Eye of the observer",
+    //     "encodingType": "text/html",
+    //     "metadata": "https://en.wikipedia.org/wiki/Human_eye"
 }
-var sensor = {
-    "name": "Human Eye",
-    "description": "Eye of the observer",
-    "encodingType": "text/html",
-    "metadata": "https://en.wikipedia.org/wiki/Human_eye"
-}
+/*
 var observedProperty = {
     "name": "Taxon",
     "description": "GBIF Backbone Taxonomy",
@@ -142,5 +145,4 @@ var observationGroup = {
 }
 var relation; //no existeix
 
-
-}
+*/

@@ -93,14 +93,14 @@ var data=[], feature;
 function getFirstCoordinateGeoJSONGeometry(geometry) {
 	if (!geometry.coordinates || !geometry.coordinates.length)
 		return null;
-	if (geometry.type==Point)
-		return coordinates;
-	else if ((geometry.type=="MultiPoint" || geometry.type=="LineString") && coordinates[0].length)
-		return coordinates[0];
-	else if ((geometry.type=="MultiLineString" || geometry.type=="Polygon") && coordinates[0].length && coordinates[0][0].length)
-		return coordinates[0][0];
-	else if (geometry.type=="MultiPolygon" && coordinates[0].length && coordinates[0][0].length && coordinates[0][0][0].length)
-		return coordinates[0][0][0];
+	if (geometry.type=="Point")
+		return geometry.coordinates;
+	else if ((geometry.type=="MultiPoint" || geometry.type=="LineString") && geometry.coordinates[0].length)
+		return geometry.coordinates[0];
+	else if ((geometry.type=="MultiLineString" || geometry.type=="Polygon") && geometry.coordinates[0].length && geometry.coordinates[0][0].length)
+		return geometry.coordinates[0][0];
+	else if (geometry.type=="MultiPolygon" && geometry.coordinates[0].length && geometry.coordinates[0][0].length && geometry.coordinates[0][0][0].length)
+		return geometry.coordinates[0][0][0];
 	else 
 		return null;
 }

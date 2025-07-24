@@ -194,6 +194,8 @@ function removeParamContentType(contentType) {
 var CriptoName=null, DisplayName="";
 
 function getHeadersFromSecurity(security, url) {
+	if (!security)
+		return null;
 	if (security.S3 /* && parentNode && parentNode.OGCType=="S3Bucket" && parentNode.STAdata && parentNode.STAdata[0].href==currentNode.STAURL*/) {
 		var locationURL=transformStringIntoLocation(url);
 		return getAWSSignedHeaders(locationURL.hostname, locationURL.pathname, security.S3);

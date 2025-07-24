@@ -1706,6 +1706,7 @@ var columnCreated=false, record, json, point;
 			dataAttributes[selectedOptions.nameOut].type="string";
 		else if (selectedOptions.radioOut=="LL") {
 			dataAttributes[selectedOptions.nameOut].type="number";
+			dataAttributes[selectedOptions.latitudeOut]={}
 			dataAttributes[selectedOptions.latitudeOut].type="number";
 		}
 		return 0;
