@@ -350,21 +350,22 @@
 			<span id="DialogMultiCreateSTARepeatedEntities_span"></span>
 			</span>
 			<br>
-			<button  onClick="ChooseObservationsToCreateINAT2STAPlus(event)" formmethod="dialog" >OK</button>
+			<button type="button" value="default" onClick="chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(event)" >OK</button>
 			<input type="hidden" id="DialogMultiCreateSTARepeatedEntitiesNodeId"></input>
 		</form>
 	</dialog>
-		<dialog id="DialogMultiCreateSTAINaturalist" >
+
+	<dialog id="DialogMultiCreateSTAINaturalist" >
 		<form>
 			<span id="DialogMultiCreateSTAINaturalist_span">
 				<fieldset><legend>Observations to create in STA Plus Service</legend>
-				<label><input type="checkbox" name="ObservationsToCreate" value="photo" checked>Photos</label><br>
-				<label><input type="checkbox" name="ObservationsToCreate" value="userIdentification" checked>Specie, identification by user</label><br>
-				<label><input type="checkbox" name="ObservationsToCreate" value="othersIdentification" checked>Identification by other users (comments)</label><br>
+				<label><input type="checkbox" name="ObservationsToCreate" value="photo" checked id="ObservationsToCreate_photo">Photos</label><br>
+				<label><input type="checkbox" name="ObservationsToCreate" value="userIdentification" checked id="ObservationsToCreate_userIdentification">Specie, identification by user</label><br>
+				<label><input type="checkbox" name="ObservationsToCreate" value="othersIdentification" checked id="ObservationsToCreate_othersIdentification">Identification by other users (comments)</label><br>
 				</fieldset>
 			</span>
 			<br>
-			<button  onClick="chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(event)" formmethod="dialog" >OK</button>
+			<button  onClick="ChooseObservationsToCreateINAT2STAPlus(event)" formmethod="dialog" >OK</button>
 			<button value="cancel" formmethod="dialog">Cancel</button>
 			<input type="hidden" id="DialogMultiCreateSTAINaturalistNodeId"></input>
 		</form>

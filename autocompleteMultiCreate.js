@@ -2,6 +2,197 @@
 function applyAutocompleteFunctioniNaturalist(node) {
 
     document.getElementById("DialogMultiCreateSTAINaturalist").showModal();
+}
+
+function ChooseObservationsToCreateINAT2STAPlus(event){
+  	event.preventDefault();
+    var photos =(document.getElementById("ObservationsToCreate_photo").checked)?true:false;
+    var userIdentification=(document.getElementById("ObservationsToCreate_userIdentification").checked)?true:false;
+    var otherUsersIdentification=(document.getElementById("ObservationsToCreate_othersIdentification").checked)?true:false;
+
+
+    //ObservationGroup!!! EL PRIMER A CREAR 
+    var observationGroup = {
+    "id": {attribute: "", text:""},
+    "name": {attribute: "uri", text:""},
+    "description": {attribute: "species_guess", text:"Observation of <b> attribute from species_guess </b>"},
+    "creationTime": {attribute: "created_at_utc", text:""}
+    };
+    
+    //Photos
+    var Party= {
+        "id": {attribute: "", text:""},
+        "displayName": {attribute: "user_login", text:""},
+        "role": {attribute: "", text:"individual"}
+    }
+	var observedProperty={
+        "id": {attribute: "", text:""},
+		"name": {attribute: "", text:"Species picture"},
+		"description":{attribute: "", text:"A picture for species identification"} ,
+		"definition": {attribute: "", text:"https://www.inaturalist.org/guides/2465"}
+	}
+	var sensor={
+        "id": {attribute: "", text:""},
+		"name": {attribute: "", text:"Generic camera"},
+		"description":{attribute: "", text:"A camera or a smartphone build-in camera"} ,
+		"encodingType": {attribute: "", text:"text/html"},
+		"metadata": {attribute: "", text:"https://en.wikipedia.org/wiki/Camera"}
+	}
+
+	var thing={
+        "id": {attribute: "", text:""},
+		"name":{attribute: "", text:"Camera of <b> attribute from user_login </b>"},
+		"description": {attribute: "", text:"Camera of <b> attribute from user_login </b> as a sensor to identify a species"},
+	}
+
+	var datastream={
+        "id": {attribute: "", text:""},
+		"unitOfMeasurement":{attribute: "", text:'{"name":"N/A","symbol": "","definition": "N/A"}'},
+		"observationType": {attribute: "", text:"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"},
+		"name": {attribute: "", text:"Pictures for Species Identification (<b> attribute from user_login </b>, Taxon)"}, 
+		"description":{attribute: "", text:"Observations of species pictures for identification of the iNaturalist user <b> attribute from user_login </b> from the camera sersor observing the property 'taxon' under the license '<b> attribute from license </b>"}
+    };
+
+    var observation={
+		"result":{attribute: "", text:" <b> from attribute large_url </b>"}, //obj.natObs.observation_photos[obj.iPictureObservation].photo.large_url,--> Array 
+		"resultTime": {attribute: "s", text:"Date <b> from attribute created_at </b>  "},  // d.toISOString(), 	var d = new Date(obj.natObs.observation_photos[obj.iPictureObservation].photo.created_at);	
+		"phenomenonTime": {attribute: "time_observed_at_utc ", text:""}, //(obj.natObs.time_observed_at_utc ? obj.natObs.time_observed_at_utc : obj.natObs.created_at_utc),
+		"parameters": {attribute: "", text:'{"species_guess" : <b> from attribute species_guess </b>}'}
+	};
+
+    var featureOfInterest={ //photo and identification from user
+        "id": {attribute: "", text:""},
+		"name": {attribute: "place_guess", text:""},
+		"description": {attribute: "", text:"<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> "},
+		"encodingType":{attribute: "", text:"application/geo+json"} ,
+		"feature": {attribute: "", text:'{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}'} 
+	};
+
+    var license= GetSTALicense(license);
+
+
+    //User identification
+    var Party= {
+        "id": {attribute: "", text:""},
+        "displayName": {attribute: "user_login", text:""},
+        "role": {attribute: "", text:"individual"}
+    }
+    	var observedProperty={
+        "id": {attribute: "", text:""},
+		"name": {attribute: "", text:"Taxon"},
+		"description": {attribute: "", text:"GBIF Backbone Taxonomy"},
+		"definition": {attribute: "", text:"https://www.gbif.org/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"},
+	}
+    	var sensor={
+        "id": {attribute: "", text:""},
+		"name": {attribute: "", text:"Human Eye"},
+		"description": {attribute: "", text:"Eye of the observer"},
+		"encodingType":{attribute: "", text:"text/html"}, 
+		"metadata": {attribute: "", text:"https://en.wikipedia.org/wiki/Human_eye"}
+	}
+	var thing={
+        "id": {attribute: "", text:""},
+		"name": {attribute: "user_login", text:""},
+		"description": {attribute: "", text:"Human as a sensor"}
+	}	
+    var datastream={
+        "id": {attribute: "", text:""},
+		"unitOfMeasurement":{attribute: "", text:'{"name":"Identifier","symbol": "","definition": "https://www.gbif.org/species"}'},
+		"observationType": {attribute: "", text:"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"},
+		"name": {attribute: "", text:"Community Agreed Species Identification (<b> attribute from user_loguin </b>, Taxon)"},
+		"description": {attribute: "", text:"Agreed Observations of species identification started by the iNaturalist user <b> attribute from user_loguin </b>  from the eyes of a human acting as a sersor observing the property 'taxon' under the license <b> attribute from license </b>"},
+	};
+    var observation={
+
+		"result":{attribute: "", text:"If exist <b> attribute from community_taxon_id</b> or <b> attribute from taxon_id</b> "},
+		"resultTime":{attribute: "created_at", text:""},  
+		"phenomenonTime":{attribute: "", text:"If exist <b> attribute from time_observed_at_utc</b> or <b> attribute from created_at_utc</b> "}, 
+	};
+
+    var featureOfInterest={ //photo and identification from user
+        "id": {attribute: "", text:""},
+		"name": {attribute: "place_guess", text:""},
+		"description": {attribute: "", text:"<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> "},
+		"encodingType":{attribute: "", text:"application/geo+json"} ,
+		"feature": {attribute: "", text:'{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}'} 
+	};
+
+    var license= GetSTALicense(license); 
+
+    //other identifications (inside "identifications")
+    var Party= {
+        "id": {attribute: "", text:""},
+        "displayName": {attribute: "", text:"user.login"},
+        "role": {attribute: "", text:"individual"}
+    }
+    	var observedProperty={
+        "id": {attribute: "", text:""},
+		"name": {attribute: "", text:"Taxon"},
+		"description": {attribute: "", text:"GBIF Backbone Taxonomy"},
+		"definition": {attribute: "", text:"https://www.gbif.org/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"},
+	}
+    	var sensor={
+        "id": {attribute: "", text:""},
+		"name": {attribute: "", text:"Human Eye"},
+		"description": {attribute: "", text:"Eye of the observer"},
+		"encodingType":{attribute: "", text:"text/html"}, 
+		"metadata": {attribute: "", text:"https://en.wikipedia.org/wiki/Human_eye"}
+	}
+	var thing={
+        "id": {attribute: "", text:""},
+		"name": {attribute: "", text:"user"},
+		"description": {attribute: "", text:"Human as a sensor"}
+	}	
+    var datastream={
+        "id": {attribute: "", text:""},
+		"unitOfMeasurement":{attribute: "", text:'{"name":"Identifier","symbol": "","definition": "https://www.gbif.org/species"}'},
+		"observationType": {attribute: "", text:"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"},
+		"name": {attribute: "", text:"Community Agreed Species Identification (<b> attribute from user.loguin </b>, Taxon)"},
+		"description": {attribute: "", text:"Agreed Observations of species identification started by the iNaturalist user <b> attribute from user.loguin </b>  from the eyes of a human acting as a sersor observing the property 'taxon' </b>"},
+	};
+    var observation={
+
+		"result":{attribute: "", text:"If exist <b> attribute from community_taxon_id</b> or <b> attribute from taxon_id </b> "},
+		"resultTime":{attribute: "created_at", text:""},  
+		"phenomenonTime":{attribute: "", text:"<b> attribute from created_at</b> "}, 
+	};
+
+    // var featureOfInterest={ //photo and identification from user
+    //     "id": {attribute: "", text:""},
+	// 	"name": {attribute: "place_guess", text:""},
+	// 	"description": {attribute: "", text:"<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> "},
+	// 	"encodingType":{attribute: "", text:"application/geo+json"} ,
+	// 	"feature": {attribute: "", text:'{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}'} 
+	// };
+
+    var license= GetSTALicense(license); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
 
     //valueToShowText = [true or false, if true, only when this column is selected. False with "", always, value is text]
     // var entitiesForTaxon = {
@@ -22,7 +213,7 @@ function applyAutocompleteFunctioniNaturalist(node) {
     //     "description": "Eye of the observer",
     //     "encodingType": "text/html",
     //     "metadata": "https://en.wikipedia.org/wiki/Human_eye"
-}
+
 /*
 var observedProperty = {
     "name": "Taxon",

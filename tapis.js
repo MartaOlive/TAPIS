@@ -9078,7 +9078,7 @@ function populateMultiCreateSTADialog(node){
 	var infoSaved;//node.STASTAMultiCreateInformation.infoSaved
 
 	infoSaved= {
-		origin: ["general", "Campaigns"], //["general"] or ["entity", entitySelected];
+		origin: ["general", "Campaigns",""], //["general"] or ["entity", entitySelected, autocomplete];
 		entities:{
 			Parties:{
 				id:{value:"",checked:"false" },
@@ -9432,15 +9432,21 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 	var dataSelected= selectedOption.getAttribute('data-origin'); //only in Configuration options
 	var dataId= selectedOption.getAttribute('data-id');
 	var configOptions=[];
+	
 	for (var a=0; a<config.suggestedAutoCompleteSTAMultiCreate.length;a++){
 		configOptions.push(config.suggestedAutoCompleteSTAMultiCreate[a].name);
 	}
 	//it is a config option? --> Necessary to call functions from other files
-	var isItconfigOption=(configOptions.includes(selectedValue)?true:false);
-
+	var isItconfigOption=false;
+	if(configOptions.includes(selectedValue)){
+		isItconfigOption=true;
+		node.STAMultiCreateInformation.infoSaved.origin[2]= selectedValue; //onlu special configuration with this
+	}else{
+		node.STAMultiCreateInformation.infoSaved.origin[2]="";
+	}
 	if (isItconfigOption){
 		
-		 if(typeof window["applyAutocompleteFunction"+selectedValue] === 'function')window["applyAutocompleteFunction"+selectedValue](node); //Functions to apply iNaturalist to STAPlus for example
+		if(typeof window["applyAutocompleteFunction"+selectedValue] === 'function')window["applyAutocompleteFunction"+selectedValue](node); //Functions to apply iNaturalist to STAPlus for example
 		else alert("The selected option is defined only as a configuration value and has no associated functions. These must be implemented before it can be used.");
 	}else{ //From previous nodes 
 	
@@ -9493,7 +9499,7 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 }
 function chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(event){
 	event.preventDefault();
-	document.getElementById("DialogMultiCreateSTARepeatedEntities").close();
+	
 	var node= getNodeDialog("DialogMultiCreateSTA");
 	var objectAttributes= node.STAMultiCreateInformation.objectFromAutocomplete.objectWithAttributes;
 	var repeatedEntities= node.STAMultiCreateInformation.objectFromAutocomplete.repeatedEntities;
@@ -9510,6 +9516,7 @@ function chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(even
 	node.STAMultiCreateInformation.objectFromAutocomplete[repeatedEntities]=[];
 	networkNodes.update(node);
 	updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node);
+	document.getElementById("DialogMultiCreateSTARepeatedEntities").close();
 
 }
 function updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node){
