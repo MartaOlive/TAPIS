@@ -4,202 +4,316 @@ function applyAutocompleteFunctioniNaturalist(node) {
     document.getElementById("DialogMultiCreateSTAINaturalist").showModal();
 }
 
-function ChooseObservationsToCreateINAT2STAPlus(event){
-  	event.preventDefault();
-    var photos =(document.getElementById("ObservationsToCreate_photo").checked)?true:false;
-    var userIdentification=(document.getElementById("ObservationsToCreate_userIdentification").checked)?true:false;
-    var othersIdentification=(document.getElementById("ObservationsToCreate_othersIdentification").checked)?true:false;
-    var node=  getNodeDialog("DialogMultiCreateSTA");
-    var license=""
+function ChooseObservationsToCreateINAT2STAPlus(event) {
+    event.preventDefault();
+    document.getElementById("DialogMultiCreateSTAINaturalist").close()
+    var photos = (document.getElementById("ObservationsToCreate_photo").checked) ? true : false;
+    var userIdentification = (document.getElementById("ObservationsToCreate_userIdentification").checked) ? true : false;
+    var othersIdentification = (document.getElementById("ObservationsToCreate_othersIdentification").checked) ? true : false;
+    var node = getNodeDialog("DialogMultiCreateSTA");
+    var license = ""
 
     //ObservationGroup!!! EL PRIMER A CREAR 
     var observationGroup = {
-    "id": {attribute: "", text:""},
-    "name": {attribute: "uri", text:""},
-    "description": {attribute: "species_guess", text:"Observation of <b> attribute from species_guess </b>"},
-    "creationTime": {attribute: "created_at_utc", text:""}
+        name: "observationGroup",
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "uri", text: "" },
+            description: { attribute: "species_guess", text: "Observation of <b> attribute from species_guess </b>" },
+            creationTime: { attribute: "created_at_utc", text: "" }
+        },
+
+
     };
-    
+
     //Photos
-    var Party_photos_userIdentification= {
-        "id": {attribute: "", text:""},
-        "displayName": {attribute: "user_login", text:""},
-        "role": {attribute: "", text:"individual"}
+    var Party_photos_userIdentification = {
+        name:{name:"Party", text:"Party"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            displayName: { attribute: "user_login", text: "" },
+            role: { attribute: "", text: "individual" }
+        }
     }
-	var observedProperty_photos={
-        "id": {attribute: "", text:""},
-		"name": {attribute: "", text:"Species picture"},
-		"description":{attribute: "", text:"A picture for species identification"} ,
-		"definition": {attribute: "", text:"https://www.inaturalist.org/guides/2465"}
-	}
-	var sensor_photos={
-        "id": {attribute: "", text:""},
-		"name": {attribute: "", text:"Generic camera"},
-		"description":{attribute: "", text:"A camera or a smartphone build-in camera"} ,
-		"encodingType": {attribute: "", text:"text/html"},
-		"metadata": {attribute: "", text:"https://en.wikipedia.org/wiki/Camera"}
-	}
+    var observedProperty_photos = {
+        name: {name:"ObservedProperty", text:"Observed property"},
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "", text: "Species picture" },
+            description: { attribute: "", text: "A picture for species identification" },
+            definition: { attribute: "", text: "https://www.inaturalist.org/guides/2465" }
+        }
+    }
+    var sensor_photos = {
+        name: {name:"Sensor", text:"Sensor"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "", text: "Generic camera" },
+            description: { attribute: "", text: "A camera or a smartphone build-in camera" },
+            encodingType: { attribute: "", text: "text/html" },
+            metadata: { attribute: "", text: "https://en.wikipedia.org/wiki/Camera" }
+        }
 
-	var thing_photos={
-        "id": {attribute: "", text:""},
-		"name":{attribute: "", text:"Camera of <b> attribute from user_login </b>"},
-		"description": {attribute: "", text:"Camera of <b> attribute from user_login </b> as a sensor to identify a species"},
-	}
+    }
 
-	var datastream_photos={
-        "id": {attribute: "", text:""},
-		"unitOfMeasurement":{attribute: "", text:'{"name":"N/A","symbol": "","definition": "N/A"}'},
-		"observationType": {attribute: "", text:"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"},
-		"name": {attribute: "", text:"Pictures for Species Identification (<b> attribute from user_login </b>, Taxon)"}, 
-		"description":{attribute: "", text:"Observations of species pictures for identification of the iNaturalist user <b> attribute from user_login </b> from the camera sersor observing the property 'taxon' under the license '<b> attribute from license </b>"}
+    var thing_photos = {
+        name: {name:"Thing", text:"Thing"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "", text: "Camera of <b> attribute from user_login </b>" },
+            description: { attribute: "", text: "Camera of <b> attribute from user_login </b> as a sensor to identify a species" },
+        }
+
+    }
+
+    var datastream_photos = {
+        name: {name:"Datastream", text:"Datastream"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            unitOfMeasurement: { attribute: "", text: '{"name":"N/A","symbol": "","definition": "N/A"}' },
+            observationType: { attribute: "", text: "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement" },
+            name: { attribute: "", text: "Pictures for Species Identification (<b> attribute from user_login </b>, Taxon)" },
+            description: { attribute: "", text: "Observations of species pictures for identification of the iNaturalist user <b> attribute from user_login </b> from the camera sersor observing the property 'taxon' under the license '<b> attribute from license </b>" }
+
+        }
     };
 
-    var observation_photos={
-		"result":{attribute: "", text:" <b> from attribute large_url </b>"}, //obj.natObs.observation_photos[obj.iPictureObservation].photo.large_url,--> Array 
-		"resultTime": {attribute: "s", text:"Date <b> from attribute created_at </b>  "},  // d.toISOString(), 	var d = new Date(obj.natObs.observation_photos[obj.iPictureObservation].photo.created_at);	
-		"phenomenonTime": {attribute: "time_observed_at_utc ", text:""}, //(obj.natObs.time_observed_at_utc ? obj.natObs.time_observed_at_utc : obj.natObs.created_at_utc),
-		"parameters": {attribute: "", text:'{"species_guess" : <b> from attribute species_guess </b>}'}
-	};
+    var observation_photos = {
+        name: {name:"Observation", text:"Observation"} ,
+        properties: {
+            result: { attribute: "", text: " <b> from attribute large_url </b>" }, //obj.natObs.observation_photos[obj.iPictureObservation].photo.large_url,--> Array 
+            resultTime: { attribute: "s", text: "Date <b> from attribute created_at </b>  " },  // d.toISOString(), 	var d = new Date(obj.natObs.observation_photos[obj.iPictureObservation].photo.created_at);	
+            phenomenonTime: { attribute: "time_observed_at_utc ", text: "" }, //(obj.natObs.time_observed_at_utc ? obj.natObs.time_observed_at_utc : obj.natObs.created_at_utc),
+            parameters: { attribute: "", text: '{"species_guess" : <b> from attribute species_guess </b>}' }
 
-    var featureOfInterest_photos={ //photo and identification from user
-        "id": {attribute: "", text:""},
-		"name": {attribute: "place_guess", text:""},
-		"description": {attribute: "", text:"<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> "},
-		"encodingType":{attribute: "", text:"application/geo+json"} ,
-		"feature": {attribute: "", text:'{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}'} 
-	};
+        }
+    };
 
-    var license_photos_userIdentification= GetSTALicense(license);
-    var photosEntities= [Party_photos_userIdentification,observedProperty_photos,sensor_photos,thing_photos,datastream_photos,observation_photos,featureOfInterest_photos,license_photos_userIdentification]
+    var featureOfInterest_photos = { //photo and identification from user
+        name: {name:"FeatureOfInterest", text:"Feature of interest"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "place_guess", text: "" },
+            description: { attribute: "", text: "<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> " },
+            encodingType: { attribute: "", text: "application/geo+json" },
+            feature: { attribute: "", text: '{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}' }
+
+        }
+    };
+
+    var license_photos_userIdentification = GetSTALicense(license);
+    var photosEntities = [Party_photos_userIdentification, observedProperty_photos, sensor_photos, thing_photos, datastream_photos, observation_photos, featureOfInterest_photos, /*license_photos_userIdentification*/]
 
 
     //User identificationç/
-        //Party_photos_userIdentification
-    	var observedProperty_userIdentification={
-        "id": {attribute: "", text:""},
-		"name": {attribute: "", text:"Taxon"},
-		"description": {attribute: "", text:"GBIF Backbone Taxonomy"},
-		"definition": {attribute: "", text:"https://www.gbif.org/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"},
-	}
-    	var sensor_userIdentification={
-        "id": {attribute: "", text:""},
-		"name": {attribute: "", text:"Human Eye"},
-		"description": {attribute: "", text:"Eye of the observer"},
-		"encodingType":{attribute: "", text:"text/html"}, 
-		"metadata": {attribute: "", text:"https://en.wikipedia.org/wiki/Human_eye"}
-	}
-	var thing_userIdentification={
-        "id": {attribute: "", text:""},
-		"name": {attribute: "user_login", text:""},
-		"description": {attribute: "", text:"Human as a sensor"}
-	}	
-    var datastream_userIdentification={
-        "id": {attribute: "", text:""},
-		"unitOfMeasurement":{attribute: "", text:'{"name":"Identifier","symbol": "","definition": "https://www.gbif.org/species"}'},
-		"observationType": {attribute: "", text:"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"},
-		"name": {attribute: "", text:"Community Agreed Species Identification (<b> attribute from user_loguin </b>, Taxon)"},
-		"description": {attribute: "", text:"Agreed Observations of species identification started by the iNaturalist user <b> attribute from user_loguin </b>  from the eyes of a human acting as a sersor observing the property 'taxon' under the license <b> attribute from license </b>"},
-	};
-    var observation_userIdentification={
+    //Party_photos_userIdentification
+    var observedProperty_userIdentification = {
+        name: {name:"ObservedProperty", text:"Observed property"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "", text: "Taxon" },
+            description: { attribute: "", text: "GBIF Backbone Taxonomy" },
+            definition: { attribute: "", text: "https://www.gbif.org/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c" },
+        }
 
-		"result":{attribute: "", text:"If exist <b> attribute from community_taxon_id</b> or <b> attribute from taxon_id</b> "},
-		"resultTime":{attribute: "created_at", text:""},  
-		"phenomenonTime":{attribute: "", text:"If exist <b> attribute from time_observed_at_utc</b> or <b> attribute from created_at_utc</b> "}, 
-	};
+    }
+    var sensor_userIdentification = {
+        name: {name:"Sensor", text:"Sensor"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "", text: "Human Eye" },
+            description: { attribute: "", text: "Eye of the observer" },
+            encodingType: { attribute: "", text: "text/html" },
+            metadata: { attribute: "", text: "https://en.wikipedia.org/wiki/Human_eye" }
+        }
 
-    var featureOfInterest_userIdentification={ //photo and identification from user
-        "id": {attribute: "", text:""},
-		"name": {attribute: "place_guess", text:""},
-		"description": {attribute: "", text:"<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> "},
-		"encodingType":{attribute: "", text:"application/geo+json"} ,
-		"feature": {attribute: "", text:'{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}'} 
-	};
+    }
+    var thing_userIdentification = {
+        name: {name:"Thing", text:"Thing"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "user_login", text: "" },
+            description: { attribute: "", text: "Human as a sensor" }
+        }
 
-    var license_photos_userIdentification= GetSTALicense(license); 
-    var userIdentificationEntities=[Party_photos_userIdentification,observedProperty_userIdentification,sensor_userIdentification,thing_userIdentification,datastream_userIdentification,observation_userIdentification,featureOfInterest_userIdentification,license_photos_userIdentification]
+    }
+    var datastream_userIdentification = {
+        name: {name:"Datastream", text:"Datastream"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            unitOfMeasurement: { attribute: "", text: '{"name":"Identifier","symbol": "","definition": "https://www.gbif.org/species"}' },
+            observationType: { attribute: "", text: "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement" },
+            name: { attribute: "", text: "Community Agreed Species Identification (<b> attribute from user_loguin </b>, Taxon)" },
+            description: { attribute: "", text: "Agreed Observations of species identification started by the iNaturalist user <b> attribute from user_loguin </b>  from the eyes of a human acting as a sersor observing the property 'taxon' under the license <b> attribute from license </b>" },
+
+        }
+    };
+    var observation_userIdentification = {
+        name: {name:"Observation", text:"Observation"} ,
+        properties: {
+            result: { attribute: "", text: "If exist <b> attribute from community_taxon_id</b> or <b> attribute from taxon_id</b> " },
+            resultTime: { attribute: "created_at", text: "" },
+            phenomenonTime: { attribute: "", text: "If exist <b> attribute from time_observed_at_utc</b> or <b> attribute from created_at_utc</b> " },
+
+        }
+
+    };
+
+    var featureOfInterest_userIdentification = { //photo and identification from user
+        name: {name:"FeatureOfInterest", text:"Feature of interest"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "place_guess", text: "" },
+            description: { attribute: "", text: "<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> " },
+            encodingType: { attribute: "", text: "application/geo+json" },
+            feature: { attribute: "", text: '{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}' }
+
+        }
+    };
+
+    var license_photos_userIdentification = GetSTALicense(license);
+    var userIdentificationEntities = [Party_photos_userIdentification, observedProperty_userIdentification, sensor_userIdentification, thing_userIdentification, datastream_userIdentification, observation_userIdentification, featureOfInterest_userIdentification, /*license_photos_userIdentification*/]
 
     //other identifications (inside "identifications")
-    var Party_othersIdentification= {
-        "id": {attribute: "", text:""},
-        "displayName": {attribute: "", text:"user.login"},
-        "role": {attribute: "", text:"individual"}
+    var Party_othersIdentification = {
+        name: {name:"Party", text:"Party"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            displayName: { attribute: "", text: "user.login" },
+            role: { attribute: "", text: "individual" }
+        }
     }
-    	var observedProperty_othersIdentification={
-        "id": {attribute: "", text:""},
-		"name": {attribute: "", text:"Taxon"},
-		"description": {attribute: "", text:"GBIF Backbone Taxonomy"},
-		"definition": {attribute: "", text:"https://www.gbif.org/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c"},
-	}
-    	var sensor_othersIdentification={
-        "id": {attribute: "", text:""},
-		"name": {attribute: "", text:"Human Eye"},
-		"description": {attribute: "", text:"Eye of the observer"},
-		"encodingType":{attribute: "", text:"text/html"}, 
-		"metadata": {attribute: "", text:"https://en.wikipedia.org/wiki/Human_eye"}
-	}
-	var thing_othersIdentification={
-        "id": {attribute: "", text:""},
-		"name": {attribute: "", text:"user"},
-		"description": {attribute: "", text:"Human as a sensor"}
-	}	
-    var datastream_othersIdentification={
-        "id": {attribute: "", text:""},
-		"unitOfMeasurement":{attribute: "", text:'{"name":"Identifier","symbol": "","definition": "https://www.gbif.org/species"}'},
-		"observationType": {attribute: "", text:"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"},
-		"name": {attribute: "", text:"Community Agreed Species Identification (<b> attribute from user.loguin </b>, Taxon)"},
-		"description": {attribute: "", text:"Agreed Observations of species identification started by the iNaturalist user <b> attribute from user.loguin </b>  from the eyes of a human acting as a sersor observing the property 'taxon' </b>"},
-	};
-    var observation_othersIdentification={
+    var observedProperty_othersIdentification = {
+        name: {name:"ObservedProperty", text:"Observed property"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "", text: "Taxon" },
+            description: { attribute: "", text: "GBIF Backbone Taxonomy" },
+            definition: { attribute: "", text: "https://www.gbif.org/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c" },
+        }
 
-		"result":{attribute: "", text:"If exist <b> attribute from community_taxon_id</b> or <b> attribute from taxon_id </b> "},
-		"resultTime":{attribute: "created_at", text:""},  
-		"phenomenonTime":{attribute: "", text:"<b> attribute from created_at</b> "}, 
-	};
+    }
+    var sensor_othersIdentification = {
+        name: {name:"Sensor", text:"Sensor"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "", text: "Human Eye" },
+            description: { attribute: "", text: "Eye of the observer" },
+            encodingType: { attribute: "", text: "text/html" },
+            metadata: { attribute: "", text: "https://en.wikipedia.org/wiki/Human_eye" }
+        }
+
+    }
+    var thing_othersIdentification = {
+        name:{name:"Thing", text:"Thing"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            name: { attribute: "", text: "user" },
+            description: { attribute: "", text: "Human as a sensor" }
+        }
+
+    }
+    var datastream_othersIdentification = {
+        name: {name:"Datastream", text:"Datastream"} ,
+        properties: {
+            id: { attribute: "", text: "" },
+            unitOfMeasurement: { attribute: "", text: '{"name":"Identifier","symbol": "","definition": "https://www.gbif.org/species"}' },
+            observationType: { attribute: "", text: "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement" },
+            name: { attribute: "", text: "Community Agreed Species Identification (<b> attribute from user.loguin </b>, Taxon)" },
+            description: { attribute: "", text: "Agreed Observations of species identification started by the iNaturalist user <b> attribute from user.loguin </b>  from the eyes of a human acting as a sersor observing the property 'taxon' </b>" },
+
+        }
+    };
+    var observation_othersIdentification = {
+        name: {name:"Observation", text:"Observation"} ,
+        properties: {
+            result: { attribute: "", text: "If exist <b> attribute from community_taxon_id</b> or <b> attribute from taxon_id </b> " },
+            resultTime: { attribute: "created_at", text: "" },
+            phenomenonTime: { attribute: "", text: "<b> attribute from created_at</b> " },
+        }
+
+    };
 
     // var featureOfInterest={ //photo and identification from user
     //     "id": {attribute: "", text:""},
-	// 	"name": {attribute: "place_guess", text:""},
-	// 	"description": {attribute: "", text:"<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> "},
-	// 	"encodingType":{attribute: "", text:"application/geo+json"} ,
-	// 	"feature": {attribute: "", text:'{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}'} 
-	// };
+    // 	"name": {attribute: "place_guess", text:""},
+    // 	"description": {attribute: "", text:"<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> "},
+    // 	"encodingType":{attribute: "", text:"application/geo+json"} ,
+    // 	"feature": {attribute: "", text:'{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}'} 
+    // };
 
     //var license_othersIdentification= GetSTALicense(license); 
-    var othersIdentification=[Party_othersIdentification,observedProperty_othersIdentification,sensor_othersIdentification,thing_othersIdentification,datastream_othersIdentification,observation_othersIdentification]
+    var othersIdentification = [Party_othersIdentification, observedProperty_othersIdentification, sensor_othersIdentification, thing_othersIdentification, datastream_othersIdentification, observation_othersIdentification]
 
+
+    //DRAWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
     //Tabs
-    var c=[];
+    var c = [];
     c.push(`<fieldset><legend>STAService connected: </legend>
 	<label><b>url:</b> ${node.STAMultiCreateInformation.STAService}</label>
 	</fieldset>`);
     c.push(`<div id="autocompleteTabINat_bar">`)
-    if (photos){
+    if (photos) {
         c.push(`<div id="autocompleteTabINat_tab_photos" onClick="changeTabINatBar('photos')" style="border: 1px solid black;display: inline-block">Photos</div>`);
     }
-    if (userIdentification){
-         c.push(`<div id="autocompleteTabINat_tab_photos" onClick="changeTabINatBar('userIdentification')" style="border: 1px solid black;display: inline-block">User identification</div>`);
+    if (userIdentification) {
+        c.push(`<div id="autocompleteTabINat_tab_photos" onClick="changeTabINatBar('userIdentification')" style="border: 1px solid black;display: inline-block">User identification</div>`);
     }
-    if(othersIdentification){
-         c.push(`<div id="autocompleteTabINat_tab_photos" onClick="changeTabINatBar('userIdentification')" style="border: 1px solid black;display: inline-block">Other users identification</div>`);
+    if (othersIdentification) {
+        c.push(`<div id="autocompleteTabINat_tab_photos" onClick="changeTabINatBar('userIdentification')" style="border: 1px solid black;display: inline-block">Other users identification</div>`);
     }
-    c.push(`</div>`)
+    c.push(`</div>`);
+    c.push(`<div id="autocompleteTabINat_div_containingPages" >`);
+    var objectKeys;
     //pages
-    if (photos){
+    var parentsInformation= node.STAMultiCreateInformation.parentsInformation;
+	var parentsInformationKeys = Object.keys(parentsInformation);
+    var valueToEvaluate;
+    if (photos) {
+        c.push(`<div id="autocompleteTabINat_div_containingPages_photos" ><span>Photos</span>`);
+        for (var i = 0; i < photosEntities.length; i++) { //entities
+            objectKeys = Object.keys(photosEntities[i].properties);
+            c.push(`<fieldset><legend>${photosEntities[i].name.text}</legend>`);
+            for (var e = 0; e < objectKeys.length; e++) { //properties
+                c.push(`<label style="font-weight: bold" for="autocompleteTabINat_photos_propertiesSelect_${photosEntities[i].name.name}_${objectKeys[e]}">${objectKeys[e]}:</label> <select id="autocompleteTabINat_photos_propertiesSelect_${photosEntities[i].name.name}_${objectKeys[e]}">`);
+                c.push(`<option value="">-- Select the corresponding attribute -- </option>`)
+
+					for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
+							c.push(`<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`)
+							for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
+								value= `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
+								c.push(`<option value="${value}"`); //value: idNode_attributeValue
+                                valueToEvaluate=parentsInformationKeys[s]+"_"+photosEntities[i].properties[objectKeys[e]].attribute
+								if (valueToEvaluate==value){ //Options of select
+									c.push( " selected ")
+								}
+								c.push(`>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`);
+							}
+							c.push("</optgroup>")
+					}
+                    c.push(`</select> <span>${photosEntities[i].properties[objectKeys[e]].text} </span> <br>`)
+            }
+            c.push(`</fieldset>`)
+        }
+
+        c.push(`</div>`);
 
     }
-    if (userIdentification){
-
+    if (userIdentification) {
+        c.push(`<div id="autocompleteTabINat_div_containingPages_userIdentification" ><span>User identification</span>`);
+        c.push(`</div>`);
     }
-    if(othersIdentification){
-
+    if (othersIdentification) {
+        c.push(`<div id="autocompleteTabINat_div_containingPages_othersIdentification" ><span>Other users identification</span>`);
+        c.push(`</div>`);
     }
+    c.push(`</div>`);
+    document.getElementById("DialogMultiCreateSTA_span").innerHTML = c.join("");
 
-    document.getElementById("DialogMultiCreateSTA_span").innerHTML=c.join("");
+}
 
 
-
-
-function GetSTALicense(natLicense){
+function GetSTALicense(natLicense) {
 
 }
 
@@ -218,28 +332,28 @@ function GetSTALicense(natLicense){
 
 
 
-}
 
 
-    //valueToShowText = [true or false, if true, only when this column is selected. False with "", always, value is text]
-    // var entitiesForTaxon = {
+
+//valueToShowText = [true or false, if true, only when this column is selected. False with "", always, value is text]
+// var entitiesForTaxon = {
 
 
-    // };
-    // var entitiesForPicture={
+// };
+// var entitiesForPicture={
 
-    // }
+// }
 
-    // var party = {
-    //     "displayName": (obj.iIdentification == -1 ? obj.natObs.user_login : obj.natObs.identifications[obj.iIdentification].user.login),
-    //     "role": "individual",  //"institution"
-    //     "@iot.id": create_UUID(true)  //Only specify if you want to have control on the @iot.id value.
-    // }
-    // var sensor = {
-    //     "name": "Human Eye",
-    //     "description": "Eye of the observer",
-    //     "encodingType": "text/html",
-    //     "metadata": "https://en.wikipedia.org/wiki/Human_eye"
+// var party = {
+//     "displayName": (obj.iIdentification == -1 ? obj.natObs.user_login : obj.natObs.identifications[obj.iIdentification].user.login),
+//     "role": "individual",  //"institution"
+//     "@iot.id": create_UUID(true)  //Only specify if you want to have control on the @iot.id value.
+// }
+// var sensor = {
+//     "name": "Human Eye",
+//     "description": "Eye of the observer",
+//     "encodingType": "text/html",
+//     "metadata": "https://en.wikipedia.org/wiki/Human_eye"
 
 /*
 var observedProperty = {
