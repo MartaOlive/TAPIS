@@ -286,12 +286,12 @@ function drawEntitiesInDialogMultiCreateSTA(node) {
     //     <div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">
     //     < input type = "radio" value = "id" name = "DialogMultiCreateSTA_entitiesProperty_INat_observationGroup_observationGroup}"
     //     id = "DialogMultiCreateSTA_entitiesProperty_INat_observationGroup_observationGroup_id"
-    //     onclick = "addPropertyCheckedValueMulticreateSTAINat('observationGroup','observationGroup', 'id')" >
+    //     onclick = "radiobuttonSelectedPropertiesOrIdMulticreateSTAINat('observationGroup','observationGroup', 'id')" >
     //     </div>
     //     < div style = "border: 1px solid black;" >
     //     < input type = "radio" value = "id" name = "DialogMultiCreateSTA_entitiesProperty_INat_observationGroup_observationGroup" 
     //      id = "DialogMultiCreateSTA_entitiesProperty_INat_observationGroup_observationGroup_properties"
-    //      onclick = "addPropertyCheckedValueMulticreateSTAINat('observationGroup','observationGroup','properties')" >
+    //      onclick = "radiobuttonSelectedPropertiesOrIdMulticreateSTAINat('observationGroup','observationGroup','properties')" >
 	// 	<span style="font-weight: bold;">Properties</span><ul>
     //     <li><label style="font-weight: bold" for="autocompleteTabINat_photos_propertiesSelect_${entity.name.name}_${objectKeys[e]}">${objectKeys[e]}:</label>
     //     <select id="autocompleteTabINat_observationGroup_propertiesSelect_observationGroup_name" ${(entitiesInInfoSaved.observationGroup["name"].text != "") ? "style='display: none;'" : ""}>
@@ -348,14 +348,14 @@ function drawEntitiesInDialogMultiCreateSTA(node) {
                     c.push(`< div style = "border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px" > `);
                     c.push(`< input type = "radio" value = "id" name = "DialogMultiCreateSTA_entitiesProperty_INat_photos_${entitiesInPage[i]}"
                     id = "DialogMultiCreateSTA_entitiesProperty_INat_photos_${entitiesInPage[i]}_id"
-                    onclick = "addPropertyCheckedValueMulticreateSTAINat('photos','${entitiesInPage[i]}', 'id')" > `);
+                    onclick = "radiobuttonSelectedPropertiesOrIdMulticreateSTAINat('photos','${entitiesInPage[i]}', 'id')" > `);
                     // ${(infoSaved.entities[STAEntitiesArray[i]][properties[e].name].checked == "true") ? "checked" : ""}
                 } else if (firstPropertyAdded == false) {
                     c.push(`< div style = "border: 1px solid black;" > `);
                     firstPropertyAdded = true;
                     c.push(`< input type = "radio" value = "id" name = "DialogMultiCreateSTA_entitiesProperty_INat_photos_${entitiesInPage[i]} " 
                     id = "DialogMultiCreateSTA_entitiesProperty_INat_photos_${entitiesInPage[i]}_properties"
-                        onclick = "addPropertyCheckedValueMulticreateSTAINat('photos','${entitiesInPage[i]}', 'properties')" >
+                        onclick = "radiobuttonSelectedPropertiesOrIdMulticreateSTAINat('photos','${entitiesInPage[i]}', 'properties')" >
 						<span style="font-weight: bold;">Properties</span><ul>`);
                     // ${(infoSaved.entities[STAEntitiesArray[i]][properties[e].name].checked == "true") ? "checked" : ""}
 
@@ -402,7 +402,7 @@ function drawEntitiesInDialogMultiCreateSTA(node) {
 function changeInfoInNodeINat2STAPlus(tab, entity, property, selectInfo) {
 
 }
-function addPropertyCheckedValueMulticreateSTAINat(page, entity, property) {
+function radiobuttonSelectedPropertiesOrIdMulticreateSTAINat(page, entity, property) {
 
 }
 function GetSTALicense(natLicense) {

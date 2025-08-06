@@ -9179,15 +9179,15 @@ function buildEntityBlockInMultiCreateSTADialog(node, entityObject,entity, page)
 				if ((entity!="Datastreams" &&  entity!="MultiDatastreams") || ((entity=="Datastreams" ||  entity!="MultiDatastreams") && (properties[e].name!= "observedArea" && properties[e].name!= "phenomenonTime" && properties[e].name!= "resultTime"))){
 					if (properties[e].name=="id") {
 						c+=`<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
-						c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" onclick="addPropertyCheckedValueMulticreateSTA('${entity}', '${properties[e].name}')">`
+						c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_${properties[e].name }" onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'id','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked=="id")? "checked":""}>`
 					}
 					else if (firstPropertyAdded==false){
 						c+=`<div style="border: 1px solid black;">`;
 						firstPropertyAdded=true;
-						c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }"  onclick="addPropertyCheckedValueMulticreateSTA('${entity}', '${properties[e].name}')">
+						c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_${properties[e].name }"  onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'properties',${page})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked!="id")? "checked":""}>
 						<span style="font-weight: bold;">Properties</span><ul>`;
 					} 
-					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="addPropertyCheckedValueMulticreateSTA('${entity}', '${properties[e].name}')">`
+					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', '${properties[e].name}')">`
 					if (properties[e].name!="id")c+=`<li>`
 					c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required=="true")?"*":""}: </label> 
 					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}' )">` //·$· property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
@@ -9407,45 +9407,50 @@ function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){
 	networkNodes.update(node);
 
 }
-function addPropertyCheckedValueMulticreateSTA(entity, property){ //Properties in entities checkboxes
+function radiobuttonSelectedPropertiesOrIdMulticreateSTA(entity, property, page){ //Radiobutton id or properties
 	var node= getNodeDialog("DialogMultiCreateSTA");
-	var properties=node.STAMultiCreateInformation.infoSaved.entities[entity];
-	var checkbox= document.getElementById("DialogMultiCreateSTA_entitiesProperty_"+entity+"_"+property);
+	//var properties=node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked=property;
+	var radiobutton= document.getElementById(`DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_${property}`);
 	//var select;
-	if (property=="id"){ //Erase other checkbox, 
-		if (checkbox.checked==false){
-			properties[property].checked="false";
+	if (property=="id"){ 
+		if (radiobutton.checked==true){
+			node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked="id";
 		}else{
-			var propertiesKeys= Object.keys(properties)
-			for (var i=0;i<propertiesKeys.length;i++){
-				checkbox= document.getElementById("DialogMultiCreateSTA_entitiesProperty_"+entity+"_"+propertiesKeys[i]);
-				//select= document.getElementById("DialogMultiCreateSTA_selectForProperties_"+entity+"_"+propertiesKeys[i]);
-				if (i==0){
-					properties[propertiesKeys[i]].checked="true";
-					//select.disabled=false;
-				}else{
-					properties[propertiesKeys[i]].checked="false";
-					checkbox.checked=false;
-					//select.disabled=true;
-				}
+			node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked="properties";
+			// var propertiesKeys= Object.keys(properties)
+			// for (var i=0;i<propertiesKeys.length;i++){
+			// 	checkbox= document.getElementById("DialogMultiCreateSTA_entitiesProperty_"+entity+"_"+propertiesKeys[i]);
+			// 	//select= document.getElementById("DialogMultiCreateSTA_selectForProperties_"+entity+"_"+propertiesKeys[i]);
+			// 	if (i==0){
+			// 		properties[propertiesKeys[i]].checked="true";
+			// 		//select.disabled=false;
+			// 	}else{
+			// 		properties[propertiesKeys[i]].checked="false";
+			// 		checkbox.checked=false;
+			// 		//select.disabled=true;
+			// 	}
 			
-			}
+			// }
 		}
 
-	}else{
-		checkbox= document.getElementById("DialogMultiCreateSTA_entitiesProperty_"+entity+"_"+property);
-		if (checkbox.checked){ //need to add		
-			properties[property].checked="true";
-			properties["id"].checked="false"; //id unchecked
-			select= document.getElementById("DialogMultiCreateSTA_selectForProperties_"+entity+"_id").disabled=true;
-		}else{ //need to remove
-			properties[property].checked="false";
+	}else{ //properties
+		if (radiobutton.checked==false){
+			node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked="id";
+		}else{
+			node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked="properties";
+		// checkbox= document.getElementById("DialogMultiCreateSTA_entitiesProperty_"+entity+"_"+property);
+		// if (checkbox.checked){ //need to add		
+		// 	properties[property].checked="true";
+		// 	properties["id"].checked="false"; //id unchecked
+		// 	select= document.getElementById("DialogMultiCreateSTA_selectForProperties_"+entity+"_id").disabled=true;
+		// }else{ //need to remove
+		// 	properties[property].checked="false";
 		}
 	}
 
 
 
-	node.STAMultiCreateInformation.infoSaved.entities[entity]= properties;
+	//node.STAMultiCreateInformation.infoSaved.entities[entity]= properties;
 	networkNodes.update(node);
 	drawMultiCreateSTADialog(node);
 
