@@ -8822,7 +8822,7 @@ function applyTemporalFilter(url, dateFrom, dateTo, property){
 	networkNodes.update(currentNode);
 }
 
-//Cal preguntar a la Marta que és això.
+//Cal preguntar a la Marta que és això. --> És per demanar tots els resultats i poder fer els agregats. 
 async function askForAllDataResults(property){
 	var numberOfResults = await loadAPIDataWithReturn(currentNode.STAURL+"&$count=true", "CountResults");
 				
@@ -9190,8 +9190,7 @@ function buildEntityBlockInMultiCreateSTADialog(node, entityObject,entity, page)
 					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="addPropertyCheckedValueMulticreateSTA('${entity}', '${properties[e].name}')">`
 					if (properties[e].name!="id")c+=`<li>`
 					c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required=="true")?"*":""}: </label> 
-					<select id="DialogMultiCreateSTA_selectForProperties_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}' )">` //·$· property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
-					//(node.STAMultiCreateInformation.infoSaved.entities[entity].id.checked ==true
+					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}' )">` //·$· property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
 					
 					c+=`<option value="">-- Select the corresponding attribute -- </option>`
 					for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
@@ -9350,12 +9349,12 @@ function addOriginCheckedValueMulticreateSTA(originRadioButton){ //Radiobuttons,
 	
 
 	if (originRadioButton=="general"){
-		node.STAMultiCreateInformation.infoSaved.origin= ["general", selected];
+		node.STAMultiCreateInformation.infoSaved.origin= ["general", selected,""];
 		networkNodes.update(node);
 		//Entities displayed yet are saved (No changes in infoSaved.entities)
 
 	}else{ //entity
-		origin=["entity", selected]; 
+		origin=["entity", selected,""]; 
 		//Add/delete entities in infosaved.entities (to display them)
 		addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(selected, node);		
 	}
@@ -9371,34 +9370,38 @@ function addOriginSelectedValueMulticreateSTA(){ //Select from origin radionbutt
 		networkNodes.update(node);
 		drawMultiCreateSTADialog(node);
 }
-function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entitie, node){
+function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){
 
 	var infoSaved=node.STAMultiCreateInformation.infoSaved;
-	node.STAMultiCreateInformation.infoSaved.origin=["entity", entitie];
-	var keysEntitiesSaved=Object.keys(infoSaved.entities); //already displayed and must be saved
-	var entitiesConnected= deapCopy(STAEntities[entitie].entities);
-	entitiesConnected.push({name: entitie, required:"true"}); //add entitie selected
-	var newEntities={}, newEntityToPush, entitiePlural, properties, needed=[];
+	node.STAMultiCreateInformation.infoSaved.origin=["entity", entity, ""];
+	var keysEntitiesSaved=Object.keys(infoSaved.entities["general"]); //already displayed and must be saved
+	var entitiesConnected= deapCopy(STAEntities[entity].entities);
+	entitiesConnected.push({name: entity, required:"true"}); //add entitie selected
+	var newEntities={}, newEntityToPush, entityPlural, propertiesObject, needed=[];
 
 	for (var i=0;i<entitiesConnected.length;i++){
-		entitiePlural= getSTAEntityPlural(entitiesConnected[i].name);
-		needed.push(entitiePlural);
-		if (keysEntitiesSaved.includes(entitiePlural)){//copy
-			newEntities[entitiePlural]=infoSaved.entities[entitiePlural];
+		entityPlural= getSTAEntityPlural(entitiesConnected[i].name);
+		needed.push(entityPlural);
+		if (keysEntitiesSaved.includes(entityPlural)){//copy
+			newEntities[entityPlural]=infoSaved.entities["general"][entityPlural];
 		}else{ //new
 			newEntityToPush={};
-			if (entitiePlural!="Subjects"&& entitiePlural!="Objects"){
-				properties=STAEntities[entitiePlural].properties;
-				properties.push({name:"id", required:"true"});
-				for (var a=0;a< STAEntities[entitiePlural].properties.length;a++){ //plural les entities...estan algune sen sing
-					newEntityToPush[STAEntities[entitiePlural].properties[a].name]={value:"",checked:"false" }
+			if (entityPlural!="Subjects"&& entityPlural!="Objects"){	
+				propertiesObject={};
+				propertiesObject.id = {attribute:"", text:""};
+				newEntityToPush.name=entityPlural;
+				newEntityToPush.radioChecked="properties";
+				for (var a=0;a< STAEntities[entityPlural].properties.length;a++){ 			
+					propertiesObject[STAEntities[entityPlural].properties[a].name] = {attribute:"", text:""};
 				}
-				newEntities[entitiePlural]=newEntityToPush;
+				newEntityToPush.properties= propertiesObject;
+
+				newEntities[entityPlural]=newEntityToPush;
 			}
 
 		}
 	}
-	infoSaved.entities=newEntities;
+	infoSaved.entities["general"]=newEntities;
 	infoSaved.needed=needed;
 	node.STAMultiCreateInformation.infoSaved= infoSaved;
 	networkNodes.update(node);
@@ -9449,11 +9452,11 @@ function addPropertyCheckedValueMulticreateSTA(entity, property){ //Properties i
 
 }
 
-function savePropertyInEntitiesSelectedValueMulticreateSTA (entity, property){
+function savePropertyInEntitiesSelectedValueMulticreateSTA (entity, property, page){
 	var node= getNodeDialog("DialogMultiCreateSTA");
-	var select= document.getElementById("DialogMultiCreateSTA_selectForProperties_"+entity+"_"+property);
+	var select= document.getElementById(`DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${property}`);
 	var selected= select.options[select.selectedIndex].value;
-	node.STAMultiCreateInformation.infoSaved.entities[entity][property].value=selected;
+	node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[property].attribute=selected;
 	networkNodes.update(node);
 	drawMultiCreateSTADialog(node);
 
