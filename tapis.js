@@ -9157,7 +9157,7 @@ function populateMultiCreateSTADialog(node){
 
 }
 function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que falla d'aqui
-	var n, properties, value,c="";
+	var n, properties, propertiesInEntity,propertiesKeys, value,c="";
 	var infoSaved= deapCopy(node.STAMultiCreateInformation.infoSaved);
 	var parentsInformation= node.STAMultiCreateInformation.parentsInformation;
 	var parentsInformationKeys = Object.keys(parentsInformation);
@@ -9168,8 +9168,13 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 			}else{ //singular
 				c+=`${STAEntities[entity].singular}</legend>`;
 			}
-
-			properties=[...STAEntities[entity].properties];
+			propertiesKeys=Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties);
+			propertiesInEntity=[...STAEntities[entity].properties];
+			properties=[];
+			for (var p=0;p<propertiesInEntity.length;p++){
+				if (propertiesKeys.includes(propertiesInEntity[p].name))properties.push({name:STAEntities[entity].properties[p].name, required:STAEntities[entity].properties[p].required})
+			}
+			
 			if (!properties.includes("id"))properties.unshift({name:"id", required: "false"}); //Adding id as a property
 			n= properties.length;
 			var firstPropertyAdded=false;
@@ -9190,7 +9195,7 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', '${properties[e].name}')">`
 					if (properties[e].name!="id")c+=`<li>`
 					c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required=="true")?"*":""}: </label> 
-					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''}) ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text != "") ? "style='display: none;'" : ""}">` //·$· property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
+					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text != "")? 'style="display: none;"' : ""}">` //·$· property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
 					
 					c+=`<option value="">-- Select the corresponding attribute -- </option>`
 					for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
@@ -9206,7 +9211,7 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 							}
 							c+="</optgroup>"
 					}
-					c+=`</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text} </span> <button onClick="changeInfoInNodeINat2STAPlus(" photos","${entity} ", "${properties[e].name} ")" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text == "") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`
+					c+=`</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text} </span> <button onClick="changeInfoInNodeINat2STAPlus(" photos","${entity} ", "${properties[e].name} ")" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text == "") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`
 					if (properties[e].name=="id")  c+=`</div>` //after id
 					else if(e==n-1) c+=` </ul></div>` // after ast propety 
 				}
