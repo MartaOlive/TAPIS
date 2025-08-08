@@ -9277,7 +9277,7 @@ function drawMultiCreateSTADialog(node){
 	spanMultiCreateSTA.innerHTML=c;	
 }
 
-function buildEntitiesCheckBoxInMultiCreateSTADialog(node, page){ 
+function buildEntitiesCheckBoxInMultiCreateSTADialog(node, page, especialAutocomplete){ 
 
 	var c="";
 c	+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
@@ -9292,7 +9292,7 @@ c	+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap:
 
 	//Box with all entities to check
 	for (var u=0;u<STAEntitiesArray.length;u++){
-		c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}', 'general')" value="${STAEntitiesArray[u]}" `;
+		c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}', '${page}', ${(especialAutocomplete)?"'"+especialAutocomplete+"'":""})" value="${STAEntitiesArray[u]}" `;
 		//checked
 		if (checkboxCheked.includes(STAEntitiesArray[u])) c+= " checked ";
 		//disabled (only when an entity is selected)
@@ -9319,7 +9319,7 @@ c	+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap:
 	return c;
 }
 
-function addOrDeleteCheckedValueMulticreateSTA(entity, page){ //If and entity appears in dialog 
+function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplete){ //If and entity appears in dialog 
 	var node= getNodeDialog("DialogMultiCreateSTA");
 	var entities=node.STAMultiCreateInformation.infoSaved.entities
 	var entitiesKeys= Object.keys(entities[page]);
@@ -9341,7 +9341,11 @@ function addOrDeleteCheckedValueMulticreateSTA(entity, page){ //If and entity ap
 
 	node.STAMultiCreateInformation.infoSaved.entities= entities;
 	networkNodes.update(node);
-	drawMultiCreateSTADialog(node);
+	if (especialAutocomplete=="")drawMultiCreateSTADialog(node);
+	else {
+		if(typeof window["drawMultiCreateSTADialog"+especialAutocomplete] === 'function')window["drawMultiCreateSTADialog"+especialAutocomplete](node);
+		else (alert("Changes will not be registered because there are no functions associated "))
+	}
 
 }
 

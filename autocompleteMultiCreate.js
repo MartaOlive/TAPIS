@@ -317,7 +317,7 @@ function drawMultiCreateSTADialogiNaturalist(node) {
     if (entitiesInInfoSaved.photos) {
         entitiesInPage = Object.keys(entitiesInInfoSaved.photos);
         c.push(`<div id = "autocompleteTabINat_div_containingPages_photos" > <span>Photos</span>`);
-        c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "photos"))
+        c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "photos", "iNaturalist"))
 
         for (var i = 0; i < entitiesInPage.length; i++) { //entities
           c.push(buildEntityBlockInMultiCreateSTADialog (node,entitiesInPage[i], "photos"));   
@@ -328,7 +328,7 @@ function drawMultiCreateSTADialogiNaturalist(node) {
     if (entitiesInInfoSaved.userIdentification) {
         entitiesInPage = Object.keys(entitiesInInfoSaved.userIdentification);
         c.push(`<div id = "autocompleteTabINat_div_containingPages_userIdentification" > <span>User identification</span>`);
-       c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "userIdentification"))
+       c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "userIdentification", "iNaturalist"))
 
         for (var i = 0; i < entitiesInPage.length; i++) { //entities
           c.push(buildEntityBlockInMultiCreateSTADialog (node,entitiesInPage[i], "userIdentification"));   
@@ -338,7 +338,7 @@ function drawMultiCreateSTADialogiNaturalist(node) {
     if (entitiesInInfoSaved.othersIdentification) {
         entitiesInPage = Object.keys(entitiesInInfoSaved.othersIdentification);
         c.push(`<div id = "autocompleteTabINat_div_containingPages_othersIdentification" > <span>Other users identification</span>`);
-       c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "othersIdentification"))
+       c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "othersIdentification", "iNaturalist"))
 
         for (var i = 0; i < entitiesInPage.length; i++) { //entities
           c.push(buildEntityBlockInMultiCreateSTADialog (node,entitiesInPage[i], "othersIdentification"));   
