@@ -9211,7 +9211,7 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 							}
 							c+="</optgroup>"
 					}
-					c+=`</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text} </span> <button onClick="changeInfoInNodeINat2STAPlus(" photos","${entity} ", "${properties[e].name} ")" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text == "") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`
+					c+=`</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text} </span> <button onClick="showAttributesSelectInEntitiesBoxMultiCreateSTADialog('${page}','${entity}', '${properties[e].name}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text == "") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`
 					if (properties[e].name=="id")  c+=`</div>` //after id
 					else if(e==n-1) c+=` </ul></div>` // after ast propety 
 				}
@@ -9566,6 +9566,19 @@ function updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(n
 
 	networkNodes.update(node);
 	drawMultiCreateSTADialog(node);	
+}
+
+function showAttributesSelectInEntitiesBoxMultiCreateSTADialog(page,entity, property, especialAutocomplete){
+	event.preventDefault();
+	var node= getNodeDialog("DialogMultiCreateSTA");
+	node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[property].text="";
+	networkNodes.update(node);
+	if (!especialAutocomplete)drawMultiCreateSTADialog(node);
+	else {
+		if(typeof window["drawMultiCreateSTADialog"+especialAutocomplete] === 'function')window["drawMultiCreateSTADialog"+especialAutocomplete](node);
+		else (alert("Changes will not be registered because there are no functions associated "))
+	}
+
 }
 
 

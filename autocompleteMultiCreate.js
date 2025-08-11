@@ -1,12 +1,12 @@
 //iNaturalistToSTA+
 function applyAutocompleteFunctioniNaturalist(node) {
-    var select=  document.getElementById("DialogMultiCreateSTAINaturalist_select");
-    var parentNodesKeys=Object.keys(node.STAMultiCreateInformation.parentsInformation)
-    var c=[];
-    for (var i=0;i<parentNodesKeys.length;i++){
+    var select = document.getElementById("DialogMultiCreateSTAINaturalist_select");
+    var parentNodesKeys = Object.keys(node.STAMultiCreateInformation.parentsInformation)
+    var c = [];
+    for (var i = 0; i < parentNodesKeys.length; i++) {
         c.push(`<option value="${parentNodesKeys[i]}">${node.STAMultiCreateInformation.parentsInformation[parentNodesKeys[i]].label} </option>`)
     }
-    select.innerHTML=c.join("");
+    select.innerHTML = c.join("");
 
     document.getElementById("DialogMultiCreateSTAINaturalist").showModal();
 }
@@ -15,37 +15,39 @@ function addINatEntitiesInfoToNode(node, nodeId) {
     var userIdentification = (document.getElementById("ObservationsToCreate_userIdentification").checked) ? true : false;
     var othersIdentification = (document.getElementById("ObservationsToCreate_othersIdentification").checked) ? true : false;
     var license = "";
+    var currentPage = ""
     //var license = GetSTALicense(license);
 
-    
+
     var entities = {
         general: {
             ObservationGroups: {
                 name: "ObservationGroup",
-                radioChecked:"properties",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
-                    name: { attribute: nodeId+"_uri", text: "" },
+                    name: { attribute: nodeId + "_uri", text: "" },
                     description: { attribute: "", text: "Observation of <b> attribute from species_guess </b>" },
-                    creationTime: { attribute: nodeId+"_created_at_utc", text: "" }
+                    creationTime: { attribute: nodeId + "_created_at_utc", text: "" }
                 },
             }
         }
     };
     if (photos) {
+        currentPage = "photos";
         entities.photos = {
             Parties: {
-                name:"Party",
-                radioChecked:"properties",
+                name: "Party",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
-                    displayName: { attribute: nodeId+"_user_login", text: "" },
+                    displayName: { attribute: nodeId + "_user_login", text: "" },
                     role: { attribute: "", text: "individual" }
                 }
             },
             ObservedProperties: {
                 name: "ObservedProperty",
-                radioChecked:"properties",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     name: { attribute: "", text: "Species picture" },
@@ -54,8 +56,8 @@ function addINatEntitiesInfoToNode(node, nodeId) {
                 }
             },
             Sensors: {
-                name:"Sensor",
-                radioChecked:"properties",
+                name: "Sensor",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     name: { attribute: "", text: "Generic camera" },
@@ -64,9 +66,9 @@ function addINatEntitiesInfoToNode(node, nodeId) {
                     metadata: { attribute: "", text: "https://en.wikipedia.org/wiki/Camera" }
                 }
             },
-           Things: {
-                name:  "Thing",
-                radioChecked:"properties",
+            Things: {
+                name: "Thing",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     name: { attribute: "", text: "Camera of <b> attribute from user_login </b>" },
@@ -75,7 +77,7 @@ function addINatEntitiesInfoToNode(node, nodeId) {
             },
             Datastreams: {
                 name: "Datastream",
-                radioChecked:"properties",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     unitOfMeasurement: { attribute: "", text: '{"name":"N/A","symbol": "","definition": "N/A"}' },
@@ -87,21 +89,21 @@ function addINatEntitiesInfoToNode(node, nodeId) {
             },
             Observations: {
                 name: "Observations",
-                radioChecked:"properties",
+                radioChecked: "properties",
                 properties: {
                     result: { attribute: "", text: " <b> from attribute large_url </b>" }, //obj.natObs.observation[obj.iPictureObservation].photo.large_url,--> Array 
                     resultTime: { attribute: "", text: "Date <b> from attribute created_at </b>  " },  // d.toISOString(), 	var d = new Date(obj.natObs.observation_photos[obj.iPictureObservation].photo.created_at);	
-                    phenomenonTime: { attribute: nodeId+"_time_observed_at_utc ", text: "" }, //(obj.natObs.time_observed_at_utc ? obj.natObs.time_observed_at_utc : obj.natObs.created_at_utc),
+                    phenomenonTime: { attribute: nodeId + "_time_observed_at_utc ", text: "" }, //(obj.natObs.time_observed_at_utc ? obj.natObs.time_observed_at_utc : obj.natObs.created_at_utc),
                     parameters: { attribute: "", text: '{"species_guess" : <b> from attribute species_guess </b>}' }
 
                 }
             },
             FeaturesOfInterest: { //photo and identification from user
-                name:  "FeatureOfInterest", 
-                radioChecked:"properties",
+                name: "FeatureOfInterest",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
-                    name: { attribute: nodeId+"_place_guess", text: "" },
+                    name: { attribute: nodeId + "_place_guess", text: "" },
                     description: { attribute: "", text: "<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> " },
                     encodingType: { attribute: "", text: "application/geo+json" },
                     feature: { attribute: "", text: '{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}' }
@@ -114,19 +116,20 @@ function addINatEntitiesInfoToNode(node, nodeId) {
     };
 
     if (userIdentification) {
+        if (currentPage == "") currentPage = "userIdentification";
         entities.userIdentification = {
             Parties: {
-                name:  "Party",
-                radioChecked:"properties",
+                name: "Party",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
-                    displayName: { attribute: nodeId+"_user_login", text: "" },
+                    displayName: { attribute: nodeId + "_user_login", text: "" },
                     role: { attribute: "", text: "individual" }
                 }
             },
             ObservedProperties: {
-                name: "ObservedProperty", 
-                radioChecked:"properties",
+                name: "ObservedProperty",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     name: { attribute: "", text: "Taxon" },
@@ -136,8 +139,8 @@ function addINatEntitiesInfoToNode(node, nodeId) {
             }
             ,
             Sensors: {
-                name: "Sensor", 
-                radioChecked:"properties",
+                name: "Sensor",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     name: { attribute: "", text: "Human Eye" },
@@ -148,18 +151,18 @@ function addINatEntitiesInfoToNode(node, nodeId) {
 
             },
             Things: {
-                name:  "Thing",
-                radioChecked:"properties",
+                name: "Thing",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
-                    name: { attribute: nodeId+"_user_login", text: "" },
+                    name: { attribute: nodeId + "_user_login", text: "" },
                     description: { attribute: "", text: "Human as a sensor" }
                 }
 
             },
             Datastreams: {
-                name: "Datastream", 
-                radioChecked:"properties",
+                name: "Datastream",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     unitOfMeasurement: { attribute: "", text: '{"name":"Identifier","symbol": "","definition": "https://www.gbif.org/species"}' },
@@ -170,11 +173,11 @@ function addINatEntitiesInfoToNode(node, nodeId) {
                 }
             },
             Observations: {
-                name:"Observations",
-                radioChecked:"properties",
+                name: "Observations",
+                radioChecked: "properties",
                 properties: {
                     result: { attribute: "", text: "If exist <b> attribute from community_taxon_id</b> or <b> attribute from taxon_id</b> " },
-                    resultTime: { attribute: nodeId+"_created_at", text: "" },
+                    resultTime: { attribute: nodeId + "_created_at", text: "" },
                     phenomenonTime: { attribute: "", text: "If exist <b> attribute from time_observed_at_utc</b> or <b> attribute from created_at_utc</b> " },
 
                 }
@@ -182,10 +185,10 @@ function addINatEntitiesInfoToNode(node, nodeId) {
             },
             FeaturesOfInterest: { //photo and identification from user
                 name: "FeatureOfInterest",
-                radioChecked:"properties",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
-                    name: { attribute: nodeId+"_place_guess", text: "" },
+                    name: { attribute: nodeId + "_place_guess", text: "" },
                     description: { attribute: "", text: "<b> attribute from place_guess </b>.Posicional accurancy: If exist <b> attribute from positional_accuracy </b>, Positioning device: If exist <b> attribute from positioning_device </b>, Positioning method: If exist <b> attribute from positioning_method </b>, Coordinates obscured: If exist <b> attribute from coordinates_obscured </b> " },
                     encodingType: { attribute: "", text: "application/geo+json" },
                     feature: { attribute: "", text: '{"type": "Feature","geometry": { type": "Point","coordinates": [<b> attribute from longitude </b>, <b> attribute from latitud </b>]}}' }
@@ -195,10 +198,11 @@ function addINatEntitiesInfoToNode(node, nodeId) {
         }
     };
     if (othersIdentification) {
+        if (currentPage == "") currentPage = "othersIdentification";
         entities.othersIdentification = {
             Parties: {
                 name: "Party",
-                radioChecked:"properties",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     displayName: { attribute: "", text: "user.login" },
@@ -206,8 +210,8 @@ function addINatEntitiesInfoToNode(node, nodeId) {
                 }
             },
             Sensors: {
-                name:  "Sensor",
-                radioChecked:"properties",
+                name: "Sensor",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     name: { attribute: "", text: "Human Eye" },
@@ -218,7 +222,7 @@ function addINatEntitiesInfoToNode(node, nodeId) {
             },
             ObservedProperties: {
                 name: "ObservedProperty",
-                radioChecked:"properties",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     name: { attribute: "", text: "Taxon" },
@@ -229,7 +233,7 @@ function addINatEntitiesInfoToNode(node, nodeId) {
             },
             Things: {
                 name: "Thing",
-                radioChecked:"properties",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     name: { attribute: "", text: "user" },
@@ -238,8 +242,8 @@ function addINatEntitiesInfoToNode(node, nodeId) {
 
             },
             Datastreams: {
-                name:  "Datastream", 
-                radioChecked:"properties",
+                name: "Datastream",
+                radioChecked: "properties",
                 properties: {
                     id: { attribute: "", text: "" },
                     unitOfMeasurement: { attribute: "", text: '{"name":"Identifier","symbol": "","definition": "https://www.gbif.org/species"}' },
@@ -251,59 +255,71 @@ function addINatEntitiesInfoToNode(node, nodeId) {
             },
             Observations: {
                 name: "Observations",
-                radioChecked:"properties",
+                radioChecked: "properties",
                 properties: {
                     result: { attribute: "", text: "If exist <b> attribute from community_taxon_id</b> or <b> attribute from taxon_id </b> " },
-                    resultTime: { attribute: nodeId+"_created_at", text: "" },
+                    resultTime: { attribute: nodeId + "_created_at", text: "" },
                     phenomenonTime: { attribute: "", text: "<b> attribute from created_at</b> " },
                 }
 
             },
         }
     };
-    node.STAMultiCreateInformation. infoSaved.origin[0]== "general";
-    node.STAMultiCreateInformation.infoSaved.origin[1]=="Observations"
+
+    var dialog = document.getElementById("DialogMultiCreateSTA");
+    dialog.setAttribute("data-currentPage", currentPage);
+
+
+    node.STAMultiCreateInformation.infoSaved.origin[0] == "general";
+    node.STAMultiCreateInformation.infoSaved.origin[1] == "Observations"
 
     node.STAMultiCreateInformation.infoSaved.entities = entities;
     networkNodes.update(node);
+}
+
+function addCurrentPageInDialog(page) {
+    var dialog = document.getElementById("DialogMultiCreateSTA");
+    dialog.setAttribute("data-currentPage", page);
+    var node = getNodeDialog("DialogMultiCreateSTA");
+    drawMultiCreateSTADialogiNaturalist(node);
 }
 
 
 function ChooseObservationsToCreateINAT2STAPlus(event) {
     event.preventDefault();
     var node = getNodeDialog("DialogMultiCreateSTA");
-	var select= document.getElementById("DialogMultiCreateSTAINaturalist_select");
-	var selectedValue= select.options[select.selectedIndex].value;
-    addINatEntitiesInfoToNode(node,selectedValue)
+    var select = document.getElementById("DialogMultiCreateSTAINaturalist_select");
+    var selectedValue = select.options[select.selectedIndex].value;
+    addINatEntitiesInfoToNode(node, selectedValue)
     drawMultiCreateSTADialogiNaturalist(node)
     document.getElementById("DialogMultiCreateSTAINaturalist").close()
-
-
-
 }
 
 function drawMultiCreateSTADialogiNaturalist(node) {
     var entitiesInInfoSaved = node.STAMultiCreateInformation.infoSaved.entities;
     var parentsInformation = node.STAMultiCreateInformation.parentsInformation;
     var parentsInformationKeys = Object.keys(parentsInformation);
+    var currentPage=document.getElementById("DialogMultiCreateSTA").getAttribute("data-currentPage");
+
     //Tabs
     var c = [];
     c.push(`<fieldset><legend>STAService connected: </legend>
 	<label><b>url:</b> ${node.STAMultiCreateInformation.STAService}</label>
 	</fieldset>`);
-    
-    c.push(buildEntityBlockInMultiCreateSTADialog (node,"ObservationGroups", "general"));
-    
 
-    c.push(`<div id = "autocompleteTabINat_bar"> `)
+    c.push(buildEntityBlockInMultiCreateSTADialog(node, "ObservationGroups", "general"));
+
+
+    c.push(`<div id = "autocompleteTabINat_bar"> `);
     if (entitiesInInfoSaved.photos) {
-        c.push(`<div id = "autocompleteTabINat_tab_photos" onClick = "changeTabINatBar('photos')" style = "border: 1px solid black;display: inline-block" > Photos</div > `);
+        c.push(`<div id = "autocompleteTabINat_tab_photos" onClick = "addCurrentPageInDialog('photos')" style = "${(currentPage=="photos")?'border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black':'border: 1px solid black'};display: inline-block; cursor: pointer"  > Photos</div > `);
+
     }
     if (entitiesInInfoSaved.userIdentification) {
-        c.push(`<div id = "autocompleteTabINat_tab_photos" onClick = "changeTabINatBar('userIdentification')" style = "border: 1px solid black;display: inline-block" > User identification</div > `);
+        c.push(`<div id = "autocompleteTabINat_tab_photos" onClick = "addCurrentPageInDialog('userIdentification')" style = "${(currentPage=="userIdentification")?'border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black':'border: 1px solid black'};display: inline-block; cursor: pointer"  > User identification</div > `);
     }
     if (entitiesInInfoSaved.othersIdentification) {
-        c.push(`<div id = "autocompleteTabINat_tab_photos" onClick = "changeTabINatBar('userIdentification')" style = "border: 1px solid black;display: inline-block" > Other users identification</div > `);
+        c.push(`<div id = "autocompleteTabINat_tab_photos" onClick = "addCurrentPageInDialog('othersIdentification')" style = "${(currentPage=="othersIdentification")?'border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black':'border: 1px solid black'};display: inline-block; cursor: pointer"  > Other users identification</div > `);
     }
     c.push(`</div> `);
     c.push(`<div id = "autocompleteTabINat_div_containingPages"> `);
@@ -316,32 +332,32 @@ function drawMultiCreateSTADialogiNaturalist(node) {
 
     if (entitiesInInfoSaved.photos) {
         entitiesInPage = Object.keys(entitiesInInfoSaved.photos);
-        c.push(`<div id = "autocompleteTabINat_div_containingPages_photos" > <span>Photos</span>`);
+        c.push(`<div id = "autocompleteTabINat_div_containingPages_photos" style="${(currentPage!="photos")?'display:none':''}" > <span>Photos</span>`);
         c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "photos", "iNaturalist"))
 
         for (var i = 0; i < entitiesInPage.length; i++) { //entities
-          c.push(buildEntityBlockInMultiCreateSTADialog (node,entitiesInPage[i], "photos"));   
+            c.push(buildEntityBlockInMultiCreateSTADialog(node, entitiesInPage[i], "photos"));
         }
         c.push(`</div > `);
 
     }
     if (entitiesInInfoSaved.userIdentification) {
         entitiesInPage = Object.keys(entitiesInInfoSaved.userIdentification);
-        c.push(`<div id = "autocompleteTabINat_div_containingPages_userIdentification" > <span>User identification</span>`);
-       c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "userIdentification", "iNaturalist"))
+        c.push(`<div id = "autocompleteTabINat_div_containingPages_userIdentification" style="${(currentPage!="userIdentification")?'display:none':''}" > <span>User identification</span>`);
+        c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "userIdentification", "iNaturalist"))
 
         for (var i = 0; i < entitiesInPage.length; i++) { //entities
-          c.push(buildEntityBlockInMultiCreateSTADialog (node,entitiesInPage[i], "userIdentification"));   
+            c.push(buildEntityBlockInMultiCreateSTADialog(node, entitiesInPage[i], "userIdentification"));
         }
         c.push(`</div > `);
     }
     if (entitiesInInfoSaved.othersIdentification) {
         entitiesInPage = Object.keys(entitiesInInfoSaved.othersIdentification);
-        c.push(`<div id = "autocompleteTabINat_div_containingPages_othersIdentification" > <span>Other users identification</span>`);
-       c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "othersIdentification", "iNaturalist"))
+        c.push(`<div id = "autocompleteTabINat_div_containingPages_othersIdentification" style="${(currentPage!="othersIdentification")?'display:none':''}" > <span>Other users identification</span>`);
+        c.push(buildEntitiesCheckBoxInMultiCreateSTADialog(node, "othersIdentification", "iNaturalist"))
 
         for (var i = 0; i < entitiesInPage.length; i++) { //entities
-          c.push(buildEntityBlockInMultiCreateSTADialog (node,entitiesInPage[i], "othersIdentification"));   
+            c.push(buildEntityBlockInMultiCreateSTADialog(node, entitiesInPage[i], "othersIdentification"));
         }
         c.push(`</div > `);
     }
@@ -349,12 +365,8 @@ function drawMultiCreateSTADialogiNaturalist(node) {
     document.getElementById("DialogMultiCreateSTA_span").innerHTML = c.join("");
 
 }
-function changeInfoInNodeINat2STAPlus(tab, entity, property, selectInfo) {
 
-}
-function radiobuttonSelectedPropertiesOrIdMulticreateSTAINat(page, entity, property) {
 
-}
 function GetSTALicense(natLicense) {
 
 }
