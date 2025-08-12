@@ -8957,7 +8957,7 @@ function calculateMinMaxMeanDesvest(aggregatedData){
 function createAndLoadImportGeoJSONNode(data,url){
 	
 	addCircularImage(null, null, "GeoJSON", "ImportGeoJSON.png");
-	console.log(data)
+	//console.log(data)
 	var node = networkNodes.get(network.getSelectedNodes()[0]);
 	currentNode=node;
 	saveNodeDialog("DialogImportGeoJSON", node);
@@ -9203,7 +9203,6 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 							for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
 								value= `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
 								c+=`<option value="${value}"`; //value: idNode_attributeValue
-								console.log(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name])
 								if (node.STAMultiCreateInformation.infoSaved.entities[page][entity]?.properties[properties[e].name]?.attribute==value){ //Options of select
 									c+= " selected "
 								}
@@ -9583,8 +9582,44 @@ function showAttributesSelectInEntitiesBoxMultiCreateSTADialog(page,entity, prop
 function oKButtonInDialogMultiCreateSTA(event){
 	event.preventDefault();
 	var node = getNodeDialog("DialogMultiCreateSTA");
-	checkIfEntitiesNeededArePresentToMultiCreateSTA();
+	if (node.STAMultiCreateInformation.infoSaved.origin[2]=="")processCreateEntitiesInMultiCreateSTA(node)
+	else {
+		if(typeof window["processCreateEntitiesInMultiCreateSTA"+node.STAMultiCreateInformation.infoSaved.origin[2]] === 'function')window["processCreateEntitiesInMultiCreateSTA"+node.STAMultiCreateInformation.infoSaved.origin[2]](node);
+		else (alert("Changes will not be registered because there are no functions associated "))};
+
 	// Party, Sensor, ObservedProperties, Location, Thing, Datastream (Multidatastreams), FeatureOfInterest, Observation, License, Campaign, ObservationGroup, 
+
+}
+function processCreateEntitiesInMultiCreateSTA(node){
+	
+	var entitiesNeeded= checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general); 
+	if (entitiesNeeded==true){
+		
+	}else{
+		alert("A required entity is missing. Add the required entities, check the schema to see which one you are missing.");
+	}
+}
+function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject){ //object with entities 
+	var entitiesArray= Object.keys(entitieObject);
+	var entity;
+	for (var i=0;i<entitiesArray.length;i++){
+		if (entitieObject[entitiesArray[i]].radioChecked=="properties"){ //If entiti has an id, it doesn't need entities associated.
+				for (var e=0;e<STAEntities[entitiesArray[i]].entities.length;e++){
+				if (STAEntities[entitiesArray[i]].entities[e].required=="true" ){
+					entity= getSTAEntityPlural(STAEntities[entitiesArray[i]].entities[e].name);
+					if (!entitiesArray.includes(entity)) {
+						if (entity =="Datastreams" ||entity== "MultiDatastreams"){
+							if (entity=="Datastreams" && !entitiesArray.includes("MultiDatastreams"))return false;
+							else if (entity =="MultiDatastreams" && !entitiesArray.includes("Datastreams"))return false;
+						}else return false;					
+						
+					}
+				}
+			}
+		}
+
+	}
+	return true;
 }
 
 

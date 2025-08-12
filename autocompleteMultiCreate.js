@@ -365,7 +365,9 @@ function drawMultiCreateSTADialogiNaturalist(node) {
 
 }
 
-
+function processCreateEntitiesInMultiCreateSTAiNaturalist(node){
+    
+}
 function GetSTALicense(natLicense) {
 
 }
