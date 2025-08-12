@@ -6751,11 +6751,10 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		return true;
 	}
 		if (nodeTo.image=="MultiCreateSTA.png"){
-		
-		if (addEdge)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		networkNodes.update(nodeTo);
-		return true;
+			if (addEdge)
+				networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+			networkNodes.update(nodeTo);
+			return true;
 	}
 	if (tableNodes && nodeTo.image == "SeparateColumns.png") {
 		if (addEdge)
@@ -7250,7 +7249,12 @@ function networkDoubleClick(params) {
 		}
 		else if(currentNode.image=="MultiCreateSTA.png"){
 			//comrpobar si hi ha info en els parents...
-			populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
+			if (parentNodesInformationAllowOpenMultiCreateSTADialog(currentNode)==true){
+				populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
+			}else{
+				alert("Only one parent with multiple records is allowed")
+			}
+			
 			
 		}
 		else if (currentNode.image == "SeparateColumns.png") {
@@ -9071,7 +9075,19 @@ function okButtonInPivotTable(event){
 		alert (newData) //Error
 	}
 }
-
+function parentNodesInformationAllowOpenMultiCreateSTADialog(node){
+	var parentNodes=GetParentNodes(node);
+	var parentWithMultipleRecords=false;
+	//only one parent with multiple records is allowed
+	for (var i=0;i<parentNodes.length;i++){	
+		
+		if (parentNodes[i].STAdata?.length > 1 &&  parentNodes[i].image != "sta.png") {
+			if (parentWithMultipleRecords== true) return false
+			parentWithMultipleRecords= true;
+		}
+	}
+	return true;
+}
 function populateMultiCreateSTADialog(node){
 	saveNodeDialog("DialogMultiCreateSTA", node);
 	var parentsInformation={}, keys={}; //node.STASTAMultiCreateInformation.previousNodesInfo
@@ -9601,6 +9617,7 @@ function processCreateEntitiesInMultiCreateSTA(node){
 }
 function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySelected){ //object with entities
 	var entitiesArray= Object.keys(entitieObject);
+	if (!entitiesArray.includes("Parties")) return false; 
 	if (entitySelected){
 		if (!entitiesArray.includes(entitySelected)) return false; 
 	}
