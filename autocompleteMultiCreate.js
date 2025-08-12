@@ -326,7 +326,6 @@ function drawMultiCreateSTADialogiNaturalist(node) {
 
     //pages
     var objectKeys, entitiesInPage, entity;
-
     var valueToEvaluate;
     var firstPropertyAdded;
 

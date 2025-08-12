@@ -9292,7 +9292,7 @@ c	+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap:
 
 	//Box with all entities to check
 	for (var u=0;u<STAEntitiesArray.length;u++){
-		c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}', '${page}', ${(especialAutocomplete)?"'"+especialAutocomplete+"'":""})" value="${STAEntitiesArray[u]}" `;
+		c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}', '${page}', ${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?"'"+especialAutocomplete+"'":""})" value="${STAEntitiesArray[u]}" `;
 		//checked
 		if (checkboxCheked.includes(STAEntitiesArray[u])) c+= " checked ";
 		//disabled (only when an entity is selected)
@@ -9341,7 +9341,7 @@ function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplet
 
 	node.STAMultiCreateInformation.infoSaved.entities= entities;
 	networkNodes.update(node);
-	if (especialAutocomplete=="")drawMultiCreateSTADialog(node);
+	if (especialAutocomplete=="" || especialAutocomplete==undefined)drawMultiCreateSTADialog(node);
 	else {
 		if(typeof window["drawMultiCreateSTADialog"+especialAutocomplete] === 'function')window["drawMultiCreateSTADialog"+especialAutocomplete](node);
 		else (alert("Changes will not be registered because there are no functions associated "))
@@ -9579,6 +9579,12 @@ function showAttributesSelectInEntitiesBoxMultiCreateSTADialog(page,entity, prop
 		else (alert("Changes will not be registered because there are no functions associated "))
 	}
 
+}
+function oKButtonInDialogMultiCreateSTA(event){
+	event.preventDefault();
+	var node = getNodeDialog("DialogMultiCreateSTA");
+	checkIfEntitiesNeededArePresentToMultiCreateSTA();
+	// Party, Sensor, ObservedProperties, Location, Thing, Datastream (Multidatastreams), FeatureOfInterest, Observation, License, Campaign, ObservationGroup, 
 }
 
 
