@@ -9591,16 +9591,19 @@ function oKButtonInDialogMultiCreateSTA(event){
 
 }
 function processCreateEntitiesInMultiCreateSTA(node){
-	
-	var entitiesNeeded= checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general); 
+
+	var entitiesNeeded=(node.STAMultiCreateInformation.infoSaved.origin[0]=="general")?checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general ): checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general,node.STAMultiCreateInformation.infoSaved.origin[1]); 	
 	if (entitiesNeeded==true){
 		
 	}else{
 		alert("A required entity is missing. Add the required entities, check the schema to see which one you are missing.");
 	}
 }
-function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject){ //object with entities 
+function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySelected){ //object with entities
 	var entitiesArray= Object.keys(entitieObject);
+	if (entitySelected){
+		if (!entitiesArray.includes(entitySelected)) return false; 
+	}
 	var entity;
 	for (var i=0;i<entitiesArray.length;i++){
 		if (entitieObject[entitiesArray[i]].radioChecked=="properties"){ //If entiti has an id, it doesn't need entities associated.
@@ -9617,7 +9620,6 @@ function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject){ //objec
 				}
 			}
 		}
-
 	}
 	return true;
 }
