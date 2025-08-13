@@ -9075,6 +9075,7 @@ function okButtonInPivotTable(event){
 		alert (newData) //Error
 	}
 }
+//MultiCreateSTADialog functions 
 function parentNodesInformationAllowOpenMultiCreateSTADialog(node){
 	var parentNodes=GetParentNodes(node);
 	var parentWithMultipleRecords=false;
@@ -9101,11 +9102,11 @@ function populateMultiCreateSTADialog(node){
 					name: "Party",
 					radioChecked:"properties",
 					properties: {
-						id:{attribute:"",text:"" },
-						description:{attribute:"",text:"" },
-						authId:{attribute:"",text:"" },
-						role:{attribute:"",text:"" },
-						displayName:{attribute:"",text:"" }
+						id:{attribute:["","","",""],text:"" },  //attribute: [idNode+columnname, idNode, columnName, simple/multi record in the node]
+						description:{attribute:["","","",""],text:"" },
+						authId:{attribute:["","","",""],text:"" },
+						role:{attribute:["","","",""],text:"" },
+						displayName:{attribute:["","","",""],text:"" }
 					}
 				}
 			}
@@ -9218,8 +9219,8 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 							c+=`<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
 							for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
 								value= `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
-								c+=`<option value="${value}"`; //value: idNode_attributeValue
-								if (node.STAMultiCreateInformation.infoSaved.entities[page][entity]?.properties[properties[e].name]?.attribute==value){ //Options of select
+								c+=`<option value="${value}" data-nodeId="${parentsInformationKeys[s]}" data-column="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`; //value: idNode_attributeValue
+								if (node.STAMultiCreateInformation.infoSaved.entities[page][entity]?.properties[properties[e].name]?.attribute[0]==value){ //Options of select
 									c+= " selected "
 								}
 								c+=`>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
@@ -9343,10 +9344,10 @@ function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplet
 	if (checkbox.checked){ //need to add
 			entities[page][entity]={}
 			entities[page][entity].name=entity;
-			entities[page][entity].properties={id:{attribute:"", text:""}};
+			entities[page][entity].properties={id:{attribute:["","","",""], text:""}};
 			entities[page][entity].radioChecked="properties";
 			for (var i=0;i< STAEntities[entity].properties.length;i++){
-				entities[page][entity].properties[STAEntities[entity].properties[i].name]={attribute:"",text:"" }
+				entities[page][entity].properties[STAEntities[entity].properties[i].name]={attribute:["","","",""],text:"" }
 			}	
 	}else{ //need to remove
 		if (entitiesKeys.includes(entity)){
@@ -9412,11 +9413,11 @@ function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){
 			newEntityToPush={};
 			if (entityPlural!="Subjects"&& entityPlural!="Objects"){	
 				propertiesObject={};
-				propertiesObject.id = {attribute:"", text:""};
+				propertiesObject.id = {attribute:["","","",""], text:""};
 				newEntityToPush.name=entityPlural;
 				newEntityToPush.radioChecked="properties";
 				for (var a=0;a< STAEntities[entityPlural].properties.length;a++){ 			
-					propertiesObject[STAEntities[entityPlural].properties[a].name] = {attribute:"", text:""};
+					propertiesObject[STAEntities[entityPlural].properties[a].name] = {attribute:["","","",""], text:""};
 				}
 				newEntityToPush.properties= propertiesObject;
 
@@ -9459,7 +9460,10 @@ function savePropertyInEntitiesSelectedValueMulticreateSTA (entity, property, pa
 	var node= getNodeDialog("DialogMultiCreateSTA");
 	var select= document.getElementById(`DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${property}`);
 	var selected= select.options[select.selectedIndex].value;
-	node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[property].attribute=selected;
+	var nodeId= select.options[select.selectedIndex].dataset.nodeid;
+	var column= select.options[select.selectedIndex].dataset.column;
+	var simpleOrMultiple= (node.STAMultiCreateInformation.parentsInformation[nodeId].data.length>1)?"multiple": "simple";
+	node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[property].attribute=[selected, nodeId, column, simpleOrMultiple];
 	networkNodes.update(node);
 	if (!especialAutocomplete)drawMultiCreateSTADialog(node);
 	else {
@@ -9606,6 +9610,7 @@ function oKButtonInDialogMultiCreateSTA(event){
 	// Party, Sensor, ObservedProperties, Location, Thing, Datastream (Multidatastreams), FeatureOfInterest, Observation, License, Campaign, ObservationGroup, 
 
 }
+
 function processCreateEntitiesInMultiCreateSTA(node){
 
 	var entitiesNeeded=(node.STAMultiCreateInformation.infoSaved.origin[0]=="general")?checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general ): checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general,node.STAMultiCreateInformation.infoSaved.origin[1]); 	
@@ -9615,6 +9620,9 @@ function processCreateEntitiesInMultiCreateSTA(node){
 		alert("A required entity is missing. Add the required entities, check the schema to see which one you are missing.");
 	}
 }
+
+
+
 function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySelected){ //object with entities
 	var entitiesArray= Object.keys(entitieObject);
 	if (!entitiesArray.includes("Parties")) return false; 
