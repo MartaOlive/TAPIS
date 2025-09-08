@@ -9085,15 +9085,18 @@ function parentNodesInformationAllowOpenMultiCreateSTADialog(node){
 		if (parentNodes[i].STAdata?.length > 1 &&  parentNodes[i].image != "sta.png") {
 			if (parentWithMultipleRecords== true) return false
 			parentWithMultipleRecords= true;
+			node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord= parentNodes[i].id;
+			networkNodes.update(node);
 		}
 	}
+	
 	return true;
 }
 function populateMultiCreateSTADialog(node){
 	saveNodeDialog("DialogMultiCreateSTA", node);
 	var parentsInformation={}, keys={}; //node.STASTAMultiCreateInformation.previousNodesInfo
 	var infoSaved;//node.STASTAMultiCreateInformation.infoSaved
-
+	var nodeWithMultiRecord= node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord
 	infoSaved= {
 		origin: ["general", "Campaigns",""], //["general"] or ["entity", entitySelected, autocomplete];
 		entities:{
@@ -9102,17 +9105,17 @@ function populateMultiCreateSTADialog(node){
 					name: "Party",
 					radioChecked:"properties",
 					properties: {
-						id:{attribute:["","","",""],text:"" },  //attribute: [idNode+columnname, idNode, columnName, simple/multi record in the node]
-						description:{attribute:["","","",""],text:"" },
-						authId:{attribute:["","","",""],text:"" },
-						role:{attribute:["","","",""],text:"" },
-						displayName:{attribute:["","","",""],text:"" }
+						id:{attribute:["","","",""],text:"", required:"false" },  //attribute: [idNode+columnname, idNode, columnName, simple/multi record in the node]
+						description:{attribute:["","","",""],text:"", required:"false" },
+						authId:{attribute:["","","",""],text:"", required:"false" },
+						role:{attribute:["","","",""],text:"", required:"true" },
+						displayName:{attribute:["","","",""],text:"", required:"false" }
 					}
 				}
 			}
-
 		},
-		needed:["Parties"]	//A MODIFICAR
+		needed:["Parties"],	//A MODIFICAR
+		nodeWithMultiRecord: nodeWithMultiRecord
 	}
 	var parentNodes=GetParentNodes(node);
 	var STAService="", open=true;
@@ -9212,7 +9215,7 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', '${properties[e].name}')">`
 					if (properties[e].name!="id")c+=`<li>`
 					c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required=="true")?"*":""}: </label> 
-					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text != "")? 'style="display: none;"' : ""}">` //·$· property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
+					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text != "")? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
 					
 					c+=`<option value="">-- Select the corresponding attribute -- </option>`
 					for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
@@ -9344,10 +9347,10 @@ function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplet
 	if (checkbox.checked){ //need to add
 			entities[page][entity]={}
 			entities[page][entity].name=entity;
-			entities[page][entity].properties={id:{attribute:["","","",""], text:""}};
+			entities[page][entity].properties={id:{attribute:["","","",""], text:""}, required:"false"};
 			entities[page][entity].radioChecked="properties";
 			for (var i=0;i< STAEntities[entity].properties.length;i++){
-				entities[page][entity].properties[STAEntities[entity].properties[i].name]={attribute:["","","",""],text:"" }
+				entities[page][entity].properties[STAEntities[entity].properties[i].name]={attribute:["","","",""],text:"", required:entities[page][entity].properties[STAEntities[entity].properties[i]].required }
 			}	
 	}else{ //need to remove
 		if (entitiesKeys.includes(entity)){
@@ -9413,11 +9416,11 @@ function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){
 			newEntityToPush={};
 			if (entityPlural!="Subjects"&& entityPlural!="Objects"){	
 				propertiesObject={};
-				propertiesObject.id = {attribute:["","","",""], text:""};
+				propertiesObject.id = {attribute:["","","",""], text:"", required:"false"};
 				newEntityToPush.name=entityPlural;
 				newEntityToPush.radioChecked="properties";
 				for (var a=0;a< STAEntities[entityPlural].properties.length;a++){ 			
-					propertiesObject[STAEntities[entityPlural].properties[a].name] = {attribute:["","","",""], text:""};
+					propertiesObject[STAEntities[entityPlural].properties[a].name] = {attribute:["","","",""], text:"", required:STAEntities[entityPlural].properties[a].required};
 				}
 				newEntityToPush.properties= propertiesObject;
 
@@ -9602,25 +9605,77 @@ function showAttributesSelectInEntitiesBoxMultiCreateSTADialog(page,entity, prop
 function oKButtonInDialogMultiCreateSTA(event){
 	event.preventDefault();
 	var node = getNodeDialog("DialogMultiCreateSTA");
-	if (node.STAMultiCreateInformation.infoSaved.origin[2]=="")processCreateEntitiesInMultiCreateSTA(node)
+	//Add if every entity will be multi created or only once 
+	QuickCheckIfEveryEntityWillBeMulticreatedOrOnlyOnceIMultiCreateSTA(node, "general");
+	if (node.STAMultiCreateInformation.infoSaved.origin[2]=="")processCreateEntitiesInMultiCreateSTA(node,node.STAMultiCreateInformation.infoSaved.entities.general, "general")
 	else {
 		if(typeof window["processCreateEntitiesInMultiCreateSTA"+node.STAMultiCreateInformation.infoSaved.origin[2]] === 'function')window["processCreateEntitiesInMultiCreateSTA"+node.STAMultiCreateInformation.infoSaved.origin[2]](node);
 		else (alert("Changes will not be registered because there are no functions associated "))};
 
-	// Party, Sensor, ObservedProperties, Location, Thing, Datastream (Multidatastreams), FeatureOfInterest, Observation, License, Campaign, ObservationGroup, 
+	
 
 }
+const entitiesCreationOrder= ["Parties", "Sensors", "ObservedProperties", "Locations", "Things", "Datastreams", "Multidatastreams", "FeaturesOfInterest", "Observations", "Licenses", "Campaigns", "ObservationGroups"]
 
-function processCreateEntitiesInMultiCreateSTA(node){
+function QuickCheckIfEveryEntityWillBeMulticreatedOrOnlyOnceIMultiCreateSTA(node, page){
+
+	var entitiesKeys= Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page]);
+	var propertiesKeys;
+	var multipleOrSimple;
+
+	for (var i=0;i<entitiesKeys.length;i++){
+		multipleOrSimple="simple"
+		propertiesKeys= Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page][entitiesKeys[i]].properties);
+		for (var p=0;p<propertiesKeys.length;p++){
+			if (node.STAMultiCreateInformation.infoSaved.entities[page][entitiesKeys[i]].properties[propertiesKeys[p]].attribute[3]=="multiple"){
+				multipleOrSimple="multiple";
+				continue;
+			}
+		}
+		node.STAMultiCreateInformation.infoSaved.entities[page][entitiesKeys[i]].creation=multipleOrSimple;
+	}
+	networkNodes.update(node);
+}
+
+function processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page){
 
 	var entitiesNeeded=(node.STAMultiCreateInformation.infoSaved.origin[0]=="general")?checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general ): checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general,node.STAMultiCreateInformation.infoSaved.origin[1]); 	
+	var data = node.STAMultiCreateInformation.parentsInformation[node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord].data;
+	var dataLength= data.length;
+	var entitiesCreationOrderlength= entitiesCreationOrder.length;
+	var entitiesObjectKeys= Object.keys(entitiesObject);
+	var entityCompleted=true;
+	
 	if (entitiesNeeded==true){
+		for (var i=0;i<dataLength;i++){
+			if (entityCompleted==false)break; //It can be false afete firts round, not before.
+			for (var e=0;e< entitiesCreationOrderlength;e++){
+				if (entitiesObjectKeys.includes (entitiesCreationOrder[e])){
+					if (i!=0 && entitiesObject[entitiesCreationOrder[e]].creation=="simple") continue; //Only need to create first time
+					else{
+						entityCompleted=isEntityCompletedWithAllProperties(data,node, entitiesObject[entitiesCreationOrder[e]],entitiesCreationOrder[e], page,i); //Entity with all properties?
+						if (entityCompleted!=false){
+
+						}else{
+							break;
+						}						
+						//create entity or recive if exist (obtain id) --> Add @id blabla
+						//updateInfo in node if the info of this entity will be used always --> Chande attribute for text and radioCheched=id;
+					}
+
+				}
+			}
+
+			//Funció de totes les entitts (array)
+
+		}
+			
+				//funció d'entitat en entitat. -> La primera guardarà aquelles que no es repeteixen
 		
 	}else{
 		alert("A required entity is missing. Add the required entities, check the schema to see which one you are missing.");
 	}
 }
-
 
 
 function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySelected){ //object with entities
@@ -9647,7 +9702,54 @@ function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySe
 		}
 	}
 	return true;
+
+}
+function isEntityCompletedWithAllProperties(data, node, entity,entityName, page,dataIndex ){
+	var allPropertiesArrayInSTAentity= STAEntities[entityName].properties; 
+	var propertiesKeys= Object.keys(entity.properties);
+	var entityToReturn, nodeId, index;
+
+	for (var i=0;i<allPropertiesArrayInSTAentity.length;i++){
+		if (!propertiesKeys.includes(allPropertiesArrayInSTAentity[i])){
+			if (STAEntities[entityName].properties[allPropertiesArrayInSTAentity[i]].required=="true") { //Is this property needed?
+				alert(`Not all properties required to create the entity ${entityName} are complete, check the asterisks`)
+				return false
+			}else continue; //no problem, next
+		}else{ //property present
+			if (entity.properties[allPropertiesArrayInSTAentity[i]].text!="")entityToReturn[allPropertiesArrayInSTAentity[i]]= entity.properties[allPropertiesArrayInSTAentity[i]].text;
+			else{
+				nodeId=entity.properties[allPropertiesArrayInSTAentity[i]][1];
+				index = (entity.properties[allPropertiesArrayInSTAentity[i]][3]=="simple")?0:dataIndex; //It depends of the number of records in that node. 
+				entityToReturn.properties[allPropertiesArrayInSTAentity[i]]= node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex];
+				if (entity.properties[allPropertiesArrayInSTAentity[i]][3]=="simple"){
+					node.STAMultiCreateInformation.infoSaved.entities.page[entityName].properties[allPropertiesArrayInSTAentity[i]].attribute="";
+					node.STAMultiCreateInformation.infoSaved.entities.page[entityName].properties[allPropertiesArrayInSTAentity[i]].text=node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex]; //Chage to avoid this again, because it will be the same
+				}
+			} 
+		}
+	}
+	return entityToReturn;
+
 }
 
+//async function GetObjectId(url, objsName, obj){
+	//var response=await HTTPJSONData(url+"/"+objsName+ "?$filter=" + encodeURIComponent(AddKeysToFilter("", obj)));
 
+			// GetObjectId(url, entityName, obj).then(
+			// 	function (value) {
+			// 		if (value) {
+			// 			document.getElementById("DialogCreateUpdateDeleteEntity").close();
+			// 			showInfoMessage('Available at: <a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
+			// 			node.STAURL = getUrlToId(url, entityName, value);
+			// 			node.STAdata = [];
+			// 			node.STAdata.push(obj);
+			// 			node.STAdata[0]["@iot.id"] = isNaN(value) ? value : parseInt(value);
+			// 			networkNodes.update(node);
+			// 		}
+			// 	},
+			// 	function (error) {
+			// 		showInfoMessage('Error creating entity. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+			// 		console.log(error);
+			// 	}
+			// );
 

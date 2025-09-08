@@ -367,7 +367,10 @@ function drawMultiCreateSTADialogiNaturalist(node) {
 }
 
 function processCreateEntitiesInMultiCreateSTAiNaturalist(node){
-    
+    //Crear un buble per compropbar si falta alguna entiti amb la funció 
+    QuickCheckIfEveryEntityWillBeMulticreatedOrOnlyOnceIMultiCreateSTA(node,page);
+    checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.page, "Observations"); 
+    processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page)
 }
 function GetSTALicense(natLicense) {
 
