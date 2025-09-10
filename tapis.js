@@ -9311,7 +9311,7 @@ c	+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap:
 
 	//Box with all entities to check
 	for (var u=0;u<STAEntitiesArray.length;u++){
-		c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}', '${page}', ${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?"'"+especialAutocomplete+"'":""})" value="${STAEntitiesArray[u]}" `;
+		c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" ${(STAEntitiesArray[u]=="Parties")? 'disabled': ''} onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}', '${page}', ${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?"'"+especialAutocomplete+"'":""})" value="${STAEntitiesArray[u]}" `;
 		//checked
 		if (checkboxCheked.includes(STAEntitiesArray[u])) c+= " checked ";
 		//disabled (only when an entity is selected)
@@ -9350,7 +9350,7 @@ function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplet
 			entities[page][entity].properties={id:{attribute:["","","",""], text:""}, required:"false"};
 			entities[page][entity].radioChecked="properties";
 			for (var i=0;i< STAEntities[entity].properties.length;i++){
-				entities[page][entity].properties[STAEntities[entity].properties[i].name]={attribute:["","","",""],text:"", required:entities[page][entity].properties[STAEntities[entity].properties[i]].required }
+				entities[page][entity].properties[STAEntities[entity].properties[i].name]={attribute:["","","",""],text:"", required:STAEntities[entity].properties[i].required }
 			}	
 	}else{ //need to remove
 		if (entitiesKeys.includes(entity)){
@@ -9386,9 +9386,9 @@ function addOriginCheckedValueMulticreateSTA(originRadioButton){ //Radiobuttons,
 		//Add/delete entities in infosaved.entities (to display them)
 		addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(selected, node);		
 	}
-
 	drawMultiCreateSTADialog(node);
 }
+
 function addOriginSelectedValueMulticreateSTA(){ //Select from origin radionbuttons
 		var node= getNodeDialog("DialogMultiCreateSTA");
 
@@ -9405,6 +9405,13 @@ function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){
 	var keysEntitiesSaved=Object.keys(infoSaved.entities["general"]); //already displayed and must be saved
 	var entitiesConnected= deapCopy(STAEntities[entity].entities);
 	entitiesConnected.push({name: entity, required:"true"}); //add entitie selected
+	//Parties
+	for (var e=0;e<entitiesConnected.length;e++){
+		if (entitiesConnected[e].name=="Party") break;
+		if (e== entitiesConnected.length-1){ //last entity, no Party
+			entitiesConnected.unshift({name: "Party", required:"true"});
+		}
+	}
 	var newEntities={}, newEntityToPush, entityPlural, propertiesObject, needed=[];
 
 	for (var i=0;i<entitiesConnected.length;i++){
