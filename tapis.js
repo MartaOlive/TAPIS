@@ -9407,9 +9407,10 @@ function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){
 	entitiesConnected.push({name: entity, required:"true"}); //add entitie selected
 	//Parties
 	for (var e=0;e<entitiesConnected.length;e++){
-		if (entitiesConnected[e].name=="Party") break;
+		if (entitiesConnected[e].name=="Party") continue;
 		if (e== entitiesConnected.length-1){ //last entity, no Party
 			entitiesConnected.unshift({name: "Party", required:"true"});
+			break;
 		}
 	}
 	var newEntities={}, newEntityToPush, entityPlural, propertiesObject, needed=[];
