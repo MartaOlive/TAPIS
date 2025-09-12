@@ -9694,42 +9694,53 @@ function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySe
 	}
 	var entity;
 	for (var i=0;i<entitiesArray.length;i++){
-		if (entitieObject[entitiesArray[i]].radioChecked=="properties"){ //If entiti has an id, it doesn't need entities associated.
+		if (entitieObject[entitiesArray[i]].radioChecked=="properties"){ //If entity has an id, it doesn't need entities associated.
 				for (var e=0;e<STAEntities[entitiesArray[i]].entities.length;e++){
-				if (STAEntities[entitiesArray[i]].entities[e].required=="true" ){
-					entity= getSTAEntityPlural(STAEntities[entitiesArray[i]].entities[e].name);
-					if (!entitiesArray.includes(entity)) {
-						if (entity =="Datastreams" ||entity== "MultiDatastreams"){
-							if (entity=="Datastreams" && !entitiesArray.includes("MultiDatastreams"))return false;
-							else if (entity =="MultiDatastreams" && !entitiesArray.includes("Datastreams"))return false;
-						}else return false;					
-						
+					if (STAEntities[entitiesArray[i]].entities[e].required=="true" ){
+						entity= getSTAEntityPlural(STAEntities[entitiesArray[i]].entities[e].name);
+						if (!entitiesArray.includes(entity)) {
+							if (entity =="Datastreams" ||entity== "MultiDatastreams"){
+								if (entity=="Datastreams" && !entitiesArray.includes("MultiDatastreams"))return false;
+								else if (entity =="MultiDatastreams" && !entitiesArray.includes("Datastreams"))return false;
+							}else return false;					
+							
+						}
 					}
 				}
-			}
 		}
 	}
 	return true;
 
 }
-function isEntityCompletedWithAllProperties(data, node, entity,entityName, page,dataIndex ){
+function isEntityCompletedWithAllProperties(data, node, entity,entityName, page,dataIndex ){ //quina data es passa? Xq pot ser de nodes diferents... aixo sha de mirar.. 
 	var allPropertiesArrayInSTAentity= STAEntities[entityName].properties; 
 	var propertiesKeys= Object.keys(entity.properties);
-	var entityToReturn, nodeId, index;
+	var entityToReturn={}, nodeId, index;
+	
 
 	for (var i=0;i<allPropertiesArrayInSTAentity.length;i++){
-		if (!propertiesKeys.includes(allPropertiesArrayInSTAentity[i])){
-			if (STAEntities[entityName].properties[allPropertiesArrayInSTAentity[i]].required=="true") { //Is this property needed?
-				alert(`Not all properties required to create the entity ${entityName} are complete, check the asterisks`)
-				return false
-			}else continue; //no problem, next
+		if (!propertiesKeys.includes(allPropertiesArrayInSTAentity[i].name)){
+			
+			if (entity.radioChecked!="id"){
+				if (STAEntities[entityName].properties[i].required=="true") { //Is this property needed?
+					alert(`Not all properties required to create the entity ${entityName} are complete, check the asterisks. ${allPropertiesArrayInSTAentity[i].name} is needed`)
+					return false
+				}else continue; //no problem, next
+			}else{ //id selected. There is a value?
+				
+				if (entity.properties["id"].attribute[0] =="") {
+					alert(`Not id value required selected to link the entity ${entityName}. `)
+					return false
+				}
+			}
+
 		}else{ //property present
-			if (entity.properties[allPropertiesArrayInSTAentity[i]].text!="")entityToReturn[allPropertiesArrayInSTAentity[i]]= entity.properties[allPropertiesArrayInSTAentity[i]].text;
+			if (entity.properties[allPropertiesArrayInSTAentity[i].name].text!="")entityToReturn[allPropertiesArrayInSTAentity[i].name]= entity.properties[allPropertiesArrayInSTAentity[i].name].text;
 			else{
-				nodeId=entity.properties[allPropertiesArrayInSTAentity[i]][1];
-				index = (entity.properties[allPropertiesArrayInSTAentity[i]][3]=="simple")?0:dataIndex; //It depends of the number of records in that node. 
-				entityToReturn.properties[allPropertiesArrayInSTAentity[i]]= node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex];
-				if (entity.properties[allPropertiesArrayInSTAentity[i]][3]=="simple"){
+				nodeId=entity.properties[allPropertiesArrayInSTAentity[i].name][1];
+				index = (entity.properties[allPropertiesArrayInSTAentity[i].name][3]=="simple")?0:dataIndex; //It depends of the number of records in that node. 
+				entityToReturn.properties[allPropertiesArrayInSTAentity[i].name]= data[index]; //Falta seleccionar la columna pr saber el valor concret. Aqui envia un objecte
+				if (entity.properties[allPropertiesArrayInSTAentity[i].name][3]=="simple"){
 					node.STAMultiCreateInformation.infoSaved.entities.page[entityName].properties[allPropertiesArrayInSTAentity[i]].attribute="";
 					node.STAMultiCreateInformation.infoSaved.entities.page[entityName].properties[allPropertiesArrayInSTAentity[i]].text=node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex]; //Chage to avoid this again, because it will be the same
 				}
