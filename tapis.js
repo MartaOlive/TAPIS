@@ -9661,9 +9661,10 @@ function processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page){
 				if (entitiesObjectKeys.includes (entitiesCreationOrder[e])){
 					if (i!=0 && entitiesObject[entitiesCreationOrder[e]].creation=="simple") continue; //Only need to create first time
 					else{
-						entityCompleted=isEntityCompletedWithAllProperties(data,node, entitiesObject[entitiesCreationOrder[e]],entitiesCreationOrder[e], page,i); //Entity with all properties?
+						entityCompleted=isEntityCompletedWithAllProperties(node, entitiesObject[entitiesCreationOrder[e]],entitiesCreationOrder[e], page,i); //Entity with all properties?
 						if (entityCompleted!=false){
-
+							//ACTUALITZAR O FER ALGO : Retorna la entitie amb els valors que interesa. 
+							//Guardarla per fora del for del entitiesCreationOrder pujarho?
 						}else{
 							break;
 						}						
@@ -9712,41 +9713,59 @@ function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySe
 	return true;
 
 }
-function isEntityCompletedWithAllProperties(data, node, entity,entityName, page,dataIndex ){ //quina data es passa? Xq pot ser de nodes diferents... aixo sha de mirar.. 
+function isEntityCompletedWithAllProperties(node, entity,entityName, page,dataIndex ){ //quina data es passa? Xq pot ser de nodes diferents... aixo sha de mirar.. 
 	var allPropertiesArrayInSTAentity= STAEntities[entityName].properties; 
 	var propertiesKeys= Object.keys(entity.properties);
 	var entityToReturn={}, nodeId, index;
+	var data;
 	
-
-	for (var i=0;i<allPropertiesArrayInSTAentity.length;i++){
-		if (!propertiesKeys.includes(allPropertiesArrayInSTAentity[i].name)){
-			
-			if (entity.radioChecked!="id"){
-				if (STAEntities[entityName].properties[i].required=="true") { //Is this property needed?
-					alert(`Not all properties required to create the entity ${entityName} are complete, check the asterisks. ${allPropertiesArrayInSTAentity[i].name} is needed`)
-					return false
-				}else continue; //no problem, next
-			}else{ //id selected. There is a value?
-				
-				if (entity.properties["id"].attribute[0] =="") {
-					alert(`Not id value required selected to link the entity ${entityName}. `)
-					return false
-				}
+	if (entity.radioChecked=="id"){
+		if (entity.properties["id"].attribute[0] =="") { //ID selected without selectinformation
+			alert(`Not id value required selected to link the entity ${entityName}. `)
+			return false
+		}else{
+			data= node.STAMultiCreateInformation.parentsInformation[entity.properties["id"].attribute[1]].data;
+			nodeId=entity.properties["id"].attribute[1];
+			index = (entity.properties["id"].attribute[3]=="simple")?0:dataIndex; //It depends of the number of records in that node. 
+			entityToReturn.properties={};
+			entityToReturn.properties["id"]= data[index][entity.properties["id"].attribute[2]]; //Falta seleccionar la columna pr saber el valor concret. Aqui envia un objecte
+			if (entity.properties["id"][3]=="simple"){
+				node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties["id"].attribute=["","","",""];
+				node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties["id"].text=node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex]; //Chage to avoid this again, because it will be the same
+				networkNodes.update(node)
 			}
-
-		}else{ //property present
-			if (entity.properties[allPropertiesArrayInSTAentity[i].name].text!="")entityToReturn[allPropertiesArrayInSTAentity[i].name]= entity.properties[allPropertiesArrayInSTAentity[i].name].text;
-			else{
-				nodeId=entity.properties[allPropertiesArrayInSTAentity[i].name][1];
-				index = (entity.properties[allPropertiesArrayInSTAentity[i].name][3]=="simple")?0:dataIndex; //It depends of the number of records in that node. 
-				entityToReturn.properties[allPropertiesArrayInSTAentity[i].name]= data[index]; //Falta seleccionar la columna pr saber el valor concret. Aqui envia un objecte
-				if (entity.properties[allPropertiesArrayInSTAentity[i].name][3]=="simple"){
-					node.STAMultiCreateInformation.infoSaved.entities.page[entityName].properties[allPropertiesArrayInSTAentity[i]].attribute="";
-					node.STAMultiCreateInformation.infoSaved.entities.page[entityName].properties[allPropertiesArrayInSTAentity[i]].text=node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex]; //Chage to avoid this again, because it will be the same
+		}
+	}else{
+		for (var i=0;i<allPropertiesArrayInSTAentity.length;i++){
+			if (allPropertiesArrayInSTAentity[i]!="id"){
+				if (!propertiesKeys.includes(allPropertiesArrayInSTAentity[i].name)){
+					if (STAEntities[entityName].properties[i].required=="true") { //Is this property needed?
+						alert(`Not all properties required to create the entity ${entityName} are complete, check the asterisks. ${allPropertiesArrayInSTAentity[i].name} is needed`)
+						return false
+					}else continue; //no problem, next
+				}else{ //property present
+					if (entity.properties[allPropertiesArrayInSTAentity[i].name].text!="")entityToReturn[allPropertiesArrayInSTAentity[i].name]= entity.properties[allPropertiesArrayInSTAentity[i].name].text;
+					else{
+						data= node.STAMultiCreateInformation.parentsInformation[entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[1]].data;
+						nodeId=entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[1];
+						index = (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[3]=="simple")?0:dataIndex; //It depends of the number of records in that node. 
+						entityToReturn.properties={};
+						entityToReturn.properties[allPropertiesArrayInSTAentity[i].name]= data[index][entity.properties["id"].attribute[2]]; //Falta seleccionar la columna pr saber el valor concret. Aqui envia un objecte
+						if (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[3]=="simple"){
+							node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties[allPropertiesArrayInSTAentity[i].name].attribute=["","","",""];
+							node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties[allPropertiesArrayInSTAentity[i].name].text=node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex]; //Chage to avoid this again, because it will be the same
+							networkNodes.update(node)
+						}
+					} 
 				}
-			} 
+			}else{
+				continue;
+			}
+			
 		}
 	}
+
+
 	return entityToReturn;
 
 }
