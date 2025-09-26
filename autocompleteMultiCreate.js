@@ -19,7 +19,7 @@ function addINatEntitiesInfoToNode(node, nodeId) {
     var simpleOrMultiple= (node.STAMultiCreateInformation.parentsInformation[nodeId].data.length>1)?"multiple": "simple";
     //var license = GetSTALicense(license);
 
-[selected, nodeId, column, simpleOrMultiple]
+//[selected, nodeId, column, simpleOrMultiple]
     var entities = {
         general: {
             ObservationGroups: {

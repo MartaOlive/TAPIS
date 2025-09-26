@@ -7250,6 +7250,7 @@ function networkDoubleClick(params) {
 		else if(currentNode.image=="MultiCreateSTA.png"){
 			//comrpobar si hi ha info en els parents...
 			if (parentNodesInformationAllowOpenMultiCreateSTADialog(currentNode)==true){
+				createArrayWithParentNodesInformation(currentNode, ["data", "label", "shape"]);
 				populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
 			}else{
 				alert("Only one parent with multiple records is allowed")
@@ -9104,6 +9105,7 @@ function populateMultiCreateSTADialog(node){
 				Parties:{
 					name: "Party",
 					radioChecked:"properties",
+					completed:"false",
 					properties: {
 						id:{attribute:["","","",""],text:"", required:"false" },  //attribute: [idNode+columnname, idNode, columnName, simple/multi record in the node]
 						description:{attribute:["","","",""],text:"", required:"false" },
@@ -9209,13 +9211,13 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 					else if (firstPropertyAdded==false){
 						c+=`<div style="border: 1px solid black;">`;
 						firstPropertyAdded=true;
-						c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_${properties[e].name }"  onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'properties',${page})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked!="id")? "checked":""}>
+						c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_properties}"  onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'properties','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked!="id")? "checked":""}>
 						<span style="font-weight: bold;">Properties</span><ul>`;
 					} 
 					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', '${properties[e].name}')">`
 					if (properties[e].name!="id")c+=`<li>`
 					c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required=="true")?"*":""}: </label> 
-					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text != "")? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
+					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text !="")? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
 					
 					c+=`<option value="">-- Select the corresponding attribute -- </option>`
 					for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
@@ -9230,7 +9232,7 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 							}
 							c+="</optgroup>"
 					}
-					c+=`</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text} </span> <button onClick="showAttributesSelectInEntitiesBoxMultiCreateSTADialog('${page}','${entity}', '${properties[e].name}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text == "") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`
+					c+=`</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text} </span> <button onClick="showAttributesSelectInEntitiesBoxMultiCreateSTADialog('${page}','${entity}', '${properties[e].name}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text =="") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`
 					if (properties[e].name=="id")  c+=`</div>` //after id
 					else if(e==n-1) c+=` </ul></div>` // after ast propety 
 				}
@@ -9349,6 +9351,7 @@ function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplet
 			entities[page][entity].name=entity;
 			entities[page][entity].properties={id:{attribute:["","","",""], text:""}, required:"false"};
 			entities[page][entity].radioChecked="properties";
+			entities[page][entity].completed="false";
 			for (var i=0;i< STAEntities[entity].properties.length;i++){
 				entities[page][entity].properties[STAEntities[entity].properties[i].name]={attribute:["","","",""],text:"", required:STAEntities[entity].properties[i].required }
 			}	
@@ -9427,6 +9430,7 @@ function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){
 				propertiesObject.id = {attribute:["","","",""], text:"", required:"false"};
 				newEntityToPush.name=entityPlural;
 				newEntityToPush.radioChecked="properties";
+				newEntityToPush.completed="false";	
 				for (var a=0;a< STAEntities[entityPlural].properties.length;a++){ 			
 					propertiesObject[STAEntities[entityPlural].properties[a].name] = {attribute:["","","",""], text:"", required:STAEntities[entityPlural].properties[a].required};
 				}
@@ -9641,8 +9645,9 @@ function QuickCheckIfEveryEntityWillBeMulticreatedOrOnlyOnceIMultiCreateSTA(node
 			}
 		}
 		node.STAMultiCreateInformation.infoSaved.entities[page][entitiesKeys[i]].creation=multipleOrSimple;
+		networkNodes.update(node);
 	}
-	networkNodes.update(node);
+	
 }
 
 function processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page){
@@ -9653,27 +9658,37 @@ function processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page){
 	var entitiesCreationOrderlength= entitiesCreationOrder.length;
 	var entitiesObjectKeys= Object.keys(entitiesObject);
 	var entityCompleted=true;
+	var entityToSend;
 	
 	if (entitiesNeeded==true){
 		for (var i=0;i<dataLength;i++){
-			if (entityCompleted==false)break; //It can be false afete firts round, not before.
+			entityToSend={};
+			if (entityCompleted==false)break; //It can be false after firts round, not before. Necessary to go out of this bucle
+			//const entitiesCreationOrder= ["Parties", "Sensors", "ObservedProperties", "Locations", "Things", "Datastreams", "Multidatastreams", "FeaturesOfInterest", "Observations", "Licenses", "Campaigns", "ObservationGroups"]
+
 			for (var e=0;e< entitiesCreationOrderlength;e++){
-				if (entitiesObjectKeys.includes (entitiesCreationOrder[e])){
-					if (i!=0 && entitiesObject[entitiesCreationOrder[e]].creation=="simple") continue; //Only need to create first time
-					else{
+				if (entitiesObjectKeys.includes(entitiesCreationOrder[e])){
+					if (entitiesObject[entitiesCreationOrder[e]].completed=="false"){
 						entityCompleted=isEntityCompletedWithAllProperties(node, entitiesObject[entitiesCreationOrder[e]],entitiesCreationOrder[e], page,i); //Entity with all properties?
 						if (entityCompleted!=false){
+							entityToSend[entitiesCreationOrder[e]]=entityCompleted
 							//ACTUALITZAR O FER ALGO : Retorna la entitie amb els valors que interesa. 
 							//Guardarla per fora del for del entitiesCreationOrder pujarho?
 						}else{
+							alert(`At least a required entity is missing (${entitiesCreationOrder[e]}). Add the required entities, check the schema to see which one you are missing.`)
 							break;
 						}						
 						//create entity or recive if exist (obtain id) --> Add @id blabla
 						//updateInfo in node if the info of this entity will be used always --> Chande attribute for text and radioCheched=id;
-					}
+			
 
+					}
 				}
+		
+		
 			}
+			//TOTES LES ENTITATS CREADES PREPARADES PER FER LA RONDA DE PUJAR DADES (HI HAURÀ tantes rondes com data.length hi hagi , a no ser que tots sigui triat de simple)
+			console.log (entityToSend)
 
 			//Funció de totes les entitts (array)
 
@@ -9713,32 +9728,40 @@ function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySe
 	return true;
 
 }
-function isEntityCompletedWithAllProperties(node, entity,entityName, page,dataIndex ){ //quina data es passa? Xq pot ser de nodes diferents... aixo sha de mirar.. 
+function isEntityCompletedWithAllProperties(node, entity,entityName, page,dataIndex ){ 
 	var allPropertiesArrayInSTAentity= STAEntities[entityName].properties; 
 	var propertiesKeys= Object.keys(entity.properties);
 	var entityToReturn={}, nodeId, index;
 	var data;
 	
+	//AGREGAR EL COMPLETED TANT SI ËS TEXT, COM SIMPLE
+	//--TEXT: Anar mirant si totes son text ...
 	if (entity.radioChecked=="id"){
-		if (entity.properties["id"].attribute[0] =="") { //ID selected without selectinformation
-			alert(`Not id value required selected to link the entity ${entityName}. `)
-			return false
+		if (entity.properties["id"].text!=""){
+			if (entity.properties["id"].attribute[0] =="" && entity.properties["id"].text=="") { //ID selected without selectinformation
+				alert(`Not id value required selected to link the entity ${entityName}. `)
+				return false
+			}
 		}else{
 			data= node.STAMultiCreateInformation.parentsInformation[entity.properties["id"].attribute[1]].data;
 			nodeId=entity.properties["id"].attribute[1];
 			index = (entity.properties["id"].attribute[3]=="simple")?0:dataIndex; //It depends of the number of records in that node. 
 			entityToReturn.properties={};
-			entityToReturn.properties["id"]= data[index][entity.properties["id"].attribute[2]]; //Falta seleccionar la columna pr saber el valor concret. Aqui envia un objecte
-			if (entity.properties["id"][3]=="simple"){
-				node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties["id"].attribute=["","","",""];
-				node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties["id"].text=node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex]; //Chage to avoid this again, because it will be the same
-				networkNodes.update(node)
+			entityToReturn.properties["id"]= data[index][entity.properties["id"].attribute[2]]; 
+			if (entity.properties["id"].attribute[3]=="simple"){
+				//node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties["id"].attribute=["","","",""];
+				//node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties["id"].text=(node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties["id"].attribute[2]]==undefined)?"undefined":node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties["id"].attribute[2]]; //Chage to avoid this again, because it will be the same ("undefined because it is necessary a different value from "")
+				node.STAMultiCreateInformation.infoSaved.entities[page][entityName].completed="true"; //It is id, so it is the only property needed.
+				node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties["id"].value=(node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties["id"].attribute[2]]==undefined)?"undefined":node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties["id"].attribute[2]]; //Chage to avoid this again, because it will be the same ("undefined because it is necessary a different value from "")
+				networkNodes.update(node);
 			}
 		}
+		
+
 	}else{
 		for (var i=0;i<allPropertiesArrayInSTAentity.length;i++){
 			if (allPropertiesArrayInSTAentity[i]!="id"){
-				if (!propertiesKeys.includes(allPropertiesArrayInSTAentity[i].name)){
+				if (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[0]=="" && entity.properties["id"].text==""){ 
 					if (STAEntities[entityName].properties[i].required=="true") { //Is this property needed?
 						alert(`Not all properties required to create the entity ${entityName} are complete, check the asterisks. ${allPropertiesArrayInSTAentity[i].name} is needed`)
 						return false
@@ -9746,28 +9769,63 @@ function isEntityCompletedWithAllProperties(node, entity,entityName, page,dataIn
 				}else{ //property present
 					if (entity.properties[allPropertiesArrayInSTAentity[i].name].text!="")entityToReturn[allPropertiesArrayInSTAentity[i].name]= entity.properties[allPropertiesArrayInSTAentity[i].name].text;
 					else{
-						data= node.STAMultiCreateInformation.parentsInformation[entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[1]].data;
+						if (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[1]==""){
+							data="";
+						}else{
+							data= node.STAMultiCreateInformation.parentsInformation[entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[1]].data;
+						}
+						
 						nodeId=entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[1];
 						index = (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[3]=="simple")?0:dataIndex; //It depends of the number of records in that node. 
 						entityToReturn.properties={};
-						entityToReturn.properties[allPropertiesArrayInSTAentity[i].name]= data[index][entity.properties["id"].attribute[2]]; //Falta seleccionar la columna pr saber el valor concret. Aqui envia un objecte
-						if (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[3]=="simple"){
-							node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties[allPropertiesArrayInSTAentity[i].name].attribute=["","","",""];
-							node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties[allPropertiesArrayInSTAentity[i].name].text=node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex]; //Chage to avoid this again, because it will be the same
-							networkNodes.update(node)
+						if (data==""){
+							entityToReturn.properties[allPropertiesArrayInSTAentity[i].name]=""
+						}else{
+							entityToReturn.properties[allPropertiesArrayInSTAentity[i].name]= data[index][entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[2]]; //Falta seleccionar la columna pr saber el valor concret. Aqui envia un objecte
+
 						}
+						if (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[3]=="simple"){
+							node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties[allPropertiesArrayInSTAentity[i].name].value=(node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[2]]==undefined)?"undefined":node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[2]]; //Chage to avoid this again, because it will be the same
+						// 	node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties[allPropertiesArrayInSTAentity[i].name].attribute=["","","",""];
+						 	networkNodes.update(node)
+						}
+						
 					} 
 				}
 			}else{
 				continue;
 			}
-			
+			if (i==allPropertiesArrayInSTAentity.length-1 && node.STAMultiCreateInformation.infoSaved.entities[page][entityName].creation=="simple"){
+				node.STAMultiCreateInformation.infoSaved.entities[page][entityName].completed="true"; //Last property. It is all entity simple and it is not necessary to complete it again? 
+			}
 		}
 	}
 
 
 	return entityToReturn;
 
+}
+function createArrayWithParentNodesInformation(node, infoArray){ //infoArray --> array with attributes from parent that you want
+	var parentNodes=GetParentNodes(node);
+	var arrayWithAllNodesInfo=[];
+	var obj;
+	for (var i=0;i<parentNodes.length;i++){
+		obj={};
+		obj.id=parentNodes[i].id;
+		obj.dataKeys=(parentNodes[i].STAdata!=null)?Object.keys(getDataAttributesSimple(parentNodes[i].STAdata)):[];
+
+		if (infoArray.length>0){
+			for(var e=0;e<infoArray.length;e++){
+				if(parentNodes[i][infoArray[e]]){
+					obj[infoArray[e]]= parentNodes[i][infoArray[e]];
+				}
+				
+			}
+		}
+
+		arrayWithAllNodesInfo.push(obj);
+	}
+	return arrayWithAllNodesInfo;
 }
 
 //async function GetObjectId(url, objsName, obj){
