@@ -334,10 +334,10 @@ function createEntitySelectorInFilterRows(selectorInfo, count) {
 	if (node.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
 		entityToInput = getSTAEntityPlural(node.STAEntityName);
 	} else {
-		entityToInput = selectorInfo[0][1];
+		entityToInput = selectorInfo.length ? selectorInfo[0][1] : "";
 	}
 	inputForEntityFilterRow.value = entityToInput;
-	inputForEntityFilterRow.style.width = entityToInput.length * 7 + "px"; //Adjust width of the input to fit all content
+	inputForEntityFilterRow.style.width = (entityToInput.length<3 ? 3 : entityToInput.length) * 7 + "px"; //Adjust width of the input to fit all content
 
 }
 function openModalRowFilterEntities(number) { //To open Modat to see and select entities
@@ -516,12 +516,6 @@ function createPropertySelectInFilterRows(selectorInfo, count) {
 	select.setAttribute("id", "selectorProperty_" + count);
 	select.setAttribute("onChange", "onchangePropertySelect('" + count + "')");
 	select.style.marginLeft = "10px";
-	var node= getNodeDialog("DialogFilterRows");
-	if (node.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
-		var entity = getSTAEntityPlural(getNodeDialog("DialogFilterRows").STAEntityName);
-	} else {
-		var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(selectorInfo[0][1]), true);
-	}
 	//Input for properties/parameters
 	var inputForProperty = document.createElement("input");
 	inputForProperty.setAttribute("type", "text");
@@ -531,7 +525,15 @@ function createPropertySelectInFilterRows(selectorInfo, count) {
 	inputForProperty.style.marginLeft = "5px";
 	optionsRow.appendChild(select);
 	optionsRow.appendChild(inputForProperty);
-	fillPropertySelector(count, entity, selectorInfo);
+
+	var node= getNodeDialog("DialogFilterRows");
+	if (node.STAFilterRowEntities["optionsRow" + count].length == 1) {//only entity from parent Node
+		var entity = getSTAEntityPlural(getNodeDialog("DialogFilterRows").STAEntityName);
+	} else {
+		var entity = selectorInfo.length==0 ? null : getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(selectorInfo[0][1]), true);
+	}
+	if (entity)
+		fillPropertySelector(count, entity, selectorInfo);
 }
 function onchangePropertySelect(count) {
 	fillValueSelectorFilterRow(count);
@@ -1768,7 +1770,7 @@ function readInformationRowFilterTable(elem, nexus, parent,node) {  //Table (not
 					var indexOf = parent.elems.indexOf(elem);
 					var typeOfValue = infoFilter[i][5];
 					var apostropheOrSpace;
-					(typeOfValue == "number") ? apostropheOrSpace = "" : apostropheOrSpace = "'";
+					apostropheOrSpace = (typeOfValue == "number") ?  "" : "'";
 					if (indexOf == 0) {
 						data += "(";
 					}

@@ -130,6 +130,47 @@ function getMediaTypeForURLExtension(url){
 	return null;
 }
 
+//From iNat2STA
+function ExtractIdFromURL(url)
+{
+	var id;
+	if (!url && url!==0)
+		return;
+	if (-1!=url.indexOf("('") && -1!=url.indexOf("')", url.indexOf("('")+2))
+	{
+		id=url.substring(url.indexOf("('")+2,url.indexOf("')",url.indexOf("('")+2));
+		if (id==+id)  //Is it a numerical id?  /inspired in https://stackoverflow.com/questions/20169217/how-to-write-isnumber-in-javascript
+			return +id;  //returns a number
+		return id;  //returns a string
+	}
+	if (-1!=url.indexOf("(") && -1!=url.indexOf(")", url.indexOf("(")+1))
+	{
+		id=url.substring(url.indexOf("(")+1,url.indexOf(")",url.indexOf("(")+1));
+		return +id;  //returns a number
+	}
+	else
+		return url;
+}
+
+//If 'id' is a string, it should not have the statinc and ending "'"
+function getQueryIdODataFromId(id) {
+	if (typeof id==="number") {
+		const n = Number(id);
+		if (Number.isInteger(n))
+			return n;
+	}
+	return "'" + id + "'";
+}
+
+function getParentesisODataFromId(id) {
+	//return "(" + (typeof id==="number" ? "" :"'") + id + (typeof id==="number" ? "" :"'") + ")"
+	return "(" + getQueryIdODataFromId(id) + ")";
+}
+
+function getUrlToId(url, objsName, id) {
+	return url + "/" + objsName + getParentesisODataFromId(id);
+}
+
 //Before it was called AddKVPToURL
 function AddQueryParamsToURL(url, kvp) {
 	kvp=removeExtraAmpersand(kvp);

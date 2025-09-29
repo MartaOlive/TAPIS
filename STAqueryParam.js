@@ -105,12 +105,13 @@ function GetQueryParamSelectedSelectExpands(selectedExpands, recursive) {
 			cdns.push(recursive ? ";" : "&");
 		cdns.push("$orderby=", selectedExpands.orderBy.attribute, " ", (selectedExpands.orderBy.desc ? "desc": "asc"));
 	}
-	 if (selectedExpands.filter){
+	if (selectedExpands.filter){
 	 	var urlFilterPart=builtFilterSTAsentence(selectedExpands.filter);
-		 if (cdns.length)cdns.push(recursive ? ";" : "&");
+		if (cdns.length)
+			cdns.push(recursive ? ";" : "&");
 	 	cdns.push("$filter=");
 	 	cdns.push(urlFilterPart);
-	 }
+	}
 	var expandedArray=Object.keys(selectedExpands.expanded)
 	if (expandedArray.length){
 		if (cdns.length)
@@ -127,6 +128,7 @@ function GetQueryParamSelectedSelectExpands(selectedExpands, recursive) {
 	}
 	return cdns.join("");
 }
+
 function builtFilterSTAsentence(STAFilter){
 	var STAFilterSchemaKeys= Object.keys(STAFilter.filterSchema);
 	STAFilterSchemaKeys= STAFilterSchemaKeys.sort();
@@ -138,14 +140,13 @@ function builtFilterSTAsentence(STAFilter){
 	for (var i=0;i<STAFilterSchemaKeys.length;i++){
 		group=STAFilterSchemaKeys[i]
 		if (group.charAt(0)=="0"){
-
-			
 			url= builtFilterSTAsentenceByparts(STAFilterCopia[group], STAFilter.filterData,STAFilter.entity);
 			STAFilterCopia[group] = url;
 		}else{
 			url="";
 			for (var e=0;e<STAFilterCopia[group].items.length;e++){
-				if (e!=0 && STAFilterCopia[group].nexus!=null)url+=" "+STAFilterCopia[group].nexus +" "; //avoid nexus at the beginning
+				if (e!=0 && STAFilterCopia[group].nexus!=null)
+					url+=" "+STAFilterCopia[group].nexus +" "; //avoid nexus at the beginning
 				url+=STAFilterCopia[STAFilterCopia[group].items[e]];
 				if(e==STAFilterCopia[group].items.length-1){ //last one 
 					if(STAFilterCopia[group].items.length>1 && i!=STAFilterSchemaKeys.length-1) url="("+url+")";
@@ -153,11 +154,8 @@ function builtFilterSTAsentence(STAFilter){
 					break;
 				}
 			}
-			
-			
 		}
 	}
-
 	return url;
  }
 

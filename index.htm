@@ -39,6 +39,7 @@
 	<script type="text/javascript" src="json.js" async defer></script>
 	<script type="text/javascript" src="jsonld.js" async defer></script>
 	<script type="text/javascript" src="edc.js" async defer></script>
+	<script type="text/javascript" src="statistics.js"></script>
 	<script type="text/javascript" src="data_tables.js"></script>
 	<script type="text/javascript" src="HTTPdata.js"></script>
 	<script type="text/javascript" src="gps.js"></script>
@@ -306,6 +307,7 @@
 			</div>
 		</form>
 	</dialog>
+
 	<dialog id="DialogCreateUpdateDeleteEntity_MultiDatastreams">
 		<form>
 			<span id="dlgCreateUpdateDeleteEntityAttributes_MultiDatastreams">
@@ -344,7 +346,7 @@
 			<input type="hidden" id="DialogReplaceTextInTableNodeId"></input>
 		</form>
 	</dialog>
-
+	
 	<dialog id="DialogMultiCreateSTARepeatedEntities" >
 		<form>
 			<span id="DialogMultiCreateSTARepeatedEntities_span"></span>
@@ -389,7 +391,7 @@
 
 	<dialog id="DialogCreateUpdateDeleteEntity_numberOfMultiDatastream" >
 		<form>
-			<label for ="DialogOpenMultiDatastream_input">How many multidatastreams do you want to introduce?</label>
+			<label for ="DialogOpenMultiDatastream_input">How many <b>fields</b> do you want to introduce in the multidatastream?</label>
 			<input type="number" id ="DialogOpenMultiDatastream_input" min="2" name="DialogOpenMultiDatastream_input" value=2> </input>
 			<button value="default" id="DialogOpenMultiDatastream" onClick="openMultiDatastreamDialog(event)" formmethod="dialog" value="2">OK</button>
 			<button value="cancel" formmethod="dialog">Cancel</button>
@@ -1335,7 +1337,6 @@
 				<label><input type="radio" id="DialogImportJSONSourceURL" name="DialogImportJSONSource" value="url" onClick='SelectImportFileSource(event, "JSON")'>
 				URL single: 
 				 <input type="text" size="70" id="DialogImportJSONSourceURLInput" onChange="ReadURLImportJSON(event)" disabled="disabled"></input> 
-
 				 <button type="button" id="DialogImportJSONSourceURLButton" onclick="ReadURLImportJSON(event)" disabled="disabled">Load</button> 
 				<br>
 				<input type="radio" id="DialogImportJSONSourceURLList" name="DialogImportJSONSource" value="urlList" onClick='SelectImportFileSource(event, "JSON")'>
@@ -1470,7 +1471,7 @@
 			<input type="hidden" id="DialogScatterPlotNodeId"></input>
 			</form>
 		</td>
-		<td style="vertical-align: top;"><div style="width: 100%; overflow-x: auto;"><canvas id="DialogScatterPlotVisualization" style="width:1700px; height:700px;max-height:700px;min-width:1000px"></canvas></div> <br>
+		<td style="vertical-align: top;"><div style="width: 100%; overflow-x: auto;"><canvas id="DialogScatterPlotVisualization" style="width:1000px; height:500px;max-height:500px;min-width:700px"></canvas></div> <br>
 		<label style="color:red; size: 10px; font-style:italic ;" id="DialogScatterPlotVisualizationTextNotSorted"> If your graph presents a strange behavior, try sorting the data by the column used on the X axis. </label>
 		</td>
 		</tr>
@@ -1479,26 +1480,25 @@
 			<td>
 				<fieldset>
 					<legend>
-						Graphic configurations
+						Graphic configuration
 					</legend>
-						<div style="display:flex; justify-content: center; align-items: center;"><label style="font-weight: bold;">Graphic title:</label>
-						<input value="" type="text" id="DialogScatterPlotAxisTitle" style="margin-left: 5px;"></div><br>
-						<div>
-							<div style="width: 50%;  float: left;"><label style="font-weight: bold;"> X axis </label><br>
-								<label> Label:</label><input value="" type="text" id="DialogScatterPlotAxisXLabel"  style="margin-left: 5px;"><br>
-								 <label>Axis interval:</label><select id="DialogScatterPlotAxisXSelectInterval" style="margin-left: 5px;margin-top: 5px;" >
-
-								 </select><br>
-								 <label>Sort x axis values: </label><input type="checkbox" id="DialogScatterPlotAxisXSort" value="sort" checked />
-						</div>
-							<div style="width: 50%;  float: right;"> <label style="font-weight: bold;">Y axis</label> <br>
-								<label> Left axis label: </label><input value="" type="text" id="DialogScatterPlotAxisYLabelLeft"><br>
-								<label style="margin-top: 5px;">Right axis label:  </label><input value="" type="text" id="DialogScatterPlotAxisYLabelRight" style="margin-top: 5px;"></div>
-
-							</div>
-						</div>
+					<div style="display:flex; justify-content: center; align-items: center;"><label>Graphic title:</label>
+					<input value="" type="text" id="DialogScatterPlotAxisTitle" style="margin-left: 5px;width: 400px;"></div><br>
+					<div>
+						<fieldset style="width: 45%;  float: left;">
+							<legend>X axis</legend>
+							<label>Label:<input value="" type="text" id="DialogScatterPlotAxisXLabel"  style="margin-left: 5px;"></label><br>
+							<label>Data time ticks interval: <select id="DialogScatterPlotAxisXSelectInterval" style="margin-left: 5px;margin-top: 5px;" >
+								</select></label><br>
+							<label><input type="checkbox" id="DialogScatterPlotAxisXSort" value="sort" checked /> Sort values by X</label>
+						</fieldset>
+						<fieldset style="width: 45%;  float: right;">
+							<legend>Y axis</legend>
+							<label>Left label: <input value="" type="text" id="DialogScatterPlotAxisYLabelLeft"></label><br>
+							<label style="margin-top: 5px;">Right label: <input value="" type="text" id="DialogScatterPlotAxisYLabelRight" style="margin-top: 5px;"></label>
+						</fieldset>
+					</div>
 				</fieldset>
-
 			</td>
 		</tr>
 	</table> 
@@ -1669,6 +1669,19 @@
 			</div>
 		</form>
 	</dialog>
+
+	<dialog id="DialogCalculateStatisticsSTA">
+		<form>
+			Upload statistical values to STA
+			<div class="center">
+				<button value="default" id="dlgDialogCalculateStatisticsSTACreate" onClick="UploadCalculateStatisticsSTAEvent(event, true)">Create</button>
+				<button value="default" id="dlgDialogCalculateStatisticsSTAContinue" onClick="UploadCalculateStatisticsSTAEvent(event, false)">Continue</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogCalculateStatisticsSTANodeId"></input>
+		</form>
+	</dialog>
+
 
 	<!--dialog id="UploadTimeAverages">
 		<div id="UploadTimeAveragesLoginFirst" style="display: none;">
