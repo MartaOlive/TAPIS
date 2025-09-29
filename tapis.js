@@ -7250,7 +7250,6 @@ function networkDoubleClick(params) {
 		else if(currentNode.image=="MultiCreateSTA.png"){
 			//comrpobar si hi ha info en els parents...
 			if (parentNodesInformationAllowOpenMultiCreateSTADialog(currentNode)==true){
-				createArrayWithParentNodesInformation(currentNode, ["data", "label", "shape"]);
 				populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
 			}else{
 				alert("Only one parent with multiple records is allowed")
@@ -9805,7 +9804,7 @@ function isEntityCompletedWithAllProperties(node, entity,entityName, page,dataIn
 	return entityToReturn;
 
 }
-function createArrayWithParentNodesInformation(node, infoArray){ //infoArray --> array with attributes from parent that you want
+function getParentNodesProperties(node, infoArray){ //infoArray --> array with attributes from parent that you want
 	var parentNodes=GetParentNodes(node);
 	var arrayWithAllNodesInfo=[];
 	var obj;
