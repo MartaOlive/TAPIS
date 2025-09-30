@@ -9467,7 +9467,7 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 					c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required==true)?"*":""}: </label> 
 					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text !="")? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
 					
-					c+=`<option value="">-- Select the corresponding attribute -- </option>`
+					c+=`<option value="">-- Select attribute -- </option>`
 					for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
 							c+=`<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
 							for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
@@ -9541,11 +9541,11 @@ function drawMultiCreateSTADialog(node){
 	var checkboxCheked=Object.keys(node.STAMultiCreateInformation.infoSaved.entities["general"]);
 	var entityObject;
 	for (var i=0;i<STAEntitiesArray.length;i++){ //Every entity	
-		if (checkboxCheked.includes(STAEntitiesArray[i])){ //Create only entities cheched
-			entityObject= infoSaved.entities[STAEntitiesArray[i]];
-			c+=buildEntityBlockInMultiCreateSTADialog (node,STAEntitiesArray[i], "general");	
-			
-			
+		if (STAEntitiesArray[i]!=node.STAMultiCreateInformation.infoSaved.origin[1]){ //THis box is above
+			if (checkboxCheked.includes(STAEntitiesArray[i])){ //Create only entities cheched
+				entityObject= infoSaved.entities[STAEntitiesArray[i]];
+				c+=buildEntityBlockInMultiCreateSTADialog (node,STAEntitiesArray[i], "general");	
+			}
 		}
 	}
 	
@@ -9635,14 +9635,16 @@ function addOriginSelectedValueMulticreateSTA(){ //Select from origin radionbutt
 		networkNodes.update(node);
 		drawMultiCreateSTADialog(node);
 }
-function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){
+function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){ 
 
 	var infoSaved=node.STAMultiCreateInformation.infoSaved;
 	node.STAMultiCreateInformation.infoSaved.origin=["entity", entity, ""];
 	var keysEntitiesSaved=Object.keys(infoSaved.entities["general"]); //already displayed and must be saved
-	var entitiesConnected= deapCopy(STAEntities[entity].entities);
+	var entitiesConnected= STAEntities[entity].entities.filter(entity=> entity.required==true);
+	
+	//deapCopy(STAEntities[entity].entities); //POSAR NOMES ELS REQUIRED TRUE
 	entitiesConnected.push({name: entity, required:true}); //add entitie selected
-	entitiesConnected.push({name: "Parties", required:false});
+	//entitiesConnected.push({name: "Parties", required:false});
 	// //Parties
 	// for (var e=0;e<entitiesConnected.length;e++){
 	// 	if (entitiesConnected[e].name=="Party") continue;
