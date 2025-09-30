@@ -271,7 +271,7 @@ function addINatEntitiesInfoToNode(node, nodeId) {
     dialog.setAttribute("data-currentPage", currentPage);
 
 
-    node.STAMultiCreateInformation.infoSaved.origin[0] == "general";
+    node.STAMultiCreateInformation.infoSaved.origin[0] == "entity";
     node.STAMultiCreateInformation.infoSaved.origin[1] == "Observations"
 
     node.STAMultiCreateInformation.infoSaved.entities = entities;

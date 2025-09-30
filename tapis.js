@@ -9334,6 +9334,8 @@ function okButtonInPivotTable(event){
 		alert (newData) //Error
 	}
 }
+
+
 //MultiCreateSTADialog functions 
 function parentNodesInformationAllowOpenMultiCreateSTADialog(node){
 	var parentNodes=GetParentNodes(node);
@@ -9357,24 +9359,12 @@ function populateMultiCreateSTADialog(node){
 	var infoSaved;//node.STASTAMultiCreateInformation.infoSaved
 	var nodeWithMultiRecord= node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord
 	infoSaved= {
-		origin: ["general", "Campaigns",""], //["general"] or ["entity", entitySelected, autocomplete];
+		origin: ["entity", "",""], //["general"] or ["entity", entitySelected, autocomplete];
 		entities:{
 			general:{
-				Parties:{
-					name: "Party",
-					radioChecked:"properties",
-					completed:"false",
-					properties: {
-						id:{attribute:["","","",""],text:"", required:"false" },  //attribute: [idNode+columnname, idNode, columnName, simple/multi record in the node]
-						description:{attribute:["","","",""],text:"", required:"false" },
-						authId:{attribute:["","","",""],text:"", required:"false" },
-						role:{attribute:["","","",""],text:"", required:"true" },
-						displayName:{attribute:["","","",""],text:"", required:"false" }
-					}
-				}
 			}
 		},
-		needed:["Parties"],	//A MODIFICAR
+		needed:[],	
 		nodeWithMultiRecord: nodeWithMultiRecord
 	}
 	var parentNodes=GetParentNodes(node);
@@ -9383,7 +9373,7 @@ function populateMultiCreateSTADialog(node){
 		for (var i=0;i<parentNodes.length;i++){
 			if (parentNodes[i].image=="sta.png" && parentNodes[i].STAURL){ //Node with STA service url
 			if (STAService!=""){ //more than one
-				alert("There is more than one STA plus Service origin connected. Only one can be linked");
+				alert("There is more than one STAplus Service origin connected. Only one can be linked");
 				open=false;
 			}else{
 				STAService= parentNodes[i].STAURL;
@@ -9443,7 +9433,7 @@ function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que 
 	var parentsInformationKeys = Object.keys(parentsInformation);
 
 	c+=`<fieldset> <legend>` //Entity box	
-			if ((infoSaved.origin[0]== "entity" && infoSaved.origin[1]==STAEntitiesArray[i])|| infoSaved.origin[0]== "general" ){ //plural
+			if (infoSaved.origin[1]==STAEntitiesArray[i]){ //plural
 				c+=`${entity}</legend>`; 
 			}else{ //singular
 				c+=`${STAEntities[entity].singular}</legend>`;
@@ -9504,21 +9494,27 @@ function drawMultiCreateSTADialog(node){
 	var infoSaved= deapCopy(node.STAMultiCreateInformation.infoSaved);
 	var spanMultiCreateSTA= document.getElementById("DialogMultiCreateSTA_span");
 	var c="";
-	c+= `<fieldset><legend>STAService connected: </legend>
-	<label><b>url:</b> ${node.STAMultiCreateInformation.STAService}</label>
-	</fieldset>`
-	c+=`<fieldset><legend>Multirecords origin</legend>
-	<input type="radio" value="general" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_general" ${(infoSaved.origin[0]=="general")? " checked ": ""} onclick="addOriginCheckedValueMulticreateSTA('general')"><label>General input </label>
-	<input type="radio" value="entity" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_entity" ${(infoSaved.origin[0]=="entity")? " checked ": ""} onclick="addOriginCheckedValueMulticreateSTA('entity')"><label>Entity </label>
-	<select name="DialogMultiCreateSTA_selectOrigin" id="DialogMultiCreateSTA_selectOrigin" onchange="addOriginSelectedValueMulticreateSTA()"${(infoSaved.origin[0]=="general")?  " disabled ":""}>`;
+	c+= `${(node.STAMultiCreateInformation.STAService !="")?"<span style='font-weight:bold'> STA service linked </span>":"<span  style='color: red;font-weight:bold'>STA service not linked </span>"} <br><br>`
 
+	c+=`<fieldset><legend>Multirecords origin</legend>
+	<label>Entity </label>
+	<select name="DialogMultiCreateSTA_selectOrigin" id="DialogMultiCreateSTA_selectOrigin" onchange="addOriginSelectedValueMulticreateSTA()">`;
+
+
+	
 	for (var i=0;i<STAEntitiesArray.length;i++){
+		if (i==0)c+=`<option value=""> --Select entity-- </option>`
 		c+=`<option value="${STAEntitiesArray[i]}"`;
 		if (infoSaved.origin[1]==STAEntitiesArray[i]) c+="selected"
 		c+=`> ${STAEntitiesArray[i]}</option>`
 	}
 
-	c+="</select></fieldset>"; 
+	c+="</select>"; 
+	if (Object.keys(node.STAMultiCreateInformation.infoSaved.entities.general).length !=0){
+		c+=`<br><br> ${buildEntityBlockInMultiCreateSTADialog(node,infoSaved.origin[1] ,"general")} `;
+	}
+	c+="</fieldset>";
+
 	//autocomplete
 	c+= `<fieldset> <legend>Autocomplete: </legend> <select id="DialogMultiCreateSTA_selectAutocomplete">`;
 	var parentInformation= node.STAMultiCreateInformation.parentsInformation;
@@ -9558,41 +9554,42 @@ function drawMultiCreateSTADialog(node){
 
 function buildEntitiesCheckBoxInMultiCreateSTADialog(node, page, especialAutocomplete){ 
 
-	var c="";
-c	+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
-  	<legend>Select entities STA</legend>`
+	// (Object.keys(node.STAMultiCreateInformation.infoSaved.entities.general).length !=0)?true:false;
+	var entitieSelected=node.STAMultiCreateInformation.infoSaved.origin[1]; // "" --> When no entities are selected 
 
+	var c="";
+	c+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
+  	<legend>Select entities STA</legend>`
 
 	var checkboxCheked=Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page]);
 	var needed= node.STAMultiCreateInformation.infoSaved.needed;
-	var entityValues=STAEntities[node.STAMultiCreateInformation.infoSaved.origin[1]].entities.map(item => getSTAEntityPlural(item.name)); //name of entities connected
-	var index ;
+	var entityValues=(entitieSelected!="")?STAEntities[node.STAMultiCreateInformation.infoSaved.origin[1]].entities.map(item => getSTAEntityPlural(item.name)):[] //name of entities connected
+	var index;
 	
-
 	//Box with all entities to check
 	for (var u=0;u<STAEntitiesArray.length;u++){
-		c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" ${(STAEntitiesArray[u]=="Parties")? 'disabled': ''} onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}', '${page}', ${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?"'"+especialAutocomplete+"'":""})" value="${STAEntitiesArray[u]}" `;
-		//checked
-		if (checkboxCheked.includes(STAEntitiesArray[u])) c+= " checked ";
-		//disabled (only when an entity is selected)
-		if (!needed.includes(STAEntitiesArray[u]) && node.STAMultiCreateInformation.infoSaved.origin[0]== "entity") c+=" disabled ";
+		if (STAEntitiesArray[u]!=entitieSelected){
+			c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}', '${page}', ${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?"'"+especialAutocomplete+"'":""})" value="${STAEntitiesArray[u]}" `;
+			//checked
+			if (checkboxCheked.includes(STAEntitiesArray[u])) c+= " checked ";
+			
+			c+=">";
 
-		c+=">";
-
-		//Singular or plural
-		if ((node.STAMultiCreateInformation.infoSaved.origin[0]== "entity" && node.STAMultiCreateInformation.infoSaved.origin[1]==STAEntitiesArray[u])|| node.STAMultiCreateInformation.infoSaved.origin[0]== "general" ) c+= STAEntitiesArray[u]; //plural
-		else c+= STAEntities[STAEntitiesArray[u]].singular; //singular
-		//Required
-		if (node.STAMultiCreateInformation.infoSaved.origin[0]== "entity"){
-			index= entityValues.indexOf(STAEntitiesArray[u])
-			if (index!=-1 || STAEntitiesArray[u]==node.STAMultiCreateInformation.infoSaved.origin[1]){
-				if (STAEntitiesArray[u]==node.STAMultiCreateInformation.infoSaved.origin[1]) c+= " *"; 
-				else if (STAEntities[node.STAMultiCreateInformation.infoSaved.origin[1]].entities[index].required==true)c+= " *"; 
-				
-			}
+			//Singular or plural
+			if (( node.STAMultiCreateInformation.infoSaved.origin[1]==STAEntitiesArray[u])) c+= STAEntitiesArray[u]; //plural
+			else c+= STAEntities[STAEntitiesArray[u]].singular; //singular
+			//Required
+			
+				index= entityValues.indexOf(STAEntitiesArray[u])
+				if (index!=-1 || STAEntitiesArray[u]==node.STAMultiCreateInformation.infoSaved.origin[1]){
+					if (STAEntitiesArray[u]==node.STAMultiCreateInformation.infoSaved.origin[1]) c+= " *"; 
+					else if (STAEntities[node.STAMultiCreateInformation.infoSaved.origin[1]].entities[index].required==true)c+= " *"; 
+					
+				}
+			
+			
+			c+=`</label>`;
 		}
-		
-		c+=`</label>`;
 	}	
 	c+=`</fieldset>`;
 	return c;
@@ -9629,27 +9626,6 @@ function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplet
 
 }
 
-function addOriginCheckedValueMulticreateSTA(originRadioButton){ //Radiobuttons, General or Entity
-	var node= getNodeDialog("DialogMultiCreateSTA");
-	//var infoSaved=node.STAMultiCreateInformation.infoSaved;
-	var origin;
-	var select= document.getElementById("DialogMultiCreateSTA_selectOrigin");
-	var selected= select.options[select.selectedIndex].value;
-	
-
-	if (originRadioButton=="general"){
-		node.STAMultiCreateInformation.infoSaved.origin= ["general", selected,""];
-		networkNodes.update(node);
-		//Entities displayed yet are saved (No changes in infoSaved.entities)
-
-	}else{ //entity
-		origin=["entity", selected,""]; 
-		//Add/delete entities in infosaved.entities (to display them)
-		addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(selected, node);		
-	}
-	drawMultiCreateSTADialog(node);
-}
-
 function addOriginSelectedValueMulticreateSTA(){ //Select from origin radionbuttons
 		var node= getNodeDialog("DialogMultiCreateSTA");
 
@@ -9665,15 +9641,16 @@ function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){
 	node.STAMultiCreateInformation.infoSaved.origin=["entity", entity, ""];
 	var keysEntitiesSaved=Object.keys(infoSaved.entities["general"]); //already displayed and must be saved
 	var entitiesConnected= deapCopy(STAEntities[entity].entities);
-	entitiesConnected.push({name: entity, required:"true"}); //add entitie selected
-	//Parties
-	for (var e=0;e<entitiesConnected.length;e++){
-		if (entitiesConnected[e].name=="Party") continue;
-		if (e== entitiesConnected.length-1){ //last entity, no Party
-			entitiesConnected.unshift({name: "Party", required:"true"});
-			break;
-		}
-	}
+	entitiesConnected.push({name: entity, required:true}); //add entitie selected
+	entitiesConnected.push({name: "Parties", required:false});
+	// //Parties
+	// for (var e=0;e<entitiesConnected.length;e++){
+	// 	if (entitiesConnected[e].name=="Party") continue;
+	// 	if (e== entitiesConnected.length-1){ //last entity, no Party
+	// 		entitiesConnected.unshift({name: "Party", required:"true"});
+	// 		break;
+	// 	}
+	// }
 	var newEntities={}, newEntityToPush, entityPlural, propertiesObject, needed=[];
 
 	for (var i=0;i<entitiesConnected.length;i++){
@@ -9685,7 +9662,7 @@ function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){
 			newEntityToPush={};
 			if (entityPlural!="Subjects"&& entityPlural!="Objects"){	
 				propertiesObject={};
-				propertiesObject.id = {attribute:["","","",""], text:"", required:"false"};
+				propertiesObject.id = {attribute:["","","",""], text:"", required:false};
 				newEntityToPush.name=entityPlural;
 				newEntityToPush.radioChecked="properties";
 				newEntityToPush.completed="false";	
@@ -9910,7 +9887,7 @@ function QuickCheckIfEveryEntityWillBeMulticreatedOrOnlyOnceIMultiCreateSTA(node
 
 function processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page){
 
-	var entitiesNeeded=(node.STAMultiCreateInformation.infoSaved.origin[0]=="general")?checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general ): checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general,node.STAMultiCreateInformation.infoSaved.origin[1]); 	
+	var entitiesNeeded= checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general,node.STAMultiCreateInformation.infoSaved.origin[1]); 	
 	var data = node.STAMultiCreateInformation.parentsInformation[node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord].data;
 	var dataLength= data.length;
 	var entitiesCreationOrderlength= entitiesCreationOrder.length;
@@ -9962,7 +9939,7 @@ function processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page){
 
 function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySelected){ //object with entities
 	var entitiesArray= Object.keys(entitieObject);
-	if (!entitiesArray.includes("Parties")) return false; 
+	//if (!entitiesArray.includes("Parties")) return false; 
 	if (entitySelected){
 		if (!entitiesArray.includes(entitySelected)) return false; 
 	}
@@ -10076,11 +10053,9 @@ function getParentNodesProperties(node, infoArray){ //infoArray --> array with a
 			for(var e=0;e<infoArray.length;e++){
 				if(parentNodes[i][infoArray[e]]){
 					obj[infoArray[e]]= parentNodes[i][infoArray[e]];
-				}
-				
+				}	
 			}
 		}
-
 		arrayWithAllNodesInfo.push(obj);
 	}
 	return arrayWithAllNodesInfo;

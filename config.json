@@ -546,6 +546,12 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/resultTime"
 				},
 				{
+				"varUoMdesc": "Observation/result",
+				"description": "result",
+				"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/result"
+			
+				},
+				{
 					"varUoMdesc": "Observation/resultQuality",
 					"description": "resultQuality",
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/resultQuality"
@@ -767,6 +773,11 @@
 				"UoMDefinition": "https://qudt.org/vocab/unit/DEG"
 			}
 			]
+		}
+		],
+	"suggestedAutoCompleteSTAMultiCreate":[{
+		"name": "iNaturalist",
+		"origin": "general"
 		}
 	]
 }
