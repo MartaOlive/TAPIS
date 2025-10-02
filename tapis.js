@@ -4587,7 +4587,7 @@ function GetSelectRow(event, iToSelect) {
 	if (i < elems.length) {
 		if (requiresLoadJSON) {
 			const s = elems[i].id.substring("SelectRow_".length);
-			node.STAResourceId=s;
+			node.STAResourceId=(parseInt(s)==s) ? parseInt(s) : s;
 			//if (node?.OGCType=="OGCAPIitems")
 			//	node.STAURL = parentNode.STAdata ? (parentNode.STAdata[i].link ? getURLWithoutQueryParams(parentNode.STAdata[i].link) : node.STAURL+"/"+parentNode.STAdata[i].id) + "/items"  : parentNode.STAURL;
 			if (parentNode?.OGCType=="OGCAPIcollections" || parentNode?.OGCType=="OGCAPIitems") {
@@ -4596,7 +4596,7 @@ function GetSelectRow(event, iToSelect) {
 			} else {
 				//const n = Number(s);
 				//node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(node.STAURL) + (Number.isInteger(n) ? "(" + n + ")" : "('" + s + "')"), getURLQueryParams(node.STAURL));
-				node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(node.STAURL) + getParentesisODataFromId(s), getURLQueryParams(node.STAURL));
+				node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(node.STAURL) + getParentesisODataFromId(node.STAResourceId), getURLQueryParams(node.STAURL));
 			}
 		}
 		else  //This should be a table operation: I'll do it myself here
@@ -4651,8 +4651,8 @@ function GetSelectResource(event, resourceId) {
 	}
 	else
 		return;
-
-	node.STAResourceId=(typeof resourceId !== "undefined") ? resourceId : document.getElementById("DialogSelectResourceId").value;
+	var s= document.getElementById("DialogSelectResourceId").value;
+	node.STAResourceId=(typeof resourceId !== "undefined") ? resourceId : (parseInt(s)==s) ? parseInt(s) : s;
 	if (parentNode?.OGCType=="OGCAPIcollections" || parentNode?.OGCType=="OGCAPIitems"){
 		node.STAURL = parentNode.STAURL + "/" + node.STAResourceId;
 	} else {
@@ -6906,6 +6906,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 	}
 	if (staNodes && nodeFrom.STAURL && nodeTo.image == "MergeExpandsSTA.png") {
 		nodeTo.STAURL = nodeFrom.STAURL;
+		nodeTo.STAEntityName= nodeFrom.STAEntityName;
 		if (nodeFrom.STAsecurity)
 			nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
 		networkNodes.update(nodeTo);
@@ -7508,7 +7509,7 @@ function networkDoubleClick(params) {
 		}
 				else if(currentNode.image=="MultiCreateSTA.png"){
 			//comrpobar si hi ha info en els parents...
-			if (parentNodesInformationAllowOpenMultiCreateSTADialog(currentNode)==true){
+			if (parentNodesInformationAllowOpenMultiCreateSTADialogAndStoreNecessaryInfoInNode(currentNode)==true){
 				populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
 			}else{
 				alert("Only one parent with multiple records is allowed")
@@ -7541,6 +7542,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				ShowTableSelectExpandsDialog(parentNode, currentNode, true);
+				currentNode.STAEntityName= parentNode.STAEntityName;
 				document.getElementById("DialogSelectExpands").showModal();
 			}
 		}
@@ -7553,6 +7555,8 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "SelectRowSTA.png" || currentNode.image == "SelectRowTable.png") {
 			var parentNode=GetFirstParentNode(currentNode);
+
+			if (currentNode.image == "SelectRowSTA.png")currentNode.STAEntityName= parentNode.STAEntityName;
 			if (parentNode) {
 				if (parentNode.STAOGCAPIconformance){
 					currentNode.STAOGCAPIconformance=parentNode.STAOGCAPIconformance;
@@ -7571,7 +7575,7 @@ function networkDoubleClick(params) {
 				if (parentNode.STAOGCAPIconformance){
 					currentNode.STAOGCAPIconformance=parentNode.STAOGCAPIconformance;
 				}
-				
+				if (currentNode.image == "SelectResourceSTA.png")currentNode.STAEntityName= parentNode.STAEntityName;
 				if ((currentNode.image == "SelectResourceSTA.png" || currentNode.image == "SelectResourceTable.png") && 
 					parentNode.STAURL) {
 					ShowSelectResourceDialog(parentNode, currentNode);
@@ -7604,6 +7608,7 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "FilterRowsByTime.png"){							
+			currentNode.STAEntityName= parentNode.STAEntityName;
 			if (PopulateFilterRowsByTimePropertySelect())
 				document.getElementById("DialogFilterRowsByTime").showModal();			
 		}
@@ -7723,10 +7728,12 @@ function networkDoubleClick(params) {
 		else if ((currentNode.image == "GeoFilterPolSTA.png" || 
 			IdOfSTAEntity(currentNode) != -1 ||
 			IdOfSTASpecialQueries(currentNode) != -1)&& currentNode.image != "GeoFilterPntSTA.png") { //It is necessary to exclude GeoFilterPntSTA to allow to entry to next else.
+			currentNode.STAEntityName= parentNode.STAEntityName;
 			document.getElementById("DialogSelectNRecords").showModal();
 		}
 		else if (currentNode.image == "GeoFilterPntSTA.png" &&
 			takeParentsInformationInGeoDistance()==true) {
+			currentNode.STAEntityName= parentNode.STAEntityName;
 			document.getElementById("DialogGeospatialFilterRowsByDistance").showModal();
 		}
 		else if (currentNode.image == "ObservedProperty.png" || currentNode.image == "Observation.png" || 
@@ -9337,7 +9344,7 @@ function okButtonInPivotTable(event){
 
 
 //MultiCreateSTADialog functions 
-function parentNodesInformationAllowOpenMultiCreateSTADialog(node){
+function parentNodesInformationAllowOpenMultiCreateSTADialogAndStoreNecessaryInfoInNode(node){
 	var parentNodes=GetParentNodes(node);
 	var parentWithMultipleRecords=false;
 	//only one parent with multiple records is allowed
@@ -9350,7 +9357,6 @@ function parentNodesInformationAllowOpenMultiCreateSTADialog(node){
 			networkNodes.update(node);
 		}
 	}
-	
 	return true;
 }
 function populateMultiCreateSTADialog(node){
@@ -9368,7 +9374,7 @@ function populateMultiCreateSTADialog(node){
 		nodeWithMultiRecord: nodeWithMultiRecord
 	}
 	var parentNodes=GetParentNodes(node);
-	var STAService="", open=true;
+	var STAService="", open=true, objectWithId={};
 	if (parentNodes!=null){
 		for (var i=0;i<parentNodes.length;i++){
 			if (parentNodes[i].image=="sta.png" && parentNodes[i].STAURL){ //Node with STA service url
@@ -9390,12 +9396,18 @@ function populateMultiCreateSTADialog(node){
 
 				parentsInformation[parentNodes[i].id]= {
 					data: parentNodes[i].STAdata,
-					lenght: parentNodes[i].STAdata.lenght,
+					//length: parentNodes[i].STAdata.length,//Aixo paque? i funciona?
 					attributesDefinitions: keys, //every attribute with the definition (to associate it with select options)
 					label: parentNodes[i].label,
 					attributesKeys: Object.keys (parentNodes[i].STAdataAttributes)
 
 				}
+				/*if(parentNodes[i].STAdata.length==1) {
+				 	if (Object.keys(parentNodes[i].STAdataAttributes).includes("@iot.id")){
+				 		objectWithId[ParentNodes[i].STAEntityName]=ParentNodes[i].STAdata[0]["@iot.id"]
+					// STAEntitiesArray[IdOfSTAEntity(nodeTo)]
+				 	}
+				}*/
 			}
 		}
 		//built selector info with config information (suggestedAutoCompleteSTAMultiCreate) and meanings 
