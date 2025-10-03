@@ -120,16 +120,16 @@
 					"type": "anyURI"
 				}
 			},
-			"x": -223,
-			"y": -145
+			"x": -208,
+			"y": -153
 		},
 		{
 			"id": "1s82s.k3b8gqg",
 			"label": "Multi create STA",
 			"image": "MultiCreateSTA.png",
 			"shape": "circularImage",
-			"x": 70,
-			"y": 7,
+			"x": 75,
+			"y": 0,
 			"STAMultiCreateInformation": {
 				"STAService": "http://localhost:8080/FROST-Server/v1.1",
 				"infoSaved": {
@@ -20344,8 +20344,8 @@
 					"type": "string"
 				}
 			},
-			"x": 147,
-			"y": -264
+			"x": 118,
+			"y": -246
 		},
 		{
 			"id": "3lq.1esppab3",
@@ -20411,8 +20411,8 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": 32,
-			"y": -6
+			"x": -25,
+			"y": 3
 		},
 		{
 			"id": "3v90h.p8gb78g",
@@ -20589,8 +20589,8 @@
 					"UoMDefinition": ""
 				}
 			},
-			"x": -266,
-			"y": -27
+			"x": -271,
+			"y": -44
 		},
 		{
 			"id": "10r4n.nle6kq",
@@ -30665,8 +30665,8 @@
 					"UoMDefinition": ""
 				}
 			},
-			"x": 108,
-			"y": -142
+			"x": 138,
+			"y": -123
 		},
 		{
 			"id": "2825i.o4g8hfg",
@@ -32449,8 +32449,8 @@
 				}
 			},
 			"STAfileUrl": "https://www.inaturalist.org/observations/6430811.json",
-			"x": 126,
-			"y": 140
+			"x": 165,
+			"y": 105
 		},
 		{
 			"id": "sd7m.l7mgdoo",
@@ -34479,16 +34479,36 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/resultTime"
 				}
 			},
-			"x": -47,
-			"y": 113
+			"x": -75,
+			"y": 130
 		},
 		{
 			"id": "1erci.oh8kmt8",
 			"label": "Select Resource",
 			"image": "SelectResourceSTA.png",
 			"shape": "circularImage",
-			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams('14')",
-			"STAdata": null,
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(14)",
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(14)",
+					"@iot.id": 14,
+					"name": "Barometric Pressure",
+					"description": "Barometric Pressure measured with Smart Citizen Kit 2.1",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"unitOfMeasurement": {
+						"name": "kPa",
+						"symbol": "kPa",
+						"definition": "https://fake-vocab.org/vocab/unit/kPa"
+					},
+					"License@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(14)/License",
+					"ObservedProperty@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(14)/ObservedProperty",
+					"Party@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(14)/Party",
+					"Sensor@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(14)/Sensor",
+					"Thing@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(14)/Thing",
+					"Campaigns@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(14)/Campaigns",
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(14)/Observations"
+				}
+			],
 			"STAdataAttributes": {
 				"@iot.selfLink": {
 					"type": "anyURI",
@@ -34514,9 +34534,17 @@
 					"type": "object",
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/unitOfMeasurement"
 				},
+				"License@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/License@iot.navigationLink"
+				},
 				"ObservedProperty@iot.navigationLink": {
 					"type": "anyURI",
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/ObservedProperty@iot.navigationLink"
+				},
+				"Party@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/Party@iot.navigationLink"
 				},
 				"Sensor@iot.navigationLink": {
 					"type": "anyURI",
@@ -34533,32 +34561,12 @@
 				"Observations@iot.navigationLink": {
 					"type": "anyURI",
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/Observations@iot.navigationLink"
-				},
-				"License@iot.navigationLink": {
-					"type": "anyURI",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/License@iot.navigationLink"
-				},
-				"Party@iot.navigationLink": {
-					"type": "anyURI",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/Party@iot.navigationLink"
-				},
-				"observedArea": {
-					"type": "geometry",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/observedArea"
-				},
-				"phenomenonTime": {
-					"type": "string",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/phenomenonTime"
-				},
-				"resultTime": {
-					"type": "string",
-					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/resultTime"
 				}
 			},
 			"STAEntityName": "Datastreams",
-			"STAResourceId": "14",
-			"x": -82,
-			"y": 9
+			"STAResourceId": 14,
+			"x": -70,
+			"y": 41
 		}
 	],
 	"edges": [

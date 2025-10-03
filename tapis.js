@@ -4660,7 +4660,8 @@ function GetSelectResource(event, resourceId) {
 		//node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(node.STAURL) + (Number.isInteger(n) ? "(" + n + ")" : "('" + node.STAResourceId + "')"), getURLQueryParams(node.STAURL));
 		node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(node.STAURL) + getParentesisODataFromId(node.STAResourceId), getURLQueryParams(node.STAURL));
 	}
-		
+	
+	
 	showInfoMessage("Selecting OGC resource...");
 	UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
 	LoadJSONNodeSTAData(node);
@@ -7511,9 +7512,10 @@ function networkDoubleClick(params) {
 			//comrpobar si hi ha info en els parents...
 			if (parentNodesInformationAllowOpenMultiCreateSTADialogAndStoreNecessaryInfoInNode(currentNode)==true){
 				populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
-			}else{
-				alert("Only one parent with multiple records is allowed")
 			}
+			// else{
+			// 	alert("Only one parent with multiple records is allowed")
+			// }
 			
 			
 		}
@@ -9346,17 +9348,62 @@ function okButtonInPivotTable(event){
 //MultiCreateSTADialog functions 
 function parentNodesInformationAllowOpenMultiCreateSTADialogAndStoreNecessaryInfoInNode(node){
 	var parentNodes=GetParentNodes(node);
-	var parentWithMultipleRecords=false;
+	var STAEntity="", entitiesId={}, multipleNode="";
+	//var parentWithMultipleRecords=false;
 	//only one parent with multiple records is allowed
 	for (var i=0;i<parentNodes.length;i++){	
-		
-		if (parentNodes[i].STAdata?.length > 1 &&  parentNodes[i].image != "sta.png") {
-			if (parentWithMultipleRecords== true) return false
-			parentWithMultipleRecords= true;
-			node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord= parentNodes[i].id;
-			networkNodes.update(node);
+		if (parentNodes[i].image=="sta.png"){
+			alert("It is not allowed to link an STAplus origin node directly to this node");
+			return false;
+		}
+		if("STAEntityName" in parentNodes[i]){ //STA
+			if (parentNodes[i].STAdata.length>1){
+				if (parentNodes[i].image== parentNodes[i].STAEntityName +".png"){ //Is an EntityNode --> TO obtain URL and To be the main multiEntry
+					if (STAEntity =="") STAEntity = parentNodes[i].STAEntityName;
+					else {
+						alert ("There is more than one STAEntity node linked, only one is allowed");
+						return false;
+					}
+				}else{ //Not allowed 
+					alert("It is not allowed to connect a node with STAdata with multiple records if it is not an Entity node.");
+					return false;
+				}
+			}else if (parentNodes[i].STAdata.length==1){ //Take EntityId
+				if (!entitiesId[parentNodes[i].STAEntityName]){
+					entitiesId[parentNodes[i].STAEntityName]= (parentNodes[i].STAdata[0]["@iot.id"])?parentNodes[i].STAdata[0]["@iot.id"]: alert(`${parentNodes[i].STAEntityName} node linked with one record does not have "@iot.id" attribute and will not be added automatically. If attributes are added to corresponding attributes manually, TAPIS system will search automatically its id`);
+				}else{
+					alert("Only one node of each STA entity type with one record is allowed.") //Only one sta node with one node of each type- > Take id
+					return false;
+				}
+
+			}else{
+				alert(`There is at least one node with no data: ${parentNodes[i].image} type` )
+				return false; //No data
+			} 
+		}else{ //No STA
+			if (parentNodes[i].STAdata.length==0){ //No data
+				alert(`There is at least one node with no data: ${parentNodes[i].image} type` );
+				return false;
+			}else if (parentNodes[i].STAdata.length>1){
+				if (multipleNode==""){
+					multipleNode= parentNodes[i].id;
+				}else{
+					alert("Only one node no STA with more than one record is allowed");
+					return false;
+				}
+			}
+
 		}
 	}
+	if(STAEntity==""){ //no node from an entity connected
+		alert("It is needed to connect and entity node to indicate wich is the main entity to add data");
+		return false;
+	}
+	
+	
+	node.STAMultiCreateInformation.infoSaved.origin= STAEntity
+	node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord= multipleNode;
+	networkNodes.update(node);
 	return true;
 }
 function populateMultiCreateSTADialog(node){
