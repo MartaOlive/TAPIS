@@ -7510,8 +7510,10 @@ function networkDoubleClick(params) {
 		}
 				else if(currentNode.image=="MultiCreateSTA.png"){
 			//comrpobar si hi ha info en els parents...
-			if (parentNodesInformationAllowOpenMultiCreateSTADialogAndStoreNecessaryInfoInNode(currentNode)==true){
+			if (AllowOpenMulticreateSTADialogAndPopulateIt(currentNode)==true){
 				populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
+				drawMultiCreateSTADialog(currentNode);
+				document.getElementById("DialogMultiCreateSTA").showModal();
 			}
 			// else{
 			// 	alert("Only one parent with multiple records is allowed")
@@ -9346,145 +9348,115 @@ function okButtonInPivotTable(event){
 
 
 //MultiCreateSTADialog functions 
-function parentNodesInformationAllowOpenMultiCreateSTADialogAndStoreNecessaryInfoInNode(node){
+function AllowOpenMulticreateSTADialogAndPopulateIt(node){
 	var parentNodes=GetParentNodes(node);
-	var STAEntity="", entitiesId={}, multipleNode="";
-	//var parentWithMultipleRecords=false;
+	var STAEntity="", entitiesId={}, nodeWithMultiRecord="";
+	var url="";
+	var parentsInformation={}, keys;
+	var keyWord, substringToErase="http://www.opengis.net/def/docs/15-078r6/";
+	node.STAMultiCreateInformation={}
+	node.STAMultiCreateInformation.parentsInformation={};
 	//only one parent with multiple records is allowed
 	for (var i=0;i<parentNodes.length;i++){	
+		keys={};
 		if (parentNodes[i].image=="sta.png"){
 			alert("It is not allowed to link an STAplus origin node directly to this node");
 			return false;
 		}
-		if("STAEntityName" in parentNodes[i]){ //STA
-			if (parentNodes[i].STAdata.length>1){
-				if (parentNodes[i].image== parentNodes[i].STAEntityName +".png"){ //Is an EntityNode --> TO obtain URL and To be the main multiEntry
-					if (STAEntity =="") STAEntity = parentNodes[i].STAEntityName;
-					else {
-						alert ("There is more than one STAEntity node linked, only one is allowed");
+		if (parentNodes[i].STAdata.length>=1){
+			for (var key in parentNodes[i].STAdataAttributes) {
+				keyWord=parentNodes[i].STAdataAttributes[key].definition;
+				if (keyWord!="" && keyWord!=undefined)keys[key] = keyWord.substring(substringToErase.length);
+			}
+			parentsInformation[parentNodes[i].id]= {
+				data: parentNodes[i].STAdata,
+				attributesDefinitions: keys, //every attribute with the definition (to associate it with select options)
+				label: parentNodes[i].label,
+				attributesKeys: Object.keys (parentNodes[i].STAdataAttributes)
+
+			}
+			
+			if("STAEntityName" in parentNodes[i]){ //STA
+				if (parentNodes[i].STAdata.length>1){
+					if (parentNodes[i].image== parentNodes[i].STAEntityName +".png"){ //Is an EntityNode --> TO obtain URL and To be the main multiEntry
+						if (STAEntity =="") {
+							STAEntity = parentNodes[i].STAEntityName;
+							url= parentNodes[i].STAURL;
+						}else {
+							alert ("There is more than one STAEntity node linked, only one is allowed");
+							return false;
+						}
+					}else{ //Not allowed 
+						alert("It is not allowed to connect a node with STAdata with multiple records if it is not an Entity node.");
 						return false;
 					}
-				}else{ //Not allowed 
-					alert("It is not allowed to connect a node with STAdata with multiple records if it is not an Entity node.");
-					return false;
-				}
-			}else if (parentNodes[i].STAdata.length==1){ //Take EntityId
-				if (!entitiesId[parentNodes[i].STAEntityName]){
-					entitiesId[parentNodes[i].STAEntityName]= (parentNodes[i].STAdata[0]["@iot.id"])?parentNodes[i].STAdata[0]["@iot.id"]: alert(`${parentNodes[i].STAEntityName} node linked with one record does not have "@iot.id" attribute and will not be added automatically. If attributes are added to corresponding attributes manually, TAPIS system will search automatically its id`);
-				}else{
-					alert("Only one node of each STA entity type with one record is allowed.") //Only one sta node with one node of each type- > Take id
-					return false;
+				}else if (parentNodes[i].STAdata.length==1){ //Take EntityId
+					if (!entitiesId[parentNodes[i].STAEntityName]){
+						entitiesId[parentNodes[i].STAEntityName]= (parentNodes[i].STAdata[0]["@iot.id"])?parentNodes[i].STAdata[0]["@iot.id"]: alert(`${parentNodes[i].STAEntityName} node linked with one record does not have "@iot.id" attribute and will not be added automatically. If attributes are added to corresponding attributes manually, TAPIS system will search automatically its id`);
+					}else{
+						alert("Only one node of each STA entity type with one record is allowed.") //Only one sta node with one node of each type- > Take id
+						return false;
+					}
+
+				} 
+			}else{ //No STA
+ 				if (parentNodes[i].STAdata.length>1){
+					if (nodeWithMultiRecord==""){
+						nodeWithMultiRecord= parentNodes[i].id;
+					}else{
+						alert("Only one node no STA with more than one record is allowed");
+						return false;
+					}
 				}
 
-			}else{
-				alert(`There is at least one node with no data: ${parentNodes[i].image} type` )
-				return false; //No data
-			} 
-		}else{ //No STA
-			if (parentNodes[i].STAdata.length==0){ //No data
-				alert(`There is at least one node with no data: ${parentNodes[i].image} type` );
-				return false;
-			}else if (parentNodes[i].STAdata.length>1){
-				if (multipleNode==""){
-					multipleNode= parentNodes[i].id;
-				}else{
-					alert("Only one node no STA with more than one record is allowed");
-					return false;
-				}
 			}
-
+		}else{//No data
+			alert(`There is at least one node with no data: ${parentNodes[i].image} type` )
+			return false; 
 		}
+
+
 	}
 	if(STAEntity==""){ //no node from an entity connected
 		alert("It is needed to connect and entity node to indicate wich is the main entity to add data");
 		return false;
 	}
-	
-	
-	node.STAMultiCreateInformation.infoSaved.origin= STAEntity
-	node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord= multipleNode;
+
+	node.STAMultiCreateInformation.parentsInformation= parentsInformation;
+	node.STAMultiCreateInformation.STAService= getSTAURLRoot(url);
+	node.STAMultiCreateInformation.infoSaved={
+		origin: [STAEntity,""],
+		entities:{ general:{},
+				needed:[]},
+		nodeWithMultiRecord: nodeWithMultiRecord
+	};
+
 	networkNodes.update(node);
 	return true;
 }
 function populateMultiCreateSTADialog(node){
 	saveNodeDialog("DialogMultiCreateSTA", node);
-	var parentsInformation={}, keys={}; //node.STASTAMultiCreateInformation.previousNodesInfo
-	var infoSaved;//node.STASTAMultiCreateInformation.infoSaved
-	var nodeWithMultiRecord= node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord
-	infoSaved= {
-		origin: ["entity", "",""], //["general"] or ["entity", entitySelected, autocomplete];
-		entities:{
-			general:{
-			}
-		},
-		needed:[],	
-		nodeWithMultiRecord: nodeWithMultiRecord
+	//var parentsInformation={}; //node.STASTAMultiCreateInformation.previousNodesInfo
+
+	//built selector info with config information (suggestedAutoCompleteSTAMultiCreate) and meanings 
+	var autocompleteSelectOptions=[], configSuggestedAutoCompleteSTAMultiCreateLength=config.suggestedAutoCompleteSTAMultiCreate.length ;
+	for (var i=0;i<configSuggestedAutoCompleteSTAMultiCreateLength;i++){
+		autocompleteSelectOptions.push([config.suggestedAutoCompleteSTAMultiCreate[i].name, config.suggestedAutoCompleteSTAMultiCreate[i].origin]);
 	}
-	var parentNodes=GetParentNodes(node);
-	var STAService="", open=true, objectWithId={};
-	if (parentNodes!=null){
-		for (var i=0;i<parentNodes.length;i++){
-			if (parentNodes[i].image=="sta.png" && parentNodes[i].STAURL){ //Node with STA service url
-			if (STAService!=""){ //more than one
-				alert("There is more than one STAplus Service origin connected. Only one can be linked");
-				open=false;
-			}else{
-				STAService= parentNodes[i].STAURL;
-			}
-
-			}else{ //Nodes with data
-				var keyWord, substringToErase="http://www.opengis.net/def/docs/15-078r6/";
-				keys={};
-				for (var key in parentNodes[i].STAdataAttributes) {
-					keyWord=parentNodes[i].STAdataAttributes[key].definition;
-
-					if (keyWord!="" && keyWord!=undefined)keys[key] = keyWord.substring(substringToErase.length);
-				}
-
-				parentsInformation[parentNodes[i].id]= {
-					data: parentNodes[i].STAdata,
-					//length: parentNodes[i].STAdata.length,//Aixo paque? i funciona?
-					attributesDefinitions: keys, //every attribute with the definition (to associate it with select options)
-					label: parentNodes[i].label,
-					attributesKeys: Object.keys (parentNodes[i].STAdataAttributes)
-
-				}
-				/*if(parentNodes[i].STAdata.length==1) {
-				 	if (Object.keys(parentNodes[i].STAdataAttributes).includes("@iot.id")){
-				 		objectWithId[ParentNodes[i].STAEntityName]=ParentNodes[i].STAdata[0]["@iot.id"]
-					// STAEntitiesArray[IdOfSTAEntity(nodeTo)]
-				 	}
-				}*/
-			}
-		}
-		//built selector info with config information (suggestedAutoCompleteSTAMultiCreate) and meanings 
-		var autocompleteSelectOptions=[], configSuggestedAutoCompleteSTAMultiCreateLength=config.suggestedAutoCompleteSTAMultiCreate.length ;
-		for (var i=0;i<configSuggestedAutoCompleteSTAMultiCreateLength;i++){
-			autocompleteSelectOptions.push([config.suggestedAutoCompleteSTAMultiCreate[i].name, config.suggestedAutoCompleteSTAMultiCreate[i].origin]);
-		}
-		var parentInformation= node.STAMultiCreateInformation.parentsInformation;
-		var parentsInformationKeys = Object.keys(parentInformation);
-		for (var e=0;e<parentsInformationKeys.length;e++){
-			if (parentInformation[parentsInformationKeys[e]].lenght!=0)autocompleteSelectOptions.push(["Attributes from "+parentInformation[parentsInformationKeys[e]].label,"",parentsInformationKeys[e]]);
-		}
-		
-	}else{
-		alert("It is necessary to link nodes with data");
-		open=false;
+	var parentsInformation= node.STAMultiCreateInformation.parentsInformation;
+	var parentsInformationKeys = Object.keys(parentsInformation);
+	for (var e=0;e<parentsInformationKeys.length;e++){
+		if (parentsInformation[parentsInformationKeys[e]].lenght!=0)autocompleteSelectOptions.push(["Attributes from "+parentsInformation[parentsInformationKeys[e]].label,"",parentsInformationKeys[e]]);
 	}
-
-	if (open){
-		node.STAMultiCreateInformation={} //first time 
-		node.STAMultiCreateInformation. STAService= STAService;
-		node.STAMultiCreateInformation.infoSaved=infoSaved;
-		node.STAMultiCreateInformation.parentsInformation=parentsInformation;
-		node.STAMultiCreateInformation.autocompleteSelectOptions= autocompleteSelectOptions;
-		networkNodes.update(node);
-		drawMultiCreateSTADialog(node);
-		document.getElementById("DialogMultiCreateSTA").showModal();
-	}
-
+	
+	addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(node.STAMultiCreateInformation.infoSaved.origin[0], node);
+	
+	node.STAMultiCreateInformation.parentsInformation=parentsInformation;
+	node.STAMultiCreateInformation.autocompleteSelectOptions= autocompleteSelectOptions;
+	networkNodes.update(node);
 }
+
+
 function buildEntityBlockInMultiCreateSTADialog(node,entity, page){ //Veure que falla d'aqui
 	var n, properties, propertiesInEntity,propertiesKeys, value,c="";
 	var infoSaved= deapCopy(node.STAMultiCreateInformation.infoSaved);
@@ -9697,7 +9669,7 @@ function addOriginSelectedValueMulticreateSTA(){ //Select from origin radionbutt
 function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node){ 
 
 	var infoSaved=node.STAMultiCreateInformation.infoSaved;
-	node.STAMultiCreateInformation.infoSaved.origin=["entity", entity, ""];
+	//node.STAMultiCreateInformation.infoSaved.origin=["entity", entity, ""];
 	var keysEntitiesSaved=Object.keys(infoSaved.entities["general"]); //already displayed and must be saved
 	var entitiesConnected= STAEntities[entity].entities.filter(entity=> entity.required==true);
 	
