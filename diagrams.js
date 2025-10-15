@@ -365,7 +365,7 @@ function UpdateScatterPlot(event) {
 			}
 		}
 		selectedOptions.AxisY = dataGroups[e].Y;
-		nodeData = (sortXaxis) ? SortTableByColumns (networkNodes.get(nodeId).STAdata,[dataGroups[e].X], "asc"): networkNodes.get(nodeId).STAdata;
+		nodeData = (sortXaxis) ? SortTableByColumns (deapCopy(networkNodes.get(nodeId).STAdata),[dataGroups[e].X], "asc"): networkNodes.get(nodeId).STAdata;
 		leftOrRight = dataGroups[e].selectedYaxis;
 		items = [];
 		for (var i = 0; i < nodeData.length; i++) {
