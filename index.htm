@@ -38,6 +38,7 @@
 	<script type="text/javascript" src="geojson.js" async defer></script>
 	<script type="text/javascript" src="json.js" async defer></script>
 	<script type="text/javascript" src="jsonld.js" async defer></script>
+	<script type="text/javascript" src="csvw.js" async defer></script>
 	<script type="text/javascript" src="edc.js" async defer></script>
 	<script type="text/javascript" src="statistics.js"></script>
 	<script type="text/javascript" src="data_tables.js"></script>
@@ -1163,16 +1164,20 @@
 			<br>
 			<fieldset>
 				<legend>Meaning source</legend>
-				<label><input type="radio" id="DialogImportMeaningCSVSourceFile" name="DialogImportMeaningCSVSource" value="file" checked="checked" onClick="SelectImportMeaningCSVSource(event)">
+				<label><input type="radio" id="DialogImportMeaningCSVSourceNone" name="DialogImportMeaningCSVSource" value="none"> None</input></label><br>
+				<label><input type="radio" id="DialogImportMeaningCSVSourceFile" name="DialogImportMeaningCSVSource" value="file" checked="checked"
+ onClick='SelectImportMeaningFileSource(event, "CSV");'>
 				Local CSVW file: <input type="file" id="DialogImportMeaningCSVSourceFileText" accept=".csvw,.json" onChange="ReadFileImportCSVW(event)"></input></label><br>
-				<label><input type="radio" id="DialogImportMeaningCSVSourceURL" name="DialogImportMeaningCSVSource" value="url" onClick='SelectImportMeaningFileSource(event, "CSV")'>
+
+				<label><input type="radio" id="DialogImportMeaningCSVSourceURL" name="DialogImportMeaningCSVSource" value="url" onClick='SelectImportMeaningFileSource(event, "CSV");'>
 				CSVW URL: <input type="text" size="70" id="DialogImportMeaningCSVSourceURLInput" onChange="ReadURLImportCSVW(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningCSVSourceURLButton" onClick="ReadURLImportCSVW(event)" disabled="disabled">Load</button></label><br>
-				<label><input type="radio" id="DialogImportMeaningCSVSourceAuto" name="DialogImportMeaningCSVSource" value="auto" onClick='SelectImportMeaningFileSource(event, "CSV")'>
+				<label><input type="radio" id="DialogImportMeaningCSVSourceAuto" name="DialogImportMeaningCSVSource" value="auto" onClick='SelectImportMeaningFileSource(event, "CSV");'>
 				Automatic retrieve of shared meaning</label><br>
 			</fieldset>
 			<br>
 			<fieldset>
 				<legend>CSV source</legend>
+				<label><input type="radio" id="DialogImportCSVSourceNew" name="DialogImportCSVSource" value="new"> New based on CSVW</input></label><br>
 				<label><input type="radio" id="DialogImportCSVSourceFile" name="DialogImportCSVSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "CSV")'>
 				Local file: <input type="file" accept=".csv,*.txt" id="DialogImportCSVSourceFileText" onChange="ReadFileImportCSV(event)"></input></label><br>
 				<label><input type="radio" id="DialogImportCSVSourceURL" name="DialogImportCSVSource" value="url" onClick='SelectImportFileSource(event, "CSV")'>
@@ -1234,7 +1239,7 @@
 				<legend>Meaning source</legend>
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceFile" name="DialogImportMeaningGeoJSONSource" value="file" checked="checked" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				Local GeoJSON schema file: <input type="file" id="DialogImportMeaningGeoJSONSourceFileText" accept=".json" onChange="ReadFileImportGeoJSONSchema(event)"></input></label><br>
-				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceURL" name="DialogImportMeaningGeoJSONSource" value="url" onClick='SelectImportMeaningFileSource(event, "GeoJSON")'>
+				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceURL" name="DialogImportMeaningGeoJSONSource" value="url" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				GeoJSON schema URL: <input type="text" size="70" id="DialogImportMeaningGeoJSONSourceURLInput" onChange="ReadURLImportGeoJSONSchema(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSONSchema(event)" disabled="disabled">Load</button></label><br>
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceAuto" name="DialogImportMeaningGeoJSONSource" value="auto" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				Automatic retrieve of shared meaning</label><br>

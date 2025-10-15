@@ -1123,17 +1123,22 @@ function RetrieveMeaningTable(event, type) {
 			//ru_schema: urlSchemaMeaning
 		}, "eng", null, RetrieveMeaningTableCallback, {node: currentNode});
 	}
-	UpdateChildenTable(currentNode);
+	if (document.getElementById("DialogImport"+type+"SourceNew")?.checked) {
+		currentNode.STAdata=[];
+		currentNode.STAdata[0]=createEmptyRecordData(currentNode.STAdataAttributes);
+	}
 	if (!currentNode.STAdata) {
 		if (confirm("No data has been loaded. Do you want to close this window anyway?"))
 			document.getElementById("DialogImport"+type).close();
 	}
 	else{
-		currentNode.STAdataAttributes= getDataAttributes(currentNode.STAdata); //It is necessary when you load new csv, because it remember dataAttributes from old csv
-		networkNodes.update(currentNode)
+		if (document.getElementById("DialogImportMeaning"+type+"SourceNone")?.checked)
+			currentNode.STAdataAttributes= getDataAttributes(currentNode.STAdata);
+		networkNodes.update(currentNode);
+		updateQueryAndTableArea(currentNode);
+		UpdateChildenTable(currentNode);
 		document.getElementById("DialogImport"+type).close();
 	}
-		
 }
 
 function TransformTextCSVWToDataAttributes(csvwText, node)
@@ -4660,8 +4665,7 @@ function GetSelectResource(event, resourceId) {
 		//node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(node.STAURL) + (Number.isInteger(n) ? "(" + n + ")" : "('" + node.STAResourceId + "')"), getURLQueryParams(node.STAURL));
 		node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(node.STAURL) + getParentesisODataFromId(node.STAResourceId), getURLQueryParams(node.STAURL));
 	}
-	
-	
+		
 	showInfoMessage("Selecting OGC resource...");
 	UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
 	LoadJSONNodeSTAData(node);
@@ -4842,31 +4846,6 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 		}
 	}
 }
-
-function getCSVWTypeFromAttributeType(t)
-{
-	if (t=="array" || t=="null" || t=="object" || t=="undefined")
-		return "json";
-	return t;
-}
-
-//Taking this into consideration: https://www.w3.org/TR/tabular-data-primer
-function getAttributeTypeFromCSVWType(t) {
-	if (typeof t==="object" && t.base)
-		t=t.base;
-	if (t=="json")
-		return "object";
-	if (t=="decimal" || t=="long" || t=="int" || t=="short" || t=="byte" || t=="nonNegativeInteger"  || t=="positiveInteger" || t=="unsignedLong" || t=="unsignedInt" || t=="unsignedShort" || t=="unsignedByte" || t=="nonPositiveInteger"  || t=="negativeInteger")
-		return "number";
-	if (t=="double" || t=="float")
-		return "number";
-	if (t=="date" || t=="time")
-		return "isodatetime";
-	if (t=="normalizedString" || t=="token" || t=="Name" || t=="NMTOKEN" || t=="xml" || t=="html")
-		return "string";
-	return t;
-}
-
 
 function getJSONSchemaTypeFromAttributeType(t) {
 	if (t=="anyURI" && t=="isodatetime")
@@ -5790,41 +5769,6 @@ function SaveTable(event) {
 	}
 }
 
-//https://csvw.org/
-//https://w3c.github.io/csvw/metadata/#dialect-descriptions
-function CreateCSVW(data, dataAttributesInput, delimiter) {
-	var dataAttributes = dataAttributesInput ? dataAttributesInput : getDataAttributes(data);
-	var dataAttributesArray = Object.keys(dataAttributes), dataAttribute, c;
-
-	var csvw={ tableSchema: {
-			"columns": []
-		},
-		"dialect": {
-			"header": true,
-			"delimiter": delimiter
-		}
-	};
-	for (var a = 0; a < dataAttributesArray.length; a++) {
-		dataAttribute=dataAttributes[dataAttributesArray[a]];
-		csvw.tableSchema.columns.push({
-			"name": dataAttributesArray[a],
-			"datatype": getCSVWTypeFromAttributeType(dataAttribute.type),
-		});
-		c=csvw.tableSchema.columns[a];
-		if (dataAttribute.description)
-			c.titles=dataAttribute.description;
-		if (dataAttribute.definition)
-			c.propertyUrl=dataAttribute.definition;
-		if (dataAttribute.UoM)
-			c.unitMeasureTitles=dataAttribute.UoM;
-		if (dataAttribute.UoMSymbol)
-			c.unitMeasureSymbol=dataAttribute.UoMSymbol;
-		if (dataAttribute.UoMDefinition)
-			c.unitMeasureUrl=dataAttribute.UoMDefinition;
-	}
-	return csvw;
-}
-
 
 function SaveCSVW(event) {
 	event.preventDefault(); // We don't want to submit this form
@@ -5832,25 +5776,9 @@ function SaveCSVW(event) {
 	document.getElementById("DialogSaveTable").close();
 	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode) {
-		SaveLocalDataFile(JSON.stringify(CreateCSVW(parentNode.STAdata, parentNode.STAdataAttributes, delimiter ? delimiter : ";"), null, "\t"), 
+		SaveLocalDataFile(JSON.stringify(createCSVW(parentNode.STAdata, parentNode.STAdataAttributes, delimiter ? delimiter : ";"), null, "\t"), 
 				(IdOfSTAEntity(parentNode) == -1 ?  "table" : STAEntitiesArray[IdOfSTAEntity(parentNode)]) + "_csvw", ".json", "application/json");   //https://stackoverflow.com/questions/7076042/what-mime-type-should-i-use-for-csv
 	}
-}
-
-function getDataAttributesCSVW(csvw){
-	var dataAttributes = {}, c;
-	for (var a = 0; a < csvw.tableSchema.columns.length; a++) {
-		c=csvw.tableSchema.columns[a];
-		dataAttributes[c.name]={
-			"type": getAttributeTypeFromCSVWType(c.datatype),
-			"description": (c.titles && Array.isArray(c.titles)) ? c.titles[0] : c.titles,
-			"definition": c.propertyUrl,
-			"UoM": c.unitMeasureTitles && Array.isArray(c.unitMeasureTitles) ? c.unitMeasureTitles[0] : c.unitMeasureTitles,
-			"UoMSymbol": c.unitMeasureSymbol,
-			"UoMDefinition": c.unitMeasureUrl
-		};
-	}
-	return dataAttributes;
 }
 
 function getDataAttributesGeoJSONSchema(jsonschema){
@@ -6055,10 +5983,6 @@ function transformObservedPropertyTimeValueIntoTimeSemanticValues(data, dataAttr
 			resultRecord[a[observedPropertyName]]=a[extractedValueName];
 	}
 	return {data: resultData, dataAttributes: resultDataAttributes};
-}
-
-function getCSVReadParams(csvw){
-	return csvw.dialect;
 }
 
 function GetSelectedOptionsAddColumnGeo(){
@@ -9455,7 +9379,6 @@ function populateMultiCreateSTADialog(node){
 	networkNodes.update(node);
 }
 
-
 function buildEntityBlockInMultiCreateSTADialog(node,entity, page, multiRecordsOrigin){ //Veure que falla d'aqui
 	var n, properties, propertiesInEntity,propertiesKeys, value,c="";
 	var infoSaved= deapCopy(node.STAMultiCreateInformation.infoSaved);
@@ -9644,15 +9567,15 @@ function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplet
 
 }
 
-function addOriginSelectedValueMulticreateSTA(){ //Select from origin radionbuttons
-		var node= getNodeDialog("DialogMultiCreateSTA");
+// function addOriginSelectedValueMulticreateSTA(){ //Select from origin radionbuttons
+// 		var node= getNodeDialog("DialogMultiCreateSTA");
 
-		var select= document.getElementById("DialogMultiCreateSTA_selectOrigin");
-		var selected= select.options[select.selectedIndex].value;
-		addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(selected, node)
-		networkNodes.update(node);
-		drawMultiCreateSTADialog(node);
-}
+// 		var select= document.getElementById("DialogMultiCreateSTA_selectOrigin");
+// 		var selected= select.options[select.selectedIndex].value;
+// 		addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(selected, node)
+// 		networkNodes.update(node);
+// 		drawMultiCreateSTADialog(node);
+// }
 function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node, origin){ 
 
 	var infoSaved=node.STAMultiCreateInformation.infoSaved;
@@ -9879,6 +9802,8 @@ function oKButtonInDialogMultiCreateSTA(event){
 	
 
 }
+
+//Process MUltiCreateSTAEntities
 const entitiesCreationOrder= ["Parties", "Sensors", "ObservedProperties", "Locations", "Things", "Datastreams", "Multidatastreams", "FeaturesOfInterest", "Observations", "Licenses", "Campaigns", "ObservationGroups"]
 
 function QuickCheckIfEveryEntityWillBeMulticreatedOrOnlyOnceIMultiCreateSTA(node, page){

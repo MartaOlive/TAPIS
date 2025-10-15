@@ -117,7 +117,46 @@ function getDataAttributesSimple(data) {
 	return dataAttributes;
 }
 
-
+function createEmptyRecordData(dataAttributes) {
+	var record={}, dataAttribute;
+	var keys = Object.keys(dataAttributes);
+	for (var k = 0; k < keys.length; k++) {
+		dataAttribute=dataAttributes[keys[k]];
+		if (typeof dataAttribute.type === "undefined") {
+			record[keys[k]]="";
+			continue;
+		}
+		switch (dataAttribute.type) {
+			case "boolean":
+				record[keys[k]]=false;
+				break;
+			case "array":
+				record[keys[k]]=[];
+				break;
+			case "object":
+				record[keys[k]]={};
+				break;
+			case "integer":
+			case "number":
+				record[keys[k]]=0;
+				break;				 
+			case "string": 
+			case "anyURI":
+				record[keys[k]]="";
+				break; 
+			case "isodatetime":
+				record[keys[k]]="1970-01-01T00:00:00Z";
+			case "geometry": 
+				record[keys[k]]="";
+				break; 
+			case "null":
+				record[keys[k]]=null;
+				break; 
+			//case "undefined":
+		}
+	}
+	return record;
+}
 
 //Return the index on the sorted list array where the value exists. If it does not find ti it returns null.
 //If there are repeated hits, it returns the first one

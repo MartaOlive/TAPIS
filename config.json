@@ -525,6 +525,11 @@
 					"description": "phenomenonTime",
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/phenomenonTime"
 				},
+								{
+					"varUoMdesc": "Datastream/resultTime",
+					"description": "resultTime",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/resultTime"
+				},
 				{
 					"varUoMdesc": "Datastream/properties",
 					"description": "properties",
