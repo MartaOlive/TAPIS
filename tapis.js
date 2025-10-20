@@ -9591,7 +9591,6 @@ function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplet
 				entities[page][entity].properties.id ={attribute:["","","",""], text:"", required:false};
 				entities[page][entity].radioChecked="properties";
 			}
-			entities[page][entity].properties={id:{attribute:["","","",""], text:""}, required:"false"};
 			entities[page][entity].completed="false";
 			for (var i=0;i< STAEntities[entity].properties.length;i++){
 				entities[page][entity].properties[STAEntities[entity].properties[i].name]={attribute:["","","",""],text:"", required:STAEntities[entity].properties[i].required }
