@@ -28,52 +28,77 @@
 
 
 	<script>
-		var searchDate = new Date("202a-04-31");
-		var replaceValue = new Date("2025-04-31T22:28:46");
-		function esData() {
-			if (!isNaN(searchDate.getTime()) && !isNaN(replaceValue.getTime())) {
-				console.log("son dates")
-			} else {
-				console.log("no")
-			}
+		var n, properties, propertiesInEntity, propertiesKeys, value, c = "";
+		var infoSaved = deapCopy(node.STAMultiCreateInformation.infoSaved);
+		var parentsInformation = node.STAMultiCreateInformation.parentsInformation;
+		var parentsInformationKeys = Object.keys(parentsInformation);
+
+		if (!multiRecordsOrigin) c += `<fieldset> `
+		//Entity box	
+		if (!multiRecordsOrigin) {
+			c += ((infoSaved.origin[0] == STAEntitiesArray[i])) ? `<legend>${entity}</legend>` : `<legend>${STAEntities[entity].singular}</legend>`; //Plural or singular
 		}
-		esData()
-		var c = `<fieldset><legend>Multirecords origin</legend>
-			< input type = "radio" value = "general" name = "DialogMultiCreateSTA_inputOrigin" id = "DialogMultiCreateSTA_inputOrigin_general" checked><label>General input </label>
-	<input type="radio" value="entity" name="DialogMultiCreateSTA_inputOrigin" id="DialogMultiCreateSTA_inputOrigin_entity" ><label>Entity </label>
-	<select name="DialogMultiCreateSTA_selectOrigin" id="DialogMultiCreateSTA_selectOrigin"><option value="Campaigns"> Campaigns</option><option value="Datastreams"> Datastreams</option><option value="FeaturesOfInterest"> FeaturesOfInterest</option><option value="HistoricalLocations"> HistoricalLocations</option><option value="Licenses"> Licenses</option><option value="Locations"> Locations</option><option value="MultiDatastreams"> MultiDatastreams</option><option value="ObservationGroups"> ObservationGroups</option><option value="Observations"> Observations</option><option value="ObservedProperties"> ObservedProperties</option><option value="Parties"> Parties</option><option value="Relations"> Relations</option><option value="Sensors"> Sensors</option><option value="Things"> Things</option></select></fieldset><fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
-  	<legend>Select entities STA</legend>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Party" checked disabled> Party</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Campaign"> Campaign </label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Datastream"> Datastream</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="FeatureOfInterest"> FeatureOfInterest  </label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="HistoricalLocation"> HistoricalLocation</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="License"> License</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Location"> Location</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="MultiDatastream"> MultiDatastream  </label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="ObservationGroup"> ObservationGroup </label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Observation"> Observation</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="ObservedProperty"> ObservedProperty</label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Relation"> Relation </label>
-	<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Sensor"> Sensor</label>
-	<label style="display: flex; align-items: center;"> <input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" value="Thing"> Thing</label>
-	</fieldset>
-	<fieldset> 
-		<legend>Campaigns</legend>
-		<label>name</label>
-		 <select id="DialogMultiCreateSTA_selectForProperties_Campaigns_name"><optgroup label="CSV">
-			<option value="@iot.selfLink">@iot.selfLink</option>
-			<option value="@iot.id">@iot.id</option>
-			<option value="phenomenonTime">phenomenonTime</option>
-			<option value="resultTime">resultTime</option
-				<option value="result">result</option>
-				<option value="parameters">parameters</option>
-				<option value="Datastream@iot.navigationLink">Datastream@iot.navigationLink</option>
-				<option value="FeatureOfInterest@iot.navigationLink">FeatureOfInterest@iot.navigationLink</option>
-				<option value="Objects@iot.navigationLink">Objects@iot.navigationLink</option>
-				<option value="ObservationGroups@iot.navigationLink">ObservationGroups@iot.navigationLink</option>
-				<option value="Subjects@iot.navigationLink">Subjects@iot.navigationLink</option></optgroup>
-			</select><br>`
+
+		propertiesKeys = Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties);
+		if (multiRecordsOrigin) propertiesKeys = propertiesKeys.filter(x => x != "id");
+		propertiesInEntity = [...STAEntities[entity].properties];
+		properties = [];
+		for (var p = 0; p < propertiesInEntity.length; p++) {
+			if (propertiesKeys.includes(propertiesInEntity[p].name)) properties.push({ name: STAEntities[entity].properties[p].name, required: STAEntities[entity].properties[p].required })
+		}
+
+		if (!properties.includes("id") && !multiRecordsOrigin) properties.unshift({ name: "id", required: "false" }); //Adding id as a property
+		n = properties.length;
+		var firstPropertyAdded = false;
+		//var propertiesArray = properties.map(x => x.name);
+
+		//id
+		c += `<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
+		c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_id" onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'id','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked == "id") ? "checked" : ""}>`
+
+		//other properties
+		for (var e = 0; e < n; e++) { //Properties
+			if (properties[e].name != "id") {
+				if ((entity != "Datastreams" && entity != "MultiDatastreams") || ((entity == "Datastreams" || entity != "MultiDatastreams") && (properties[e].name != "observedArea" && properties[e].name != "phenomenonTime" && properties[e].name != "resultTime"))) {
+					// if (properties[e].name == "id") {
+					// 	c += `<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
+					// 	c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_id" onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'id','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked == "id") ? "checked" : ""}>`
+					// }
+					if (firstPropertyAdded == false) {
+						c += `<div style="border: 1px solid black;">`;
+						firstPropertyAdded = true;
+						c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_properties"  onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'properties','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked != "id") ? "checked" : ""}>
+						<span style="font-weight: bold;">Properties</span><ul>`;
+					}
+					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', '${properties[e].name}')">`
+					if (properties[e].name != "id") c += `<li>`
+					c += `<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required == true) ? "*" : ""}: </label> 
+					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2] != "") ? ", '" + node.STAMultiCreateInformation.infoSaved.origin[2] + "'" : ''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text != "") ? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
+
+					c += `<option value="">-- Select attribute -- </option>`
+					for (var s = 0; s < parentsInformationKeys.length; s++) {//every key (parentNode) has ther attributes
+						c += `<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
+						for (var att = 0; att < parentsInformation[parentsInformationKeys[s]].attributesKeys.length; att++) { //parentNode attributes (keys)
+							value = `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
+							c += `<option value="${value}" data-nodeId="${parentsInformationKeys[s]}" data-column="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`; //value: idNode_attributeValue
+							if (node.STAMultiCreateInformation.infoSaved.entities[page][entity]?.properties[properties[e].name]?.attribute[0] == value) { //Options of select
+								c += " selected "
+							}
+							c += `>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
+						}
+						c += "</optgroup>"
+					}
+					c += `</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text} </span> <button onClick="showAttributesSelectInEntitiesBoxMultiCreateSTADialog('${page}','${entity}', '${properties[e].name}'${(node.STAMultiCreateInformation.infoSaved.origin[2] != "") ? ", '" + node.STAMultiCreateInformation.infoSaved.origin[2] + "'" : ''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text == "") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`
+					if (properties[e].name == "id") c += `</div>` //after id
+					else if (e == n - 1) c += ` </ul></div>` // after ast propety 
+				}
+			}
+
+
+		}
+		if (!multiRecordsOrigin) c += "</fieldset>"
+		return c;
+
 	</script>
 </body>
 

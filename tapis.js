@@ -9345,7 +9345,7 @@ function AllowOpenMulticreateSTADialogAndPopulateIt(node){
 		alert("It is needed to connect and entity node to indicate wich is the main entity to add data");
 		return false;
 	}
-
+	node.STAMultiCreateInformation.entitiesId=entitiesId;
 	node.STAMultiCreateInformation.parentsInformation= parentsInformation;
 	node.STAMultiCreateInformation.STAService= getSTAURLRoot(url);
 	node.STAMultiCreateInformation.infoSaved={
@@ -9380,71 +9380,111 @@ function populateMultiCreateSTADialog(node){
 }
 
 function buildEntityBlockInMultiCreateSTADialog(node,entity, page, multiRecordsOrigin){ //Veure que falla d'aqui
-	var n, properties, propertiesInEntity,propertiesKeys, value,c="";
-	var infoSaved= deapCopy(node.STAMultiCreateInformation.infoSaved);
-	var parentsInformation= node.STAMultiCreateInformation.parentsInformation;
+	var n, properties, propertiesInEntity, propertiesKeys, value, c = "";
+	var infoSaved = deapCopy(node.STAMultiCreateInformation.infoSaved);
+	var parentsInformation = node.STAMultiCreateInformation.parentsInformation;
 	var parentsInformationKeys = Object.keys(parentsInformation);
 
-	if (!multiRecordsOrigin)c+=`<fieldset> `
-	 //Entity box	
-	if(!multiRecordsOrigin){
-		c+= ((infoSaved.origin[0]==STAEntitiesArray[i]))?`<legend>${entity}</legend>`: `<legend>${STAEntities[entity].singular}</legend>`; //Plural or singular
+	if (!multiRecordsOrigin) c += `<fieldset> `
+	//Entity box	
+	if (!multiRecordsOrigin) {
+		c += ((infoSaved.origin[0] == STAEntitiesArray[i])) ? `<legend>${entity}</legend>` : `<legend>${STAEntities[entity].singular}</legend>`; //Plural or singular
 	}
 
-	propertiesKeys=Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties);
-	if (multiRecordsOrigin)propertiesKeys=propertiesKeys.filter(x=>x!="id");
-	propertiesInEntity=[...STAEntities[entity].properties];
-	properties=[];
-		for (var p=0;p<propertiesInEntity.length;p++){
-			if (propertiesKeys.includes(propertiesInEntity[p].name))properties.push({name:STAEntities[entity].properties[p].name, required:STAEntities[entity].properties[p].required})
+	propertiesKeys = Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties);
+	if (multiRecordsOrigin) propertiesKeys = propertiesKeys.filter(x => x != "id");
+	propertiesInEntity = [...STAEntities[entity].properties];
+	properties = [];
+	for (var p = 0; p < propertiesInEntity.length; p++) {
+		if (propertiesKeys.includes(propertiesInEntity[p].name)) properties.push({ name: STAEntities[entity].properties[p].name, required: STAEntities[entity].properties[p].required })
+	}
+
+	if (!properties.includes("id") && !multiRecordsOrigin) properties.unshift({ name: "id", required: "false" }); //Adding id as a property
+	n = properties.length;
+	var firstPropertyAdded = false;
+	//var propertiesArray = properties.map(x => x.name);
+
+	//id
+	if(entity!=infoSaved.origin[0]){ //not in main entity to add
+		c += `<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
+		c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_id" onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'id','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked == "id") ? "checked" : ""}>`
+		c += `<label style="font-weight: bold;">id: </label> 
+		<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_id" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','id', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2] != "") ? ", '" + node.STAMultiCreateInformation.infoSaved.origin[2] + "'" : ''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties["id"]?.text != "") ? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
+
+		c += `<option value="">-- Select attribute -- </option>`
+		for (var s = 0; s < parentsInformationKeys.length; s++) {//every key (parentNode) has ther attributes
+			c += `<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
+			for (var att = 0; att < parentsInformation[parentsInformationKeys[s]].attributesKeys.length; att++) { //parentNode attributes (keys)
+				value = `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
+				c += `<option value="${value}" data-nodeId="${parentsInformationKeys[s]}" data-column="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`; //value: idNode_attributeValue
+				if (node.STAMultiCreateInformation.infoSaved.entities[page][entity]?.properties["id"]?.attribute[0] == value) { //Options of select
+					c += " selected "
+				}
+				c += `>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
+			}
+			c += "</optgroup>"
 		}
-		
-		if (!properties.includes("id")&& !multiRecordsOrigin)properties.unshift({name:"id", required: "false"}); //Adding id as a property
-		n= properties.length;
-		var firstPropertyAdded=false;
+		c += `</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties["id"]?.text} </span>` 
+		c += `<button onClick="showPropertiesNotIdInMultiCreateSTA('${page}','${entity}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties["id"]?.text == "") ? "style='display: none;'" : ""}> Add properties</button > <br>`
+		c += `</div>` //after id
+	}
+	
 		
 
-		for (var e=0;e<n;e++){ //Properties
-			if ((entity!="Datastreams" &&  entity!="MultiDatastreams") || ((entity=="Datastreams" ||  entity!="MultiDatastreams") && (properties[e].name!= "observedArea" && properties[e].name!= "phenomenonTime" && properties[e].name!= "resultTime"))){
-				if (properties[e].name=="id") {
-					c+=`<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
-					c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_id" onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'id','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked=="id")? "checked":""}>`
-				}
-				else if (firstPropertyAdded==false){
-					c+=`<div style="border: 1px solid black;">`;
-					firstPropertyAdded=true;
-					c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_properties"  onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'properties','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked!="id")? "checked":""}>
-					<span style="font-weight: bold;">Properties</span><ul>`;
-				} 
-				//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', '${properties[e].name}')">`
-				if (properties[e].name!="id")c+=`<li>`
-				c+=`<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required==true)?"*":""}: </label> 
-				<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text !="")? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
-				
-				c+=`<option value="">-- Select attribute -- </option>`
-				for (var s=0;s<parentsInformationKeys.length;s++){//every key (parentNode) has ther attributes
-						c+=`<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
-						for (var att=0;att<parentsInformation[parentsInformationKeys[s]].attributesKeys.length;att++){ //parentNode attributes (keys)
-							value= `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
-							c+=`<option value="${value}" data-nodeId="${parentsInformationKeys[s]}" data-column="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`; //value: idNode_attributeValue
-							if (node.STAMultiCreateInformation.infoSaved.entities[page][entity]?.properties[properties[e].name]?.attribute[0]==value){ //Options of select
-								c+= " selected "
+	// //other properties
+	if (infoSaved.entities[page][entity].properties.id.text==""){ //no properties displayed
+		for (var e = 0; e < n; e++) { //Properties
+			if (properties[e].name != "id") {
+				if ((entity != "Datastreams" && entity != "MultiDatastreams") || ((entity == "Datastreams" || entity != "MultiDatastreams") && (properties[e].name != "observedArea" && properties[e].name != "phenomenonTime" && properties[e].name != "resultTime"))) {
+					// if (properties[e].name == "id") {
+					// 	c += `<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
+					// 	c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_id" onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'id','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked == "id") ? "checked" : ""}>`
+					// }
+					if (firstPropertyAdded == false) {
+						c += `<div style="border: 1px solid black;">`;
+						firstPropertyAdded = true;
+						c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_properties"  onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'properties','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked != "id") ? "checked" : ""}>
+						<span style="font-weight: bold;">Properties</span><ul>`;
+					}
+					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', '${properties[e].name}')">`
+					c += `<li>`
+					c += `<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required == true) ? "*" : ""}: </label> 
+					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2] != "") ? ", '" + node.STAMultiCreateInformation.infoSaved.origin[2] + "'" : ''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text != "") ? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
+
+					c += `<option value="">-- Select attribute -- </option>`
+					for (var s = 0; s < parentsInformationKeys.length; s++) {//every key (parentNode) has ther attributes
+						c += `<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
+						for (var att = 0; att < parentsInformation[parentsInformationKeys[s]].attributesKeys.length; att++) { //parentNode attributes (keys)
+							value = `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
+							c += `<option value="${value}" data-nodeId="${parentsInformationKeys[s]}" data-column="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`; //value: idNode_attributeValue
+							if (node.STAMultiCreateInformation.infoSaved.entities[page][entity]?.properties[properties[e].name]?.attribute[0] == value) { //Options of select
+								c += " selected "
 							}
-							c+=`>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
+							c += `>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
 						}
-						c+="</optgroup>"
+						c += "</optgroup>"
+					}
+					c += `</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text} </span> <button onClick="showAttributesSelectInEntitiesBoxMultiCreateSTADialog('${page}','${entity}', '${properties[e].name}'${(node.STAMultiCreateInformation.infoSaved.origin[2] != "") ? ", '" + node.STAMultiCreateInformation.infoSaved.origin[2] + "'" : ''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text == "") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`	
+					if (e == n - 1) c += ` </ul></div>` // after last propety 
 				}
-				c+=`</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text} </span> <button onClick="showAttributesSelectInEntitiesBoxMultiCreateSTADialog('${page}','${entity}', '${properties[e].name}'${(node.STAMultiCreateInformation.infoSaved.origin[2]!="")?", '"+node.STAMultiCreateInformation.infoSaved.origin[2]+"'":''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name ]?.text =="") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`
-				if (properties[e].name=="id")  c+=`</div>` //after id
-				else if(e==n-1) c+=` </ul></div>` // after ast propety 
 			}
-			
 		}
-		if (!multiRecordsOrigin)c+="</fieldset>"
+	}
+
+	if (!multiRecordsOrigin) c += "</fieldset>"
 	return c;
 }
+function showPropertiesNotIdInMultiCreateSTA(page, entity){
+	var node= getNodeDialog("DialogMultiCreateSTA");
+	node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties.id = {attribute: ['', '', '', ''],required: false, text:"" };
+	node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked = "properties";
+	networkNodes.update(node);
+	drawMultiCreateSTADialog(node);
+
+}
+
 function drawMultiCreateSTADialog(node){
-	var parentsInformation= node.STAMultiCreateInformation.parentsInformation;
+	
 	var infoSaved= deapCopy(node.STAMultiCreateInformation.infoSaved);
 	var spanMultiCreateSTA= document.getElementById("DialogMultiCreateSTA_span");
 	var c="";
@@ -9471,15 +9511,8 @@ function drawMultiCreateSTADialog(node){
 		c+=` ${buildEntityBlockInMultiCreateSTADialog(node,infoSaved.origin[0] ,"general", true)} `;
 	}
 	c+="</fieldset>";
-
-
-
 	c+=buildEntitiesCheckBoxInMultiCreateSTADialog(node,"general" )
 	
-	
-
-
-
 	//Create entitiesBox with properties...
 	var checkboxCheked=Object.keys(node.STAMultiCreateInformation.infoSaved.entities["general"]);
 	var entityObject;
@@ -9521,7 +9554,6 @@ function buildEntitiesCheckBoxInMultiCreateSTADialog(node, page, especialAutocom
 			//Singular or plural
 			 c+= STAEntities[STAEntitiesArray[u]].singular; //singular
 			//Required
-			
 				index= entityValues.indexOf(STAEntitiesArray[u])
 				if (index!=-1){
 					//if (STAEntities[node.STAMultiCreateInformation.infoSaved.origin[0]].entities[index].required==true)c+= " *"; 	
@@ -9538,15 +9570,28 @@ function buildEntitiesCheckBoxInMultiCreateSTADialog(node, page, especialAutocom
 
 function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplete){ //If and entity appears in dialog 
 	var node= getNodeDialog("DialogMultiCreateSTA");
+	//addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node, origin)
 	var entities=node.STAMultiCreateInformation.infoSaved.entities
 	var entitiesKeys= Object.keys(entities[page]);
 	var checkbox= document.getElementById("DialogMultiCreateSTA_checkboxEntities_"+entity);
-
+	var entitiesIdKeys= (node.STAMultiCreateInformation.entitiesId)?Object.keys(node.STAMultiCreateInformation.entitiesId):[];
 	if (checkbox.checked){ //need to add
 			entities[page][entity]={}
 			entities[page][entity].name=entity;
+			entities[page][entity].properties ={}
+			if(entitiesIdKeys.length>0){
+				if(entitiesIdKeys.includes(entity)){
+					entities[page][entity].properties.id ={attribute:["","","",""], text:node.STAMultiCreateInformation.entitiesId[entity], required:false};
+					entities[page][entity].radioChecked="id";
+				}else{
+					entities[page][entity].properties.id ={attribute:["","","",""], text:"", required:false};
+					entities[page][entity].radioChecked="properties";
+				}
+			}else{
+				entities[page][entity].properties.id ={attribute:["","","",""], text:"", required:false};
+				entities[page][entity].radioChecked="properties";
+			}
 			entities[page][entity].properties={id:{attribute:["","","",""], text:""}, required:"false"};
-			entities[page][entity].radioChecked="properties";
 			entities[page][entity].completed="false";
 			for (var i=0;i< STAEntities[entity].properties.length;i++){
 				entities[page][entity].properties[STAEntities[entity].properties[i].name]={attribute:["","","",""],text:"", required:STAEntities[entity].properties[i].required }
@@ -9567,20 +9612,13 @@ function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplet
 
 }
 
-// function addOriginSelectedValueMulticreateSTA(){ //Select from origin radionbuttons
-// 		var node= getNodeDialog("DialogMultiCreateSTA");
 
-// 		var select= document.getElementById("DialogMultiCreateSTA_selectOrigin");
-// 		var selected= select.options[select.selectedIndex].value;
-// 		addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(selected, node)
-// 		networkNodes.update(node);
-// 		drawMultiCreateSTADialog(node);
-// }
 function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node, origin){ 
 
 	var infoSaved=node.STAMultiCreateInformation.infoSaved;
 	var keysEntitiesSaved=Object.keys(infoSaved.entities["general"]); //already displayed and must be saved
 	var entitiesConnected= STAEntities[entity].entities.filter(entity=> entity.required==true);
+	var entitiesIdKeys= (node.STAMultiCreateInformation.entitiesId)?Object.keys(node.STAMultiCreateInformation.entitiesId):[];
 	
 	entitiesConnected.push({name: entity, required:true}); //add entitie selected
 	var newEntities={}, newEntityToPush, entityPlural, propertiesObject, needed=[];
@@ -9594,9 +9632,20 @@ function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node, origin)
 			newEntityToPush={};
 			if (entityPlural!="Subjects"&& entityPlural!="Objects"){	
 				propertiesObject={};
-				propertiesObject.id = {attribute:["","","",""], text:"", required:false};
-				newEntityToPush.name=entityPlural;
+			if(entitiesIdKeys.length>0){
+				if(entitiesIdKeys.includes(entityPlural)){
+					propertiesObject.id ={attribute:["","","",""], text:node.STAMultiCreateInformation.entitiesId[entityPlural], required:false};
+					newEntityToPush.radioChecked="id";
+				}else{
+					propertiesObject.id ={attribute:["","","",""], text:"", required:false};
+					newEntityToPush.radioChecked="properties";
+				}
+			}else{
+				propertiesObject.id ={attribute:["","","",""], text:"", required:false};
 				newEntityToPush.radioChecked="properties";
+			}
+				
+				newEntityToPush.name=entityPlural;
 				newEntityToPush.completed="false";	
 				for (var a=0;a< STAEntities[entityPlural].properties.length;a++){ 			
 					propertiesObject[STAEntities[entityPlural].properties[a].name] = {attribute:["","","",""], text:"", required:STAEntities[entityPlural].properties[a].required};
@@ -9690,7 +9739,7 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 					(repeatedEntities[getSTAEntityPlural(objectValue[0])])? repeatedEntities[getSTAEntityPlural(objectValue[0])].push(objectValue[1]): repeatedEntities[getSTAEntityPlural(objectValue[0])]=[objectValue[1]]
 				}				 
 			}
-			if (repeatedEntities.length!=0){ //There are duplicates, need to select one
+			if (Object.keys(repeatedEntities).length!=0){ //There are duplicates, need to select one
 				var dialogRepeatedEntities= document.getElementById("DialogMultiCreateSTARepeatedEntities_span");
 				var c=[];
 				c.push(`<span>There are attributes repeated: Choose attributes to use below</span>`);
@@ -9797,10 +9846,8 @@ function oKButtonInDialogMultiCreateSTA(event){
 	if (node.STAMultiCreateInformation.infoSaved.origin[1]=="")processCreateEntitiesInMultiCreateSTA(node,node.STAMultiCreateInformation.infoSaved.entities.general, "general")
 	else {
 		if(typeof window["processCreateEntitiesInMultiCreateSTA"+node.STAMultiCreateInformation.infoSaved.origin[1]] === 'function')window["processCreateEntitiesInMultiCreateSTA"+node.STAMultiCreateInformation.infoSaved.origin[1]](node);
-		else (alert("Changes will not be registered because there are no functions associated "))};
-
-	
-
+		else (alert("Changes will not be registered because there are no functions associated "))
+	};
 }
 
 //Process MUltiCreateSTAEntities
