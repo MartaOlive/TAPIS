@@ -6813,6 +6813,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 					nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
 				if (nodeFrom.STAsecurity)
 					nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
+				if (nodeFrom.STAEntityName)nodeTo.STAEntityName = nodeFrom.STAEntityName;
 				networkNodes.update(nodeTo);
 				if (addEdge)
 					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
@@ -7503,7 +7504,9 @@ function networkDoubleClick(params) {
 				if (parentNode.STAOGCAPIconformance){
 					currentNode.STAOGCAPIconformance=parentNode.STAOGCAPIconformance;
 				}
-				if (currentNode.image == "SelectResourceSTA.png")currentNode.STAEntityName= parentNode.STAEntityName;
+				if (currentNode.image == "SelectResourceSTA.png"){
+					currentNode.STAEntityName= parentNode.STAEntityName;
+				}
 				if ((currentNode.image == "SelectResourceSTA.png" || currentNode.image == "SelectResourceTable.png") && 
 					parentNode.STAURL) {
 					ShowSelectResourceDialog(parentNode, currentNode);
