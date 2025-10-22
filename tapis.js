@@ -602,7 +602,10 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 	provisional=[];
 	for (var i = 0; i < STAEntitiesArray.length; i++) {
 		node.image= STAEntitiesArray[i]+".png";
-		if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
+		if(parentNode.STAEntityName== STAEntitiesArray[i]){
+			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit),
+				(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
+		}else if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit),
 				(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
 	}
@@ -9846,7 +9849,7 @@ function oKButtonInDialogMultiCreateSTA(event){
 	//Add if every entity will be multi created or only once 
 	QuickCheckIfEveryEntityWillBeMulticreatedOrOnlyOnceIMultiCreateSTA(node, "general");
 	if (node.STAMultiCreateInformation.infoSaved.origin[1]=="")processCreateEntitiesInMultiCreateSTA(node,node.STAMultiCreateInformation.infoSaved.entities.general, "general")
-	else {
+	else { //Special formulas
 		if(typeof window["processCreateEntitiesInMultiCreateSTA"+node.STAMultiCreateInformation.infoSaved.origin[1]] === 'function')window["processCreateEntitiesInMultiCreateSTA"+node.STAMultiCreateInformation.infoSaved.origin[1]](node);
 		else (alert("Changes will not be registered because there are no functions associated "))
 	};
