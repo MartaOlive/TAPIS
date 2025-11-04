@@ -64,8 +64,8 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": 195,
-			"y": -20
+			"x": 207,
+			"y": 29
 		},
 		{
 			"id": "4ne15.9v0tfn",
@@ -1360,16 +1360,16 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/parameters"
 				}
 			},
-			"x": 73,
-			"y": 15
+			"x": 84,
+			"y": 62
 		},
 		{
 			"id": "8ur9v.ejne2q",
 			"label": "Multi create STA",
 			"image": "MultiCreateSTA.png",
 			"shape": "circularImage",
-			"x": -27,
-			"y": 92,
+			"x": -32,
+			"y": 120,
 			"STAMultiCreateInformation": {
 				"parentsInformation": {
 					"4ne15.9v0tfn": {
@@ -3360,8 +3360,8 @@
 					"type": "isodatetime"
 				}
 			},
-			"x": -232,
-			"y": 253
+			"x": -228,
+			"y": 301
 		},
 		{
 			"id": "991hc.pf5aj2",
@@ -3398,22 +3398,64 @@
 					"type": "string"
 				}
 			},
-			"x": -91,
-			"y": -380
+			"x": -276,
+			"y": -415
 		},
 		{
 			"id": "912q8.spoktu",
-			"label": "SensorBerta",
+			"label": "SensorsBerta",
 			"image": "ImportCSV.png",
 			"shape": "circularImage",
 			"STAdata": [
 				{
-					"@iot.selfLink L": "https://frost.iotlab.com/sensorthings2/v1.1/Sensors(41)",
-					"@iot.id I": 41,
-					"description C": "The Optics in Browning Trail Cameras Dark Ops Pro X 1080 (2023) .",
-					"encodingType C": "application/json",
-					"metadata C": "{\"resolution\" : \"24 megapixels\", \"fieldOfView\": \"55 degrees\", \"detectionAngle\": \"45 degrees\"}",
-					"name C": "Optics in BROWNING DARK OPS PRO X 1080"
+					"@iot.selfLink L": 35,
+					"description C": "Pictures with an animal inside",
+					"name C": "Pictures",
+					"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+					"phenomenonTime C": "2024-07-20T09:00:00Z",
+					"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+					"resultTime C": "2024-07-20T09:00:00Z"
+				},
+				{
+					"@iot.selfLink L": 36,
+					"description C": "Pictures with an animal inside",
+					"name C": "Pictures",
+					"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+					"phenomenonTime C": "2024-07-20T09:00:00Z",
+					"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+					"resultTime C": "2024-07-20T09:00:00Z"
+				},
+				{
+					"@iot.selfLink L": 37,
+					"description C": "Pictures with an animal inside",
+					"name C": "Pictures",
+					"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+					"phenomenonTime C": "2024-07-20T09:00:00Z",
+					"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+					"resultTime C": "2024-07-20T09:00:00Z"
+				},
+				{
+					"@iot.selfLink L": 38,
+					"description C": "Pictures with an animal inside",
+					"name C": "Pictures",
+					"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+					"phenomenonTime C": "2024-07-20T09:00:00Z",
+					"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+					"resultTime C": "2024-07-20T09:00:00Z"
+				},
+				{
+					"@iot.selfLink L": 39,
+					"description C": "Pictures with an animal inside",
+					"name C": "Pictures",
+					"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+					"phenomenonTime C": "2024-07-20T09:00:00Z",
+					"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+					"resultTime C": "2024-07-20T09:00:00Z"
 				}
 			],
 			"STAdataAttributes": {
@@ -3436,8 +3478,8 @@
 					"type": "string"
 				}
 			},
-			"x": 126,
-			"y": -348
+			"x": -136,
+			"y": -199
 		},
 		{
 			"id": "1t2gm.1t35si8",
@@ -3470,8 +3512,8 @@
 					"type": "string"
 				}
 			},
-			"x": 108,
-			"y": 418
+			"x": 15,
+			"y": 466
 		},
 		{
 			"id": "78tmg.c9lpa4",
@@ -3556,8 +3598,8 @@
 					"type": "isodatetime"
 				}
 			},
-			"x": -349,
-			"y": -25
+			"x": -388,
+			"y": 84
 		},
 		{
 			"id": "e2ea.4pb7o3c",
@@ -3682,8 +3724,8 @@
 					"UoMDefinition": ""
 				}
 			},
-			"x": -261,
-			"y": -120
+			"x": -339,
+			"y": -35
 		},
 		{
 			"id": "6g3gi.7pjusu",
@@ -3902,8 +3944,8 @@
 					"UoMDefinition": ""
 				}
 			},
-			"x": -153,
-			"y": 153
+			"x": -149,
+			"y": 198
 		},
 		{
 			"id": "1jmu8.jsl5pn",
@@ -3989,8 +4031,8 @@
 				}
 			},
 			"STAURL": null,
-			"x": -170,
-			"y": -210
+			"x": -318,
+			"y": -161
 		},
 		{
 			"id": "69oj3.1dr97f",
@@ -6019,8 +6061,8 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/resultTime"
 				}
 			},
-			"x": 95,
-			"y": -116
+			"x": 100,
+			"y": -60
 		},
 		{
 			"id": "2e301.tl76vpg",
@@ -6202,8 +6244,8 @@
 					]
 				}
 			},
-			"x": -25,
-			"y": -52
+			"x": -26,
+			"y": -17
 		},
 		{
 			"id": "7tnko.rkgjap",
@@ -7744,30 +7786,620 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/FeatureOfInterest/Observations@iot.navigationLink"
 				}
 			},
-			"x": 201,
-			"y": 123
+			"x": 212,
+			"y": 168
 		},
 		{
-			"id": "9f6ep.39b3h8",
-			"label": "Select 13",
-			"image": "SelectResourceSTA.png",
+			"id": "7ic9e.ej0vqd",
+			"label": "Multi create STA",
+			"image": "MultiCreateSTA.png",
 			"shape": "circularImage",
-			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest(13)",
+			"STAMultiCreateInformation": {
+				"parentsInformation": {
+					"96mlc.360re8": {
+						"data": [
+							{
+								"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(1)",
+								"@iot.id": 1,
+								"name": "NouSensorPostman",
+								"description": "NouSensorPostman",
+								"encodingType": "application/geo+json",
+								"metadata": "NouSensorPostman",
+								"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(1)/Datastreams",
+								"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(1)/MultiDatastreams"
+							},
+							{
+								"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(2)",
+								"@iot.id": 2,
+								"name": "NouSensorPostman",
+								"description": "NouSensorPostman2",
+								"encodingType": "application/geo+json",
+								"metadata": "NouSensorPostman",
+								"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(2)/Datastreams",
+								"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(2)/MultiDatastreams"
+							},
+							{
+								"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(3)",
+								"@iot.id": 3,
+								"name": "SensorTapis",
+								"description": "SensorTapis",
+								"encodingType": "SensorTapis",
+								"metadata": "SensorTapis",
+								"properties": {},
+								"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(3)/Datastreams",
+								"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(3)/MultiDatastreams"
+							},
+							{
+								"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(4)",
+								"@iot.id": 4,
+								"name": "Human Eye",
+								"description": "Eye of the observer",
+								"encodingType": "text/html",
+								"metadata": "https://en.wikipedia.org/wiki/Human_eye",
+								"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(4)/Datastreams",
+								"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(4)/MultiDatastreams"
+							},
+							{
+								"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(5)",
+								"@iot.id": 5,
+								"name": "Generic camera",
+								"description": "A camera or a smartphone build-in camera",
+								"encodingType": "text/html",
+								"metadata": "https://en.wikipedia.org/wiki/Camera",
+								"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(5)/Datastreams",
+								"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(5)/MultiDatastreams"
+							},
+							{
+								"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(6)",
+								"@iot.id": 6,
+								"name": "Test2",
+								"description": "Test2",
+								"encodingType": "application/geo+json",
+								"metadata": "TestSensor",
+								"properties": {},
+								"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(6)/Datastreams",
+								"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(6)/MultiDatastreams"
+							}
+						],
+						"attributesDefinitions": {
+							"@iot.selfLink": "Sensor/@iot.selfLink",
+							"@iot.id": "Sensor/@iot.id",
+							"name": "Sensor/name",
+							"description": "Sensor/description",
+							"encodingType": "Sensor/encodingType",
+							"metadata": "Sensor/metadata",
+							"Datastreams@iot.navigationLink": "Sensor/Datastreams@iot.navigationLink",
+							"MultiDatastreams@iot.navigationLink": "Sensor/MultiDatastreams@iot.navigationLink",
+							"properties": "Sensor/properties"
+						},
+						"label": "Sensors",
+						"attributesKeys": [
+							"@iot.selfLink",
+							"@iot.id",
+							"name",
+							"description",
+							"encodingType",
+							"metadata",
+							"Datastreams@iot.navigationLink",
+							"MultiDatastreams@iot.navigationLink",
+							"properties"
+						]
+					},
+					"1sd0a.3i7aq7g": {
+						"data": [
+							{
+								"@iot.selfLink L": 35,
+								"description C": "Pictures with an animal inside",
+								"name C": "Pictures",
+								"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+								"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+								"phenomenonTime C": "2024-07-20T09:00:00Z",
+								"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+								"resultTime C": "2024-07-20T09:00:00Z"
+							},
+							{
+								"@iot.selfLink L": 36,
+								"description C": "Pictures with an animal inside",
+								"name C": "Pictures",
+								"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+								"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+								"phenomenonTime C": "2024-07-20T09:00:00Z",
+								"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+								"resultTime C": "2024-07-20T09:00:00Z"
+							},
+							{
+								"@iot.selfLink L": 37,
+								"description C": "Pictures with an animal inside",
+								"name C": "Pictures",
+								"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+								"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+								"phenomenonTime C": "2024-07-20T09:00:00Z",
+								"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+								"resultTime C": "2024-07-20T09:00:00Z"
+							},
+							{
+								"@iot.selfLink L": 38,
+								"description C": "Pictures with an animal inside",
+								"name C": "Pictures",
+								"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+								"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+								"phenomenonTime C": "2024-07-20T09:00:00Z",
+								"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+								"resultTime C": "2024-07-20T09:00:00Z"
+							},
+							{
+								"@iot.selfLink L": 39,
+								"description C": "Pictures with an animal inside",
+								"name C": "Pictures",
+								"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+								"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+								"phenomenonTime C": "2024-07-20T09:00:00Z",
+								"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+								"resultTime C": "2024-07-20T09:00:00Z"
+							}
+						],
+						"attributesDefinitions": {
+							"description C": "Sensor/description",
+							"encodingType C": "Sensor/encodingType",
+							"metadata C": "Sensor/metadata",
+							"name C": "Sensor/name"
+						},
+						"label": "Column meaning",
+						"attributesKeys": [
+							"@iot.selfLink L",
+							"@iot.id I",
+							"description C",
+							"encodingType C",
+							"metadata C",
+							"name C"
+						]
+					}
+				},
+				"entitiesId": {},
+				"STAService": "http://localhost:8080/FROST-Server/v1.1",
+				"infoSaved": {
+					"origin": [
+						"Sensors",
+						""
+					],
+					"entities": {
+						"general": {
+							"Sensors": {
+								"radioChecked": "properties",
+								"name": "Sensors",
+								"completed": "false",
+								"properties": {
+									"id": {
+										"attribute": [
+											"",
+											"",
+											"",
+											""
+										],
+										"text": "",
+										"required": false
+									},
+									"name": {
+										"attribute": [
+											"1sd0a.3i7aq7g_name C",
+											"1sd0a.3i7aq7g",
+											"name C",
+											"multiple"
+										],
+										"required": true,
+										"text": ""
+									},
+									"description": {
+										"attribute": [
+											"1sd0a.3i7aq7g_description C",
+											"1sd0a.3i7aq7g",
+											"description C",
+											"multiple"
+										],
+										"required": true,
+										"text": ""
+									},
+									"encodingType": {
+										"attribute": [
+											"1sd0a.3i7aq7g_encodingType C",
+											"1sd0a.3i7aq7g",
+											"encodingType C",
+											"multiple"
+										],
+										"required": true,
+										"text": ""
+									},
+									"metadata": {
+										"attribute": [
+											"1sd0a.3i7aq7g_metadata C",
+											"1sd0a.3i7aq7g",
+											"metadata C",
+											"multiple"
+										],
+										"required": true,
+										"text": ""
+									},
+									"properties": {
+										"attribute": [
+											"",
+											"",
+											"",
+											""
+										],
+										"text": "",
+										"required": false
+									}
+								}
+							}
+						},
+						"needed": []
+					},
+					"nodeWithMultiRecord": "1sd0a.3i7aq7g",
+					"needed": [
+						"Sensors"
+					]
+				},
+				"autocompleteSelectOptions": [
+					[
+						"iNaturalist",
+						"general"
+					],
+					[
+						"Attributes from Sensors",
+						"",
+						"96mlc.360re8"
+					],
+					[
+						"Attributes from Column meaning",
+						"",
+						"1sd0a.3i7aq7g"
+					]
+				],
+				"objectFromAutocomplete": {
+					"objectWithAttributes": {
+						"Sensors": {
+							"description": [
+								"1sd0a.3i7aq7g_description C",
+								"1sd0a.3i7aq7g",
+								"description C",
+								"multiple"
+							],
+							"encodingType": [
+								"1sd0a.3i7aq7g_encodingType C",
+								"1sd0a.3i7aq7g",
+								"encodingType C",
+								"multiple"
+							],
+							"metadata": [
+								"1sd0a.3i7aq7g_metadata C",
+								"1sd0a.3i7aq7g",
+								"metadata C",
+								"multiple"
+							],
+							"name": [
+								"1sd0a.3i7aq7g_name C",
+								"1sd0a.3i7aq7g",
+								"name C",
+								"multiple"
+							]
+						}
+					},
+					"repeatedEntities": {}
+				}
+			},
+			"x": 90,
+			"y": -308
+		},
+		{
+			"id": "mqr7.ko3n1ac",
+			"label": "STA plus",
+			"image": "sta.png",
+			"shape": "circularImage",
+			"STAURL": "http://localhost:8080/FROST-Server/v1.1",
 			"STAdata": [
 				{
-					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest(13)",
-					"@iot.id": 13,
-					"name": "Valencia",
-					"description": "A beautiful, beautiful place",
+					"name": "Campaigns",
+					"url": "http://localhost:8080/FROST-Server/v1.1/Campaigns"
+				},
+				{
+					"name": "Datastreams",
+					"url": "http://localhost:8080/FROST-Server/v1.1/Datastreams"
+				},
+				{
+					"name": "FeaturesOfInterest",
+					"url": "http://localhost:8080/FROST-Server/v1.1/FeaturesOfInterest"
+				},
+				{
+					"name": "HistoricalLocations",
+					"url": "http://localhost:8080/FROST-Server/v1.1/HistoricalLocations"
+				},
+				{
+					"name": "Licenses",
+					"url": "http://localhost:8080/FROST-Server/v1.1/Licenses"
+				},
+				{
+					"name": "Locations",
+					"url": "http://localhost:8080/FROST-Server/v1.1/Locations"
+				},
+				{
+					"name": "MultiDatastreams",
+					"url": "http://localhost:8080/FROST-Server/v1.1/MultiDatastreams"
+				},
+				{
+					"name": "Observations",
+					"url": "http://localhost:8080/FROST-Server/v1.1/Observations"
+				},
+				{
+					"name": "ObservationGroups",
+					"url": "http://localhost:8080/FROST-Server/v1.1/ObservationGroups"
+				},
+				{
+					"name": "ObservedProperties",
+					"url": "http://localhost:8080/FROST-Server/v1.1/ObservedProperties"
+				},
+				{
+					"name": "Parties",
+					"url": "http://localhost:8080/FROST-Server/v1.1/Parties"
+				},
+				{
+					"name": "Relations",
+					"url": "http://localhost:8080/FROST-Server/v1.1/Relations"
+				},
+				{
+					"name": "Sensors",
+					"url": "http://localhost:8080/FROST-Server/v1.1/Sensors"
+				},
+				{
+					"name": "Things",
+					"url": "http://localhost:8080/FROST-Server/v1.1/Things"
+				}
+			],
+			"x": 336,
+			"y": -217
+		},
+		{
+			"id": "96mlc.360re8",
+			"label": "Sensors",
+			"image": "Sensors.png",
+			"shape": "circularImage",
+			"STAURL": "http://localhost:8080/FROST-Server/v1.1/Sensors",
+			"STAEntityName": "Sensors",
+			"STAdata": [
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(1)",
+					"@iot.id": 1,
+					"name": "NouSensorPostman",
+					"description": "NouSensorPostman",
+					"encodingType": "application/geo+json",
+					"metadata": "NouSensorPostman",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(1)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(1)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(2)",
+					"@iot.id": 2,
+					"name": "NouSensorPostman",
+					"description": "NouSensorPostman2",
+					"encodingType": "application/geo+json",
+					"metadata": "NouSensorPostman",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(2)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(2)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(3)",
+					"@iot.id": 3,
+					"name": "SensorTapis",
+					"description": "SensorTapis",
+					"encodingType": "SensorTapis",
+					"metadata": "SensorTapis",
+					"properties": {},
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(3)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(3)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(4)",
+					"@iot.id": 4,
+					"name": "Human Eye",
+					"description": "Eye of the observer",
+					"encodingType": "text/html",
+					"metadata": "https://en.wikipedia.org/wiki/Human_eye",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(4)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(4)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(5)",
+					"@iot.id": 5,
+					"name": "Generic camera",
+					"description": "A camera or a smartphone build-in camera",
+					"encodingType": "text/html",
+					"metadata": "https://en.wikipedia.org/wiki/Camera",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(5)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(5)/MultiDatastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(6)",
+					"@iot.id": 6,
+					"name": "Test2",
+					"description": "Test2",
+					"encodingType": "application/geo+json",
+					"metadata": "TestSensor",
+					"properties": {},
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(6)/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.1/Sensors(6)/MultiDatastreams"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/description"
+				},
+				"encodingType": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/encodingType"
+				},
+				"metadata": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/metadata"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/Datastreams@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/MultiDatastreams@iot.navigationLink"
+				},
+				"properties": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/properties"
+				}
+			},
+			"x": 220,
+			"y": -278
+		},
+		{
+			"id": "1sd0a.3i7aq7g",
+			"label": "Column meaning",
+			"image": "Meaning.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"@iot.selfLink L": 35,
+					"description C": "Pictures with an animal inside",
+					"name C": "Pictures",
+					"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+					"phenomenonTime C": "2024-07-20T09:00:00Z",
+					"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+					"resultTime C": "2024-07-20T09:00:00Z"
+				},
+				{
+					"@iot.selfLink L": 36,
+					"description C": "Pictures with an animal inside",
+					"name C": "Pictures",
+					"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+					"phenomenonTime C": "2024-07-20T09:00:00Z",
+					"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+					"resultTime C": "2024-07-20T09:00:00Z"
+				},
+				{
+					"@iot.selfLink L": 37,
+					"description C": "Pictures with an animal inside",
+					"name C": "Pictures",
+					"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+					"phenomenonTime C": "2024-07-20T09:00:00Z",
+					"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+					"resultTime C": "2024-07-20T09:00:00Z"
+				},
+				{
+					"@iot.selfLink L": 38,
+					"description C": "Pictures with an animal inside",
+					"name C": "Pictures",
+					"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+					"phenomenonTime C": "2024-07-20T09:00:00Z",
+					"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+					"resultTime C": "2024-07-20T09:00:00Z"
+				},
+				{
+					"@iot.selfLink L": 39,
+					"description C": "Pictures with an animal inside",
+					"name C": "Pictures",
+					"observationType C": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"observedArea G": "{\"type\":\"Point\",\"coordinates\":[2.942919,42.47697]}",
+					"phenomenonTime C": "2024-07-20T09:00:00Z",
+					"unitOfMeasurement O": "{\"name\":null,\"symbol\":null,\"definition\":null}",
+					"resultTime C": "2024-07-20T09:00:00Z"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink L": {
+					"type": "string",
+					"description": "",
+					"definition": "",
+					"UoM": "",
+					"UoMSymbol": "",
+					"UoMDefinition": ""
+				},
+				"@iot.id I": {
+					"type": "integer",
+					"description": "",
+					"definition": "",
+					"UoM": "",
+					"UoMSymbol": "",
+					"UoMDefinition": ""
+				},
+				"description C": {
+					"type": "string",
+					"description": "description",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/description",
+					"UoM": "",
+					"UoMSymbol": "",
+					"UoMDefinition": ""
+				},
+				"encodingType C": {
+					"type": "string",
+					"description": "encodingType",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/encodingType",
+					"UoM": "",
+					"UoMSymbol": "",
+					"UoMDefinition": ""
+				},
+				"metadata C": {
+					"type": "string",
+					"description": "metadata",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/metadata",
+					"UoM": "",
+					"UoMSymbol": "",
+					"UoMDefinition": ""
+				},
+				"name C": {
+					"type": "string",
+					"description": "name",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Sensor/name",
+					"UoM": "",
+					"UoMSymbol": "",
+					"UoMDefinition": ""
+				}
+			},
+			"x": -39,
+			"y": -281
+		},
+		{
+			"id": "6215h.09e14l",
+			"label": "Select 1",
+			"image": "SelectResourceSTA.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest(1)",
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest(1)",
+					"@iot.id": 1,
+					"name": "Spitzingsee",
+					"description": "Hotel Gundl Alm",
 					"encodingType": "application/geo+json",
 					"feature": {
 						"type": "Point",
 						"coordinates": [
-							39.454678,
-							-0.403103
+							11.88533,
+							47.659664
 						]
 					},
-					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest(13)/Observations"
+					"Observations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest(1)/Observations"
 				}
 			],
 			"STAdataAttributes": {
@@ -7800,9 +8432,10 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/FeatureOfInterest/Observations@iot.navigationLink"
 				}
 			},
-			"STAResourceId": 13,
-			"x": 83,
-			"y": 209
+			"STAEntityName": "FeaturesOfInterest",
+			"STAResourceId": 1,
+			"x": 86,
+			"y": 216
 		}
 	],
 	"edges": [
@@ -7868,6 +8501,36 @@
 		},
 		{
 			"from": "9f6ep.39b3h8",
+			"to": "8ur9v.ejne2q",
+			"arrows": "from"
+		},
+		{
+			"from": "mqr7.ko3n1ac",
+			"to": "96mlc.360re8",
+			"arrows": "from"
+		},
+		{
+			"from": "96mlc.360re8",
+			"to": "7ic9e.ej0vqd",
+			"arrows": "from"
+		},
+		{
+			"from": "912q8.spoktu",
+			"to": "1sd0a.3i7aq7g",
+			"arrows": "from"
+		},
+		{
+			"from": "1sd0a.3i7aq7g",
+			"to": "7ic9e.ej0vqd",
+			"arrows": "from"
+		},
+		{
+			"from": "7tnko.rkgjap",
+			"to": "6215h.09e14l",
+			"arrows": "from"
+		},
+		{
+			"from": "6215h.09e14l",
 			"to": "8ur9v.ejne2q",
 			"arrows": "from"
 		}

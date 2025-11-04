@@ -170,6 +170,15 @@ const tableStatisticsVisualize ={
 const tableStatisticsVisualizeArray = Object.keys(tableStatisticsVisualize);
 const tableStatisticsVisualizeType = {singular: " Table tool for statistics and visualization", plural: "Table tools for statistics and visualization"};
 
+const dataQuality={
+	datacompletenessomission:{description: "data completness omission", help:"the degree to which all required data is present and recorded without missing or incomplete values" }
+
+}
+const dataQualityArray = Object.keys(dataQuality);
+const dataQualityType = {singular: " Table tool for data quality", plural: "Table tools for data quality"};
+
+
+
 function IdOfSTAEntity(node) {
 	for (var i = 0; i < STAEntitiesArray.length; i++) {
 		if (node.image == STAEntitiesArray[i] + ".png")
@@ -266,7 +275,8 @@ function getConnectionSTAEntity(parentNode, node) {
 
 	if (parentPlural)
 	{
-		if (null!=getSTAURLSelectingARow(parentNode.STAURL))
+		if (parentNode.STAdata.length==1)
+		//if (null!=getSTAURLSelectingARow(parentNode.STAURL))
 		{
 			//Determinino si ha de ser singular o plural
 			var entityName=transformToSingularIfNeededSTAEntity(parentEntity, nextEntity)
@@ -511,6 +521,11 @@ function PlaceButtonsSTAEntities() {
 		if (!startButtonsOnly || TableOperations[TableOperationsArray[i]].startNode)
 			cdns.push(textOperationButton(null, "", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular));
 	}
+	cdns.push("<br>");
+	for (var i = 0; i < dataQualityArray.length; i++) {
+		if (!startButtonsOnly || dataQuality[dataQualityArray[i]].startNode)
+			cdns.push(textOperationButton(null, "", dataQualityArray[i], dataQuality[dataQualityArray[i]].description, dataQuality[dataQualityArray[i]].description, dataQuality[dataQualityArray[i]].help, dataQuality[dataQualityArray[i]], dataQualityType.singular));
+	}
 	if (!startButtonsOnly)
 		cdns.push("<br>");
 
@@ -590,7 +605,7 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 	cdns.push(generalBox.replace("TITLE", ServicesAndAPIsType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 	
 	provisional=[];
-	for (var i = 0; i < STAEntitiesArray.length; i++) {
+	for (var i = 0; i < STAEntitiesArray.length; i++) { //Plural 
 		node.image= STAEntitiesArray[i]+".png";
 		if (!nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular), 
@@ -600,7 +615,7 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 		cdns.push(generalBox.replace("TITLE", STAEntitiesType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 
 	provisional=[];
-	for (var i = 0; i < STAEntitiesArray.length; i++) {
+	for (var i = 0; i < STAEntitiesArray.length; i++) { //Singular (create, update, delete)
 		node.image= STAEntitiesArray[i]+".png";
 		if(parentNode.STAEntityName== STAEntitiesArray[i]){
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit),
@@ -651,6 +666,16 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 	}
 	if (provisional.length>1)
 		cdns.push(generalBox.replace("TITLE",tableStatisticsVisualizeType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
+	
+	provisional=[];
+	for (var i = 0; i < dataQualityArray.length; i++) {
+		node.image= dataQualityArray[i]+".png";
+		if (!nodeId || reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
+			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", dataQualityArray[i], dataQuality[dataQualityArray[i]].description, dataQuality[dataQualityArray[i]].description, dataQuality[dataQualityArray[i]].help, dataQuality[dataQualityArray[i]], dataQualityType.singular),
+				(i+1)%nCol==0 || i == dataQualityArray.length-1 ? "<br>" : " ");
+	}
+	if (provisional.length>1)
+		cdns.push(generalBox.replace("TITLE",dataQualityType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
 
 	//cdns.push("</div>");
 	document.getElementById("ButtonsContextMenuObjects").innerHTML = cdns.join("");
@@ -3438,8 +3463,8 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 		}
 		if (parentNode.image != "sta.png"){
 			if (parentNode.STAdata.length>1){
-				alert("Parent node has more than a single record. Please select a record first.");
-				return false;
+			 	alert("Parent node has more than a single record. Please select a record first.");
+			 	return false;
 			}				
 			if (parentEntityName!=entityName && returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName)==-1 && returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular)==-1) {
 				alert("Parent node ("+STAEntities[parentEntityName].singular+") is not a/an " + STAEntities[entityName].singular + " or is directly related to a/an " +  STAEntities[entityName].singular);
@@ -9881,7 +9906,7 @@ function QuickCheckIfEveryEntityWillBeMulticreatedOrOnlyOnceIMultiCreateSTA(node
 
 function processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page){
 
-	var entitiesNeeded= checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general,node.STAMultiCreateInformation.infoSaved.origin[0]); 	
+	var entitiesNeeded= checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general); 	
 	var data = node.STAMultiCreateInformation.parentsInformation[node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord].data;
 	var dataLength= data.length;
 	var entitiesCreationOrderlength= entitiesCreationOrder.length;
@@ -9889,7 +9914,7 @@ function processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page){
 	var entityCompleted=true;
 	var entityToSend;
 	
-	if (entitiesNeeded==true){
+	if (entitiesNeeded){
 		for (var i=0;i<dataLength;i++){
 			entityToSend={};
 			if (entityCompleted==false)break; //It can be false after firts round, not before. Necessary to go out of this bucle
@@ -9931,16 +9956,18 @@ function processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page){
 }
 
 
-function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySelected){ //object with entities
+function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject){ //object with entities
 	var entitiesArray= Object.keys(entitieObject);
+	var objectToProcessCreation={}
 	//if (!entitiesArray.includes("Parties")) return false; 
-	if (entitySelected){
-		if (!entitiesArray.includes(entitySelected)) return false; 
-	}
+	// if (entitySelected){
+	// 	if (!entitiesArray.includes(entitySelected)) return false; 
+	// }
 	var entity;
 	for (var i=0;i<entitiesArray.length;i++){
 		if (entitieObject[entitiesArray[i]].radioChecked=="properties"){ //If entity has an id, it doesn't need entities associated.
 				for (var e=0;e<STAEntities[entitiesArray[i]].entities.length;e++){
+					objectToProcessCreation[entitiesArray[i]]={properties:{},idNeeded:{}}; //entityCreation in object
 					if (STAEntities[entitiesArray[i]].entities[e].required==true){
 						entity= getSTAEntityPlural(STAEntities[entitiesArray[i]].entities[e].name);
 						if (!entitiesArray.includes(entity)) {
@@ -9950,11 +9977,16 @@ function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject, entitySe
 							}else return false;					
 							
 						}
+
 					}
+					//Crear columna id
+					objectToProcessCreation[entitiesArray[i]].idNeeded[entity]="";
+
 				}
 		}
 	}
-	return true;
+	
+	return objectToProcessCreation;
 
 }
 function isEntityCompletedWithAllProperties(node, entity,entityName, page,dataIndex ){ 

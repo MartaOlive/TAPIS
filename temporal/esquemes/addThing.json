@@ -1,0 +1,549 @@
+{
+	"nodes": [
+		{
+			"id": "1et86.0hmm05g",
+			"label": "STA plus",
+			"image": "sta.png",
+			"shape": "circularImage",
+			"STAURL": "http://localhost:8080/FROST-Server/v1.0",
+			"STAdata": [
+				{
+					"name": "Campaigns",
+					"url": "http://localhost:8080/FROST-Server/v1.0/Campaigns"
+				},
+				{
+					"name": "Datastreams",
+					"url": "http://localhost:8080/FROST-Server/v1.0/Datastreams"
+				},
+				{
+					"name": "FeaturesOfInterest",
+					"url": "http://localhost:8080/FROST-Server/v1.0/FeaturesOfInterest"
+				},
+				{
+					"name": "HistoricalLocations",
+					"url": "http://localhost:8080/FROST-Server/v1.0/HistoricalLocations"
+				},
+				{
+					"name": "Licenses",
+					"url": "http://localhost:8080/FROST-Server/v1.0/Licenses"
+				},
+				{
+					"name": "Locations",
+					"url": "http://localhost:8080/FROST-Server/v1.0/Locations"
+				},
+				{
+					"name": "MultiDatastreams",
+					"url": "http://localhost:8080/FROST-Server/v1.0/MultiDatastreams"
+				},
+				{
+					"name": "Observations",
+					"url": "http://localhost:8080/FROST-Server/v1.0/Observations"
+				},
+				{
+					"name": "ObservationGroups",
+					"url": "http://localhost:8080/FROST-Server/v1.0/ObservationGroups"
+				},
+				{
+					"name": "ObservedProperties",
+					"url": "http://localhost:8080/FROST-Server/v1.0/ObservedProperties"
+				},
+				{
+					"name": "Parties",
+					"url": "http://localhost:8080/FROST-Server/v1.0/Parties"
+				},
+				{
+					"name": "Relations",
+					"url": "http://localhost:8080/FROST-Server/v1.0/Relations"
+				},
+				{
+					"name": "Sensors",
+					"url": "http://localhost:8080/FROST-Server/v1.0/Sensors"
+				},
+				{
+					"name": "Things",
+					"url": "http://localhost:8080/FROST-Server/v1.0/Things"
+				}
+			],
+			"x": -67,
+			"y": -30
+		},
+		{
+			"id": "1nt9g.63c1vbo",
+			"label": "Datastreams",
+			"image": "Datastreams.png",
+			"shape": "circularImage",
+			"STAURL": "http://localhost:8080/FROST-Server/v1.0/Datastreams",
+			"STAEntityName": "Datastreams",
+			"STAdata": [
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(1)",
+					"@iot.id": 1,
+					"name": "Community Agreed Species Identification (guypopbio, Taxon)",
+					"description": "Agreed Observations of species identification started by the iNaturalist user 'guypopbio' from the eyes of a human acting as a sersor observing the property 'taxon' under the license 'CC-BY-NC'.",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"unitOfMeasurement": {
+						"name": "Identifier",
+						"symbol": "",
+						"definition": "https://www.gbif.org/species"
+					},
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							6.497658798,
+							49.745787098
+						]
+					},
+					"phenomenonTime": "2016-10-27T12:52:14Z/2016-10-27T12:52:14Z",
+					"resultTime": "2017-05-30T14:52:58.166Z/2017-05-30T14:52:58.166Z",
+					"License@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(1)/License",
+					"ObservedProperty@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(1)/ObservedProperty",
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(1)/Party",
+					"Sensor@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(1)/Sensor",
+					"Thing@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(1)/Thing",
+					"Campaigns@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(1)/Campaigns",
+					"Observations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(1)/Observations"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(2)",
+					"@iot.id": 2,
+					"name": "Pictures for Species Identification (guypopbio, Taxon)",
+					"description": "Observations of species pictures for identification of the iNaturalist user 'guypopbio' from the camera sersor observing the property 'taxon' under the license 'CC-BY-NC'.",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"unitOfMeasurement": {
+						"name": "N/A",
+						"symbol": "",
+						"definition": "N/A"
+					},
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							6.497658798,
+							49.745787098
+						]
+					},
+					"phenomenonTime": "2016-10-27T12:52:14Z/2016-10-27T12:52:14Z",
+					"resultTime": "2017-05-30T14:53:12.256Z/2017-05-30T14:53:12.256Z",
+					"License@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(2)/License",
+					"ObservedProperty@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(2)/ObservedProperty",
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(2)/Party",
+					"Sensor@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(2)/Sensor",
+					"Thing@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(2)/Thing",
+					"Campaigns@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(2)/Campaigns",
+					"Observations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(2)/Observations"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(3)",
+					"@iot.id": 3,
+					"name": "Species Identification (almantas, Taxon)",
+					"description": "Observations of species identification of the iNaturalist user 'almantas' from the eyes of a human acting as a sersor observing the property 'taxon' under the license 'CC-BY-NC'.",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"unitOfMeasurement": {
+						"name": "Identifier",
+						"symbol": "",
+						"definition": "https://www.gbif.org/species"
+					},
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							6.497658798,
+							49.745787098
+						]
+					},
+					"phenomenonTime": "2016-10-27T12:52:14Z/2016-10-27T12:52:14Z",
+					"resultTime": "2017-05-30T17:18:01.969Z/2017-05-30T17:18:01.969Z",
+					"License@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(3)/License",
+					"ObservedProperty@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(3)/ObservedProperty",
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(3)/Party",
+					"Sensor@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(3)/Sensor",
+					"Thing@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(3)/Thing",
+					"Campaigns@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(3)/Campaigns",
+					"Observations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(3)/Observations"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(4)",
+					"@iot.id": 4,
+					"name": "Species Identification (paul_luap, Taxon)",
+					"description": "Observations of species identification of the iNaturalist user 'paul_luap' from the eyes of a human acting as a sersor observing the property 'taxon' under the license 'CC-BY-NC'.",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"unitOfMeasurement": {
+						"name": "Identifier",
+						"symbol": "",
+						"definition": "https://www.gbif.org/species"
+					},
+					"observedArea": {
+						"type": "Point",
+						"coordinates": [
+							6.497658798,
+							49.745787098
+						]
+					},
+					"phenomenonTime": "2016-10-27T12:52:14Z/2016-10-27T12:52:14Z",
+					"resultTime": "2017-06-02T13:09:40.4Z/2017-06-02T13:09:40.4Z",
+					"License@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(4)/License",
+					"ObservedProperty@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(4)/ObservedProperty",
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(4)/Party",
+					"Sensor@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(4)/Sensor",
+					"Thing@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(4)/Thing",
+					"Campaigns@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(4)/Campaigns",
+					"Observations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Datastreams(4)/Observations"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/description"
+				},
+				"observationType": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/observationType"
+				},
+				"unitOfMeasurement": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/unitOfMeasurement"
+				},
+				"observedArea": {
+					"type": "geometry",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/observedArea"
+				},
+				"phenomenonTime": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/phenomenonTime"
+				},
+				"resultTime": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/resultTime"
+				},
+				"License@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/License@iot.navigationLink"
+				},
+				"ObservedProperty@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/ObservedProperty@iot.navigationLink"
+				},
+				"Party@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/Party@iot.navigationLink"
+				},
+				"Sensor@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/Sensor@iot.navigationLink"
+				},
+				"Thing@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/Thing@iot.navigationLink"
+				},
+				"Campaigns@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/Campaigns@iot.navigationLink"
+				},
+				"Observations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/Observations@iot.navigationLink"
+				}
+			},
+			"x": -32,
+			"y": -148
+		},
+		{
+			"id": "4lfmd.aj8nv6",
+			"label": "Things",
+			"image": "Things.png",
+			"shape": "circularImage",
+			"STAURL": "http://localhost:8080/FROST-Server/v1.0/Things",
+			"STAEntityName": "Things",
+			"STAdata": [
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(1)",
+					"@iot.id": 1,
+					"name": "NovaThingPostman",
+					"description": "NovaThingPostman2",
+					"properties": {},
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(1)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(1)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(1)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(1)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(1)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)",
+					"@iot.id": 2,
+					"name": "ThingAmbElTapisModificadaAmbPostman",
+					"description": "ThingAmbElTapisModificadaAmbPostman",
+					"properties": {},
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(3)",
+					"@iot.id": 3,
+					"name": "raedwulf68",
+					"description": "Human as a sensor",
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(3)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(3)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(3)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(3)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(3)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(4)",
+					"@iot.id": 4,
+					"name": "guypopbio",
+					"description": "Human as a sensor",
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(4)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(4)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(4)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(4)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(4)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(5)",
+					"@iot.id": 5,
+					"name": "Camera of guypopbio",
+					"description": "Camera of guypopbioas a sensor to identify a species",
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(5)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(5)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(5)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(5)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(5)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(6)",
+					"@iot.id": 6,
+					"name": "almantas",
+					"description": "Human as a sensor",
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(6)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(6)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(6)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(6)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(6)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(7)",
+					"@iot.id": 7,
+					"name": "paul_luap",
+					"description": "Human as a sensor",
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(7)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(7)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(7)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(7)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(7)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(8)",
+					"@iot.id": 8,
+					"name": "TestThing",
+					"description": "test",
+					"properties": {},
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(8)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(8)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(8)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(8)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(9)",
+					"@iot.id": 9,
+					"name": "Thing2",
+					"description": "Thing2",
+					"properties": {},
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(9)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(9)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(9)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(9)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(10)",
+					"@iot.id": 10,
+					"name": "NovaThingPostman",
+					"description": "NovaThingPostman3",
+					"properties": {},
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(10)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(10)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(10)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(10)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(10)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(11)",
+					"@iot.id": 11,
+					"name": "NovaThingPostman",
+					"description": "NovaThingPostman3",
+					"properties": {},
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(11)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(11)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(11)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(11)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(11)/Datastreams"
+				},
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(12)",
+					"@iot.id": 12,
+					"name": "NovaThingPostman3",
+					"description": "NovaThingPostman3",
+					"properties": {},
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(12)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(12)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(12)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(12)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(12)/Datastreams"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/description"
+				},
+				"properties": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/properties"
+				},
+				"Party@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Party@iot.navigationLink"
+				},
+				"HistoricalLocations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/HistoricalLocations@iot.navigationLink"
+				},
+				"Locations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Locations@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/MultiDatastreams@iot.navigationLink"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Datastreams@iot.navigationLink"
+				}
+			},
+			"x": -38,
+			"y": 88
+		},
+		{
+			"id": "34ppv.12jsh9",
+			"label": "Select 2",
+			"image": "SelectResourceSTA.png",
+			"shape": "circularImage",
+			"STAURL": "http://localhost:8080/FROST-Server/v1.0/Things(2)",
+			"STAdata": [
+				{
+					"@iot.selfLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)",
+					"@iot.id": 2,
+					"name": "ThingAmbElTapisModificadaAmbPostman",
+					"description": "ThingAmbElTapisModificadaAmbPostman",
+					"properties": {},
+					"Party@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)/Party",
+					"HistoricalLocations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)/HistoricalLocations",
+					"Locations@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)/Locations",
+					"MultiDatastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)/MultiDatastreams",
+					"Datastreams@iot.navigationLink": "http://localhost:8080/FROST-Server/v1.0/Things(2)/Datastreams"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/description"
+				},
+				"properties": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/properties"
+				},
+				"Party@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Party@iot.navigationLink"
+				},
+				"HistoricalLocations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/HistoricalLocations@iot.navigationLink"
+				},
+				"Locations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Locations@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/MultiDatastreams@iot.navigationLink"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Thing/Datastreams@iot.navigationLink"
+				}
+			},
+			"STAEntityName": "Things",
+			"STAResourceId": 2,
+			"x": 82,
+			"y": 72
+		},
+		{
+			"id": "5b5rv.qep41g",
+			"label": "Thing",
+			"image": "Thing.png",
+			"shape": "circularImage",
+			"x": 125,
+			"y": -45
+		}
+	],
+	"edges": [
+		{
+			"from": "1et86.0hmm05g",
+			"to": "1nt9g.63c1vbo",
+			"arrows": "from"
+		},
+		{
+			"from": "1et86.0hmm05g",
+			"to": "4lfmd.aj8nv6",
+			"arrows": "from"
+		},
+		{
+			"from": "4lfmd.aj8nv6",
+			"to": "34ppv.12jsh9",
+			"arrows": "from"
+		},
+		{
+			"from": "34ppv.12jsh9",
+			"to": "5b5rv.qep41g",
+			"arrows": "from"
+		}
+	]
+}

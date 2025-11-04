@@ -28,77 +28,33 @@
 
 
 	<script>
-		var n, properties, propertiesInEntity, propertiesKeys, value, c = "";
-		var infoSaved = deapCopy(node.STAMultiCreateInformation.infoSaved);
-		var parentsInformation = node.STAMultiCreateInformation.parentsInformation;
-		var parentsInformationKeys = Object.keys(parentsInformation);
+		const url = "http://localhost:8080/FROST-Server/v1.0/Things(2)";
+const options = {
+  method: "PUT",
+  headers: {
+    "Accept": "application/json, */*;q=0.8",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    name: "ThingAmbElTapisModificadaAmbPostman22",
+    description: "ThingAmbElTapisModificadaAmbPostman22",
+    properties: {}
+  })
+};
 
-		if (!multiRecordsOrigin) c += `<fieldset> `
-		//Entity box	
-		if (!multiRecordsOrigin) {
-			c += ((infoSaved.origin[0] == STAEntitiesArray[i])) ? `<legend>${entity}</legend>` : `<legend>${STAEntities[entity].singular}</legend>`; //Plural or singular
-		}
+async function updateThing() {
+  try {
+    const response = await fetch(url, options);
+    console.log("Resposta rebuda:", response);
 
-		propertiesKeys = Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties);
-		if (multiRecordsOrigin) propertiesKeys = propertiesKeys.filter(x => x != "id");
-		propertiesInEntity = [...STAEntities[entity].properties];
-		properties = [];
-		for (var p = 0; p < propertiesInEntity.length; p++) {
-			if (propertiesKeys.includes(propertiesInEntity[p].name)) properties.push({ name: STAEntities[entity].properties[p].name, required: STAEntities[entity].properties[p].required })
-		}
+    const data = await response.json().catch(() => "Resposta sense JSON");
+    console.log("Cos de la resposta:", data);
+  } catch (error) {
+    console.error("❌ Error en el fetch:", error);
+  }
+}
 
-		if (!properties.includes("id") && !multiRecordsOrigin) properties.unshift({ name: "id", required: "false" }); //Adding id as a property
-		n = properties.length;
-		var firstPropertyAdded = false;
-		//var propertiesArray = properties.map(x => x.name);
-
-		//id
-		c += `<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
-		c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_id" onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'id','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked == "id") ? "checked" : ""}>`
-
-		//other properties
-		for (var e = 0; e < n; e++) { //Properties
-			if (properties[e].name != "id") {
-				if ((entity != "Datastreams" && entity != "MultiDatastreams") || ((entity == "Datastreams" || entity != "MultiDatastreams") && (properties[e].name != "observedArea" && properties[e].name != "phenomenonTime" && properties[e].name != "resultTime"))) {
-					// if (properties[e].name == "id") {
-					// 	c += `<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
-					// 	c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_id" onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'id','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked == "id") ? "checked" : ""}>`
-					// }
-					if (firstPropertyAdded == false) {
-						c += `<div style="border: 1px solid black;">`;
-						firstPropertyAdded = true;
-						c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_properties"  onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'properties','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked != "id") ? "checked" : ""}>
-						<span style="font-weight: bold;">Properties</span><ul>`;
-					}
-					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', '${properties[e].name}')">`
-					if (properties[e].name != "id") c += `<li>`
-					c += `<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required == true) ? "*" : ""}: </label> 
-					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2] != "") ? ", '" + node.STAMultiCreateInformation.infoSaved.origin[2] + "'" : ''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text != "") ? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
-
-					c += `<option value="">-- Select attribute -- </option>`
-					for (var s = 0; s < parentsInformationKeys.length; s++) {//every key (parentNode) has ther attributes
-						c += `<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
-						for (var att = 0; att < parentsInformation[parentsInformationKeys[s]].attributesKeys.length; att++) { //parentNode attributes (keys)
-							value = `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
-							c += `<option value="${value}" data-nodeId="${parentsInformationKeys[s]}" data-column="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`; //value: idNode_attributeValue
-							if (node.STAMultiCreateInformation.infoSaved.entities[page][entity]?.properties[properties[e].name]?.attribute[0] == value) { //Options of select
-								c += " selected "
-							}
-							c += `>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
-						}
-						c += "</optgroup>"
-					}
-					c += `</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text} </span> <button onClick="showAttributesSelectInEntitiesBoxMultiCreateSTADialog('${page}','${entity}', '${properties[e].name}'${(node.STAMultiCreateInformation.infoSaved.origin[2] != "") ? ", '" + node.STAMultiCreateInformation.infoSaved.origin[2] + "'" : ''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text == "") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`
-					if (properties[e].name == "id") c += `</div>` //after id
-					else if (e == n - 1) c += ` </ul></div>` // after ast propety 
-				}
-			}
-
-
-		}
-		if (!multiRecordsOrigin) c += "</fieldset>"
-		return c;
-
+updateThing();
 	</script>
 </body>
 
