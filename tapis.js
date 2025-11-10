@@ -7734,6 +7734,19 @@ function networkDoubleClick(params) {
 				alert("Parent node must have data to replace it");
 			}
 		}
+		else if (currentNode.image == "datacompletenessomission.png") {
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode.STAdata) {
+					currentNode.STAdata= deapCopy(parentNode.STAdata);
+					currentNode.STAdataAttributes= deapCopy(parentNode.STAdataAttributes);
+					populateDialogQualityCompletnessOmission(currentNode);
+					networkNodes.update(currentNode)
+					document.getElementById("DialogQualityCompletnessOmission").showModal();
+			}else{
+				alert("Parent node must have data to analyze");
+			}
+		}
+		
 	}
 }
 
@@ -10085,6 +10098,44 @@ function getParentNodesProperties(node, infoArray){ //infoArray --> array with a
 		arrayWithAllNodesInfo.push(obj);
 	}
 	return arrayWithAllNodesInfo;
+}
+
+function populateDialogQualityCompletnessOmission(node){
+	var attributesCheckboxModule = populateAttributesListWithCheckbox(node.STAdataAttributes, node, "omission");
+	document.getElementById("DialogQualityCompletnessOmission_attributesList").innerHTML=attributesCheckboxModule;
+
+
+}
+function populateAttributesListWithCheckbox(attributes, node,place){
+	var attributesKeys=Object.keys(attributes);
+	saveNodeDialog("DialogQualityCompletnessOmission", node);
+	var c=`<fieldset><legend>Attributes</legend><select name="attributesList_${place}" id ="attributeList_${place}">`;
+	for (var i=0;i<attributesKeys.length;i++){
+		c+= `<option  value="${attributesKeys[i]}">${attributesKeys[i]}</option>`
+	}
+	c+="</select></fieldset>";
+	return c;
+}
+function okButtonDataQualityCompletnessOmission(event){
+	var node= getNodeDialog("DialogQualityCompletnessOmission");
+	var data= node.STAdata;
+	var select= document.getElementById("attributeList_omission");
+	var selected= select.options[select.selectedIndex].value;
+	var calculate=(document.getElementById("dataQuality_omission_calculate").checked)?true:false;
+	var flag= (document.getElementById("dataQuality_omission_flag").checked)?true:false;
+	var filter= (document.getElementById("dataQuality_omission_filter").checked)?true:false;
+	var globalOmission;
+
+	if (calculate)globalOmission= calculateDataQualityCompletnessOmission(data, selected);
+	if(flag){
+		data= addValidityFlagDataQualityCompletnessOmission(data, selected);
+	}
+	if (filter) data = dataFilteredDataQualityCompletnessOmission(data, selected);
+
+	node.STAdata=data;
+	networkNodes.update(node)
+
+
 }
 
 //async function GetObjectId(url, objsName, obj){

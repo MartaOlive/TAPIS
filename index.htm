@@ -53,6 +53,7 @@
 	<script type="text/javascript" src="aws.js"></script>
 	<script type="text/javascript" src="tapis.js"></script>
 	<script type="text/javascript" src="autocompleteMultiCreate.js"></script>
+	<script type="text/javascript" src="data_quality.js"></script>
 
 	<link rel="stylesheet" href="tapis.css">
 	<link rel="stylesheet" href="vis.network.css">
@@ -1687,7 +1688,25 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogQualityCompletnessOmission">
+		<div id="DialogUploadObservationsLoginFirst" >
+			<form>
+				<h3> Completness omission </h3>
+				<div id="DialogQualityCompletnessOmission_attributesList"></div>
+				<fieldset>
+					<legend>To do</legend>
+					<label><input type="checkbox" value="Omission_calculateRate" id="dataQuality_omission_calculate" name="dataQuality_omission" checked>Calculate the global omission rate (%)</label><br>
+					<label><input type="checkbox" value="Omission_flagBadRecords" id="dataQuality_omission_flag" name="dataQuality_omission">Flag the bad records (true/false)</label><br>
+					<label><input type="checkbox" value="Omission_filterBadRecords" id="dataQuality_omission_filter" name="dataQuality_omission">Filter the table to keep only valid records</label>
+				</fieldset>
+				<div class="center">
+					<button value="ok" onClick="okButtonDataQualityCompletnessOmission(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+				</div>
 
+			<input type="hidden" id="DialogQualityCompletnessOmissionNodeId"></input>
+			</form>
+		</div>
+	</dialog>
 	<!--dialog id="UploadTimeAverages">
 		<div id="UploadTimeAveragesLoginFirst" style="display: none;">
 		<form>
