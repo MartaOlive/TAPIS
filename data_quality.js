@@ -9,7 +9,8 @@ function calculateDataQualityCompletnessOmission(data, attribute){
     if (count !=0) dataQuality= (count/data.length)*100;
     else dataQuality=count;
 
-    return dataQuality.toFixed(2);
+
+    return [data.length, data.length - count, count, dataQuality.toFixed(2), 100-dataQuality.toFixed(2) ];//Total, true, false, %omission, %completesa
 }
 
 function addValidityFlagDataQualityCompletnessOmission(data, attribute){

@@ -171,7 +171,8 @@ const tableStatisticsVisualizeArray = Object.keys(tableStatisticsVisualize);
 const tableStatisticsVisualizeType = {singular: " Table tool for statistics and visualization", plural: "Table tools for statistics and visualization"};
 
 const dataQuality={
-	datacompletenessomission:{description: "data completness omission", help:"the degree to which all required data is present and recorded without missing or incomplete values" }
+	datacompletenessomission:{description: "Data completness omission", help:"the degree to which all required data is present and recorded without missing or incomplete values" },
+	logicalConsistency:{description: "Logical consistency", help:"Performs a logical consistency check to identify contradictions and ensure coherent data relationships." }
 
 }
 const dataQualityArray = Object.keys(dataQuality);
@@ -4973,7 +4974,7 @@ function addSemanticsSTADataAttributes(dataAttributes, url) {
 function ShowTableOptionsDiv(node, optionsDiv, fn_showTable) {
 	if (node.STAdata && node.STAdata.length)
 		document.getElementById(optionsDiv).innerHTML = "<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "RowNumber") || document.getElementById(optionsDiv + "RowNumber").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "RowNumber' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> Show row numbers</label> &ensp;" +
-								"<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "SelfNavLink") || document.getElementById(optionsDiv + "SelfNavLink").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "SelfNavLink' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> Show self and navigation links</label>";
+								"<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "SelfNavLink") || document.getElementById(optionsDiv + "SelfNavLink").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "SelfNavLink' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> Show self and navigation links</label> <label><img src='metadata.png' alt='metadata' title='metadata'> Metadata </label>";
 	else
 		document.getElementById(optionsDiv).innerHTML = "";
 }
@@ -7746,6 +7747,23 @@ function networkDoubleClick(params) {
 				alert("Parent node must have data to analyze");
 			}
 		}
+		else if (currentNode.image == "logicalConsistency.png") {
+			if (populateDialogQualityLogicalConsistency(currentNode)){
+				document.getElementById("DialogQualityLogicalConsistency").showModal();
+			}else{
+				alert ("Both a parent to evaluate and a reference parent are required.")
+			}
+			//var parentNode=GetFirstParentNode(currentNode);
+			//if (parentNode.STAdata) {
+			 		//currentNode.STAdata= deapCopy(parentNode.STAdata);
+			 		//currentNode.STAdataAttributes= deapCopy(parentNode.STAdataAttributes);
+			// 		populateDialogQualityCompletnessOmission(currentNode);
+			// 		networkNodes.update(currentNode)
+			// 		document.getElementById("DialogQualityCompletnessOmission").showModal();
+			// }else{
+			// 	alert("Parent node must have data to analyze");
+			// }
+		}
 		
 	}
 }
@@ -10124,18 +10142,58 @@ function okButtonDataQualityCompletnessOmission(event){
 	var calculate=(document.getElementById("dataQuality_omission_calculate").checked)?true:false;
 	var flag= (document.getElementById("dataQuality_omission_flag").checked)?true:false;
 	var filter= (document.getElementById("dataQuality_omission_filter").checked)?true:false;
-	var globalOmission;
+	var infoDataOmission;
 
-	if (calculate)globalOmission= calculateDataQualityCompletnessOmission(data, selected);
+	if (calculate)infoDataOmission= calculateDataQualityCompletnessOmission(data, selected); //Total, true, false, %omission, %completesa
 	if(flag){
 		data= addValidityFlagDataQualityCompletnessOmission(data, selected);
 	}
 	if (filter) data = dataFilteredDataQualityCompletnessOmission(data, selected);
 
 	node.STAdata=data;
-	networkNodes.update(node)
+	networkNodes.update(node);
+	networkNodes.update(currentNode);
+	document.getElementById("DialogQualityCompletnessOmission").close();
+	if(calculate){ //pensar si fer-ne una funció per tots
+		document.getElementById("dataQualityResult_info").innerHTML= `<table style="border: 1px solid black">
+		<thead > 
+		<th style="border: 1px solid black" >Attribute</th><th style="border: 1px solid black">Total records</th><th style="border: 1px solid black">Empty records</th>
+		<th style="border: 1px solid black">Omission rate</th><th style="border: 1px solid black">Completeness rate</th></tr></thead>
+		<tbody><tr>
+		<td style="border: 1px solid black">${selected}</td><td style="border: 1px solid black">${infoDataOmission[0]}</td><td style="border: 1px solid black">${infoDataOmission[2]}</td>
+		<td style="border: 1px solid black">${infoDataOmission[3]}</td><td style="border: 1px solid black">${infoDataOmission[4]}</td>
+		</tr></tbody></table>`
+	}
+	document.getElementById("dataQualityResult").showModal();
+	updateQueryAndTableArea(node);
+}
+function populateDialogQualityLogicalConsistency(node){
+	var parentsNodes= GetParentNodes(currentNode);
+	if (parentsNodes.length!=2) return false; //node to evaluate and reference nodes are required
+	var options="", objectKeys;
+	options+=`<option value="">--- Select attribute ---</option>`
+	for (var i=0;i<parentsNodes.length;i++){
+		if(parentsNodes.STAdata){
+			alert("Parent nodes do not contain data");
+			return false;
+		} 
+		objectKeys=Object.keys(parentsNodes[i].STAdataAttributes);
+		options+=`<optgroup label="${parentsNodes[i].label}"></optgroup>`
+		for (var e=0;e<objectKeys.length;e++){
+			options+=`<option value="${objectKeys[e]}">${objectKeys[e]}</option>`
+		}
+		options+="</optgroup>";
+	}
+	
+	document.getElementById("DialogQualityLogicalConsistency_attribute1_target").innerHTML= options;
+	document.getElementById("DialogQualityLogicalConsistency_attribute1_reference").innerHTML= options;
+	document.getElementById("DialogQualityLogicalConsistency_attribute2_target").innerHTML= options;
+	document.getElementById("DialogQualityLogicalConsistency_attribute2_reference").innerHTML= options;
+	document.getElementById("DialogQualityLogicalConsistency_attribute3_target").innerHTML= options;
+	document.getElementById("DialogQualityLogicalConsistency_attribute3_reference").innerHTML= options;
 
-
+	return true;
+	
 }
 
 //async function GetObjectId(url, objsName, obj){
