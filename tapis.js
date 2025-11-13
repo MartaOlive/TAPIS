@@ -10144,15 +10144,12 @@ function okButtonDataQualityCompletnessOmission(event){
 	var filter= (document.getElementById("dataQuality_omission_filter").checked)?true:false;
 	var infoDataOmission;
 
-	if (calculate)infoDataOmission= calculateDataQualityCompletnessOmission(data, selected); //Total, true, false, %omission, %completesa
-	if(flag){
-		data= addValidityFlagDataQualityCompletnessOmission(data, selected);
-	}
+	if (calculate)infoDataOmission= calculateDataQualityCompletnessOmission(data, selected); //Response:Total, true, false, %omission, %completness
+	if(flag)data= addValidityFlagDataQualityCompletnessOmission(data, selected);
 	if (filter) data = dataFilteredDataQualityCompletnessOmission(data, selected);
 
 	node.STAdata=data;
 	networkNodes.update(node);
-	networkNodes.update(currentNode);
 	document.getElementById("DialogQualityCompletnessOmission").close();
 	if(calculate){ //pensar si fer-ne una funció per tots
 		document.getElementById("dataQualityResult_info").innerHTML= `<table style="border: 1px solid black">
@@ -10168,8 +10165,19 @@ function okButtonDataQualityCompletnessOmission(event){
 	updateQueryAndTableArea(node);
 }
 function populateDialogQualityLogicalConsistency(node){
-	var parentsNodes= GetParentNodes(currentNode);
+	var parentsNodes= GetParentNodes(node);
+	saveNodeDialog("DialogQualityLogicalConsistency", node);
 	if (parentsNodes.length!=2) return false; //node to evaluate and reference nodes are required
+	var identificatingNodes="";
+	identificatingNodes+=`<label>Target node </label> 
+		<input type="radio" value="${parentsNodes[0].id}" name="DialogQualityLogicalConsistency_radiobutton_targetNode" id="DialogQualityLogicalConsistency_radiobutton_targetNode_0" checked> <label>${parentsNodes[0].label} </label>
+		<input type="radio" value="${parentsNodes[1].id}" name="DialogQualityLogicalConsistency_radiobutton_targetNode" id="DialogQualityLogicalConsistency_radiobutton_targetNode_1" > <label>${parentsNodes[1].label} </label><br>
+		<label>Reference node </label> 
+		<input type="radio" value="${parentsNodes[0].id}" name="DialogQualityLogicalConsistency_radiobutton_referenceNode" id="DialogQualityLogicalConsistency_radiobutton_referenceNode_0" checked> <label>${parentsNodes[0].label} </label>
+		<input type="radio" value="${parentsNodes[1].id}" name="DialogQualityLogicalConsistency_radiobutton_referenceNode" id="DialogQualityLogicalConsistency_radiobutton_referenceNode_1"> <label>${parentsNodes[1].label} </label>`
+	
+	document.getElementById("DialogQualityLogicalConsistency_targetAndReferenceNode").innerHTML= identificatingNodes;
+
 	var options="", objectKeys;
 	options+=`<option value="">--- Select attribute ---</option>`
 	for (var i=0;i<parentsNodes.length;i++){
@@ -10184,7 +10192,6 @@ function populateDialogQualityLogicalConsistency(node){
 		}
 		options+="</optgroup>";
 	}
-	
 	document.getElementById("DialogQualityLogicalConsistency_attribute1_target").innerHTML= options;
 	document.getElementById("DialogQualityLogicalConsistency_attribute1_reference").innerHTML= options;
 	document.getElementById("DialogQualityLogicalConsistency_attribute2_target").innerHTML= options;
@@ -10192,10 +10199,67 @@ function populateDialogQualityLogicalConsistency(node){
 	document.getElementById("DialogQualityLogicalConsistency_attribute3_target").innerHTML= options;
 	document.getElementById("DialogQualityLogicalConsistency_attribute3_reference").innerHTML= options;
 
-	return true;
-	
-}
 
+	return true;
+}
+function okButtonDataQualityDialogQualityLogicalConsistency(event){
+	var node= getNodeDialog("DialogQualityLogicalConsistency");
+	var targets =[];
+	var references=[];
+	var select, selectedTarget, selectedReference;
+	var dataTarget, dataReference, idTarget, idReference;
+	for (var i=1;i<4;i++){
+		select=document.getElementById(`DialogQualityLogicalConsistency_attribute${i}_target`);
+		selectedTarget= select.options[select.selectedIndex].value;
+		if(selectedTarget!=""){
+			select=document.getElementById(`DialogQualityLogicalConsistency_attribute${i}_reference`);
+			selectedReference= select.options[select.selectedIndex].value;
+			if(selectedReference!=""){
+				targets.push(selectedTarget);
+				references.push(selectedReference);
+			}
+		}
+	}
+	if (targets.length!=0){
+		var calculate=(document.getElementById("dataQuality_logicalConsistency_calculate").checked)?true:false;
+		var flag= (document.getElementById("dataQuality_logicalConsistency_flag").checked)?true:false;
+		var filter= (document.getElementById("dataQuality_logicalConsistency_filter").checked)?true:false;
+
+		//if (calculate)
+		idTarget= (document.getElementById("DialogQualityLogicalConsistency_radiobutton_targetNode_0").checked)?document.getElementById("DialogQualityLogicalConsistency_radiobutton_targetNode_0").value: document.getElementById("DialogQualityLogicalConsistency_radiobutton_targetNode_1").value;
+		idReference= (document.getElementById("DialogQualityLogicalConsistency_radiobutton_referenceNode_0").checked)?document.getElementById("DialogQualityLogicalConsistency_radiobutton_referenceNode_0").value: document.getElementById("DialogQualityLogicalConsistency_radiobutton_referenceNode_1").value;
+		
+		if(idTarget!=idReference){
+			var infoDatalogicalConsistency;
+			dataTarget= networkNodes.get(idTarget).STAdata;
+			dataReference= networkNodes.get(idReference).STAdata;
+			infoDatalogicalConsistency= calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, calculate, flag, filter); //Total, true, false, %logicalConsistency, %completesa
+			
+			node.STAdata= infoDatalogicalConsistency[0];
+			node.STAdataAttributes= getDataAttributes(infoDatalogicalConsistency[0]);
+			networkNodes.update(node);
+			document.getElementById("DialogQualityLogicalConsistency").close();
+
+			document.getElementById("dataQualityResult_info").innerHTML=`<table style="border: 1px solid black">
+		<thead > 
+		<th style="border: 1px solid black" >Target attributes</th><th style="border: 1px solid black" >Reference attributes</th><th style="border: 1px solid black">Total records</th>
+		<th style="border: 1px solid black">True records</th><th style="border: 1px solid black">Logical consistancy rate</th></tr></thead>
+		<tbody><tr>
+		<td style="border: 1px solid black">${targets}</td><td style="border: 1px solid black">${references}</td><td style="border: 1px solid black">${dataTarget.length}</td>
+		<td style="border: 1px solid black">${infoDatalogicalConsistency[1]}</td><td style="border: 1px solid black">${infoDatalogicalConsistency[2]}</td>
+		</tr></tbody></table>`
+
+			document.getElementById("dataQualityResult").showModal();
+			updateQueryAndTableArea(node);
+
+		}else{
+			alert("target node and reference node are the same are identified as the same")
+		}
+	}
+
+
+
+}
 //async function GetObjectId(url, objsName, obj){
 	//var response=await HTTPJSONData(url+"/"+objsName+ "?$filter=" + encodeURIComponent(AddKeysToFilter("", obj)));
 
