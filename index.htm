@@ -1711,23 +1711,99 @@
 		<div id="DialogUploadObservationsLoginFirst" >
 			<form>
 				<h3> Logical consistency</h3>
-				<div>
-					<fieldset>
-						<span id="DialogQualityLogicalConsistency_targetAndReferenceNode"></span>
+				<div id="DialogQualityLogicalConsistency_table_div">
+					<table style="border:2px solid black; border-collapse:collapse;">
+						<thead>
+							<th id="DialogQualityLogicalConsistency_table_0"
+								style="border:1px solid black; padding:6px; border-right:3px solid black; text-align:center;"></th>
+							<th id="DialogQualityLogicalConsistency_table_1"
+								style="border:1px solid black; padding:6px; text-align:center;"></th>
+						</thead>
+						<tbody>
+							<tr>
+								<td style="border:1px solid black; padding:6px; border-right:3px solid black; text-align:center;">
+									<select id="DialogQualityLogicalConsistency_select_targetOrReference_0">
+										<option value="target">Target</option>
+										<option value="reference">Reference</option>
+									</select>
+								</td>
+								<td style="border:1px solid black; padding:6px; text-align:center;">
+									<select id="DialogQualityLogicalConsistency_select_targetOrReference_1">
+										<option value="target">Target</option>
+										<option value="reference">Reference</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td style="border-top:1px solid black; border-left:1px solid black; padding:6px;
+										border-right:3px solid black; text-align:center; padding-bottom:0px;">
+									Attribute 1
+								</td>
+								<td style="border-top:1px solid black; border-right:1px solid black; padding:6px;
+										border-left:3px solid black; text-align:center; padding-bottom:0px;">
+									Attribute 1
+								</td>
+							</tr>
+							<tr>
+								<td style="border-bottom:1px solid black; border-left:1px solid black; padding:6px;
+										border-right:3px solid black; text-align:center;">
+									<select id="DialogQualityLogicalConsistency_selectAttribute1_0"
+											style="margin:0 5px 0 5px;"></select>
+								</td>
+								<td style="border-bottom:1px solid black; border-right:1px solid black; padding:6px;
+										border-left:3px solid black; text-align:center;">
+									<select id="DialogQualityLogicalConsistency_selectAttribute1_1"
+											style="margin:0 5px 0 5px;"></select>
+								</td>
+							</tr>
+							<tr>
+								<td style="border-top:1px solid black; border-left:1px solid black; padding:6px;
+										border-right:3px solid black; text-align:center; padding-bottom:0px;">
+									Attribute 2
+								</td>
+								<td style="border-top:1px solid black; border-right:1px solid black; padding:6px;
+										border-left:3px solid black; text-align:center; padding-bottom:0px;">
+									Attribute 2
+								</td>
+							</tr>
+							<tr>
+								<td style="border-bottom:1px solid black; border-left:1px solid black; padding:6px;
+										border-right:3px solid black; text-align:center;">
+									<select id="DialogQualityLogicalConsistency_selectAttribute2_0"
+											style="margin:0 5px 0 5px;"></select>
+								</td>
+								<td style="border-bottom:1px solid black; border-right:1px solid black; padding:6px;
+										border-left:3px solid black; text-align:center;">
+									<select id="DialogQualityLogicalConsistency_selectAttribute2_1"
+											style="margin:0 5px 0 5px;"></select>
+								</td>
+							</tr>
+							<tr>
+								<td style="border-top:1px solid black; border-left:1px solid black; padding:6px;
+										border-right:3px solid black; text-align:center; padding-bottom:0px;">
+									Attribute 3
+								</td>
+								<td style="border-top:1px solid black; border-right:1px solid black; padding:6px;
+										border-left:3px solid black; text-align:center; padding-bottom:0px;">
+									Attribute 3
+								</td>
+							</tr>
+							<tr>
+								<td style="border-bottom:1px solid black; border-left:1px solid black; padding:6px;
+										border-right:3px solid black; text-align:center;">
+									<select id="DialogQualityLogicalConsistency_selectAttribute3_0"
+											style="margin:0 5px 0 5px;"></select>
+								</td>
+								<td style="border-bottom:1px solid black; border-right:1px solid black; padding:6px;
+										border-left:3px solid black; text-align:center;">
+									<select id="DialogQualityLogicalConsistency_selectAttribute3_1"
+											style="margin:0 5px 0 5px;"></select>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					</div>
 
-					</fieldset>
-					<fieldset><legend>Attribute 1</legend>
-						<label>Target attribute</label> <select id="DialogQualityLogicalConsistency_attribute1_target"></select>
-						<label>Reference attribute</label> <select id="DialogQualityLogicalConsistency_attribute1_reference"></select>
-					</fieldset>
-					<fieldset><legend>Attribute 2</legend>
-						<label>Target attribute</label> <select id="DialogQualityLogicalConsistency_attribute2_target"></select>
-						<label>Reference attribute</label> <select id="DialogQualityLogicalConsistency_attribute2_reference"></select></fieldset>
-					<fieldset><legend>Attribute 3</legend>
-						<label>Target attribute</label> <select id="DialogQualityLogicalConsistency_attribute3_target"></select>
-						<label>Reference attribute</label> <select id="DialogQualityLogicalConsistency_attribute3_reference"></select>
-					</fieldset>
-				</div>
 				<fieldset>
 					<legend>To do</legend>
 					<label><input type="checkbox" value="logicalConsistency_calculateRate" id="dataQuality_logicalConsistency_calculate" name="dataQuality_logicalConsistency" checked>Calculate the global LogicalConsistency rate (%)</label><br>

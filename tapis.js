@@ -10168,36 +10168,40 @@ function populateDialogQualityLogicalConsistency(node){
 	var parentsNodes= GetParentNodes(node);
 	saveNodeDialog("DialogQualityLogicalConsistency", node);
 	if (parentsNodes.length!=2) return false; //node to evaluate and reference nodes are required
-	var identificatingNodes="";
-	identificatingNodes+=`<label>Target node </label> 
-		<input type="radio" value="${parentsNodes[0].id}" name="DialogQualityLogicalConsistency_radiobutton_targetNode" id="DialogQualityLogicalConsistency_radiobutton_targetNode_0" checked> <label>${parentsNodes[0].label} </label>
-		<input type="radio" value="${parentsNodes[1].id}" name="DialogQualityLogicalConsistency_radiobutton_targetNode" id="DialogQualityLogicalConsistency_radiobutton_targetNode_1" > <label>${parentsNodes[1].label} </label><br>
-		<label>Reference node </label> 
-		<input type="radio" value="${parentsNodes[0].id}" name="DialogQualityLogicalConsistency_radiobutton_referenceNode" id="DialogQualityLogicalConsistency_radiobutton_referenceNode_0" checked> <label>${parentsNodes[0].label} </label>
-		<input type="radio" value="${parentsNodes[1].id}" name="DialogQualityLogicalConsistency_radiobutton_referenceNode" id="DialogQualityLogicalConsistency_radiobutton_referenceNode_1"> <label>${parentsNodes[1].label} </label>`
-	
-	document.getElementById("DialogQualityLogicalConsistency_targetAndReferenceNode").innerHTML= identificatingNodes;
 
-	var options="", objectKeys;
-	options+=`<option value="">--- Select attribute ---</option>`
-	for (var i=0;i<parentsNodes.length;i++){
-		if(parentsNodes.STAdata){
-			alert("Parent nodes do not contain data");
-			return false;
-		} 
-		objectKeys=Object.keys(parentsNodes[i].STAdataAttributes);
-		options+=`<optgroup label="${parentsNodes[i].label}"></optgroup>`
-		for (var e=0;e<objectKeys.length;e++){
-			options+=`<option value="${objectKeys[e]}">${objectKeys[e]}</option>`
-		}
-		options+="</optgroup>";
+	document.getElementById("DialogQualityLogicalConsistency_table_0").innerHTML=parentsNodes[0].label;
+	document.getElementById("DialogQualityLogicalConsistency_table_1").innerHTML=parentsNodes[1].label;
+	var div= document.getElementById("DialogQualityLogicalConsistency_table_div");
+	var options1="",options2="", objectKeys;
+	//node 1
+	if(!parentsNodes[0].STAdata){
+		alert("Parent nodes do not contain data");
+		return false;
 	}
-	document.getElementById("DialogQualityLogicalConsistency_attribute1_target").innerHTML= options;
-	document.getElementById("DialogQualityLogicalConsistency_attribute1_reference").innerHTML= options;
-	document.getElementById("DialogQualityLogicalConsistency_attribute2_target").innerHTML= options;
-	document.getElementById("DialogQualityLogicalConsistency_attribute2_reference").innerHTML= options;
-	document.getElementById("DialogQualityLogicalConsistency_attribute3_target").innerHTML= options;
-	document.getElementById("DialogQualityLogicalConsistency_attribute3_reference").innerHTML= options;
+	options1+=`<option value="">--- Select attribute ---</option>`;
+	objectKeys=Object.keys(parentsNodes[0].STAdataAttributes);
+	for (var e=0;e<objectKeys.length;e++){
+		options1+=`<option value="${objectKeys[e]}">${objectKeys[e]}</option>`
+	}
+	div.setAttribute("data-value_0", parentsNodes[0].id);
+	//node 2
+	if(!parentsNodes[1].STAdata){
+		alert("Parent nodes do not contain data");
+		return false;
+	}
+	options2+=`<option value="">--- Select attribute ---</option>`;
+	objectKeys=Object.keys(parentsNodes[1].STAdataAttributes);
+	for (var e=0;e<objectKeys.length;e++){
+		options2+=`<option value="${objectKeys[e]}">${objectKeys[e]}</option>`
+	}
+	div.setAttribute("data-value_1", parentsNodes[1].id);
+
+	document.getElementById("DialogQualityLogicalConsistency_selectAttribute1_0").innerHTML= options1;
+	document.getElementById("DialogQualityLogicalConsistency_selectAttribute2_0").innerHTML= options1;
+	document.getElementById("DialogQualityLogicalConsistency_selectAttribute3_0").innerHTML= options1;
+	document.getElementById("DialogQualityLogicalConsistency_selectAttribute1_1").innerHTML= options2;
+	document.getElementById("DialogQualityLogicalConsistency_selectAttribute2_1").innerHTML= options2;
+	document.getElementById("DialogQualityLogicalConsistency_selectAttribute3_1").innerHTML= options2;
 
 
 	return true;
@@ -10206,13 +10210,26 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 	var node= getNodeDialog("DialogQualityLogicalConsistency");
 	var targets =[];
 	var references=[];
-	var select, selectedTarget, selectedReference;
+	var select, selected, selectedTarget, selectedReference;
 	var dataTarget, dataReference, idTarget, idReference;
+	var numTargued, numReference;
+
+	//Wich node is targed and wich reference
+	select= document.getElementById("DialogQualityLogicalConsistency_select_targetOrReference_0");
+	selected= select.options[select.selectedIndex].value;
+	if(selected=="targed"){
+		numTargued=0;
+		numReference=1; 
+	}else{
+		numTargued=1;
+		numReference=0; 	
+	}
+
 	for (var i=1;i<4;i++){
-		select=document.getElementById(`DialogQualityLogicalConsistency_attribute${i}_target`);
+		select=document.getElementById(`DialogQualityLogicalConsistency_selectAttribute${i}_${numTargued}`);
 		selectedTarget= select.options[select.selectedIndex].value;
 		if(selectedTarget!=""){
-			select=document.getElementById(`DialogQualityLogicalConsistency_attribute${i}_reference`);
+			select=document.getElementById(`DialogQualityLogicalConsistency_selectAttribute${i}_${numReference}`);
 			selectedReference= select.options[select.selectedIndex].value;
 			if(selectedReference!=""){
 				targets.push(selectedTarget);
@@ -10225,10 +10242,14 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 		var flag= (document.getElementById("dataQuality_logicalConsistency_flag").checked)?true:false;
 		var filter= (document.getElementById("dataQuality_logicalConsistency_filter").checked)?true:false;
 
-		//if (calculate)
-		idTarget= (document.getElementById("DialogQualityLogicalConsistency_radiobutton_targetNode_0").checked)?document.getElementById("DialogQualityLogicalConsistency_radiobutton_targetNode_0").value: document.getElementById("DialogQualityLogicalConsistency_radiobutton_targetNode_1").value;
-		idReference= (document.getElementById("DialogQualityLogicalConsistency_radiobutton_referenceNode_0").checked)?document.getElementById("DialogQualityLogicalConsistency_radiobutton_referenceNode_0").value: document.getElementById("DialogQualityLogicalConsistency_radiobutton_referenceNode_1").value;
-		
+	if (numTargued==0){
+		idTarget=document.getElementById("DialogQualityLogicalConsistency_table_div").getAttribute("data-value_0");
+		idReference=document.getElementById("DialogQualityLogicalConsistency_table_div").getAttribute("data-value_1")
+	}else{
+		idTarget=document.getElementById("DialogQualityLogicalConsistency_table_div").getAttribute("data-value_1");
+		idReference=document.getElementById("DialogQualityLogicalConsistency_table_div").getAttribute("data-value_0");
+	}
+
 		if(idTarget!=idReference){
 			var infoDatalogicalConsistency;
 			dataTarget= networkNodes.get(idTarget).STAdata;
