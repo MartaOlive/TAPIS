@@ -192,7 +192,7 @@ function UnSubscribeTopicToWebHub(nodeId) {
 		}
 	}
 	if (!subsc) {	
-		WSfmessage("Subscription for the node not found");
+		if (WSfmessage) WSfmessage("Subscription for the node not found");
 		return;
 	}
 

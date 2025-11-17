@@ -7,8 +7,7 @@ function applyAutocompleteFunctioniNaturalist(node) {
         c.push(`<option value="${parentNodesKeys[i]}">${node.STAMultiCreateInformation.parentsInformation[parentNodesKeys[i]].label} </option>`)
     }
     select.innerHTML = c.join("");
-
-    document.getElementById("DialogMultiCreateSTAINaturalist").showModal();
+    showNodeDialog("DialogMultiCreateSTAINaturalist");
 }
 function addINatEntitiesInfoToNode(node, nodeId) {
     var photos = (document.getElementById("ObservationsToCreate_photo").checked) ? true : false;
@@ -292,8 +291,9 @@ function ChooseObservationsToCreateINAT2STAPlus(event) {
     var select = document.getElementById("DialogMultiCreateSTAINaturalist_select");
     var selectedValue = select.options[select.selectedIndex].value;
     addINatEntitiesInfoToNode(node, selectedValue)
-    drawMultiCreateSTADialogiNaturalist(node)
-    document.getElementById("DialogMultiCreateSTAINaturalist").close()
+    drawMultiCreateSTADialogiNaturalist(node);
+    hideNodeDialog("DialogMultiCreateSTAINaturalist", event);
+    
 }
 
 function drawMultiCreateSTADialogiNaturalist(node) {

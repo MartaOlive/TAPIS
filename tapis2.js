@@ -47,15 +47,12 @@
 
 /*
 Some things that I'm always looking for:
-Function to hide a dialog box: hideNodeDialog()
-Function to show a dialog box: showNodeDialog()
 Function to include the nodeId as a hidden value in a dialog: saveNodeDialog(div_id, node)
 Function to get the nodeId from a dialog: getNodeDialog(div_id) 
 
 Function to send a message to the message box: showInfoMessage(); 
 
 Function to redraw the table view: updateQueryAndTableArea(node);
-Function to update the child nodes: UpdateChildenLoadJSONCallback(node);
 Function to show and informative message in the screen: showInfoMessage();
 
 Function to get the character representing the column type getHTMLCharacterAttributeType();
@@ -64,9 +61,7 @@ Function to open a link in the graph: OpenLink(event)
 Function to decide what is a link in the table view: isAttributeAnyURI(s)
 Function to decide what is a link in the table that is a special link in the graph: isAttributeAnyURINode() (used in isAttributeAnyURINodeId() that is used in ShowLinkDialog(nodeId, columnName, iRecord))
 
-Function to define the dependence compatibility: reasonNodeDoesNotFitWithPrevious(nodeTo, nodeFrom);
-Function that reacts to a double click on a node: networkDoubleClick()
-Function that reacts to the creation of a node: StartCircularImage()
+Function to define the dependence compatibility reasonNodeDoesNotFitWithPrevious(nodeTo, nodeFrom);
 */
 
 var config;
@@ -90,7 +85,7 @@ const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", sta
 const ServicesAndAPIsArray = Object.keys(ServicesAndAPIs);
 const ServicesAndAPIsType = {singular: "Data input tool", plural: "Data input tools"};
 
-const STAEntities = {
+const STAEntities = { 
 	Campaigns: { singular: "Campaign", entities: [{name: "Datastreams", required: false}, {name: "MultiDatastreams", required: false}, {name: "Party", required: true}, {name: "License", required: false}, {name:"ObservationGroups", required:"false"}], properties: [{name: "name", dataType: "string", required: true}, {name: "description", dataType: "string", required: true}, {name: "classification", dataType: "string", required: false}, {name: "termsOfUse", dataType: "string", required: true}, {name: "privacyPolicy", dataType: "string", required: false}, {name: "creationTime", dataType: "isodatetime", required: true}, {name: "url", dataType: "URI", required: false}, {name: "startTime", dataType: "isodatetime", required: false}, {name: "endTime", dataType: "isodatetime", required: false}, {name: "properties", dataType: "JSON", required: false}], help: "Visualize through a table the Campaigns of this STAPlus service.", helpEdit: "Create, edit or delete an Campaign in a STAPlus service."},
 	Cells: { singular: "Cell", entities: [{name: "Datastreams", required: false}, {name: "MultiDatastreams", required: false}, {name: "Observations", required: false}], properties: [{name: "zoneId", dataType: "string", required: true}, {name: "zoneLevel", dataType: "integer", required: false}, {name: "properties", dataType: "JSON", required: false}], help: "Visualize through a table the Cells of this STAPlus service.", helpEdit: "Create, edit or delete a Cell in a STAPlus service."},
 	Datastreams: { singular: "Datastream", entities: [{name: "Party", required: true}, {name: "Sensor", required: true}, {name: "ObservedProperty", required: true}, {name: "Campaigns", required: false}, {name: "License", required: false}, {name: "Observations", required: false}, {name: "Thing", required: true}, {name: "Cells", required: false}], properties: [{name: "name", dataType: "string", required: true}, {name: "description", dataType: "string", required: true}, {name: "observationType", dataType: "string", required: true}, {name: "unitOfMeasurement", dataType: "JSON", required: true}, {name: "observedArea", dataType: "object", required: false}, {name: "phenomenonTime", dataType: "data_isoperiod", required: false}, {name: "resultTime", dataType: "data_isoperiod", required: false}, {name: "properties", dataType: "JSON", required: false}], help: "Visualize through a table the Datastreams of this STAPlus service.", helpEdit: "Create, edit or delete a Datastream in a STAPlus service."},
@@ -107,6 +102,7 @@ const STAEntities = {
 	Sensors: { singular: "Sensor", entities: [{name: "Datastreams", required: false}, {name: "MultiDatastreams", required: false}], properties: [{name: "name", dataType: "string", required: true}, {name: "description", dataType: "string", required: true}, {name: "encodingType", dataType: "string", required: true}, {name: "metadata", dataType: "", required: true}, {name: "properties", dataType: "JSON", required: false}], help: "Visualize through a table the Sensors of this STAPlus service.", helpEdit: "Create, edit or delete a Sensor in a STAPlus service."},
 	Things: { singular: "Thing", entities: [{name: "Datastreams", required: false}, {name: "MultiDatastreams", required: false}, {name: "Party", required: true}, {name: "Locations", required: false}, {name: "HistoricalLocations", required: false}], properties: [{name: "name", dataType: "string", required: true}, {name: "description", dataType: "string", required: true}, {name: "properties", dataType: "JSON", required: false}], help: "Visualize through a table the Things of this STAPlus service.", helpEdit: "Create, edit or delete a Thing in a STAPlus service."}
 };
+
 const STAEntitiesArray = Object.keys(STAEntities);
 const STAEntitiesType = {singular: "STA entity reading tool", plural: "STA entities reading tool", 
 			singularEdit: "STA entity transaction tool", pluralEdit: "STA entities create, edit or delete tool"};
@@ -130,9 +126,10 @@ const STAOperations = {RecursiveExpandSTA: {description: "Recursive Expand", cal
 			UploadObservations: {description: "Upload in STA", leafNode: true, help: "Saves some observations to a SensorThings API or a STAplus server."},
 			CalculateStatisticsSTA: {description: "Upload statistics in STA", leafNode: true, help: "Saves statistics of Observations in SensorThings API or a STAplus server."},
 			//UploadTimeAverages: {description: "Upload time averages", leafNode: true},
-			CountResultsSTA: { description: "Count results", leafNode: true, help: "Returns the total number of records returned by the API query without loading them in a table. Only with STA data. Requeres to be connected to a SensorThings API or a STAplus entity node. This node can not be connected to other dependend nodes."},
-			OneValueSTA: {description: "One Value", leafNode: true, help: "Shows the last posted value. This value is updated according to the time period you set. Requeres to be connected to another SensorThings API or a STAplus entity. If WebSub available, it subscribes to a topic, opens a websocket connection and waits for updates, if not, it generates a HTTP request every n seconds. Do not requre to connect to previous sort by time. This node can not be connected to other dependend nodes."},
-			SubscribeSTA: {description: "Subscribe and alert", help: "Subscribes to notifications of change in the parent resource. It requires that the parent node is a STA or STAplus with WebSub available. Then it subscribes to a topic and opens a websocket connection and waits for updates. When new records are received, they are immediately added to the table."}};
+			OneValueSTA: {description: "One Value", leafNode: true, help: "Shows the last posted value. This value is updated according to the time period you set. Requeres to be connected to another SensorThings API or a STAplus entity. Do not requre to connect to previous sort by time. This node can not be connected to other dependend nodes."},
+			MultiCreateSTA: { description: "Multi create STA", leafNode: true, help:"Create and send to STAPlus service several records at the same time. It is necessary to take into account the obligations of the different entities."},
+
+			CountResultsSTA: { description: "Count results", leafNode: true, help: "Returns the total number of records returned by the API query without loading them in a table. Only with STA data. Requeres to be connected to another SensorThings API or a STAplus entity. This node can not be connected to other dependend nodes."}};
 const STAOperationsArray = Object.keys(STAOperations);
 const STAOperationsType = {singular: "STA tool", plural: "STA tools"};
 
@@ -150,7 +147,7 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			SortByTables: {description: "Sort by", callSTALoad: true, help: "Gets a table with data sorted by a given criteria."},
 			AggregateColumns: {description: "Aggregate Columns", help: "Adds a new column to a table with the aggregation of other previous selected columns."},
 			CreateColumns: {description: "Create Columns", help: "Adds a new column to your table. This column can be left empty, filled with a constant value or filled with an autoincremental value."},
-			AddColumnGeo: {description: "Add geospatial column", help: "Adds a new geospatial column to your table that is a format transformation of a preexisting geospatial column. The column can be a GeoJSON geometry, a Well Known Text, a Geohash, a Uber H3 or a pair of longitude/latitude columns."},
+			AddColumnGeo: {description: "Add geospatial column", help: "Adds a new geospatial column to your table that is a format transformation of a preexisting geospatial column. The column can be a GeoJSON geometry, a Well Known Text, a Geohash or a pair of longitude/latitude columns."},
 			ColumnsCalculator: {description: "Columns calculator", help: "Adds a new column to your table where for each record the new column contains the result of an operation involving other column values of that record."},
 			PivotTable: {description: "Pivot table", help:"Create a new table where some column content is transponsed into new columns" },
 			ColumnStatistics: {description:"Columns statistics", help: "Create a table where, for each column the main statistics for the column values of all records are recorded."},
@@ -181,7 +178,6 @@ const dataQuality={
 }
 const dataQualityArray = Object.keys(dataQuality);
 const dataQualityType = {singular: " Table tool for data quality", plural: "Table tools for data quality"};
-
 function IdOfSTAEntity(node) {
 	for (var i = 0; i < STAEntitiesArray.length; i++) {
 		if (node.image == STAEntitiesArray[i] + ".png")
@@ -278,7 +274,8 @@ function getConnectionSTAEntity(parentNode, node) {
 
 	if (parentPlural)
 	{
-		if (null!=getSTAURLSelectingARow(parentNode.STAURL))
+		if (parentNode.STAdata.length==1)
+
 		{
 			//Determinino si ha de ser singular o plural
 			var entityName=transformToSingularIfNeededSTAEntity(parentEntity, nextEntity)
@@ -607,7 +604,7 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 	cdns.push(generalBox.replace("TITLE", ServicesAndAPIsType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 	
 	provisional=[];
-	for (var i = 0; i < STAEntitiesArray.length; i++) { //Plural
+	for (var i = 0; i < STAEntitiesArray.length; i++) { //Plural 
 		node.image= STAEntitiesArray[i]+".png";
 		if (!nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular), 
@@ -617,7 +614,6 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 		cdns.push(generalBox.replace("TITLE", STAEntitiesType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 
 	provisional=[];
-
 	for (var i = 0; i < STAEntitiesArray.length; i++) { //Singular (create, update, delete)
 		node.image= STAEntitiesArray[i]+".png";
 		if(parentNode.STAEntityName== STAEntitiesArray[i]){
@@ -669,6 +665,7 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 	}
 	if (provisional.length>1)
 		cdns.push(generalBox.replace("TITLE",tableStatisticsVisualizeType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
+	
 	provisional=[];
 	for (var i = 0; i < dataQualityArray.length; i++) {
 		node.image= dataQualityArray[i]+".png";
@@ -678,8 +675,6 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 	}
 	if (provisional.length>1)
 		cdns.push(generalBox.replace("TITLE",dataQualityType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
-
-	
 	//cdns.push("</div>");
 	document.getElementById("ButtonsContextMenuObjects").innerHTML = cdns.join("");
 }
@@ -1141,7 +1136,6 @@ function RetrieveMeaningTableCallback(usage_descr, params_function) {
 	showInfoMessage("Meaning retrieved from NiMMbus.");
 }
 
-
 function RetrieveMeaningTable(event, type) {
 	event.preventDefault(); // We don't want to submit this form
 	if (document.getElementById("DialogImportMeaning"+type+"SourceAuto")?.checked && 
@@ -1161,7 +1155,7 @@ function RetrieveMeaningTable(event, type) {
 	}
 	if (!currentNode.STAdata) {
 		if (confirm("No data has been loaded. Do you want to close this window anyway?"))
-			hideNodeDialog("DialogImport"+type);
+			document.getElementById("DialogImport"+type).close();
 	}
 	else{
 		if (document.getElementById("DialogImportMeaning"+type+"SourceNone")?.checked)
@@ -1169,8 +1163,8 @@ function RetrieveMeaningTable(event, type) {
 		networkNodes.update(currentNode);
 		updateQueryAndTableArea(currentNode);
 		UpdateChildenTable(currentNode);
-		hideNodeDialog("DialogImport"+type);
-	}		
+		document.getElementById("DialogImport"+type).close();
+	}
 }
 
 function TransformTextCSVWToDataAttributes(csvwText, node)
@@ -1911,7 +1905,7 @@ function OpenHelp(event) {
 }
 
 function OpenConfiguration(event) {
-	showNodeDialog("DialogConfiguration");
+	document.getElementById("DialogConfiguration").showModal();
 }
 
 // Helper function to parse the JWT token
@@ -1997,8 +1991,8 @@ function UpdateConfiguration()
 }
 
 function ChangeConfiguration(event) {
-	//document.getElementById("DialogConfiguration").close(document.getElementById("DialogConfigurationFontSize").value);
-	hideNodeDialog("DialogConfiguration", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogConfiguration").close(document.getElementById("DialogConfigurationFontSize").value);
 	UpdateConfiguration();
 }
 
@@ -2008,8 +2002,9 @@ function ApplyConfiguration(event) {
 }
 
 function GetSTAURLEvent(event, url) {
-	//document.getElementById("DialogSTAURL").close(document.getElementById("DialogSTAURLInput").value);
-	hideNodeDialog("DialogSTAURL", event);
+	if (event)
+		event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogSTAURL").close(document.getElementById("DialogSTAURLInput").value);
 	
 	var node=getNodeDialog("DialogSTAURL");
 	if (!url && ((node.image == "sta.png" && node.STAURL == document.getElementById("DialogSTAURLInput").value) ||
@@ -2098,8 +2093,9 @@ function TransformS3ServiceResponseToDataAttributes(node, text) {
 }
 
 function GetDialogS3BucketEvent(event, url, security) {
-	//document.getElementById("DialogS3Bucket").close(document.getElementById("DialogS3BucketURL").value);
-	hideNodeDialog("DialogS3Bucket", event);
+	if (event)
+		event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogS3Bucket").close(document.getElementById("DialogS3BucketURL").value);
 	var node=getNodeDialog("DialogS3Bucket");
 
 	if (false==ChangeToHTTPS(true))
@@ -2145,7 +2141,8 @@ function TransformEDCCatalogResponseToDataAttributes(node, obj) {
 }
 
 function GetDialogEDCEvent(event) {
-	hideNodeDialog("DialogEDC", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogEDC").close();
 
 	var previousSTAURL = currentNode.STAURL;
 	currentNode.STAURL = document.getElementById("DialogEDCCatalogURL").value;
@@ -2284,7 +2281,8 @@ function ShowCalculateStatisticsSTADialog(node) {
 }
 
 function UploadCalculateStatisticsSTAEvent(event, create) {
-	hideNodeDialog("DialogCalculateStatisticsSTA", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogCalculateStatisticsSTA").close();
 	var node=getNodeDialog("DialogCalculateStatisticsSTA");
 
 	var parentNode=GetFirstParentNode(node);
@@ -2567,27 +2565,6 @@ function saveNodeDialog(div_id, node) {
 	document.getElementById(div_id + "NodeId").value=node.id;
 }
 
-var aDialogIsOpen=false;
-function showNodeDialog(div_id) {
-	document.getElementById(div_id).showModal();
-	aDialogIsOpen=true;
-}
-
-function isNodeDialogOpen(div_id) {
-	if (aDialogIsOpen)
-		return document.getElementById(div_id).open;
-	return false;
-}
-
-
-function hideNodeDialog(div_id, event) {
-	if (event)
-		event.preventDefault(); // We don't want to submit this form
-	document.getElementById(div_id).close();
-	aDialogIsOpen=false;
-}
-
-
 function GetFirstParentNode(node) {
 	var nodeids = network.getConnectedNodes(node.id, "from");
 	if (nodeids && nodeids.length && networkNodes.get(nodeids[0]))
@@ -2732,8 +2709,6 @@ function UpdateNodeId(nodeId, record){
 		return;
 	if (node.image=="OneValueSTA.png")
 		getOneValueLabel(node, record);
-	else if (node.image=="SubscribeSTA.png")
-		addRecordToTableAndShow(node, record);
 }
 
 function ShowOneValueDialog(node) {
@@ -2760,7 +2735,8 @@ function ShowOneValueDialog(node) {
 }
 
 function PrepareRefreshOneValue(event) {
-	hideNodeDialog("DialogOneValue", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogOneValue").close();
 
 	var node=getNodeDialog("DialogOneValue");
 	if (!node)
@@ -2777,11 +2753,12 @@ function PrepareRefreshOneValue(event) {
 	node.STAOneValue.alertValue=document.getElementById("DialogOneValueAlertValue").value;
 	networkNodes.update(node);
 
-	RequestLastObservationAndRefreshOneValueSTA(node);
+	RequestLastObservationAndRefreshOneValue(node);
 }
 
 function StopRefreshOneValue(event) {
-	hideNodeDialog("DialogOneValue", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogOneValue").close();
 
 	var node=getNodeDialog("DialogOneValue");
 	if (!node)
@@ -2797,7 +2774,8 @@ function StopRefreshOneValue(event) {
 
 
 function prepareRefreshCountResults(event) {
-	hideNodeDialog("DialogCountResults", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogCountResults").close();
 
 	var node=getNodeDialog("DialogCountResults");
 	if (!node)
@@ -2815,7 +2793,8 @@ function prepareRefreshCountResults(event) {
 }
 
 function stopRefreshCountResults(event) {
-	hideNodeDialog("DialogCountResults", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogCountResults").close();
 
 	var node=getNodeDialog("DialogCountResults");
 	if (!node)
@@ -2828,50 +2807,9 @@ function stopRefreshCountResults(event) {
 }
 
 function closeDialogCountResults(event) {
-	hideNodeDialog("DialogCountResults", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogCountResults").close();
 }
-
-/*
-function PrepareRefreshSubscribe(event) {
-	hideNodeDialog("DialogSubscribe", event);
-
-	var node=getNodeDialog("DialogSubscribe");
-	if (!node)
-		return;	
-
-	if (node.STAtimeOut) {
-		clearTimeout(node.STAtimeOut);
-		node.STAtimeOut=null;
-	}
-	node.STAOneValue={};
-	node.STAOneValue.variable=document.getElementById("DialogOneValueVariableSelect").value;
-	node.STAOneValue.timeVariable=document.getElementById("DialogOneValueTimeSelect").value;
-	node.STAOneValue.redrawPeriod=document.getElementById("DialogOneValueRefreshPeriod").value;
-	node.STAOneValue.alertValue=document.getElementById("DialogOneValueAlertValue").value;
-	networkNodes.update(node);
-
-	RequestLastObservationAndRefreshOneValueSTA(node);
-}
-
-function StopRefreshSubscribe(event) {
-	hideNodeDialog("DialogSubscribe", event);
-
-	var node=getNodeDialog("DialogSubscribe");
-	if (!node)
-		return;	
-
-	if (node.STAtimeOut) {
-		clearTimeout(node.STAtimeOut);
-		showInfoMessage("Refresh cancelled.");
-	} else {
-		UnSubscribeTopicToWebHub(node.id);
-	}
-}
-
-function closeDialogSubscribe(event) {
-	hideNodeDialog("DialogSubscribe", event);
-}
-*/
 
 function getTimeISOTime(isodatetime) {
 	var d=new Date(isodatetime);
@@ -2932,15 +2870,7 @@ var label, value;
 	return node.label;
 }
 
-function addRecordToTableAndShow(node, record) {
-	node.STAdata.unshift(record);
-	networkNodes.update(node);
-	showInfoMessage("New record added to table. Waiting for updates ...");
-	updateQueryAndTableArea(node);
-	UpdateChildenLoadJSONCallback(node);
-}
-
-async function RequestLastObservationAndRefreshOneValueSTA(node) {
+async function RequestLastObservationAndRefreshOneValue(node) {
 
 	var parentNode=GetFirstParentNode(node);
 	if (!parentNode)
@@ -2980,7 +2910,7 @@ async function RequestLastObservationAndRefreshOneValueSTA(node) {
 		SubscribeTopicToWebHub(config.WebSocketUrl, config.WebHookUrl, websub.hub, websub.self, node.id, 300, UpdateNodeId, showInfoMessage);
 	} else {
 		//Redraw
-		node.STAtimeOut=setTimeout(RequestLastObservationAndRefreshOneValueSTA, node.STAOneValue.redrawPeriod*1000, node);
+		node.STAtimeOut=setTimeout(RequestLastObservationAndRefreshOneValue, node.STAOneValue.redrawPeriod*1000, node);
 	}
 	getOneValueLabel(node, node.STAdata[0]);
 }
@@ -3010,29 +2940,9 @@ async function requestAndRefreshCountResults(node, period) {
 	networkNodes.update(node);
 }
 
-async function requestChangesAndRefreshTableSTA(node) {
-
-var selectedExpands;
-	if (node.STASelectedExpands) {
-		selectedExpands=deapCopy(node.STASelectedExpands);
-		delete selectedExpands.top;
-		delete selectedExpands.skip;
-		delete selectedExpands.orderBy;
-	}
-	var topic = AddQueryParamsToURL(RemoveQueryParamSelectExpands(node.STAURL), 
-					GetQueryParamSelectedSelectExpands(selectedExpands));
-
-	var websub=await DiscoverSTATopic(topic);
-
-	if (websub && websub.hub && websub.self && config.WebSocketUrl && config.WebHookUrl) {
-		SubscribeTopicToWebHub(config.WebSocketUrl, config.WebHookUrl, websub.hub, websub.self, node.id, 300, UpdateNodeId, showInfoMessage);
-	} else {
-		alert("This STA as a whole or this particular request does not support WebSbu and updates are not posible,")
-	}
-}
-
 function CloseDialogOneValue(event) {
-	hideNodeDialog("DialogOneValue", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogOneValue").close();
 }
 
 function AddKeysToFilter(url, obj, prefix) {
@@ -3259,7 +3169,8 @@ async function UploadObservationsSTA(url, data, dataAttributes, selectedOptions)
 }
 
 function UploadObservationsSTAURL(event) {
-	hideNodeDialog("DialogUploadObservations", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogUploadObservations").close();
 	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode) {
 		var url=document.getElementById("DialogSTAUploadURLInput").value;
@@ -3278,7 +3189,8 @@ function UploadObservationsSTAURL(event) {
 }
 
 function GetSelectNRecords(event) {
-	hideNodeDialog("DialogSelectNRecords", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogSelectNRecords").close();
 
 	var previousSTAURL= currentNode.STAURL;
 	
@@ -3314,7 +3226,7 @@ function openMultiDatastreamDialog(event){
 	var number= document.getElementById("DialogOpenMultiDatastream_input").value;
 	if (PopulateCreateUpdateDeleteEntityMultiDatastreams("MultiDatastreams", currentNode,number))
 	document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").setAttribute("data-stanumber", number);
-	showNodeDialog("DialogCreateUpdateDeleteEntity_MultiDatastreams");
+	document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").showModal();
 }
 
 function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNode, number) {
@@ -3549,8 +3461,8 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 		}
 		if (parentNode.image != "sta.png"){
 			if (parentNode.STAdata.length>1){
-				alert("Parent node has more than a single record. Please select a record first.");
-				return false;
+			 	alert("Parent node has more than a single record. Please select a record first.");
+			 	return false;
 			}				
 			if (parentEntityName!=entityName && returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName)==-1 && returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular)==-1) {
 				alert("Parent node ("+STAEntities[parentEntityName].singular+") is not a/an " + STAEntities[entityName].singular + " or is directly related to a/an " +  STAEntities[entityName].singular);
@@ -3630,7 +3542,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			continue;
 		}
 		//Attributes in general
-		cdns.push('<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" data-STArequired='+(STAEntities[entityName].properties[i].required ? "true" : "false")+' style=" font-weight: bold;">', (STAEntities[entityName].properties[i].required=="true")? STAEntities[entityName].properties[i].name+'*':STAEntities[entityName].properties[i].name, ': </label>');
+		cdns.push('<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" data-STArequired='+(STAEntities[entityName].properties[i].required ? "true" : "false")+' style=" font-weight: bold;">', (STAEntities[entityName].properties[i].required==true)? STAEntities[entityName].properties[i].name+'*':STAEntities[entityName].properties[i].name, ': </label>');
 
 
 		//Special inputs with calendar
@@ -3845,7 +3757,7 @@ function createEntitiesInCreateEntity(currentNode,entitiesParentArray){
 					if (getSTAEntityPlural(entitiesParentArray[u][0], false) == "Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0], false) == "MultiDatastreams" && datastream != "linked")) {
 						datastream = "linked";
 					}
-					entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}`,(entitiesLinked[e].required == "true")?'* ':'',`: <a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+					entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}`,(entitiesLinked[e].required == true)?'* ':'',`: <a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
 					if (entitiesLinked[e].name==getSTAEntityPlural(entitiesLinked[e].name, false)){ //Plural
 						entitiesObject[entitiesLinked[e].name]=[{"@iot.id":entitiesParentArray[u][1]}];
 					}else{
@@ -3858,14 +3770,14 @@ function createEntitiesInCreateEntity(currentNode,entitiesParentArray){
 				else {
 					if (u == entitiesParentArray.length - 1) { //If there is not any 
 						if (getSTAEntityPlural(entitiesLinked[e].name, false) != "MultiDatastreams" && getSTAEntityPlural(entitiesLinked[e].name, false) != "Datastreams") {
-							entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}`,(entitiesLinked[e].required == "true")? '*: <span style="color: red; font-style: italic" >You need to link one</span>':  `: <span style="color: #897F7F; font-style: italic">none</span>`,'</span><br>');
-							if (entitiesLinked[e].required == "true"){
+							entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}`,(entitiesLinked[e].required == true)? '*: <span style="color: red; font-style: italic" >You need to link one</span>':  `: <span style="color: #897F7F; font-style: italic">none</span>`,'</span><br>');
+							if (entitiesLinked[e].required == true){
 								entitiesRequiedNotLinked.push(entitiesLinked[e].name);
 							}
 
 						} else if (getSTAEntityPlural(entitiesLinked[e].name, false) == "MultiDatastreams" && datastream != "linked") {
-							entitiesRequired.push(`<span style="font-weight: bold;">Datastreams/MultiDatastreams`, (entitiesLinked[e].required == "true")?'*: <span style="color: red; font-style: italic" >You need to link one</span></span>':': <span style="color: #897F7F; font-style: italic" >none</span>', '</span> <br>');
-							if (entitiesLinked[e].required == "true")entitiesRequiedNotLinked.push("Datastream or MultiDatastream");
+							entitiesRequired.push(`<span style="font-weight: bold;">Datastreams/MultiDatastreams`, (entitiesLinked[e].required == true)?'*: <span style="color: red; font-style: italic" >You need to link one</span></span>':': <span style="color: #897F7F; font-style: italic" >none</span>', '</span> <br>');
+							if (entitiesLinked[e].required == true)entitiesRequiedNotLinked.push("Datastream or MultiDatastream");
 						}
 					}
 				}
@@ -4107,7 +4019,7 @@ function GetCreateEntityMultiDatastream(event){
 		function(value) {
 			if (value)
 			{ 
-				hideNodeDialog("DialogCreateUpdateDeleteEntity_MultiDatastreams");
+				document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").close();
 				showInfoMessage('Available at: <a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
 				node.STAURL=getUrlToId(url, entityName, value);
 				node.STAdata=[];
@@ -4179,12 +4091,12 @@ function GetCreateEntity(event) {
 		var obj = obtainDataInEntitiesCreationAndUpdate("create",entityName); //Entities already added when dialog was created
 		
 		if (obj != false) {
-			hideNodeDialog("DialogCreateUpdateDeleteEntity");
+			document.getElementById("DialogCreateUpdateDeleteEntity").close();
 			showInfoMessage("Creating a/an " + STAEntities[entityName].singular + "...");
 			GetObjectId(url, entityName, obj).then(
 				function (value) {
 					if (value) {
-						hideNodeDialog("DialogCreateUpdateDeleteEntity");
+						document.getElementById("DialogCreateUpdateDeleteEntity").close();
 						showInfoMessage('Available at: <a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
 						node.STAURL = getUrlToId(url, entityName, value);
 						node.STAdata = [];
@@ -4337,7 +4249,7 @@ async function GetUpdateEntity(event){
 	if (allowToSend==true){
 		showInfoMessage("Updating  "+ STAEntities[entityName].singular +" "+id+" ...");
 	 var response= await HTTPJSONData(url,null,"PUT",obj);
-		 hideNodeDialog("DialogCreateUpdateDeleteEntity");
+		 document.getElementById("DialogCreateUpdateDeleteEntity").close();
 	 if (response.ok)
 		showInfoMessage(STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
 	 else{
@@ -4378,7 +4290,7 @@ async function GetUpdateEntityMultiDatastream(event){
 	if (obj != false) {
 		showInfoMessage("Updating MultiDatastream " + id + " ...");
 		var response = await HTTPJSONData(url, null, "PUT", obj);
-		hideNodeDialog("DialogCreateUpdateDeleteEntity_MultiDatastreams");
+		document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").close();
 		if (response.ok)
 			showInfoMessage("MultiDatastream <a href='" + url + "'target='_blank'>" + id + "</a> updated.");
 		else
@@ -4399,7 +4311,12 @@ function AskForDeleteEntity(event){
 
 
 async function GetDeleteEntity(entityName, id){
-	hideNodeDialog((entityName=="MultiDatastreams") ? "DialogCreateUpdateDeleteEntity_MultiDatastreams" : "DialogCreateUpdateDeleteEntity", event);
+	event.preventDefault(); 
+	if (entityName=="MultiDatastreams"){
+		document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").close();
+	}else{
+		document.getElementById("DialogCreateUpdateDeleteEntity").close();
+	}
 	
 	var parentNodes=GetParentNodes(currentNode);
 	var url=parentNodes[0].STAURL;
@@ -4452,7 +4369,7 @@ function ReplaceTextInTableApplyButton(event){
 			networkNodes.update(node);
 			updateQueryAndTableArea(node);
 			UpdateChildenTable(node);
-			hideNodeDialog("DialogReplaceTextInTable")
+			document.getElementById("DialogReplaceTextInTable").close()
 		}
 
 	} else { //column
@@ -4465,7 +4382,7 @@ function ReplaceTextInTableApplyButton(event){
 			networkNodes.update(node);
 			updateQueryAndTableArea(node);
 			UpdateChildenTable(node);
-			hideNodeDialog("DialogReplaceTextInTable")
+			document.getElementById("DialogReplaceTextInTable").close()
 		}
 	}
 }
@@ -4654,7 +4571,9 @@ function AskForDeleteRecord(event) {
 }
 
 function GetSelectRow(event, iToSelect) {
-	hideNodeDialog("DialogSelectRow", event);
+	
+	if (event) event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogSelectRow").close();
 
 	var node=getNodeDialog("DialogSelectRow");
 	if (!node)
@@ -4733,7 +4652,10 @@ function GetSelectRow(event, iToSelect) {
 }
 
 function GetSelectResource(event, resourceId) {
-	hideNodeDialog("DialogSelectResource", event);
+	
+	if (event)
+		event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogSelectResource").close();
 
 	var node=getNodeDialog("DialogSelectResource");
 	if (!node)
@@ -4760,7 +4682,7 @@ function GetSelectResource(event, resourceId) {
 	}
 	else
 		return;
-    var s= document.getElementById("DialogSelectResourceId").value;
+	var s= document.getElementById("DialogSelectResourceId").value;
 	node.STAResourceId=(typeof resourceId !== "undefined") ? resourceId : (parseInt(s)==s) ? parseInt(s) : s;
 	if (parentNode?.OGCType=="OGCAPIcollections" || parentNode?.OGCType=="OGCAPIitems"){
 		node.STAURL = parentNode.STAURL + "/" + node.STAResourceId;
@@ -4845,7 +4767,8 @@ function DoGeoFilterRows(node) {
 }
 
 function GetJoinTables(event) {
-	hideNodeDialog("DialogJoinTables", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogJoinTables").close();
 	UpdateJoinTablesRowMatchingNode(currentNode);
 	if (document.getElementById("DialogJoinTablesNotMatchRemove").checked)
 		currentNode.STAJoinTables.NotMatch="Remove";
@@ -4926,7 +4849,7 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 			//pensar com es podria fer.
 			showInfoMessage("Automatic update of SelectColumns not implemented for table nodes.");
 		}
-		else if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || (STAOperations[removeFileExtension(node.image)] && STAOperations[removeFileExtension(node.image)].callSTALoad))  
+		else if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || STAOperations[removeFileExtension(node.image)].callSTALoad)
 		{
 			showInfoMessage("Updating "+ removeFileExtension(node.image) + " ...");
 			await LoadJSONNodeSTAData(node);
@@ -4937,7 +4860,7 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 				clearTimeout(node.STAtimeOut);
 				node.STAtimeOut=null;
 			}
-			await RequestLastObservationAndRefreshOneValueSTA(node);
+			await RequestLastObservationAndRefreshOneValue(node);
 		}
 		else if (node.image == "CountResultsSTA.png")
 		{
@@ -4946,11 +4869,6 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 				node.STAtimeOut=null;
 			}
 			await requestAndRefreshCountResults(node, node.STAredrawPeriodCount);
-		}
-		else if (node.image == "ScatterPlot.png")
-		{
-			if (isNodeDialogOpen("DialogScatterPlot"))
-				UpdateScatterPlot(null);
 		}
 	}
 }
@@ -5152,56 +5070,7 @@ function GetGeoJSON(data, selectedOptions) {
 	{
 		for (var i = 0; i < data.length; i++) {
 			var a=data[i];
-			if (selectedOptions.geohash) {
-				if (a[selectedOptions.geohash]) {
-					var bbox=ngeohash_decode_bbox(a[selectedOptions.geohash])
-					geojson.features.push({
-						"type": "Feature",
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [ [ 
-								[ bbox[1], bbox[0] ], 
-								[ bbox[1], bbox[2] ], 
-								[ bbox[3], bbox[2] ], 
-								[ bbox[3], bbox[0] ], 
-								[ bbox[1], bbox[0] ]
-							] ]
-						},
-						"properties": {
-						}
-					});
-				} else {
-					geojson.features.push({
-						"type": "Feature",
-						"geometry": null,
-						"properties": {
-						}
-					});
-				}
-			} else if (selectedOptions.uberH3) {
-				if (a[selectedOptions.uberH3]) {
-					var hexagon=h3.cellToBoundary(a[selectedOptions.uberH3])
-					for (var c=0; c<hexagon.length; c++)
-						hexagon[c]=hexagon[c].reverse()
-					hexagon.push(hexagon[0]);
-					geojson.features.push({
-						"type": "Feature",
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [ hexagon ]
-						},
-						"properties": {
-						}
-					});
-				} else {
-					geojson.features.push({
-						"type": "Feature",
-						"geometry": null,
-						"properties": {
-						}
-					});
-				}
-			} else if (selectedOptions.geometry)
+			if (selectedOptions.geometry)
 				geojson.features.push({
 					"type": "Feature",
 					"geometry": (a[selectedOptions.geometry] && typeof a[selectedOptions.geometry]==="string" ? JSON.parse(a[selectedOptions.geometry]) : a[selectedOptions.geometry]),
@@ -5588,7 +5457,7 @@ function GetGeoJSONStyles(data, selectedOptions) {
 				}
 			],
 			"ncol": 1,
-			"simbols": selectedOptions.geohash || selectedOptions.uberH3 ? null : [
+			"simbols": [
 				{
 					"simbol": [
 						{
@@ -5756,9 +5625,7 @@ function ShowSaveLayerDialogSelects(node, descripUoM) {
 		var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 		var s, elem;
 		PopulateSelectSaveLayerDialog("DialogSaveLayerPlace", dataAttributes, "FeatureOfInterest/description");
-		PopulateSelectSaveLayerDialog("DialogSaveLayerSelectGeometry", dataAttributes, "FeatureOfInterest/feature");
-		PopulateSelectSaveLayerDialog("DialogSaveLayerSelectGeohash", dataAttributes, "Geohash");
-		PopulateSelectSaveLayerDialog("DialogSaveLayerSelectUberH3", dataAttributes, "H3");
+		PopulateSelectSaveLayerDialog("DialogSaveLayerGeometry", dataAttributes, "FeatureOfInterest/feature");
 		PopulateSelectSaveLayerDialog("DialogSaveLayerLongitude", dataAttributes, "FeatureOfInterest/feature/coordinates_0");
 		PopulateSelectSaveLayerDialog("DialogSaveLayerLatitude", dataAttributes, "FeatureOfInterest/feature/coordinates_1");
 		PopulateSelectSaveLayerDialog("DialogSaveLayerTime", dataAttributes, "phenomenonTime");
@@ -5781,17 +5648,9 @@ function ShowSaveLayerDialogSelects(node, descripUoM) {
 function GetSelectedOptionsSaveLayer(descripUoM){
 	var selectedOptions={};
 	selectedOptions.place=document.getElementById("DialogSaveLayerPlaceSelect").value;
-	if (document.getElementById("DialogSaveLayerGeo").checked)
-		selectedOptions.geometry=document.getElementById("DialogSaveLayerSelectGeometrySelect").value;
-	else if (document.getElementById("DialogSaveLayerGeoHash").checked)
-		selectedOptions.geohash=document.getElementById("DialogSaveLayerSelectGeohashSelect").value;
-	else if (document.getElementById("DialogSaveLayerUberH3").checked)
-		selectedOptions.uberH3=document.getElementById("DialogSaveLayerSelectUberH3Select").value;
-	else //if (document.getElementById("DialogSaveLayerLL").checked)
-	{
-		selectedOptions.longitude=document.getElementById("DialogSaveLayerLongitudeSelect").value;
-		selectedOptions.latitude=document.getElementById("DialogSaveLayerLatitudeSelect").value;
-	}
+	selectedOptions.geometry=document.getElementById("DialogSaveLayerGeometrySelect").value;
+	selectedOptions.longitude=document.getElementById("DialogSaveLayerLongitudeSelect").value;
+	selectedOptions.latitude=document.getElementById("DialogSaveLayerLatitudeSelect").value;
 	selectedOptions.time=document.getElementById("DialogSaveLayerTimeSelect").value;
 	selectedOptions.variable=document.getElementById("DialogSaveLayerVariableSelect").value;
 	if (descripUoM){
@@ -5903,9 +5762,10 @@ function changeAttributeNameAndData(data, newName,dataAttributes){ //newName (ol
 	networkNodes.update(currentNode);
 }
 function SaveMeaningTable(event) {
-	hideNodeDialog("DialogMeaningTable", event);
+	event.preventDefault(); // We don't want to submit this form
 	currentNode.STAdataAttributes=GetMeaningTable();
 	networkNodes.update(currentNode);
+	document.getElementById("DialogMeaningTable").close();
 }
 
 const urlSchemaMeaning="https://github.com/grumets/MiraMonMapBrowser/config_attributes_metaschema.json#/definitions/AttributeDescription";
@@ -5925,8 +5785,9 @@ function ShareMeaningTable(event) {
 }
 
 function SaveTable(event) {
-	hideNodeDialog("DialogSaveTable", event);
+	event.preventDefault(); // We don't want to submit this form
 	var delimiter=document.getElementById("DialogSaveTableDelimiter").value;
+	document.getElementById("DialogSaveTable").close();
 	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode) {
 		SaveLocalDataFile(Papa.unparse(StringifyObjectElements(parentNode.STAdata, parentNode.STAdataAttributes), { quotes: false, quoteChar: '"', escapeChar: '"', delimiter: (delimiter ? delimiter : ";"), header: true, newline: "\r\n", skipEmptyLines: "greedy"}), 
@@ -5936,8 +5797,9 @@ function SaveTable(event) {
 
 
 function SaveCSVW(event) {
-	hideNodeDialog("DialogSaveTable", event);
+	event.preventDefault(); // We don't want to submit this form
 	var delimiter=document.getElementById("DialogSaveTableDelimiter").value;
+	document.getElementById("DialogSaveTable").close();
 	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode) {
 		SaveLocalDataFile(JSON.stringify(createCSVW(parentNode.STAdata, parentNode.STAdataAttributes, delimiter ? delimiter : ";"), null, "\t"), 
@@ -6155,8 +6017,7 @@ function GetSelectedOptionsAddColumnGeo(){
 	selectedOptions.radioIn=document.DialogAddColumnGeoForm.DialogAddColumnGeoRadioJSON_WKT_geohash_LL.value;
 	selectedOptions.JSONIn=document.getElementById("DialogAddColumnGeoJSONSelect").value;
 	selectedOptions.WKTIn=document.getElementById("DialogAddColumnGeoWKTSelect").value;
-	selectedOptions.geohashIn=document.getElementById("DialogAddColumnGeohashSelect").value;
-	selectedOptions.uberH3In=document.getElementById("DialogAddColumnUberH3Select").value;
+	selectedOptions.geohashIn=document.getElementById("DialogAddColumnGeoGeohashSelect").value;
 	selectedOptions.longitudeIn=document.getElementById("DialogAddColumnGeoLongitudeSelect").value;
 	selectedOptions.latitudeIn=document.getElementById("DialogAddColumnGeoLatitudeSelect").value;
 
@@ -6168,7 +6029,8 @@ function GetSelectedOptionsAddColumnGeo(){
 }
 
 function GetAddColumnGeo(event) {
-	hideNodeDialog("DialogAddColumnGeo", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogAddColumnGeo").close();
 	var node=getNodeDialog("DialogAddColumnGeo");
 	var selectedOptions=GetSelectedOptionsAddColumnGeo();
 	AddColumnGeoFromAnother(node.STAdata, node.STAdataAttributes, selectedOptions);
@@ -6181,8 +6043,7 @@ function ShowAddColumnGeoDialog(node) {
 	var dataAttributes=currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(node.STAdata);
 	PopulateSelectSaveLayerDialog("DialogAddColumnGeoJSON", dataAttributes, "geometry");
 	PopulateSelectSaveLayerDialog("DialogAddColumnGeoWKT", dataAttributes, "wkt");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeohash", dataAttributes, "geohash");
-	PopulateSelectSaveLayerDialog("DialogAddColumnUberH3", dataAttributes, "H3");
+	PopulateSelectSaveLayerDialog("DialogAddColumnGeoGeohash", dataAttributes, "geohash");
 	PopulateSelectSaveLayerDialog("DialogAddColumnGeoLongitude", dataAttributes, "long");
 	PopulateSelectSaveLayerDialog("DialogAddColumnGeoLatitude", dataAttributes, "lat");
 
@@ -6193,8 +6054,7 @@ function ShowAddColumnGeoDialog(node) {
 function ChangeAddColumnGeoRadioOut(event) {
 	if (document.getElementById("DialogAddColumnGeoRadioJSONOut").checked || 
 	    document.getElementById("DialogAddColumnGeoRadioWKTOut").checked ||
-	    document.getElementById("DialogAddColumnGeoRadioGeohashOut").checked ||
-	    document.getElementById("DialogAddColumnGeoRadioUberH3Out").checked) {
+	    document.getElementById("DialogAddColumnGeoRadioGeohashOut").checked) {
 		document.getElementById("DialogAddColumnGeoNameOut").innerHTML="Column name:";
 		//document.getElementById("DialogAddColumnGeoLatitudeNameOut").innetHTML=""; 
 		document.getElementById("DialogAddColumnGeoLatitudeNameOut").style.display="none";
@@ -6212,7 +6072,8 @@ function ChangeAddColumnGeoRadioOut(event) {
 
 
 function SaveLayer(event) {
-	hideNodeDialog("DialogSaveLayer", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogSaveLayer").close();
 	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode) {
 		SaveLocalDataFile(JSON.stringify(GetGeoJSON(parentNode.STAdata, GetSelectedOptionsSaveLayer(false)), null, "\t"), "GeoJSON", ".geojson", "application/geo+json");
@@ -6220,7 +6081,8 @@ function SaveLayer(event) {
 }
 
 function SaveLayerSchema(event) {
-	hideNodeDialog("DialogSaveLayer", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogSaveLayer").close();
 	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode) {
 		SaveLocalDataFile(JSON.stringify(GetGeoJSONSchema(parentNode.STAdata, GetSelectedOptionsSaveLayer(true)), null, "\t"), "JSON", ".json", "application/json");
@@ -6228,12 +6090,14 @@ function SaveLayerSchema(event) {
 }
 
 function SaveLayerMetaschema(event) {
-	hideNodeDialog("DialogSaveLayer", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogSaveLayer").close();
 	SaveLocalDataFile(JSON.stringify(GetGeoJSONMetaschema(), null, "\t"), "JSON", ".json", "application/json");
 }
 
 function OpenMap(event) {
-	hideNodeDialog("DialogSaveLayer", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogSaveLayer").close();
 	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode) {
 		var selectedOptionsSaveLayer=GetSelectedOptionsSaveLayer(true);
@@ -6258,7 +6122,8 @@ function EditGUF(event) {
 }
 
 function ShowGUF(event) {
-	hideNodeDialog("DialogGUF", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogGUF").close();
 	
 	var previousSTAURL = currentNode.STAURL;
 
@@ -6457,7 +6322,8 @@ function ShowSelectResourceDialog(parentNode, node) {
 }
 
 function SeparateColumns(event) {
-	hideNodeDialog("DialogSeparateColumns", event);
+	event.preventDefault(); // We don't want to submit this form
+	document.getElementById("DialogSeparateColumns").close();
 	var parentNode=GetFirstParentNode(currentNode);
 	if (!parentNode)
 		return;
@@ -6803,7 +6669,7 @@ function OpenLink(event) {
 			}
 		}
 	}
-	hideNodeDialog("DialogLink");
+	document.getElementById("DialogLink").close();
 	return false;
 }
 
@@ -6869,7 +6735,7 @@ function ShowLinkDialog(nodeId, columnName, iRecord) {
 		document.getElementById("DialogLinkIRecord").value=iRecord;
 		document.getElementById("DialogLinkColumnName").value=columnName;
 
-		showNodeDialog("DialogLink");
+		document.getElementById("DialogLink").showModal();
 	} else {
 		window.open(data[iRecord][columnName], "_blank");
 	}
@@ -6973,6 +6839,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 					nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
 				if (nodeFrom.STAsecurity)
 					nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
+				if (nodeFrom.STAEntityName)nodeTo.STAEntityName = nodeFrom.STAEntityName;
 				networkNodes.update(nodeTo);
 				if (addEdge)
 					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
@@ -6998,22 +6865,6 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 		DoMergeExpandSTA(nodeTo);
-		return true;
-	}
-	if (staNodes && nodeFrom.STAURL && nodeTo.image == "SubscribeSTA.png") {
-		nodeTo.STAURL = nodeFrom.STAURL;
-		if (nodeFrom.STAsecurity)
-			nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
-		if (nodeFrom.STAdata)
-			nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
-		nodeTo.STAdataAttributes = nodeFrom.STAdataAttributes ? nodeFrom.STAdataAttributes : (nodeTo.STAdata ? getDataAttributes(nodeTo.STAdata) : null);
-		if (nodeFrom.STASelectedExpands)
-			nodeTo.STASelectedExpands=deapCopy(nodeFrom.STASelectedExpands);
-		networkNodes.update(nodeTo);
-		if (addEdge)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		updateQueryAndTableArea(nodeTo);
-		requestChangesAndRefreshTableSTA(nodeTo);
 		return true;
 	}
 	if (tableNodes && nodeTo.image == "SortByTables.png") {  //I believe this is not necessary because is not doing anything but the default. Marta, can you please try to remove it?
@@ -7211,9 +7062,6 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 
 function KeySTAPage(event) {
 	//if (event.keyCode == 113)  //F2
-
-	if (aDialogIsOpen)
-		return;
 	if (event.code == "F2" || event.code == "Delete"){
 		event.preventDefault();
 		var nodeId = network.getSelectedNodes();
@@ -7221,10 +7069,10 @@ function KeySTAPage(event) {
 			switch (event.code) {
 				case "F2":
 					renameNode(nodeId[0]);
-					return;
+					break;
 				case "Delete":
 					removeNode(nodeId[0]);
-					return;
+					break;
 			}
 		}
 	}
@@ -7292,20 +7140,20 @@ function networkDoubleClick(params) {
 						document.getElementById("DialogSTAURLInput").value = record.dataURL;
 				}
 			}
-			showNodeDialog("DialogSTAURL");
+			document.getElementById("DialogSTAURL").showModal();
 		}
 		else if (currentNode.image == "ogcAPICols.png") {
 			saveNodeDialog("DialogSTAURL", currentNode);
 			document.getElementById("divTitleDialogSTAURL").innerHTML = "OGC API landing page";
 			document.getElementById("DialogSTAURLInput").value = currentNode.STAURL ? (currentNode.STAURL.endsWith("/collections") ? currentNode.STAURL.substring(0, currentNode.STAURL.length-"/collections".length) : currentNode.STAURL) : "";
 			document.getElementById("DialogSTAURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedOGCAPIurls);
-			showNodeDialog("DialogSTAURL");
+			document.getElementById("DialogSTAURL").showModal();
 		}
 		else if (currentNode.image == "ogcAPIItems.png") {
 			saveNodeDialog("DialogSTAURL", currentNode);
 			document.getElementById("divTitleDialogSTAURL").innerHTML = "OGC API collection to extract items";
 			document.getElementById("DialogSTAURLInput").value = currentNode.STAURL;
-			showNodeDialog("DialogSTAURL");
+			document.getElementById("DialogSTAURL").showModal();
 		}
 		else if (currentNode.image == "csw.png") {
 			saveNodeDialog("DialogSTAURL", currentNode);
@@ -7313,7 +7161,7 @@ function networkDoubleClick(params) {
 			if (currentNode.STAURL)
 				document.getElementById("DialogSTAURLInput").value = currentNode.STAURL;
 			document.getElementById("DialogSTAURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedCatalogues);
-			showNodeDialog("DialogSTAURL")
+			document.getElementById("DialogSTAURL").showModal();
 		}
 		else if (currentNode.image == "s3Service.png") {
 			if (false==ChangeToHTTPS(true))
@@ -7323,7 +7171,7 @@ function networkDoubleClick(params) {
 			if (currentNode.STAURL)
 				document.getElementById("DialogS3BucketURL").value = currentNode.STAURL;
 			document.getElementById("DialogS3BucketSelect").innerHTML = GetOptionsObjectSelectDialog(config.suggestedS3Buckets);
-			showNodeDialog("DialogS3Bucket");
+			document.getElementById("DialogS3Bucket").showModal();
 		}
 		else if (currentNode.image == "s3Bucket.png") {
 			if (false==ChangeToHTTPS(true))
@@ -7343,7 +7191,7 @@ function networkDoubleClick(params) {
 				}
 			}
 			document.getElementById("DialogS3BucketSelect").innerHTML = GetOptionsObjectSelectDialog(config.suggestedS3Buckets);
-			showNodeDialog("DialogS3Bucket");
+			document.getElementById("DialogS3Bucket").showModal();
 		}
 		else if (currentNode.image == "edc.png") {
 			if (false==ChangeToHTTPS(true))
@@ -7352,7 +7200,7 @@ function networkDoubleClick(params) {
 			if (currentNode.STAURL)
 				document.getElementById("DialogEDCCatalogURL").value = currentNode.STAURL;
 			document.getElementById("DialogEDCSelect").innerHTML = GetOptionsObjectSelectDialog(config.suggestedEDCs);
-			showNodeDialog("DialogEDC");
+			document.getElementById("DialogEDC").showModal();
 		}
 		else if (currentNode.image == "ViewQuerySTA.png") {
 			var parentNode=GetFirstParentNode(currentNode);
@@ -7363,7 +7211,7 @@ function networkDoubleClick(params) {
 				document.getElementById("DialogSTAViewQueryLink").innerHTML="";
 			//document.getElementById("DialogSTAURLInput").readOnly = true;
 			//document.getElementById("DialogSTAURLOk").style.display = "none";
-			showNodeDialog("DialogSTAViewQuery");
+			document.getElementById("DialogSTAViewQuery").showModal();
 		}
 		else if (currentNode.image == "ImportCSV.png") {
 			saveNodeDialog("DialogImportCSV", currentNode);
@@ -7398,7 +7246,7 @@ function networkDoubleClick(params) {
 					}
 				}
 			}
-			showNodeDialog("DialogImportCSV");
+			document.getElementById("DialogImportCSV").showModal();
 		}
 		else if (currentNode.image == "ImportJSONLD.png") {
 			saveNodeDialog("DialogImportJSONLD", currentNode);
@@ -7423,7 +7271,7 @@ function networkDoubleClick(params) {
 					}
 				}
 			}
-			showNodeDialog("DialogImportJSONLD");
+			document.getElementById("DialogImportJSONLD").showModal();
 		}
 		else if (currentNode.image == "ImportJSON.png") {
 			saveNodeDialog("DialogImportJSON", currentNode);
@@ -7448,7 +7296,7 @@ function networkDoubleClick(params) {
 					}
 				}
 			}
-			showNodeDialog("DialogImportJSON");
+			document.getElementById("DialogImportJSON").showModal();
 		}
 		else if (currentNode.image == "ImportDBF.png") {
 			saveNodeDialog("DialogImportDBF", currentNode);
@@ -7472,7 +7320,7 @@ function networkDoubleClick(params) {
 					}
 				}
 			}
-			showNodeDialog("DialogImportDBF");
+			document.getElementById("DialogImportDBF").showModal();
 		}
 		else if (currentNode.image == "ImportGPKG.png") {
 			saveNodeDialog("DialogImportGPKG", currentNode);
@@ -7496,48 +7344,48 @@ function networkDoubleClick(params) {
 					}
 				}
 			}
-			showNodeDialog("DialogImportGPKG");
+			document.getElementById("DialogImportGPKG").showModal();
 		}
 		else if (currentNode.image == "ImportGeoJSON.png") {
 			document.getElementById("DialogImportGeoJSONSourceURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedGeoJSONurls);
 			saveNodeDialog("DialogImportGeoJSON", currentNode);
-			showNodeDialog("DialogImportGeoJSON");
+			document.getElementById("DialogImportGeoJSON").showModal();
 		}
 		else if (currentNode.image == "Table.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				ShowTableOptionsDiv(parentNode, "DialogOKOptions", "ShowTableDialog");
 				ShowTableDialog(parentNode);
-				showNodeDialog("DialogOK");
+				document.getElementById("DialogOK").showModal();
 			}
 		}
 		else if (currentNode.image == "UploadObservations.png") {
 			ShowUploadObservationsDialog(currentNode);
-			showNodeDialog("DialogUploadObservations");
+			document.getElementById("DialogUploadObservations").showModal();
 		}
 		else if (currentNode.image == "CalculateStatisticsSTA.png") {
 			ShowCalculateStatisticsSTADialog(currentNode);
-			showNodeDialog("DialogCalculateStatisticsSTA");
+			document.getElementById("DialogCalculateStatisticsSTA").showModal();
 		}
 		/*else if (currentNode.image == "UploadTimeAverages.png") {
 			ShowUploadTimeAveragesDialog(currentNode.id);
-			showNodeDialog("UploadTimeAverages");
+			document.getElementById("UploadTimeAverages").showModal();
 		}*/
 		else if (currentNode.image == "SaveTable.png") {
 			//ShowSaveTableDialog(currentNode.id);
-			showNodeDialog("DialogSaveTable");
+			document.getElementById("DialogSaveTable").showModal();
 		}
 		else if (currentNode.image == "ScatterPlot.png") {
 			var parentNodes=GetParentNodes(currentNode);
 					ShowScatterPlotDialog(parentNodes, currentNode); //This will check if any parentNode hasn't got data. It is possible that some nodes linked has data but some not...
-				showNodeDialog("DialogScatterPlot");
+				document.getElementById("DialogScatterPlot").showModal();
 		}
 		else if (currentNode.image == "BarPlot.png") {
 			var parentNodes=GetParentNodes(currentNode);
 			if (parentNodes && parentNodes[0]) {
 				if (parentNodes[0].STAdata)
 					ShowBarPlotDialog(parentNodes, currentNode);
-				showNodeDialog("DialogBarPlot");
+				document.getElementById("DialogBarPlot").showModal();
 			}
 		}
 		else if (currentNode.image == "ImageViewer.png") {
@@ -7545,32 +7393,32 @@ function networkDoubleClick(params) {
 			if (parentNodes && parentNodes[0]) {
 				if (parentNodes[0].STAdata)
 					ShowImageViewerDialog(currentNode, parentNodes);
-				showNodeDialog("DialogImageViewer");
+				document.getElementById("DialogImageViewer").showModal();
 			}
 		}
 		else if (currentNode.image == "OneValueSTA.png") {
 			ShowOneValueDialog(currentNode);
-			showNodeDialog("DialogOneValue");
+			document.getElementById("DialogOneValue").showModal();
 		}
 		else if (currentNode.image == "CountResultsSTA.png") {
 			saveNodeDialog("DialogCountResults", currentNode);
-			showNodeDialog("DialogCountResults");
+			document.getElementById("DialogCountResults").showModal();
 		}
 		else if (currentNode.image == "SubscribeSTA.png") {
 			saveNodeDialog("DialogSubscribe", currentNode);
-			showNodeDialog("DialogSubscribe");
+			document.getElementById("DialogSubscribe").showModal();
 		}
 		else if (currentNode.image == "SaveLayer.png") {
 			ShowSaveLayerDialog(currentNode);
-			showNodeDialog("DialogSaveLayer");
+			document.getElementById("DialogSaveLayer").showModal();
 		}
 		else if (currentNode.image == "OpenMap.png") {
 			var parentNodes=GetParentNodes(currentNode);
 			if (parentNodes[0]){
-				currentNode.STAdataAttributes=deapCopy(parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(parentNodes[0].STAdata));
+				currentNode.STAdataAttributes=deapCopy(parentNodes[0].STAdataAttributes);
 			}
 			ShowOpenMapDialog(currentNode);
-			showNodeDialog("DialogSaveLayer");
+			document.getElementById("DialogSaveLayer").showModal();
 		}
 		else if (currentNode.image == "guf.png") {
 			var parentNode=GetFirstParentNode(currentNode);
@@ -7598,24 +7446,25 @@ function networkDoubleClick(params) {
 					}
 				}
 			}
-			showNodeDialog("DialogGUF");
+			document.getElementById("DialogGUF").showModal();
 		}
 		else if (currentNode.image == "Meaning.png") {
 			ShowMeaningTableDialog(currentNode);
-			showNodeDialog("DialogMeaningTable");
+			document.getElementById("DialogMeaningTable").showModal();
 		}				
 		else if (currentNode.image == "SelectColumnsTable.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				ShowTableSelectColumnsDialog("SelectColumns", parentNode, currentNode, true);
-				showNodeDialog("DialogSelectColumns");
+				document.getElementById("DialogSelectColumns").showModal();
 			}
 		}
 				else if(currentNode.image=="MultiCreateSTA.png"){
+			//comrpobar si hi ha info en els parents...
 			if (AllowOpenMulticreateSTADialogAndPopulateIt(currentNode)==true){
 				populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
 				drawMultiCreateSTADialog(currentNode);
-				showNodeDialog("DialogMultiCreateSTA");
+				document.getElementById("DialogMultiCreateSTA").showModal();
 			}
 			// else{
 			// 	alert("Only one parent with multiple records is allowed")
@@ -7628,34 +7477,35 @@ function networkDoubleClick(params) {
 			if (parentNode) {
 				populateSelectColumnSeparateColumns();
 			}
-			showNodeDialog("DialogSeparateColumns");
+			document.getElementById("DialogSeparateColumns").showModal();
 		}
 		else if (currentNode.image == "SelectColumnsSTA.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				ShowTableSTASelectColumnsDialog("SelectColumns", parentNode, currentNode);
-				showNodeDialog("DialogSelectColumns");
+				document.getElementById("DialogSelectColumns").showModal();
 			}
 		}
 		else if (currentNode.image == "ExpandColumnSTA.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				ShowTableExpandColumnDialog("ExpandColumn", parentNode, currentNode);
-				showNodeDialog("DialogExpandColumn");
+				document.getElementById("DialogExpandColumn").showModal();
 			}
 		}
 		else if (currentNode.image == "RecursiveExpandSTA.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				ShowTableSelectExpandsDialog(parentNode, currentNode, true);
-				showNodeDialog("DialogSelectExpands");
+				currentNode.STAEntityName= parentNode.STAEntityName;
+				document.getElementById("DialogSelectExpands").showModal();
 			}
 		}
 		else if (currentNode.image == "JoinTables.png") {
 			var parentNodes=GetParentNodes(currentNode);
 			if (parentNodes && parentNodes.length>1) {
 				ShowJoinTablesDialog(parentNodes, currentNode);
-				showNodeDialog("DialogJoinTables");
+				document.getElementById("DialogJoinTables").showModal();
 			}
 		}
 		else if (currentNode.image == "SelectRowSTA.png" || currentNode.image == "SelectRowTable.png") {
@@ -7671,7 +7521,7 @@ function networkDoubleClick(params) {
 					currentNode.image == "SelectRowTable.png") {
 					ShowTableSelectRowDialog(parentNode, currentNode);
 				}
-				showNodeDialog("DialogSelectRow");
+				document.getElementById("DialogSelectRow").showModal();
 			}
 		}
 		else if (currentNode.image == "SelectResourceSTA.png" || currentNode.image == "SelectResourceTable.png") {
@@ -7680,12 +7530,14 @@ function networkDoubleClick(params) {
 				if (parentNode.STAOGCAPIconformance){
 					currentNode.STAOGCAPIconformance=parentNode.STAOGCAPIconformance;
 				}
-				
+				if (currentNode.image == "SelectResourceSTA.png"){
+					currentNode.STAEntityName= parentNode.STAEntityName;
+				}
 				if ((currentNode.image == "SelectResourceSTA.png" || currentNode.image == "SelectResourceTable.png") && 
 					parentNode.STAURL) {
 					ShowSelectResourceDialog(parentNode, currentNode);
 				}
-				showNodeDialog("DialogSelectResource");
+				document.getElementById("DialogSelectResource").showModal();
 			}
 		}
 		else if (currentNode.image == "FilterRowsSTA.png" || currentNode.image == "FilterRowsTable.png") {
@@ -7709,20 +7561,20 @@ function networkDoubleClick(params) {
 					currentNode.OGCType="OGCAPIitem";
 				}*/
 				ShowTableFilterRowsDialog(parentNode, currentNode);
-				showNodeDialog("DialogFilterRows");
+				document.getElementById("DialogFilterRows").showModal();
 			}
 		}
 		else if (currentNode.image == "FilterRowsByTime.png"){							
 			currentNode.STAEntityName= parentNode.STAEntityName;
 			if (PopulateFilterRowsByTimePropertySelect())
-				showNodeDialog("DialogFilterRowsByTime");			
+				document.getElementById("DialogFilterRowsByTime").showModal();			
 		}
 		else if (currentNode.image == "SortBySTA.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				if (parentNode.STAURL)
 					ShowTableSelectSortByDialog(parentNode, currentNode);
-				showNodeDialog("DialogSelectSortBy");
+				document.getElementById("DialogSelectSortBy").showModal();
 			}
 		}
 		else if (currentNode.image == "SortByTables.png") {
@@ -7730,7 +7582,7 @@ function networkDoubleClick(params) {
 			if (parentNode) {
 				if (parentNode.STAdata)
 					ShowTableSelectSortByDialog(parentNode, currentNode);
-				showNodeDialog("DialogSelectSortBy");
+				document.getElementById("DialogSelectSortBy").showModal();
 			}
 		}
 		else if (currentNode.image == "RangeSTA.png") {
@@ -7738,14 +7590,14 @@ function networkDoubleClick(params) {
 			if (parentNode) {
 				if (parentNode.STAURL)
 					ShowTableRangeSTADialog(parentNode, currentNode);
-				showNodeDialog("DialogSelectRangeSTA");
+				document.getElementById("DialogSelectRangeSTA").showModal();
 			}
 		}
 		else if (currentNode.image == "GroupBy.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				ShowGroupByDialog(parentNode, currentNode);
-				showNodeDialog("DialogGroupBy");
+				document.getElementById("DialogGroupBy").showModal();
 			}
 		}				
 		else if (currentNode.image == "CreateColumns.png") {
@@ -7761,7 +7613,7 @@ function networkDoubleClick(params) {
 				}
 				networkNodes.update(currentNode);
 				drawTableInColumnBoxTableInCreateColumns();
-				showNodeDialog("DialogCreateColumns");
+				document.getElementById("DialogCreateColumns").showModal();
 			 }		
 		}
 		else if (currentNode.image == "AggregateColumns.png") {
@@ -7779,7 +7631,7 @@ function networkDoubleClick(params) {
 				}
 				networkNodes.update(currentNode);
 				drawTableInColumnBoxTableInAggregateColumns()
-				showNodeDialog("DialogAggregateColumns");
+				document.getElementById("DialogAggregateColumns").showModal();
 			}
 		}
 		else if (currentNode.image == "ColumnsCalculator.png") {
@@ -7804,7 +7656,7 @@ function networkDoubleClick(params) {
 				}
 				networkNodes.update(currentNode);
 				drawTableInColumnBoxTableInCalculatorColumns();
-				showNodeDialog("DialogColumnsCalculator");
+				document.getElementById("DialogColumnsCalculator").showModal();
 			}
 		}
 		else if (currentNode.image == "AddColumnGeo.png") {
@@ -7812,32 +7664,34 @@ function networkDoubleClick(params) {
 			
 			if (parentNode.STAdata && !currentNode.STAdata)
 				currentNode.STAdata=deapCopy(parentNode.STAdata);
-			if (!currentNode.STAdataAttributes)
-				currentNode.STAdataAttributes=deapCopy(parentNode.STAdataAttributes ? parentNode.STAdataAttributes: getDataAttributes(currentNode.STAdata));
-			networkNodes.update(currentNode);
+			if (parentNode.STAdataAttributes && !currentNode.STAdataAttributes)
+				currentNode.STAdataAttributes=deapCopy(parentNode.STAdataAttributes);
+
 			ShowAddColumnGeoDialog(currentNode);
-			showNodeDialog("DialogAddColumnGeo");
+			document.getElementById("DialogAddColumnGeo").showModal();
 		}
 		else if (currentNode.image =="ConcatenateTables.png") {
-			showNodeDialog("DialogConcatenateTables");
+			document.getElementById("DialogConcatenateTables").showModal();
 		}
 		else if (currentNode.image=="PivotTable.png"){
 			populatePivotTableDialog(currentNode);
-			showNodeDialog("DialogPivotTable");
+			document.getElementById("DialogPivotTable").showModal();
 		}
 		else if (currentNode.image =="ColumnStatistics.png") {
 			saveNodeDialog("DialogColumnStatistics", currentNode);
-			showNodeDialog("DialogColumnStatistics");
+			document.getElementById("DialogColumnStatistics").showModal();
 		}
 		
 		else if ((currentNode.image == "GeoFilterPolSTA.png" || 
 			IdOfSTAEntity(currentNode) != -1 ||
 			IdOfSTASpecialQueries(currentNode) != -1)&& currentNode.image != "GeoFilterPntSTA.png") { //It is necessary to exclude GeoFilterPntSTA to allow to entry to next else.
-			showNodeDialog("DialogSelectNRecords");
+			currentNode.STAEntityName= parentNode.STAEntityName;
+			document.getElementById("DialogSelectNRecords").showModal();
 		}
 		else if (currentNode.image == "GeoFilterPntSTA.png" &&
 			takeParentsInformationInGeoDistance()==true) {
-			showNodeDialog("DialogGeospatialFilterRowsByDistance");
+			currentNode.STAEntityName= parentNode.STAEntityName;
+			document.getElementById("DialogGeospatialFilterRowsByDistance").showModal();
 		}
 		else if (currentNode.image == "ObservedProperty.png" || currentNode.image == "Observation.png" || 
 			currentNode.image == "FeatureOfInterest.png" || currentNode.image == "Sensor.png" || 
@@ -7849,23 +7703,23 @@ function networkDoubleClick(params) {
 			startingNodeContextId=currentNode.id;
 			if (GetFirstParentNode(currentNode)) {
 				if (PopulateCreateUpdateDeleteEntity(getSTAEntityPlural(removeFileExtension(currentNode.image), true), currentNode))
-					showNodeDialog("DialogCreateUpdateDeleteEntity");
+					document.getElementById("DialogCreateUpdateDeleteEntity").showModal();
 			}
 		}else if (currentNode.image == "MultiDatastream.png"){
 			var firstparentNode=GetFirstParentNode(currentNode);
 			if (firstparentNode&& (getSTAURLLastEntity(firstparentNode.STAURL)!="MultiDatastreams")) {
-				showNodeDialog("DialogCreateUpdateDeleteEntity_numberOfMultiDatastream");
+				document.getElementById("DialogCreateUpdateDeleteEntity_numberOfMultiDatastream").showModal();
 			}else {
 				var number =firstparentNode.STAdata[0].multiObservationDataTypes.length;
 				PopulateCreateUpdateDeleteEntityMultiDatastreams("MultiDatastreams", currentNode,number); //S'ha de calcular el numero
-				showNodeDialog("DialogCreateUpdateDeleteEntity_MultiDatastreams");
+				document.getElementById("DialogCreateUpdateDeleteEntity_MultiDatastreams").showModal();
 			}
 		}
 		else if (currentNode.image == "EditRecord.png") {
 			startingNodeContextId=currentNode.id;
 			if (currentNode.STAdata) {
 				if (PopulateCreateUpdateDeleteRecord(currentNode, 0, false))
-					showNodeDialog("DialogCreateUpdateDeleteRecord");
+					document.getElementById("DialogCreateUpdateDeleteRecord").showModal();
 			}else{
 				alert("Parent node must have data to edite it");
 			}
@@ -7873,7 +7727,7 @@ function networkDoubleClick(params) {
 			//startingNodeContextId=currentNode.id;
 			if (currentNode.STAdata) {
 					populateReplace(currentNode);
-					showNodeDialog("DialogReplaceTextInTable");
+					document.getElementById("DialogReplaceTextInTable").showModal();
 			}else{
 				alert("Parent node must have data to replace it");
 			}
@@ -7884,15 +7738,15 @@ function networkDoubleClick(params) {
 					currentNode.STAdata= deapCopy(parentNode.STAdata);
 					currentNode.STAdataAttributes= deapCopy(parentNode.STAdataAttributes);
 					populateDialogQualityCompletnessOmission(currentNode);
-					networkNodes.update(currentNode);
-					showNodeDialog("DialogQualityCompletnessOmission");
+					networkNodes.update(currentNode)
+					document.getElementById("DialogQualityCompletnessOmission").showModal();
 			}else{
 				alert("Parent node must have data to analyze");
 			}
 		}
 		else if (currentNode.image == "logicalConsistency.png") {
 			if (populateDialogQualityLogicalConsistency(currentNode)){
-				showNodeDialog("DialogQualityLogicalConsistency");
+				document.getElementById("DialogQualityLogicalConsistency").showModal();
 			}else{
 				alert ("Both a parent to evaluate and a reference parent are required.")
 			}
@@ -7903,8 +7757,8 @@ function networkDoubleClick(params) {
 					currentNode.STAdata= deapCopy(parentNode.STAdata);
 					currentNode.STAdataAttributes= deapCopy(parentNode.STAdataAttributes);
 					populateDialogQualityTemporalQuality(currentNode);
-					networkNodes.update(currentNode);
-					showNodeDialog("DialogQualityTemporalQuality");
+					networkNodes.update(currentNode)
+					document.getElementById("DialogQualityTemporalQuality").showModal();
 			}else{
 				alert("Parent node must have data to analyze");
 			}
@@ -7921,13 +7775,13 @@ function networkContext(params) {
 	PopulateContextMenu (nodeId);
 	if (nodeId) {
 		startingNodeContextId = nodeId;
-		showNodeDialog("DialogContextMenu");
+		document.getElementById("DialogContextMenu").showModal();
 		return;
 	}
 	var edgeId = network.getEdgeAt(params.pointer.DOM);
 	if (edgeId) {
 		startingEdgeContextId = edgeId;
-		showNodeDialog("DialogEdgeContextMenu");
+		document.getElementById("DialogEdgeContextMenu").showModal();
 	}
 	/*params.event = "[original event]";
 	document.getElementById("eventSpanHeading").innerText = "oncontext (right click) event:";
@@ -8023,7 +7877,7 @@ function addCircularImage(event, dialog, label, image) {
 	if (event)
 		event.preventDefault(); // We don't want to submit this form
 	if (dialog)
-		hideNodeDialog(dialog);
+		document.getElementById(dialog).close();
 	var newId = (Math.random() * 1e7).toString(32);
 	var node = { id: newId, label: label, image: image, shape: "circularImage" };
 
@@ -8056,9 +7910,6 @@ function removeNode(nodeId)
 	var node=networkNodes.get(nodeId);
 	if (confirm("Do you want to remove the node '" + node.label + "'?"))
 	{
-		if (node.image == "SubscribeSTA.png") {
-			UnSubscribeTopicToWebHub(node.id);
-		}
 		networkNodes.remove(nodeId);
 		return 0;
 	}
@@ -8070,7 +7921,7 @@ function removeCircularImage(event, dialog) {
 	if (event)
 		event.preventDefault(); // We don't want to submit this form
 	if (dialog)
-		hideNodeDialog(dialog);
+		document.getElementById(dialog).close();
 	if (startingNodeContextId) {
 		if (0==removeNode(startingNodeContextId))
 			startingNodeContextId = null;
@@ -8091,7 +7942,7 @@ function renameCircularImage(event, dialog) {
 	if (event)
 		event.preventDefault(); // We don't want to submit this form
 	if (dialog)
-		hideNodeDialog(dialog);
+		document.getElementById(dialog).close();
 	if (startingNodeContextId) {
 		renameNode(startingNodeContextId);
 		startingNodeContextId = null;
@@ -8108,7 +7959,7 @@ function removeEdge(event, dialog) {
 	if (event)
 		event.preventDefault(); // We don't want to submit this form
 	if (dialog)
-		hideNodeDialog(dialog);
+		document.getElementById(dialog).close();
 	if (startingEdgeContextId) {
 		if (confirm("Do you want to remove the edge?"))
 		{
@@ -8150,7 +8001,7 @@ function openFileNetwork(event) {
 }
 
 function openURLNetwork(event) {
-	hideNodeDialog("DialogOpenURLNetwork");
+	document.getElementById("DialogOpenURLNetwork").close();
 	HTTPJSONData(document.getElementById("DialogOpenURLNetworkInput").value).then(
 				function(value) {
 					openNetwork(value.obj);
@@ -8221,11 +8072,11 @@ function cancelButtonRecoveryOldData(event){
 	networkNodes.update(currentNode)
 
 	if (currentNode.image=="CreateColumns.png"){
-		hideNodeDialog("DialogCreateColumns");
+		document.getElementById("DialogCreateColumns").close();
 	}else if (currentNode.image=="AggregateColumns.png"){
-		hideNodeDialog("DialogAggregateColumns");
+		document.getElementById("DialogAggregateColumns").close();
 	}else{
-		hideNodeDialog("DialogColumnsCalculator");
+		document.getElementById("DialogColumnsCalculator").close();
 	}
 }
 
@@ -8373,7 +8224,7 @@ function addColumnsToTableInCreateColumns(){
 	var attributes= uploadDataAttributesAddingNewColumns(GetParentNodes(currentNode)[0].STAdataAttributes, currentNode.STAdata);
 	currentNode.STAdataAttributes= attributes;
 	networkNodes.update(currentNode);
-	hideNodeDialog("DialogCreateColumns");
+	document.getElementById("DialogCreateColumns").close();
 	showInfoMessage("New columns have been added");
 }
 
@@ -8638,7 +8489,7 @@ function addColumnsToTableInAggregateColumns(event) {
 		currentNode.STAdataAttributes=attributes;
 		networkNodes.update(currentNode);
 		showInfoMessage("New columns have been added");
-		hideNodeDialog("DialogAggregateColumns");
+		document.getElementById("DialogAggregateColumns").close();
 	}else{
 		alert("There are no columns in the list to add, nothing will be added to the table")
 	}
@@ -8808,7 +8659,7 @@ function addColumnsToTableInColumnsCalculator(){
 	currentNode.STAdataAttributes=attributes;
 	networkNodes.update(currentNode);
 	showInfoMessage("New columns have been added");
-	hideNodeDialog("DialogColumnsCalculator");
+	document.getElementById("DialogColumnsCalculator").close();
 }
 
 function createColumnStatistics(event){
@@ -8854,7 +8705,7 @@ function createColumnStatistics(event){
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
 
-	hideNodeDialog("DialogColumnStatistics");	
+	document.getElementById("DialogColumnStatistics").close();	
 }
 
 
@@ -8933,7 +8784,7 @@ function concatenateTables() {
 	var attributes= uploadDataAttributesAddingNewColumns(allAttributes, currentNode.STAdata);
 	currentNode.STAdataAttributes=attributes;
 	networkNodes.update(currentNode);
-	hideNodeDialog("DialogConcatenateTables");
+	document.getElementById("DialogConcatenateTables").close();
 }
 
 const RouteToLocation={
@@ -9119,7 +8970,7 @@ async function GetGeoDistanceFilter(event){
 	currentNode.STAURL= url;
 	currentNode.STAdata= await loadAPIDataWithReturn(url,"EntitiesFilterRow");
 	networkNodes.update(currentNode);
-	hideNodeDialog("DialogGeospatialFilterRowsByDistance");
+	document.getElementById("DialogGeospatialFilterRowsByDistance").close();
 }
 
 function writeValueInInputGeoDistance(value){
@@ -9182,7 +9033,7 @@ async function filterRowsByTimeOkButton(){
 	if (dateFromValue==""|| dateToValue =="")
 		alert("It is necessary to select a Data");
 	else{
-		hideNodeDialog("DialogFilterRowsByTime");
+		document.getElementById("DialogFilterRowsByTime").close();
 		var url= prepareUrlToApplyFilter();
 		await applyTemporalFilter(url, dateFromValue+"Z", dateToValue+"Z",selectedValue );
 		
@@ -9474,7 +9325,7 @@ function okButtonInPivotTable(event){
 		node.STAdata=newData;
 		node.STAdataAttributes=uploadDataAttributesAddingNewColumns(node.STAdataAttributes, newData, "");
 		networkNodes.update(node);
-		hideNodeDialog("DialogPivotTable");
+		document.getElementById("DialogPivotTable").close();
 	}else{
 		alert (newData) //Error
 	}
@@ -9969,7 +9820,7 @@ function autocompleteFieldsMultiCreateSTADialog(event){
 				dialogRepeatedEntities.innerHTML= c.join("");
 				node.STAMultiCreateInformation.objectFromAutocomplete={objectWithAttributes:objectWithAttributes,repeatedEntities:repeatedEntities}; //save to use after ok button in DialogMultiCreateSTARepeatedEntities 
 				networkNodes.update(node);
-				showNodeDialog("DialogMultiCreateSTARepeatedEntities");//open a dialog to choose which you want to choose
+				document.getElementById("DialogMultiCreateSTARepeatedEntities").showModal(); //open a dialog to choose which you want to choose
 				//updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node) --> The access to this function will be through ok button in this dialog
 				
 			}else{
@@ -10004,7 +9855,7 @@ function chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(even
 	node.STAMultiCreateInformation.objectFromAutocomplete[repeatedEntities]=[];
 	networkNodes.update(node);
 	updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node);
-	hideNodeDialog("DialogMultiCreateSTARepeatedEntities", event);
+	document.getElementById("DialogMultiCreateSTARepeatedEntities").close();
 
 }
 function updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node){
@@ -10300,8 +10151,7 @@ function okButtonDataQualityCompletnessOmission(event){
 
 	node.STAdata=data;
 	networkNodes.update(node);
-	hideNodeDialog("DialogQualityCompletnessOmission", event);
-	
+	document.getElementById("DialogQualityCompletnessOmission").close();
 	if(calculate){ //pensar si fer-ne una funció per tots
 		document.getElementById("dataQualityResult_info").innerHTML= `<table style="border: 1px solid black">
 		<thead > 
@@ -10312,7 +10162,7 @@ function okButtonDataQualityCompletnessOmission(event){
 		<td style="border: 1px solid black">${infoDataOmission[3]}</td><td style="border: 1px solid black">${infoDataOmission[4]}</td>
 		</tr></tbody></table>`
 	}
-	showNodeDialog("dataQualityResult");
+	document.getElementById("dataQualityResult").showModal();
 	updateQueryAndTableArea(node);
 }
 function populateDialogQualityLogicalConsistency(node){
@@ -10410,17 +10260,18 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 			node.STAdata= infoDatalogicalConsistency[0];
 			node.STAdataAttributes= getDataAttributes(infoDatalogicalConsistency[0]);
 			networkNodes.update(node);
-			hideNodeDialog("DialogQualityLogicalConsistency", event);
-	
+			document.getElementById("DialogQualityLogicalConsistency").close();
+
 			document.getElementById("dataQualityResult_info").innerHTML=`<table style="border: 1px solid black">
-				<thead > 
-				<th style="border: 1px solid black" >Target attributes</th><th style="border: 1px solid black" >Reference attributes</th><th style="border: 1px solid black">Total records</th>
-				<th style="border: 1px solid black">True records</th><th style="border: 1px solid black">Logical consistancy rate</th></tr></thead>
-				<tbody><tr>
-				<td style="border: 1px solid black">${targets}</td><td style="border: 1px solid black">${references}</td><td style="border: 1px solid black">${dataTarget.length}</td>
-				<td style="border: 1px solid black">${infoDatalogicalConsistency[1]}</td><td style="border: 1px solid black">${infoDatalogicalConsistency[2]}</td>
-				</tr></tbody></table>`
-			showNodeDialog("dataQualityResult");
+		<thead > 
+		<th style="border: 1px solid black" >Target attributes</th><th style="border: 1px solid black" >Reference attributes</th><th style="border: 1px solid black">Total records</th>
+		<th style="border: 1px solid black">True records</th><th style="border: 1px solid black">Logical consistancy rate</th></tr></thead>
+		<tbody><tr>
+		<td style="border: 1px solid black">${targets}</td><td style="border: 1px solid black">${references}</td><td style="border: 1px solid black">${dataTarget.length}</td>
+		<td style="border: 1px solid black">${infoDatalogicalConsistency[1]}</td><td style="border: 1px solid black">${infoDatalogicalConsistency[2]}</td>
+		</tr></tbody></table>`
+
+			document.getElementById("dataQualityResult").showModal();
 			updateQueryAndTableArea(node);
 
 		}else{

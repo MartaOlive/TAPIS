@@ -344,8 +344,7 @@ function FinalizeSelectedSelectExpands(node, previousSTAURL, message) {
 ////////////// Recursive select expand dialog
 
 		function GetSelectExpands(event) {
-			event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogSelectExpands").close();
+			hideNodeDialog("DialogSelectExpands", event);
 
 			var node=getNodeDialog("DialogSelectExpands");
 			if (!node)
@@ -601,8 +600,7 @@ function GetPropagateNodeSelectedSelectExpands(node, parentNode) {
 }
 
 function GetExpandColumn(event) {
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogExpandColumn").close();
+	hideNodeDialog("DialogExpandColumn", event);
 
 	var node=getNodeDialog("DialogExpandColumn");
 	if (!node)
@@ -668,8 +666,7 @@ var data;
 
 function GetSelectColumnsSTA(event)
 {
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogSelectColumns").close();
+	hideNodeDialog("DialogSelectColumns", event);
 
 	var node=getNodeDialog("DialogSelectColumns");
 	if (!node)
@@ -718,8 +715,7 @@ function ShowTableRangeSTADialog(parentNode, node) {
 }
 
 function GetSelectRangeSTA(event) {
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogSelectRangeSTA").close();
+	hideNodeDialog("DialogSelectRangeSTA", event);
 
 	var node=getNodeDialog("DialogSelectRangeSTA");
 	if (!node)
@@ -794,8 +790,7 @@ function ShowTableSelectSortByDialog(parentNode, node) {
 }
 
 function GetSelectSortBy(event) {
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogSelectSortBy").close();
+	hideNodeDialog("DialogSelectSortBy", event);
 
 	var node=getNodeDialog("DialogSelectSortBy");
 	if (!node)

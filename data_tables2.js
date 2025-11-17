@@ -1409,12 +1409,6 @@ var columnCreated=false, record, json, point;
 				record[selectedOptions.nameOut]=ngeohash_encode(point[1], point[0]);
 				columnCreated=true;
 			}
-			else if (selectedOptions.radioOut=="UberH3") {
-				//JSON-->Uber H3
-				point=getFirstCoordinateGeoJSONGeometry(json);
-				record[selectedOptions.nameOut]=h3.latLngToCell(point[1], point[0], 10);
-				columnCreated=true;
-			}
 			else if (selectedOptions.radioOut=="LL") {
 				//JSON-->LL (only if points)
 				point=getFirstCoordinateGeoJSONGeometry(json);
@@ -1444,12 +1438,6 @@ var columnCreated=false, record, json, point;
 				//JSON-->Geohash
 				point=getFirstCoordinateGeoJSONGeometry(json);
 				record[selectedOptions.nameOut]=ngeohash_encode(point[1], point[0]);
-				columnCreated=true;
-			}
-			else if (selectedOptions.radioOut=="UberH3") {
-				//JSON-->Uber H3
-				point=getFirstCoordinateGeoJSONGeometry(json);
-				record[selectedOptions.nameOut]=h3.latLngToCell(point[1], point[0], 10);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="LL") {
@@ -1482,43 +1470,6 @@ var columnCreated=false, record, json, point;
 				record[selectedOptions.nameOut]=record[selectedOptions.geohashIn];
 				columnCreated=true;
 			}
-			else if (selectedOptions.radioOut=="UberH3") {
-				record[selectedOptions.nameOut]=h3.latLngToCell(point.latitude, point.longitude, 10);
-				columnCreated=true;
-			}
-			else if (selectedOptions.radioOut=="LL") {
-				//JSON-->LL (only if points)
-				record[selectedOptions.nameOut]=point.longitude;
-				record[selectedOptions.latitudeOut]=point.latitude;
-				columnCreated=true;
-			}
-		}
-	}
-	else if (selectedOptions.radioIn=="UberH3") {
-		for (var i=0; i<data.length; i++)
-		{
-			record=data[i];
-			if (!record[selectedOptions.uberH3In])
-				continue;
-			point=h3.cellToLatLng(record[selectedOptions.uberH3In]);
-			json={type:"Point", coordinates:[point[1], point[0]]};
-			if (selectedOptions.radioOut=="JSON") {
-				record[selectedOptions.nameOut]=json;
-				columnCreated=true;
-			}
-			else if (selectedOptions.radioOut=="WKT") {
-				wkt.read(JSON.stringify(json));
-				record[selectedOptions.nameOut]=wkt.write();
-				columnCreated=true;
-			}
-			else if (selectedOptions.radioOut=="Geohash") {
-				record[selectedOptions.nameOut]=ngeohash_encode(point[0], point[1]);
-				columnCreated=true;
-			}
-			else if (selectedOptions.radioOut=="UberH3") {
-				record[selectedOptions.nameOut]=record[selectedOptions.uberH3In];
-				columnCreated=true;
-			}
 			else if (selectedOptions.radioOut=="LL") {
 				//JSON-->LL (only if points)
 				point=getFirstCoordinateGeoJSONGeometry(json);
@@ -1548,10 +1499,6 @@ var columnCreated=false, record, json, point;
 				record[selectedOptions.nameOut]=ngeohash_encode(record[selectedOptions.latitudeIn], record[selectedOptions.longitudeIn]);
 				columnCreated=true;
 			}
-			else if (selectedOptions.radioOut=="UberH3") {
-				record[selectedOptions.nameOut]=h3.latLngToCell(record[selectedOptions.latitudeIn], record[selectedOptions.longitudeIn], 10);
-				columnCreated=true;
-			}
 			else if (selectedOptions.radioOut=="LL") {
 				//JSON-->LL (only if points)
 				record[selectedOptions.nameOut]=record[selectedOptions.longitudeIn];
@@ -1567,8 +1514,6 @@ var columnCreated=false, record, json, point;
 		else if (selectedOptions.radioOut=="WKT")
 			dataAttributes[selectedOptions.nameOut].type="geometry";
 		else if (selectedOptions.radioOut=="Geohash")
-			dataAttributes[selectedOptions.nameOut].type="string";
-		else if (selectedOptions.radioOut=="UberH3")
 			dataAttributes[selectedOptions.nameOut].type="string";
 		else if (selectedOptions.radioOut=="LL") {
 			dataAttributes[selectedOptions.nameOut].type="number";

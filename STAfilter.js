@@ -345,7 +345,7 @@ function openModalRowFilterEntities(number) { //To open Modat to see and select 
 	var dialogFilterRowEntities = document.getElementById("DialogFilterRowEntities");
 	dialogFilterRowEntities.setAttribute("data-rowNumber", number);
 	fillDialogFilterRowEntities(number, 0, "");
-	document.getElementById("DialogFilterRowEntities").showModal();
+	showNodeDialog("DialogFilterRowEntities");
 }
 
 function updateSTAFilterRowEntities(number, counter, entitySelected) { //Modify or erase what is necessary
@@ -507,7 +507,7 @@ function OkButtonInRowFilterEntities(event) { //Ok in DialogFilterRowEntities
 	fillValueSelectorFilterRow(number);
 	showAndHiddeSelectorAndInputsFilterRow(number);
 	showInputProperty(number);
-	document.getElementById("DialogFilterRowEntities").close();
+	hideNodeDialog("DialogFilterRowEntities");
 }
 //PropertySelect
 function createPropertySelectInFilterRows(selectorInfo, count) {
@@ -2066,7 +2066,7 @@ function GetFilterRows(event) {
 		GetFilterRowsSTA(node);
 		showInfoMessage("Filtering STA rows...");
 	}
-	document.getElementById("DialogFilterRows").close();
+	hideNodeDialog("DialogFilterRows");
 	networkNodes.update(node);
 }
 
@@ -2103,7 +2103,7 @@ function GetFilterRowsSTA(node) {
 		filterSchema:node.STAFilterSchema,
 		filterData: node.STAinfoFilter,
 	};
-	document.getElementById("DialogFilterRows").close();
+	hideNodeDialog("DialogFilterRows");
 	FinalizeSelectedSelectExpands(node, previousSTAURL, "Filtering STA by selected criteria... ");	
 	}
 	async function GetFilterRowsOGCAPIFeatures(node){

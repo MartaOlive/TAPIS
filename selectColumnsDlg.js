@@ -104,9 +104,7 @@ function ShowTableSelectColumnsDialogSelect(div_id, parentNode, node, selected, 
 }
 
 function GetSelectColumns(event) {
-
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogSelectColumns").close();
+	hideNodeDialog("DialogSelectColumns", event);
 
 	var node=getNodeDialog("DialogSelectColumns");
 	if (!node)

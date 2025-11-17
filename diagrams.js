@@ -330,20 +330,21 @@ function AdaptValueAxisY(value) {
 
 
 function UpdateScatterPlot(event) {
-	event.preventDefault(); // We don't want to submit this form
+	if (event)
+		event.preventDefault(); // We don't want to submit this form
 	var node = getNodeDialog("DialogScatterPlot");
 	if (!node)
 		return;
 	var dataGroups = node.STAattributesToSelect.dataGroupsSelectedToScatterPlot; //Options selected
 	var nodeId, node, nodeData, selectedOptions = {}, record, items, minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight, dataRecord;
-	var yAxisTodisplay={left:false, right:false}, axisXType="",curentAttributeType,label,type, pointRadius;
+	var yAxisTodisplay={left:false, right:false}, axisXType="", currentAttributeType, label, type, pointRadius;
 	var data = {datasets:[]};
 
 	//x axis in sorted?
 	var sortXaxis=(document.getElementById("DialogScatterPlotAxisXSort").checked)?true:false;
 	if (sortXaxis){
 		node.STAattributesToSelect.sorted= true;
-		 document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display = "none";
+		document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display = "none";
 	}else{
 		node.STAattributesToSelect.sorted= false;
 		document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display = "inline-block";
@@ -352,14 +353,14 @@ function UpdateScatterPlot(event) {
 	for (var e = 0; e < dataGroups.length; e++) {
 		nodeId = dataGroups[e].nodeSelected;
 		selectedOptions.AxisX = dataGroups[e].X;
-		curentAttributeType=networkNodes.get(dataGroups[e].nodeSelected).STAdataAttributes[dataGroups[e].X].type;
-		if (curentAttributeType=="integer")
-			curentAttributeType="number"; //coded as sameAxis
+		currentAttributeType=networkNodes.get(nodeId).STAdataAttributes[dataGroups[e].X].type;
+		if (currentAttributeType=="integer")
+			currentAttributeType="number"; //coded as sameAxis
 
 		if (e==0)
-			axisXType= curentAttributeType;
+			axisXType=currentAttributeType;
 		else{
-			if (axisXType!=curentAttributeType){ //avoid different types of X axis
+			if (axisXType!=currentAttributeType){ //avoid different types of X axis
 				alert("All series in X axis has to have same type of data");
 				return;
 			}
@@ -407,7 +408,7 @@ function UpdateScatterPlot(event) {
 		}
 		type=dataGroups[e].graphicType;
 		pointRadius=(type=="line") ? 0 : 2;
-		label=(dataGroups[e].legendText=="") ? node.STAattributesToSelect.parentNodesInformation[dataGroups[e].nodeSelected].nodeLabel+"_"+dataGroups[e].Y : dataGroups[e].legendText;
+		label=(dataGroups[e].legendText=="") ? node.STAattributesToSelect.parentNodesInformation[nodeId].nodeLabel+"_"+dataGroups[e].Y : dataGroups[e].legendText;
 			
 		data.datasets.push(
 			{
@@ -619,8 +620,7 @@ function UpdateScatterPlot(event) {
 }
 	
 function CloseDialogScatterPlot(event) {
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogScatterPlot").close();
+	hideNodeDialog("DialogScatterPlot", event);
 }
 
 const ColorsForBarPlot = ["#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c", "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5", "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f", "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"];
@@ -815,8 +815,7 @@ function DrawBarPlot(event) {
 }
 
 function CloseDialogBarPlot(event) {
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogBarPlot").close();
+	hideNodeDialog("DialogBarPlot", event);
 }
 
 function DrawImageViewer(event) {
@@ -867,7 +866,6 @@ function DrawImageViewer(event) {
 }
 
 function CloseDialogImageViewer(event) {
-	event.preventDefault(); // We don't want to submit this form
-	document.getElementById("DialogImageViewer").close();
+	hideNodeDialog("DialogImageViewer", event);
 }
 

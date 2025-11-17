@@ -169,8 +169,7 @@
 		}
 
 		function GetGroupBy(event) {
-			event.preventDefault(); // We don't want to submit this form
-			document.getElementById("DialogGroupBy").close();
+			hideNodeDialog("DialogGroupBy", event);
 			
 			var node= getNodeDialog("DialogGroupBy");
 			node.groupByParams={groupByAttr: [], groupByDate:[], aggregationAttr:{}};
