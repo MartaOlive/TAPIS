@@ -1939,27 +1939,34 @@
 					<div style="display: flex; flex-direction: column; align-items: center;">
 				<table >
 						<tr>
-							<td style="text-align: center;" colspan="2"><strong>Time unit:</strong></td>
+							<td colspan="2" style="text-align: center;"><strong>Time unit:</strong></td>
 						</tr>
 						<tr>
-							<td style="width: 10px;">
-								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_years"><br>
-								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_months"><br>
-								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_days"><br>
-								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_hours"><br>
-								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_minutes"><br>
-								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_seconds"><br>
-							</td>
-							<td>
-								<label for="TemporalQuality_consistency_radio_years">Years</label><br>
-								<label for="TemporalQuality_consistency_radio_months">Months</label><br>
-								<label for="TemporalQuality_consistency_radio_days">Days</label><br>
-								<label for="TemporalQuality_consistency_radio_hours">Hours</label><br>
-								<label for="TemporalQuality_consistency_radio_minutes">Minutes</label><br>
-								<label for="TemporalQuality_consistency_radio_seconds">Seconds</label><br>
-							</td>
+							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_years"></td>
+							<td><label for="TemporalQuality_consistency_radio_years">Years</label></td>
+						</tr>
+						<tr>
+							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_months"></td>
+							<td><label for="TemporalQuality_consistency_radio_months">Months</label></td>
+						</tr>
+						<tr>
+							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_days"></td>
+							<td><label for="TemporalQuality_consistency_radio_days">Days</label></td>
+						</tr>
+						<tr>
+							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_hours"></td>
+							<td><label for="TemporalQuality_consistency_radio_hours">Hours</label></td>
+						</tr>
+						<tr>
+							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_minutes"></td>
+							<td><label for="TemporalQuality_consistency_radio_minutes">Minutes</label></td>
+						</tr>
+						<tr>
+							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_seconds"></td>
+							<td><label for="TemporalQuality_consistency_radio_seconds">Seconds</label></td>
 						</tr>
 					</table>
+					<br>
 					<table>
 						<tr>
 							<td style="text-align: center;"><strong>Tolerance:</strong></td>
@@ -1983,14 +1990,14 @@
 					</div>
 
 			</fieldset>
+			<br>
 			<div>
-				<label><input type="checkbox" value="temporalQuality_calculateRate" id="dataQuality_temporalQuality_calculate" name="dataQuality_temporalQuality" checked>Calculate the global temporalQuality rate (%)</label><br>
-				<label><input type="checkbox" value="temporalQuality_flagBadRecords" id="dataQuality_temporalQuality_flag" name="dataQuality_temporalQuality">Flag the bad records (true/false)</label><br>
-				<label><input type="checkbox" value="temporalQuality_filterBadRecords" id="dataQuality_temporalQuality_filter" name="dataQuality_temporalQuality">Filter the table to keep only valid records</label>
+				<label><input type="checkbox" value="temporalQuality_filterBadRecords" id="dataQuality_temporalQuality_filter" name="dataQuality_temporalQuality">Filter the table to keep only valid records (from calculated parameters only)</label>
 			</div>
 			<div class="center">
 				<button value="ok" onClick="okButtonDataQualityTemporalQuality(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
+			<br>
 			<input type="hidden" id="DialogQualityTemporalQualityNodeId"></input>
 		</form>
 	</dialog>
