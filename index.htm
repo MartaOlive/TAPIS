@@ -1722,12 +1722,12 @@
 		<form>
 			<h3> Completness omission </h3>
 			<div id="DialogQualityCompletnessOmission_attributesList"></div>
-			<fieldset>
-				<legend>To do</legend>
+			<div>
+				
 				<label><input type="checkbox" value="Omission_calculateRate" id="dataQuality_omission_calculate" name="dataQuality_omission" checked>Calculate the global omission rate (%)</label><br>
 				<label><input type="checkbox" value="Omission_flagBadRecords" id="dataQuality_omission_flag" name="dataQuality_omission">Flag the bad records (true/false)</label><br>
 				<label><input type="checkbox" value="Omission_filterBadRecords" id="dataQuality_omission_filter" name="dataQuality_omission">Filter the table to keep only valid records</label>
-			</fieldset>
+			</div>
 			<div class="center">
 				<button value="ok" onClick="okButtonDataQualityCompletnessOmission(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
@@ -1831,12 +1831,12 @@
 				</table>
 				</div>
 
-			<fieldset>
-				<legend>To do</legend>
+			<div>
+				
 				<label><input type="checkbox" value="logicalConsistency_calculateRate" id="dataQuality_logicalConsistency_calculate" name="dataQuality_logicalConsistency" checked>Calculate the global LogicalConsistency rate (%)</label><br>
 				<label><input type="checkbox" value="logicalConsistency_flagBadRecords" id="dataQuality_logicalConsistency_flag" name="dataQuality_logicalConsistency">Flag the bad records (true/false)</label><br>
 				<label><input type="checkbox" value="logicalConsistency_filterBadRecords" id="dataQuality_logicalConsistency_filter" name="dataQuality_logicalConsistency">Filter the table to keep only valid records</label>
-			</fieldset>
+			</div>
 			<div class="center">
 				<button value="ok" onClick="okButtonDataQualityDialogQualityLogicalConsistency(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
@@ -1848,18 +1848,146 @@
 			<h3> Temporal quality </h3>
 			<div id="DialogQualityTemporalQuality_attributesList"></div>
 			<fieldset><legend>Temporal validity</legend>
-			<label>From:</label><input id="DialogQualityTemporalQuality_validity_inputText_from" type="text" placeholder="YYYY-MM-DDTHH:MM:SSZ" style="width:150px" onchange="addTimeToOtherInputCreateEntities('DialogQualityTemporalQuality_validity_inputText_from','DialogQualityTemporalQuality_validity_calendar_from')" ><input type="datetime-local" id="DialogQualityTemporalQuality_validity_calendar_from" onchange="addTimeToOtherInputCreateEntities('DialogQualityTemporalQuality_validity_calendar_from','DialogQualityTemporalQuality_validity_inputText_from')"><br>
-			<label>To:</label><input id="DialogQualityTemporalQuality_validity_inputText_to" type="text" placeholder="YYYY-MM-DDTHH:MM:SSZ" style="width:150px" onchange="addTimeToOtherInputCreateEntities('DialogQualityTemporalQuality_validity_inputText_to','DialogQualityTemporalQuality_validity_calendar_to')" ><input type="datetime-local" id="DialogQualityTemporalQuality_validity_calendar_to" onchange="addTimeToOtherInputCreateEntities('DialogQualityTemporalQuality_validity_calendar_to','DialogQualityTemporalQuality_validity_inputText_to')">
+				<table>
+					<tbody>
+						<tr>
+							<td><label>From:</label></td>
+							<td><input id="DialogQualityTemporalQuality_validity_inputText_from" type="text" placeholder="YYYY-MM-DDTHH:MM:SSZ" style="width:150px" onchange="addTimeToOtherInputCreateEntities('DialogQualityTemporalQuality_validity_inputText_from','DialogQualityTemporalQuality_validity_calendar_from')" ></td>
+							<td><input type="datetime-local" id="DialogQualityTemporalQuality_validity_calendar_from" onchange="addTimeToOtherInputCreateEntities('DialogQualityTemporalQuality_validity_calendar_from','DialogQualityTemporalQuality_validity_inputText_from')"></td>
+						</tr>
+						<tr>
+							<td><label>To:</label></td>
+							<td><input id="DialogQualityTemporalQuality_validity_inputText_to" type="text" placeholder="YYYY-MM-DDTHH:MM:SSZ" style="width:150px" onchange="addTimeToOtherInputCreateEntities('DialogQualityTemporalQuality_validity_inputText_to','DialogQualityTemporalQuality_validity_calendar_to')" ></td>
+							<td><input type="datetime-local" id="DialogQualityTemporalQuality_validity_calendar_to" onchange="addTimeToOtherInputCreateEntities('DialogQualityTemporalQuality_validity_calendar_to','DialogQualityTemporalQuality_validity_inputText_to')"></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<br>
+				<input type="checkbox" value="TemporalQuality_calculate_temporalValidity" id="TemporalQuality_checkbox_calculate_temporalValidity" name="TemporalQuality_checkbox_calculate"><label>Calculate the global temporal validity rate (%)</label><br>
+				<input type="checkbox" value="TemporalQuality_flag_temporalValidity" id="TemporalQuality_checkbox_flag_temporalValidity" name="TemporalQuality_checkbox_flag"><label>Flag the bad records (true/false)</label><br><br>
+
 
 			</fieldset>
-			<fieldset><legend>Temporal resolution</legend></fieldset>
-			<fieldset><legend>Temporal consistency</legend></fieldset>
-			<fieldset>
-				<legend>To do</legend>
+			<fieldset><legend>Temporal resolution</legend>
+				<span style="display: block; text-align: center;">
+					The system will determine the resolution based on this table:
+					<table class="tablesmall" style="margin: 0 auto;">
+						<thead>
+						<tr>
+							<th></th>
+							<th>Format</th>
+							<th>Description</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_year"></td>
+							<td>YYYY</td>
+							<td>Year</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_month"></td>
+							<td>YYYY-MM</td>
+							<td>Month</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_day"></td>
+							<td>YYYY-MM-DD</td>
+							<td>Day</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_hour"></td>
+							<td>YYYY-MM-DDTHH</td>
+							<td>Hour</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_minutesSimple"></td>
+							<td>HH:mm</td>
+							<td>Minutes</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_minutes"></td>
+							<td>YYYY-MM-DDTHH:mm</td>
+							<td>Minutes</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_secondsSimple"></td>
+							<td>HH:mm:ss</td>
+							<td>Seconds</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_seconds"></td>
+							<td>YYYY-MM-DDTHH:mm:ss</td>
+							<td>Seconds</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_fractions"></td>
+							<td>YYYY-MM-DDTHH:mm:ss.fff</td>
+							<td>Fractions of a second</td>
+						</tr>
+						</tbody>
+					</table>
+				
+				</span>
+					<input type="checkbox" value="TemporalQuality_calculate_temporalResolution" id="TemporalQuality_checkbox_calculate_temporalResolution" name="TemporalQuality_checkbox_calculate"><label>Calculate the global temporal resolution rate (%)</label><br>
+					<input type="checkbox" value="TemporalQuality_flag_temporalResolution" id="TemporalQuality_checkbox_flag_temporalResolution" name="TemporalQuality_checkbox_flag"><label>Flag the bad records (true/false)</label><br>
+
+			</fieldset>
+			<fieldset >
+				<legend>Temporal consistency</legend>
+					<div style="display: flex; flex-direction: column; align-items: center;">
+				<table >
+						<tr>
+							<td style="text-align: center;" colspan="2"><strong>Time unit:</strong></td>
+						</tr>
+						<tr>
+							<td style="width: 10px;">
+								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_years"><br>
+								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_months"><br>
+								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_days"><br>
+								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_hours"><br>
+								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_minutes"><br>
+								<input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_seconds"><br>
+							</td>
+							<td>
+								<label for="TemporalQuality_consistency_radio_years">Years</label><br>
+								<label for="TemporalQuality_consistency_radio_months">Months</label><br>
+								<label for="TemporalQuality_consistency_radio_days">Days</label><br>
+								<label for="TemporalQuality_consistency_radio_hours">Hours</label><br>
+								<label for="TemporalQuality_consistency_radio_minutes">Minutes</label><br>
+								<label for="TemporalQuality_consistency_radio_seconds">Seconds</label><br>
+							</td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td style="text-align: center;"><strong>Tolerance:</strong></td>
+						</tr>
+						<tr>
+							<td>
+								<label><span id="TemporalQuality_consistency_toleranceRange_span">2</span>%</label><br>
+								<input type="range"
+									id="TemporalQuality_consistency_toleranceRange"
+									min="0" max="15" value="2" step="1"
+									oninput="document.getElementById('TemporalQuality_consistency_toleranceRange_span').textContent=this.value">
+							</td>
+						</tr>
+					</table>
+					</div>
+					<div>
+							<input type="checkbox"value="TemporalQuality_calculate_temporalConsistency" id="TemporalQuality_checkbox_calculate_temporalConsistency"name="TemporalQuality_checkbox_calculate">
+							<label for="TemporalQuality_checkbox_calculate_temporalConsistency">Calculate the global temporal consistency rate (%)</label> <br>
+							<input type="checkbox" value="TemporalQuality_flag_temporalConsistency"	id="TemporalQuality_checkbox_flag_temporalConsistency" name="TemporalQuality_checkbox_flag">						<td>
+							<label for="TemporalQuality_checkbox_flag_temporalConsistency">	Flag the bad records (true/false)</label>
+					</div>
+
+			</fieldset>
+			<div>
 				<label><input type="checkbox" value="temporalQuality_calculateRate" id="dataQuality_temporalQuality_calculate" name="dataQuality_temporalQuality" checked>Calculate the global temporalQuality rate (%)</label><br>
 				<label><input type="checkbox" value="temporalQuality_flagBadRecords" id="dataQuality_temporalQuality_flag" name="dataQuality_temporalQuality">Flag the bad records (true/false)</label><br>
 				<label><input type="checkbox" value="temporalQuality_filterBadRecords" id="dataQuality_temporalQuality_filter" name="dataQuality_temporalQuality">Filter the table to keep only valid records</label>
-			</fieldset>
+			</div>
 			<div class="center">
 				<button value="ok" onClick="okButtonDataQualityTemporalQuality(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>

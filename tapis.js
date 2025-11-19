@@ -10303,13 +10303,13 @@ function okButtonDataQualityCompletnessOmission(event){
 	hideNodeDialog("DialogQualityCompletnessOmission", event);
 	
 	if(calculate){ //pensar si fer-ne una funció per tots
-		document.getElementById("dataQualityResult_info").innerHTML= `<table style="border: 1px solid black">
+		document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
 		<thead > 
-		<th style="border: 1px solid black" >Attribute</th><th style="border: 1px solid black">Total records</th><th style="border: 1px solid black">Empty records</th>
-		<th style="border: 1px solid black">Omission rate</th><th style="border: 1px solid black">Completeness rate</th></tr></thead>
+		<th >Attribute</th><th>Total records</th><th>Empty records</th>
+		<th>Omission rate</th><th>Completeness rate</th></tr></thead>
 		<tbody><tr>
-		<td style="border: 1px solid black">${selected}</td><td style="border: 1px solid black">${infoDataOmission[0]}</td><td style="border: 1px solid black">${infoDataOmission[2]}</td>
-		<td style="border: 1px solid black">${infoDataOmission[3]}</td><td style="border: 1px solid black">${infoDataOmission[4]}</td>
+		<td>${selected}</td><td>${infoDataOmission[0]}</td><td>${infoDataOmission[2]}</td>
+		<td>${infoDataOmission[3]}</td><td>${infoDataOmission[4]}</td>
 		</tr></tbody></table>`
 	}
 	showNodeDialog("dataQualityResult");
@@ -10412,13 +10412,13 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 			networkNodes.update(node);
 			hideNodeDialog("DialogQualityLogicalConsistency", event);
 	
-			document.getElementById("dataQualityResult_info").innerHTML=`<table style="border: 1px solid black">
+			document.getElementById("dataQualityResult_info").innerHTML=`<table class="tablesmall">
 				<thead > 
-				<th style="border: 1px solid black" >Target attributes</th><th style="border: 1px solid black" >Reference attributes</th><th style="border: 1px solid black">Total records</th>
-				<th style="border: 1px solid black">True records</th><th style="border: 1px solid black">Logical consistancy rate</th></tr></thead>
+				<th >Target attributes</th><th >Reference attributes</th><th>Total records</th>
+				<th>True records</th><th>Logical consistancy rate</th></tr></thead>
 				<tbody><tr>
-				<td style="border: 1px solid black">${targets}</td><td style="border: 1px solid black">${references}</td><td style="border: 1px solid black">${dataTarget.length}</td>
-				<td style="border: 1px solid black">${infoDatalogicalConsistency[1]}</td><td style="border: 1px solid black">${infoDatalogicalConsistency[2]}</td>
+				<td>${targets}</td><td>${references}</td><td>${dataTarget.length}</td>
+				<td>${infoDatalogicalConsistency[1]}</td><td>${infoDatalogicalConsistency[2]}</td>
 				</tr></tbody></table>`
 			showNodeDialog("dataQualityResult");
 			updateQueryAndTableArea(node);
