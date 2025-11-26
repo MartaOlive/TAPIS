@@ -10432,8 +10432,57 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 function populateDialogQualityTemporalQuality(node){
 	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, node, "temporalQuality");
 	document.getElementById("DialogQualityTemporalQuality_attributesList").innerHTML=attributesCheckboxModule;
+	saveNodeDialog("DialogQualityLogicalConsistency", node);
 }
 
+function okButtonDataQualityTemporalQuality(event){
+	var node= getNodeDialog("DialogQualityLogicalConsistency");
+	var data= node.STAdata;
+	var select= document.getElementById("attributeList_temporalQuality");
+	var attributeSelected= select.options[select.selectedIndex].value;
+
+	var validity_calculate=(document.getElementById("TemporalQuality_checkbox_calculate_temporalValidity").checked)?true:false;
+	var validity_flag=(document.getElementById("TemporalQuality_checkbox_flag_temporalValidity").checked)?true:false;
+	var from=document.getElementById("DialogQualityTemporalQuality_validity_inputText_from").value;
+	var to= document.getElementById("DialogQualityTemporalQuality_validity_inputText_to").value;
+
+	var resolution_calculate=(document.getElementById("TemporalQuality_checkbox_calculate_temporalResolution").checked)?true:false;
+	var resolution_flag=(document.getElementById("TemporalQuality_checkbox_flag_temporalResolution").checked)?true:false;
+	var resolutionRadio=document.querySelector('input[name="TemporalQuality_resolution_radio"]:checked')
+	var resolutionRadioValue= resolutionRadio.value;
+
+	var consistencyInput= document.getElementById("TemporalQuality_consistency_toleranceNumber").value;
+	var consistency_calculate=(document.getElementById("TemporalQuality_checkbox_calculate_temporalConsistency").checked)?true:false;
+	var consistency_flag=(document.getElementById("TemporalQuality_checkbox_flag_temporalConsistency").checked)?true:false;
+	var consistencyRadio=document.querySelector('input[name="TemporalQuality_consistency_radio"]:checked')
+	var consistencyRadioValue= consistencyRadio.value;
+	var tolerance= document.getElementById("TemporalQuality_consistency_toleranceRange").value;
+	var consistencyRadioMethod=(document.getElementById("TemporalQuality_intervalMethod_radio_local").checked)?"interval":"global";
+
+	var filter= (document.getElementById("dataQuality_temporalQuality_filter").checked)?true:false;
+
+	var newData={}
+	if(validity_calculate||validity_flag){
+		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, validity_calculate, validity_flag);
+		data= newData.validity[0];
+	} 
+	
+	if (resolution_calculate||resolution_flag){
+		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, resolution_calculate, resolution_flag);
+		data= newData.resolution[0];
+	} 
+	if(consistency_calculate||consistency_flag){
+		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,consistency_calculate, consistency_flag);
+		data= newData.consistency[0];
+	}
+
+
+
+
+
+
+
+}
 
 //async function GetObjectId(url, objsName, obj){
 	//var response=await HTTPJSONData(url+"/"+objsName+ "?$filter=" + encodeURIComponent(AddKeysToFilter("", obj)));

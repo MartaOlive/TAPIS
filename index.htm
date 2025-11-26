@@ -1871,7 +1871,7 @@
 			</fieldset>
 			<fieldset><legend>Temporal resolution</legend>
 				<span style="display: block; text-align: center;">
-					The system will determine the resolution based on this table:
+					Expected resolution (Values with higher resolutions will be accepted, but those with lower resolutions will not) :
 					<table class="tablesmall" style="margin: 0 auto;">
 						<thead>
 						<tr>
@@ -1882,47 +1882,47 @@
 						</thead>
 						<tbody>
 						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_year"></td>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_year" value="year"></td>
 							<td>YYYY</td>
 							<td>Year</td>
 						</tr>
 						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_month"></td>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_month" value="month"></td>
 							<td>YYYY-MM</td>
 							<td>Month</td>
 						</tr>
 						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_day"></td>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_day" value="day"></td>
 							<td>YYYY-MM-DD</td>
 							<td>Day</td>
 						</tr>
 						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_hour"></td>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_hour" value="hour"></td>
 							<td>YYYY-MM-DDTHH</td>
 							<td>Hour</td>
 						</tr>
 						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_minutesSimple"></td>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_minuteSimple" value="minute"></td>
 							<td>HH:mm</td>
-							<td>Minutes</td>
+							<td>Minute</td>
 						</tr>
 						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_minutes"></td>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_minute" value="minute"></td>
 							<td>YYYY-MM-DDTHH:mm</td>
-							<td>Minutes</td>
+							<td>Minute</td>
 						</tr>
 						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_secondsSimple"></td>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_secondsSimple" value="second"></td>
 							<td>HH:mm:ss</td>
-							<td>Seconds</td>
+							<td>Second</td>
 						</tr>
 						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_seconds"></td>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_seconds" value="second" checked></td>
 							<td>YYYY-MM-DDTHH:mm:ss</td>
-							<td>Seconds</td>
+							<td>Second</td>
 						</tr>
 						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_fractions"></td>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_fraction" value="fraction"></td>
 							<td>YYYY-MM-DDTHH:mm:ss.fff</td>
 							<td>Fractions of a second</td>
 						</tr>
@@ -1936,59 +1936,84 @@
 			</fieldset>
 			<fieldset >
 				<legend>Temporal consistency</legend>
-					<div style="display: flex; flex-direction: column; align-items: center;">
-				<table >
-						<tr>
-							<td colspan="2" style="text-align: center;"><strong>Time unit:</strong></td>
-						</tr>
-						<tr>
-							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_years"></td>
-							<td><label for="TemporalQuality_consistency_radio_years">Years</label></td>
-						</tr>
-						<tr>
-							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_months"></td>
-							<td><label for="TemporalQuality_consistency_radio_months">Months</label></td>
-						</tr>
-						<tr>
-							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_days"></td>
-							<td><label for="TemporalQuality_consistency_radio_days">Days</label></td>
-						</tr>
-						<tr>
-							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_hours"></td>
-							<td><label for="TemporalQuality_consistency_radio_hours">Hours</label></td>
-						</tr>
-						<tr>
-							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_minutes"></td>
-							<td><label for="TemporalQuality_consistency_radio_minutes">Minutes</label></td>
-						</tr>
-						<tr>
-							<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_seconds"></td>
-							<td><label for="TemporalQuality_consistency_radio_seconds">Seconds</label></td>
-						</tr>
-					</table>
-					<br>
+					<div style="display: flex; flex-direction: row; align-items: flex-start; gap: 20px;">
 					<table>
 						<tr>
-							<td style="text-align: center;"><strong>Tolerance:</strong></td>
+							<td style="text-align: center;"><strong>Number:</strong></td>
 						</tr>
 						<tr>
 							<td>
-								<label><span id="TemporalQuality_consistency_toleranceRange_span">2</span>%</label><br>
-								<input type="range"
-									id="TemporalQuality_consistency_toleranceRange"
-									min="0" max="15" value="2" step="1"
-									oninput="document.getElementById('TemporalQuality_consistency_toleranceRange_span').textContent=this.value">
+								<input type="text" id="TemporalQuality_consistency_toleranceNumber" style="width: 50px">	
 							</td>
 						</tr>
 					</table>
+					<table >
+							<tr>
+								<td colspan="2" style="text-align: center;"><strong>Time unit:</strong></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_years" value= "years"></td>
+								<td><label for="TemporalQuality_consistency_radio_years">Years</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_months" value="months"></td>
+								<td><label for="TemporalQuality_consistency_radio_months">Months</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_days" value="days"></td>
+								<td><label for="TemporalQuality_consistency_radio_days">Days</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_hours" value="hours"></td>
+								<td><label for="TemporalQuality_consistency_radio_hours">Hours</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_minutes" value="minutes"></td>
+								<td><label for="TemporalQuality_consistency_radio_minutes">Minutes</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_seconds" value="seconds"></td>
+								<td><label for="TemporalQuality_consistency_radio_seconds" checked>Seconds</label></td>
+							</tr>
+						</table>
+						<br>
+						<table>
+							<tr>
+								<td style="text-align: center;"><strong>Tolerance:</strong></td>
+							</tr>
+							<tr>
+								<td>
+									<label><span id="TemporalQuality_consistency_toleranceRange_span">2</span>%</label><br>
+									<input type="range"
+										id="TemporalQuality_consistency_toleranceRange"
+										min="0" max="15" value="2" step="1"
+										oninput="document.getElementById('TemporalQuality_consistency_toleranceRange_span').textContent=this.value">
+								</td>
+							</tr>
+						</table>
+						<table>
+						<tbody>
+							<tr>
+								<td colspan="2" style="text-align: center;"><strong>Interval method:</strong></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_intervalMethod_radio" id="TemporalQuality_intervalMethod_radio_local" checked value="local"></td>
+								<td><label for="TemporalQuality_intervalMethod_radio_local" >Evaluating the distance to the previous data</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_intervalMethod_radio" id="TemporalQuality_intervalMethod_radio_global" value="global"></td>
+								<td><label for="TemporalQuality_intervalMethod_radio_global">Evaluating the distance from the global interval baseline</label></td>
+							</tr>
+						</tbody>
+					</table>
+
 					</div>
 					<div>
-							<input type="checkbox"value="TemporalQuality_calculate_temporalConsistency" id="TemporalQuality_checkbox_calculate_temporalConsistency"name="TemporalQuality_checkbox_calculate">
-							<label for="TemporalQuality_checkbox_calculate_temporalConsistency">Calculate the global temporal consistency rate (%)</label> <br>
-							<input type="checkbox" value="TemporalQuality_flag_temporalConsistency"	id="TemporalQuality_checkbox_flag_temporalConsistency" name="TemporalQuality_checkbox_flag">						<td>
-							<label for="TemporalQuality_checkbox_flag_temporalConsistency">	Flag the bad records (true/false)</label>
+						<input type="checkbox"value="TemporalQuality_calculate_temporalConsistency" id="TemporalQuality_checkbox_calculate_temporalConsistency"name="TemporalQuality_checkbox_calculate">
+						<label for="TemporalQuality_checkbox_calculate_temporalConsistency">Calculate the global temporal consistency rate (%)</label> <br>
+						<input type="checkbox" value="TemporalQuality_flag_temporalConsistency"	id="TemporalQuality_checkbox_flag_temporalConsistency" name="TemporalQuality_checkbox_flag">						<td>
+						<label for="TemporalQuality_checkbox_flag_temporalConsistency">	Flag the bad records (true/false)</label>
 					</div>
-
 			</fieldset>
 			<br>
 			<div>
