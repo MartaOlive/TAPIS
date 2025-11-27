@@ -10476,8 +10476,11 @@ function okButtonDataQualityTemporalQuality(event){
 		data= newData.consistency[0];
 	}
 
-
-
+	//FAlta mostrar el resultat
+	node.STAdata= data;
+	node.STAdataAttributes= getDataAttributes(data);
+	networkNodes.update(node);
+	hideNodeDialog("DialogQualityTemporalQuality", event);
 
 
 

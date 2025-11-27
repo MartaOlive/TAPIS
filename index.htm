@@ -1902,19 +1902,9 @@
 							<td>Hour</td>
 						</tr>
 						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_minuteSimple" value="minute"></td>
-							<td>HH:mm</td>
-							<td>Minute</td>
-						</tr>
-						<tr>
 							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_minute" value="minute"></td>
 							<td>YYYY-MM-DDTHH:mm</td>
 							<td>Minute</td>
-						</tr>
-						<tr>
-							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_secondsSimple" value="second"></td>
-							<td>HH:mm:ss</td>
-							<td>Second</td>
 						</tr>
 						<tr>
 							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_seconds" value="second" checked></td>
@@ -1972,8 +1962,8 @@
 								<td><label for="TemporalQuality_consistency_radio_minutes">Minutes</label></td>
 							</tr>
 							<tr>
-								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_seconds" value="seconds"></td>
-								<td><label for="TemporalQuality_consistency_radio_seconds" checked>Seconds</label></td>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_seconds" value="seconds"checked></td>
+								<td><label for="TemporalQuality_consistency_radio_seconds" >Seconds</label></td>
 							</tr>
 						</table>
 						<br>
@@ -1997,11 +1987,11 @@
 								<td colspan="2" style="text-align: center;"><strong>Interval method:</strong></td>
 							</tr>
 							<tr>
-								<td><input type="radio" name="TemporalQuality_intervalMethod_radio" id="TemporalQuality_intervalMethod_radio_local" checked value="local"></td>
+								<td><input type="radio" name="TemporalQuality_intervalMethod_radio" id="TemporalQuality_intervalMethod_radio_local"  value="local"></td>
 								<td><label for="TemporalQuality_intervalMethod_radio_local" >Evaluating the distance to the previous data</label></td>
 							</tr>
 							<tr>
-								<td><input type="radio" name="TemporalQuality_intervalMethod_radio" id="TemporalQuality_intervalMethod_radio_global" value="global"></td>
+								<td><input type="radio" name="TemporalQuality_intervalMethod_radio" id="TemporalQuality_intervalMethod_radio_global" value="global" checked></td>
 								<td><label for="TemporalQuality_intervalMethod_radio_global">Evaluating the distance from the global interval baseline</label></td>
 							</tr>
 						</tbody>
@@ -2009,6 +1999,8 @@
 
 					</div>
 					<div>
+						<span style="font-style: italic;">This test may not be accurate if the data includes the original timezone’s daylight saving time change. <br> It is recommended to split the dataset into segments that do not include the transition</span>
+						<div><label><input type="checkbox">SORT</label><br><br>
 						<input type="checkbox"value="TemporalQuality_calculate_temporalConsistency" id="TemporalQuality_checkbox_calculate_temporalConsistency"name="TemporalQuality_checkbox_calculate">
 						<label for="TemporalQuality_checkbox_calculate_temporalConsistency">Calculate the global temporal consistency rate (%)</label> <br>
 						<input type="checkbox" value="TemporalQuality_flag_temporalConsistency"	id="TemporalQuality_checkbox_flag_temporalConsistency" name="TemporalQuality_checkbox_flag">						<td>
