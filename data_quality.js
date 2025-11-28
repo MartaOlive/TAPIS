@@ -136,16 +136,12 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 function calculateDataQualityTemporalConsistency(data, attributeSelected, number, consistencyRadioValue, consistencyRadioMethod, tolerance, calculate, flag, filter) {
     //comprobar que siguin dates (que faig amb els hh:mm?) --> mirar dates senceres i punt
 
-    var intervals = [];
-    var previousDateSeconds, previousDate;
-    var currentDateSeconds, currentDate;
+    var currentDate, previousDate;
 
-    // var validValuesRange= [number -(tolerance/100), number +(tolerance/100)]
-    var numberOfSeconds;
-    var dateFrom, dateTo, tmp1, tmp2, tmp3, DatePlusNumber, toleranceMSeconds;
+    var dateFrom, validRange;
     number = parseInt(number);
     newData = [];
-    var datesGlobal = [], dateCurrentMonthYear, daysPerMonthYear, start, end, arrayTwoDates, count = 0;
+    var datesGlobal = [], count = 0;
 
     if (consistencyRadioMethod == "global") { //GLOBAL
         for (var i = 0; i < data.length; i++) { //Creating global intervals
@@ -156,52 +152,34 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
             else dateFrom = new Date(dateFrom);
             switch (consistencyRadioValue) {
                 case "years":
-                    DatePlusNumber = new Date(dateFrom.getTime() + number * 60 * 60 * 24 * 30.44 * 12 * 1000);
-                    toleranceMSeconds = number * tolerance / 100 * 60 * 60 * 24 * 30.44 * 12 * 1000
-                    start = new Date(DatePlusNumber.getTime() - toleranceMSeconds);
-                    end = new Date(DatePlusNumber.getTime() + toleranceMSeconds);
-                    datesGlobal.push([start, end]);
+                    validRange = returnValidRange(dateFrom, number, tolerance, consistencyRadioValue)
+                    datesGlobal.push([validRange[0], validRange[1]]);
                     dateFrom = new Date(dateFrom.getTime() + number * 60 * 60 * 24 * 30.44 * 12 * 1000);
                     break;
                 case "months":
-                    DatePlusNumber = new Date(dateFrom.getTime() + number * 60 * 60 * 24 * 30.44 * 1000);
-                    toleranceMSeconds = number * tolerance / 100 * 60 * 60 * 24 * 30.44 * 1000
-                    start = new Date(DatePlusNumber.getTime() - toleranceMSeconds);
-                    end = new Date(DatePlusNumber.getTime() + toleranceMSeconds);
-                    datesGlobal.push([start, end]);
+                    validRange = returnValidRange(dateFrom, number, tolerance, consistencyRadioValue)
+                    datesGlobal.push([validRange[0], validRange[1]]);
                     dateFrom = new Date(dateFrom.getTime() + number * 60 * 60 * 24 * 30.44 * 1000);
                     break;
                 case "days":
-                    DatePlusNumber = new Date(dateFrom.getTime() + number * 60 * 60 * 24 * 1000);
-                    toleranceMSeconds = number * tolerance / 100 * 60 * 60 * 24 * 1000
-                    start = new Date(DatePlusNumber.getTime() - toleranceMSeconds);
-                    end = new Date(DatePlusNumber.getTime() + toleranceMSeconds);
-                    datesGlobal.push([start, end]);
+                    validRange = returnValidRange(dateFrom, number, tolerance, consistencyRadioValue)
+                    datesGlobal.push([validRange[0], validRange[1]]);
                     dateFrom = new Date(dateFrom.getTime() + number * 60 * 60 * 24 * 1000);
                     break;
                 case "hours":
-                    DatePlusNumber = new Date(dateFrom.getTime() + number * 60 * 60 * 1000);
-                    toleranceMSeconds = number * tolerance / 100 * 60 * 60 * 1000
-                    start = new Date(DatePlusNumber.getTime() - toleranceMSeconds);
-                    end = new Date(DatePlusNumber.getTime() + toleranceMSeconds);
-                    datesGlobal.push([start, end]);
+                    validRange = returnValidRange(dateFrom, number, tolerance, consistencyRadioValue)
+                    datesGlobal.push([validRange[0], validRange[1]]);
                     dateFrom = new Date(dateFrom.getTime() + number * 60 * 60 * 1000);
                     break;
                 case "minutes":
-                    DatePlusNumber = new Date(dateFrom.getTime() + number * 60 * 1000);
-                    toleranceMSeconds = number * tolerance / 100 * 60 * 1000
-                    start = new Date(DatePlusNumber.getTime() - toleranceMSeconds);
-                    end = new Date(DatePlusNumber.getTime() + toleranceMSeconds);
-                    datesGlobal.push([start, end]);
+                    validRange = returnValidRange(dateFrom, number, tolerance, consistencyRadioValue)
+                    datesGlobal.push([validRange[0], validRange[1]]);
                     dateFrom = new Date(dateFrom.getTime() + number * 60 * 1000);
                     break;
 
                 case "seconds":
-                    start = new Date(dateFrom.getTime() + (number - number * tolerance / 100) * 1000);
-                    end = new Date(dateFrom.getTime() + (number + number * tolerance / 100) * 1000);
-
-                    datesGlobal.push([start, end]);
-
+                    validRange = returnValidRange(dateFrom, number, tolerance, consistencyRadioValue)
+                    datesGlobal.push([validRange[0], validRange[1]]);
                     dateFrom = new Date(dateFrom.getTime() + number * 1000);
 
                     break;
@@ -209,14 +187,13 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
                     return false;
             }
         }
-        // if(flag)data[0]["temporalConsistency"]=true;
-        // if (filter)data[0][attributeSelected]
-        for (var i = 0; i < data.length; i++) { //
+
+        for (var i = 0; i < data.length; i++) {
             currentDate = new Date(data[i][attributeSelected]);
-            if (currentDate > datesGlobal[i][0] && currentDate < datesGlobal[i][1]) { //Valid
+            if (currentDate >= datesGlobal[i][0] && currentDate <= datesGlobal[i][1]) { //Valid
                 count++;
                 data[i]["temporalConsistency"] = true;
-                if (filter) newData.push(data[i][attributeSelected])
+                if (filter) newData.push(data[i])
 
             } else { //OutOfRange
                 if (flag) data[i]["temporalConsistency"] = false;
@@ -224,88 +201,78 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
             }
         }
 
-    } else {
-        ////
+    } else { //compared with previous record
+
+        for (var i = 0; i < data.length; i++) {
+            if (i == 0) {
+                previousDate = new Date(data[i][attributeSelected]);
+                count++;
+                data[i]["temporalConsistency"] = true;
+                if (filter) newData.push(data[i])
+            }
+            else {
+                currentDate = new Date(data[i][attributeSelected]);
+                validRange = returnValidRange(previousDate, number, tolerance, consistencyRadioValue);
+                if (currentDate >= validRange[0] && currentDate <= validRange[1]) {//valid
+                    count++;
+                    data[i]["temporalConsistency"] = true;
+                    if (filter) newData.push(data[i]);
+                } else { //OutOfRange
+                    if (flag) data[i]["temporalConsistency"] = false;
+                }
+                previousDate = new Date(data[i][attributeSelected]);
+            }
+
+        }
     }
     if (!filter) newData = data;
-    return newData
-    //     for (var i=1;i<data.length;i++){
-    //            // previousDate=new Date(data[i][attributeSelected]);;
-    //            // previousDateSeconds= currentDate.getTime() / 1000;
-
-    //         currentDate= new Date(data[i][attributeSelected]);
-    //         //currentDateSeconds=currentDate.getTime() / 1000;
-    //        if(consistencyRadioMethod== "global"){
-
-    //        }
-    //         switch(consistencyRadioValue){
-    //             case "years": 
-
-    //                 break;
-    //             case "months": 
-    //                 break;
-    //             case "days": 
-    //                 break;
-    //             case "hours": 
-    //                 break;
-    //             case "minutes": 
-    //                 break;
-    //             case "seconds": 
-    //                 if(d.setSeconds(d.getSeconds() + 3.5))
-    //                 dateFrom= date
-    //                 numberOfSeconds= number
-    //                 break;
-    //             default:
-    //                 return false;
-    //         }
-
-    //         if(i==1){
-    //             previousDate=new Date(data[i][attributeSelected]);;
-    //             previousDateSeconds= currentDate.getTime() / 1000;
-    //         }
-    //         if (isNaN(currentDateSeconds)){
-    //             return false; 
-    //         }else{
-
-    //         }
-    //     }
-
-
-    //    // intervals.sort((a, b) => a - b); //ordenar
-    //    //ordenar la data per la columna seleccionada
-    //    addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncMedian, decimalNumber);
-    //     var median= aggrFuncMedian(intervals); //fer mediana
-    //     var validRange =[median*(1-(tolerance/100)),median*(1+(tolerance/100)) ];
-
-    //     // for(var e=0;e<intervals.length;e++){
-    //     //     if()
-    //     // }
-
+    return [newData, count,(count / data.length) * 100 ]
 }
 
-function addPortionsToFullDate(DatePlusNumber, number, tolerance, timeUnit) {
-    var proportion = number * tolerance / 100;
-    var timeToAdd, integer, fractional;
-    var rangeToReturn;
-    switch (timeUnit) {
-        case "minutes":
-            timeToAdd = proportion * 60; //Seconds
-            rangeToReturn = [new Date(DatePlusNumber.getTime() - timeToAdd * 1000), new Date(DatePlusNumber.getTime() + timeToAdd * 1000)];
+function returnValidRange(currentData, number, tolerance, consistencyRadioValue) {
+    var start, end, DatePlusNumber, toleranceMSeconds;
+    switch (consistencyRadioValue) {
+        case "years":
+            DatePlusNumber = new Date(currentData.getTime() + number * 60 * 60 * 24 * 30.44 * 12 * 1000);
+            toleranceMSeconds = number * tolerance / 100 * 60 * 60 * 24 * 30.44 * 12 * 1000
+            start = new Date(DatePlusNumber.getTime() - toleranceMSeconds);
+            end = new Date(DatePlusNumber.getTime() + toleranceMSeconds);
+
+            break;
+        case "months":
+            DatePlusNumber = new Date(currentData.getTime() + number * 60 * 60 * 24 * 30.44 * 1000);
+            toleranceMSeconds = number * tolerance / 100 * 60 * 60 * 24 * 30.44 * 1000
+            start = new Date(DatePlusNumber.getTime() - toleranceMSeconds);
+            end = new Date(DatePlusNumber.getTime() + toleranceMSeconds);
+
+            break;
+        case "days":
+            DatePlusNumber = new Date(currentData.getTime() + number * 60 * 60 * 24 * 1000);
+            toleranceMSeconds = number * tolerance / 100 * 60 * 60 * 24 * 1000
+            start = new Date(DatePlusNumber.getTime() - toleranceMSeconds);
+            end = new Date(DatePlusNumber.getTime() + toleranceMSeconds);
             break;
         case "hours":
-            timeToAdd = proportion * 60; //minutes
-            integer = Math.trunc(timeToAdd); //minute integer
-            fractional = (timeToAdd - integer) * 60; //seconds
-
-
-
+            DatePlusNumber = new Date(currentData.getTime() + number * 60 * 60 * 1000);
+            toleranceMSeconds = number * tolerance / 100 * 60 * 60 * 1000
+            start = new Date(DatePlusNumber.getTime() - toleranceMSeconds);
+            end = new Date(DatePlusNumber.getTime() + toleranceMSeconds);
 
             break;
+        case "minutes":
+            DatePlusNumber = new Date(currentData.getTime() + number * 60 * 1000);
+            toleranceMSeconds = number * tolerance / 100 * 60 * 1000
+            start = new Date(DatePlusNumber.getTime() - toleranceMSeconds);
+            end = new Date(DatePlusNumber.getTime() + toleranceMSeconds);
+            break;
 
+        case "seconds":
+            start = new Date(currentData.getTime() + (number - number * tolerance / 100) * 1000);
+            end = new Date(currentData.getTime() + (number + number * tolerance / 100) * 1000);
+            break;
         default:
             return false;
-
     }
-    return rangeToReturn;
 
+    return [start, end]
 }

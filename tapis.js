@@ -10460,31 +10460,53 @@ function okButtonDataQualityTemporalQuality(event){
 	var consistencyRadioMethod=(document.getElementById("TemporalQuality_intervalMethod_radio_local").checked)?"interval":"global";
 
 	var filter= (document.getElementById("dataQuality_temporalQuality_filter").checked)?true:false;
+	var sort= (document.getElementById("TemporalQuality_checkbox_sort").checked)?true:false;
+	var datalength=data.length;
 
-	var newData={}
+	var newData={}, conditionsToFilter=[];
 	if(validity_calculate||validity_flag){
-		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, validity_calculate, validity_flag);
+		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, validity_calculate, validity_flag, filter);
 		data= newData.validity[0];
+		conditionsToFilter.push("temporalValidity");
+
 	} 
 	
 	if (resolution_calculate||resolution_flag){
-		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, resolution_calculate, resolution_flag);
+		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, resolution_calculate, resolution_flag,filter);
 		data= newData.resolution[0];
+		conditionsToFilter.push("temporalResolution");
 	} 
 	if(consistency_calculate||consistency_flag){
-		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,consistency_calculate, consistency_flag);
+		if(sort)sortDates(data, attributeSelected);
+		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,consistency_calculate, consistency_flag, filter);
 		data= newData.consistency[0];
+		conditionsToFilter.push("temporalConsistency");
 	}
-
+	var finalData;
+	
+	if (filter && conditionsToFilter.length>0)finalData= data.filter(obj=>conditionsToFilter.every(attr=> obj[attr]===true)); 
+	else finalData=data;
+	
+	
 	//FAlta mostrar el resultat
-	node.STAdata= data;
-	node.STAdataAttributes= getDataAttributes(data);
+	node.STAdata= finalData;
+	node.STAdataAttributes= getDataAttributes(finalData);
 	networkNodes.update(node);
+	updateQueryAndTableArea(node);
 	hideNodeDialog("DialogQualityTemporalQuality", event);
 
-
-
-
+	if(validity_calculate||resolution_calculate||consistency_calculate){
+		var html="";
+		html= `<table class="tablesmall">
+					<thead > 
+					<th></th><th>Attribute</th><th>Total records</th><th>True records</th><th>Rate</th></tr></thead><tbody>`;
+		if(validity_calculate)html+= `<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.validity[1]}</td><td>${(newData.validity[1]/datalength)*100}</td></tr>`
+		if(resolution_calculate)html+= `<tr><td>Temporal resolution</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.resolution[1]}</td><td>${(newData.resolution[1]/datalength)*100}</td></tr>`
+		if(consistency_calculate)html+= `<tr><td>Temporal consistency</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.consistency[1]}</td><td>${(newData.consistency[1]/datalength)*100}</td></tr>`
+		html+=`</tbody></table>`;
+		document.getElementById("dataQualityResult_info").innerHTML= html
+		showNodeDialog("dataQualityResult");
+	}
 }
 
 //async function GetObjectId(url, objsName, obj){

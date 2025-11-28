@@ -1870,8 +1870,8 @@
 
 			</fieldset>
 			<fieldset><legend>Temporal resolution</legend>
-				<span style="display: block; text-align: center;">
-					Expected resolution (Values with higher resolutions will be accepted, but those with lower resolutions will not) :
+				<div style="text-align: center; margin-bottom: 15px;">
+					<p>Expected resolution (Values with higher resolutions will be accepted, but those with lower resolutions will not):</p>
 					<table class="tablesmall" style="margin: 0 auto;">
 						<thead>
 						<tr>
@@ -1919,7 +1919,7 @@
 						</tbody>
 					</table>
 				
-				</span>
+				</div>
 					<input type="checkbox" value="TemporalQuality_calculate_temporalResolution" id="TemporalQuality_checkbox_calculate_temporalResolution" name="TemporalQuality_checkbox_calculate"><label>Calculate the global temporal resolution rate (%)</label><br>
 					<input type="checkbox" value="TemporalQuality_flag_temporalResolution" id="TemporalQuality_checkbox_flag_temporalResolution" name="TemporalQuality_checkbox_flag"><label>Flag the bad records (true/false)</label><br>
 
@@ -1995,12 +1995,12 @@
 								<td><label for="TemporalQuality_intervalMethod_radio_global">Evaluating the distance from the global interval baseline</label></td>
 							</tr>
 						</tbody>
-					</table>
+					</table><br>
 
 					</div>
-					<div>
-						<span style="font-style: italic;">This test may not be accurate if the data includes the original timezone’s daylight saving time change. <br> It is recommended to split the dataset into segments that do not include the transition</span>
-						<div><label><input type="checkbox">SORT</label><br><br>
+					<div><span style="color: red; font-weight: bold;">&#x26A0;</span>
+						<span style="font-style: italic;">This test may not be accurate if the data includes the original timezone’s daylight saving time change. The test applies the time change of your own country; <br>if your data comes from a different timezone, take this into account. <br> In this case, it is recommended to split the dataset into segments that do not include the transition</span>
+						<div><br><label><input type="checkbox" id="TemporalQuality_checkbox_sort" checked>Sort records</label><br><br>
 						<input type="checkbox"value="TemporalQuality_calculate_temporalConsistency" id="TemporalQuality_checkbox_calculate_temporalConsistency"name="TemporalQuality_checkbox_calculate">
 						<label for="TemporalQuality_checkbox_calculate_temporalConsistency">Calculate the global temporal consistency rate (%)</label> <br>
 						<input type="checkbox" value="TemporalQuality_flag_temporalConsistency"	id="TemporalQuality_checkbox_flag_temporalConsistency" name="TemporalQuality_checkbox_flag">						<td>
