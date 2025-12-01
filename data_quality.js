@@ -65,7 +65,8 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
 }
 
 function calculateDataQualityTemporalValidity(data, attributeSelected, from, to, calculate, flag, filter) {
-    //S'ha de comprobar que sigui tipus DATA (Falta)
+   var attributes=   getDataAttributes(data); //Està a tapis.js 
+    if(attributes[attributeSelected].type!="isodatetime")return false;
     var count = 0;
     var newData = [];
     for (var i = 0; i < data.length; i++) {
@@ -83,7 +84,8 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 
 }
 function calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, calculate, flag, filter) {
-    //S'ha de comprobar que sigui tipus DATA (Falta)
+    var attributes=   getDataAttributes(data); //Està a tapis.js 
+    if(attributes[attributeSelected].type!="isodatetime")return false;
     var regex, count = 0, newData = [];
     for (var i = 0; i < data.length; i++) {
 
@@ -117,7 +119,7 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
                 break;
 
             default:
-                regex = null;
+                return false;
         }
         if (regex.test(data[i][attributeSelected])) {
             count++;
@@ -134,10 +136,10 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 }
 
 function calculateDataQualityTemporalConsistency(data, attributeSelected, number, consistencyRadioValue, consistencyRadioMethod, tolerance, calculate, flag, filter) {
-    //comprobar que siguin dates (que faig amb els hh:mm?) --> mirar dates senceres i punt
+    var attributes=   getDataAttributes(data); //Està a tapis.js 
+    if(attributes[attributeSelected].type!="isodatetime")return false;
 
     var currentDate, previousDate;
-
     var dateFrom, validRange;
     number = parseInt(number);
     newData = [];

@@ -10463,6 +10463,7 @@ function okButtonDataQualityTemporalQuality(event){
 	var sort= (document.getElementById("TemporalQuality_checkbox_sort").checked)?true:false;
 	var datalength=data.length;
 
+	var attributes=   getDataAttributes(data); //Està a tapis.js 
 	var newData={}, conditionsToFilter=[];
 	if(validity_calculate||validity_flag){
 		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, validity_calculate, validity_flag, filter);
@@ -10487,26 +10488,29 @@ function okButtonDataQualityTemporalQuality(event){
 	if (filter && conditionsToFilter.length>0)finalData= data.filter(obj=>conditionsToFilter.every(attr=> obj[attr]===true)); 
 	else finalData=data;
 	
-	
-	//FAlta mostrar el resultat
-	node.STAdata= finalData;
-	node.STAdataAttributes= getDataAttributes(finalData);
-	networkNodes.update(node);
-	updateQueryAndTableArea(node);
-	hideNodeDialog("DialogQualityTemporalQuality", event);
+	if(newData.validity==false || newData.resolution==false ||newData.consistency==false){
+		alert("Attribute selected must be a Date")
+	}else{
+		node.STAdata= finalData;
+		node.STAdataAttributes= getDataAttributes(finalData);
+		networkNodes.update(node);
+		updateQueryAndTableArea(node);
+		hideNodeDialog("DialogQualityTemporalQuality", event);
 
-	if(validity_calculate||resolution_calculate||consistency_calculate){
-		var html="";
-		html= `<table class="tablesmall">
-					<thead > 
-					<th></th><th>Attribute</th><th>Total records</th><th>True records</th><th>Rate</th></tr></thead><tbody>`;
-		if(validity_calculate)html+= `<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.validity[1]}</td><td>${(newData.validity[1]/datalength)*100}</td></tr>`
-		if(resolution_calculate)html+= `<tr><td>Temporal resolution</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.resolution[1]}</td><td>${(newData.resolution[1]/datalength)*100}</td></tr>`
-		if(consistency_calculate)html+= `<tr><td>Temporal consistency</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.consistency[1]}</td><td>${(newData.consistency[1]/datalength)*100}</td></tr>`
-		html+=`</tbody></table>`;
-		document.getElementById("dataQualityResult_info").innerHTML= html
-		showNodeDialog("dataQualityResult");
+		if(validity_calculate||resolution_calculate||consistency_calculate){
+			var html="";
+			html= `<table class="tablesmall">
+						<thead > 
+						<th></th><th>Attribute</th><th>Total records</th><th>True records</th><th>Rate</th></tr></thead><tbody>`;
+			if(validity_calculate)html+= `<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.validity[1]}</td><td>${(newData.validity[1]/datalength)*100}</td></tr>`
+			if(resolution_calculate)html+= `<tr><td>Temporal resolution</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.resolution[1]}</td><td>${(newData.resolution[1]/datalength)*100}</td></tr>`
+			if(consistency_calculate)html+= `<tr><td>Temporal consistency</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.consistency[1]}</td><td>${(newData.consistency[1]/datalength)*100}</td></tr>`
+			html+=`</tbody></table>`;
+			document.getElementById("dataQualityResult_info").innerHTML= html
+			showNodeDialog("dataQualityResult");
+		}
 	}
+	
 }
 
 //async function GetObjectId(url, objsName, obj){
