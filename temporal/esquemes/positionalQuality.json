@@ -1,0 +1,1006 @@
+{
+	"nodes": [
+		{
+			"id": "8dvtv.88809s",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"codi": "0000024AR",
+					"lat": 41.4372502,
+					"long": 2.1652948,
+					"cientific_name": "Populus nigra22 'Italica'",
+					"catalan_name": "Pollancre gavatx",
+					"geom": "POINT (430265.669623264 4587634.01248087)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000027AR",
+					"lat": 41.4373184,
+					"long": 2.16541,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx",
+					"geom": "POINT (430275.370695029 4587641.48841885)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000029AR",
+					"lat": 41.4373646,
+					"long": 2.1654937,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx",
+					"geom": "POINT (430282.40974435 4587646.55037329)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000030AR",
+					"lat": 41.4373796,
+					"long": 2.1655205,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx",
+					"geom": "POINT (430284.668760349 4587648.1973587)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000031AR",
+					"lat": 41.4373963,
+					"long": 2.1655516,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx",
+					"geom": "POINT (430287.287778272 4587650.02434166)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000032AR",
+					"lat": 41.437412,
+					"long": 2.1655838,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx",
+					"geom": "POINT (430289.987795478 4587651.74032384)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000033AR",
+					"lat": 41.4375329,
+					"long": 2.1658555,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430312.82193105 4587664.94217105)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000035AR",
+					"lat": 41.4375915,
+					"long": 2.1659228,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430318.50798885 4587671.39813792)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000037AR",
+					"lat": 41.437609,
+					"long": 2.1659719,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430322.623009631 4587673.29610964)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000038AR",
+					"lat": 41.4375446,
+					"long": 2.1660464,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430328.782964498 4587666.08905173)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000040AR",
+					"lat": 41.4373958,
+					"long": 2.165629,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430293.752787407 4587649.90729243)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000041AR",
+					"lat": 41.4373517,
+					"long": 2.165851,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430312.251777588 4587644.8331442)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000043AR",
+					"lat": 41.437359,
+					"long": 2.1655828,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430289.848750595 4587645.85331577)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000044AR",
+					"lat": 41.4373015,
+					"long": 2.165719,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430301.164718933 4587639.36821985)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000045AR",
+					"lat": 41.4372855,
+					"long": 2.1659007,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430316.331727819 4587637.44010178)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000046AR",
+					"lat": 41.4373153,
+					"long": 2.1654831,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430281.472701416 4587641.08337192)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000047AR",
+					"lat": 41.4372837,
+					"long": 2.1654898,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430281.997675567 4587637.56936249)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000048AR",
+					"lat": 41.4372906,
+					"long": 2.1654493,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430278.623676376 4587638.36538933)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000049AR",
+					"lat": 41.4372812,
+					"long": 2.165415,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430275.748664263 4587637.35640958)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000050AR",
+					"lat": 41.4372501,
+					"long": 2.1659052,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430316.666698451 4587633.50109313)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000051AR",
+					"lat": 41.4372269,
+					"long": 2.1659333,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430318.993682377 4587630.90707146)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000052AR",
+					"lat": 41.4371989,
+					"long": 2.1659492,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430320.289660698 4587627.78505678)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000053AR",
+					"lat": 41.4371544,
+					"long": 2.1659848,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430323.219627523 4587622.81402684)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000054AR",
+					"lat": 41.4371588,
+					"long": 2.1659323,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430318.835624816 4587623.35306094)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000056AR",
+					"lat": 41.4372093,
+					"long": 2.165389,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430273.500600343 4587629.39141429)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000058AR",
+					"lat": 41.4371556,
+					"long": 2.1653393,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430269.292548886 4587623.46943703)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000059AR",
+					"lat": 41.4370903,
+					"long": 2.1658415,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430311.178555803 4587615.82210737)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000060AR",
+					"lat": 41.437078,
+					"long": 2.1659002,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430316.065552597 4587614.40106808)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000061AR",
+					"lat": 41.437069,
+					"long": 2.1660102,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430325.251558569 4587613.31099669)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000062AR",
+					"lat": 41.4370456,
+					"long": 2.1660507,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430328.605543851 4587610.68596717)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000063AR",
+					"lat": 41.4370159,
+					"long": 2.1660801,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430331.02752237 4587607.35994364)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000064AR",
+					"lat": 41.4370221,
+					"long": 2.1660206,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430326.066520339 4587608.10598244)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000065AR",
+					"lat": 41.4371191,
+					"long": 2.1653623,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430271.175520946 4587619.40241644)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000066AR",
+					"lat": 41.4371143,
+					"long": 2.1653172,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430267.400511292 4587618.90144431)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000067AR",
+					"lat": 41.437125,
+					"long": 2.1652153,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430258.898507755 4587620.17251079)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000068AR",
+					"lat": 41.4370997,
+					"long": 2.1652007,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430257.651484584 4587617.37351591)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000069AR",
+					"lat": 41.437078,
+					"long": 2.1651607,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430254.286461392 4587615.00453777)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000070AR",
+					"lat": 41.4370501,
+					"long": 2.1651238,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430251.169433243 4587611.93155665)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000071AR",
+					"lat": 41.4370433,
+					"long": 2.1651717,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430255.169433458 4587611.14252508)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000072AR",
+					"lat": 41.4369968,
+					"long": 2.165957,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430320.723491053 4587605.33801869)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000073AR",
+					"lat": 41.4369815,
+					"long": 2.1659964,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430323.997483018 4587603.60999117)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000074AR",
+					"lat": 41.4369747,
+					"long": 2.1660931,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430332.073489211 4587602.7759286)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000075AR",
+					"lat": 41.4369535,
+					"long": 2.1661272,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430334.901475582 4587600.40190346)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000076AR",
+					"lat": 41.4368873,
+					"long": 2.1661677,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430338.209424639 4587593.0118669)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000077AR",
+					"lat": 41.4369021,
+					"long": 2.1660774,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430330.685426047 4587594.73492666)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000078AR",
+					"lat": 41.4370058,
+					"long": 2.1651811,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430255.916402908 4587606.96351293)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000079AR",
+					"lat": 41.4370237,
+					"long": 2.1650915,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana",
+					"geom": "POINT (430248.444407015 4587609.03157283)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000080AR",
+					"lat": 41.4369874,
+					"long": 2.1650524,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430245.137371507 4587605.02759172)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000081AR",
+					"lat": 41.4368815,
+					"long": 2.1650099,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430241.479276887 4587593.3046013)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000082AR",
+					"lat": 41.4368561,
+					"long": 2.1650828,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430247.542264412 4587590.42155082)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000083AR",
+					"lat": 41.4369007,
+					"long": 2.1651762,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430255.393313596 4587595.29949882)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000084AR",
+					"lat": 41.4369174,
+					"long": 2.1652187,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430258.956332982 4587597.12647462)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000085AR",
+					"lat": 41.4368864,
+					"long": 2.1652326,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430260.090308526 4587593.67146066)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000086AR",
+					"lat": 41.4368517,
+					"long": 2.1653217,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430267.497290198 4587589.74239836)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000087AR",
+					"lat": 41.4368305,
+					"long": 2.1655238,
+					"cientific_name": "Cupressus sempervirens",
+					"catalan_name": "Xiprer",
+					"geom": "POINT (430284.360297282 4587587.23026652)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000088AR",
+					"lat": 41.4368302,
+					"long": 2.1655545,
+					"cientific_name": "Cupressus sempervirens",
+					"catalan_name": "Xiprer",
+					"geom": "POINT (430286.92030078 4587587.168247)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000089AR",
+					"lat": 41.4367974,
+					"long": 2.1655729,
+					"cientific_name": "Cupressus sempervirens",
+					"catalan_name": "Xiprer",
+					"geom": "POINT (430288.42327537 4587583.51222993)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000095AR",
+					"lat": 41.4368462,
+					"long": 2.1660666,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430329.722693082 4587588.53259447)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000096AR",
+					"lat": 41.4367442,
+					"long": 2.1662775,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430347.229290598 4587577.03710786)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000097AR",
+					"lat": 41.4367047,
+					"long": 2.1661999,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430340.705033437 4587572.72065322)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000098AR",
+					"lat": 41.4367278,
+					"long": 2.166016,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430325.36406171 4587575.42771704)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000099AR",
+					"lat": 41.4366048,
+					"long": 2.1661132,
+					"cientific_name": "Olea europaea",
+					"catalan_name": "Olivera",
+					"geom": "POINT (430333.352179482 4587561.6938552)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000100AR",
+					"lat": 41.4366481,
+					"long": 2.1655666,
+					"cientific_name": "Ceratonia siliqua",
+					"catalan_name": "Garrofer",
+					"geom": "POINT (430287.740148609 4587566.94520942)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000101AR",
+					"lat": 41.436711,
+					"long": 2.1654605,
+					"cientific_name": "Ceratonia siliqua",
+					"catalan_name": "Garrofer",
+					"geom": "POINT (430278.942188567 4587574.00928713)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000102AR",
+					"lat": 41.4363902,
+					"long": 2.1649714,
+					"cientific_name": "Tamarix africana",
+					"catalan_name": "Tamariu; tamariu africà",
+					"geom": "POINT (430237.73785746 4587538.79054517)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000103AR",
+					"lat": 41.4363611,
+					"long": 2.1651408,
+					"cientific_name": "Tamarix africana",
+					"catalan_name": "Tamariu; tamariu africà",
+					"geom": "POINT (430251.852853842 4587535.42943286)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000104AR",
+					"lat": 41.4363367,
+					"long": 2.165191,
+					"cientific_name": "Tamarix africana",
+					"catalan_name": "Tamariu; tamariu africà",
+					"geom": "POINT (430256.023839443 4587532.67939695)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000105AR",
+					"lat": 41.4363577,
+					"long": 2.1653105,
+					"cientific_name": "Tamarix africana",
+					"catalan_name": "Tamariu; tamariu africà",
+					"geom": "POINT (430266.03387192 4587534.91432446)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000107AR",
+					"lat": 41.4363524,
+					"long": 2.1654484,
+					"cientific_name": "Tamarix africana",
+					"catalan_name": "Tamariu; tamariu africà",
+					"geom": "POINT (430277.542884452 4587534.21423605)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000109AR",
+					"lat": 41.4362869,
+					"long": 2.1649293,
+					"cientific_name": "Pinus halepensis",
+					"catalan_name": "Pi blanc",
+					"geom": "POINT (430234.110765126 4587527.36255497)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000110AR",
+					"lat": 41.4362957,
+					"long": 2.1649702,
+					"cientific_name": "Pinus halepensis",
+					"catalan_name": "Pi blanc",
+					"geom": "POINT (430237.533777581 4587528.30453046)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000111AR",
+					"lat": 41.4363022,
+					"long": 2.1650187,
+					"cientific_name": "Pinus halepensis",
+					"catalan_name": "Pi blanc",
+					"geom": "POINT (430241.595789 4587528.97950068)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000112AR",
+					"lat": 41.436274,
+					"long": 2.165012,
+					"cientific_name": "Pinus halepensis",
+					"catalan_name": "Pi blanc",
+					"geom": "POINT (430241.000764419 4587525.86150036)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000113AR",
+					"lat": 41.4362128,
+					"long": 2.1654596,
+					"cientific_name": "Pinus halepensis",
+					"catalan_name": "Pi blanc",
+					"geom": "POINT (430278.330768006 4587518.70620603)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000114AR",
+					"lat": 41.4361698,
+					"long": 2.1651746,
+					"cientific_name": "Pinus halepensis",
+					"catalan_name": "Pi blanc",
+					"geom": "POINT (430254.477696555 4587514.16337997)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000115AR",
+					"lat": 41.4361484,
+					"long": 2.1652868,
+					"cientific_name": "Pinus halepensis",
+					"catalan_name": "Pi blanc",
+					"geom": "POINT (430263.82769231 4587511.6933052)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000116AR",
+					"lat": 41.436144,
+					"long": 2.1653138,
+					"cientific_name": "Pinus halepensis",
+					"catalan_name": "Pi blanc",
+					"geom": "POINT (430266.078691945 4587511.18528733)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000117AR",
+					"lat": 41.4363685,
+					"long": 2.1657208,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430300.320931686 4587535.78506566)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000118AR",
+					"lat": 41.436381,
+					"long": 2.1658102,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430307.800953215 4587537.09401093)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000120AR",
+					"lat": 41.4363366,
+					"long": 2.1659344,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430318.12893107 4587532.06492477)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000121AR",
+					"lat": 41.4362842,
+					"long": 2.1659947,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430323.109894299 4587526.20087788)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000122AR",
+					"lat": 41.43639,
+					"long": 2.1660392,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430326.941989075 4587537.90886696)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000123AR",
+					"lat": 41.4363861,
+					"long": 2.1660818,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430330.497991022 4587537.43883925)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000124AR",
+					"lat": 41.4363516,
+					"long": 2.1661457,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430335.799969855 4587533.56579302)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000125AR",
+					"lat": 41.4362501,
+					"long": 2.16611,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430332.707879747 4587522.32179905)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000126AR",
+					"lat": 41.4362936,
+					"long": 2.1661959,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430339.929927106 4587527.08775164)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000127AR",
+					"lat": 41.4363002,
+					"long": 2.1662382,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430343.469937883 4587527.78472586)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000129AR",
+					"lat": 41.4374433,
+					"long": 2.166102,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430333.313885814 4587654.79299984)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000130AR",
+					"lat": 41.4373997,
+					"long": 2.1661038,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430333.41684928 4587649.95699156)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000135AR",
+					"lat": 41.4374091,
+					"long": 2.1663594,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430354.782888741 4587650.79183073)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000136AR",
+					"lat": 41.4373163,
+					"long": 2.1662175,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430342.83079294 4587640.60790563)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000137AR",
+					"lat": 41.4372809,
+					"long": 2.1662701,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430347.190769524 4587636.63086638)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000140AR",
+					"lat": 41.4373882,
+					"long": 2.1664704,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430364.038884805 4587648.38175677)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000141AR",
+					"lat": 41.4372311,
+					"long": 2.1662898,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430348.781729933 4587631.08784572)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000142AR",
+					"lat": 41.4372821,
+					"long": 2.1664632,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430363.31779436 4587636.60874399)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000144AR",
+					"lat": 41.4372017,
+					"long": 2.1663716,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430355.582715187 4587627.75478895)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000147AR",
+					"lat": 41.4371934,
+					"long": 2.1664538,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina",
+					"geom": "POINT (430362.443718336 4587626.76773536)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000149AR",
+					"lat": 41.437145,
+					"long": 2.1661067,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430333.386634613 4587621.67094793)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000150AR",
+					"lat": 41.4371113,
+					"long": 2.1661431,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430336.39861067 4587617.89991923)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000152AR",
+					"lat": 41.4370729,
+					"long": 2.1663578,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430354.290604774 4587613.4667766)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000153AR",
+					"lat": 41.4370209,
+					"long": 2.1664633,
+					"cientific_name": "Magnolia grandiflora",
+					"catalan_name": "Magnòlia",
+					"geom": "POINT (430363.047029467 4587607.60753624)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000154AR",
+					"lat": 41.4369848,
+					"long": 2.1664453,
+					"cientific_name": "Magnolia grandiflora",
+					"catalan_name": "Magnòlia",
+					"geom": "POINT (430361.507028587 4587603.617704)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000155AR",
+					"lat": 41.4373591,
+					"long": 2.1666639,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx",
+					"geom": "POINT (430380.171972171 4587644.99904125)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000158AR",
+					"lat": 41.4373417,
+					"long": 2.1667459,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx",
+					"geom": "POINT (430386.999999951 4587642.99999993)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000159AR",
+					"lat": 41.4373701,
+					"long": 2.1668118,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx",
+					"geom": "POINT (430392.536378751 4587646.10293005)",
+					"district": "NOU BARRIS"
+				},
+				{
+					"codi": "0000160AR",
+					"lat": 41.4372719,
+					"long": 2.16665,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana",
+					"geom": "POINT (430378.916808809 4587635.32562364)",
+					"district": "NOU BARRIS"
+				}
+			],
+			"STAdataAttributes": {
+				"codi": {
+					"type": "string"
+				},
+				"lat": {
+					"type": "number"
+				},
+				"long": {
+					"type": "number"
+				},
+				"cientific_name": {
+					"type": "string"
+				},
+				"catalan_name": {
+					"type": "string"
+				},
+				"geom": {
+					"type": "string"
+				},
+				"district": {
+					"type": "string"
+				}
+			},
+			"x": -56,
+			"y": 23
+		},
+		{
+			"id": "62lom.aualln",
+			"label": "Positional quality",
+			"image": "positionalQuality.png",
+			"shape": "circularImage",
+			"x": 59,
+			"y": -8
+		}
+	],
+	"edges": [
+		{
+			"from": "8dvtv.88809s",
+			"to": "62lom.aualln",
+			"arrows": "from"
+		}
+	]
+}

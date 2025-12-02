@@ -176,7 +176,9 @@ const tableStatisticsVisualizeType = {singular: " Table tool for statistics and 
 const dataQuality={
 	datacompletenessomission:{description: "Data completness omission", help:"the degree to which all required data is present and recorded without missing or incomplete values" },
 	logicalConsistency:{description: "Logical consistency", help:"Performs a logical consistency check to identify contradictions and ensure coherent data relationships." },
-	temporalQuality:{description: "Temporal quality", help:"Allows calculating temporal consistency, temporal validity and temporal resolution." }
+	temporalQuality:{description: "Temporal quality", help:"Allows calculating temporal consistency, temporal validity and temporal resolution." },
+	// temporalQuality:{description: "Thematic quality", help:"Allows calculating ..." } //FALTA COMPELTAR
+	positionalQuality:{description: "Positional quality", help:"Allows calculating ..."  } //Falta completar
 
 }
 const dataQualityArray = Object.keys(dataQuality);
@@ -3912,6 +3914,9 @@ function addTimeToOtherInputCreateEntities (itemWritten, itemToWrite,number,orig
 	}else{
 		document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value+"Z" ;
 	}
+}
+function addTimeToTemporalQualityCalendar(itemWritten, itemToWrite){
+	document.getElementById(itemToWrite).value=document.getElementById(itemWritten).value;
 }
 
 function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
@@ -7909,6 +7914,18 @@ function networkDoubleClick(params) {
 				alert("Parent node must have data to analyze");
 			}
 		}
+		else if (currentNode.image == "positionalQuality.png") {
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode.STAdata) {
+					currentNode.STAdata= deapCopy(parentNode.STAdata);
+					currentNode.STAdataAttributes= deapCopy(parentNode.STAdataAttributes);
+					populateDialogQualityPositionalQuality(currentNode);
+					networkNodes.update(currentNode);
+					showNodeDialog("DialogQualityPositionalQuality");
+			}else{
+				alert("Parent node must have data to analyze");
+			}
+		}
 		
 	}
 }
@@ -10268,19 +10285,18 @@ function getParentNodesProperties(node, infoArray){ //infoArray --> array with a
 
 function populateDialogQualityCompletnessOmission(node){
 	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, node, "omission");
+	saveNodeDialog("DialogQualityCompletnessOmission", node);
 	document.getElementById("DialogQualityCompletnessOmission_attributesList").innerHTML=attributesCheckboxModule;
 }
 
 function populateAttributesListSelect(attributes, node,place){
 	var attributesKeys=Object.keys(attributes);
-	saveNodeDialog("DialogQualityCompletnessOmission", node);
-	var anyAttribute=false;
-	var c=`<fieldset><legend>Attributes</legend><select name="attributesList_${place}" id ="attributeList_${place}">`;
+	var c=`<div><span>Column:  </span><select name="attributesList_${place}" id ="attributeList_${place}">`;
 	for (var i=0;i<attributesKeys.length;i++){
 			c+= `<option  value="${attributesKeys[i]}">${attributesKeys[i]}</option>`;
 	}
 	
-	c+="</select></fieldset>";
+	c+="</select></div><br>";
 	return c;
 }
 
@@ -10294,25 +10310,24 @@ function okButtonDataQualityCompletnessOmission(event){
 	var filter= (document.getElementById("dataQuality_omission_filter").checked)?true:false;
 	var infoDataOmission;
 
-	if (calculate)infoDataOmission= calculateDataQualityCompletnessOmission(data, selected); //Response:Total, true, false, %omission, %completness
-	if(flag)data= addValidityFlagDataQualityCompletnessOmission(data, selected);
-	if (filter) data = dataFilteredDataQualityCompletnessOmission(data, selected);
+	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected, flag, filter); //Response:data, Total, true, false, %omission, %completness
 
-	node.STAdata=data;
+	node.STAdata=infoDataOmission[0];
 	networkNodes.update(node);
 	hideNodeDialog("DialogQualityCompletnessOmission", event);
 	
-	if(calculate){ //pensar si fer-ne una funció per tots
+	if(calculate){ 
 		document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
 		<thead > 
 		<th >Attribute</th><th>Total records</th><th>Empty records</th>
 		<th>Omission rate</th><th>Completeness rate</th></tr></thead>
 		<tbody><tr>
-		<td>${selected}</td><td>${infoDataOmission[0]}</td><td>${infoDataOmission[2]}</td>
-		<td>${infoDataOmission[3]}</td><td>${infoDataOmission[4]}</td>
-		</tr></tbody></table>`
+		<td>${selected}</td><td>${infoDataOmission[1]}</td><td>${infoDataOmission[3]}</td>
+		<td>${infoDataOmission[4]}</td><td>${infoDataOmission[5]}</td>
+		</tr></tbody></table>`;
+		showNodeDialog("dataQualityResult");
 	}
-	showNodeDialog("dataQualityResult");
+	
 	updateQueryAndTableArea(node);
 }
 function populateDialogQualityLogicalConsistency(node){
@@ -10329,7 +10344,7 @@ function populateDialogQualityLogicalConsistency(node){
 		alert("Parent nodes do not contain data");
 		return false;
 	}
-	options1+=`<option value="">--- Select attribute ---</option>`;
+	options1+=`<option value="">--- Select column ---</option>`;
 	objectKeys=Object.keys(parentsNodes[0].STAdataAttributes);
 	for (var e=0;e<objectKeys.length;e++){
 		options1+=`<option value="${objectKeys[e]}">${objectKeys[e]}</option>`
@@ -10340,7 +10355,7 @@ function populateDialogQualityLogicalConsistency(node){
 		alert("Parent nodes do not contain data");
 		return false;
 	}
-	options2+=`<option value="">--- Select attribute ---</option>`;
+	options2+=`<option value="">--- Select column ---</option>`;
 	objectKeys=Object.keys(parentsNodes[1].STAdataAttributes);
 	for (var e=0;e<objectKeys.length;e++){
 		options2+=`<option value="${objectKeys[e]}">${objectKeys[e]}</option>`
@@ -10442,44 +10457,42 @@ function okButtonDataQualityTemporalQuality(event){
 	var attributeSelected= select.options[select.selectedIndex].value;
 
 	var validity_calculate=(document.getElementById("TemporalQuality_checkbox_calculate_temporalValidity").checked)?true:false;
-	var validity_flag=(document.getElementById("TemporalQuality_checkbox_flag_temporalValidity").checked)?true:false;
 	var from=document.getElementById("DialogQualityTemporalQuality_validity_inputText_from").value;
 	var to= document.getElementById("DialogQualityTemporalQuality_validity_inputText_to").value;
 
 	var resolution_calculate=(document.getElementById("TemporalQuality_checkbox_calculate_temporalResolution").checked)?true:false;
-	var resolution_flag=(document.getElementById("TemporalQuality_checkbox_flag_temporalResolution").checked)?true:false;
 	var resolutionRadio=document.querySelector('input[name="TemporalQuality_resolution_radio"]:checked')
 	var resolutionRadioValue= resolutionRadio.value;
 
 	var consistencyInput= document.getElementById("TemporalQuality_consistency_toleranceNumber").value;
 	var consistency_calculate=(document.getElementById("TemporalQuality_checkbox_calculate_temporalConsistency").checked)?true:false;
-	var consistency_flag=(document.getElementById("TemporalQuality_checkbox_flag_temporalConsistency").checked)?true:false;
+
 	var consistencyRadio=document.querySelector('input[name="TemporalQuality_consistency_radio"]:checked')
 	var consistencyRadioValue= consistencyRadio.value;
 	var tolerance= document.getElementById("TemporalQuality_consistency_toleranceRange").value;
 	var consistencyRadioMethod=(document.getElementById("TemporalQuality_intervalMethod_radio_local").checked)?"interval":"global";
 
 	var filter= (document.getElementById("dataQuality_temporalQuality_filter").checked)?true:false;
+	var flag=(document.getElementById("TemporalQuality_checkbox_flag").checked)?true:false;
 	var sort= (document.getElementById("TemporalQuality_checkbox_sort").checked)?true:false;
 	var datalength=data.length;
 
-	var attributes=   getDataAttributes(data); //Està a tapis.js 
+	
 	var newData={}, conditionsToFilter=[];
-	if(validity_calculate||validity_flag){
-		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, validity_calculate, validity_flag, filter);
+	if(validity_calculate){
+		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, validity_calculate, flag, filter);
 		data= newData.validity[0];
 		conditionsToFilter.push("temporalValidity");
-
 	} 
 	
-	if (resolution_calculate||resolution_flag){
-		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, resolution_calculate, resolution_flag,filter);
+	if (resolution_calculate){
+		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, resolution_calculate, flag,filter);
 		data= newData.resolution[0];
 		conditionsToFilter.push("temporalResolution");
 	} 
-	if(consistency_calculate||consistency_flag){
+	if(consistency_calculate){
 		if(sort)sortDates(data, attributeSelected);
-		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,consistency_calculate, consistency_flag, filter);
+		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,consistency_calculate, flag, filter);
 		data= newData.consistency[0];
 		conditionsToFilter.push("temporalConsistency");
 	}
@@ -10489,7 +10502,7 @@ function okButtonDataQualityTemporalQuality(event){
 	else finalData=data;
 	
 	if(newData.validity==false || newData.resolution==false ||newData.consistency==false){
-		alert("Attribute selected must be a Date")
+		alert("Attribute selected must be a Date");
 	}else{
 		node.STAdata= finalData;
 		node.STAdataAttributes= getDataAttributes(finalData);
@@ -10511,6 +10524,12 @@ function okButtonDataQualityTemporalQuality(event){
 		}
 	}
 	
+}
+
+function populateDialogQualityPositionalQuality(node){
+	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, node, "positionalQuality");
+	document.getElementById("DialogQualityPositionalQuality_attributesList").innerHTML=attributesCheckboxModule;
+	saveNodeDialog("DialogQualityPositionalQuality", node);
 }
 
 //async function GetObjectId(url, objsName, obj){

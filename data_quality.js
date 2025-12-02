@@ -1,35 +1,19 @@
 //You need statistics.js (Som functions needed are described there)
 
 
-function calculateDataQualityCompletnessOmission(data, attribute) {
-    var dataQuality;
-    var count = 0;
-
+function calculateDataQualityCompletnessOmission(data, attribute, flag, filter) {
+    var rate;
+    var count = 0, newData = [];
     for (var i = 0; i < data.length; i++) {
-        if (data[i][attribute] == null || data[i][attribute] == undefined || data[i][attribute] == "") count++
+        if (data[i][attribute] != null && data[i][attribute] != undefined && data[i][attribute] != "") {
+            count++;
+            if (flag) data[i]["Omission Flag"] = "True";
+            if (filter) newData.push(data[i]);
+        } else if (flag) data[i]["Omission Flag"] = "False";
     }
-
-    if (count != 0) dataQuality = (count / data.length) * 100;
-    else dataQuality = count;
-
-
-    return [data.length, data.length - count, count, dataQuality.toFixed(2), 100 - dataQuality.toFixed(2)];//Total, true, false, %omission, %completesa
-}
-
-function addValidityFlagDataQualityCompletnessOmission(data, attribute) {
-    for (var i = 0; i < data.length; i++) {
-        if (data[i][attribute] == null || data[i][attribute] == undefined || data[i][attribute] == "") data[i]["Omission Flag"] = "False"
-        else data[i]["Omission Flag"] = "True"
-    }
-    return data
-}
-
-function dataFilteredDataQualityCompletnessOmission(data, attribute) {
-    var newData = [];
-    for (var i = 0; i < data.length; i++) {
-        if (data[i][attribute] != null && data[i][attribute] != undefined && data[i][attribute] != "") newData.push(data[i])
-    }
-    return newData;
+    rate = (data.length - count) / data.length * 100;
+    if (!filter) newData = data;
+    return [newData, data.length, count, data.length - count, rate.toFixed(2), 100 - rate.toFixed(2)];//data, Total, true, false, %omission, %completesa
 }
 
 function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, calculate, flag, filter) {
@@ -61,22 +45,37 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
     else {
         return [newData, count, (count / dataTarget.length) * 100];
     }
-
 }
 
 function calculateDataQualityTemporalValidity(data, attributeSelected, from, to, calculate, flag, filter) {
-   var attributes=   getDataAttributes(data); //Està a tapis.js 
-    if(attributes[attributeSelected].type!="isodatetime")return false;
+    var attributes = getDataAttributes(data); //Està a tapis.js 
+    if (attributes[attributeSelected].type != "isodatetime") return false;
+    if (!from && !to) return false;
     var count = 0;
     var newData = [];
     for (var i = 0; i < data.length; i++) {
-        if (data[i][attributeSelected] < from || data[i][attributeSelected] > to) {
+        if (from) {
+            if (data[i][attributeSelected] < from) {
+                if (data[i][attributeSelected] > to) {
+                    count++;
+                    if (flag) data[i]["temporalValidity"] = true;
+                    if (filter) newData.push(data[i]);
 
-            if (flag) data[i]["temporalValidity"] = false;
-        } else if (flag) {
-            data[i]["temporalValidity"] = true;
-            count++;
-            if (filter) newData.push(data[i]);
+                } else {
+                    if (flag) data[i]["temporalValidity"] = false;
+                }
+            } else {
+                if (flag) data[i]["temporalValidity"] = false;
+            }
+        } else { //only to
+            if (data[i][attributeSelected] > to) {
+                count++;
+                if (flag) data[i]["temporalValidity"] = true;
+                if (filter) newData.push(data[i]);
+
+            } else {
+                if (flag) data[i]["temporalValidity"] = false;
+            }
         }
     }
     if (!filter) newData = data;
@@ -84,11 +83,10 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 
 }
 function calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, calculate, flag, filter) {
-    var attributes=   getDataAttributes(data); //Està a tapis.js 
-    if(attributes[attributeSelected].type!="isodatetime")return false;
+    var attributes = getDataAttributes(data); //Està a tapis.js 
+    if (attributes[attributeSelected].type != "isodatetime") return false;
     var regex, count = 0, newData = [];
     for (var i = 0; i < data.length; i++) {
-
         switch (resolutionRadioValue) {
             case "year":
                 regex = /^\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{2})?)?)?)?)?/;
@@ -136,15 +134,14 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 }
 
 function calculateDataQualityTemporalConsistency(data, attributeSelected, number, consistencyRadioValue, consistencyRadioMethod, tolerance, calculate, flag, filter) {
-    var attributes=   getDataAttributes(data); //Està a tapis.js 
-    if(attributes[attributeSelected].type!="isodatetime")return false;
+    var attributes = getDataAttributes(data); //Està a tapis.js 
+    if (attributes[attributeSelected].type != "isodatetime") return false;
 
     var currentDate, previousDate;
     var dateFrom, validRange;
     number = parseInt(number);
     newData = [];
     var datesGlobal = [], count = 0;
-
     if (consistencyRadioMethod == "global") { //GLOBAL
         for (var i = 0; i < data.length; i++) { //Creating global intervals
             if (i == 0) {
@@ -189,7 +186,6 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
                     return false;
             }
         }
-
         for (var i = 0; i < data.length; i++) {
             currentDate = new Date(data[i][attributeSelected]);
             if (currentDate >= datesGlobal[i][0] && currentDate <= datesGlobal[i][1]) { //Valid
@@ -202,7 +198,6 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
 
             }
         }
-
     } else { //compared with previous record
 
         for (var i = 0; i < data.length; i++) {
@@ -228,7 +223,7 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
         }
     }
     if (!filter) newData = data;
-    return [newData, count,(count / data.length) * 100 ]
+    return [newData, count, (count / data.length) * 100]
 }
 
 function returnValidRange(currentData, number, tolerance, consistencyRadioValue) {
