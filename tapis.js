@@ -174,7 +174,7 @@ const tableStatisticsVisualizeArray = Object.keys(tableStatisticsVisualize);
 const tableStatisticsVisualizeType = {singular: " Table tool for statistics and visualization", plural: "Table tools for statistics and visualization"};
 
 const dataQuality={
-	datacompletenessomission:{description: "Data completness omission", help:"the degree to which all required data is present and recorded without missing or incomplete values" },
+	completenessomission:{description: "Completness omission", help:"The degree to which all required data is present and recorded without missing or incomplete values" },
 	logicalConsistency:{description: "Logical consistency", help:"Performs a logical consistency check to identify contradictions and ensure coherent data relationships." },
 	temporalQuality:{description: "Temporal quality", help:"Allows calculating temporal consistency, temporal validity and temporal resolution." },
 	// temporalQuality:{description: "Thematic quality", help:"Allows calculating ..." } //FALTA COMPELTAR
@@ -7883,7 +7883,7 @@ function networkDoubleClick(params) {
 				alert("Parent node must have data to replace it");
 			}
 		}
-		else if (currentNode.image == "datacompletenessomission.png") {
+		else if (currentNode.image == "completenessomission.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode.STAdata) {
 					currentNode.STAdata= deapCopy(parentNode.STAdata);
