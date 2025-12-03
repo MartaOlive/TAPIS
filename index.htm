@@ -2018,19 +2018,25 @@
 			<h3> Positional quality</h3>
 			<div id="DialogQualityPositionalQuality_attributesList"></div>
 			<div>
-
-
-
-				
+				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalAccuracy">Positional accuracy</label></legend>
+					<label><input type="radio" name="PositionalQuality_radio_positionalAccuracy" id="PositionalQuality_radio_positionalAccuracy_accuracyColumn" checked> Mean of the values in the accuracy column. Acuraccy column:  </label> <select id="PositionalQuality_select_positionalAccuracy"></select> <br>
+					<label><input type="radio" name="PositionalQuality_radio_positionalAccuracy" id="PositionalQuality_radio_positionalAccuracy_evaluateColumn"> Mean of the values in the column to evaluate </label>
+				</fieldset>
+				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalValidity">Positional validity</label></legend>
+					<label for ="PositionalQuality_input_positionalValidity_xmin"> X minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmin" style="margin-bottom: 10px">
+					<label for ="PositionalQuality_input_positionalValidity_xmax" style="margin-left: 15px"> X maximum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmax" style="margin-bottom: 10px"><br>
+					<label for ="PositionalQuality_input_positionalValidity_ymin"> Y minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_ymin">
+					<label for ="PositionalQuality_input_positionalValidity_ymax" style="margin-left: 15px"> Y maximum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_ymax"> <br><br>
+					<label><input type="checkbox"  id="dataQuality_temporalValidity_flag">Flag the bad records (true/false)</label><br>
+					<label><input type="checkbox"  id="dataQuality_temporalValidity_filter">Filter the table to keep only valid records</label> 
+				</fieldset>
 			</div>
 			<div>
-<!-- 				
-				<label><input type="checkbox" value="Omission_calculateRate" id="dataQuality_omission_calculate" name="dataQuality_omission" checked>Calculate the global omission rate (%)</label><br>
-				<label><input type="checkbox" value="Omission_flagBadRecords" id="dataQuality_omission_flag" name="dataQuality_omission">Flag the bad records (true/false)</label><br>
-				<label><input type="checkbox" value="Omission_filterBadRecords" id="dataQuality_omission_filter" name="dataQuality_omission">Filter the table to keep only valid records</label> -->
+			
+
 			</div>
 			<div class="center">
-				<button value="ok" onClick="okButtonDataQualityCompletnessOmission(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+				<button value="ok" onClick="okButtonDataQualityPositionalQuality(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 
 		<input type="hidden" id="DialogQualityPositionalQualityNodeId"></input>

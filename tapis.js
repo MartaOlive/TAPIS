@@ -10284,14 +10284,14 @@ function getParentNodesProperties(node, infoArray){ //infoArray --> array with a
 }
 
 function populateDialogQualityCompletnessOmission(node){
-	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, node, "omission");
+	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "omission", "Column");
 	saveNodeDialog("DialogQualityCompletnessOmission", node);
 	document.getElementById("DialogQualityCompletnessOmission_attributesList").innerHTML=attributesCheckboxModule;
 }
 
-function populateAttributesListSelect(attributes, node,place){
+function populateAttributesListSelect(attributes,place, text){
 	var attributesKeys=Object.keys(attributes);
-	var c=`<div><span>Column:  </span><select name="attributesList_${place}" id ="attributeList_${place}">`;
+	var c=`<div><span>${text}:  </span><select name="attributesList_${place}" id ="attributeList_${place}">`;
 	for (var i=0;i<attributesKeys.length;i++){
 			c+= `<option  value="${attributesKeys[i]}">${attributesKeys[i]}</option>`;
 	}
@@ -10445,7 +10445,7 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 }
 
 function populateDialogQualityTemporalQuality(node){
-	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, node, "temporalQuality");
+	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "temporalQuality", "Column");
 	document.getElementById("DialogQualityTemporalQuality_attributesList").innerHTML=attributesCheckboxModule;
 	saveNodeDialog("DialogQualityLogicalConsistency", node);
 }
@@ -10527,9 +10527,16 @@ function okButtonDataQualityTemporalQuality(event){
 }
 
 function populateDialogQualityPositionalQuality(node){
-	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, node, "positionalQuality");
+	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "positionalQuality", "Column");
 	document.getElementById("DialogQualityPositionalQuality_attributesList").innerHTML=attributesCheckboxModule;
 	saveNodeDialog("DialogQualityPositionalQuality", node);
+	var c="";
+	var attributesKeys= Object.keys(node.STAdataAttributes);
+	for (var i= 0; i< attributesKeys.length;i++){
+
+		c+=`<option value="${attributesKeys[i]}">${attributesKeys[i]}</option>`
+	}
+	document.getElementById("PositionalQuality_select_positionalAccuracy").innerHTML=c;
 }
 
 //async function GetObjectId(url, objsName, obj){
