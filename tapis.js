@@ -10319,7 +10319,7 @@ function okButtonDataQualityCompletnessOmission(event){
 	if(calculate){ 
 		document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
 		<thead > 
-		<th >Attribute</th><th>Total records</th><th>Empty records</th>
+		<th >Column</th><th>Total records</th><th>Empty records</th>
 		<th>Omission rate</th><th>Completeness rate</th></tr></thead>
 		<tbody><tr>
 		<td>${selected}</td><td>${infoDataOmission[1]}</td><td>${infoDataOmission[3]}</td>
@@ -10344,7 +10344,7 @@ function populateDialogQualityLogicalConsistency(node){
 		alert("Parent nodes do not contain data");
 		return false;
 	}
-	options1+=`<option value="">--- Select column ---</option>`;
+	options1+=`<option value="" style="text-align: center;">--- Select column ---</option>`;
 	objectKeys=Object.keys(parentsNodes[0].STAdataAttributes);
 	for (var e=0;e<objectKeys.length;e++){
 		options1+=`<option value="${objectKeys[e]}">${objectKeys[e]}</option>`
@@ -10355,7 +10355,7 @@ function populateDialogQualityLogicalConsistency(node){
 		alert("Parent nodes do not contain data");
 		return false;
 	}
-	options2+=`<option value="">--- Select column ---</option>`;
+	options2+=`<option value="" style="text-align: center;">--- Select column ---</option>`;
 	objectKeys=Object.keys(parentsNodes[1].STAdataAttributes);
 	for (var e=0;e<objectKeys.length;e++){
 		options2+=`<option value="${objectKeys[e]}">${objectKeys[e]}</option>`
@@ -10429,7 +10429,7 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 	
 			document.getElementById("dataQualityResult_info").innerHTML=`<table class="tablesmall">
 				<thead > 
-				<th >Target attributes</th><th >Reference attributes</th><th>Total records</th>
+				<th >Target columns</th><th >Reference columns</th><th>Total records</th>
 				<th>True records</th><th>Logical consistancy rate</th></tr></thead>
 				<tbody><tr>
 				<td>${targets}</td><td>${references}</td><td>${dataTarget.length}</td>
@@ -10514,7 +10514,7 @@ function okButtonDataQualityTemporalQuality(event){
 			var html="";
 			html= `<table class="tablesmall">
 						<thead > 
-						<th></th><th>Attribute</th><th>Total records</th><th>True records</th><th>Rate</th></tr></thead><tbody>`;
+						<th></th><th>Column</th><th>Total records</th><th>True records</th><th>Rate</th></tr></thead><tbody>`;
 			if(validity_calculate)html+= `<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.validity[1]}</td><td>${(newData.validity[1]/datalength)*100}</td></tr>`
 			if(resolution_calculate)html+= `<tr><td>Temporal resolution</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.resolution[1]}</td><td>${(newData.resolution[1]/datalength)*100}</td></tr>`
 			if(consistency_calculate)html+= `<tr><td>Temporal consistency</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.consistency[1]}</td><td>${(newData.consistency[1]/datalength)*100}</td></tr>`

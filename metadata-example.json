@@ -1,0 +1,71 @@
+{
+	"quality": [
+		{
+			"indicator": "DQ_QuantitativeAttributeAccuracy",
+			"statement": "Comparison with ground truth",
+			"result": [
+				{
+					"qualityml": {
+						"version": "1.0",
+						"measure": {
+							"name": "QuantitativeAttributeCorrectness"
+						},
+						"domain": [
+							{
+								"name": "DifferentialErrors1D",
+								"values": {
+									"list": [ 1, 2, 3, 4, 5 ],
+									"units": "m"
+								}
+							}
+						],
+						"metrics": [
+							{
+								"name": "Half-lengthConfidenceInterval",
+								"param": [
+									{
+										"name": "level",
+										"value": "0.683"
+									}
+								],
+								"values": {
+									"list": [ 50 ],
+									"units": "m"
+								}
+							}
+						]
+					}
+				}
+			]
+		}
+	],
+	"provenance": {
+		"lineage": {
+			"sources": [
+				{
+					"desc": "Landsat-8 OLI 2013/08/03 (surface reflectance), WRS2 path=192 row=026"
+				}
+			],
+			"processes": [
+				{
+					"purpose": "NDVI computation ([NIR]-[R])/([NIR]+[R])",
+					"processor": [
+						{
+							"party": {
+								"individual": {
+									"name": "Joan Maso"
+								}
+							}
+						}
+					]
+				},
+				{
+					"desc": "Clip to area of interest"
+				},
+				{
+					"desc": "Cloud masking"
+				}
+			]
+		}
+	}
+}

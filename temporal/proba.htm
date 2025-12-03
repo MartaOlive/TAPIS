@@ -25,36 +25,118 @@
 	</style>
 
 <body>
+  hola
+<div id="DialogQualityLogicalConsistency">
+		<form>
+			<h3> Logical consistency</h3>
+			<div id="DialogQualityLogicalConsistency_table_div">
+				<table style="border:2px solid black; border-collapse:collapse;">
+					<thead>
+						<th id="DialogQualityLogicalConsistency_table_0"
+							style="border:1px solid black; padding:6px; border-right:3px solid black; text-align:center;"></th>
+						<th id="DialogQualityLogicalConsistency_table_1"
+							style="border:1px solid black; padding:6px; text-align:center;"></th>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="border:1px solid black; padding:6px; border-right:3px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_select_targetOrReference_0">
+									<option value="target">Target</option>
+									<option value="reference">Reference</option>
+								</select>
+							</td>
+							<td style="border:1px solid black; padding:6px; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_select_targetOrReference_1">
+									<option value="target">Target</option>
+									<option value="reference" selected>Reference</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-top:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:3px solid black; text-align:center; padding-bottom:0px;">
+								Column 1
+							</td>
+							<td style="border-top:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:3px solid black; text-align:center; padding-bottom:0px;">
+								Column 1
+							</td>
+						</tr>
+						<tr>
+							<td style="border-bottom:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:3px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute1_0"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+							<td style="border-bottom:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:3px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute1_1"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-top:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:3px solid black; text-align:center; padding-bottom:0px;">
+								Column 2
+							</td>
+							<td style="border-top:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:3px solid black; text-align:center; padding-bottom:0px;">
+								Column 2
+							</td>
+						</tr>
+						<tr>
+							<td style="border-bottom:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:3px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute2_0"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+							<td style="border-bottom:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:3px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute2_1"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-top:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:3px solid black; text-align:center; padding-bottom:0px;">
+								Column 3
+							</td>
+							<td style="border-top:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:3px solid black; text-align:center; padding-bottom:0px;">
+								Column 3
+							</td>
+						</tr>
+						<tr>
+							<td style="border-bottom:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:3px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute3_0"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+							<td style="border-bottom:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:3px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute3_1"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
 
+			<div style="margin-top: 20px;">
+				
+				<label><input type="checkbox" value="logicalConsistency_calculateRate" id="dataQuality_logicalConsistency_calculate" name="dataQuality_logicalConsistency" checked>Calculate the global LogicalConsistency rate (%)</label><br>
+				<label><input type="checkbox" value="logicalConsistency_flagBadRecords" id="dataQuality_logicalConsistency_flag" name="dataQuality_logicalConsistency">Flag the bad records (true/false)</label><br>
+				<label><input type="checkbox" value="logicalConsistency_filterBadRecords" id="dataQuality_logicalConsistency_filter" name="dataQuality_logicalConsistency">Filter the table to keep only valid records</label>
+			</div>
+			<div class="center">
+				<button value="ok" onClick="okButtonDataQualityDialogQualityLogicalConsistency(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogQualityLogicalConsistencyNodeId"></input>
+		</form>
+	</div>
 
 	<script>
-		const url = "http://localhost:8080/FROST-Server/v1.0/Things(2)";
-const options = {
-  method: "PUT",
-  headers: {
-    "Accept": "application/json, */*;q=0.8",
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    name: "ThingAmbElTapisModificadaAmbPostman22",
-    description: "ThingAmbElTapisModificadaAmbPostman22",
-    properties: {}
-  })
-};
-
-async function updateThing() {
-  try {
-    const response = await fetch(url, options);
-    console.log("Resposta rebuda:", response);
-
-    const data = await response.json().catch(() => "Resposta sense JSON");
-    console.log("Cos de la resposta:", data);
-  } catch (error) {
-    console.error("❌ Error en el fetch:", error);
-  }
-}
-
-updateThing();
+		
 	</script>
 </body>
 
