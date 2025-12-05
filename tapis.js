@@ -10527,7 +10527,7 @@ function okButtonDataQualityTemporalQuality(event){
 }
 
 function populateDialogQualityPositionalQuality(node){
-	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "positionalQuality", "Column");
+	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "positionalQuality", "Geometry column");
 	document.getElementById("DialogQualityPositionalQuality_attributesList").innerHTML=attributesCheckboxModule;
 	saveNodeDialog("DialogQualityPositionalQuality", node);
 	var c="";
@@ -10536,7 +10536,72 @@ function populateDialogQualityPositionalQuality(node){
 
 		c+=`<option value="${attributesKeys[i]}">${attributesKeys[i]}</option>`
 	}
-	document.getElementById("PositionalQuality_select_positionalAccuracy").innerHTML=c;
+	document.getElementById("PositionalQuality_select_positionalAccuracy_accuracyColumn").innerHTML=c;
+}
+
+function okButtonDataQualityPositionalQuality(event){
+	var node= getNodeDialog("DialogQualityPositionalQuality");
+	var positionalAccuracy= (document.getElementById("PositionalQuality_checkbox_positionalAccuracy").checked)?true:false;
+	var positionalValidity= (document.getElementById("PositionalQuality_checkbox_positionalValidity").checked)?true:false;
+	var select= document.getElementById("attributeList_positionalQuality");
+	var attributeSelected= select.options[select.selectedIndex].value;
+	var finalData, accuracy;
+	var data = node.STAdata; 
+
+
+	if (positionalAccuracy){
+		var accuracyMethod= (document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn").checked)?"accuracyColumn": "geometryColumn";
+		var accuracyMean;
+		if (accuracyMethod=="accuracyColumn"){
+			//MIRAR QUE LA COLUMNA SIGUI NUMERICA!!
+			var selectAccuracy= document.getElementById("PositionalQuality_select_positionalAccuracy_accuracyColumn");
+			var attributeSelectedAccuracy= selectAccuracy.options[selectAccuracy.selectedIndex].value;
+			var accuracyValues=[];
+			for (var i=0;i<data.length; i++){
+				accuracyValues.push(data[i][attributeSelectedAccuracy]);
+			}
+			accuracyMean=aggrFuncMean(accuracyValues);
+			if(!Number.isInteger(accuracyMean)) accuracyMean= accuracyMean.toFixed(3);
+		}else{
+			var selectUnit= document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn_degreeMeters");
+			var selectUnitValue= selectUnit.options[selectUnit.selectedIndex].value;
+			var selectAxis= document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn_degreeMeters");
+			var selectAxisValue= selectAxis.options[selectAxis.selectedIndex].value;
+
+			var accurancyValue = accuracyValuesInMetersWithPoints(data, attributeSelected, selectUnitValue, selectAxisValue);
+			 
+
+		}
+		console.log (accuracyMean)
+
+	}
+
+
+	if(positionalValidity){
+
+
+	}
+
+	// node.STAdata= finalData;
+	// node.STAdataAttributes= getDataAttributes(finalData);
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
+	hideNodeDialog("DialogQualityPositionalQuality", event);
+
+		// if(validity_calculate||resolution_calculate||consistency_calculate){
+		// 	var html="";
+		// 	html= `<table class="tablesmall">
+		// 				<thead > 
+		// 				<th></th><th>Column</th><th>Total records</th><th>True records</th><th>Rate</th></tr></thead><tbody>`;
+		// 	if(validity_calculate)html+= `<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.validity[1]}</td><td>${(newData.validity[1]/datalength)*100}</td></tr>`
+		// 	if(resolution_calculate)html+= `<tr><td>Temporal resolution</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.resolution[1]}</td><td>${(newData.resolution[1]/datalength)*100}</td></tr>`
+		// 	if(consistency_calculate)html+= `<tr><td>Temporal consistency</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.consistency[1]}</td><td>${(newData.consistency[1]/datalength)*100}</td></tr>`
+		// 	html+=`</tbody></table>`;
+		// 	document.getElementById("dataQualityResult_info").innerHTML= html
+		// 	showNodeDialog("dataQualityResult");
+		// }
+	
+
 }
 
 //async function GetObjectId(url, objsName, obj){

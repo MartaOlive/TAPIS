@@ -273,3 +273,47 @@ function returnValidRange(currentData, number, tolerance, consistencyRadioValue)
 
     return [start, end]
 }
+
+
+function accuracyValuesInMetersWithPoints(data, attribute, units, axisOrder) {
+    var longitudeValues = []; latitudeValues = [];
+    var lon, lat;
+    if (axisOrder == "lonLat") {
+        lon = 0;
+        lat = 1;
+    } else {
+        lon = 1;
+        lat = 0;
+    }
+    //Mean of Longitudes and latitudes
+    for (var i = 0; i < data.length; i++) {
+        longitudeValues.push(data[i][attribute].coordinates[lon]);
+        latitudeValues.push(data[i][attribute].coordinates[lat]);
+
+    }
+    var longitudeMean=aggrFuncMean(longitudeValues);
+    var latitudeMean= aggrFuncMean(latitudeValues);
+    var distances=[], difLong, difLat;
+
+    //Distances 
+    if(units=="degree"){
+        var latRad = latitudeMean * Math.PI / 180
+        var longFactor= 111132 * Math.cos(latRad);
+    }
+    for (var e=0;e< data.length;e++){
+        //long
+        difLong= data[e][attribute].coordinates[lon]-longitudeMean;
+        difLat= data[e][attribute].coordinates[lat]-latitudeMean;
+        if (units=="degree"){
+            difLong = difLong * longFactor;
+            difLat= difLat *111132;
+        }
+        distances.push(Math.sqrt(difLong**2 + difLat**2))
+    }
+
+    //RMSE
+    var sumSquareDistances = distances.reduce((acc, d) => acc + d**2, 0);
+    var RMSE = Math.sqrt(sumSquareDistances / data.length);    
+
+    return RMSE;
+}

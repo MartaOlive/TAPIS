@@ -2019,8 +2019,52 @@
 			<div id="DialogQualityPositionalQuality_attributesList"></div>
 			<div>
 				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalAccuracy">Positional accuracy</label></legend>
-					<label><input type="radio" name="PositionalQuality_radio_positionalAccuracy" id="PositionalQuality_radio_positionalAccuracy_accuracyColumn" checked> Mean of the values in the accuracy column. Acuraccy column:  </label> <select id="PositionalQuality_select_positionalAccuracy"></select> <br>
-					<label><input type="radio" name="PositionalQuality_radio_positionalAccuracy" id="PositionalQuality_radio_positionalAccuracy_evaluateColumn"> Mean of the values in the column to evaluate </label>
+					<table style="text-align: center; border-collapse: collapse;">
+						<tr>
+							<td style="border-right: 2px solid #ccc; padding: 10px;">
+								<label>
+									<input type="radio" name="PositionalQuality_radio_positionalAccuracy"
+										id="PositionalQuality_radio_positionalAccuracy_accuracyColumn" checked>
+									Mean of the values in the accuracy column.
+								</label>
+							</td>
+
+							<td style="padding: 10px;">
+								<label>
+									<input type="radio" name="PositionalQuality_radio_positionalAccuracy"
+										id="PositionalQuality_radio_positionalAccuracy_evaluateColumn">
+									Mean of the values in the geometry column
+								</label>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="border-right: 2px solid #ccc;">
+								<label style="margin-right: 10px;">Accuracy column:</label>
+								<select id="PositionalQuality_select_positionalAccuracy_accuracyColumn"></select><br>
+							</td>
+
+							<td>
+								<label style="margin-right: 10px; padding-bottom: 0px;">Coordinates units</label>
+								<select id="PositionalQuality_radio_positionalAccuracy_accuracyColumn_degreeMeters">
+									<option value="degrees">Degrees</option>
+									<option value="meters">Meters</option>
+								</select>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="border-right: 2px solid #ccc; padding: 10px;"></td>
+
+							<td style="padding: 10px;">
+								<label>Axis order</label>
+								<select id="PositionalQuality_radio_positionalAccuracy_accuracyColumn_lonLat">
+									<option value="lonLat">[Longitude, Latitude]</option>
+									<option value="latLon">[Latitude, Longitude]</option>
+								</select>
+							</td>
+						</tr>
+					</table>
 				</fieldset>
 				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalValidity">Positional validity</label></legend>
 					<label for ="PositionalQuality_input_positionalValidity_xmin"> X minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmin" style="margin-bottom: 10px">

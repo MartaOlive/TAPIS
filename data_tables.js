@@ -938,7 +938,7 @@ function addnewColumnMaximalValue(data, columnName,columnsToEvaluate, decimalNum
 	}
 }
 
-function addnewColumnMeanValue(data, columnName,columnsToEvaluate, decimalNumber){
+function addnewColumnMeanValue(data, columnName,columnsToEvaluate, decimalNumber){ //data, name to new colum, array with columsn to evaluate, number of decimals
 	var values,mean;
 	for (var i=0;i<data.length;i++){
 		values=[];
