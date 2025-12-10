@@ -276,6 +276,8 @@ function returnValidRange(currentData, number, tolerance, consistencyRadioValue)
 
 
 function accuracyValuesInMetersWithPoints(data, attribute, units, axisOrder) {
+    var attributes = getDataAttributes(data);
+    if (attributes[attribute].type!="geometry") return false;
     var longitudeValues = []; latitudeValues = [];
     var lon, lat;
     if (axisOrder == "lonLat") {
@@ -291,29 +293,71 @@ function accuracyValuesInMetersWithPoints(data, attribute, units, axisOrder) {
         latitudeValues.push(data[i][attribute].coordinates[lat]);
 
     }
-    var longitudeMean=aggrFuncMean(longitudeValues);
-    var latitudeMean= aggrFuncMean(latitudeValues);
-    var distances=[], difLong, difLat;
+    var longitudeMean = aggrFuncMean(longitudeValues);
+    var latitudeMean = aggrFuncMean(latitudeValues);
+    var distances = [], difLong, difLat;
 
     //Distances 
-    if(units=="degree"){
+    if (units == "degree") {
         var latRad = latitudeMean * Math.PI / 180
-        var longFactor= 111132 * Math.cos(latRad);
+        var longFactor = 111132 * Math.cos(latRad);
     }
-    for (var e=0;e< data.length;e++){
+    for (var e = 0; e < data.length; e++) {
         //long
-        difLong= data[e][attribute].coordinates[lon]-longitudeMean;
-        difLat= data[e][attribute].coordinates[lat]-latitudeMean;
-        if (units=="degree"){
+        difLong = data[e][attribute].coordinates[lon] - longitudeMean;
+        difLat = data[e][attribute].coordinates[lat] - latitudeMean;
+        if (units == "degree") {
             difLong = difLong * longFactor;
-            difLat= difLat *111132;
+            difLat = difLat * 111132;
         }
-        distances.push(Math.sqrt(difLong**2 + difLat**2))
+        distances.push(Math.sqrt(difLong ** 2 + difLat ** 2))
     }
 
     //RMSE
-    var sumSquareDistances = distances.reduce((acc, d) => acc + d**2, 0);
-    var RMSE = Math.sqrt(sumSquareDistances / data.length);    
+    var sumSquareDistances = distances.reduce((acc, d) => acc + d ** 2, 0);
+    var RMSE = Math.sqrt(sumSquareDistances / data.length);
 
     return RMSE;
+}
+
+function calculateDataQualityPositionalValidity(data, attributeSelected, xmin, xmax, ymin, ymax, axisOrder, tag, filter) { //AxisOrder XY or YX
+    var attributes = getDataAttributes(data);
+    if (attributes[attributeSelected].type!="geometry") return false;
+    var valid;
+    var x, y;
+    var count =0;
+    var newData=[];
+    if (axisOrder == "XY") {
+        x = 0;
+        y = 1;
+    }
+    else {
+        x = 1;
+        y = 0;
+    }
+    for (var i = 0; i < data.length; i++) {
+        valid = true;
+        if (xmin != "") {
+            if (data[i][attributeSelected].coordinates[x] < parseFloat(xmin)) valid = false;
+        }
+        if (xmax != "") {
+            if (data[i][attributeSelected].coordinates[x] > parseFloat(xmax)) valid = false;
+        }
+        if (ymin != "") {
+            if (data[i][attributeSelected].coordinates[y] < parseFloat(ymin)) valid = false;
+        }
+        if (ymax != "") {
+            if (data[i][attributeSelected].coordinates[y] > parseFloat(ymax)) valid = false;
+        }
+
+        if (valid){
+            count++;
+        }
+        if(tag && valid)data[i]["PositionalValidity"] = "True";
+        if(tag && !valid)data[i]["PositionalValidity"] = "False";
+        if (filter && valid) newData.push(data[i]);
+    }
+    if(!filter)newData=data;
+    return [newData, count, (count / data.length) * 100]
+
 }

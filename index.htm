@@ -2067,6 +2067,10 @@
 					</table>
 				</fieldset>
 				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalValidity">Positional validity</label></legend>
+					<label>Axis order</label><select id="PositionalQuality_radio_positionalValidity_xy">
+						<option value="XY">[X, Y]</option>
+						<option value="YX">[Y, X]</option>
+					</select><br><br>
 					<label for ="PositionalQuality_input_positionalValidity_xmin"> X minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmin" style="margin-bottom: 10px">
 					<label for ="PositionalQuality_input_positionalValidity_xmax" style="margin-left: 15px"> X maximum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmax" style="margin-bottom: 10px"><br>
 					<label for ="PositionalQuality_input_positionalValidity_ymin"> Y minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_ymin">
@@ -2080,7 +2084,7 @@
 
 			</div>
 			<div class="center">
-				<button value="ok" onClick="okButtonDataQualityPositionalQuality(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+				<button value="ok" onClick="okButtonDataQualityPositionalQuality(event)" >Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 
 		<input type="hidden" id="DialogQualityPositionalQualityNodeId"></input>

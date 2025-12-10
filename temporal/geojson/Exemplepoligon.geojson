@@ -1,0 +1,17 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [2.10, 41.40],
+        [2.15, 41.42],
+        [2.12, 41.38],
+        [2.10, 41.40]
+      ]
+    ]
+  },
+  "properties": {
+    "name": "Polígon d'exemple"
+  }
+}

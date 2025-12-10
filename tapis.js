@@ -10540,12 +10540,13 @@ function populateDialogQualityPositionalQuality(node){
 }
 
 function okButtonDataQualityPositionalQuality(event){
+	event.preventDefault();
 	var node= getNodeDialog("DialogQualityPositionalQuality");
 	var positionalAccuracy= (document.getElementById("PositionalQuality_checkbox_positionalAccuracy").checked)?true:false;
 	var positionalValidity= (document.getElementById("PositionalQuality_checkbox_positionalValidity").checked)?true:false;
 	var select= document.getElementById("attributeList_positionalQuality");
 	var attributeSelected= select.options[select.selectedIndex].value;
-	var finalData, accuracy;
+	var finalData, accuracy, valid;
 	var data = node.STAdata; 
 
 
@@ -10554,39 +10555,60 @@ function okButtonDataQualityPositionalQuality(event){
 		var accuracyMean;
 		if (accuracyMethod=="accuracyColumn"){
 			//MIRAR QUE LA COLUMNA SIGUI NUMERICA!!
+			
 			var selectAccuracy= document.getElementById("PositionalQuality_select_positionalAccuracy_accuracyColumn");
 			var attributeSelectedAccuracy= selectAccuracy.options[selectAccuracy.selectedIndex].value;
-			var accuracyValues=[];
-			for (var i=0;i<data.length; i++){
-				accuracyValues.push(data[i][attributeSelectedAccuracy]);
-			}
-			accuracyMean=aggrFuncMean(accuracyValues);
-			if(!Number.isInteger(accuracyMean)) accuracyMean= accuracyMean.toFixed(3);
+			if (node.STAdataAttributes[attributeSelectedAccuracy].type == "number" || node.STAdataAttributes[attributeSelectedAccuracy].type== "integer"){
+				var accuracyValues=[];
+				for (var i=0;i<data.length; i++){
+					accuracyValues.push(data[i][attributeSelectedAccuracy]);
+				}
+				accuracyMean=aggrFuncMean(accuracyValues);
+				if(!Number.isInteger(accuracyMean)) accuracyMean= accuracyMean.toFixed(3);
+				valid=true;
+			}else{
+				valid= false;
+				alert("Column selected must be a number type column");
+			} 
+
 		}else{
 			var selectUnit= document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn_degreeMeters");
 			var selectUnitValue= selectUnit.options[selectUnit.selectedIndex].value;
 			var selectAxis= document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn_degreeMeters");
 			var selectAxisValue= selectAxis.options[selectAxis.selectedIndex].value;
-
 			var accurancyValue = accuracyValuesInMetersWithPoints(data, attributeSelected, selectUnitValue, selectAxisValue);
-			 
-
+			if (accurancyValue==false){
+				valid=false;
+				alert("Geometry column selected must be a geometry type column");
+			} 
 		}
-		console.log (accuracyMean)
-
 	}
-
-
 	if(positionalValidity){
-
-
+		var selectValidity= document.getElementById("PositionalQuality_radio_positionalValidity_xy");
+		var attributeSelectedValidity= selectValidity.options[selectValidity.selectedIndex].value;
+		var xmin=document.getElementById("PositionalQuality_input_positionalValidity_xmin").value;
+		var xmax=document.getElementById("PositionalQuality_input_positionalValidity_xmax").value;
+		var ymin=document.getElementById("PositionalQuality_input_positionalValidity_ymin").value;
+		var ymax=document.getElementById("PositionalQuality_input_positionalValidity_ymax").value;
+		var tag= (document.getElementById("dataQuality_temporalValidity_flag").checked)?true:false;
+		var filter= (document.getElementById("dataQuality_temporalValidity_filter").checked)?true:false;
+		var positionalValidityRate= calculateDataQualityPositionalValidity (data, attributeSelected, xmin, xmax, ymin, ymax, attributeSelectedValidity, tag, filter)
+		if (positionalValidityRate==false){
+			valid=false;
+			alert("Geometry column selected must be a geometry type column");
+		} 
+	}
+	if (valid !=false){
+		node.STAdata= positionalValidityRate[0];
+		node.STAdataAttributes= getDataAttributes(positionalValidityRate[0]);
+		networkNodes.update(node);
+		updateQueryAndTableArea(node);
+		hideNodeDialog("DialogQualityPositionalQuality", event);
+		
+		if ()
 	}
 
-	// node.STAdata= finalData;
-	// node.STAdataAttributes= getDataAttributes(finalData);
-	networkNodes.update(node);
-	updateQueryAndTableArea(node);
-	hideNodeDialog("DialogQualityPositionalQuality", event);
+
 
 		// if(validity_calculate||resolution_calculate||consistency_calculate){
 		// 	var html="";
