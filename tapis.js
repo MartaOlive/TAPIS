@@ -10546,16 +10546,15 @@ function okButtonDataQualityPositionalQuality(event){
 	var positionalValidity= (document.getElementById("PositionalQuality_checkbox_positionalValidity").checked)?true:false;
 	var select= document.getElementById("attributeList_positionalQuality");
 	var attributeSelected= select.options[select.selectedIndex].value;
-	var finalData, accuracy, valid;
+	var valid, accurancyValue;
 	var data = node.STAdata; 
+	var dataLength= data.length;
 
 
 	if (positionalAccuracy){
 		var accuracyMethod= (document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn").checked)?"accuracyColumn": "geometryColumn";
-		var accuracyMean;
-		if (accuracyMethod=="accuracyColumn"){
-			//MIRAR QUE LA COLUMNA SIGUI NUMERICA!!
-			
+		
+		if (accuracyMethod=="accuracyColumn"){			
 			var selectAccuracy= document.getElementById("PositionalQuality_select_positionalAccuracy_accuracyColumn");
 			var attributeSelectedAccuracy= selectAccuracy.options[selectAccuracy.selectedIndex].value;
 			if (node.STAdataAttributes[attributeSelectedAccuracy].type == "number" || node.STAdataAttributes[attributeSelectedAccuracy].type== "integer"){
@@ -10563,8 +10562,8 @@ function okButtonDataQualityPositionalQuality(event){
 				for (var i=0;i<data.length; i++){
 					accuracyValues.push(data[i][attributeSelectedAccuracy]);
 				}
-				accuracyMean=aggrFuncMean(accuracyValues);
-				if(!Number.isInteger(accuracyMean)) accuracyMean= accuracyMean.toFixed(3);
+				accurancyValue=aggrFuncMean(accuracyValues);
+				if(!Number.isInteger(accurancyValue)) accurancyValue= accurancyValue.toFixed(3);
 				valid=true;
 			}else{
 				valid= false;
@@ -10576,7 +10575,7 @@ function okButtonDataQualityPositionalQuality(event){
 			var selectUnitValue= selectUnit.options[selectUnit.selectedIndex].value;
 			var selectAxis= document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn_degreeMeters");
 			var selectAxisValue= selectAxis.options[selectAxis.selectedIndex].value;
-			var accurancyValue = accuracyValuesInMetersWithPoints(data, attributeSelected, selectUnitValue, selectAxisValue);
+			accurancyValue = accuracyValuesInMetersWithPoints(data, attributeSelected, selectUnitValue, selectAxisValue);
 			if (accurancyValue==false){
 				valid=false;
 				alert("Geometry column selected must be a geometry type column");
@@ -10599,30 +10598,57 @@ function okButtonDataQualityPositionalQuality(event){
 		} 
 	}
 	if (valid !=false){
-		node.STAdata= positionalValidityRate[0];
-		node.STAdataAttributes= getDataAttributes(positionalValidityRate[0]);
+		if(positionalValidity){
+			node.STAdata= positionalValidityRate[0];
+			node.STAdataAttributes= getDataAttributes(positionalValidityRate[0]);
+		}
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		hideNodeDialog("DialogQualityPositionalQuality", event);
 		
-		if ()
+		if (positionalAccuracy ||positionalValidity ){
+			var html="";
+			if(positionalAccuracy){
+				
+				html+= `<div> Positional accuracy <br>
+				 <table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
+				<tbody>`
+
+				if(accuracyMethod=="accuracyColumn"){
+					html+=`<tr>
+						<td>${attributeSelectedAccuracy} </td>
+						<td> Mean of the accuracy column values </td>
+						<td> ${accurancyValue}</td>
+					</tr>`
+				}else{
+					html+=`<tr>
+						<td>${attributeSelected} </td>
+						<td> Root Mean Square Error (RMSE) </td>
+						<td> ${accurancyValue} m</td>
+					</tr>`
+				}
+				html+="</tbody></table></div>"
+			}
+			html +="<br>"
+			if(positionalValidity){
+				var positionValidityRateValue;
+				if(!Number.isInteger(positionalValidityRate[2])){
+					positionValidityRateValue= positionalValidityRate[2].toFixed(3)	
+				}else positionValidityRateValue = positionalValidityRate[2];
+				html+= `<div> Positional validity <br>
+				 <table class="tablesmall"><thead><th>Column</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
+				<tbody><tr>
+					<td>${attributeSelected}</td>
+					<td>${dataLength}</td>
+					<td>${positionalValidityRate[1]}</td>
+					<td>${positionValidityRateValue}</td>
+				</tr>`
+			}
+			
+			document.getElementById("dataQualityResult_info").innerHTML= html
+			showNodeDialog("dataQualityResult");		
+		}
 	}
-
-
-
-		// if(validity_calculate||resolution_calculate||consistency_calculate){
-		// 	var html="";
-		// 	html= `<table class="tablesmall">
-		// 				<thead > 
-		// 				<th></th><th>Column</th><th>Total records</th><th>True records</th><th>Rate</th></tr></thead><tbody>`;
-		// 	if(validity_calculate)html+= `<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.validity[1]}</td><td>${(newData.validity[1]/datalength)*100}</td></tr>`
-		// 	if(resolution_calculate)html+= `<tr><td>Temporal resolution</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.resolution[1]}</td><td>${(newData.resolution[1]/datalength)*100}</td></tr>`
-		// 	if(consistency_calculate)html+= `<tr><td>Temporal consistency</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.consistency[1]}</td><td>${(newData.consistency[1]/datalength)*100}</td></tr>`
-		// 	html+=`</tbody></table>`;
-		// 	document.getElementById("dataQualityResult_info").innerHTML= html
-		// 	showNodeDialog("dataQualityResult");
-		// }
-	
 
 }
 
