@@ -1,0 +1,1024 @@
+{
+	"nodes": [
+		{
+			"id": "781t9.gma54j",
+			"label": "EmbassamentsPerEvaluar",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"dia": "2024-03-08T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.53,
+					"percentatge_volum_embassat": 56.4,
+					"volum_embassat": 2.11,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-09T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.64,
+					"percentatge_volum_embassat": 57.8,
+					"volum_embassat": 2.16,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-10T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.81,
+					"percentatge_volum_embassat": 60,
+					"volum_embassat": 2.25,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-11T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.82,
+					"percentatge_volum_embassat": 60.1,
+					"volum_embassat": 2.25,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-12T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.81,
+					"percentatge_volum_embassat": 60.1,
+					"volum_embassat": 2.25,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-13T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.81,
+					"percentatge_volum_embassat": 60,
+					"volum_embassat": 2.25,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-14T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.81,
+					"percentatge_volum_embassat": 60,
+					"volum_embassat": 2.24,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-15T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.81,
+					"percentatge_volum_embassat": 60,
+					"volum_embassat": 2.24,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-16T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.8,
+					"percentatge_volum_embassat": 60,
+					"volum_embassat": 2.24,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-17T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.8,
+					"percentatge_volum_embassat": 59.9,
+					"volum_embassat": 2.24,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-18T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.77,
+					"percentatge_volum_embassat": 59.6,
+					"volum_embassat": 2.23,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-19T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.75,
+					"percentatge_volum_embassat": 59.2,
+					"volum_embassat": 2.22,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-20T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.74,
+					"percentatge_volum_embassat": 59.1,
+					"volum_embassat": 2.21,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-21T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.73,
+					"percentatge_volum_embassat": 59,
+					"volum_embassat": 2.21,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-22T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.73,
+					"percentatge_volum_embassat": 59,
+					"volum_embassat": 2.21,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-23T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.73,
+					"percentatge_volum_embassat": 59,
+					"volum_embassat": 2.21,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-24T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.74,
+					"percentatge_volum_embassat": 59.1,
+					"volum_embassat": 2.21,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-25T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.74,
+					"percentatge_volum_embassat": 59.2,
+					"volum_embassat": 2.21,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-26T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.82,
+					"percentatge_volum_embassat": 60.1,
+					"volum_embassat": 2.25,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-27T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.86,
+					"percentatge_volum_embassat": 60.6,
+					"volum_embassat": 2.27,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-28T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.85,
+					"percentatge_volum_embassat": 60.5,
+					"volum_embassat": 2.26,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-29T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.85,
+					"percentatge_volum_embassat": 60.5,
+					"volum_embassat": 2.26,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-30T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.85,
+					"percentatge_volum_embassat": 60.5,
+					"volum_embassat": 2.26,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-03-31T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.97,
+					"percentatge_volum_embassat": 62.1,
+					"volum_embassat": 2.32,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-01T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.01,
+					"percentatge_volum_embassat": 62.5,
+					"volum_embassat": 2.34,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-02T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98,
+					"percentatge_volum_embassat": 62.6,
+					"volum_embassat": 2.34,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-03T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98,
+					"percentatge_volum_embassat": 62.5,
+					"volum_embassat": 2.34,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-04T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98,
+					"percentatge_volum_embassat": 62.5,
+					"volum_embassat": 2.34,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-05T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.99,
+					"percentatge_volum_embassat": 62.4,
+					"volum_embassat": 2.33,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-06T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.99,
+					"percentatge_volum_embassat": 62.4,
+					"volum_embassat": 2.33,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-07T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.98,
+					"percentatge_volum_embassat": 62.3,
+					"volum_embassat": 2.33,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-08T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.98,
+					"percentatge_volum_embassat": 62.2,
+					"volum_embassat": 2.33,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-09T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.95,
+					"percentatge_volum_embassat": 61.9,
+					"volum_embassat": 2.31,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-10T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.92,
+					"percentatge_volum_embassat": 61.5,
+					"volum_embassat": 2.3,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-11T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.89,
+					"percentatge_volum_embassat": 61.1,
+					"volum_embassat": 2.28,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-12T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.88,
+					"percentatge_volum_embassat": 60.9,
+					"volum_embassat": 2.28,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-13T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.87,
+					"percentatge_volum_embassat": 60.8,
+					"volum_embassat": 2.28,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-14T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.87,
+					"percentatge_volum_embassat": 60.8,
+					"volum_embassat": 2.27,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-15T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.85,
+					"percentatge_volum_embassat": 60.6,
+					"volum_embassat": 2.27,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-16T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.82,
+					"percentatge_volum_embassat": 60.2,
+					"volum_embassat": 2.25,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-17T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.79,
+					"percentatge_volum_embassat": 59.8,
+					"volum_embassat": 2.24,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-18T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.79,
+					"percentatge_volum_embassat": 59.7,
+					"volum_embassat": 2.23,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-19T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.76,
+					"percentatge_volum_embassat": 59.4,
+					"volum_embassat": 2.22,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-20T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.75,
+					"percentatge_volum_embassat": 59.3,
+					"volum_embassat": 2.22,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-21T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.75,
+					"percentatge_volum_embassat": 59.3,
+					"volum_embassat": 2.22,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-22T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.8,
+					"percentatge_volum_embassat": 59.9,
+					"volum_embassat": 2.24,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-23T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.86,
+					"percentatge_volum_embassat": 60.7,
+					"volum_embassat": 2.27,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-24T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.86,
+					"percentatge_volum_embassat": 60.7,
+					"volum_embassat": 2.27,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-25T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.87,
+					"percentatge_volum_embassat": 60.7,
+					"volum_embassat": 2.27,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-26T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.86,
+					"percentatge_volum_embassat": 60.7,
+					"volum_embassat": 2.27,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-27T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.86,
+					"percentatge_volum_embassat": 60.7,
+					"volum_embassat": 2.27,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-28T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.86,
+					"percentatge_volum_embassat": 60.7,
+					"volum_embassat": 2.27,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-29T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 97.95,
+					"percentatge_volum_embassat": 61.9,
+					"volum_embassat": 2.31,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-04-30T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.21,
+					"percentatge_volum_embassat": 65.4,
+					"volum_embassat": 2.44,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-01T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.24,
+					"percentatge_volum_embassat": 65.7,
+					"volum_embassat": 2.46,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-02T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.24,
+					"percentatge_volum_embassat": 65.7,
+					"volum_embassat": 2.46,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-03T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.23,
+					"percentatge_volum_embassat": 65.5,
+					"volum_embassat": 2.45,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-04T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.22,
+					"percentatge_volum_embassat": 65.4,
+					"volum_embassat": 2.45,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-05T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.22,
+					"percentatge_volum_embassat": 65.4,
+					"volum_embassat": 2.44,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-06T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.21,
+					"percentatge_volum_embassat": 65.3,
+					"volum_embassat": 2.44,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-07T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.18,
+					"percentatge_volum_embassat": 64.9,
+					"volum_embassat": 2.43,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-08T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.15,
+					"percentatge_volum_embassat": 64.5,
+					"volum_embassat": 2.41,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-09T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.13,
+					"percentatge_volum_embassat": 64.3,
+					"volum_embassat": 2.41,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-10T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.12,
+					"percentatge_volum_embassat": 64.1,
+					"volum_embassat": 2.4,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-11T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.11,
+					"percentatge_volum_embassat": 64,
+					"volum_embassat": 2.39,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-12T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.11,
+					"percentatge_volum_embassat": 64,
+					"volum_embassat": 2.39,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-13T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.1,
+					"percentatge_volum_embassat": 63.8,
+					"volum_embassat": 2.39,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-14T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.12,
+					"percentatge_volum_embassat": 64.1,
+					"volum_embassat": 2.4,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-15T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.19,
+					"percentatge_volum_embassat": 65.1,
+					"volum_embassat": 2.43,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-16T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.29,
+					"percentatge_volum_embassat": 66.4,
+					"volum_embassat": 2.48,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-17T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.44,
+					"percentatge_volum_embassat": 68.5,
+					"volum_embassat": 2.56,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-18T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.45,
+					"percentatge_volum_embassat": 68.5,
+					"volum_embassat": 2.56,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-19T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.45,
+					"percentatge_volum_embassat": 68.6,
+					"volum_embassat": 2.57,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-20T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.45,
+					"percentatge_volum_embassat": 68.5,
+					"volum_embassat": 2.56,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-21T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.44,
+					"percentatge_volum_embassat": 68.4,
+					"volum_embassat": 2.56,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-22T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.4,
+					"percentatge_volum_embassat": 67.9,
+					"volum_embassat": 2.54,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-23T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.37,
+					"percentatge_volum_embassat": 67.5,
+					"volum_embassat": 2.52,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-24T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.35,
+					"percentatge_volum_embassat": 67.2,
+					"volum_embassat": 2.51,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-25T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.34,
+					"percentatge_volum_embassat": 67.1,
+					"volum_embassat": 2.51,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-26T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.33,
+					"percentatge_volum_embassat": 66.9,
+					"volum_embassat": 2.5,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-27T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.32,
+					"percentatge_volum_embassat": 66.8,
+					"volum_embassat": 2.5,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-28T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.31,
+					"percentatge_volum_embassat": 66.6,
+					"volum_embassat": 2.49,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-29T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.27,
+					"percentatge_volum_embassat": 66.2,
+					"volum_embassat": 2.47,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-30T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.25,
+					"percentatge_volum_embassat": 65.8,
+					"volum_embassat": 2.46,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-05-31T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.21,
+					"percentatge_volum_embassat": 65.3,
+					"volum_embassat": 2.44,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-01T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.23,
+					"percentatge_volum_embassat": 65.6,
+					"volum_embassat": 2.45,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-02T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.47,
+					"percentatge_volum_embassat": 68.9,
+					"volum_embassat": 2.58,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-03T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.49,
+					"percentatge_volum_embassat": 69.1,
+					"volum_embassat": 2.59,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-04T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.49,
+					"percentatge_volum_embassat": 69.1,
+					"volum_embassat": 2.58,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-05T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.48,
+					"percentatge_volum_embassat": 68.9,
+					"volum_embassat": 2.58,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-06T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.47,
+					"percentatge_volum_embassat": 68.8,
+					"volum_embassat": 2.57,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-07T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.43,
+					"percentatge_volum_embassat": 68.3,
+					"volum_embassat": 2.56,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-08T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.4,
+					"percentatge_volum_embassat": 67.8,
+					"volum_embassat": 2.54,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-09T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.41,
+					"percentatge_volum_embassat": 68,
+					"volum_embassat": 2.54,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-10T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.42,
+					"percentatge_volum_embassat": 68.1,
+					"volum_embassat": 2.55,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-11T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.43,
+					"percentatge_volum_embassat": 68.3,
+					"volum_embassat": 2.56,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-12T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.55,
+					"percentatge_volum_embassat": 69.9,
+					"volum_embassat": 2.62,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-13T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.6,
+					"percentatge_volum_embassat": 70.6,
+					"volum_embassat": 2.64,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-14T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.6,
+					"percentatge_volum_embassat": 70.7,
+					"volum_embassat": 2.64,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-15T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.6,
+					"percentatge_volum_embassat": 70.6,
+					"volum_embassat": 2.64,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-16T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.59,
+					"percentatge_volum_embassat": 70.5,
+					"volum_embassat": 2.64,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-17T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.58,
+					"percentatge_volum_embassat": 70.3,
+					"volum_embassat": 2.63,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-18T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.54,
+					"percentatge_volum_embassat": 69.8,
+					"volum_embassat": 2.61,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-19T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.51,
+					"percentatge_volum_embassat": 69.4,
+					"volum_embassat": 2.59,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-20T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.49,
+					"percentatge_volum_embassat": 69.1,
+					"volum_embassat": 2.58,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-21T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.48,
+					"percentatge_volum_embassat": 68.9,
+					"volum_embassat": 2.58,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-22T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.47,
+					"percentatge_volum_embassat": 68.8,
+					"volum_embassat": 2.57,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-23T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.45,
+					"percentatge_volum_embassat": 68.6,
+					"volum_embassat": 2.57,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-24T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.44,
+					"percentatge_volum_embassat": 68.4,
+					"volum_embassat": 2.56,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-25T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.41,
+					"percentatge_volum_embassat": 68,
+					"volum_embassat": 2.54,
+					"Unitat": "Litres"
+				},
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"estaci": "Embassament de Foix (Castellet i la Gornal)",
+					"nivell_absolut": 98.37,
+					"percentatge_volum_embassat": 67.5,
+					"volum_embassat": 2.52,
+					"Unitat": "Litres"
+				}
+			],
+			"STAdataAttributes": {
+				"dia": {
+					"type": "isodatetime"
+				},
+				"estaci": {
+					"type": "string"
+				},
+				"nivell_absolut": {
+					"type": "number"
+				},
+				"percentatge_volum_embassat": {
+					"type": "number"
+				},
+				"volum_embassat": {
+					"type": "number"
+				},
+				"Unitat": {
+					"type": "string"
+				}
+			},
+			"x": 37,
+			"y": 49
+		},
+		{
+			"id": "2hsof.0qmn5t",
+			"label": "Referència",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Province": "Barcelona",
+					"River_basin": "Riu Foix",
+					"County": "Alt Penedes",
+					"Station": "Reservoir of Foix (Castellet i la Gornal)"
+				},
+				{
+					"Province": "Barcelona",
+					"River_basin": "Riu Llobregat",
+					"County": "Bergueda",
+					"Station": "Reservoir of la Baells (Cercs)"
+				},
+				{
+					"Province": "Barcelona",
+					"River_basin": "Riu Ter",
+					"County": "Osona",
+					"Station": "Reservoir of Sau (Vilanova de Sau)"
+				},
+				{
+					"Province": "Girona",
+					"River_basin": "Riu Ter",
+					"County": "La Selva",
+					"Station": "Reservoir of Susqueda (Osor)"
+				},
+				{
+					"Province": "Lleida ",
+					"River_basin": "Riu Cardener",
+					"County": "Solsones",
+					"Station": "Reservoir of la Llosa del Cavall (Nav?s)"
+				},
+				{
+					"Province": "Lleida ",
+					"River_basin": "Riu Cardener",
+					"County": "Solsones",
+					"Station": "Reservoir of Sant Pon? (Clariana de Cardener)"
+				},
+				{
+					"Province": "Tarragona",
+					"River_basin": "Riera Riudecanyes",
+					"County": "Baix Camp",
+					"Station": "Reservoir of Riudecanyes"
+				},
+				{
+					"Province": "Tarragona",
+					"River_basin": "Riu Siurana",
+					"County": "Priorat",
+					"Station": "Reservoir of Siurana (Cornudella de Montsant)"
+				}
+			],
+			"STAdataAttributes": {
+				"Province": {
+					"type": "string"
+				},
+				"River_basin": {
+					"type": "string"
+				},
+				"County": {
+					"type": "string"
+				},
+				"Station": {
+					"type": "string"
+				}
+			},
+			"x": 55,
+			"y": -106
+		},
+		{
+			"id": "3c90g.g7h135g",
+			"label": "Thematic quality",
+			"image": "thematicQuality.png",
+			"shape": "circularImage",
+			"x": -28,
+			"y": -27
+		}
+	],
+	"edges": [
+		{
+			"from": "8bpf0.tqecjc",
+			"to": "75h1u.n97tfg",
+			"arrows": "from"
+		},
+		{
+			"from": "781t9.gma54j",
+			"to": "1pup2.l9og138",
+			"arrows": "from"
+		},
+		{
+			"from": "781t9.gma54j",
+			"to": "3c90g.g7h135g",
+			"arrows": "from"
+		},
+		{
+			"from": "2hsof.0qmn5t",
+			"to": "3c90g.g7h135g",
+			"arrows": "from"
+		}
+	]
+}

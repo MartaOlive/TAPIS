@@ -177,8 +177,8 @@ const dataQuality={
 	completenessomission:{description: "Completness omission", help:"The degree to which all required data is present and recorded without missing or incomplete values" },
 	logicalConsistency:{description: "Logical consistency", help:"Performs a logical consistency check to identify contradictions and ensure coherent data relationships." },
 	temporalQuality:{description: "Temporal quality", help:"Allows calculating temporal consistency, temporal validity and temporal resolution." },
-	// temporalQuality:{description: "Thematic quality", help:"Allows calculating ..." } //FALTA COMPELTAR
-	positionalQuality:{description: "Positional quality", help:"Allows calculating ..."  } //Falta completar
+	positionalQuality:{description: "Positional quality", help:"Allows calculating positional accuracy and positional validity"  },
+	thematicQuality:{description: "Thematic quality", help:"Allows calculating thematic accuracy and thematic validity"  }
 
 }
 const dataQualityArray = Object.keys(dataQuality);
@@ -7926,6 +7926,18 @@ function networkDoubleClick(params) {
 				alert("Parent node must have data to analyze");
 			}
 		}
+		else if (currentNode.image == "thematicQuality.png") {
+			var parentNode=GetParentNodes(currentNode);
+			if (parentNode) {
+					//currentNode.STAdata= deapCopy(parentNode.STAdata);
+					//currentNode.STAdataAttributes= deapCopy(parentNode.STAdataAttributes);
+					populateDialogQualityThematicQuality(currentNode);
+					networkNodes.update(currentNode);
+					showNodeDialog("DialogQualityThematicQuality");
+			}else{
+				alert("Parent node must have data to analyze");
+			}
+		}
 		
 	}
 }
@@ -10648,6 +10660,62 @@ function okButtonDataQualityPositionalQuality(event){
 			document.getElementById("dataQualityResult_info").innerHTML= html
 			showNodeDialog("dataQualityResult");		
 		}
+	}
+
+}
+
+function populateDialogQualityThematicQuality(node){
+	populateAttributesListSelectThematicQuality(node);
+	saveNodeDialog("DialogQualityThematicQuality", node);
+}
+
+function populateDialogQualityThematicQuality(node){
+	var parentNodes=GetParentNodes(currentNode);
+	
+	var select= createSelectForThematicQuality(parentNodes, "columnToEvaluate");
+	//Oplir el select de la grouping group
+
+	document.getElementById("DialogQualityThematicQuality_attributesList").innerHTML=select; //general
+	document.getElementById("thematicQuality_select_thematicAccuracy_group").innerHTML=select; //grouping column
+	document.getElementById("thematicQuality_select_thematicValidity").innerHTML=select; //grouping column
+}
+
+function createSelectForThematicQuality(parentNodes, place){
+	var c="", attributes;
+	c+=`<select id= "thematicQuality_select_${place}">`
+	for (var i=0;i<parentNodes.length;i++){
+		attributes= Object.keys(parentNodes[i].STAdataAttributes);
+		c+=`<optgroup label="${parentNodes[i].label}">`
+		for (var a=0; a< attributes.length; a++){
+			c+=`<option value="${attributes[a]}">${attributes[a]}</option>`
+		}
+		c+="</optgroup>"
+	}
+	c+=`</select>`
+	return c;
+}
+
+
+
+function okButtonDataQualityThematicQuality(event){
+	var thematicAccuracy= (document.getElementById("ThematicQuality_checkbox_ThematicAccuracy").checked)?true:false;
+	var thematicValidity= (document.getElementById("ThematicQuality_checkbox_ThematicValidity").checked)?true:false;
+	if(thematicAccuracy){
+		var groupingMode= (document.getElementById("thematicQuality_radio_thematicAccuracy_group").checked)?"grouped": "all";
+		var inputWayGroup = document.querySelector('input[name="thematicQuality_radio_thematicAccuracy_way"]:checked')
+		var inputWayValue= inputWayGroup.value; //accuracyMean, string, number
+
+
+
+
+
+	}
+	if(thematicValidity){
+
+		var thematicValidityWay= (document.getElementById("thematicQuality_radio_thematicValidity_list").checked)? "list": "range";
+		
+
+
 	}
 
 }
