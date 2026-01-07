@@ -303,7 +303,7 @@ function ngeohash_decode_int(hash_int, bitDepth) {
  * @returns {String}
  */
 function ngeohash_neighbor(hashString, direction) {
-  var lonLat = decode(hashString);
+  var lonLat = ngeohash_decode(hashString);
   var neighborLat = lonLat.latitude
     + direction[0] * lonLat.error.latitude * 2;
   var neighborLon = lonLat.longitude
@@ -326,7 +326,7 @@ function ngeohash_neighbor(hashString, direction) {
 */
 function ngeohash_neighbor_int(hash_int, direction, bitDepth) {
     bitDepth = bitDepth || 52;
-    var lonlat = decode_int(hash_int, bitDepth);
+    var lonlat = ngeohash_decode_int(hash_int, bitDepth);
     var neighbor_lat = lonlat.latitude + direction[0] * lonlat.error.latitude * 2;
     var neighbor_lon = lonlat.longitude + direction[1] * lonlat.error.longitude * 2;
     neighbor_lon = ngeohash_ensure_valid_lon(neighbor_lon);
@@ -507,7 +507,7 @@ function ngeohash_bboxes_int(minLat, minLon, maxLat, maxLon, bitDepth){
   return hashList;
 };
 
-function ngeohash_ngeohash_ensure_valid_lon(lon) {
+function ngeohash_ensure_valid_lon(lon) {
   if (lon > ngeohash_MAX_LON)
     return ngeohash_MIN_LON + lon % ngeohash_MAX_LON;
   if (lon < ngeohash_MIN_LON)
@@ -515,7 +515,7 @@ function ngeohash_ngeohash_ensure_valid_lon(lon) {
   return lon;
 };
 
-function ngeohash_ngeohash_ensure_valid_lat(lat) {
+function ngeohash_ensure_valid_lat(lat) {
   if (lat > ngeohash_MAX_LAT)
     return ngeohash_MAX_LAT;
   if (lat < ngeohash_MIN_LAT)

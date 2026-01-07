@@ -1,0 +1,113 @@
+{
+	"dataQualityInfos": [ 
+		{
+			"reports": [
+				{
+					"type": "DQ_QuantitativeAttributeAccuracy",
+					"statement": "Comparison with ground truth",
+					"measureIdentification": {
+						"measure": {
+							"name": "QuantitativeAttributeCorrectness"
+						},
+						"domains": [
+							{
+								"name": "DifferentialErrors1D",
+								"valueUnit": {
+									"symbol": "m"
+								},
+								"values": [ 1, 2, 3, 4, 5 ]
+							}
+						]						
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Half-lengthConfidenceInterval",
+									"params": [
+										{
+											"name": "level",
+											"value": "0.683"
+										}
+									]
+								}
+							},
+							"valueType": "number",
+							"valueUnit": {"symbol": "m"},
+							"values": [ 50 ]
+						}
+					]
+				}
+			]
+		},
+		{
+			"reports": [
+				{
+					"type": "DQ_AbsoluteExternalPositionalAccuracy",
+					"statement": "Comparison with ground truth",
+					"measureIdentification": {
+						"measure": {
+							"name": "CircularMapAccuracy"
+						},
+						"domains": [
+							{
+								"name": "DifferentialErrors2D",
+								"valueUnit": {"symbol": "m"},
+								"values": [1, 2, 3, 4, 5]
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Half-lengthConfidenceInterval",
+									"params": [
+										{
+											"name": "level",
+											"value": "0.683"
+										}
+									]
+								}
+							},
+							"valueType": "number",
+							"valueUnit": {"symbol": "m"},
+							"values": [ 50 ]
+						}
+					]
+				}
+			]
+		}	
+	],
+	"provenance": {
+		"lineage": {
+			"sources": [
+				{
+					"desc": "Landsat-8 OLI 2013/08/03 (surface reflectance), WRS2 path=192 row=026"
+				}
+			],
+			"processes": [
+				{
+					"purpose": "NDVI computation ([NIR]-[R])/([NIR]+[R])",
+					"processors": [
+						{
+							"party": {
+								"individual": {
+									"name": "Joan Maso"
+								}
+							}
+						}
+					]
+				},
+				{
+					"desc": "Clip to area of interest"
+				},
+				{
+					"desc": "Cloud masking"
+				}
+			]
+		}
+	}
+}

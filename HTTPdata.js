@@ -248,7 +248,7 @@ function getHeadersFromSecurity(security, url) {
 }
 
 function AddHeadersIfNeeded(options, security, url) {
-	if (!options.headers['Authorization'] && !options.headers['x-facts-key']) {
+	if (!options.headers || (!options.headers['Authorization'] && !options.headers['x-facts-key'])) {
 		if (security) {
 			if (!options.headers)
 				options.headers={};

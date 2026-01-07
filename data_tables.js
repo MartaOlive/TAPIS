@@ -938,7 +938,8 @@ function addnewColumnMaximalValue(data, columnName,columnsToEvaluate, decimalNum
 	}
 }
 
-function addnewColumnMeanValue(data, columnName,columnsToEvaluate, decimalNumber){ //data, name to new colum, array with columsn to evaluate, number of decimals
+//data, name to new colum, array with columns to evaluate, number of decimals
+function addnewColumnMeanValue(data, columnName, columnsToEvaluate, decimalNumber){ 
 	var values,mean;
 	for (var i=0;i<data.length;i++){
 		values=[];
@@ -1406,13 +1407,13 @@ var columnCreated=false, record, json, point;
 			else if (selectedOptions.radioOut=="Geohash") {
 				//JSON-->Geohash
 				point=getFirstCoordinateGeoJSONGeometry(json);
-				record[selectedOptions.nameOut]=ngeohash_encode(point[1], point[0]);
+				record[selectedOptions.nameOut]=ngeohash_encode(point[1], point[0], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="UberH3") {
 				//JSON-->Uber H3
 				point=getFirstCoordinateGeoJSONGeometry(json);
-				record[selectedOptions.nameOut]=h3.latLngToCell(point[1], point[0], 10);
+				record[selectedOptions.nameOut]=h3.latLngToCell(point[1], point[0], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="LL") {
@@ -1443,13 +1444,13 @@ var columnCreated=false, record, json, point;
 			else if (selectedOptions.radioOut=="Geohash") {
 				//JSON-->Geohash
 				point=getFirstCoordinateGeoJSONGeometry(json);
-				record[selectedOptions.nameOut]=ngeohash_encode(point[1], point[0]);
+				record[selectedOptions.nameOut]=ngeohash_encode(point[1], point[0], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="UberH3") {
 				//JSON-->Uber H3
 				point=getFirstCoordinateGeoJSONGeometry(json);
-				record[selectedOptions.nameOut]=h3.latLngToCell(point[1], point[0], 10);
+				record[selectedOptions.nameOut]=h3.latLngToCell(point[1], point[0], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="LL") {
@@ -1483,7 +1484,7 @@ var columnCreated=false, record, json, point;
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="UberH3") {
-				record[selectedOptions.nameOut]=h3.latLngToCell(point.latitude, point.longitude, 10);
+				record[selectedOptions.nameOut]=h3.latLngToCell(point.latitude, point.longitude, selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="LL") {
@@ -1512,7 +1513,7 @@ var columnCreated=false, record, json, point;
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="Geohash") {
-				record[selectedOptions.nameOut]=ngeohash_encode(point[0], point[1]);
+				record[selectedOptions.nameOut]=ngeohash_encode(point[0], point[1], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="UberH3") {
@@ -1545,11 +1546,11 @@ var columnCreated=false, record, json, point;
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="Geohash") {
-				record[selectedOptions.nameOut]=ngeohash_encode(record[selectedOptions.latitudeIn], record[selectedOptions.longitudeIn]);
+				record[selectedOptions.nameOut]=ngeohash_encode(record[selectedOptions.latitudeIn], record[selectedOptions.longitudeIn], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="UberH3") {
-				record[selectedOptions.nameOut]=h3.latLngToCell(record[selectedOptions.latitudeIn], record[selectedOptions.longitudeIn], 10);
+				record[selectedOptions.nameOut]=h3.latLngToCell(record[selectedOptions.latitudeIn], record[selectedOptions.longitudeIn], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="LL") {
@@ -1580,3 +1581,41 @@ var columnCreated=false, record, json, point;
 	return 1;
 }
 
+function CreateTableDGGSCodes(selectedOptions) {
+var data=[], dataAttributes={}, cells, g;
+
+	for (var l=selectedOptions.level; l>=(selectedOptions.parents ? (selectedOptions.codeType=="Geohash" ? 1 : 0) : selectedOptions.level); l--) {
+		if (selectedOptions.codeType=="Geohash")
+			cells=ngeohash_bboxes(selectedOptions.minLat, selectedOptions.minLong, selectedOptions.maxLat, selectedOptions.maxLong, selectedOptions.level);		
+		else if (selectedOptions.codeType=="UberH3")
+			cells=h3.polygonToCellsExperimental([[selectedOptions.minLat, selectedOptions.minLong],
+						[selectedOptions.minLat, selectedOptions.maxLong], 
+						[selectedOptions.maxLat, selectedOptions.maxLong],
+						[selectedOptions.maxLat, selectedOptions.minLong],
+						[selectedOptions.minLat, selectedOptions.minLong]], l, h3.POLYGON_TO_CELLS_FLAGS.containmentOverlapping)
+		else
+			return;
+		if (selectedOptions.centroid) {
+			if (selectedOptions.codeType=="Geohash") {
+				for (var i=0; i<cells.length; i++) {
+					g=ngeohash_decode(cells[i]);
+					data.push({cell: cells[i], longitude: g.longitude, latitude: g.latitude});
+				}
+			} else {
+				for (var i=0; i<cells.length; i++) {
+					g=h3.cellToLatLng(cells[i]);
+					data.push({cell: cells[i], longitude: g[1], latitude: g[0]});
+				}
+			}
+		} else {
+			for (var i=0; i<cells.length; i++)
+				data.push({cell: cells[i]});
+		}
+	}
+	dataAttributes={cell: {type: "string", description: selectedOptions.codeType + " cell"}};
+	if (selectedOptions.centroid) {
+		dataAttributes.longitude={type: "number", description: "Longitude"};
+		dataAttributes.latitude={type: "number", description: "Latitude"};
+	}
+	return {data: data, dataAttributes: dataAttributes}
+}

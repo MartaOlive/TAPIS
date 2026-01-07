@@ -1,5 +1,53 @@
-//You need statistics.js (Som functions needed are described there)
+"use strict"
 
+/* 
+	This file is part of TAPIS. TAPIS is a web page and a Javascript code 
+	that builds queries and explore the STAplus content, saves it as CSV or 
+	GeoJSON and connects with the MiraMon Map Browser. While the project is 
+	completely independent from the Orange data mining software, it has been 
+	inspired by its GUI. The general idea of the application is to be able 
+	to work with STA data as tables.
+  
+	The TAPIS client is free software under the terms of the MIT License
+
+	Copyright (c) 2023 Joan Masó
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+	
+	The TAPIS can be updated from https://github.com/joanma747/tapis.
+
+	Aquest codi JavaScript ha estat idea de Joan Masó Pau (joan maso at uab cat) 
+	dins del grup del MiraMon. MiraMon és un projecte del 
+	CREAF que elabora programari de Sistema d'Informació Geogràfica 
+	i de Teledetecció per a la visualització, consulta, edició i anàlisi 
+	de mapes ràsters i vectorials. Aquest progamari programari inclou
+	aplicacions d'escriptori i també servidors i clients per Internet.
+	No tots aquests productes són gratuïts o de codi obert. 
+	
+	En particular, el TAPIS es distribueix sota els termes de la llicència MIT.
+	
+	El TAPIS es pot actualitzar des de https://github.com/joanma747/tapis.
+*/
+
+/*This module calculates data quality indicators.*/
+
+//statistics.js is needed (Some functions needed are defined there)
 
 function calculateDataQualityCompletnessOmission(data, attribute, flag, filter) {
     var rate;
@@ -274,10 +322,60 @@ function returnValidRange(currentData, number, tolerance, consistencyRadioValue)
     return [start, end]
 }
 
+function accuracyFromUncertaintyInPositions(data, metadata, uncertaintyAttribute) {
+	var uncertainties=[];
+	for (var i=0; i<data.length; i++)
+		uncertainties.push(data[i][uncertaintyAttribute]);
+
+	var accuracyValue=aggrFuncStandardDeviation(uncertainties);
+	if (!Number.isInteger(accuracyValue)) 
+		accuracyValue= accuracyValue.toFixed(3);
+
+	if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_AbsoluteExternalPositionalAccuracy",
+					"measureIdentification": {
+						"measure": {
+							"name": "CircularMapAccuracy"
+						},
+						"domains": [
+							{
+								"name": "DifferentialErrors2D"
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Half-lengthConfidenceInterval",
+									"params": [
+										{
+											"name": "level",
+											"value": "0.683"
+										}
+									]
+								}
+							},
+							"valueType": "number",
+							"values": [ accuracyValue ]
+						}
+					]
+				}
+			]
+		});
+
+	return accuracyValue;
+}
 
 function accuracyValuesInMetersWithPoints(data, attribute, units, axisOrder) {
     var attributes = getDataAttributes(data);
-    if (attributes[attribute].type!="geometry") return false;
+    if (attributes[attribute].type!="geometry") return null;
     var longitudeValues = []; latitudeValues = [];
     var lon, lat;
     if (axisOrder == "lonLat") {
@@ -322,7 +420,7 @@ function accuracyValuesInMetersWithPoints(data, attribute, units, axisOrder) {
 
 function calculateDataQualityPositionalValidity(data, attributeSelected, xmin, xmax, ymin, ymax, axisOrder, tag, filter) { //AxisOrder XY or YX
     var attributes = getDataAttributes(data);
-    if (attributes[attributeSelected].type!="geometry") return false;
+    if (attributes[attributeSelected].type!="geometry") return null;
     var valid;
     var x, y;
     var count =0;
@@ -353,11 +451,52 @@ function calculateDataQualityPositionalValidity(data, attributeSelected, xmin, x
         if (valid){
             count++;
         }
-        if(tag && valid)data[i]["PositionalValidity"] = "True";
-        if(tag && !valid)data[i]["PositionalValidity"] = "False";
+        if (tag && valid) data[i]["PositionalValidity"] = "True";
+        if (tag && !valid) data[i]["PositionalValidity"] = "False";
         if (filter && valid) newData.push(data[i]);
     }
-    if(!filter)newData=data;
+    if (!filter)
+	newData=data;
     return [newData, count, (count / data.length) * 100]
+}
 
+function metadataAsHTML(metadata) {
+var cdns=[];
+	if (!metadata)
+		return "";
+	if (metadata.dataQualityInfos && metadata.dataQualityInfos.length) {
+		cdns.push("<h2>Data quality</b><h2>");
+		for (var q=0; q<metadata.dataQualityInfos.length; q++) {
+			for (var r=0; r<metadata.dataQualityInfos[q].reports.length; r++) {
+				var report=metadata.dataQualityInfos[q].reports[r];
+				cdns.push("<h3>", report.type, "</h3>");
+				if (report.measureIdentification) {
+					if (report.measureIdentification.measure && report.measureIdentification.measure.name) {
+						cdns.push("<b>Measure:</b> ", report.measureIdentification.measure.name, "<br>");
+						for (var d=0; d<report.measureIdentification.domains.length; d++) {
+							var domain=report.measureIdentification.domains[d];
+							cdns.push("<b>Domain:</b> ", domain.name, "<br>");
+						}
+					}
+					for (var rr=0; rr<report.results.length; rr++) {
+						var result=report.results[rr];
+						cdns.push("<h4>", result.type, "</h4>");
+						if (result.errorStatistic && result.errorStatistic.metric && result.errorStatistic.metric.name) {
+							var metric=result.errorStatistic.metric;
+							cdns.push("<b>Metric:</b> ", metric.name, "<br>");
+							for (var p=0; p<metric.params.length; p++)
+								cdns.push("<b>", metric.params[p].name, ":</b> ", metric.params[p].value, "<br>");
+						}
+						cdns.push("<b>Result:</b> ");
+						for (var v=0; v<report.results[rr].values.length; v++) {
+							cdns.push(report.results[rr].values[v]);
+							if (v+1<report.results[rr].values.length)
+								cdns.push(", ");
+						}
+					}
+				}
+			}
+		}
+	}
+	return cdns.join("");
 }

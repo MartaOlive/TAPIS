@@ -86,6 +86,7 @@ const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", sta
 			ImportJSONLD: {name: "JSON-LD", description: "JSON-LD", startNode: true, help: "Imports data from a JSON-LD file and returns a table."},
 			ImportJSON: {name: "JSON", description: "JSON", startNode: true, help: "Imports data from a JSON file and returns a table."},
 			ImportGeoJSON: {name: "GeoJSON", description: "GeoJSON", startNode: true, help: "Imports the features of a GeoJSON and returns a table where each feature is a record. One of the columns contains the geometry JSON object."},
+			CreateDGGS: {name: "Extent", description: "DGGS extent", startNode: true, help: "Create a table of all DGGS codes that are inside a geospatial extent. It can also add the position or the center of the cell."},
 			staRoot: {name: "STA root", description: "STA root", help:"Returns to the root of the SensorThings API or STSTAplus service in use. In other words, removes the path and query parameters of the previous node."}};
 const ServicesAndAPIsArray = Object.keys(ServicesAndAPIs);
 const ServicesAndAPIsType = {singular: "Data input tool", plural: "Data input tools"};
@@ -5057,10 +5058,12 @@ function addSemanticsSTADataAttributes(dataAttributes, url) {
 
 function ShowTableOptionsDiv(node, optionsDiv, fn_showTable) {
 	if (node.STAdata && node.STAdata.length)
-		document.getElementById(optionsDiv).innerHTML = "<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "RowNumber") || document.getElementById(optionsDiv + "RowNumber").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "RowNumber' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> Show row numbers</label> &ensp;" +
-								"<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "SelfNavLink") || document.getElementById(optionsDiv + "SelfNavLink").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "SelfNavLink' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> Show self and navigation links</label> <label><img src='metadata.png' alt='metadata' title='metadata'> Metadata </label>";
+		document.getElementById(optionsDiv).innerHTML="<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "RowNumber") || document.getElementById(optionsDiv + "RowNumber").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "RowNumber' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> Show row numbers</label> &ensp;" +
+								"<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "SelfNavLink") || document.getElementById(optionsDiv + "SelfNavLink").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "SelfNavLink' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> Show self and navigation links</label>";
 	else
-		document.getElementById(optionsDiv).innerHTML = "";
+		document.getElementById(optionsDiv).innerHTML="";
+	if (node.STAmetadata)
+		document.getElementById(optionsDiv).innerHTML+=" <a href='javascript:void(0)' style='text-decoration: none;' onClick='ShowMetadataDialog(\""+node.id+"\")'><img src='metadata.png' alt='metadata' title='metadata'> Metadata </a>";
 }
 
 function ShowTableDialog(node) {
@@ -5586,7 +5589,8 @@ function GetGeoJSONStyles(data, selectedOptions) {
 			"desc": null,
 			"DescItems": null,
 			"TipusObj": "P",
-			"ItemLleg": [
+			"nItemLlegAuto": (selectedOptions.geohash || selectedOptions.uberH3) && selectedOptions.place ? 9 : null,
+			"ItemLleg": (selectedOptions.geohash || selectedOptions.uberH3) && selectedOptions.place ? null : [
 				{
 					"color": "#ff0000",
 					"DescColor": ""
@@ -5613,14 +5617,25 @@ function GetGeoJSONStyles(data, selectedOptions) {
 						]
 					}
 				},
-				"interior": {
+				"interior": (selectedOptions.geohash || selectedOptions.uberH3) && selectedOptions.place ? {
+					"NomCamp": "Place",
+					"paleta": {
+						"ramp": [{"i_color": 0, "color" : "rgba(255,0,0,0.4)"},
+							{"i_color": 64, "color" : "rgba(255,255,0,0.4)"}]
+					},
+					"estiramentPaleta": {
+						"auto": true
+					},
+					"NDecimals": 3
+				} : {
 					"paleta": {
 						"colors": [
 							"rgba(255,0,0,0.4)"
 						]
 					}
-				}}],
-			"fonts": {
+				}
+			}],
+			"fonts": selectedOptions.geohash || selectedOptions.uberH3 ? null : {
 				"NomCampText": selectedOptions.place ? "Place" : null,
 				"aspecte": [
 					{
@@ -5785,6 +5800,7 @@ function ShowSaveLayerDialogSelects(node, descripUoM) {
 
 function GetSelectedOptionsSaveLayer(descripUoM){
 	var selectedOptions={};
+	selectedOptions.title=document.getElementById("DialogSaveLayerDescription").value;
 	selectedOptions.place=document.getElementById("DialogSaveLayerPlaceSelect").value;
 	if (document.getElementById("DialogSaveLayerGeo").checked)
 		selectedOptions.geometry=document.getElementById("DialogSaveLayerSelectGeometrySelect").value;
@@ -6168,6 +6184,13 @@ function GetSelectedOptionsAddColumnGeo(){
 	selectedOptions.radioOut=document.DialogAddColumnGeoForm.DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut.value;
 	selectedOptions.nameOut=document.getElementById("DialogAddColumnGeoNameText").value;
 	selectedOptions.latitudeOut=document.getElementById("DialogAddColumnGeoLatitudeNameText").value;
+	if (selectedOptions.radioOut=="Geohash" || selectedOptions.radioOut=="UberH3") {
+		selectedOptions.level=parseInt(document.getElementById("DialogAddColumnGeoLevelText").value);
+		if (isNaN(selectedOptions.level) || selectedOptions.level<=0 || selectedOptions.level>(selectedOptions.radioOut=="UberH3" ? 15 : 30)) {
+			alert("Level is not a positive number or it is too high. '10' will be used this time");
+			selectedOptions.level=10;
+		}
+	}	
 
 	return selectedOptions;
 }
@@ -6177,6 +6200,39 @@ function GetAddColumnGeo(event) {
 	var node=getNodeDialog("DialogAddColumnGeo");
 	var selectedOptions=GetSelectedOptionsAddColumnGeo();
 	AddColumnGeoFromAnother(node.STAdata, node.STAdataAttributes, selectedOptions);
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
+}
+
+function GetOptionsDGGSCodesBbox(){
+	var result={
+		minLong: parseFloat(document.getElementById("DialogDGGSCodesBboxMinLong").value),
+		minLat: parseFloat(document.getElementById("DialogDGGSCodesBboxMinLat").value),
+		maxLong: parseFloat(document.getElementById("DialogDGGSCodesBboxMaxLong").value),
+		maxLat: parseFloat(document.getElementById("DialogDGGSCodesBboxMaxLat").value),
+		level: parseInt(document.getElementById("DialogDGGSCodesBboxLevel").value)};
+
+	if (document.getElementById("DialogDGGSCodesBboxCodeGeohash").checked)
+		result.codeType="Geohash";
+	else //if (document.getElementById("DialogDGGSCodesBboxCodeUberH3").checked)
+		result.codeType="UberH3";
+
+	if (document.getElementById("DialogDGGSCodesBboxParents").checked)
+		result.parents=true;
+	if (document.getElementById("DialogDGGSCodesBboxCentroid").checked)
+		result.centroid=true;
+	
+	return result;
+}
+
+function GetCreateTableDGGSCodes(event) {
+	hideNodeDialog("DialogDGGSCodesBbox", event);
+	var node=getNodeDialog("DialogDGGSCodesBbox");
+	var selectedOptions=GetOptionsDGGSCodesBbox();
+	var result=CreateTableDGGSCodes(selectedOptions);
+	node.STAdata=result.data;
+	node.STAdataAttributes=result.dataAttributes;
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
 	UpdateChildenTable(node);
@@ -6201,17 +6257,22 @@ function ChangeAddColumnGeoRadioOut(event) {
 	    document.getElementById("DialogAddColumnGeoRadioGeohashOut").checked ||
 	    document.getElementById("DialogAddColumnGeoRadioUberH3Out").checked) {
 		document.getElementById("DialogAddColumnGeoNameOut").innerHTML="Column name:";
-		//document.getElementById("DialogAddColumnGeoLatitudeNameOut").innetHTML=""; 
 		document.getElementById("DialogAddColumnGeoLatitudeNameOut").style.display="none";
 		document.getElementById("DialogAddColumnGeoLatitudeNameText").style.display="none";
-	}
-	else
-	{
+	} else {
 		document.getElementById("DialogAddColumnGeoNameOut").innerHTML="Longitude:";
 		document.getElementById("DialogAddColumnGeoNameText").value="Longitude";
 		document.getElementById("DialogAddColumnGeoLatitudeNameOut").innetHTML="Latitude";
 		document.getElementById("DialogAddColumnGeoLatitudeNameOut").style.display="inline-block";
 		document.getElementById("DialogAddColumnGeoLatitudeNameText").style.display="inline-block";
+	}
+	if (document.getElementById("DialogAddColumnGeoRadioGeohashOut").checked ||
+	    document.getElementById("DialogAddColumnGeoRadioUberH3Out").checked) {
+		document.getElementById("DialogAddColumnGeoLevel").style.display="inline-block";
+		document.getElementById("DialogAddColumnGeoLevelText").style.display="inline-block";
+	} else {
+		document.getElementById("DialogAddColumnGeoLevel").style.display="none";
+		document.getElementById("DialogAddColumnGeoLevelText").style.display="none";
 	}
 }
 
@@ -6242,7 +6303,7 @@ function OpenMap(event) {
 	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode) {
 		var selectedOptionsSaveLayer=GetSelectedOptionsSaveLayer(true);
-		OpenMapMMN(getAbsoluteURL(config.MMNpath) + (config.MMNpath.indexOf('?')>0 ? "&" : "?") + "reset=1", GetGeoJSON(parentNode.STAdata, selectedOptionsSaveLayer), GetGeoJSONPropertiesSchema(parentNode.STAdata, parentNode.STAdataAttributes, selectedOptionsSaveLayer), GetGeoJSONStyles(parentNode.STAdata, selectedOptionsSaveLayer), GetGeoJSONDates(parentNode.STAdata, selectedOptionsSaveLayer));
+		OpenMapMMN(getAbsoluteURL(config.MMNpath) + (config.MMNpath.indexOf('?')>0 ? "&" : "?") + "reset=1", selectedOptionsSaveLayer.title, GetGeoJSON(parentNode.STAdata, selectedOptionsSaveLayer), GetGeoJSONPropertiesSchema(parentNode.STAdata, parentNode.STAdataAttributes, selectedOptionsSaveLayer), GetGeoJSONStyles(parentNode.STAdata, selectedOptionsSaveLayer), GetGeoJSONDates(parentNode.STAdata, selectedOptionsSaveLayer));
 	}
 }
 
@@ -6282,10 +6343,11 @@ function ShowGUF(event) {
 var MiraMonMapBrowserVars={};
 
 function DisplayMapMMN(){
-	MiraMonMapBrowserVars.mmn.postMessage("CommandMMNAddGeoJSONLayer('SensorThings API data', "+ JSON.stringify(MiraMonMapBrowserVars.geojson) + ", " + JSON.stringify(MiraMonMapBrowserVars.geojsonSchema) + ", " + JSON.stringify(MiraMonMapBrowserVars.geojsonStyle) + ", " + JSON.stringify(MiraMonMapBrowserVars.geojsonDates) + ")", GetCleanURLMiraMonMapBrowser(MiraMonMapBrowserVars.mmnURL));
+	MiraMonMapBrowserVars.mmn.postMessage("CommandMMNAddGeoJSONLayer(\"" + MiraMonMapBrowserVars.title + "\", "+ JSON.stringify(MiraMonMapBrowserVars.geojson) + ", " + JSON.stringify(MiraMonMapBrowserVars.geojsonSchema) + ", " + JSON.stringify(MiraMonMapBrowserVars.geojsonStyle) + ", " + JSON.stringify(MiraMonMapBrowserVars.geojsonDates) + ")", GetCleanURLMiraMonMapBrowser(MiraMonMapBrowserVars.mmnURL));
 }
 
-function OpenMapMMN(url, geojson, geojsonSchema, geojsonStyle, geojsonDates){
+function OpenMapMMN(url, title, geojson, geojsonSchema, geojsonStyle, geojsonDates){
+	MiraMonMapBrowserVars.title=title;
 	MiraMonMapBrowserVars.geojson=geojson;
 	MiraMonMapBrowserVars.geojsonSchema=geojsonSchema;
 	MiraMonMapBrowserVars.geojsonStyle=geojsonStyle;
@@ -6896,6 +6958,15 @@ function ShowTableNode(node) {
 	}
 }
 
+function ShowMetadataDialog(nodeId) {
+	var node=networkNodes.get(nodeId);
+	if (node && node.STAmetadata) {
+		document.getElementById("dataQualityResult_info").innerHTML= metadataAsHTML(node.STAmetadata);
+		showNodeDialog("dataQualityResult");		
+	}
+}
+
+
 /*return 
 	null means connection should not be done.
 	true means all done
@@ -7110,12 +7181,6 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		return true;
-	}
-	if (nodeTo.image=="MultiCreateSTA.png"){
-		if (addEdge)
-			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		networkNodes.update(nodeTo);
 		return true;
 	}
 	if (tableNodes && nodeTo.image == "SeparateColumns.png") {
@@ -7508,6 +7573,10 @@ function networkDoubleClick(params) {
 			saveNodeDialog("DialogImportGeoJSON", currentNode);
 			showNodeDialog("DialogImportGeoJSON");
 		}
+		else if (currentNode.image == "CreateDGGS.png") {
+			saveNodeDialog("DialogDGGSCodesBbox", currentNode);
+			showNodeDialog("DialogDGGSCodesBbox");
+		}
 		else if (currentNode.image == "Table.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
@@ -7615,18 +7684,6 @@ function networkDoubleClick(params) {
 				ShowTableSelectColumnsDialog("SelectColumns", parentNode, currentNode, true);
 				showNodeDialog("DialogSelectColumns");
 			}
-		}
-				else if(currentNode.image=="MultiCreateSTA.png"){
-			if (AllowOpenMulticreateSTADialogAndPopulateIt(currentNode)==true){
-				populateMultiCreateSTADialog(currentNode); //necessary here because need all parents information
-				drawMultiCreateSTADialog(currentNode);
-				showNodeDialog("DialogMultiCreateSTA");
-			}
-			// else{
-			// 	alert("Only one parent with multiple records is allowed")
-			// }
-			
-			
 		}
 		else if (currentNode.image == "SeparateColumns.png") {
 			var parentNode=GetFirstParentNode(currentNode);
@@ -7887,7 +7944,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode.STAdata) {
 					currentNode.STAdata= deapCopy(parentNode.STAdata);
-					currentNode.STAdataAttributes= deapCopy(parentNode.STAdataAttributes);
+					currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
 					populateDialogQualityCompletnessOmission(currentNode);
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityCompletnessOmission");
@@ -7906,7 +7963,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode.STAdata) {
 					currentNode.STAdata= deapCopy(parentNode.STAdata);
-					currentNode.STAdataAttributes= deapCopy(parentNode.STAdataAttributes);
+					currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
 					populateDialogQualityTemporalQuality(currentNode);
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityTemporalQuality");
@@ -7918,7 +7975,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode.STAdata) {
 					currentNode.STAdata= deapCopy(parentNode.STAdata);
-					currentNode.STAdataAttributes= deapCopy(parentNode.STAdataAttributes);
+					currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
 					populateDialogQualityPositionalQuality(currentNode);
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityPositionalQuality");
@@ -7930,7 +7987,7 @@ function networkDoubleClick(params) {
 			var parentNode=GetParentNodes(currentNode);
 			if (parentNode) {
 					//currentNode.STAdata= deapCopy(parentNode.STAdata);
-					//currentNode.STAdataAttributes= deapCopy(parentNode.STAdataAttributes);
+					//currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
 					populateDialogQualityThematicQuality(currentNode);
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityThematicQuality");
@@ -7947,7 +8004,7 @@ function networkContext(params) {
 
 	var nodeId = network.getNodeAt(params.pointer.DOM); //params.nodes is not useful here as params.nodes are the selected ones and not the ones rightclicked.
 	//rewrite DialogContextMenu
-	PopulateContextMenu (nodeId);
+	PopulateContextMenu(nodeId);
 	if (nodeId) {
 		startingNodeContextId = nodeId;
 		showNodeDialog("DialogContextMenu");
@@ -9259,7 +9316,6 @@ function applyTemporalFilter(url, dateFrom, dateTo, property){
 	networkNodes.update(currentNode);
 }
 
-//Cal preguntar a la Marta que és això. --> És per demanar tots els resultats i poder fer els agregats (al filter rows by time). 
 async function askForAllDataResults(property){
 	var numberOfResults = await loadAPIDataWithReturn(currentNode.STAURL+"&$count=true", "CountResults");
 				
@@ -9274,7 +9330,6 @@ async function askForAllDataResults(property){
 		data.push(...dataToPush);
 		
 		while (stop==false){ 
-
 			if ((skip+20000)<numberOfResults){
 				skip+=10000;
 
@@ -9286,8 +9341,7 @@ async function askForAllDataResults(property){
 
 			newUrl= currentNode.STAURL+ `&$skip=${skip} &$top=${top} &$orderBy=${property}+asc`;
 			dataToPush= await loadAPIDataWithReturn(newUrl,"obtainAllData")
-			data.push(...dataToPush);		
-	
+			data.push(...dataToPush);			
 		} 
 		currentNode.STAdata=data;
 		networkNodes.update(currentNode);			
@@ -9299,10 +9353,8 @@ function prepareSTAdataToAggregateDataByChosenPeriodFunction(data, properties){
 	
 	for (var i=0;i<n;i++){
 		loadArray=[];
-		for (var a=0;a<properties.length;a++){
+		for (var a=0;a<properties.length;a++)
 			loadArray.push(data[i][properties[a]]);	
-			
-		}
 		finalDataArray.push(loadArray)
 	}
 	return finalDataArray;
@@ -9313,86 +9365,78 @@ function AggregateDataByChosenPeriod(necessaryData, period,STA){//year, month, d
 	switch (period){
 		case "year": 
 			x=4;
-		break;
+			break;
 		case "month": 
 			x=7;
-		break;
+			break;
 		case "day": 
 			x=10;
-		break;
+			break;
 		case "hour": 
 			x=13;
-		break;
+			break;
 		case "minute": 
 			x=16;
-		break;
-
+			break;
 	}
 	var firstDataValue, lastDataValue, observationsArray=[];
 	for (var i=0;i<n;i++){
-				if (STA && i==0){
-					firstDataValue=necessaryData[i][0];
-					lastDataValue=necessaryData[i][0];
-				}
-				if (necessaryData[i][0].substr(0,x)==lastDate){
-					samePeriodData.push(necessaryData[i][1]);
-					if (STA)lastDataValue= necessaryData[i][0]; 
-					if (i== n-1){
-						aggregedData.push([lastDate,samePeriodData]);
-						if (STA){
-							observationsArray.push({
-								"phenomenonTime": firstDataValue+"/"+lastDataValue,
-								"resultTime": "",
-								"result": [],
-								"parameters":{
-									"resultCount": samePeriodData.length
-								}
-							})
-						}
-					}
-				}
-				else{ //new date
-					if (i!=0)aggregedData.push([lastDate,samePeriodData]); //load data from period before
-					if (STA &&  i!=0){
-						observationsArray.push({
-							"phenomenonTime": firstDataValue+"/"+lastDataValue,
-							"resultTime": "",
-							"result": [],
-							"parameters":{
-								"resultCount": samePeriodData.length
-							}
-
-						})
-						lastDataValue= necessaryData[i][0]; 
-						firstDataValue= necessaryData[i][0];
-					}
-					lastDate= necessaryData[i][0].substr(0,x); //new date
-					samePeriodData=[]; //restart
-					samePeriodData.push(necessaryData[i][1]);
-					if (i== n-1){
-						aggregedData.push([lastDate,samePeriodData]);
-					}
-				}
+		if (STA && i==0){
+			firstDataValue=necessaryData[i][0];
+			lastDataValue=necessaryData[i][0];
 		}
-		if (STA) return [aggregedData,observationsArray]
-		else return aggregedData;
+		if (necessaryData[i][0].substr(0,x)==lastDate){
+			samePeriodData.push(necessaryData[i][1]);
+			if (STA)
+				lastDataValue= necessaryData[i][0]; 
+			if (i== n-1) {
+				aggregedData.push([lastDate,samePeriodData]);
+				if (STA){
+					observationsArray.push({
+						"phenomenonTime": firstDataValue+"/"+lastDataValue,
+						"resultTime": "",
+						"result": [],
+						"parameters":{
+							"resultCount": samePeriodData.length
+						}
+					});
+				}
+			}
+		} else{ //new date
+			if (i!=0)
+				aggregedData.push([lastDate,samePeriodData]); //load data from period before
+			if (STA &&  i!=0){
+				observationsArray.push({
+					"phenomenonTime": firstDataValue+"/"+lastDataValue,
+					"resultTime": "",
+					"result": [],
+					"parameters":{
+						"resultCount": samePeriodData.length
+					}
+				});
+				lastDataValue= necessaryData[i][0]; 
+				firstDataValue= necessaryData[i][0];
+			}
+			lastDate= necessaryData[i][0].substr(0,x); //new date
+			samePeriodData=[]; //restart
+			samePeriodData.push(necessaryData[i][1]);
+			if (i== n-1) 
+				aggregedData.push([lastDate,samePeriodData]);
+		}
+	}
+	return (STA) ? [aggregedData,observationsArray] : aggregedData;
 }
 
-function calculateMinMaxMeanDesvest(aggregatedData){
+function calculateMinMaxMeanDesvest(aggregatedData) {
+	var n=aggregatedData.length, statisticsArray=[];
 
-	var n= aggregatedData.length, statisticsArray=[];
-
-	for (var i=0; i<n; i++){
+	for (var i=0; i<n; i++)
 		statisticsArray.push({"date":aggregatedData[i][0],"Min. value":aggrFuncMinValue(aggregatedData[i][1]),"Max. value":aggrFuncMaxValue(aggregatedData[i][1]),"Mean":aggrFuncMean(aggregatedData[i][1]),"Standard deviation":aggrFuncStandardDeviation(aggregatedData[i][1])});
-	}
+
 	return statisticsArray
 }
 
-
-
-
-function createAndLoadImportGeoJSONNode(data,url){
-	
+function createAndLoadImportGeoJSONNode(data,url){	
 	addCircularImage(null, null, "GeoJSON", "ImportGeoJSON.png");
 	console.log(data)
 	var node = networkNodes.get(network.getSelectedNodes()[0]);
@@ -9408,8 +9452,6 @@ function createAndLoadImportGeoJSONNode(data,url){
 	node.STAdataAttributes=attributes;
 	updateQueryAndTableArea(node);
 	networkNodes.update(node);
-
-	
 }
 
 function populatePivotTableDialog(node){
@@ -9445,9 +9487,9 @@ function populatePivotTableDialog(node){
 		}else{
 			for (var u=0;u<node.STApivotTable[columnsRowsValues[e]].length;u++){
 				elementsInTable+=`<tr style="border: 1px solid black;"> 
-				<td style="border: 1px solid black;""> ${node.STApivotTable[columnsRowsValues[e]][u]} </td>
-				<td style="border: 1px solid black;"><button onclick="deleteTableRowInPivotTable('${columnsRowsValues[e]}',${u})"><img src="trash.png" alt="Remove" title="Remove" style="width:20px"></button></td>
-			</tr>`;
+					<td style="border: 1px solid black;""> ${node.STApivotTable[columnsRowsValues[e]][u]} </td>
+					<td style="border: 1px solid black;"><button onclick="deleteTableRowInPivotTable('${columnsRowsValues[e]}',${u})"><img src="trash.png" alt="Remove" title="Remove" style="width:20px"></button></td>
+					</tr>`;
 			}
 
 		}
@@ -9469,7 +9511,6 @@ function addTableRowInPivotTable(place){
 		//if (place=="Rows") document.getElementById("pivotTableRows_addButton").disabled=true;
 		populatePivotTableDialog(node);
 	}
-
 }
 
 function deleteTableRowInPivotTable(place,number){
@@ -9482,7 +9523,8 @@ function deleteTableRowInPivotTable(place,number){
 	}
 	node.STApivotTable[place]=elementsFiltered;
 	networkNodes.update(node);
-	if (place=="Rows") document.getElementById("pivotTableRows_addButton").disabled=false;
+	if (place=="Rows") 
+		document.getElementById("pivotTableRows_addButton").disabled=false;
 	populatePivotTableDialog(node);
 }
 function okButtonInPivotTable(event){
@@ -9504,795 +9546,8 @@ function okButtonInPivotTable(event){
 		node.STAdataAttributes=uploadDataAttributesAddingNewColumns(node.STAdataAttributes, newData, "");
 		networkNodes.update(node);
 		hideNodeDialog("DialogPivotTable");
-	}else{
+	}else
 		alert (newData) //Error
-	}
-}
-
-
-//MultiCreateSTADialog functions 
-function AllowOpenMulticreateSTADialogAndPopulateIt(node){
-	var parentNodes=GetParentNodes(node);
-	var STAEntity="", entitiesId={}, nodeWithMultiRecord="";
-	var url="";
-	var parentsInformation={}, keys;
-	var keyWord, substringToErase="http://www.opengis.net/def/docs/15-078r6/";
-	node.STAMultiCreateInformation={}
-	node.STAMultiCreateInformation.parentsInformation={};
-	//only one parent with multiple records is allowed
-	for (var i=0;i<parentNodes.length;i++){	
-		keys={};
-		if (parentNodes[i].image=="sta.png"){
-			alert("It is not allowed to link an STAplus origin node directly to this node");
-			return false;
-		}
-		if (parentNodes[i].STAdata.length>=1){
-			for (var key in parentNodes[i].STAdataAttributes) {
-				keyWord=parentNodes[i].STAdataAttributes[key].definition;
-				if (keyWord!="" && keyWord!=undefined)keys[key] = keyWord.substring(substringToErase.length);
-			}
-			parentsInformation[parentNodes[i].id]= {
-				data: parentNodes[i].STAdata,
-				attributesDefinitions: keys, //every attribute with the definition (to associate it with select options)
-				label: parentNodes[i].label,
-				attributesKeys: Object.keys (parentNodes[i].STAdataAttributes)
-
-			}
-			
-			if("STAEntityName" in parentNodes[i]){ //STA
-				if (parentNodes[i].STAdata.length>1){
-					if (parentNodes[i].image== parentNodes[i].STAEntityName +".png"){ //Is an EntityNode --> TO obtain URL and To be the main multiEntry
-						if (STAEntity =="") {
-							STAEntity = parentNodes[i].STAEntityName;
-							url= parentNodes[i].STAURL;
-						}else {
-							alert ("There is more than one STAEntity node linked, only one is allowed");
-							return false;
-						}
-					}else{ //Not allowed 
-						alert("It is not allowed to connect a node with STAdata with multiple records if it is not an Entity node.");
-						return false;
-					}
-				}else if (parentNodes[i].STAdata.length==1){ //Take EntityId
-					if (!entitiesId[parentNodes[i].STAEntityName]){
-						entitiesId[parentNodes[i].STAEntityName]= (parentNodes[i].STAdata[0]["@iot.id"])?parentNodes[i].STAdata[0]["@iot.id"]: alert(`${parentNodes[i].STAEntityName} node linked with one record does not have "@iot.id" attribute and will not be added automatically. If attributes are added to corresponding attributes manually, TAPIS system will search automatically its id`);
-					}else{
-						alert("Only one node of each STA entity type with one record is allowed.") //Only one sta node with one node of each type- > Take id
-						return false;
-					}
-
-				} 
-			}else{ //No STA
- 				if (parentNodes[i].STAdata.length>1){
-					if (nodeWithMultiRecord==""){
-						nodeWithMultiRecord= parentNodes[i].id;
-					}else{
-						alert("Only one node no STA with more than one record is allowed");
-						return false;
-					}
-				}
-
-			}
-		}else{//No data
-			alert(`There is at least one node with no data: ${parentNodes[i].image} type` )
-			return false; 
-		}
-
-
-	}
-	if(STAEntity==""){ //no node from an entity connected
-		alert("It is needed to connect and entity node to indicate wich is the main entity to add data");
-		return false;
-	}
-	node.STAMultiCreateInformation.entitiesId=entitiesId;
-	node.STAMultiCreateInformation.parentsInformation= parentsInformation;
-	node.STAMultiCreateInformation.STAService= getSTAURLRoot(url);
-	node.STAMultiCreateInformation.infoSaved={
-		origin: [STAEntity,""],
-		entities:{ general:{},
-				needed:[]},
-		nodeWithMultiRecord: nodeWithMultiRecord
-	};
-
-	networkNodes.update(node);
-	return true;
-}
-function populateMultiCreateSTADialog(node){
-	saveNodeDialog("DialogMultiCreateSTA", node);
-
-	//built selector info with config information (suggestedAutoCompleteSTAMultiCreate) and meanings 
-	var autocompleteSelectOptions=[], configSuggestedAutoCompleteSTAMultiCreateLength=config.suggestedAutoCompleteSTAMultiCreate.length ;
-	for (var i=0;i<configSuggestedAutoCompleteSTAMultiCreateLength;i++){
-		autocompleteSelectOptions.push([config.suggestedAutoCompleteSTAMultiCreate[i].name, config.suggestedAutoCompleteSTAMultiCreate[i].origin]);
-	}
-	var parentsInformation= node.STAMultiCreateInformation.parentsInformation;
-	var parentsInformationKeys = Object.keys(parentsInformation);
-	for (var e=0;e<parentsInformationKeys.length;e++){
-		if (parentsInformation[parentsInformationKeys[e]].lenght!=0)autocompleteSelectOptions.push(["Attributes from "+parentsInformation[parentsInformationKeys[e]].label,"",parentsInformationKeys[e]]);
-	}
-	
-	addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(node.STAMultiCreateInformation.infoSaved.origin[0], node,true);
-	
-	node.STAMultiCreateInformation.parentsInformation=parentsInformation;
-	node.STAMultiCreateInformation.autocompleteSelectOptions= autocompleteSelectOptions;
-	networkNodes.update(node);
-}
-
-function buildEntityBlockInMultiCreateSTADialog(node,entity, page, multiRecordsOrigin){ //Veure que falla d'aqui
-	var n, properties, propertiesInEntity, propertiesKeys, value, c = "";
-	var infoSaved = deapCopy(node.STAMultiCreateInformation.infoSaved);
-	var parentsInformation = node.STAMultiCreateInformation.parentsInformation;
-	var parentsInformationKeys = Object.keys(parentsInformation);
-
-	if (!multiRecordsOrigin) c += `<fieldset> `
-	//Entity box	
-	if (!multiRecordsOrigin) {
-		c += ((infoSaved.origin[0] == STAEntitiesArray[i])) ? `<legend>${entity}</legend>` : `<legend>${STAEntities[entity].singular}</legend>`; //Plural or singular
-	}
-
-	propertiesKeys = Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties);
-	if (multiRecordsOrigin) propertiesKeys = propertiesKeys.filter(x => x != "id");
-	propertiesInEntity = [...STAEntities[entity].properties];
-	properties = [];
-	for (var p = 0; p < propertiesInEntity.length; p++) {
-		if (propertiesKeys.includes(propertiesInEntity[p].name)) properties.push({ name: STAEntities[entity].properties[p].name, required: STAEntities[entity].properties[p].required })
-	}
-
-	if (!properties.includes("id") && !multiRecordsOrigin) properties.unshift({ name: "id", required: "false" }); //Adding id as a property
-	n = properties.length;
-	var firstPropertyAdded = false;
-	//var propertiesArray = properties.map(x => x.name);
-
-	//id
-	if(entity!=infoSaved.origin[0]){ //not in main entity to add
-		c += `<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
-		c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_id" onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'id','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked == "id") ? "checked" : ""}>`
-		c += `<label style="font-weight: bold;">id: </label> 
-		<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_id" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','id', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2] != "") ? ", '" + node.STAMultiCreateInformation.infoSaved.origin[2] + "'" : ''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties["id"]?.text != "") ? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
-
-		c += `<option value="">-- Select attribute -- </option>`
-		for (var s = 0; s < parentsInformationKeys.length; s++) {//every key (parentNode) has ther attributes
-			c += `<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
-			for (var att = 0; att < parentsInformation[parentsInformationKeys[s]].attributesKeys.length; att++) { //parentNode attributes (keys)
-				value = `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
-				c += `<option value="${value}" data-nodeId="${parentsInformationKeys[s]}" data-column="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`; //value: idNode_attributeValue
-				if (node.STAMultiCreateInformation.infoSaved.entities[page][entity]?.properties["id"]?.attribute[0] == value) { //Options of select
-					c += " selected "
-				}
-				c += `>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
-			}
-			c += "</optgroup>"
-		}
-		c += `</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties["id"]?.text} </span>` 
-		c += `<button onClick="showPropertiesNotIdInMultiCreateSTA('${page}','${entity}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties["id"]?.text == "") ? "style='display: none;'" : ""}> Add properties</button > <br>`
-		c += `</div>` //after id
-	}
-	
-		
-
-	// //other properties
-	if (infoSaved.entities[page][entity].properties.id.text==""){ //no properties displayed
-		for (var e = 0; e < n; e++) { //Properties
-			if (properties[e].name != "id") {
-				if ((entity != "Datastreams" && entity != "MultiDatastreams") || ((entity == "Datastreams" || entity != "MultiDatastreams") && (properties[e].name != "observedArea" && properties[e].name != "phenomenonTime" && properties[e].name != "resultTime"))) {
-					// if (properties[e].name == "id") {
-					// 	c += `<div style="border: 1px solid black; background-color: #b4dff7; padding-top:5px;padding-bottom:5px; margin-bottom:5px">` //id property
-					// 	c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_id" onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'id','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked == "id") ? "checked" : ""}>`
-					// }
-					if (firstPropertyAdded == false) {
-						c += `<div style="border: 1px solid black;">`;
-						firstPropertyAdded = true;
-						c += `<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_properties"  onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', 'properties','${page}')" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked != "id") ? "checked" : ""}>
-						<span style="font-weight: bold;">Properties</span><ul>`;
-					}
-					//c+=`<input type="radio" value="id" name="DialogMultiCreateSTA_entitiesProperty_${entity}" id="DialogMultiCreateSTA_entitiesProperty_${entity}_${properties[e].name }" ${(infoSaved.entities[entity][properties[e].name].checked=="true")? "checked": ""} onclick="radiobuttonSelectedPropertiesOrIdMulticreateSTA('${entity}', '${properties[e].name}')">`
-					c += `<li>`
-					c += `<label style="font-weight: bold;">${properties[e].name} ${(properties[e].required == true) ? "*" : ""}: </label> 
-					<select id="DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${properties[e].name}" onchange="savePropertyInEntitiesSelectedValueMulticreateSTA('${entity}','${properties[e].name}', '${page}'${(node.STAMultiCreateInformation.infoSaved.origin[2] != "") ? ", '" + node.STAMultiCreateInformation.infoSaved.origin[2] + "'" : ''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text != "") ? 'style="display: none;"' : ""}">` // property: Selectid:"DialogMultiCreateSTA_selectForProperties_Entity_property 
-
-					c += `<option value="">-- Select attribute -- </option>`
-					for (var s = 0; s < parentsInformationKeys.length; s++) {//every key (parentNode) has ther attributes
-						c += `<optgroup label="${parentsInformation[parentsInformationKeys[s]].label}">`
-						for (var att = 0; att < parentsInformation[parentsInformationKeys[s]].attributesKeys.length; att++) { //parentNode attributes (keys)
-							value = `${parentsInformationKeys[s]}_${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}`
-							c += `<option value="${value}" data-nodeId="${parentsInformationKeys[s]}" data-column="${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}"`; //value: idNode_attributeValue
-							if (node.STAMultiCreateInformation.infoSaved.entities[page][entity]?.properties[properties[e].name]?.attribute[0] == value) { //Options of select
-								c += " selected "
-							}
-							c += `>${parentsInformation[parentsInformationKeys[s]].attributesKeys[att]}</option>`
-						}
-						c += "</optgroup>"
-					}
-					c += `</select><span>${node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text} </span> <button onClick="showAttributesSelectInEntitiesBoxMultiCreateSTADialog('${page}','${entity}', '${properties[e].name}'${(node.STAMultiCreateInformation.infoSaved.origin[2] != "") ? ", '" + node.STAMultiCreateInformation.infoSaved.origin[2] + "'" : ''})" ${(node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[properties[e].name]?.text == "") ? "style='display: none;'" : ""}> Select an attribute</button > <br>`	
-					if (e == n - 1) c += ` </ul></div>` // after last propety 
-				}
-			}
-		}
-	}
-
-	if (!multiRecordsOrigin) c += "</fieldset>"
-	return c;
-}
-function showPropertiesNotIdInMultiCreateSTA(page, entity){
-	var node= getNodeDialog("DialogMultiCreateSTA");
-	node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties.id = {attribute: ['', '', '', ''],required: false, text:"" };
-	node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked = "properties";
-	networkNodes.update(node);
-	drawMultiCreateSTADialog(node);
-
-}
-
-function drawMultiCreateSTADialog(node){
-	
-	var infoSaved= deapCopy(node.STAMultiCreateInformation.infoSaved);
-	var spanMultiCreateSTA= document.getElementById("DialogMultiCreateSTA_span");
-	var c="";
-	c+= `${(node.STAMultiCreateInformation.STAService !="")?"<span style='font-weight:bold'> STA service linked </span>":"<span  style='color: red;font-weight:bold'>STA service not linked </span>"} <br><br>`
-	//autocomplete
-	c+= `<fieldset> <legend>Autocomplete: </legend> <select id="DialogMultiCreateSTA_selectAutocomplete">`;
-	var parentInformation= node.STAMultiCreateInformation.parentsInformation;
-	var parentsInformationKeys = Object.keys(parentInformation);
-	var autocompleteSelectOptions= node.STAMultiCreateInformation.autocompleteSelectOptions; 
-	var configSuggestedAutoCompleteSTAMultiCreateLength=config.suggestedAutoCompleteSTAMultiCreate.length;
-	for (var u=0;u<autocompleteSelectOptions.length;u++){
-		if (u==0)c+=`<optgroup label="config options">`;
-		if (u==configSuggestedAutoCompleteSTAMultiCreateLength)c+=`<optgroup label="linked nodes meaning">`;
-		c+= `<option value="${autocompleteSelectOptions[u][0]}" data-origin="${autocompleteSelectOptions[u][1]}"data-id="${autocompleteSelectOptions[u][2]}">${autocompleteSelectOptions[u][0]} </option>`
-		if (u==0)c+=`</optgroup>`;
-	}
-	
-	c+=`</select> <button onclick="autocompleteFieldsMultiCreateSTADialog(event)"> Apply </button>
-	</fieldset>`;
-
-	c+=`<fieldset><legend>Multirecords origin: ${node,infoSaved.origin[0]}</legend>`
-
-	if (Object.keys(node.STAMultiCreateInformation.infoSaved.entities.general).length !=0){
-		c+=` ${buildEntityBlockInMultiCreateSTADialog(node,infoSaved.origin[0] ,"general", true)} `;
-	}
-	c+="</fieldset>";
-	c+=buildEntitiesCheckBoxInMultiCreateSTADialog(node,"general" )
-	
-	//Create entitiesBox with properties...
-	var checkboxCheked=Object.keys(node.STAMultiCreateInformation.infoSaved.entities["general"]);
-	var entityObject;
-	for (var i=0;i<STAEntitiesArray.length;i++){ //Every entity	
-		if (STAEntitiesArray[i]!=node.STAMultiCreateInformation.infoSaved.origin[0]){ //THis box is above
-			if (checkboxCheked.includes(STAEntitiesArray[i])){ //Create only entities cheched
-				entityObject= infoSaved.entities[STAEntitiesArray[i]];
-				c+=buildEntityBlockInMultiCreateSTADialog (node,STAEntitiesArray[i], "general");	
-			}
-		}
-	}
-	
-	spanMultiCreateSTA.innerHTML=c;	
-}
-
-function buildEntitiesCheckBoxInMultiCreateSTADialog(node, page, especialAutocomplete){ 
-
-	// (Object.keys(node.STAMultiCreateInformation.infoSaved.entities.general).length !=0)?true:false;
-	var entitieSelected=node.STAMultiCreateInformation.infoSaved.origin[0]; //
-
-	var c="";
-	c+=`<fieldset style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 16px; max-width: 600px;">
-  	<legend>Select entities STA</legend>`
-
-	var checkboxCheked=Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page]);
-	var needed= node.STAMultiCreateInformation.infoSaved.needed;
-	var entityValues=STAEntities[node.STAMultiCreateInformation.infoSaved.origin[0]].entities.map(item => getSTAEntityPlural(item.name)) //name of entities connected
-	var index;
-	
-	//Box with all entities to check
-	for (var u=0;u<STAEntitiesArray.length;u++){
-		if (STAEntitiesArray[u]!=entitieSelected){
-			c+=`<label style="display: flex; align-items: center;"><input type="checkbox" name="DialogMultiCreateSTA_checkboxEntities" id="DialogMultiCreateSTA_checkboxEntities_${STAEntitiesArray[u]}" onclick="addOrDeleteCheckedValueMulticreateSTA('${STAEntitiesArray[u]}', '${page}', ${(node.STAMultiCreateInformation.infoSaved.origin[1]!="")?"'"+especialAutocomplete+"'":""})" value="${STAEntitiesArray[u]}" `;
-			//checked
-			if (checkboxCheked.includes(STAEntitiesArray[u])) c+= " checked ";
-			
-			c+=">";
-
-			//Singular or plural
-			 c+= STAEntities[STAEntitiesArray[u]].singular; //singular
-			//Required
-				index= entityValues.indexOf(STAEntitiesArray[u])
-				if (index!=-1){
-					//if (STAEntities[node.STAMultiCreateInformation.infoSaved.origin[0]].entities[index].required==true)c+= " *"; 	
-					if(needed.includes(STAEntitiesArray[u]))c+= " *";
-				}
-			
-			
-			c+=`</label>`;
-		}
-	}	
-	c+=`</fieldset>`;
-	return c;
-}
-
-function addOrDeleteCheckedValueMulticreateSTA(entity, page, especialAutocomplete){ //If and entity appears in dialog 
-	var node= getNodeDialog("DialogMultiCreateSTA");
-	//addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node, origin)
-	var entities=node.STAMultiCreateInformation.infoSaved.entities
-	var entitiesKeys= Object.keys(entities[page]);
-	var checkbox= document.getElementById("DialogMultiCreateSTA_checkboxEntities_"+entity);
-	var entitiesIdKeys= (node.STAMultiCreateInformation.entitiesId)?Object.keys(node.STAMultiCreateInformation.entitiesId):[];
-	if (checkbox.checked){ //need to add
-			entities[page][entity]={}
-			entities[page][entity].name=entity;
-			entities[page][entity].properties ={}
-			if(entitiesIdKeys.length>0){
-				if(entitiesIdKeys.includes(entity)){
-					entities[page][entity].properties.id ={attribute:["","","",""], text:node.STAMultiCreateInformation.entitiesId[entity], required:false};
-					entities[page][entity].radioChecked="id";
-				}else{
-					entities[page][entity].properties.id ={attribute:["","","",""], text:"", required:false};
-					entities[page][entity].radioChecked="properties";
-				}
-			}else{
-				entities[page][entity].properties.id ={attribute:["","","",""], text:"", required:false};
-				entities[page][entity].radioChecked="properties";
-			}
-			entities[page][entity].completed="false";
-			for (var i=0;i< STAEntities[entity].properties.length;i++){
-				entities[page][entity].properties[STAEntities[entity].properties[i].name]={attribute:["","","",""],text:"", required:STAEntities[entity].properties[i].required }
-			}	
-	}else{ //need to remove
-		if (entitiesKeys.includes(entity)){
-			delete entities[page][entity];
-		}
-	}
-
-	node.STAMultiCreateInformation.infoSaved.entities= entities;
-	networkNodes.update(node);
-	if (especialAutocomplete=="" || especialAutocomplete==undefined)drawMultiCreateSTADialog(node);
-	else {
-		if(typeof window["drawMultiCreateSTADialog"+especialAutocomplete] === 'function')window["drawMultiCreateSTADialog"+especialAutocomplete](node);
-		else (alert("Changes will not be registered because there are no functions associated "))
-	}
-
-}
-
-
-function addOrEraseEntitiesInEntitiesSavedInMulticreateSTA(entity, node, origin){ 
-
-	var infoSaved=node.STAMultiCreateInformation.infoSaved;
-	var keysEntitiesSaved=Object.keys(infoSaved.entities["general"]); //already displayed and must be saved
-	var entitiesConnected= STAEntities[entity].entities.filter(entity=> entity.required==true);
-	var entitiesIdKeys= (node.STAMultiCreateInformation.entitiesId)?Object.keys(node.STAMultiCreateInformation.entitiesId):[];
-	
-	entitiesConnected.push({name: entity, required:true}); //add entitie selected
-	var newEntities={}, newEntityToPush, entityPlural, propertiesObject, needed=[];
-
-	for (var i=0;i<entitiesConnected.length;i++){
-		entityPlural= getSTAEntityPlural(entitiesConnected[i].name);
-		needed.push(entityPlural);
-		if (keysEntitiesSaved.includes(entityPlural)){//copy
-			newEntities[entityPlural]=infoSaved.entities["general"][entityPlural];
-		}else{ //new
-			newEntityToPush={};
-			if (entityPlural!="Subjects"&& entityPlural!="Objects"){	
-				propertiesObject={};
-			if(entitiesIdKeys.length>0){
-				if(entitiesIdKeys.includes(entityPlural)){
-					propertiesObject.id ={attribute:["","","",""], text:node.STAMultiCreateInformation.entitiesId[entityPlural], required:false};
-					newEntityToPush.radioChecked="id";
-				}else{
-					propertiesObject.id ={attribute:["","","",""], text:"", required:false};
-					newEntityToPush.radioChecked="properties";
-				}
-			}else{
-				propertiesObject.id ={attribute:["","","",""], text:"", required:false};
-				newEntityToPush.radioChecked="properties";
-			}
-				
-				newEntityToPush.name=entityPlural;
-				newEntityToPush.completed="false";	
-				for (var a=0;a< STAEntities[entityPlural].properties.length;a++){ 			
-					propertiesObject[STAEntities[entityPlural].properties[a].name] = {attribute:["","","",""], text:"", required:STAEntities[entityPlural].properties[a].required};
-				}
-				newEntityToPush.properties= propertiesObject;
-				newEntities[entityPlural]=newEntityToPush;
-			}
-
-		}
-	}
-	infoSaved.entities["general"]=newEntities;
-	infoSaved.needed=needed;
-	node.STAMultiCreateInformation.infoSaved= infoSaved;
-	networkNodes.update(node);
-
-}
-function radiobuttonSelectedPropertiesOrIdMulticreateSTA(entity, property, page){ //Radiobutton id or properties
-	var node= getNodeDialog("DialogMultiCreateSTA");
-	var radiobutton= document.getElementById(`DialogMultiCreateSTA_entitiesProperty_${page}_${entity}_${property}`);
-	if (property=="id"){ 
-		if (radiobutton.checked==true){
-			node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked="id";
-		}else{
-			node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked="properties";
-		}
-
-	}else{ //properties
-		if (radiobutton.checked==false){
-			node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked="id";
-		}else{
-			node.STAMultiCreateInformation.infoSaved.entities[page][entity].radioChecked="properties";
-		}
-	}
-
-	networkNodes.update(node);
-	}
-
-function savePropertyInEntitiesSelectedValueMulticreateSTA (entity, property, page, especialAutocomplete){
-	var node= getNodeDialog("DialogMultiCreateSTA");
-	var select= document.getElementById(`DialogMultiCreateSTA_selectForProperties_${page}_${entity}_${property}`);
-	var selected= select.options[select.selectedIndex].value;
-	var nodeId= select.options[select.selectedIndex].dataset.nodeid;
-	var column= select.options[select.selectedIndex].dataset.column;
-	var simpleOrMultiple= (node.STAMultiCreateInformation.parentsInformation[nodeId].data.length>1)?"multiple": "simple";
-	node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[property].attribute=[selected, nodeId, column, simpleOrMultiple];
-	networkNodes.update(node);
-}
-
-function autocompleteFieldsMultiCreateSTADialog(event){ 
-	event.preventDefault();
-	var node= getNodeDialog("DialogMultiCreateSTA");
-	var select= document.getElementById("DialogMultiCreateSTA_selectAutocomplete");
-	var selectedOption= select.options[select.selectedIndex];
-	var selectedValue= selectedOption.getAttribute('value');
-	var dataSelected= selectedOption.getAttribute('data-origin'); //only in Configuration options
-	var dataId= selectedOption.getAttribute('data-id');
-	var configOptions=[];
-	
-	for (var a=0; a<config.suggestedAutoCompleteSTAMultiCreate.length;a++){
-		configOptions.push(config.suggestedAutoCompleteSTAMultiCreate[a].name);
-	}
-	//it is a config option? --> Necessary to call functions from other files
-	var isItconfigOption=false;
-	if(configOptions.includes(selectedValue)){
-		isItconfigOption=true;
-		node.STAMultiCreateInformation.infoSaved.origin[1]= selectedValue; //onlu special configuration with this
-	}else{
-		node.STAMultiCreateInformation.infoSaved.origin[1]="";
-	}
-	if (isItconfigOption){
-		
-		if(typeof window["applyAutocompleteFunction"+selectedValue] === 'function')window["applyAutocompleteFunction"+selectedValue](node); //Functions to apply iNaturalist to STAPlus for example
-		else alert("The selected option is defined only as a configuration value and has no associated functions. These must be implemented before it can be used.");
-	}else{ //From previous nodes 
-	
-		var attributesDefinitions=node.STAMultiCreateInformation.parentsInformation[dataId].attributesDefinitions;
-		var attributesDefinitionsKeys=Object.keys(attributesDefinitions);
-		if (attributesDefinitionsKeys.length!=0){ //If there is information in "meaning"
-			var objectWithAttributes={};
-			var objectValue, repeatedEntities={};
-			for (var i=0;i<attributesDefinitionsKeys.length;i++){	//Build object from meaning and check if there are duplicates
-				objectValue=attributesDefinitions[attributesDefinitionsKeys[i]].split("/");
-				if (!objectWithAttributes[getSTAEntityPlural(objectValue[0])])objectWithAttributes[getSTAEntityPlural(objectValue[0])]={};
-				if (!objectWithAttributes[getSTAEntityPlural(objectValue[0])][objectValue[1]]){
-					objectWithAttributes[getSTAEntityPlural(objectValue[0])][objectValue[1]]=[dataId+"_"+attributesDefinitionsKeys[i], dataId, attributesDefinitionsKeys[i],(node.STAMultiCreateInformation.parentsInformation[dataId].data.length>1)?"multiple": "simple" ];
-
-				} 
-				else {
-					objectWithAttributes[getSTAEntityPlural(objectValue[0])][objectValue[1]]=[objectWithAttributes[getSTAEntityPlural(objectValue[0])][objectValue[1]]]; //Transform to array
-					objectWithAttributes[getSTAEntityPlural(objectValue[0])][objectValue[1]].push(attributesDefinitionsKeys[i]); //Add new value
-					(repeatedEntities[getSTAEntityPlural(objectValue[0])])? repeatedEntities[getSTAEntityPlural(objectValue[0])].push(objectValue[1]): repeatedEntities[getSTAEntityPlural(objectValue[0])]=[objectValue[1]]
-				}				 
-			}
-			if (Object.keys(repeatedEntities).length!=0){ //There are duplicates, need to select one
-				var dialogRepeatedEntities= document.getElementById("DialogMultiCreateSTARepeatedEntities_span");
-				var c=[];
-				c.push(`<span>There are attributes repeated: Choose attributes to use below</span>`);
-				var repeatedEntitiesKeys= Object.keys(repeatedEntities);
-				for (var e=0;e<repeatedEntitiesKeys.length;e++){
-					c.push(`<fieldSet><legend>${repeatedEntitiesKeys[e]}</legend>`);
-					for (var u=0;u<repeatedEntities[repeatedEntitiesKeys[e]].length;u++){ //S'ha de vcanviar xq ve directament l'arrai
-						c.push(`<label style="font-weight: bold;">${repeatedEntities[repeatedEntitiesKeys[e]][u]}:  </label>`);
-						c.push(`<select  id="DialogMultiCreateSTARepeatedEntities_radiobutton_${repeatedEntitiesKeys[e]}_${repeatedEntities[repeatedEntitiesKeys[e]][u]}" >`);
-						for (var r=0;r<objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]].length;r++){
-								c.push(`<option value= "${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r][0]}"
-									data-nodeId="${dataId}" data-column="${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r][2]}">${objectWithAttributes[repeatedEntitiesKeys[e]][repeatedEntities[repeatedEntitiesKeys[e]][u]][r][2]}</option>`)
-							}
-						c.push(`</select>`);
-					}
-					c.push(`</fieldSet>`);
-				}
-				dialogRepeatedEntities.innerHTML= c.join("");
-				node.STAMultiCreateInformation.objectFromAutocomplete={objectWithAttributes:objectWithAttributes,repeatedEntities:repeatedEntities}; //save to use after ok button in DialogMultiCreateSTARepeatedEntities 
-				networkNodes.update(node);
-				showNodeDialog("DialogMultiCreateSTARepeatedEntities");//open a dialog to choose which you want to choose
-				//updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node) --> The access to this function will be through ok button in this dialog
-				
-			}else{
-				node.STAMultiCreateInformation.objectFromAutocomplete={objectWithAttributes:objectWithAttributes,repeatedEntities:repeatedEntities}; //save to use after ok button in DialogMultiCreateSTARepeatedEntities 
-				networkNodes.update(node);
-				updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node);
-			}		
-		}else alert("There aren't attributes associated with STAplus schema");
-
-	}
-}
-function chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(event){
-	event.preventDefault();
-	
-	var node= getNodeDialog("DialogMultiCreateSTA");
-	var objectAttributes= node.STAMultiCreateInformation.objectFromAutocomplete.objectWithAttributes;
-	var repeatedEntities= node.STAMultiCreateInformation.objectFromAutocomplete.repeatedEntities;
-	var repeatedEntitiesKeys= Object.keys(repeatedEntities);
-	var select,selected, nodeId, column,simpleOrMultiple;
-	for (var i=0;i<repeatedEntitiesKeys.length;i++){ //Put the option selected. 
-		for (var e=0;e<repeatedEntities[repeatedEntitiesKeys[i]].length;e++){
-			select=document.getElementById(`DialogMultiCreateSTARepeatedEntities_radiobutton_${repeatedEntitiesKeys[i]}_${repeatedEntities[repeatedEntitiesKeys[i]][e]}`);
-			selected= select.options[select.selectedIndex].value;
-			nodeId= select.options[select.selectedIndex].dataset.nodeid;
-			column= select.options[select.selectedIndex].dataset.column;
-			simpleOrMultiple= (node.STAMultiCreateInformation.parentsInformation[nodeId].data.length>1)?"multiple": "simple";
-			objectAttributes[repeatedEntitiesKeys[i]][repeatedEntities[repeatedEntitiesKeys[i]][e]]=[selected, nodeId, column,simpleOrMultiple ]; 
-		}
-	}
-
-	node.STAMultiCreateInformation.objectFromAutocomplete[objectAttributes]=objectAttributes ;
-	node.STAMultiCreateInformation.objectFromAutocomplete[repeatedEntities]=[];
-	networkNodes.update(node);
-	updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node);
-	hideNodeDialog("DialogMultiCreateSTARepeatedEntities", event);
-
-}
-function updatePropertiesInEntitiesSelectedValueMulticreateSTAWithAutocomplete(node){
-
-	var entitiesSaved= node.STAMultiCreateInformation.infoSaved.entities;
-	var objectWithAttributes=  node.STAMultiCreateInformation.objectFromAutocomplete.objectWithAttributes;
-	var objectWithAttributesKeys=Object.keys(objectWithAttributes);
-	var propertiesKeys,required;
-
-	for (var i=0; i< objectWithAttributesKeys.length;i++){
-		propertiesKeys=Object.keys(objectWithAttributes[objectWithAttributesKeys[i]]);
-	 	for (var e=0;e<propertiesKeys.length;e++){
-			for (var p=0;p<STAEntities[objectWithAttributesKeys[i]].properties.length;p++){
-				if (STAEntities[objectWithAttributesKeys[i]].properties[p].name==propertiesKeys[e]){
-					required=STAEntities[objectWithAttributesKeys[i]].properties[p].required;
-					break;
-				}
-			}
-			if (entitiesSaved.general[objectWithAttributesKeys[i]])entitiesSaved.general[objectWithAttributesKeys[i]].properties[propertiesKeys[e]]= {
-				attribute:objectWithAttributes[objectWithAttributesKeys[i]][propertiesKeys[e]],
-				required:required,
-				text:""
-			};
-		}
-	}
-
-	networkNodes.update(node);
-	drawMultiCreateSTADialog(node);	
-}
-
-function showAttributesSelectInEntitiesBoxMultiCreateSTADialog(page,entity, property, especialAutocomplete){
-	event.preventDefault();
-	var node= getNodeDialog("DialogMultiCreateSTA");
-	node.STAMultiCreateInformation.infoSaved.entities[page][entity].properties[property].text="";
-	networkNodes.update(node);
-	if (!especialAutocomplete)drawMultiCreateSTADialog(node);
-	else {
-		if(typeof window["drawMultiCreateSTADialog"+especialAutocomplete] === 'function')window["drawMultiCreateSTADialog"+especialAutocomplete](node);
-		else (alert("Changes will not be registered because there are no functions associated "))
-	}
-
-}
-function oKButtonInDialogMultiCreateSTA(event){
-	event.preventDefault();
-	var node = getNodeDialog("DialogMultiCreateSTA");
-	//Add if every entity will be multi created or only once 
-	QuickCheckIfEveryEntityWillBeMulticreatedOrOnlyOnceIMultiCreateSTA(node, "general");
-	if (node.STAMultiCreateInformation.infoSaved.origin[1]=="")processCreateEntitiesInMultiCreateSTA(node,node.STAMultiCreateInformation.infoSaved.entities.general, "general")
-	else { //Special formulas
-		if(typeof window["processCreateEntitiesInMultiCreateSTA"+node.STAMultiCreateInformation.infoSaved.origin[1]] === 'function')window["processCreateEntitiesInMultiCreateSTA"+node.STAMultiCreateInformation.infoSaved.origin[1]](node);
-		else (alert("Changes will not be registered because there are no functions associated "))
-	};
-}
-
-//Process MUltiCreateSTAEntities
-const entitiesCreationOrder= ["Parties", "Sensors", "ObservedProperties", "Locations", "Things", "Datastreams", "Multidatastreams", "FeaturesOfInterest", "Observations", "Licenses", "Campaigns", "ObservationGroups"]
-
-function QuickCheckIfEveryEntityWillBeMulticreatedOrOnlyOnceIMultiCreateSTA(node, page){
-
-	var entitiesKeys= Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page]);
-	var propertiesKeys;
-	var multipleOrSimple;
-
-	for (var i=0;i<entitiesKeys.length;i++){
-		multipleOrSimple="simple"
-		propertiesKeys= Object.keys(node.STAMultiCreateInformation.infoSaved.entities[page][entitiesKeys[i]].properties);
-		for (var p=0;p<propertiesKeys.length;p++){
-			if (node.STAMultiCreateInformation.infoSaved.entities[page][entitiesKeys[i]].properties[propertiesKeys[p]].attribute[3]=="multiple"){
-				multipleOrSimple="multiple";
-				continue;
-			}
-		}
-		node.STAMultiCreateInformation.infoSaved.entities[page][entitiesKeys[i]].creation=multipleOrSimple;
-		networkNodes.update(node);
-	}
-	
-}
-
-function processCreateEntitiesInMultiCreateSTA(node, entitiesObject, page){
-
-	var entitiesNeeded= checkIfEntitiesNeededArePresentToMultiCreateSTA(node.STAMultiCreateInformation.infoSaved.entities.general); 	
-	var data = node.STAMultiCreateInformation.parentsInformation[node.STAMultiCreateInformation.infoSaved.nodeWithMultiRecord].data;
-	var dataLength= data.length;
-	var entitiesCreationOrderlength= entitiesCreationOrder.length;
-	var entitiesObjectKeys= Object.keys(entitiesObject);
-	var entityCompleted=true;
-	var entityToSend;
-	
-	if (entitiesNeeded){
-		for (var i=0;i<dataLength;i++){
-			entityToSend={};
-			if (entityCompleted==false)break; //It can be false after firts round, not before. Necessary to go out of this bucle
-			//const entitiesCreationOrder= ["Parties", "Sensors", "ObservedProperties", "Locations", "Things", "Datastreams", "Multidatastreams", "FeaturesOfInterest", "Observations", "Licenses", "Campaigns", "ObservationGroups"]
-
-			for (var e=0;e< entitiesCreationOrderlength;e++){
-				if (entitiesObjectKeys.includes(entitiesCreationOrder[e])){
-					if (entitiesObject[entitiesCreationOrder[e]].completed=="false"){
-						entityCompleted=isEntityCompletedWithAllProperties(node, entitiesObject[entitiesCreationOrder[e]],entitiesCreationOrder[e], page,i); //Entity with all properties?
-						if (entityCompleted!=false){
-							entityToSend[entitiesCreationOrder[e]]=entityCompleted
-							//ACTUALITZAR O FER ALGO : Retorna la entitie amb els valors que interesa. 
-							//Guardarla per fora del for del entitiesCreationOrder pujarho?
-						}else{
-							alert(`At least a required entity is missing (${entitiesCreationOrder[e]}). Add the required entities, check the schema to see which one you are missing.`)
-							break;
-						}						
-						//create entity or recive if exist (obtain id) --> Add @id blabla
-						//updateInfo in node if the info of this entity will be used always --> Chande attribute for text and radioCheched=id;
-			
-
-					}
-				}
-		
-		
-			}
-			//TOTES LES ENTITATS CREADES PREPARADES PER FER LA RONDA DE PUJAR DADES (HI HAURÀ tantes rondes com data.length hi hagi , a no ser que tots sigui triat de simple)
-			console.log (entityToSend)
-
-			//Funció de totes les entitts (array)
-
-		}
-			
-				//funció d'entitat en entitat. -> La primera guardarà aquelles que no es repeteixen
-		
-	}else{
-		alert("A required entity is missing. Add the required entities, check the schema to see which one you are missing.");
-	}
-}
-
-
-function checkIfEntitiesNeededArePresentToMultiCreateSTA(entitieObject){ //object with entities
-	var entitiesArray= Object.keys(entitieObject);
-	var objectToProcessCreation={}
-	//if (!entitiesArray.includes("Parties")) return false; 
-	// if (entitySelected){
-	// 	if (!entitiesArray.includes(entitySelected)) return false; 
-	// }
-	var entity;
-	for (var i=0;i<entitiesArray.length;i++){
-		if (entitieObject[entitiesArray[i]].radioChecked=="properties"){ //If entity has an id, it doesn't need entities associated.
-				for (var e=0;e<STAEntities[entitiesArray[i]].entities.length;e++){
-					objectToProcessCreation[entitiesArray[i]]={properties:{},idNeeded:{}}; //entityCreation in object
-					if (STAEntities[entitiesArray[i]].entities[e].required==true){
-						entity= getSTAEntityPlural(STAEntities[entitiesArray[i]].entities[e].name);
-						if (!entitiesArray.includes(entity)) {
-							if (entity =="Datastreams" ||entity== "MultiDatastreams"){
-								if (entity=="Datastreams" && !entitiesArray.includes("MultiDatastreams"))return false;
-								else if (entity =="MultiDatastreams" && !entitiesArray.includes("Datastreams"))return false;
-							}else return false;					
-							
-						}
-
-					}
-					//Crear columna id
-					objectToProcessCreation[entitiesArray[i]].idNeeded[entity]="";
-
-				}
-		}
-	}
-	
-	return objectToProcessCreation;
-
-}
-function isEntityCompletedWithAllProperties(node, entity,entityName, page,dataIndex ){ 
-	var allPropertiesArrayInSTAentity= STAEntities[entityName].properties; 
-	var propertiesKeys= Object.keys(entity.properties);
-	var entityToReturn={}, nodeId, index;
-	var data;
-	
-	//AGREGAR EL COMPLETED TANT SI ËS TEXT, COM SIMPLE
-	//--TEXT: Anar mirant si totes son text ...
-	if (entity.radioChecked=="id"){
-		if (entity.properties["id"].text!=""){
-			if (entity.properties["id"].attribute[0] =="" && entity.properties["id"].text=="") { //ID selected without selectinformation
-				alert(`Not id value required selected to link the entity ${entityName}. `)
-				return false
-			}
-		}else{
-			data= node.STAMultiCreateInformation.parentsInformation[entity.properties["id"].attribute[1]].data;
-			nodeId=entity.properties["id"].attribute[1];
-			index = (entity.properties["id"].attribute[3]=="simple")?0:dataIndex; //It depends of the number of records in that node. 
-			entityToReturn.properties={};
-			entityToReturn.properties["id"]= data[index][entity.properties["id"].attribute[2]]; 
-			if (entity.properties["id"].attribute[3]=="simple"){
-				//node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties["id"].attribute=["","","",""];
-				//node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties["id"].text=(node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties["id"].attribute[2]]==undefined)?"undefined":node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties["id"].attribute[2]]; //Chage to avoid this again, because it will be the same ("undefined because it is necessary a different value from "")
-				node.STAMultiCreateInformation.infoSaved.entities[page][entityName].completed="true"; //It is id, so it is the only property needed.
-				node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties["id"].value=(node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties["id"].attribute[2]]==undefined)?"undefined":node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties["id"].attribute[2]]; //Chage to avoid this again, because it will be the same ("undefined because it is necessary a different value from "")
-				networkNodes.update(node);
-			}
-		}
-		
-
-	}else{
-		for (var i=0;i<allPropertiesArrayInSTAentity.length;i++){
-			if (allPropertiesArrayInSTAentity[i]!="id"){
-				if (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[0]=="" && entity.properties["id"].text==""){ 
-					if (STAEntities[entityName].properties[i].required==true) { //Is this property needed?
-						alert(`Not all properties required to create the entity ${entityName} are complete, check the asterisks. ${allPropertiesArrayInSTAentity[i].name} is needed`)
-						return false
-					}else continue; //no problem, next
-				}else{ //property present
-					if (entity.properties[allPropertiesArrayInSTAentity[i].name].text!="")entityToReturn[allPropertiesArrayInSTAentity[i].name]= entity.properties[allPropertiesArrayInSTAentity[i].name].text;
-					else{
-						if (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[1]==""){
-							data="";
-						}else{
-							data= node.STAMultiCreateInformation.parentsInformation[entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[1]].data;
-						}
-						
-						nodeId=entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[1];
-						index = (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[3]=="simple")?0:dataIndex; //It depends of the number of records in that node. 
-						entityToReturn.properties={};
-						if (data==""){
-							entityToReturn.properties[allPropertiesArrayInSTAentity[i].name]=""
-						}else{
-							entityToReturn.properties[allPropertiesArrayInSTAentity[i].name]= data[index][entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[2]]; //Falta seleccionar la columna pr saber el valor concret. Aqui envia un objecte
-
-						}
-						if (entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[3]=="simple"){
-							node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties[allPropertiesArrayInSTAentity[i].name].value=(node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[2]]==undefined)?"undefined":node.STAMultiCreateInformation.parentsInformation[nodeId].data[dataIndex][entity.properties[allPropertiesArrayInSTAentity[i].name].attribute[2]]; //Chage to avoid this again, because it will be the same
-						// 	node.STAMultiCreateInformation.infoSaved.entities[page][entityName].properties[allPropertiesArrayInSTAentity[i].name].attribute=["","","",""];
-						 	networkNodes.update(node)
-						}
-						
-					} 
-				}
-			}else{
-				continue;
-			}
-			if (i==allPropertiesArrayInSTAentity.length-1 && node.STAMultiCreateInformation.infoSaved.entities[page][entityName].creation=="simple"){
-				node.STAMultiCreateInformation.infoSaved.entities[page][entityName].completed="true"; //Last property. It is all entity simple and it is not necessary to complete it again? 
-			}
-		}
-	}
-
-
-	return entityToReturn;
-
-}
-function getParentNodesProperties(node, infoArray){ //infoArray --> array with attributes from parent that you want
-	var parentNodes=GetParentNodes(node);
-	var arrayWithAllNodesInfo=[];
-	var obj;
-	for (var i=0;i<parentNodes.length;i++){
-		obj={};
-		obj.id=parentNodes[i].id;
-		obj.dataKeys=(parentNodes[i].STAdata!=null)?Object.keys(getDataAttributesSimple(parentNodes[i].STAdata)):[];
-
-		if (infoArray.length>0){
-			for(var e=0;e<infoArray.length;e++){
-				if(parentNodes[i][infoArray[e]]){
-					obj[infoArray[e]]= parentNodes[i][infoArray[e]];
-				}	
-			}
-		}
-		arrayWithAllNodesInfo.push(obj);
-	}
-	return arrayWithAllNodesInfo;
 }
 
 function populateDialogQualityCompletnessOmission(node){
@@ -10380,7 +9635,6 @@ function populateDialogQualityLogicalConsistency(node){
 	document.getElementById("DialogQualityLogicalConsistency_selectAttribute1_1").innerHTML= options2;
 	document.getElementById("DialogQualityLogicalConsistency_selectAttribute2_1").innerHTML= options2;
 	document.getElementById("DialogQualityLogicalConsistency_selectAttribute3_1").innerHTML= options2;
-
 
 	return true;
 }
@@ -10488,10 +9742,9 @@ function okButtonDataQualityTemporalQuality(event){
 	var flag=(document.getElementById("TemporalQuality_checkbox_flag").checked)?true:false;
 	var sort= (document.getElementById("TemporalQuality_checkbox_sort").checked)?true:false;
 	var datalength=data.length;
-
 	
 	var newData={}, conditionsToFilter=[];
-	if(validity_calculate){
+	if (validity_calculate){
 		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, validity_calculate, flag, filter);
 		data= newData.validity[0];
 		conditionsToFilter.push("temporalValidity");
@@ -10502,7 +9755,7 @@ function okButtonDataQualityTemporalQuality(event){
 		data= newData.resolution[0];
 		conditionsToFilter.push("temporalResolution");
 	} 
-	if(consistency_calculate){
+	if (consistency_calculate){
 		if(sort)sortDates(data, attributeSelected);
 		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,consistency_calculate, flag, filter);
 		data= newData.consistency[0];
@@ -10513,9 +9766,9 @@ function okButtonDataQualityTemporalQuality(event){
 	if (filter && conditionsToFilter.length>0)finalData= data.filter(obj=>conditionsToFilter.every(attr=> obj[attr]===true)); 
 	else finalData=data;
 	
-	if(newData.validity==false || newData.resolution==false ||newData.consistency==false){
-		alert("Attribute selected must be a Date");
-	}else{
+	if (newData.validity==false || newData.resolution==false ||newData.consistency==false)
+		alert("The attribute selected must be a Date");
+	else{
 		node.STAdata= finalData;
 		node.STAdataAttributes= getDataAttributes(finalData);
 		networkNodes.update(node);
@@ -10534,8 +9787,7 @@ function okButtonDataQualityTemporalQuality(event){
 			document.getElementById("dataQualityResult_info").innerHTML= html
 			showNodeDialog("dataQualityResult");
 		}
-	}
-	
+	}	
 }
 
 function populateDialogQualityPositionalQuality(node){
@@ -10544,24 +9796,26 @@ function populateDialogQualityPositionalQuality(node){
 	saveNodeDialog("DialogQualityPositionalQuality", node);
 	var c="";
 	var attributesKeys= Object.keys(node.STAdataAttributes);
-	for (var i= 0; i< attributesKeys.length;i++){
-
+	for (var i= 0; i< attributesKeys.length;i++)
 		c+=`<option value="${attributesKeys[i]}">${attributesKeys[i]}</option>`
-	}
+
 	document.getElementById("PositionalQuality_select_positionalAccuracy_accuracyColumn").innerHTML=c;
 }
+
 
 function okButtonDataQualityPositionalQuality(event){
 	event.preventDefault();
 	var node= getNodeDialog("DialogQualityPositionalQuality");
-	var positionalAccuracy= (document.getElementById("PositionalQuality_checkbox_positionalAccuracy").checked)?true:false;
-	var positionalValidity= (document.getElementById("PositionalQuality_checkbox_positionalValidity").checked)?true:false;
-	var select= document.getElementById("attributeList_positionalQuality");
-	var attributeSelected= select.options[select.selectedIndex].value;
-	var valid, accurancyValue;
-	var data = node.STAdata; 
-	var dataLength= data.length;
-
+	var positionalAccuracy=(document.getElementById("PositionalQuality_checkbox_positionalAccuracy").checked)?true:false;
+	var positionalValidity=(document.getElementById("PositionalQuality_checkbox_positionalValidity").checked)?true:false;
+	var select=document.getElementById("attributeList_positionalQuality");
+	var attributeSelected=select.options[select.selectedIndex].value;
+	var valid, accuracyValue;
+	var data=node.STAdata;
+	var dataLength=data.length;
+	if (!node.STAmetadata)
+		node.STAmetadata={};
+	var metadata=node.STAmetadata;
 
 	if (positionalAccuracy){
 		var accuracyMethod= (document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn").checked)?"accuracyColumn": "geometryColumn";
@@ -10569,29 +9823,25 @@ function okButtonDataQualityPositionalQuality(event){
 		if (accuracyMethod=="accuracyColumn"){			
 			var selectAccuracy= document.getElementById("PositionalQuality_select_positionalAccuracy_accuracyColumn");
 			var attributeSelectedAccuracy= selectAccuracy.options[selectAccuracy.selectedIndex].value;
-			if (node.STAdataAttributes[attributeSelectedAccuracy].type == "number" || node.STAdataAttributes[attributeSelectedAccuracy].type== "integer"){
-				var accuracyValues=[];
-				for (var i=0;i<data.length; i++){
-					accuracyValues.push(data[i][attributeSelectedAccuracy]);
-				}
-				accurancyValue=aggrFuncMean(accuracyValues);
-				if(!Number.isInteger(accurancyValue)) accurancyValue= accurancyValue.toFixed(3);
+			if (node.STAdataAttributes[attributeSelectedAccuracy].type == "number" || node.STAdataAttributes[attributeSelectedAccuracy].type== "integer") {
+				accuracyValue=accuracyFromUncertaintyInPositions(data, metadata, attributeSelectedAccuracy);
 				valid=true;
-			}else{
-				valid= false;
-				alert("Column selected must be a number type column");
-			} 
-
-		}else{
+			} else {
+				valid=false;
+				alert("Selected uncertainly column must be of a 'number' type");
+			}
+		} else {
 			var selectUnit= document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn_degreeMeters");
 			var selectUnitValue= selectUnit.options[selectUnit.selectedIndex].value;
 			var selectAxis= document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn_degreeMeters");
 			var selectAxisValue= selectAxis.options[selectAxis.selectedIndex].value;
-			accurancyValue = accuracyValuesInMetersWithPoints(data, attributeSelected, selectUnitValue, selectAxisValue);
-			if (accurancyValue==false){
+			accuracyValue = accuracyValuesInMetersWithPoints(data, attributeSelected, selectUnitValue, selectAxisValue);
+			if (accuracyValue==null){
 				valid=false;
-				alert("Geometry column selected must be a geometry type column");
-			} 
+				alert("Selected collumn must have a geometry type");
+			}
+			else 
+				valid=true;
 		}
 	}
 	if(positionalValidity){
@@ -10603,66 +9853,68 @@ function okButtonDataQualityPositionalQuality(event){
 		var ymax=document.getElementById("PositionalQuality_input_positionalValidity_ymax").value;
 		var tag= (document.getElementById("dataQuality_temporalValidity_flag").checked)?true:false;
 		var filter= (document.getElementById("dataQuality_temporalValidity_filter").checked)?true:false;
-		var positionalValidityRate= calculateDataQualityPositionalValidity (data, attributeSelected, xmin, xmax, ymin, ymax, attributeSelectedValidity, tag, filter)
-		if (positionalValidityRate==false){
+		var positionalValidityRate= calculateDataQualityPositionalValidity(data, attributeSelected, xmin, xmax, ymin, ymax, attributeSelectedValidity, tag, filter)
+		if (positionalValidityRate==null){
 			valid=false;
-			alert("Geometry column selected must be a geometry type column");
-		} 
-	}
-	if (valid !=false){
-		if(positionalValidity){
+			alert("Selected collumn must have a geometry type");
+		} else {
+			valid=true;
 			node.STAdata= positionalValidityRate[0];
 			node.STAdataAttributes= getDataAttributes(positionalValidityRate[0]);
 		}
+	}
+	if (valid) {
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		hideNodeDialog("DialogQualityPositionalQuality", event);
 		
-		if (positionalAccuracy ||positionalValidity ){
+		if (positionalAccuracy || positionalValidity ){
 			var html="";
 			if(positionalAccuracy){
 				
 				html+= `<div> Positional accuracy <br>
-				 <table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
-				<tbody>`
+					<table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
+					<tbody>`
 
 				if(accuracyMethod=="accuracyColumn"){
 					html+=`<tr>
 						<td>${attributeSelectedAccuracy} </td>
 						<td> Mean of the accuracy column values </td>
-						<td> ${accurancyValue}</td>
-					</tr>`
+						<td> ${accuracyValue}</td>
+						</tr>`
 				}else{
 					html+=`<tr>
 						<td>${attributeSelected} </td>
 						<td> Root Mean Square Error (RMSE) </td>
-						<td> ${accurancyValue} m</td>
-					</tr>`
+						<td> ${accuracyValue} m</td>
+						</tr>`
 				}
 				html+="</tbody></table></div>"
 			}
-			html +="<br>"
-			if(positionalValidity){
+			html+="<br>"
+			if (positionalValidity){
 				var positionValidityRateValue;
-				if(!Number.isInteger(positionalValidityRate[2])){
-					positionValidityRateValue= positionalValidityRate[2].toFixed(3)	
-				}else positionValidityRateValue = positionalValidityRate[2];
+				if (!Number.isInteger(positionalValidityRate[2]))
+					positionValidityRateValue= positionalValidityRate[2].toFixed(3);
+				else 
+					positionValidityRateValue = positionalValidityRate[2];
 				html+= `<div> Positional validity <br>
-				 <table class="tablesmall"><thead><th>Column</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
-				<tbody><tr>
-					<td>${attributeSelected}</td>
-					<td>${dataLength}</td>
-					<td>${positionalValidityRate[1]}</td>
-					<td>${positionValidityRateValue}</td>
-				</tr>`
+					<table class="tablesmall"><thead><th>Column</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
+					<tbody><tr>
+						<td>${attributeSelected}</td>
+						<td>${dataLength}</td>
+						<td>${positionalValidityRate[1]}</td>
+						<td>${positionValidityRateValue}</td>
+					</tr>`;
 			}
 			
 			document.getElementById("dataQualityResult_info").innerHTML= html
 			showNodeDialog("dataQualityResult");		
-		}
+		} else
+			alert("No option selected. Nothing to do.");
 	}
-
 }
+
 
 function populateDialogQualityThematicQuality(node){
 	populateAttributesListSelectThematicQuality(node);
@@ -10684,7 +9936,7 @@ function createSelectForThematicQuality(parentNodes, place){
 	var c="", attributes;
 	c+=`<select id= "thematicQuality_select_${place}">`
 	for (var i=0;i<parentNodes.length;i++){
-		attributes= Object.keys(parentNodes[i].STAdataAttributes);
+		attributes= Object.keys(parentNodes[i].STAdataAttributes ? parentNodes[i].STAdataAttributes : getDataAttributes(parentNodes[i].STAdata));
 		c+=`<optgroup label="${parentNodes[i].label}">`
 		for (var a=0; a< attributes.length; a++){
 			c+=`<option value="${attributes[a]}">${attributes[a]}</option>`
@@ -10695,8 +9947,6 @@ function createSelectForThematicQuality(parentNodes, place){
 	return c;
 }
 
-
-
 function okButtonDataQualityThematicQuality(event){
 	var thematicAccuracy= (document.getElementById("ThematicQuality_checkbox_ThematicAccuracy").checked)?true:false;
 	var thematicValidity= (document.getElementById("ThematicQuality_checkbox_ThematicValidity").checked)?true:false;
@@ -10704,41 +9954,13 @@ function okButtonDataQualityThematicQuality(event){
 		var groupingMode= (document.getElementById("thematicQuality_radio_thematicAccuracy_group").checked)?"grouped": "all";
 		var inputWayGroup = document.querySelector('input[name="thematicQuality_radio_thematicAccuracy_way"]:checked')
 		var inputWayValue= inputWayGroup.value; //accuracyMean, string, number
-
-
-
-
-
 	}
-	if(thematicValidity){
-
+	if(thematicValidity)
 		var thematicValidityWay= (document.getElementById("thematicQuality_radio_thematicValidity_list").checked)? "list": "range";
-		
-
-
-	}
-
 }
 
-//async function GetObjectId(url, objsName, obj){
-	//var response=await HTTPJSONData(url+"/"+objsName+ "?$filter=" + encodeURIComponent(AddKeysToFilter("", obj)));
 
-			// GetObjectId(url, entityName, obj).then(
-			// 	function (value) {
-			// 		if (value) {
-			// 			document.getElementById("DialogCreateUpdateDeleteEntity").close();
-			// 			showInfoMessage('Available at: <a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
-			// 			node.STAURL = getUrlToId(url, entityName, value);
-			// 			node.STAdata = [];
-			// 			node.STAdata.push(obj);
-			// 			node.STAdata[0]["@iot.id"] = isNaN(value) ? value : parseInt(value);
-			// 			networkNodes.update(node);
-			// 		}
-			// 	},
-			// 	function (error) {
-			// 		showInfoMessage('Error creating entity. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
-			// 		console.log(error);
-			// 	}
-			// );
-
-
+/*function giveMeNetworkInformation(event) {
+			hideNodeDialog("DialogContextMenu", event);
+			console.log(networkNodes.get());
+}*/

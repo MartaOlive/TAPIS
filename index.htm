@@ -343,7 +343,7 @@
 
 			</span>
 			<div class="center">
-				<button value="default" id="dlgReplaceOkButton" onClick="ReplaceTextInTableApplyButton(event)">Apply</button>
+				<button value="default" id="dlgReplaceOkButton" onClick="ReplaceTextInTableApplyButton(event)" formmethod="dialog">Apply</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogReplaceTextInTableNodeId"></input>
@@ -1362,9 +1362,10 @@
 	<dialog id="DialogSaveLayer" onClose='hideNodeDialog("DialogSaveLayer", event)'>
 		<form>
 			<span id="DialogSaveLayerTitle"></span>
+			Title: <input id="DialogSaveLayerDescription" value="Layer from TAPIS" />
 			<fieldset>
 				<legend>Position:</legend>
-				<label>Place description*:
+				<label>Symbolizer (text or color)*:
 					<span id="DialogSaveLayerPlace"></span>
 				</label>
 				<br>
@@ -1395,10 +1396,13 @@
 				</fieldset>
 			</fieldset>
 			<br>
-			<label>Date and time:
-				<span id="DialogSaveLayerTime"></span>
-			</label>
-			<span id="DialogSaveLayerVariableDefUoM"></span>
+			<fieldset>
+				<legend>Time Series (optional)</legend>
+				<label>Date and time:
+					<span id="DialogSaveLayerTime"></span>
+				</label>
+				<span id="DialogSaveLayerVariableDefUoM"></span>
+			</fieldset>
 			<br>
 			<div class="center">
 				<span id="DialogSaveLayerSave"></span>
@@ -1409,7 +1413,7 @@
 
 	<dialog id="DialogAddColumnGeo" onClose='hideNodeDialog("DialogAddColumnGeo", event)'>
 		<form name="DialogAddColumnGeoForm">
-			Add column with tranformed geometry
+			Add column with transformed geometry
 			<fieldset>
 				<legend>Input</legend>
 				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="JSON" id="DialogAddColumnGeoRadioJSON">GeoJSON Geometry:
@@ -1446,18 +1450,51 @@
 					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="JSON" id="DialogAddColumnGeoRadioJSONOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioJSONOut");' checked="checked">GeoJSON Geometry</label><br>
 					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="WKT" id="DialogAddColumnGeoRadioWKTOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioWKTOut");' >Well Known Text</label><br>
 					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="Geohash" id="DialogAddColumnGeoRadioGeohashOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioGeohashOut");' >Geohash</label><br>
-					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="UberH3" id="DialogAddColumnGeoRadioUberH3Out" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioUberH3Out");' >Uber U3</label><br>
+					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="UberH3" id="DialogAddColumnGeoRadioUberH3Out" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioUberH3Out");' >Uber H3</label><br>
 					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="LL" id="DialogAddColumnGeoRadioLLOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioLLOut");' >Point coordinates</label>
 				</fieldset>
-				<legend>New columns</legend>
+				<legend>New column</legend>
 				<label><span id="DialogAddColumnGeoNameOut">Column name:</span><input type="text" size="30" id="DialogAddColumnGeoNameText" value="Geometry"></input><br>
-				<label><span id="DialogAddColumnGeoLatitudeNameOut" style="display:none;">Latitude:</span><input type="text" size="30" id="DialogAddColumnGeoLatitudeNameText" value="Latitude" style="display:none;"></input> 
+				<label><span id="DialogAddColumnGeoLatitudeNameOut" style="display:none;">Latitude:</span><input type="text" size="30" id="DialogAddColumnGeoLatitudeNameText" value="Latitude" style="display:none;"></input>
+				<label><span id="DialogAddColumnGeoLevel" style="display:none;">Level:</span><input type="text" size="3" id="DialogAddColumnGeoLevelText" value="10" style="display:none;"></input>
 			</fieldset>
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick="GetAddColumnGeo(event)" formmethod="dialog">Add</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogAddColumnGeoNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogDGGSCodesBbox" onClose='hideNodeDialog("DialogDGGSCodesBbox", event)'>
+		<form name="DialogDGGSCodesBboxForm">
+			DGGS codes table from geospatial extent
+			<fieldset>
+				<legend>Geospatial extent</legend>
+				<label>Minimum longitude: <input type="text" id="DialogDGGSCodesBboxMinLong" size="16" value="-180"></input></label>
+				<br>
+				<label>Minimum latitude: <input type="text" id="DialogDGGSCodesBboxMinLat" size="16" value="-90"></input></label>
+				<br>
+				<label>Maximum longitude: <input type="text" id="DialogDGGSCodesBboxMaxLong" size="16" value="180"></input></label>
+				<br>
+				<label>Maximum latitude: <input type="text" id="DialogDGGSCodesBboxMaxLat" size="16" value="90"></input></label>
+				<br>
+			</fieldset>
+			<br>
+			<fieldset>
+				<legend>DGGS code type:</legend>
+				<label><input type="radio" name="DialogDGGSCodesBboxCode" value="Geohash" id="DialogDGGSCodesBboxCodeGeohash">Geohash</label><br>
+				<label><input type="radio" name="DialogDGGSCodesBboxCode" value="UberH3" id="DialogDGGSCodesBboxCodeUberH3" checked="checked">Uber H3</label><br>
+			</fieldset>
+			<br>
+			<label>Level: <input type="text" size="2" id="DialogDGGSCodesBboxLevel" value="9"></input><label>
+			<label><input type="checkbox" id="DialogDGGSCodesBboxParents" checked="checked">Parent levels</label><br>
+			<label><input type="checkbox" id="DialogDGGSCodesBboxCentroid" checked="checked">Add centroid coordinates</label><br>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick="GetCreateTableDGGSCodes(event)" formmethod="dialog">Create</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogDGGSCodesBboxNodeId"></input>
 		</form>
 	</dialog>
 
@@ -2018,14 +2055,14 @@
 			<h3> Positional quality</h3>
 			<div id="DialogQualityPositionalQuality_attributesList"></div>
 			<div>
-				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalAccuracy">Positional accuracy</label></legend>
+				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalAccuracy" checked="checked">Positional accuracy</label></legend>
 					<table style="text-align: center; border-collapse: collapse;">
 						<tr>
 							<td style="border-right: 2px solid #ccc; padding: 10px;">
 								<label>
 									<input type="radio" name="PositionalQuality_radio_positionalAccuracy"
 										id="PositionalQuality_radio_positionalAccuracy_accuracyColumn" checked>
-									Mean of the values in the accuracy column.
+									Standard deviation of the uncertainties of each position.
 								</label>
 							</td>
 
@@ -2040,7 +2077,7 @@
 
 						<tr>
 							<td style="border-right: 2px solid #ccc;">
-								<label style="margin-right: 10px;">Accuracy column:</label>
+								<label style="margin-right: 10px;">Uncertaintly column:</label>
 								<select id="PositionalQuality_select_positionalAccuracy_accuracyColumn"></select><br>
 							</td>
 
@@ -2066,7 +2103,7 @@
 						</tr>
 					</table>
 				</fieldset>
-				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalValidity">Positional validity</label></legend>
+				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalValidity" checked="checked">Positional validity</label></legend>
 					<label>Axis order</label><select id="PositionalQuality_radio_positionalValidity_xy">
 						<option value="XY">[X, Y]</option>
 						<option value="YX">[Y, X]</option>
@@ -2126,13 +2163,7 @@
 
 			<input type="hidden" id="DialogQualityThematicQualityNodeId"></input>
 			</form>
-		</dialog>
-
-
-
-
-
-
+	</dialog>
 
 	<dialog id="dataQualityResult" onClose='hideNodeDialog("DialogQualityTemporalQuality", event)'>
 		<form>
@@ -2141,7 +2172,12 @@
 			<div class="center"> <button value="cancel" formmethod="dialog">Close</button></div>
 		</form>
 	</dialog>
-	<!--dialog id="UploadTimeAverages">
+
+
+
+
+
+	<!--dialog id="UploadTimeAverages" onClose='hideNodeDialog("UploadTimeAverages", event)'>
 		<div id="UploadTimeAveragesLoginFirst" style="display: none;">
 		<form>
 			To upload data in a STA server, you should Login first.<br>
