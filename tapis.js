@@ -9975,6 +9975,7 @@ function GetCreateNewTable(event){
 			newTable[inputValue[i]] ="";
 		}
 		node.STAdata=[newTable];
+		node.STAdataAttributes= getDataAttributes([newTable]);
 		updateQueryAndTableArea(node);
 
 	}else{
