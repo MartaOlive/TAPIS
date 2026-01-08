@@ -87,6 +87,7 @@ const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", sta
 			ImportJSON: {name: "JSON", description: "JSON", startNode: true, help: "Imports data from a JSON file and returns a table."},
 			ImportGeoJSON: {name: "GeoJSON", description: "GeoJSON", startNode: true, help: "Imports the features of a GeoJSON and returns a table where each feature is a record. One of the columns contains the geometry JSON object."},
 			CreateDGGS: {name: "Extent", description: "DGGS extent", startNode: true, help: "Create a table of all DGGS codes that are inside a geospatial extent. It can also add the position or the center of the cell."},
+			CreateNewTable: {name: "New table", description: "New table", startNode: true, help: "Create a new table from scratch."},
 			staRoot: {name: "STA root", description: "STA root", help:"Returns to the root of the SensorThings API or STSTAplus service in use. In other words, removes the path and query parameters of the previous node."}};
 const ServicesAndAPIsArray = Object.keys(ServicesAndAPIs);
 const ServicesAndAPIsType = {singular: "Data input tool", plural: "Data input tools"};
@@ -7577,6 +7578,10 @@ function networkDoubleClick(params) {
 			saveNodeDialog("DialogDGGSCodesBbox", currentNode);
 			showNodeDialog("DialogDGGSCodesBbox");
 		}
+		else if (currentNode.image == "CreateNewTable.png") {
+			saveNodeDialog("DialogCreateNewTable", currentNode);
+			showNodeDialog("DialogCreateNewTable");
+		}
 		else if (currentNode.image == "Table.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
@@ -9959,6 +9964,23 @@ function okButtonDataQualityThematicQuality(event){
 		var thematicValidityWay= (document.getElementById("thematicQuality_radio_thematicValidity_list").checked)? "list": "range";
 }
 
+
+function GetCreateNewTable(event){
+	var node=  getNodeDialog("DialogCreateNewTable");
+	var inputValue= document.getElementById("DialogDialogCreateNewTable_columnList").value;
+	if (inputValue!=""){
+		inputValue=inputValue.split(",");
+		var newTable={};
+		for (var i=0;i<inputValue.length;i++){
+			newTable[inputValue[i]] ="";
+		}
+		node.STAdata=[newTable];
+		updateQueryAndTableArea(node);
+
+	}else{
+		alert("Column list is empty. Table will not be created.")
+	}
+}
 
 /*function giveMeNetworkInformation(event) {
 			hideNodeDialog("DialogContextMenu", event);

@@ -1497,7 +1497,20 @@
 			<input type="hidden" id="DialogDGGSCodesBboxNodeId"></input>
 		</form>
 	</dialog>
-
+	<dialog id="DialogCreateNewTable" onClose='hideNodeDialog("DialogCreateNewTable", event)'>
+		<form name="DialogDialogCreateNewTable">
+			<span style="font-weight: bold;display: block;">Create a new table</span>
+			<div style="margin-bottom: 20px;">
+			<label>List of columns (separed by comas): </label> 
+				<input type="text" id="DialogDialogCreateNewTable_columnList" style="width: 400px; height: 50px;" value="">
+			</div>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick="GetCreateNewTable(event)" formmethod="dialog">Create</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogCreateNewTableNodeId"></input>
+		</form>
+	</dialog>
 	<dialog id="DialogGUF" onClose='hideNodeDialog("DialogGUF", event)'>
 		<form>
 			Geospatial user feedback
