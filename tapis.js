@@ -9766,7 +9766,7 @@ function okButtonDataQualityTemporalQuality(event){
 	if (filter && conditionsToFilter.length>0)finalData= data.filter(obj=>conditionsToFilter.every(attr=> obj[attr]===true)); 
 	else finalData=data;
 	
-	if (newData.validity==false || newData.resolution==false ||newData.consistency==false)
+	if (newData.validity==null || newData.resolution==null ||newData.consistency==null)
 		alert("The attribute selected must be a Date");
 	else{
 		node.STAdata= finalData;

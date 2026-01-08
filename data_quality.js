@@ -97,8 +97,8 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
 
 function calculateDataQualityTemporalValidity(data, attributeSelected, from, to, calculate, flag, filter) {
     var attributes = getDataAttributes(data); //Està a tapis.js 
-    if (attributes[attributeSelected].type != "isodatetime") return false;
-    if (!from && !to) return false;
+    if (attributes[attributeSelected].type != "isodatetime") return null;
+    if (!from && !to) return null;
     var count = 0;
     var newData = [];
     for (var i = 0; i < data.length; i++) {
@@ -132,7 +132,7 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 }
 function calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, calculate, flag, filter) {
     var attributes = getDataAttributes(data); //Està a tapis.js 
-    if (attributes[attributeSelected].type != "isodatetime") return false;
+    if (attributes[attributeSelected].type != "isodatetime") return null;
     var regex, count = 0, newData = [];
     for (var i = 0; i < data.length; i++) {
         switch (resolutionRadioValue) {
@@ -165,7 +165,7 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
                 break;
 
             default:
-                return false;
+                return null;
         }
         if (regex.test(data[i][attributeSelected])) {
             count++;
@@ -183,7 +183,7 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 
 function calculateDataQualityTemporalConsistency(data, attributeSelected, number, consistencyRadioValue, consistencyRadioMethod, tolerance, calculate, flag, filter) {
     var attributes = getDataAttributes(data); //Està a tapis.js 
-    if (attributes[attributeSelected].type != "isodatetime") return false;
+    if (attributes[attributeSelected].type != "isodatetime") return null;
 
     var currentDate, previousDate;
     var dateFrom, validRange;
@@ -231,7 +231,7 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
 
                     break;
                 default:
-                    return false;
+                    return null;
             }
         }
         for (var i = 0; i < data.length; i++) {
@@ -316,7 +316,7 @@ function returnValidRange(currentData, number, tolerance, consistencyRadioValue)
             end = new Date(currentData.getTime() + (number + number * tolerance / 100) * 1000);
             break;
         default:
-            return false;
+            return null;
     }
 
     return [start, end]
@@ -376,7 +376,7 @@ function accuracyFromUncertaintyInPositions(data, metadata, uncertaintyAttribute
 function accuracyValuesInMetersWithPoints(data, attribute, units, axisOrder) {
     var attributes = getDataAttributes(data);
     if (attributes[attribute].type!="geometry") return null;
-    var longitudeValues = []; latitudeValues = [];
+    var longitudeValues = [], latitudeValues = [];
     var lon, lat;
     if (axisOrder == "lonLat") {
         lon = 0;
