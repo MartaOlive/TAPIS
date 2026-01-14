@@ -9821,14 +9821,13 @@ function okButtonDataQualityPositionalQuality(event){
 	var node= getNodeDialog("DialogQualityPositionalQuality");
 	var positionalAccuracy=(document.getElementById("PositionalQuality_checkbox_positionalAccuracy").checked)?true:false;
 	var positionalValidity=(document.getElementById("PositionalQuality_checkbox_positionalValidity").checked)?true:false;
-	
+	var dataLength=node.STAdata.length;
 	var selectLong=document.getElementById("PositionalQuality_select_geometricPositions_longitude");
 	var attributeSelectedLong=selectLong.options[selectLong.selectedIndex].value;
 	var selectLat=document.getElementById("PositionalQuality_select_geometricPositions_latitude");
 	var attributeSelectedLat=selectLat.options[selectLat.selectedIndex].value;
 	var valid, accuracyValue;
 	var data=node.STAdata;
-	var dataLength=data.length;
 	if (!node.STAmetadata)
 		node.STAmetadata={};
 	var metadata=node.STAmetadata;
@@ -9902,15 +9901,16 @@ function okButtonDataQualityPositionalQuality(event){
 				if(accuracyMethod=="uncertantlyColumn"){
 					html+=`<tr>
 						<td>${attributeSelectedUncertantly} </td>
-						<td> Mean of the accuracy column values </td>
+						<td> Standar deviation </td>
 						<td> ${accuracyValue}</td>
 						</tr>`
 				}else{
-					// html+=`<tr>
-					// 	 <td>${attributeSelected} </td>
-					// 	<td> Root Mean Square Error (RMSE) </td>
-					// 	<td> ${accuracyValue} m</td>
-					// 	</tr>`
+					html+=`<tr>
+					 	<td>${attributeSelectedLong},${attributeSelectedLat} </td>`
+						if (grouped)html+=`<td> Standard deviation of RMSE across groups </td>`
+						else html+=`<td> global RMSE </td>`
+					 	html+=`<td> ${accuracyValue} m</td>
+						</tr>`
 				}
 				html+="</tbody></table></div>"
 			}
@@ -9921,14 +9921,14 @@ function okButtonDataQualityPositionalQuality(event){
 					positionValidityRateValue= positionalValidityRate[2].toFixed(3);
 				else 
 				 	positionValidityRateValue = positionalValidityRate[2];
-				// html+= `<div> Positional validity <br>
-				// 	<table class="tablesmall"><thead><th>Column</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
-				// 	<tbody><tr>
-				// 		<td>${attributeSelected}</td>
-				// 		<td>${dataLength}</td>
-				// 		<td>${positionalValidityRate[1]}</td>
-				// 		<td>${positionValidityRateValue}</td>
-				// 	</tr>`;
+				 	html+= `<div> Positional validity <br>
+				 	<table class="tablesmall"><thead><th>Columns</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
+						<tbody><tr>
+					 		<td>${attributeSelectedLong},${attributeSelectedLat}</td>
+					 		<td>${dataLength}</td>
+					 		<td>${positionalValidityRate[1]}</td>
+					 		<td>${positionValidityRateValue}</td>
+					 	</tr>`;
 			}
 			
 			document.getElementById("dataQualityResult_info").innerHTML= html
