@@ -373,79 +373,115 @@ function accuracyFromUncertaintyInPositions(data, metadata, uncertaintyAttribute
 	return accuracyValue;
 }
 
-function accuracyValuesInMetersWithPoints(data, attribute, units, axisOrder) {
-    var attributes = getDataAttributes(data);
-    if (attributes[attribute].type!="geometry") return null;
-    var longitudeValues = [], latitudeValues = [];
-    var lon, lat;
-    if (axisOrder == "lonLat") {
-        lon = 0;
-        lat = 1;
-    } else {
-        lon = 1;
-        lat = 0;
-    }
-    //Mean of Longitudes and latitudes
-    for (var i = 0; i < data.length; i++) {
-        longitudeValues.push(data[i][attribute].coordinates[lon]);
-        latitudeValues.push(data[i][attribute].coordinates[lat]);
+function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAttribute, units, grouped, newColumns) {
+   // var attributes = getDataAttributes(data);
+   // if (attributes[attribute].type!="geometry") return null;
+   //Mirar si son numeros.
+   //Falta posar si la casella està buida
+ 
 
-    }
-    var longitudeMean = aggrFuncMean(longitudeValues);
-    var latitudeMean = aggrFuncMean(latitudeValues);
-    var distances = [], difLong, difLat;
+    if (grouped!=false){
 
-    //Distances 
-    if (units == "degree") {
-        var latRad = latitudeMean * Math.PI / 180
-        var longFactor = 111132 * Math.cos(latRad);
-    }
-    for (var e = 0; e < data.length; e++) {
-        //long
-        difLong = data[e][attribute].coordinates[lon] - longitudeMean;
-        difLat = data[e][attribute].coordinates[lat] - latitudeMean;
-        if (units == "degree") {
-            difLong = difLong * longFactor;
-            difLat = difLat * 111132;
+        var groupingGroupsObject=  createObjectWithDifferentPossibilitiesInColumns(data, grouped);
+        var groupingObjectKeys=Object.keys(groupingGroupsObject);
+
+        for(var i = 0; i<groupingObjectKeys.length;i++){            
+            groupingGroupsObject= calculateRMSE (data,groupingGroupsObject, groupingObjectKeys[i],  longAttribute, latAttribute, units)
         }
-        distances.push(Math.sqrt(difLong ** 2 + difLat ** 2))
+
+        for (var g=0;g<data.length;g++){
+            data[g]["RMSE"]= groupingGroupsObject[data[g][grouped]]["RMSE"];
+            if (newColumns){
+                data[g]["LongMean"]= groupingGroupsObject[data[g][grouped]]["LongMean"];
+                data[g]["LatMean"]= groupingGroupsObject[data[g][grouped]]["LatMean"];
+            }
+        }
+        var dataToEvaluateGlobalAccuracy=[];
+        for (var p=0;p<groupingObjectKeys.length;p++){
+            dataToEvaluateGlobalAccuracy.push({RMSE: groupingGroupsObject[groupingObjectKeys[p]]["RMSE"]})
+        }
+        var  globalAccuracy = accuracyFromUncertaintyInPositions(dataToEvaluateGlobalAccuracy, metadata, "RMSE")
+        if (!newColumns){ //Erase RMSE column. Needed before to calculate global accuracy
+            for (var d=0;d<data.length;d++){
+                delete data[i]["RMSE"]
+            }
+        }
+    }else{
+        var numbersArray=[]
+        for(var s=0;s<data.length;s++){
+            numbersArray.push(s)
+        }
+        var groupingGroupsObject={column:{"DataPositions":numbersArray}}
+        groupingGroupsObject= calculateRMSE (data,groupingGroupsObject, "column",  longAttribute, latAttribute, units);
+        var globalAccuracy = groupingGroupsObject.column["RMSE"];
     }
 
-    //RMSE
-    var sumSquareDistances = distances.reduce((acc, d) => acc + d ** 2, 0);
-    var RMSE = Math.sqrt(sumSquareDistances / data.length);
 
-    return RMSE;
+   if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_AbsoluteExternalPositionalAccuracy", 
+					"measureIdentification": {
+						"measure": {
+							"name": "RMSE" //ES LA DESVES Del RMSE. Amb la desvest has posat circularmapaccuracy
+						},
+						"domains": [
+							{
+								"name": "RootMeanSquareError2D"
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Half-lengthConfidenceInterval",
+									"params": [
+										{
+											"name": "level",
+											"value": "0.683"
+										}
+									]
+								}
+							},
+							"valueType": "number",
+							"values": [ globalAccuracy ]
+						}
+					]
+				}
+			]
+		});
+
+    return globalAccuracy;
+
 }
 
-function calculateDataQualityPositionalValidity(data, attributeSelected, xmin, xmax, ymin, ymax, axisOrder, tag, filter) { //AxisOrder XY or YX
-    var attributes = getDataAttributes(data);
-    if (attributes[attributeSelected].type!="geometry") return null;
+function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, longAttribute, latAttribute, tag, filter) { //AxisOrder XY or YX
+   //x-> long, y-> lat
+    // var attributes = getDataAttributes(data);
+    // if (attributes[attributeSelected].type!="geometry") return null;
+    //MIRAR QUE SIGUIN... NUMEROS?(float)
     var valid;
-    var x, y;
     var count =0;
     var newData=[];
-    if (axisOrder == "XY") {
-        x = 0;
-        y = 1;
-    }
-    else {
-        x = 1;
-        y = 0;
-    }
+    
     for (var i = 0; i < data.length; i++) {
         valid = true;
         if (xmin != "") {
-            if (data[i][attributeSelected].coordinates[x] < parseFloat(xmin)) valid = false;
+            if (data[i][longAttribute] < parseFloat(xmin)) valid = false;
         }
         if (xmax != "") {
-            if (data[i][attributeSelected].coordinates[x] > parseFloat(xmax)) valid = false;
+            if (data[i][longAttribute] > parseFloat(xmax)) valid = false;
         }
         if (ymin != "") {
-            if (data[i][attributeSelected].coordinates[y] < parseFloat(ymin)) valid = false;
+            if (data[i][latAttribute] < parseFloat(ymin)) valid = false;
         }
         if (ymax != "") {
-            if (data[i][attributeSelected].coordinates[y] > parseFloat(ymax)) valid = false;
+            if (data[i][latAttribute] > parseFloat(ymax)) valid = false;
         }
 
         if (valid){
@@ -499,4 +535,61 @@ var cdns=[];
 		}
 	}
 	return cdns.join("");
+}
+
+
+function createObjectWithDifferentPossibilitiesInColumns(data, groupingColumn){
+    var groupingGroupsObject={}, groupingKeys;
+
+    for(var i=0; i<data.length;i++){
+        groupingKeys= Object.keys(groupingGroupsObject);
+        if(groupingKeys.includes(data[i][groupingColumn])){
+                groupingGroupsObject[data[i][groupingColumn]]["DataPositions"].push(i);
+        }
+        else {
+            groupingGroupsObject[data[i][groupingColumn]]={}
+            groupingGroupsObject[data[i][groupingColumn]]["DataPositions"]=[i]
+        }
+    }
+    return groupingGroupsObject;
+}
+
+function calculateRMSE (data, groupingObject, keyToEvaluate, longAttribute, latAttribute, units){
+    var RMSE, longitudeValues=[], latitudeValues=[];
+    //Mean of Longitudes and latitudes
+    
+    for (var i = 0; i < groupingObject[keyToEvaluate]["DataPositions"].length; i++) {
+        longitudeValues.push(data[groupingObject[keyToEvaluate]["DataPositions"][i]][longAttribute]);
+        latitudeValues.push(data[groupingObject[keyToEvaluate]["DataPositions"][i]][latAttribute]);
+    }
+
+    var longitudeMean = aggrFuncMean(longitudeValues);
+    var latitudeMean = aggrFuncMean(latitudeValues);
+    var distances = [], difLong, difLat;
+
+    //Distances 
+    if (units == "degree") {
+        var latRad = latitudeMean * Math.PI / 180
+        var longFactor = 111132 * Math.cos(latRad);
+    }
+    for (var e = 0; e < groupingObject[keyToEvaluate]["DataPositions"].length; e++) {
+        //long
+        difLong = data[groupingObject[keyToEvaluate]["DataPositions"][e]][longAttribute] - longitudeMean;
+        difLat = data[groupingObject[keyToEvaluate]["DataPositions"][e]][latAttribute] - latitudeMean;
+        if (units == "degree") {
+            difLong = difLong * longFactor;
+            difLat = difLat * 111132;
+        }
+        distances.push(Math.sqrt(difLong ** 2 + difLat ** 2))
+    }
+
+    //RMSE
+    var sumSquareDistances = distances.reduce((acc, d) => acc + d ** 2, 0);
+    var RMSE = Math.sqrt(sumSquareDistances / groupingObject[keyToEvaluate]["DataPositions"].length);
+
+    groupingObject[keyToEvaluate]["LongMean"]= longitudeMean;
+    groupingObject[keyToEvaluate]["LatMean"]= latitudeMean;
+    groupingObject[keyToEvaluate]["RMSE"]= RMSE;
+
+    return groupingObject;
 }

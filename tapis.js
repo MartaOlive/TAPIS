@@ -9796,15 +9796,23 @@ function okButtonDataQualityTemporalQuality(event){
 }
 
 function populateDialogQualityPositionalQuality(node){
-	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "positionalQuality", "Geometry column");
-	document.getElementById("DialogQualityPositionalQuality_attributesList").innerHTML=attributesCheckboxModule;
+	//var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "positionalQuality", "Geometry column");
+	//document.getElementById("DialogQualityPositionalQuality_attributesList").innerHTML=attributesCheckboxModule;
+	var options="";
+	var attributesKeys= Object.keys(node.STAdataAttributes);
+	for (var i=0;i<attributesKeys.length;i++){
+		options+= `<option  value="${attributesKeys[i]}">${attributesKeys[i]}</option>`;
+	}
+	document.getElementById("PositionalQuality_select_geometricPositions_longitude").innerHTML= options;
+	document.getElementById("PositionalQuality_select_geometricPositions_latitude").innerHTML= options;
+	document.getElementById("PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_select").innerHTML= options;
 	saveNodeDialog("DialogQualityPositionalQuality", node);
 	var c="";
 	var attributesKeys= Object.keys(node.STAdataAttributes);
 	for (var i= 0; i< attributesKeys.length;i++)
 		c+=`<option value="${attributesKeys[i]}">${attributesKeys[i]}</option>`
 
-	document.getElementById("PositionalQuality_select_positionalAccuracy_accuracyColumn").innerHTML=c;
+	document.getElementById("PositionalQuality_select_positionalAccuracy_uncertantlyColumn").innerHTML=c;
 }
 
 
@@ -9813,8 +9821,11 @@ function okButtonDataQualityPositionalQuality(event){
 	var node= getNodeDialog("DialogQualityPositionalQuality");
 	var positionalAccuracy=(document.getElementById("PositionalQuality_checkbox_positionalAccuracy").checked)?true:false;
 	var positionalValidity=(document.getElementById("PositionalQuality_checkbox_positionalValidity").checked)?true:false;
-	var select=document.getElementById("attributeList_positionalQuality");
-	var attributeSelected=select.options[select.selectedIndex].value;
+	
+	var selectLong=document.getElementById("PositionalQuality_select_geometricPositions_longitude");
+	var attributeSelectedLong=selectLong.options[selectLong.selectedIndex].value;
+	var selectLat=document.getElementById("PositionalQuality_select_geometricPositions_latitude");
+	var attributeSelectedLat=selectLat.options[selectLat.selectedIndex].value;
 	var valid, accuracyValue;
 	var data=node.STAdata;
 	var dataLength=data.length;
@@ -9823,24 +9834,31 @@ function okButtonDataQualityPositionalQuality(event){
 	var metadata=node.STAmetadata;
 
 	if (positionalAccuracy){
-		var accuracyMethod= (document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn").checked)?"accuracyColumn": "geometryColumn";
+		var accuracyMethod= (document.getElementById("PositionalQuality_radio_positionalAccuracy_uncertantlyColumn").checked)?"uncertantlyColumn": "geometryColumns";
 		
-		if (accuracyMethod=="accuracyColumn"){			
-			var selectAccuracy= document.getElementById("PositionalQuality_select_positionalAccuracy_accuracyColumn");
-			var attributeSelectedAccuracy= selectAccuracy.options[selectAccuracy.selectedIndex].value;
-			if (node.STAdataAttributes[attributeSelectedAccuracy].type == "number" || node.STAdataAttributes[attributeSelectedAccuracy].type== "integer") {
-				accuracyValue=accuracyFromUncertaintyInPositions(data, metadata, attributeSelectedAccuracy);
+		if (accuracyMethod=="uncertantlyColumn"){			
+			var selectUncertantly= document.getElementById("PositionalQuality_select_positionalAccuracy_uncertantlyColumn");
+			var attributeSelectedUncertantly= selectUncertantly.options[selectUncertantly.selectedIndex].value;
+			if (node.STAdataAttributes[attributeSelectedUncertantly].type == "number" || node.STAdataAttributes[attributeSelectedUncertantly].type== "integer") {
+				accuracyValue=accuracyFromUncertaintyInPositions(data, metadata, attributeSelectedUncertantly);
 				valid=true;
 			} else {
 				valid=false;
 				alert("Selected uncertainly column must be of a 'number' type");
 			}
-		} else {
-			var selectUnit= document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn_degreeMeters");
+		} else { 
+			var selectUnit= document.getElementById("PositionalQuality_radio_positionalAccuracy_uncertantlyColumn_degreeMeters");
 			var selectUnitValue= selectUnit.options[selectUnit.selectedIndex].value;
-			var selectAxis= document.getElementById("PositionalQuality_radio_positionalAccuracy_accuracyColumn_degreeMeters");
-			var selectAxisValue= selectAxis.options[selectAxis.selectedIndex].value;
-			accuracyValue = accuracyValuesInMetersWithPoints(data, attributeSelected, selectUnitValue, selectAxisValue);
+			var grouped;
+			if (document.getElementById("PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_group").checked){
+				var selectGroupingColumn= document.getElementById("PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_select");
+				var selectGroupingColumnValue= selectGroupingColumn.options[selectGroupingColumn.selectedIndex].value;
+				grouped=selectGroupingColumnValue;
+				var newColumns= (document.getElementById("PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox").checked)?true:false;
+			}else{
+				grouped=false;
+			}
+			accuracyValue = accuracyValuesInMetersWithPoints(data, metadata, attributeSelectedLong, attributeSelectedLat, selectUnitValue, grouped, newColumns);
 			if (accuracyValue==null){
 				valid=false;
 				alert("Selected collumn must have a geometry type");
@@ -9850,15 +9868,13 @@ function okButtonDataQualityPositionalQuality(event){
 		}
 	}
 	if(positionalValidity){
-		var selectValidity= document.getElementById("PositionalQuality_radio_positionalValidity_xy");
-		var attributeSelectedValidity= selectValidity.options[selectValidity.selectedIndex].value;
 		var xmin=document.getElementById("PositionalQuality_input_positionalValidity_xmin").value;
 		var xmax=document.getElementById("PositionalQuality_input_positionalValidity_xmax").value;
 		var ymin=document.getElementById("PositionalQuality_input_positionalValidity_ymin").value;
 		var ymax=document.getElementById("PositionalQuality_input_positionalValidity_ymax").value;
 		var tag= (document.getElementById("dataQuality_temporalValidity_flag").checked)?true:false;
 		var filter= (document.getElementById("dataQuality_temporalValidity_filter").checked)?true:false;
-		var positionalValidityRate= calculateDataQualityPositionalValidity(data, attributeSelected, xmin, xmax, ymin, ymax, attributeSelectedValidity, tag, filter)
+		var positionalValidityRate= calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, attributeSelectedLong, attributeSelectedLat, tag, filter)
 		if (positionalValidityRate==null){
 			valid=false;
 			alert("Selected collumn must have a geometry type");
@@ -9869,6 +9885,8 @@ function okButtonDataQualityPositionalQuality(event){
 		}
 	}
 	if (valid) {
+		node.STAdata=data;
+		node.STAdataAttributes= getDataAttributes(data)
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		hideNodeDialog("DialogQualityPositionalQuality", event);
@@ -9881,18 +9899,18 @@ function okButtonDataQualityPositionalQuality(event){
 					<table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
 					<tbody>`
 
-				if(accuracyMethod=="accuracyColumn"){
+				if(accuracyMethod=="uncertantlyColumn"){
 					html+=`<tr>
-						<td>${attributeSelectedAccuracy} </td>
+						<td>${attributeSelectedUncertantly} </td>
 						<td> Mean of the accuracy column values </td>
 						<td> ${accuracyValue}</td>
 						</tr>`
 				}else{
-					html+=`<tr>
-						<td>${attributeSelected} </td>
-						<td> Root Mean Square Error (RMSE) </td>
-						<td> ${accuracyValue} m</td>
-						</tr>`
+					// html+=`<tr>
+					// 	 <td>${attributeSelected} </td>
+					// 	<td> Root Mean Square Error (RMSE) </td>
+					// 	<td> ${accuracyValue} m</td>
+					// 	</tr>`
 				}
 				html+="</tbody></table></div>"
 			}
@@ -9902,15 +9920,15 @@ function okButtonDataQualityPositionalQuality(event){
 				if (!Number.isInteger(positionalValidityRate[2]))
 					positionValidityRateValue= positionalValidityRate[2].toFixed(3);
 				else 
-					positionValidityRateValue = positionalValidityRate[2];
-				html+= `<div> Positional validity <br>
-					<table class="tablesmall"><thead><th>Column</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
-					<tbody><tr>
-						<td>${attributeSelected}</td>
-						<td>${dataLength}</td>
-						<td>${positionalValidityRate[1]}</td>
-						<td>${positionValidityRateValue}</td>
-					</tr>`;
+				 	positionValidityRateValue = positionalValidityRate[2];
+				// html+= `<div> Positional validity <br>
+				// 	<table class="tablesmall"><thead><th>Column</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
+				// 	<tbody><tr>
+				// 		<td>${attributeSelected}</td>
+				// 		<td>${dataLength}</td>
+				// 		<td>${positionalValidityRate[1]}</td>
+				// 		<td>${positionValidityRateValue}</td>
+				// 	</tr>`;
 			}
 			
 			document.getElementById("dataQualityResult_info").innerHTML= html
