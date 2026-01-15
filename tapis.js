@@ -9648,13 +9648,13 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 	var targets =[];
 	var references=[];
 	var select, selected, selectedTarget, selectedReference;
-	var dataTarget, dataReference, idTarget, idReference;
+	var idTarget, idReference;
 	var numTargued, numReference;
 
-	//Wich node is targed and wich reference
+	//Wich node is target and wich reference
 	select= document.getElementById("DialogQualityLogicalConsistency_select_targetOrReference_0");
 	selected= select.options[select.selectedIndex].value;
-	if(selected=="targed"){
+	if(selected=="target"){
 		numTargued=0;
 		numReference=1; 
 	}else{
@@ -9688,9 +9688,11 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 	}
 
 		if(idTarget!=idReference){
+	
 			var infoDatalogicalConsistency;
-			dataTarget= networkNodes.get(idTarget).STAdata;
-			dataReference= networkNodes.get(idReference).STAdata;
+			var dataTarget= networkNodes.get(idTarget).STAdata;
+			var dataReference= networkNodes.get(idReference).STAdata;
+			var dataTargetLength=dataTarget.length;
 			infoDatalogicalConsistency= calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, calculate, flag, filter); //Total, true, false, %logicalConsistency, %completesa
 			
 			node.STAdata= infoDatalogicalConsistency[0];
@@ -9698,12 +9700,14 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 			networkNodes.update(node);
 			hideNodeDialog("DialogQualityLogicalConsistency", event);
 	
+			// return [newData, count, (count / dataTarget.length) * 100];
 			document.getElementById("dataQualityResult_info").innerHTML=`<table class="tablesmall">
 				<thead > 
 				<th >Target columns</th><th >Reference columns</th><th>Total records</th>
 				<th>True records</th><th>Logical consistancy rate</th></tr></thead>
 				<tbody><tr>
-				<td>${targets}</td><td>${references}</td><td>${dataTarget.length}</td>
+				<td>${targets}</td><td>${references}</td>
+				<td>${dataTargetLength}</td>
 				<td>${infoDatalogicalConsistency[1]}</td><td>${infoDatalogicalConsistency[2]}</td>
 				</tr></tbody></table>`
 			showNodeDialog("dataQualityResult");
@@ -9945,7 +9949,7 @@ function populateDialogQualityThematicQuality(node){
 }
 
 function populateDialogQualityThematicQuality(node){
-	var parentNodes=GetParentNodes(currentNode);
+	var parentNodes=GetParentNodes(node);
 	
 	var select= createSelectForThematicQuality(parentNodes, "columnToEvaluate");
 	//Oplir el select de la grouping group
