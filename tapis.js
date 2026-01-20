@@ -5066,8 +5066,7 @@ function ShowTableOptionsDiv(node, optionsDiv, fn_showTable) {
 	else
 		document.getElementById(optionsDiv).innerHTML="";
 	if (node.STAmetadata)
-		document.getElementById(optionsDiv).innerHTML+=" <a href='javascript:void(0)' style='text-decoration: none;' onClick='ShowMetadataDialog(\""+node.id+"\")'><img src='metadata.png' alt='metadata' title='metadata'> Metadata </a>";
-}
+		document.getElementById(optionsDiv).innerHTML+=" <a href='javascript:void(0)' style='text-decoration: none;' onClick='ShowMetadataDialog(\""+node.id+"\")'><img src='metadata.png' alt='metadata' title='metadata'> Metadata </a>";}
 
 function ShowTableDialog(node) {
 	var data = node.STAdata;
@@ -7287,8 +7286,7 @@ function KeySTAPage(event) {
 
 	if (aDialogIsOpen)
 		return;
-	if (event.code == "F2" || event.code == "Delete"){
-		event.preventDefault();
+if (event.code == "F2" || event.code == "Delete" || event.code == "Insert" || event.code == "Enter"){		event.preventDefault();
 		var nodeId = network.getSelectedNodes();
 		if (nodeId && nodeId.length) {
 			switch (event.code) {
@@ -7297,6 +7295,12 @@ function KeySTAPage(event) {
 					return;
 				case "Delete":
 					removeNode(nodeId[0]);
+					return;
+				case "Insert":
+					openContextNode(nodeId[0]);
+					return;
+				case "Enter":
+					networkDoubleClick({nodes:[nodeId[0]]});
 					return;
 			}
 		}
@@ -7684,22 +7688,29 @@ function networkDoubleClick(params) {
 		else if(currentNode.image =="uploadToIC.png"){
 			saveNodeDialog("DialogUploadIC", currentNode);
 			var parentNode=GetFirstParentNode(currentNode);//S'encadenen els DQ? es fan per separat i arriben mes d'un?
+			var open=false;
 			if (parentNode){
 				if(parentNode.STAdata) {
 					currentNode.STAdata=parentNode.STAdata;
+					open=true;
+					if(parentNode.STAdataAttributes){
+						currentNode.STAdataAttributes=parentNode.STAdataAttributes;
+						populateuploadToICDialogUploadIC(currentNode);
+						if (parentNode.STAmetadata && open==true) {
+							currentNode.STAmetadata= parentNode.STAmetadata;
+						}else{
+							alert("The data has to contain metadata");
+						}
+					}else{
+						alert("The data has to had attributes");
+					}
 				}else{
-					//Error
-				}
-				if(parentNode.STAdataAttributes){
-					currentNode.STAdataAttributes=parentNode.STAdataAttributes;
-					populateuploadToICDialogUploadIC(currentNode);
-
-				}else{
-					//ERROR
-				}
-				if (parentNode.STAmetadata) currentNode.STAmetadata= parentNode.STAmetadata;
+					open=false;
+					alert("The node conected has to have data");
+				}				
 			}
-			showNodeDialog("DialogUploadIC");
+			if (open)showNodeDialog("DialogUploadIC");
+			
 		}
 		else if (currentNode.image == "Meaning.png") {
 			ShowMeaningTableDialog(currentNode);
@@ -7972,6 +7983,8 @@ function networkDoubleClick(params) {
 			if (parentNode.STAdata) {
 					currentNode.STAdata= deapCopy(parentNode.STAdata);
 					currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+					if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
+					else currentNode.STAmetadata={};
 					populateDialogQualityCompletnessOmission(currentNode);
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityCompletnessOmission");
@@ -7991,6 +8004,8 @@ function networkDoubleClick(params) {
 			if (parentNode.STAdata) {
 					currentNode.STAdata= deapCopy(parentNode.STAdata);
 					currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+					if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
+					else currentNode.STAmetadata={};
 					populateDialogQualityTemporalQuality(currentNode);
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityTemporalQuality");
@@ -8003,6 +8018,8 @@ function networkDoubleClick(params) {
 			if (parentNode.STAdata) {
 					currentNode.STAdata= deapCopy(parentNode.STAdata);
 					currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+					if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
+					else currentNode.STAmetadata={};
 					populateDialogQualityPositionalQuality(currentNode);
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityPositionalQuality");
@@ -8015,6 +8032,7 @@ function networkDoubleClick(params) {
 			if (parentNode) {
 					//currentNode.STAdata= deapCopy(parentNode.STAdata);
 					//currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+					//if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata
 					populateDialogQualityThematicQuality(currentNode);
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityThematicQuality");
@@ -8025,16 +8043,18 @@ function networkDoubleClick(params) {
 		
 	}
 }
-
+function openContextNode(nodeId) {
+	PopulateContextMenu(nodeId);  	//rewrite DialogContextMenu
+	startingNodeContextId = nodeId;
+	showNodeDialog("DialogContextMenu");
+}
 function networkContext(params) {
 	params.event.preventDefault();  //https://stackoverflow.com/questions/38258940/open-an-extension-popup-html-list-on-right-click-of-node-contextmenu-in-visj
 
 	var nodeId = network.getNodeAt(params.pointer.DOM); //params.nodes is not useful here as params.nodes are the selected ones and not the ones rightclicked.
 	//rewrite DialogContextMenu
-	PopulateContextMenu(nodeId);
 	if (nodeId) {
-		startingNodeContextId = nodeId;
-		showNodeDialog("DialogContextMenu");
+		openContextNode(nodeId);
 		return;
 	}
 	var edgeId = network.getEdgeAt(params.pointer.DOM);
@@ -9599,29 +9619,27 @@ function okButtonDataQualityCompletnessOmission(event){
 	var data= node.STAdata;
 	var select= document.getElementById("attributeList_omission");
 	var selected= select.options[select.selectedIndex].value;
-	var calculate=(document.getElementById("dataQuality_omission_calculate").checked)?true:false;
 	var flag= (document.getElementById("dataQuality_omission_flag").checked)?true:false;
 	var filter= (document.getElementById("dataQuality_omission_filter").checked)?true:false;
 	var infoDataOmission;
+	var metadata= (node.STAmetadata)?node.STAmetadata:{}
 
-	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected, flag, filter); //Response:data, Total, true, false, %omission, %completness
+	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected,metadata, flag, filter); //Response:data, Total, true, false, %omission, %completness
 
 	node.STAdata=infoDataOmission[0];
 	node.STAdataAttributes=getDataAttributes(infoDataOmission[0]);
 	networkNodes.update(node);
 	hideNodeDialog("DialogQualityCompletnessOmission", event);
 	
-	if(calculate){ 
-		document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
-		<thead > 
-		<th >Column</th><th>Total records</th><th>Empty records</th>
-		<th>Omission rate</th><th>Completeness rate</th></tr></thead>
-		<tbody><tr>
-		<td>${selected}</td><td>${infoDataOmission[1]}</td><td>${infoDataOmission[3]}</td>
-		<td>${infoDataOmission[4]}</td><td>${infoDataOmission[5]}</td>
-		</tr></tbody></table>`;
-		showNodeDialog("dataQualityResult");
-	}
+	document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
+	<thead > 
+	<th >Column</th><th>Total records</th><th>Empty records</th>
+	<th>Omission rate</th><th>Completeness rate</th></tr></thead>
+	<tbody><tr>
+	<td>${selected}</td><td>${infoDataOmission[1]}</td><td>${infoDataOmission[3]}</td>
+	<td>${infoDataOmission[4]}</td><td>${infoDataOmission[5]}</td>
+	</tr></tbody></table>`;
+	showNodeDialog("dataQualityResult");
 	
 	updateQueryAndTableArea(node);
 }
@@ -9698,7 +9716,6 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 		}
 	}
 	if (targets.length!=0){
-		var calculate=(document.getElementById("dataQuality_logicalConsistency_calculate").checked)?true:false;
 		var flag= (document.getElementById("dataQuality_logicalConsistency_flag").checked)?true:false;
 		var filter= (document.getElementById("dataQuality_logicalConsistency_filter").checked)?true:false;
 
@@ -9716,7 +9733,7 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 			var dataTarget= networkNodes.get(idTarget).STAdata;
 			var dataReference= networkNodes.get(idReference).STAdata;
 			var dataTargetLength=dataTarget.length;
-			infoDatalogicalConsistency= calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, calculate, flag, filter); //Total, true, false, %logicalConsistency, %completesa
+			infoDatalogicalConsistency= calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, flag, filter); //Total, true, false, %logicalConsistency, %completesa
 			
 			node.STAdata= infoDatalogicalConsistency[0];
 			node.STAdataAttributes= getDataAttributes(infoDatalogicalConsistency[0]);
@@ -9745,11 +9762,11 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 function populateDialogQualityTemporalQuality(node){
 	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "temporalQuality", "Column");
 	document.getElementById("DialogQualityTemporalQuality_attributesList").innerHTML=attributesCheckboxModule;
-	saveNodeDialog("", node);//!!
+	saveNodeDialog("DialogQualityTemporalQuality", node);
 }
 
 function okButtonDataQualityTemporalQuality(event){
-	var node= getNodeDialog("");//!!
+	var node= getNodeDialog("DialogQualityTemporalQuality");
 	var data= node.STAdata;
 	var select= document.getElementById("attributeList_temporalQuality");
 	var attributeSelected= select.options[select.selectedIndex].value;
@@ -9777,19 +9794,19 @@ function okButtonDataQualityTemporalQuality(event){
 	
 	var newData={}, conditionsToFilter=[];
 	if (validity_calculate){
-		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, validity_calculate, flag, filter);
+		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag, filter);
 		data= newData.validity[0];
 		conditionsToFilter.push("temporalValidity");
 	} 
 	
 	if (resolution_calculate){
-		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, resolution_calculate, flag,filter);
+		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata,flag,filter);
 		data= newData.resolution[0];
 		conditionsToFilter.push("temporalResolution");
 	} 
 	if (consistency_calculate){
 		if(sort)sortDates(data, attributeSelected);
-		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,consistency_calculate, flag, filter);
+		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance, flag, filter);
 		data= newData.consistency[0];
 		conditionsToFilter.push("temporalConsistency");
 	}
@@ -9900,7 +9917,7 @@ function okButtonDataQualityPositionalQuality(event){
 		var ymax=document.getElementById("PositionalQuality_input_positionalValidity_ymax").value;
 		var tag= (document.getElementById("dataQuality_temporalValidity_flag").checked)?true:false;
 		var filter= (document.getElementById("dataQuality_temporalValidity_filter").checked)?true:false;
-		var positionalValidityRate= calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, attributeSelectedLong, attributeSelectedLat, tag, filter)
+		var positionalValidityRate= calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, attributeSelectedLong, attributeSelectedLat,metadata, tag, filter)
 		if (positionalValidityRate==null){
 			valid=false;
 			alert("Selected collumn must have a geometry type");
@@ -10143,6 +10160,7 @@ function GetUploadIC(event){
 		"stac_extensions": [
 			"https://stac-extensions.github.io/file/v2.1.0/schema.json"
 		],
+		"metadata":node.STAmetadata,
 		"stac_version": "1.0.0",
 		"type": "Feature"
 		}

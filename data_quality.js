@@ -49,7 +49,7 @@
 
 //statistics.js is needed (Some functions needed are defined there)
 
-function calculateDataQualityCompletnessOmission(data, attribute, flag, filter) {
+function calculateDataQualityCompletnessOmission(data, attribute,metadata, flag, filter) {
     var rate;
     var count = 0, newData = [];
     for (var i = 0; i < data.length; i++) {
@@ -61,10 +61,50 @@ function calculateDataQualityCompletnessOmission(data, attribute, flag, filter) 
     }
     rate = (data.length - count) / data.length * 100;
     if (!filter) newData = data;
+    if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_CompletenessOmission",
+					"measureIdentification": {
+						"measure": {
+							"name": "Missing items"
+						},
+						"domains": [
+							{
+								"name": "NonConformance" //PredictedValues
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Rate of missing items"//,
+									// "params": [
+									// 	{
+									// 		"name": "level",
+									// 		"value": "0.683"
+									// 	}
+									// ]
+								}
+							},
+							"valueType": "number",
+							"values": [ rate.toFixed(2) ]
+						}
+					]
+				}
+			]
+		});
+
+
     return [newData, data.length, count, data.length - count, rate.toFixed(2), 100 - rate.toFixed(2)];//data, Total, true, false, %omission, %completesa
 }
 
-function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, calculate, flag, filter) {
+function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, flag, filter) {
     var count = 0;
 
     //Create an array with all possibilities (without repetitions)
@@ -89,14 +129,49 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
         if (flag) dataTarget[a]["logicalConsistenci"] = itExist;
         if (filter && itExist) newData.push(dataTarget[a]);
     }
+    if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_LogicalConsistency",
+					"measureIdentification": {
+						"measure": {
+							"name": "Value domain"
+						},
+						"domains": [
+							{
+								"name": "NonConformance" 
+                            }
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Rate of missing items"//,
+									// "params": [
+									// 	{
+									// 		"name": "level",
+									// 		"value": "0.683"
+									// 	}
+									// ]
+								}
+							},
+							"valueType": "number",
+							"values": [(count / dataTarget.length) * 100 ]
+						}
+					]
+				}
+			]
+		});
     newData=dataTarget;
-    if (!calculate) return [newData, count];
-    else {
-        return [newData, count, (count / dataTarget.length) * 100];
-    }
+    return [newData, count, (count / dataTarget.length) * 100];
 }
 
-function calculateDataQualityTemporalValidity(data, attributeSelected, from, to, calculate, flag, filter) {
+function calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag, filter) {
     var attributes = getDataAttributes(data); //Està a tapis.js 
     if (attributes[attributeSelected].type != "isodatetime") return null;
     if (!from && !to) return null;
@@ -128,10 +203,49 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
         }
     }
     if (!filter) newData = data;
+
+        if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_TemporalValidity",
+					"measureIdentification": {
+						"measure": {
+							"name": "Value domain"
+						},
+						"domains": [
+							{
+								"name": "NonConformance" 
+                            }
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Rate of missing items"//,
+									// "params": [
+									// 	{
+									// 		"name": "level",
+									// 		"value": "0.683"
+									// 	}
+									// ]
+								}
+							},
+							"valueType": "number",
+							"values": [ (count / dataTarget.length) * 100]
+						}
+					]
+				}
+			]
+		});
     return ([newData, count, (count / data.length) * 100])
 
 }
-function calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, calculate, flag, filter) {
+function calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata, flag, filter) {
     var attributes = getDataAttributes(data); //Està a tapis.js 
     if (attributes[attributeSelected].type != "isodatetime") return null;
     var regex, count = 0, newData = [];
@@ -179,10 +293,48 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
         }
     }
     if (!filter) newData = data;
+    if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_TemporalResolution",
+					"measureIdentification": {
+						"measure": {
+							"name": "Value domain"
+						},
+						"domains": [
+							{
+								"name": "NonConformance" 
+                            }
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Rate of missing items"//,
+									// "params": [
+									// 	{
+									// 		"name": "level",
+									// 		"value": "0.683"
+									// 	}
+									// ]
+								}
+							},
+							"valueType": "number",
+							"values": [ (count / data.length) * 100]
+						}
+					]
+				}
+			]
+		});
     return ([newData, count, (count / data.length) * 100])
 }
 
-function calculateDataQualityTemporalConsistency(data, attributeSelected, number, consistencyRadioValue, consistencyRadioMethod, tolerance, calculate, flag, filter) {
+function calculateDataQualityTemporalConsistency(data, attributeSelected, number, consistencyRadioValue, consistencyRadioMethod, tolerance, metadata, flag, filter) {
     var attributes = getDataAttributes(data); //Està a tapis.js 
     if (attributes[attributeSelected].type != "isodatetime") return null;
 
@@ -272,6 +424,44 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
         }
     }
     if (!filter) newData = data;
+    if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_TemporalConsistency",
+					"measureIdentification": {
+						"measure": {
+							"name": "Value domain"
+						},
+						"domains": [
+							{
+								"name": "NonConformance" 
+                            }
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Rate of missing items"//,
+									// "params": [
+									// 	{
+									// 		"name": "level",
+									// 		"value": "0.683"
+									// 	}
+									// ]
+								}
+							},
+							"valueType": "number",
+							"values": [ (count / data.length) * 100]
+						}
+					]
+				}
+			]
+		});
     return [newData, count, (count / data.length) * 100]
 }
 
@@ -461,7 +651,7 @@ function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAtt
 
 }
 
-function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, longAttribute, latAttribute, tag, filter) { //AxisOrder XY or YX
+function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, longAttribute, latAttribute, metadata, tag, filter) { //AxisOrder XY or YX
    //x-> long, y-> lat
     // var attributes = getDataAttributes(data);
     // if (attributes[attributeSelected].type!="geometry") return null;
@@ -494,6 +684,44 @@ function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, lo
     }
     if (!filter)
 	newData=data;
+    if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_PositionalValidity",
+					"measureIdentification": {
+						"measure": {
+							"name": "Value domain"
+						},
+						"domains": [
+							{
+								"name": "NonConformance" 
+                            }
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Rate of missing items"//,
+									// "params": [
+									// 	{
+									// 		"name": "level",
+									// 		"value": "0.683"
+									// 	}
+									// ]
+								}
+							},
+							"valueType": "number",
+							"values": [ (count / data.length) * 100]
+						}
+					]
+				}
+			]
+		});
     return [newData, count, (count / data.length) * 100]
 }
 
