@@ -159,7 +159,9 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			SeparateColumns: {description: "Separate Columns", help: "Splits a column containing a JSON object into separated new columns and removes the original column."},
 			SaveTable: {description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the column definition is semantically enriched; see &#39;meaning&#39;)."},
 			SaveLayer: {description: "Save Layer", leafNode: true, help: "Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values."},
-			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."}
+			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."},
+			uploadToIC: {description: "Upload to inmutable catalog",leafNode: true, help: "Upload data and metadata to an inmutable catalog."}
+		
 		};
 	
 const TableOperationsArray = Object.keys(TableOperations);
@@ -5978,7 +5980,7 @@ function getDataAttributesGeoJSONSchema(jsonschema){
 }
 
 //Has the string s a ISO data in the position i? It does not 
-function fragmentStartsWithISODate(s, i) {
+function fragmentStartsWithISODate(s, i) { //regex equivalent: const pattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z)?(\.000)?(\+00:00)?$/;
 	if (s.charAt(i+0) >= '0' && s.charAt(i+0) <= '9' &&
 		s.charAt(i+1) >= '0' && s.charAt(i+1) <= '9' &&
 		s.charAt(i+2) >= '0' && s.charAt(i+2) <= '9' &&
@@ -7678,6 +7680,15 @@ function networkDoubleClick(params) {
 				}
 			}
 			showNodeDialog("DialogGUF");
+		}
+		else if(currentNode.image =="uploadToIC.png"){
+			saveNodeDialog("DialogBarPlot", currentNode);
+			var parentNode=GetFirstParentNode(currentNode);//S'encadenen els DQ? es fan per separat i arriben mes d'un?
+			if (parentNode){
+				if(parentNode.STAdata) currentNode.STAdata=parentNode.STAdata
+				if (parentNode.STAmetadata) currentNode.STAmetadata= parentNode.STAmetadata;
+			}
+			showNodeDialog("DialogUploadIC");
 		}
 		else if (currentNode.image == "Meaning.png") {
 			ShowMeaningTableDialog(currentNode);
@@ -10003,6 +10014,77 @@ function GetCreateNewTable(event){
 	}else{
 		alert("Column list is empty. Table will not be created.")
 	}
+}
+
+function GetUploadIC(event){
+	var node= getNodeDialog("DialogQualityLogicalConsistency");
+
+	var informationToUpdate;
+	var title= document.getElementById("DialogUploadIC_title").value;
+	var author= document.getElementById("DialogUploadIC_author").value;
+	var licenceSelect= document.getElementById("DialogUploadIC_license");
+	var licenceValue= licenceSelect.options[licenceSelect.selectedIndex].value;
+
+	if (title=="")title=`Data from TAPIS on ${Date.now()}`
+	if (author=="") author= "Author example" //Com s'haurà 'destar autentificat.. 
+	var id= crypto.randomUUID()
+
+	informationToUpdate= 
+		{
+		"assets": {
+			"PRODUCT": {
+			"file:checksum": "",
+			"file:size": "",
+			"href": "",
+			"title": title,
+			"type": "application/json"
+			}
+		},
+		"bbox": [],
+		"collection": "DQ4STA",
+		"geometry": {
+			"coordinates": [],
+			"type": "Point"
+		},
+		"id": id,
+		"links": [
+			{
+			"rel": "root",
+			"type": "application/json",
+			"href": "https://ic.ogc.secd.eu/stac"
+			},
+			{
+			"rel": "self",
+			"type": "application/json",
+			"href": "https://ic.ogc.secd.eu/stac/collections/DQ4STA/items/xxx"
+			},
+			{
+			"rel": "collection",
+			"type": "application/json",
+			"href": "https://ic.ogc.secd.eu/stac/collections/DQ4STA"
+			},
+			{
+			"href": "https://ic.ogc.secd.eu/stac",
+			"rel": "root",
+			"type": "application/json"
+			}
+		],
+		"properties": {
+			"author": author,
+			"datetime": "",
+			"end_datetime": "",
+			"license": licenceValue,
+			"license_description": `https://creativecommons.org/licenses/${licenceValue.slice(3)}/4.0/deed.en`,
+			"start_datetime": ""
+		},
+		"stac_extensions": [
+			"https://stac-extensions.github.io/file/v2.1.0/schema.json"
+		],
+		"stac_version": "1.0.0",
+		"type": "Feature"
+		}
+		//console.log(informationToUpdate)
+		console.log(`https://creativecommons.org/licenses/${licenceValue.slice(3)}/4.0/deed.en`)
 }
 
 /*function giveMeNetworkInformation(event) {

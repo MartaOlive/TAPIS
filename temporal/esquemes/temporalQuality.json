@@ -2691,8 +2691,8 @@
 					"type": "string"
 				}
 			},
-			"x": -174,
-			"y": -110
+			"x": -76,
+			"y": -150
 		},
 		{
 			"id": "5h5j1.rovpoe",
@@ -2758,8 +2758,8 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": 35,
-			"y": 297
+			"x": 90,
+			"y": 348
 		},
 		{
 			"id": "3khtb.dsb1f0g",
@@ -4788,8 +4788,8 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/Datastream/resultTime"
 				}
 			},
-			"x": -89,
-			"y": 252
+			"x": -25,
+			"y": 288
 		},
 		{
 			"id": "6jmt2.gkkre9",
@@ -4864,16 +4864,22 @@
 			},
 			"STAEntityName": "Datastreams",
 			"STAResourceId": 1,
-			"x": -197,
-			"y": 171
+			"x": -142,
+			"y": 227
 		},
 		{
 			"id": "lc9m.704vjf4",
 			"label": "Observation",
 			"image": "Observation.png",
 			"shape": "circularImage",
-			"x": -284,
-			"y": 74
+			"x": -269,
+			"y": 205,
+			"STAentitiesObject": {
+				"Datastream": {
+					"@iot.id": 1
+				}
+			},
+			"STAEntitiesRequiredNotLinked": []
 		},
 		{
 			"id": "29k5r.mkg60gg",
@@ -7566,8 +7572,8 @@
 					"Unitat": "Litres"
 				}
 			],
-			"x": -63,
-			"y": -44
+			"x": -38,
+			"y": -34
 		},
 		{
 			"id": "84m3i.h9o8sq",
@@ -8517,16 +8523,16 @@
 				0
 			],
 			"STAtable": "(('estaci' == 'Embassament de Foix (Castellet i la Gornal)'))",
-			"x": 53,
-			"y": 14
+			"x": 63,
+			"y": 36
 		},
 		{
 			"id": "56o3g.gjgp52",
 			"label": "Temporal quality",
 			"image": "temporalQuality.png",
 			"shape": "circularImage",
-			"x": 177,
-			"y": 56,
+			"x": 190,
+			"y": 19,
 			"STAdata": [
 				{
 					"dia": "2024-03-08T00:00:00.000",
@@ -9554,8 +9560,8 @@
 			"label": "Save Table",
 			"image": "SaveTable.png",
 			"shape": "circularImage",
-			"x": -16,
-			"y": 113
+			"x": 113,
+			"y": 151
 		},
 		{
 			"id": "4i82d.0nlqav",
@@ -10472,16 +10478,16 @@
 					"type": "string"
 				}
 			},
-			"x": 221,
-			"y": -184
+			"x": 209,
+			"y": -198
 		},
 		{
 			"id": "6vtqs.89ohld",
 			"label": "Temporal quality",
 			"image": "temporalQuality.png",
 			"shape": "circularImage",
-			"x": 276,
-			"y": -296,
+			"x": 318,
+			"y": -127,
 			"STAdata": [
 				{
 					"dia": "2024-03-08T00:00:00.000",
@@ -12422,8 +12428,8 @@
 					"type": "string"
 				}
 			},
-			"x": 92,
-			"y": -177
+			"x": 97,
+			"y": -270
 		},
 		{
 			"id": "1j6ce.2p5sj8o",
@@ -13454,8 +13460,788 @@
 					"type": "boolean"
 				}
 			},
-			"x": -24,
-			"y": -235
+			"x": -13,
+			"y": -340
+		},
+		{
+			"id": "4f8fr.udg0au",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Day": "2024-12-31T00:00:00.000",
+					"Station": "Reservoir of Darnius Boadella (Darnius)",
+					"Absolute_level": 136.33,
+					"Percentage_volume_stored": 17.7,
+					"volume_stored": 10.81,
+					"County": "Alt Empord?",
+					"River_basin": "Riu Muga",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2024-12-31T00:00:00.000",
+					"Station": "Reservoir of la Llosa del Cavall (Nav?s)",
+					"Absolute_level": 780.81,
+					"Percentage_volume_stored": 35.2,
+					"volume_stored": 28.18,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2024-12-31T00:00:00.000",
+					"Station": "Reservoir of Siurana (Cornudella de Montsant)",
+					"Absolute_level": 460.17,
+					"Percentage_volume_stored": 9.7,
+					"volume_stored": 1.18,
+					"County": "Priorat",
+					"River_basin": "Riu Siurana",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2024-12-31T00:00:00.000",
+					"Station": "Reservoir of Susqueda (Osor)",
+					"Absolute_level": 316.23,
+					"Percentage_volume_stored": 36.6,
+					"volume_stored": 85.21,
+					"County": "La Selva",
+					"River_basin": "Riu Ter",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-01T00:00:00.000",
+					"Station": "Reservoir of Darnius Boadella (Darnius)",
+					"Absolute_level": 136.32,
+					"Percentage_volume_stored": 17.7,
+					"volume_stored": 10.8,
+					"County": "Alt Empord?",
+					"River_basin": "Riu Muga",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-01T00:00:00.000",
+					"Station": "Reservoir of Foix (Castellet i la Gornal)",
+					"Absolute_level": 100.27,
+					"Percentage_volume_stored": 96,
+					"volume_stored": 3.59,
+					"County": "Alt Pened?s",
+					"River_basin": "Riu Foix",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-01T00:00:00.000",
+					"Station": "Reservoir of la Baells (Cercs)",
+					"Absolute_level": 615.62,
+					"Percentage_volume_stored": 59.3,
+					"volume_stored": 64.86,
+					"County": "Bergued?",
+					"River_basin": "Riu Llobregat",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-01T00:00:00.000",
+					"Station": "Reservoir of la Llosa del Cavall (Nav?s)",
+					"Absolute_level": 780.79,
+					"Percentage_volume_stored": 35.2,
+					"volume_stored": 28.16,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-01T00:00:00.000",
+					"Station": "Reservoir of Riudecanyes",
+					"Absolute_level": 205.19,
+					"Percentage_volume_stored": 23.2,
+					"volume_stored": 1.24,
+					"County": "Baix Camp",
+					"River_basin": "Riera Riudecanyes",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-01T00:00:00.000",
+					"Station": "Reservoir of Sant Pon? (Clariana de Cardener)",
+					"Absolute_level": 519.76,
+					"Percentage_volume_stored": 50.7,
+					"volume_stored": 12.35,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-01T00:00:00.000",
+					"Station": "Reservoir of Sau (Vilanova de Sau)",
+					"Absolute_level": 387.81,
+					"Percentage_volume_stored": 15.6,
+					"volume_stored": 25.76,
+					"County": "Osona",
+					"River_basin": "Riu Ter",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-01T00:00:00.000",
+					"Station": "Reservoir of Siurana (Cornudella de Montsant)",
+					"Absolute_level": 460.17,
+					"Percentage_volume_stored": 9.7,
+					"volume_stored": 1.18,
+					"County": "Priorat",
+					"River_basin": "Riu Siurana",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-01T00:00:00.000",
+					"Station": "Reservoir of Susqueda (Osor)",
+					"Absolute_level": 316.13,
+					"Percentage_volume_stored": 36.5,
+					"volume_stored": 84.95,
+					"County": "La Selva",
+					"River_basin": "Riu Ter",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-02T00:00:00.000",
+					"Station": "Reservoir of Darnius Boadella (Darnius)",
+					"Absolute_level": 136.32,
+					"Percentage_volume_stored": 17.7,
+					"volume_stored": 10.8,
+					"County": "Alt Empord?",
+					"River_basin": "Riu Muga",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-02T00:00:00.000",
+					"Station": "Reservoir of Foix (Castellet i la Gornal)",
+					"Absolute_level": 100.25,
+					"Percentage_volume_stored": 95.7,
+					"volume_stored": 3.58,
+					"County": "Alt Pened?s",
+					"River_basin": "Riu Foix",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-02T00:00:00.000",
+					"Station": "Reservoir of la Baells (Cercs)",
+					"Absolute_level": 615.58,
+					"Percentage_volume_stored": 59.2,
+					"volume_stored": 64.77,
+					"County": "Bergued?",
+					"River_basin": "Riu Llobregat",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-02T00:00:00.000",
+					"Station": "Reservoir of la Llosa del Cavall (Nav?s)",
+					"Absolute_level": 780.78,
+					"Percentage_volume_stored": 35.2,
+					"volume_stored": 28.13,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-02T00:00:00.000",
+					"Station": "Reservoir of Riudecanyes",
+					"Absolute_level": 205.2,
+					"Percentage_volume_stored": 23.2,
+					"volume_stored": 1.24,
+					"County": "Baix Camp",
+					"River_basin": "Riera Riudecanyes",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-02T00:00:00.000",
+					"Station": "Reservoir of Sant Pon? (Clariana de Cardener)",
+					"Absolute_level": 519.78,
+					"Percentage_volume_stored": 50.8,
+					"volume_stored": 12.38,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-02T00:00:00.000",
+					"Station": "Reservoir of Sau (Vilanova de Sau)",
+					"Absolute_level": 387.86,
+					"Percentage_volume_stored": 15.6,
+					"volume_stored": 25.85,
+					"County": "Osona",
+					"River_basin": "Riu Ter",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-02T00:00:00.000",
+					"Station": "Reservoir of Siurana (Cornudella de Montsant)",
+					"Absolute_level": 460.17,
+					"Percentage_volume_stored": 9.7,
+					"volume_stored": 1.18,
+					"County": "Priorat",
+					"River_basin": "Riu Siurana",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-02T00:00:00.000",
+					"Station": "Reservoir of Susqueda (Osor)",
+					"Absolute_level": 316.04,
+					"Percentage_volume_stored": 36.3,
+					"volume_stored": 84.68,
+					"County": "La Selva",
+					"River_basin": "Riu Ter",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000",
+					"Station": "Reservoir of Darnius Boadella (Darnius)",
+					"Absolute_level": 136.31,
+					"Percentage_volume_stored": 17.7,
+					"volume_stored": 10.79,
+					"County": "Alt Empord?",
+					"River_basin": "Riu Muga",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000",
+					"Station": "Reservoir of Foix (Castellet i la Gornal)",
+					"Absolute_level": 100.23,
+					"Percentage_volume_stored": 95.4,
+					"volume_stored": 3.57,
+					"County": "Alt Pened?s",
+					"River_basin": "Riu Foix",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000",
+					"Station": "Reservoir of la Baells (Cercs)",
+					"Absolute_level": 615.54,
+					"Percentage_volume_stored": 59.1,
+					"volume_stored": 64.66,
+					"County": "Bergued?",
+					"River_basin": "Riu Llobregat",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000",
+					"Station": "Reservoir of la Llosa del Cavall (Nav?s)",
+					"Absolute_level": 780.76,
+					"Percentage_volume_stored": 35.1,
+					"volume_stored": 28.12,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000",
+					"Station": "Reservoir of Riudecanyes",
+					"Absolute_level": 205.21,
+					"Percentage_volume_stored": 23.3,
+					"volume_stored": 1.24,
+					"County": "Baix Camp",
+					"River_basin": "Riera Riudecanyes",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000",
+					"Station": "Reservoir of Sant Pon? (Clariana de Cardener)",
+					"Absolute_level": 519.81,
+					"Percentage_volume_stored": 50.9,
+					"volume_stored": 12.4,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000",
+					"Station": "Reservoir of Sau (Vilanova de Sau)",
+					"Absolute_level": 387.83,
+					"Percentage_volume_stored": 15.6,
+					"volume_stored": 25.79,
+					"County": "Osona",
+					"River_basin": "Riu Ter",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000",
+					"Station": "Reservoir of Siurana (Cornudella de Montsant)",
+					"Absolute_level": 460.18,
+					"Percentage_volume_stored": 9.7,
+					"volume_stored": 1.18,
+					"County": "Priorat",
+					"River_basin": "Riu Siurana",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000",
+					"Station": "Reservoir of Susqueda (Osor)",
+					"Absolute_level": 316,
+					"Percentage_volume_stored": 36.3,
+					"volume_stored": 84.57,
+					"County": "La Selva",
+					"River_basin": "Riu Ter",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Darnius Boadella (Darnius)",
+					"Absolute_level": 136.3,
+					"Percentage_volume_stored": 17.6,
+					"volume_stored": 10.77,
+					"County": "Alt Empord?",
+					"River_basin": "Riu Muga",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Foix (Castellet i la Gornal)",
+					"Absolute_level": 100.22,
+					"Percentage_volume_stored": 95.2,
+					"volume_stored": 3.56,
+					"County": "Alt Pened?s",
+					"River_basin": "Riu Foix",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of la Baells (Cercs)",
+					"Absolute_level": 615.5,
+					"Percentage_volume_stored": 59,
+					"volume_stored": 64.55,
+					"County": "Bergued?",
+					"River_basin": "Riu Llobregat",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of la Llosa del Cavall (Nav?s)",
+					"Absolute_level": 780.75,
+					"Percentage_volume_stored": 35.1,
+					"volume_stored": 28.09,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Riudecanyes",
+					"Absolute_level": 205.21,
+					"Percentage_volume_stored": 23.3,
+					"volume_stored": 1.24,
+					"County": "Baix Camp",
+					"River_basin": "Riera Riudecanyes",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Sant Pon? (Clariana de Cardener)",
+					"Absolute_level": 519.83,
+					"Percentage_volume_stored": 51,
+					"volume_stored": 12.42,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Sau (Vilanova de Sau)",
+					"Absolute_level": 387.71,
+					"Percentage_volume_stored": 15.5,
+					"volume_stored": 25.55,
+					"County": "Osona",
+					"River_basin": "Riu Ter",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Siurana (Cornudella de Montsant)",
+					"Absolute_level": 460.18,
+					"Percentage_volume_stored": 9.7,
+					"volume_stored": 1.18,
+					"County": "Priorat",
+					"River_basin": "Riu Siurana",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Susqueda (Osor)",
+					"Absolute_level": 316.01,
+					"Percentage_volume_stored": 36.3,
+					"volume_stored": 84.62,
+					"County": "La Selva",
+					"River_basin": "Riu Ter",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Darnius Boadella (Darnius)",
+					"Absolute_level": 136.28,
+					"Percentage_volume_stored": 17.6,
+					"volume_stored": 10.75,
+					"County": "Alt Empord?",
+					"River_basin": "Riu Muga",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Foix (Castellet i la Gornal)",
+					"Absolute_level": 100.22,
+					"Percentage_volume_stored": 95.2,
+					"volume_stored": 3.56,
+					"County": "Alt Pened?s",
+					"River_basin": "Riu Foix",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of la Baells (Cercs)",
+					"Absolute_level": 615.46,
+					"Percentage_volume_stored": 58.9,
+					"volume_stored": 64.45,
+					"County": "Bergued?",
+					"River_basin": "Riu Llobregat",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of la Llosa del Cavall (Nav?s)",
+					"Absolute_level": 780.73,
+					"Percentage_volume_stored": 35.1,
+					"volume_stored": 28.07,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Riudecanyes",
+					"Absolute_level": 205.22,
+					"Percentage_volume_stored": 23.3,
+					"volume_stored": 1.24,
+					"County": "Baix Camp",
+					"River_basin": "Riera Riudecanyes",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Sant Pon? (Clariana de Cardener)",
+					"Absolute_level": 519.86,
+					"Percentage_volume_stored": 51.1,
+					"volume_stored": 12.45,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Sau (Vilanova de Sau)",
+					"Absolute_level": 387.61,
+					"Percentage_volume_stored": 15.3,
+					"volume_stored": 25.35,
+					"County": "Osona",
+					"River_basin": "Riu Ter",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Siurana (Cornudella de Montsant)",
+					"Absolute_level": 460.18,
+					"Percentage_volume_stored": 9.7,
+					"volume_stored": 1.18,
+					"County": "Priorat",
+					"River_basin": "Riu Siurana",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Susqueda (Osor)",
+					"Absolute_level": 316.05,
+					"Percentage_volume_stored": 36.4,
+					"volume_stored": 84.72,
+					"County": "La Selva",
+					"River_basin": "Riu Ter",
+					"Province": "Girona"
+				}
+			],
+			"STAdataAttributes": {
+				"Day": {
+					"type": "isodatetime"
+				},
+				"Station": {
+					"type": "string"
+				},
+				"Absolute_level": {
+					"type": "number"
+				},
+				"Percentage_volume_stored": {
+					"type": "number"
+				},
+				"volume_stored": {
+					"type": "number"
+				},
+				"County": {
+					"type": "string"
+				},
+				"River_basin": {
+					"type": "string"
+				},
+				"Province": {
+					"type": "string"
+				}
+			},
+			"x": -285,
+			"y": -202
+		},
+		{
+			"id": "81gv8.957qni",
+			"label": "Edit record",
+			"image": "EditRecord.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Day": "2025-01-03T00:00:00.",
+					"Station": "Reservoir of Siurana (Cornudella de Montsant)",
+					"Absolute_level": 460.18,
+					"Percentage_volume_stored": 9.7,
+					"volume_stored": 1.18,
+					"County": "Priorat",
+					"River_basin": "Riu Siurana",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000ee",
+					"Station": "Reservoir of Susqueda (Osor)",
+					"Absolute_level": 316,
+					"Percentage_volume_stored": 36.3,
+					"volume_stored": 84.57,
+					"County": "La Selva",
+					"River_basin": "Riu Ter",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Darnius Boadella (Darnius)",
+					"Absolute_level": 136.3,
+					"Percentage_volume_stored": 17.6,
+					"volume_stored": 10.77,
+					"County": "Alt Empord?",
+					"River_basin": "Riu Muga",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-04T",
+					"Station": "Reservoir of Darnius Boadella (Darnius)",
+					"Absolute_level": 136.3,
+					"Percentage_volume_stored": 17.6,
+					"volume_stored": 10.77,
+					"County": "Alt Empord?",
+					"River_basin": "Riu Muga",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00",
+					"Station": "Reservoir of Foix (Castellet i la Gornal)",
+					"Absolute_level": 100.22,
+					"Percentage_volume_stored": 95.2,
+					"volume_stored": 3.56,
+					"County": "Alt Pened?s",
+					"River_basin": "Riu Foix",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of la Baells (Cercs)",
+					"Absolute_level": 615.5,
+					"Percentage_volume_stored": 59,
+					"volume_stored": 64.55,
+					"County": "Bergued?",
+					"River_basin": "Riu Llobregat",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of la Llosa del Cavall (Nav?s)",
+					"Absolute_level": 780.75,
+					"Percentage_volume_stored": 35.1,
+					"volume_stored": 28.09,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Riudecanyes",
+					"Absolute_level": 205.21,
+					"Percentage_volume_stored": 23.3,
+					"volume_stored": 1.24,
+					"County": "Baix Camp",
+					"River_basin": "Riera Riudecanyes",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Sant Pon? (Clariana de Cardener)",
+					"Absolute_level": 519.83,
+					"Percentage_volume_stored": 51,
+					"volume_stored": 12.42,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Sau (Vilanova de Sau)",
+					"Absolute_level": 387.71,
+					"Percentage_volume_stored": 15.5,
+					"volume_stored": 25.55,
+					"County": "Osona",
+					"River_basin": "Riu Ter",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Siurana (Cornudella de Montsant)",
+					"Absolute_level": 460.18,
+					"Percentage_volume_stored": 9.7,
+					"volume_stored": 1.18,
+					"County": "Priorat",
+					"River_basin": "Riu Siurana",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Station": "Reservoir of Susqueda (Osor)",
+					"Absolute_level": 316.01,
+					"Percentage_volume_stored": 36.3,
+					"volume_stored": 84.62,
+					"County": "La Selva",
+					"River_basin": "Riu Ter",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Darnius Boadella (Darnius)",
+					"Absolute_level": 136.28,
+					"Percentage_volume_stored": 17.6,
+					"volume_stored": 10.75,
+					"County": "Alt Empord?",
+					"River_basin": "Riu Muga",
+					"Province": "Girona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Foix (Castellet i la Gornal)",
+					"Absolute_level": 100.22,
+					"Percentage_volume_stored": 95.2,
+					"volume_stored": 3.56,
+					"County": "Alt Pened?s",
+					"River_basin": "Riu Foix",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of la Baells (Cercs)",
+					"Absolute_level": 615.46,
+					"Percentage_volume_stored": 58.9,
+					"volume_stored": 64.45,
+					"County": "Bergued?",
+					"River_basin": "Riu Llobregat",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of la Llosa del Cavall (Nav?s)",
+					"Absolute_level": 780.73,
+					"Percentage_volume_stored": 35.1,
+					"volume_stored": 28.07,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Riudecanyes",
+					"Absolute_level": 205.22,
+					"Percentage_volume_stored": 23.3,
+					"volume_stored": 1.24,
+					"County": "Baix Camp",
+					"River_basin": "Riera Riudecanyes",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Sant Pon? (Clariana de Cardener)",
+					"Absolute_level": 519.86,
+					"Percentage_volume_stored": 51.1,
+					"volume_stored": 12.45,
+					"County": "Solson?s",
+					"River_basin": "Riu Cardener",
+					"Province": "Lleida "
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Sau (Vilanova de Sau)",
+					"Absolute_level": 387.61,
+					"Percentage_volume_stored": 15.3,
+					"volume_stored": 25.35,
+					"County": "Osona",
+					"River_basin": "Riu Ter",
+					"Province": "Barcelona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Siurana (Cornudella de Montsant)",
+					"Absolute_level": 460.18,
+					"Percentage_volume_stored": 9.7,
+					"volume_stored": 1.18,
+					"County": "Priorat",
+					"River_basin": "Riu Siurana",
+					"Province": "Tarragona"
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Station": "Reservoir of Susqueda (Osor)",
+					"Absolute_level": 316.05,
+					"Percentage_volume_stored": 36.4,
+					"volume_stored": 84.72,
+					"County": "La Selva",
+					"River_basin": "Riu Ter",
+					"Province": "Girona"
+				}
+			],
+			"STAdataAttributes": {
+				"Day": {
+					"type": "isodatetime"
+				},
+				"Station": {
+					"type": "string"
+				},
+				"Absolute_level": {
+					"type": "number"
+				},
+				"Percentage_volume_stored": {
+					"type": "number"
+				},
+				"volume_stored": {
+					"type": "number"
+				},
+				"County": {
+					"type": "string"
+				},
+				"River_basin": {
+					"type": "string"
+				},
+				"Province": {
+					"type": "string"
+				}
+			},
+			"x": -289,
+			"y": -74
+		},
+		{
+			"id": "6p6ku.eqlgbh",
+			"label": "Temporal quality",
+			"image": "temporalQuality.png",
+			"shape": "circularImage",
+			"x": -212,
+			"y": 24
 		}
 	],
 	"edges": [
@@ -13517,6 +14303,26 @@
 		{
 			"from": "4nkhp.vaeae6",
 			"to": "1j6ce.2p5sj8o",
+			"arrows": "from"
+		},
+		{
+			"from": "lc9m.704vjf4",
+			"to": "5gqja.5pl61u",
+			"arrows": "from"
+		},
+		{
+			"from": "4f8fr.udg0au",
+			"to": "81gv8.957qni",
+			"arrows": "from"
+		},
+		{
+			"from": "4f8fr.udg0au",
+			"to": "5n72f.bikeu1",
+			"arrows": "from"
+		},
+		{
+			"from": "81gv8.957qni",
+			"to": "6p6ku.eqlgbh",
 			"arrows": "from"
 		}
 	]

@@ -1,0 +1,50 @@
+Day;Station;Absolute_level;Percentage_volume_stored;volume_stored;County;River_basin;Province
+2024-12-31T00:00:00.000;Reservoir of Darnius Boadella (Darnius);136.33;17.7;10.81;Alt Empord?;Riu Muga;Girona
+2024-12-31T00:00:00.000;Reservoir of la Llosa del Cavall (Nav?s);780.81;35.2;28.18;Solson?s;Riu Cardener;"Lleida "
+2024-12-31T00:00:00.000;Reservoir of Siurana (Cornudella de Montsant);460.17;9.7;1.18;Priorat;Riu Siurana;Tarragona
+2024-12-31T00:00:00.000;Reservoir of Susqueda (Osor);316.23;36.6;85.21;La Selva;Riu Ter;Girona
+2025-01-01T00:00:00.000;Reservoir of Darnius Boadella (Darnius);136.32;17.7;10.8;Alt Empord?;Riu Muga;Girona
+2025-01-01T00:00:00.000;Reservoir of Foix (Castellet i la Gornal);100.27;96;3.59;Alt Pened?s;Riu Foix;Barcelona
+2025-01-01T00:00:00.000;Reservoir of la Baells (Cercs);615.62;59.3;64.86;Bergued?;Riu Llobregat;Barcelona
+2025-01-01T00:00:00.000;Reservoir of la Llosa del Cavall (Nav?s);780.79;35.2;28.16;Solson?s;Riu Cardener;"Lleida "
+2025-01-01T00:00:00.000;Reservoir of Riudecanyes;205.19;23.2;1.24;Baix Camp;Riera Riudecanyes;Tarragona
+2025-01-01T00:00:00.000;Reservoir of Sant Pon? (Clariana de Cardener);519.76;50.7;12.35;Solson?s;Riu Cardener;"Lleida "
+2025-01-01T00:00:00.000;Reservoir of Sau (Vilanova de Sau);387.81;15.6;25.76;Osona;Riu Ter;Barcelona
+2025-01-01T00:00:00.000;Reservoir of Siurana (Cornudella de Montsant);460.17;9.7;1.18;Priorat;Riu Siurana;Tarragona
+2025-01-01T00:00:00.000;Reservoir of Susqueda (Osor);316.13;36.5;84.95;La Selva;Riu Ter;Girona
+2025-01-02T00:00:00.000;Reservoir of Darnius Boadella (Darnius);136.32;17.7;10.8;Alt Empord?;Riu Muga;Girona
+2025-01-02T00:00:00.000;Reservoir of Foix (Castellet i la Gornal);100.25;95.7;3.58;Alt Pened?s;Riu Foix;Barcelona
+2025-01-02T00:00:00.000;Reservoir of la Baells (Cercs);615.58;59.2;64.77;Bergued?;Riu Llobregat;Barcelona
+2025-01-02T00:00:00.000;Reservoir of la Llosa del Cavall (Nav?s);780.78;35.2;28.13;Solson?s;Riu Cardener;"Lleida "
+2025-01-02T00:00:00.000;Reservoir of Riudecanyes;205.2;23.2;1.24;Baix Camp;Riera Riudecanyes;Tarragona
+2025-01-02T00:00:00.000;Reservoir of Sant Pon? (Clariana de Cardener);519.78;50.8;12.38;Solson?s;Riu Cardener;"Lleida "
+2025-01-02T00:00:00.000;Reservoir of Sau (Vilanova de Sau);387.86;15.6;25.85;Osona;Riu Ter;Barcelona
+2025-01-02T00:00:00.000;Reservoir of Siurana (Cornudella de Montsant);460.17;9.7;1.18;Priorat;Riu Siurana;Tarragona
+2025-01-02T00:00:00.000;Reservoir of Susqueda (Osor);316.04;36.3;84.68;La Selva;Riu Ter;Girona
+2025-01-03T00:00:00.000;Reservoir of Darnius Boadella (Darnius);136.31;17.7;10.79;Alt Empord?;Riu Muga;Girona
+2025-01-03T00:00:00.000;Reservoir of Foix (Castellet i la Gornal);100.23;95.4;3.57;Alt Pened?s;Riu Foix;Barcelona
+2025-01-03T00:00:00.000;Reservoir of la Baells (Cercs);615.54;59.1;64.66;Bergued?;Riu Llobregat;Barcelona
+2025-01-03T00:00:00.000;Reservoir of la Llosa del Cavall (Nav?s);780.76;35.1;28.12;Solson?s;Riu Cardener;"Lleida "
+2025-01-03T00:00:00.000;Reservoir of Riudecanyes;205.21;23.3;1.24;Baix Camp;Riera Riudecanyes;Tarragona
+2025-01-03T00:00:00.000;Reservoir of Sant Pon? (Clariana de Cardener);519.81;50.9;12.4;Solson?s;Riu Cardener;"Lleida "
+2025-01-03T00:00:00.000;Reservoir of Sau (Vilanova de Sau);387.83;15.6;25.79;Osona;Riu Ter;Barcelona
+2025-01-03T00:00:00.000;Reservoir of Siurana (Cornudella de Montsant);460.18;9.7;1.18;Priorat;Riu Siurana;Tarragona
+2025-01-03T00:00:00.000;Reservoir of Susqueda (Osor);316;36.3;84.57;La Selva;Riu Ter;Girona
+2025-01-04T00:00:00.000;Reservoir of Darnius Boadella (Darnius);136.3;17.6;10.77;Alt Empord?;Riu Muga;Girona
+2025-01-04T00:00:00.000;Reservoir of Foix (Castellet i la Gornal);100.22;95.2;3.56;Alt Pened?s;Riu Foix;Barcelona
+2025-01-04T00:00:00.000;Reservoir of la Baells (Cercs);615.5;59;64.55;Bergued?;Riu Llobregat;Barcelona
+2025-01-04T00:00:00.000;Reservoir of la Llosa del Cavall (Nav?s);780.75;35.1;28.09;Solson?s;Riu Cardener;"Lleida "
+2025-01-04T00:00:00.000;Reservoir of Riudecanyes;205.21;23.3;1.24;Baix Camp;Riera Riudecanyes;Tarragona
+2025-01-04T00:00:00.000;Reservoir of Sant Pon? (Clariana de Cardener);519.83;51;12.42;Solson?s;Riu Cardener;"Lleida "
+2025-01-04T00:00:00.000;Reservoir of Sau (Vilanova de Sau);387.71;15.5;25.55;Osona;Riu Ter;Barcelona
+2025-01-04T00:00:00.000;Reservoir of Siurana (Cornudella de Montsant);460.18;9.7;1.18;Priorat;Riu Siurana;Tarragona
+2025-01-04T00:00:00.000;Reservoir of Susqueda (Osor);316.01;36.3;84.62;La Selva;Riu Ter;Girona
+2025-01-05T00:00:00.000;Reservoir of Darnius Boadella (Darnius);136.28;17.6;10.75;Alt Empord?;Riu Muga;Girona
+2025-01-05T00:00:00.000;Reservoir of Foix (Castellet i la Gornal);100.22;95.2;3.56;Alt Pened?s;Riu Foix;Barcelona
+2025-01-05T00:00:00.000;Reservoir of la Baells (Cercs);615.46;58.9;64.45;Bergued?;Riu Llobregat;Barcelona
+2025-01-05T00:00:00.000;Reservoir of la Llosa del Cavall (Nav?s);780.73;35.1;28.07;Solson?s;Riu Cardener;"Lleida "
+2025-01-05T00:00:00.000;Reservoir of Riudecanyes;205.22;23.3;1.24;Baix Camp;Riera Riudecanyes;Tarragona
+2025-01-05T00:00:00.000;Reservoir of Sant Pon? (Clariana de Cardener);519.86;51.1;12.45;Solson?s;Riu Cardener;"Lleida "
+2025-01-05T00:00:00.000;Reservoir of Sau (Vilanova de Sau);387.61;15.3;25.35;Osona;Riu Ter;Barcelona
+2025-01-05T00:00:00.000;Reservoir of Siurana (Cornudella de Montsant);460.18;9.7;1.18;Priorat;Riu Siurana;Tarragona
+2025-01-05T00:00:00.000;Reservoir of Susqueda (Osor);316.05;36.4;84.72;La Selva;Riu Ter;Girona

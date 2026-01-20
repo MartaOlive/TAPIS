@@ -865,6 +865,27 @@
 			<input type="hidden" id="DialogExpandColumnNodeId"></input>
 		</form>
 	</dialog>
+		<dialog id="DialogUploadIC" onClose='hideNodeDialog("DialogUploadIC", event)'>
+		<form>
+			<span>Title: <input type="text" id="DialogUploadIC_title" value=""></span><br>
+			<span>Author: <input type="text" id="DialogUploadIC_author" value=""></span><br>
+			<label>License:<select id="DialogUploadIC_license">
+				<option value="CC-BY" checked>CC BY </option>
+				<option value="CC BY-SA">CC BY-SA </option>
+				<option value="CC BY-ND">CC BY-ND </option>
+				<option value="CC BY-NC">CC BY-NC </option>
+				<option value="CC BY-NC-SA">CC BY-NC-SA </option>
+				<option value="CC BY-NC-ND">CC BY-NC-ND </option>			
+			</select></label>
+
+
+			<div class="center" style="margin-top:10px">
+				<button value="default" onClick="GetUploadIC(event)" formmethod="dialog">OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogUploadICNodeId"></input>
+		</form>
+	</dialog>
 
 	<dialog id="DialogSelectExpands" onClose='hideNodeDialog("DialogSelectExpands", event)'>
 		<form>
