@@ -89,6 +89,7 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
         if (flag) dataTarget[a]["logicalConsistenci"] = itExist;
         if (filter && itExist) newData.push(dataTarget[a]);
     }
+    newData=dataTarget;
     if (!calculate) return [newData, count];
     else {
         return [newData, count, (count / dataTarget.length) * 100];

@@ -878,7 +878,13 @@
 				<option value="CC BY-NC-ND">CC BY-NC-ND </option>			
 			</select></label>
 
-
+			<fieldset><legend><input type="checkbox" id="DialogUploadIC_geographicInfo_checkbox"></input>Geographic information</legend>
+				<label>Longitude: <select id="DialogUploadIC_longitude"></select></label><br>
+				<label>Latitude: <select id="DialogUploadIC_latitude"></select></label>
+			</fieldset>
+			<fieldset><legend><input type="checkbox" id="DialogUploadIC_date_checkbox"></input>Date column</legend>
+				<label>Column: <select id="DialogUploadIC_date"></select></label>
+			</fieldset>
 			<div class="center" style="margin-top:10px">
 				<button value="default" onClick="GetUploadIC(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>

@@ -69,8 +69,8 @@
 					"type": "string"
 				}
 			},
-			"x": 42,
-			"y": -82
+			"x": 58,
+			"y": -77
 		},
 		{
 			"id": "640ln.blrt57",
@@ -86,7 +86,8 @@
 					"volume_stored": 10.81,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2024-12-31T00:00:00.000",
@@ -96,7 +97,8 @@
 					"volume_stored": 28.18,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2024-12-31T00:00:00.000",
@@ -106,7 +108,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2024-12-31T00:00:00.000",
@@ -116,7 +119,8 @@
 					"volume_stored": 85.21,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -126,7 +130,8 @@
 					"volume_stored": 10.8,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -136,7 +141,8 @@
 					"volume_stored": 3.59,
 					"County": "Alt Pened?s",
 					"River_basin": "Riu Foix",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -146,7 +152,8 @@
 					"volume_stored": 64.86,
 					"County": "Bergued?",
 					"River_basin": "Riu Llobregat",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -156,7 +163,8 @@
 					"volume_stored": 28.16,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -166,7 +174,8 @@
 					"volume_stored": 1.24,
 					"County": "Baix Camp",
 					"River_basin": "Riera Riudecanyes",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -176,7 +185,8 @@
 					"volume_stored": 12.35,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -186,7 +196,8 @@
 					"volume_stored": 25.76,
 					"County": "Osona",
 					"River_basin": "Riu Ter",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -196,7 +207,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -206,7 +218,8 @@
 					"volume_stored": 84.95,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -216,7 +229,8 @@
 					"volume_stored": 10.8,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -226,7 +240,8 @@
 					"volume_stored": 3.58,
 					"County": "Alt Pened?s",
 					"River_basin": "Riu Foix",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -236,7 +251,8 @@
 					"volume_stored": 64.77,
 					"County": "Bergued?",
 					"River_basin": "Riu Llobregat",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -246,7 +262,8 @@
 					"volume_stored": 28.13,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -256,7 +273,8 @@
 					"volume_stored": 1.24,
 					"County": "Baix Camp",
 					"River_basin": "Riera Riudecanyes",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -266,7 +284,8 @@
 					"volume_stored": 12.38,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -276,7 +295,8 @@
 					"volume_stored": 25.85,
 					"County": "Osona",
 					"River_basin": "Riu Ter",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -286,7 +306,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -296,7 +317,8 @@
 					"volume_stored": 84.68,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -306,7 +328,8 @@
 					"volume_stored": 10.79,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -316,7 +339,8 @@
 					"volume_stored": 3.57,
 					"County": "Alt Pened?s",
 					"River_basin": "Riu Foix",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -326,7 +350,8 @@
 					"volume_stored": 64.66,
 					"County": "Bergued?",
 					"River_basin": "Riu Llobregat",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -336,7 +361,8 @@
 					"volume_stored": 28.12,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -346,7 +372,8 @@
 					"volume_stored": 1.24,
 					"County": "Baix Camp",
 					"River_basin": "Riera Riudecanyes",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -356,7 +383,8 @@
 					"volume_stored": 12.4,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -366,7 +394,8 @@
 					"volume_stored": 25.79,
 					"County": "Osona",
 					"River_basin": "Riu Ter",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -376,7 +405,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -386,7 +416,8 @@
 					"volume_stored": 84.57,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -396,7 +427,8 @@
 					"volume_stored": 10.77,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -406,7 +438,8 @@
 					"volume_stored": 3.56,
 					"County": "Alt Pened?s",
 					"River_basin": "Riu Foix",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -416,7 +449,8 @@
 					"volume_stored": 64.55,
 					"County": "Bergued?",
 					"River_basin": "Riu Llobregat",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -426,7 +460,8 @@
 					"volume_stored": 28.09,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -436,7 +471,8 @@
 					"volume_stored": 1.24,
 					"County": "Baix Camp",
 					"River_basin": "Riera Riudecanyes",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -446,7 +482,8 @@
 					"volume_stored": 12.42,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -456,7 +493,8 @@
 					"volume_stored": 25.55,
 					"County": "Osona",
 					"River_basin": "Riu Ter",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -466,7 +504,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -476,7 +515,8 @@
 					"volume_stored": 84.62,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -486,7 +526,8 @@
 					"volume_stored": 10.75,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -496,7 +537,8 @@
 					"volume_stored": 3.56,
 					"County": "Alt Pened?s",
 					"River_basin": "Riu Foix",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -506,7 +548,8 @@
 					"volume_stored": 64.45,
 					"County": "Bergued?",
 					"River_basin": "Riu Llobregat",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -516,7 +559,8 @@
 					"volume_stored": 28.07,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -526,7 +570,8 @@
 					"volume_stored": 1.24,
 					"County": "Baix Camp",
 					"River_basin": "Riera Riudecanyes",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -536,7 +581,8 @@
 					"volume_stored": 12.45,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -546,7 +592,8 @@
 					"volume_stored": 25.35,
 					"County": "Osona",
 					"River_basin": "Riu Ter",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -556,7 +603,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -566,7 +614,8 @@
 					"volume_stored": 84.72,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				}
 			],
 			"STAdataAttributes": {
@@ -595,16 +644,16 @@
 					"type": "string"
 				}
 			},
-			"x": -170,
-			"y": 16
+			"x": -187,
+			"y": -45
 		},
 		{
 			"id": "1ee27.n8qplco",
 			"label": "Logical consistency",
 			"image": "logicalConsistency.png",
 			"shape": "circularImage",
-			"x": -77,
-			"y": -69,
+			"x": -60,
+			"y": -38,
 			"STAdata": [
 				{
 					"Day": "2024-12-31T00:00:00.000",
@@ -614,7 +663,8 @@
 					"volume_stored": 10.81,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2024-12-31T00:00:00.000",
@@ -624,7 +674,8 @@
 					"volume_stored": 28.18,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2024-12-31T00:00:00.000",
@@ -634,7 +685,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2024-12-31T00:00:00.000",
@@ -644,7 +696,8 @@
 					"volume_stored": 85.21,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -654,7 +707,8 @@
 					"volume_stored": 10.8,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -664,7 +718,8 @@
 					"volume_stored": 3.59,
 					"County": "Alt Pened?s",
 					"River_basin": "Riu Foix",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -674,7 +729,8 @@
 					"volume_stored": 64.86,
 					"County": "Bergued?",
 					"River_basin": "Riu Llobregat",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -684,7 +740,8 @@
 					"volume_stored": 28.16,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -694,7 +751,8 @@
 					"volume_stored": 1.24,
 					"County": "Baix Camp",
 					"River_basin": "Riera Riudecanyes",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -704,7 +762,8 @@
 					"volume_stored": 12.35,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -714,7 +773,8 @@
 					"volume_stored": 25.76,
 					"County": "Osona",
 					"River_basin": "Riu Ter",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -724,7 +784,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-01T00:00:00.000",
@@ -734,7 +795,8 @@
 					"volume_stored": 84.95,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -744,7 +806,8 @@
 					"volume_stored": 10.8,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -754,7 +817,8 @@
 					"volume_stored": 3.58,
 					"County": "Alt Pened?s",
 					"River_basin": "Riu Foix",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -764,7 +828,8 @@
 					"volume_stored": 64.77,
 					"County": "Bergued?",
 					"River_basin": "Riu Llobregat",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -774,7 +839,8 @@
 					"volume_stored": 28.13,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -784,7 +850,8 @@
 					"volume_stored": 1.24,
 					"County": "Baix Camp",
 					"River_basin": "Riera Riudecanyes",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -794,7 +861,8 @@
 					"volume_stored": 12.38,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -804,7 +872,8 @@
 					"volume_stored": 25.85,
 					"County": "Osona",
 					"River_basin": "Riu Ter",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -814,7 +883,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-02T00:00:00.000",
@@ -824,7 +894,8 @@
 					"volume_stored": 84.68,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -834,7 +905,8 @@
 					"volume_stored": 10.79,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -844,7 +916,8 @@
 					"volume_stored": 3.57,
 					"County": "Alt Pened?s",
 					"River_basin": "Riu Foix",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -854,7 +927,8 @@
 					"volume_stored": 64.66,
 					"County": "Bergued?",
 					"River_basin": "Riu Llobregat",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -864,7 +938,8 @@
 					"volume_stored": 28.12,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -874,7 +949,8 @@
 					"volume_stored": 1.24,
 					"County": "Baix Camp",
 					"River_basin": "Riera Riudecanyes",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -884,7 +960,8 @@
 					"volume_stored": 12.4,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -894,7 +971,8 @@
 					"volume_stored": 25.79,
 					"County": "Osona",
 					"River_basin": "Riu Ter",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -904,7 +982,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-03T00:00:00.000",
@@ -914,7 +993,8 @@
 					"volume_stored": 84.57,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -924,7 +1004,8 @@
 					"volume_stored": 10.77,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -934,7 +1015,8 @@
 					"volume_stored": 3.56,
 					"County": "Alt Pened?s",
 					"River_basin": "Riu Foix",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -944,7 +1026,8 @@
 					"volume_stored": 64.55,
 					"County": "Bergued?",
 					"River_basin": "Riu Llobregat",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -954,7 +1037,8 @@
 					"volume_stored": 28.09,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -964,7 +1048,8 @@
 					"volume_stored": 1.24,
 					"County": "Baix Camp",
 					"River_basin": "Riera Riudecanyes",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -974,7 +1059,8 @@
 					"volume_stored": 12.42,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -984,7 +1070,8 @@
 					"volume_stored": 25.55,
 					"County": "Osona",
 					"River_basin": "Riu Ter",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -994,7 +1081,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-04T00:00:00.000",
@@ -1004,7 +1092,8 @@
 					"volume_stored": 84.62,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -1014,7 +1103,8 @@
 					"volume_stored": 10.75,
 					"County": "Alt Empord?",
 					"River_basin": "Riu Muga",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -1024,7 +1114,8 @@
 					"volume_stored": 3.56,
 					"County": "Alt Pened?s",
 					"River_basin": "Riu Foix",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -1034,7 +1125,8 @@
 					"volume_stored": 64.45,
 					"County": "Bergued?",
 					"River_basin": "Riu Llobregat",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -1044,7 +1136,8 @@
 					"volume_stored": 28.07,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -1054,7 +1147,8 @@
 					"volume_stored": 1.24,
 					"County": "Baix Camp",
 					"River_basin": "Riera Riudecanyes",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -1064,7 +1158,8 @@
 					"volume_stored": 12.45,
 					"County": "Solson?s",
 					"River_basin": "Riu Cardener",
-					"Province": "Lleida "
+					"Province": "Lleida ",
+					"logicalConsistenci": false
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -1074,7 +1169,8 @@
 					"volume_stored": 25.35,
 					"County": "Osona",
 					"River_basin": "Riu Ter",
-					"Province": "Barcelona"
+					"Province": "Barcelona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -1084,7 +1180,8 @@
 					"volume_stored": 1.18,
 					"County": "Priorat",
 					"River_basin": "Riu Siurana",
-					"Province": "Tarragona"
+					"Province": "Tarragona",
+					"logicalConsistenci": true
 				},
 				{
 					"Day": "2025-01-05T00:00:00.000",
@@ -1094,7 +1191,8 @@
 					"volume_stored": 84.72,
 					"County": "La Selva",
 					"River_basin": "Riu Ter",
-					"Province": "Girona"
+					"Province": "Girona",
+					"logicalConsistenci": true
 				}
 			],
 			"STAdataAttributes": {
@@ -1121,16 +1219,19 @@
 				},
 				"Province": {
 					"type": "string"
+				},
+				"logicalConsistenci": {
+					"type": "boolean"
 				}
 			}
 		},
 		{
-			"id": "3r10.d57ktuv",
+			"id": "3nnir.e5p526",
 			"label": "Upload to inmutable catalog",
 			"image": "uploadToIC.png",
 			"shape": "circularImage",
-			"x": -23,
-			"y": 45
+			"x": -17,
+			"y": 48
 		}
 	],
 	"edges": [
@@ -1156,7 +1257,17 @@
 		},
 		{
 			"from": "1ee27.n8qplco",
-			"to": "3r10.d57ktuv",
+			"to": "4814d.b824sb",
+			"arrows": "from"
+		},
+		{
+			"from": "1ee27.n8qplco",
+			"to": "1e0k0.0oprfeg",
+			"arrows": "from"
+		},
+		{
+			"from": "1ee27.n8qplco",
+			"to": "3nnir.e5p526",
 			"arrows": "from"
 		}
 	]

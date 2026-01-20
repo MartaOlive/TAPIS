@@ -7682,10 +7682,21 @@ function networkDoubleClick(params) {
 			showNodeDialog("DialogGUF");
 		}
 		else if(currentNode.image =="uploadToIC.png"){
-			saveNodeDialog("DialogBarPlot", currentNode);
+			saveNodeDialog("DialogUploadIC", currentNode);
 			var parentNode=GetFirstParentNode(currentNode);//S'encadenen els DQ? es fan per separat i arriben mes d'un?
 			if (parentNode){
-				if(parentNode.STAdata) currentNode.STAdata=parentNode.STAdata
+				if(parentNode.STAdata) {
+					currentNode.STAdata=parentNode.STAdata;
+				}else{
+					//Error
+				}
+				if(parentNode.STAdataAttributes){
+					currentNode.STAdataAttributes=parentNode.STAdataAttributes;
+					populateuploadToICDialogUploadIC(currentNode);
+
+				}else{
+					//ERROR
+				}
 				if (parentNode.STAmetadata) currentNode.STAmetadata= parentNode.STAmetadata;
 			}
 			showNodeDialog("DialogUploadIC");
@@ -9596,6 +9607,7 @@ function okButtonDataQualityCompletnessOmission(event){
 	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected, flag, filter); //Response:data, Total, true, false, %omission, %completness
 
 	node.STAdata=infoDataOmission[0];
+	node.STAdataAttributes=getDataAttributes(infoDataOmission[0]);
 	networkNodes.update(node);
 	hideNodeDialog("DialogQualityCompletnessOmission", event);
 	
@@ -9733,11 +9745,11 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 function populateDialogQualityTemporalQuality(node){
 	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "temporalQuality", "Column");
 	document.getElementById("DialogQualityTemporalQuality_attributesList").innerHTML=attributesCheckboxModule;
-	saveNodeDialog("DialogQualityLogicalConsistency", node);
+	saveNodeDialog("", node);//!!
 }
 
 function okButtonDataQualityTemporalQuality(event){
-	var node= getNodeDialog("DialogQualityLogicalConsistency");
+	var node= getNodeDialog("");//!!
 	var data= node.STAdata;
 	var select= document.getElementById("attributeList_temporalQuality");
 	var attributeSelected= select.options[select.selectedIndex].value;
@@ -9900,7 +9912,7 @@ function okButtonDataQualityPositionalQuality(event){
 	}
 	if (valid) {
 		node.STAdata=data;
-		node.STAdataAttributes= getDataAttributes(data)
+		node.STAdataAttributes= getDataAttributes(data);
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		hideNodeDialog("DialogQualityPositionalQuality", event);
@@ -10015,19 +10027,70 @@ function GetCreateNewTable(event){
 		alert("Column list is empty. Table will not be created.")
 	}
 }
+function populateuploadToICDialogUploadIC(node){
+	var attributes= Object.keys(node.STAdataAttributes);
+	var c="";
+	for (var i=0; i<attributes.length;i++){
+		c+=`<option value="${attributes[i]}">${attributes[i]}</option>`
+	}
 
+	document.getElementById("DialogUploadIC_longitude").innerHTML=c;
+	document.getElementById("DialogUploadIC_latitude").innerHTML=c;
+	document.getElementById("DialogUploadIC_date").innerHTML=c;
+}
 function GetUploadIC(event){
-	var node= getNodeDialog("DialogQualityLogicalConsistency");
+	var node= getNodeDialog("DialogUploadIC");
+	var attributes= node.STAdataAttributes;
+	var data= node.STAdata;
 
 	var informationToUpdate;
 	var title= document.getElementById("DialogUploadIC_title").value;
 	var author= document.getElementById("DialogUploadIC_author").value;
 	var licenceSelect= document.getElementById("DialogUploadIC_license");
 	var licenceValue= licenceSelect.options[licenceSelect.selectedIndex].value;
+	var geographicInfo= document.getElementById("DialogUploadIC_geographicInfo_checkbox");
+	var date= document.getElementById("DialogUploadIC_date_checkbox");
+	var bbox=null;
+	if(geographicInfo){
+		var selectLong= document.getElementById("DialogUploadIC_longitude");
+		var selectLat= document.getElementById("DialogUploadIC_latitude");
+		var selectLongValue= selectLong.options[selectLong.selectedIndex].value;
+		var selectLatValue= selectLat.options[selectLat.selectedIndex].value;
+		var columsAreNumbers;
+		if ((attributes[selectLongValue].type=="integer"||attributes[selectLongValue].type=="number")&&(attributes[selectLatValue].type=="integer"||attributes[selectLatValue].type=="number"))columsAreNumbers=true;
+		if (columsAreNumbers){
+			var longValues=[];
+			var latValues=[];
+			for (var  i=0;i<data.length;i++){
+				longValues.push(data[i][selectLongValue]);
+				latValues.push(data[i][selectLatValue]);
+			}
+			var longMin=aggrFuncMinValue(longValues);
+			var longMax=aggrFuncMaxValue(longValues);
+			var latMin=aggrFuncMinValue(latValues);
+			var latMax= aggrFuncMaxValue(latValues);
+			bbox=[longMin,latMin,longMax,latMax];
+		}
+	}
+	var now=new Date().toISOString();
+	var startDate=now;
+	var startEnd=now;
+	if(date){
+		var selectDate= document.getElementById("DialogUploadIC_date");
+		var selectDateValue= selectDate.options[selectDate.selectedIndex].value;
 
-	if (title=="")title=`Data from TAPIS on ${Date.now()}`
+		if(attributes[selectDateValue].type= "isodatetime"){
+			var dataSorted=sortDates(data, selectDateValue);
+			var startDate=dataSorted[0][selectDateValue];
+			var startEnd=dataSorted[dataSorted.length-1][selectDateValue]			
+		}
+
+	}
+
+	if (title=="")title=`Data from TAPIS on ${now}`
 	if (author=="") author= "Author example" //Com s'haurà 'destar autentificat.. 
-	var id= crypto.randomUUID()
+	var id= crypto.randomUUID();
+
 
 	informationToUpdate= 
 		{
@@ -10040,7 +10103,7 @@ function GetUploadIC(event){
 			"type": "application/json"
 			}
 		},
-		"bbox": [],
+		"bbox": bbox,
 		"collection": "DQ4STA",
 		"geometry": {
 			"coordinates": [],
@@ -10071,11 +10134,11 @@ function GetUploadIC(event){
 		],
 		"properties": {
 			"author": author,
-			"datetime": "",
-			"end_datetime": "",
+			"datetime": now,
+			"end_datetime": startEnd,
 			"license": licenceValue,
 			"license_description": `https://creativecommons.org/licenses/${licenceValue.slice(3)}/4.0/deed.en`,
-			"start_datetime": ""
+			"start_datetime": startDate
 		},
 		"stac_extensions": [
 			"https://stac-extensions.github.io/file/v2.1.0/schema.json"
@@ -10083,8 +10146,7 @@ function GetUploadIC(event){
 		"stac_version": "1.0.0",
 		"type": "Feature"
 		}
-		//console.log(informationToUpdate)
-		console.log(`https://creativecommons.org/licenses/${licenceValue.slice(3)}/4.0/deed.en`)
+		console.log(informationToUpdate)
 }
 
 /*function giveMeNetworkInformation(event) {
