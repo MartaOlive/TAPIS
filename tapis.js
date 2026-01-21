@@ -10139,7 +10139,7 @@ async function GetUploadIC(event){
 			"datetime": now,
 			"end_datetime": startEnd,
 			"license": licenceValue,
-			"license_description": `https://creativecommons.org/licenses/${licenceValue.slice(3)}/4.0/deed.en`,
+			"license_description": `https://creativecommons.org/${licenceValue=="CC0" ? "publicdomain/zero/1.0/": "licenses/"+licenceValue.slice(3)+"/4.0/deed.en"}`,
 			"start_datetime": startDate,
 			"metadata": node.STAmetadata
 
