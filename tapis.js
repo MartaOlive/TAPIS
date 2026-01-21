@@ -5066,7 +5066,8 @@ function ShowTableOptionsDiv(node, optionsDiv, fn_showTable) {
 	else
 		document.getElementById(optionsDiv).innerHTML="";
 	if (node.STAmetadata)
-		document.getElementById(optionsDiv).innerHTML+=" <a href='javascript:void(0)' style='text-decoration: none;' onClick='ShowMetadataDialog(\""+node.id+"\")'><img src='metadata.png' alt='metadata' title='metadata'> Metadata </a>";}
+		document.getElementById(optionsDiv).innerHTML+=" <a href='javascript:void(0)' style='text-decoration: none;' onClick='ShowMetadataDialog(\""+node.id+"\")'><img src='metadata.png' alt='metadata' title='metadata'> Metadata </a>";
+}
 
 function ShowTableDialog(node) {
 	var data = node.STAdata;
@@ -7286,7 +7287,8 @@ function KeySTAPage(event) {
 
 	if (aDialogIsOpen)
 		return;
-if (event.code == "F2" || event.code == "Delete" || event.code == "Insert" || event.code == "Enter"){		event.preventDefault();
+if (event.code == "F2" || event.code == "Delete" || event.code == "Insert" || event.code == "Enter"){
+			event.preventDefault();
 		var nodeId = network.getSelectedNodes();
 		if (nodeId && nodeId.length) {
 			switch (event.code) {
@@ -8043,16 +8045,17 @@ function networkDoubleClick(params) {
 		
 	}
 }
+
 function openContextNode(nodeId) {
 	PopulateContextMenu(nodeId);  	//rewrite DialogContextMenu
 	startingNodeContextId = nodeId;
 	showNodeDialog("DialogContextMenu");
 }
+
 function networkContext(params) {
 	params.event.preventDefault();  //https://stackoverflow.com/questions/38258940/open-an-extension-popup-html-list-on-right-click-of-node-contextmenu-in-visj
 
 	var nodeId = network.getNodeAt(params.pointer.DOM); //params.nodes is not useful here as params.nodes are the selected ones and not the ones rightclicked.
-	//rewrite DialogContextMenu
 	if (nodeId) {
 		openContextNode(nodeId);
 		return;
@@ -9620,11 +9623,10 @@ function okButtonDataQualityCompletnessOmission(event){
 	var select= document.getElementById("attributeList_omission");
 	var selected= select.options[select.selectedIndex].value;
 	var flag= (document.getElementById("dataQuality_omission_flag").checked)?true:false;
-	var filter= (document.getElementById("dataQuality_omission_filter").checked)?true:false;
 	var infoDataOmission;
 	var metadata= (node.STAmetadata)?node.STAmetadata:{}
 
-	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected,metadata, flag, filter); //Response:data, Total, true, false, %omission, %completness
+	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected,metadata, flag); //Response:data, Total, true, false, %omission, %completness
 
 	node.STAdata=infoDataOmission[0];
 	node.STAdataAttributes=getDataAttributes(infoDataOmission[0]);
@@ -9717,7 +9719,6 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 	}
 	if (targets.length!=0){
 		var flag= (document.getElementById("dataQuality_logicalConsistency_flag").checked)?true:false;
-		var filter= (document.getElementById("dataQuality_logicalConsistency_filter").checked)?true:false;
 
 	if (numTargued==0){
 		idTarget=document.getElementById("DialogQualityLogicalConsistency_table_div").getAttribute("data-value_0");
@@ -9727,35 +9728,33 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 		idReference=document.getElementById("DialogQualityLogicalConsistency_table_div").getAttribute("data-value_0");
 	}
 
-		if(idTarget!=idReference){
-	
-			var infoDatalogicalConsistency;
-			var dataTarget= networkNodes.get(idTarget).STAdata;
-			var dataReference= networkNodes.get(idReference).STAdata;
-			var dataTargetLength=dataTarget.length;
-			infoDatalogicalConsistency= calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, flag, filter); //Total, true, false, %logicalConsistency, %completesa
-			
-			node.STAdata= infoDatalogicalConsistency[0];
-			node.STAdataAttributes= getDataAttributes(infoDatalogicalConsistency[0]);
-			networkNodes.update(node);
-			hideNodeDialog("DialogQualityLogicalConsistency", event);
-	
-			// return [newData, count, (count / dataTarget.length) * 100];
-			document.getElementById("dataQualityResult_info").innerHTML=`<table class="tablesmall">
-				<thead > 
-				<th >Target columns</th><th >Reference columns</th><th>Total records</th>
-				<th>True records</th><th>Logical consistancy rate</th></tr></thead>
-				<tbody><tr>
-				<td>${targets}</td><td>${references}</td>
-				<td>${dataTargetLength}</td>
-				<td>${infoDatalogicalConsistency[1]}</td><td>${infoDatalogicalConsistency[2]}</td>
-				</tr></tbody></table>`
-			showNodeDialog("dataQualityResult");
-			updateQueryAndTableArea(node);
+	if(idTarget!=idReference){
 
-		}else{
-			alert("target node and reference node are the same are identified as the same")
-		}
+		var infoDatalogicalConsistency;
+		var dataTarget= networkNodes.get(idTarget).STAdata;
+		var dataReference= networkNodes.get(idReference).STAdata;
+		var dataTargetLength=dataTarget.length;
+		infoDatalogicalConsistency= calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, flag); //Total, true, false, %logicalConsistency, %completesa
+		node.STAdata= infoDatalogicalConsistency[0];
+		node.STAdataAttributes= getDataAttributes(infoDatalogicalConsistency[0]);
+		networkNodes.update(node);
+		hideNodeDialog("DialogQualityLogicalConsistency", event);
+
+		document.getElementById("dataQualityResult_info").innerHTML=`<table class="tablesmall">
+			<thead > 
+			<th >Target columns</th><th >Reference columns</th><th>Total records</th>
+			<th>True records</th><th>Logical consistancy rate</th></tr></thead>
+			<tbody><tr>
+			<td>${targets}</td><td>${references}</td>
+			<td>${dataTargetLength}</td>
+			<td>${infoDatalogicalConsistency[1]}</td><td>${infoDatalogicalConsistency[2]}</td>
+			</tr></tbody></table>`
+		showNodeDialog("dataQualityResult");
+		updateQueryAndTableArea(node);
+
+	}else{
+		alert("target node and reference node are the same are identified as the same")
+	}
 	}
 }
 
@@ -9787,39 +9786,32 @@ function okButtonDataQualityTemporalQuality(event){
 	var tolerance= document.getElementById("TemporalQuality_consistency_toleranceRange").value;
 	var consistencyRadioMethod=(document.getElementById("TemporalQuality_intervalMethod_radio_local").checked)?"interval":"global";
 
-	var filter= (document.getElementById("dataQuality_temporalQuality_filter").checked)?true:false;
 	var flag=(document.getElementById("TemporalQuality_checkbox_flag").checked)?true:false;
 	var sort= (document.getElementById("TemporalQuality_checkbox_sort").checked)?true:false;
 	var datalength=data.length;
 	
-	var newData={}, conditionsToFilter=[];
+	var newData={};
 	if (validity_calculate){
-		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag, filter);
+		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag);
 		data= newData.validity[0];
-		conditionsToFilter.push("temporalValidity");
 	} 
 	
 	if (resolution_calculate){
 		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata,flag,filter);
 		data= newData.resolution[0];
-		conditionsToFilter.push("temporalResolution");
 	} 
 	if (consistency_calculate){
 		if(sort)sortDates(data, attributeSelected);
 		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance, flag, filter);
 		data= newData.consistency[0];
-		conditionsToFilter.push("temporalConsistency");
 	}
-	var finalData;
-	
-	if (filter && conditionsToFilter.length>0)finalData= data.filter(obj=>conditionsToFilter.every(attr=> obj[attr]===true)); 
-	else finalData=data;
+
 	
 	if (newData.validity==null || newData.resolution==null ||newData.consistency==null)
 		alert("The attribute selected must be a Date");
 	else{
-		node.STAdata= finalData;
-		node.STAdataAttributes= getDataAttributes(finalData);
+		node.STAdata= data;
+		node.STAdataAttributes= getDataAttributes(data);
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		hideNodeDialog("DialogQualityTemporalQuality", event);
@@ -9916,8 +9908,7 @@ function okButtonDataQualityPositionalQuality(event){
 		var ymin=document.getElementById("PositionalQuality_input_positionalValidity_ymin").value;
 		var ymax=document.getElementById("PositionalQuality_input_positionalValidity_ymax").value;
 		var tag= (document.getElementById("dataQuality_temporalValidity_flag").checked)?true:false;
-		var filter= (document.getElementById("dataQuality_temporalValidity_filter").checked)?true:false;
-		var positionalValidityRate= calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, attributeSelectedLong, attributeSelectedLat,metadata, tag, filter)
+		var positionalValidityRate= calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, attributeSelectedLong, attributeSelectedLat,metadata, tag)
 		if (positionalValidityRate==null){
 			valid=false;
 			alert("Selected collumn must have a geometry type");
@@ -9953,7 +9944,7 @@ function okButtonDataQualityPositionalQuality(event){
 					 	<td>${attributeSelectedLong},${attributeSelectedLat} </td>`
 						if (grouped)html+=`<td> Standard deviation of RMSE across groups </td>`
 						else html+=`<td> global RMSE </td>`
-					 	html+=`<td> ${accuracyValue}</td>
+					 	html+=`<td> ${accuracyValue} m</td>
 						</tr>`
 				}
 				html+="</tbody></table></div>"
@@ -10025,7 +10016,6 @@ function okButtonDataQualityThematicQuality(event){
 	if(thematicValidity)
 		var thematicValidityWay= (document.getElementById("thematicQuality_radio_thematicValidity_list").checked)? "list": "range";
 }
-
 
 function GetCreateNewTable(event){
 	var node=  getNodeDialog("DialogCreateNewTable");

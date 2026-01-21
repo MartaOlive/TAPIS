@@ -879,8 +879,8 @@
 			</select></label>
 
 			<fieldset><legend><input type="checkbox" id="DialogUploadIC_geographicInfo_checkbox"></input>Geographic information</legend>
-				<label>Longitude: <select id="DialogUploadIC_longitude"></select></label><br>
-				<label>Latitude: <select id="DialogUploadIC_latitude"></select></label>
+				<label>X (longitude): <select id="DialogUploadIC_longitude"></select></label><br>
+				<label>Y (latitude): <select id="DialogUploadIC_latitude"></select></label>
 			</fieldset>
 			<fieldset><legend><input type="checkbox" id="DialogUploadIC_date_checkbox"></input>Date column</legend>
 				<label>Column: <select id="DialogUploadIC_date"></select></label>
@@ -1498,13 +1498,13 @@
 			DGGS codes table from geospatial extent
 			<fieldset>
 				<legend>Geospatial extent</legend>
-				<label>Minimum longitude: <input type="text" id="DialogDGGSCodesBboxMinLong" size="16" value="-180"></input></label>
+				<label>Minimum longitude: <input type="text" id="DialogDGGSCodesBboxMinLong" size="16" value="-120"></input></label>
 				<br>
-				<label>Minimum latitude: <input type="text" id="DialogDGGSCodesBboxMinLat" size="16" value="-90"></input></label>
+				<label>Minimum latitude: <input type="text" id="DialogDGGSCodesBboxMinLat" size="16" value="-70"></input></label>
 				<br>
-				<label>Maximum longitude: <input type="text" id="DialogDGGSCodesBboxMaxLong" size="16" value="180"></input></label>
+				<label>Maximum longitude: <input type="text" id="DialogDGGSCodesBboxMaxLong" size="16" value="120"></input></label>
 				<br>
-				<label>Maximum latitude: <input type="text" id="DialogDGGSCodesBboxMaxLat" size="16" value="90"></input></label>
+				<label>Maximum latitude: <input type="text" id="DialogDGGSCodesBboxMaxLat" size="16" value="70"></input></label>
 				<br>
 			</fieldset>
 			<br>
@@ -1801,7 +1801,6 @@
 			<div id="DialogQualityCompletnessOmission_attributesList"></div>
 			<div>
 				<label><input type="checkbox" value="Omission_flagBadRecords" id="dataQuality_omission_flag" name="dataQuality_omission">Flag the bad records (true/false)</label><br>
-				<label><input type="checkbox" value="Omission_filterBadRecords" id="dataQuality_omission_filter" name="dataQuality_omission">Filter the table to keep only valid records</label>
 			</div>
 			<div class="center">
 				<button value="ok" onClick="okButtonDataQualityCompletnessOmission(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
@@ -1906,8 +1905,7 @@
 				</table>
 				</div>
 			<div style="margin-top: 20px;">
-				<label><input type="checkbox" value="logicalConsistency_flagBadRecords" id="dataQuality_logicalConsistency_flag" name="dataQuality_logicalConsistency">Flag the bad records (true/false)</label><br>
-				<label><input type="checkbox" value="logicalConsistency_filterBadRecords" id="dataQuality_logicalConsistency_filter" name="dataQuality_logicalConsistency">Filter the table to keep only valid records</label>
+				<label><input type="checkbox" value="logicalConsistency_flagBadRecords" id="dataQuality_logicalConsistency_flag" name="dataQuality_logicalConsistency">Flag the bad records (true/false)</label>
 			</div>
 			<div class="center">
 				<button value="ok" onClick="okButtonDataQualityDialogQualityLogicalConsistency(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
@@ -2074,7 +2072,6 @@
 			<br>
 			<div>
 				<label for="TemporalQuality_checkbox_flag"><input type="checkbox" id="TemporalQuality_checkbox_flag">Flag the bad records (true/false)</label><br>
-				<label><input type="checkbox" value="temporalQuality_filterBadRecords" id="dataQuality_temporalQuality_filter" name="dataQuality_temporalQuality">Filter the table to keep only valid records (from calculated parameters only)</label>
 			</div>
 			<div class="center">
 				<button value="ok" onClick="okButtonDataQualityTemporalQuality(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
@@ -2114,7 +2111,6 @@
 							</td>
 						</tr>
 
-
 						<tr>
 							<td style="border-right: 2px solid #ccc;">
 								<label style="margin-right: 10px;">Uncertaintly column:</label>
@@ -2124,8 +2120,8 @@
 							<td>
 								<label style="margin-right: 10px; padding-bottom: 0px;">Coordinates units</label>
 								<select id="PositionalQuality_radio_positionalAccuracy_uncertantlyColumn_degreeMeters">
-									<option value="degrees">Degrees</option>
-									<option value="meters">Meters</option>
+									<option value="deg">Degrees</option>
+									<option value="m">Meters</option>
 								</select>
 							</td>
 						</tr>
@@ -2141,30 +2137,14 @@
 							</td>
 						</tr>
 
-						<!-- <tr>
-							<td style="border-right: 2px solid #ccc; padding: 10px;"></td>
-
-							<td style="padding: 10px;">
-								<label>Axis order</label>
-								<select id="PositionalQuality_radio_positionalAccuracy_uncertantlyColumn_lonLat">
-									<option value="lonLat">[Longitude, Latitude]</option>
-									<option value="latLon">[Latitude, Longitude]</option>
-								</select>
-							</td>
-						</tr> -->
 					</table>
 				</fieldset>
 				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalValidity" checked="checked">Positional validity</label></legend>
-					<!-- <label>Axis order</label><select id="PositionalQuality_radio_positionalValidity_xy">
-						<option value="XY">[X, Y]</option>
-						<option value="YX">[Y, X]</option>
-					</select><br><br> -->
 					<label for ="PositionalQuality_input_positionalValidity_xmin"> X minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmin" style="margin-bottom: 10px">
 					<label for ="PositionalQuality_input_positionalValidity_xmax" style="margin-left: 15px"> X maximum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmax" style="margin-bottom: 10px"><br>
 					<label for ="PositionalQuality_input_positionalValidity_ymin"> Y minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_ymin">
 					<label for ="PositionalQuality_input_positionalValidity_ymax" style="margin-left: 15px"> Y maximum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_ymax"> <br><br>
 					<label><input type="checkbox"  id="dataQuality_temporalValidity_flag">Flag the bad records (true/false)</label><br>
-					<label><input type="checkbox"  id="dataQuality_temporalValidity_filter">Filter the table to keep only valid records</label> 
 				</fieldset>
 			</div>
 			<div>
