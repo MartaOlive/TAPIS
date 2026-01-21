@@ -74,7 +74,13 @@ function calculateDataQualityCompletnessOmission(data, attribute,metadata, flag,
 						},
 						"domains": [
 							{
-								"name": "NonConformance" //PredictedValues
+								"name": "NonConformance",
+								"params": [
+										{
+										"name": "column",
+										"value": attribute
+											}
+										]
 							}
 						]
 					},
@@ -83,13 +89,17 @@ function calculateDataQualityCompletnessOmission(data, attribute,metadata, flag,
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items"//,
-									// "params": [
-									// 	{
-									// 		"name": "level",
-									// 		"value": "0.683"
-									// 	}
-									// ]
+									"name": "Rate of missing items",
+									"params":[
+                                        {
+                                            "name": "min",
+                                            "value":0
+                                        },
+                                        {
+                                            "name": "max",
+                                            "value":100
+                                        }
+                                    ]
 								}
 							},
 							"valueType": "number",
@@ -145,10 +155,14 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
 								"name": "Conformance" ,
                                  "params": [
 										{
-									"name": "column",
-									"value": []
-									 	}
-									]
+									"name": "target columns",
+									"value": [targets]
+									},
+									{
+									"name": "reference columns",
+									"value": [references]
+									}
+								]
                             }
 						]
 					},
@@ -206,7 +220,7 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
                 if (flag) data[i]["temporalValidity"] = false;
             }
         } else { //only to
-            if (data[i][attributeSelected] > toDate) {
+            if (date > toDate) {
                 count++;
                 if (flag) data[i]["temporalValidity"] = true;
                 if (filter) newData.push(data[i]);
@@ -217,6 +231,9 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
         }
     }
     if (!filter) newData = data;
+	var params= [{"name": "temporal column","value": attributeSelected}]
+	if(from) params.push({"name": "date from","value": from});
+	if(to) params.push({"name": "date to","value": to});
 
         if (!metadata.dataQualityInfos)
 		metadata.dataQualityInfos=[];
@@ -231,7 +248,8 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 						},
 						"domains": [
 							{
-								"name": "NonConformance" 
+								"name": "Conformance",
+								"params":params
                             }
 						]
 					},
@@ -240,13 +258,17 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items"//,
-									// "params": [
-									// 	{
-									// 		"name": "level",
-									// 		"value": "0.683"
-									// 	}
-									// ]
+									"name": "Rate of missing items",
+									"params":[
+                                        {
+                                            "name": "min",
+                                            "value":0
+                                        },
+                                        {
+                                            "name": "max",
+                                            "value":100
+                                        }
+                                    ]
 								}
 							},
 							"valueType": "number",
@@ -306,9 +328,42 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
             if (flag) data[i]["temporalResolution"] = false;
         }
     }
+	var format;
+	switch (resolutionRadioValue){
+		    case "year":
+				format = "YYYY";               
+				break;
+
+            case "month":
+				format = "YYYY-MM";               
+				break;
+
+            case "day":
+				format = "YYYY-MM-DD";               
+				break;
+
+            case "hour":
+				format = "YYYY-MM-DDTHH";               
+				break;
+
+            case "minute":
+				format = "YYYY-MM-DDTHH:mm";               
+				break;
+
+            case "second":
+				format = "	YYYY-MM-DDTHH:mm:ss";               
+				break;
+
+            case "fraction":
+				format = "YYYY-MM-DDTHH:mm:ss.fff";               
+				break;
+
+            default:
+                return null;
+	}
     if (!filter) newData = data;
     if (!metadata.dataQualityInfos)
-		metadata.dataQualityInfos=[];
+		metadata.dataQualityInfos=[];ññ
 	metadata.dataQualityInfos.push(
 		{
 			"reports": [
@@ -320,7 +375,22 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 						},
 						"domains": [
 							{
-								"name": "NonConformance" 
+								"name": "Conformance",
+								"params": [
+										{
+										"name": "temporal column",
+										"value": attributeSelected
+										},
+																				{
+										"name": "time resolution",
+										"value": resolutionRadioValue
+										},
+										{
+										"name": "format resolution",
+										"value": format
+										}
+
+										] 
                             }
 						]
 					},
@@ -329,13 +399,17 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items"//,
-									// "params": [
-									// 	{
-									// 		"name": "level",
-									// 		"value": "0.683"
-									// 	}
-									// ]
+									"name": "Rate of missing items",
+									"params":[
+                                        {
+                                            "name": "min",
+                                            "value":0
+                                        },
+                                        {
+                                            "name": "max",
+                                            "value":100
+                                        }
+                                    ]
 								}
 							},
 							"valueType": "number",
@@ -438,6 +512,7 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
         }
     }
     if (!filter) newData = data;
+	var intervalMetohd= (consistencyRadioMethod="local")?"Distance to the previous data":"Distance from the global interval baseline";
     if (!metadata.dataQualityInfos)
 		metadata.dataQualityInfos=[];
 	metadata.dataQualityInfos.push(
@@ -451,7 +526,31 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
 						},
 						"domains": [
 							{
-								"name": "NonConformance" 
+								"name": "Conformance",
+								"params": [
+										{
+										"name": "temporal column",
+										"value": attributeSelected
+										},
+										{
+										"name": "number",
+										"value": number
+										},
+										{
+										"name": "time unit",
+										"value": consistencyRadioValue
+										},
+										{
+										"name": "tolerance ",
+										"value": tolerance
+										},
+										{
+										"name": "interval method",
+										"value": intervalMetohd
+										},
+
+
+										]
                             }
 						]
 					},
@@ -460,13 +559,17 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items"//,
-									// "params": [
-									// 	{
-									// 		"name": "level",
-									// 		"value": "0.683"
-									// 	}
-									// ]
+									"name": "Rate of missing items",
+									"params":[
+                                        {
+                                            "name": "min",
+                                            "value":0
+                                        },
+                                        {
+                                            "name": "max",
+                                            "value":100
+                                        }
+                                    ]
 								}
 							},
 							"valueType": "number",
@@ -549,7 +652,13 @@ function accuracyFromUncertaintyInPositions(data, metadata, uncertaintyAttribute
 						},
 						"domains": [
 							{
-								"name": "DifferentialErrors2D"
+								"name": "DifferentialErrors2D",
+								"params": [
+										{
+										"name": "uncertantie column",
+										"value": uncertaintyAttribute
+											}
+										]
 							}
 						]
 					},
@@ -620,7 +729,18 @@ function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAtt
         groupingGroupsObject= calculateRMSE (data,groupingGroupsObject, "column",  longAttribute, latAttribute, units);
         var globalAccuracy = groupingGroupsObject.column["RMSE"];
     }
-
+	var params= [{
+					"name": "longitude column",
+					"value": longAttribute
+					},
+					{
+					"name": "latitude column",
+					"value":latAttribute
+					}
+					
+				]
+ 	if(grouped)params.push({"name": "groumping mode","value": "grouped"},{"name": "groumping column",	"value": grouped})
+	else params.push({"name": "groumping mode",	"value": "global"});
 
    if (!metadata.dataQualityInfos)
 		metadata.dataQualityInfos=[];
@@ -631,11 +751,12 @@ function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAtt
 					"type": "DQ_AbsoluteExternalPositionalAccuracy", 
 					"measureIdentification": {
 						"measure": {
-							"name": "RMSE" //ES LA DESVES Del RMSE. Amb la desvest has posat circularmapaccuracy
+							"name": "RMSE"
 						},
 						"domains": [
 							{
-								"name": "RootMeanSquareError2D"
+								"name": "RootMeanSquareError2D",
+								"params":params
 							}
 						]
 					},
@@ -698,6 +819,11 @@ function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, lo
     }
     if (!filter)
 	newData=data;
+	var params= [{"name": "longitude column","value": longAttribute	},{	"name": "latitude column","value":latAttribute}]
+	if (xmin!="")params.push({"name": "xmin","value": xmin});
+	if (ymin!="")params.push({"name": "ymin","value": ymin});
+	if (xmax!="")params.push({"name": "xmax","value": xmax});
+	if (ymax!="")params.push({"name": "ymax","value": ymax})
     if (!metadata.dataQualityInfos)
 		metadata.dataQualityInfos=[];
 	metadata.dataQualityInfos.push(
@@ -711,7 +837,8 @@ function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, lo
 						},
 						"domains": [
 							{
-								"name": "NonConformance" 
+								"name": "Conformance",
+								"params": params
                             }
 						]
 					},
@@ -720,13 +847,17 @@ function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, lo
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items"//,
-									// "params": [
-									// 	{
-									// 		"name": "level",
-									// 		"value": "0.683"
-									// 	}
-									// ]
+									"name": "Rate of missing items",
+										"params":[
+                                        {
+                                            "name": "min",
+                                            "value":0
+                                        },
+                                        {
+                                            "name": "max",
+                                            "value":100
+                                        }
+                                    ]
 								}
 							},
 							"valueType": "number",
