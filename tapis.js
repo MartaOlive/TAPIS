@@ -10042,7 +10042,7 @@ function populateuploadToICDialogUploadIC(node){
 	document.getElementById("DialogUploadIC_latitude").innerHTML=c;
 	document.getElementById("DialogUploadIC_date").innerHTML=c;
 }
-function GetUploadIC(event){
+async function GetUploadIC(event){
 	var node= getNodeDialog("DialogUploadIC");
 	var attributes= node.STAdataAttributes;
 	var data= node.STAdata;
@@ -10054,7 +10054,7 @@ function GetUploadIC(event){
 	var licenceValue= licenceSelect.options[licenceSelect.selectedIndex].value;
 	var geographicInfo= document.getElementById("DialogUploadIC_geographicInfo_checkbox");
 	var date= document.getElementById("DialogUploadIC_date_checkbox");
-	var bbox=null;
+	var bbox=null, geometry=null;
 	if(geographicInfo){
 		var selectLong= document.getElementById("DialogUploadIC_longitude");
 		var selectLat= document.getElementById("DialogUploadIC_latitude");
@@ -10074,6 +10074,10 @@ function GetUploadIC(event){
 			var latMin=aggrFuncMinValue(latValues);
 			var latMax= aggrFuncMaxValue(latValues);
 			bbox=[longMin,latMin,longMax,latMax];
+			geometry={
+				"coordinates": [[[longMin,latMin],[longMin,latMax],[longMax,latMax],[longMax,latMin],[longMin,latMin]]],
+				"type": "Polygon"
+			}
 		}
 	}
 	var now=new Date().toISOString();
@@ -10092,27 +10096,26 @@ function GetUploadIC(event){
 	}
 
 	if (title=="")title=`Data from TAPIS on ${now}`
-	if (author=="") author= "Author example" //Com s'haurà 'destar autentificat.. 
+	if (author=="") author= "Author" 
 	var id= crypto.randomUUID();
-
-
+	var href= await uploadDataToIPFS(node.STAdata);
+	var fileChecksum= "12"+getFileName(href).length.toString(16)/2+getFileName(href)
+	
+	
 	informationToUpdate= 
 		{
 		"assets": {
 			"PRODUCT": {
-			"file:checksum": "",
-			"file:size": "",
-			"href": "",
+			"file:checksum": fileChecksum,
+			"file:size": JSON.stringify(data).length,
+			"href": href,
 			"title": title,
 			"type": "application/json"
 			}
 		},
 		"bbox": bbox,
 		"collection": "DQ4STA",
-		"geometry": {
-			"coordinates": [],
-			"type": "Point"
-		},
+		"geometry": geometry,
 		"id": id,
 		"links": [
 			{
@@ -10123,17 +10126,12 @@ function GetUploadIC(event){
 			{
 			"rel": "self",
 			"type": "application/json",
-			"href": "https://ic.ogc.secd.eu/stac/collections/DQ4STA/items/xxx"
+			"href": "https://ic.ogc.secd.eu/stac/collections/DQ4STA/items/"+id
 			},
 			{
 			"rel": "collection",
 			"type": "application/json",
 			"href": "https://ic.ogc.secd.eu/stac/collections/DQ4STA"
-			},
-			{
-			"href": "https://ic.ogc.secd.eu/stac",
-			"rel": "root",
-			"type": "application/json"
 			}
 		],
 		"properties": {
@@ -10142,17 +10140,41 @@ function GetUploadIC(event){
 			"end_datetime": startEnd,
 			"license": licenceValue,
 			"license_description": `https://creativecommons.org/licenses/${licenceValue.slice(3)}/4.0/deed.en`,
-			"start_datetime": startDate
+			"start_datetime": startDate,
+			"metadata": node.STAmetadata
+
 		},
 		"stac_extensions": [
 			"https://stac-extensions.github.io/file/v2.1.0/schema.json"
 		],
-		"metadata":node.STAmetadata,
 		"stac_version": "1.0.0",
 		"type": "Feature"
 		}
 		console.log(informationToUpdate)
 }
+
+async function uploadDataToIPFS(data){
+	try{
+		var url="https://ipfs.ogc.secd.eu/files"
+		var formData= createJSONFromDataToSendToIPFS(data);
+		var response= await HTTPJSONData(url, ['Location'], "POST", formData,null,"multipart/form-data")  
+	}
+	 catch (error) {
+		showInfoMessage('There was an error with ' + url + ": " + error.message);
+	}
+	if ((response)) {
+		return response.responseHeaders.Location;
+	 }
+}
+
+function createJSONFromDataToSendToIPFS(data){
+	var blob = new Blob([JSON.stringify(data, null, 2)],{ type: 'application/json'});
+	var file = new File([blob], 'dades.json', {type: 'application/json'});
+	var formData = new FormData();
+	formData.append('file', file); 
+	return formData;
+}
+
 
 /*function giveMeNetworkInformation(event) {
 			hideNodeDialog("DialogContextMenu", event);

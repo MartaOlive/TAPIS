@@ -68,7 +68,7 @@ function calculateDataQualityCompletnessOmission(data, attribute,metadata, flag)
 					"type": "DQ_CompletenessOmission",
 					"measureIdentification": {
 						"measure": {
-							"name": "Missing items"
+							"name": "MissingItems"
 						},
 						"domains": [
 							{
@@ -87,8 +87,12 @@ function calculateDataQualityCompletnessOmission(data, attribute,metadata, flag)
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items",
+									"name": "items",
 									"params":[
+										{
+											"name":"subtype",
+											"value":"rate"
+										},
                                         {
                                             "name": "min",
                                             "value":0
@@ -146,7 +150,7 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
 					"type": "DQ_ConceptualConsistency",
 					"measureIdentification": {
 						"measure": {
-							"name": "Value domain"
+							"name": "ValueDomain"
 						},
 						"domains": [
 							{
@@ -169,8 +173,12 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of consistant items",
+									"name": "items",
                                     "params":[
+										{
+											"name":"subtype",
+											"value":"rate"
+										},
                                         {
                                             "name": "min",
                                             "value":0
@@ -237,7 +245,7 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 					"type": "DQ_TemporalValidity",
 					"measureIdentification": {
 						"measure": {
-							"name": "Value domain"
+							"name": "ValueDomain"
 						},
 						"domains": [
 							{
@@ -251,8 +259,12 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items",
+									"name": "items",
 									"params":[
+										{
+											"name":"subtype",
+											"value":"rate"
+										},
                                         {
                                             "name": "min",
                                             "value":0
@@ -362,7 +374,7 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 					"type": "DQ_TemporalResolution",
 					"measureIdentification": {
 						"measure": {
-							"name": "Value domain"
+							"name": "ValueDomain"
 						},
 						"domains": [
 							{
@@ -390,8 +402,12 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items",
+									"name": "items",
 									"params":[
+										{
+											"name":"subtype",
+											"value":"rate"
+										},
                                         {
                                             "name": "min",
                                             "value":0
@@ -508,7 +524,7 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
 					"type": "DQ_TemporalConsistency",
 					"measureIdentification": {
 						"measure": {
-							"name": "Value domain"
+							"name": "ValueDomain"
 						},
 						"domains": [
 							{
@@ -545,8 +561,12 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items",
+									"name": "items",
 									"params":[
+										{
+											"name":"subtype",
+											"value":"rate"
+										},
                                         {
                                             "name": "min",
                                             "value":0
@@ -735,7 +755,7 @@ function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAtt
 					"type": "DQ_AbsoluteExternalPositionalAccuracy", 
 					"measureIdentification": {
 						"measure": {
-							"name": "RMSE"
+							"name": "RootMeanSquare"
 						},
 						"domains": [
 							{
@@ -813,7 +833,7 @@ function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, lo
 					"type": "DQ_PositionalValidity",
 					"measureIdentification": {
 						"measure": {
-							"name": "Value domain"
+							"name": "ValueDomain"
 						},
 						"domains": [
 							{
@@ -827,8 +847,12 @@ function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, lo
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items",
-										"params":[
+									"name": "items",
+									"params":[
+										{
+											"name":"subtype",
+											"value":"rate"
+										},
                                         {
                                             "name": "min",
                                             "value":0
