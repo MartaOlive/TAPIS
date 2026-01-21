@@ -109,10 +109,10 @@ function calculateDataQualityCompletnessOmission(data, attribute,metadata, flag)
 		});
 
 
-    return [data, data.length, count, data.length - count, rate.toFixed(2), 100 - rate.toFixed(2)];//data, Total, true, false, %omission, %completesa
+    return [count, data.length - count, rate.toFixed(2), 100 - rate.toFixed(2)];//data, Total, true, false, %omission, %completesa
 }
 
-function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, flag) {
+function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references,metadata, flag) {
     var count = 0;
 
     //Create an array with all possibilities (without repetitions)
@@ -189,7 +189,7 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
 				}
 			]
 		});
-    return [dataTarget, count, (count / dataTarget.length) * 100];
+    return [count, (count / dataTarget.length) * 100];
 }
 
 function calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag) {
@@ -271,7 +271,7 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 				}
 			]
 		});
-    return ([data, count, (count / data.length) * 100])
+    return ([count, (count / data.length) * 100])
 
 }
 function calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata, flag) {
@@ -410,7 +410,7 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 				}
 			]
 		});
-    return ([data, count, (count / data.length) * 100]);
+    return ([count, (count / data.length) * 100]);
 }
 
 function calculateDataQualityTemporalConsistency(data, attributeSelected, number, consistencyRadioValue, consistencyRadioMethod, tolerance, metadata, flag) {
@@ -565,7 +565,7 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
 				}
 			]
 		});
-    return [data, count, (count / data.length) * 100]
+    return [count, (count / data.length) * 100]
 }
 
 function returnValidRange(currentData, number, tolerance, consistencyRadioValue) {
@@ -847,7 +847,7 @@ function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, lo
 				}
 			]
 		});
-    return [data, count, (count / data.length) * 100]
+    return [count, (count / data.length) * 100]
 }
 
 var RootURLQualityML="https://www.qualityml.org/";

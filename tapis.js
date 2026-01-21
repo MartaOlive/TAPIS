@@ -7995,6 +7995,7 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "logicalConsistency.png") {
+			if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
 			if (populateDialogQualityLogicalConsistency(currentNode)){
 				showNodeDialog("DialogQualityLogicalConsistency");
 			}else{
@@ -9628,8 +9629,8 @@ function okButtonDataQualityCompletnessOmission(event){
 
 	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected,metadata, flag); //Response:data, Total, true, false, %omission, %completness
 
-	node.STAdata=infoDataOmission[0];
-	node.STAdataAttributes=getDataAttributes(infoDataOmission[0]);
+	node.STAdata=data;
+	node.STAdataAttributes=getDataAttributes(data);
 	networkNodes.update(node);
 	hideNodeDialog("DialogQualityCompletnessOmission", event);
 	
@@ -9638,8 +9639,8 @@ function okButtonDataQualityCompletnessOmission(event){
 	<th >Column</th><th>Total records</th><th>Empty records</th>
 	<th>Omission rate</th><th>Completeness rate</th></tr></thead>
 	<tbody><tr>
-	<td>${selected}</td><td>${infoDataOmission[1]}</td><td>${infoDataOmission[3]}</td>
-	<td>${infoDataOmission[4]}</td><td>${infoDataOmission[5]}</td>
+	<td>${selected}</td><td>${data.length}</td><td>${infoDataOmission[0]}</td>
+	<td>${infoDataOmission[1]}</td><td>${infoDataOmission[2]}</td>
 	</tr></tbody></table>`;
 	showNodeDialog("dataQualityResult");
 	
@@ -9727,16 +9728,17 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 		idTarget=document.getElementById("DialogQualityLogicalConsistency_table_div").getAttribute("data-value_1");
 		idReference=document.getElementById("DialogQualityLogicalConsistency_table_div").getAttribute("data-value_0");
 	}
-
+	var metadata= (node.STAmetadata)?node.STAmetadata:{}
 	if(idTarget!=idReference){
 
 		var infoDatalogicalConsistency;
 		var dataTarget= networkNodes.get(idTarget).STAdata;
 		var dataReference= networkNodes.get(idReference).STAdata;
 		var dataTargetLength=dataTarget.length;
-		infoDatalogicalConsistency= calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references, flag); //Total, true, false, %logicalConsistency, %completesa
-		node.STAdata= infoDatalogicalConsistency[0];
-		node.STAdataAttributes= getDataAttributes(infoDatalogicalConsistency[0]);
+		infoDatalogicalConsistency= calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references,metadata, flag); //Total, true, false, %logicalConsistency, %completesa
+		node.STAdata= dataTarget;
+		node.STAdataAttributes= getDataAttributes(dataTarget);
+		node.STAmetadata=metadata;
 		networkNodes.update(node);
 		hideNodeDialog("DialogQualityLogicalConsistency", event);
 
@@ -9747,7 +9749,7 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 			<tbody><tr>
 			<td>${targets}</td><td>${references}</td>
 			<td>${dataTargetLength}</td>
-			<td>${infoDatalogicalConsistency[1]}</td><td>${infoDatalogicalConsistency[2]}</td>
+			<td>${infoDatalogicalConsistency[0]}</td><td>${infoDatalogicalConsistency[1]}</td>
 			</tr></tbody></table>`
 		showNodeDialog("dataQualityResult");
 		updateQueryAndTableArea(node);
@@ -9789,21 +9791,18 @@ function okButtonDataQualityTemporalQuality(event){
 	var flag=(document.getElementById("TemporalQuality_checkbox_flag").checked)?true:false;
 	var sort= (document.getElementById("TemporalQuality_checkbox_sort").checked)?true:false;
 	var datalength=data.length;
-	
+	var metadata= (node.STAmetadata)?node.STAmetadata:{}
 	var newData={};
 	if (validity_calculate){
 		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag);
-		data= newData.validity[0];
 	} 
 	
 	if (resolution_calculate){
 		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata,flag,filter);
-		data= newData.resolution[0];
 	} 
 	if (consistency_calculate){
 		if(sort)sortDates(data, attributeSelected);
-		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance, flag, filter);
-		data= newData.consistency[0];
+		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,metadata, flag, filter);
 	}
 
 	
@@ -9821,9 +9820,9 @@ function okButtonDataQualityTemporalQuality(event){
 			html= `<table class="tablesmall">
 						<thead > 
 						<th></th><th>Column</th><th>Total records</th><th>True records</th><th>Rate</th></tr></thead><tbody>`;
-			if(validity_calculate)html+= `<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.validity[1]}</td><td>${(newData.validity[1]/datalength)*100}</td></tr>`
-			if(resolution_calculate)html+= `<tr><td>Temporal resolution</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.resolution[1]}</td><td>${(newData.resolution[1]/datalength)*100}</td></tr>`
-			if(consistency_calculate)html+= `<tr><td>Temporal consistency</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.consistency[1]}</td><td>${(newData.consistency[1]/datalength)*100}</td></tr>`
+			if(validity_calculate)html+= `<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.validity[0]}</td><td>${newData.validity[1]}</td></tr>`
+			if(resolution_calculate)html+= `<tr><td>Temporal resolution</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.resolution[0]}</td><td>${newData.resolution[1]}</td></tr>`
+			if(consistency_calculate)html+= `<tr><td>Temporal consistency</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.consistency[0]}</td><td>${newData.consistency[1]}</td></tr>`
 			html+=`</tbody></table>`;
 			document.getElementById("dataQualityResult_info").innerHTML= html
 			showNodeDialog("dataQualityResult");
@@ -9864,9 +9863,7 @@ function okButtonDataQualityPositionalQuality(event){
 	var attributeSelectedLat=selectLat.options[selectLat.selectedIndex].value;
 	var valid, accuracyValue;
 	var data=node.STAdata;
-	if (!node.STAmetadata)
-		node.STAmetadata={};
-	var metadata=node.STAmetadata;
+	var metadata= (node.STAmetadata)?node.STAmetadata:{}
 
 	if (positionalAccuracy){
 		var accuracyMethod= (document.getElementById("PositionalQuality_radio_positionalAccuracy_uncertantlyColumn").checked)?"uncertantlyColumn": "geometryColumns";
@@ -9914,8 +9911,8 @@ function okButtonDataQualityPositionalQuality(event){
 			alert("Selected collumn must have a geometry type");
 		} else {
 			valid=true;
-			node.STAdata= positionalValidityRate[0];
-			node.STAdataAttributes= getDataAttributes(positionalValidityRate[0]);
+			node.STAdata= data;
+			node.STAdataAttributes= getDataAttributes(data);
 		}
 	}
 	if (valid) {
@@ -9952,16 +9949,16 @@ function okButtonDataQualityPositionalQuality(event){
 			html+="<br>"
 			if (positionalValidity){
 				var positionValidityRateValue;
-				if (!Number.isInteger(positionalValidityRate[2]))
-					positionValidityRateValue= positionalValidityRate[2].toFixed(3);
+				if (!Number.isInteger(positionalValidityRate[1]))
+					positionValidityRateValue= positionalValidityRate[1].toFixed(3);
 				else 
-				 	positionValidityRateValue = positionalValidityRate[2];
+				 	positionValidityRateValue = positionalValidityRate[1];
 				 	html+= `<div> Positional validity <br>
 				 	<table class="tablesmall"><thead><th>Columns</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
 						<tbody><tr>
 					 		<td>${attributeSelectedLong},${attributeSelectedLat}</td>
 					 		<td>${dataLength}</td>
-					 		<td>${positionalValidityRate[1]}</td>
+					 		<td>${positionalValidityRate[0]}</td>
 					 		<td>${positionValidityRateValue}</td>
 					 	</tr>`;
 			}
@@ -9974,7 +9971,7 @@ function okButtonDataQualityPositionalQuality(event){
 }
 
 
-function populateDialogQualityThematicQuality(node){
+function populateDialogQualityThematicQuality(node){ //Aqui hi ha un lio de cal deu xq hi ha dos funcions repetides
 	populateAttributesListSelectThematicQuality(node);
 	saveNodeDialog("DialogQualityThematicQuality", node);
 }
