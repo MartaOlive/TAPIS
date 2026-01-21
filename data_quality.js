@@ -135,14 +135,20 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
 		{
 			"reports": [
 				{
-					"type": "DQ_LogicalConsistency",
+					"type": "DQ_ConceptualConsistency",
 					"measureIdentification": {
 						"measure": {
 							"name": "Value domain"
 						},
 						"domains": [
 							{
-								"name": "NonConformance" 
+								"name": "Conformance" ,
+                                 "params": [
+										{
+									"name": "column",
+									"value": []
+									 	}
+									]
                             }
 						]
 					},
@@ -151,13 +157,17 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
 							"type": "DQ_QuantitativeResult",
 							"errorStatistic": {
 								"metric": {
-									"name": "Rate of missing items"//,
-									// "params": [
-									// 	{
-									// 		"name": "level",
-									// 		"value": "0.683"
-									// 	}
-									// ]
+									"name": "Rate of consistant items",
+                                    "params":[
+                                        {
+                                            "name": "min",
+                                            "value":0
+                                        },
+                                        {
+                                            "name": "max",
+                                            "value":100
+                                        }
+                                    ]
 								}
 							},
 							"valueType": "number",
@@ -177,10 +187,14 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
     if (!from && !to) return null;
     var count = 0;
     var newData = [];
+    var fromDate=new Date(from);
+    var toDate=new Date(to);
+    var date;
     for (var i = 0; i < data.length; i++) {
         if (from) {
-            if (data[i][attributeSelected] < from) {
-                if (data[i][attributeSelected] > to) {
+            date= data[i][attributeSelected]
+            if (date < fromDate) {
+                if (date > toDate) {
                     count++;
                     if (flag) data[i]["temporalValidity"] = true;
                     if (filter) newData.push(data[i]);
@@ -192,7 +206,7 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
                 if (flag) data[i]["temporalValidity"] = false;
             }
         } else { //only to
-            if (data[i][attributeSelected] > to) {
+            if (data[i][attributeSelected] > toDate) {
                 count++;
                 if (flag) data[i]["temporalValidity"] = true;
                 if (filter) newData.push(data[i]);
@@ -583,8 +597,8 @@ function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAtt
         for (var g=0;g<data.length;g++){
             data[g]["RMSE"]= groupingGroupsObject[data[g][grouped]]["RMSE"];
             if (newColumns){
-                data[g]["LongMean"]= groupingGroupsObject[data[g][grouped]]["LongMean"];
-                data[g]["LatMean"]= groupingGroupsObject[data[g][grouped]]["LatMean"];
+                data[g]["MeanLong"]= groupingGroupsObject[data[g][grouped]]["MeanLong"];
+                data[g]["MeanLat"]= groupingGroupsObject[data[g][grouped]]["MeanLat"];
             }
         }
         var dataToEvaluateGlobalAccuracy=[];
@@ -816,8 +830,8 @@ function calculateRMSE (data, groupingObject, keyToEvaluate, longAttribute, latA
     var sumSquareDistances = distances.reduce((acc, d) => acc + d ** 2, 0);
     var RMSE = Math.sqrt(sumSquareDistances / groupingObject[keyToEvaluate]["DataPositions"].length);
 
-    groupingObject[keyToEvaluate]["LongMean"]= longitudeMean;
-    groupingObject[keyToEvaluate]["LatMean"]= latitudeMean;
+    groupingObject[keyToEvaluate]["MeanLong"]= longitudeMean;
+    groupingObject[keyToEvaluate]["MeanLat"]= latitudeMean;
     groupingObject[keyToEvaluate]["RMSE"]= RMSE;
 
     return groupingObject;

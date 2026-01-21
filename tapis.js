@@ -9945,7 +9945,7 @@ function okButtonDataQualityPositionalQuality(event){
 				if(accuracyMethod=="uncertantlyColumn"){
 					html+=`<tr>
 						<td>${attributeSelectedUncertantly} </td>
-						<td> Standar deviation </td>
+						<td> Standard deviation </td>
 						<td> ${accuracyValue}</td>
 						</tr>`
 				}else{
@@ -9953,7 +9953,7 @@ function okButtonDataQualityPositionalQuality(event){
 					 	<td>${attributeSelectedLong},${attributeSelectedLat} </td>`
 						if (grouped)html+=`<td> Standard deviation of RMSE across groups </td>`
 						else html+=`<td> global RMSE </td>`
-					 	html+=`<td> ${accuracyValue} m</td>
+					 	html+=`<td> ${accuracyValue}</td>
 						</tr>`
 				}
 				html+="</tbody></table></div>"
