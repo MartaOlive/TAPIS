@@ -10112,7 +10112,7 @@ async function GetUploadIC(event){
 				return;
 			}
 	}
-	bbox=[longMin,latMin,longMax,latMax];
+	bbox=[parseFloat(longMin),parseFloat(latMin),parseFloat(longMax),parseFloat(latMax)];
 	geometry={
 		"coordinates": [[[longMin,latMin],[longMin,latMax],[longMax,latMax],[longMax,latMin],[longMin,latMin]]],
 		"type": "Polygon"
@@ -10173,6 +10173,7 @@ async function GetUploadIC(event){
 		},
 		
 		"collection": "DQ4STA",
+		"bbox":bbox,
 		"geometry": geometry,
 		"id": id,
 		"links": [
@@ -10208,7 +10209,7 @@ async function GetUploadIC(event){
 		"stac_version": "1.0.0",
 		"type": "Feature"
 		}
-		if (bbox)informationToUpdate.bbox=bbox;
+		
 		console.log(informationToUpdate)
 		var result=await addAnAssetToInmutableCatalog("https://api.ogc.secd.eu/api/dq4sta/assets/"+id, "e9c79149-5c17-403e-af14-1a3ef13be2a3", informationToUpdate)
 		// var checkResult= document.getElementById("DialogUploadIC_checkbox_checkresult").checked?true:false;
