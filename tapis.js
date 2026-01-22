@@ -10094,10 +10094,18 @@ async function GetUploadIC(event){
 			if (!pattern.test(longMin))columsAreNumbers=false;
 			longMax=document.getElementById("DialogUploadIC_input_xmax").value;
 			if (!pattern.test(longMax))columsAreNumbers=false;
+			if(parseFloat(longMin)>parseFloat(longMax)){
+				alert("XMin value is higher than XMax value");
+				return;
+			}
 			latMin=document.getElementById("DialogUploadIC_input_ymin").value;
 			if (!pattern.test(latMin))columsAreNumbers=false;
 			latMax= document.getElementById("DialogUploadIC_input_ymax").value;
 			if (!pattern.test(latMax))columsAreNumbers=false;
+			if(parseFloat(latMin)>parseFloat(latMax)){
+				alert("YMin value is higher than YMax value");
+				return;
+			}
 			
 			if (columsAreNumbers==false){
 				alert("This procedure must contain geographical information. Values introduced are not valid")
@@ -10132,6 +10140,12 @@ async function GetUploadIC(event){
 		var paternDate= /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(Z)?(\.000)?(\+00:00)?$/;
 		if (!paternDate.test(startDate))itsADate=false;
 		if (!paternDate.test(endDate))itsADate=false;
+		var startDateAsDate=new Date(startDate);
+		var endDateAsDate=new Date(endDate);
+		if(startDateAsDate>endDateAsDate){
+			alert("End date can't be before start date");
+			return;
+		}
 		if (itsADate==false){
 			alert("This procedure must contain date information. Introduced dates do not meet this requirement")
 			return
