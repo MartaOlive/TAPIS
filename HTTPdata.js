@@ -349,8 +349,8 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend,
 			options.headers=headersToSend;
 		else
 			options.headers={'Accept': 'application/json, */*;q=0.8'};
-
-		AddHeadersIfNeeded(options);
+		if (!headersToSend || !headersToSend["X-API-Key"])
+			AddHeadersIfNeeded(options);
 		if (objToSend)
 		{
 			if (mediaToSend!="multipart/form-data")

@@ -10121,7 +10121,7 @@ async function GetUploadIC(event){
 			"type": "application/json"
 			}
 		},
-		"bbox": bbox,
+		
 		"collection": "DQ4STA",
 		"geometry": geometry,
 		"id": id,
@@ -10158,8 +10158,25 @@ async function GetUploadIC(event){
 		"stac_version": "1.0.0",
 		"type": "Feature"
 		}
+		if (bbox)informationToUpdate.bbox=bbox;
 		console.log(informationToUpdate)
+		var result=await addAnAssetToInmutableCatalog("https://api.ogc.secd.eu/api/dq4sta/assets/"+id, "e9c79149-5c17-403e-af14-1a3ef13be2a3", informationToUpdate)
+		// var checkResult= document.getElementById("DialogUploadIC_checkbox_checkresult").checked?true:false;
+		// if (checkResult){
+		// 	  setTimeout(addJSONNodeToCheckAddingToCalatongResult, 2000, );!!
+		// }
+		// showInfoMessage("The asset has been added to DQ4STA at URL: ")
+		console.log(result)
 }
+function addJSONNodeToCheckAddingToCalatongResult(){
+
+}
+
+async function addAnAssetToInmutableCatalog(url , key, obj){
+
+	var response= await HTTPJSONData(url, null, "PUT", obj, {"X-API-Key": key}) 
+	console.log(response);
+} 
 
 async function uploadDataToIPFS(data){
 	try{
