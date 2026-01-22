@@ -879,12 +879,38 @@
 				<option value="CC BY-NC-ND">Creative Commons Attribution Non Commercial No Derivatives 4.0 (BY-NC-ND) </option>			
 			</select></label>
 
-			<fieldset><legend><input type="checkbox" id="DialogUploadIC_geographicInfo_checkbox"></input>Geographic information</legend>
-				<label>X (longitude): <select id="DialogUploadIC_longitude"></select></label><br>
-				<label>Y (latitude): <select id="DialogUploadIC_latitude"></select></label>
+			<fieldset><legend>Geographic information</legend>
+				<fieldset><legend><input type="radio" id="DialogUploadIC_radio_geographic_column" name="DialogUploadIC_radio" checked>Columns</legend>
+					<label>X (longitude): <select id="DialogUploadIC_columns_longitude"></select></label>
+					<label>Y (latitude): <select id="DialogUploadIC_columns_latitude"></select></label>
+				</fieldset>
+				<fieldset><legend><input type="radio" id="DialogUploadIC_radio_geographic_input" name="DialogUploadIC_radio">Manually</legend>
+					<label for="DialogUploadIC_input_xmin"> X minimum: </label> <input type="text" id="DialogUploadIC_input_xmin" style="margin-bottom: 10px">
+					<label for="DialogUploadIC_input_xmax" style="margin-left: 15px"> X maximum: </label> <input type="text" id="DialogUploadIC_input_xmax" style="margin-bottom: 10px"><br>
+					<label for="DialogUploadIC_input_ymin"> Y minimum: </label> <input type="text" id="DialogUploadIC_input_ymin">
+					<label for="DialogUploadIC_input_ymax" style="margin-left: 15px"> Y maximum: </label> <input type="text" id="DialogUploadIC_input_ymax"> <br>
+				</fieldset>				
 			</fieldset>
-			<fieldset><legend><input type="checkbox" id="DialogUploadIC_date_checkbox"></input>Date column</legend>
-				<label>Column: <select id="DialogUploadIC_date"></select></label>
+			<fieldset>
+				<legend>Date column</legend>
+				<fieldset><legend><input type="radio" id="DialogUploadIC_radio_date_column" name="DialogUploadIC_radio_geographic" checked>Column</legend>
+					<select id="DialogUploadIC_date"></select>
+				</fieldset>
+				<fieldset><legend><input type="radio"  id="DialogUploadIC_radio_date_input" name="DialogUploadIC_radio_geographic">Manually</legend>
+				<table>
+					<tbody>
+						<tr>
+							<td><label>Start:</label></td>
+							<td><input id="DialogUploadIC_inputText_start" type="text" placeholder="YYYY-MM-DDTHH:MM:SS" style="width:150px" onchange="addTimeToTemporalQualityCalendar('DialogUploadIC_inputText_start','DialogUploadIC_calendar_start')"></td>
+							<td><input type="datetime-local" id="DialogUploadIC_calendar_start" onchange="addTimeToTemporalQualityCalendar('DialogUploadIC_calendar_start','DialogUploadIC_inputText_start')"></td>
+						</tr>
+						<tr>
+							<td><label>End:</label></td>
+							<td><input id="DialogUploadIC_inputText_end" type="text" placeholder="YYYY-MM-DDTHH:MM:SS" style="width:150px" onchange="addTimeToTemporalQualityCalendar('DialogUploadIC_inputText_end','DialogUploadIC_calendar_end')"></td>
+							<td><input type="datetime-local" id="DialogUploadIC_calendar_end" onchange="addTimeToTemporalQualityCalendar('DialogUploadIC_calendar_end','DialogUploadIC_inputText_end')"></td>
+						</tr>
+					</tbody>
+				</table>
 			</fieldset>
 			<label>Add GeoJSON node to check the result<input type="checkbox" cheked id="DialogUploadIC_checkbox_checkresult"></label>
 			<div class="center" style="margin-top:10px">

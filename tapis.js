@@ -5988,7 +5988,7 @@ function getDataAttributesGeoJSONSchema(jsonschema){
 }
 
 //Has the string s a ISO data in the position i? It does not 
-function fragmentStartsWithISODate(s, i) { //regex equivalent: const pattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z)?(\.000)?(\+00:00)?$/;
+function fragmentStartsWithISODate(s, i) { //regex equivalent: pattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z)?(\.000)?(\+00:00)?$/;
 	if (s.charAt(i+0) >= '0' && s.charAt(i+0) <= '9' &&
 		s.charAt(i+1) >= '0' && s.charAt(i+1) <= '9' &&
 		s.charAt(i+2) >= '0' && s.charAt(i+2) <= '9' &&
@@ -10046,8 +10046,8 @@ function populateuploadToICDialogUploadIC(node){
 		c+=`<option value="${attributes[i]}">${attributes[i]}</option>`
 	}
 
-	document.getElementById("DialogUploadIC_longitude").innerHTML=c;
-	document.getElementById("DialogUploadIC_latitude").innerHTML=c;
+	document.getElementById("DialogUploadIC_columns_longitude").innerHTML=c;
+	document.getElementById("DialogUploadIC_columns_latitude").innerHTML=c;
 	document.getElementById("DialogUploadIC_date").innerHTML=c;
 }
 async function GetUploadIC(event){
@@ -10060,16 +10060,17 @@ async function GetUploadIC(event){
 	var author= document.getElementById("DialogUploadIC_author").value;
 	var licenceSelect= document.getElementById("DialogUploadIC_license");
 	var licenceValue= licenceSelect.options[licenceSelect.selectedIndex].value;
-	var geographicInfo= document.getElementById("DialogUploadIC_geographicInfo_checkbox");
-	var date= document.getElementById("DialogUploadIC_date_checkbox");
-	var bbox=null, geometry=null;
-	if(geographicInfo){
-		var selectLong= document.getElementById("DialogUploadIC_longitude");
-		var selectLat= document.getElementById("DialogUploadIC_latitude");
+	var bbox, geometry;
+
+	//Geoographic information
+	var columsAreNumbers
+	var longMin, longMax,latMin, latMax;
+	if(document.getElementById("DialogUploadIC_radio_geographic_column").checked){
+		var selectLong= document.getElementById("DialogUploadIC_columns_longitude");
+		var selectLat= document.getElementById("DialogUploadIC_columns_latitude");
 		var selectLongValue= selectLong.options[selectLong.selectedIndex].value;
 		var selectLatValue= selectLat.options[selectLat.selectedIndex].value;
-		var columsAreNumbers;
-		if ((attributes[selectLongValue].type=="integer"||attributes[selectLongValue].type=="number")&&(attributes[selectLatValue].type=="integer"||attributes[selectLatValue].type=="number"))columsAreNumbers=true;
+		var columsAreNumbers=((attributes[selectLongValue].type=="integer"||attributes[selectLongValue].type=="number")&&(attributes[selectLatValue].type=="integer"||attributes[selectLatValue].type=="number"))?true:false;
 		if (columsAreNumbers){
 			var longValues=[];
 			var latValues=[];
@@ -10077,31 +10078,66 @@ async function GetUploadIC(event){
 				longValues.push(data[i][selectLongValue]);
 				latValues.push(data[i][selectLatValue]);
 			}
-			var longMin=aggrFuncMinValue(longValues);
-			var longMax=aggrFuncMaxValue(longValues);
-			var latMin=aggrFuncMinValue(latValues);
-			var latMax= aggrFuncMaxValue(latValues);
-			bbox=[longMin,latMin,longMax,latMax];
-			geometry={
-				"coordinates": [[[longMin,latMin],[longMin,latMax],[longMax,latMax],[longMax,latMin],[longMin,latMin]]],
-				"type": "Polygon"
-			}
+			longMin=aggrFuncMinValue(longValues);
+			longMax=aggrFuncMaxValue(longValues);
+			latMin=aggrFuncMinValue(latValues);
+			latMax= aggrFuncMaxValue(latValues);
 		}
+		else{
+			alert("This procedure must contain geographical information. The selected columns do not meet this requirement")
+			return;
+		}
+	}else{ //xmin, xmax, ymin, ymax
+			var pattern= /^-?\d+(\.\d+)?$/;	
+			columsAreNumbers=true;	
+			longMin=document.getElementById("DialogUploadIC_input_xmin").value;
+			if (!pattern.test(longMin))columsAreNumbers=false;
+			longMax=document.getElementById("DialogUploadIC_input_xmax").value;
+			if (!pattern.test(longMax))columsAreNumbers=false;
+			latMin=document.getElementById("DialogUploadIC_input_ymin").value;
+			if (!pattern.test(latMin))columsAreNumbers=false;
+			latMax= document.getElementById("DialogUploadIC_input_ymax").value;
+			if (!pattern.test(latMax))columsAreNumbers=false;
+			
+			if (columsAreNumbers==false){
+				alert("This procedure must contain geographical information. Values introduced are not valid")
+				return;
+			}
 	}
+	bbox=[longMin,latMin,longMax,latMax];
+	geometry={
+		"coordinates": [[[longMin,latMin],[longMin,latMax],[longMax,latMax],[longMax,latMin],[longMin,latMin]]],
+		"type": "Polygon"
+	}
+	
 	var now=new Date().toISOString();
-	var startDate=now;
-	var startEnd=now;
-	if(date){
+	var startDate, endDate;
+	//Date
+	if(document.getElementById("DialogUploadIC_radio_date_column").checked){//column
 		var selectDate= document.getElementById("DialogUploadIC_date");
 		var selectDateValue= selectDate.options[selectDate.selectedIndex].value;
-
 		if(attributes[selectDateValue].type= "isodatetime"){
 			var dataSorted=sortDates(data, selectDateValue);
-			var startDate=dataSorted[0][selectDateValue];
-			var startEnd=dataSorted[dataSorted.length-1][selectDateValue]			
-		}
+			startDate=dataSorted[0][selectDateValue];
+			endDate=dataSorted[dataSorted.length-1][selectDateValue]
+		}else{
+			alert("This procedure must contain date information. The selected column do not meet this requirement")
+			return;
 
+		}	
+	}else{//calendar
+		var itsADate=true;
+		startDate=document.getElementById("DialogUploadIC_inputText_start").value;
+		endDate=document.getElementById("DialogUploadIC_inputText_end").value;
+		var paternDate= /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?(Z)?(\.000)?(\+00:00)?$/;
+		if (!paternDate.test(startDate))itsADate=false;
+		if (!paternDate.test(endDate))itsADate=false;
+		if (itsADate==false){
+			alert("This procedure must contain date information. Introduced dates do not meet this requirement")
+			return
+		}
 	}
+	
 
 	if (title=="")title=`Data from TAPIS on ${now}`
 	if (author=="") author= "Author" 
@@ -10145,7 +10181,7 @@ async function GetUploadIC(event){
 		"properties": {
 			"author": author,
 			"datetime": now,
-			"end_datetime": startEnd,
+			"end_datetime": endDate,
 			"license": licenceValue,
 			"license_description": `https://creativecommons.org/${licenceValue=="CC0" ? "publicdomain/zero/1.0/": "licenses/"+licenceValue.slice(3)+"/4.0/deed.en"}`,
 			"start_datetime": startDate,
@@ -10167,6 +10203,7 @@ async function GetUploadIC(event){
 		// }
 		// showInfoMessage("The asset has been added to DQ4STA at URL: ")
 		console.log(result)
+		hideNodeDialog("DialogUploadIC", event);
 }
 function addJSONNodeToCheckAddingToCalatongResult(){
 
