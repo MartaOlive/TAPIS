@@ -1839,6 +1839,10 @@ function TransformTextGeoJSONToTable(jsonText, url, node) {
 		networkNodes.update(node);
 		return;
 	}
+	TransformObjGeoJSONToTable(geojson, url, node);
+}
+
+function TransformObjGeoJSONToTable(geojson, url, node) {
 	node.STAdata=TransformGeoJSONToTable(geojson);
 	if (!node.STAdata)
 	{
@@ -1883,8 +1887,12 @@ function ReadURLImportGeoJSON() {
 	var node=getNodeDialog("DialogImportGeoJSON");
 	HTTPJSONData(document.getElementById("DialogImportGeoJSONSourceURLInput").value).then(
 				function(value) { 
-					showInfoMessage('Download GeoJSON completed.'); 
-					TransformTextGeoJSONToTable(value.text, document.getElementById("DialogImportGeoJSONSourceURLInput").value, node);
+					showInfoMessage('Download GeoJSON completed.');
+					if (value.obj) 
+						TransformObjGeoJSONToTable(value.obj, document.getElementById("DialogImportGeoJSONSourceURLInput").value, node);
+					else
+						TransformTextGeoJSONToTable(value.text, document.getElementById("DialogImportGeoJSONSourceURLInput").value, node);
+
 				},
 				function(error) { 
 					showInfoMessage('Error downloading GeoJSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
