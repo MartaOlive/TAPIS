@@ -160,7 +160,7 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			SaveTable: {description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the column definition is semantically enriched; see &#39;meaning&#39;)."},
 			SaveLayer: {description: "Save Layer", leafNode: true, help: "Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values."},
 			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."},
-			uploadToIC: {description: "Upload to inmutable catalog",leafNode: true, help: "Upload data and metadata to an inmutable catalog."}
+			uploadToIC: {description: "Upload to inmutable catalog", help: "Upload data and metadata to an inmutable catalog."}
 		
 		};
 	
@@ -10212,15 +10212,21 @@ async function GetUploadIC(event){
 		
 		console.log(informationToUpdate)
 		var result=await addAnAssetToInmutableCatalog("https://api.ogc.secd.eu/api/dq4sta/assets/"+id, "e9c79149-5c17-403e-af14-1a3ef13be2a3", informationToUpdate)
-		// var checkResult= document.getElementById("DialogUploadIC_checkbox_checkresult").checked?true:false;
-		// if (checkResult){
-		// 	  setTimeout(addJSONNodeToCheckAddingToCalatongResult, 2000, );!!
-		// }
-		// showInfoMessage("The asset has been added to DQ4STA at URL: ")
+		var checkResult= document.getElementById("DialogUploadIC_checkbox_checkresult").checked?true:false;
+		if (checkResult){
+		 	  setTimeout(addJSONNodeToCheckAddingToCalatongResult, 1000,node,"https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/"+id );
+		}
+		showInfoMessage("The asset has been added to DQ4STA at URL: "+"https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/"+id )
 		console.log(result)
 		hideNodeDialog("DialogUploadIC", event);
 }
-function addJSONNodeToCheckAddingToCalatongResult(){
+function addJSONNodeToCheckAddingToCalatongResult(node,url){
+	var newId = (Math.random() * 1e7).toString(32);
+	var nodeTo = { id: newId, label: "GeoJSON", image: "ImportGeoJSON.png", shape: "circularImage" };
+	StartCircularImage(nodeTo,node,true,false,true);//--> "Fer que funcioni"
+	document.getElementById("DialogImportGeoJSONSourceURLInput").value=url;
+	//Executar gejson
+	
 
 }
 
