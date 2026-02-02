@@ -10210,22 +10210,42 @@ async function GetUploadIC(event){
 		"type": "Feature"
 		}
 		
-		console.log(informationToUpdate)
 		var result=await addAnAssetToInmutableCatalog("https://api.ogc.secd.eu/api/dq4sta/assets/"+id, "e9c79149-5c17-403e-af14-1a3ef13be2a3", informationToUpdate)
 		var checkResult= document.getElementById("DialogUploadIC_checkbox_checkresult").checked?true:false;
 		if (checkResult){
-		 	  setTimeout(addJSONNodeToCheckAddingToCalatongResult, 1000,node,"https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/"+id );
+
+		 	  setTimeout(addJSONNodeToCheckAddingToCalatongResult, 4000,node,"https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/"+id, );
 		}
 		showInfoMessage("The asset has been added to DQ4STA at URL: "+"https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/"+id )
+		showInfoMessage("Adding GeoJSON node with data uploaded")
 		console.log(result)
 		hideNodeDialog("DialogUploadIC", event);
 }
 function addJSONNodeToCheckAddingToCalatongResult(node,url){
 	var newId = (Math.random() * 1e7).toString(32);
 	var nodeTo = { id: newId, label: "GeoJSON", image: "ImportGeoJSON.png", shape: "circularImage" };
-	StartCircularImage(nodeTo,node,true,false,true);//--> "Fer que funcioni"
-	document.getElementById("DialogImportGeoJSONSourceURLInput").value=url;
+
+	networkNodes.add(nodeTo);
+	networkEdges.add([{ from: node.id, to: newId, arrows: "from" }]);
+	;
 	//Executar gejson
+	HTTPJSONData(url).then(
+			function(value) { 
+				showInfoMessage('Download GeoJSON completed.');
+				if (value.obj) 
+					TransformObjGeoJSONToTable(value.obj, url, nodeTo);
+				else
+					TransformTextGeoJSONToTable(value.text, url, nodeTo);
+
+			},
+			function(error) { 
+				showInfoMessage('Error downloading GeoJSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+				console.log(error) ;
+			}
+		);
+		
+	networkNodes.update(nodeTo);
+	updateQueryAndTableArea(nodeTo);
 	
 
 }
