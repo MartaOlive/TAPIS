@@ -701,7 +701,7 @@ function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAtt
 
     if (grouped!=false){
 
-        var groupingGroupsObject=  createObjectWithDifferentPossibilitiesInColumns(data, grouped);
+        var groupingGroupsObject=  createObjectWithDifferentPossibilitiesInColumnsInQualityPositions(data, grouped);
         var groupingObjectKeys=Object.keys(groupingGroupsObject);
 
         for(var i = 0; i<groupingObjectKeys.length;i++)
@@ -949,7 +949,7 @@ var cdns=[];
 }
 
 
-function createObjectWithDifferentPossibilitiesInColumns(data, groupingColumn){
+function createObjectWithDifferentPossibilitiesInColumnsInQualityPositions(data, groupingColumn){
     var groupingGroupsObject={}, groupingKeys;
 
     for(var i=0; i<data.length;i++){
@@ -1002,4 +1002,122 @@ function calculateRMSEGroup(data, groupingObject, longAttribute, latAttribute, u
     groupingObject.MeanLong=longitudeMean;
     groupingObject.MeanLat= latitudeMean;
     groupingObject.RMSE= RMSE.toFixed(3);
+}
+
+function accuracyFromUncertaintyThematicQuality(data, metadata, uncertaintyAttribute) {
+	var uncertainties=[];
+	for (var i=0; i<data.length; i++)
+		uncertainties.push(data[i][uncertaintyAttribute]);
+
+	var accuracyValue=aggrFuncStandardDeviation(uncertainties);
+	if (!Number.isInteger(accuracyValue)) 
+		accuracyValue= accuracyValue.toFixed(3);
+
+	if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "",//canviar
+					"measureIdentification": {
+						"measure": {
+							"name": "CircularMapAccuracy" //canviar?
+						},
+						"domains": [
+							{
+								"name": "DifferentialErrors2D",
+								"params": [
+										{
+										"name": "uncertantie column",
+										"value": uncertaintyAttribute
+											}
+										]
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Half-lengthConfidenceInterval",
+									"params": [
+										{
+											"name": "level",
+											"value": "0.683"
+										}
+									]
+								}
+							},
+							"valueType": "number",
+							"values": [ accuracyValue ]
+						}
+					]
+				}
+			]
+		});
+
+	return accuracyValue;
+}
+
+function accuracyFromAlfaNumValuesInThematicQuality (data, metadata, thematicAttributeSelected, uncertantyColumnValue, grouped,  newColumns){
+	if (grouped){
+		var groupingGroupsObject=createObjectWithDifferentPossibilitiesInColumnsInQualityThematic(data, grouped,thematicAttributeSelected)
+
+	}else{
+
+	} //all together
+}
+
+function createObjectWithDifferentPossibilitiesInColumnsInQualityThematic(data,groupingColumn, valuesColumn){
+	SortTableByColumns(data, [groupingColumn], "asc");
+
+	var groupingGroupsObject={};
+	var currentGroupName;
+	var groupingValue, objectWithValues={}, currentValue, lastGroupName;
+	
+	for (var i=0;i<data.length;i++){	
+		currentGroupName= data[i][groupingColumn];
+		if (groupingGroupsObject.hasOwnProperty(currentGroupName)){ //group already created
+			if (groupingGroupsObject[currentGroupName].values.hasOwnProperty([data[i][valuesColumn]])){ //The value in this group exist?
+				groupingGroupsObject[currentGroupName].values[data[i][valuesColumn]]=groupingGroupsObject[currentGroupName].values[data[i][valuesColumn]]+1;
+			}else{
+				groupingGroupsObject[currentGroupName].values[data[i][valuesColumn]]=1; //first time this value added in the group.
+			}
+		}else{ //FirtsRound or New group
+			//newOne
+			groupingGroupsObject[currentGroupName]={values:{}, mode:""}; //create property group-level
+			groupingGroupsObject[currentGroupName].values[data[i][valuesColumn]]=1;
+		}
+		lastGroupName= currentGroupName;
+	}
+
+
+	var groupingGroupsObjectKeys=Object.keys(groupingGroupsObject); //Transform To %, return mode
+	for (var e=0;e<groupingGroupsObjectKeys.length;e++){
+		groupingGroupsObject[groupingGroupsObjectKeys[e]].mode= calculatePercentageInObject(groupingGroupsObject[groupingGroupsObjectKeys[e]].values);
+	}	
+		
+	console.log(groupingGroupsObject)
+		
+
+	
+}
+
+function calculatePercentageInObject(obj){
+	var objKeys=Object.keys(obj);
+	var sum=0, mode=0;
+
+	for (var i=0;i<objKeys.length;i++){ //total
+		sum+=obj[objKeys[i]];	
+	}
+
+	for (var a=0;a<objKeys.length;a++){
+		if(obj[objKeys[a]]>mode)mode=obj[objKeys[a]];
+		obj[objKeys[a]]= obj[objKeys[a]]/sum *100;
+	}
+
+	mode= mode/sum *100;
+	return mode
 }

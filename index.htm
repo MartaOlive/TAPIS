@@ -2192,18 +2192,66 @@
 	<dialog id="DialogQualityThematicQuality" onClose='hideNodeDialog("DialogQualityThematicQuality", event)'>
 			<form>
 				<h3> Thematic quality</h3>
-				<div id="DialogQualityThematicQuality_attributesList"></div>
+				<div> <label>Node with data to evaluate: </label><select id="ThematicQuality_select_metadata"></select></div>
+				<label>Column to evaluate:</label><div id="DialogQualityThematicQuality_attributesList"></div>
 				<div>
 					<fieldset><legend><label><input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy">Thematic accuracy</label></legend>
-						<fieldset > <legend>Grouping mode</legend>
-						<label><input type="radio" id="thematicQuality_radio_thematicAccuracy_group" name="thematicQuality_radio_thematicAccuracy_grouping" checked> Grouped by column</label><label>Grouping column:  </label><select id="thematicQuality_select_thematicAccuracy_group"></select><br>
-						<label><input type="radio" id="thematicQuality_radio_thematicAccuracy_column" name="thematicQuality_radio_thematicAccuracy_grouping"> All records</label>
-						</fieldset>
-						<fieldset ><legend>Way to evaluate</legend>
-							<label><input type="radio" id="thematicQuality_radio_thematicAccuracy_accuracyMean" name="thematicQuality_radio_thematicAccuracy_way" checked value="accuracyMean"> Mean of the accuracy column</label><br>
-							<label><input type="radio" id="thematicQuality_radio_thematicAccuracy_string" name="thematicQuality_radio_thematicAccuracy_way" value="string"> Mode of non-numeric column (Most frequent value and its frequency)</label><br>
-							<label><input type="radio" id="thematicQuality_radio_thematicAccuracy_number" name="thematicQuality_radio_thematicAccuracy_way" value="number"> Mean distance from center (numeric)</label>
-						</fieldset>
+						<table style="width:100%; border-collapse:collapse;">
+							<tr>
+								<td style="vertical-align:top; padding:10px; text-align:left;">
+								<label>
+									<input type="radio"  id="thematicQuality_radio_thematicAccuracy_accuracyStaDev" name="thematicQuality_radio_thematicAccuracy_way" checked value="accuracyStaDev" onclick="unableGroupingModeInThematicQuality(true)">
+									Standard deviation of the uncertainty column
+								</label>
+								<select id="DialogQualityThematicQuality_select_uncertantyColumn"></select>
+								</td>
+								<td></td>
+							</tr>
+
+							<tr>
+								<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
+								<label>
+									<input type="radio" id="thematicQuality_radio_thematicAccuracy_string" name="thematicQuality_radio_thematicAccuracy_way" value="alfaNum" onclick="unableGroupingModeInThematicQuality(false)">
+									Mode of non-numeric column (Most frequent value and its frequency)
+								</label>
+								</td>
+
+								<td rowspan="2" style="vertical-align:top; padding:10px;">
+								<fieldset>
+									<legend>Grouping mode</legend>
+
+									<label>
+									<input type="radio" 	id="thematicQuality_radio_thematicAccuracy_group" name="thematicQuality_radio_thematicAccuracy_grouping" 	checked>
+									Grouped by column
+									</label>
+									<label>
+									Grouping column:
+									<select id="thematicQuality_select_thematicAccuracy_group"></select>
+									</label>
+									<br>
+									<label style="margin-left:30px;">
+									<input type="checkbox" 	id="thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox" 	checked>
+									Create new columns with grouped result
+									</label>
+									<br>
+									<label>
+									<input type="radio" 	id="thematicQuality_radio_thematicAccuracy_column" 	name="thematicQuality_radio_thematicAccuracy_grouping">
+									All records
+									</label>
+								</fieldset>
+								</td>
+							</tr>
+
+							<tr>
+								<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
+								<label>
+									<input type="radio" id="thematicQuality_radio_thematicAccuracy_number" name="thematicQuality_radio_thematicAccuracy_way" value="number" onclick="unableGroupingModeInThematicQuality(false)">
+									Mean distance from center (numeric)
+								</label>
+								</td>
+							</tr>
+						</table>
+
 					</fieldset>
 					<fieldset><legend><label><input type="checkbox" id="ThematicQuality_checkbox_ThematicValidity">Thematic validity</label></legend>
 							<label><input type="radio" id="thematicQuality_radio_thematicValidity_list" name="thematicQuality_radio_thematicValidity" checked> List of values </label><select id="thematicQuality_select_thematicValidity"></select><br>
@@ -2217,7 +2265,7 @@
 
 				</div>
 				<div class="center">
-					<button value="ok" onClick="okButtonDataQualityThematicQuality(event)" >Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+					<button value="default" onClick="okButtonDataQualityThematicQuality(event)" >Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
 				</div>
 
 			<input type="hidden" id="DialogQualityThematicQualityNodeId"></input>

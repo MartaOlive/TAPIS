@@ -8003,7 +8003,7 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "logicalConsistency.png") {
-			if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
+			//if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
 			if (populateDialogQualityLogicalConsistency(currentNode)){
 				showNodeDialog("DialogQualityLogicalConsistency");
 			}else{
@@ -9979,20 +9979,23 @@ function okButtonDataQualityPositionalQuality(event){
 }
 
 
-function populateDialogQualityThematicQuality(node){ //Aqui hi ha un lio de cal deu xq hi ha dos funcions repetides
-	populateAttributesListSelectThematicQuality(node);
-	saveNodeDialog("DialogQualityThematicQuality", node);
-}
-
 function populateDialogQualityThematicQuality(node){
 	var parentNodes=GetParentNodes(node);
-	
+	saveNodeDialog("DialogQualityThematicQuality", node);
 	var select= createSelectForThematicQuality(parentNodes, "columnToEvaluate");
-	//Oplir el select de la grouping group
 
 	document.getElementById("DialogQualityThematicQuality_attributesList").innerHTML=select; //general
 	document.getElementById("thematicQuality_select_thematicAccuracy_group").innerHTML=select; //grouping column
-	document.getElementById("thematicQuality_select_thematicValidity").innerHTML=select; //grouping column
+	document.getElementById("thematicQuality_select_thematicValidity").innerHTML=select; //validity column
+	document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn").innerHTML=select; //uncertannty column
+	unableGroupingModeInThematicQuality(true); //disable grouping mode
+
+	var optionsMetadata="";
+	for(var i=0;i<parentNodes.length;i++){
+		optionsMetadata+=`<option value="${parentNodes[i].id}">${parentNodes[i].label}</option>`
+	}
+	document.getElementById("ThematicQuality_select_metadata").innerHTML=optionsMetadata; 
+
 }
 
 function createSelectForThematicQuality(parentNodes, place){
@@ -10009,17 +10012,56 @@ function createSelectForThematicQuality(parentNodes, place){
 	c+=`</select>`
 	return c;
 }
-
+function unableGroupingModeInThematicQuality(desvest){
+	
+	document.getElementById("thematicQuality_radio_thematicAccuracy_group").disabled=desvest;
+	document.getElementById("thematicQuality_select_thematicAccuracy_group").disabled=desvest;
+	document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").disabled=desvest;
+	document.getElementById("thematicQuality_radio_thematicAccuracy_column").disabled=desvest;
+	
+}
 function okButtonDataQualityThematicQuality(event){
+	var node= getNodeDialog("DialogQualityThematicQuality");
 	var thematicAccuracy= (document.getElementById("ThematicQuality_checkbox_ThematicAccuracy").checked)?true:false;
 	var thematicValidity= (document.getElementById("ThematicQuality_checkbox_ThematicValidity").checked)?true:false;
+	var thematicAttribute=document.getElementById("thematicQuality_select_columnToEvaluate");
+	var thematicAttributeSelected=thematicAttribute.options[thematicAttribute.selectedIndex].value;
+	var metadataIdNode=document.getElementById("ThematicQuality_select_metadata");
+	var metadataIdNodeSelected=metadataIdNode.options[metadataIdNode.selectedIndex].value;
+	var metadata= (networkNodes.get(metadataIdNodeSelected))?node.STAmetadata:{};
+	var dataToEvaluate= networkNodes.get(metadataIdNodeSelected).STAdata;
+	
 	if(thematicAccuracy){
 		var groupingMode= (document.getElementById("thematicQuality_radio_thematicAccuracy_group").checked)?"grouped": "all";
+		if (groupingMode){
+			var grouped= document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked?true:false;
+			if (grouped==true){
+				var groupingSelect= document.getElementById("thematicQuality_select_thematicAccuracy_group");
+				grouped=groupingSelect.options[groupingSelect.selectedIndex].value;
+			}
+		} 
 		var inputWayGroup = document.querySelector('input[name="thematicQuality_radio_thematicAccuracy_way"]:checked')
-		var inputWayValue= inputWayGroup.value; //accuracyMean, string, number
+		var inputWayValue= inputWayGroup.value; //accuracyStaDev, string, number
+		
+		//accuracyStaDev
+		if(inputWayValue=="accuracyStaDev"){
+			var uncertantuColumn=document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn");
+			var uncertantuColumnValue=uncertantuColumn.options[uncertantuColumn.selectedIndex].value;
+			var thematicAccuracyValue= accuracyFromUncertaintyThematicQuality(dataToEvaluate, metadata, uncertantuColumnValue);			
+		}
+		//alfaNum
+		else if (inputWayValue=="alfaNum"){
+			var newColumns= (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked)?true:false;
+			accuracyFromAlfaNumValuesInThematicQuality (dataToEvaluate, metadata,thematicAttributeSelected, uncertantuColumnValue, grouped,newColumns)
+		}
+
+
+		//number
+	
 	}
 	if(thematicValidity)
 		var thematicValidityWay= (document.getElementById("thematicQuality_radio_thematicValidity_list").checked)? "list": "range";
+
 }
 
 function GetCreateNewTable(event){
