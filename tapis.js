@@ -10028,20 +10028,22 @@ function okButtonDataQualityThematicQuality(event){
 	var thematicAttributeSelected=thematicAttribute.options[thematicAttribute.selectedIndex].value;
 	var metadataIdNode=document.getElementById("ThematicQuality_select_metadata");
 	var metadataIdNodeSelected=metadataIdNode.options[metadataIdNode.selectedIndex].value;
-	var metadata= (networkNodes.get(metadataIdNodeSelected))?node.STAmetadata:{};
+	var metadata= (networkNodes.get(metadataIdNodeSelected).STAmetadata)?networkNodes.get(metadataIdNodeSelected).STAmetadata:{};
 	var dataToEvaluate= networkNodes.get(metadataIdNodeSelected).STAdata;
 	
 	if(thematicAccuracy){
-		var groupingMode= (document.getElementById("thematicQuality_radio_thematicAccuracy_group").checked)?"grouped": "all";
-		if (groupingMode){
-			var grouped= document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked?true:false;
-			if (grouped==true){
-				var groupingSelect= document.getElementById("thematicQuality_select_thematicAccuracy_group");
-				grouped=groupingSelect.options[groupingSelect.selectedIndex].value;
-			}
-		} 
+		var grouped=false, newColumns =false;
 		var inputWayGroup = document.querySelector('input[name="thematicQuality_radio_thematicAccuracy_way"]:checked')
-		var inputWayValue= inputWayGroup.value; //accuracyStaDev, string, number
+		var inputWayValue= inputWayGroup.value; //accuracyStaDev, alfaNum, number
+		if (inputWayValue=="alfaNum" ||inputWayValue=="number"){
+			var groupingMode= (document.getElementById("thematicQuality_radio_thematicAccuracy_group").checked)?"grouped": "all";
+			if(groupingMode=="grouped")	{
+				var groupingSelect= document.getElementById("thematicQuality_select_thematicAccuracy_group");
+				grouped=groupingSelect.options[groupingSelect.selectedIndex].value;					
+				if (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked)newColumns=true;
+			}			
+		}
+
 		
 		//accuracyStaDev
 		if(inputWayValue=="accuracyStaDev"){
@@ -10052,7 +10054,10 @@ function okButtonDataQualityThematicQuality(event){
 		//alfaNum
 		else if (inputWayValue=="alfaNum"){
 			var newColumns= (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked)?true:false;
-			accuracyFromAlfaNumValuesInThematicQuality (dataToEvaluate, metadata,thematicAttributeSelected, uncertantuColumnValue, grouped,newColumns)
+			accuracyFromAlfaNumValuesInThematicQuality (dataToEvaluate, metadata,thematicAttributeSelected, grouped,newColumns)
+		
+		}else{ //num
+			accuracyFromNumValuesInThematicQuality (dataToEvaluate, metadata,thematicAttributeSelected, grouped,newColumns)
 		}
 
 

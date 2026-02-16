@@ -1061,49 +1061,78 @@ function accuracyFromUncertaintyThematicQuality(data, metadata, uncertaintyAttri
 	return accuracyValue;
 }
 
-function accuracyFromAlfaNumValuesInThematicQuality (data, metadata, thematicAttributeSelected, uncertantyColumnValue, grouped,  newColumns){
-	if (grouped){
-		var groupingGroupsObject=createObjectWithDifferentPossibilitiesInColumnsInQualityThematic(data, grouped,thematicAttributeSelected)
-
-	}else{
-
-	} //all together
+function accuracyFromAlfaNumValuesInThematicQuality (data, metadata, thematicAttributeSelected, grouped,  newColumns){
+	
+	var groupingGroupsObject=createObjectWithDifferentPossibilitiesInColumnsInQualityThematicAlfaNum(data, grouped,thematicAttributeSelected)
+	 //Falta el pas seguent de la desves de totes
+	 //i completar les metadades
+	 //i afegir la columna que toca- > Funció apart que compartirà amb el numeric 
 }
 
-function createObjectWithDifferentPossibilitiesInColumnsInQualityThematic(data,groupingColumn, valuesColumn){
+function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicAlfaNum(data,groupingColumn, valuesColumn){
 	SortTableByColumns(data, [groupingColumn], "asc");
 
 	var groupingGroupsObject={};
 	var currentGroupName;
-	var groupingValue, objectWithValues={}, currentValue, lastGroupName;
 	
 	for (var i=0;i<data.length;i++){	
-		currentGroupName= data[i][groupingColumn];
-		if (groupingGroupsObject.hasOwnProperty(currentGroupName)){ //group already created
-			if (groupingGroupsObject[currentGroupName].values.hasOwnProperty([data[i][valuesColumn]])){ //The value in this group exist?
+		if (groupingColumn)currentGroupName= data[i][groupingColumn];
+		else currentGroupName= "all"
+		//currentGroupName= data[i][groupingColumn];
+		if (groupingGroupsObject.hasOwnProperty(currentGroupName)){ //group already created (Without group allways here)
+			if (groupingGroupsObject[currentGroupName].values.hasOwnProperty(data[i][valuesColumn])){ //The value in this group exist?
 				groupingGroupsObject[currentGroupName].values[data[i][valuesColumn]]=groupingGroupsObject[currentGroupName].values[data[i][valuesColumn]]+1;
 			}else{
 				groupingGroupsObject[currentGroupName].values[data[i][valuesColumn]]=1; //first time this value added in the group.
-			}
+			}				
 		}else{ //FirtsRound or New group
 			//newOne
 			groupingGroupsObject[currentGroupName]={values:{}, mode:""}; //create property group-level
 			groupingGroupsObject[currentGroupName].values[data[i][valuesColumn]]=1;
 		}
-		lastGroupName= currentGroupName;
 	}
-
-
 	var groupingGroupsObjectKeys=Object.keys(groupingGroupsObject); //Transform To %, return mode
 	for (var e=0;e<groupingGroupsObjectKeys.length;e++){
 		groupingGroupsObject[groupingGroupsObjectKeys[e]].mode= calculatePercentageInObject(groupingGroupsObject[groupingGroupsObjectKeys[e]].values);
-	}	
+	}
 		
 	console.log(groupingGroupsObject)
 		
-
-	
 }
+
+function accuracyFromNumValuesInThematicQuality (data, metadata,thematicAttributeSelected, grouped,newColumns){
+	
+	var groupingGroupsObject=createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(data, grouped,thematicAttributeSelected)
+	 //Falta el pas seguent de la desves de totes
+	 //i completar les metadades
+	 //i afegir la columna que toca- > Funció apart que compartirà amb el numeric 
+}
+
+function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(data,groupingColumn, valuesColumn){
+	SortTableByColumns(data, [groupingColumn], "asc");
+	//Mirar que siguin NUMEROS
+
+	var groupingGroupsObject={};
+	var currentGroupName;
+	
+	for (var i=0;i<data.length;i++){	
+		if (groupingColumn)currentGroupName= data[i][groupingColumn];
+		else currentGroupName= "all";
+		if (groupingGroupsObject.hasOwnProperty(currentGroupName)){ //group already created (Without group allways here)
+			groupingGroupsObject[currentGroupName].values.push(data[i][valuesColumn]);			
+		}else{ //FirtsRound or New group
+			//newOne
+			groupingGroupsObject[currentGroupName]={values:[data[i][valuesColumn]], groupUncertainty:""}; //create property group-level
+		}
+	}
+	var groupingGroupsObjectKeys=Object.keys(groupingGroupsObject); //Transform To %, return mode
+	for (var e=0;e<groupingGroupsObjectKeys.length;e++){
+		calculateDesVestInObject(groupingGroupsObject[groupingGroupsObjectKeys[e]]);
+	}
+	console.log(groupingGroupsObject)
+}
+
+
 
 function calculatePercentageInObject(obj){
 	var objKeys=Object.keys(obj);
@@ -1115,9 +1144,27 @@ function calculatePercentageInObject(obj){
 
 	for (var a=0;a<objKeys.length;a++){
 		if(obj[objKeys[a]]>mode)mode=obj[objKeys[a]];
-		obj[objKeys[a]]= obj[objKeys[a]]/sum *100;
+		obj[objKeys[a]]= (Number.isInteger(obj[objKeys[a]]/sum *100))?obj[objKeys[a]]/sum *100:(obj[objKeys[a]]/sum *100).toFixed(3);
 	}
 
-	mode= mode/sum *100;
+	mode= (Number.isInteger(mode/sum *100))?mode/sum *100:(mode/sum *100).toFixed(3);
 	return mode
+}
+
+
+function calculateDesVestInObject(obj){
+	//console.log (obj);
+	var sum=0, mean, sumSquaredDistances=0; 
+
+	for (var i=0;i<obj.values.length;i++){
+		sum+=obj.values[i]
+	}
+	mean= sum/obj.values.length;
+
+	for (var e=0;e<obj.values.length;e++){
+		sumSquaredDistances+= (obj.values[e]-mean)**2;
+	}
+
+	obj.groupUncertainty= Math.sqrt(sumSquaredDistances/obj.values.length).toFixed(3);
+	
 }
