@@ -1006,8 +1006,9 @@ function calculateRMSEGroup(data, groupingObject, longAttribute, latAttribute, u
 
 function accuracyFromUncertaintyThematicQuality(data, metadata, uncertaintyAttribute) {
 	var uncertainties=[];
-	for (var i=0; i<data.length; i++)
+	for (var i=0; i<data.length; i++){
 		uncertainties.push(data[i][uncertaintyAttribute]);
+	}
 
 	var accuracyValue=aggrFuncStandardDeviation(uncertainties);
 	if (!Number.isInteger(accuracyValue)) 
@@ -1063,10 +1064,68 @@ function accuracyFromUncertaintyThematicQuality(data, metadata, uncertaintyAttri
 
 function accuracyFromAlfaNumValuesInThematicQuality (data, metadata, thematicAttributeSelected, grouped,  newColumns){
 	
-	var groupingGroupsObject=createObjectWithDifferentPossibilitiesInColumnsInQualityThematicAlfaNum(data, grouped,thematicAttributeSelected)
-	 //Falta el pas seguent de la desves de totes
-	 //i completar les metadades
-	 //i afegir la columna que toca- > Funció apart que compartirà amb el numeric 
+	var groupingGroupsObject=createObjectWithDifferentPossibilitiesInColumnsInQualityThematicAlfaNum(data, grouped,thematicAttributeSelected);
+
+	if (newColumns){
+		 for (var g=0;g<data.length;g++){
+            data[g]["percentageIngroup"]= parseFloat(groupingGroupsObject[data[g][grouped]].values[data[g][thematicAttributeSelected]]);
+			data[g]["groupMode"]= parseFloat(groupingGroupsObject[data[g][grouped]].mode);        
+        }
+	}
+	var modeValues=[];
+	var groupingGroupsObjectKeys= Object.keys(groupingGroupsObject);
+	for (var i=0;i<groupingGroupsObjectKeys.length;i++){
+		modeValues.push(groupingGroupsObject[groupingGroupsObjectKeys[i]].mode);
+	}
+
+	var globalAccuracyValue= aggrFuncMean(modeValues);
+
+
+	if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "",//canviar
+					"measureIdentification": {
+						"measure": {
+							"name": "CircularMapAccuracy" //canviar?
+						},
+						"domains": [
+							{
+								"name": "DifferentialErrors2D",
+								"params": [
+										{
+										"name": "uncertantie column",
+										"value":""// uncertaintyAttribute
+											}
+										]
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Half-lengthConfidenceInterval",
+									"params": [
+										{
+											"name": "level",
+											"value": "0.683"
+										}
+									]
+								}
+							},
+							"valueType": "number",
+							"values":globalAccuracyValue //[ accuracyValue ]
+						}
+					]
+				}
+			]
+		});
+		return globalAccuracyValue;
 }
 
 function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicAlfaNum(data,groupingColumn, valuesColumn){
@@ -1096,16 +1155,75 @@ function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicAlfaNum
 		groupingGroupsObject[groupingGroupsObjectKeys[e]].mode= calculatePercentageInObject(groupingGroupsObject[groupingGroupsObjectKeys[e]].values);
 	}
 		
-	console.log(groupingGroupsObject)
+	return groupingGroupsObject;
 		
 }
 
 function accuracyFromNumValuesInThematicQuality (data, metadata,thematicAttributeSelected, grouped,newColumns){
 	
 	var groupingGroupsObject=createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(data, grouped,thematicAttributeSelected)
-	 //Falta el pas seguent de la desves de totes
+		if (newColumns){
+		 for (var g=0;g<data.length;g++){
+            data[g]["groupUncertainty"]= parseFloat(groupingGroupsObject[data[g][grouped]].groupUncertainty);   
+        }
+	}
+
+	var uncertainties=[];
+	var groupingGroupsObjectKeys= Object.keys(groupingGroupsObject)
+	for (var i=0; i<groupingGroupsObjectKeys.length; i++){
+		uncertainties.push(groupingGroupsObject[groupingGroupsObjectKeys[i]].groupUncertainty);
+	}
+	var accuracyValue=aggrFuncStandardDeviation(uncertainties);
+
+	if (!metadata.dataQualityInfos)metadata.dataQualityInfos=[];
+
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "",//canviar
+					"measureIdentification": {
+						"measure": {
+							"name": "CircularMapAccuracy" //canviar?
+						},
+						"domains": [
+							{
+								"name": "DifferentialErrors2D",
+								"params": [
+										{
+										"name": "uncertantie column",
+										"value":""// uncertaintyAttribute
+											}
+										]
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Half-lengthConfidenceInterval",
+									"params": [
+										{
+											"name": "level",
+											"value": "0.683"
+										}
+									]
+								}
+							},
+							"valueType": "number",
+							"values": [ accuracyValue ]
+						}
+					]
+				}
+			]
+		});
+
 	 //i completar les metadades
-	 //i afegir la columna que toca- > Funció apart que compartirà amb el numeric 
+
+
+	return accuracyValue;
 }
 
 function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(data,groupingColumn, valuesColumn){
@@ -1129,7 +1247,8 @@ function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(dat
 	for (var e=0;e<groupingGroupsObjectKeys.length;e++){
 		calculateDesVestInObject(groupingGroupsObject[groupingGroupsObjectKeys[e]]);
 	}
-	console.log(groupingGroupsObject)
+	// console.log(groupingGroupsObject)
+	return groupingGroupsObject
 }
 
 
@@ -1167,4 +1286,149 @@ function calculateDesVestInObject(obj){
 
 	obj.groupUncertainty= Math.sqrt(sumSquaredDistances/obj.values.length).toFixed(3);
 	
+}
+
+function calculateDataQualityThematicValidityWithAList(dataToEvaluate,referenceData, metadata, attributeToEvaluate, referenceAttribute,flag) {
+	var referenceList=[]
+	for (var i=0; i<referenceData.length;i++){
+		if (!referenceList.includes(referenceData[i][referenceAttribute]))referenceList.push(referenceData[i][referenceAttribute])
+	}
+	var count=0, itsValid;
+	for (var a=0;a<dataToEvaluate.length;a++){
+		itsValid=referenceList.includes(dataToEvaluate[a][attributeToEvaluate])?true:false;
+		if(itsValid)count++;
+		if(flag)data[a]["thematicValidity"]=itsValid
+	}
+	if (!metadata.dataQualityInfos)	metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_PositionalValidity",
+					"measureIdentification": {
+						"measure": {
+							"name": "ValueDomain"
+						},
+						"domains": [
+							{
+								"name": "Conformance",
+								"params": ""//params
+                            }
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "items",
+									"params":[
+										{
+											"name":"subtype",
+											"value":"rate"
+										},
+                                        {
+                                            "name": "min",
+                                            "value":0
+                                        },
+                                        {
+                                            "name": "max",
+                                            "value":100
+                                        }
+                                    ]
+								}
+							},
+							"valueType": "number",
+							"values": [ (count / dataToEvaluate.length) * 100]
+						}
+					]
+				}
+			]
+		});
+    return [count, (count / dataToEvaluate.length) * 100]
+}
+
+function calculateDataQualityThematicValidityWithRange(data,from, to,  metadata, thematicAttributeSelected,flag){
+	//Mirar si es numero la clumna e vaors triat
+	if (!from && !to)return "It is necessary to indicate a from or to number"; 
+	if (from) {
+		var fromNumber= Number(from);
+		if (isNaN(fromNumber)) return '"From" value is not a number'; 
+	}
+	if (to) {
+		var toNumber= Number(to);
+		if (isNaN(toNumber)) return '"To" value is not a number'; 
+	}
+	var count=0;
+	for (var i=0; i<data.length;i++){
+		if (from){
+			if (data[i][thematicAttributeSelected]>from){
+				if (to){
+					if (data[i][thematicAttributeSelected]<to){
+						count++;
+						if(flag)data[a]["thematicValidity"]=true;
+					}else{
+						if(flag)data[a]["thematicValidity"]=false;
+					}
+				}
+			}
+			continue;
+		}
+		if (to){
+			if (data[i][thematicAttributeSelected]<to){
+				count++
+				if(flag)data[a]["thematicValidity"]=true;
+			}else{
+				if(flag)data[a]["thematicValidity"]=false;
+			}
+		}
+	}
+	if (!metadata.dataQualityInfos)	metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_PositionalValidity",
+					"measureIdentification": {
+						"measure": {
+							"name": "ValueDomain"
+						},
+						"domains": [
+							{
+								"name": "Conformance",
+								"params": ""//params
+                            }
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "items",
+									"params":[
+										{
+											"name":"subtype",
+											"value":"rate"
+										},
+                                        {
+                                            "name": "min",
+                                            "value":0
+                                        },
+                                        {
+                                            "name": "max",
+                                            "value":100
+                                        }
+                                    ]
+								}
+							},
+							"valueType": "number",
+							"values": [ (count / data.length) * 100]
+						}
+					]
+				}
+			]
+		});
+    return [count, (count / data.length) * 100]
+
 }

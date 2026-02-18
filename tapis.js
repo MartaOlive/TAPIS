@@ -8044,9 +8044,13 @@ function networkDoubleClick(params) {
 					//currentNode.STAdata= deapCopy(parentNode.STAdata);
 					//currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
 					//if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata
-					populateDialogQualityThematicQuality(currentNode);
-					networkNodes.update(currentNode);
-					showNodeDialog("DialogQualityThematicQuality");
+					if (populateDialogQualityThematicQuality(currentNode)){
+						networkNodes.update(currentNode);
+						showNodeDialog("DialogQualityThematicQuality");
+					}else{
+						alert("Only 2 parents are allowed");
+					}
+
 			}else{
 				alert("Parent node must have data to analyze");
 			}
@@ -9991,11 +9995,17 @@ function populateDialogQualityThematicQuality(node){
 	unableGroupingModeInThematicQuality(true); //disable grouping mode
 
 	var optionsMetadata="";
+	if (parentNodes.length>2) return false;
+	var nodeIds=""
 	for(var i=0;i<parentNodes.length;i++){
-		optionsMetadata+=`<option value="${parentNodes[i].id}">${parentNodes[i].label}</option>`
+		optionsMetadata+=`<option value="${parentNodes[i].id}">${parentNodes[i].label}</option>`;
+		if (i==0)nodeIds= parentNodes[i].id+"_"
+		else nodeIds+= parentNodes[i].id
 	}
 	document.getElementById("ThematicQuality_select_metadata").innerHTML=optionsMetadata; 
-
+	document.getElementById("DialogQualityThematicQuality").setAttribute ("data-nodeIds", nodeIds);
+	
+	return true;
 }
 
 function createSelectForThematicQuality(parentNodes, place){
@@ -10020,53 +10030,131 @@ function unableGroupingModeInThematicQuality(desvest){
 	document.getElementById("thematicQuality_radio_thematicAccuracy_column").disabled=desvest;
 	
 }
-function okButtonDataQualityThematicQuality(event){
-	var node= getNodeDialog("DialogQualityThematicQuality");
-	var thematicAccuracy= (document.getElementById("ThematicQuality_checkbox_ThematicAccuracy").checked)?true:false;
-	var thematicValidity= (document.getElementById("ThematicQuality_checkbox_ThematicValidity").checked)?true:false;
-	var thematicAttribute=document.getElementById("thematicQuality_select_columnToEvaluate");
-	var thematicAttributeSelected=thematicAttribute.options[thematicAttribute.selectedIndex].value;
-	var metadataIdNode=document.getElementById("ThematicQuality_select_metadata");
-	var metadataIdNodeSelected=metadataIdNode.options[metadataIdNode.selectedIndex].value;
-	var metadata= (networkNodes.get(metadataIdNodeSelected).STAmetadata)?networkNodes.get(metadataIdNodeSelected).STAmetadata:{};
-	var dataToEvaluate= networkNodes.get(metadataIdNodeSelected).STAdata;
-	
-	if(thematicAccuracy){
-		var grouped=false, newColumns =false;
+
+function okButtonDataQualityThematicQuality(event) {
+	var node = getNodeDialog("DialogQualityThematicQuality");
+	var thematicAccuracy = (document.getElementById("ThematicQuality_checkbox_ThematicAccuracy").checked) ? true : false;
+	var thematicValidity = (document.getElementById("ThematicQuality_checkbox_ThematicValidity").checked) ? true : false;
+	var thematicAttribute = document.getElementById("thematicQuality_select_columnToEvaluate");
+	var thematicAttributeSelected = thematicAttribute.options[thematicAttribute.selectedIndex].value;
+	var nodeIdToEvaluate = document.getElementById("ThematicQuality_select_metadata");
+	var nodeIdToEvaluateSelected = nodeIdToEvaluate.options[nodeIdToEvaluate.selectedIndex].value;
+	var metadata = (networkNodes.get(nodeIdToEvaluateSelected).STAmetadata) ? networkNodes.get(nodeIdToEvaluateSelected).STAmetadata : {};
+	var dataToEvaluate = networkNodes.get(nodeIdToEvaluateSelected).STAdata;
+	var nodeIds = document.getElementById("DialogQualityThematicQuality").getAttribute("data-node-ids");
+	nodeIds = nodeIds.split("_");
+	var referenceNodeId;
+	for (var n = 0; n < nodeIds.length; n++) {
+		if (!nodeIds[n] == nodeIdToEvaluateSelected) referenceNodeId = nodeIds[n];
+	}
+
+	if (thematicAccuracy) {
+		var grouped = false, newColumns = false;
 		var inputWayGroup = document.querySelector('input[name="thematicQuality_radio_thematicAccuracy_way"]:checked')
-		var inputWayValue= inputWayGroup.value; //accuracyStaDev, alfaNum, number
-		if (inputWayValue=="alfaNum" ||inputWayValue=="number"){
-			var groupingMode= (document.getElementById("thematicQuality_radio_thematicAccuracy_group").checked)?"grouped": "all";
-			if(groupingMode=="grouped")	{
-				var groupingSelect= document.getElementById("thematicQuality_select_thematicAccuracy_group");
-				grouped=groupingSelect.options[groupingSelect.selectedIndex].value;					
-				if (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked)newColumns=true;
-			}			
+		var inputWayValue = inputWayGroup.value; //accuracyStaDev, alfaNum, number
+		if (inputWayValue == "alfaNum" || inputWayValue == "number") {
+			var groupingMode = (document.getElementById("thematicQuality_radio_thematicAccuracy_group").checked) ? "grouped" : "all";
+			if (groupingMode == "grouped") {
+				var groupingSelect = document.getElementById("thematicQuality_select_thematicAccuracy_group");
+				grouped = groupingSelect.options[groupingSelect.selectedIndex].value;
+				if (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) newColumns = true;
+			}
 		}
 
-		
+
 		//accuracyStaDev
-		if(inputWayValue=="accuracyStaDev"){
-			var uncertantuColumn=document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn");
-			var uncertantuColumnValue=uncertantuColumn.options[uncertantuColumn.selectedIndex].value;
-			var thematicAccuracyValue= accuracyFromUncertaintyThematicQuality(dataToEvaluate, metadata, uncertantuColumnValue);			
+		if (inputWayValue == "accuracyStaDev") {
+			var uncertantuColumn = document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn");
+			var uncertantuColumnValue = uncertantuColumn.options[uncertantuColumn.selectedIndex].value;
+			var globalAccuracyValue = accuracyFromUncertaintyThematicQuality(dataToEvaluate, metadata, uncertantuColumnValue);
 		}
 		//alfaNum
-		else if (inputWayValue=="alfaNum"){
-			var newColumns= (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked)?true:false;
-			accuracyFromAlfaNumValuesInThematicQuality (dataToEvaluate, metadata,thematicAttributeSelected, grouped,newColumns)
-		
-		}else{ //num
-			accuracyFromNumValuesInThematicQuality (dataToEvaluate, metadata,thematicAttributeSelected, grouped,newColumns)
+		else if (inputWayValue == "alfaNum") {
+			var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
+			var globalAccuracyValue = accuracyFromAlfaNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
+
+		} else { //num
+			var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
+			var globalAccuracyValue = accuracyFromNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
+
 		}
-
-
-		//number
-	
 	}
-	if(thematicValidity)
-		var thematicValidityWay= (document.getElementById("thematicQuality_radio_thematicValidity_list").checked)? "list": "range";
+	if (thematicValidity) {
+		var thematicValidityWay = (document.getElementById("thematicQuality_radio_thematicValidity_list").checked) ? "list" : "range";
+		var flag = (document.getElementById("dataQuality_thematicValidity_flag").checked) ? true : false;
+		if (thematicValidityWay == "list") {
+			var refenceAttributeSelect = document.getElementById("thematicQuality_select_thematicValidity");
+			var referenceAttributeValue = refenceAttributeSelect.options[refenceAttributeSelect.selectedIndex].value;
+			var referenceData = networkNodes.get(referenceNodeId).STAdata;
+			var thematicValidity = calculateDataQualityThematicValidityWithAList(dataToEvaluate, referenceData, metadata, thematicAttributeSelected, referenceAttributeValue, flag)
+		} else {
+			var from = document.getElementById("thematicQuality_input_thematicValidity_from")
+			var to = document.getElementById("thematicQuality_input_thematicValidity_to")
+			var thematicValidity = calculateDataQualityThematicValidityWithRange(dataToEvaluate, from, to, metadata, thematicAttributeSelected, flag)
 
+
+		}
+		if (typeof thematicValidity == "string") valid = false;
+
+	}
+	if (valid) {
+		node.STAdata = dataToEvaluate;
+		node.STAdataAttributes = getDataAttributes(dataToEvaluate);
+		networkNodes.update(node);
+		updateQueryAndTableArea(node);
+		hideNodeDialog("DialogQualityPositionalQuality", event);
+
+		if (thematicAccuracy || thematicValidity) {
+			var html = "";
+			if (thematicAccuracy) {
+
+				html += `<div> Thematic accuracy <br>
+				<table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
+				<tbody>`
+
+				if (accuracyMethod == "accuracyStaDev") {
+					html += `<tr>
+					<td>${uncertantuColumnValue} </td>
+					<td> Standard deviation </td>
+					<td> ${globalAccuracyValue}</td>
+					</tr>`
+				} else if (accuracyMethod == "alfaNum") {
+					html += `<tr>
+					<td>${thematicAttributeSelected} </td>`
+					if (grouped) html += `<td> Mean of percentatge of mode value </td>`
+					else html += `<td> Percentatge of mode value </td>`
+					html += `<td> ${globalAccuracyValue} m</td>
+					</tr>`
+				}
+				else {
+					html += `<tr>
+					<td>${thematicAttributeSelected} </td>`
+					if (grouped) html += `<td> Standard deviation of standard deviations across the groups  </td>`
+					else html += `<td> Standard deviation </td>`
+					html += `<td> ${globalAccuracyValue} m</td>
+					</tr>`
+
+				}
+				html += "</tbody></table></div>"
+			}
+			html += "<br>"
+			if (thematicValidity) {
+				html += `<div> Thematic validity <br>
+					<table class="tablesmall"><thead><th>Columns</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
+						<tbody><tr>
+							<td>${thematicAttributeSelected}</td>
+							<td>${dataToEvaluate.length}</td>
+							<td>${thematicValidity[0]}</td>
+							<td>${thematicValidity[1]}</td>
+						</tr>`;
+				html += "</tbody></table></div>"
+			}
+			document.getElementById("dataQualityResult_info").innerHTML = html
+		}
+		else {
+			alert(thematicValidity)
+		}
+	}
 }
 
 function GetCreateNewTable(event){
