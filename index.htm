@@ -921,6 +921,114 @@
 		</form>
 	</dialog>
 
+		<dialog id="DialogUncertainty" onClose='hideNodeDialog("DialogUncertainty", event)'>
+		<form>
+			<label>Result Column: <select id="DialogUncertainty_select_resultColumn"></select>	</label>
+			<div>
+				<fieldset><legend>Temporal grouping</legend>
+				<div style="display: flex; gap: 20px; align-items: flex-start;">
+					<table>
+						<tr>
+							<td style="text-align: center;"><strong>Column:</strong></td>
+						</tr>
+						<tr>
+							<td>
+								<select id="DialogUncertainty_select_temporalColumn"></select>	
+							</td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td style="text-align: center;"><strong>Number:</strong></td>
+						</tr>
+						<tr>
+							<td>
+								<input type="number" id="DialogUncertainty_input_temporalValue" style="width: 50px">	
+							</td>
+						</tr>
+					</table>
+					<table >
+							<tr>
+								<td colspan="2" style="text-align: center;"><strong>Time unit:</strong></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_years" value= "years"></td>
+								<td><label for="DialogUncertainty_radio_years">Years</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_months" value="months"></td>
+								<td><label for="DialogUncertainty_radio_months">Months</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_days" value="days"></td>
+								<td><label for="DialogUncertainty_radio_days">Days</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_hours" value="hours"></td>
+								<td><label for="DialogUncertainty_radio_hours">Hours</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_minutes" value="minutes"></td>
+								<td><label for="DialogUncertainty_radio_minutes">Minutes</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_seconds" value="seconds"checked></td>
+								<td><label for="DialogUncertainty_radio_seconds" >Seconds</label></td>
+							</tr>
+						</table><div></div>						
+				</fieldset>
+				<fieldset><legend>Positional grouping</legend>
+					<div style="display: flex; gap: 20px; align-items: flex-start;">
+						<table>
+							<tr>
+								<td style="text-align: center;"><strong>Column X:</strong></td>
+							</tr>
+							<tr>
+								<td>
+									<select id="DialogUncertainty_select_PositionalColumn_x"></select>	
+								</td>
+							</tr>
+						</table>
+						<table>
+							<tr>
+								<td style="text-align: center;"><strong>Column Y:</strong></td>
+							</tr>
+							<tr>
+								<td>
+									<select id="DialogUncertainty_select_PositionalColumn_y"></select>
+								</td>
+							</tr>
+						</table>
+						<table>
+							<tr>
+								<td style="text-align: center;"><strong>Distance:</strong></td>
+							</tr>
+							<tr>
+								<td><input type="number" id="DialogUncertainty_input_number" style="width: 50px"></input>
+								<span> m</span>
+								</td>
+							</tr>
+						</table>
+				</fieldset>
+
+			</div>
+			<div class="center" style="margin-top:10px">
+				<button type="button" value="default" onClick="GetUncertainty(event)" >OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogUncertaintyNodeId"></input>
+		</form>
+	</dialog>
+
+
+
+
+
+
+
+
+
+
 	<dialog id="DialogSelectExpands" onClose='hideNodeDialog("DialogSelectExpands", event)'>
 		<form>
 			<fieldset id="DialogSelectExpandsHTML">

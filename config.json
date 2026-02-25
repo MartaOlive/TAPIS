@@ -317,7 +317,7 @@
 			{
 				"varUoMdesc": "PM 2.5 in ug/m³",
 				"description": "Particulate matter with particulate matter with an average aerodynamic diameter of up to 2.5 micrometers",
-				"definition": "https://www.eea.europa.eu/help/glossary/eea-glossary/pm2.5",
+				"definition": "https://dd.eionet.europa.eu/vocabularyconcept/aq/pollutant/6001/",
 				"UoM": "Microgram per cubic meter",
 				"UoMSymbol": "ug/m³",
 				"UoMDefinition": "https://qudt.org/vocab/unit/MicroGM-PER-M3"
@@ -325,7 +325,7 @@
 			{
 				"varUoMdesc": "PM 10 in ug/m³",
 				"description": "Particulate matter with particulate matter with an average aerodynamic diameter of up to 10 micrometers",
-				"definition": "https://www.eea.europa.eu/help/glossary/eea-glossary/pm10",
+				"definition": "https://dd.eionet.europa.eu/vocabularyconcept/aq/pollutant/5/",
 				"UoM": "Microgram per cubic meter",
 				"UoMSymbol": "ug/m³",
 				"UoMDefinition": "https://qudt.org/vocab/unit/MicroGM-PER-M3"

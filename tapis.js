@@ -160,8 +160,8 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			SaveTable: {description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the column definition is semantically enriched; see &#39;meaning&#39;)."},
 			SaveLayer: {description: "Save Layer", leafNode: true, help: "Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values."},
 			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."},
-			uploadToIC: {description: "Upload to inmutable catalog", help: "Upload data and metadata to an inmutable catalog."}
-		
+			uploadToIC: {description: "Upload to inmutable catalog", help: "Upload data and metadata to an inmutable catalog."},
+			uncertainty: {description: "Uncertainty", help: "Group values by time and space and calculate its uncertainties"}
 		};
 	
 const TableOperationsArray = Object.keys(TableOperations);
@@ -1839,10 +1839,6 @@ function TransformTextGeoJSONToTable(jsonText, url, node) {
 		networkNodes.update(node);
 		return;
 	}
-	TransformObjGeoJSONToTable(geojson, url, node);
-}
-
-function TransformObjGeoJSONToTable(geojson, url, node) {
 	node.STAdata=TransformGeoJSONToTable(geojson);
 	if (!node.STAdata)
 	{
@@ -1888,11 +1884,7 @@ function ReadURLImportGeoJSON() {
 	HTTPJSONData(document.getElementById("DialogImportGeoJSONSourceURLInput").value).then(
 				function(value) { 
 					showInfoMessage('Download GeoJSON completed.');
-					if (value.obj) 
-						TransformObjGeoJSONToTable(value.obj, document.getElementById("DialogImportGeoJSONSourceURLInput").value, node);
-					else
 						TransformTextGeoJSONToTable(value.text, document.getElementById("DialogImportGeoJSONSourceURLInput").value, node);
-
 				},
 				function(error) { 
 					showInfoMessage('Error downloading GeoJSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -7697,7 +7689,7 @@ function networkDoubleClick(params) {
 		}
 		else if(currentNode.image =="uploadToIC.png"){
 			saveNodeDialog("DialogUploadIC", currentNode);
-			var parentNode=GetFirstParentNode(currentNode);//S'encadenen els DQ? es fan per separat i arriben mes d'un?
+			var parentNode=GetFirstParentNode(currentNode);
 			var open=false;
 			if (parentNode){
 				if(parentNode.STAdata) {
@@ -7720,6 +7712,37 @@ function networkDoubleClick(params) {
 				}				
 			}
 			if (open)showNodeDialog("DialogUploadIC");
+			
+		}
+		else if(currentNode.image =="uncertainty.png"){
+			saveNodeDialog("DialogUncertainty", currentNode);
+			var parentNode=GetFirstParentNode(currentNode);
+			var open=true; //Canviar a false si cal
+			if (parentNode){
+				 if(parentNode.STAdata) {
+				 	currentNode.STAdata=parentNode.STAdata;
+					currentNode.STAdataAttributes=parentNode.STAdataAttributes;
+					if (parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
+					populateUncertaintyDialog(currentNode)
+					networkNodes.update(currentNode);
+				// 	open=true;
+				// 	if(parentNode.STAdataAttributes){
+				// 		currentNode.STAdataAttributes=parentNode.STAdataAttributes;
+				// 		populateuploadToICDialogUploadIC(currentNode);
+				// 		if (parentNode.STAmetadata && open==true) {
+				// 			currentNode.STAmetadata= parentNode.STAmetadata;
+				// 		}else{
+				// 			alert("The data has to contain metadata");
+				// 		}
+				// 	}else{
+				// 		alert("The data has to had attributes");
+				// 	}
+				}else{
+				 	open=false;
+				 	alert("The node conected has to have data");
+				 }				
+			}
+			if (open)showNodeDialog("DialogUncertainty");
 			
 		}
 		else if (currentNode.image == "Meaning.png") {
@@ -8003,7 +8026,6 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "logicalConsistency.png") {
-			//if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
 			if (populateDialogQualityLogicalConsistency(currentNode)){
 				showNodeDialog("DialogQualityLogicalConsistency");
 			}else{
@@ -10412,6 +10434,305 @@ function createJSONFromDataToSendToIPFS(data){
 	formData.append('file', file); 
 	return formData;
 }
+
+function populateUncertaintyDialog(node){
+	saveNodeDialog("DialogQualityTemporalQuality", node);
+	var attributesKeys= Object.keys(node.STAdataAttributes);
+	var c="";
+	for (var i=0;i<attributesKeys.length;i++){
+			c+= `<option  value="${attributesKeys[i]}">${attributesKeys[i]}</option>`;
+	}
+	document.getElementById("DialogUncertainty_select_resultColumn").innerHTML=c;
+	document.getElementById("DialogUncertainty_select_temporalColumn").innerHTML=c;
+	document.getElementById("DialogUncertainty_select_PositionalColumn_x").innerHTML=c;
+	document.getElementById("DialogUncertainty_select_PositionalColumn_y").innerHTML=c;
+
+}
+function GetUncertainty(event){
+	var node= getNodeDialog("DialogQualityTemporalQuality");
+
+	// var temporalGrouping=document.getElementById("DialogUncertainty_checkbox_temporal").checked?true:false;
+	// var positionalGrouping=document.getElementById("DialogUncertainty_checkbox_positional").checked?true:false;	
+	var data= node.STAdata;
+	var resultColumnSelect= document.getElementById("DialogUncertainty_select_resultColumn");
+	var resultColumnSelectValue= resultColumnSelect.options[resultColumnSelect.selectedIndex].value;
+	//TIME
+	var selectTemporalColumn=document.getElementById("DialogUncertainty_select_temporalColumn");
+	var selectTemporalColumnValue= selectTemporalColumn.options[selectTemporalColumn.selectedIndex].value;
+	var temporalNumber= document.getElementById("DialogUncertainty_input_temporalValue").value;
+	var unitTimeGroup = document.querySelector('input[name="DialogUncertainty_radio"]:checked');
+	var unitTimeValue = unitTimeGroup.value;
+	//POSITION
+	var selectPositionalXColumn=document.getElementById("DialogUncertainty_select_PositionalColumn_x");
+	var selectPositionalXColumnValue= selectPositionalXColumn.options[selectPositionalXColumn.selectedIndex].value;
+	var selectPositionalYColumn=document.getElementById("DialogUncertainty_select_PositionalColumn_y");
+	var selectPositionalYColumnValue= selectPositionalYColumn.options[selectPositionalYColumn.selectedIndex].value;
+	var positionalNumber= document.getElementById("DialogUncertainty_input_number").value;
+
+	var excuteProcess=true;
+
+	if (node.STAdataAttributes[selectTemporalColumnValue].type !="isodatetime"){
+		excuteProcess=false;
+		alert("The column selected to group by time must be a time-type column");
+
+	}
+	if (!node.STAdataAttributes[selectPositionalXColumnValue].type == "number" || !node.STAdataAttributes[selectPositionalXColumnValue].type== "integer"){
+		excuteProcess=false;
+		alert("The column selected to group by position (X) must be a number-type column");
+
+	}
+	if (!node.STAdataAttributes[selectPositionalYColumnValue].type == "number" || !node.STAdataAttributes[selectPositionalYColumnValue].type== "integer"){
+		excuteProcess=false;
+		alert("The column selected to group by position (Y) must be a number-type column");
+
+	}
+
+	if(excuteProcess){
+		//TIME PROCES
+		SortTableByColumns(data, [selectTemporalColumnValue], "asc");
+		var objWithGroupsTime=groupByTimeInCalculateUncertantyNode(data, selectTemporalColumnValue,temporalNumber,unitTimeValue, resultColumnSelectValue);
+		//POSITION
+		groupByPositionCalculateUncertantyNode (objWithGroupsTime,selectPositionalXColumnValue,selectPositionalYColumnValue,positionalNumber)
+
+
+
+
+
+	}
+	
+
+
+
+
+
+
+
+}
+function groupByTimeInCalculateUncertantyNode(data, timeColumn, number, unit){
+	var FirstTime= new Date( data[0][timeColumn]); 
+	var lastTime= new Date (data[data.length-1][timeColumn]);
+	var periods=[FirstTime], currentPeriod= FirstTime, msToAdd;
+
+	switch (unit) { //To ms
+		case "years":
+			msToAdd = number * 60 * 60 * 24 * 30.44 * 12 * 1000;
+			break;
+		case "months":
+			msToAdd = number * 60 * 60 * 24 * 30.44 * 1000;
+			break;
+		case "days":
+			msToAdd = number * 60 * 60 * 24 * 1000;
+			break;
+		case "hours":
+			msToAdd = number * 60 * 60 * 1000;
+			break;
+		case "minutes":
+			msToAdd = number * 60 * 1000;
+			break;
+
+		case "seconds":
+			msToAdd = number * 1000;
+			break;
+		default:
+			return null;
+	}
+
+	while (currentPeriod < lastTime){
+		periods.push(new Date(currentPeriod.getTime() + msToAdd))
+		currentPeriod= new Date(currentPeriod.getTime() + msToAdd);
+	}
+	var periodsLength= periods.length;
+	var dataLength= data.length;
+	var dataGrupedByTime=[], currentDate, objWithGroupsTime={};
+	for (var i=0;i<periodsLength-1;i++){
+		objWithGroupsTime[i]=[]
+		for (var a=0;a<dataLength;a++){
+			currentDate= new Date(data[a][timeColumn]);
+			if(currentDate>=periods[i]&&currentDate<periods[i+1]){//dins el periode
+				objWithGroupsTime[i].push(data[i]);
+			}
+		}
+	}
+	console.log(objWithGroupsTime);
+	return objWithGroupsTime
+}
+function groupByPositionCalculateUncertantyNode(objWithGroupsTime,xColumn,yColum,meters){ //FALTEN COSES AQUI DINS
+	var objWithGroupsTimeKeys= Object.keys(objWithGroupsTime);
+	var objWithGroupsTimeKeysLength= objWithGroupsTimeKeys.length;
+	var minX,maxX,minY,maxY, objBoundings,x,y, finaObjectWithTimeAndPositionGroups,objWithGroups;
+	
+	for (var e=0;e<objWithGroupsTimeKeysLength;e++){
+		if(objWithGroupsTime[objWithGroupsTimeKeys[e]].length!=0)
+		objWithGroups=makeGroupsByTimeInUncertaintyNode(objWithGroupsTime[objWithGroupsTimeKeys[e]],xColumn,yColum,meters)
+	 }
+
+	 /*Un cop tinc l'objecte amb els diferents grups, es passa a calcular:
+	 mirtjanes i desviacions temporals
+
+
+	 mitjanes i desviacions posicionals 
+
+
+
+
+	 mitjana i desviació del resultat
+	 
+	 
+	 
+	 */
+}
+
+function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters){
+	//x->Long, y->Lat
+
+	//Mirar si nom´es es un i passar a com hauria de ser al final
+	SortTableByColumns(setOfData, [xColumn], "asc");
+//[
+//     {
+//         "@iot.id": 172,
+//         "resultTime": "2024-01-11T11:02:17Z",
+//         "result": -2.889,
+//         "FeatureOfInterest/@iot.id": 1,
+//         "FeatureOfInterest/name": "Spitzingsee",
+//         "FeatureOfInterest/feature/coordinates_0": 11.88533,
+//         "FeatureOfInterest/feature/coordinates_1": 47.659664
+//     },
+//     {
+//         "@iot.id": 172,
+//         "resultTime": "2024-01-11T11:02:17Z",
+//         "result": -2.889,
+//         "FeatureOfInterest/@iot.id": 1,
+//         "FeatureOfInterest/name": "Spitzingsee",
+//         "FeatureOfInterest/feature/coordinates_0": 11.88533,
+//         "FeatureOfInterest/feature/coordinates_1": 47.659664
+//     },
+//     {
+//         "@iot.id": 172,
+//         "resultTime": "2024-01-11T11:02:17Z",
+//         "result": -2.889,
+//         "FeatureOfInterest/@iot.id": 1,
+//         "FeatureOfInterest/name": "Spitzingsee",
+//         "FeatureOfInterest/feature/coordinates_0": 11.88533,
+//         "FeatureOfInterest/feature/coordinates_1": 47.659664
+//     }
+// ]
+
+	//Lat/Lon to meters (x=long, y=lat)
+	var setOfDataLength= setOfData.length;
+	var setOfDataMeters={}, latMet,longMet, setOfLat=[];
+	for (var i=0;i<setOfDataLength;i++){ //find latMean
+		setOfLat.push(setOfData[i][yColumn])
+	}
+	var latitudeMean= aggrFuncMean(setOfLat);
+	var lonFactor= factorDegreeToMeters * Math.cos(latitudeMean * Math.PI / 180);
+
+	for (var e=0;e<setOfDataLength;e++){ //Gades to meters --> Prooerty indicates the position in the array ("i")
+		setOfDataMeters[e]={};
+		setOfDataMeters[e].x= setOfData[e][[xColumn]]*lonFactor
+		setOfDataMeters[e].y=  setOfData[e][[yColumn]]*factorDegreeToMeters;
+	}
+
+	//calcular distancies entre ells. COmençant per l'1.
+	/*objecte de grups
+		Mirem el 1: 
+		grup1: [1,3,5], 
+		Mirem el 2
+		grup2: [2,5]
+		--> mirar si algun membre dle grup 2 està en el 1. En acquest cas el 5 es repeteix, per tant tos passen a grup1
+		grup1: [1,3,5,2] --> Eliminar grup2
+		Mirem el 3: 
+		grup2: [3,6,7]
+		comprobem similituts amb grups anteriors. Es repeteix el 3. Passen tots a ser grup 1. Borrem grup2
+		Mirem el 4: 
+		grup2: [4,8]
+		comprobem, no es repeteix cap, seguim
+		Comprobem el 5
+		grup3: [5,ghjhjjj]
+	*/
+
+	//setOfDataMeters=[
+	// 	0:{x: 891130.6862710434, y: 5305449.966648},
+	// 	1: {x: 891134.6862710434, y: 5305449.966648}
+
+	// ]
+	var groups={}, distance,xMax, currentGroup, pointToGroup={},groupsToMerge, minGroupNumber;
+	var setOfDataMetersKeys=Object.keys(setOfDataMeters);
+	for (var u=0;u<setOfDataMetersKeys.length;u++){
+		//Theorical max x to be valid in distance
+		xMax=setOfDataMeters[u].x +meters;
+		currentGroup=[u];
+		if(pointToGroup[u]!==undefined){
+			groupsToMerge=[pointToGroup[u]];
+		}else groupsToMerge=[]
+		newGroup= Object.keys(groups).length;
+		//calculate distance
+		for (var n=u+1;n<setOfDataMetersKeys.length;n++){
+			if (setOfDataMeters[n].x>xMax) break; 
+			distance= Math.sqrt((setOfDataMeters[u].x - setOfDataMeters[n].x) ** 2 + (setOfDataMeters[u].y - setOfDataMeters[n].y) ** 2);
+			if (distance<=meters){
+				currentGroup.push(n);
+				//FALTA MIRAR EN QUIN GRU ESTA; NO?
+				if(pointToGroup[n]!==undefined){ //have a designed group
+					if(!groupsToMerge.includes(pointToGroup[n]))groupsToMerge.push(pointToGroup[n]);
+				} 
+			}
+		}
+		if(groupsToMerge.length==0){
+			groups[u]=currentGroup; //Any number is in another previous group
+			for(var s=0;s<currentGroup.length;s++){
+				pointToGroup[currentGroup[s]] = u;
+			}
+		}else{
+			minGroupNumber=Math.min(...groupsToMerge);
+			groups[minGroupNumber]=[... new Set([...groups[minGroupNumber], ...currentGroup])]; //Add group min number withcurrent group
+			for(var a=0;a<groupsToMerge.length;a++){
+				if (groupsToMerge[a]!=minGroupNumber){
+					groups[minGroupNumber]= [... new Set([...groups[minGroupNumber], ...groups[groupsToMerge[a]]])] //merge grups
+					delete groups[groupsToMerge[a]]; //Erase group
+				}
+			}
+			//update pointToGroup
+			
+			for(var s=0;s<groups[minGroupNumber].length;s++){
+				pointToGroup[groups[minGroupNumber][s]] = minGroupNumber;
+			}
+
+		}
+		//Fer totes les comparacions, que estiguin mes aprop del mxim i despres unir grups. 
+		//-> En comptes de tots els groups, puc mirar abans si existei en un dels grups i posar tots els que estan dins ja en el grup que toca per no haver de fusionar.
+	
+	}
+
+
+}
+
+
+
+
+//Un cop tinc l'esquema dels números, faig l'objecte amb les dades 
+
+
+//}
+
+
+// function calculateBoundingsInLocationInUncertanty(x,y,meters){
+// 	var minX,maxX,minY,maxY; //x->Long, Y->Lat
+// 	minY= y-(meters/factorDegreeToMeters);
+	
+
+// 	factorDegreeToMeters
+
+// 	return {minX: "", maxX:"", minY:"", maxY:""}
+// }
+// function crerateMeanAndDesviationColumnsByTimeInUncertantyNode(dataInGroup){
+// 	var dataWithMeanAndDesvest;
+// 	for (var i=0;i<dataInGroup.length;i++){
+
+// 	}
+
+
+// 	return dataWithMeanAndDesvest;
+// }
 
 
 /*function giveMeNetworkInformation(event) {
