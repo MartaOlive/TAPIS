@@ -10560,11 +10560,19 @@ function groupByPositionCalculateUncertantyNode(objWithGroupsTime,xColumn,yColum
 	var objWithGroupsTimeKeys= Object.keys(objWithGroupsTime);
 	var objWithGroupsTimeKeysLength= objWithGroupsTimeKeys.length;
 	var minX,maxX,minY,maxY, objBoundings,x,y, finaObjectWithTimeAndPositionGroups,objWithGroups;
-	
+	var newDataGrouped=[];
 	for (var e=0;e<objWithGroupsTimeKeysLength;e++){
+		if(e==0)currentNumberGroup=0
 		if(objWithGroupsTime[objWithGroupsTimeKeys[e]].length!=0)
-		objWithGroups=makeGroupsByTimeInUncertaintyNode(objWithGroupsTime[objWithGroupsTimeKeys[e]],xColumn,yColum,meters)
-	 }
+		objWithGroups=makeGroupsByTimeInUncertaintyNode(objWithGroupsTime[objWithGroupsTimeKeys[e]],xColumn,yColum,meters,currentNumberGroup)
+		currentNumberGroup=objWithGroups.lastIndex;
+		newDataGrouped.push(...objWithGroups.data);
+	}
+
+	//FER LES MITJES I DESVIACIONS 
+
+
+
 
 	 /*Un cop tinc l'objecte amb els diferents grups, es passa a calcular:
 	 mirtjanes i desviacions temporals
@@ -10582,79 +10590,23 @@ function groupByPositionCalculateUncertantyNode(objWithGroupsTime,xColumn,yColum
 	 */
 }
 
-function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters){
+function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters,currentNumberGroup){
 	//x->Long, y->Lat
-
-	//Mirar si nom´es es un i passar a com hauria de ser al final
 	SortTableByColumns(setOfData, [xColumn], "asc");
-//[
-//     {
-//         "@iot.id": 172,
-//         "resultTime": "2024-01-11T11:02:17Z",
-//         "result": -2.889,
-//         "FeatureOfInterest/@iot.id": 1,
-//         "FeatureOfInterest/name": "Spitzingsee",
-//         "FeatureOfInterest/feature/coordinates_0": 11.88533,
-//         "FeatureOfInterest/feature/coordinates_1": 47.659664
-//     },
-//     {
-//         "@iot.id": 172,
-//         "resultTime": "2024-01-11T11:02:17Z",
-//         "result": -2.889,
-//         "FeatureOfInterest/@iot.id": 1,
-//         "FeatureOfInterest/name": "Spitzingsee",
-//         "FeatureOfInterest/feature/coordinates_0": 11.88533,
-//         "FeatureOfInterest/feature/coordinates_1": 47.659664
-//     },
-//     {
-//         "@iot.id": 172,
-//         "resultTime": "2024-01-11T11:02:17Z",
-//         "result": -2.889,
-//         "FeatureOfInterest/@iot.id": 1,
-//         "FeatureOfInterest/name": "Spitzingsee",
-//         "FeatureOfInterest/feature/coordinates_0": 11.88533,
-//         "FeatureOfInterest/feature/coordinates_1": 47.659664
-//     }
-// ]
-
 	//Lat/Lon to meters (x=long, y=lat)
 	var setOfDataLength= setOfData.length;
-	var setOfDataMeters={}, latMet,longMet, setOfLat=[];
+	var setOfDataMeters={}, setOfLat=[];
 	for (var i=0;i<setOfDataLength;i++){ //find latMean
 		setOfLat.push(setOfData[i][yColumn])
 	}
 	var latitudeMean= aggrFuncMean(setOfLat);
 	var lonFactor= factorDegreeToMeters * Math.cos(latitudeMean * Math.PI / 180);
 
-	for (var e=0;e<setOfDataLength;e++){ //Gades to meters --> Prooerty indicates the position in the array ("i")
+	for (var e=0;e<setOfDataLength;e++){ //Gades to meters --> Property indicates the position in the array ("i")
 		setOfDataMeters[e]={};
-		setOfDataMeters[e].x= setOfData[e][[xColumn]]*lonFactor
-		setOfDataMeters[e].y=  setOfData[e][[yColumn]]*factorDegreeToMeters;
+		setOfDataMeters[e].x= setOfData[e][xColumn]*lonFactor
+		setOfDataMeters[e].y=  setOfData[e][yColumn]*factorDegreeToMeters;
 	}
-
-	//calcular distancies entre ells. COmençant per l'1.
-	/*objecte de grups
-		Mirem el 1: 
-		grup1: [1,3,5], 
-		Mirem el 2
-		grup2: [2,5]
-		--> mirar si algun membre dle grup 2 està en el 1. En acquest cas el 5 es repeteix, per tant tos passen a grup1
-		grup1: [1,3,5,2] --> Eliminar grup2
-		Mirem el 3: 
-		grup2: [3,6,7]
-		comprobem similituts amb grups anteriors. Es repeteix el 3. Passen tots a ser grup 1. Borrem grup2
-		Mirem el 4: 
-		grup2: [4,8]
-		comprobem, no es repeteix cap, seguim
-		Comprobem el 5
-		grup3: [5,ghjhjjj]
-	*/
-
-	//setOfDataMeters=[
-	// 	0:{x: 891130.6862710434, y: 5305449.966648},
-	// 	1: {x: 891134.6862710434, y: 5305449.966648}
-
-	// ]
 	var groups={}, distance,xMax, currentGroup, pointToGroup={},groupsToMerge, minGroupNumber;
 	var setOfDataMetersKeys=Object.keys(setOfDataMeters);
 	for (var u=0;u<setOfDataMetersKeys.length;u++){
@@ -10671,7 +10623,6 @@ function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters){
 			distance= Math.sqrt((setOfDataMeters[u].x - setOfDataMeters[n].x) ** 2 + (setOfDataMeters[u].y - setOfDataMeters[n].y) ** 2);
 			if (distance<=meters){
 				currentGroup.push(n);
-				//FALTA MIRAR EN QUIN GRU ESTA; NO?
 				if(pointToGroup[n]!==undefined){ //have a designed group
 					if(!groupsToMerge.includes(pointToGroup[n]))groupsToMerge.push(pointToGroup[n]);
 				} 
@@ -10698,42 +10649,27 @@ function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters){
 			}
 
 		}
-		//Fer totes les comparacions, que estiguin mes aprop del mxim i despres unir grups. 
-		//-> En comptes de tots els groups, puc mirar abans si existei en un dels grups i posar tots els que estan dins ja en el grup que toca per no haver de fusionar.
 	
 	}
 
+	var groupKeys=Object.keys(groups);
+	var arrayToReturn=[];
 
+	currentNumberGroup++;
+	var groupNumber,groupInSetOfData,idx;
+	for(var g=0;g<groupKeys.length;g++){
+		groupNumber= currentNumberGroup+g;
+		groupInSetOfData=groups[groupKeys[g]];
+		for(var f=0;f<groupInSetOfData.length;f++){
+			idx= groupInSetOfData[f];
+			setOfData[idx].groupIndex = groupNumber;
+			arrayToReturn.push(setOfData[idx]);
+		}
+		
+	}
+
+	return {lastIndex: groupNumber, data: arrayToReturn }
 }
-
-
-
-
-//Un cop tinc l'esquema dels números, faig l'objecte amb les dades 
-
-
-//}
-
-
-// function calculateBoundingsInLocationInUncertanty(x,y,meters){
-// 	var minX,maxX,minY,maxY; //x->Long, Y->Lat
-// 	minY= y-(meters/factorDegreeToMeters);
-	
-
-// 	factorDegreeToMeters
-
-// 	return {minX: "", maxX:"", minY:"", maxY:""}
-// }
-// function crerateMeanAndDesviationColumnsByTimeInUncertantyNode(dataInGroup){
-// 	var dataWithMeanAndDesvest;
-// 	for (var i=0;i<dataInGroup.length;i++){
-
-// 	}
-
-
-// 	return dataWithMeanAndDesvest;
-// }
-
 
 /*function giveMeNetworkInformation(event) {
 			hideNodeDialog("DialogContextMenu", event);
