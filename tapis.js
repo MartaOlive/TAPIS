@@ -10492,7 +10492,7 @@ function GetUncertainty(event){
 		SortTableByColumns(data, [selectTemporalColumnValue], "asc");
 		var objWithGroupsTime=groupByTimeInCalculateUncertantyNode(data, selectTemporalColumnValue,temporalNumber,unitTimeValue, resultColumnSelectValue);
 		//POSITION
-		groupByPositionCalculateUncertantyNode (objWithGroupsTime,selectPositionalXColumnValue,selectPositionalYColumnValue,positionalNumber)
+		groupByPositionCalculateUncertantyNode (objWithGroupsTime,selectTemporalColumnValue,selectPositionalXColumnValue,selectPositionalYColumnValue,positionalNumber,resultColumnSelectValue,unitTimeValue)
 
 
 
@@ -10543,7 +10543,7 @@ function groupByTimeInCalculateUncertantyNode(data, timeColumn, number, unit){
 	}
 	var periodsLength= periods.length;
 	var dataLength= data.length;
-	var dataGrupedByTime=[], currentDate, objWithGroupsTime={};
+	var currentDate, objWithGroupsTime={};
 	for (var i=0;i<periodsLength-1;i++){
 		objWithGroupsTime[i]=[]
 		for (var a=0;a<dataLength;a++){
@@ -10556,38 +10556,22 @@ function groupByTimeInCalculateUncertantyNode(data, timeColumn, number, unit){
 	console.log(objWithGroupsTime);
 	return objWithGroupsTime
 }
-function groupByPositionCalculateUncertantyNode(objWithGroupsTime,xColumn,yColum,meters){ //FALTEN COSES AQUI DINS
+function groupByPositionCalculateUncertantyNode(objWithGroupsTime,timeColumn,xColumn,yColumn,meters,resultColumn,timeUnit){ 
 	var objWithGroupsTimeKeys= Object.keys(objWithGroupsTime);
 	var objWithGroupsTimeKeysLength= objWithGroupsTimeKeys.length;
-	var minX,maxX,minY,maxY, objBoundings,x,y, finaObjectWithTimeAndPositionGroups,objWithGroups;
+	var objWithGroups,currentNumberGroup ;
 	var newDataGrouped=[];
 	for (var e=0;e<objWithGroupsTimeKeysLength;e++){
 		if(e==0)currentNumberGroup=0
 		if(objWithGroupsTime[objWithGroupsTimeKeys[e]].length!=0)
-		objWithGroups=makeGroupsByTimeInUncertaintyNode(objWithGroupsTime[objWithGroupsTimeKeys[e]],xColumn,yColum,meters,currentNumberGroup)
+		objWithGroups=makeGroupsByTimeInUncertaintyNode(objWithGroupsTime[objWithGroupsTimeKeys[e]],xColumn,yColumn,meters,currentNumberGroup)
 		currentNumberGroup=objWithGroups.lastIndex;
 		newDataGrouped.push(...objWithGroups.data);
 	}
+	 console.log(newDataGrouped)
+	calculateMeanAndDesvestInUncertaintyInTimePositionResult(newDataGrouped,timeColumn,xColumn,yColumn,resultColumn, timeUnit)
+	console.log(newDataGrouped)
 
-	//FER LES MITJES I DESVIACIONS 
-
-
-
-
-	 /*Un cop tinc l'objecte amb els diferents grups, es passa a calcular:
-	 mirtjanes i desviacions temporals
-
-
-	 mitjanes i desviacions posicionals 
-
-
-
-
-	 mitjana i desviació del resultat
-	 
-	 
-	 
-	 */
 }
 
 function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters,currentNumberGroup){
@@ -10607,7 +10591,7 @@ function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters,curr
 		setOfDataMeters[e].x= setOfData[e][xColumn]*lonFactor
 		setOfDataMeters[e].y=  setOfData[e][yColumn]*factorDegreeToMeters;
 	}
-	var groups={}, distance,xMax, currentGroup, pointToGroup={},groupsToMerge, minGroupNumber;
+	var groups={}, distance,xMax, currentGroup, pointToGroup={},groupsToMerge, minGroupNumber,newGroup;
 	var setOfDataMetersKeys=Object.keys(setOfDataMeters);
 	for (var u=0;u<setOfDataMetersKeys.length;u++){
 		//Theorical max x to be valid in distance
@@ -10647,7 +10631,6 @@ function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters,curr
 			for(var s=0;s<groups[minGroupNumber].length;s++){
 				pointToGroup[groups[minGroupNumber][s]] = minGroupNumber;
 			}
-
 		}
 	
 	}
@@ -10655,22 +10638,151 @@ function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters,curr
 	var groupKeys=Object.keys(groups);
 	var arrayToReturn=[];
 
-	currentNumberGroup++;
-	var groupNumber,groupInSetOfData,idx;
+	
+	var groupInSetOfData,idx;
 	for(var g=0;g<groupKeys.length;g++){
-		groupNumber= currentNumberGroup+g;
+		currentNumberGroup++;
 		groupInSetOfData=groups[groupKeys[g]];
 		for(var f=0;f<groupInSetOfData.length;f++){
 			idx= groupInSetOfData[f];
-			setOfData[idx].groupIndex = groupNumber;
+			setOfData[idx].groupIndex = currentNumberGroup;
 			arrayToReturn.push(setOfData[idx]);
 		}
-		
 	}
 
-	return {lastIndex: groupNumber, data: arrayToReturn }
+	return {lastIndex: currentNumberGroup, data: arrayToReturn }
 }
 
+function calculateMeanAndDesvestInUncertaintyInTimePositionResult(data, timeColumn,xColumn,yColumn,resultColumn, timeUnit){
+	var currentGroup, lastGroup, dataToCalculate={}, indexToChange=[];
+	for (var i=0;i<data.length;i++){
+		currentGroup=data[i].groupIndex;
+		if (i==0){
+			lastGroup=data[i].groupIndex;
+				dataToCalculate={
+					time:[data[i][timeColumn]],
+					x:[data[i][xColumn]],
+					y:[data[i][yColumn]],
+					result:[data[i][resultColumn]]
+				};
+				indexToChange.push(i)
+		}else{
+			if(currentGroup==lastGroup){
+				dataToCalculate.time.push(data[i][timeColumn]);
+				dataToCalculate.x.push(data[i][xColumn]);
+				dataToCalculate.y.push(data[i][yColumn]);
+				dataToCalculate.result.push(data[i][resultColumn]);
+				indexToChange.push(i);
+				if(i==data.length-1){
+					calculaterMeanAndDesvesInGroupInTime(data,dataToCalculate,indexToChange,timeUnit, timeColumn);
+					calculaterMeanAndDesvesInGroupInResult(data,dataToCalculate,indexToChange,resultColumn);
+					calculaterMeanAndDesvesInGroupInPosition(data,dataToCalculate,indexToChange,xColumn, yColumn);
+				}
+			}else{
+				
+				calculaterMeanAndDesvesInGroupInTime(data,dataToCalculate,indexToChange,timeUnit, timeColumn);
+				calculaterMeanAndDesvesInGroupInResult(data,dataToCalculate,indexToChange,resultColumn);
+				calculaterMeanAndDesvesInGroupInPosition(data,dataToCalculate,indexToChange,xColumn, yColumn);
+				indexToChange=[i];
+				dataToCalculate={
+					time:[data[i][timeColumn]],
+					x:[data[i][xColumn]],
+					y:[data[i][yColumn]],
+					result:[data[i][resultColumn]]
+				};
+				if (i==data.length-1){
+					indexToChange=[i];
+					dataToCalculate={
+						time:[data[i][timeColumn]],
+						x:[data[i][xColumn]],
+						y:[data[i][yColumn]],
+						result:[data[i][resultColumn]]
+					};
+				calculaterMeanAndDesvesInGroupInTime(data,dataToCalculate,indexToChange,timeUnit, timeColumn);
+				calculaterMeanAndDesvesInGroupInResult(data,dataToCalculate,indexToChange,resultColumn);
+				calculaterMeanAndDesvesInGroupInPosition(data,dataToCalculate,indexToChange,xColumn, yColumn);
+				}
+			}			
+		}	
+	}
+	lastGroup=currentGroup;
+}
+function calculaterMeanAndDesvesInGroupInTime(data,dataToCalculate,indexToChange,timeUnit, timeColumn){
+	var msAdatesInMs = dataToCalculate.time.map(s => new Date(s).getTime());
+	var timeMean=indexToChange.length==1? data[indexToChange[0]][timeColumn]: aggrFuncMean(msAdatesInMs);
+	var meanDateInISO= new Date(timeMean);
+	var timeDesvest=indexToChange.length==1? 0: aggrFuncStandardDeviation(msAdatesInMs);
+	var desvest;
+
+	switch (timeUnit) {
+		case 'seconds':
+			desvest= timeDesvest / 1000;
+			break;
+
+		case 'minutes':
+			desvest= timeDesvest / (1000 * 60);
+			break;
+
+		case 'hours':
+			desvest= timeDesvest / (1000 * 60 * 60);
+			break;
+
+		case 'days':
+			desvest= timeDesvest / (1000 * 60 * 60 * 24);
+			break;
+
+		case 'months':
+			desvest= timeDesvest / (1000 * 60 * 60 * 24 * 30.44);
+			break; 
+
+		case 'years':
+			desvest= timeDesvest / (1000 * 60 * 60 * 24 * 365.25); 
+			break;
+
+		default:
+			return ("Invalid unit")
+  }
+  for (var i=0;i<indexToChange.length; i++){
+	data[indexToChange[i]][timeColumn+"Mean"]= formatLocalDate(meanDateInISO);
+	data[indexToChange[i]][timeColumn+"StandardDeviation"]= desvest*0.6745;
+	data[indexToChange[i]].StandardDeviationUnit= timeUnit;
+  }
+}
+
+function calculaterMeanAndDesvesInGroupInResult(data,dataToCalculate,indexToChange,resultColumn){
+	var resultMean= indexToChange.length==1? data[indexToChange[0]][resultColumn]:aggrFuncMean(dataToCalculate.result);
+	var resultDesvest=indexToChange.length==1? 0: aggrFuncStandardDeviation(dataToCalculate.result);
+	for (var i=0;i<indexToChange.length; i++){
+		data[indexToChange[i]][resultColumn+"Mean"]= resultMean;
+		data[indexToChange[i]][resultColumn+"StandardDeviation"]= resultDesvest*0.6745;
+  }
+}
+function calculaterMeanAndDesvesInGroupInPosition(data,dataToCalculate,indexToChange, xColumn, yColumn){
+	var xMean= indexToChange.length==1? data[indexToChange[0]][xColumn]:aggrFuncMean(dataToCalculate.x);
+	var yMean= indexToChange.length==1? data[indexToChange[0]][xColumn]:aggrFuncMean(dataToCalculate.y);
+	var xDesvest= indexToChange.length==1? 0:aggrFuncStandardDeviation(dataToCalculate.x);
+	var yDesvest= indexToChange.length==1? 0:aggrFuncStandardDeviation(dataToCalculate.y);
+	var desvest= indexToChange.length==1? 0: 0.5*Math.sqrt(xDesvest**2+ yDesvest**2);
+	// var obj={DataPositions:indexToChange};
+	// calculateRMSEGroup(data,obj,xColumn,yColumn, "deg");
+	for(var i=0;i< indexToChange.length;i++){
+		data[indexToChange[i]][xColumn+"Mean"]= xMean;
+		data[indexToChange[i]][yColumn+"Mean"]= yMean;
+		data[indexToChange[i]]["PositionStandardDeviation"]=desvest * 1.1774;
+
+	}
+}
+function formatLocalDate(date) {
+  var yyyy = date.getFullYear();
+  var mm = String(date.getMonth() + 1).padStart(2, '0'); 
+  var dd = String(date.getDate()).padStart(2, '0');
+
+  var hh = String(date.getHours()).padStart(2, '0');
+  var min = String(date.getMinutes()).padStart(2, '0');
+  var ss = String(date.getSeconds()).padStart(2, '0');
+
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}Z`;
+}
 /*function giveMeNetworkInformation(event) {
 			hideNodeDialog("DialogContextMenu", event);
 			console.log(networkNodes.get());
