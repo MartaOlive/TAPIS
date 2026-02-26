@@ -10739,7 +10739,7 @@ function calculaterMeanAndDesvesInGroupInTime(data,dataToCalculate,indexToChange
 	obj[timeColumn+"Mean"]= formatLocalDate(meanDateInISO);
 	obj[timeColumn+"StandardDeviation"]= (desvest*0.6745).toFixed(3);
 	obj.StandardDeviationUnit= timeUnit;
-  
+  	obj.groupCount= indexToChange.length;
 }
 
 function calculaterMeanAndDesvesInGroupInResult(data,dataToCalculate,indexToChange,resultColumn,obj){
@@ -10757,9 +10757,10 @@ function calculaterMeanAndDesvesInGroupInPosition(data,dataToCalculate,indexToCh
 	var yDesvest= indexToChange.length==1? 0:aggrFuncStandardDeviation(dataToCalculate.y);
 	var desvest= indexToChange.length==1? 0: 0.5*Math.sqrt(xDesvest**2+ yDesvest**2);
 
+
 	obj[xColumn+"Mean"]= xMean;
 	obj[yColumn+"Mean"]= yMean;
-	obj["PositionStandardDeviation"]=desvest * 1.1774;
+	obj["PositionStandardDeviation"]=desvest * 1.1774*factorDegreeToMeters;
 
 }
 function formatLocalDate(date) {
