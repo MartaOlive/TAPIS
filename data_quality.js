@@ -641,7 +641,7 @@ function accuracyFromUncertaintyInPositions(data, metadata, uncertaintyAttribute
 	for (var i=0; i<data.length; i++)
 		uncertainties.push(data[i][uncertaintyAttribute]);
 
-	var accuracyValue=aggrFuncStandardDeviation(uncertainties);
+	var accuracyValue=aggrFuncMean(uncertainties);
 	if (!Number.isInteger(accuracyValue)) 
 		accuracyValue= accuracyValue.toFixed(3);
 
@@ -652,6 +652,63 @@ function accuracyFromUncertaintyInPositions(data, metadata, uncertaintyAttribute
 			"reports": [
 				{
 					"type": "DQ_AbsoluteExternalPositionalAccuracy",
+					"measureIdentification": {
+						"measure": {
+							"name": "CircularMapAccuracy"
+						},
+						"domains": [
+							{
+								"name": "DifferentialErrors2D",
+								"params": [
+										{
+										"name": "uncertanty column",
+										"value": uncertaintyAttribute
+											}
+										]
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Half-lengthConfidenceInterval",
+									"params": [
+										{
+											"name": "level",
+											"value": "0.683"
+										}
+									]
+								}
+							},
+							"valueType": "number",
+							"values": [ accuracyValue ]
+						}
+					]
+				}
+			]
+		});
+
+	return accuracyValue;
+}
+
+function accuracyFromUncertaintyInTemporal(data, metadata, uncertaintyAttribute) {
+	var uncertainties=[];
+	for (var i=0; i<data.length; i++)
+		uncertainties.push(data[i][uncertaintyAttribute]);
+
+	var accuracyValue=aggrFuncMean(uncertainties);
+	if (!Number.isInteger(accuracyValue)) 
+		accuracyValue= accuracyValue.toFixed(3);
+
+	if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "",//"DQ_AbsoluteExternalPositionalAccuracy",
 					"measureIdentification": {
 						"measure": {
 							"name": "CircularMapAccuracy"
@@ -692,6 +749,90 @@ function accuracyFromUncertaintyInPositions(data, metadata, uncertaintyAttribute
 
 	return accuracyValue;
 }
+
+function calculateTemporalAccuracyFromTimes(data,timeColumn,metadata,groupColumn,newColumn){
+
+	if(groupColumn)	{
+		var objTime=createObjectToGroupTemporalRecords(data,groupColumn, timeColumn);
+		var objTimeKeys=Object.keys(objTime);
+		var msAdatesInMs, globalStandardDeviationArray=[];
+		
+		for (var i=0;i<objTimeKeys.length;i++){
+			var msAdatesInMs = objTime[objTimeKeys[i]].values.map(s => new Date(s).getTime());
+			objTime[objTimeKeys[i]].desvest=msAdatesInMs.length==1?0:aggrFuncStandardDeviation(msAdatesInMs);
+		}
+		for (var e=0;e<data.length;e++){
+			if (newColumn)data[e].temporalAccuracy=objTime[data[e][groupColumn]].desvest/1000;
+			globalStandardDeviationArray.push(objTime[data[e][groupColumn]].desvest/1000);
+		}
+		var accuracyValue= aggrFuncStandardDeviation(globalStandardDeviationArray)
+		
+	}else{
+		var msAdatesInMs = data.map(s => new Date(s[timeColumn]).getTime());
+		var desvest=aggrFuncStandardDeviation(msAdatesInMs); 
+		console.log(desvest)
+		var accuracyValue= desvest /1000
+	}	
+		if (!metadata.dataQualityInfos)	metadata.dataQualityInfos=[];
+		metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "",//"DQ_AbsoluteExternalPositionalAccuracy",
+					"measureIdentification": {
+						"measure": {
+							"name": "CircularMapAccuracy"
+						},
+						"domains": [
+							{
+								"name": "DifferentialErrors2D",
+								"params": [
+										{
+										"name": "uncertantie column",
+										"value": timeColumn
+											}
+										]
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "Half-lengthConfidenceInterval",
+									"params": [
+										{
+											"name": "level",
+											"value": "0.683"
+										}
+									]
+								}
+							},
+							"valueType": "number",
+							"values": [ accuracyValue ]
+						}
+					]
+				}
+			]
+		});
+		return accuracyValue
+}
+
+function createObjectToGroupTemporalRecords(data,groupColumn, timeColumn){
+	var obj={}
+	for (var i=0;i<data.length;i++){
+			if (obj.hasOwnProperty(data[i][groupColumn])){
+				obj[data[i][groupColumn]].values.push(data[i][timeColumn])
+			}else{
+					obj[data[i][groupColumn]]= {}
+					obj[data[i][groupColumn]].values=[data[i][timeColumn]]
+			}
+		
+	}
+	return obj
+}
+
 
 function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAttribute, units, grouped, newColumns) {
 
@@ -1010,7 +1151,7 @@ function accuracyFromUncertaintyThematicQuality(data, metadata, uncertaintyAttri
 		uncertainties.push(data[i][uncertaintyAttribute]);
 	}
 
-	var accuracyValue=aggrFuncStandardDeviation(uncertainties);
+	var accuracyValue=aggrFuncMean(uncertainties);
 	if (!Number.isInteger(accuracyValue)) 
 		accuracyValue= accuracyValue.toFixed(3);
 
@@ -1173,7 +1314,7 @@ function accuracyFromNumValuesInThematicQuality (data, metadata,thematicAttribut
 	for (var i=0; i<groupingGroupsObjectKeys.length; i++){
 		uncertainties.push(groupingGroupsObject[groupingGroupsObjectKeys[i]].groupUncertainty);
 	}
-	var accuracyValue=aggrFuncStandardDeviation(uncertainties);
+	var accuracyValue=aggrFuncStandardDeviation(uncertainties); //MITJANAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 	if (!metadata.dataQualityInfos)metadata.dataQualityInfos=[];
 

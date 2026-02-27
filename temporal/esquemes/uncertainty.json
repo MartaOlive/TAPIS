@@ -12045,210 +12045,240 @@
 					"time": "2024-01-11T10:00:05Z",
 					"lon": 11.88533,
 					"lat": 47.659664,
-					"temperature": 5.2
+					"temperature": 5.2,
+					"groupIndex": 1
 				},
 				{
 					"id": 2,
 					"time": "2024-01-11T10:00:20Z",
 					"lon": 11.88534,
 					"lat": 47.659665,
-					"temperature": 5.5
+					"temperature": 5.5,
+					"groupIndex": 1
 				},
 				{
 					"id": 3,
 					"time": "2024-01-11T10:00:25Z",
 					"lon": 11.88535,
 					"lat": 47.659666,
-					"temperature": 5.1
+					"temperature": 5.1,
+					"groupIndex": 1
 				},
 				{
 					"id": 4,
 					"time": "2024-01-11T10:00:40Z",
 					"lon": 11.8854,
 					"lat": 47.65967,
-					"temperature": 5.7
+					"temperature": 5.7,
+					"groupIndex": 2
 				},
 				{
 					"id": 5,
 					"time": "2024-01-11T10:00:50Z",
 					"lon": 11.88542,
 					"lat": 47.659672,
-					"temperature": 5
+					"temperature": 5,
+					"groupIndex": 2
 				},
 				{
 					"id": 6,
 					"time": "2024-01-11T10:01:05Z",
 					"lon": 11.88543,
 					"lat": 47.659673,
-					"temperature": 5.6
+					"temperature": 5.6,
+					"groupIndex": 3
 				},
 				{
 					"id": 7,
 					"time": "2024-01-11T10:01:10Z",
 					"lon": 11.88544,
 					"lat": 47.659674,
-					"temperature": 5.3
+					"temperature": 5.3,
+					"groupIndex": 3
 				},
 				{
 					"id": 8,
 					"time": "2024-01-11T10:01:25Z",
 					"lon": 11.8855,
 					"lat": 47.65968,
-					"temperature": 5.8
+					"temperature": 5.8,
+					"groupIndex": 3
 				},
 				{
 					"id": 9,
 					"time": "2024-01-11T10:01:35Z",
 					"lon": 11.88552,
 					"lat": 47.659682,
-					"temperature": 5.1
+					"temperature": 5.1,
+					"groupIndex": 4
 				},
 				{
 					"id": 10,
 					"time": "2024-01-11T10:01:40Z",
 					"lon": 11.88553,
 					"lat": 47.659683,
-					"temperature": 5.4
+					"temperature": 5.4,
+					"groupIndex": 4
 				},
 				{
 					"id": 11,
 					"time": "2024-01-11T10:01:55Z",
 					"lon": 11.88555,
 					"lat": 47.659685,
-					"temperature": 5.2
+					"temperature": 5.2,
+					"groupIndex": 4
 				},
 				{
 					"id": 12,
 					"time": "2024-01-11T10:02:00Z",
 					"lon": 11.88557,
 					"lat": 47.659687,
-					"temperature": 5.6
+					"temperature": 5.6,
+					"groupIndex": 4
 				},
 				{
 					"id": 13,
 					"time": "2024-01-11T10:02:15Z",
 					"lon": 11.88558,
 					"lat": 47.659688,
-					"temperature": 5
+					"temperature": 5,
+					"groupIndex": 5
 				},
 				{
 					"id": 14,
 					"time": "2024-01-11T10:02:25Z",
 					"lon": 11.8856,
 					"lat": 47.65969,
-					"temperature": 5.5
+					"temperature": 5.5,
+					"groupIndex": 5
 				},
 				{
 					"id": 15,
 					"time": "2024-01-11T10:02:35Z",
 					"lon": 11.88562,
 					"lat": 47.659692,
-					"temperature": 5.3
+					"temperature": 5.3,
+					"groupIndex": 6
 				},
 				{
 					"id": 16,
 					"time": "2024-01-11T10:02:50Z",
 					"lon": 11.88563,
 					"lat": 47.659693,
-					"temperature": 5.7
+					"temperature": 5.7,
+					"groupIndex": 6
 				},
 				{
 					"id": 17,
 					"time": "2024-01-11T10:03:00Z",
 					"lon": 11.88565,
 					"lat": 47.659695,
-					"temperature": 5.2
+					"temperature": 5.2,
+					"groupIndex": 6
 				},
 				{
 					"id": 18,
 					"time": "2024-01-11T10:03:10Z",
 					"lon": 11.88567,
 					"lat": 47.659697,
-					"temperature": 5.6
+					"temperature": 5.6,
+					"groupIndex": 7
 				},
 				{
 					"id": 19,
 					"time": "2024-01-11T10:03:20Z",
 					"lon": 11.88568,
 					"lat": 47.659698,
-					"temperature": 5.4
+					"temperature": 5.4,
+					"groupIndex": 7
 				},
 				{
 					"id": 20,
 					"time": "2024-01-11T10:03:35Z",
 					"lon": 11.8857,
 					"lat": 47.6597,
-					"temperature": 5.1
+					"temperature": 5.1,
+					"groupIndex": 8
 				},
 				{
 					"id": 21,
 					"time": "2024-01-11T10:03:50Z",
 					"lon": 11.88572,
 					"lat": 47.659702,
-					"temperature": 5.5
+					"temperature": 5.5,
+					"groupIndex": 8
 				},
 				{
 					"id": 22,
 					"time": "2024-01-11T10:03:55Z",
 					"lon": 11.88573,
 					"lat": 47.659703,
-					"temperature": 5.3
+					"temperature": 5.3,
+					"groupIndex": 8
 				},
 				{
 					"id": 23,
 					"time": "2024-01-11T10:04:10Z",
 					"lon": 11.88575,
 					"lat": 47.659705,
-					"temperature": 5.6
+					"temperature": 5.6,
+					"groupIndex": 9
 				},
 				{
 					"id": 24,
 					"time": "2024-01-11T10:04:20Z",
 					"lon": 11.88577,
 					"lat": 47.659707,
-					"temperature": 5.2
+					"temperature": 5.2,
+					"groupIndex": 9
 				},
 				{
 					"id": 25,
 					"time": "2024-01-11T10:04:25Z",
 					"lon": 11.88578,
 					"lat": 47.659708,
-					"temperature": 5.4
+					"temperature": 5.4,
+					"groupIndex": 9
 				},
 				{
 					"id": 26,
 					"time": "2024-01-11T10:04:40Z",
 					"lon": 11.8858,
 					"lat": 47.65971,
-					"temperature": 5
+					"temperature": 5,
+					"groupIndex": 10
 				},
 				{
 					"id": 27,
 					"time": "2024-01-11T10:04:50Z",
 					"lon": 11.88582,
 					"lat": 47.659712,
-					"temperature": 5.7
+					"temperature": 5.7,
+					"groupIndex": 10
 				},
 				{
 					"id": 28,
 					"time": "2024-01-11T10:05:05Z",
 					"lon": 11.88583,
 					"lat": 47.659713,
-					"temperature": 5.1
+					"temperature": 5.1,
+					"groupIndex": 11
 				},
 				{
 					"id": 29,
 					"time": "2024-01-11T10:05:15Z",
 					"lon": 11.88585,
 					"lat": 47.659715,
-					"temperature": 5.5
+					"temperature": 5.5,
+					"groupIndex": 11
 				},
 				{
 					"id": 30,
 					"time": "2024-01-11T10:05:25Z",
 					"lon": 11.88587,
 					"lat": 47.659717,
-					"temperature": 5.3
+					"temperature": 5.3,
+					"groupIndex": 11
 				}
 			],
 			"STAdataAttributes": {
@@ -12280,259 +12310,153 @@
 			"y": 119,
 			"STAdata": [
 				{
-					"id": 1,
-					"time": "2024-01-11T10:00:00Z",
-					"lon": 11.88533,
-					"lat": 47.659664,
-					"temperature": 5.2,
-					"groupIndex": 1
+					"timeMean": "2024-01-11T11:00:16Z",
+					"timeStaDev": 7.02,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.267,
+					"temperatureStaDev": 0.14,
+					"lonMean": 11.88534,
+					"latMean": 47.659665,
+					"PositionStaDev": 0.658606435003133
 				},
 				{
-					"id": 2,
-					"time": "2024-01-11T10:00:30Z",
-					"lon": 11.88534,
-					"lat": 47.659665,
-					"temperature": 5.5,
-					"groupIndex": 2
+					"timeMean": "2024-01-11T11:00:45Z",
+					"timeStaDev": 4.769,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.35,
+					"temperatureStaDev": 0.334,
+					"lonMean": 11.88541,
+					"latMean": 47.659671,
+					"PositionStaDev": 0.9314101525657184
 				},
 				{
-					"id": 3,
-					"time": "2024-01-11T10:01:00Z",
-					"lon": 11.88535,
-					"lat": 47.659666,
-					"temperature": 5.1,
-					"groupIndex": 3
+					"timeMean": "2024-01-11T11:01:13Z",
+					"timeStaDev": 7.02,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.567,
+					"temperatureStaDev": 0.17,
+					"lonMean": 11.885456666666665,
+					"latMean": 47.659675666666665,
+					"PositionStaDev": 2.4934437201196595
 				},
 				{
-					"id": 4,
-					"time": "2024-01-11T10:01:30Z",
-					"lon": 11.8854,
-					"lat": 47.65967,
-					"temperature": 5.7,
-					"groupIndex": 4
+					"timeMean": "2024-01-11T11:01:47Z",
+					"timeStaDev": 8.028,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 4,
+					"temperatureMean": 5.325,
+					"temperatureStaDev": 0.15,
+					"lonMean": 11.8855425,
+					"latMean": 47.65968425,
+					"PositionStaDev": 1.4603647870384697
 				},
 				{
-					"id": 5,
-					"time": "2024-01-11T10:02:00Z",
-					"lon": 11.88542,
-					"lat": 47.659672,
-					"temperature": 5,
-					"groupIndex": 5
+					"timeMean": "2024-01-11T11:02:20Z",
+					"timeStaDev": 4.769,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.25,
+					"temperatureStaDev": 0.238,
+					"lonMean": 11.88559,
+					"latMean": 47.659689,
+					"PositionStaDev": 0.9314101526148624
 				},
 				{
-					"id": 6,
-					"time": "2024-01-11T10:02:30Z",
-					"lon": 11.88543,
-					"lat": 47.659673,
-					"temperature": 5.6,
-					"groupIndex": 6
+					"timeMean": "2024-01-11T11:02:48Z",
+					"timeStaDev": 8.487,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.4,
+					"temperatureStaDev": 0.178,
+					"lonMean": 11.885633333333333,
+					"latMean": 47.65969333333334,
+					"PositionStaDev": 1.0060379471475975
 				},
 				{
-					"id": 7,
-					"time": "2024-01-11T10:03:00Z",
-					"lon": 11.88544,
-					"lat": 47.659674,
-					"temperature": 5.3,
-					"groupIndex": 7
+					"timeMean": "2024-01-11T11:03:15Z",
+					"timeStaDev": 4.769,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.5,
+					"temperatureStaDev": 0.095,
+					"lonMean": 11.885674999999999,
+					"latMean": 47.6596975,
+					"PositionStaDev": 0.46570507634838454
 				},
 				{
-					"id": 8,
-					"time": "2024-01-11T10:03:30Z",
-					"lon": 11.8855,
-					"lat": 47.65968,
-					"temperature": 5.8,
-					"groupIndex": 8
+					"timeMean": "2024-01-11T11:03:46Z",
+					"timeStaDev": 7.02,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.3,
+					"temperatureStaDev": 0.135,
+					"lonMean": 11.885716666666667,
+					"latMean": 47.65970166666667,
+					"PositionStaDev": 1.0060379471475975
 				},
 				{
-					"id": 9,
-					"time": "2024-01-11T10:04:00Z",
-					"lon": 11.88552,
-					"lat": 47.659682,
-					"temperature": 5.1,
-					"groupIndex": 9
+					"timeMean": "2024-01-11T11:04:18Z",
+					"timeStaDev": 5.152,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.4,
+					"temperatureStaDev": 0.135,
+					"lonMean": 11.885766666666669,
+					"latMean": 47.659706666666665,
+					"PositionStaDev": 1.0060379471551804
 				},
 				{
-					"id": 10,
-					"time": "2024-01-11T10:04:30Z",
-					"lon": 11.88553,
-					"lat": 47.659683,
-					"temperature": 5.4,
-					"groupIndex": 10
+					"timeMean": "2024-01-11T11:04:45Z",
+					"timeStaDev": 4.769,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.35,
+					"temperatureStaDev": 0.334,
+					"lonMean": 11.88581,
+					"latMean": 47.659711,
+					"PositionStaDev": 0.9314101526476251
 				},
 				{
-					"id": 11,
-					"time": "2024-01-11T10:05:00Z",
-					"lon": 11.88555,
-					"lat": 47.659685,
-					"temperature": 5.2,
-					"groupIndex": 11
-				},
-				{
-					"id": 12,
-					"time": "2024-01-11T10:05:30Z",
-					"lon": 11.88557,
-					"lat": 47.659687,
-					"temperature": 5.6,
-					"groupIndex": 12
-				},
-				{
-					"id": 13,
-					"time": "2024-01-11T10:06:00Z",
-					"lon": 11.88558,
-					"lat": 47.659688,
-					"temperature": 5,
-					"groupIndex": 13
-				},
-				{
-					"id": 14,
-					"time": "2024-01-11T10:06:30Z",
-					"lon": 11.8856,
-					"lat": 47.65969,
-					"temperature": 5.5,
-					"groupIndex": 14
-				},
-				{
-					"id": 15,
-					"time": "2024-01-11T10:07:00Z",
-					"lon": 11.88562,
-					"lat": 47.659692,
-					"temperature": 5.3,
-					"groupIndex": 15
-				},
-				{
-					"id": 16,
-					"time": "2024-01-11T10:07:30Z",
-					"lon": 11.88563,
-					"lat": 47.659693,
-					"temperature": 5.7,
-					"groupIndex": 16
-				},
-				{
-					"id": 17,
-					"time": "2024-01-11T10:08:00Z",
-					"lon": 11.88565,
-					"lat": 47.659695,
-					"temperature": 5.2,
-					"groupIndex": 17
-				},
-				{
-					"id": 18,
-					"time": "2024-01-11T10:08:30Z",
-					"lon": 11.88567,
-					"lat": 47.659697,
-					"temperature": 5.6,
-					"groupIndex": 18
-				},
-				{
-					"id": 19,
-					"time": "2024-01-11T10:09:00Z",
-					"lon": 11.88568,
-					"lat": 47.659698,
-					"temperature": 5.4,
-					"groupIndex": 19
-				},
-				{
-					"id": 20,
-					"time": "2024-01-11T10:09:30Z",
-					"lon": 11.8857,
-					"lat": 47.6597,
-					"temperature": 5.1,
-					"groupIndex": 20
-				},
-				{
-					"id": 21,
-					"time": "2024-01-11T10:10:00Z",
-					"lon": 11.88572,
-					"lat": 47.659702,
-					"temperature": 5.5,
-					"groupIndex": 21
-				},
-				{
-					"id": 22,
-					"time": "2024-01-11T10:10:30Z",
-					"lon": 11.88573,
-					"lat": 47.659703,
-					"temperature": 5.3,
-					"groupIndex": 22
-				},
-				{
-					"id": 23,
-					"time": "2024-01-11T10:11:00Z",
-					"lon": 11.88575,
-					"lat": 47.659705,
-					"temperature": 5.6,
-					"groupIndex": 23
-				},
-				{
-					"id": 24,
-					"time": "2024-01-11T10:11:30Z",
-					"lon": 11.88577,
-					"lat": 47.659707,
-					"temperature": 5.2,
-					"groupIndex": 24
-				},
-				{
-					"id": 25,
-					"time": "2024-01-11T10:12:00Z",
-					"lon": 11.88578,
-					"lat": 47.659708,
-					"temperature": 5.4,
-					"groupIndex": 25
-				},
-				{
-					"id": 26,
-					"time": "2024-01-11T10:12:30Z",
-					"lon": 11.8858,
-					"lat": 47.65971,
-					"temperature": 5,
-					"groupIndex": 26
-				},
-				{
-					"id": 27,
-					"time": "2024-01-11T10:13:00Z",
-					"lon": 11.88582,
-					"lat": 47.659712,
-					"temperature": 5.7,
-					"groupIndex": 27
-				},
-				{
-					"id": 28,
-					"time": "2024-01-11T10:13:30Z",
-					"lon": 11.88583,
-					"lat": 47.659713,
-					"temperature": 5.1,
-					"groupIndex": 28
-				},
-				{
-					"id": 29,
-					"time": "2024-01-11T10:14:00Z",
-					"lon": 11.88585,
-					"lat": 47.659715,
-					"temperature": 5.5,
-					"groupIndex": 29
-				},
-				{
-					"id": 30,
-					"time": "2024-01-11T10:14:30Z",
-					"lon": 11.88587,
-					"lat": 47.659717,
-					"temperature": 5.3
+					"timeMean": "2024-01-11T11:05:15Z",
+					"timeStaDev": 6.745,
+					"StandardDeviationUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.3,
+					"temperatureStaDev": 0.135,
+					"lonMean": 11.88585,
+					"latMean": 47.659715000000006,
+					"PositionStaDev": 1.3172128699251824
 				}
 			],
 			"STAdataAttributes": {
-				"id": {
-					"type": "integer"
-				},
-				"time": {
+				"timeMean": {
 					"type": "isodatetime"
 				},
-				"lon": {
+				"timeStaDev": {
 					"type": "number"
 				},
-				"lat": {
+				"StandardDeviationUnit": {
+					"type": "string"
+				},
+				"groupCount": {
+					"type": "integer"
+				},
+				"temperatureMean": {
 					"type": "number"
 				},
-				"temperature": {
+				"temperatureStaDev": {
+					"type": "number"
+				},
+				"lonMean": {
+					"type": "number"
+				},
+				"latMean": {
+					"type": "number"
+				},
+				"PositionStaDev": {
 					"type": "number"
 				}
 			}

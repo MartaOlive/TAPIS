@@ -9795,18 +9795,25 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 }
 
 function populateDialogQualityTemporalQuality(node){
-	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "temporalQuality", "Column");
-	document.getElementById("DialogQualityTemporalQuality_attributesList").innerHTML=attributesCheckboxModule;
+	//var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "temporalQuality", "Column");
+	var attributesKeys= Object.keys(node.STAdataAttributes), options;
+	for (var i=0;i<attributesKeys.length;i++){
+		options+= `<option  value="${attributesKeys[i]}">${attributesKeys[i]}</option>`;
+	}
+	document.getElementById("TemporalQuality_select_temporalAccuracy_uncertantyColumn").innerHTML=options;
+	document.getElementById("TemporalQuality_select_temporalColumn").innerHTML=options;
+	document.getElementById("TemporalQuality_radio_temporalAccuracy_evaluateColumn_grouping_select").innerHTML=options;
 	saveNodeDialog("DialogQualityTemporalQuality", node);
 }
 
 function okButtonDataQualityTemporalQuality(event){
 	var node= getNodeDialog("DialogQualityTemporalQuality");
 	var data= node.STAdata;
-	var select= document.getElementById("attributeList_temporalQuality");
+	var select= document.getElementById("TemporalQuality_select_temporalColumn");
 	var attributeSelected= select.options[select.selectedIndex].value;
-
+	var temporalAccuracy=(document.getElementById("TemporalQuality_checkbox_calculate_temporalAccuracy").checked)?true:false;
 	var validity_calculate=(document.getElementById("TemporalQuality_checkbox_calculate_temporalValidity").checked)?true:false;
+
 	var from=document.getElementById("DialogQualityTemporalQuality_validity_inputText_from").value;
 	var to= document.getElementById("DialogQualityTemporalQuality_validity_inputText_to").value;
 
@@ -9827,6 +9834,39 @@ function okButtonDataQualityTemporalQuality(event){
 	var datalength=data.length;
 	var metadata= (node.STAmetadata)?node.STAmetadata:{}
 	var newData={};
+
+	if (temporalAccuracy){
+		var accuracyMethod=document.querySelector('input[name="TemporalQuality_radio_temporalAccuracy"]:checked')
+		var accuracyMethodValue= accuracyMethod.value;
+
+		if(accuracyMethodValue=="uncertaintyColumn"){
+			
+			var selectUncertantly= document.getElementById("TemporalQuality_select_temporalAccuracy_uncertantyColumn");
+			var attributeSelectedUncertantly= selectUncertantly.options[selectUncertantly.selectedIndex].value;
+			//if (node.STAdataAttributes[attributeSelectedUncertantly].type == "number" || node.STAdataAttributes[attributeSelectedUncertantly].type== "integer") {
+				newData.accuracy=accuracyFromUncertaintyInTemporal(data, metadata, attributeSelectedUncertantly)
+				//valid=true;
+			//} else {
+				// valid=false;
+				// alert("Selected uncertainly column must be of a 'number' type");
+			//}
+			
+		}else{ //Calculate
+				var accuracyMethodGrouped=document.getElementById("TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_group").checked?true:false;
+			if(accuracyMethodGrouped){
+				var temporalUncertaintyGroupColumn= document.getElementById("TemporalQuality_radio_temporalAccuracy_evaluateColumn_grouping_select");
+				var temporalUncertaintyGroupColumnValue= temporalUncertaintyGroupColumn.options[temporalUncertaintyGroupColumn.selectedIndex].value;
+				var newColumn= document.getElementById("TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox").checked?true:false;
+				newData.accuracy=calculateTemporalAccuracyFromTimes(data, attributeSelected,metadata,temporalUncertaintyGroupColumnValue, newColumn)
+			}else{ //all
+				newData.accuracyy=calculateTemporalAccuracyFromTimes(data, attributeSelected,metadata)
+			}
+			
+		}
+	}
+
+
+
 	if (validity_calculate){
 		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag);
 	} 
@@ -9840,28 +9880,39 @@ function okButtonDataQualityTemporalQuality(event){
 	}
 
 	
-	if (newData.validity==null || newData.resolution==null ||newData.consistency==null)
-		alert("The attribute selected must be a Date");
-	else{
+	// if (newData.validity==null || newData.resolution==null ||newData.consistency==null)
+	// 	alert("The attribute selected must be a Date");
+	// else{
 		node.STAdata= data;
 		node.STAdataAttributes= getDataAttributes(data);
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		hideNodeDialog("DialogQualityTemporalQuality", event);
 
-		if(validity_calculate||resolution_calculate||consistency_calculate){
+		if(validity_calculate||resolution_calculate||consistency_calculate||temporalAccuracy ){
 			var html="";
+			if(validity_calculate||resolution_calculate||consistency_calculate){
 			html= `<table class="tablesmall">
 						<thead > 
 						<th></th><th>Column</th><th>Total records</th><th>True records</th><th>Rate</th></tr></thead><tbody>`;
+			
+			}
+
 			if(validity_calculate)html+= `<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.validity[0]}</td><td>${newData.validity[1]}</td></tr>`
 			if(resolution_calculate)html+= `<tr><td>Temporal resolution</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.resolution[0]}</td><td>${newData.resolution[1]}</td></tr>`
 			if(consistency_calculate)html+= `<tr><td>Temporal consistency</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.consistency[0]}</td><td>${newData.consistency[1]}</td></tr>`
 			html+=`</tbody></table>`;
+			if (temporalAccuracy){
+				html+= `<table class="tablesmall">
+						<thead > 
+						<th></th><th>Column</th><th>Total records</th><th>Accuracy value</th></tr></thead><tbody>
+						<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.accuracy}</td></tr>`
+			}
+			
 			document.getElementById("dataQualityResult_info").innerHTML= html
 			showNodeDialog("dataQualityResult");
 		}
-	}	
+	//}	
 }
 
 function populateDialogQualityPositionalQuality(node){
@@ -10063,9 +10114,10 @@ function okButtonDataQualityThematicQuality(event) {
 	var nodeIdToEvaluateSelected = nodeIdToEvaluate.options[nodeIdToEvaluate.selectedIndex].value;
 	var metadata = (networkNodes.get(nodeIdToEvaluateSelected).STAmetadata) ? networkNodes.get(nodeIdToEvaluateSelected).STAmetadata : {};
 	var dataToEvaluate = networkNodes.get(nodeIdToEvaluateSelected).STAdata;
-	var nodeIds = document.getElementById("DialogQualityThematicQuality").getAttribute("data-node-ids");
-	nodeIds = nodeIds.split("_");
+	var nodeIds = document.getElementById("DialogQualityThematicQuality").getAttribute("data-nodeids");
+	nodeIds = nodeIds.includes("_")?nodeIds.split("_"):nodeIds; //only one doesn't have _
 	var referenceNodeId;
+	var valid=true;
 	for (var n = 0; n < nodeIds.length; n++) {
 		if (!nodeIds[n] == nodeIdToEvaluateSelected) referenceNodeId = nodeIds[n];
 	}
@@ -10134,13 +10186,13 @@ function okButtonDataQualityThematicQuality(event) {
 				<table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
 				<tbody>`
 
-				if (accuracyMethod == "accuracyStaDev") {
+				if (inputWayValue == "accuracyStaDev") {
 					html += `<tr>
 					<td>${uncertantuColumnValue} </td>
 					<td> Standard deviation </td>
 					<td> ${globalAccuracyValue}</td>
 					</tr>`
-				} else if (accuracyMethod == "alfaNum") {
+				} else if (inputWayValue == "alfaNum") {
 					html += `<tr>
 					<td>${thematicAttributeSelected} </td>`
 					if (grouped) html += `<td> Mean of percentatge of mode value </td>`
@@ -10737,7 +10789,7 @@ function calculaterMeanAndDesvesInGroupInTime(data,dataToCalculate,indexToChange
 			return ("Invalid unit")
   }
 	obj[timeColumn+"Mean"]= formatLocalDate(meanDateInISO);
-	obj[timeColumn+"StandardDeviation"]= (desvest*0.6745).toFixed(3);
+	obj[timeColumn+"StaDev"]= parseFloat((desvest*0.6745).toFixed(3));
 	obj.StandardDeviationUnit= timeUnit;
   	obj.groupCount= indexToChange.length;
 }
@@ -10746,8 +10798,8 @@ function calculaterMeanAndDesvesInGroupInResult(data,dataToCalculate,indexToChan
 	var resultMean= indexToChange.length==1? data[indexToChange[0]][resultColumn]:aggrFuncMean(dataToCalculate.result);
 	var resultDesvest=indexToChange.length==1? 0: aggrFuncStandardDeviation(dataToCalculate.result);
 	
-	obj[resultColumn+"Mean"]= resultMean.toFixed(3);
-	obj[resultColumn+"StandardDeviation"]= (resultDesvest*0.6745).toFixed(3);
+	obj[resultColumn+"Mean"]= parseFloat(resultMean.toFixed(3));
+	obj[resultColumn+"StaDev"]=parseFloat((resultDesvest*0.6745).toFixed(3));
   
 }
 function calculaterMeanAndDesvesInGroupInPosition(data,dataToCalculate,indexToChange, xColumn, yColumn,obj){
@@ -10760,7 +10812,7 @@ function calculaterMeanAndDesvesInGroupInPosition(data,dataToCalculate,indexToCh
 
 	obj[xColumn+"Mean"]= xMean;
 	obj[yColumn+"Mean"]= yMean;
-	obj["PositionStandardDeviation"]=desvest * 1.1774*factorDegreeToMeters;
+	obj["PositionStaDev"]=desvest * 1.1774*factorDegreeToMeters;
 
 }
 function formatLocalDate(date) {

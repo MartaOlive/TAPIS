@@ -2052,7 +2052,73 @@
 	<dialog id="DialogQualityTemporalQuality" onClose='hideNodeDialog("DialogQualityTemporalQuality", event)'>
 		<form>
 			<h3> Temporal quality </h3>
-			<div id="DialogQualityTemporalQuality_attributesList"></div>
+			<div id="DialogQualityTemporalQuality_attributesList">
+				<label>Temporal column: </label><select  id="TemporalQuality_select_temporalColumn"></select>
+			</div>
+			<fieldset><legend><label><input type="checkbox" value="TemporalQuality_calculate_temporalAccuracy" id="TemporalQuality_checkbox_calculate_temporalAccuracy" name="TemporalQuality_checkbox_calculate">Temporal accuracy</label></legend>
+				<table style="border-collapse: collapse; width: 100%;">
+					<tbody>
+
+						<tr>
+							<td colspan="2" style="padding: 10px; text-align: left;">
+								<label>
+									<input type="radio" name="TemporalQuality_radio_temporalAccuracy" id="TemporalQuality_radio_temporalAccuracy_uncertaintyColumn" value="uncertaintyColumn" checked>
+									Mean of the values in the uncertainty column
+								</label>
+								<label style="margin-right: 10px;">Uncertainty column:</label>
+								<select id="TemporalQuality_select_temporalAccuracy_uncertantyColumn">
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td style="padding: 10px; text-align: left; width: 50%; vertical-align: top;">
+								<label>
+									<input type="radio" name="TemporalQuality_radio_temporalAccuracy" 	id="TemporalQuality_radio_temporalAccuracy_evaluateColumn" value="calculate">	Standard deviation of the temporal column
+								</label>
+							</td>
+							<td style="padding: 10px; text-align: left; width: 50%;">
+								<fieldset>
+									<legend>Grouping mode</legend>
+
+									<label>
+										<input type="radio" 
+											id="TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_group" 
+											name="TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping" 
+											checked>
+										Grouped by column
+									</label>
+									<select id="TemporalQuality_radio_temporalAccuracy_evaluateColumn_grouping_select">
+									</select>
+
+									<br><br>
+
+									<label style="margin-left: 20px;">
+										<input type="checkbox" 
+											id="TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox" 
+											checked>
+										Create new columns with mean and uncertainty
+									</label>
+
+									<br><br>
+
+									<label>
+										<input type="radio" 
+											id="TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_all" 
+											name="TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping">
+										All records
+									</label>
+
+								</fieldset>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+				</fieldset>
+				
+
+
+			</fieldset>
 			<fieldset><legend><label><input type="checkbox" value="TemporalQuality_calculate_temporalValidity" id="TemporalQuality_checkbox_calculate_temporalValidity" name="TemporalQuality_checkbox_calculate">Temporal validity</label></legend>
 				<table>
 					<tbody>
@@ -2234,7 +2300,7 @@
 								<label>
 									<input type="radio" name="PositionalQuality_radio_positionalAccuracy"
 										id="PositionalQuality_radio_positionalAccuracy_uncertantlyColumn" checked>
-									Standard deviation of the uncertainties of each position.
+									Mean of the uncertainties of each position.
 								</label>
 							</td>
 
@@ -2249,7 +2315,7 @@
 
 						<tr>
 							<td style="border-right: 2px solid #ccc;">
-								<label style="margin-right: 10px;">Uncertaintly column:</label>
+								<label style="margin-right: 10px;">Uncertainty column:</label>
 								<select id="PositionalQuality_select_positionalAccuracy_uncertantlyColumn"></select><br>
 							</td>
 
@@ -2300,20 +2366,19 @@
 	<dialog id="DialogQualityThematicQuality" onClose='hideNodeDialog("DialogQualityThematicQuality", event)'>
 			<form>
 				<h3> Thematic quality</h3>
-				<div> <label>Node with data to evaluate: </label><select id="ThematicQuality_select_metadata"></select></div>
-				<label>Column to evaluate:</label><div id="DialogQualityThematicQuality_attributesList"></div>
+				<div> <label>Table to assess: </label><select id="ThematicQuality_select_metadata"></select></div>
+				<label>Column to assess:</label><span id="DialogQualityThematicQuality_attributesList"></span>
 				<div>
 					<fieldset><legend><label><input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy" checked>Thematic accuracy</label></legend>
 						<table style="width:100%; border-collapse:collapse;">
 							<tr>
-								<td style="vertical-align:top; padding:10px; text-align:left;">
+								<td style="vertical-align:top; padding:10px; text-align:left;" colspan="2">
 								<label>
 									<input type="radio"  id="thematicQuality_radio_thematicAccuracy_accuracyStaDev" name="thematicQuality_radio_thematicAccuracy_way" checked value="accuracyStaDev" onclick="unableGroupingModeInThematicQuality(true)">
-									Standard deviation of the uncertainty column
+									Mean of uncertainty column: 
 								</label>
 								<select id="DialogQualityThematicQuality_select_uncertantyColumn"></select>
 								</td>
-								<td></td>
 							</tr>
 
 							<tr>
@@ -2354,7 +2419,7 @@
 								<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
 								<label>
 									<input type="radio" id="thematicQuality_radio_thematicAccuracy_number" name="thematicQuality_radio_thematicAccuracy_way" value="number" onclick="unableGroupingModeInThematicQuality(false)">
-									Mean distance from center (numeric)
+									Mean of the standard deviation (numeric)
 								</label>
 								</td>
 							</tr>

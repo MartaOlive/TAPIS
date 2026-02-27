@@ -175,6 +175,7 @@ function aggrFuncMedian(values) {
 }
 
 function aggrFuncStandardDeviation(values){
+	if(values.length<=1)return  0; //If you use it automatically and is one value it fails. 
 	return Math.sqrt(aggrFuncVariance(values));
 }
 

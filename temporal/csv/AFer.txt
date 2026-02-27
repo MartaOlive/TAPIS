@@ -1,0 +1,20 @@
+thematyc accuracy by uncertanties
+- Table to assess
+-column to asses
+
+thematic accuracies by values (tmb al position)
+
+Canviar standar deviation per mean , en el uncertantie column i en els grups
+i en el position
+i crear temporal accuracy by uncertanties
+
+Fet: 
+POSITION:
+- Mean del accuracy column
+- Mean en els grups
+
+TEMPORAL: 
+- carregar el select de la uncertainty column
+- Calcular la uncertainties sobre una columna temporal.
+	- Per grups
+	- En general
