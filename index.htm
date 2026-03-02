@@ -1020,15 +1020,6 @@
 		</form>
 	</dialog>
 
-
-
-
-
-
-
-
-
-
 	<dialog id="DialogSelectExpands" onClose='hideNodeDialog("DialogSelectExpands", event)'>
 		<form>
 			<fieldset id="DialogSelectExpandsHTML">
@@ -1378,7 +1369,7 @@
 
 	<dialog id="DialogMeaningTable" onClose='hideNodeDialog("DialogMeaningTable", event)'>
 		<form>
-			<span id="DialogMeaningTableTitle"></span>
+			Column name, type, meaning and units
 			<br>
 			<span id="DialogMeaningFields"></span>
 			<div class="center">
@@ -1386,6 +1377,7 @@
 				<button value="share" onClick="ShareMeaningTable(event)" formmethod="dialog">Share</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
+			<input type="hidden" id="DialogMeaningTableNodeId"></input>
 		</form>
 	</dialog>
 
@@ -2055,7 +2047,7 @@
 			<div id="DialogQualityTemporalQuality_attributesList">
 				<label>Temporal column: </label><select  id="TemporalQuality_select_temporalColumn"></select>
 			</div>
-			<fieldset><legend><label><input type="checkbox" value="TemporalQuality_calculate_temporalAccuracy" id="TemporalQuality_checkbox_calculate_temporalAccuracy" name="TemporalQuality_checkbox_calculate">Temporal accuracy</label></legend>
+			<fieldset><legend><label><input type="checkbox" checked="checked" value="TemporalQuality_calculate_temporalAccuracy" id="TemporalQuality_checkbox_calculate_temporalAccuracy" name="TemporalQuality_checkbox_calculate">Temporal accuracy</label></legend>
 				<table style="border-collapse: collapse; width: 100%;">
 					<tbody>
 
@@ -2063,9 +2055,9 @@
 							<td colspan="2" style="padding: 10px; text-align: left;">
 								<label>
 									<input type="radio" name="TemporalQuality_radio_temporalAccuracy" id="TemporalQuality_radio_temporalAccuracy_uncertaintyColumn" value="uncertaintyColumn" checked>
-									Mean of the values in the uncertainty column
+									Mean of the values in the 
 								</label>
-								<label style="margin-right: 10px;">Uncertainty column:</label>
+								<label style="margin-right: 10px;">uncertainty column:</label>
 								<select id="TemporalQuality_select_temporalAccuracy_uncertantyColumn">
 								</select>
 							</td>
@@ -2341,7 +2333,7 @@
 
 					</table>
 				</fieldset>
-				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalValidity" checked="checked">Positional validity</label></legend>
+				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalValidity">Positional validity</label></legend>
 					<label for ="PositionalQuality_input_positionalValidity_xmin"> X minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmin" style="margin-bottom: 10px">
 					<label for ="PositionalQuality_input_positionalValidity_xmax" style="margin-left: 15px"> X maximum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmax" style="margin-bottom: 10px"><br>
 					<label for ="PositionalQuality_input_positionalValidity_ymin"> Y minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_ymin">
@@ -2366,15 +2358,15 @@
 	<dialog id="DialogQualityThematicQuality" onClose='hideNodeDialog("DialogQualityThematicQuality", event)'>
 			<form>
 				<h3> Thematic quality</h3>
-				<div> <label>Table to assess: </label><select id="ThematicQuality_select_metadata"></select></div>
-				<label>Column to assess:</label><span id="DialogQualityThematicQuality_attributesList"></span>
+				<div> <label>Table to assess: </label><span id="ThematicQuality_select_tableAssess"></span></div>
+				<label>Column to assess:</label><select id="DialogQualityThematicQuality_attributesList"></select>
 				<div>
 					<fieldset><legend><label><input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy" checked>Thematic accuracy</label></legend>
 						<table style="width:100%; border-collapse:collapse;">
 							<tr>
 								<td style="vertical-align:top; padding:10px; text-align:left;" colspan="2">
 								<label>
-									<input type="radio"  id="thematicQuality_radio_thematicAccuracy_accuracyStaDev" name="thematicQuality_radio_thematicAccuracy_way" checked value="accuracyStaDev" onclick="unableGroupingModeInThematicQuality(true)">
+									<input type="radio"  id="thematicQuality_radio_thematicAccuracy_accuracyStaDev" name="thematicQuality_radio_thematicAccuracy_way" checked value="accuracyStaDev" onclick="enableGroupingModeInThematicQuality(false)">
 									Mean of uncertainty column: 
 								</label>
 								<select id="DialogQualityThematicQuality_select_uncertantyColumn"></select>
@@ -2384,7 +2376,7 @@
 							<tr>
 								<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
 								<label>
-									<input type="radio" id="thematicQuality_radio_thematicAccuracy_string" name="thematicQuality_radio_thematicAccuracy_way" value="alfaNum" onclick="unableGroupingModeInThematicQuality(false)">
+									<input type="radio" id="thematicQuality_radio_thematicAccuracy_string" name="thematicQuality_radio_thematicAccuracy_way" value="alfaNum" onclick="enableGroupingModeInThematicQuality(true)">
 									Mode of non-numeric column (Most frequent value and its frequency)
 								</label>
 								</td>
@@ -2399,7 +2391,7 @@
 									</label>
 									<label>
 									Grouping column:
-									<select id="thematicQuality_select_thematicAccuracy_group"></select>
+									<select id="DialogQualityThematicQuality_select_accuracy_group"></select>
 									</label>
 									<br>
 									<label style="margin-left:30px;">
@@ -2418,7 +2410,7 @@
 							<tr>
 								<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
 								<label>
-									<input type="radio" id="thematicQuality_radio_thematicAccuracy_number" name="thematicQuality_radio_thematicAccuracy_way" value="number" onclick="unableGroupingModeInThematicQuality(false)">
+									<input type="radio" id="thematicQuality_radio_thematicAccuracy_number" name="thematicQuality_radio_thematicAccuracy_way" value="number" onclick="enableGroupingModeInThematicQuality(true)">
 									Mean of the standard deviation (numeric)
 								</label>
 								</td>
@@ -2426,8 +2418,9 @@
 						</table>
 
 					</fieldset>
-					<fieldset><legend><label><input type="checkbox" id="ThematicQuality_checkbox_ThematicValidity" checked>Thematic validity</label></legend>
-							<label><input type="radio" id="thematicQuality_radio_thematicValidity_list" name="thematicQuality_radio_thematicValidity" checked> List of values </label><select id="thematicQuality_select_thematicValidity"></select><br>
+					<fieldset><legend><label><input type="checkbox" id="ThematicQuality_checkbox_ThematicValidity">Thematic validity</label></legend>
+							<div><label>Table with list of possible values: </label><span id="ThematicQuality_select_tableList"></span></div>
+							<label><input type="radio" id="thematicQuality_radio_thematicValidity_list" name="thematicQuality_radio_thematicValidity" checked> List of values </label><select id="DialogQualityThematic_select_Validity"></select><br>
 							<label><input type="radio" id="thematicQuality_radio_thematicValidity_range" name="thematicQuality_radio_thematicValidity"> Range</label>	
 							<label style ="margin-left: 15px">From:<input type="text" id="thematicQuality_input_thematicValidity_from"> </label>
 							<label>To: <input type="text" id="thematicQuality_input_thematicValidity_to"></label>

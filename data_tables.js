@@ -1394,7 +1394,16 @@ var columnCreated=false, record, json, point;
 			record=data[i];
 			if (!record[selectedOptions.JSONIn])
 				continue;
-			json=typeof record[selectedOptions.JSONIn] === "object" ? record[selectedOptions.JSONIn] : JSON.parse(record[selectedOptions.JSONIn]);
+			if (typeof record[selectedOptions.JSONIn] === "object")
+				json=record[selectedOptions.JSONIn]
+			else {
+				try {
+					json=JSON.parse(record[selectedOptions.JSONIn]);
+				} catch (error) {
+					continue;
+				}
+			}
+			
 			if (selectedOptions.radioOut=="JSON") {
 				record[selectedOptions.nameOut]=record[selectedOptions.JSONIn];
 				columnCreated=true;
@@ -1407,18 +1416,24 @@ var columnCreated=false, record, json, point;
 			else if (selectedOptions.radioOut=="Geohash") {
 				//JSON-->Geohash
 				point=getFirstCoordinateGeoJSONGeometry(json);
+				if (!point)
+					continue;
 				record[selectedOptions.nameOut]=ngeohash_encode(point[1], point[0], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="UberH3") {
 				//JSON-->Uber H3
 				point=getFirstCoordinateGeoJSONGeometry(json);
+				if (!point)
+					continue;
 				record[selectedOptions.nameOut]=h3.latLngToCell(point[1], point[0], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="LL") {
 				//JSON-->LL (only if points)
 				point=getFirstCoordinateGeoJSONGeometry(json);
+				if (!point)
+					continue;
 				record[selectedOptions.nameOut]=point[0];
 				record[selectedOptions.latitudeOut]=point[1];
 				columnCreated=true;
@@ -1444,18 +1459,24 @@ var columnCreated=false, record, json, point;
 			else if (selectedOptions.radioOut=="Geohash") {
 				//JSON-->Geohash
 				point=getFirstCoordinateGeoJSONGeometry(json);
+				if (!point)
+					continue;
 				record[selectedOptions.nameOut]=ngeohash_encode(point[1], point[0], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="UberH3") {
 				//JSON-->Uber H3
 				point=getFirstCoordinateGeoJSONGeometry(json);
+				if (!point)
+					continue;
 				record[selectedOptions.nameOut]=h3.latLngToCell(point[1], point[0], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="LL") {
 				//JSON-->LL (only if points)
 				point=getFirstCoordinateGeoJSONGeometry(json);
+				if (!point)
+					continue;
 				record[selectedOptions.nameOut]=point[0];
 				record[selectedOptions.latitudeOut]=point[1];
 				columnCreated=true;
@@ -1521,10 +1542,8 @@ var columnCreated=false, record, json, point;
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="LL") {
-				//JSON-->LL (only if points)
-				point=getFirstCoordinateGeoJSONGeometry(json);
-				record[selectedOptions.nameOut]=point[0];
-				record[selectedOptions.latitudeOut]=point[1];
+				record[selectedOptions.nameOut]=point[1];
+				record[selectedOptions.latitudeOut]=point[0];
 				columnCreated=true;
 			}
 		}

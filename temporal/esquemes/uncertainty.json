@@ -12460,6 +12460,14 @@
 					"type": "number"
 				}
 			}
+		},
+		{
+			"id": "3c9vj.9mlu17",
+			"label": "Thematic quality",
+			"image": "thematicQuality.png",
+			"shape": "circularImage",
+			"x": -50,
+			"y": -10
 		}
 	],
 	"edges": [
@@ -12556,6 +12564,11 @@
 		{
 			"from": "3j6sh.tbfjbag",
 			"to": "8dbn2.in8rgg",
+			"arrows": "from"
+		},
+		{
+			"from": "8dbn2.in8rgg",
+			"to": "3c9vj.9mlu17",
 			"arrows": "from"
 		}
 	]

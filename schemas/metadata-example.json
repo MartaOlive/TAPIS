@@ -6,9 +6,7 @@
 					"type": "DQ_QuantitativeAttributeAccuracy",
 					"statement": "Comparison with ground truth",
 					"measureIdentification": {
-						"measure": {
-							"name": "QuantitativeAttributeCorrectness"
-						},
+						"code": "QuantitativeAttributeCorrectness",
 						"domains": [
 							{
 								"name": "DifferentialErrors1D",
@@ -47,9 +45,7 @@
 					"type": "DQ_AbsoluteExternalPositionalAccuracy",
 					"statement": "Comparison with ground truth",
 					"measureIdentification": {
-						"measure": {
-							"name": "CircularMapAccuracy"
-						},
+						"code": "CircularMapAccuracy",
 						"domains": [
 							{
 								"name": "DifferentialErrors2D",

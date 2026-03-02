@@ -51,6 +51,9 @@
 					}
 				}
 			}
+		},
+		"prov": {
+			"$ref": "#/definitions/prov"
 		}
 	},
 	"definitions":{ 
@@ -92,8 +95,7 @@
 					"type": "string"
 				},
 				"value": {
-					"description": "value of the parameter",
-					"type": "string"
+					"description": "value of the parameter"
 				}
 			}
 		},		
@@ -285,10 +287,10 @@
 		"qualityElement": {
 			"description": "Un element de qualitat de les dades",
 			"type": "object",
-			"required": ["indicator"],
+			"required": ["type", "results"],
 			"properties": { 
 				"type": {
-					"enum": ["DQ_CompletenessCommission", "DQ_CompletenessOmission", "DQ_ConceptualConsistency","DQ_FormatConsistency","DQ_TopologicalConsistency","DQ_AbsoluteExternalPositionalAccuracy","DQ_RelativeInternalPositionalAccuracy","DQ_GriddedDataPositionalAccuracy","DQ_AccuracyOfATimeMeasurement","DQ_TemporalConsistency","DQ_TemporalValidity","DQ_ThematicClassificationCorrectness","DQ_NonQuantitativeAttributeCorrectness","DQ_QuantitativeAttributeAccuracy","DQ_UsabilityElement","DQ_Confidence","DQ_Representativity","DQ_Homogeneity"]
+					"enum": ["DQ_CompletenessCommission", "DQ_CompletenessOmission", "DQ_ConceptualConsistency","DQ_LogicalConsistency", "DQ_DomainConsistency", "DQ_FormatConsistency","DQ_TopologicalConsistency","DQ_AbsoluteExternalPositionalAccuracy","DQ_RelativeInternalPositionalAccuracy","DQ_GriddedDataPositionalAccuracy","DQ_AccuracyOfATimeMeasurement","DQ_TemporalConsistency","DQ_TemporalValidity","DQ_ThematicClassificationCorrectness","DQ_NonQuantitativeAttributeCorrectness","DQ_QuantitativeAttributeAccuracy","DQ_UsabilityElement","DQ_Confidence","DQ_Representativity","DQ_Homogeneity"]
 				},
 				"statement": {
 					"description": "Textual information on how to interpret the data or that complements the quality result",
@@ -298,28 +300,22 @@
 					"type": "array",
 					"items": {"type": "string"}
 				},
+				"measureDescription": {
+					"type": "string"
+				},
 				"measureIdentification": {
 					"type": "object",
+					"required": ["code"],
 					"properties": {
 						"code": {
+							"description": "A measure in qualityml",
 							"type": "string"
 						},
-						"measure": {
-							"description": "A measure in qualityml",
-							"type": "object",
-							"required": ["name"],
-							"properties": {
-								"name": {
-									"description": "A measure id in qualityml",
-									"type": "string"
-								},
-								"params": {
-									"description": "key and value pair parameters",
-									"type": "array",
-									"items": {
-										"$ref": "#/definitions/keyValuePair"
-									}
-								}
+						"params": {
+							"description": "key and value pair parameters",
+							"type": "array",
+							"items": {
+								"$ref": "#/definitions/keyValuePair"
 							}
 						},
 						"domains": {
@@ -635,6 +631,123 @@
 					]
 				}
 			}
-		}
+		},
+		"prov": {
+			"type": "object",
+			"properties": {
+				"activity": {
+					"additionalProperties": { 
+						"type": "object",  
+						"properties": {
+							"prov:startTime": { "type": "string" },
+							"prov:endTime": { "type": "string" },
+							"prov:label": { "type": "string" },
+							"prov:type": { "type": "string" }
+						}
+					}
+				},
+				"entity": {
+					"additionalProperties": { 
+						"type": "object",  
+						"properties": {
+							"prov:label": { "type": "string" },
+							"prov:type": { 
+								"anyOf": [
+									{ "type": "string" },
+									{ "enum": ["prov:Collection", "prov:Plan", "prov:Bundle"] }
+								]
+							}
+						}
+					}
+				},
+				"agent": {
+					"additionalProperties": { 
+						"type": "object",  
+						"properties": {
+							"prov:label": { "type": "string" },
+							"prov:type": { 
+								"anyOf": [
+									{ "type": "string" },
+									{ "enum": ["prov:Organization", "prov:Person" , "prov:SoftwareAgent"] }
+								]
+							}
+						}
+					}
+				},
+				"wasGeneratedBy": {
+					"additionalProperties": { 
+						"type": "object",  
+						"required": ["prov:activity", "prov:entity"],
+						"properties": {
+							"prov:activity": { "type": "string" },
+							"prov:entity": { "type": "string" },
+							"prov:time": { "type": "string" }
+						}
+					}
+				},
+				"wasDerivedFrom": {
+					"additionalProperties": { 
+						"type": "object",
+						"required": ["prov:generatedEntity", "prov:usedEntity"],
+						"properties": {
+							"prov:generatedEntity": { "type": "string" },
+							"prov:usedEntity": { "type": "string" }
+						}
+					}
+				},
+				"wasAttributedTo": {
+					"additionalProperties": { 
+						"type": "object",  
+						"required": ["prov:agent", "prov:entity"],
+						"properties": {
+							"prov:agent": { "type": "string" },
+							"prov:entity": { "type": "string" }
+						}
+					}
+				},
+				"used": {
+					"additionalProperties": { 
+						"type": "object",  
+						"required": ["prov:activity", "prov:entity"],
+						"properties": {
+							"prov:activity": { "type": "string" },
+							"prov:entity": { "type": "string" },
+							"prov:time": { "type": "string" }
+						}
+					}
+				},
+				"wasInformedBy": {
+					"additionalProperties": { 
+						"type": "object",  
+						"required": ["prov:informant", "prov:informed"],
+						"properties": {
+							"prov:informant": { "type": "string" },
+							"prov:informed": { "type": "string" }
+						}
+					}
+				},
+				"wasAssociatedWith": {
+					"additionalProperties": { 
+						"type": "object",  
+						"required": ["prov:activity", "prov:agent"],
+						"properties": {
+							"prov:activity": { "type": "string" },
+							"prov:agent": { "type": "string" },
+							"prov:role": { "type": "string" }
+						}
+					}
+				},
+				"actedOnBehalfOf": {
+					"additionalProperties": { 
+						"type": "object",  
+						"required": ["prov:delegate", "prov:responsible"],
+						"properties": {
+							"prov:delegate": { "type": "string" },
+							"prov:responsible": { "type": "string" }
+						}
+					}
+				}
+			}
+		}		
 	}
 }

@@ -90,7 +90,10 @@ var data=[], feature;
 	return data;
 }
 
+//This funcion support both a feature or a geometry as input
 function getFirstCoordinateGeoJSONGeometry(geometry) {
+	if (geometry.geometry)
+		geometry=geometry.geometry;
 	if (!geometry.coordinates || !geometry.coordinates.length)
 		return null;
 	if (geometry.type=="Point")

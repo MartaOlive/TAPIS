@@ -50,7 +50,8 @@ Some things that I'm always looking for:
 Function to hide a dialog box: hideNodeDialog()
 Function to show a dialog box: showNodeDialog()
 Function to include the nodeId as a hidden value in a dialog: saveNodeDialog(div_id, node)
-Function to get the nodeId from a dialog: getNodeDialog(div_id) 
+Function to get the node from a dialog: getNodeDialog(div_id)
+Function to save a node in the networkNodes: networkNodes.update(node);
 
 Function to send a message to the message box: showInfoMessage(); 
 
@@ -160,7 +161,7 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			SaveTable: {description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the column definition is semantically enriched; see &#39;meaning&#39;)."},
 			SaveLayer: {description: "Save Layer", leafNode: true, help: "Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values."},
 			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."},
-			uploadToIC: {description: "Upload to inmutable catalog", help: "Upload data and metadata to an inmutable catalog."},
+			uploadToIC: {description: "Upload to inmutable catalog", leafNode: true, help: "Upload data and metadata to an inmutable catalog."},
 			uncertainty: {description: "Uncertainty", help: "Group values by time and space and calculate its uncertainties"}
 		};
 	
@@ -240,17 +241,17 @@ function getSTAEntityPlural(entityName, considerEntityRelations) {
 	return entityName;
 }
 
-function getDataAttributeArraySTAEntity(name) {
+function getDataAttributesArraySTAEntity(name) {
 	var entity=STAEntities[getSTAEntityPlural(name, true)];
 	if (!entity)
 		return [];
-	var dataAttributeArray=["@iot.selfLink", "@iot.id"];
+	var dataAttributesArray=["@iot.selfLink", "@iot.id"];
 	for (var e=0; e < entity.properties.length; e++)
-		dataAttributeArray.push(entity.properties[e].name);
+		dataAttributesArray.push(entity.properties[e].name);
 	for (var e=0; e < entity.entities.length; e++)
-		dataAttributeArray.push(entity.entities[e].name+"@iot.navigationLink");
+		dataAttributesArray.push(entity.entities[e].name+"@iot.navigationLink");
 
-	return dataAttributeArray;
+	return dataAttributesArray;
 }
 
 
@@ -986,7 +987,7 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 	}
 	try {
 		if (node.OGCType=="OGCCSW" || node.OGCType=="GUF")
-				jsonData = JSON.parse(xml2json(parseXml(await response.text()), false, null));
+			jsonData = JSON.parse(xml2json(parseXml(await response.text()), false, null));
 		else
 			jsonData = await response.json();
 	} catch (error) {
@@ -1839,6 +1840,10 @@ function TransformTextGeoJSONToTable(jsonText, url, node) {
 		networkNodes.update(node);
 		return;
 	}
+	TransformObjGeoJSONToTable(geojson, url, node);
+}
+
+function TransformObjGeoJSONToTable(geojson, url, node) {
 	node.STAdata=TransformGeoJSONToTable(geojson);
 	if (!node.STAdata)
 	{
@@ -1884,7 +1889,11 @@ function ReadURLImportGeoJSON() {
 	HTTPJSONData(document.getElementById("DialogImportGeoJSONSourceURLInput").value).then(
 				function(value) { 
 					showInfoMessage('Download GeoJSON completed.');
+					if (value.obj) 
+						TransformObjGeoJSONToTable(value.obj, document.getElementById("DialogImportGeoJSONSourceURLInput").value, node);
+					else
 						TransformTextGeoJSONToTable(value.text, document.getElementById("DialogImportGeoJSONSourceURLInput").value, node);
+
 				},
 				function(error) { 
 					showInfoMessage('Error downloading GeoJSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
@@ -2159,7 +2168,15 @@ function GetDialogEDCEvent(event) {
 	var version=document.getElementById("DialogEDCCatalogVersion").value
 	if (version=="v1alpha") {
 		currentNode.STAURL+="/catalog/v1alpha/catalog/query";
-		var obj=null;
+		var obj={
+			"@context": {
+				"@vocab": "https://w3id.org/edc"
+			},
+			"@type" : "QuerySpec",
+			"limit": 1000,
+			"offset": 0,
+			"sortOrder": "DESC"
+		};
 	} else if (version=="v2" || version=="v3") {
 		currentNode.STAURL+="/management/"+version+"/catalog/request";
 		var obj={
@@ -2186,7 +2203,7 @@ function GetDialogEDCEvent(event) {
 	//if childen nodes have also STAURL
 	//UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 
-	HTTPJSONData(currentNode.STAURL, null, "POST", obj).then(
+	HTTPJSONData(currentNode.STAURL, null, "POST", obj, {'Accept': '*/*', 'x-api-key': 'edc'}).then(
 				function(value) { 
 					showInfoMessage('EDC catalog request completed.'); 
 					TransformEDCCatalogResponseToDataAttributes(currentNode, value.obj);
@@ -5684,17 +5701,17 @@ function GetGeoJSONDates(data, selectedOptions) {
 	;   //Nothing to do
 }*/
 
-function PopulateSelectSaveLayerDialog(id, dataAttributes, selectedOption)
+function PopulateSelectSaveLayerDialog(id, dataAttributes, selectedOption, onChange)
 {
-	document.getElementById(id).innerHTML=GetSelectSaveLayerDialog(id+"Select", dataAttributes, selectedOption);
+	document.getElementById(id).innerHTML=GetSelectSaveLayerDialog(id+"Select", dataAttributes, selectedOption, onChange);
 }
 
-function GetSelectSaveLayerDialog(id, dataAttributes, selectedOption)
+function GetSelectSaveLayerDialog(id, dataAttributes, selectedOption, onChange)
 {
 	var thereIsSelectionOption=false;
 	var dataAttributesArray = Object.keys(dataAttributes);
 
-	var s="<select id=\""+id+"\">";
+	var s="<select id=\""+id+"\""  + (onChange ? "onChange=\""+onChange+"\"" : "") + ">";
 	for (var a=0; a<dataAttributesArray.length; a++)
 	{
 		if (dataAttributesArray[a]==selectedOption)
@@ -5713,6 +5730,7 @@ function GetSelectSaveLayerDialog(id, dataAttributes, selectedOption)
 // params.nameInLegend
 // params.showValue
 // params.showType
+// params.columnName
 function GetHTMLVariableDefUoM(suffix, params) {
 	var cdns=[];
 	cdns.push('<fieldset>');
@@ -5735,8 +5753,10 @@ function GetHTMLVariableDefUoM(suffix, params) {
 			'	<br>');
 	if (params.showType)
 		cdns.push('	<label>Data type:',
-			'		<span id="DialogMeaningVariableType' + suffix + '"></span>',
-			'		</label>',
+			'		<span id="DialogMeaningVariableType' + suffix + '"></span>');
+		if (params.columnName)
+			cdns.push(' <a href="javascript:void(0)" style="text-decoration: none;" onClick="RecalculateColumnType(\'', params.columnName, '\');">reevaluate</a>');
+		cdns.push('		</label>',
 			'	<br>');
 	cdns.push('	<span id="DialogMeaningVariableDescriptionUoM' + suffix + '">',
 		'		<label>Description:',
@@ -5860,14 +5880,30 @@ function PopulateDialogSaveLayerVarUoM(i, varUoM) {
 	document.getElementById("DialogMeaningVariableUoMDefinitionInput_"+i).value=varUoM.UoMDefinition ? varUoM.UoMDefinition : "";
 }
 
+function RecalculateColumnType(columnName) {
+	var node=getNodeDialog("DialogMeaningTable");
+	if (!node.STAdataAttributes)
+		return;
+	if (!confirm("This will save other previous changes in the dialog. Do you want to continue?"))
+		return;
+	node.STAdataAttributes=GetMeaningTable(node);
+	var type=getDataAttributeType(node.STAdata, columnName);
+	if (type!="null")
+		node.STAdataAttributes[columnName].type=type;
+	networkNodes.update(node);
+	ShowMeaningTableDialog(node);
+}
+
 function ShowMeaningTableDialog(node) {
 	var data = node.STAdata, cdns, vus;
-	var dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
+	var dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data)
 	var dataAttributesArray = Object.keys(dataAttributes);
+
+	saveNodeDialog("DialogMeaningTable", node);
 
 	document.getElementById("DialogMeaningFields").innerHTML="";
 	for (var i = 0; i < dataAttributesArray.length; i++) {
-		document.getElementById("DialogMeaningFields").innerHTML+=GetHTMLVariableDefUoM("_" + i, {nameInLegend: true, showValue: false, showType: true, showPredefOptions:true});
+		document.getElementById("DialogMeaningFields").innerHTML+=GetHTMLVariableDefUoM("_" + i, {nameInLegend: true, showValue: false, showType: true, showPredefOptions:true, nodeId: node.id, columnName: dataAttributesArray[i]});
 		document.getElementById("DialogSaveLayerVariable_"+i).innerHTML="Field "+(i+1)+ ": " + dataAttributesArray[i];
 
 		cdns=[];
@@ -5895,9 +5931,9 @@ function ShowMeaningTableDialog(node) {
 		PopulateDialogSaveLayerVarUoM(i, dataAttributes[dataAttributesArray[i]]);
 }
 
-function GetMeaningTable() {
-	var data = currentNode.STAdata;
-	var dataAttributes = currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(data);
+function GetMeaningTable(node) {
+	var data = node.STAdata;
+	var dataAttributes = node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(data);
 	var dataAttributesArray = Object.keys(dataAttributes);
 	var newName=[];
 	for (var i = 0; i < dataAttributesArray.length; i++) {
@@ -5908,11 +5944,12 @@ function GetMeaningTable() {
 		dataAttributes[dataAttributesArray[i]].UoMSymbol=document.getElementById("DialogMeaningVariableUoMSymbolInput_"+i).value;
 		dataAttributes[dataAttributesArray[i]].UoMDefinition=document.getElementById("DialogMeaningVariableUoMDefinitionInput_"+i).value;
 	}
-	if (newName.length!=0)	changeAttributeNameAndData(data, newName,dataAttributes);
+	if (newName.length!=0)
+		changeAttributeNameAndData(node, data, newName, dataAttributes);
 	return dataAttributes;
 }
 
-function changeAttributeNameAndData(data, newName,dataAttributes){ //newName (old att name, new)
+function changeAttributeNameAndData(node, data, newName, dataAttributes){ //newName (old att name, new)
 	var n=data.length, m=newName.length ;
 	for (var i=0;i<n;i++){ //change data
 		for (var e=0;e<m;e++){
@@ -5924,24 +5961,28 @@ function changeAttributeNameAndData(data, newName,dataAttributes){ //newName (ol
 		dataAttributes [newName[i][1]]=deapCopy(dataAttributes [newName[i][0]]);
 		delete dataAttributes [newName[i][0]];
 	}
-	networkNodes.update(currentNode);
+	networkNodes.update(node);
 }
+
 function SaveMeaningTable(event) {
 	hideNodeDialog("DialogMeaningTable", event);
-	currentNode.STAdataAttributes=GetMeaningTable();
-	networkNodes.update(currentNode);
+	var node=getNodeDialog("DialogMeaningTable");
+	node.STAdataAttributes=GetMeaningTable(node);
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
 }
 
 const urlSchemaMeaning="https://github.com/grumets/MiraMonMapBrowser/config_attributes_metaschema.json#/definitions/AttributeDescription";
 
 function ShareMeaningTable(event) {
 	event.preventDefault(); // We don't want to submit this form
-	currentNode.STAdataAttributes=GetMeaningTable();
-	networkNodes.update(currentNode);
-	var fileName=getFileName(currentNode.STAfileUrl);
-	GUFCreateFeedbackWithReproducibleUsage([{title: fileName, code: fileName, codespace: getAddressPath(getAbsoluteURL(currentNode.STAfileUrl))}],
+	var node=getNodeDialog("DialogMeaningTable");
+	node.STAdataAttributes=GetMeaningTable(node);
+	networkNodes.update(node);
+	var fileName=getFileName(node.STAfileUrl);
+	GUFCreateFeedbackWithReproducibleUsage([{title: fileName, code: fileName, codespace: getAddressPath(getAbsoluteURL(node.STAfileUrl))}],
 		{abstract: "Meaning of the fields in the "+fileName, specific_usage: "Share meaning of fields in tabular data",
-		ru_code: JSON.stringify(currentNode.STAdataAttributes), ru_code_media_type: "application/json",
+		ru_code: JSON.stringify(node.STAdataAttributes), ru_code_media_type: "application/json",
 		ru_platform: "https://github.com/joanma747/TAPIS", ru_version: 0.9, ru_schema: urlSchemaMeaning},
 		"eng", "" //access_token_type
 	);
@@ -6243,12 +6284,12 @@ function GetCreateTableDGGSCodes(event) {
 
 function ShowAddColumnGeoDialog(node) {
 	var dataAttributes=currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(node.STAdata);
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoJSON", dataAttributes, "geometry");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoWKT", dataAttributes, "wkt");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeohash", dataAttributes, "geohash");
-	PopulateSelectSaveLayerDialog("DialogAddColumnUberH3", dataAttributes, "H3");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoLongitude", dataAttributes, "long");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoLatitude", dataAttributes, "lat");
+	PopulateSelectSaveLayerDialog("DialogAddColumnGeoJSON", dataAttributes, "geometry", "document.getElementById('DialogAddColumnGeoRadioJSON').click()"); 
+	PopulateSelectSaveLayerDialog("DialogAddColumnGeoWKT", dataAttributes, "wkt", "document.getElementById('DialogAddColumnGeoRadioWKT').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnGeohash", dataAttributes, "geohash", "document.getElementById('DialogAddColumnGeoRadioGeohash').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnUberH3", dataAttributes, "H3", "document.getElementById('DialogAddColumnGeoRadioUberH3').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnGeoLongitude", dataAttributes, "long", "document.getElementById('DialogAddColumnGeoRadioLL').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnGeoLatitude", dataAttributes, "lat", "document.getElementById('DialogAddColumnGeoRadioLL').click()");
 
 	saveNodeDialog("DialogAddColumnGeo", node);
 	ChangeAddColumnGeoRadioOut();
@@ -8013,19 +8054,19 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "completenessomission.png") {
 			var parentNode=GetFirstParentNode(currentNode);
-			if (parentNode.STAdata) {
-					currentNode.STAdata= deapCopy(parentNode.STAdata);
-					currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-					if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
-					else currentNode.STAmetadata={};
-					populateDialogQualityCompletnessOmission(currentNode);
-					networkNodes.update(currentNode);
-					showNodeDialog("DialogQualityCompletnessOmission");
+			if (parentNode && parentNode.STAdata) {
+				currentNode.STAdata= deapCopy(parentNode.STAdata);
+				currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				populateDialogQualityCompletnessOmission(currentNode);
+				networkNodes.update(currentNode);
+				showNodeDialog("DialogQualityCompletnessOmission");
 			}else{
 				alert("Parent node must have data to analyze");
 			}
 		}
 		else if (currentNode.image == "logicalConsistency.png") {
+			currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
 			if (populateDialogQualityLogicalConsistency(currentNode)){
 				showNodeDialog("DialogQualityLogicalConsistency");
 			}else{
@@ -8034,28 +8075,26 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "temporalQuality.png") {
 			var parentNode=GetFirstParentNode(currentNode);
-			if (parentNode.STAdata) {
-					currentNode.STAdata= deapCopy(parentNode.STAdata);
-					currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-					if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
-					else currentNode.STAmetadata={};
-					populateDialogQualityTemporalQuality(currentNode);
-					networkNodes.update(currentNode);
-					showNodeDialog("DialogQualityTemporalQuality");
+			if (parentNode && parentNode.STAdata) {
+				currentNode.STAdata= deapCopy(parentNode.STAdata);
+				currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+				currentNode.STAmetadata = (parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				populateDialogQualityTemporalQuality(currentNode);
+				networkNodes.update(currentNode);
+				showNodeDialog("DialogQualityTemporalQuality");
 			}else{
 				alert("Parent node must have data to analyze");
 			}
 		}
 		else if (currentNode.image == "positionalQuality.png") {
 			var parentNode=GetFirstParentNode(currentNode);
-			if (parentNode.STAdata) {
-					currentNode.STAdata= deapCopy(parentNode.STAdata);
-					currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-					if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
-					else currentNode.STAmetadata={};
-					populateDialogQualityPositionalQuality(currentNode);
-					networkNodes.update(currentNode);
-					showNodeDialog("DialogQualityPositionalQuality");
+			if (parentNode && parentNode.STAdata) {
+				currentNode.STAdata= deapCopy(parentNode.STAdata);
+				currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				populateDialogQualityPositionalQuality(currentNode);
+				networkNodes.update(currentNode);
+				showNodeDialog("DialogQualityPositionalQuality");
 			}else{
 				alert("Parent node must have data to analyze");
 			}
@@ -8063,15 +8102,15 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "thematicQuality.png") {
 			var parentNode=GetParentNodes(currentNode);
 			if (parentNode) {
-					//currentNode.STAdata= deapCopy(parentNode.STAdata);
-					//currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-					//if(parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata
-					if (populateDialogQualityThematicQuality(currentNode)){
-						networkNodes.update(currentNode);
-						showNodeDialog("DialogQualityThematicQuality");
-					}else{
-						alert("Only 2 parents are allowed");
-					}
+				//currentNode.STAdata= deapCopy(parentNode.STAdata);
+				//currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+				//currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				if (populateDialogQualityThematicQuality(currentNode)){
+					networkNodes.update(currentNode);
+					showNodeDialog("DialogQualityThematicQuality");
+				}else{
+					alert("Only 2 parents are allowed");
+				}
 
 			}else{
 				alert("Parent node must have data to analyze");
@@ -9364,7 +9403,7 @@ async function filterRowsByTimeOkButton(){
 			await askForAllDataResults(selectedValue);
 			var necessaryData= await prepareSTAdataToAggregateDataByChosenPeriodFunction(currentNode.STAdata, [selectedValue, "result"]); //await because can contain a lot of data 
 			var aggregatedData= await AggregateDataByChosenPeriod(necessaryData, selectedAggregationValue, true);
-			var statistics= calculateMinMaxMeanDesvest(aggregatedData[0]);
+			var statistics= calculateMinMaxMeanStaDev(aggregatedData[0]);
 			
 			var data=[], n=statistics.length; //data = array of observations. Every statistic has their observation
 			for (var i=0;i<n;i++){ //Put results in every observation
@@ -9512,7 +9551,7 @@ function AggregateDataByChosenPeriod(necessaryData, period,STA){//year, month, d
 	return (STA) ? [aggregedData,observationsArray] : aggregedData;
 }
 
-function calculateMinMaxMeanDesvest(aggregatedData) {
+function calculateMinMaxMeanStaDev(aggregatedData) {
 	var n=aggregatedData.length, statisticsArray=[];
 
 	for (var i=0; i<n; i++)
@@ -9669,8 +9708,8 @@ function okButtonDataQualityCompletnessOmission(event){
 	hideNodeDialog("DialogQualityCompletnessOmission", event);
 	
 	document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
-	<thead > 
-	<th >Column</th><th>Total records</th><th>Empty records</th>
+	<thead> 
+	<th>Column</th><th>Total records</th><th>Empty records</th>
 	<th>Omission rate</th><th>Completeness rate</th></tr></thead>
 	<tbody><tr>
 	<td>${selected}</td><td>${data.length}</td><td>${infoDataOmission[0]}</td>
@@ -9680,6 +9719,7 @@ function okButtonDataQualityCompletnessOmission(event){
 	
 	updateQueryAndTableArea(node);
 }
+
 function populateDialogQualityLogicalConsistency(node){
 	var parentsNodes= GetParentNodes(node);
 	saveNodeDialog("DialogQualityLogicalConsistency", node);
@@ -9948,7 +9988,7 @@ function okButtonDataQualityPositionalQuality(event){
 	var attributeSelectedLat=selectLat.options[selectLat.selectedIndex].value;
 	var valid, accuracyValue;
 	var data=node.STAdata;
-	var metadata= (node.STAmetadata)?node.STAmetadata:{}
+	var metadata= (node.STAmetadata) ? node.STAmetadata : {};
 
 	if (positionalAccuracy){
 		var accuracyMethod= (document.getElementById("PositionalQuality_radio_positionalAccuracy_uncertantlyColumn").checked)?"uncertantlyColumn": "geometryColumns";
@@ -9990,7 +10030,7 @@ function okButtonDataQualityPositionalQuality(event){
 		var ymin=document.getElementById("PositionalQuality_input_positionalValidity_ymin").value;
 		var ymax=document.getElementById("PositionalQuality_input_positionalValidity_ymax").value;
 		var tag= (document.getElementById("dataQuality_temporalValidity_flag").checked)?true:false;
-		var positionalValidityRate= calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, attributeSelectedLong, attributeSelectedLat,metadata, tag)
+		var positionalValidityRate= calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, attributeSelectedLong, attributeSelectedLat, metadata, tag)
 		if (positionalValidityRate==null){
 			valid=false;
 			alert("Selected collumn must have a geometry type");
@@ -10058,69 +10098,61 @@ function okButtonDataQualityPositionalQuality(event){
 
 function populateDialogQualityThematicQuality(node){
 	var parentNodes=GetParentNodes(node);
+	if (!parentNodes || !parentNodes.length)
+		return;
 	saveNodeDialog("DialogQualityThematicQuality", node);
-	var select= createSelectForThematicQuality(parentNodes, "columnToEvaluate");
+	var select=createSelectForThematicQuality(parentNodes[0]);
 
+	document.getElementById("ThematicQuality_select_tableAssess").innerHTML=parentNodes[0].label;
 	document.getElementById("DialogQualityThematicQuality_attributesList").innerHTML=select; //general
-	document.getElementById("thematicQuality_select_thematicAccuracy_group").innerHTML=select; //grouping column
-	document.getElementById("thematicQuality_select_thematicValidity").innerHTML=select; //validity column
+	document.getElementById("DialogQualityThematicQuality_select_accuracy_group").innerHTML=select; //grouping column
 	document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn").innerHTML=select; //uncertannty column
-	unableGroupingModeInThematicQuality(true); //disable grouping mode
+	enableGroupingModeInThematicQuality(true);
 
-	var optionsMetadata="";
-	if (parentNodes.length>2) return false;
-	var nodeIds=""
-	for(var i=0;i<parentNodes.length;i++){
-		optionsMetadata+=`<option value="${parentNodes[i].id}">${parentNodes[i].label}</option>`;
-		if (i==0)nodeIds= parentNodes[i].id+"_"
-		else nodeIds+= parentNodes[i].id
-	}
-	document.getElementById("ThematicQuality_select_metadata").innerHTML=optionsMetadata; 
-	document.getElementById("DialogQualityThematicQuality").setAttribute ("data-nodeIds", nodeIds);
+	document.getElementById("ThematicQuality_select_tableList").innerHTML=parentNodes.length>1 ? parentNodes[1].label : "No second node is connected!";
+	if (parentNodes.length>1)
+		document.getElementById("DialogQualityThematic_select_Validity").innerHTML=createSelectForThematicQuality(parentNodes[1]); //validity column
+
+	//document.getElementById("DialogQualityThematicQuality").setAttribute("data-nodeIds", nodeIds);
 	
 	return true;
 }
 
-function createSelectForThematicQuality(parentNodes, place){
-	var c="", attributes;
-	c+=`<select id= "thematicQuality_select_${place}">`
-	for (var i=0;i<parentNodes.length;i++){
-		attributes= Object.keys(parentNodes[i].STAdataAttributes ? parentNodes[i].STAdataAttributes : getDataAttributes(parentNodes[i].STAdata));
-		c+=`<optgroup label="${parentNodes[i].label}">`
-		for (var a=0; a< attributes.length; a++){
-			c+=`<option value="${attributes[a]}">${attributes[a]}</option>`
-		}
-		c+="</optgroup>"
+function createSelectForThematicQuality(node){
+	var c="";
+	var dataAttributes= Object.keys(node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(node.STAdata));
+	for (var a=0; a<dataAttributes.length; a++){
+		c+=`<option value="${dataAttributes[a]}">${dataAttributes[a]}</option>`;
 	}
-	c+=`</select>`
 	return c;
 }
-function unableGroupingModeInThematicQuality(desvest){
-	
-	document.getElementById("thematicQuality_radio_thematicAccuracy_group").disabled=desvest;
-	document.getElementById("thematicQuality_select_thematicAccuracy_group").disabled=desvest;
-	document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").disabled=desvest;
-	document.getElementById("thematicQuality_radio_thematicAccuracy_column").disabled=desvest;
-	
+
+function enableGroupingModeInThematicQuality(desvest){	
+	document.getElementById("thematicQuality_radio_thematicAccuracy_group").disabled=!desvest;
+	document.getElementById("DialogQualityThematicQuality_select_accuracy_group").disabled=!desvest;
+	document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").disabled=!desvest;
+	document.getElementById("thematicQuality_radio_thematicAccuracy_column").disabled=!desvest;	
 }
 
 function okButtonDataQualityThematicQuality(event) {
+	var valid=false;
 	var node = getNodeDialog("DialogQualityThematicQuality");
+	var parentNodes=GetParentNodes(node);
+	if (!parentNodes || !parentNodes.length || !parentNodes[0].STAdata)
+		return;
 	var thematicAccuracy = (document.getElementById("ThematicQuality_checkbox_ThematicAccuracy").checked) ? true : false;
 	var thematicValidity = (document.getElementById("ThematicQuality_checkbox_ThematicValidity").checked) ? true : false;
-	var thematicAttribute = document.getElementById("thematicQuality_select_columnToEvaluate");
+	var thematicAttribute = document.getElementById("DialogQualityThematicQuality_attributesList");
 	var thematicAttributeSelected = thematicAttribute.options[thematicAttribute.selectedIndex].value;
-	var nodeIdToEvaluate = document.getElementById("ThematicQuality_select_metadata");
-	var nodeIdToEvaluateSelected = nodeIdToEvaluate.options[nodeIdToEvaluate.selectedIndex].value;
-	var metadata = (networkNodes.get(nodeIdToEvaluateSelected).STAmetadata) ? networkNodes.get(nodeIdToEvaluateSelected).STAmetadata : {};
-	var dataToEvaluate = networkNodes.get(nodeIdToEvaluateSelected).STAdata;
-	var nodeIds = document.getElementById("DialogQualityThematicQuality").getAttribute("data-nodeids");
-	nodeIds = nodeIds.includes("_")?nodeIds.split("_"):nodeIds; //only one doesn't have _
-	var referenceNodeId;
-	var valid=true;
-	for (var n = 0; n < nodeIds.length; n++) {
-		if (!nodeIds[n] == nodeIdToEvaluateSelected) referenceNodeId = nodeIds[n];
-	}
+	var metadata = (parentNodes[0].STAmetadata) ? parentNodes[0].STAmetadata : {};
+	var dataToEvaluate = parentNodes[0].STAdata;
+	//var nodeIds = document.getElementById("DialogQualityThematicQuality").getAttribute("data-nodeids");
+	//nodeIds = nodeIds.includes("_")?nodeIds.split("_"):nodeIds; //only one doesn't have _
+	//var referenceNodeId;
+	//var valid=true;
+	//for (var n = 0; n < nodeIds.length; n++) {
+	//	if (!nodeIds[n] == nodeIdToEvaluateSelected) referenceNodeId = nodeIds[n];
+	//}
 
 	if (thematicAccuracy) {
 		var grouped = false, newColumns = false;
@@ -10129,54 +10161,53 @@ function okButtonDataQualityThematicQuality(event) {
 		if (inputWayValue == "alfaNum" || inputWayValue == "number") {
 			var groupingMode = (document.getElementById("thematicQuality_radio_thematicAccuracy_group").checked) ? "grouped" : "all";
 			if (groupingMode == "grouped") {
-				var groupingSelect = document.getElementById("thematicQuality_select_thematicAccuracy_group");
+				var groupingSelect = document.getElementById("DialogQualityThematicQuality_select_accuracy_group");
 				grouped = groupingSelect.options[groupingSelect.selectedIndex].value;
 				if (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) newColumns = true;
 			}
 		}
 
-
-		//accuracyStaDev
 		if (inputWayValue == "accuracyStaDev") {
 			var uncertantuColumn = document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn");
 			var uncertantuColumnValue = uncertantuColumn.options[uncertantuColumn.selectedIndex].value;
 			var globalAccuracyValue = accuracyFromUncertaintyThematicQuality(dataToEvaluate, metadata, uncertantuColumnValue);
+			valid=true;
 		}
-		//alfaNum
 		else if (inputWayValue == "alfaNum") {
 			var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
 			var globalAccuracyValue = accuracyFromAlfaNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
-
+			valid=true;
 		} else { //num
 			var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
 			var globalAccuracyValue = accuracyFromNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
-
+			valid=true;
 		}
 	}
 	if (thematicValidity) {
 		var thematicValidityWay = (document.getElementById("thematicQuality_radio_thematicValidity_list").checked) ? "list" : "range";
 		var flag = (document.getElementById("dataQuality_thematicValidity_flag").checked) ? true : false;
 		if (thematicValidityWay == "list") {
-			var refenceAttributeSelect = document.getElementById("thematicQuality_select_thematicValidity");
+			var refenceAttributeSelect = document.getElementById("DialogQualityThematic_select_Validity");
 			var referenceAttributeValue = refenceAttributeSelect.options[refenceAttributeSelect.selectedIndex].value;
-			var referenceData = networkNodes.get(referenceNodeId).STAdata;
-			var thematicValidity = calculateDataQualityThematicValidityWithAList(dataToEvaluate, referenceData, metadata, thematicAttributeSelected, referenceAttributeValue, flag)
+			if (parentNodes.length>1 && parentNodes[1].STAdata)
+				referenceData = parentNodes[1].STAdata;
+			//var referenceData = networkNodes.get(referenceNodeId).STAdata;
+			var thematicValidity = calculateDataQualityThematicValidityWithAList(dataToEvaluate, referenceData, metadata, thematicAttributeSelected, referenceAttributeValue, flag);
 		} else {
 			var from = document.getElementById("thematicQuality_input_thematicValidity_from")
 			var to = document.getElementById("thematicQuality_input_thematicValidity_to")
 			var thematicValidity = calculateDataQualityThematicValidityWithRange(dataToEvaluate, from, to, metadata, thematicAttributeSelected, flag)
-
-
 		}
 		if (typeof thematicValidity == "string") valid = false;
-
 	}
 	if (valid) {
 		node.STAdata = dataToEvaluate;
-		node.STAdataAttributes = getDataAttributes(dataToEvaluate);
+		node.STAdataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(dataToEvaluate);
+		node.STAmetadata = metadata;
+		
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
-		hideNodeDialog("DialogQualityPositionalQuality", event);
+		hideNodeDialog("DialogQualityThematicQuality", event);
 
 		if (thematicAccuracy || thematicValidity) {
 			var html = "";
@@ -10223,10 +10254,11 @@ function okButtonDataQualityThematicQuality(event) {
 						</tr>`;
 				html += "</tbody></table></div>"
 			}
-			document.getElementById("dataQualityResult_info").innerHTML = html
+			document.getElementById("dataQualityResult_info").innerHTML = html;
+			showNodeDialog("dataQualityResult");	
 		}
 		else {
-			alert(thematicValidity)
+			alert(thematicValidity);
 		}
 	}
 }
@@ -10521,36 +10553,31 @@ function GetUncertainty(event){
 	var selectPositionalYColumnValue= selectPositionalYColumn.options[selectPositionalYColumn.selectedIndex].value;
 	var positionalNumber= document.getElementById("DialogUncertainty_input_number").value;
 
-	var excuteProcess=true;
-
 	if (node.STAdataAttributes[selectTemporalColumnValue].type !="isodatetime"){
-		excuteProcess=false;
+		executeProcess=false;
 		alert("The column selected to group by time must be a time-type column");
-
+		return;
 	}
 	if (!node.STAdataAttributes[selectPositionalXColumnValue].type == "number" || !node.STAdataAttributes[selectPositionalXColumnValue].type== "integer"){
-		excuteProcess=false;
+		executeProcess=false;
 		alert("The column selected to group by position (X) must be a number-type column");
-
+		return;
 	}
 	if (!node.STAdataAttributes[selectPositionalYColumnValue].type == "number" || !node.STAdataAttributes[selectPositionalYColumnValue].type== "integer"){
-		excuteProcess=false;
+		executeProcess=false;
 		alert("The column selected to group by position (Y) must be a number-type column");
-
+		return;
 	}
 
-	if(excuteProcess){
-		//TIME PROCES
-		SortTableByColumns(data, [selectTemporalColumnValue], "asc");
-		var objWithGroupsTime=groupByTimeInCalculateUncertantyNode(data, selectTemporalColumnValue,temporalNumber,unitTimeValue, resultColumnSelectValue);
-		//POSITION
-		var finalData= groupByPositionCalculateUncertantyNode (objWithGroupsTime,selectTemporalColumnValue,selectPositionalXColumnValue,selectPositionalYColumnValue,positionalNumber,resultColumnSelectValue,unitTimeValue)
-		node.STAdata = finalData;
-		node.STAdataAttributes = getDataAttributes(finalData);
-		networkNodes.update(node);
-		updateQueryAndTableArea(node);
-		hideNodeDialog("DialogUncertainty", event);
-	}
+	//TIME PROCESS
+	SortTableByColumns(data, [selectTemporalColumnValue], "asc");
+	var objWithGroupsTime=groupByTimeInCalculateUncertantyNode(data, selectTemporalColumnValue,temporalNumber,unitTimeValue, resultColumnSelectValue);
+	//POSITION
+	node.STAdata=groupByPositionCalculateUncertantyNode(objWithGroupsTime,selectTemporalColumnValue,selectPositionalXColumnValue,selectPositionalYColumnValue,positionalNumber,resultColumnSelectValue,unitTimeValue)
+	node.STAdataAttributes = getDataAttributes(node.STAdata);  //@marta, crec que això s'hauria de fer manualment ara que saps perfectament el que estas fent. Així pots posar URLs a les definicions de l'uncertainty i les unitats i treure la columna de les unitats.
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
+	hideNodeDialog("DialogUncertainty", event);
 }
 function groupByTimeInCalculateUncertantyNode(data, timeColumn, number, unit){
 	var FirstTime= new Date( data[0][timeColumn]); 
@@ -10600,20 +10627,21 @@ function groupByTimeInCalculateUncertantyNode(data, timeColumn, number, unit){
 	console.log(objWithGroupsTime);
 	return objWithGroupsTime
 }
-function groupByPositionCalculateUncertantyNode(objWithGroupsTime,timeColumn,xColumn,yColumn,meters,resultColumn,timeUnit){ 
+
+function groupByPositionCalculateUncertantyNode(objWithGroupsTime, timeColumn, xColumn, yColumn,meters, resultColumn, timeUnit){ 
 	var objWithGroupsTimeKeys= Object.keys(objWithGroupsTime);
 	var objWithGroupsTimeKeysLength= objWithGroupsTimeKeys.length;
 	var objWithGroups,currentNumberGroup ;
 	var newDataGrouped=[];
-	for (var e=0;e<objWithGroupsTimeKeysLength;e++){
-		if(e==0)currentNumberGroup=0
+	for (var e=0; e<objWithGroupsTimeKeysLength; e++){
+		if(e==0)
+			currentNumberGroup=0
 		if(objWithGroupsTime[objWithGroupsTimeKeys[e]].length!=0)
-		objWithGroups=makeGroupsByTimeInUncertaintyNode(objWithGroupsTime[objWithGroupsTimeKeys[e]],xColumn,yColumn,meters,currentNumberGroup)
+			objWithGroups=makeGroupsByTimeInUncertaintyNode(objWithGroupsTime[objWithGroupsTimeKeys[e]],xColumn,yColumn,meters,currentNumberGroup);
 		currentNumberGroup=objWithGroups.lastIndex;
 		newDataGrouped.push(...objWithGroups.data);
-	}
-	
-	return  calculateMeanAndDesvestInUncertaintyInTimePositionResult(newDataGrouped,timeColumn,xColumn,yColumn,resultColumn, timeUnit)
+	}	
+	return calculateMeanAndStaDevInUncertaintyInTimePositionResult(newDataGrouped, timeColumn, xColumn, yColumn, resultColumn, timeUnit)
 }
 
 function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters,currentNumberGroup){
@@ -10695,9 +10723,9 @@ function makeGroupsByTimeInUncertaintyNode(setOfData,xColumn,yColumn,meters,curr
 	return {lastIndex: currentNumberGroup, data: arrayToReturn }
 }
 
-function calculateMeanAndDesvestInUncertaintyInTimePositionResult(data, timeColumn,xColumn,yColumn,resultColumn, timeUnit){
+function calculateMeanAndStaDevInUncertaintyInTimePositionResult(data, timeColumn, xColumn, yColumn, resultColumn, timeUnit) {
 	var currentGroup, lastGroup, dataToCalculate={}, indexToChange=[], finalArray=[];
-	for (var i=0;i<data.length;i++){
+	for (var i=0; i<data.length; i++){
 		currentGroup=data[i].groupIndex;
 		if (i==0){
 			lastGroup=data[i].groupIndex;
@@ -10708,7 +10736,7 @@ function calculateMeanAndDesvestInUncertaintyInTimePositionResult(data, timeColu
 					result:[data[i][resultColumn]]
 				};
 				indexToChange.push(i)
-		}else{
+		} else {
 			if(currentGroup==lastGroup){
 				dataToCalculate.time.push(data[i][timeColumn]);
 				dataToCalculate.x.push(data[i][xColumn]);
@@ -10716,7 +10744,7 @@ function calculateMeanAndDesvestInUncertaintyInTimePositionResult(data, timeColu
 				dataToCalculate.result.push(data[i][resultColumn]);
 				indexToChange.push(i);
 				if(i==data.length-1){
-				aggregateDataToSingleRecord(data,dataToCalculate,indexToChange,timeUnit, timeColumn,resultColumn,xColumn, yColumn, finalArray)
+					aggregateDataToSingleRecord(data,dataToCalculate,indexToChange,timeUnit, timeColumn,resultColumn,xColumn, yColumn, finalArray)
 				}
 			}else{
 				
@@ -10728,103 +10756,108 @@ function calculateMeanAndDesvestInUncertaintyInTimePositionResult(data, timeColu
 					y:[data[i][yColumn]],
 					result:[data[i][resultColumn]]
 				};
-				if (i==data.length-1){
-					indexToChange=[i];
-					dataToCalculate={
-						time:[data[i][timeColumn]],
-						x:[data[i][xColumn]],
-						y:[data[i][yColumn]],
-						result:[data[i][resultColumn]]
-					};
+				if (i==data.length-1) {
 					aggregateDataToSingleRecord(data,dataToCalculate,indexToChange,timeUnit, timeColumn,resultColumn,xColumn, yColumn, finalArray)
 				}
 			}			
 		}
 		lastGroup=currentGroup;	
-	}
-	
-	return finalArray
-	
+	}	
+	return finalArray	
 }
+
 function aggregateDataToSingleRecord(data,dataToCalculate,indexToChange,timeUnit, timeColumn,resultColumn,xColumn, yColumn, finalArray){
 	var obj={}
-	calculaterMeanAndDesvesInGroupInTime(data,dataToCalculate,indexToChange,timeUnit, timeColumn,obj);
-	calculaterMeanAndDesvesInGroupInResult(data,dataToCalculate,indexToChange,resultColumn,obj);
-	calculaterMeanAndDesvesInGroupInPosition(data,dataToCalculate,indexToChange,xColumn, yColumn,obj);
+	calculateMeanAndDevInGroupInTime(data, dataToCalculate, indexToChange, timeUnit, timeColumn, obj);
+	calculateMeanAndDevInGroupInResult(data, dataToCalculate, indexToChange, resultColumn, obj);
+	calculateMeanAndDevInGroupInPosition(data, dataToCalculate, indexToChange, xColumn, yColumn, obj);
 	finalArray.push(obj);
 }
-function calculaterMeanAndDesvesInGroupInTime(data,dataToCalculate,indexToChange,timeUnit, timeColumn,obj){
-	var msAdatesInMs = dataToCalculate.time.map(s => new Date(s).getTime());
-	var timeMean=indexToChange.length==1? data[indexToChange[0]][timeColumn]: aggrFuncMean(msAdatesInMs);
-	var meanDateInISO= new Date(timeMean);
-	var timeDesvest=indexToChange.length==1? 0: aggrFuncStandardDeviation(msAdatesInMs);
-	var desvest;
 
-	switch (timeUnit) {
-		case 'seconds':
-			desvest= timeDesvest / 1000;
-			break;
+function calculateMeanAndDevInGroupInTime(data, dataToCalculate, indexToChange, timeUnit, timeColumn, obj) {
+	if (indexToChange.length>1) {
+		var msAdatesInMs=dataToCalculate.time.map(s => new Date(s).getTime());
+		var timeMean=aggrFuncMean(msAdatesInMs);
+		var meanDateInISO= new Date(timeMean);
+		obj[timeColumn+"Mean"]=formatLocalDate(meanDateInISO);
 
-		case 'minutes':
-			desvest= timeDesvest / (1000 * 60);
-			break;
-
-		case 'hours':
-			desvest= timeDesvest / (1000 * 60 * 60);
-			break;
-
-		case 'days':
-			desvest= timeDesvest / (1000 * 60 * 60 * 24);
-			break;
-
-		case 'months':
-			desvest= timeDesvest / (1000 * 60 * 60 * 24 * 30.44);
-			break; 
-
-		case 'years':
-			desvest= timeDesvest / (1000 * 60 * 60 * 24 * 365.25); 
-			break;
-
-		default:
-			return ("Invalid unit")
-  }
-	obj[timeColumn+"Mean"]= formatLocalDate(meanDateInISO);
-	obj[timeColumn+"StaDev"]= parseFloat((desvest*0.6745).toFixed(3));
-	obj.StandardDeviationUnit= timeUnit;
-  	obj.groupCount= indexToChange.length;
+		var timeStaDev=aggrFuncStandardDeviation(msAdatesInMs)*0.6745;
+		switch (timeUnit) {
+			default:
+				alert("Invalid unit. Assumint seconds");
+			case 'seconds':
+				timeStaDev=timeStaDev / 1000;
+				timeStaDev=parseFloat((timeStaDev).toFixed(2));
+				break;
+			case 'minutes':
+				timeStaDev=timeStaDev / (1000 * 60);
+				timeStaDev=parseFloat((timeStaDev).toFixed(4));
+				break;
+			case 'hours':
+				timeStaDev=timeStaDev / (1000 * 60 * 60);
+				timeStaDev=parseFloat((timeStaDev).toPrecision(4));
+				break;
+			case 'days':
+				timeStaDev=timeStaDev / (1000 * 60 * 60 * 24);
+				timeStaDev=parseFloat((timeStaDev).toPrecision(4));
+				break;
+			case 'months':
+				timeStaDev=timeStaDev / (1000 * 60 * 60 * 24 * 30.44);
+				timeStaDev=parseFloat((timeStaDev).toPrecision(4));
+				break; 
+			case 'years':
+				timeStaDev=timeStaDev / (1000 * 60 * 60 * 24 * 365.25);
+				timeStaDev=parseFloat((timeStaDev).toPrecision(4));
+				break;				
+		}
+		obj[timeColumn+"Uncertainty"]=timeStaDev;
+	} else {
+		obj[timeColumn+"Mean"]=data[indexToChange[0]][timeColumn];
+		obj[timeColumn+"Uncertainty"]=0;
+	}
+	obj.TemporalUncertaintyUnit=timeUnit;
+  	obj.groupCount=indexToChange.length;
 }
 
-function calculaterMeanAndDesvesInGroupInResult(data,dataToCalculate,indexToChange,resultColumn,obj){
-	var resultMean= indexToChange.length==1? data[indexToChange[0]][resultColumn]:aggrFuncMean(dataToCalculate.result);
-	var resultDesvest=indexToChange.length==1? 0: aggrFuncStandardDeviation(dataToCalculate.result);
-	
-	obj[resultColumn+"Mean"]= parseFloat(resultMean.toFixed(3));
-	obj[resultColumn+"StaDev"]=parseFloat((resultDesvest*0.6745).toFixed(3));
-  
+function calculateMeanAndDevInGroupInResult(data, dataToCalculate, indexToChange, resultColumn, obj){
+	if (indexToChange.length>1) {
+		obj[resultColumn+"Mean"]=parseFloat(aggrFuncMean(dataToCalculate.result).toPrecision(7));
+		obj[resultColumn+"Uncertainty"]=parseFloat((aggrFuncStandardDeviation(dataToCalculate.result)*0.6745).toPrecision(4));
+		if (obj[resultColumn+"Uncertainty"]<1e-12)
+			obj[resultColumn+"Uncertainty"]=0;
+	} else {
+		obj[resultColumn+"Mean"]=data[indexToChange[0]][resultColumn];
+		obj[resultColumn+"Uncertainty"]=0;
+	}
 }
-function calculaterMeanAndDesvesInGroupInPosition(data,dataToCalculate,indexToChange, xColumn, yColumn,obj){
-	var xMean= indexToChange.length==1? data[indexToChange[0]][xColumn]:aggrFuncMean(dataToCalculate.x);
-	var yMean= indexToChange.length==1? data[indexToChange[0]][xColumn]:aggrFuncMean(dataToCalculate.y);
-	var xDesvest= indexToChange.length==1? 0:aggrFuncStandardDeviation(dataToCalculate.x);
-	var yDesvest= indexToChange.length==1? 0:aggrFuncStandardDeviation(dataToCalculate.y);
-	var desvest= indexToChange.length==1? 0: 0.5*Math.sqrt(xDesvest**2+ yDesvest**2);
 
+function calculateMeanAndDevInGroupInPosition(data, dataToCalculate, indexToChange, xColumn, yColumn,obj) {
+	if (indexToChange.length>1) {
+		obj[xColumn+"Mean"]=parseFloat(aggrFuncMean(dataToCalculate.x).toPrecision(10));
+		obj[yColumn+"Mean"]=parseFloat(aggrFuncMean(dataToCalculate.y).toPrecision(10));
 
-	obj[xColumn+"Mean"]= xMean;
-	obj[yColumn+"Mean"]= yMean;
-	obj["PositionStaDev"]=desvest * 1.1774*factorDegreeToMeters;
-
+		var xStaDev= aggrFuncStandardDeviation(dataToCalculate.x);
+		var yStaDev= aggrFuncStandardDeviation(dataToCalculate.y);
+		obj.PositionUncertainty=parseFloat((0.5 * Math.sqrt(xStaDev**2+ yStaDev**2) * 1.1774 * factorDegreeToMeters).toPrecision(4));
+		if (obj.PositionUncertainty<0.0001)
+			obj.PositionUncertainty=0;
+	} else {
+		obj[xColumn+"Mean"]=data[indexToChange[0]][xColumn];
+		obj[yColumn+"Mean"]=data[indexToChange[0]][yColumn];
+		obj.PositionUncertainty=0;
+	}
 }
+
 function formatLocalDate(date) {
-  var yyyy = date.getFullYear();
-  var mm = String(date.getMonth() + 1).padStart(2, '0'); 
-  var dd = String(date.getDate()).padStart(2, '0');
+	var yyyy = date.getFullYear();
+	var mm = String(date.getMonth() + 1).padStart(2, '0'); 
+	var dd = String(date.getDate()).padStart(2, '0');
 
-  var hh = String(date.getHours()).padStart(2, '0');
-  var min = String(date.getMinutes()).padStart(2, '0');
-  var ss = String(date.getSeconds()).padStart(2, '0');
+	var hh = String(date.getHours()).padStart(2, '0');
+	var min = String(date.getMinutes()).padStart(2, '0');
+	var ss = String(date.getSeconds()).padStart(2, '0');
 
-  return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}Z`;
+	return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}Z`;
 }
 /*function giveMeNetworkInformation(event) {
 			hideNodeDialog("DialogContextMenu", event);

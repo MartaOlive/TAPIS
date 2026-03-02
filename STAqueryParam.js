@@ -305,7 +305,7 @@ function builtFilterSTAsentence(STAFilter){
 function ShowPropagateNodeSelectedSelectExpands(node, parentNode) {
 
 	if (parentNode.STAEntityName && parentNode.STAURL) {
-		var dataAttributesArray = getDataAttributeArraySTAEntity(parentNode.STAEntityName);
+		var dataAttributesArray = getDataAttributesArraySTAEntity(parentNode.STAEntityName);
 	} else {
 		var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);		
 		var dataAttributesArray = Object.keys(dataAttributes);
@@ -591,7 +591,7 @@ function GetPropagateNodeSelectedSelectExpands(node, parentNode) {
 	}
 
 	if (parentNode.STAEntityName && parentNode.STAURL) {
-		var dataAttributesArray = getDataAttributeArraySTAEntity(parentNode.STAEntityName);
+		var dataAttributesArray = getDataAttributesArraySTAEntity(parentNode.STAEntityName);
 	} else {
 		var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);		
 		var dataAttributesArray = Object.keys(dataAttributes);

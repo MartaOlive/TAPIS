@@ -349,7 +349,7 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend,
 			options.headers=headersToSend;
 		else
 			options.headers={'Accept': 'application/json, */*;q=0.8'};
-		if (!headersToSend || !headersToSend["X-API-Key"])
+		if (!headersToSend || !headersToSend["X-API-Key"])  //Temporary. To be improved.
 			AddHeadersIfNeeded(options);
 		if (objToSend)
 		{
