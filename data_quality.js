@@ -1334,7 +1334,7 @@ function calculateDataQualityThematicValidityWithAList(dataToEvaluate,referenceD
 	for (var a=0;a<dataToEvaluate.length;a++){
 		itsValid=referenceList.includes(dataToEvaluate[a][attributeToEvaluate])?true:false;
 		if(itsValid)count++;
-		if(flag)data[a]["thematicValidity"]=itsValid
+		if(flag)dataToEvaluate[a]["thematicValidity"]=itsValid
 	}
 	if (!metadata.dataQualityInfos)	metadata.dataQualityInfos=[];
 	metadata.dataQualityInfos.push(
@@ -1401,9 +1401,9 @@ function calculateDataQualityThematicValidityWithRange(data,from, to,  metadata,
 				if (to){
 					if (data[i][thematicAttributeSelected]<to){
 						count++;
-						if(flag)data[a]["thematicValidity"]=true;
+						if(flag)data[i]["thematicValidity"]=true;
 					}else{
-						if(flag)data[a]["thematicValidity"]=false;
+						if(flag)data[i]["thematicValidity"]=false;
 					}
 				}
 			}
@@ -1412,9 +1412,9 @@ function calculateDataQualityThematicValidityWithRange(data,from, to,  metadata,
 		if (to){
 			if (data[i][thematicAttributeSelected]<to){
 				count++
-				if(flag)data[a]["thematicValidity"]=true;
+				if(flag)data[i]["thematicValidity"]=true;
 			}else{
-				if(flag)data[a]["thematicValidity"]=false;
+				if(flag)data[i]["thematicValidity"]=false;
 			}
 		}
 	}

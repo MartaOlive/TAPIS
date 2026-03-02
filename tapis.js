@@ -10135,7 +10135,7 @@ function enableGroupingModeInThematicQuality(desvest){
 }
 
 function okButtonDataQualityThematicQuality(event) {
-	var valid=false;
+	var valid1=false, valid2=false;
 	var node = getNodeDialog("DialogQualityThematicQuality");
 	var parentNodes=GetParentNodes(node);
 	if (!parentNodes || !parentNodes.length || !parentNodes[0].STAdata)
@@ -10168,7 +10168,7 @@ function okButtonDataQualityThematicQuality(event) {
 			var uncertantuColumn = document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn");
 			var uncertantuColumnValue = uncertantuColumn.options[uncertantuColumn.selectedIndex].value;
 			var globalAccuracyValue = accuracyFromUncertaintyThematicQuality(dataToEvaluate, metadata, uncertantuColumnValue);
-			valid=true;
+			valid1=true;
 		}
 		if(document.getElementById("ThematicQuality_checkbox_ThematicAccuracy_values").checked){
 			
@@ -10183,14 +10183,16 @@ function okButtonDataQualityThematicQuality(event) {
 			if (inputWayValue2 == "alfaNum") {
 				// var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
 				var globalAccuracyValue2 = accuracyFromAlfaNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
-				valid=true;
+				valid1=true;
 			}else if(inputWayValue2 == "number") { //num
 				// var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
 				var globalAccuracyValue2 = accuracyFromNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
-				valid=true;
+				valid1=true;
 			}
 		}
 
+	}else{
+		valid1=true;
 	}
 	if (thematicValidity) {
 		var thematicValidityWay = (document.getElementById("thematicQuality_radio_thematicValidity_list").checked) ? "list" : "range";
@@ -10199,17 +10201,20 @@ function okButtonDataQualityThematicQuality(event) {
 			var refenceAttributeSelect = document.getElementById("DialogQualityThematic_select_Validity");
 			var referenceAttributeValue = refenceAttributeSelect.options[refenceAttributeSelect.selectedIndex].value;
 			if (parentNodes.length>1 && parentNodes[1].STAdata)
-				referenceData = parentNodes[1].STAdata;
+				var referenceData = parentNodes[1].STAdata;
 			//var referenceData = networkNodes.get(referenceNodeId).STAdata;
 			var thematicValidity = calculateDataQualityThematicValidityWithAList(dataToEvaluate, referenceData, metadata, thematicAttributeSelected, referenceAttributeValue, flag);
 		} else {
-			var from = document.getElementById("thematicQuality_input_thematicValidity_from")
-			var to = document.getElementById("thematicQuality_input_thematicValidity_to")
+			var from = document.getElementById("thematicQuality_input_thematicValidity_from").value
+			var to = document.getElementById("thematicQuality_input_thematicValidity_to").value
 			var thematicValidity = calculateDataQualityThematicValidityWithRange(dataToEvaluate, from, to, metadata, thematicAttributeSelected, flag)
 		}
-		if (typeof thematicValidity == "string") valid = false;
+		valid2= typeof thematicValidity == "string"?  false: true;
+	}else{
+		valid2=true;
 	}
-	if (valid) {
+		
+	if (valid1 && valid2) {
 		node.STAdata = dataToEvaluate;
 		node.STAdataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(dataToEvaluate);
 		node.STAmetadata = metadata;
