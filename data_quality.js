@@ -757,8 +757,7 @@ function createObjectToGroupTemporalRecords(data,groupColumn, timeColumn){
 			}else{
 					obj[data[i][groupColumn]]= {}
 					obj[data[i][groupColumn]].values=[data[i][timeColumn]]
-			}
-		
+			}		
 	}
 	return obj
 }
@@ -1111,8 +1110,8 @@ function accuracyFromAlfaNumValuesInThematicQuality (data, metadata, thematicAtt
 
 	if (newColumns){
 		 for (var g=0;g<data.length;g++){
-            data[g]["percentageIngroup"]= parseFloat(groupingGroupsObject[data[g][grouped]].values[data[g][thematicAttributeSelected]]);
-			data[g]["groupMode"]= parseFloat(groupingGroupsObject[data[g][grouped]].mode);        
+            data[g]["percentageIngroup"]= groupingGroupsObject[data[g][grouped]].values[data[g][thematicAttributeSelected]];
+			data[g]["groupMode"]=groupingGroupsObject[data[g][grouped]].mode;        
         }
 	}
 	var modeValues=[];
@@ -1205,7 +1204,7 @@ function accuracyFromNumValuesInThematicQuality (data, metadata, thematicAttribu
 	var groupingGroupsObject=createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(data, grouped,thematicAttributeSelected)
 		if (newColumns){
 		 for (var g=0;g<data.length;g++){
-            data[g]["groupUncertainty"]= parseFloat(groupingGroupsObject[data[g][grouped]].groupUncertainty);   
+            data[g]["groupUncertainty"]= groupingGroupsObject[data[g][grouped]].groupUncertainty;   
         }
 	}
 
@@ -1214,7 +1213,7 @@ function accuracyFromNumValuesInThematicQuality (data, metadata, thematicAttribu
 	for (var i=0; i<groupingGroupsObjectKeys.length; i++){
 		uncertainties.push(groupingGroupsObject[groupingGroupsObjectKeys[i]].groupUncertainty);
 	}
-	var accuracyValue=aggrFuncStandardDeviation(uncertainties); //MITJANAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	var accuracyValue=(uncertainties.length==1)?uncertainties[0]:aggrFuncMean(uncertainties); 
 
 	if (!metadata.dataQualityInfos)metadata.dataQualityInfos=[];
 
@@ -1301,10 +1300,10 @@ function calculatePercentageInObject(obj){
 
 	for (var a=0;a<objKeys.length;a++){
 		if(obj[objKeys[a]]>mode)mode=obj[objKeys[a]];
-		obj[objKeys[a]]= (Number.isInteger(obj[objKeys[a]]/sum *100))?obj[objKeys[a]]/sum *100:(obj[objKeys[a]]/sum *100).toFixed(3);
+		obj[objKeys[a]]= (Number.isInteger(obj[objKeys[a]]/sum *100))?obj[objKeys[a]]/sum *100:(obj[objKeys[a]]/sum *100);
 	}
 
-	mode= (Number.isInteger(mode/sum *100))?mode/sum *100:(mode/sum *100).toFixed(3);
+	mode= (Number.isInteger(mode/sum *100))?mode/sum *100:(mode/sum *100);
 	return mode
 }
 
@@ -1322,7 +1321,7 @@ function calculateDesVestInObject(obj){
 		sumSquaredDistances+= (obj.values[e]-mean)**2;
 	}
 
-	obj.groupUncertainty= Math.sqrt(sumSquaredDistances/obj.values.length).toFixed(3);
+	obj.groupUncertainty= Math.sqrt(sumSquaredDistances/obj.values.length);
 	
 }
 

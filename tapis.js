@@ -10140,8 +10140,16 @@ function okButtonDataQualityThematicQuality(event) {
 	var parentNodes=GetParentNodes(node);
 	if (!parentNodes || !parentNodes.length || !parentNodes[0].STAdata)
 		return;
-	var thematicAccuracy = (document.getElementById("ThematicQuality_checkbox_ThematicAccuracy").checked) ? true : false;
+	var thematicAccuracy =false, inputWayValue;
+	if(document.getElementById("ThematicQuality_checkbox_ThematicAccuracy_values").checked) thematicAccuracy =  true ;
+	if(document.getElementById("ThematicQuality_checkbox_ThematicAccuracy_column").checked){
+		thematicAccuracy =  true ;
+		inputWayValue="accuracyStaDev"
+
+	} 
+
 	var thematicValidity = (document.getElementById("ThematicQuality_checkbox_ThematicValidity").checked) ? true : false;
+	
 	var thematicAttribute = document.getElementById("DialogQualityThematicQuality_attributesList");
 	var thematicAttributeSelected = thematicAttribute.options[thematicAttribute.selectedIndex].value;
 	var metadata = (parentNodes[0].STAmetadata) ? parentNodes[0].STAmetadata : {};
@@ -10156,32 +10164,33 @@ function okButtonDataQualityThematicQuality(event) {
 
 	if (thematicAccuracy) {
 		var grouped = false, newColumns = false;
-		var inputWayGroup = document.querySelector('input[name="thematicQuality_radio_thematicAccuracy_way"]:checked')
-		var inputWayValue = inputWayGroup.value; //accuracyStaDev, alfaNum, number
-		if (inputWayValue == "alfaNum" || inputWayValue == "number") {
-			var groupingMode = (document.getElementById("thematicQuality_radio_thematicAccuracy_group").checked) ? "grouped" : "all";
-			if (groupingMode == "grouped") {
-				var groupingSelect = document.getElementById("DialogQualityThematicQuality_select_accuracy_group");
-				grouped = groupingSelect.options[groupingSelect.selectedIndex].value;
-				if (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) newColumns = true;
-			}
-		}
-
 		if (inputWayValue == "accuracyStaDev") {
 			var uncertantuColumn = document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn");
 			var uncertantuColumnValue = uncertantuColumn.options[uncertantuColumn.selectedIndex].value;
 			var globalAccuracyValue = accuracyFromUncertaintyThematicQuality(dataToEvaluate, metadata, uncertantuColumnValue);
 			valid=true;
 		}
-		else if (inputWayValue == "alfaNum") {
-			var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
-			var globalAccuracyValue = accuracyFromAlfaNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
-			valid=true;
-		} else { //num
-			var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
-			var globalAccuracyValue = accuracyFromNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
-			valid=true;
+		if(document.getElementById("ThematicQuality_checkbox_ThematicAccuracy_values").checked){
+			
+			var groupingMode = (document.getElementById("thematicQuality_radio_thematicAccuracy_group").checked) ? "grouped" : "all";
+			if (groupingMode == "grouped") {
+				var groupingSelect = document.getElementById("DialogQualityThematicQuality_select_accuracy_group");
+				grouped = groupingSelect.options[groupingSelect.selectedIndex].value;
+				if (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) newColumns = true;
+			}
+			var inputWayGroup = document.querySelector('input[name="thematicQuality_radio_thematicAccuracy_way"]:checked')
+			var inputWayValue2 = inputWayGroup.value; // alfaNum, number	
+			if (inputWayValue2 == "alfaNum") {
+				// var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
+				var globalAccuracyValue2 = accuracyFromAlfaNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
+				valid=true;
+			}else if(inputWayValue2 == "number") { //num
+				// var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
+				var globalAccuracyValue2 = accuracyFromNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
+				valid=true;
+			}
 		}
+
 	}
 	if (thematicValidity) {
 		var thematicValidityWay = (document.getElementById("thematicQuality_radio_thematicValidity_list").checked) ? "list" : "range";
@@ -10223,20 +10232,21 @@ function okButtonDataQualityThematicQuality(event) {
 					<td> Standard deviation </td>
 					<td> ${globalAccuracyValue}</td>
 					</tr>`
-				} else if (inputWayValue == "alfaNum") {
+				} 
+				
+				if (inputWayValue2 == "alfaNum") {
 					html += `<tr>
 					<td>${thematicAttributeSelected} </td>`
 					if (grouped) html += `<td> Mean of percentatge of mode value </td>`
 					else html += `<td> Percentatge of mode value </td>`
-					html += `<td> ${globalAccuracyValue} m</td>
+					html += `<td> ${globalAccuracyValue2} </td>
 					</tr>`
-				}
-				else {
+				}else if(inputWayValue2 == "number"){
 					html += `<tr>
 					<td>${thematicAttributeSelected} </td>`
 					if (grouped) html += `<td> Standard deviation of standard deviations across the groups  </td>`
 					else html += `<td> Standard deviation </td>`
-					html += `<td> ${globalAccuracyValue} m</td>
+					html += `<td> ${globalAccuracyValue2} </td>
 					</tr>`
 
 				}

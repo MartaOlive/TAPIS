@@ -2359,24 +2359,22 @@
 			<form>
 				<h3> Thematic quality</h3>
 				<div> <label>Table to assess: </label><span id="ThematicQuality_select_tableAssess"></span></div>
-				<label>Column to assess:</label><select id="DialogQualityThematicQuality_attributesList"></select>
+				
 				<div>
-					<fieldset><legend><label><input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy" checked>Thematic accuracy</label></legend>
-						<table style="width:100%; border-collapse:collapse;">
-							<tr>
-								<td style="vertical-align:top; padding:10px; text-align:left;" colspan="2">
-								<label>
-									<input type="radio"  id="thematicQuality_radio_thematicAccuracy_accuracyStaDev" name="thematicQuality_radio_thematicAccuracy_way" checked value="accuracyStaDev" onclick="enableGroupingModeInThematicQuality(false)">
-									Mean of uncertainty column: 
-								</label>
+					<fieldset><legend><input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy_column" >Thematic accuracy by accuracy column</legend>
+								<label>	Mean of uncertainty column: </label>
 								<select id="DialogQualityThematicQuality_select_uncertantyColumn"></select>
-								</td>
-							</tr>
+					</fieldset> <br>
+					<label>Column to assess:</label><select id="DialogQualityThematicQuality_attributesList"></select><br>
+
+					<fieldset><legend><label><input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy_values" >Thematic accuracy by values</label></legend>
+						<table style="width:100%; border-collapse:collapse;">
+
 
 							<tr>
 								<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
 								<label>
-									<input type="radio" id="thematicQuality_radio_thematicAccuracy_string" name="thematicQuality_radio_thematicAccuracy_way" value="alfaNum" onclick="enableGroupingModeInThematicQuality(true)">
+									<input type="radio" id="thematicQuality_radio_thematicAccuracy_string" name="thematicQuality_radio_thematicAccuracy_way" value="alfaNum" onclick="enableGroupingModeInThematicQuality(true)" checked>
 									Mode of non-numeric column (Most frequent value and its frequency)
 								</label>
 								</td>
