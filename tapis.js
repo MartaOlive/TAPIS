@@ -10187,7 +10187,7 @@ function okButtonDataQualityThematicQuality(event) {
 			}else if(inputWayValue2 == "number") { //num
 				// var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
 				var globalAccuracyValue2 = accuracyFromNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
-				valid1=true;
+				if (globalAccuracyValue2!=null)	valid1=true;
 			}
 		}
 

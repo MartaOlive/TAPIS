@@ -197,7 +197,7 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
 }
 
 function calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag) {
-    var attributes = getDataAttributes(data); //Està a tapis.js 
+    var attributes = getDataAttributes(data); 
     if (attributes[attributeSelected].type != "isodatetime") return null;
     if (!from && !to) return null;
     var count = 0;
@@ -281,7 +281,7 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 
 }
 function calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata, flag) {
-    var attributes = getDataAttributes(data); //Està a tapis.js 
+    var attributes = getDataAttributes(data); 
     if (attributes[attributeSelected].type != "isodatetime") return null;
     var regex, count = 0;
     for (var i = 0; i < data.length; i++) {
@@ -422,7 +422,7 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 }
 
 function calculateDataQualityTemporalConsistency(data, attributeSelected, number, consistencyRadioValue, consistencyRadioMethod, tolerance, metadata, flag) {
-    var attributes = getDataAttributes(data); //Està a tapis.js 
+    var attributes = getDataAttributes(data); 
     if (attributes[attributeSelected].type != "isodatetime") return null;
 
     var currentDate, previousDate;
@@ -764,9 +764,9 @@ function createObjectToGroupTemporalRecords(data,groupColumn, timeColumn){
 
 
 function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAttribute, units, grouped, newColumns) {
-
-   //Mirar si son numeros.
-   //Falta posar si la casella està buida
+	var attributes = getDataAttributes(data); 
+    if (attributes[longAttribute].type != "integer" && attributes[longAttribute].type != "number") return null;
+	if (attributes[latAttribute].type != "integer" && attributes[latAttribute].type != "number") return null;
  
 
     if (grouped!=false){
@@ -860,9 +860,9 @@ function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAtt
 
 function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, longAttribute, latAttribute, metadata, tag) {
    //x-> long, y-> lat
-    // var attributes = getDataAttributes(data);
-    // if (attributes[attributeSelected].type!="geometry") return null;
-    //MIRAR QUE SIGUIN... NUMEROS?(float)
+    var attributes = getDataAttributes(data);
+  	if (attributes[longAttribute].type != "integer" && attributes[longAttribute].type != "number") return null;
+	if (attributes[latAttribute].type != "integer" && attributes[latAttribute].type != "number") return null;
     var valid;
     var count =0;
     
@@ -1093,11 +1093,11 @@ function calculateRMSEGroup(data, groupingObject, longAttribute, latAttribute, u
 
 
     var RMSE = Math.sqrt(sumSquareDistances / groupingObject.DataPositions.length);
-	//@Marta, please Truncate the RMSE to 3 decimals (mm precision). Ho he posat abaix
+	
 
     groupingObject.MeanLong=longitudeMean;
     groupingObject.MeanLat= latitudeMean;
-    groupingObject.RMSE= RMSE.toFixed(3);
+    groupingObject.RMSE= RMSE.toPrecision(3);
 }
 
 function accuracyFromUncertaintyThematicQuality(data, metadata, uncertaintyAttribute) {
@@ -1129,16 +1129,16 @@ function accuracyFromAlfaNumValuesInThematicQuality (data, metadata, thematicAtt
 		{
 			"reports": [
 				{
-					"type": "",//canviar
+					"type": "DQ_NonQuantitativeAttributeAccuracy",
 					"measureIdentification": {
-						"code": "CircularMapAccuracy", //canviar?
+						"code": "ModePercentage", 
 						"domains": [
 							{
-								"name": "DifferentialErrors2D",
+								"name": "CategoricalCorrespondance",
 								"params": [
 										{
-										"name": "uncertantie column",
-										"value":""// uncertaintyAttribute
+										"name": "column",
+										"value":thematicAttributeSelected
 											}
 										]
 							}
@@ -1159,7 +1159,7 @@ function accuracyFromAlfaNumValuesInThematicQuality (data, metadata, thematicAtt
 								}
 							},
 							"valueType": "number",
-							"values":globalAccuracyValue //[ accuracyValue ]
+							"values":globalAccuracyValue 
 						}
 					]
 				}
@@ -1177,7 +1177,6 @@ function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicAlfaNum
 	for (var i=0;i<data.length;i++){	
 		if (groupingColumn)currentGroupName= data[i][groupingColumn];
 		else currentGroupName= "all"
-		//currentGroupName= data[i][groupingColumn];
 		if (groupingGroupsObject.hasOwnProperty(currentGroupName)){ //group already created (Without group allways here)
 			if (groupingGroupsObject[currentGroupName].values.hasOwnProperty(data[i][valuesColumn])){ //The value in this group exist?
 				groupingGroupsObject[currentGroupName].values[data[i][valuesColumn]]=groupingGroupsObject[currentGroupName].values[data[i][valuesColumn]]+1;
@@ -1200,7 +1199,7 @@ function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicAlfaNum
 }
 
 function accuracyFromNumValuesInThematicQuality (data, metadata, thematicAttributeSelected, grouped, newColumns){
-	
+	if (attributes[thematicAttributeSelected].type != "integer" && attributes[thematicAttributeSelected].type != "number") return null;
 	var groupingGroupsObject=createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(data, grouped,thematicAttributeSelected)
 		if (newColumns){
 		 for (var g=0;g<data.length;g++){
@@ -1221,16 +1220,16 @@ function accuracyFromNumValuesInThematicQuality (data, metadata, thematicAttribu
 		{
 			"reports": [
 				{
-					"type": "",//canviar
+					"type": "DQ_QuantitativeAttributeAccuracy",
 					"measureIdentification": {
-						"code": "CircularMapAccuracy", //canviar?						},
+						"code": "RootMeanSquare", 
 						"domains": [
 							{
-								"name": "DifferentialErrors2D",
+								"name": "RootMeanSquareError2D",
 								"params": [
 										{
-										"name": "uncertantie column",
-										"value":""// uncertaintyAttribute
+										"name": "column",
+										"value":thematicAttributeSelected
 											}
 										]
 							}
@@ -1257,15 +1256,11 @@ function accuracyFromNumValuesInThematicQuality (data, metadata, thematicAttribu
 				}
 			]
 		});
-
-	 //i completar les metadades
-
 	return accuracyValue;
 }
 
 function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(data,groupingColumn, valuesColumn){
 	SortTableByColumns(data, [groupingColumn], "asc");
-	//Mirar que siguin NUMEROS
 
 	var groupingGroupsObject={};
 	var currentGroupName;
@@ -1284,7 +1279,6 @@ function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(dat
 	for (var e=0;e<groupingGroupsObjectKeys.length;e++){
 		calculateDesVestInObject(groupingGroupsObject[groupingGroupsObjectKeys[e]]);
 	}
-	// console.log(groupingGroupsObject)
 	return groupingGroupsObject
 }
 
@@ -1309,7 +1303,6 @@ function calculatePercentageInObject(obj){
 
 
 function calculateDesVestInObject(obj){
-	//console.log (obj);
 	var sum=0, mean, sumSquaredDistances=0; 
 
 	for (var i=0;i<obj.values.length;i++){
@@ -1320,9 +1313,7 @@ function calculateDesVestInObject(obj){
 	for (var e=0;e<obj.values.length;e++){
 		sumSquaredDistances+= (obj.values[e]-mean)**2;
 	}
-
 	obj.groupUncertainty= Math.sqrt(sumSquaredDistances/obj.values.length);
-	
 }
 
 function calculateDataQualityThematicValidityWithAList(dataToEvaluate,referenceData, metadata, attributeToEvaluate, referenceAttribute,flag) {
@@ -1341,13 +1332,20 @@ function calculateDataQualityThematicValidityWithAList(dataToEvaluate,referenceD
 		{
 			"reports": [
 				{
-					"type": "DQ_PositionalValidity",
+					"type": "DQ_ThematicValidity",
 					"measureIdentification": {
 						"code": "ValueDomain",
 						"domains": [
 							{
 								"name": "Conformance",
-								"params": ""//params
+								"params":[ {
+									"name": "reference column",
+									"value":referenceAttribute 
+									},
+									{
+									"name": "assess column",
+									"value":attributeToEvaluate 
+									}]
                             }
 						]
 					},
@@ -1429,7 +1427,19 @@ function calculateDataQualityThematicValidityWithRange(data,from, to,  metadata,
 						"domains": [
 							{
 								"name": "Conformance",
-								"params": ""//params
+								"params": [ {
+									"name": "column",
+									"value":thematicAttributeSelected 
+									},
+									{
+									"name": "min value",
+									"value":from 
+									},
+									{
+									"name": "max value",
+									"value":to 
+									}
+								]
                             }
 						]
 					},
