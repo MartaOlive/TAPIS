@@ -65,6 +65,7 @@
 <li><a href="#recipe09">Recipe 9: Drawing a stacked bar chart</a></li>
 <li><a href="#recipe10">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</a></li>
 <li><a href="#recipe11">Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns</a></li>
+<li><a href="#recipe12">Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</a></li>
 </ul>
 
 <hr>
@@ -1113,7 +1114,7 @@ The table can be examine and analyce. In this case, we can do groupBy statistics
 <img src="recipe07_groupBy.png" width="800" class="center">
 <p>
 
-Then we can create a <b>bar chart</b> that reprensents the table by selecting the <i>species</i> as categories and the <i>countDefined</i> as values. We can easily see that the <i>Mustela putorius</i> is the <i>species</i> with more registered occurences.<br> 
+Then we can create a <b>bar chart</b> that represents the table by selecting the <i>species</i> as categories and the <i>countDefined</i> as values. We can easily see that the <i>Mustela putorius</i> is the <i>species</i> with more registered occurences.<br> 
 <img src="recipe07_barChart.png" width="1000" class="center">
 <p>
 
@@ -1374,6 +1375,136 @@ In this case, there are Rows, so values come from the values of Row attributes a
 	<img src="recipe11_pivotTableDialog_without_columns.png"  height="450px"> <br>
 	<img src="recipe11_resultTable_without_columns.png"  class="center">
 	
-	</p>
+<br><br><br>
+<br>
+<hr width="30%">
+<a id="recipe12"></a>
+<h3>Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</h3>
+<p>In this example, we will start by a table containing a geopackage that represents the content of a SensorThings API. The same exercise could be done getting the data directly from a STA. These are the necessary steps:
+<ul>
+<li>Produce a single table with observations values, time of acquisition and position. 
+<li>Generate aggregated observations combining observations that are close in space and time.
+<li>While doing so compute the uncertainty of the produced observations by calculating the distances to the mean value and producing its standard deviation.
+<li>Determine the global quality of the dataset by calculating the positional, temporal and thematic accuracy.
+<li>Saving the metadata in an immutable catalogue and the table in a repository, linked by the data hash, to ensure that data cannot be tempered with and is trustable.
+</ul>
+
+<p>
+First we open the geopackage. The result is the list of tables inside:<br>
+<img src="recipe12_geopackage.png" width="600" class="center">
+<p>
+
+We are interested in two tables, the observations table and the feature of interest table. We can open both tables by clicking on the link and request adding them to the graph:<br>
+<img src="recipe12_requestFeatureOfInterest.png" width="600" class="center">
+<p>
+
+The feature of interest table contains GeoJSON object that describes de position of the observed feature:<br>
+<img src="recipe12_tableFeatureOfInterest.png" width="1000" class="center">
+<p>
+
+The observations table contains the actual result of the observation, the phenomenonTime and the identifier of the feature of interest:<br>
+<img src="recipe12_tableObservations.png" width="1000" class="center">
+<p>
+
+Next step is joining both tables into a single table using the feature of interest identifier as a join key. In the observations table the key is called FeatureOfInterest and in the featuresOfInterest table is called iot_id:<br>
+<img src="recipe12_requestJointables.png" width="800" class="center">
+<p>
+
+The result of the join is a table that contains data from both tables.<br>
+<img src="recipe12_resultJointables.png" width="1000" class="center">
+<p>
+
+The join operation has produced too many columns, some of the confusing and unnecessary, so it is necessary to create a new table selecting only the necessary fields: position, time and result.<br>
+<img src="recipe12_requestSelectColumns.png" width="600" class="center">
+<p>
+
+The result is the consolidated table only with what we need.<br>
+<img src="recipe12_resultSelectColumns.png" width="800" class="center">
+<p>
+
+The result has the right content, but the data type of result and phenomenonTime is the intended one. To fix that, the <i>column meaning</i> tool has a reevaluate that will be handy. By pressing the link in both column descriptions, we will get the data types corrected.<br>
+<img src="recipe12_requestColumnMeaning.png" width="600" class="center">
+<p>
+
+Here we can see the table with the data types recalculated.<br>
+<img src="recipe12_resultColumnMeaning.png" width="800" class="center">
+<p>
+
+The feature element includes the position in a format that is not easy to deal with. With the tool <i>Add a geospatial column</i> we will be able to create two columns with latitude and longitude.<br>
+<img src="recipe12_requestAddGeospatialColumn.png" width="600" class="center">
+<p>
+
+The two columns with latitude and longitude are visible at the end of the table.<br>
+<img src="recipe12_resultAddGeospatialColumn.png" width="1000" class="center">
+<p>
+
+Finally, we got a table with positions, times and observation values. We are ready to compute the uncertainties based on the redundancies no the dataset. We need to select the 4 columns that represent, thematic values, time and positional and specify a temporal period and a positional distance that specifies observations that will be considered the same because they are close in space and time.<br>
+<img src="recipe12_requestUncertainties.png" width="600" class="center">
+<p>
+
+The <i>uncertainty</i> tool creates the uncertainties in the 3 components: spatial, temporal and thematic. The table is now condensed and the aggregated values and their uncertainties are added.<br>
+<img src="recipe12_resultUncertainties.png" width="1000" class="center">
+<p>
+
+Now we can request the assessment of the positional accuracy of the dataset.<br>
+<img src="recipe12_requestPositionalAccuracy.png" width="800" class="center">
+<p>
+
+A diamond logo and the text <i>Metadata</i> appears on the top of the table. This represents the result of the quality assessment.<br>
+<img src="recipe12_resultPositionalAccuracy.png" width="400" class="center">
+<p>
+
+Now we can request the assessment of the temporal accuracy of the dataset.<br>
+<img src="recipe12_requestTemporalAccuracy.png" width="800" class="center">
+<p>
+
+The diamond logo and the text <i>Metadata</i> on the top of the table accumulates the result of the second quality assessment.<br>
+<img src="recipe12_resultTemporalAccuracy.png" width="400" class="center">
+<p>
+
+Finally we can request the assessment of the thematic accuracy of the dataset.<br>
+<img src="recipe12_requestThematicAccuracy.png" width="800" class="center">
+<p>
+
+The diamond logo and the text <i>Metadata</i> on the top of the table accumulates the result of the three quality assessments.<br>
+<img src="recipe12_resultThematicAccuracy.png" width="400" class="center">
+<p>
+
+Now we would like to send the result to the immutable catalogue. To do that, we have to login first. There is a login button in the upper part of the window that will request authentication.<br>
+<img src="recipe12_loginRequest.png" width="400" class="center">
+<p>
+
+After a successful login, you will see your name in the upper part of the window.<br>
+<img src="recipe12_loginSuccessful.png" width="600" class="center">
+<p>
+
+The <i>immutable catalogue</i> window will register the data and the metadata in the catalogue. We need to provide a title, author and the positional and temporal column names.<br>
+<img src="recipe12_immutalbleCatalogue.png" width="500" class="center">
+<p>
+
+If all goes well, the creation will be completed and you will get a URL of the STAC record in the information area.<br>
+<img src="recipe12_assessCreated.png" width="500" class="center">
+<p>
+
+You can take the first part of the URL to go to the STAC catalogue (in my case https://ic.ogc.secd.eu/), select the Search botton and request the right collection (in my case Immutable Catalog with DQ4STA 'SensorThings' Records) and use the last part of the URL provided as the item Id (in my case f5e72cfb-056a-45c6-aecb-3ef9f7649f39).<br>
+<img src="recipe12_assessSearch.png" width="600" class="center">
+<p>
+
+The result will give us a link to the immutable assed that we can follow to see the complete metadata of the asset that includes the quality parameters that we carefully crafted.<br>
+<img src="recipe12_assessSTACRecordGUI.png" width="800" class="center">
+<p>
+
+In the page we can also find a download button.<br>
+<img src="recipe12_assessDownloadButton.png" width="600" class="center">
+<p>
+
+The download process produces a tabular result in JSON with the table of data that we have created that includes the position, time and observations values and its uncertainties.<br>
+<img src="recipe12_assessDownloadResultJSON.png" width="400" class="center">
+<p>
+
+This is the final complete diagram of all the steps we made:<br>
+<img src="recipe12_completeDiagram.png" width="800" class="center">
+<p>
+
 </body>
 </html>
