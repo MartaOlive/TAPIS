@@ -1,3 +1,51 @@
+"use strict"
+
+/* 
+	This file is part of TAPIS. TAPIS is a web page and a Javascript code 
+	that builds queries and explore the STAplus content, saves it as CSV or 
+	GeoJSON and connects with the MiraMon Map Browser. While the project is 
+	completely independent from the Orange data mining software, it has been 
+	inspired by its GUI. The general idea of the application is to be able 
+	to work with STA data as tables.
+  
+	The TAPIS client is free software under the terms of the MIT License
+
+	Copyright (c) 2023 Joan Masó
+
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE.
+	
+	The TAPIS can be updated from https://github.com/joanma747/tapis.
+
+	Aquest codi JavaScript ha estat idea de Joan Masó Pau (joan maso at uab cat) 
+	dins del grup del MiraMon. MiraMon és un projecte del 
+	CREAF que elabora programari de Sistema d'Informació Geogràfica 
+	i de Teledetecció per a la visualització, consulta, edició i anàlisi 
+	de mapes ràsters i vectorials. Aquest progamari programari inclou
+	aplicacions d'escriptori i també servidors i clients per Internet.
+	No tots aquests productes són gratuïts o de codi obert. 
+	
+	En particular, el TAPIS es distribueix sota els termes de la llicència MIT.
+	
+	El TAPIS es pot actualitzar des de https://github.com/joanma747/tapis.
+*/
+
+
 const ServicesAndAPIs = {sta: {name: "STA plus", description: "STA service", startNode: true, help: "Connects to a SensorThings API or a STAplus instance and returns a table with the list of entities suported by the API."},
 			ogcAPICols: {name: "OGC API collections", description: "OAPI Collections", startNode: true, help: "Connects to the collections page of a OGC Web API instance and returns a table with the list collections available."},
 			ogcAPIItems: {name: "OGC API items", description: "OAPI items", help: "Connects to a collection page on an OGC Web API Features or derivatives and returns a table with the items available. One of the columns contains the geometry JSON object."},
@@ -87,8 +135,7 @@ const TableOperations = {Table: {description: "View Table", leafNode: true, help
 			SaveTable: {description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the column definition is semantically enriched; see &#39;meaning&#39;)."},
 			SaveLayer: {description: "Save Layer", leafNode: true, help: "Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values."},
 			guf: {description: "Feedback", help: "Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface."},
-			uploadToIC: {description: "Upload to inmutable catalog", leafNode: true, help: "Upload data and metadata to an inmutable catalog."},
-			uncertainty: {description: "Uncertainty", help: "Group values by time and space and calculate its uncertainties"}
+			uploadToIC: {description: "Upload to inmutable catalog", leafNode: true, help: "Upload data and metadata to an inmutable catalog."}
 		};
 	
 const TableOperationsArray = Object.keys(TableOperations);
@@ -105,6 +152,7 @@ const tableStatisticsVisualizeArray = Object.keys(tableStatisticsVisualize);
 const tableStatisticsVisualizeType = {singular: " Table tool for statistics and visualization", plural: "Table tools for statistics and visualization"};
 
 const dataQuality={
+	uncertainty: {description: "Uncertainty", help: "Group values by time and space and calculate its uncertainties"},
 	completenessomission:{description: "Completness omission", help:"The degree to which all required data is present and recorded without missing or incomplete values" },
 	logicalConsistency:{description: "Logical consistency", help:"Performs a logical consistency check to identify contradictions and ensure coherent data relationships." },
 	temporalQuality:{description: "Temporal quality", help:"Allows calculating temporal consistency, temporal validity and temporal resolution." },

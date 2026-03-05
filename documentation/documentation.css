@@ -1,0 +1,55 @@
+
+.toolBoxParent {
+    display: flex;           
+    flex-wrap: wrap;     
+    gap: 10px;               
+    align-items: center;     
+    width: 80%;
+    margin: 0 auto;
+    justify-content: center;   
+}
+
+.toolBoxParentTitle {
+    text-align: center;
+    color: #252525;
+    width:100%;
+    margin-top: 50px;
+    margin-bottom:5px
+}
+
+.toolBox {
+    border: 1px solid #ababab; 
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    width:120px;
+    height:115px;
+    display: flex;
+    flex-direction: column;   
+    align-items: center;      
+    text-align: center;  
+    justify-content: center;  
+    padding: 5px;
+    cursor: pointer;
+    
+}
+.toolBox:hover {
+  background-color: #eef0f1;
+ 
+}
+.toolBox:active {
+  transform: translateY(4px); 
+  box-shadow: 0 1px 0 #b4b7b9; 
+}
+
+ .toolBoxText{
+    color: #252525;
+    font-weight:500; 
+} 
+.entities{
+    width:150px;
+}
+
+body {
+  background-color: #f0f0f0; 
+}
