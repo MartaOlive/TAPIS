@@ -1,55 +1,154 @@
-
+/* ToolsPage  */
 .toolBoxParent {
-    display: flex;           
-    flex-wrap: wrap;     
-    gap: 10px;               
-    align-items: center;     
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
     width: 80%;
     margin: 0 auto;
-    justify-content: center;   
+    justify-content: center;
 }
 
 .toolBoxParentTitle {
     text-align: center;
     color: #252525;
-    width:100%;
+    width: 100%;
     margin-top: 50px;
-    margin-bottom:5px
+    margin-bottom: 5px
 }
 
 .toolBox {
-    border: 1px solid #ababab; 
+    border: 1px solid #ababab;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: white;
-    width:120px;
-    height:115px;
+    width: 120px;
+    height: 115px;
     display: flex;
-    flex-direction: column;   
-    align-items: center;      
-    text-align: center;  
-    justify-content: center;  
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
     padding: 5px;
     cursor: pointer;
-    
+
 }
+
 .toolBox:hover {
-  background-color: #eef0f1;
- 
+    background-color: #eef0f1;
 }
+
 .toolBox:active {
-  transform: translateY(4px); 
-  box-shadow: 0 1px 0 #b4b7b9; 
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #b4b7b9;
 }
 
- .toolBoxText{
+.toolBoxText {
     color: #252525;
-    font-weight:500; 
-} 
-.entities{
-    width:150px;
+    font-weight: 500;
 }
 
+.entities {
+    width: 150px;
+}
+
+/* EveryToolPage */
+
+
+/* General */
 body {
-  background-color: #f0f0f0; 
+    background-color: #f0f0f0;
+}
+
+.button {
+    cursor: pointer;
+}
+
+/* El header en horitzontal */
+.descriptionToolsHeader {
+    display: flex;                  
+    align-items: center;            
+    background-color: #ffffff;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 10px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    gap: 20px;                      
+}
+
+/* ===== Logo + text ===== */
+.descriptionToolsHeader  {
+    cursor: pointer;
+}
+
+/* Opcional: reduir margin */
+#content_navBar {
+    margin-top: 0;                  /* ja està a la mateixa alçada */
+    flex: 1;                         /* que ocupi l'espai restant */
+}
+
+/* ===== Navbar ===== */
+#navBar {
+    display: flex;
+    justify-content: space-around;   /* distribuir elements uniformement */
+    flex-wrap: wrap;                 /* que baixi si no hi ha espai */
+    align-items: center;
+    width: 100%;
+}
+
+/* ===== Dropdowns ===== */
+.dropdown {
+    flex: 0 1 120px;         
+    max-width: 120px;
+    text-align: center;
+    font-size: 16px;
+    white-space: normal;
+    position: relative;
+    padding: 8px 5px;
+}
+.blue{
+  color: rgb(2, 166, 240);
+}
+/* .dropdown:hover {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+} */
+
+/* ===== Contingut desplegable ===== */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;              
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    max-width: 150px;
+    border-radius: 10px;      /* marges arrodonits */
+    padding: 5px 0;           /* espai interior */
+    z-index: 10;
+    /* box-shadow: 0 2px 5px rgba(0,0,0,0.1); */ 
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.dropdown:hover >div:first-child {
+ font-weight: bold;
+}
+.dropdown-content a {
+    display: block;
+    padding: 8px 12px;        /* espai intern */
+   border-bottom: 1px solid  #cccccc; 
+    text-decoration: none;
+    color: #252525;
+    background-color:#ffffff; /* fons clar per veure separació */
+    /* border-radius: 8px;        cantons arrodonits */
+    /* transition: background-color 0.2s;   */
+}
+
+.dropdown-content a:hover {
+    background-color: #e0e0e0; /* hover destacat */
+} 
+.dropdown-content a:hover {
+    background-color: #ddd;
 }

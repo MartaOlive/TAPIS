@@ -14,55 +14,47 @@
 </head>
 
 <body onLoad="StartDocumentationPage();">
-	<table border="0" style="width:100%">
-		<tr>
-			<td>
-				<table>
-					<tr>
-						<td><img src="../logo.png" height="70"></td>
-						<td>
-							<div style="font-size: 30px; font-weight: bold;">TAPIS</div>
-							<div style="font-size: 20px; font-weight: bold;">Tables from APIS</div>
-							<div style="font-size: 10px; font-weight: normal;">or an API Explerer and a Table Manager
-							</div>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
+    <header>
+        <div onclick="openTapisPage()">
+            <table border="0" style="width:100%" class="button">
+                <tr>
+                    <td>
+                        <table>
+                            <tr>
+                                <td><img src="../logo.png" height="70"></td>
+                                <td>
+                                    <div style="font-size: 30px; font-weight: bold;">TAPIS</div>
+                                    <div style="font-size: 20px; font-weight: bold;">Tables from APIS</div>
+                                    <div style="font-size: 10px; font-weight: normal;">or an API Explerer and a Table Manager
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table> 
+        </div>  
+    </header>
+	<main>
+		<H1 class="toolBoxParentTitle">Documentation</H1>
 
-<H1 class="toolBoxParentTitle">Documentation</H1>
+		<div>
+			<div id="tools">
+				<div id="container_servicesAndApis" class="toolBoxParent"></div>
+				<div id="container_STAEntities" class="toolBoxParent"></div>
+				<div id="container_STAEntities_singular" class="toolBoxParent"></div>
+				<div id="container_STASpecialQueries" class="toolBoxParent"></div>
+				<div id="container_STAOperations" class="toolBoxParent"></div>
+				<div id="container_TableOperations" class="toolBoxParent"></div>
+				<div id="container_tableStatisticsVisualize" class="toolBoxParent"></div>
+				<div id="container_dataQuality" class="toolBoxParent"></div>
+				<div id="container_nodeOperations" class="toolBoxParent"></div>
+				<div id="container_navBar" class="toolBoxParent"></div>
+			</div>
 
-<div>
-	<div id="tools">
-		<div id="container_servicesAndApis" class="toolBoxParent"></div>
-		<div id="container_STAEntities" class="toolBoxParent"></div>
-		<div id="container_STAEntities_singular" class="toolBoxParent"></div>
-		<div id="container_STASpecialQueries" class="toolBoxParent"></div>
-		<div id="container_STAOperations" class="toolBoxParent"></div>
-		<div id="container_TableOperations" class="toolBoxParent"></div>
-		<div id="container_tableStatisticsVisualize" class="toolBoxParent"></div>
-		<div id="container_dataQuality" class="toolBoxParent"></div>
-		<div id="container_nodeOperations" class="toolBoxParent"></div>
-		<div id="container_navBar" class="toolBoxParent"></div>
-	</div>
-	<div id="content_navBar" style="width: 200px;  border: 1px solid red;">
-		<nav id="navBar">
-			<div id="navBar_servicesAndApis"></div>
-			<div id="navBar_STAEntities"></div>
-			<div id="navBar_STAEntities_singular"></div>
-			<div id="container_STASpecialQueries"></div>
-			<div id="navBar_STAOperations"></div>
-			<div id="navBar_TableOperations"></div>
-			<div id="navBar_tableStatisticsVisualize"></div>
-			<div id="navBar_dataQuality"></div>
-			<div id="navBar_nodeOperations"></div>
-		</nav>
-		<div id="content"> </div> 
-	</div>
+			</div>
 
-</div>
-
+		</div>
+	</main>
 </body>
 </html>
