@@ -33,7 +33,10 @@
     cursor: pointer;
 
 }
-
+.toolBox_a{
+    text-decoration: none; 
+    color: inherit; 
+}
 .toolBox:hover {
     background-color: #eef0f1;
 }
@@ -66,39 +69,43 @@ body {
 
 /* El header en horitzontal */
 .descriptionToolsHeader {
-    display: flex;                  
-    align-items: center;            
+    display: flex;
+    align-items: center;
     background-color: #ffffff;
     border-bottom: 1px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     padding: 10px 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    gap: 20px;                      
+    gap: 20px;
 }
 
 /* ===== Logo + text ===== */
-.descriptionToolsHeader  {
+.descriptionToolsHeader {
     cursor: pointer;
 }
 
 /* Opcional: reduir margin */
 #content_navBar {
-    margin-top: 0;                  /* ja està a la mateixa alçada */
-    flex: 1;                         /* que ocupi l'espai restant */
+    margin-top: 0;
+    /* ja està a la mateixa alçada */
+    flex: 1;
+    /* que ocupi l'espai restant */
 }
 
 /* ===== Navbar ===== */
 #navBar {
     display: flex;
-    justify-content: space-around;   /* distribuir elements uniformement */
-    flex-wrap: wrap;                 /* que baixi si no hi ha espai */
+    justify-content: space-around;
+    /* distribuir elements uniformement */
+    flex-wrap: wrap;
+    /* que baixi si no hi ha espai */
     align-items: center;
     width: 100%;
 }
 
 /* ===== Dropdowns ===== */
 .dropdown {
-    flex: 0 1 120px;         
+    flex: 0 1 120px;
     max-width: 120px;
     text-align: center;
     font-size: 16px;
@@ -106,9 +113,11 @@ body {
     position: relative;
     padding: 8px 5px;
 }
-.blue{
-  color: rgb(2, 166, 240);
+
+.blue {
+    color: rgb(2, 166, 240);
 }
+
 /* .dropdown:hover {
     background-color: #f0f0f0;
     border-radius: 4px;
@@ -118,37 +127,79 @@ body {
 .dropdown-content {
     display: none;
     position: absolute;
-    top: 100%;              
+    top: 100%;
     left: 50%;
     transform: translateX(-50%);
     background-color: #ffffff;
     max-width: 150px;
-    border-radius: 10px;      /* marges arrodonits */
-    padding: 5px 0;           /* espai interior */
+    border-radius: 10px;
+    /* marges arrodonits */
+    padding: 5px 0;
+    /* espai interior */
     z-index: 10;
-    /* box-shadow: 0 2px 5px rgba(0,0,0,0.1); */ 
+    /* box-shadow: 0 2px 5px rgba(0,0,0,0.1); */
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
 }
-.dropdown:hover >div:first-child {
- font-weight: bold;
+
+.dropdown:hover>div:first-child {
+    font-weight: bold;
 }
+
 .dropdown-content a {
     display: block;
-    padding: 8px 12px;        /* espai intern */
-   border-bottom: 1px solid  #cccccc; 
+    padding: 8px 12px;
+    border-bottom: 1px solid #cccccc;
     text-decoration: none;
     color: #252525;
-    background-color:#ffffff; /* fons clar per veure separació */
-    /* border-radius: 8px;        cantons arrodonits */
-    /* transition: background-color 0.2s;   */
+    background-color: #ffffff;
 }
 
 .dropdown-content a:hover {
-    background-color: #e0e0e0; /* hover destacat */
-} 
+    background-color: #e0e0e0;
+    /* hover destacat */
+}
+
 .dropdown-content a:hover {
     background-color: #ddd;
+}
+
+.toolPage_main {
+    width: 80%;
+    background-color: white;
+    margin: 0 auto;
+    margin-top: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 8px;
+    margin-bottom: 50px;
+
+}
+.toolPage_main_text{
+    width: 80%;
+    margin: 0 auto; 
+    padding-bottom: 50px;
+    font-size: 20px;
+    text-align: justify;
+}
+.toolPage_title{
+    text-align: center;
+    color: #252525;
+    width: 100%;
+    padding-top: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;  
+    justify-content: center; 
+    gap: 20px; 
+    
+}
+.toolPage_title_icon{
+    height: 60px;
+}
+.toolPage_image{
+    width: 90%;
+    margin: 20px auto;
+    display: block;
 }

@@ -1,0 +1,1497 @@
+{
+	"nodes": [
+		{
+			"id": "nc4l.iaoo2pk",
+			"label": "OGC API collections",
+			"image": "ogcAPICols.png",
+			"shape": "circularImage",
+			"OGCExpectedLength": 100,
+			"STAURL": "https://eodag.dev.services.eodc.eu/collections",
+			"OGCType": "OGCAPIcollections",
+			"STAdata": [
+				{
+					"id": "AI4SAR_SIG0",
+					"title": "AI4SAR Despeckled Sentinel-1 Sigma0 (20m)",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/AI4SAR_SIG0",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/AI4SAR_SIG0/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2014-10-01T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "ASA_IMP_1P",
+					"title": "Envisat ASAR Image Mode Precision Level-1",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/ASA_IMP_1P",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/ASA_IMP_1P/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.5,
+									46.4,
+									17.2,
+									49
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2002-03-01T00:00:00Z",
+									"2012-04-08T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "ASA_IMS_1P",
+					"title": "Envisat ASAR Image Mode Single Look Complex Level-1",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/ASA_IMS_1P",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/ASA_IMS_1P/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.5,
+									46.4,
+									17.2,
+									49
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2002-03-01T00:00:00Z",
+									"2012-04-08T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "AUSTRIA_GROUND_MOTION",
+					"title": "Austria Ground Motion",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/AUSTRIA_GROUND_MOTION",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/AUSTRIA_GROUND_MOTION/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.5,
+									46.3,
+									17.5,
+									49.2
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2023-12-31T23:59:59Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "AUT_DEM",
+					"title": "Austrian High Resolution DEM",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/AUT_DEM",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/AUT_DEM/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.3,
+									46.2,
+									17.3,
+									49.2
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2018-01-01T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "BOA_LANDSAT_8",
+					"title": "Bottom of Atmosphere Landsat-8 at 30m resolution.",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/BOA_LANDSAT_8",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/BOA_LANDSAT_8/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									5.014148226142465,
+									42.50120437013096,
+									18.59706624229073,
+									51.419674834228985
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2015-01-04T00:00:00Z",
+									"2020-12-26T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "BOA_SENTINEL_2",
+					"title": "Bottom of Atmosphere Sentinel-2 at 10m resolution.",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/BOA_SENTINEL_2",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/BOA_SENTINEL_2/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									1.4211922929976784,
+									41.388795496730424,
+									19.38022689396854,
+									52.43260595832486
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2020-01-01T00:00:00Z",
+									"2020-12-31T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "CGLS_SSM_1KM",
+					"title": "Copernicus Global Land Surface Soil Moisture",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/CGLS_SSM_1KM",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/CGLS_SSM_1KM/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-25.81979937879616,
+									31.602457597935924,
+									58.39398229109195,
+									76.95632595060702
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2018-12-16T00:00:00Z",
+									"2022-04-04T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "COP_DEM",
+					"title": "Copernicus Digital Elevation Model (DEM)",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/COP_DEM",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/COP_DEM/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2011-01-01T00:00:00Z",
+									"2016-01-01T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "CORINE_LAND_COVER",
+					"title": "Corine Land Cover",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/CORINE_LAND_COVER",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/CORINE_LAND_COVER/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-32.091997820189285,
+									31.6977150076753,
+									55.116146716432254,
+									72.11413813793037
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"1990-12-15T00:00:00Z",
+									"2018-12-15T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DEIMS_RECORD",
+					"title": "DEIMS Records",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DEIMS_RECORD",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DEIMS_RECORD/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2000-01-01T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_K_KLAGENFURT",
+					"title": "Digital Orthophotos (DOP) Austria - Land Kärnten Flugblock Klagenfurt",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_KLAGENFURT",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_KLAGENFURT/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.967485195000119,
+									46.36541188061731,
+									15.080333273626895,
+									46.721472911972235
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2022-05-19T00:00:00Z",
+									"2022-06-20T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_K_OSTTIROL",
+					"title": "Digital Orthophotos (DOP) Austria - Land Kärnten Flugblock Osttirol",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_OSTTIROL",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_OSTTIROL/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									12.66239337053699,
+									46.59655104088551,
+									13.022709336961602,
+									47.037629467133534
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2021-09-02T00:00:00Z",
+									"2021-09-24T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_K_TAMSWEG",
+					"title": "Digital Orthophotos (DOP) Austria - Land Kärnten Flugblock Tamsweg",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_TAMSWEG",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_TAMSWEG/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									12.987009545265067,
+									47.018112421462206,
+									14.006810065443387,
+									47.11002553041674
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2021-09-02T00:00:00Z",
+									"2021-09-23T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_K_VILLACH",
+					"title": "Digital Orthophotos (DOP) Austria - Land Kärnten Flugblock Villach",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_VILLACH",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_VILLACH/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									12.987244329672953,
+									46.478418251763074,
+									14.006810065443387,
+									47.038065513109295
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2022-06-18T00:00:00Z",
+									"2022-09-13T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_K_WOLFSBERG",
+					"title": "Digital Orthophotos (DOP) Austria - Land Kärnten Flugblock Wolfsberg",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_WOLFSBERG",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_WOLFSBERG/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.970101698798722,
+									46.692425077247385,
+									15.050241586958041,
+									47.03580174699723
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2022-07-13T00:00:00Z",
+									"2022-07-21T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_K_ZELL_AM_SEE",
+					"title": "Digital Orthophotos (DOP) Austria - Land Kärnten Flugblock Zell am See",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_ZELL_AM_SEE",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_ZELL_AM_SEE/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									12.640596218582658,
+									47.01844076037797,
+									13.020243376683137,
+									47.14453516623542
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2022-09-12T00:00:00Z",
+									"2022-09-12T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_K_ZELTWEG",
+					"title": "Digital Orthophotos (DOP) Austria - Land Kärnten Flugblock Zeltweg",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_ZELTWEG",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_K_ZELTWEG/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.973818068962956,
+									47.00924998081931,
+									14.910953733717628,
+									47.09844028882999
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2022-09-23T00:00:00Z",
+									"2022-10-07T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_ST_BISCHOFSHOFEN",
+					"title": "Digital Orthophotos (DOP) Austria - Land Steiermark Flugblock Bischofshofen",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_BISCHOFSHOFEN",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_BISCHOFSHOFEN/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.55,
+									46.6,
+									16.18,
+									47.82
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2021-12-31T23:59:59.999990Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_ST_GRAZ",
+					"title": "Digital Orthophotos (DOP) Austria - Land Steiermark Flugblock Graz",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_GRAZ",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_GRAZ/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.55,
+									46.6,
+									16.18,
+									47.82
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2021-12-31T23:59:59.999990Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_ST_KLAGENFURT",
+					"title": "Digital Orthophotos (DOP) Austria - Land Steiermark Flugblock Klagenfurt",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_KLAGENFURT",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_KLAGENFURT/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.55,
+									46.6,
+									16.18,
+									47.82
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2021-12-31T23:59:59.999990Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_ST_MARIAZELL",
+					"title": "Digital Orthophotos (DOP) Austria - Land Steiermark Flugblock Mariazell",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_MARIAZELL",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_MARIAZELL/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.55,
+									46.6,
+									16.18,
+									47.82
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2021-12-31T23:59:59.999990Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_ST_MURTAL",
+					"title": "Digital Orthophotos (DOP) Austria - Land Steiermark Flugblock Murtal",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_MURTAL",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_MURTAL/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.55,
+									46.6,
+									16.18,
+									47.82
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2021-12-31T23:59:59.999990Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_ST_SUEDBURGENLAND",
+					"title": "Digital Orthophotos (DOP) Austria - Land Steiermark Flugblock Suedburgenland",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_SUEDBURGENLAND",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_SUEDBURGENLAND/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.55,
+									46.6,
+									16.18,
+									47.82
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2021-12-31T23:59:59.999990Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_ST_VILLACH",
+					"title": "Digital Orthophotos (DOP) Austria - Land Steiermark Flugblock Villach",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_VILLACH",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_VILLACH/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.55,
+									46.6,
+									16.18,
+									47.82
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2021-12-31T23:59:59.999990Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DOP_AUT_ST_WINDISCHGARSTEN",
+					"title": "Digital Orthophotos (DOP) Austria - Land Steiermark Flugblock Windischgarsten",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_WINDISCHGARSTEN",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DOP_AUT_ST_WINDISCHGARSTEN/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.55,
+									46.6,
+									16.18,
+									47.82
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2021-12-31T23:59:59.999990Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DROUGHT_VULNERABILITY",
+					"title": "Drought Vulnerability",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DROUGHT_VULNERABILITY",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DROUGHT_VULNERABILITY/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.531249999715405,
+									46.370535714571226,
+									17.165178571144022,
+									49.022321428856955
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2003-01-01T00:00:00Z",
+									"2018-12-31T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "DSM_AUT",
+					"title": "Austrian Digital Surface Model",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/DSM_AUT",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/DSM_AUT/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									16.48,
+									47.81,
+									16.58,
+									47.88
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2023-07-16T00:00:00Z",
+									"2023-07-16T23:59:59Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "ERS_ENVISAT_NRB",
+					"title": "ERS-1/2 SAR and ENVISAT ASAR ARD Normalized Radar Backscatter (NRB)",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/ERS_ENVISAT_NRB",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/ERS_ENVISAT_NRB/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.5,
+									46.4,
+									17.2,
+									49
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"1991-07-31T00:00:00Z",
+									"2012-03-28T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "GFM",
+					"title": "Global Flood Monitoring",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/GFM",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/GFM/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2015-01-01T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "INTRA_FIELD_CROP_GROWTH_POTENTIAL",
+					"title": "Intra-field Crop Growth Potential",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/INTRA_FIELD_CROP_GROWTH_POTENTIAL",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/INTRA_FIELD_CROP_GROWTH_POTENTIAL/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									8.675376233657454,
+									45.81979116602317,
+									17.89480854415766,
+									49.62308593333951
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2017-01-01T00:00:00Z",
+									"2020-12-31T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "S2_MSI_L1C",
+					"title": "SENTINEL2 Level-1C",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/S2_MSI_L1C",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/S2_MSI_L1C/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2015-06-23T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "S2_MSI_L2A",
+					"title": "SENTINEL2 Level-2A",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/S2_MSI_L2A",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/S2_MSI_L2A/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2018-03-26T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SAR_IMP_1P",
+					"title": "ERS-1/2 SAR Image Mode Precision Level-1",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SAR_IMP_1P",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SAR_IMP_1P/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.5,
+									46.4,
+									17.2,
+									49
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"1991-07-27T00:00:00Z",
+									"2011-07-04T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SAR_IMS_1P",
+					"title": "ERS-1/2 SAR Image Mode Single Look Complex Level-1",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SAR_IMS_1P",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SAR_IMS_1P/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.5,
+									46.4,
+									17.2,
+									49
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"1991-07-27T00:00:00Z",
+									"2011-07-04T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL1_ALPS_WETSNOW",
+					"title": "Sentinel-1 Alps WetSnow",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_ALPS_WETSNOW",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_ALPS_WETSNOW/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-0.838,
+									37.528,
+									18.985,
+									54.442
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2019-03-01T00:00:00Z",
+									"2021-08-01T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL1_GMR0",
+					"title": "SENTINEL1 Radiometric Terrain Corrected Gamma Nought",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_GMR0",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_GMR0/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9,
+									46,
+									24,
+									50
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2014-10-01T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL1_GRD",
+					"title": "Sentinel-1 SAR L1 GRD",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_GRD",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_GRD/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2014-10-03T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL1_GRD_COVERAGE",
+					"title": "Sentinel-1 Coverage Maps",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_GRD_COVERAGE",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_GRD_COVERAGE/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2014-10-03T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL1_HPAR",
+					"title": "SENTINEL1 Harmonic Parameters",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_HPAR",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_HPAR/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2019-01-01T00:00:00Z",
+									"2021-12-31T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL1_MPLIA",
+					"title": "SENTINEL1 Mean PLIA",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_MPLIA",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_MPLIA/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2020-01-01T00:00:00Z",
+									"2020-12-31T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL1_SCENE_GMR0",
+					"title": "SENTINEL1 Scene-based Radiometric Terrain Corrected Gamma Nought",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_SCENE_GMR0",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_SCENE_GMR0/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9,
+									46,
+									24,
+									50
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2014-10-01T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL1_SIG0_20M",
+					"title": "SENTINEL1 Sigma Nought (SIG0) Backscatter in 20 meter resolution",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_SIG0_20M",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_SIG0_20M/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2014-10-01T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL1_SLC",
+					"title": "Sentinel-1 SLC",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_SLC",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL1_SLC/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2014-10-10T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL2_GRI_L1C",
+					"title": "Multi-Layer Copernicus Sentinel-2 GRI in L1C",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL2_GRI_L1C",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL2_GRI_L1C/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2015-07-06T10:57:26Z",
+									"2018-09-06T08:25:59Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SENTINEL3_SRAL_L2",
+					"title": "Sentinel-3 Products SRAL Level-2 data",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL3_SRAL_L2",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SENTINEL3_SRAL_L2/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-180,
+									-90,
+									180,
+									90
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-02-23T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "SSM-RT0-SIG0-R-EXTR",
+					"title": "SSM-RT0-SIG0-R-EXTR",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/SSM-RT0-SIG0-R-EXTR",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/SSM-RT0-SIG0-R-EXTR/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-0.838124,
+									37.528484,
+									18.984326,
+									55.311872
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2025-01-01T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "Sentinel-1_Lacken_Extent",
+					"title": "SENTINEL-1 Lacken Extent",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/Sentinel-1_Lacken_Extent",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/Sentinel-1_Lacken_Extent/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									15.4557,
+									47.0861,
+									18.2263,
+									48.155
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2021-12-31T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "Sentinel-1_Reed_Extent",
+					"title": "SENTINEL-1 Reed Extent",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/Sentinel-1_Reed_Extent",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/Sentinel-1_Reed_Extent/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									15.4557,
+									47.0861,
+									18.2263,
+									48.155
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2016-01-01T00:00:00Z",
+									"2021-12-31T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "Sentinel-2-Greenness-Austria",
+					"title": "Sentinel-2 Greenness Austria",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/Sentinel-2-Greenness-Austria",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/Sentinel-2-Greenness-Austria/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.47996951665,
+									46.4318173285,
+									16.9796667823,
+									49.0390742051
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2018-01-01T00:00:00Z",
+									"2022-12-31T23:59:59Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "VEGETATION_CHANGE_AUSTRIA",
+					"title": "Vegetation-Change-Austria",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/VEGETATION_CHANGE_AUSTRIA",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/VEGETATION_CHANGE_AUSTRIA/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									15.953984827833802,
+									46.77108096987509,
+									17.176816759840396,
+									48.1760048418813
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2018-01-01T00:00:00Z",
+									"2022-12-31T00:00:00Z"
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "incal-hourly",
+					"title": "INCA analysis hourly data (1km)",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/incal-hourly",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/incal-hourly/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									7.1,
+									45.77,
+									17.74,
+									49.48
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2011-03-15T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "sentinel2-landsat8-l2f",
+					"title": "Harmonized Landsat and Sentinel 2 L2F",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/sentinel2-landsat8-l2f",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/sentinel2-landsat8-l2f/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.3,
+									46.3,
+									17.3,
+									49.2
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2024-01-01T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "spartacus-daily",
+					"title": "Spartacus Analysis Daily (1 km)",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/spartacus-daily",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/spartacus-daily/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									9.393909,
+									46.161327,
+									17.38218,
+									49.17754
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"1961-01-01T00:00:00Z",
+									null
+								]
+							]
+						}
+					}
+				},
+				{
+					"id": "topo-dc-austria",
+					"title": "Topographic datacube Austria",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/topo-dc-austria",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/topo-dc-austria/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									13.925037572194727,
+									47.17225684691276,
+									14.038576549922626,
+									47.241917770358086
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"2006-01-01T00:00:00Z",
+									"2024-12-31T00:00:00Z"
+								]
+							]
+						}
+					}
+				}
+			],
+			"STAOGCAPIconformance": [
+				"filter",
+				"features-filter"
+			],
+			"x": 25,
+			"y": -57
+		},
+		{
+			"id": "o3te.84s2fis",
+			"label": "Select CORINE_LAND_COVER",
+			"image": "SelectResourceSTA.png",
+			"shape": "circularImage",
+			"STAURL": "https://eodag.dev.services.eodc.eu/collections/CORINE_LAND_COVER",
+			"STAdata": [
+				{
+					"id": "CORINE_LAND_COVER",
+					"title": "Corine Land Cover",
+					"link": "https://eodag.dev.services.eodc.eu:9443/collections/CORINE_LAND_COVER",
+					"itemsLink": "https://eodag.dev.services.eodc.eu:9443/collections/CORINE_LAND_COVER/items",
+					"extent": {
+						"spatial": {
+							"bbox": [
+								[
+									-32.091997820189285,
+									31.6977150076753,
+									55.116146716432254,
+									72.11413813793037
+								]
+							]
+						},
+						"temporal": {
+							"interval": [
+								[
+									"1990-12-15T00:00:00Z",
+									"2018-12-15T00:00:00Z"
+								]
+							]
+						}
+					}
+				}
+			],
+			"OGCType": "OGCAPIcollection",
+			"STAResourceId": "CORINE_LAND_COVER",
+			"x": -12,
+			"y": 64
+		}
+	],
+	"edges": [
+		{
+			"from": "nc4l.iaoo2pk",
+			"to": "o3te.84s2fis",
+			"arrows": "from"
+		}
+	]
+}
