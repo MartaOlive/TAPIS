@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>TAPIS: Tables from APIs for Sensors (Sensor Things API plus Explorer)</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+
+
+    <link rel="stylesheet" href="documentation.css">
+    <script type="text/javascript" src="../t_nodes.js" defer></script>
+    <script type="text/javascript" src="documentation.js" defer></script>
+
+</head>
+
+<body onLoad="openToolPage('inputTools')">
+    <header class="descriptionToolsHeader" id="toolPage_header_inputTools">
+    </header>
+    <main>
+        <h1 class="toolPage_mainTitle">Input Tools</h1> <!--general title -->
+        <div id="container_servicesAndApis_inToolPage" class="toolBoxParent"></div> <!--all tools-->
+
+        <div id="content" class="toolPage_main" id="general"> <!--general explanation-->
+            <div class="toolPage_main_text">
+                General Explanation
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+
+
+
+
+
+        <div id="content" class="toolPage_main" id="sta">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../sta.png" alt="icon sta" class="toolPage_title_icon">STA Service
+                </h2>
+
+                <p>Reads the STA service API and downloads the data to the browser. This data will be displayed as a
+                    table.
+                    When an STA service is used, data will be loaded at every step. Using the blue tools will make a new
+                    request to the API, while using the grey tools will work with the data already stored in the
+                    browser.
+                </p>
+                <p>Each request to the STA Service API will return only 100 records. To obtain more records, you need to
+                    request them explicitly—either by clicking an <a
+                        href="https://www.tapis.grumets.cat/tapis/documentation/entitySingular.htm">entity tool</a> or
+                    using the<a href="https://www.tapis.grumets.cat/tapis/documentation/login.htm"> Record Range
+                        tool</a>.</p>
+                <p>Some STA services require authorization. This authorization is obtained using the <a
+                        href="https://www.tapis.grumets.cat/tapis/documentation/login.htm">Login tool</a>.</p>
+                <img src="STAplusService_image0.png" alt="sta icon in TAPIS" class="toolPage_image">
+                <p>Double-click to the tool to open it. The form below will be displayed </p>
+                <img src="STAplusService_image1.png" alt="icon" class="toolPage_image">
+
+                To access a service, enter the service URL in the <strong>Landing Page URL field</strong>. TAPIS
+                provides
+                several examples in the dropdown below <strong>(Suggested services)</strong>; select one and the URL
+                will be added automatically.</p>
+                <img src="STAplusService_image2.png" alt="suggested services dropdown" class="toolPage_image">
+
+                <p> Click the OK button to load the data. If the action succeeds, <i>“Complete” </i>will appear in the
+                    clarification zone (the box on the right). If the action fails, <i>the error</i> will appear in this
+                    box—for example:
+                    <i> HTTP Response Code: 401, indicating that authorization is required.</i>
+                </p>
+                <img src="STAplusService_image4.png" alt="succes result" class="toolPage_image">
+                <p>A successful result will be a table with the list of entities supported by the API.</p>
+                <img src="STAplusService_image3.png" alt="succes result" class="toolPage_image" style="width: 80%;">
+                <p><i>More information about <strong> STA Services:</i></strong> <a
+                        href="https://www.ogc.org/standards/sensorthings/"
+                        target="_blank">https://www.ogc.org/standards/sensorthings/</a></p>
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="ogcAPICols">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../ogcAPICols.png" alt="icon ogcAPICols"
+                        class="toolPage_title_icon">OAPI Collections
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="ogcAPIItems">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../ogcAPIItems.png" alt="icon ogcAPIItems"
+                        class="toolPage_title_icon">OAPI items
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="csw">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../csw.png" alt="icon csw" class="toolPage_title_icon">OGC CSW
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="s3Service">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../s3Service.png" alt="icon s3Service"
+                        class="toolPage_title_icon">S3 Service
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="s3Bucket">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../s3Bucket.png" alt="icon s3Bucket"
+                        class="toolPage_title_icon">S3 Bucket
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="edc">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../edc.png" alt="icon edc" class="toolPage_title_icon">DataSpace cat.
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="edcAsset">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../edcAsset.png" alt="icon edcAsset"
+                        class="toolPage_title_icon">DataSpace asset
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="ImportCSV">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../ImportCSV.png" alt="icon ImportCSV"
+                        class="toolPage_title_icon">CSV
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="ImportDBF">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../ImportDBF.png" alt="icon ImportDBF"
+                        class="toolPage_title_icon">DBF
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="ImportGPKG">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../ImportGPKG.png" alt="icon ImportGPKG"
+                        class="toolPage_title_icon">GeoPack Table
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="ImportGPKGTable">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../ImportGPKGTable.png" alt="icon ImportGPKGTable"
+                        class="toolPage_title_icon">STA Service
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="ImportJSONLD">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../ImportJSONLD.png" alt="icon ImportJSONLD"
+                        class="toolPage_title_icon">JSON-LD
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="ImportJSON">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../ImportJSON.png" alt="icon ImportJSON"
+                        class="toolPage_title_icon">JSON
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="ImportGeoJSON">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../ImportGeoJSON.png" alt="icon ImportGeoJSON"
+                        class="toolPage_title_icon">GeoJSON
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="CreateDGGS">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../CreateDGGS.png" alt="icon CreateDGGS"
+                        class="toolPage_title_icon">DGGS extent
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="CreateNewTable">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../CreateNewTable.png" alt="icon CreateNewTable"
+                        class="toolPage_title_icon">New table
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+        <div id="content" class="toolPage_main" id="staRoot">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../staRoot.png" alt="icon staRoot" class="toolPage_title_icon">STA root
+                </h2>
+                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+            </div>
+        </div>
+
+    </main>
+</body>
+
+</html>

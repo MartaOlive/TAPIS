@@ -78,7 +78,15 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     gap: 20px;
 }
-
+.toolPage_mainTitle{
+    text-align: center;
+    color: #252525;
+    width: 100%;
+    padding-top: 50px;
+    margin-bottom: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 50px;
+} 
 /* ===== Logo + text ===== */
 .descriptionToolsHeader {
     cursor: pointer;
