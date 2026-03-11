@@ -7,6 +7,7 @@
 	<link rel="icon" type="image/x-icon" href="../favicon.ico">
 
 	<link rel="stylesheet" href="../tapis.css">
+	<link rel="stylesheet" href="../documentation/documentation.css">
 
 </head>
 
@@ -29,11 +30,113 @@
 		</tr>
 	</table>
 
-<H1>Help</H1>
+<H1 class="toolBoxParentTitle">Recipes</H1>
 
-<H2>Table of content</H2>
+<H2 class="toolPage_title">Table of content</H2>
+<div class="listContainer">
+<div class="mainInList"><a href="#help">How TAPIS works</a></div>
+<div class="secondaryInList"><a href="#helpStart" class="link_a">How start with TAPIS</a></div >
+<div class="secondaryInList"><a href="#helpConnectingNodes" class="link_a">Connecting nodes</a></div >
+<div class="secondaryInList"><a href="#helpLeafNodes" class="link_a">Leaf nodes</a></div >
+<div class="secondaryInList"><a href="#helpSTAvsTableNodes" class="link_a">SensorThings API nodes vs Table nodes</a></div >
+ </div>
+
+
+
+<h2>Recipes</h2>
+
+<div class="recipeContainer">
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe01">Recipe 1: Connecting to a STA or STAplus</a>
+    <div class="recipeChildren">
+      <a href="#recipe01_01">Cooking method 1: Understanding the concept of Datastream in STAplus</a>
+      <a href="#recipe01_02">Cooking method 2: Visiting the same entity from different paths</a>
+    </div>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe02">Recipe 2: Show the current evolution of a variable captured by a particular party</a>
+    <div class="recipeChildren">
+      <a href="#recipe02_01">Cooking method 1: Recurrently selecting a row using entity identifiers</a>
+      <a href="#recipe02_02">Cooking method 2: Filtering observations</a>
+    </div>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe03">Recipe 3: Show a map of all observation features in an STA service</a>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe04">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</a>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe05">Recipe 5: Selecting temperatures from an area</a>
+    <div class="recipeChildren">
+      <a href="#recipe05_01">Cooking method 1: Selecting temperatures with a determined polygon</a>
+      <a href="#recipe05_02">Cooking method 2: Selecting temperatures by distance from a point</a>
+    </div>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe06">Recipe 6: Creating a new stream of observations</a>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe07">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</a>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe08">Recipe 8: Connecting to a S3 service and retrieve and view a CSV file in a S3 bucket</a>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe09">Recipe 9: Drawing a stacked bar chart</a>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe10">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</a>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe11">Recipe 11: Pivoting a table, from values in rows of a selected column to new columns</a>
+  </div>
+
+  <div class="recipeCard">
+    <a class="recipeTitle" href="#recipe12">Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</a>
+  </div>
+
+</div>
+<!-- <li><a href="#recipes">Recipes</a></li>
 <ul>
-<li><a href="#help">How TAPIS works</a></li>
+<li><a href="#recipe01">Recipe 1: Connecting to a STA or STAplus
+<ul>
+<li><a href="#recipe01_01">Cooking method 1: Understanding the concept of Datastream in STAplus</a></li>
+<li><a href="#recipe01_02">Cooking method 2: Visiting the same entity from different paths</a></li>
+</ul>
+<li><a href="#recipe02">Recipe 2: Show the current evolution of a variable captured by a particular party</a></li>
+<ul>
+<li><a href="#recipe02_01">Cooking method 1: Recurrently selecting a row using entity identifiers</a>
+<li><a href="#recipe02_02">Cooking method 2: Filtering observations</a>
+</ul>
+<li><a href="#recipe03">Recipe 3: Show a map of all observation features in an STA service</a></li>
+<li><a href="#recipe04">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</a></li>
+<li><a href="#recipe05">Recipe 5: Selecting temperatures from an area </a></li>
+<ul>
+<li><a href="#recipe05_01">Cooking method 1: Selecting temperatures with a determined polygon</a></li>
+<li><a href="#recipe05_02">Cooking method 2: Selecting temperatures whose distance from a certain point is greater or lower than an established distance</a></li>
+</ul>
+<li><a href="#recipe06">Recipe 6: Creating a new stream of observations</a></li>
+<li><a href="#recipe07">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</a></li>
+<li><a href="#recipe08">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
+<li><a href="#recipe09">Recipe 9: Drawing a stacked bar chart</a></li>
+<li><a href="#recipe10">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</a></li>
+<li><a href="#recipe11">Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns</a></li>
+<li><a href="#recipe12">Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</a></li>
+</ul>
+<ul> -->
+<!-- <li><a href="#help">How TAPIS works</a></li>
 <ul>
 <li><a href="#helpStart">How start with TAPIS</a></li>
 <li><a href="#helpConnectingNodes">Connecting nodes</a></li>
@@ -66,7 +169,7 @@
 <li><a href="#recipe10">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</a></li>
 <li><a href="#recipe11">Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns</a></li>
 <li><a href="#recipe12">Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</a></li>
-</ul>
+</ul> -->
 
 <hr>
 <a id="help"></a>
@@ -117,7 +220,7 @@ Since almost all nodes represent data in tabular form, the "Table" button is a g
 "Table" is an example of "leaf node". Leaf nodes cannot be the source node of any other node and represent the "leafs" of a network representation. Other examples of leaf nodes are "Scatter plot", "One value", "View query" or, "Save table".
 <br>
 <img src="help_Table.png" width="800" class="center">
-<p>
+<div>
 
 <a id="helpSTAvsTableNodes"></a>
 <h3>SensorThings API nodes vs Table nodes</h3>
@@ -131,8 +234,9 @@ Some operations are performed by TAPIS directly (the ones that has grey icons) a
 Just a few collection of recipes are provided. The steps of the recipes can be reproduced by you or can be shown  More recipes to come soon!
 <br><br><br>
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text">
 <a id="recipe01"></a>
-<h3>Recipe 1: Connecting to a STA or STAplus</h3>
+<h3 class="toolPage_title">Recipe 1: Connecting to a STA or STAplus</h3>
 In this example, we illustrate how to connect to a STA and navegate the basic entities modifying the URLs.<br>
 
 <p>
@@ -251,11 +355,12 @@ The final graph shows 3 branches with 3 leaf nodes that contain the same informa
 <li>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams(1820)/ObservedProperty
 <li>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties(1828)
 </ul>
-
+</div></div>
 <br><br><br>
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text">
 <a id="recipe02"></a>
-<h3>Recipe 2: Show the current evolution of a variable captured by a particular party</h3>
+<h3 class="toolPage_title">Recipe 2: Show the current evolution of a variable captured by a particular party</h3>
 In this example, we illustrate how to monitor a variable capture by a particular party. The way this is done, is conditioned by the STAplus entities data model (see the figure below) that relates Observations to Party through Datastream.<br>
 
 <p>
@@ -336,6 +441,7 @@ We can see the last temperature captured in the icon in the center of the pentag
 <p>
 If the value is over the alerting value, the color of the icon and the text changes.<br>
 <img src="recipe02_01_oneValueAlert.png" width="300" class="center">
+</p>
 
 <br><br><br>
 <hr width="30%">
@@ -388,11 +494,12 @@ This is the resulting table that contains a time series of temperature measureme
 And this is the result as a scatter plot.
 <br>
 <img src="recipe02_02_SeparateColumnsScatterPlot.png" width="800" class="center">
-
+</div></div>
 <br><br><br>
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text"></div>
 <a id="recipe03"></a>
-<h3>Recipe 3: Show a map of all observation features in an STA service</h3>
+<h3 class="toolPage_title">Recipe 3: Show a map of all observation features in an STA service</h3>
 This example illustrates how TAPIS is connected to the MiraMon Map Browser and how it can be used to show a map of all features of interest stored in the STA showing the last observations. This example, shows how to expand the observations to indicate the datastream and the observed property they are part of. The tool to generate the map is capable of sorting the data by feature of interest and observed property before sending the data to the map browser.
 
 <p>
@@ -427,12 +534,12 @@ The resulting table is ready to be converted into a map.
 <br>
 <img src="recipe03_openMapBrowser.png" width="800" class="center">
 
-<p>
+<div>
 By selecting the right fields and pressing the "Open" button, a map browser emerges with an extra layer that shows the last observations as a time series. By clicking in the point icons we can see the time evolution of the different variables.
 <br>
 <img src="recipe03_mapBrowser.png" width="800" class="center">
 
-<p>
+
 It is also possible to create a GeoJSON and a GeoJSON schema using the "Save layer" tool.
 <br>
 <img src="recipe03_saveGeoJSON.png" width="800" class="center">
@@ -618,10 +725,12 @@ As a result, we get a GeoJSON with the features of interest as geometries and th
 </textarea>
 </td></tr>
 </table>
+</p></div></div>
 <br><br><br>
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text">
 <a id="recipe04"></a>
-<h3>Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</h3>
+<h3 class="toolPage_title">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</h3>
 In this example, we illustrate how to manage a table semantics.
 
 <p>
@@ -696,7 +805,6 @@ To finalize, we can use the "Save Table" tool to save a CSVW file with the meani
 <br>
 <img src="recipe04_savecsvw.png" width="600" class="center">
 
-<p>
 This is the result of saving the CSV (fragment) and the CSVW.
 <table>
 <tr><td>
@@ -784,12 +892,13 @@ This is the result of saving the CSV (fragment) and the CSVW.
 </textarea>
 </td></tr>
 </table>
-
+</div></div>
 <br><br><br>
 
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text">
 <a id="recipe05"></a>
-<h3>Recipe 5: Selecting temperatures from an area </h3>
+<h3 class="toolPage_title">Recipe 5: Selecting temperatures from an area </h3>
 <a id="recipe05_01"></a>
 <h4>Cooking method 1:Selecting temperatures with a determined polygon</h4>
 In this example, we illustrate how to apply spatial and non-spatial filters (and easily generate complex queries) to extract temperatures of an area.
@@ -845,7 +954,7 @@ Finally, we can sort the observations with the more recent first.
 <br>
 This results in thiw complex query URL: <a href="https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$filter=geo.intersects(FeatureOfInterest/feature,geography'POLYGON ((1.78 41.78, 1.79 41.78, 1.79 41.79, 1.78 41.79, 1.78 41.78))') and ((Datastream/ObservedProperty/definition eq 'http://vocabs.lter-europe.net/EnvThes/22035'))&$orderby=phenomenonTime desc">https://citiobs.demo.secure-dimensions.de/staplus/v1.1/Observations?$filter=geo.intersects(FeatureOfInterest/feature,geography'POLYGON ((1.78 41.78, 1.79 41.78, 1.79 41.79, 1.78 41.79, 1.78 41.78))') and ((Datastream/ObservedProperty/definition eq 'http://vocabs.lter-europe.net/EnvThes/22035'))&$orderby=phenomenonTime desc</a>
 
-<p>
+
 Now that we have a time series we can use the scater plot tool to generate a temperature/time diagram.<br>
 <img src="recipe05_01_scatterPlot.png" width="800" class="center">
 
@@ -898,9 +1007,11 @@ At the bottom, we will indicate the distance and the operator we want to use to 
 <img src="recipe05_02_csvfilterRowWindow.png" width="800" class="center">
 <br><br><br>
 <br>
+</div></div>
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text">
 <a id="recipe06"></a>
-<h3>Recipe 6: Creating two new datastream of observations</h3>
+<h3 class="toolPage_title">Recipe 6: Creating two new datastream of observations</h3>
 In this example, we illustrate how to store two datastreams of observations that are related in STAplus. The concrete case is a fixed camera trap that is installed in the woods and takes a short sequence of pictures of an animal that is latter identified as a particular species. The pictures are stored and described in a datastream and the identification (occurrence) of the species is stored in another datastream. Each small set of pictures and the occurrence is grouped in an observation group.   
 
 <p>
@@ -1045,7 +1156,6 @@ In this case, the "result" the full URL of the species name in GBIF (https://www
 <p>
 You can add as many Observations and ObservationGroups as needed repeating the same procedure.
 
-<P>
 A partial result of the created observation group can be retrieved from the following query: <a href="https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)?$expand=Observations($select=result,phenomenonTime;$expand=Datastream($select=description;$expand=ObservedProperty($select=description)))" target="_blank">https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups(232753)?$expand=Observations($select=result,phenomenonTime;$expand=Datastream($select=description;$expand=ObservedProperty($select=description)))</a>
 
 <textarea rows="30" cols="80" style="white-space: pre; overflow-wrap: normal; overflow-x: scroll;" readonly>
@@ -1088,9 +1198,11 @@ A partial result of the created observation group can be retrieved from the foll
 
 <br><br><br>
 <br>
+</div></div>
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text">
 <a id="recipe07"></a>
-<h3>Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</h3>
+<h3 class="toolPage_title">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</h3>
 In this example, we illustrate how to connect to a catalogue of metadata using the OGC CSW standard. Then we can select a dataset, look at it and explore the geospatial user feedback of input a new eedback about about it.
 
 <p>
@@ -1128,17 +1240,16 @@ The interface of the Nimmbus system is called. After logging in the system is po
 
 To verify that the feedback is collected and recorded, we can use the button [Get feedback] to get the stored feedback as table (with only one row if there was no previous feedback.<br>
 <img src="recipe07_GUFGetFeedback.png" width="1200" class="center">
-<p>
 
 To read the record better, we can use the [Edit record] to see the item as a record in a form.<br>
 <img src="recipe07_GUFFeedbackItem.png" width="600" class="center">
-<p>
-
+</div></div>
 <br><br><br>
 <br>
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text">
 <a id="recipe08"></a>
-<h3>Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</h3>
+<h3 class="toolPage_title">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</h3>
 In this example, we illustrate how to connect to a S3 service. Then we can select a S3 bucket, load the content of the S3 bucket, select a CSV file in it and show its content.
 
 <p>
@@ -1165,17 +1276,16 @@ The result is a table with a list of files offered. Note that the folder structu
 
 We can select one of these files with the [select row] tool.<br>
 <img src="recipe08_filesSelectRow.png" width="800" class="center">
-<p>
 
 Now, depending on the format we can select a tool to open the file. In this case we use the [ImportCSV]. By double-clicking in the tool, we can immediately open the resource without having to write the URL of the resource. We only need to press the two [load] buttons next to the URLs.<br>
 <img src="recipe08_importCSVTable.png" width="1000" class="center">
-<p>
-
+</div></div>
 <br><br><br>
 <br>
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text">
 <a id="recipe09"></a>
-<h3>Recipe 9: Drawing a stacked bar chart</h3>
+<h3 class="toolPage_title">Recipe 9: Drawing a stacked bar chart</h3>
 In this example, we illustrate how to create a stacked bar char plot by counting the number of records that have the same values in two columns, and represent the values of first column in the table as the bar titles and the values of the second criteria as the colors of the stacked fragments of each bar.
 
 <p>
@@ -1197,13 +1307,13 @@ The result is a table that has 3 columns. The thirt column represent the number 
 
 We select the [Bar plot] tool and we ask for Categories (the bar labels) "Need Type", the Classifications (the data series names that are going to be stacked segements in diferent colors in the bar chart) as "Area" and the Values (the size of the segments of the bars in the chart) as "User requirement id_CouldDefined". After presing "plot, you will see the actual stacked bar chart.<br>
 <img src="recipe09_StackedBarChart.png" width="900" class="center">
-<p>
-
+</div></div>
 <br><br><br>
 <br>
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text">
 <a id="recipe10"></a>
-<h3>Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</h3>
+<h3 class="toolPage_title">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</h3>
 In this example, we illustrate how to connect to a Eclipse Data Connector using the Data Space Protocol proposed by the International Data Space Assotiation. The Eclipse Data Connector implements an API that allows TAPIS to dialog with the data space and request data assets.
 <p>
 In preparation for this example, we configured a SensorThings API (STA) endpoint as a asset available in the data space. Our demonstrative data space is composed by two nodes, each one with an Eclipse Data Connector instance. To get access to the STA asset a sequence of steps need to be conducted. Fortunately, TAPIS takes case of those steps automatically. The steps are:
@@ -1249,12 +1359,14 @@ Finally, We can request the Datastream of this observation in the STA service by
 <img src="recipe10_dataSpaceSTADatastreams.png" width="900" class="center">
 <p>
 This recipe has demosntrated that is possible to connect ot a STA endpoint from a data space that contains the root of the STA service as a asset in the data space catalog.
+</p></div></div>
 <p>
 	<br><br><br>
 	<br>
 	<hr width="30%">
+	<div class="toolPage_main"><div class="toolPage_main_text">
 	<a id="recipe11"></a>
-	<h3>Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns</h3>
+	<h3 class="toolPage_title">Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns</h3>
 	<p>In this example, we have a table, on every record represents a measure of the amount of water in a reservoir on a concrete date. In order to allow for some analisis we need to reorganize the data and transform the values of the collumn that refer to a Station into new columns. "Pivot table" tool can be applied to all data sources as TAPIS always represente the output data as tables. In this example, data is imported from CSV with the "Import CSV" tool. A fragment of the original table is shown below: 
 		
 	<br><img src="recipe11_initialTable.png" width="900" class="center">
@@ -1374,12 +1486,13 @@ Now we link the "pivot table" tool to apply the desired changes to the current t
 In this case, there are Rows, so values come from the values of Row attributes added but no original column was selected in the Columns section. Similar to what has happened before, every new column (no new Columns have been added in this example) will be every attribute added in Value part. The values in these columns will be the result of the  selected aggregation.<br>
 	<img src="recipe11_pivotTableDialog_without_columns.png"  height="450px"> <br>
 	<img src="recipe11_resultTable_without_columns.png"  class="center">
-	
+</div></div>	
 <br><br><br>
 <br>
 <hr width="30%">
+<div class="toolPage_main"><div class="toolPage_main_text">
 <a id="recipe12"></a>
-<h3>Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</h3>
+<h3 class="toolPage_title">Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</h3>
 <p>In this example, we will start by a table containing a geopackage that represents the content of a SensorThings API. The same exercise could be done getting the data directly from a STA. These are the necessary steps:
 <ul>
 <li>Produce a single table with observations values, time of acquisition and position. 
@@ -1504,7 +1617,7 @@ The download process produces a tabular result in JSON with the table of data th
 
 This is the final complete diagram of all the steps we made:<br>
 <img src="recipe12_completeDiagram.png" width="800" class="center">
-<p>
 
+</div></div>
 </body>
 </html>

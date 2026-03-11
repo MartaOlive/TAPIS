@@ -1,3 +1,74 @@
+/* Receipes */
+/* .listContainer {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.mainInList {
+    width: fit-content;
+    padding: 10px 14px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.secondaryInList {
+    width: fit-content;
+    padding: 8px 12px;
+    background-color: #f7f9fc;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    margin-left: 28px;
+    margin-bottom: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+} */
+/* Contenidor vertical */
+.recipeContainer{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+/* Targeta de cada recipe */
+.recipeCard{
+  padding:18px 20px; 
+  background:white;
+  border-radius:8px;
+  width:100%; 
+  box-sizing:border-box;
+}
+
+/* Títol del recipe */
+.recipeTitle{
+  display:block;
+  font-weight:600;
+  font-size:20px; 
+  text-decoration:none;
+  color: #252525;
+  margin-bottom:8px;
+}
+
+/* Cooking methods */
+.recipeChildren a{
+  display:block;
+  font-size:16px; /* lleugerament més gran */
+  text-decoration:none;
+  color:#252525;
+  margin-top:4px;
+  margin-left:20px; /* més endins que el recipe */
+}
+
+/* Hover per tots els links */
+.recipeTitle:hover{
+  font-size:21px;
+}
+.recipeChildren a:hover{
+     font-size:17px;
+}
 /* ToolsPage  */
 .toolBoxParent {
     display: flex;

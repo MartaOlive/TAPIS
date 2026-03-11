@@ -1805,11 +1805,11 @@ function SaveLocalDataFile(data, fileName, extension, mediatype)   //Saves a mem
 	return false;
 }
 
-function OpenHelp(event) {
-	window.open("help", "TapisHelp");
+function OpenRecipes(event) {
+	window.open("help", "TapisRecipes"); //canviar el nom de les carpetes?
 }
-function OpenDocumentation(event) {
-	window.open("documentation", "TapisDocumentation");
+function OpenHelp(event) {
+	window.open("documentation", "TapisHelp");
 }
 
 function OpenConfiguration(event) {
