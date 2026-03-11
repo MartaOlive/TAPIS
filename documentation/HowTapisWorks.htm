@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>TAPIS: Tables from APIs for Sensors (Sensor Things API plus Explorer)</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+
+
+    <link rel="stylesheet" href="documentation.css">
+    <script type="text/javascript" src="../t_nodes.js" defer></script>
+    <script type="text/javascript" src="documentation.js" defer></script>
+
+</head>
+
+<body onLoad="openToolPage('howTapisWorks')">
+    <header class="descriptionToolsHeader" id="toolPage_header_howTapisWorks">
+    </header>
+    <main>
+        <h1 class="toolPage_mainTitle">How TAPIS Works</h1> <!--general title -->
+        <div id="toolPage_howTapisWorks" class="toolBoxParent"></div> <!--all tools-->
+
+        <div class="toolPage_main" id="general">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title">
+                </h2>
+                TAPIS is a API explorer and a table manager. TAPIS reads data and metadata from some supported APIs and
+                some data file formats and structures the data as tables that can be managed and transformed.
+                Internally, everything is a table that has columns that represents fields and rows that represent
+                records.
+                <p>
+                    The supported data sources are: Sensor Things API, STAplus, OGC API Features/Records, OGC Catalogue
+                    Service for the Web, S3 Services, Eclipse Data Connectors, CSV, DBF, JSON-LD, JSON and GeoJSON
+                    files. Once the data is represented as a table, it can be directly viewed, edited, semantically
+                    enriched, filtered, joint, grouped by, aggregated, etc.
+                    A part of a classical rows and columns tabular representation, data can be presented as bar charts,
+                    pie charts, scatter plots, and maps. TAPIS is integrated with <a
+                        href="https://github.com/grumets/nimmbus">NiMMbus</a> (MiraMon implementation of the Geospatial
+                    User Feedback) and with the <a href="https://github.com/grumets/MiraMonMapBrowser">MiraMon Map
+                        Browser</a>.
+                <p>
+                <p>
+                    While the project is completely independent from the <a href="https://orangedatamining.com/">Orange
+                        data mining</a> software, it has been inspired by its GUI design. If you have used Orange in the
+                    past, you will immediately know how TAPIS works.
+                <p>
+                    But there are some differences with Orange:
+                <ul>
+                    <li>TAPIS is a JavaScript interface that does not required installation
+                    <li>Columns can be semantically tagged adding meaning to the data fields
+                    <li>TAPIS connects with external APIs such as SensorThings API (STA) and STAplus as sources for
+                        tabular data.
+                </ul>
+            </div>
+        </div>
+
+
+
+        <div class="toolPage_main" id="howStart">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title">How start with TAPIS
+                </h2>
+                The workspace of TAPIS can be divided in the following areas <br>
+                <img src="../help/help_tapisAreas.png" width="800" class="center">
+                <p>
+                    In TAPIS, the first thing that you need to do is to place a starting node in the network area.
+                    Examples of starting nodes are "Add STA service", "Import CSV" or "Import GeoJSON". Clicking on
+                    them in the <i>button area</i> will place them in the <i>network area</i>. Doubleclicking on
+                    their representation in the network area will make appear dialog box to specify the parameters
+                    necessary to import the data in TAPIS. After accepting the options messages about the progress
+                    and eventual errors will appear in the <i>Information area</i>. The result of the operation will
+                    be represented as a table in the <i>Query and table area</i> (a STA query will also be shown if
+                    the node is a STA node; the ones with blue icons).
+                <p>
+                    Next thing is connecting other nodes to the starting nodes.
+
+                    <a id="helpConnectingNodes"></a>
+            </div>
+        </div>
+        <div class="toolPage_main" id="connectingNodes">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title">Connecting nodes </h2>
+                There are two ways to do so:
+                <ul>
+                    <li>Right click in the previous node will make visible a dialog box with many buttons. Select one of
+                        them and it will be placed in the <i>network area</i> as a new node and it will be automatically
+                        connected to the previous node.
+                    <li>Click on one of the buttons of the button area to create a new node in the network area. This
+                        node will not be connected to any previous node. You will need to connect the node to the
+                        previous node by clicking in the "Connect to nodes" button and the click on the new node and
+                        then in the previous node.
+                </ul>
+
+                Connections represents the inheritance of information. So if two nodes are connected, the arrow points
+                to the node that is the data source of the next target node (like in a lineage diagram). You can see
+                arrows as "data dependencies". In other words, the information "travels" in the opposite direction of
+                the arrows. Commonly a target node uses the tabular data represented by source node and operates with it
+                to create a new table. Nodes can be source nodes of as many target nodes as needed. Nodes can be target
+                nodes and source nodes at the same time.
+                <br>
+                <img src="../help/help_sourceTarget.png" width="400" class="center">
+                <p>
+            </div>
+        </div>
+        <div class="toolPage_main" id="leafNodes">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title">Leaf nodes
+                </h2>
+                Since almost all nodes represent data in tabular form, the "Table" button is a good asset to check the
+                content of a node.
+                <p>
+                    "Table" is an example of "leaf node". Leaf nodes cannot be the source node of any other node and
+                    represent the "leafs" of a network representation. Other examples of leaf nodes are "Scatter plot",
+                    "One value", "View query" or, "Save table".
+                    <br>
+                    <img src="../help/help_Table.png" width="800" class="center">
+                <div>
+                </div>
+            </div>
+            <div class="toolPage_main" id="STAnodesVsTableNodes">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title">SensorThings API nodes vs Table nodes </h2>
+                    Some operations are performed by TAPIS directly (the ones that has grey icons) and some others are
+                    performed by the STA (the ones that has blue elements in the icon). For the STA icons, TAPIS will
+                    only build queries and wait for the STA server to return the new table. A blue node can commonly be
+                    a source node for a grey node but a grey node cannot be a source node for a blue node.
+
+                </div>
+            </div>
+    </main>
+</body>
+
+</html>

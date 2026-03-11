@@ -66,6 +66,7 @@ const headerNavBar = `<div onclick="openTapisPage()">
         </div>
         <div id="content_navBar">
             <div id="navBar">
+                <div id="navBar_howTAPISWorks"></div>
                 <div id="navBar_servicesAndApis"></div>
                 <div id="navBar_STAEntities"></div>
                 <div id="navBar_STAEntities_singular"></div>
@@ -81,6 +82,13 @@ const headerNavBar = `<div onclick="openTapisPage()">
 
 function StartDocumentationPage() {
     var c = "";
+    //howTAPISWorks
+    c = `<h2 class="toolBoxParentTitle">How TAPIS Works</h2>`;
+    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm" class="link_a"><div class="toolBox tapisTool">
+       <img src="../logoWithText.png" alt="Imatge" style="height:84px">
+       <div class="toolBoxText">How to use it</div>
+       </div></a>`
+    document.getElementById("container_howTapisWorks").innerHTML = c;
     //Services And Apis (inputTools)
     c = `<h2 class="toolBoxParentTitle">Data input tools</h2>`;
     c += createInputTools()
@@ -303,6 +311,15 @@ function openToolPage(place) {
 }
 function createNavBar() {
     var c = "";
+    //How TAPIS works
+    c = `<div class="dropdown"><a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm" class="link_a"><div>How TAPIS works</div></a><div class="dropdown-content">`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm">How works</a>
+    <a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm#howStart">How start</a>
+    <a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm#connectingNodes">Connecting nodes</a>
+    <a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm#leafNodes">Leaf nodes</a>
+    <a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm#STAnodesVsTableNodes">STAnodes vs table nodes</a>`
+    c += `</div></div></div>`
+    document.getElementById("navBar_howTAPISWorks").innerHTML = c;
     //Services And Apis
     c = `<div class="dropdown"><a href="https://www.tapis.grumets.cat/tapis/documentation/inputtools.htm" class="link_a"><div>Input tools</div></a><div class="dropdown-content">`
     for (var i = 0; i < ServicesAndAPIsArray.length; i++) {
