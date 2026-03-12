@@ -273,12 +273,33 @@ function createnavBarButtonsToolBox() {
 function openTapisPage() {
     window.open("https://www.tapis.grumets.cat/", "Tapis");
 }
+//STA Schema Image
+// STA entities schema image with zoom
+const element = document.querySelector("#imageSTA");
+const panzoom = Panzoom(element);
+document.getElementById('imageSTAZoomSTADatastream').addEventListener('wheel', panzoom.zoomWithWheel);
+
+// STA entities Multidatastream schema image with zoom
+const elementMulti = document.querySelector("#imageSTAMulti");
+const panzoomMulti = Panzoom(elementMulti);
+document.getElementById('imageSTAZoomMultiDatastream').addEventListener('wheel', panzoomMulti.zoomWithWheel);
+
+function showOrHideSTASchema(schema) {
+    if (schema == "Datastreams") {
+        document.getElementById('imageSTAZoomSTADatastream').style.display = "block";
+        document.getElementById('imageSTAZoomMultiDatastream').style.display = "none";
+    } else {
+        document.getElementById('imageSTAZoomSTADatastream').style.display = "none";
+        document.getElementById('imageSTAZoomMultiDatastream').style.display = "block";
+    }
+}
 function openToolPage(place) {
     document.getElementById("toolPage_header_" + place).innerHTML = headerNavBar;
     createNavBar();
     switch (place) {
         case "inputTools":
             document.getElementById("toolPage_inputTools").innerHTML = createInputTools()
+            showOrHideSTASchema("Datastreams");
             break;
         case "STAentities":
             document.getElementById("toolPage_STAentities").innerHTML = createSTAentities()
