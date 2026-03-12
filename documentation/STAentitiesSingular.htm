@@ -20,10 +20,42 @@
         <h1 class="toolPage_mainTitle">STA entities create, edit or delete tool</h1> <!--general title -->
         <div id="toolPage_STAentitiesSingular" class="toolBoxParent"></div> <!--all tools-->
 
-        <div class="toolPage_main" id="general"> <!--general explanation-->
-            <div class="toolPage_main_text">
-                General Explanation
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+        <div class="toolPage_main"> <!--general explanation-->
+            <div class="toolPage_main_text generalExplanation">
+                <p>These tools allow you to create, edit, or delete a record in an STA service.</p>
+
+                <strong>Create</strong>
+
+                <p>To create a new record in an entity, you must link the singular entity tool to the <a
+                        href="https://www.tapis.grumets.cat/tapis/documentation/inputtools.htm#sta">STA service</a> or
+                    to a related <a href="https://www.tapis.grumets.cat/tapis/documentation/staentities.htm#imageSTA"
+                        target="_blank">STA entity (see STA schema)</a>. You must link all <strong>required entities </strong>to this
+                    node. <strong>Each entity can have only one record.</strong> The system will automatically add these IDs to the
+                    create request. Mandatory linked entities will be marked with an asterisk.</p>
+
+                <p>Double-clicking the node will display a dialog box showing the linked entities with their IDs and a
+                    set of possible properties to fill out. <strong>Required properties</strong> will also be marked with an asterisk.
+                </p>
+
+                <p>You can create a new record only if you are <a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#login">logged in</a>.
+                </p>
+
+                <strong>Edit</strong>
+
+                <p>To edit a record, the entity you want to modify must have <strong>only one record.</strong> Link the singular entity
+                    tool of this entity to it. Double-clicking this tool will display a dialog box with the existing
+                    information. This dialog is the same one used for deleting records. To modify the data, make your
+                    changes and click <i>"Update".</i> You must be <a
+                        href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#login">logged in</a>
+                    to edit an entity.</p>
+
+                <strong>Delete</strong>
+
+                <p>To delete a record, the entity you want to remove must have<strong> only one record.</strong> Link the singular entity
+                    tool of this entity to it. Double-clicking this tool will display a dialog box with the existing
+                    information (the same dialog used for editing). To delete the record, click the <i>"Delete"</i> button. You
+                    must be <a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#login">logged
+                        in</a> to delete an entity.</p>
             </div>
         </div>
 
