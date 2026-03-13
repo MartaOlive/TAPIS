@@ -20,17 +20,21 @@
         <h1 class="toolPage_mainTitle">Input Tools</h1> <!--general title -->
         <div id="toolPage_inputTools" class="toolBoxParent"></div> <!--all tools-->
 
-        <div class="toolPage_main" > <!--general explanation-->
-            <div class="toolPage_main_text generalExplanation" >
+        <div class="toolPage_main"> <!--general explanation-->
+            <div class="toolPage_main_text generalExplanation">
                 <p>
-                    <strong>Input tools allow you to add data to TAPIS</strong>. TAPIS supports <strong>multiple data sources</strong>, and one of its
+                    <strong>Input tools allow you to add data to TAPIS</strong>. TAPIS supports <strong>multiple data
+                        sources</strong>, and one of its
                     main advantages is the ability to combine data from different sources.
                 </p>
 
                 <p>
-                    Each input tool is designed to load a specific type of data. Data can be loaded from <strong>APIs</strong>, such as
-                    STA services, OGC API Collections, OGC catalogues, or S3 services... It is also possible to load data
-                    from <strong>other internet sources</strong>, such as DataSpace catalogues... In addition, data can be imported
+                    Each input tool is designed to load a specific type of data. Data can be loaded from
+                    <strong>APIs</strong>, such as
+                    STA services, OGC API Collections, OGC catalogues, or S3 services... It is also possible to load
+                    data
+                    from <strong>other internet sources</strong>, such as DataSpace catalogues... In addition, data can
+                    be imported
                     directly <strong>from your computer</strong> using files such as CSV, JSON, or DBF...
                 </p>
 
@@ -39,38 +43,45 @@
                 </p>
 
                 <p>
-                    <strong>When an API service is used, data from the source is requested each time the <i>"blue tools"</i> are executed. In contrast,
-                    when the <i>"grey tools"</i> are used, TAPIS works with data that has already been loaded into the system.</strong>
+                    <strong>When an API service is used, data from the source is requested each time the <i>"blue
+                            tools"</i> are executed. In contrast,
+                        when the <i>"grey tools"</i> are used, TAPIS works with data that has already been loaded into
+                        the system.</strong>
                 </p>
 
                 <p>
                     Once the data has been loaded, additional tools can be added to process, transform, or analyse the
                     data.
                 </p>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
-
 
         <div class="toolPage_main" id="sta">
             <div class="toolPage_main_text">
                 <h2 class="toolPage_title"><img src="../sta.png" alt="icon sta" class="toolPage_title_icon">STA Service
                 </h2>
+                <p><strong>Setting Up the Node: </strong><img src="STAplusService_image0.png" alt="sta icon in TAPIS"
+                        class="toolPage_image"></p>
 
-                <p>Reads the STA service API and downloads the data to the browser. This data will be displayed as a
-                    table.
-                    When an STA service is used, data will be loaded at every step. Using the blue tools will make a new
-                    request to the API, while using the grey tools will work with the data already stored in the
+                <p><strong>How to Use the Node: </strong></p>
+
+                <p>This tool reads <strong>the STA service API</strong> and downloads the data to the browser. This data
+                    will be displayed as a
+                    table (original obtained with a JSON).
+                    When an STA service is used, data will be loaded at every step whenever you use the <i>blue
+                        tools.</i> Remember, using the <i>blue tools</i> will make a new
+                    request to the API, while using the <i>grey tools</i> will work with the data already stored in the
                     browser.
                 </p>
-                <p>Each request to the STA Service API will return only 100 records. To obtain more records, you need to
+                <p>Each request to the STA Service API will return only <strong>100 records.</strong> To obtain more
+                    records, you need to
                     request them explicitly—either by clicking an <a
                         href="https://www.tapis.grumets.cat/tapis/documentation/entitySingular.htm">entity tool</a> or
                     using the<a href="https://www.tapis.grumets.cat/tapis/documentation/login.htm"> Record Range
                         tool</a>.</p>
-                <p>Some STA services require authorization. This authorization is obtained using the <a
+                <p>Some STA services <strong>require authorization.</strong> This authorization is obtained using the <a
                         href="https://www.tapis.grumets.cat/tapis/documentation/login.htm">Login tool</a>.</p>
-                <img src="STAplusService_image0.png" alt="sta icon in TAPIS" class="toolPage_image">
+
                 <p>Double-click to the tool to open it. The form below will be displayed </p>
                 <img src="STAplusService_image1.png" alt="icon" class="toolPage_image">
 
@@ -115,6 +126,8 @@
                 <h2 class="toolPage_title"><img src="../ogcAPICols.png" alt="icon ogcAPICols"
                         class="toolPage_title_icon">OAPI Collections
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -123,6 +136,8 @@
                 <h2 class="toolPage_title"><img src="../ogcAPIItems.png" alt="icon ogcAPIItems"
                         class="toolPage_title_icon">OAPI items
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -130,6 +145,8 @@
             <div class="toolPage_main_text">
                 <h2 class="toolPage_title"><img src="../csw.png" alt="icon csw" class="toolPage_title_icon">OGC CSW
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -138,6 +155,8 @@
                 <h2 class="toolPage_title"><img src="../s3Service.png" alt="icon s3Service"
                         class="toolPage_title_icon">S3 Service
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -146,6 +165,8 @@
                 <h2 class="toolPage_title"><img src="../s3Bucket.png" alt="icon s3Bucket" class="toolPage_title_icon">S3
                     Bucket
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -154,6 +175,8 @@
                 <h2 class="toolPage_title"><img src="../edc.png" alt="icon edc" class="toolPage_title_icon">DataSpace
                     cat.
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -162,6 +185,8 @@
                 <h2 class="toolPage_title"><img src="../edcAsset.png" alt="icon edcAsset"
                         class="toolPage_title_icon">DataSpace asset
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -170,6 +195,8 @@
                 <h2 class="toolPage_title"><img src="../ImportCSV.png" alt="icon ImportCSV"
                         class="toolPage_title_icon">CSV
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -178,6 +205,8 @@
                 <h2 class="toolPage_title"><img src="../ImportDBF.png" alt="icon ImportDBF"
                         class="toolPage_title_icon">DBF
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -186,6 +215,8 @@
                 <h2 class="toolPage_title"><img src="../ImportGPKG.png" alt="icon ImportGPKG"
                         class="toolPage_title_icon">GeoPack Table
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -194,6 +225,8 @@
                 <h2 class="toolPage_title"><img src="../ImportGPKGTable.png" alt="icon ImportGPKGTable"
                         class="toolPage_title_icon">STA Service
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -202,6 +235,8 @@
                 <h2 class="toolPage_title"><img src="../ImportJSONLD.png" alt="icon ImportJSONLD"
                         class="toolPage_title_icon">JSON-LD
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -210,6 +245,8 @@
                 <h2 class="toolPage_title"><img src="../ImportJSON.png" alt="icon ImportJSON"
                         class="toolPage_title_icon">JSON
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -218,6 +255,8 @@
                 <h2 class="toolPage_title"><img src="../ImportGeoJSON.png" alt="icon ImportGeoJSON"
                         class="toolPage_title_icon">GeoJSON
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -226,6 +265,8 @@
                 <h2 class="toolPage_title"><img src="../CreateDGGS.png" alt="icon CreateDGGS"
                         class="toolPage_title_icon">DGGS extent
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -234,6 +275,8 @@
                 <h2 class="toolPage_title"><img src="../CreateNewTable.png" alt="icon CreateNewTable"
                         class="toolPage_title_icon">New table
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -242,6 +285,8 @@
                 <h2 class="toolPage_title"><img src="../staRoot.png" alt="icon staRoot" class="toolPage_title_icon">STA
                     root
                 </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <p><strong>How to Use the Node: </strong></p>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
