@@ -17,6 +17,11 @@
     <header class="descriptionToolsHeader" id="toolPage_header_STAOperations">
     </header>
     <main>
+        <div>
+            <button onclick='OpenHelpFromHelp(event);'><img src="../help.png" height="20" valign="middle">Help</button>
+            <button onclick='OpenRecipesFromHelp(event);'><img src="../documentation.png" height="20"
+                    valign="middle">Recipes</button>
+        </div>
         <h1 class="toolPage_mainTitle">STA tools</h1> <!--general title -->
         <div id="toolPage_STAOperations" class="toolBoxParent"></div> <!--all tools-->
 
@@ -43,8 +48,15 @@
                 <h2 class="toolPage_title"><img src="../RecursiveExpandSTA.png" alt="icon RecursiveExpandSTA"
                         class="toolPage_title_icon">Recursive Expand</h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <!-- <img src="RecursiveExpand_image0.png" alt="icon" class="toolPage_image"> -->
                 <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <!-- <p>
+                    Recursive expand STA tool allow you to add new columns by expanding the properties of linked
+                    entities recursively. 
+                    To use this tool, this has to be connected to an STA data node, 
+
+                </p>
+                <p> <strong>Recipes where this tool is used:</strong> </p> -->
                 <ul>
 
                 </ul>
@@ -88,11 +100,48 @@
                         class="toolPage_title_icon">Select Columns
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="selectColums_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ;">
                 <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
+                <p>
+                    The purpose of the <strong>Select Columns</strong> tool is to generate a <strong>new table</strong>
+                    containing only the <strong>columns selected</strong> in the dialog displayed.
+                    The selection will be internally applied as a <strong>new request to the STA service.</strong>
+                </p>
 
-                </ul>
+                <p>
+                    This example contains the original data with all columns:
+                </p>
+
+                <img src="selectColums_image1.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+
+                <p>
+                    To display the dialog, <i>double right-click</i> on the node. Below you can see the dialog
+                    displayed, showing all the columns from your data.
+                    <strong>Deselect the columns</strong> that you do not want to include in the new table, leaving
+                    selected only those you want to keep. After making the selection, press the <i>OK</i> button.
+                </p>
+
+                <img src="selectColums_image2.png" alt="icon" class="toolPage_image">
+
+                <p>
+                    This is the result, a <strong>new table containing only the selected columns.</strong>
+                </p>
+
+                <img src="selectColums_image3.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+
+                <p>
+                    Take a look at the new request that TAPIS internally makes:
+                </p>
+                <p><i>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations?<strong>$select=</strong>@iot.selfLink, id, phenomenonTime, resultTime, result, resultQuality, validTime, parameters</i>
+                </p>
+                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <p> <i>No one yet</i></p>
+                <!-- <ul>
+
+                </ul> -->
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>

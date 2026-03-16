@@ -323,3 +323,13 @@ body {
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
 
 }
+
+.zoomable{
+  cursor: zoom-in;
+  transition: transform 0.3s;
+}
+
+.zoomable.zoom{
+  transform: scale(2);
+  cursor: zoom-out;
+}

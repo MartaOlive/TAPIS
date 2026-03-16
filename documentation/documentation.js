@@ -273,25 +273,19 @@ function createnavBarButtonsToolBox() {
 function openTapisPage() {
     window.open("https://www.tapis.grumets.cat/", "Tapis");
 }
-//STA Schema Image
-// STA entities schema image with zoom
-const element = document.querySelector("#imageSTA");
-const panzoom = Panzoom(element);
-document.getElementById('imageSTAZoomSTADatastream').addEventListener('wheel', panzoom.zoomWithWheel);
 
-// STA entities Multidatastream schema image with zoom
-const elementMulti = document.querySelector("#imageSTAMulti");
-const panzoomMulti = Panzoom(elementMulti);
-document.getElementById('imageSTAZoomMultiDatastream').addEventListener('wheel', panzoomMulti.zoomWithWheel);
 
-function showOrHideSTASchema(schema) {
-    if (schema == "Datastreams") {
-        document.getElementById('imageSTAZoomSTADatastream').style.display = "block";
-        document.getElementById('imageSTAZoomMultiDatastream').style.display = "none";
-    } else {
-        document.getElementById('imageSTAZoomSTADatastream').style.display = "none";
-        document.getElementById('imageSTAZoomMultiDatastream').style.display = "block";
-    }
+function addPanzoneWitSTASchema() {
+    //STA Schema Image
+    // STA entities schema image with zoom
+    const element = document.querySelector("#imageSTA");
+    const panzoom = Panzoom(element);
+    document.getElementById('imageSTAZoomSTADatastream').addEventListener('wheel', panzoom.zoomWithWheel);
+
+    // STA entities Multidatastream schema image with zoom
+    const elementMulti = document.querySelector("#imageSTAMulti");
+    const panzoomMulti = Panzoom(elementMulti);
+    document.getElementById('imageSTAZoomMultiDatastream').addEventListener('wheel', panzoomMulti.zoomWithWheel);
 }
 function openToolPage(place) {
     document.getElementById("toolPage_header_" + place).innerHTML = headerNavBar;
@@ -299,10 +293,10 @@ function openToolPage(place) {
     switch (place) {
         case "inputTools":
             document.getElementById("toolPage_inputTools").innerHTML = createInputTools()
-            showOrHideSTASchema("Datastreams");
             break;
         case "STAentities":
-            document.getElementById("toolPage_STAentities").innerHTML = createSTAentities()
+            document.getElementById("toolPage_STAentities").innerHTML = createSTAentities();
+            addPanzoneWitSTASchema();
             break;
         case "STAentitiesSingular":
             document.getElementById("toolPage_STAentitiesSingular").innerHTML = createSTAentitiesSingular()
@@ -430,3 +424,13 @@ function createNavBar() {
     document.getElementById("navBar_navBarButtons").innerHTML = c;
 }
 
+function OpenRecipesFromHelp(event) {
+    window.open("help", "TapisRecipes"); //canviar el nom de les carpetes?
+}
+function OpenHelpFromHelp(event) {
+    window.open("documentation", "TapisHelp");
+}
+
+function zoomToImage(img){
+  img.classList.toggle("zoom");
+}
