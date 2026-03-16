@@ -120,7 +120,7 @@
                     To display the dialog, <i>double right-click</i> on the node. Below you can see the dialog
                     displayed, showing all the columns from your data.
                     <strong>Deselect the columns</strong> that you do not want to include in the new table, leaving
-                    selected only those you want to keep. After making the selection, press the <i>OK</i> button.
+                    selected only those you want to keep. After making the selection, press <i>OK</i> button.
                 </p>
 
                 <img src="selectColums_image2.png" alt="icon" class="toolPage_image">
@@ -131,11 +131,15 @@
 
                 <img src="selectColums_image3.png" alt="icon" class="toolPage_image zoomable"
                     onclick="zoomToImage(this)">
-
+                <p>
+                    Now, the attributes of your data contain only the selected columns. To restore the original ones,
+                    you must continue from the previous node.
+                </p>
                 <p>
                     Take a look at the new request that TAPIS internally makes:
                 </p>
-                <p><i>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations?<strong>$select=</strong>@iot.selfLink, id, phenomenonTime, resultTime, result, resultQuality, validTime, parameters</i>
+                <p><i>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations?<strong>$select=</strong>@iot.selfLink,
+                        id, phenomenonTime, resultTime, result, resultQuality, validTime, parameters</i>
                 </p>
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <p> <i>No one yet</i></p>
@@ -151,7 +155,55 @@
                         class="toolPage_title_icon">Select Row
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="selectRow_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ;">
                 <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    The purpose of the <strong>Select Row</strong> tool is to generate a <strong>new table</strong>
+                    containing only the <strong>row selected</strong> (a resgister) in the dialog displayed.
+                </p>
+
+                <p>
+                    This example contains all the original rows:
+                </p>
+
+                <p>
+                    <img src="selectRow_image1.png" alt="icon" class="toolPage_image zoomable"
+                        onclick="zoomToImage(this)">
+                </p>
+
+                <p>
+                    To display the dialog, <i>double right-click</i> on the node. Below you can see the dialog
+                    displayed, showing all the rows from your data.
+                    <strong>Select the register</strong> you want to keep (using the radio button on the left) and press the
+                    <i>OK</i> button,
+                    located at the bottom of the dialog.
+                </p>
+
+                <p>
+                    <img src="selectRow_image2.png" alt="icon" class="toolPage_image zoomable"
+                        onclick="zoomToImage(this)">
+                </p>
+
+                <p>
+                    After the new request to the STA service (remember that this tool creates a new request with the
+                    required query), you will obtain a table containing only the selected row.
+                </p>
+
+                <p>
+                    <img src="selectRow_image3.png" alt="icon" class="toolPage_image zoomable"
+                        onclick="zoomToImage(this)">
+                </p>
+
+                <p>
+                    Take a look at the new request that TAPIS internally makes:
+                </p>
+                <p><i>OGC query URL:
+                        https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams<strong>(11)</strong></i>
+                </p>
+                <p>
+                    You can obtain same result using <a href="https://www.tapis.grumets.cat/tapis/documentation/staoperations.htm#SelectResourceSTA">Select Resource</a>
+                </p>
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
