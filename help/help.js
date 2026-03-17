@@ -84,7 +84,7 @@ function StartDocumentationPage() {
     var c = "";
     //howTAPISWorks
     c = `<h2 class="toolBoxParentTitle">How TAPIS Works</h2>`;
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm" class="link_a"><div class="toolBox tapisTool">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm" class="link_a"><div class="toolBox tapisTool">
        <img src="../logoWithText.png" alt="Imatge" style="height:84px">
        <div class="toolBoxText">How to use it</div>
        </div></a>`
@@ -146,7 +146,7 @@ function StartDocumentationPage() {
 function createInputTools() {
     var c = "";
     for (var i = 0; i < ServicesAndAPIsArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/inputtools.htm#${ServicesAndAPIsArray[i]}" class="link_a"><div style="" class="toolBox">
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#${ServicesAndAPIsArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${ServicesAndAPIsArray[i]}.png" alt="Imatge" style="height:60px">
        <div class="toolBoxText">${ServicesAndAPIs[ServicesAndAPIsArray[i]].description}</div>
        </div></a>`
@@ -157,7 +157,7 @@ function createSTAentities() {
     var c = "";
 
     for (var i = 0; i < STAEntitiesArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/staentities.htm#${STAEntitiesArray[i]}" class="link_a"><div style="" class="toolBox entities">
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/staentities.htm#${STAEntitiesArray[i]}" class="link_a"><div style="" class="toolBox entities">
        <img src="../${STAEntitiesArray[i]}.png" alt="Imatge" style="height:60px">
        <div class="toolBoxText">${STAEntitiesArray[i]}</div>
        </div></a>`
@@ -167,7 +167,7 @@ function createSTAentities() {
 function createSTAentitiesSingular() {
     var c = "";
     for (var i = 0; i < STAEntitiesArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/staentitiesSingular.htm#${STAEntities[STAEntitiesArray[i]].singular}" class="link_a"><div style="" class="toolBox entities">
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/staentitiesSingular.htm#${STAEntities[STAEntitiesArray[i]].singular}" class="link_a"><div style="" class="toolBox entities">
         <img src="../${STAEntities[STAEntitiesArray[i]].singular}.png" alt="Imatge" style="height:60px">
         <div class="toolBoxText">${STAEntities[STAEntitiesArray[i]].singular}</div>
         </div></a>`
@@ -177,7 +177,7 @@ function createSTAentitiesSingular() {
 function createSTAOperations() {
     var c = "";
     for (var i = 0; i < STAOperationsArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/staoperations.htm#${STAOperationsArray[i]}" class="link_a"><div style="" class="toolBox">
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#${STAOperationsArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${STAOperationsArray[i]}.png" alt="Imatge" style="height:60px">
        <div class="toolBoxText">${STAOperations[STAOperationsArray[i]].description}</div>
        </div></a>`
@@ -187,7 +187,7 @@ function createSTAOperations() {
 function createComplexOperations() {
     var c = "";
     for (var i = 0; i < STASpecialQueriesArray.length; i++) {
-        c += ` <a href="https://www.tapis.grumets.cat/tapis/documentation/complexqueries.htm#${STASpecialQueriesArray[i]}" class="link_a"><div style="" class="toolBox">
+        c += ` <a href="https://www.tapis.grumets.cat/tapis/help/complexqueries.htm#${STASpecialQueriesArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${STASpecialQueriesArray[i]}.png" alt="Imatge" style="height:60px">
        <div class="toolBoxText">${STASpecialQueries[STASpecialQueriesArray[i]].description}</div>
        </div>`
@@ -197,7 +197,7 @@ function createComplexOperations() {
 function createTableOperations() {
     var c = "";
     for (var i = 0; i < TableOperationsArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/tableOperations.htm#${TableOperationsArray[i]}" class="link_a"><div style="" class="toolBox">
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#${TableOperationsArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${TableOperationsArray[i]}.png" alt="Imatge" style="height:60px">
        <div class="toolBoxText">${TableOperations[TableOperationsArray[i]].description}</div>
        </div></a>`
@@ -207,7 +207,7 @@ function createTableOperations() {
 function createStatisticsVisualize() {
     var c = "";
     for (var i = 0; i < tableStatisticsVisualizeArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/statisticsvisualize.htm#${tableStatisticsVisualizeArray[i]}" class="link_a"><div style="" class="toolBox">
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/statisticsvisualize.htm#${tableStatisticsVisualizeArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${tableStatisticsVisualizeArray[i]}.png" alt="Imatge" style="height:60px">
        <div class="toolBoxText">${tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description}</div>
        </div></a>`
@@ -217,7 +217,7 @@ function createStatisticsVisualize() {
 function createDataQuality() {
     var c = "";
     for (var i = 0; i < dataQualityArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/dataquality.htm#${dataQualityArray[i]}" class="link_a"><div style="" class="toolBox">
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#${dataQualityArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${dataQualityArray[i]}.png" alt="Imatge" style="height:60px">
        <div class="toolBoxText">${dataQuality[dataQualityArray[i]].description}</div>
        </div></a>`
@@ -227,13 +227,13 @@ function createDataQuality() {
 function createNodeOperations() {
     var c = "";
     //connectTwoNodes
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/nodeoperations.htm#connect" class="link_a"><div style="" class="toolBox"><img src="../connect.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/nodeoperations.htm#connect" class="link_a"><div style="" class="toolBox"><img src="../connect.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Connect two nodes</div></div></a>`
     //Remove
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/nodeoperations.htm#remove" class="link_a"><div style="" class="toolBox"><img src="../remove.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/nodeoperations.htm#remove" class="link_a"><div style="" class="toolBox"><img src="../remove.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Remove</div></div></a>`
     //Rename
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/nodeoperations.htm#rename" class="link_a"><div style="" class="toolBox"><img src="../rename.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/nodeoperations.htm#rename" class="link_a"><div style="" class="toolBox"><img src="../rename.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Rename</div></div></a>`
 
     return c;
@@ -241,28 +241,28 @@ function createNodeOperations() {
 function createnavBarButtonsToolBox() {
     var c = "";
     //Refresh
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#reload" class="link_a"><div style="" class="toolBox"><img src="../reload.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#reload" class="link_a"><div style="" class="toolBox"><img src="../reload.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Refresh</div></div></a>`
     //Open
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#openNetwork" class="link_a"><div style="" class="toolBox"><img src="../OpenNetwork.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#openNetwork" class="link_a"><div style="" class="toolBox"><img src="../OpenNetwork.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Open</div></div> </a>`
     //Oper Url
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#openURLNetwork" class="link_a"><div style="" class="toolBox"><img src="../OpenURLNetwork.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#openURLNetwork" class="link_a"><div style="" class="toolBox"><img src="../OpenURLNetwork.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Oper Url</div></div></a>`
     //Save as...
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#saveNetwork" class="link_a"><div style="" class="toolBox"><img src="../SaveNetwork.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#saveNetwork" class="link_a"><div style="" class="toolBox"><img src="../SaveNetwork.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Save as...</div></div></a>`
     //Login
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#login" class="link_a"><div style="" class="toolBox"><img src="../login.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login" class="link_a"><div style="" class="toolBox"><img src="../login.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Login</div></div></a>`
     //Configuration
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#config" class="link_a"><div style="" class="toolBox"><img src="../config.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#config" class="link_a"><div style="" class="toolBox"><img src="../config.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Configuration</div></div></a>`
     //Help
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#help" class="link_a"><div style="" class="toolBox"><img src="../help.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#help" class="link_a"><div style="" class="toolBox"><img src="../help.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Help</div></div></a>`
     //Documentation
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#documentation" class="link_a"><div style="" class="toolBox"><img src="../Documentation.png" alt="Imatge" style="height:45px">
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#documentation" class="link_a"><div style="" class="toolBox"><img src="../Documentation.png" alt="Imatge" style="height:45px">
        <div class="toolBoxText">Documentation</div></div></a>`
 
     return c
@@ -327,99 +327,99 @@ function openToolPage(place) {
 function createNavBar() {
     var c = "";
     //How TAPIS works
-    c = `<div class="dropdown"><a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm" class="link_a"><div>How TAPIS works</div></a><div class="dropdown-content">`
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm">How works</a>
-    <a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm#howStart">How start</a>
-    <a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm#connectingNodes">Connecting nodes</a>
-    <a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm#leafNodes">Leaf nodes</a>
-    <a href="https://www.tapis.grumets.cat/tapis/documentation/HowTapisWorks.htm#STAnodesVsTableNodes">STAnodes vs table nodes</a>`
+    c = `<div class="dropdown"><a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm" class="link_a"><div>How TAPIS works</div></a><div class="dropdown-content">`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm">How works</a>
+    <a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm#howStart">How start</a>
+    <a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm#connectingNodes">Connecting nodes</a>
+    <a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm#leafNodes">Leaf nodes</a>
+    <a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm#STAnodesVsTableNodes">STAnodes vs table nodes</a>`
     c += `</div></div></div>`
     document.getElementById("navBar_howTAPISWorks").innerHTML = c;
     //Services And Apis
-    c = `<div class="dropdown"><a href="https://www.tapis.grumets.cat/tapis/documentation/inputtools.htm" class="link_a"><div>Input tools</div></a><div class="dropdown-content">`
+    c = `<div class="dropdown"><a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm" class="link_a"><div>Input tools</div></a><div class="dropdown-content">`
     for (var i = 0; i < ServicesAndAPIsArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/inputtools.htm#${ServicesAndAPIsArray[i]}">${ServicesAndAPIs[ServicesAndAPIsArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#${ServicesAndAPIsArray[i]}">${ServicesAndAPIs[ServicesAndAPIsArray[i]].description}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_servicesAndApis").innerHTML = c;
     //container_STAEntities
-    c = `<div class="dropdown blue"><a href="https://www.tapis.grumets.cat/tapis/documentation/staentities.htm" class="link_a"><div>STA entities reading</div></a><div class="dropdown-content">`
+    c = `<div class="dropdown blue"><a href="https://www.tapis.grumets.cat/tapis/help/staentities.htm" class="link_a"><div>STA entities reading</div></a><div class="dropdown-content">`
     for (var i = 0; i < STAEntitiesArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/staentities.htm#${STAEntitiesArray[i]}">${STAEntitiesArray[i]}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/staentities.htm#${STAEntitiesArray[i]}">${STAEntitiesArray[i]}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_STAEntities").innerHTML = c;
     //container_STAEntities singular
-    c = `<div class="dropdown blue"><a href="https://www.tapis.grumets.cat/tapis/documentation/staentitiesSingular.htm" class="link_a"><div>STA entities create...</div></a><div class="dropdown-content">`
+    c = `<div class="dropdown blue"><a href="https://www.tapis.grumets.cat/tapis/help/staentitiesSingular.htm" class="link_a"><div>STA entities create...</div></a><div class="dropdown-content">`
     for (var i = 0; i < STAEntitiesArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/staentitiesSingular.htm#${STAEntities[STAEntitiesArray[i]].singular}">${STAEntities[STAEntitiesArray[i]].singular}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/staentitiesSingular.htm#${STAEntities[STAEntitiesArray[i]].singular}">${STAEntities[STAEntitiesArray[i]].singular}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_STAEntities_singular").innerHTML = c;
     //STA operations 
-    c = `<div class="dropdown blue"><a href="https://www.tapis.grumets.cat/tapis/documentation/staoperations.htm" class="link_a"><div>STA tools </div></a><div class="dropdown-content">`
+    c = `<div class="dropdown blue"><a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm" class="link_a"><div>STA tools </div></a><div class="dropdown-content">`
     for (var i = 0; i < STAOperationsArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/staoperations.htm#${STAOperationsArray[i]}">${STAOperations[STAOperationsArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#${STAOperationsArray[i]}">${STAOperations[STAOperationsArray[i]].description}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_STAOperations").innerHTML = c;
     //ComplexQuerys
-    c = `<div class="dropdown blue"> <a href="https://www.tapis.grumets.cat/tapis/documentation/complexqueries.htm" class="link_a"><div>Complex queries</div></a><div class="dropdown-content">`
+    c = `<div class="dropdown blue"> <a href="https://www.tapis.grumets.cat/tapis/help/complexqueries.htm" class="link_a"><div>Complex queries</div></a><div class="dropdown-content">`
     for (var i = 0; i < STASpecialQueriesArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/complexqueries.htm#${STASpecialQueriesArray[i]}">${STASpecialQueries[STASpecialQueriesArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/complexqueries.htm#${STASpecialQueriesArray[i]}">${STASpecialQueries[STASpecialQueriesArray[i]].description}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_STASpecialQueries").innerHTML = c;
     //TableOperations
-    c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/documentation/TableOperations.htm" class="link_a"><div>Table tools</div></a><div class="dropdown-content">`
+    c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/help/TableOperations.htm" class="link_a"><div>Table tools</div></a><div class="dropdown-content">`
     for (var i = 0; i < TableOperationsArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/TableOperations.htm#${TableOperationsArray[i]}">${TableOperations[TableOperationsArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/TableOperations.htm#${TableOperationsArray[i]}">${TableOperations[TableOperationsArray[i]].description}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_TableOperations").innerHTML = c;
     //Table Statistics visualize
-    c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/documentation/statisticsvisualize.htm" class="link_a"><div>Statistics and visualization</div></a><div class="dropdown-content">`
+    c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/help/statisticsvisualize.htm" class="link_a"><div>Statistics and visualization</div></a><div class="dropdown-content">`
     for (var i = 0; i < tableStatisticsVisualizeArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/statisticsvisualize.htm#${tableStatisticsVisualizeArray[i]}">${tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/statisticsvisualize.htm#${tableStatisticsVisualizeArray[i]}">${tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_tableStatisticsVisualize").innerHTML = c;
     //Data quality
-    c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/documentation/dataquality.htm" class="link_a"><div>Data quality</div></a><div class="dropdown-content">`
+    c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm" class="link_a"><div>Data quality</div></a><div class="dropdown-content">`
     for (var i = 0; i < dataQualityArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/dataquality.htm#${dataQualityArray[i]}">${dataQuality[dataQualityArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#${dataQualityArray[i]}">${dataQuality[dataQualityArray[i]].description}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_dataQuality").innerHTML = c;
 
     //node operations
-    c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/documentation/nodeoperations.htm" class="link_a"><div>Node operations</div></a><div class="dropdown-content">`
+    c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/help/nodeoperations.htm" class="link_a"><div>Node operations</div></a><div class="dropdown-content">`
     //connectTwoNodes
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/nodeoperations.htm#connect">Connect two nodes</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/nodeoperations.htm#connect">Connect two nodes</a>`
     //Remove
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/nodeoperations.htm#remove">Remove</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/nodeoperations.htm#remove">Remove</a>`
     //Rename
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/nodeoperations.htm#rename">Rename</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/nodeoperations.htm#rename">Rename</a>`
     c += `</div></div></div>`
     document.getElementById("navBar_nodeOperations").innerHTML = c;
     //NavBar buttons
-    c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm" class="link_a"><div>NavBar buttons</div></a><div class="dropdown-content">`
+    c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm" class="link_a"><div>NavBar buttons</div></a><div class="dropdown-content">`
     //Refresh
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#reload">Refresh</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#reload">Refresh</a>`
     //Open
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#openNetwork">Open</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#openNetwork">Open</a>`
     //Oper Url
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#openURLNetwork">Open URL</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#openURLNetwork">Open URL</a>`
     //Save as...
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#saveNetwork">Save as...</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#saveNetwork">Save as...</a>`
     //Login
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#login">Login</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">Login</a>`
     //Configuration
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#config">Configuration</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#config">Configuration</a>`
     //Help
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#help">Help</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#help">Help</a>`
     //Documentation
-    c += `<a href="https://www.tapis.grumets.cat/tapis/documentation/navBarButtons.htm#documentation">documentation</a>`
+    c += `<a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#documentation">documentation</a>`
     c += `</div></div></div>`
     document.getElementById("navBar_navBarButtons").innerHTML = c;
 }

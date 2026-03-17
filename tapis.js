@@ -1806,10 +1806,10 @@ function SaveLocalDataFile(data, fileName, extension, mediatype)   //Saves a mem
 }
 
 function OpenRecipes(event) {
-	window.open("help", "TapisRecipes"); //canviar el nom de les carpetes?
+	window.open("recipes", "TapisRecipes"); //canviar el nom de les carpetes?
 }
 function OpenHelp(event) {
-	window.open("documentation", "TapisHelp");
+	window.open("help", "TapisHelp");
 }
 
 function OpenConfiguration(event) {
