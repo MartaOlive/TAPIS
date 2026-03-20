@@ -72,9 +72,11 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe2" target="_blank">Recipe 2: Show the
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
+                            the
                             current evolution of a variable captured by a particular party</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe3" target="_blank">Recipe 3: Show a map
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a
+                            map
                             of all observation features in an STA service</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -158,7 +160,7 @@
                 <p><strong>How to Use the Node: </strong></p>
                 <p>
                     The purpose of the <strong>Select Row</strong> tool is to generate a <strong>new table</strong>
-                    containing only the <strong>row selected</strong> (a resgister) in the dialog displayed.
+                    containing only the <strong>row selected</strong> (a record) in the dialog displayed.
                 </p>
 
                 <p>
@@ -173,7 +175,8 @@
                 <p>
                     To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog
                     displayed, showing all the rows from your data.
-                    <strong>Select the register</strong> you want to keep (using the radio button on the left) and press
+                    <strong>Select the record</strong> you want to keep (using the <i>radio button</i> on the left) and
+                    press
                     the
                     <i>OK</i> button,
                     located at the bottom of the dialog.
@@ -209,11 +212,14 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe1" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe2" target="_blank">Recipe 2: Show the
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
+                            the
                             current evolution of a variable captured by a particular party</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe6" target="_blank">Recipe 6: Creating
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
+                            Creating
                             two new datastream of observations</a></li>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe10" target="_blank">Recipe 10:
                             Connecting to a Eclipse Data Connector (Data Space)</a></li>
@@ -233,7 +239,7 @@
                 <p><strong>How to Use the Node: </strong></p>
                 <p>
                     The purpose of the <strong>Select Resource</strong> tool is to generate a <strong>new table</strong>
-                    containing only the <strong>a register</strong>selected by its <strong>id</strong>.
+                    containing only the <strong>a record</strong>selected by its <strong>id</strong>.
                 </p>
 
                 <p>
@@ -266,7 +272,8 @@
                 </p>
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe1" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -282,7 +289,8 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe2" target="_blank">Recipe 2: Show the
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
+                            the
                             current evolution of a variable captured by a particular party</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -312,7 +320,8 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe5" target="_blank">Recipe 5: Selecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
+                            Selecting
                             temperatures from an area</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -328,7 +337,8 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe5" target="_blank">Recipe 5: Selecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
+                            Selecting
                             temperatures from an area</a></li>
 
                 </ul>
@@ -341,18 +351,60 @@
                         class="toolPage_title_icon">Sort by
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="sortBy_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
 
                 <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    <strong>Sort By</strong> tool allows you to <strong>sort data by an attribute</strong> (column). Be
+                    aware that
+                    each request loads
+                    100 records, so <strong>the tool will return the first 100 records from the data stored in the STA
+                        service.</strong>
+                    This means that your previous data and the result of the request may include data unrelated to the
+                    current context. If you want to sort only your data, you need to ensure that your request returns
+                    fewer than 100 records, or use the <a
+                        href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#SortByTables">Sort By tables
+                    </a>tool (grey) to work only with the currently loaded data (using the "table" mode).
+                </p>
+                <p>This example shows data sorted as follows:</p>
+                <img src="sortBy_image1.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
+                <p>
+                    To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog, which
+                    includes all the columns from your data. Select one column to use as the reference for sorting. You
+                    can also choose whether to sort the data in <i>ascending or descending order</i>. After selecting
+                    your
+                    preferences, click the <i>OK</i> button to apply the changes.
+                </p>
+
+                <img src="sortBy_image2.png" alt="icon" class="toolPage_image">
+
+                <p>
+                    This is the result of the request. In this case, you can see that the data is sorted by
+                    <i>result</i>
+                    attribute, and the records displayed are not the same as before because the STA service contains
+                    more
+                    than 100 results for this request.
+                </p>
+
+                <img src="sortBy_image3.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
+                <p>
+                    This is the request sent to the STA service:</p>
+                <p><i>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations?$orderby=resultasc</i></p>
 
 
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe2" target="_blank">Recipe 2: Show the
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
+                            the
                             current evolution of a variable captured by a particular party</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe3" target="_blank">Recipe 3: Show a map
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a
+                            map
                             of all observation features in an STA service</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe5" target="_blank">Recipe 5: Selecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
+                            Selecting
                             temperatures from an area</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -364,11 +416,51 @@
                         class="toolPage_title_icon">Record range
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
+                <img src="recordRange_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
 
-                </ul>
+                <p><strong>How to Use the Node: </strong></p>
+                <p><strong>Record range</strong> allows you to define a range of records to request from the STA
+                    service, indicating <strong>from which record</strong> to start and <strong>how many
+                        records</strong> you want to receive.</p>
+
+                <p>This example shows the current data:</p>
+                <img src="recordRange_image1.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+
+                <p>
+                    To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog, which
+                    includes two fields: one to indicate <strong>how many records you want to skip</strong> from the
+                    beginning of your
+                    request, and another to indicate <strong>how many records you want to receive.</strong>
+
+                    If you want to use this tool to <strong>select a number of records different from 100 starting from
+                        0</strong>, you
+                    must enter 0 in the first field and specify the desired number of records in the second one.
+
+                    After writing your preferences, click the <i>OK</i> button to apply the changes.
+                </p>
+
+                <img src="recordRange_image2.png" alt="icon" class="toolPage_image">
+
+                <p>
+                    This is the result of the request. In this case, you can see that the request has skipped the first
+                    50 records and returned the next 200.
+                </p>
+                <img src="recordRange_image3.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+
+
+
+                <p>
+                    This is the request sent to the STA service:
+                    <i>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors?<strong>$skip=50&$top=200</strong></i>
+                </p>
+
+                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <p> <i>No one yet</i></p>
+                <!-- <ul>
+
+                </ul> -->
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
@@ -406,12 +498,55 @@
                         class="toolPage_title_icon">Count results
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="countResults_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+
                 <p><strong>How to Use the Node: </strong></p>
+                <p><strong>Count Results</strong> tool shows you the <strong>total number of records</strong> you can
+                    find in the
+                    STA service with your query. TAPIS displays only 100 records by default (or more if you use the <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#RangeSTA">Range tool</a> or <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staentities.htm">Entity tool</a>), but this tool
+                    returns the <strong>total number of all records.</strong>
+                </p>
+
+                <p>
+                    To display the dialog, <i>double left-click</i> on the node. The dialog that appears shows a box
+                    where
+                    you can enter <strong>the interval (in seconds)</strong> at which you want to <strong>receive a new
+                        request </strong>for the number of records.
+                    By clicking the <i>OK</i> button, you start receiving the information. <strong>The counted number
+                        will be displayed in TAPIS</strong>, below the <i>Count Results</i> node.
+                    To <strong>stop this automatic refresh</strong>, enter the node and click <i>Stop Refresh</i>.
+                </p>
+
+                <img src="countResults_image1.png" alt="icon" class="toolPage_image">
+
+                <p>
+                    Here you can see the result of the request.
+                </p>
+
+                <img src="countResults_image2.png" alt="icon" class="toolPage_image">
+
+                <p>
+                    To illustrate the difference, below two different requests have been executed: one asking for all
+                    <i> Observations</i> in the STA service (bottom row), and another retrieving only the records from
+                    <i>Datastream 20 </i>(using the <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#RangeSTA">Record Range</a>
+                    tool).
+                </p>
+                <img src="countResults_image3.png" alt="icon" class="toolPage_image">
+
+                <p>
+                    Take a look at this exemple request that TAPIS internally makes (<i>all Observations</i>):
+                </p>
+                <p><i>
+                        https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations?<strong>$count=true</strong></i>
+                </p>
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="OneValueSTA">
@@ -420,11 +555,20 @@
                         class="toolPage_title_icon">One Value
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+
+                <!-- <img src="countResults_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; "> -->
+
                 <p><strong>How to Use the Node: </strong></p>
+
+
+                <!-- <img src="countResults_image1.png" alt="icon" class="toolPage_image">
+                <img src="countResults_image2.png" alt="icon" class="toolPage_image">
+                <img src="countResults_image3.png" alt="icon" class="toolPage_image"> -->
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe2" target="_blank">Recipe 2: Show the
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
+                            the
                             current evolution of a variable captured by a particular party</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -436,32 +580,44 @@
                         class="toolPage_title_icon">View Query
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="viewQuery_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+
                 <p><strong>How to Use the Node: </strong></p>
+                <p><strong>View Query</strong> shows you the query (the URL) sent to the STA service to make the request
+                    in the node where it has been linked. It can be used in any STA node, whether it is an
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staentities.htm">entity</a> or an <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm">STA tool</a>.
+                </p>
+                <p>There are some examples below:</p>
+                <img src="viewQuery_image1.png" alt="icon" class="toolPage_image">
+                <img src="viewQuery_image2.png" alt="icon" class="toolPage_image">
+                <img src="viewQuery_image3.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe2" target="_blank">Recipe 2: Show the
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
+                            the
                             current evolution of a variable captured by a particular party</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe3" target="_blank">Recipe 3: Show a map
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a
+                            map
                             of all observation features in an STA service</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="SubscribeSTA">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../SubscribeSTA.png" alt="icon SubscribeSTA"
-                        class="toolPage_title_icon">Subscribe and alert
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
 
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
+                <div class="toolPage_main" id="SubscribeSTA">
+                    <div class="toolPage_main_text">
+                        <h2 class="toolPage_title"><img src="../SubscribeSTA.png" alt="icon SubscribeSTA"
+                                class="toolPage_title_icon">Subscribe and alert
+                        </h2>
+                        <p><strong>Setting Up the Node: </strong></p>
+                        <p><strong>How to Use the Node: </strong></p>
+                        <p> <strong>Recipes where this tool is used:</strong> </p>
+                        <ul>
+
+                        </ul>
+                        <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    </div>
+                </div>
 
 
     </main>

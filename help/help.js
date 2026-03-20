@@ -425,10 +425,10 @@ function createNavBar() {
 }
 
 function OpenRecipesFromHelp(event) {
-    window.open("help", "TapisRecipes"); //canviar el nom de les carpetes?
+    window.open("https://www.tapis.grumets.cat/tapis/recipes/index.htm", "TapisRecipes");
 }
 function OpenHelpFromHelp(event) {
-    window.open("documentation", "TapisHelp");
+    window.open("https://www.tapis.grumets.cat/tapis/help/index.htm", "TapisHelp");
 }
 
 function zoomToImage(img){

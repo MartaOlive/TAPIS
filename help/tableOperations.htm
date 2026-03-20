@@ -29,8 +29,7 @@
             <div class="toolPage_main_text generalExplanation">
                 <p>
                     This set of tools allows you to perform operations on data. These operations are applied to the
-                    <strong>data
-                        already loaded in TAPIS.</strong>
+                    <strong>data already loaded in TAPIS.</strong>
                     These tools can also be used with <strong>STA data</strong>, but you must take into account that
                     from this point you
                     cannot send another request to the STA service and the <strong>data will become table-based
@@ -61,19 +60,38 @@
                     Table
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="viewTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+
+
                 <p><strong>How to Use the Node: </strong></p>
+                <p><strong>View Table </strong> shows you the data as a table. Dougle-lewft click on the node display a
+                    dialog with all the data loaded in the node (as table showed above in the TAPIS). This is only a
+                    visualization tool.</p>
+                <p> Below you can see some examples: </p>
+                <p> Example 1: </p>
+                <img src="viewTable_image3.png" alt="icon" class="toolPage_image">
+                <p> And its visualization:</p>
+                <img src="viewTable_image1.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+                <p> Example 2: </p>
+                <img src="viewTable_image4.png" alt="icon" class="toolPage_image">
+                <p> And its visualization:</p>
+                <img src="viewTable_image2.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe1" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe2" target="_blank">Recipe 2: Show the
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
+                            the
                             current evolution of a variable captured by a particular party</a></li>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe3" target="_blank">Recipe 3: Show a map
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a
+                            map
                             of all observation features in an STA service</a></li>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe4" target="_blank">Recipe 4: Add
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe04" target="_blank">Recipe 4: Add
                             semantics (meaning) to a table and share, retrieve and store it</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -85,14 +103,77 @@
                         class="toolPage_title_icon">Edit record
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="editRecord_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
+                <p>The <strong>Edit Record</strong> tool allows you to <i>edit, delete, or insert records</i> (by
+                    creating new
+                    ones).</p>
+
+                <p> Original data:</p>
+                <img src="editRecord_image1.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+                <p>When you <i>double left-click</i> on the node, a dialog like the one shown above is displayed. The
+                    <strong>same dialog allows you to perform all three actions</strong>, depending on the button you
+                    click you will do an action or another. In the
+                    dialog, you will find all the attributes and their values which <strong>all are editable</strong>.
+                    You can navigate
+                    between records using the <i>bottom arrows</i>. You can also <i>enter the record number in the
+                        bottom field</i>
+                    and click outside to load that record.
+                </p>
+
+                <img src="editRecord_image2.png" alt="icon" class="toolPage_image ">
+
+                <p>An example of each action is shown below.</p>
+
+                <hr style="border: none; border-top: 1px solid #ccc; width: 30%; margin: 20px auto;">
+
+                <p><strong>Edit (Update button)</strong></p>
+                <p>To <i>edit</i> a record, <strong>modify the information on the fields</strong> you want to change and
+                    then click the <i><strong>Update button</strong></i> to apply the
+                    changes. The changes will be applied immediately. When you have finished, click <i>Cancel</i> to
+                    close the
+                    dialog.</p>
+
+                <img src="editRecord_image3.png" alt="icon" class="toolPage_image ">
+
+                <p>Result:</p>
+                <img src="editRecord_image4.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
+                <hr style="border: none; border-top: 1px solid #ccc; width: 30%; margin: 20px auto;">
+
+                <p><strong>Delete</strong></p>
+                <p>To delete a record, <strong>locate it</strong> using the <i>bottom arrows</i> or by <strong>entering
+                        the record number</strong>, and then
+                    click the <i><strong>Delete button</strong></i>. When you have finished, click <i>Cancel</i> to
+                    close the dialog.</p>
+
+                <img src="editRecord_image5.png" alt="icon" class="toolPage_image ">
+
+                <p>Result:</p>
+                <img src="editRecord_image6.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
+                <hr style="border: none; border-top: 1px solid #ccc; width: 30%; margin: 20px auto;">
+
+                <p><strong>Insert</strong></p>
+                <p>A new record will be inserted after the current one. Use this record to <strong>enter all the
+                        values</strong> for the
+                    new record, and then click <i><strong>Insert</strong></i>. The insertion will be applied
+                    immediately.</p>
+
+                <img src="editRecord_image7.png" alt="icon" class="toolPage_image ">
+
+                <p>Result:</p>
+                <img src="editRecord_image8.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe7" target="_blank">Recipe 7: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
+                            Connecting
                             to a data catalogue and giving user feedback about a dataset</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
             </div>
         </div>
         <div class="toolPage_main" id="Meaning">
@@ -105,9 +186,9 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe4" target="_blank">Recipe 4: Add
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe04" target="_blank">Recipe 4: Add
                             semantics (meaning) to a table and share, retrieve and store it</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe012" target="_blank">Recipe 12:
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>
@@ -120,15 +201,46 @@
                         class="toolPage_title_icon">Select Columns
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="selectColumnsTable_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ">
+
                 <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    The <strong>Select Columns</strong> tool allows you to generate a <strong>new table</strong>
+                    containing only the <strong>selected columns</strong> from the displayed dialog. After applying this
+                    tool, if you want to <strong>restore these columns (attributes)</strong>, it is not possible
+                    directly; however, you can return to the previous node and
+                    proceed from there.
+                </p>
+
+                <p>
+                    This example shows the original data with all columns:
+                </p>
+                <img src="selectColumnsTable_image1.png" alt="icon" class="toolPage_image">
+
+                <p>
+                    To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog,
+                    which displays all the columns in your dataset.
+                    <strong>Deselect the columns</strong> that you do not want to include in the new table, leaving
+                    only those you want to keep selected. After making your selection, press the <i>OK</i> button to
+                    apply it.
+                </p>
+                <img src="selectColumnsTable_image2.png" alt="icon" class="toolPage_image">
+
+                <p>
+                    This is the result: a <strong>new table containing only the selected columns.</strong>
+                </p>
+                <img src="selectColumnsTable_image3.png" alt="icon" class="toolPage_image">
+
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe012" target="_blank">Recipe 12:
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
             </div>
         </div>
         <div class="toolPage_main" id="SelectRowTable">
@@ -137,19 +249,49 @@
                         class="toolPage_title_icon">Select Row
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="selectRowTable_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ">
+
                 <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    <strong>Select Resource</strong> tool generates a <strong>new table</strong>
+                    containing only the <strong>a record</strong> selected in the dialog.
+                </p>
+
+                <p>
+                    This example contains all the original rows:
+                </p>
+                <img src="selectRowTable_image1.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+                <p>
+                    To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog
+                    displayed, showing all the rows from your data.
+                    <strong>Select the record</strong> you want to keep (using the <i>radio button</i> on the left) and
+                    press
+                    the <i>OK</i> button, located at the bottom of the dialog.
+                </p>
+                <img src="selectRowTable_image2.png" alt="icon" class="toolPage_image">
+                <p>
+                    This is the result: a <strong>new table containing only the selected record.</strong>
+                </p> <img src="selectRowTable_image3.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe5" target="_blank">Recipe 5: Selecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
+                            Selecting
                             temperatures from an area</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe5" target="_blank">Recipe 5: Selecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
+                            Selecting
                             temperatures from an area</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe7" target="_blank">Recipe 7: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
+                            Connecting
                             to a data catalogue and giving user feedback about a dataset</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe8" target="_blank">Recipe 8: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe08" target="_blank">Recipe 8:
+                            Connecting
                             to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe012" target="_blank">Recipe 12:
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>
@@ -194,7 +336,7 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe012" target="_blank">Recipe 12:
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>
@@ -225,9 +367,11 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe7" target="_blank">Recipe 7: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
+                            Connecting
                             to a data catalogue and giving user feedback about a dataset</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe9" target="_blank">Recipe 9: Drawing a
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe09" target="_blank">Recipe 9:
+                            Drawing a
                             stacked bar chart</a></li>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe10" target="_blank">Recipe 10:
                             Connecting to a Eclipse Data Connector (Data Space)</a></li>
@@ -241,12 +385,44 @@
                         class="toolPage_title_icon">Sort by
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
+                <img src="sortByTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
 
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    <strong>Sort By</strong> tool allows you to <strong>sort data by an attribute</strong> (column).
+                    This action will be performed with TAPIS code.
+
+                </p>
+                <p>This example shows data sorted as follows:</p>
+                <img src="sortByTable_image1.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+
+                <p>
+                    To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog, which
+                    includes all the columns from your data. <strong>Select one column</strong> to use as the reference
+                    for sorting. You
+                    can also choose whether to sort the data in <i>ascending or descending order</i>. After selecting
+                    your preferences, click the <i>OK</i> button to apply the changes.
+                </p>
+
+                <img src="sortByTable_image2.png" alt="icon" class="toolPage_image">
+
+                <p>
+                    This is the resulting data. In this case, you can see that the data is sorted by the
+                    <i>River_basin</i> attribute. Unlike <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SortBySTA">Sort by STA</a>,
+                    <strong>all records remain the same</strong> as the originally loaded data, but are sorted
+                    differently.
+                </p>
+
+                <img src="sortByTable_image3.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+
+                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <p> <i>No one yet</i></p>
+                <!-- <ul></ul> -->
+
+
             </div>
         </div>
         <div class="toolPage_main" id="AggregateColumns">
@@ -256,6 +432,9 @@
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
                 <p><strong>How to Use the Node: </strong></p>
+
+
+                <!-- Sha de posar un nom sino quedarà buida -->
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
@@ -269,12 +448,85 @@
                         class="toolPage_title_icon">Create Columns
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
+                <img src="createColumns_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ">
 
+                <p><strong>How to Use the Node: </strong></p>
+                <p><strong>Create Columns</strong> tool allows you to create <strong>new column</strong>s in your table. You can create
+                    <strong>three kinds of columns</strong>:
+                <ul>
+                    <li>Column with a <strong>constant value</strong></li>
+                    <li>Column with an<strong> auto-incremental value</strong> starting from an <i>initial value</i></li>
+                    <li><strong>Empty column</strong> (you can edit it record by record using the <a
+                            href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#EditRecord">Edit record
+                        </a> tool)</li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                This tool can be used with data from your computer (<strong>table data</strong>) or with a table <strong>requested from an
+                internet service</strong>. Remember that once you use this tool, you cannot make another request to the server again.
+                </p>
+
+                <p>For the example shown, <a  href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportCSV">CSV import</a> has been used.</p>
+
+                <img src="createColumns_image11.png" alt="icon" class="toolPage_image">
+
+                <p>This is the original data, containing only the columns shown in the image below.</p>
+
+                <img src="createColumns_image10.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+
+                <p><strong>General overview</strong></p>
+
+                <p>To display the dialog, <i>double-click</i> on the node. This dialog has two parts: the upper
+                    part, where you can <strong>configure the column</strong> you want to add
+                    (<i>Select operation, Column name, Add column to list button</i>), and the <strong>List of columns</strong> to
+                    be added (columns that you have configured to be added to your table).
+                </p>
+
+                <p><u>Step 1:</u> Choose the <strong>type of column</strong> you want to add and <strong>fill in the fields</strong> if it will be a
+                   <i> constant value</i> or an <i>auto-incremental</i> value. If you leave both values empty, it will be
+                    considered as 0.</p>
+
+                <p><u>Step 2:</u> Enter a <strong>name</strong> for the new column. It cannot be empty.</p>
+
+                <p><u>Step 3:</u> Click the <i>Add column to list</i> button to add this configuration to the table
+                    above.
+                    <strong>The program only creates the columns that appear in this table</strong>.</p>
+
+                <p>The creation of a <strong>Constant value column</strong> is used to illustrate the previous steps. You can add <strong>any
+                    type of value</strong> as a constant.</p>
+
+                <img src="createColumns_image1.png" alt="icon" class="toolPage_image" style="width: 500px;">
+                <img src="createColumns_image2.png" alt="icon" class="toolPage_image" style="width: 500px;">
+
+                <p><u>Remove a column from the list:</u> To remove a column, click the <i>"trash"</i> button and the row will
+                    disappear.</p>
+
+                <img src="createColumns_image3.png" alt="icon" class="toolPage_image" style="width: 500px;">
+                <img src="createColumns_image4.png" alt="icon" class="toolPage_image" style="width: 500px;">
+
+                <p>To create an <strong>auto-incremental column</strong>, follow the previous steps and provide an
+                    initial value. This value increases by 1 for each record.</p>
+
+                <img src="createColumns_image5.png" alt="icon" class="toolPage_image" style="width: 500px;">
+                <img src="createColumns_image6.png" alt="icon" class="toolPage_image" style="width: 500px;">
+                <img src="createColumns_image7.png" alt="icon" class="toolPage_image" style="width: 500px;">
+
+                <p>To create an <strong>empty column</strong>, follow the same steps. It is only necessary to provide a
+                    column name.</p>
+
+                <img src="createColumns_image8.png" alt="icon" class="toolPage_image" style="width: 500px;">
+
+                <p>In the image above, <strong>all three columns have been added</strong>. You can add as many columns as you want each
+                    time you use the tool (in a new node).</p>
+
+                <img src="createColumns_image9.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <p> <i>No one yet</i></p>
+                <!-- <ul>
+
+                </ul> -->
+           
             </div>
         </div>
         <div class="toolPage_main" id="AddColumnGeo">
@@ -287,7 +539,7 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe012" target="_blank">Recipe 12:
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>
@@ -318,7 +570,8 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe11" target="_blank">Recipe 11: Pivoting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe011" target="_blank">Recipe 11:
+                            Pivoting
                             a table, from values in the rows of a selected column to new columns</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -348,9 +601,11 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe2" target="_blank">Recipe 2: Show the
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
+                            the
                             current evolution of a variable captured by a particular party</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe3" target="_blank">Recipe 3: Show a map
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a
+                            map
                             of all observation features in an STA service</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -366,7 +621,7 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe4" target="_blank">Recipe 4: Add
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe04" target="_blank">Recipe 4: Add
                             semantics (meaning) to a table and share, retrieve and store it</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -382,7 +637,8 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe3" target="_blank">Recipe 3: Show a map
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a
+                            map
                             of all observation features in an STA service</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -397,7 +653,8 @@
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe7" target="_blank">Recipe 7: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
+                            Connecting
                             to a data catalogue and giving user feedback about a dataset</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -412,7 +669,7 @@
                 <p><strong>How to Use the Node: </strong></p>
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe012" target="_blank">Recipe 12:
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>

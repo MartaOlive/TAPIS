@@ -313,7 +313,9 @@ body {
 }
 
 .toolPage_image {
-    width: 90%;
+    max-width: 90%;
+    height: auto;
+    width: auto;
     margin: 20px auto;
     display: block;
     border: 1px solid #ccc;
@@ -324,12 +326,12 @@ body {
 
 }
 
-.zoomable{
-  cursor: zoom-in;
-  transition: transform 0.3s;
+.zoomable {
+    cursor: zoom-in;
+    transition: transform 0.3s;
 }
 
-.zoomable.zoom{
-  transform: scale(2);
-  cursor: zoom-out;
+.zoomable.zoom {
+    transform: scale(2);
+    cursor: zoom-out;
 }
