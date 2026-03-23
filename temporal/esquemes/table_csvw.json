@@ -1,0 +1,42 @@
+{
+	"tableSchema": {
+		"columns": [
+			{
+				"name": "Date",
+				"datatype": "string"
+			},
+			{
+				"name": "City",
+				"datatype": "string"
+			},
+			{
+				"name": "Latitude",
+				"datatype": "float"
+			},
+			{
+				"name": "Longitude",
+				"datatype": "float"
+			},
+			{
+				"name": "Temperature_C",
+				"datatype": "integer"
+			},
+			{
+				"name": "Humidity_Percent",
+				"datatype": "integer"
+			},
+			{
+				"name": "WindSpeed_km_h",
+				"datatype": "integer"
+			},
+			{
+				"name": "Condition",
+				"datatype": "string"
+			}
+		]
+	},
+	"dialect": {
+		"header": true,
+		"delimiter": ";"
+	}
+}

@@ -1,0 +1,75 @@
+{
+	"$id": "https://meaning.ad4gd.eu/meaning.schema.json",
+	"$schema": "https://meaning.ad4gd.eu/json-meta/meaning",
+	"type": "object",
+	"properties": {
+		"features": {
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"geometry": {
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "string"
+							},
+							"coordinates": {
+								"type": "array"
+							}
+						}
+					},
+					"properties": {
+						"type": "object",
+						"properties": {
+							"Place": {
+								"description": "Place name",
+								"mostrar": "si"
+							},
+							"Date": {
+								"description": null,
+								"definition": null,
+								"UoM": null,
+								"UoMSymbol": null,
+								"UoMDefinition": null,
+								"mostrar": "si"
+							},
+							"City": {
+								"description": null,
+								"definition": null,
+								"UoM": null,
+								"UoMSymbol": null,
+								"UoMDefinition": null,
+								"mostrar": "si"
+							},
+							"Humidity_Percent": {
+								"description": null,
+								"definition": null,
+								"UoM": null,
+								"UoMSymbol": null,
+								"UoMDefinition": null,
+								"mostrar": "si"
+							},
+							"WindSpeed_km_h": {
+								"description": null,
+								"definition": null,
+								"UoM": null,
+								"UoMSymbol": null,
+								"UoMDefinition": null,
+								"mostrar": "si"
+							},
+							"Condition": {
+								"description": null,
+								"definition": null,
+								"UoM": null,
+								"UoMSymbol": null,
+								"UoMDefinition": null,
+								"mostrar": "si"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
