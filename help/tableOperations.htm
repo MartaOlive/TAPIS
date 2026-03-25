@@ -65,7 +65,7 @@
 
                 <p><strong>How to Use the Node: </strong></p>
                 <p><strong>View Table </strong> shows you the data as a table. Dougle-lewft click on the node display a
-                    dialog with all the data loaded in the node (as table showed above in the TAPIS). This is only a
+                    dialog with all the data loaded in the node (as table showed below in the TAPIS). This is only a
                     visualization tool.</p>
                 <p> Below you can see some examples: </p>
                 <p> Example 1: </p>
@@ -111,7 +111,7 @@
 
                 <p> Original data:</p>
                 <img src="editRecord_image1.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
-                <p>When you <i>double left-click</i> on the node, a dialog like the one shown above is displayed. The
+                <p>When you <i>double left-click</i> on the node, a dialog like the one shown below is displayed. The
                     <strong>same dialog allows you to perform all three actions</strong>, depending on the button you
                     click you will do an action or another. In the
                     dialog, you will find all the attributes and their values which <strong>all are editable</strong>.
@@ -186,79 +186,91 @@
                     style="height:350px;width: auto; ">
 
                 <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Column meaning </strong> tool shows you the properties of the attributes. Every attribute
-                    (column) has their own properties that you can edit and save. This tool can be
-                    used with any kind of data. Some internet servises, as STA has som properties precompleted, such as
-                    definition (URI), this is the case of the example below.</p>
-
+                <p><strong>Column meaning</strong> tool shows the <strong>properties of the attributes</strong>. Every
+                    attribute
+                    (column) has its own properties that you can <strong>edit and save</strong>. This tool can be
+                    used with <strong>any kind of data</strong>. Some internet services, such as STA, have some
+                    properties prefilled,
+                    such as the <i>definition (URI)</i>, this is the case in the example below.</p>
 
                 <img src="columnMeaning_image1.png" alt="icon" class="toolPage_image ">
-                <p>This are the properties: </p>
-                <p><strong>Name:</strong> Name of the attribute (column). </p>
-                <p><strong>Predefined options: </strong> it is a dropdown with some options that if you select you
-                    autocomplite some fields of the rest of the properties.</p>
+                <p>These are the properties:</p>
+                <p><strong>Name:</strong> Name of the attribute (column).</p>
 
-                <img src="columnMeaning_image2.png" alt="icon" class="toolPage_image ">
-                <p>In the example below, if you select PM 2.5 in ug/m <sup>3</sup> all field will be complited
-                    inmediatly. For example if you choose an option from Sensors Thins API, only URL will be completed.
+                <p><strong>Predefined options:</strong> It is a dropdown with some options that, when selected,
+                    automatically complete some fields of the remaining properties.</p>
+
+                <img src="columnMeaning_image2.png" alt="icon" class="toolPage_image " style="width: 600px;">
+                <p>In the example below, if you select <i>PM 2.5 in ug/m <sup>3</sup></i>, all fields will be completed
+                    immediately. For example, if you choose an option from the <i>SensorsThings API</i>, only the URL
+                    will be
+                    completed.
                 </p>
-                <img src="columnMeaning_image3.png" alt="icon" class="toolPage_image ">
-                <p><strong>Data type: </strong> Indicates the type of the data. It is posible taht your data comes from
-                    an
-                    internet service place and this type is predefined, but wrongly predefined. You can click
-                    reevaluate
-                    and TAPIS code will asign the type that is predefinited in TAPIS for this kind of data. Every
-                    character represents a type:
-                    <!-- <ul>
-                            <li> Boolean: <span class="roundCorner" style="background-color: DarkGrey">B </span> </li>
-                            <li> Array: <span class="roundCorner" style="background-color: DarkOrange">A </span> </li>
-                            <li> Null: <span class="roundCorner" style="background-color: LightSlateGrey">N </span> </li>
-                            <li> Object: <span class="roundCorner" style="background-color: Fuchsia">O </span> </li>
-                            <li> Geometry: <span class="roundCorner" style="background-color: Tan">G </span> </li>
-                            <li> Undefined: <span class="roundCorner" style="background-color:LightGrey">U </span> </li>
-                            <li>Integer: <span class="roundCorner" style="background-color: IndianRed">I </span> </li>
-                            <li> Number: <span class="roundCorner" style="background-color: Red">N </span> </li>
-                            <li> Isodatetime: <span class="roundCorner" style="background-color: BlueViolet">D </span> </li>
-                            <li>AnyURI: <span class="roundCorner" style="background-color: Coral">L </span> </li>
-                            <li> String: <span class="roundCorner" style="background-color:ForestGreen">C </span></li>
-                        </ul> -->
+
+                <img src="columnMeaning_image3.png" alt="icon" class="toolPage_image " style="width: 600px;">
+                <p><strong>Data type:</strong> Indicates the type of the data. It is possible that your data comes from
+                    an internet service and this type is predefined, but incorrectly. You can click
+                    <strong><i>Reevaluate</i></strong>, and the TAPIS code will assign the type predefined in TAPIS for
+                    this kind of data.
+                    Each character represents a type:
                 <table style="border-collapse: collapse; border: 1px solid #ccc; margin: 0 auto;">
                     <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Boolean: <span class="roundCorner"
-                                style="background-color: DarkGrey">B</span></td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Array: <span class="roundCorner"
-                                style="background-color: DarkOrange">A</span></td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Null: <span class="roundCorner"
-                                style="background-color: LightSlateGrey">N</span></td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Object: <span class="roundCorner"
-                                style="background-color: Fuchsia">O</span></td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: DarkGrey">B</span> Boolean
+                        </td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: DarkOrange">A</span> Array
+                        </td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: LightSlateGrey">N</span> Null
+                        </td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: Fuchsia">O</span> Object
+                        </td>
                     </tr>
                     <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Geometry: <span class="roundCorner"
-                                style="background-color: Tan">G</span></td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Undefined: <span class="roundCorner"
-                                style="background-color: LightGrey">U</span></td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Integer: <span class="roundCorner"
-                                style="background-color: IndianRed">I</span></td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Number: <span class="roundCorner"
-                                style="background-color: Red">N</span></td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: Tan">G</span> Geometry
+                        </td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: LightGrey">U</span> Undefined
+                        </td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: IndianRed">I</span> Integer
+                        </td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: Red">N</span> Number
+                        </td>
                     </tr>
                     <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Isodatetime: <span class="roundCorner"
-                                style="background-color: BlueViolet">D</span></td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">AnyURI: <span class="roundCorner"
-                                style="background-color: Coral">L</span></td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">String: <span class="roundCorner"
-                                style="background-color: ForestGreen">C</span></td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: BlueViolet">D</span> Isodatetime
+                        </td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: Coral">L</span> AnyURI
+                        </td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <span class="roundCorner" style="background-color: ForestGreen">C</span> String
+                        </td>
                         <td style="border: 1px solid #ddd; padding: 10px 15px;"></td>
                     </tr>
                 </table>
-                </p>
-                <p><strong>Description: </strong></p>
-                <p><strong>Definition (URI)</strong></p>
-                <p><strong>Units of Measurement: </strong></p>
 
+                <p><strong>Description:</strong> Description of the attribute.</p>
 
+                <p><strong>Definition (URI):</strong> URL with the description of the attribute. It is better to use
+                    standard websites.</p>
+
+                <p><strong>Units of Measurement:</strong> The units of the attribute. Not all attributes have
+                    units. You can specify the <i>name</i> of the unit, its <i>symbol</i>, and, as before,
+                    the <i>definition (URI)</i> that describes it.</p>
+
+                <p><u>Share button:</u></p>
+
+                <p>With <i>Ok</i> button you can <srong>save your changes</srong>. If you want to keep this schema to
+                    load with other data with same attributes you can <a
+                        hrf="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#SaveTable">Save table as
+                        CSVW</a></p>
 
 
                 <p> <strong>Recipes where this tool is used:</strong> </p>
@@ -271,7 +283,6 @@
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="SelectColumnsTable">
@@ -383,12 +394,172 @@
                         class="toolPage_title_icon">Filter Rows
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="filterRowsTable_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
+                <p><strong>Filter Rows</strong> tool for <strong>tables</strong> allows you to filter your data using
+                    <strong>one or more
+                        parameters</strong>, using combined queries. This tool works with TAPIS code.
+                    You can use this tool with <strong>any kind of data</strong>, but remember that the filter will be
+                    applied only to
+                    the <strong>data already loaded</strong> in TAPIS. If you are using data from an internet API, you
+                    may break the request.
+                </p>
 
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                <p>Here is an example with data from a <i>CSV file</i>.</p>
+
+                <img src="filterRowsTable_image1.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+
+                <p>To display the dialog, <i>double-click</i> on the node. This is the general view when it is
+                    displayed.
+                    The main function of this dialog is to create <strong>conditions</strong> linked with
+                    <strong>logical operators</strong>.
+                    Each "line" of dropdowns represents a single condition, and each box is a set of conditions
+                    connected by a logical operator.
+                    <strong>You can organize the conditions however you like by adding new conditions or creating
+                        additional
+                        groups</strong>.
+                </p>
+
+                <img src="filterRowsTable_image2.png" alt="icon" class="toolPage_image">
+
+                <p>Here is the description of the different parts:</p>
+
+                <p><strong>Choose a field:</strong> In this dropdown, all the <strong>attributes (columns)</strong> of
+                    your
+                    data will appear. Select the one you want.</p>
+
+                <p><strong>Choose an operator:</strong> In this dropdown you have to choose the
+                    <strong>operator</strong> for your
+                    condition. You can use different operators depending on the type of the selected attribute:
+                </p>
+                <table style="border-collapse: collapse; margin: 0 auto;">
+                    <tr>
+                        <th style="border: 1px solid #ddd; padding: 10px 15px;">Type</th>
+                        <th style="border: 1px solid #ddd; padding: 10px 15px;">Operators</th>
+                        <th style="border: 1px solid #ddd; padding: 10px 15px;">Meaning</th>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Numeric operators</td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">=, ≠, ≥, &gt;, ≤, &lt;</td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <strong>=</strong> : equals<br>
+                            <strong>≠</strong> : not equal<br>
+                            <strong>≥</strong> : greater than or equal<br>
+                            <strong>&gt;</strong> : greater than<br>
+                            <strong>≤</strong> : less than or equal<br>
+                            <strong>&lt;</strong> : less than
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Interval operators</td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">[a,b], (a,b], [a,b), (a,b)</td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <strong>[a,b]</strong> : a ≤ x ≤ b<br>
+                            <strong>(a,b]</strong> : a &lt; x ≤ b<br>
+                            <strong>[a,b)</strong> : a ≤ x &lt; b<br>
+                            <strong>(a,b)</strong> : a &lt; x &lt; b
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Text operators</td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">contains, does not contain, starts with,
+                            ends with</td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <strong>contains</strong> : text includes the value<br>
+                            <strong>does not contain</strong> : text does not include the value<br>
+                            <strong>starts with</strong> : text begins with the value<br>
+                            <strong>ends with</strong> : text ends with the value
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Temporal operators</td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">year, month, day, hour, minute, date
+                        </td>
+                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                            <strong>year</strong> : extract the year<br>
+                            <strong>month</strong> : extract the month<br>
+                            <strong>day</strong> : extract the day<br>
+                            <strong>hour</strong> : extract the hour<br>
+                            <strong>minute</strong> : extract the minute<br>
+                            <strong>date</strong> : extract the date
+                        </td>
+                    </tr>
+                </table>
+
+                <p><i>Be careful when using interval operators or &lt; , &gt; with dates, as this process may need
+                        internal adjustments (we are working on it).</i></p>
+
+                <p>Selecting an <strong>interval operator</strong> will display an <strong>additional field</strong>
+                    where you can enter both limits.
+                </p>
+
+                <img src="filterRowsTable_image3.png" alt="icon" class="toolPage_image">
+
+                <p>If you click the <i>arrow on the right</i> and you have a <i>field</i> selected, a
+                    <strong>dropdown</strong> with
+                    the possible values will appear. You can also type the value <strong>manually</strong> if you
+                    prefer.
+                    Press the <i>OK</i> button after selecting a value to populate the field.
+                </p>
+
+                <img src="filterRowsTable_image4.png" alt="icon" class="toolPage_image">
+                <img src="filterRowsTable_image5.png" alt="icon" class="toolPage_image">
+
+                <p><strong>Introduce a value</strong> <i>(last field)</i>: Enter a value <strong>manually</strong> or,
+                    if you have a <i>field</i> selected,
+                    you can choose a value from a <strong>dropdown</strong>. To display the dropdown,
+                    click the <i>arrow on the right </i>(as explained above), select the value, and press the <i>OK</i>
+                    button to
+                    automatically populate the field.</p>
+
+                <p><strong>Add a new condition below</strong>:
+                    By clicking <i>Add a new condition below</i>, a new "line" (<strong>condition</strong>) is added to
+                    the box. When
+                    you have more than one condition per box, a <strong>logical operator</strong> dropdown appears on
+                    the right.
+                    In this dropdown, you can choose between <strong><i>And, Or or Not</i></strong>. If you want to
+                    <strong>delete a
+                        condition</strong>, click on the <i>trash button</i>.
+                </p>
+
+                <img src="filterRowsTable_image6.png" alt="icon" class="toolPage_image">
+
+                <p>In the example below, you request data where <i>volume_stored</i> is between <i>10.77</i> and
+                    <i>28.09</i> (both included) and the <i>Province</i> is equal to <i>Girona</i>.
+                </p>
+
+                <img src="filterRowsTable_image7.png" alt="icon" class="toolPage_image">
+
+                <p>This is the result after applying the filter.</p>
+
+                <img src="filterRowsTable_image8.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+
+                <p><strong>Add a higher group:</strong> By clicking <i>Add a higher group</i>, a new <strong>"box"</strong> with a
+                   <strong> condition</strong> and a <strong>logical operator</strong> will appear.
+                    This new box works the same as the previous one. You can <i>add new conditions with new logical
+                    operators</i>.
+                </p>
+
+                <img src="filterRowsTable_image9.png" alt="icon" class="toolPage_image">
+
+                <p>In this example, we use the same filter as before, but with an addition: data where the <i>Province</i>
+                    is <i> Barcelona</i> will also pass the filter (because the logical operator used is <i>OR</i>).</p>
+
+                <img src="filterRowsTable_image10.png" alt="icon" class="toolPage_image">
+
+                <p>This is the result after applying the filter.</p>
+
+                <img src="filterRowsTable_image11.png" alt="icon" class="toolPage_image zoomable"
+                    onclick="zoomToImage(this)">
+                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <p> <i>No one yet</i></p>
+                <!-- <ul>
+
+                </ul> -->
+               
             </div>
         </div>
         <div class="toolPage_main" id="Replace">
@@ -578,7 +749,7 @@
                 <p><u>Step 2:</u> Enter a <strong>name</strong> for the new column. It cannot be empty.</p>
 
                 <p><u>Step 3:</u> Click the <i>Add column to list</i> button to add this configuration to the table
-                    above.
+                    below.
                     <strong>The program only creates the columns that appear in this table</strong>.
                 </p>
 
@@ -608,7 +779,7 @@
 
                 <img src="createColumns_image8.png" alt="icon" class="toolPage_image" style="width: 500px;">
 
-                <p>In the image above, <strong>all three columns have been added</strong>. You can add as many columns
+                <p>In the image below, <strong>all three columns have been added</strong>. You can add as many columns
                     as you want each
                     time you use the tool (in a new node).</p>
 
