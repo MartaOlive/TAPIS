@@ -589,7 +589,8 @@
 
                 <p><strong>Entire table:</strong> If you choose this option, the replacement will be applied to
                     <strong>all data</strong>
-                    in the table.</p>
+                    in the table.
+                </p>
 
                 <p><strong>Single column:</strong> If you choose this option, the replacement will be applied only to
                     the <strong>selected column</strong> from the dropdown.</p>
@@ -599,7 +600,8 @@
 
                 <p><strong>Search and Replace:</strong> Enter the <strong>text or value</strong> to search for in the
                     <i>Search field</i> and
-                    the text or value to use as a replacement in the <i>Replace field</i>.</p>
+                    the text or value to use as a replacement in the <i>Replace field</i>.
+                </p>
 
                 <p><strong>Treat numbers as text:</strong> If you check this checkbox, numbers will be treated as text.
                     This means you can <strong>partially replace a number</strong>. For example, if you enter 23 in the
@@ -636,6 +638,7 @@
                         class="toolPage_title_icon">Join tables
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+
                 <p><strong>How to Use the Node: </strong></p>
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
@@ -653,12 +656,42 @@
                         class="toolPage_title_icon">Concatenate tables
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="concatenateColumns_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
+                <p><strong>Concatenate columns:</strong> This tool returns a <strong>table that combines the linked
+                        tables</strong>. It
+                    is possible to combine more than two tables. The data from these tables is combined by
+                    <strong>stacking the
+                        rows vertically</strong>. Any kind of data is accepted.</p>
 
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                <p>These are the tables used in the example:</p>
+                <img src="concatenateColumns_image1.png" alt="icon" class="toolPage_image">
+
+                <p>To display the dialog, <i>double-click</i> on the node. In this dialog, you have only two options to
+                    choose from:</p>
+                <img src="concatenateColumns_image2.png" alt="icon" class="toolPage_image">
+
+                <p><strong>Concatenate all columns:</strong> With this option selected, <strong>all data</strong> from
+                    the tables will be
+                    combined to form a new table. Columns present in only one table will keep their data, and the
+                    missing cells in the other tables will stay empty</p>
+
+                <p>Example:</p>
+                <img src="concatenateColumns_image3.png" alt="icon" class="toolPage_image">
+
+                <p><strong>Concatenate only repeated columns:</strong> With this option selected, only columns that
+                    appear in more than one table will be included in the new table. Columns that exist in only one
+                    table will be discarded.</p>
+
+                <p>Example:</p>
+                <img src="concatenateColumns_image4.png" alt="icon" class="toolPage_image">
+                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <p> <i>No one yet</i></p>
+                <!-- <ul>
+
+                </ul> -->
+
             </div>
         </div>
         <div class="toolPage_main" id="GroupBy">

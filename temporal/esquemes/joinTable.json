@@ -1,0 +1,253 @@
+{
+	"nodes": [
+		{
+			"id": "3mlqh.sqm84tg",
+			"label": "Taula1",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"idTaula1": 1,
+					"lletra": "a"
+				},
+				{
+					"idTaula1": 2,
+					"lletra": "b"
+				},
+				{
+					"idTaula1": 3,
+					"lletra": "c"
+				},
+				{
+					"idTaula1": 4,
+					"lletra": "d"
+				},
+				{
+					"idTaula1": 5,
+					"lletra": "e"
+				},
+				{
+					"idTaula1": "\n"
+				}
+			],
+			"STAdataAttributes": {
+				"idTaula1": {
+					"type": "string"
+				},
+				"lletra": {
+					"type": "string"
+				}
+			},
+			"x": -68,
+			"y": -74
+		},
+		{
+			"id": "43fdd.3g5ibr",
+			"label": "Taula2",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"idTaula2": 1,
+					"lletra": "M"
+				},
+				{
+					"idTaula2": 3,
+					"lletra": "N"
+				},
+				{
+					"idTaula2": 4,
+					"lletra": "O"
+				},
+				{
+					"idTaula2": 8,
+					"lletra": "P"
+				}
+			],
+			"STAdataAttributes": {
+				"idTaula2": {
+					"type": "integer"
+				},
+				"lletra": {
+					"type": "string"
+				}
+			},
+			"x": 71,
+			"y": 77
+		},
+		{
+			"id": "9gngi.5ioeum",
+			"label": "Discard",
+			"image": "JoinTables.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"idTaula1": 1,
+					"lletra": "M"
+				},
+				{
+					"idTaula1": 3,
+					"lletra": "N"
+				},
+				{
+					"idTaula1": 4,
+					"lletra": "O"
+				}
+			],
+			"STAdataAttributes": {
+				"idTaula1": {
+					"type": "string"
+				},
+				"lletra": {
+					"type": "string"
+				}
+			},
+			"STAJoinTables": {
+				"RowMatching": [
+					{
+						"left": "idTaula1",
+						"right": "idTaula2"
+					}
+				],
+				"NotMatch": "Remove"
+			},
+			"x": -65,
+			"y": 66
+		},
+		{
+			"id": "6957k.ccfl93",
+			"label": "1stTYable",
+			"image": "JoinTables.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"idTaula1": 1,
+					"lletra": "M"
+				},
+				{
+					"idTaula1": 2,
+					"lletra": "b"
+				},
+				{
+					"idTaula1": 3,
+					"lletra": "N"
+				},
+				{
+					"idTaula1": 4,
+					"lletra": "O"
+				},
+				{
+					"idTaula1": 5,
+					"lletra": "e"
+				},
+				{
+					"idTaula1": "\n"
+				}
+			],
+			"STAdataAttributes": {
+				"idTaula1": {
+					"type": "string"
+				},
+				"lletra": {
+					"type": "string"
+				}
+			},
+			"STAJoinTables": {
+				"RowMatching": [
+					{
+						"left": "idTaula1",
+						"right": "idTaula2"
+					}
+				],
+				"NotMatch": "LeftTable"
+			},
+			"x": 71,
+			"y": -60
+		},
+		{
+			"id": "29p7l.j12d0tg",
+			"label": "both",
+			"image": "JoinTables.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"idTaula1": 1,
+					"lletra": "M"
+				},
+				{
+					"idTaula1": 2,
+					"lletra": "b"
+				},
+				{
+					"idTaula1": 3,
+					"lletra": "N"
+				},
+				{
+					"idTaula1": 4,
+					"lletra": "O"
+				},
+				{
+					"idTaula1": 5,
+					"lletra": "e"
+				},
+				{
+					"idTaula1": "\n"
+				},
+				{
+					"lletra": "P"
+				}
+			],
+			"STAdataAttributes": {
+				"idTaula1": {
+					"type": "string"
+				},
+				"lletra": {
+					"type": "string"
+				}
+			},
+			"STAJoinTables": {
+				"RowMatching": [
+					{
+						"left": "idTaula1",
+						"right": "idTaula2"
+					}
+				],
+				"NotMatch": "BothTables"
+			},
+			"x": 0,
+			"y": 1
+		}
+	],
+	"edges": [
+		{
+			"from": "3mlqh.sqm84tg",
+			"to": "9gngi.5ioeum",
+			"arrows": "from"
+		},
+		{
+			"from": "43fdd.3g5ibr",
+			"to": "9gngi.5ioeum",
+			"arrows": "from"
+		},
+		{
+			"from": "3mlqh.sqm84tg",
+			"to": "6957k.ccfl93",
+			"arrows": "from"
+		},
+		{
+			"from": "43fdd.3g5ibr",
+			"to": "6957k.ccfl93",
+			"arrows": "from"
+		},
+		{
+			"from": "3mlqh.sqm84tg",
+			"to": "29p7l.j12d0tg",
+			"arrows": "from"
+		},
+		{
+			"from": "43fdd.3g5ibr",
+			"to": "29p7l.j12d0tg",
+			"arrows": "from"
+		}
+	]
+}

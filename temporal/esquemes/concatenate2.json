@@ -1,0 +1,116 @@
+{
+	"nodes": [
+		{
+			"id": "5kmq2.h1hrv4",
+			"label": "table1",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"City": "Barcelona",
+					"Temperature (Â°C)": 22,
+					"Country": "Spain",
+					"Humidity (%)": 60
+				},
+				{
+					"City": "Paris",
+					"Temperature (Â°C)": 18,
+					"Country": "France",
+					"Humidity (%)": 70
+				},
+				{
+					"City": "Berlin",
+					"Temperature (Â°C)": 16,
+					"Country": "Germany",
+					"Humidity (%)": 65
+				},
+				{
+					"City": "Amsterdam",
+					"Temperature (Â°C)": 17,
+					"Country": "Netherlands",
+					"Humidity (%)": 68
+				},
+				{
+					"City": "Vienna",
+					"Temperature (Â°C)": 19,
+					"Country": "Austria",
+					"Humidity (%)": 63
+				},
+				{
+					"City": "Prague",
+					"Temperature (Â°C)": 15,
+					"Country": "Czechia",
+					"Humidity (%)": 72
+				},
+				{
+					"City": "Brussels",
+					"Temperature (Â°C)": 18,
+					"Country": "Belgium",
+					"Humidity (%)": 69
+				},
+				{
+					"City": "Copenhagen",
+					"Temperature (Â°C)": 14,
+					"Country": "Denmark",
+					"Humidity (%)": 75
+				},
+				{
+					"City": "Dublin",
+					"Temperature (Â°C)": 13,
+					"Country": "Ireland",
+					"Humidity (%)": 80
+				},
+				{
+					"City": "Zurich",
+					"Temperature (Â°C)": 20,
+					"Country": "Switzerland",
+					"Humidity (%)": 62
+				}
+			],
+			"STAdataAttributes": {
+				"City": {
+					"type": "string"
+				},
+				"Temperature (Â°C)": {
+					"type": "integer"
+				},
+				"Country": {
+					"type": "string"
+				},
+				"Humidity (%)": {
+					"type": "integer"
+				}
+			},
+			"x": -8,
+			"y": -61
+		},
+		{
+			"id": "6rn9u.6rm28k",
+			"label": "table2",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"x": 119,
+			"y": 47
+		},
+		{
+			"id": "2jr4f.snrpqv",
+			"label": "Concatenate Columns",
+			"image": "ConcatenateTables.png",
+			"shape": "circularImage",
+			"x": -38,
+			"y": 41
+		}
+	],
+	"edges": [
+		{
+			"from": "5kmq2.h1hrv4",
+			"to": "2jr4f.snrpqv",
+			"arrows": "from"
+		},
+		{
+			"from": "6rn9u.6rm28k",
+			"to": "2jr4f.snrpqv",
+			"arrows": "from"
+		}
+	]
+}

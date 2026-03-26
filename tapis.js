@@ -9030,7 +9030,9 @@ function concatenateTables() {
 	var attributes= uploadDataAttributesAddingNewColumns(allAttributes, currentNode.STAdata);
 	currentNode.STAdataAttributes=attributes;
 	networkNodes.update(currentNode);
+	updateQueryAndTableArea(currentNode)
 	hideNodeDialog("DialogConcatenateTables");
+
 }
 
 const RouteToLocation={
