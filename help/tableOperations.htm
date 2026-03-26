@@ -663,7 +663,8 @@
                         tables</strong>. It
                     is possible to combine more than two tables. The data from these tables is combined by
                     <strong>stacking the
-                        rows vertically</strong>. Any kind of data is accepted.</p>
+                        rows vertically</strong>. Any kind of data is accepted.
+                </p>
 
                 <p>These are the tables used in the example:</p>
                 <img src="concatenateColumns_image1.png" alt="icon" class="toolPage_image">
@@ -700,7 +701,36 @@
                         class="toolPage_title_icon">Group by
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="groupBy_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
+                <p><strong>Group by</strong> tool allows you to aggregate data based on one or more columns with the
+                    same values. You can also aggregate by time. The result of this aggregation is a set of summary
+                    statistics, such as mean, mode, sum, or any other values you select. You can aggregate any type of
+                    data; columns will include values if the selected statistic is applicable, or remain empty
+                    otherwise.</p>
+                </p>
+                <p> This is the table use in this example:</p>
+                <img src="groupBy_image1.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
+                <p>To display de dialog <i>double left-click</i> on the node. Dialog is divided in four parts that will
+                    be explained below</p>
+                <img src="groupBy_image2.png" alt="icon" class="toolPage_image">
+                <p><strong>GroupBy:</strong> Check the boxes for the columns you want to group by. In other words,
+                    values in these columns must be the same to combine the data into a set. You can select more than
+                    one</p>
+                <p><strong>Attributes to aggregate:</strong> which columns you want to use to obtain the values to
+                    perform the statistics. The selected statistics will appear next to each column name.</p>
+                <p><strong>GroupBy date rounding:</strong> This option lets you aggregate your data by time intervals.
+                    You need to select a column with date values.</p>
+                <p><strong>Aggregations:</strong> Select the statistical functions you want to apply. You can choose as
+                    many as you need.</p>
+                <p>Here there is an example, <i>grouping by</i> the column <i>Province</i>, <i>aggregating</i> the
+                    values of <i>Absolute_level</i> and <i>Percentage_volume_stored</i> separately and asking for their
+                    <i>Mean, Min and Max values</i>.</p>
+                <img src="groupBy_image3.png" alt="icon" class="toolPage_image">
+
+                <img src="groupBy_image4.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
@@ -710,8 +740,7 @@
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe09" target="_blank">Recipe 9:
                             Drawing a
                             stacked bar chart</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe10" target="_blank">Recipe 10:
-                            Connecting to a Eclipse Data Connector (Data Space)</a></li>
+
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
