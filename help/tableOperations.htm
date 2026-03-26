@@ -537,16 +537,19 @@
                 <img src="filterRowsTable_image8.png" alt="icon" class="toolPage_image zoomable"
                     onclick="zoomToImage(this)">
 
-                <p><strong>Add a higher group:</strong> By clicking <i>Add a higher group</i>, a new <strong>"box"</strong> with a
-                   <strong> condition</strong> and a <strong>logical operator</strong> will appear.
+                <p><strong>Add a higher group:</strong> By clicking <i>Add a higher group</i>, a new
+                    <strong>"box"</strong> with a
+                    <strong> condition</strong> and a <strong>logical operator</strong> will appear.
                     This new box works the same as the previous one. You can <i>add new conditions with new logical
-                    operators</i>.
+                        operators</i>.
                 </p>
 
                 <img src="filterRowsTable_image9.png" alt="icon" class="toolPage_image">
 
-                <p>In this example, we use the same filter as before, but with an addition: data where the <i>Province</i>
-                    is <i> Barcelona</i> will also pass the filter (because the logical operator used is <i>OR</i>).</p>
+                <p>In this example, we use the same filter as before, but with an addition: data where the
+                    <i>Province</i>
+                    is <i> Barcelona</i> will also pass the filter (because the logical operator used is <i>OR</i>).
+                </p>
 
                 <img src="filterRowsTable_image10.png" alt="icon" class="toolPage_image">
 
@@ -559,7 +562,7 @@
                 <!-- <ul>
 
                 </ul> -->
-               
+
             </div>
         </div>
         <div class="toolPage_main" id="Replace">
@@ -568,12 +571,63 @@
                         class="toolPage_title_icon">Replace
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="replace_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
+                <p><strong>Replace</strong> tool allows you to <strong>completely or partially replace a word, number,
+                        or value</strong>.
+                    You can apply the replacement to <strong>all data</strong> or to a <strong>specific column</strong>.
+                    You can replace <strong>any kind of data</strong>
+                    from any type of node. If you want to replace something from an internet request, remember that from
+                    this point on, the table will no longer request data from the source. Complete the dialog with your
+                    options and click <i>Apply</i> to apply the changes.</p>
 
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                <p>This is the CSV table used for the example:</p>
+                <img src="replace_image1.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
+                <p>To display the dialog, <i>double-click</i> on the node. This is how the dialog looks:</p>
+                <img src="replace_image2.png" alt="icon" class="toolPage_image">
+
+                <p><strong>Entire table:</strong> If you choose this option, the replacement will be applied to
+                    <strong>all data</strong>
+                    in the table.</p>
+
+                <p><strong>Single column:</strong> If you choose this option, the replacement will be applied only to
+                    the <strong>selected column</strong> from the dropdown.</p>
+
+                <img src="replace_image3.png" alt="icon" class="toolPage_image">
+                <img src="replace_image4.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
+                <p><strong>Search and Replace:</strong> Enter the <strong>text or value</strong> to search for in the
+                    <i>Search field</i> and
+                    the text or value to use as a replacement in the <i>Replace field</i>.</p>
+
+                <p><strong>Treat numbers as text:</strong> If you check this checkbox, numbers will be treated as text.
+                    This means you can <strong>partially replace a number</strong>. For example, if you enter 23 in the
+                    search field,
+                    both 23 and 230 will be matched. If you do not treat numbers as text, the entire number must match,
+                    so only 23 will be replaced.</p>
+
+                <img src="replace_image8.png" alt="icon" class="toolPage_image">
+
+                <p><strong>Treat dates as text:</strong> If you check this checkbox, dates will be treated as text. This
+                    means you can <strongpartially replace></strong> parts of a date, similar to how it works with
+                        numbers. For example,
+                        if you want to replace the year in dates, you need to treat dates as text. If you want to
+                        replace a
+                        number across the entire table without affecting dates, do not treat dates as text. In that
+                        case,
+                        the full date must match to be replaced.</p>
+
+                <img src="replace_image5.png" alt="icon" class="toolPage_image">
+                <img src="replace_image6.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
+
+
+                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <p> <i>No one yet</i></p>
+                <!-- <ul>
+
+                </ul> -->
+
             </div>
         </div>
         <div class="toolPage_main" id="JoinTables">
