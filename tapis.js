@@ -8907,6 +8907,7 @@ function addColumnsToTableInColumnsCalculator(){
 	networkNodes.update(currentNode);
 	showInfoMessage("New columns have been added");
 	hideNodeDialog("DialogColumnsCalculator");
+	updateQueryAndTableArea(currentNode)
 }
 
 function createColumnStatistics(event){
