@@ -411,7 +411,7 @@
                 <img src="filterRowsTable_image1.png" alt="icon" class="toolPage_image zoomable"
                     onclick="zoomToImage(this)">
 
-                <p>To display the dialog, <i>double-click</i> on the node. This is the general view when it is
+                <p>To display the dialog, <i>double left-click</i> on the node. This is the general view when it is
                     displayed.
                     The main function of this dialog is to create <strong>conditions</strong> linked with
                     <strong>logical operators</strong>.
@@ -584,7 +584,7 @@
                 <p>This is the CSV table used for the example:</p>
                 <img src="replace_image1.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
 
-                <p>To display the dialog, <i>double-click</i> on the node. This is how the dialog looks:</p>
+                <p>To display the dialog, <i>double left-click</i> on the node. This is how the dialog looks:</p>
                 <img src="replace_image2.png" alt="icon" class="toolPage_image">
 
                 <p><strong>Entire table:</strong> If you choose this option, the replacement will be applied to
@@ -669,7 +669,8 @@
                 <p>These are the tables used in the example:</p>
                 <img src="concatenateColumns_image1.png" alt="icon" class="toolPage_image">
 
-                <p>To display the dialog, <i>double-click</i> on the node. In this dialog, you have only two options to
+                <p>To display the dialog, <i>double left-click</i> on the node. In this dialog, you have only two
+                    options to
                     choose from:</p>
                 <img src="concatenateColumns_image2.png" alt="icon" class="toolPage_image">
 
@@ -726,7 +727,8 @@
                     many as you need.</p>
                 <p>Here there is an example, <i>grouping by</i> the column <i>Province</i>, <i>aggregating</i> the
                     values of <i>Absolute_level</i> and <i>Percentage_volume_stored</i> separately and asking for their
-                    <i>Mean, Min and Max values</i>.</p>
+                    <i>Mean, Min and Max values</i>.
+                </p>
                 <img src="groupBy_image3.png" alt="icon" class="toolPage_image">
 
                 <img src="groupBy_image4.png" alt="icon" class="toolPage_image zoomable" onclick="zoomToImage(this)">
@@ -797,15 +799,61 @@
                         class="toolPage_title_icon">Aggregate Columns
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="aggregateColumns_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
+                <p><strong>Aggregate Columns</strong> tool creates <strong>new columns</strong> in your table by
+                    <strong> existing
+                        columns</strong> using <strong> statistics</strong>. It can be used with any type of data,
+                    depending on which
+                    statistic you choose.</p>
+                <p>This is the table for the example. It comes from a JSON document.</p>
+                <img src="aggregateColumns_image6.png" alt="icon" class="toolPage_image">
+                <p>To display the dialog, <i>double left-click</i> on the node. Here you can find the dialog and below
+                    you can find the description of the following parts. The <strong>general functionality</strong> is
+                    to select the options
+                    you want for the new column, add it to the table, and then press the OK button to create the new
+                    columns.</p>
+                <img src="aggregateColumns_image1.png" alt="icon" class="toolPage_image">
+                <p><strong>Select attributes:</strong> Check the checkboxes of the attributes <strong>(columns)</strong>
+                    you want to
+                    aggregate. You should select two or more attributes.</p>
+
+                <p><strong>Aggregations:</strong> Select which <strong> statistical procedure</strong> you want to apply
+                    to the values of
+                    the previously selected columns.</p>
+
+                <p><strong>Set number of decimal figures:</strong> If you want to fix the number of decimals, check the
+                    checkbox and enter the value to specify the number.</p>
+
+                <p><strong>Column names:</strong> You can customize the name of the new column by choosing the
+                    <i> Personalized</i> option and entering the name, or select the predefined name using the
+                    <i>Suggested</i> option.
+                </p>
+
+                <img src="aggregateColumns_image2.png" alt="icon" class="toolPage_image">
+
+                <p><strong>Add column to list:</strong> Once you have completed all options, click this button to add
+                    the column to the <i>List of columns to add</i>.</p>
+
+                <img src="aggregateColumns_image3.png" alt="icon" class="toolPage_image">
+
+                <p>For the example, two additional columns will be added, with the same attributes but using two
+                    different statistics.</p>
+
+                <img src="aggregateColumns_image4.png" alt="icon" class="toolPage_image">
+
+                <p>This is the result of adding three new columns.</p>
+
+                <img src="aggregateColumns_image5.png" alt="icon" class="toolPage_image">
 
 
-                <!-- Sha de posar un nom sino quedarà buida -->
                 <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
 
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                <p> <i>No one yet</i></p>
+                <!-- <ul>
+
+                </ul> -->
             </div>
         </div>
         <div class="toolPage_main" id="CreateColumns">
@@ -848,7 +896,7 @@
 
                 <p><strong>General overview</strong></p>
 
-                <p>To display the dialog, <i>double-click</i> on the node. This dialog has two parts: the upper
+                <p>To display the dialog, <i>double left-click</i> on the node. This dialog has two parts: the upper
                     part, where you can <strong>configure the column</strong> you want to add
                     (<i>Select operation, Column name, Add column to list button</i>), and the <strong>List of
                         columns</strong> to
@@ -977,7 +1025,7 @@
 
                 <img src="columnsStatistics_image1.png" alt="icon" class="toolPage_image ">
 
-                <p>To display the dialog, <i>double-click</i> on the node. In this case, the dialog is
+                <p>To display the dialog, <i>double left-click</i> on the node. In this case, the dialog is
                     for<strong>informational</strong>
                     purposes only; it shows which statistics TAPIS will calculate and return in a table.</p>
 
@@ -1033,7 +1081,8 @@
 
                 <img src="saveTable_image1.png" alt="icon" class="toolPage_image">
 
-                <p>To display the dialog, <i>double-click</i> on the node. In the dialog, you can perform two actions:
+                <p>To display the dialog, <i>double left-click</i> on the node. In the dialog, you can perform two
+                    actions:
                 </p>
 
                 <img src="saveTable_image2.png" alt="icon" class="toolPage_image">

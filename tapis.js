@@ -8621,7 +8621,7 @@ function addColumnsToTableInAggregateColumns(event) {
 					break;
 				case  "MaxValue":
 					if (decimalNumber!=""){
-					addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber,dataAttributes); 
+					addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2], decimalNumber); 
 			}else{
 					}
 					addnewColumnMaximalValue(currentNode.STAdata, currentNode.STAnewColumnsToAdd[i][1],currentNode.STAnewColumnsToAdd[i][2],""); 
@@ -8736,6 +8736,7 @@ function addColumnsToTableInAggregateColumns(event) {
 		networkNodes.update(currentNode);
 		showInfoMessage("New columns have been added");
 		hideNodeDialog("DialogAggregateColumns");
+		updateQueryAndTableArea(currentNode);
 	}else{
 		alert("There are no columns in the list to add, nothing will be added to the table")
 	}
