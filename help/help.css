@@ -26,6 +26,9 @@
     margin-bottom: 6px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 } */
+ body {
+    overflow: auto;
+}
 /* Contenidor vertical */
 .recipeContainer {
     display: flex;
@@ -326,15 +329,37 @@ body {
 
 }
 
-.zoomable {
-    cursor: zoom-in;
-    transition: transform 0.3s;
+.image-wrapper {
+    overflow: auto;
+    max-width: 100%;
+    transition: all 0.4s ease;
 }
 
+.image-wrapper.zoom {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 90vw;
+    height: 90vh;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background: white;
+    padding: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+/* imatge */
+.zoomable {
+    transition: transform 0.4s ease;
+}
+.image-wrapper.zoom img {
+    max-width: none;   
+}
 .zoomable.zoom {
     transform: scale(2);
-    cursor: zoom-out;
+    transform-origin: top left;
 }
+
 
 .roundCorner {
     color: white;
