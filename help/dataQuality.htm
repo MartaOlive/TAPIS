@@ -22,10 +22,10 @@
             <button onclick='OpenRecipesFromHelp(event);'><img src="../documentation.png" height="20"
                     valign="middle">Recipes</button>
         </div>
-        <h1 class="toolPage_mainTitle">Table tools for data quality</h1> <!--general title -->
-        <div id="toolPage_dataQuality" class="toolBoxParent"></div> <!--all tools-->
+        <h1 class="toolPage_mainTitle">Table tools for data quality</h1>
+        <div id="toolPage_dataQuality" class="toolBoxParent"></div>
 
-        <div class="toolPage_main"> <!--general explanation-->
+        <div class="toolPage_main">
             <div class="toolPage_main_text generalExplanation">
                 <p>
                     These tools evaluate the quality of your data and provide the results <strong>as metadata.</strong>
@@ -43,7 +43,6 @@
                 <p>
                     Some nodes require links to<strong> additional nodes</strong> besides the one being evaluated.
                 </p>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
 
@@ -53,7 +52,24 @@
                         class="toolPage_title_icon">Uncertainty
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="uncertainty_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
+                <p>The <strong>Uncertainty</strong> tool groups the data by <strong>date and position</strong> criteria. The resulting
+                    table is the outcome of these <strong>daggregations</strong> and includes columns with the <strong>mean</strong> and <strong>uncertainty</strong> for
+                    each variable (position, date, and result).</p>
+                <p>This is the data used in the example:</p>
+                <img src="uncertainty_image1.png" alt="icon" class="toolPage_image">
+                <p>To display the dialog, <i>double left-click</i> on the node. This dialog has trhee parts.</p>
+                <img src="uncertainty_image2.png" alt="icon" class="toolPage_image">
+                <p><strong>Result column:</strong> Select the column that contains the <strong>results</strong> (in the example, <i>the
+                    temperature</i> values).</p>
+                <p><strong>Temporal grouping:</strong> Choose the column with <strong>date values</strong>, then enter the <strong>grouping
+                    period</strong> and its <strong>time unit</strong>.</p>
+                <p><strong>Positional grouping:</strong> Select the <strong>positional columns</strong> and assign the <strong>grouping distance</strong>
+                    in <i>meters</i>.</p>
+                <p>These are the results of the aggregation. In addition, there is a <strong><i>groupCount</i></strong> column
+                    indicating the number of values aggregated in each group.</p>
+                <img src="uncertainty_image3.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
