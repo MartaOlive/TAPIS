@@ -1263,22 +1263,72 @@
                 <p><strong>Setting Up the Node: </strong></p>
                 <img src="uploadToIC_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"> <img src="uploadToIC_image1.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-                <img src="uploadToIC_image2.png" alt="icon" class="toolPage_image ">
-                <img src="uploadToIC_image3.png" alt="icon" class="toolPage_image ">
-                <img src="uploadToIC_image4.png" alt="icon" class="toolPage_image ">
-                <img src="uploadToIC_image5.png" alt="icon" class="toolPage_image ">
-                <img src="uploadToIC_image6.png" alt="icon" class="toolPage_image ">
+                <p><strong>Upload to immutable catalog</strong> tool allows you to load your <strong>data</strong> and <strong>quality metadata</strong>
+                    into an <strong>immutable catalog</strong>. For this purpose, you need to use previously <i>quality nodes</i>, as many as
+                    you want.
+                    You can use any kind of data, but you need to have <strong>geographic data</strong> (in a column or written manually)
+                    and <strong>date data</strong> (in a column or written manually).</p>
+                <p>To perform this procedure, you need to be logged in(<a
+                        href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">Login button</a>).</p>
                 <div class="image-wrapper" onclick="zoomToImage(this)"><img src="uploadToIC_image7.png" alt="icon"
                         class="toolPage_image zoomable"></div>
+                <p>This is the data we will use for the example:</p>
+
+                <div class="image-wrapper" onclick="zoomToImage(this)">
+                    <img src="uploadToIC_image1.png" alt="icon" class="toolPage_image zoomable">
+                </div>
+
+                <p>This is the result of the <strong>quality metadata</strong> calculated in previously nodes.</p>
+                <img src="uploadToIC_image2.png" alt="icon" class="toolPage_image ">
+                <p>To display the dialog, <i>double left-click</i> on the node. This dialog consists of different parts,
+                    explained below.</p>
+                <img src="uploadToIC_image3.png" alt="icon" class="toolPage_image ">
+                <p><strong>Title:</strong> Enter a title for your element in the catalog. If this field is empty, the
+                    automatic title will be: <i>Data from TAPIS on "current date".</i></p>
+                <p><strong>Author:</strong> Enter an author for your element in the catalog. If this field is empty, the
+                    automatic author will be: <i>"Author"</i>.</p>
+                <p><strong>License:</strong> Select a license from the dropdown.</p>
+                <img src="uploadToIC_image4.png" alt="icon" class="toolPage_image ">
+                <p><strong>Geographic information:</strong> It is necessary to include geographic information, either
+                    provided in the data <i>columns</i> or <i>entered manually</i>. Choose the option you want to use and select or
+                    complete the fields.</p>
+                <img src="uploadToIC_image5.png" alt="icon" class="toolPage_image ">
+                <p><strong>Date column:</strong> It is necessary to include date information, either
+                    provided in the data <i>columns</i> or <i>entered manually</i>. Choose the option you want to use and select or
+                    complete the fields. To enter the date manually, you can use the calendar. Click on the <strong>calendar</strong> to
+                    display it and select the desired date. This date will be added to the field automatically.</p>
+                <img src="uploadToIC_image6.png" alt="icon" class="toolPage_image ">
+                <p><strong>Add GeoJSON node to check the result:</strong> Check the checkbox if you want to add a <a
+                        href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportGeoJSON">GeoJSON</a> node to
+                    see what has been loaded into the catalog in TAPIS.</p>
+                <img src="uploadToIC_image9.png" alt="icon" class="toolPage_image ">
+                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="uploadToIC_image10.png" alt="icon"
+                        class="toolPage_image zoomable"></div>
+                <p>
+                <p>If the load has been successful, something similar will appear. The <strong>URL</strong> is the link to the
+                    information loaded in the catalog.</p>
+                </p>
+                <img src="uploadToIC_image8.png" alt="icon" class="toolPage_image ">
+                <p>This is the URL of the example:
+                    <a
+                        href="https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/8a9aaea8-f01f-4683-b3a3-aaf62df887ea">https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/8a9aaea8-f01f-4683-b3a3-aaf62df887ea</a>
+                </p>
+                <p>
+                <p>This is the result of the <strong>loaded information</strong>. The image shows the table created from the <strong>GeoJSON
+                    node</strong>. In the <strong><i>metadata</i></strong>, all calculated quality data will appear. In <strong><i>PRODUCTOpenLink</i></strong>, you will find
+                    the data uploaded to the Interplanetary File System (IPFS) (<a
+                        href="https://ipfs.ogc.secd.eu/">https://ipfs.ogc.secd.eu/</a>). With this link, you can
+                    download the data to your computer.</p>
+                <p><i>The download of the data in the GeoJSON node is not guaranteed. It is delayed to allow time for the
+                    data to be loaded into the catalog, but there is no confirmation that the data has been
+                    successfully loaded yet.</i></p>
+                </p>
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
 
