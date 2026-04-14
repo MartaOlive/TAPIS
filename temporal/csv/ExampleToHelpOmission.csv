@@ -1,0 +1,50 @@
+Date;City;Latitude;Longitude;Temperature_C;Humidity_Percent;WindSpeed_km_h;Condition
+01/01/2026;Barcelona;41.3851;2.1734;15;70;12;Cloudy
+02/01/2026;Barcelona;41.3851;2.1734;16;68;10;Partly Cloudy
+03/01/2026;Barcelona;41.3851;2.1734;;75;14;Rainy
+04/01/2026;Barcelona;41.3851;2.1734;13;80;18;Rainy
+05/01/2026;Barcelona;41.3851;2.1734;15;72;11;Cloudy
+06/01/2026;Barcelona;41.3851;2.1734;17;65;9;Sunny
+07/01/2026;Barcelona;41.3851;2.1734;18;60;8;Sunny
+08/01/2026;Barcelona;41.3851;2.1734;16;67;13;Windy
+09/01/2026;Barcelona;41.3851;2.1734;15;70;15;Cloudy
+10/01/2026;Barcelona;41.3851;2.1734;;62;10;Partly Cloudy
+11/01/2026;Barcelona;41.3851;2.1734;18;58;9;Sunny
+12/01/2026;Barcelona;41.3851;2.1734;19;55;7;Sunny
+13/01/2026;Barcelona;41.3851;2.1734;17;63;12;Cloudy
+14/01/2026;Barcelona;41.3851;2.1734;16;68;14;Windy
+15/01/2026;Barcelona;41.3851;2.1734;15;72;16;Rainy
+16/01/2026;Barcelona;41.3851;2.1734;14;78;17;Rainy
+17/01/2026;Barcelona;41.3851;2.1734;;69;11;Cloudy
+18/01/2026;Barcelona;41.3851;2.1734;18;60;9;Sunny
+19/01/2026;Barcelona;41.3851;2.1734;19;57;8;Sunny
+20/01/2026;Barcelona;41.3851;2.1734;17;64;10;Partly Cloudy
+21/01/2026;Barcelona;41.3851;2.1734;16;70;13;Cloudy
+22/01/2026;Barcelona;41.3851;2.1734;15;75;15;Rainy
+23/01/2026;Barcelona;41.3851;2.1734;14;80;18;Rainy
+24/01/2026;Barcelona;41.3851;2.1734;;68;12;Cloudy
+25/01/2026;Barcelona;41.3851;2.1734;17;62;10;Partly Cloudy
+26/01/2026;Barcelona;41.3851;2.1734;18;58;9;Sunny
+27/01/2026;Barcelona;41.3851;2.1734;20;55;7;Sunny
+28/01/2026;Barcelona;41.3851;2.1734;19;60;8;Sunny
+29/01/2026;Barcelona;41.3851;2.1734;18;63;11;Cloudy
+30/01/2026;Barcelona;41.3851;2.1734;17;66;13;Windy
+31/01/2026;Barcelona;41.3851;2.1734;16;70;14;Cloudy
+01/02/2026;Barcelona;41.3851;2.1734;15;74;15;Rainy
+02/02/2026;Barcelona;41.3851;2.1734;;78;17;Rainy
+03/02/2026;Barcelona;41.3851;2.1734;16;69;12;Cloudy
+04/02/2026;Barcelona;41.3851;2.1734;17;64;10;Partly Cloudy
+05/02/2026;Barcelona;41.3851;2.1734;18;60;9;Sunny
+06/02/2026;Barcelona;41.3851;2.1734;19;57;8;Sunny
+07/02/2026;Barcelona;41.3851;2.1734;20;55;7;Sunny
+08/02/2026;Barcelona;41.3851;2.1734;18;62;9;Cloudy
+09/02/2026;Barcelona;41.3851;2.1734;17;65;11;Partly Cloudy
+10/02/2026;Barcelona;41.3851;2.1734;16;70;13;Cloudy
+11/02/2026;Barcelona;41.3851;2.1734;;75;15;Rainy
+12/02/2026;Barcelona;41.3851;2.1734;14;80;18;Rainy
+13/02/2026;Barcelona;41.3851;2.1734;16;68;12;Cloudy
+14/02/2026;Barcelona;41.3851;2.1734;17;63;10;Partly Cloudy
+15/02/2026;Barcelona;41.3851;2.1734;18;58;9;Sunny
+16/02/2026;Barcelona;41.3851;2.1734;19;55;7;Sunny
+17/02/2026;Barcelona;41.3851;2.1734;20;53;6;Sunny
+18/02/2026;Barcelona;41.3851;2.1734;;60;8;Cloudy

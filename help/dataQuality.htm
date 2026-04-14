@@ -54,20 +54,28 @@
                 <p><strong>Setting Up the Node: </strong></p>
                 <img src="uncertainty_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
-                <p>The <strong>Uncertainty</strong> tool groups the data by <strong>date and position</strong> criteria. The resulting
-                    table is the outcome of these <strong>daggregations</strong> and includes columns with the <strong>mean</strong> and <strong>uncertainty</strong> for
-                    each variable (position, date, and result).</p>
+                <p>The <strong>Uncertainty</strong> tool groups the data by <strong>date and position</strong> criteria.
+                    The resulting
+                    table is the outcome of these <strong>daggregations</strong> and includes columns with the
+                    <strong>mean</strong> and <strong>uncertainty</strong> for
+                    each variable (position, date, and result).
+                </p>
                 <p>This is the data used in the example:</p>
                 <img src="uncertainty_image1.png" alt="icon" class="toolPage_image">
                 <p>To display the dialog, <i>double left-click</i> on the node. This dialog has trhee parts.</p>
                 <img src="uncertainty_image2.png" alt="icon" class="toolPage_image">
-                <p><strong>Result column:</strong> Select the column that contains the <strong>results</strong> (in the example, <i>the
-                    temperature</i> values).</p>
-                <p><strong>Temporal grouping:</strong> Choose the column with <strong>date values</strong>, then enter the <strong>grouping
-                    period</strong> and its <strong>time unit</strong>.</p>
-                <p><strong>Positional grouping:</strong> Select the <strong>positional columns</strong> and assign the <strong>grouping distance</strong>
-                    in <i>meters</i>.</p>
-                <p>These are the results of the aggregation. In addition, there is a <strong><i>groupCount</i></strong> column
+                <p><strong>Result column:</strong> Select the column that contains the <strong>results</strong> (in the
+                    example, <i>the
+                        temperature</i> values).</p>
+                <p><strong>Temporal grouping:</strong> Choose the column with <strong>date values</strong>, then enter
+                    the <strong>grouping
+                        period</strong> and its <strong>time unit</strong>.</p>
+                <p><strong>Positional grouping:</strong> Select the <strong>positional columns</strong> and assign the
+                    <strong>grouping distance</strong>
+                    in <i>meters</i>.
+                </p>
+                <p>These are the results of the aggregation. In addition, there is a <strong><i>groupCount</i></strong>
+                    column
                     indicating the number of values aggregated in each group.</p>
                 <img src="uncertainty_image3.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
@@ -76,7 +84,6 @@
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="completenessomission">
@@ -85,12 +92,32 @@
                         class="toolPage_title_icon">Completness omission
                 </h2>
                 <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
+                <img src="completnessOmission_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ">
 
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                <p><strong>How to Use the Node: </strong></p>
+                <p><strong>Completeness Omission</strong> tool allows you to calculate the <strong>rate of completeness omission</strong>
+                    in your data. You can calculate the rate for <strong>one column</strong> at a time, but you <strong>can link as many nodes</strong> as
+                    you want to carry out different omission calculations. The result obtained each time will be added
+                    to the <strong>metadata</strong>.</p>
+                <img src="completnessOmission_image5.png" alt="icon" class="toolPage_image">
+                <p>To display the dialog, <i>double-click</i> the node with the left mouse button. This node is simple:
+                    it only includes a <strong>selector for the column to evaluate</strong> and a <strong>checkbox to create a new column</strong>. The
+                    value of this new column depends on whether the evaluated column contains a <strong>value (true)</strong> or is
+                    <strong>missing (false)</strong>.</p>
+                <img src="completnessOmission_image1.png" alt="icon" class="toolPage_image">
+                <p>This is the result of the calculation. This dialog only appears after calculating the rate. To view
+                    the result again, click on <a>Metadata</a> at the top of the table below.</p>
+                <img src="completnessOmission_image2.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so far</strong>.</p>
+                <img src="completnessOmission_image3.png" alt="icon" class="toolPage_image">
+                <p>Here you can see the new column created, containing <strong>true or false values</strong> based on the omission
+                    calculation.</p>
+                <img src="completnessOmission_image4.png" alt="icon" class="toolPage_image">
+                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <!-- <ul>
+                </ul> -->
+                <p> <i>No one yet</i></p>
             </div>
         </div>
         <div class="toolPage_main" id="logicalConsistency">

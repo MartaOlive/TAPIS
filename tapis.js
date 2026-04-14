@@ -7953,6 +7953,7 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "logicalConsistency.png") {
+			var parentNode=GetFirstParentNode(currentNode);
 			currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
 			if (populateDialogQualityLogicalConsistency(currentNode)){
 				showNodeDialog("DialogQualityLogicalConsistency");
