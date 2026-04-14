@@ -1221,13 +1221,21 @@ function TransformTextCSVToTable(csvText, url, node) {
 		return;
 	}
 }
-
+function openFileDialog() { //Click the hide input type =file. All this is necessary to allow to load same file again and show file name. 
+    document.getElementById("csvInput").click();
+}
 function ReadFileImportCSV(event) {
 	var input = event.target;
+	
+	var file = input.files[0]; //Add file name to span to "fake" the input type=file
+	if (!file) return;
+	document.getElementById("fileNameLabel").textContent = file.name;
+
 	var node=getNodeDialog("DialogImportCSV");
 	var reader = new FileReader();
 	reader.onload = function() {
 		TransformTextCSVToTable(reader.result, null, node);
+		input.value = null;
 	};
 	reader.readAsText(input.files[0], document.getElementById("DialogImportCSVEncoding").value);
 }
