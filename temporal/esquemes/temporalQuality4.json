@@ -1,0 +1,105 @@
+{
+	"nodes": [
+		{
+			"id": "2foqa.7mu119g",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"date": "2024-01-10T08:15:23",
+					"species": "Turdus philomelos",
+					"count": 2
+				},
+				{
+					"date": "2024-01-22T10:42",
+					"species": "Carduelis carduelis",
+					"count": 7
+				},
+				{
+					"date": "2024-03-15T07:30:45",
+					"species": "Turdus merula",
+					"count": 3
+				},
+				{
+					"date": "2024-03-18T09:12:05",
+					"species": "Parus major",
+					"count": 5
+				},
+				{
+					"date": "2024-03-21T06:55:37",
+					"species": "Erithacus rubecula",
+					"count": 2
+				},
+				{
+					"date": "2024-03-25T11:20:18",
+					"species": "Columba livia",
+					"count": 12
+				},
+				{
+					"date": "2024-03-28T08:05:52",
+					"species": "Cyanistes caeruleus",
+					"count": 4
+				},
+				{
+					"date": "2024-04-02T07:48:29",
+					"species": "Pica pica",
+					"count": 2
+				},
+				{
+					"date": "2024-04-05T10:15",
+					"species": "Passer domesticus",
+					"count": 8
+				},
+				{
+					"date": "2024-04-10T09:33:41",
+					"species": "Streptopelia decaocto",
+					"count": 6
+				},
+				{
+					"date": "2024-04-12T07:59:14",
+					"species": "Fringilla coelebs",
+					"count": 3
+				},
+				{
+					"date": "2024-04-15T12:10:56",
+					"species": "Sturnus vulgaris",
+					"count": 15
+				}
+			],
+			"STAdataAttributes": {
+				"date": {
+					"type": "string"
+				},
+				"species": {
+					"type": "string"
+				},
+				"count": {
+					"type": "integer"
+				}
+			},
+			"x": 15,
+			"y": -58
+		},
+		{
+			"id": "8viut.m67flg",
+			"label": "Temporal quality",
+			"image": "temporalQuality.png",
+			"shape": "circularImage",
+			"x": -30,
+			"y": 54
+		}
+	],
+	"edges": [
+		{
+			"from": "2foqa.7mu119g",
+			"to": "1grkt.2q5t6n",
+			"arrows": "from"
+		},
+		{
+			"from": "2foqa.7mu119g",
+			"to": "8viut.m67flg",
+			"arrows": "from"
+		}
+	]
+}

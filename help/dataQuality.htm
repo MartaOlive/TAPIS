@@ -91,27 +91,40 @@
                 <h2 class="toolPage_title"><img src="../completenessomission.png" alt="icon completenessomission"
                         class="toolPage_title_icon">Completness omission
                 </h2>
+                <p><strong>Completeness (omission)</strong> evaluates whether a dataset <strong>contains all required
+                        values</strong> as
+                    defined by its schema or reference model. It identifies <strong>missing or undefined data</strong>
+                    elements and ensures that no
+                    mandatory information is omitted, preserving the integrity of the dataset.</p>
                 <p><strong>Setting Up the Node: </strong></p>
                 <img src="completnessOmission_image0.png" alt="icon" class="toolPage_image"
                     style="height:350px;width: auto; ">
 
                 <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Completeness Omission</strong> tool allows you to calculate the <strong>rate of completeness omission</strong>
-                    in your data. You can calculate the rate for <strong>one column</strong> at a time, but you <strong>can link as many nodes</strong> as
+                <p><strong>Completeness Omission</strong> tool allows you to calculate the <strong>rate of completeness
+                        omission</strong>
+                    in your data. You can calculate the rate for <strong>one column</strong> at a time, but you
+                    <strong>can link as many nodes</strong> as
                     you want to carry out different omission calculations. The result obtained each time will be added
-                    to the <strong>metadata</strong>.</p>
+                    to the <strong>metadata</strong>.
+                </p>
                 <img src="completnessOmission_image5.png" alt="icon" class="toolPage_image">
                 <p>To display the dialog, <i>double-click</i> the node with the left mouse button. This node is simple:
-                    it only includes a <strong>selector for the column to evaluate</strong> and a <strong>checkbox to create a new column</strong>. The
-                    value of this new column depends on whether the evaluated column contains a <strong>value (true)</strong> or is
-                    <strong>missing (false)</strong>.</p>
+                    it only includes a <strong>selector for the column to evaluate</strong> and a <strong>checkbox to
+                        create a new column</strong>. The
+                    value of this new column depends on whether the evaluated column contains a <strong>value
+                        (true)</strong> or is
+                    <strong>missing (false)</strong>.
+                </p>
                 <img src="completnessOmission_image1.png" alt="icon" class="toolPage_image">
                 <p>This is the result of the calculation. This dialog only appears after calculating the rate. To view
                     the result again, click on <a>Metadata</a> at the top of the table below.</p>
                 <img src="completnessOmission_image2.png" alt="icon" class="toolPage_image">
-                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so far</strong>.</p>
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
                 <img src="completnessOmission_image3.png" alt="icon" class="toolPage_image">
-                <p>Here you can see the new column created, containing <strong>true or false values</strong> based on the omission
+                <p>Here you can see the new column created, containing <strong>true or false values</strong> based on
+                    the omission
                     calculation.</p>
                 <img src="completnessOmission_image4.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
@@ -125,13 +138,69 @@
                 <h2 class="toolPage_title"><img src="../logicalConsistency.png" alt="icon logicalConsistency"
                         class="toolPage_title_icon">Logical consistency
                 </h2>
+                <p><strong>Logical consistency</strong> checks whether values in a dataset <strong>can coexist</strong>
+                    according to a
+                    <strong>reference table of valid combinations</strong>. It verifies that the relationships between
+                    variables follow predefined rules
+                    that define which values are allowed to appear together. This ensures that the data does not contain
+                    incompatible or logically contradictory combinations according to the defined reference model.
+                </p>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="logicalConsistency_image0.png" class="toolPage_image" style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
+                <p><strong>Logical consistency</strong> tool allows you to evaluate the quality of your data,
+                    specifically its logical consistency. You can use this tool with <strong>any kind of data</strong>.
+                    In TAPIS, this
+                    analysis is performed <strong>using another table as a reference</strong> (in this example:
+                    <i>Reference data node</i>).
+                </p>
 
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                <p>This is the data to analyze (Target data):</p>
+
+                <div class="image-wrapper" onclick="zoomToImage(this)">
+                    <img src="logicalConsistency_image2.png" alt="icon" class="toolPage_image zoomable">
+                </div>
+
+                <p>This is the data used as a reference (Reference data):</p>
+                <img src="logicalConsistency_image1.png" alt="icon" class="toolPage_image">
+                <p>To display the dialog, <i>double left-click</i> on the node. This dialog contains a table with two
+                    columns. <strong>Each column</strong> displays the information from <strong>one of the nodes
+                    </strong>connected. The <strong>left column</strong> shows
+                    the information from the <strong>first node connected</strong> to this tool, which should be the
+                    <strong>data to assess</strong>. The
+                    <strong>right column</strong> shows the <strong>reference data</strong> (the second connected node).
+                </p>
+
+                <p>Use <strong>two or more selectors</strong> in each column to indicate which values you want to
+                    evaluate. Column 1
+                    corresponds to Column 1, and so on. You can select only one column, but this will not perform a
+                    logical consistency evaluation.
+
+                    If you want to check whether values in a <strong>single column</strong> are correct, you should
+                    perform a <a
+                        href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#thematicQuality">Thematic quality
+                        evaluation (Thematic validity)</a>.
+                </p>
+                <p>The image below shows the selected values for this example.</p>
+                <img src="logicalConsistency_image3.png" alt="icon" class="toolPage_image">
+                <p>This is the result of the calculation. This dialog only appears after calculating the rate. To view
+                    the result again, click on <a>Metadata</a> at the top of the table below.</p>
+                <img src="logicalConsistency_image4.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
+                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="logicalConsistency_image5.png"
+                        alt="icon" class="toolPage_image zoomable"></div>
+                <p>Here you can see the new column created, containing <strong>true or false values</strong> based on
+                    the logical consistency calculation.</p>
+                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="logicalConsistency_image6.png"
+                        alt="icon" class="toolPage_image zoomable"></div>
+
+
+                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <p> <i>No one yet</i></p>
+                <!-- <ul>
+
+                </ul> -->
             </div>
         </div>
         <div class="toolPage_main" id="temporalQuality">
@@ -139,15 +208,198 @@
                 <h2 class="toolPage_title"><img src="../temporalQuality.png" alt="icon temporalQuality"
                         class="toolPage_title_icon">Temporal quality
                 </h2>
+                <p>Temporal quality evaluates the correctness and reliability of time-related information in a dataset.
+                    It ensures that temporal values are accurate, valid, and consistent according to defined rules, such
+                    as reference values, valid time ranges, expected resolution, and measurement frequency.</p>
+                <p><strong>Temporal accuracy:</strong>Temporal accuracy is a quantitative indicator of the correctness
+                    of time-related data. It is calculated from the dataset, either by averaging an uncertainty column
+                    or by computing the standard deviation of time values.</p>
+                <p><strong>Temporal validity:</strong> Temporal validity assesses whether time values conform to a
+                    predefined validity range, ensuring that all timestamps fall within acceptable limits.</p>
+                <p><strong>Temporal resolution: </strong>Temporal resolution is a quantitative indicator that measures
+                    the proportion of records that satisfy a predefined temporal granularity (e.g., hours, minutes),
+                    according to the required resolution of the dataset.</p>
+                <p><strong>Temporal consistency:</strong> Temporal consistency evaluates whether data follows an
+                    expected time pattern or frequency. It checks if the time intervals between records match the
+                    defined pattern (e.g., hourly), allowing for a small tolerance.</p>
+
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="temporalQuality_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
+                <p><strong>Temporal quality</strong> allows you to evaluate the quality of your data,
+                    specifically different types of temporal quality (<strong>accuracy, validity, resolution, and
+                        consistency</strong>).
+                    It is possible to evaluate <strong>one or more types at the same time</strong> by checking the
+                    <i>checkbox</i> for each one.
+                    This tool can be used with any kind of node that contains date-type data.
+                </p>
+
+                <p>To display the dialog, <i>double left-click</i> on the node. This is the general appearance of the
+                    dialog; each part will be explained below. Different datasets will be used in the examples.</p>
+                </p>
+                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="temporalQuality_image1.png" alt="icon"
+                        class="toolPage_image zoomable"></div>
+                <p>
+
+                <p>
+                    <strong>The temporal column</strong> at the top is used to indicate which <strong>column will be
+                        assessed</strong>. This selector is
+                    always used, except when calculating <i>temporal accuracy</i> by computing the <i>mean</i> of the
+                    values in a
+                    specific column that contains <i>uncertainties</i> in the dates. In this case, the selected column
+                    does not
+                    matter, as it will not be used.
+                </p>
+                <img src="temporalQuality_image6.png" alt="icon" class="toolPage_image">
+
+                <p>
+                    Check the <i>checkbox</i> <strong>Flag tue bad records</strong> at the bottom of the dialog to create a <strong>new column</strong> with true or false values for
+                    your calculated rates (valid for all temporal options except temporal accuracy, since it is a
+                    calculation).
+                </p>
+
+                <img src="temporalQuality_image26.png" alt="icon" class="toolPage_image">
+                <p><strong><u>Temporal accuracy:</u></strong></p>
+                <p>This is the date used to calculate it.</p>
+                <img src="temporalQuality_image2.png" alt="icon" class="toolPage_image">
+                <p>There are two ways to calculate it:</p>
+
+                <p><strong>Mean of the values in the uncertainty column:</strong> If you already have a column with
+                    calculated uncertainties, select it using the <i>selector</i>. The program will calculate the
+                    <strong>mean</strong> of this
+                    column.
+                </p>
+
+                <p><strong>Standard deviation of the temporal column:</strong> This method uses the column selected as
+                    the <strong>temporal column</strong>. It provides a <strong>single value for all the data</strong>,
+                    but it is also possible to
+                    calculate the <strong>standard deviation by grouping values</strong> (<i>grouped by another
+                        column</i>) using a different
+                    column as a guide (selected with the <i>selector</i>). If you select<strong> group mode</strong>,
+                    you can add a <strong>new column</strong>
+                    to your data with the <strong>uncertainties for each group</strong> by checking the <i>Create new
+                        column with mean
+                        uncertainty</i> option.</p>
+                <img src="temporalQuality_image3.png" alt="icon" class="toolPage_image">
+                <p>This is the result of the calculation. This dialog only appears after calculating the rate. To view
+                    the result again, click on <a>Metadata</a> at the top of the table below.</p>
+                <img src="temporalQuality_image4.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
+                <img src="temporalQuality_image5.png" alt="icon" class="toolPage_image">
+                <p>Here you can see the new column created using grouping mode, containing <strong>uncertainty
+                        values</strong>.</p>
+                <img src="temporalQuality_image7.png" alt="icon" class="toolPage_image">
+
+                <p><strong><u>Temporal validity:</u></strong></p>
+                <p>This is the date used to calculate it.</p>
+
+                <img src="temporalQuality_image8.png" alt="icon" class="toolPage_image">
+                <p>Enter the <i>from</i> and <i>to</i> dates. You can write them directly in ISO format or use the
+                    calendar. To use the calendar, click the calendar icon; it will open, then select a date and click
+                    outside the calendar to close it. The date will be filled in automatically.</p>
+                <img src="temporalQuality_image9.png" alt="icon" class="toolPage_image">
+                <p>This is the result of the calculation. This dialog only appears after calculating the rate. To view
+                    the result again, click on <a>Metadata</a> at the top of the table below.</p>
+
+                <img src="temporalQuality_image10.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
+
+                <img src="temporalQuality_image12.png" alt="icon" class="toolPage_image">
+                <p>Here you can see the new column created, containing <strong>true or false values</strong> based on
+                    the temporal validation calculation.</p>
+                <img src="temporalQuality_image11.png" alt="icon" class="toolPage_image">
+
+                <p><strong><u>Temporal resolution:</u></strong></p>
+                <p>This is the date used to calculate it.</p>
+
+                <img src="temporalQuality_image13.png" alt="icon" class="toolPage_image">
+                <p>
+                    Choose the option to test your values. The selected option will be the <strong>minimum
+                        level</strong> that is
+                    considered valid. For example, if you select <i>hours</i>, dates with <i>hours</i> will be
+                    <strong>valid</strong>, as well as dates
+                    with <i>minutes, seconds, and fractions of a second</i>. Dates with only <i>days, months, or
+                        years</i> will be
+                    considered <strong>invalid</strong>.
+                    In the example, most dates have <i>second</i> precision, which will be <strong>valid</strong>, but
+                    some dates have only <i>hour</i>
+                    precision, which will be considered <strong>invalid</strong>.
+                </p>
+                <img src="temporalQuality_image14.png" alt="icon" class="toolPage_image">
+                <p>This is the result of the calculation. This dialog only appears after calculating the rate. To view
+                    the result again, click on <a>Metadata</a> at the top of the table below.</p>
+
+                <img src="temporalQuality_image15.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
+                <img src="temporalQuality_image16.png" alt="icon" class="toolPage_image">
+                <p>Here you can see the new column created, containing <strong>true or false values</strong> based on
+                    the temporal resolution.</p>
+
+                <img src="temporalQuality_image17.png" alt="icon" class="toolPage_image">
+
+                <p><strong><u>Temporal consistency:</u></strong></p>
+                <p>This is the date used to calculate it.</p>
+                <img src="temporalQuality_image18.png" alt="icon" class="toolPage_image">
+                <p>
+                    This tool automatically <strong>calculates the time intervals</strong> based on the specified
+                    parameters, <strong>starting
+                        from the first value</strong>. There are two ways to apply it. Below are two examples to help
+                    you understand
+                    how each method works.
+                </p>
+
+                <p>
+                    <strong>Distance to the previous data:</strong> This method starts <strong>from the first
+                        date</strong> and
+                    <strong>calculates the expected range in which the next date should fall</strong>. If the date fits
+                    within this
+                    range, it is considered valid; otherwise, it is considered invalid. <strong>Each calculation is
+                        based on the
+                        previous date</strong>. This allows you to continue validating subsequent dates even if there is
+                    a gap in the
+                    data.
+                </p>
+                <img src="temporalQuality_image19.png" alt="icon" class="toolPage_image">
+                <p>This is the result of the calculation. This dialog only appears after calculating the rate. To view
+                    the result again, click on <a>Metadata</a> at the top of the table below.</p>
+
+                <img src="temporalQuality_image20.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
+                <img src="temporalQuality_image21.png" alt="icon" class="toolPage_image">
+                <p>Here you can see the new column created, containing <strong>true or false values</strong> based on
+                    the temporal consistency calculation. As you can see, there is only one invalid value, only the one
+                    immediatly after the gap.</p>
+                <img src="temporalQuality_image22.png" alt="icon" class="toolPage_image">
+                <p>
+                    <strong>Distance from the global interval baseline:</strong> This method builds an ideal time
+                    sequence starting from the first date and checks whether each date matches this expected pattern.
+                    This method is useful when gaps in the data are not allowed.
+                </p>
+                <img src="temporalQuality_image23.png" alt="icon" class="toolPage_image">
+                <p>This is the result of the calculation. This dialog only appears after calculating the rate. To view
+                    the result again, click on <a>Metadata</a> at the top of the table below (not showed in this
+                    example).</p>
+                <img src="temporalQuality_image24.png" alt="icon" class="toolPage_image">
+                <p>
+                    Here you can see the new column that has been created, containing <strong>true or false
+                        values</strong> based on the temporal consistency calculation. As you can see, all values after
+                    the gap are invalid.
+                </p>
+                <img src="temporalQuality_image25.png" alt="icon" class="toolPage_image">
+
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
             </div>
         </div>
         <div class="toolPage_main" id="positionalQuality">

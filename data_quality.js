@@ -204,30 +204,29 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
     var fromDate=new Date(from);
     var toDate=new Date(to);
     var date;
-    for (var i = 0; i < data.length; i++) {
-        if (from) {
-            date= data[i][attributeSelected]
-            if (date < fromDate) {
-                if (date > toDate) {
-                    count++;
-                    if (flag) data[i]["temporalValidity"] = true;
+	for (var i = 0; i < data.length; i++) {
+		date = new Date(data[i][attributeSelected]); 
 
-                } else {
-                    if (flag) data[i]["temporalValidity"] = false;
-                }
-            } else {
-                if (flag) data[i]["temporalValidity"] = false;
-            }
-        } else { //only to
-            if (date > toDate) {
-                count++;
-                if (flag) data[i]["temporalValidity"] = true;
-
-            } else {
-                if (flag) data[i]["temporalValidity"] = false;
-            }
-        }
-    }
+		if (from) {
+			if (date >= fromDate) {
+				if (date <= toDate) {
+					count++;
+					if (flag) data[i]["temporalValidity"] = true;
+				} else {
+					if (flag) data[i]["temporalValidity"] = false;
+				}
+			} else {
+				if (flag) data[i]["temporalValidity"] = false;
+			}
+		} else { // only to
+			if (date <= toDate) { 
+				count++;
+				if (flag) data[i]["temporalValidity"] = true;
+			} else {
+				if (flag) data[i]["temporalValidity"] = false;
+			}
+		}
+	}
 	var params= [{"name": "temporal column","value": attributeSelected}]
 	if(from) params.push({"name": "date from","value": from});
 	if(to) params.push({"name": "date to","value": to});
@@ -271,7 +270,7 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 								}
 							},
 							"valueType": "number",
-							"values": [ (count / dataTarget.length) * 100]
+							"values": [ (count / data.length) * 100]
 						}
 					]
 				}
@@ -282,7 +281,7 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 }
 function calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata, flag) {
     var attributes = getDataAttributes(data); 
-    if (attributes[attributeSelected].type != "isodatetime") return null;
+   //if (attributes[attributeSelected].type != "isodatetime") return null;
     var regex, count = 0;
     for (var i = 0; i < data.length; i++) {
         switch (resolutionRadioValue) {
@@ -423,7 +422,7 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 
 function calculateDataQualityTemporalConsistency(data, attributeSelected, number, consistencyRadioValue, consistencyRadioMethod, tolerance, metadata, flag) {
     var attributes = getDataAttributes(data); 
-    if (attributes[attributeSelected].type != "isodatetime") return null;
+   //Without 
 
     var currentDate, previousDate;
     var dateFrom, validRange;
@@ -721,7 +720,7 @@ function calculateTemporalAccuracyFromTimes(data,timeColumn,metadata,groupColumn
 								"params": [
 									{
 										"name": "Temporal uncertanty column",
-										"value": uncertaintyAttribute
+										"value": timeColumn
 									},
 									{
 										"name": "Probability",

@@ -9625,8 +9625,8 @@ function populateDialogQualityLogicalConsistency(node){
 	saveNodeDialog("DialogQualityLogicalConsistency", node);
 	if (parentsNodes.length!=2) return false; //node to evaluate and reference nodes are required
 
-	document.getElementById("DialogQualityLogicalConsistency_table_0").innerHTML=parentsNodes[0].label;
-	document.getElementById("DialogQualityLogicalConsistency_table_1").innerHTML=parentsNodes[1].label;
+	document.getElementById("DialogQualityLogicalConsistency_table_0").innerHTML="Node name: "+ parentsNodes[0].label;
+	document.getElementById("DialogQualityLogicalConsistency_table_1").innerHTML="Node name: "+parentsNodes[1].label;
 	var div= document.getElementById("DialogQualityLogicalConsistency_table_div");
 	var options1="",options2="", objectKeys;
 	//node 1
@@ -9670,15 +9670,15 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 	var numTargued, numReference;
 
 	//Wich node is target and wich reference
-	select= document.getElementById("DialogQualityLogicalConsistency_select_targetOrReference_0");
-	selected= select.options[select.selectedIndex].value;
-	if(selected=="target"){
+	// select= document.getElementById("DialogQualityLogicalConsistency_select_targetOrReference_0");
+	// selected= select.options[select.selectedIndex].value;
+	// if(selected=="target"){
 		numTargued=0;
 		numReference=1; 
-	}else{
-		numTargued=1;
-		numReference=0; 	
-	}
+	// }else{
+	// 	numTargued=1;
+	// 	numReference=0; 	
+	// }
 
 	for (var i=1;i<4;i++){
 		select=document.getElementById(`DialogQualityLogicalConsistency_selectAttribute${i}_${numTargued}`);
@@ -9799,7 +9799,7 @@ function okButtonDataQualityTemporalQuality(event){
 				var newColumn= document.getElementById("TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox").checked?true:false;
 				newData.accuracy=calculateTemporalAccuracyFromTimes(data, attributeSelected,metadata,temporalUncertaintyGroupColumnValue, newColumn)
 			}else{ //all
-				newData.accuracyy=calculateTemporalAccuracyFromTimes(data, attributeSelected,metadata)
+				newData.accuracy=calculateTemporalAccuracyFromTimes(data, attributeSelected,metadata)
 			}
 			
 		}
@@ -9812,11 +9812,11 @@ function okButtonDataQualityTemporalQuality(event){
 	} 
 	
 	if (resolution_calculate){
-		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata,flag,filter);
+		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata,flag);
 	} 
 	if (consistency_calculate){
 		if(sort)sortDates(data, attributeSelected);
-		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,metadata, flag, filter);
+		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,metadata, flag);
 	}
 
 	

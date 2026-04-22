@@ -1947,24 +1947,16 @@
 			<div id="DialogQualityLogicalConsistency_table_div">
 				<table style="border:2px solid black; border-collapse:collapse;">
 					<thead>
-						<th id="DialogQualityLogicalConsistency_table_0"
-							style="border:1px solid black; padding:6px; border-right:1px solid black; text-align:center;"></th>
-						<th id="DialogQualityLogicalConsistency_table_1"
-							style="border:1px solid black; padding:6px; text-align:center;"></th>
+						<th style="border:1px solid black; padding:6px; border-right:1px solid black; text-align:center;"> Target data</th>
+						<th style="border:1px solid black; padding:6px; text-align:center;">Reference data</th>
 					</thead>
 					<tbody>
 						<tr>
-							<td style="border:1px solid black; padding:6px; border-right:1px solid black; text-align:center;">
-								<select id="DialogQualityLogicalConsistency_select_targetOrReference_0">
-									<option value="target">Target</option>
-									<option value="reference">Reference</option>
-								</select>
+							<td style="border:1px solid black; padding:6px; border-right:1px solid black; text-align:center;" id="DialogQualityLogicalConsistency_table_0">
+
 							</td>
-							<td style="border:1px solid black; padding:6px; text-align:center;">
-								<select id="DialogQualityLogicalConsistency_select_targetOrReference_1">
-									<option value="target">Target</option>
-									<option value="reference" selected>Reference</option>
-								</select>
+							<td style="border:1px solid black; padding:6px; text-align:center;" id="DialogQualityLogicalConsistency_table_1">
+
 							</td>
 						</tr>
 						<tr>
@@ -2039,7 +2031,7 @@
 			<div style="margin-top: 20px;">
 				<label><input type="checkbox" value="logicalConsistency_flagBadRecords" id="dataQuality_logicalConsistency_flag" name="dataQuality_logicalConsistency">Flag the bad records (true/false)</label>
 			</div>
-			<div class="center">
+			<div class="center" style="margin-top: 20px;">
 				<button value="ok" onClick="okButtonDataQualityDialogQualityLogicalConsistency(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogQualityLogicalConsistencyNodeId"></input>
@@ -2051,7 +2043,7 @@
 			<div id="DialogQualityTemporalQuality_attributesList">
 				<label>Temporal column: </label><select  id="TemporalQuality_select_temporalColumn"></select>
 			</div>
-			<fieldset><legend><label><input type="checkbox" checked="checked" value="TemporalQuality_calculate_temporalAccuracy" id="TemporalQuality_checkbox_calculate_temporalAccuracy" name="TemporalQuality_checkbox_calculate">Temporal accuracy</label></legend>
+			<fieldset><legend><label><input type="checkbox"  value="TemporalQuality_calculate_temporalAccuracy" id="TemporalQuality_checkbox_calculate_temporalAccuracy" name="TemporalQuality_checkbox_calculate">Temporal accuracy</label></legend>
 				<table style="border-collapse: collapse; width: 100%;">
 					<tbody>
 

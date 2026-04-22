@@ -26,9 +26,10 @@
     margin-bottom: 6px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 } */
- body {
+body {
     overflow: auto;
 }
+
 /* Contenidor vertical */
 .recipeContainer {
     display: flex;
@@ -333,6 +334,7 @@ body {
     overflow: auto;
     max-width: 100%;
     transition: all 0.4s ease;
+    cursor: zoom-in;
 }
 
 .image-wrapper.zoom {
@@ -345,19 +347,24 @@ body {
     z-index: 9999;
     background: white;
     padding: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    cursor: zoom-out;
+
 }
 
 /* imatge */
 .zoomable {
     transition: transform 0.4s ease;
 }
+
 .image-wrapper.zoom img {
-    max-width: none;   
+    max-width: none;
 }
+
 .zoomable.zoom {
     transform: scale(2);
     transform-origin: top left;
+    cursor: zoom-out;
 }
 
 
