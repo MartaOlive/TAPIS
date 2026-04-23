@@ -254,7 +254,8 @@
                 <img src="temporalQuality_image6.png" alt="icon" class="toolPage_image">
 
                 <p>
-                    Check the <i>checkbox</i> <strong>Flag tue bad records</strong> at the bottom of the dialog to create a <strong>new column</strong> with true or false values for
+                    Check the <i>checkbox</i> <strong>Flag tue bad records</strong> at the bottom of the dialog to
+                    create a <strong>new column</strong> with true or false values for
                     your calculated rates (valid for all temporal options except temporal accuracy, since it is a
                     calculation).
                 </p>
@@ -407,8 +408,105 @@
                 <h2 class="toolPage_title"><img src="../positionalQuality.png" alt="icon positionalQuality"
                         class="toolPage_title_icon">Positional quality
                 </h2>
+                <p><strong>Positional quality</strong> evaluates the correctness and reliability of <strong>spatial
+                        information</strong> in a dataset. It
+                    ensures that positional values are consistent and meaningful according to defined rules, such as
+                    expected precision, measurement conditions, and spatial constraints.</p>
+
+                <p><strong>Positional accuracy:</strong> Positional accuracy is a quantitative indicator of the
+                    correctness of spatial
+                    data. It is calculated using the <strong>mean of the reported measurement uncertainties</strong>
+                    when these are
+                    available. When no uncertainty information is provided, positional accuracy is computed using the
+                    <strong>RMSE</strong> (Root Mean Square Error) of the repeated position measurements, considering
+                    the dispersion of
+                    the observed coordinates.
+                </p>
+
+                <p> <strong>Positional validity:</strong> Positional validity assesses whether spatial values fall
+                    within <strong>predefined
+                        spatial limits</strong>. It is evaluated by defining maximum and minimum allowable values for
+                    the
+                    coordinates, and checking whether each position lies within these valid ranges. Any measurement
+                    outside these bounds is considered invalid.
+                </p>
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="positionalQuality_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ">
                 <p><strong>How to Use the Node: </strong></p>
+                <p><strong>Positional quality</strong> allows you to evaluate the quality of your data,
+                    specifically different types of positional quality (<strong>accuracy and validity</strong>).
+                    It is possible to evaluate <strong>one or more types at the same time</strong> by checking the
+                    <i>checkbox</i> for each one.
+                    This tool can be used with any kind of node that contains date-type data.
+                <p>This is the data used in the example.</p>
+                <img src="positionalQuality_image1.png" alt="icon" class="toolPage_image">
+                <p>To display the dialog, <i>double left-click</i> on the node. This is the general appearance of the
+                    dialog; each part will be explained below. Same dataset will be used in the examples.</p>
+                </p>
+                <img src="positionalQuality_image2.png" alt="icon" class="toolPage_image">
+                <p><strong>Geographic coordinates: </strong> Select the two columns containing latitude and longitude.
+                    These columns are used for positional accuracy if the dataset does not include a column with
+                    uncertainty values, and for positional validity when selected.</p>
+                <img src="positionalQuality_image3.png" alt="icon" class="toolPage_image">
+
+                <p><strong><u>Positional accuracy:</u></strong></p>
+                <p>There are two ways to calculate it:</p>
+
+                <p><strong>Mean of the uncertainties of each position:</strong> If you already have a column with
+                    calculated uncertainties, select it using the <i>selector</i>. The program will calculate the
+                    <strong>mean</strong> of this column.
+                </p>
+
+                <p><strong>Mean of the values in the geometry column (RMSE):</strong> A <strong>single accuracy
+                        value</strong> is
+                    calculated using the columns selected in <strong>Geographic coordinates</strong>. The
+                    <strong>RMSE</strong> is
+                    computed from these values and can be calculated for the entire dataset (selecting <strong>All
+                        records</strong>) or
+                    by groups (selecting <strongGrouped by columnGrouping column></strong>) defined by another column
+                        (selected using the
+                        <i>selector</i>) in <strong>grouping mode</strong>. If grouping mode is chosen, you can
+                        optionally
+                        <strong> create a new column</strong> containing the RMSE for each group by checking the
+                        <strong>Create new column with
+                            mean uncertainty</strong> checkbox.
+                </p>
+
+                <img src="positionalQuality_image4.png" alt="icon" class="toolPage_image">
+                <p>
+                <p>This is the result of calculating the accuracy for all records using the geographic coordinates.</p>
+                This dialog only appears after calculating the rate. To view
+                the result again, click on <a>Metadata</a> at the top of the table below.</p>
+                <img src="positionalQuality_image5.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
+                <img src="positionalQuality_image6.png" alt="icon" class="toolPage_image">
+
+                <p><strong><u>Positional validity:</u></strong></p>
+                <p>Set the <strong>coordinate limits</strong> for your data. <strong>X</strong> corresponds to
+                    <strong>longitude</strong> values and <strong>Y</strong> to <strong>latitude</strong> values.
+                    You can define limits for X and Y using minimum and maximum values (<strong>X min, X max, Y min, and
+                        Y max</strong>).
+                    You may set between one and all four of these limits.</p>
+
+                <p>Check the <i>checkbox</i> <strong>Flag the bad records</strong> to create a <strong>new
+                        column</strong> with true or false values for the calculated results.</p>
+                <img src="positionalQuality_image7.png" alt="icon" class="toolPage_image">
+                <p>This is the result of calculating the validity using the geographic coordinates.</p>
+                This dialog only appears after calculating the rate. To view
+                the result again, click on <a>Metadata</a> at the top of the table below.</p>
+                <img src="positionalQuality_image8.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
+                <img src="positionalQuality_image9.png" alt="icon" class="toolPage_image">
+                <p>Here you can see the new column created, containing <strong>true or false values</strong> based on
+                    the positional validation calculation.</p>
+                <img src="positionalQuality_image10.png" alt="icon" class="toolPage_image">
+
+
+
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
