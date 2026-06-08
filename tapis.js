@@ -10115,13 +10115,6 @@ function okButtonDataQualityThematicQuality(event) {
 	}
 		
 	if (valid1 && valid2) {
-		node.STAdata = dataToEvaluate;
-		node.STAdataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(dataToEvaluate);
-		node.STAmetadata = metadata;
-		
-		networkNodes.update(node);
-		updateQueryAndTableArea(node);
-		hideNodeDialog("DialogQualityThematicQuality", event);
 
 		if (thematicAccuracy || thematicValidity) {
 			var html = "";
@@ -10175,6 +10168,13 @@ function okButtonDataQualityThematicQuality(event) {
 		else {
 			alert(thematicValidity);
 		}
+		node.STAdata = dataToEvaluate;
+		node.STAdataAttributes =  getDataAttributes(dataToEvaluate);
+		node.STAmetadata = metadata;
+		
+		networkNodes.update(node);
+		updateQueryAndTableArea(node);
+		hideNodeDialog("DialogQualityThematicQuality", event);
 	}
 }
 

@@ -1,0 +1,130 @@
+{
+	"nodes": [
+		{
+			"id": "6u7bt.5eea13",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 1,
+					"Bird_Species_Observed": "Parus major"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 1,
+					"Bird_Species_Observed": "Parus major"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 1,
+					"Bird_Species_Observed": "Parus major"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 1,
+					"Bird_Species_Observed": "Parus major"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 1,
+					"Bird_Species_Observed": "Parus caeruleus"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 1,
+					"Bird_Species_Observed": "Parus caeruleus"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 1,
+					"Bird_Species_Observed": "Parus caeruleus"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 2,
+					"Bird_Species_Observed": "Phylloscopus collybita"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 2,
+					"Bird_Species_Observed": "Phylloscopus collybita"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 2,
+					"Bird_Species_Observed": "Phylloscopus collybita"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 2,
+					"Bird_Species_Observed": "Phylloscopus collybita"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 2,
+					"Bird_Species_Observed": "Phylloscopus trochilus"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 2,
+					"Bird_Species_Observed": "Phylloscopus trochilus"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 2,
+					"Bird_Species_Observed": "Phylloscopus trochilus"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 3,
+					"Bird_Species_Observed": "Motacilla alba"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 3,
+					"Bird_Species_Observed": "Motacilla alba"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 3,
+					"Bird_Species_Observed": "Motacilla alba"
+				},
+				{
+					"Date_ISO": "2026-05-15",
+					"Taxonomic_Group_No": 3,
+					"Bird_Species_Observed": "Motacilla alba"
+				}
+			],
+			"STAdataAttributes": {
+				"Date_ISO": {
+					"type": "string"
+				},
+				"Taxonomic_Group_No": {
+					"type": "integer"
+				},
+				"Bird_Species_Observed": {
+					"type": "string"
+				}
+			},
+			"x": 36,
+			"y": 58
+		},
+		{
+			"id": "14hmn.kpiibio",
+			"label": "Thematic quality",
+			"image": "thematicQuality.png",
+			"shape": "circularImage",
+			"x": -33,
+			"y": -52
+		}
+	],
+	"edges": [
+		{
+			"from": "6u7bt.5eea13",
+			"to": "14hmn.kpiibio",
+			"arrows": "from"
+		}
+	]
+}
