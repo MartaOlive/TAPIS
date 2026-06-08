@@ -2349,89 +2349,172 @@
 		</form>
 	</dialog>
 
-
-
 	<dialog id="DialogQualityThematicQuality" onClose='hideNodeDialog("DialogQualityThematicQuality", event)'>
-			<form>
-				<h3> Thematic quality</h3>
-				<div> <label>Table to assess: </label><span id="ThematicQuality_select_tableAssess"></span></div>
-				
-				<div>
-					<fieldset><legend><input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy_column" >Thematic accuracy by accuracy column</legend>
-								<label>	Mean of uncertainty column: </label>
-								<select id="DialogQualityThematicQuality_select_uncertantyColumn"></select>
-					</fieldset> <br>
-					<label>Column to assess:</label><select id="DialogQualityThematicQuality_attributesList"></select><br>
+		<form>
+			<h3> Thematic quality</h3>
 
-					<fieldset><legend><label><input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy_values" >Thematic accuracy by values</label></legend>
-						<table style="width:100%; border-collapse:collapse;">
+			<div style="margin-bottom: 20px;"> 
+				<label><strong>Table to assess: </strong></label>
+				<span id="ThematicQuality_select_tableAssess"></span>
+			</div>
 
+			<div>
 
-							<tr>
-								<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
+				<fieldset>
+					<legend>
+						<input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy_column">
+						Thematic accuracy by accuracy column
+					</legend>
+					<label>Mean of uncertainty column: </label>
+					<select id="DialogQualityThematicQuality_select_uncertantyColumn"></select>
+				</fieldset>
+
+				<br>
+
+				<div style="display:flex; gap:20px; align-items:flex-start;">
+
+					<div style="min-width:250px; max-width:300px;">
+						<div style="background:#f5f5f5; padding:10px; border-radius:6px;">
+							<label><strong>Attribute selection</strong></label>
+							<br><br>
+
+							<label>Column to assess:</label><br>
+							<select id="DialogQualityThematicQuality_attributesList"></select>
+
+							<br><br>
+
+							<small style="color:#666;">
+								Used for thematic accuracy by values and thematic validity
+							</small>
+						</div>
+					</div>
+
+					<div style="flex:1;">
+
+						<fieldset>
+							<legend>
 								<label>
-									<input type="radio" id="thematicQuality_radio_thematicAccuracy_string" name="thematicQuality_radio_thematicAccuracy_way" value="alfaNum" onclick="enableGroupingModeInThematicQuality(true)" checked>
-									Mode of non-numeric column (Most frequent value and its frequency)
+									<input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy_values">
+									Thematic accuracy by values
 								</label>
-								</td>
+							</legend>
 
-								<td rowspan="2" style="vertical-align:top; padding:10px;">
-								<fieldset>
-									<legend>Grouping mode</legend>
+							<table style="width:100%; border-collapse:collapse;">
+								<tr>
+									<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
+										<label>
+											<input type="radio" id="thematicQuality_radio_thematicAccuracy_string" name="thematicQuality_radio_thematicAccuracy_way" value="alfaNum" onclick="enableGroupingModeInThematicQuality(true)" checked>
+											Mode of non-numeric column (Most frequent value and its frequency)
+										</label>
+									</td>
 
-									<label>
-									<input type="radio" 	id="thematicQuality_radio_thematicAccuracy_group" name="thematicQuality_radio_thematicAccuracy_grouping" 	checked>
-									Grouped by column
-									</label>
-									<label>
-									Grouping column:
-									<select id="DialogQualityThematicQuality_select_accuracy_group"></select>
-									</label>
-									<br>
-									<label style="margin-left:30px;">
-									<input type="checkbox" 	id="thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox" 	checked>
-									Create new columns with grouped result
-									</label>
-									<br>
-									<label>
-									<input type="radio" 	id="thematicQuality_radio_thematicAccuracy_column" 	name="thematicQuality_radio_thematicAccuracy_grouping">
-									All records
-									</label>
-								</fieldset>
-								</td>
-							</tr>
+									<td rowspan="2" style="vertical-align:top; padding:10px;">
+										<fieldset>
+											<legend>Grouping mode</legend>
 
-							<tr>
-								<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
+											<label>
+												<input type="radio" id="thematicQuality_radio_thematicAccuracy_group" name="thematicQuality_radio_thematicAccuracy_grouping" checked>
+												Grouped by column
+											</label>
+
+											<label>
+												Grouping column:
+												<select id="DialogQualityThematicQuality_select_accuracy_group"></select>
+											</label>
+
+											<br>
+
+											<label style="margin-left:30px;">
+												<input type="checkbox" id="thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox" checked>
+												Create new columns with grouped result
+											</label>
+
+											<br>
+
+											<label>
+												<input type="radio" id="thematicQuality_radio_thematicAccuracy_column" name="thematicQuality_radio_thematicAccuracy_grouping">
+												All records
+											</label>
+										</fieldset>
+									</td>
+								</tr>
+
+								<tr>
+									<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
+										<label>
+											<input type="radio" id="thematicQuality_radio_thematicAccuracy_number" name="thematicQuality_radio_thematicAccuracy_way" value="number" onclick="enableGroupingModeInThematicQuality(true)">
+											Mean of the standard deviation (numeric)
+										</label>
+									</td>
+								</tr>
+							</table>
+
+						</fieldset>
+
+						<br>
+
+						<fieldset>
+							<legend>
 								<label>
-									<input type="radio" id="thematicQuality_radio_thematicAccuracy_number" name="thematicQuality_radio_thematicAccuracy_way" value="number" onclick="enableGroupingModeInThematicQuality(true)">
-									Mean of the standard deviation (numeric)
+									<input type="checkbox" id="ThematicQuality_checkbox_ThematicValidity">
+									Thematic validity
 								</label>
-								</td>
-							</tr>
-						</table>
+							</legend>
 
-					</fieldset>
-					<fieldset><legend><label><input type="checkbox" id="ThematicQuality_checkbox_ThematicValidity">Thematic validity</label></legend>
-							<div><label>Table with list of possible values: </label><span id="ThematicQuality_select_tableList"></span></div>
-							<label><input type="radio" id="thematicQuality_radio_thematicValidity_list" name="thematicQuality_radio_thematicValidity" checked> List of values </label><select id="DialogQualityThematic_select_Validity"></select><br>
-							<label><input type="radio" id="thematicQuality_radio_thematicValidity_range" name="thematicQuality_radio_thematicValidity"> Range</label>	
-							<label style ="margin-left: 15px">From:<input type="text" id="thematicQuality_input_thematicValidity_from"> </label>
-							<label>To: <input type="text" id="thematicQuality_input_thematicValidity_to"></label>
-							<br><label><input type="checkbox"  id="dataQuality_thematicValidity_flag">Flag the bad records (true/false)</label>
-					</fieldset>
-				</div>
-				<div>
-				
+							<div>
+								<label>Table with list of possible values: </label>
+								<span id="ThematicQuality_select_tableList"></span>
+							</div>
 
-				</div>
-				<div class="center">
-					<button value="default" onClick="okButtonDataQualityThematicQuality(event)" >Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
-				</div>
+							<label>
+								<input type="radio" id="thematicQuality_radio_thematicValidity_list" name="thematicQuality_radio_thematicValidity" checked>
+								List of values
+							</label>
 
-			<input type="hidden" id="DialogQualityThematicQualityNodeId"></input>
-			</form>
+							<select id="DialogQualityThematic_select_Validity"></select>
+
+							<br>
+
+							<label>
+								<input type="radio" id="thematicQuality_radio_thematicValidity_range" name="thematicQuality_radio_thematicValidity">
+								Range
+							</label>
+
+							<label style="margin-left: 15px">
+								From:<input type="text" id="thematicQuality_input_thematicValidity_from">
+							</label>
+
+							<label>
+								To: <input type="text" id="thematicQuality_input_thematicValidity_to">
+							</label>
+
+							<br>
+
+							<label>
+								<input type="checkbox" id="dataQuality_thematicValidity_flag">
+								Flag the bad records (true/false)
+							</label>
+						</fieldset>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="center">
+				<button value="default" onClick="okButtonDataQualityThematicQuality(event)">Ok</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+
+			<input type="hidden" id="DialogQualityThematicQualityNodeId">
+		</form>
 	</dialog>
+
+
+
+	 
+
+
+
 
 	<dialog id="dataQualityResult" onClose='hideNodeDialog("DialogQualityTemporalQuality", event)'>
 		<form>

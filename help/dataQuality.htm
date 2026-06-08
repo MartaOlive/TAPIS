@@ -488,7 +488,8 @@
                     <strong>longitude</strong> values and <strong>Y</strong> to <strong>latitude</strong> values.
                     You can define limits for X and Y using minimum and maximum values (<strong>X min, X max, Y min, and
                         Y max</strong>).
-                    You may set between one and all four of these limits.</p>
+                    You may set between one and all four of these limits.
+                </p>
 
                 <p>Check the <i>checkbox</i> <strong>Flag the bad records</strong> to create a <strong>new
                         column</strong> with true or false values for the calculated results.</p>
@@ -504,16 +505,13 @@
                     the positional validation calculation.</p>
                 <img src="positionalQuality_image10.png" alt="icon" class="toolPage_image">
 
-
-
-
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
                             Determining data quality of a sequence of observations from a Geopackage equivalent to a
                             STA</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
             </div>
         </div>
         <div class="toolPage_main" id="thematicQuality">
@@ -521,8 +519,35 @@
                 <h2 class="toolPage_title"><img src="../thematicQuality.png" alt="icon thematicQuality"
                         class="toolPage_title_icon">Thematic quality
                 </h2>
+                <p><strong>Thematic quality</strong> evaluates the correctness and reliability of <strong>attribute
+                        information</strong> in a dataset. It ensures that thematic values are consistent and
+                    meaningful according to defined rules, such as expected classifications, measurement
+                    uncertainties, and domain constraints.</p>
+
+                <p><strong>Thematic accuracy:</strong> Thematic accuracy is a quantitative indicator of the
+                    correctness of attribute data. When uncertainty values are available, it is calculated using the
+                    <strong>mean of the values in the uncertainty column</strong>. When no explicit uncertainty
+                    information is provided, thematic accuracy is derived from the observed attribute values.
+                    For <strong>numeric attributes</strong>, it is computed as the <strong>mean standard
+                        deviation</strong> of the values, reflecting their dispersion. For <strong>non-numeric
+                        attributes</strong>, thematic accuracy is estimated using the <strong>relative frequency of
+                        the mode</strong> (i.e., the most frequently occurring value), representing the level of
+                    agreement among observations.
+                </p>
+
+                <p><strong>Thematic validity:</strong> Thematic validity assesses whether attribute values conform
+                    to <strong>predefined thematic constraints</strong>. For categorical data, this involves checking
+                    whether values belong to a <strong>defined list of valid categories</strong>. For numeric data,
+                    validity is evaluated by verifying that values fall within <strong>specified minimum and maximum
+                        ranges</strong>. Any value outside these constraints is considered invalid.</p>
+
                 <p><strong>Setting Up the Node: </strong></p>
+
                 <p><strong>How to Use the Node: </strong></p>
+                        // LLeida i LLeida sense espai
+                        // % superior a 100
+
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
