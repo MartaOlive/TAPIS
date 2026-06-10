@@ -7661,18 +7661,6 @@ function networkDoubleClick(params) {
 					if (parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
 					populateUncertaintyDialog(currentNode)
 					networkNodes.update(currentNode);
-				// 	open=true;
-				// 	if(parentNode.STAdataAttributes){
-				// 		currentNode.STAdataAttributes=parentNode.STAdataAttributes;
-				// 		populateuploadToICDialogUploadIC(currentNode);
-				// 		if (parentNode.STAmetadata && open==true) {
-				// 			currentNode.STAmetadata= parentNode.STAmetadata;
-				// 		}else{
-				// 			alert("The data has to contain metadata");
-				// 		}
-				// 	}else{
-				// 		alert("The data has to had attributes");
-				// 	}
 				}else{
 				 	open=false;
 				 	alert("The node conected has to have data");
@@ -7998,9 +7986,6 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "thematicQuality.png") {
 			var parentNode=GetParentNodes(currentNode);
 			if (parentNode) {
-				//currentNode.STAdata= deapCopy(parentNode.STAdata);
-				//currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-				//currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
 				if (populateDialogQualityThematicQuality(currentNode)){
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityThematicQuality");
@@ -9598,12 +9583,13 @@ function okButtonDataQualityCompletnessOmission(event){
 	var selected= select.options[select.selectedIndex].value;
 	var flag= (document.getElementById("dataQuality_omission_flag").checked)?true:false;
 	var infoDataOmission;
-	var metadata= (node.STAmetadata)?node.STAmetadata:{}
+	var metadata= (node.STAmetadata)?deapCopy(node.STAmetadata):{}
 
 	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected,metadata, flag); //Response:data, Total, true, false, %omission, %completness
 
 	node.STAdata=data;
 	node.STAdataAttributes=getDataAttributes(data);
+	node.STAmetadata=metadata;
 	networkNodes.update(node);
 	hideNodeDialog("DialogQualityCompletnessOmission", event);
 	
@@ -9702,7 +9688,7 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 		idTarget=document.getElementById("DialogQualityLogicalConsistency_table_div").getAttribute("data-value_1");
 		idReference=document.getElementById("DialogQualityLogicalConsistency_table_div").getAttribute("data-value_0");
 	}
-	var metadata= (node.STAmetadata)?node.STAmetadata:{}
+	var metadata= (node.STAmetadata)?deapCopy(node.STAmetadata):{}
 	if(idTarget!=idReference){
 
 		var infoDatalogicalConsistency;
@@ -9772,7 +9758,7 @@ function okButtonDataQualityTemporalQuality(event){
 	var flag=(document.getElementById("TemporalQuality_checkbox_flag").checked)?true:false;
 	var sort= (document.getElementById("TemporalQuality_checkbox_sort").checked)?true:false;
 	var datalength=data.length;
-	var metadata= (node.STAmetadata)?node.STAmetadata:{}
+	var metadata= (node.STAmetadata)? deapCopy(node.STAmetadata) :{}
 	var newData={};
 
 	if (temporalAccuracy){
@@ -9825,6 +9811,7 @@ function okButtonDataQualityTemporalQuality(event){
 	// else{
 		node.STAdata= data;
 		node.STAdataAttributes= getDataAttributes(data);
+		node.STAmetadata= metadata;
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		hideNodeDialog("DialogQualityTemporalQuality", event);
@@ -9888,7 +9875,7 @@ function okButtonDataQualityPositionalQuality(event){
 	var attributeSelectedLat=selectLat.options[selectLat.selectedIndex].value;
 	var valid, accuracyValue;
 	var data=node.STAdata;
-	var metadata= (node.STAmetadata) ? node.STAmetadata : {};
+	var metadata= (node.STAmetadata) ? deapCopy(node.STAmetadata) : {};
 
 	if (positionalAccuracy){
 		var accuracyMethod= (document.getElementById("PositionalQuality_radio_positionalAccuracy_uncertantlyColumn").checked)?"uncertantlyColumn": "geometryColumns";
@@ -9938,11 +9925,13 @@ function okButtonDataQualityPositionalQuality(event){
 			valid=true;
 			node.STAdata= data;
 			node.STAdataAttributes= getDataAttributes(data);
+			node.STAmetadata= metadata;
 		}
 	}
 	if (valid) {
 		node.STAdata=data;
 		node.STAdataAttributes= getDataAttributes(data);
+		node.STAmetadata= metadata;
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		hideNodeDialog("DialogQualityPositionalQuality", event);
@@ -10052,7 +10041,7 @@ function okButtonDataQualityThematicQuality(event) {
 	
 	var thematicAttribute = document.getElementById("DialogQualityThematicQuality_attributesList");
 	var thematicAttributeSelected = thematicAttribute.options[thematicAttribute.selectedIndex].value;
-	var metadata = (parentNodes[0].STAmetadata) ? parentNodes[0].STAmetadata : {};
+	var metadata = (parentNodes[0].STAmetadata) ? deapCopy(parentNodes[0].STAmetadata) : {};
 	var dataToEvaluate = parentNodes[0].STAdata;
 	//var nodeIds = document.getElementById("DialogQualityThematicQuality").getAttribute("data-nodeids");
 	//nodeIds = nodeIds.includes("_")?nodeIds.split("_"):nodeIds; //only one doesn't have _
@@ -10169,7 +10158,7 @@ function okButtonDataQualityThematicQuality(event) {
 			alert(thematicValidity);
 		}
 		node.STAdata = dataToEvaluate;
-		node.STAdataAttributes =  getDataAttributes(dataToEvaluate);
+		node.STAdataAttributes = getDataAttributes(dataToEvaluate);
 		node.STAmetadata = metadata;
 		
 		networkNodes.update(node);

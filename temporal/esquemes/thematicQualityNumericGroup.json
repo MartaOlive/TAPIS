@@ -1,0 +1,190 @@
+{
+	"nodes": [
+		{
+			"id": "uu86.fjd5bok",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Scale": "B1",
+					"Standard_Weight_g": 10,
+					"Measured_Weight_g": 10.02
+				},
+				{
+					"Scale": "B2",
+					"Standard_Weight_g": 10,
+					"Measured_Weight_g": 9.97
+				},
+				{
+					"Scale": "B3",
+					"Standard_Weight_g": 10,
+					"Measured_Weight_g": 10.01
+				},
+				{
+					"Scale": "B4",
+					"Standard_Weight_g": 10,
+					"Measured_Weight_g": 10.05
+				},
+				{
+					"Scale": "B5",
+					"Standard_Weight_g": 10,
+					"Measured_Weight_g": 9.96
+				},
+				{
+					"Scale": "B6",
+					"Standard_Weight_g": 10,
+					"Measured_Weight_g": 10.03
+				},
+				{
+					"Scale": "B7",
+					"Standard_Weight_g": 10,
+					"Measured_Weight_g": 9.99
+				},
+				{
+					"Scale": "B8",
+					"Standard_Weight_g": 10,
+					"Measured_Weight_g": 10.04
+				},
+				{
+					"Scale": "B9",
+					"Standard_Weight_g": 10,
+					"Measured_Weight_g": 9.95
+				},
+				{
+					"Scale": "B10",
+					"Standard_Weight_g": 10,
+					"Measured_Weight_g": 10
+				},
+				{
+					"Scale": "B1",
+					"Standard_Weight_g": 50,
+					"Measured_Weight_g": 49.98
+				},
+				{
+					"Scale": "B2",
+					"Standard_Weight_g": 50,
+					"Measured_Weight_g": 50.05
+				},
+				{
+					"Scale": "B3",
+					"Standard_Weight_g": 50,
+					"Measured_Weight_g": 49.95
+				},
+				{
+					"Scale": "B4",
+					"Standard_Weight_g": 50,
+					"Measured_Weight_g": 50.12
+				},
+				{
+					"Scale": "B5",
+					"Standard_Weight_g": 50,
+					"Measured_Weight_g": 49.9
+				},
+				{
+					"Scale": "B6",
+					"Standard_Weight_g": 50,
+					"Measured_Weight_g": 50.02
+				},
+				{
+					"Scale": "B7",
+					"Standard_Weight_g": 50,
+					"Measured_Weight_g": 49.97
+				},
+				{
+					"Scale": "B8",
+					"Standard_Weight_g": 50,
+					"Measured_Weight_g": 50.08
+				},
+				{
+					"Scale": "B9",
+					"Standard_Weight_g": 50,
+					"Measured_Weight_g": 49.93
+				},
+				{
+					"Scale": "B10",
+					"Standard_Weight_g": 50,
+					"Measured_Weight_g": 50.01
+				},
+				{
+					"Scale": "B1",
+					"Standard_Weight_g": 100,
+					"Measured_Weight_g": 100.1
+				},
+				{
+					"Scale": "B2",
+					"Standard_Weight_g": 100,
+					"Measured_Weight_g": 99.92
+				},
+				{
+					"Scale": "B3",
+					"Standard_Weight_g": 100,
+					"Measured_Weight_g": 100.03
+				},
+				{
+					"Scale": "B4",
+					"Standard_Weight_g": 100,
+					"Measured_Weight_g": 100.18
+				},
+				{
+					"Scale": "B5",
+					"Standard_Weight_g": 100,
+					"Measured_Weight_g": 99.88
+				},
+				{
+					"Scale": "B6",
+					"Standard_Weight_g": 100,
+					"Measured_Weight_g": 100.07
+				},
+				{
+					"Scale": "B7",
+					"Standard_Weight_g": 100,
+					"Measured_Weight_g": 99.95
+				},
+				{
+					"Scale": "B8",
+					"Standard_Weight_g": 100,
+					"Measured_Weight_g": 100.11
+				},
+				{
+					"Scale": "B9",
+					"Standard_Weight_g": 100,
+					"Measured_Weight_g": 99.9
+				},
+				{
+					"Scale": "B10",
+					"Standard_Weight_g": 100,
+					"Measured_Weight_g": 100.02
+				}
+			],
+			"STAdataAttributes": {
+				"Scale": {
+					"type": "string"
+				},
+				"Standard_Weight_g": {
+					"type": "integer"
+				},
+				"Measured_Weight_g": {
+					"type": "number"
+				}
+			},
+			"x": -55,
+			"y": -18
+		},
+		{
+			"id": "42go7.jpt5ib",
+			"label": "Thematic quality",
+			"image": "thematicQuality.png",
+			"shape": "circularImage",
+			"x": 51,
+			"y": 25
+		}
+	],
+	"edges": [
+		{
+			"from": "uu86.fjd5bok",
+			"to": "42go7.jpt5ib",
+			"arrows": "from"
+		}
+	]
+}

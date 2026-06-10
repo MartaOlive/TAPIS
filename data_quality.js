@@ -1198,6 +1198,7 @@ function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicAlfaNum
 }
 
 function accuracyFromNumValuesInThematicQuality (data, metadata, thematicAttributeSelected, grouped, newColumns){
+	var attributes = getDataAttributes(data); 
 	if (attributes[thematicAttributeSelected].type != "integer" && attributes[thematicAttributeSelected].type != "number") return null;
 	var groupingGroupsObject=createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(data, grouped,thematicAttributeSelected)
 		if (newColumns){
