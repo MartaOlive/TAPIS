@@ -438,7 +438,7 @@
                     specifically different types of positional quality (<strong>accuracy and validity</strong>).
                     It is possible to evaluate <strong>one or more types at the same time</strong> by checking the
                     <i>checkbox</i> for each one.
-                    This tool can be used with any kind of node that contains date-type data.
+                    This tool can be used with any kind of node that contains geospatial-type data.
                 <p>This is the data used in the example.</p>
                 <img src="positionalQuality_image1.png" alt="icon" class="toolPage_image">
                 <p>To display the dialog, <i>double left-click</i> on the node. This is the general appearance of the
@@ -542,10 +542,120 @@
                         ranges</strong>. Any value outside these constraints is considered invalid.</p>
 
                 <p><strong>Setting Up the Node: </strong></p>
+                <img src="thematicQuality_image0.png" alt="icon" class="toolPage_image"
+                    style="height:350px;width: auto; ">
 
                 <p><strong>How to Use the Node: </strong></p>
-                        // LLeida i LLeida sense espai
-                        // % superior a 100
+                <p><strong>Thematic quality</strong> allows you to evaluate the quality of your data,
+                    specifically different types of thrmatic quality (<strong>accuracy and validity</strong>).
+                    It is possible to evaluate <strong>one or more types at the same time</strong> by checking the
+                    <i>checkbox</i> for each one.
+                    This tool can be used with any kind of node.
+                </p>
+                <p>To display the dialog, <i>double left-click</i> on the node. This is the general appearance of the
+                    dialog; each part will be explained below. Different datasets will be used in the examples.</p>
+                </p>
+                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="thematicQuality_image1.png" alt="icon"
+                        class="toolPage_image zoomable"></div>
+                <p><strong><u>Thematic accuracy:</u></strong></p>
+                <p><strong>Thematic accuracy by accuracy column:</strong></p>
+                <p>This is the data used in this example.</p>
+                <img src="thematicQuality_image20.png" alt="icon" class="toolPage_image">
+                <p>To calculate the <strong>overall accuracy of your dataset</strong>, select the
+                    <strong>column</strong> containing the accuracy values
+                    that have already been calculated. Check the <i>checkbox</i> and click the <i>OK button</i> at the
+                    bottom of the
+                    dialog
+                </p>
+                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="thematicQuality_image21.png" alt="icon"
+                        class="toolPage_image zoomable"></div>
+                <p>This is the result of calculating the accuracy for all records.</p>
+                This dialog only appears after calculating the rate. To view
+                the result again, click on <a>Metadata</a> at the top of the table below.</p>
+                <img src="thematicQuality_image22.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
+                <img src="thematicQuality_image23.png" alt="icon" class="toolPage_image">
+                <p><strong>Thematic accuracy by values:</strong></p>
+                <p>
+                    To calculate accuracy using values, you have two options depending on the type of data: numeric or
+                    non-numeric. In both cases, the column to assess must be indicated on the left side (in grey). Use
+                    the selector to choose the column. Check the checkbox to apply this method.
+                </p>
+                <p>
+                <ul>
+                    <li><strong>Non-numeric:</strong></li>
+                </ul>
+                </p>
+                <p>This is the data used in this example.</p>
+                <img src="thematicQuality_image2.png" alt="icon" class="toolPage_image">
+                <p>
+                    Select <strong>Mode for non-numeric column (most frequent value and its frequency)</strong>. This
+                    can be applied to the entire dataset or grouped by another column (specified in <strong>Grouping
+                        mode</strong>). Select <strong>Grouped by column</strong> to apply this method by groups. If you
+                    choose this option, you can add two new columns (by checking the corresponding checkbox): one
+                    showing the grouped accuracy results and another showing the percentage of each value within the
+                    group. In this example, values will be grouped by <strong>Taxonomic_Group_No</strong>, and two new
+                    columns will be added.
+                </p>
+                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="thematicQuality_image3.png" alt="icon"
+                        class="toolPage_image zoomable"></div>
+                <p>This is the result of calculating the accuracy for all records.</p>
+                This dialog only appears after calculating the rate. To view
+                the result again, click on <a>Metadata</a> at the top of the table below.</p>
+                <img src="thematicQuality_image4.png" alt="icon" class="toolPage_image">
+                <p>This is the result of adding these two new columns.</p>
+                <img src="thematicQuality_image5.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
+                <img src="thematicQuality_image5_1.png" alt="icon" class="toolPage_image">
+                <li><strong>Numeric:</strong></li>
+                <p>This is the data used in this example.</p>
+                <img src="thematicQuality_image6.png" alt="icon" class="toolPage_image">
+                <p> To use this method is samne explanation as non-numeric method explained before, but selecting
+                    <strong>Mean
+                        of the standard deviation (numeric)</strong>
+                </p>
+                <img src="thematicQuality_image7.png" alt="icon" class="toolPage_image">
+                <p>This is the result of calculating the accuracy for all records.</p>
+                This dialog only appears after calculating the rate. To view
+                the result again, click on <a>Metadata</a> at the top of the table below.</p>
+                <img src="thematicQuality_image8.png" alt="icon" class="toolPage_image">
+                <p>This is the result of adding this new columns.</p>
+                <img src="thematicQuality_image9.png" alt="icon" class="toolPage_image">
+                <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                        far</strong>.</p>
+                <img src="thematicQuality_image10.png" alt="icon" class="toolPage_image">
+
+                <p><strong><u>Thematic validity:</u></strong></p>
+                <p>
+                    To calculate validity percentatge, you have two options depending on the type of data: numeric or
+                    non-numeric. In both cases, the column to assess must be indicated on the left side (in grey). Use
+                    the selector to choose the column. Check the checkbox to apply this method.
+                </p>
+
+                <ul>
+                    <li><strong>Non-numeric:</strong></li>
+                </ul>
+                <p>To evaluate thematic validity with non-numeric data it is necessary to link a node with "the list" of
+                    valid values.</p>
+                <img src="thematicQuality_image15.png" alt="icon" class="toolPage_image">
+                <p>This is the data to be evaluated used in this example.</p>
+                <img src="thematicQuality_image2.png" alt="icon" class="toolPage_image">
+                <p>This is the data used as reference to evaluate the data.</p>
+                <img src="thematicQuality_image15_1.png" alt="icon" class="toolPage_image">
+
+                <img src="thematicQuality_image16.png" alt="icon" class="toolPage_image">
+                <img src="thematicQuality_image17.png" alt="icon" class="toolPage_image">
+                <img src="thematicQuality_image19.png" alt="icon" class="toolPage_image">
+                <img src="thematicQuality_image18.png" alt="icon" class="toolPage_image">
+                <img src="thematicQuality_image11.png" alt="icon" class="toolPage_image">
+                <img src="thematicQuality_image12.png" alt="icon" class="toolPage_image">
+                <img src="thematicQuality_image13.png" alt="icon" class="toolPage_image">
+                <img src="thematicQuality_image14.png" alt="icon" class="toolPage_image">
+
+
+
 
 
                 <p> <strong>Recipes where this tool is used:</strong> </p>

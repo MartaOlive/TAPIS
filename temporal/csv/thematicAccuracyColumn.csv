@@ -1,0 +1,5 @@
+id,Bird_Species_Observed,Accuracy
+1,Parus major,0.94
+2,Phylloscopus collybita,0.91
+3,Phylloscopus trochilus,0.89
+4,Motacilla alba,0.96
