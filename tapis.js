@@ -145,7 +145,7 @@ function getConnectionSTAEntity(parentNode, node) {
 	if (idNode<0)
 		return {error: "Node is not a STA entity"};
 	var parentLastEntity=getSTAURLLastEntity(parentNode.STAURL);
-	if (STAEntities[parentLastEntity]){
+	if (STAEntities[parentLastEntity]){ 
 		parentPlural=true;
 		parentEntity=STAEntities[parentLastEntity];
 	} else {
@@ -182,7 +182,7 @@ function getConnectionSTAEntity(parentNode, node) {
 				return {error: "The node connection does not match the STA data model. Connect '" + parentLastEntity + "' to one of the following: " + s};
 			}
 		}
-		else
+		else 
 		{
 			//Is parentNode plural? Everything is incompatible
 			return {error: "A plural parent node requires \"select row\" before connecting to another STA entity (resulting in path parameters). Alternatively, use \"Expand entity\" to get each entity as a JSON in a single column that can be later separated in columns with \"Separate columns\"."};
@@ -207,6 +207,7 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 		return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
 	if (parentNode.image == "sta.png" || parentNode.image=="staRoot.png" || parentNode.image=="edcAsset.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
 		return null;
+	
 	if ((STAOperations[removeFileExtension(parentNode.image)] && STAOperations[removeFileExtension(parentNode.image)].leafNode==true) ||
 		(TableOperations[removeFileExtension(parentNode.image)] && TableOperations[removeFileExtension(parentNode.image)].leafNode==true))
 		return "Parent node is a leaf node and cannot be connected with any other node";
@@ -219,6 +220,17 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 	var idNode=IdOfSTAEntity(node);
 	if (idNode<0)
 		return null;
+	if (parentNode.image=="FilterRowsSTA.png" && parentNode.STAdata.length==1){ //FilterRow (1 record) +STAEntity
+		//Linked in the schema?
+		var parentLastEntity=getSTAURLLastEntity(parentNode.STAURL);
+		if (STAEntities[parentLastEntity]){ //plural? (It has to be, but in case of...)
+			parentLastEntity= getSTAEntityPlural(parentLastEntity);
+		}
+		var entityName=transformToSingularIfNeededSTAEntity(STAEntities[parentLastEntity], Object.keys(STAEntities)[idNode]);
+		if (entityName==null) return "The node connection does not match the STA data model. Check the STA schema in Help"
+
+		else return null;
+	}
 	if (!parentNode.STAURL)
 		return null;
 	if (node.image == "MergeExpandsSTA.png" && STAOperations[removeFileExtension(parentNode.image)])
@@ -9072,7 +9084,7 @@ function takeParentsInformationInGeoDistance(){
 
 	for (var i=0;i<parentNodes.length;i++){
 		parentNode=deapCopy(parentNodes[i])
-		if (parentNode.STAURL && parentNode.STAdata.length>1){ //STA to apply filter
+		if (parentNode.STAURL){
 			var url=parentNode.STAURL, finalURL; 
 			nodeSTA=true;
 			parentNodeSTAEntity= getSTAURLLastEntity(parentNode.STAURL);
