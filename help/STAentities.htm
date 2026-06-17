@@ -35,8 +35,13 @@
 
                 <p>Any entity can be linked to an STA service node. If you want to explore an entity related to your
                     previous entity, <strong>you must ensure that your data contains only one record</strong> (by
-                    applying the Select
-                    tool, the Filter tool, or automatically clicking the entity in the table below).</p>
+                    applying the <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>
+                    tool, the <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
+                        rows </a>tool, or , with <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">select
+                        resource</a> tool or automatically clicking the entity in the table below).</p>
+
 
                 <p>Each time you link an entity,<strong>a new request to the API will be made</strong> . Every request
                     to the STA service
@@ -65,27 +70,119 @@
                 <h2 class="toolPage_title"><img src="../Campaigns.png" alt="icon Campaigns"
                         class="toolPage_title_icon">Campaigns
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
+                <p>
+                    As with any entity, to view the <strong>Campaigns</strong> of an STA service, this tool must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="Campaings_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
 
-                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                <ul>
+                    <li>
+                        <u><strong>Definition:</strong></u> An event or an activity that results in or is linked to a
+                        collection of MultiDatastream, Datastream, and/or ObservationGroup. A campaign is commonly
+                        limited in space and time and can be managed by one party. <br><br>
+                        Example: A "Water Quality Summer Campaign" carried out during July and August in a river basin,
+                        where multiple Datastreams (e.g., pH, temperature, turbidity) are collected by different sensors
+                        and grouped under the same campaign.
+                    </li>
+                </ul>
+                </p>
+                <p>
+                <ul>
+                    <li> <u><strong>Linked with:</strong></u>Datastreams, MultiDatastreams, Party, License,
+                        ObservationGroups</li>
+                </ul>
+                </p>
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>name</b> (string): required</li>
+                            <li><b>description</b> (string): required</li>
+                            <li><b>observationType</b> (string): required</li>
+                            <li><b>unitOfMeasurement</b> (JSON): required</li>
+                            <li><b>observedArea</b> (object): optional</li>
+                            <li><b>phenomenonTime</b> (data_isoperiod): optional</li>
+                            <li><b>resultTime</b> (data_isoperiod): optional</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
 
-                
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
                 </ul>
 
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
             </div>
         </div>
         <div class="toolPage_main" id="Cells">
             <div class="toolPage_main_text">
                 <h2 class="toolPage_title"><img src="../Cells.png" alt="icon Cells" class="toolPage_title_icon">Cells
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    As with any entity, to view the <strong>Cells</strong> of an STA service, this tool must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="Cells_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u><br>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>zoneId</b> (string): required</li>
+                            <li><b>zoneLevel</b> (integer): optional</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Datastreams, MultiDatastreams, Observations</li>
+                </ul>
+                </p>
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
@@ -98,18 +195,76 @@
                 <h2 class="toolPage_title"><img src="../Datastreams.png" alt="icon Datastreams"
                         class="toolPage_title_icon">Datastreams
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    As with any entity, to view the <strong>Datastreams</strong> of an STA service, this tool must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="Datastreams_image0.png" class="toolPage_image" style="height:900px;width: auto; ">
+
+                <p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u> A Datastream groups a collection of Observations measuring
+                        the same
+                        ObservedProperty and produced by the same Sensor.
+
+                        Example: A temperature Datastream named "Room temperature" from a weather station sensor, where
+                        each Observation
+                        represents a temperature measurement taken every 10 minutes at the same location<br>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>name</b> (string): required</li>
+                            <li><b>description</b> (string): required</li>
+                            <li><b>encodingType</b> (string): required</li>
+                            <li><b>feature</b> (): required</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Party, Sensor, ObservedProperty, Campaigns, License,
+                        Observations, Thing,
+                        Cells</li>
+                </ul>
+                </p>
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
+
+
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show the
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
+                            the
                             current evolution of a variable captured by a particular party</a></li>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe10" target="_blank">Recipe 10:
                             Connecting to a Eclipse Data Connector (Data Space)</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="FeaturesOfInterest">
@@ -117,14 +272,74 @@
                 <h2 class="toolPage_title"><img src="../FeaturesOfInterest.png" alt="icon FeaturesOfInterest"
                         class="toolPage_title_icon">FeaturesOfInterest
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    As with any entity, to view the <strong>FeturesOfInterest</strong> of an STA service, this tool must
+                    be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="FeaturesOfInterest_image0.png" class="toolPage_image" style="height:auto;width: 520px; ">
+
+                <p>
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u>A FeatureOfInterest is the real-world entity or phenomenon on
+                        which an
+                        observation is made and to which the result of the observation is assigned.
+
+                        It represents the subject being observed, such as a location, object, or spatial region.
+
+                        In the context of the Internet of Things, the FeatureOfInterest is often the location of the
+                        Thing, for example
+                        the room where a sensor is installed. In remote sensing scenarios, it can represent a geographic
+                        area or volume
+                        that is being observed.
+
+                        In short, the FeatureOfInterest is what the observation is about<br>
+                    </li>
+                </ul>
+                </p>
+
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>name</b> (string): required</li>
+                            <li><b>description</b> (string): required</li>
+                            <li><b>encodingType</b> (string): required</li>
+                            <li><b>feature</b> (): required</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Observations</li>
+                </ul>
+                </p>
+
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5: Selecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
+                            Selecting
                             temperatures from an area</a></li>
                 </ul>
                 <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -135,15 +350,71 @@
                 <h2 class="toolPage_title"><img src="../HistoricalLocations.png" alt="icon HistoricalLocations"
                         class="toolPage_title_icon">HistoricalLocations
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+
+                <p>
+                    As with any entity, to view the <strong>HistoricalLocations</strong> of an STA service, this tool
+                    must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="HistoricalLocations_image0.png" class="toolPage_image" style="height:auto;width: 520px; ">
+
+
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u>A HistoricalLocation represents the record of a Thing’s past
+                        and current
+                        locations over time. It provides the timestamps of the current (latest known) and previous
+                        locations associated
+                        with the Thing.
+
+                        This entity is automatically updated by the service whenever a Thing is assigned a new
+                        Location.<br>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>time</b> (isodatetime): required
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <br><br>
+
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Thing, Locations</li>
+                </ul>
+                </p>
+
+
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="Licenses">
@@ -151,17 +422,77 @@
                 <h2 class="toolPage_title"><img src="../Licenses.png" alt="icon Licenses"
                         class="toolPage_title_icon">Licenses
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+
+                <p>
+                    As with any entity, to view the <strong>Licenses</strong> of an STA service, this tool must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="Licenses_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+
+
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u><br>
+                        An agreement between a party and other parties to gain access and use primarily observations but
+                        also groups of
+                        observations and campaigns. The agreement can include clauses about data sharing, commercial
+                        use, modification
+                        rights, and attribution. Associating a license with a MultiDatastream or Datastream defines
+                        re-use conditions
+                        for all associated observations. Associating a license to an ObservationGroup or a Campaign
+                        defines their re-use
+                        conditions.
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>name</b> (string): required</li>
+                            <li><b>description</b> (string): required</li>
+                            <li><b>observationType</b> (string): required</li>
+                            <li><b>unitOfMeasurement</b> (JSON): required</li>
+                            <li><b>observedArea</b> (object): optional</li>
+                            <li><b>phenomenonTime</b> (data_isoperiod): optional</li>
+                            <li><b>resultTime</b> (data_isoperiod): optional</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Datastreams, MultiDatastreams, Campaigns, ObservationGroups
+                    </li>
+                </ul>
+                </p>
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6: Creating
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
+                            Creating
                             two new datastream of observations</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="Locations">
@@ -169,14 +500,66 @@
                 <h2 class="toolPage_title"><img src="../Locations.png" alt="icon Locations"
                         class="toolPage_title_icon">Locations
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+
+                <p>
+                    As with any entity, to view the <strong>Locations</strong> of an STA service, this tool must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="Locations_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u>The Location of a Thing represents its last known physical
+                        position. It
+                        describes where the Thing is located in the real world, and this location is often the same as
+                        the location of
+                        interest for the data it produces. In many IoT sensing scenarios, the Thing’s Location matches
+                        the
+                        FeatureOfInterest of its Observations (for example, the room or building where a sensor
+                        operates).<br>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>name</b> (string): required</li>
+                            <li><b>description</b> (string): required</li>
+                            <li><b>encodingType</b> (string): required</li>
+                            <li><b>location</b> (geometry): required</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Things, HistoricalLocations</li>
+                </ul>
+                </p>
+
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
                             Connecting to a STA or STAplus</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="MultiDatastreams">
@@ -184,13 +567,74 @@
                 <h2 class="toolPage_title"><img src="../MultiDatastreams.png" alt="icon MultiDatastreams"
                         class="toolPage_title_icon">MultiDatastreams
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+
+                <p>
+                    As with any entity, to view the <strong>MultiDatastreams</strong> of an STA service, this tool must
+                    be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="MultiDatastreams_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u>In the context of the OGC SensorThings API, a MultiDatastream
+                        is a type of
+                        datastream that groups multiple observed properties measured by a single Thing into one stream,
+                        where each
+                        Observation returns a single structured result containing multiple values (an array), one for
+                        each observed
+                        property measured at the same time. For example, a weather station measuring air temperature,
+                        relative humidity,
+                        and atmospheric pressure would use a MultiDatastream so that each Observation returns a combined
+                        result such as
+                        [22.5, 61.2, 1013.4], representing all measurements taken simultaneously<br>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>name</b> (string): required</li>
+                            <li><b>description</b> (string): required</li>
+                            <li><b>observationType</b> (string): required</li>
+                            <li><b>unitOfMeasurement</b> (JSON): required</li>
+                            <li><b>observedArea</b> (object): optional</li>
+                            <li><b>phenomenonTime</b> (data_isoperiod): optional</li>
+                            <li><b>resultTime</b> (data_isoperiod): optional</li>
+                            <li><b>multiObservationDataType</b> (JSON): required</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Party, Sensor, ObservedProperty, Campaigns, License,
+                        Observations, Thing,
+                        Cells</li>
+                </ul>
+                </p>
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="ObservationGroups">
@@ -198,38 +642,146 @@
                 <h2 class="toolPage_title"><img src="../ObservationGroups.png" alt="icon ObservationGroups"
                         class="toolPage_title_icon">ObservationGroups
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    As with any entity, to view the <strong>ObservationGroups</strong> of an STA service, this tool must
+                    be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="ObservationGroups_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u><br>
+                        A collection of observations that are grouped together for a particular purpose.
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>name</b> (string): required</li>
+                            <li><b>description</b> (string): required</li>
+                            <li><b>purpose</b> (string): optional</li>
+                            <li><b>creationTime</b> (isodatetime): optional</li>
+                            <li><b>endTime</b> (isodatetime): optional</li>
+                            <li><b>termsOfUsed</b> (string): optional</li>
+                            <li><b>privacyPolicy</b> (string): optional</li>
+                            <li><b>dataQuality</b> (JSON): optional</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Party, Campaigns, License, Observations, Relations</li>
+                </ul>
+                </p>
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
+
         <div class="toolPage_main" id="Observations">
             <div class="toolPage_main_text">
                 <h2 class="toolPage_title"><img src="../Observations.png" alt="icon Observations"
                         class="toolPage_title_icon">Observations
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    As with any entity, to view the <strong>Observations</strong> of an STA service, this tool must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="Observations_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u> An Observation is an event carried out by a Sensor that
+                        produces a result
+                        which is an estimate of an ObservedProperty of a FeatureOfInterest. For example, a temperature
+                        sensor installed
+                        in a room performs an Observation at a specific time and returns a value such as 22.5 °C, which
+                        is an estimate
+                        of the air temperature (ObservedProperty) of that room (FeatureOfInterest)<br>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>phenomenonTime</b> (object): required</li>
+                            <li><b>resultTime</b> (isodatetime): required</li>
+                            <li><b>result</b> (): required</li>
+                            <li><b>resultQuality</b> (object): optional</li>
+                            <li><b>validTime</b> (data_isoperiod): optional</li>
+                            <li><b>parameters</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Datastream, MultiDatastream, FeatureOfInterest,
+                        ObservationGroups, Cells,
+                        Subjects, Objects</li>
+                </ul>
+                </p>
+
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
+
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a map
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a
+                            map
                             of all observation features in an STA service</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5: Selecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
+                            Selecting
                             temperatures from an area</a></li>
                     <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe10" target="_blank">Recipe 10:
                             Connecting to a Eclipse Data Connector (Data Space)</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="ObservedProperties">
@@ -237,15 +789,73 @@
                 <h2 class="toolPage_title"><img src="../ObservedProperties.png" alt="icon ObservedProperties"
                         class="toolPage_title_icon">ObservedProperties
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+
+                <p>
+                    As with any entity, to view the <strong>ObservedProperties</strong> of an STA service, this tool
+                    must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="ObservedProperties_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u>In the context of the OGC SensorThings API, an
+                        ObservedProperty is a concept
+                        that describes what is being measured or observed by a Sensor in an Observation. It defines the
+                        phenomenon of
+                        interest (for example, temperature, humidity, or pressure) that the Sensor is capable of
+                        estimating.
+
+                        For example, a weather station might have ObservedProperties such as “air temperature”,
+                        “relative humidity”, and
+                        “atmospheric pressure”, where each Observation produced by the Sensor provides a value
+                        corresponding to one of
+                        these properties<br>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>name</b> (string): required</li>
+                            <li><b>definition</b> (URI): required</li>
+                            <li><b>description</b> (string): required</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Datastreams, MultiDatastreams</li>
+                </ul>
+                </p>
+
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
+
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
             </div>
         </div>
         <div class="toolPage_main" id="Parties">
@@ -253,17 +863,67 @@
                 <h2 class="toolPage_title"><img src="../Parties.png" alt="icon Parties"
                         class="toolPage_title_icon">Parties
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    As with any entity, to view the <strong>Parties</strong> of an STA service, this tool must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="Parties_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u><br>
+                        A user interacting with the service, facilitating the creation of observations and managing
+                        owned resources. A
+                        party can own a thing, decide on the license of a datastream, manage a campaign, be responsible
+                        for an
+                        observation group, etc.
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>description</b> (string): optional</li>
+                            <li><b>authId</b> (string): optional</li>
+                            <li><b>role</b> (PartyRoleCode): required</li>
+                            <li><b>displayName</b> (string): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Datastreams, MultiDatastreams, Campaigns,
+                        ObservationGroups, Things</li>
+                </ul>
+                </p>
+
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show the
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
+                            the
                             current evolution of a variable captured by a particular party</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="Relations">
@@ -271,8 +931,55 @@
                 <h2 class="toolPage_title"><img src="../Relations.png" alt="icon Relations"
                         class="toolPage_title_icon">Relations
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    As with any entity, to view the <strong>Relations</strong> of an STA service, this tool must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="Relations_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+               
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u><br>
+                        A relationship established between two observations or between an observation and an external
+                        resource for a
+                        particular reason.
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>role</b> (URI): required</li>
+                            <li><b>description</b> (string): optional</li>
+                            <li><b>externalObject</b> (URI): optional</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Object, Subject, ObservationGroups</li>
+                </ul>
+                </p>
+                <p> <i>Object and Subject are not yet implemented </i></p>
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
@@ -285,30 +992,140 @@
                 <h2 class="toolPage_title"><img src="../Sensors.png" alt="icon Sensors"
                         class="toolPage_title_icon">Sensors
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    As with any entity, to view the <strong>Sensors</strong> of an STA service, this tool must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="Sensors_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u>A sensor is an instrument that observes a property or
+                        phenomenon with the
+                        goal of producing an estimate of the value of that property.
+
+                        For example, a temperature sensor measures the air temperature and returns a numerical value
+                        such as 23.4 °C.
+                        Another example is a heart rate sensor in a smartwatch, which measures a person’s pulse and
+                        provides values such
+                        as 72 beats per minute (bpm)<br>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>name</b> (string): required</li>
+                            <li><b>description</b> (string): required</li>
+                            <li><b>encodingType</b> (string): required</li>
+                            <li><b>metadata</b> (): required</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Datastreams, MultiDatastreams</li>
+                </ul>
+                </p>
+
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
         <div class="toolPage_main" id="Things">
             <div class="toolPage_main_text">
                 <h2 class="toolPage_title"><img src="../Things.png" alt="icon Things" class="toolPage_title_icon">Things
                 </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
+                <p>
+                    As with any entity, to view the <strong>Things</strong> of an STA service, this tool must be
+                    connected directly to
+                    the <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta">STA service</a> or to a
+                    related entity following the STA schema. If it is connected to another
+                    entity, that entity must contain only a single record. To achieve this, you can use the
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select row</a>,
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter rows</a>,
+                    or
+                    <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        resource</a>
+                    tool.
+                </p>
+                <img src="Things_image0.png" class="toolPage_image" style="height:auto;width: 520px;">
+
+                <p>
+                <ul>
+                    <li><u><strong>Definition:</strong></u>A Thing is a real-world or digital entity that is uniquely
+                        identifiable
+                        within the system and that can have properties and be associated with sensors and observations.
+                        It represents
+                        the object being modeled in the IoT environment.
+
+                        For example, a weather station installed on a building is considered a Thing because it
+                        represents a physical
+                        asset that hosts multiple sensors (such as temperature and humidity sensors) and generates
+                        observations. Another
+                        example is a smartwatch, which is also a Thing because it is a device with a unique identity
+                        that can contain
+                        sensors like a heart rate sensor and an accelerometer<br>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Properties:</strong></u>
+                        <ul>
+                            <li><b>name</b> (string): required</li>
+                            <li><b>description</b> (string): required</li>
+                            <li><b>properties</b> (JSON): optional</li>
+                        </ul>
+                    </li>
+                </ul>
+                </p>
+
+                <p>
+                <ul>
+                    <li><u><strong>Linked with:</strong></u> Datastreams, MultiDatastreams, Party, Locations,
+                        HistoricalLocations</li>
+                </ul>
+                </p>
+
+
+                <p>
+                    <i>Double left-click</i> on the node to open the dialog. By default, 100 records are retrieved from
+                    the STA service. Use this dialog to specify a higher number of records.
+                </p>
+                <img src="EntityDialog.png" alt="icon" class="toolPage_image">
                 <p> <strong>Recipes where this tool is used:</strong> </p>
                 <ul>
 
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1: Connecting
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                            Connecting
                             to a STA or STAplus</a></li>
                 </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
             </div>
         </div>
 
