@@ -17,1322 +17,1423 @@
     <header class="descriptionToolsHeader" id="toolPage_header_tableOperations">
     </header>
     <main>
-        <div>
-            <button onclick='OpenHelpFromHelp(event);'><img src="../help.png" height="20" valign="middle">Help</button>
-            <button onclick='OpenRecipesFromHelp(event);'><img src="../documentation.png" height="20"
-                    valign="middle">Recipes</button>
-        </div>
-        <h1 class="toolPage_mainTitle">Generic table tools</h1> <!--general title -->
-        <div id="toolPage_tableOperations" class="toolBoxParent"></div> <!--all tools-->
-
-        <div class="toolPage_main"> <!--general explanation-->
-            <div class="toolPage_main_text generalExplanation">
-                <p>
-                    This set of tools allows you to perform operations on data. These operations are applied to the
-                    <strong>data already loaded in TAPIS.</strong>
-                    These tools can also be used with <strong>STA data</strong>, but you must take into account that
-                    from this point you
-                    cannot send another request to the STA service and the <strong>data will become table-based
-                        data.</strong>
-                </p>
-
-                <p>
-                    The operations are<strong> applied manually (implemented in the TAPIS code)</strong> without sending
-                    external
-                    requests.
-                    You may find some tools that are similar to the STA tools, but in this case the operations are
-                    applied to
-                    data that has already been loaded.
-                </p>
-
-                <p>
-                    With these tools you can <i>select, filter, and edit data, create new columns, group data, and
-                        perform
-                        other operations.</i>
-                </p>
+        <div class="mainTools">
+            <div>
+                <button onclick='OpenHelpFromHelp(event);'><img src="../help.png" height="20"
+                        valign="middle">Help</button>
+                <button onclick='OpenRecipesFromHelp(event);'><img src="../documentation.png" height="20"
+                        valign="middle">Recipes</button>
             </div>
-        </div>
-
-
-        <div class="toolPage_main" id="Table">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../Table.png" alt="icon Table" class="toolPage_title_icon">View
-                    Table
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="viewTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-
-
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>View Table </strong> shows you the data as a table. Dougle-lewft click on the node display a
-                    dialog with all the data loaded in the node (as table showed below in the TAPIS). This is only a
-                    visualization tool.</p>
-                <p> Below you can see some examples: </p>
-                <p> Example 1: </p>
-                <img src="viewTable_image3.png" alt="icon" class="toolPage_image">
-                <p> And its visualization:</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="viewTable_image1.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-                <p> Example 2: </p>
-                <img src="viewTable_image4.png" alt="icon" class="toolPage_image">
-                <p> And its visualization:</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="viewTable_image2.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
-                            Connecting
-                            to a STA or STAplus</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
-                            the
-                            current evolution of a variable captured by a particular party</a></li>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a
-                            map
-                            of all observation features in an STA service</a></li>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe04" target="_blank">Recipe 4: Add
-                            semantics (meaning) to a table and share, retrieve and store it</a></li>
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="EditRecord">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../EditRecord.png" alt="icon EditRecord"
-                        class="toolPage_title_icon">Edit record
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="editRecord_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p>The <strong>Edit Record</strong> tool allows you to <i>edit, delete, or insert records</i> (by
-                    creating new
-                    ones).</p>
-
-                <p> Original data:</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="editRecord_image1.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-                <p>When you <i>double left-click</i> on the node, a dialog like the one shown below is displayed. The
-                    <strong>same dialog allows you to perform all three actions</strong>, depending on the button you
-                    click you will do an action or another. In the
-                    dialog, you will find all the attributes and their values which <strong>all are editable</strong>.
-                    You can navigate
-                    between records using the <i>bottom arrows</i>. You can also <i>enter the record number in the
-                        bottom field</i>
-                    and click outside to load that record.
-                </p>
-
-                <img src="editRecord_image2.png" alt="icon" class="toolPage_image ">
-
-                <p>An example of each action is shown below.</p>
-
-                <hr style="border: none; border-top: 1px solid #ccc; width: 30%; margin: 20px auto;">
-
-                <p><strong>Edit (Update button)</strong></p>
-                <p>To <i>edit</i> a record, <strong>modify the information on the fields</strong> you want to change and
-                    then click the <i><strong>Update button</strong></i> to apply the
-                    changes. The changes will be applied immediately. When you have finished, click <i>Cancel</i> to
-                    close the
-                    dialog.</p>
-
-                <img src="editRecord_image3.png" alt="icon" class="toolPage_image ">
-
-                <p>Result:</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="editRecord_image4.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <hr style="border: none; border-top: 1px solid #ccc; width: 30%; margin: 20px auto;">
-
-                <p><strong>Delete</strong></p>
-                <p>To delete a record, <strong>locate it</strong> using the <i>bottom arrows</i> or by <strong>entering
-                        the record number</strong>, and then
-                    click the <i><strong>Delete button</strong></i>. When you have finished, click <i>Cancel</i> to
-                    close the dialog.</p>
-
-                <img src="editRecord_image5.png" alt="icon" class="toolPage_image ">
-
-                <p>Result:</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="editRecord_image6.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <hr style="border: none; border-top: 1px solid #ccc; width: 30%; margin: 20px auto;">
-
-                <p><strong>Insert</strong></p>
-                <p>A new record will be inserted after the current one. Use this record to <strong>enter all the
-                        values</strong> for the
-                    new record, and then click <i><strong>Insert</strong></i>. The insertion will be applied
-                    immediately.</p>
-
-                <img src="editRecord_image7.png" alt="icon" class="toolPage_image ">
-
-                <p>Result:</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="editRecord_image8.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
-                            Connecting
-                            to a data catalogue and giving user feedback about a dataset</a></li>
-                </ul>
-
-            </div>
-        </div>
-        <div class="toolPage_main" id="Meaning">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../Meaning.png" alt="icon Meaning"
-                        class="toolPage_title_icon">Column meaning
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="columnMeaning_image0.png" alt="icon" class="toolPage_image"
-                    style="height:350px;width: auto; ">
-
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Column meaning</strong> tool shows the <strong>properties of the attributes</strong>. Every
-                    attribute
-                    (column) has its own properties that you can <strong>edit and save</strong>. This tool can be
-                    used with <strong>any kind of data</strong>. Some internet services, such as STA, have some
-                    properties prefilled,
-                    such as the <i>definition (URI)</i>, this is the case in the example below.</p>
-
-                <img src="columnMeaning_image1.png" alt="icon" class="toolPage_image ">
-                <p>These are the properties:</p>
-                <p><strong>Name:</strong> Name of the attribute (column).</p>
-
-                <p><strong>Predefined options:</strong> It is a dropdown with some options that, when selected,
-                    automatically complete some fields of the remaining properties.</p>
-
-                <img src="columnMeaning_image2.png" alt="icon" class="toolPage_image " style="width: 600px;">
-                <p>In the example below, if you select <i>PM 2.5 in ug/m <sup>3</sup></i>, all fields will be completed
-                    immediately. For example, if you choose an option from the <i>SensorsThings API</i>, only the URL
-                    will be
-                    completed.
-                </p>
-
-                <img src="columnMeaning_image3.png" alt="icon" class="toolPage_image " style="width: 600px;">
-                <p><strong>Data type:</strong> Indicates the type of the data. It is possible that your data comes from
-                    an internet service and this type is predefined, but incorrectly. You can click
-                    <strong><i>Reevaluate</i></strong>, and the TAPIS code will assign the type predefined in TAPIS for
-                    this kind of data.
-                    Each character represents a type:
-                <table style="border-collapse: collapse; border: 1px solid #ccc; margin: 0 auto;">
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: DarkGrey">B</span> Boolean
-                        </td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: DarkOrange">A</span> Array
-                        </td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: LightSlateGrey">N</span> Null
-                        </td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: Fuchsia">O</span> Object
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: Tan">G</span> Geometry
-                        </td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: LightGrey">U</span> Undefined
-                        </td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: IndianRed">I</span> Integer
-                        </td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: Red">N</span> Number
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: BlueViolet">D</span> Isodatetime
-                        </td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: Coral">L</span> AnyURI
-                        </td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <span class="roundCorner" style="background-color: ForestGreen">C</span> String
-                        </td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;"></td>
-                    </tr>
-                </table>
-
-                <p><strong>Description:</strong> Description of the attribute.</p>
-
-                <p><strong>Definition (URI):</strong> URL with the description of the attribute. It is better to use
-                    standard websites.</p>
-
-                <p><strong>Units of Measurement:</strong> The units of the attribute. Not all attributes have
-                    units. You can specify the <i>name</i> of the unit, its <i>symbol</i>, and, as before,
-                    the <i>definition (URI)</i> that describes it.</p>
-
-                <p><u>Share button:</u></p>
-
-                <p>With <i>Ok</i> button you can <srong>save your changes</srong>. If you want to keep this schema to
-                    load with other data with same attributes you can <a
-                        hrf="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#SaveTable">Save table as
-                        CSVW</a></p>
-
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe04" target="_blank">Recipe 4:
-                            Add
-                            semantics (meaning) to a table and share, retrieve and store it</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
-                            Determining data quality of a sequence of observations from a Geopackage equivalent to a
-                            STA</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="toolPage_main" id="SelectColumnsTable">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../SelectColumnsTable.png" alt="icon SelectColumnsTable"
-                        class="toolPage_title_icon">Select Columns
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="selectColumnsTable_image0.png" alt="icon" class="toolPage_image"
-                    style="height:350px;width: auto; ">
-
-                <p><strong>How to Use the Node: </strong></p>
-                <p>
-                    The <strong>Select Columns</strong> tool allows you to generate a <strong>new table</strong>
-                    containing only the <strong>selected columns</strong> from the displayed dialog. After applying this
-                    tool, if you want to <strong>restore these columns (attributes)</strong>, it is not possible
-                    directly; however, you can return to the previous node and
-                    proceed from there.
-                </p>
-
-                <p>
-                    This example shows the original data with all columns:
-                </p>
-                <img src="selectColumnsTable_image1.png" alt="icon" class="toolPage_image">
-
-                <p>
-                    To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog,
-                    which displays all the columns in your dataset.
-                    <strong>Deselect the columns</strong> that you do not want to include in the new table, leaving
-                    only those you want to keep selected. After making your selection, press the <i>OK</i> button to
-                    apply it.
-                </p>
-                <img src="selectColumnsTable_image2.png" alt="icon" class="toolPage_image">
-
-                <p>
-                    This is the result: a <strong>new table containing only the selected columns.</strong>
-                </p>
-                <img src="selectColumnsTable_image3.png" alt="icon" class="toolPage_image">
-
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
-                            Determining data quality of a sequence of observations from a Geopackage equivalent to a
-                            STA</a></li>
-                </ul>
-
-            </div>
-        </div>
-        <div class="toolPage_main" id="SelectRowTable">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../SelectRowTable.png" alt="icon SelectRowTable"
-                        class="toolPage_title_icon">Select Row
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="selectRowTable_image0.png" alt="icon" class="toolPage_image"
-                    style="height:350px;width: auto; ">
-
-                <p><strong>How to Use the Node: </strong></p>
-                <p>
-                    <strong>Select Resource</strong> tool generates a <strong>new table</strong>
-                    containing only the <strong>a record</strong> selected in the dialog.
-                </p>
-
-                <p>
-                    This example contains all the original rows:
-                </p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="selectRowTable_image1.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-                <p>
-                    To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog
-                    displayed, showing all the rows from your data.
-                    <strong>Select the record</strong> you want to keep (using the <i>radio button</i> on the left) and
-                    press
-                    the <i>OK</i> button, located at the bottom of the dialog.
-                </p>
-                <img src="selectRowTable_image2.png" alt="icon" class="toolPage_image">
-                <p>
-                    This is the result: a <strong>new table containing only the selected record.</strong>
-                </p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="selectRowTable_image3.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
-                            Selecting
-                            temperatures from an area</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
-                            Selecting
-                            temperatures from an area</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
-                            Connecting
-                            to a data catalogue and giving user feedback about a dataset</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe08" target="_blank">Recipe 8:
-                            Connecting
-                            to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
-                            Determining data quality of a sequence of observations from a Geopackage equivalent to a
-                            STA</a></li>
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="FilterRowsTable">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../FilterRowsTable.png" alt="icon FilterRowsTable"
-                        class="toolPage_title_icon">Filter Rows
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="filterRowsTable_image0.png" alt="icon" class="toolPage_image"
-                    style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Filter Rows</strong> tool for <strong>tables</strong> allows you to filter your data using
-                    <strong>one or more
-                        parameters</strong>, using combined queries. This tool works with TAPIS code.
-                    You can use this tool with <strong>any kind of data</strong>, but remember that the filter will be
-                    applied only to
-                    the <strong>data already loaded</strong> in TAPIS. If you are using data from an internet API, you
-                    may break the request.
-                </p>
-
-                <p>Here is an example with data from a <i>CSV file</i>.</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="filterRowsTable_image1.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p>To display the dialog, <i>double left-click</i> on the node. This is the general view when it is
-                    displayed.
-                    The main function of this dialog is to create <strong>conditions</strong> linked with
-                    <strong>logical operators</strong>.
-                    Each "line" of dropdowns represents a single condition, and each box is a set of conditions
-                    connected by a logical operator.
-                    <strong>You can organize the conditions however you like by adding new conditions or creating
-                        additional
-                        groups</strong>.
-                </p>
-
-                <img src="filterRowsTable_image2.png" alt="icon" class="toolPage_image">
-
-                <p>Here is the description of the different parts:</p>
-
-                <p><strong>Choose a field:</strong> In this dropdown, all the <strong>attributes (columns)</strong> of
-                    your
-                    data will appear. Select the one you want.</p>
-
-                <p><strong>Choose an operator:</strong> In this dropdown you have to choose the
-                    <strong>operator</strong> for your
-                    condition. You can use different operators depending on the type of the selected attribute:
-                </p>
-                <table style="border-collapse: collapse; margin: 0 auto;">
-                    <tr>
-                        <th style="border: 1px solid #ddd; padding: 10px 15px;">Type</th>
-                        <th style="border: 1px solid #ddd; padding: 10px 15px;">Operators</th>
-                        <th style="border: 1px solid #ddd; padding: 10px 15px;">Meaning</th>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Numeric operators</td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">=, ≠, ≥, &gt;, ≤, &lt;</td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <strong>=</strong> : equals<br>
-                            <strong>≠</strong> : not equal<br>
-                            <strong>≥</strong> : greater than or equal<br>
-                            <strong>&gt;</strong> : greater than<br>
-                            <strong>≤</strong> : less than or equal<br>
-                            <strong>&lt;</strong> : less than
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Interval operators</td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">[a,b], (a,b], [a,b), (a,b)</td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <strong>[a,b]</strong> : a ≤ x ≤ b<br>
-                            <strong>(a,b]</strong> : a &lt; x ≤ b<br>
-                            <strong>[a,b)</strong> : a ≤ x &lt; b<br>
-                            <strong>(a,b)</strong> : a &lt; x &lt; b
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Text operators</td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">contains, does not contain, starts with,
-                            ends with</td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <strong>contains</strong> : text includes the value<br>
-                            <strong>does not contain</strong> : text does not include the value<br>
-                            <strong>starts with</strong> : text begins with the value<br>
-                            <strong>ends with</strong> : text ends with the value
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">Temporal operators</td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">year, month, day, hour, minute, date
-                        </td>
-                        <td style="border: 1px solid #ddd; padding: 10px 15px;">
-                            <strong>year</strong> : extract the year<br>
-                            <strong>month</strong> : extract the month<br>
-                            <strong>day</strong> : extract the day<br>
-                            <strong>hour</strong> : extract the hour<br>
-                            <strong>minute</strong> : extract the minute<br>
-                            <strong>date</strong> : extract the date
-                        </td>
-                    </tr>
-                </table>
-
-                <p><i>Be careful when using interval operators or &lt; , &gt; with dates, as this process may need
-                        internal adjustments (we are working on it).</i></p>
-
-                <p>Selecting an <strong>interval operator</strong> will display an <strong>additional field</strong>
-                    where you can enter both limits.
-                </p>
-
-                <img src="filterRowsTable_image3.png" alt="icon" class="toolPage_image">
-
-                <p>If you click the <i>arrow on the right</i> and you have a <i>field</i> selected, a
-                    <strong>dropdown</strong> with
-                    the possible values will appear. You can also type the value <strong>manually</strong> if you
-                    prefer.
-                    Press the <i>OK</i> button after selecting a value to populate the field.
-                </p>
-
-                <img src="filterRowsTable_image4.png" alt="icon" class="toolPage_image">
-                <img src="filterRowsTable_image5.png" alt="icon" class="toolPage_image">
-
-                <p><strong>Introduce a value</strong> <i>(last field)</i>: Enter a value <strong>manually</strong> or,
-                    if you have a <i>field</i> selected,
-                    you can choose a value from a <strong>dropdown</strong>. To display the dropdown,
-                    click the <i>arrow on the right </i>(as explained above), select the value, and press the <i>OK</i>
-                    button to
-                    automatically populate the field.</p>
-
-                <p><strong>Add a new condition below</strong>:
-                    By clicking <i>Add a new condition below</i>, a new "line" (<strong>condition</strong>) is added to
-                    the box. When
-                    you have more than one condition per box, a <strong>logical operator</strong> dropdown appears on
-                    the right.
-                    In this dropdown, you can choose between <strong><i>And, Or or Not</i></strong>. If you want to
-                    <strong>delete a
-                        condition</strong>, click on the <i>trash button</i>.
-                </p>
-
-                <img src="filterRowsTable_image6.png" alt="icon" class="toolPage_image">
-
-                <p>In the example below, you request data where <i>volume_stored</i> is between <i>10.77</i> and
-                    <i>28.09</i> (both included) and the <i>Province</i> is equal to <i>Girona</i>.
-                </p>
-
-                <img src="filterRowsTable_image7.png" alt="icon" class="toolPage_image">
-
-                <p>This is the result after applying the filter.</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="filterRowsTable_image8.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-
-                <p><strong>Add a higher group:</strong> By clicking <i>Add a higher group</i>, a new
-                    <strong>"box"</strong> with a
-                    <strong> condition</strong> and a <strong>logical operator</strong> will appear.
-                    This new box works the same as the previous one. You can <i>add new conditions with new logical
-                        operators</i>.
-                </p>
-
-                <img src="filterRowsTable_image9.png" alt="icon" class="toolPage_image">
-
-                <p>In this example, we use the same filter as before, but with an addition: data where the
-                    <i>Province</i>
-                    is <i> Barcelona</i> will also pass the filter (because the logical operator used is <i>OR</i>).
-                </p>
-
-                <img src="filterRowsTable_image10.png" alt="icon" class="toolPage_image">
-
-                <p>This is the result after applying the filter.</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="filterRowsTable_image11.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <p> <i>No one yet</i></p>
-                <!-- <ul>
-
-                </ul> -->
-
-            </div>
-        </div>
-        <div class="toolPage_main" id="Replace">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../Replace.png" alt="icon Replace"
-                        class="toolPage_title_icon">Replace
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="replace_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Replace</strong> tool allows you to <strong>completely or partially replace a word, number,
-                        or value</strong>.
-                    You can apply the replacement to <strong>all data</strong> or to a <strong>specific column</strong>.
-                    You can replace <strong>any kind of data</strong>
-                    from any type of node. If you want to replace something from an internet request, remember that from
-                    this point on, the table will no longer request data from the source. Complete the dialog with your
-                    options and click <i>Apply</i> to apply the changes.</p>
-
-                <p>This is the CSV table used for the example:</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="replace_image1.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p>To display the dialog, <i>double left-click</i> on the node. This is how the dialog looks:</p>
-                <img src="replace_image2.png" alt="icon" class="toolPage_image">
-
-                <p><strong>Entire table:</strong> If you choose this option, the replacement will be applied to
-                    <strong>all data</strong>
-                    in the table.
-                </p>
-
-                <p><strong>Single column:</strong> If you choose this option, the replacement will be applied only to
-                    the <strong>selected column</strong> from the dropdown.</p>
-
-                <img src="replace_image3.png" alt="icon" class="toolPage_image">
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="replace_image4.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p><strong>Search and Replace:</strong> Enter the <strong>text or value</strong> to search for in the
-                    <i>Search field</i> and
-                    the text or value to use as a replacement in the <i>Replace field</i>.
-                </p>
-
-                <p><strong>Treat numbers as text:</strong> If you check this checkbox, numbers will be treated as text.
-                    This means you can <strong>partially replace a number</strong>. For example, if you enter 23 in the
-                    search field,
-                    both 23 and 230 will be matched. If you do not treat numbers as text, the entire number must match,
-                    so only 23 will be replaced.</p>
-
-                <img src="replace_image8.png" alt="icon" class="toolPage_image">
-
-                <p><strong>Treat dates as text:</strong> If you check this checkbox, dates will be treated as text. This
-                    means you can <strongpartially replace></strong> parts of a date, similar to how it works with
-                        numbers. For example,
-                        if you want to replace the year in dates, you need to treat dates as text. If you want to
-                        replace a
-                        number across the entire table without affecting dates, do not treat dates as text. In that
-                        case,
-                        the full date must match to be replaced.</p>
-
-                <img src="replace_image5.png" alt="icon" class="toolPage_image">
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="replace_image6.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <p> <i>No one yet</i></p>
-                <!-- <ul>
-
-                </ul> -->
-
-            </div>
-        </div>
-        <div class="toolPage_main" id="JoinTables">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../JoinTables.png" alt="icon JoinTables"
-                        class="toolPage_title_icon">Join tables
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
-                            Determining data quality of a sequence of observations from a Geopackage equivalent to a
-                            STA</a></li>
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="ConcatenateTables">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../ConcatenateTables.png" alt="icon ConcatenateTables"
-                        class="toolPage_title_icon">Concatenate tables
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="concatenateColumns_image0.png" alt="icon" class="toolPage_image"
-                    style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Concatenate columns:</strong> This tool returns a <strong>table that combines the linked
-                        tables</strong>. It
-                    is possible to combine more than two tables. The data from these tables is combined by
-                    <strong>stacking the
-                        rows vertically</strong>. Any kind of data is accepted.
-                </p>
-
-                <p>These are the tables used in the example:</p>
-                <img src="concatenateColumns_image1.png" alt="icon" class="toolPage_image">
-
-                <p>To display the dialog, <i>double left-click</i> on the node. In this dialog, you have only two
-                    options to
-                    choose from:</p>
-                <img src="concatenateColumns_image2.png" alt="icon" class="toolPage_image">
-
-                <p><strong>Concatenate all columns:</strong> With this option selected, <strong>all data</strong> from
-                    the tables will be
-                    combined to form a new table. Columns present in only one table will keep their data, and the
-                    missing cells in the other tables will stay empty</p>
-
-                <p>Example:</p>
-                <img src="concatenateColumns_image3.png" alt="icon" class="toolPage_image">
-
-                <p><strong>Concatenate only repeated columns:</strong> With this option selected, only columns that
-                    appear in more than one table will be included in the new table. Columns that exist in only one
-                    table will be discarded.</p>
-
-                <p>Example:</p>
-                <img src="concatenateColumns_image4.png" alt="icon" class="toolPage_image">
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <p> <i>No one yet</i></p>
-                <!-- <ul>
-
-                </ul> -->
-
-            </div>
-        </div>
-        <div class="toolPage_main" id="GroupBy">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../GroupBy.png" alt="icon GroupBy"
-                        class="toolPage_title_icon">Group by
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="groupBy_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Group by</strong> tool allows you to aggregate data based on one or more columns with the
-                    same values. You can also aggregate by time. The result of this aggregation is a set of summary
-                    statistics, such as mean, mode, sum, or any other values you select. You can aggregate any type of
-                    data; columns will include values if the selected statistic is applicable, or remain empty
-                    otherwise.</p>
-                </p>
-                <p> This is the table use in this example:</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="groupBy_image1.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p>To display de dialog <i>double left-click</i> on the node. Dialog is divided in four parts that will
-                    be explained below</p>
-                <img src="groupBy_image2.png" alt="icon" class="toolPage_image">
-                <p><strong>GroupBy:</strong> Check the boxes for the columns you want to group by. In other words,
-                    values in these columns must be the same to combine the data into a set. You can select more than
-                    one</p>
-                <p><strong>Attributes to aggregate:</strong> which columns you want to use to obtain the values to
-                    perform the statistics. The selected statistics will appear next to each column name.</p>
-                <p><strong>GroupBy date rounding:</strong> This option lets you aggregate your data by time intervals.
-                    You need to select a column with date values.</p>
-                <p><strong>Aggregations:</strong> Select the statistical functions you want to apply. You can choose as
-                    many as you need.</p>
-                <p>Here there is an example, <i>grouping by</i> the column <i>Province</i>, <i>aggregating</i> the
-                    values of <i>Absolute_level</i> and <i>Percentage_volume_stored</i> separately and asking for their
-                    <i>Mean, Min and Max values</i>.
-                </p>
-                <img src="groupBy_image3.png" alt="icon" class="toolPage_image">
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="groupBy_image4.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
-                            Connecting
-                            to a data catalogue and giving user feedback about a dataset</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe09" target="_blank">Recipe 9:
-                            Drawing a
-                            stacked bar chart</a></li>
-
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="SortByTables">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../SortByTables.png" alt="icon SortByTables"
-                        class="toolPage_title_icon">Sort by
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="sortByTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-
-                <p><strong>How to Use the Node: </strong></p>
-                <p>
-                    <strong>Sort By</strong> tool allows you to <strong>sort data by an attribute</strong> (column).
-                    This action will be performed with TAPIS code.
-
-                </p>
-                <p>This example shows data sorted as follows:</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="sortByTable_image1.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p>
-                    To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog, which
-                    includes all the columns from your data. <strong>Select one column</strong> to use as the reference
-                    for sorting. You
-                    can also choose whether to sort the data in <i>ascending or descending order</i>. After selecting
-                    your preferences, click the <i>OK</i> button to apply the changes.
-                </p>
-
-                <img src="sortByTable_image2.png" alt="icon" class="toolPage_image">
-
-                <p>
-                    This is the resulting data. In this case, you can see that the data is sorted by the
-                    <i>River_basin</i> attribute. Unlike <a
-                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SortBySTA">Sort by STA</a>,
-                    <strong>all records remain the same</strong> as the originally loaded data, but are sorted
-                    differently.
-                </p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="sortByTable_image3.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <p> <i>No one yet</i></p>
-                <!-- <ul></ul> -->
-
-
-            </div>
-        </div>
-        <div class="toolPage_main" id="AggregateColumns">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../AggregateColumns.png" alt="icon AggregateColumns"
-                        class="toolPage_title_icon">Aggregate Columns
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="aggregateColumns_image0.png" alt="icon" class="toolPage_image"
-                    style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Aggregate Columns</strong> tool creates <strong>new columns</strong> in your table by
-                    <strong> existing
-                        columns</strong> using <strong> statistics</strong>. It can be used with any type of data,
-                    depending on which
-                    statistic you choose.
-                </p>
-                <p>This is the table for the example. It comes from a JSON document.</p>
-                <img src="aggregateColumns_image6.png" alt="icon" class="toolPage_image">
-                <p>To display the dialog, <i>double left-click</i> on the node. Here you can find the dialog and below
-                    you can find the description of the following parts. The <strong>general functionality</strong> is
-                    to select the options
-                    you want for the new column, add it to the table, and then press the OK button to create the new
-                    columns.</p>
-                <img src="aggregateColumns_image1.png" alt="icon" class="toolPage_image">
-                <p><strong>Select attributes:</strong> Check the checkboxes of the attributes <strong>(columns)</strong>
-                    you want to
-                    aggregate. You should select two or more attributes.</p>
-
-                <p><strong>Aggregations:</strong> Select which <strong> statistical procedure</strong> you want to apply
-                    to the values of
-                    the previously selected columns.</p>
-
-                <p><strong>Set number of decimal figures:</strong> If you want to fix the number of decimals, check the
-                    checkbox and enter the value to specify the number.</p>
-
-                <p><strong>Column names:</strong> You can customize the name of the new column by choosing the
-                    <i> Personalized</i> option and entering the name, or select the predefined name using the
-                    <i>Suggested</i> option.
-                </p>
-
-                <img src="aggregateColumns_image2.png" alt="icon" class="toolPage_image">
-
-                <p><strong>Add column to list:</strong> Once you have completed all options, click this button to add
-                    the column to the <i>List of columns to add</i>.</p>
-
-                <img src="aggregateColumns_image3.png" alt="icon" class="toolPage_image">
-
-                <p>For the example, two additional columns will be added, with the same attributes but using two
-                    different statistics.</p>
-
-                <img src="aggregateColumns_image4.png" alt="icon" class="toolPage_image">
-
-                <p>This is the result of adding three new columns.</p>
-
-                <img src="aggregateColumns_image5.png" alt="icon" class="toolPage_image">
-
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-
-                <p> <i>No one yet</i></p>
-                <!-- <ul>
-
-                </ul> -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="CreateColumns">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../CreateColumns.png" alt="icon CreateColumns"
-                        class="toolPage_title_icon">Create Columns
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="createColumns_image0.png" alt="icon" class="toolPage_image"
-                    style="height:350px;width: auto; ">
-
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Create Columns</strong> tool allows you to create <strong>new column</strong>s in your table.
-                    You can create
-                    <strong>three kinds of columns</strong>:
-                <ul>
-                    <li>Column with a <strong>constant value</strong></li>
-                    <li>Column with an<strong> auto-incremental value</strong> starting from an <i>initial value</i>
-                    </li>
-                    <li><strong>Empty column</strong> (you can edit it record by record using the <a
-                            href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#EditRecord">Edit record
-                        </a> tool)</li>
-                </ul>
-                This tool can be used with data from your computer (<strong>table data</strong>) or with a table
-                <strong>requested from an
-                    internet service</strong>. Remember that once you use this tool, you cannot make another request to
-                the server again.
-                </p>
-
-                <p>For the example shown, <a
-                        href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportCSV">CSV import</a> has been
-                    used.</p>
-
-                <img src="createColumns_image11.png" alt="icon" class="toolPage_image">
-
-                <p>This is the original data, containing only the columns shown in the image below.</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="createColumns_image10.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-
-                <p><strong>General overview</strong></p>
-
-                <p>To display the dialog, <i>double left-click</i> on the node. This dialog has two parts: the upper
-                    part, where you can <strong>configure the column</strong> you want to add
-                    (<i>Select operation, Column name, Add column to list button</i>), and the <strong>List of
-                        columns</strong> to
-                    be added (columns that you have configured to be added to your table).
-                </p>
-
-                <p><u>Step 1:</u> Choose the <strong>type of column</strong> you want to add and <strong>fill in the
-                        fields</strong> if it will be a
-                    <i> constant value</i> or an <i>auto-incremental</i> value. If you leave both values empty, it will
-                    be
-                    considered as 0.
-                </p>
-
-                <p><u>Step 2:</u> Enter a <strong>name</strong> for the new column. It cannot be empty.</p>
-
-                <p><u>Step 3:</u> Click the <i>Add column to list</i> button to add this configuration to the table
-                    below.
-                    <strong>The program only creates the columns that appear in this table</strong>.
-                </p>
-
-                <p>The creation of a <strong>Constant value column</strong> is used to illustrate the previous steps.
-                    You can add <strong>any
-                        type of value</strong> as a constant.</p>
-
-                <img src="createColumns_image1.png" alt="icon" class="toolPage_image" style="width: 500px;">
-                <img src="createColumns_image2.png" alt="icon" class="toolPage_image" style="width: 500px;">
-
-                <p><u>Remove a column from the list:</u> To remove a column, click the <i>"trash"</i> button and the row
-                    will
-                    disappear.</p>
-
-                <img src="createColumns_image3.png" alt="icon" class="toolPage_image" style="width: 500px;">
-                <img src="createColumns_image4.png" alt="icon" class="toolPage_image" style="width: 500px;">
-
-                <p>To create an <strong>auto-incremental column</strong>, follow the previous steps and provide an
-                    initial value. This value increases by 1 for each record.</p>
-
-                <img src="createColumns_image5.png" alt="icon" class="toolPage_image" style="width: 500px;">
-                <img src="createColumns_image6.png" alt="icon" class="toolPage_image" style="width: 500px;">
-                <img src="createColumns_image7.png" alt="icon" class="toolPage_image" style="width: 500px;">
-
-                <p>To create an <strong>empty column</strong>, follow the same steps. It is only necessary to provide a
-                    column name.</p>
-
-                <img src="createColumns_image8.png" alt="icon" class="toolPage_image" style="width: 500px;">
-
-                <p>In the image below, <strong>all three columns have been added</strong>. You can add as many columns
-                    as you want each
-                    time you use the tool (in a new node).</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="createColumns_image9.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <p> <i>No one yet</i></p>
-                <!-- <ul>
-
-                </ul> -->
-
-            </div>
-        </div>
-        <div class="toolPage_main" id="AddColumnGeo">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../AddColumnGeo.png" alt="icon AddColumnGeo"
-                        class="toolPage_title_icon">Add geospatial column
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
-                            Determining data quality of a sequence of observations from a Geopackage equivalent to a
-                            STA</a></li>
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="ColumnsCalculator">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../ColumnsCalculator.png" alt="icon ColumnsCalculator"
-                        class="toolPage_title_icon">Columns calculator
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="columnsCalculator_image0.png" alt="icon" class="toolPage_image"
-                    style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Columns calculator</strong> tool enables you to create <strongnew columns using mathematical
-                        operations></strong>. This tool can be used with numeric data.</p>
-                <p>Here is a table from a <i>CSV file</i> used in this example. In this example, we will calculate a
-                    simplified version of
-                    <i>Fire Weather Index (FWI)</i>.
-                </p>
-                <img src="columnsCalculator_image1.png" alt="icon" class="toolPage_image">
-                <p>To display the dialog, <i>double left-click</i> on the node. The dialog parts will be described
-                    below. </p>
-                <p><strong>General functionality: Build the formula</strong> you want to apply to create a new column.
-                    You can either <strong>type</strong> the formula directly or <strong>click the buttons</strong> to
-                    insert elements.
-                    When you click a button, the element will be added to the formula box at the position where you
-                    clicked. If you don’t click in the box, the element will be added at the end. You can also add
-                    <strong>column references</strong> using the <i>Attribute dropdown</i>.
-                </p>
-                <img src="columnsCalculator_image2.png" alt="icon" class="toolPage_image">
-                <p><strong>Operators and functions for formula:</strong> Clicking these buttons will add the
-                    corresponding function to the formula box. Use them to build your formula.There are <i>numbers
-                        and other mathematical operations</i>.</p> <img src="columnsCalculator_image3.png" alt="icon"
-                    class="toolPage_image">
-                <p><strong>Attribute:</strong> Select the <strong>column</strong> you want to add to the formula in
-                    order to use its
-                    values in the operation. Click <i>Write in the formula</i> to add to the box.</p>
-                <img src="columnsCalculator_image4.png" alt="icon" class="toolPage_image">
-                <p><strong>Formula:</strong> Elements will be added in this box to create the final formula. You can
-                    <strong>type and erase</strong> text directly, as it is a <i>text box</i>. As mentioned before, you
-                    can also add elements
-                    using the <i>operator and function buttons</i>. If you want to add something in a <strong>specific
-                        part of the
-                        formula</strong>, first <i>click</i> to mark the position, then <i>click the button</i> you want
-                    to use.
-                </p>
-                <img src="columnsCalculator_image5.png" alt="icon" class="toolPage_image">
-                <p><strong>Set number of decimal figures:</strong> You can configure the <strong>number of
-                        decimals</strong> for your new
-                    column. Check the <i>checkbox</i> and enter the desired number.</p>
-                <p><strong>Column name:</strong> Write a name for the new column. </p>
-                <img src="columnsCalculator_image6.png" alt="icon" class="toolPage_image">
-                <p>When you have your new column configured, click the <strong>Add to List</strong> button to add it to
-                    the table
-                    above.</p>
-                <p><strong>List of columns to add:</strong> <i>Only new columns added to this table will appear
-                        here</i>. Don't
-                    forget to add all the columns you want to create to this table.</p> <img
-                    src="columnsCalculator_image7.png" alt="icon" class="toolPage_image">
-                <p>This is the result of the operation, same table with a new column <i>(Simpl_FWI)</i></p>
-                <img src="columnsCalculator_image8.png" alt="icon" class="toolPage_image">
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <p> <i>No one yet</i></p>
-                <!-- <ul>
-
-                </ul> -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="PivotTable">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../PivotTable.png" alt="icon PivotTable"
-                        class="toolPage_title_icon">Pivot table
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe11" target="_blank">Recipe 11:
-                            Pivoting
-                            a table, from values in the rows of a selected column to new columns</a></li>
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="ColumnStatistics">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../ColumnStatistics.png" alt="icon ColumnStatistics"
-                        class="toolPage_title_icon">Columns statistics
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="columnsStatistics_image0.png" alt="icon" class="toolPage_image"
-                    style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Columns Statistics</strong> tool returns a <strong>table with general statistics for all
-                        columns</strong>.
-                    Some statistics can only be calculated for <i>numeric values</i>; in those cases, the value remains
-                    <i>empty</i>.
-                    You can use this tool with <strong>any kind of data</strong>.
-                </p>
-
-                <p>This example is from a CSV file with data shown below.</p>
-
-                <img src="columnsStatistics_image1.png" alt="icon" class="toolPage_image ">
-
-                <p>To display the dialog, <i>double left-click</i> on the node. In this case, the dialog is
-                    for<strong>informational</strong>
-                    purposes only; it shows which statistics TAPIS will calculate and return in a table.</p>
-
-                <img src="columnsStatistics_image2.png" alt="icon" class="toolPage_image">
-
-                <p>After clicking the <i>OK</i> button, you will obtain a table similar to the one below.</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="columnsStatistics_image3.png"
-                        alt="icon" class="toolPage_image zoomable"></div>
-
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="SeparateColumns">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../SeparateColumns.png" alt="icon SeparateColumns"
-                        class="toolPage_title_icon">Separate Columns
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="separateColumns_image0.png" alt="icon" class="toolPage_image"
-                    style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p>The <strong>Separate columns</strong> tool creates <strong>new columns or records by splitting
-                        elements</strong> from
-                    a column. These elements can be in <strong>JSON format</strong> or <strong></strong>separated by a
-                    delimiter</strong>, such as a <i>comma</i>. This
-                    tool can work with data from any type of node.</p>
-
-                <p>To display the dialog, <i>double left-click</i> on the node. In the dialog there are trhee parts:
-                </p>
-                <p><strong>Columns to separate</strong> Select the <strong>data type</strong>, either <strong>JSON
-                        format</strong> or <strong>delimiter-separated</strong>
-                    element. If the data contains <strong>delimiters</strong>, select the <strong>column</strong> to
-                    split and enter the <strong>delimiter</strong>. If the
-                    data is in <strong>JSON format</strong>, TAPIS will <strong>automatically</strong> split it.</p>
-                <p><strong>Result</strong> Here you can choose how to handle the split data, either <strong>create
-                        separate
-                        records</strong> for each part (keeping the original columns and repeating the rest of the data)
-                    or keep the
-                    original record and add <strong>new columns</strong>,one for each part of the split. Depending on
-                    your choice, the
-                    number of records or the number of columns will increase.</p>
-                <p><strong>Remove already present elements</strong> Check this checkbox if you want to <strong>keep the
-                        original
-                        record</strong> (or column) or remove it.</p>
-                <p>Example of data separated in <strong>JSON format</strong> and split into <strong>new
-                        columns</strong>:</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="separateColumns_image1.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-                <img src="separateColumns_image3.png" alt="icon" class="toolPage_image">
-                <p>This is the result of the dialog shown above.</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="separateColumns_image4.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-                <p>In this other example, <strong>data separated by commas</strong> will be split into <strong>new
-                        columns</strong>:</p>
-                <p>This is the original data.</p>
-                <img src="separateColumns_image2.png" alt="icon" class="toolPage_image">
-                <img src="separateColumns_image5.png" alt="icon" class="toolPage_image">
-                <p>This is the result, with three new columns in each record.</p>
-                <img src="separateColumns_image6.png" alt="icon" class="toolPage_image">
-                <p>This example uses the same data as before, but now this column is split into <strong>new
-                        records</strong> while the
-                    rest of the information is kept the same:</p>
-                <img src="separateColumns_image7.png" alt="icon" class="toolPage_image">
-                <p>This is the result:</p>
-                <img src="separateColumns_image8.png" alt="icon" class="toolPage_image">
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2: Show
-                            the
-                            current evolution of a variable captured by a particular party</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a
-                            map
-                            of all observation features in an STA service</a></li>
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="SaveTable">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../SaveTable.png" alt="icon SaveTable"
-                        class="toolPage_title_icon">Save Table
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="saveTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Save Table</strong> tool allows you to save node <strong>data as a CSV file</strong> and
-                    <strong>attributes as CSVW</strong>
-                    (JSON format). You can save any kind of data.
-                </p>
-
-                <p>In the example below, the data is saved after applying a filter, so only the filtered data will be
-                    saved.</p>
-
-                <img src="saveTable_image1.png" alt="icon" class="toolPage_image">
-
-                <p>To display the dialog, <i>double left-click</i> on the node. In the dialog, you can perform two
-                    actions:
-                </p>
-
-                <img src="saveTable_image2.png" alt="icon" class="toolPage_image">
-
-                <p><u><strong>Save CSV</strong>:</u> Save node <strong>data</strong> as a CSV file,
-                    <strong></strong>choosing the delimiter</strong> you want to use (enter it in
-                    the <i>CSV delimiter field</i>).
-                </p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="saveTable_image3.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-                <p><u><strong>Save CSVW</strong>:</u> Save <strong>attributes</strong> from the data. The resulting JSON
-                    file will only contain the
-                    properties of completed attributes.</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="saveTable_image4.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-
-
-                <p>If you want to save both data and attributes, you will need to perform both actions.</p>
-
-                <p>Click the button for the desired action, enter a name for the document, and save it.</p>
-
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe04" target="_blank">Recipe 4: Add
-                            semantics (meaning) to a table and share, retrieve and store it</a></li>
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="SaveLayer">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../SaveLayer.png" alt="icon SaveLayer"
-                        class="toolPage_title_icon">Save Layer
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3: Show a
-                            map
-                            of all observation features in an STA service</a></li>
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="guf">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../guf.png" alt="icon guf" class="toolPage_title_icon">Feedback
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
-                            Connecting
-                            to a data catalogue and giving user feedback about a dataset</a></li>
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="uploadToIC">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../uploadToIC.png" alt="icon uploadToIC"
-                        class="toolPage_title_icon">Upload to inmutable catalog
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <img src="uploadToIC_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-                <p><strong>How to Use the Node: </strong></p>
-                <p><strong>Upload to immutable catalog</strong> tool allows you to load your <strong>data</strong> and <strong>quality metadata</strong>
-                    into an <strong>immutable catalog</strong>. For this purpose, you need to use previously <i>quality nodes</i>, as many as
-                    you want.
-                    You can use any kind of data, but you need to have <strong>geographic data</strong> (in a column or written manually)
-                    and <strong>date data</strong> (in a column or written manually).</p>
-                <p>To perform this procedure, you need to be logged in(<a
-                        href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">Login button</a>).</p>
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="uploadToIC_image7.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-                <p>This is the data we will use for the example:</p>
-
-                <div class="image-wrapper" onclick="zoomToImage(this)">
-                    <img src="uploadToIC_image1.png" alt="icon" class="toolPage_image zoomable">
+            <h1 class="toolPage_mainTitle">Generic table tools</h1> <!--general title -->
+            <div id="toolPage_tableOperations" class="toolBoxParent"></div> <!--all tools-->
+
+            <div class="toolPage_main"> <!--general explanation-->
+                <div class="toolPage_main_text generalExplanation">
+                    <p>
+                        This set of tools allows you to perform operations on data. These operations are applied to the
+                        <strong>data already loaded in TAPIS.</strong>
+                        These tools can also be used with <strong>STA data</strong>, but you must take into account that
+                        from this point you
+                        cannot send another request to the STA service and the <strong>data will become table-based
+                            data.</strong>
+                    </p>
+
+                    <p>
+                        The operations are<strong> applied manually (implemented in the TAPIS code)</strong> without
+                        sending
+                        external
+                        requests.
+                        You may find some tools that are similar to the STA tools, but in this case the operations are
+                        applied to
+                        data that has already been loaded.
+                    </p>
+
+                    <p>
+                        With these tools you can <i>select, filter, and edit data, create new columns, group data, and
+                            perform
+                            other operations.</i>
+                    </p>
                 </div>
-
-                <p>This is the result of the <strong>quality metadata</strong> calculated in previously nodes.</p>
-                <img src="uploadToIC_image2.png" alt="icon" class="toolPage_image ">
-                <p>To display the dialog, <i>double left-click</i> on the node. This dialog consists of different parts,
-                    explained below.</p>
-                <img src="uploadToIC_image3.png" alt="icon" class="toolPage_image ">
-                <p><strong>Title:</strong> Enter a title for your element in the catalog. If this field is empty, the
-                    automatic title will be: <i>Data from TAPIS on "current date".</i></p>
-                <p><strong>Author:</strong> Enter an author for your element in the catalog. If this field is empty, the
-                    automatic author will be: <i>"Author"</i>.</p>
-                <p><strong>License:</strong> Select a license from the dropdown.</p>
-                <img src="uploadToIC_image4.png" alt="icon" class="toolPage_image ">
-                <p><strong>Geographic information:</strong> It is necessary to include geographic information, either
-                    provided in the data <i>columns</i> or <i>entered manually</i>. Choose the option you want to use and select or
-                    complete the fields.</p>
-                <img src="uploadToIC_image5.png" alt="icon" class="toolPage_image ">
-                <p><strong>Date column:</strong> It is necessary to include date information, either
-                    provided in the data <i>columns</i> or <i>entered manually</i>. Choose the option you want to use and select or
-                    complete the fields. To enter the date manually, you can use the calendar. Click on the <strong>calendar</strong> to
-                    display it and select the desired date. This date will be added to the field automatically.</p>
-                <img src="uploadToIC_image6.png" alt="icon" class="toolPage_image ">
-                <p><strong>Add GeoJSON node to check the result:</strong> Check the checkbox if you want to add a <a
-                        href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportGeoJSON">GeoJSON</a> node to
-                    see what has been loaded into the catalog in TAPIS.</p>
-                <img src="uploadToIC_image9.png" alt="icon" class="toolPage_image ">
-                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="uploadToIC_image10.png" alt="icon"
-                        class="toolPage_image zoomable"></div>
-                <p>
-                <p>If the load has been successful, something similar will appear. The <strong>URL</strong> is the link to the
-                    information loaded in the catalog.</p>
-                </p>
-                <img src="uploadToIC_image8.png" alt="icon" class="toolPage_image ">
-                <p>This is the URL of the example:
-                    <a
-                        href="https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/8a9aaea8-f01f-4683-b3a3-aaf62df887ea">https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/8a9aaea8-f01f-4683-b3a3-aaf62df887ea</a>
-                </p>
-                <p>
-                <p>This is the result of the <strong>loaded information</strong>. The image shows the table created from the <strong>GeoJSON
-                    node</strong>. In the <strong><i>metadata</i></strong>, all calculated quality data will appear. In <strong><i>PRODUCTOpenLink</i></strong>, you will find
-                    the data uploaded to the Interplanetary File System (IPFS) (<a
-                        href="https://ipfs.ogc.secd.eu/">https://ipfs.ogc.secd.eu/</a>). With this link, you can
-                    download the data to your computer.</p>
-                <p><i>The download of the data in the GeoJSON node is not guaranteed. It is delayed to allow time for the
-                    data to be loaded into the catalog, but there is no confirmation that the data has been
-                    successfully loaded yet.</i></p>
-                </p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
-                            Determining data quality of a sequence of observations from a Geopackage equivalent to a
-                            STA</a></li>
-                </ul>
             </div>
+
+
+            <div class="toolPage_main" id="Table">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../Table.png" alt="icon Table" class="toolPage_title_icon">View
+                        Table
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="viewTable_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+
+
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>View Table </strong> shows you the data as a table. Dougle-lewft click on the node
+                        display a
+                        dialog with all the data loaded in the node (as table showed below in the TAPIS). This is only a
+                        visualization tool.</p>
+                    <p> Below you can see some examples: </p>
+                    <p> Example 1: </p>
+                    <img src="viewTable_image3.png" alt="icon" class="toolPage_image">
+                    <p> And its visualization:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="viewTable_image1.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+                    <p> Example 2: </p>
+                    <img src="viewTable_image4.png" alt="icon" class="toolPage_image">
+                    <p> And its visualization:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="viewTable_image2.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe01" target="_blank">Recipe 1:
+                                Connecting
+                                to a STA or STAplus</a></li>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2:
+                                Show
+                                the
+                                current evolution of a variable captured by a particular party</a></li>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3:
+                                Show a
+                                map
+                                of all observation features in an STA service</a></li>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe04" target="_blank">Recipe 4:
+                                Add
+                                semantics (meaning) to a table and share, retrieve and store it</a></li>
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="EditRecord">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../EditRecord.png" alt="icon EditRecord"
+                            class="toolPage_title_icon">Edit record
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="editRecord_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>Edit Record</strong> tool allows you to <i>edit, delete, or insert records</i> (by
+                        creating new
+                        ones).</p>
+
+                    <p> Original data:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="editRecord_image1.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+                    <p>When you <i>double left-click</i> on the node, a dialog like the one shown below is displayed.
+                        The
+                        <strong>same dialog allows you to perform all three actions</strong>, depending on the button
+                        you
+                        click you will do an action or another. In the
+                        dialog, you will find all the attributes and their values which <strong>all are
+                            editable</strong>.
+                        You can navigate
+                        between records using the <i>bottom arrows</i>. You can also <i>enter the record number in the
+                            bottom field</i>
+                        and click outside to load that record.
+                    </p>
+
+                    <img src="editRecord_image2.png" alt="icon" class="toolPage_image ">
+
+                    <p>An example of each action is shown below.</p>
+
+                    <hr style="border: none; border-top: 1px solid #ccc; width: 30%; margin: 20px auto;">
+
+                    <p><strong>Edit (Update button)</strong></p>
+                    <p>To <i>edit</i> a record, <strong>modify the information on the fields</strong> you want to change
+                        and
+                        then click the <i><strong>Update button</strong></i> to apply the
+                        changes. The changes will be applied immediately. When you have finished, click <i>Cancel</i> to
+                        close the
+                        dialog.</p>
+
+                    <img src="editRecord_image3.png" alt="icon" class="toolPage_image ">
+
+                    <p>Result:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="editRecord_image4.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <hr style="border: none; border-top: 1px solid #ccc; width: 30%; margin: 20px auto;">
+
+                    <p><strong>Delete</strong></p>
+                    <p>To delete a record, <strong>locate it</strong> using the <i>bottom arrows</i> or by
+                        <strong>entering
+                            the record number</strong>, and then
+                        click the <i><strong>Delete button</strong></i>. When you have finished, click <i>Cancel</i> to
+                        close the dialog.</p>
+
+                    <img src="editRecord_image5.png" alt="icon" class="toolPage_image ">
+
+                    <p>Result:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="editRecord_image6.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <hr style="border: none; border-top: 1px solid #ccc; width: 30%; margin: 20px auto;">
+
+                    <p><strong>Insert</strong></p>
+                    <p>A new record will be inserted after the current one. Use this record to <strong>enter all the
+                            values</strong> for the
+                        new record, and then click <i><strong>Insert</strong></i>. The insertion will be applied
+                        immediately.</p>
+
+                    <img src="editRecord_image7.png" alt="icon" class="toolPage_image ">
+
+                    <p>Result:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="editRecord_image8.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
+                                Connecting
+                                to a data catalogue and giving user feedback about a dataset</a></li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="toolPage_main" id="Meaning">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../Meaning.png" alt="icon Meaning"
+                            class="toolPage_title_icon">Column meaning
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="columnMeaning_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Column meaning</strong> tool shows the <strong>properties of the attributes</strong>.
+                        Every
+                        attribute
+                        (column) has its own properties that you can <strong>edit and save</strong>. This tool can be
+                        used with <strong>any kind of data</strong>. Some internet services, such as STA, have some
+                        properties prefilled,
+                        such as the <i>definition (URI)</i>, this is the case in the example below.</p>
+
+                    <img src="columnMeaning_image1.png" alt="icon" class="toolPage_image ">
+                    <p>These are the properties:</p>
+                    <p><strong>Name:</strong> Name of the attribute (column).</p>
+
+                    <p><strong>Predefined options:</strong> It is a dropdown with some options that, when selected,
+                        automatically complete some fields of the remaining properties.</p>
+
+                    <img src="columnMeaning_image2.png" alt="icon" class="toolPage_image " style="width: 600px;">
+                    <p>In the example below, if you select <i>PM 2.5 in ug/m <sup>3</sup></i>, all fields will be
+                        completed
+                        immediately. For example, if you choose an option from the <i>SensorsThings API</i>, only the
+                        URL
+                        will be
+                        completed.
+                    </p>
+
+                    <img src="columnMeaning_image3.png" alt="icon" class="toolPage_image " style="width: 600px;">
+                    <p><strong>Data type:</strong> Indicates the type of the data. It is possible that your data comes
+                        from
+                        an internet service and this type is predefined, but incorrectly. You can click
+                        <strong><i>Reevaluate</i></strong>, and the TAPIS code will assign the type predefined in TAPIS
+                        for
+                        this kind of data.
+                        Each character represents a type:
+                    <table style="border-collapse: collapse; border: 1px solid #ccc; margin: 0 auto;">
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: DarkGrey">B</span> Boolean
+                            </td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: DarkOrange">A</span> Array
+                            </td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: LightSlateGrey">N</span> Null
+                            </td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: Fuchsia">O</span> Object
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: Tan">G</span> Geometry
+                            </td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: LightGrey">U</span> Undefined
+                            </td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: IndianRed">I</span> Integer
+                            </td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: Red">N</span> Number
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: BlueViolet">D</span> Isodatetime
+                            </td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: Coral">L</span> AnyURI
+                            </td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <span class="roundCorner" style="background-color: ForestGreen">C</span> String
+                            </td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;"></td>
+                        </tr>
+                    </table>
+
+                    <p><strong>Description:</strong> Description of the attribute.</p>
+
+                    <p><strong>Definition (URI):</strong> URL with the description of the attribute. It is better to use
+                        standard websites.</p>
+
+                    <p><strong>Units of Measurement:</strong> The units of the attribute. Not all attributes have
+                        units. You can specify the <i>name</i> of the unit, its <i>symbol</i>, and, as before,
+                        the <i>definition (URI)</i> that describes it.</p>
+
+                    <p><u>Share button:</u></p>
+
+                    <p>With <i>Ok</i> button you can <srong>save your changes</srong>. If you want to keep this schema
+                        to
+                        load with other data with same attributes you can <a
+                            hrf="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#SaveTable">Save table as
+                            CSVW</a></p>
+
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe04" target="_blank">Recipe 4:
+                                Add
+                                semantics (meaning) to a table and share, retrieve and store it</a></li>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                                Determining data quality of a sequence of observations from a Geopackage equivalent to a
+                                STA</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="toolPage_main" id="SelectColumnsTable">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../SelectColumnsTable.png" alt="icon SelectColumnsTable"
+                            class="toolPage_title_icon">Select Columns
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="selectColumnsTable_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>
+                        The <strong>Select Columns</strong> tool allows you to generate a <strong>new table</strong>
+                        containing only the <strong>selected columns</strong> from the displayed dialog. After applying
+                        this
+                        tool, if you want to <strong>restore these columns (attributes)</strong>, it is not possible
+                        directly; however, you can return to the previous node and
+                        proceed from there.
+                    </p>
+
+                    <p>
+                        This example shows the original data with all columns:
+                    </p>
+                    <img src="selectColumnsTable_image1.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog,
+                        which displays all the columns in your dataset.
+                        <strong>Deselect the columns</strong> that you do not want to include in the new table, leaving
+                        only those you want to keep selected. After making your selection, press the <i>OK</i> button to
+                        apply it.
+                    </p>
+                    <img src="selectColumnsTable_image2.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        This is the result: a <strong>new table containing only the selected columns.</strong>
+                    </p>
+                    <img src="selectColumnsTable_image3.png" alt="icon" class="toolPage_image">
+
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                                Determining data quality of a sequence of observations from a Geopackage equivalent to a
+                                STA</a></li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="toolPage_main" id="SelectRowTable">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../SelectRowTable.png" alt="icon SelectRowTable"
+                            class="toolPage_title_icon">Select Row
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="selectRowTable_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>
+                        <strong>Select Resource</strong> tool generates a <strong>new table</strong>
+                        containing only the <strong>a record</strong> selected in the dialog.
+                    </p>
+
+                    <p>
+                        This example contains all the original rows:
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="selectRowTable_image1.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+                    <p>
+                        To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog
+                        displayed, showing all the rows from your data.
+                        <strong>Select the record</strong> you want to keep (using the <i>radio button</i> on the left)
+                        and
+                        press
+                        the <i>OK</i> button, located at the bottom of the dialog.
+                    </p>
+                    <img src="selectRowTable_image2.png" alt="icon" class="toolPage_image">
+                    <p>
+                        This is the result: a <strong>new table containing only the selected record.</strong>
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="selectRowTable_image3.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
+                                Selecting
+                                temperatures from an area</a></li>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
+                                Selecting
+                                temperatures from an area</a></li>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
+                                Connecting
+                                to a data catalogue and giving user feedback about a dataset</a></li>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe08" target="_blank">Recipe 8:
+                                Connecting
+                                to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                                Determining data quality of a sequence of observations from a Geopackage equivalent to a
+                                STA</a></li>
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="FilterRowsTable">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../FilterRowsTable.png" alt="icon FilterRowsTable"
+                            class="toolPage_title_icon">Filter Rows
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="filterRowsTable_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Filter Rows</strong> tool for <strong>tables</strong> allows you to filter your data
+                        using
+                        <strong>one or more
+                            parameters</strong>, using combined queries. This tool works with TAPIS code.
+                        You can use this tool with <strong>any kind of data</strong>, but remember that the filter will
+                        be
+                        applied only to
+                        the <strong>data already loaded</strong> in TAPIS. If you are using data from an internet API,
+                        you
+                        may break the request.
+                    </p>
+
+                    <p>Here is an example with data from a <i>CSV file</i>.</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="filterRowsTable_image1.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+
+                    <p>To display the dialog, <i>double left-click</i> on the node. This is the general view when it is
+                        displayed.
+                        The main function of this dialog is to create <strong>conditions</strong> linked with
+                        <strong>logical operators</strong>.
+                        Each "line" of dropdowns represents a single condition, and each box is a set of conditions
+                        connected by a logical operator.
+                        <strong>You can organize the conditions however you like by adding new conditions or creating
+                            additional
+                            groups</strong>.
+                    </p>
+
+                    <img src="filterRowsTable_image2.png" alt="icon" class="toolPage_image">
+
+                    <p>Here is the description of the different parts:</p>
+
+                    <p><strong>Choose a field:</strong> In this dropdown, all the <strong>attributes (columns)</strong>
+                        of
+                        your
+                        data will appear. Select the one you want.</p>
+
+                    <p><strong>Choose an operator:</strong> In this dropdown you have to choose the
+                        <strong>operator</strong> for your
+                        condition. You can use different operators depending on the type of the selected attribute:
+                    </p>
+                    <table style="border-collapse: collapse; margin: 0 auto;">
+                        <tr>
+                            <th style="border: 1px solid #ddd; padding: 10px 15px;">Type</th>
+                            <th style="border: 1px solid #ddd; padding: 10px 15px;">Operators</th>
+                            <th style="border: 1px solid #ddd; padding: 10px 15px;">Meaning</th>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">Numeric operators</td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">=, ≠, ≥, &gt;, ≤, &lt;</td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <strong>=</strong> : equals<br>
+                                <strong>≠</strong> : not equal<br>
+                                <strong>≥</strong> : greater than or equal<br>
+                                <strong>&gt;</strong> : greater than<br>
+                                <strong>≤</strong> : less than or equal<br>
+                                <strong>&lt;</strong> : less than
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">Interval operators</td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">[a,b], (a,b], [a,b), (a,b)</td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <strong>[a,b]</strong> : a ≤ x ≤ b<br>
+                                <strong>(a,b]</strong> : a &lt; x ≤ b<br>
+                                <strong>[a,b)</strong> : a ≤ x &lt; b<br>
+                                <strong>(a,b)</strong> : a &lt; x &lt; b
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">Text operators</td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">contains, does not contain, starts
+                                with,
+                                ends with</td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <strong>contains</strong> : text includes the value<br>
+                                <strong>does not contain</strong> : text does not include the value<br>
+                                <strong>starts with</strong> : text begins with the value<br>
+                                <strong>ends with</strong> : text ends with the value
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">Temporal operators</td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">year, month, day, hour, minute, date
+                            </td>
+                            <td style="border: 1px solid #ddd; padding: 10px 15px;">
+                                <strong>year</strong> : extract the year<br>
+                                <strong>month</strong> : extract the month<br>
+                                <strong>day</strong> : extract the day<br>
+                                <strong>hour</strong> : extract the hour<br>
+                                <strong>minute</strong> : extract the minute<br>
+                                <strong>date</strong> : extract the date
+                            </td>
+                        </tr>
+                    </table>
+
+                    <p><i>Be careful when using interval operators or &lt; , &gt; with dates, as this process may need
+                            internal adjustments (we are working on it).</i></p>
+
+                    <p>Selecting an <strong>interval operator</strong> will display an <strong>additional field</strong>
+                        where you can enter both limits.
+                    </p>
+
+                    <img src="filterRowsTable_image3.png" alt="icon" class="toolPage_image">
+
+                    <p>If you click the <i>arrow on the right</i> and you have a <i>field</i> selected, a
+                        <strong>dropdown</strong> with
+                        the possible values will appear. You can also type the value <strong>manually</strong> if you
+                        prefer.
+                        Press the <i>OK</i> button after selecting a value to populate the field.
+                    </p>
+
+                    <img src="filterRowsTable_image4.png" alt="icon" class="toolPage_image">
+                    <img src="filterRowsTable_image5.png" alt="icon" class="toolPage_image">
+
+                    <p><strong>Introduce a value</strong> <i>(last field)</i>: Enter a value <strong>manually</strong>
+                        or,
+                        if you have a <i>field</i> selected,
+                        you can choose a value from a <strong>dropdown</strong>. To display the dropdown,
+                        click the <i>arrow on the right </i>(as explained above), select the value, and press the
+                        <i>OK</i>
+                        button to
+                        automatically populate the field.</p>
+
+                    <p><strong>Add a new condition below</strong>:
+                        By clicking <i>Add a new condition below</i>, a new "line" (<strong>condition</strong>) is added
+                        to
+                        the box. When
+                        you have more than one condition per box, a <strong>logical operator</strong> dropdown appears
+                        on
+                        the right.
+                        In this dropdown, you can choose between <strong><i>And, Or or Not</i></strong>. If you want to
+                        <strong>delete a
+                            condition</strong>, click on the <i>trash button</i>.
+                    </p>
+
+                    <img src="filterRowsTable_image6.png" alt="icon" class="toolPage_image">
+
+                    <p>In the example below, you request data where <i>volume_stored</i> is between <i>10.77</i> and
+                        <i>28.09</i> (both included) and the <i>Province</i> is equal to <i>Girona</i>.
+                    </p>
+
+                    <img src="filterRowsTable_image7.png" alt="icon" class="toolPage_image">
+
+                    <p>This is the result after applying the filter.</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="filterRowsTable_image8.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+
+
+                    <p><strong>Add a higher group:</strong> By clicking <i>Add a higher group</i>, a new
+                        <strong>"box"</strong> with a
+                        <strong> condition</strong> and a <strong>logical operator</strong> will appear.
+                        This new box works the same as the previous one. You can <i>add new conditions with new logical
+                            operators</i>.
+                    </p>
+
+                    <img src="filterRowsTable_image9.png" alt="icon" class="toolPage_image">
+
+                    <p>In this example, we use the same filter as before, but with an addition: data where the
+                        <i>Province</i>
+                        is <i> Barcelona</i> will also pass the filter (because the logical operator used is <i>OR</i>).
+                    </p>
+
+                    <img src="filterRowsTable_image10.png" alt="icon" class="toolPage_image">
+
+                    <p>This is the result after applying the filter.</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="filterRowsTable_image11.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
+                    <!-- <ul>
+
+                </ul> -->
+
+                </div>
+            </div>
+            <div class="toolPage_main" id="Replace">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../Replace.png" alt="icon Replace"
+                            class="toolPage_title_icon">Replace
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="replace_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Replace</strong> tool allows you to <strong>completely or partially replace a word,
+                            number,
+                            or value</strong>.
+                        You can apply the replacement to <strong>all data</strong> or to a <strong>specific
+                            column</strong>.
+                        You can replace <strong>any kind of data</strong>
+                        from any type of node. If you want to replace something from an internet request, remember that
+                        from
+                        this point on, the table will no longer request data from the source. Complete the dialog with
+                        your
+                        options and click <i>Apply</i> to apply the changes.</p>
+
+                    <p>This is the CSV table used for the example:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="replace_image1.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <p>To display the dialog, <i>double left-click</i> on the node. This is how the dialog looks:</p>
+                    <img src="replace_image2.png" alt="icon" class="toolPage_image">
+
+                    <p><strong>Entire table:</strong> If you choose this option, the replacement will be applied to
+                        <strong>all data</strong>
+                        in the table.
+                    </p>
+
+                    <p><strong>Single column:</strong> If you choose this option, the replacement will be applied only
+                        to
+                        the <strong>selected column</strong> from the dropdown.</p>
+
+                    <img src="replace_image3.png" alt="icon" class="toolPage_image">
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="replace_image4.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <p><strong>Search and Replace:</strong> Enter the <strong>text or value</strong> to search for in
+                        the
+                        <i>Search field</i> and
+                        the text or value to use as a replacement in the <i>Replace field</i>.
+                    </p>
+
+                    <p><strong>Treat numbers as text:</strong> If you check this checkbox, numbers will be treated as
+                        text.
+                        This means you can <strong>partially replace a number</strong>. For example, if you enter 23 in
+                        the
+                        search field,
+                        both 23 and 230 will be matched. If you do not treat numbers as text, the entire number must
+                        match,
+                        so only 23 will be replaced.</p>
+
+                    <img src="replace_image8.png" alt="icon" class="toolPage_image">
+
+                    <p><strong>Treat dates as text:</strong> If you check this checkbox, dates will be treated as text.
+                        This
+                        means you can <strongpartially replace></strong> parts of a date, similar to how it works with
+                            numbers. For example,
+                            if you want to replace the year in dates, you need to treat dates as text. If you want to
+                            replace a
+                            number across the entire table without affecting dates, do not treat dates as text. In that
+                            case,
+                            the full date must match to be replaced.</p>
+
+                    <img src="replace_image5.png" alt="icon" class="toolPage_image">
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="replace_image6.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
+                    <!-- <ul>
+
+                </ul> -->
+
+                </div>
+            </div>
+            <div class="toolPage_main" id="JoinTables">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../JoinTables.png" alt="icon JoinTables"
+                            class="toolPage_title_icon">Join tables
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                                Determining data quality of a sequence of observations from a Geopackage equivalent to a
+                                STA</a></li>
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="ConcatenateTables">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../ConcatenateTables.png" alt="icon ConcatenateTables"
+                            class="toolPage_title_icon">Concatenate tables
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="concatenateColumns_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Concatenate columns:</strong> This tool returns a <strong>table that combines the linked
+                            tables</strong>. It
+                        is possible to combine more than two tables. The data from these tables is combined by
+                        <strong>stacking the
+                            rows vertically</strong>. Any kind of data is accepted.
+                    </p>
+
+                    <p>These are the tables used in the example:</p>
+                    <img src="concatenateColumns_image1.png" alt="icon" class="toolPage_image">
+
+                    <p>To display the dialog, <i>double left-click</i> on the node. In this dialog, you have only two
+                        options to
+                        choose from:</p>
+                    <img src="concatenateColumns_image2.png" alt="icon" class="toolPage_image">
+
+                    <p><strong>Concatenate all columns:</strong> With this option selected, <strong>all data</strong>
+                        from
+                        the tables will be
+                        combined to form a new table. Columns present in only one table will keep their data, and the
+                        missing cells in the other tables will stay empty</p>
+
+                    <p>Example:</p>
+                    <img src="concatenateColumns_image3.png" alt="icon" class="toolPage_image">
+
+                    <p><strong>Concatenate only repeated columns:</strong> With this option selected, only columns that
+                        appear in more than one table will be included in the new table. Columns that exist in only one
+                        table will be discarded.</p>
+
+                    <p>Example:</p>
+                    <img src="concatenateColumns_image4.png" alt="icon" class="toolPage_image">
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
+                    <!-- <ul>
+
+                </ul> -->
+
+                </div>
+            </div>
+            <div class="toolPage_main" id="GroupBy">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../GroupBy.png" alt="icon GroupBy"
+                            class="toolPage_title_icon">Group by
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="groupBy_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Group by</strong> tool allows you to aggregate data based on one or more columns with the
+                        same values. You can also aggregate by time. The result of this aggregation is a set of summary
+                        statistics, such as mean, mode, sum, or any other values you select. You can aggregate any type
+                        of
+                        data; columns will include values if the selected statistic is applicable, or remain empty
+                        otherwise.</p>
+                    </p>
+                    <p> This is the table use in this example:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="groupBy_image1.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <p>To display de dialog <i>double left-click</i> on the node. Dialog is divided in four parts that
+                        will
+                        be explained below</p>
+                    <img src="groupBy_image2.png" alt="icon" class="toolPage_image">
+                    <p><strong>GroupBy:</strong> Check the boxes for the columns you want to group by. In other words,
+                        values in these columns must be the same to combine the data into a set. You can select more
+                        than
+                        one</p>
+                    <p><strong>Attributes to aggregate:</strong> which columns you want to use to obtain the values to
+                        perform the statistics. The selected statistics will appear next to each column name.</p>
+                    <p><strong>GroupBy date rounding:</strong> This option lets you aggregate your data by time
+                        intervals.
+                        You need to select a column with date values.</p>
+                    <p><strong>Aggregations:</strong> Select the statistical functions you want to apply. You can choose
+                        as
+                        many as you need.</p>
+                    <p>Here there is an example, <i>grouping by</i> the column <i>Province</i>, <i>aggregating</i> the
+                        values of <i>Absolute_level</i> and <i>Percentage_volume_stored</i> separately and asking for
+                        their
+                        <i>Mean, Min and Max values</i>.
+                    </p>
+                    <img src="groupBy_image3.png" alt="icon" class="toolPage_image">
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="groupBy_image4.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
+                                Connecting
+                                to a data catalogue and giving user feedback about a dataset</a></li>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe09" target="_blank">Recipe 9:
+                                Drawing a
+                                stacked bar chart</a></li>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="SortByTables">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../SortByTables.png" alt="icon SortByTables"
+                            class="toolPage_title_icon">Sort by
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="sortByTable_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>
+                        <strong>Sort By</strong> tool allows you to <strong>sort data by an attribute</strong> (column).
+                        This action will be performed with TAPIS code.
+
+                    </p>
+                    <p>This example shows data sorted as follows:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="sortByTable_image1.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <p>
+                        To display the dialog, <i>double left-click</i> on the node. Below you can see the dialog, which
+                        includes all the columns from your data. <strong>Select one column</strong> to use as the
+                        reference
+                        for sorting. You
+                        can also choose whether to sort the data in <i>ascending or descending order</i>. After
+                        selecting
+                        your preferences, click the <i>OK</i> button to apply the changes.
+                    </p>
+
+                    <img src="sortByTable_image2.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        This is the resulting data. In this case, you can see that the data is sorted by the
+                        <i>River_basin</i> attribute. Unlike <a
+                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SortBySTA">Sort by STA</a>,
+                        <strong>all records remain the same</strong> as the originally loaded data, but are sorted
+                        differently.
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="sortByTable_image3.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
+                    <!-- <ul></ul> -->
+
+
+                </div>
+            </div>
+            <div class="toolPage_main" id="AggregateColumns">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../AggregateColumns.png" alt="icon AggregateColumns"
+                            class="toolPage_title_icon">Aggregate Columns
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="aggregateColumns_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Aggregate Columns</strong> tool creates <strong>new columns</strong> in your table by
+                        <strong> existing
+                            columns</strong> using <strong> statistics</strong>. It can be used with any type of data,
+                        depending on which
+                        statistic you choose.
+                    </p>
+                    <p>This is the table for the example. It comes from a JSON document.</p>
+                    <img src="aggregateColumns_image6.png" alt="icon" class="toolPage_image">
+                    <p>To display the dialog, <i>double left-click</i> on the node. Here you can find the dialog and
+                        below
+                        you can find the description of the following parts. The <strong>general functionality</strong>
+                        is
+                        to select the options
+                        you want for the new column, add it to the table, and then press the OK button to create the new
+                        columns.</p>
+                    <img src="aggregateColumns_image1.png" alt="icon" class="toolPage_image">
+                    <p><strong>Select attributes:</strong> Check the checkboxes of the attributes
+                        <strong>(columns)</strong>
+                        you want to
+                        aggregate. You should select two or more attributes.</p>
+
+                    <p><strong>Aggregations:</strong> Select which <strong> statistical procedure</strong> you want to
+                        apply
+                        to the values of
+                        the previously selected columns.</p>
+
+                    <p><strong>Set number of decimal figures:</strong> If you want to fix the number of decimals, check
+                        the
+                        checkbox and enter the value to specify the number.</p>
+
+                    <p><strong>Column names:</strong> You can customize the name of the new column by choosing the
+                        <i> Personalized</i> option and entering the name, or select the predefined name using the
+                        <i>Suggested</i> option.
+                    </p>
+
+                    <img src="aggregateColumns_image2.png" alt="icon" class="toolPage_image">
+
+                    <p><strong>Add column to list:</strong> Once you have completed all options, click this button to
+                        add
+                        the column to the <i>List of columns to add</i>.</p>
+
+                    <img src="aggregateColumns_image3.png" alt="icon" class="toolPage_image">
+
+                    <p>For the example, two additional columns will be added, with the same attributes but using two
+                        different statistics.</p>
+
+                    <img src="aggregateColumns_image4.png" alt="icon" class="toolPage_image">
+
+                    <p>This is the result of adding three new columns.</p>
+
+                    <img src="aggregateColumns_image5.png" alt="icon" class="toolPage_image">
+
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+
+                    <p> <i>No one yet</i></p>
+                    <!-- <ul>
+
+                </ul> -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="CreateColumns">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../CreateColumns.png" alt="icon CreateColumns"
+                            class="toolPage_title_icon">Create Columns
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="createColumns_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Create Columns</strong> tool allows you to create <strong>new column</strong>s in your
+                        table.
+                        You can create
+                        <strong>three kinds of columns</strong>:
+                    <ul>
+                        <li>Column with a <strong>constant value</strong></li>
+                        <li>Column with an<strong> auto-incremental value</strong> starting from an <i>initial value</i>
+                        </li>
+                        <li><strong>Empty column</strong> (you can edit it record by record using the <a
+                                href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#EditRecord">Edit
+                                record
+                            </a> tool)</li>
+                    </ul>
+                    This tool can be used with data from your computer (<strong>table data</strong>) or with a table
+                    <strong>requested from an
+                        internet service</strong>. Remember that once you use this tool, you cannot make another request
+                    to
+                    the server again.
+                    </p>
+
+                    <p>For the example shown, <a
+                            href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportCSV">CSV import</a> has
+                        been
+                        used.</p>
+
+                    <img src="createColumns_image11.png" alt="icon" class="toolPage_image">
+
+                    <p>This is the original data, containing only the columns shown in the image below.</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="createColumns_image10.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+
+
+                    <p><strong>General overview</strong></p>
+
+                    <p>To display the dialog, <i>double left-click</i> on the node. This dialog has two parts: the upper
+                        part, where you can <strong>configure the column</strong> you want to add
+                        (<i>Select operation, Column name, Add column to list button</i>), and the <strong>List of
+                            columns</strong> to
+                        be added (columns that you have configured to be added to your table).
+                    </p>
+
+                    <p><u>Step 1:</u> Choose the <strong>type of column</strong> you want to add and <strong>fill in the
+                            fields</strong> if it will be a
+                        <i> constant value</i> or an <i>auto-incremental</i> value. If you leave both values empty, it
+                        will
+                        be
+                        considered as 0.
+                    </p>
+
+                    <p><u>Step 2:</u> Enter a <strong>name</strong> for the new column. It cannot be empty.</p>
+
+                    <p><u>Step 3:</u> Click the <i>Add column to list</i> button to add this configuration to the table
+                        below.
+                        <strong>The program only creates the columns that appear in this table</strong>.
+                    </p>
+
+                    <p>The creation of a <strong>Constant value column</strong> is used to illustrate the previous
+                        steps.
+                        You can add <strong>any
+                            type of value</strong> as a constant.</p>
+
+                    <img src="createColumns_image1.png" alt="icon" class="toolPage_image" style="width: 500px;">
+                    <img src="createColumns_image2.png" alt="icon" class="toolPage_image" style="width: 500px;">
+
+                    <p><u>Remove a column from the list:</u> To remove a column, click the <i>"trash"</i> button and the
+                        row
+                        will
+                        disappear.</p>
+
+                    <img src="createColumns_image3.png" alt="icon" class="toolPage_image" style="width: 500px;">
+                    <img src="createColumns_image4.png" alt="icon" class="toolPage_image" style="width: 500px;">
+
+                    <p>To create an <strong>auto-incremental column</strong>, follow the previous steps and provide an
+                        initial value. This value increases by 1 for each record.</p>
+
+                    <img src="createColumns_image5.png" alt="icon" class="toolPage_image" style="width: 500px;">
+                    <img src="createColumns_image6.png" alt="icon" class="toolPage_image" style="width: 500px;">
+                    <img src="createColumns_image7.png" alt="icon" class="toolPage_image" style="width: 500px;">
+
+                    <p>To create an <strong>empty column</strong>, follow the same steps. It is only necessary to
+                        provide a
+                        column name.</p>
+
+                    <img src="createColumns_image8.png" alt="icon" class="toolPage_image" style="width: 500px;">
+
+                    <p>In the image below, <strong>all three columns have been added</strong>. You can add as many
+                        columns
+                        as you want each
+                        time you use the tool (in a new node).</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="createColumns_image9.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
+                    <!-- <ul>
+
+                </ul> -->
+
+                </div>
+            </div>
+            <div class="toolPage_main" id="AddColumnGeo">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../AddColumnGeo.png" alt="icon AddColumnGeo"
+                            class="toolPage_title_icon">Add geospatial column
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                                Determining data quality of a sequence of observations from a Geopackage equivalent to a
+                                STA</a></li>
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="ColumnsCalculator">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../ColumnsCalculator.png" alt="icon ColumnsCalculator"
+                            class="toolPage_title_icon">Columns calculator
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="columnsCalculator_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Columns calculator</strong> tool enables you to create <strongnew columns using
+                            mathematical operations></strong>. This tool can be used with numeric data.</p>
+                    <p>Here is a table from a <i>CSV file</i> used in this example. In this example, we will calculate a
+                        simplified version of
+                        <i>Fire Weather Index (FWI)</i>.
+                    </p>
+                    <img src="columnsCalculator_image1.png" alt="icon" class="toolPage_image">
+                    <p>To display the dialog, <i>double left-click</i> on the node. The dialog parts will be described
+                        below. </p>
+                    <p><strong>General functionality: Build the formula</strong> you want to apply to create a new
+                        column.
+                        You can either <strong>type</strong> the formula directly or <strong>click the buttons</strong>
+                        to
+                        insert elements.
+                        When you click a button, the element will be added to the formula box at the position where you
+                        clicked. If you don’t click in the box, the element will be added at the end. You can also add
+                        <strong>column references</strong> using the <i>Attribute dropdown</i>.
+                    </p>
+                    <img src="columnsCalculator_image2.png" alt="icon" class="toolPage_image">
+                    <p><strong>Operators and functions for formula:</strong> Clicking these buttons will add the
+                        corresponding function to the formula box. Use them to build your formula.There are <i>numbers
+                            and other mathematical operations</i>.</p> <img src="columnsCalculator_image3.png"
+                        alt="icon" class="toolPage_image">
+                    <p><strong>Attribute:</strong> Select the <strong>column</strong> you want to add to the formula in
+                        order to use its
+                        values in the operation. Click <i>Write in the formula</i> to add to the box.</p>
+                    <img src="columnsCalculator_image4.png" alt="icon" class="toolPage_image">
+                    <p><strong>Formula:</strong> Elements will be added in this box to create the final formula. You can
+                        <strong>type and erase</strong> text directly, as it is a <i>text box</i>. As mentioned before,
+                        you
+                        can also add elements
+                        using the <i>operator and function buttons</i>. If you want to add something in a
+                        <strong>specific
+                            part of the
+                            formula</strong>, first <i>click</i> to mark the position, then <i>click the button</i> you
+                        want
+                        to use.
+                    </p>
+                    <img src="columnsCalculator_image5.png" alt="icon" class="toolPage_image">
+                    <p><strong>Set number of decimal figures:</strong> You can configure the <strong>number of
+                            decimals</strong> for your new
+                        column. Check the <i>checkbox</i> and enter the desired number.</p>
+                    <p><strong>Column name:</strong> Write a name for the new column. </p>
+                    <img src="columnsCalculator_image6.png" alt="icon" class="toolPage_image">
+                    <p>When you have your new column configured, click the <strong>Add to List</strong> button to add it
+                        to
+                        the table
+                        above.</p>
+                    <p><strong>List of columns to add:</strong> <i>Only new columns added to this table will appear
+                            here</i>. Don't
+                        forget to add all the columns you want to create to this table.</p> <img
+                        src="columnsCalculator_image7.png" alt="icon" class="toolPage_image">
+                    <p>This is the result of the operation, same table with a new column <i>(Simpl_FWI)</i></p>
+                    <img src="columnsCalculator_image8.png" alt="icon" class="toolPage_image">
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
+                    <!-- <ul>
+
+                </ul> -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="PivotTable">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../PivotTable.png" alt="icon PivotTable"
+                            class="toolPage_title_icon">Pivot table
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe11" target="_blank">Recipe 11:
+                                Pivoting
+                                a table, from values in the rows of a selected column to new columns</a></li>
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="ColumnStatistics">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../ColumnStatistics.png" alt="icon ColumnStatistics"
+                            class="toolPage_title_icon">Columns statistics
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="columnsStatistics_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Columns Statistics</strong> tool returns a <strong>table with general statistics for all
+                            columns</strong>.
+                        Some statistics can only be calculated for <i>numeric values</i>; in those cases, the value
+                        remains
+                        <i>empty</i>.
+                        You can use this tool with <strong>any kind of data</strong>.
+                    </p>
+
+                    <p>This example is from a CSV file with data shown below.</p>
+
+                    <img src="columnsStatistics_image1.png" alt="icon" class="toolPage_image ">
+
+                    <p>To display the dialog, <i>double left-click</i> on the node. In this case, the dialog is
+                        for<strong>informational</strong>
+                        purposes only; it shows which statistics TAPIS will calculate and return in a table.</p>
+
+                    <img src="columnsStatistics_image2.png" alt="icon" class="toolPage_image">
+
+                    <p>After clicking the <i>OK</i> button, you will obtain a table similar to the one below.</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="columnsStatistics_image3.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="SeparateColumns">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../SeparateColumns.png" alt="icon SeparateColumns"
+                            class="toolPage_title_icon">Separate Columns
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="separateColumns_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>Separate columns</strong> tool creates <strong>new columns or records by splitting
+                            elements</strong> from
+                        a column. These elements can be in <strong>JSON format</strong> or <strong></strong>separated by
+                        a
+                        delimiter</strong>, such as a <i>comma</i>. This
+                        tool can work with data from any type of node.</p>
+
+                    <p>To display the dialog, <i>double left-click</i> on the node. In the dialog there are trhee parts:
+                    </p>
+                    <p><strong>Columns to separate</strong> Select the <strong>data type</strong>, either <strong>JSON
+                            format</strong> or <strong>delimiter-separated</strong>
+                        element. If the data contains <strong>delimiters</strong>, select the <strong>column</strong> to
+                        split and enter the <strong>delimiter</strong>. If the
+                        data is in <strong>JSON format</strong>, TAPIS will <strong>automatically</strong> split it.</p>
+                    <p><strong>Result</strong> Here you can choose how to handle the split data, either <strong>create
+                            separate
+                            records</strong> for each part (keeping the original columns and repeating the rest of the
+                        data)
+                        or keep the
+                        original record and add <strong>new columns</strong>,one for each part of the split. Depending
+                        on
+                        your choice, the
+                        number of records or the number of columns will increase.</p>
+                    <p><strong>Remove already present elements</strong> Check this checkbox if you want to <strong>keep
+                            the
+                            original
+                            record</strong> (or column) or remove it.</p>
+                    <p>Example of data separated in <strong>JSON format</strong> and split into <strong>new
+                            columns</strong>:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="separateColumns_image1.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+                    <img src="separateColumns_image3.png" alt="icon" class="toolPage_image">
+                    <p>This is the result of the dialog shown above.</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="separateColumns_image4.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+                    <p>In this other example, <strong>data separated by commas</strong> will be split into <strong>new
+                            columns</strong>:</p>
+                    <p>This is the original data.</p>
+                    <img src="separateColumns_image2.png" alt="icon" class="toolPage_image">
+                    <img src="separateColumns_image5.png" alt="icon" class="toolPage_image">
+                    <p>This is the result, with three new columns in each record.</p>
+                    <img src="separateColumns_image6.png" alt="icon" class="toolPage_image">
+                    <p>This example uses the same data as before, but now this column is split into <strong>new
+                            records</strong> while the
+                        rest of the information is kept the same:</p>
+                    <img src="separateColumns_image7.png" alt="icon" class="toolPage_image">
+                    <p>This is the result:</p>
+                    <img src="separateColumns_image8.png" alt="icon" class="toolPage_image">
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe02" target="_blank">Recipe 2:
+                                Show
+                                the
+                                current evolution of a variable captured by a particular party</a></li>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3:
+                                Show a
+                                map
+                                of all observation features in an STA service</a></li>
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="SaveTable">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../SaveTable.png" alt="icon SaveTable"
+                            class="toolPage_title_icon">Save Table
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="saveTable_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Save Table</strong> tool allows you to save node <strong>data as a CSV file</strong> and
+                        <strong>attributes as CSVW</strong>
+                        (JSON format). You can save any kind of data.
+                    </p>
+
+                    <p>In the example below, the data is saved after applying a filter, so only the filtered data will
+                        be
+                        saved.</p>
+
+                    <img src="saveTable_image1.png" alt="icon" class="toolPage_image">
+
+                    <p>To display the dialog, <i>double left-click</i> on the node. In the dialog, you can perform two
+                        actions:
+                    </p>
+
+                    <img src="saveTable_image2.png" alt="icon" class="toolPage_image">
+
+                    <p><u><strong>Save CSV</strong>:</u> Save node <strong>data</strong> as a CSV file,
+                        <strong></strong>choosing the delimiter</strong> you want to use (enter it in
+                        the <i>CSV delimiter field</i>).
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="saveTable_image3.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <p><u><strong>Save CSVW</strong>:</u> Save <strong>attributes</strong> from the data. The resulting
+                        JSON
+                        file will only contain the
+                        properties of completed attributes.</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="saveTable_image4.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+
+                    <p>If you want to save both data and attributes, you will need to perform both actions.</p>
+
+                    <p>Click the button for the desired action, enter a name for the document, and save it.</p>
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe04" target="_blank">Recipe 4:
+                                Add
+                                semantics (meaning) to a table and share, retrieve and store it</a></li>
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="SaveLayer">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../SaveLayer.png" alt="icon SaveLayer"
+                            class="toolPage_title_icon">Save Layer
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe03" target="_blank">Recipe 3:
+                                Show a
+                                map
+                                of all observation features in an STA service</a></li>
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="guf">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../guf.png" alt="icon guf" class="toolPage_title_icon">Feedback
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
+                                Connecting
+                                to a data catalogue and giving user feedback about a dataset</a></li>
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="uploadToIC">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../uploadToIC.png" alt="icon uploadToIC"
+                            class="toolPage_title_icon">Upload to inmutable catalog
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="uploadToIC_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Upload to immutable catalog</strong> tool allows you to load your <strong>data</strong>
+                        and <strong>quality metadata</strong>
+                        into an <strong>immutable catalog</strong>. For this purpose, you need to use previously
+                        <i>quality nodes</i>, as many as
+                        you want.
+                        You can use any kind of data, but you need to have <strong>geographic data</strong> (in a column
+                        or written manually)
+                        and <strong>date data</strong> (in a column or written manually).</p>
+                    <p>To perform this procedure, you need to be logged in(<a
+                            href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">Login button</a>).
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="uploadToIC_image7.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+                    <p>This is the data we will use for the example:</p>
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="uploadToIC_image1.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
+
+                    <p>This is the result of the <strong>quality metadata</strong> calculated in previously nodes.</p>
+                    <img src="uploadToIC_image2.png" alt="icon" class="toolPage_image ">
+                    <p>To display the dialog, <i>double left-click</i> on the node. This dialog consists of different
+                        parts,
+                        explained below.</p>
+                    <img src="uploadToIC_image3.png" alt="icon" class="toolPage_image ">
+                    <p><strong>Title:</strong> Enter a title for your element in the catalog. If this field is empty,
+                        the
+                        automatic title will be: <i>Data from TAPIS on "current date".</i></p>
+                    <p><strong>Author:</strong> Enter an author for your element in the catalog. If this field is empty,
+                        the
+                        automatic author will be: <i>"Author"</i>.</p>
+                    <p><strong>License:</strong> Select a license from the dropdown.</p>
+                    <img src="uploadToIC_image4.png" alt="icon" class="toolPage_image ">
+                    <p><strong>Geographic information:</strong> It is necessary to include geographic information,
+                        either
+                        provided in the data <i>columns</i> or <i>entered manually</i>. Choose the option you want to
+                        use and select or
+                        complete the fields.</p>
+                    <img src="uploadToIC_image5.png" alt="icon" class="toolPage_image ">
+                    <p><strong>Date column:</strong> It is necessary to include date information, either
+                        provided in the data <i>columns</i> or <i>entered manually</i>. Choose the option you want to
+                        use and select or
+                        complete the fields. To enter the date manually, you can use the calendar. Click on the
+                        <strong>calendar</strong> to
+                        display it and select the desired date. This date will be added to the field automatically.</p>
+                    <img src="uploadToIC_image6.png" alt="icon" class="toolPage_image ">
+                    <p><strong>Add GeoJSON node to check the result:</strong> Check the checkbox if you want to add a <a
+                            href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportGeoJSON">GeoJSON</a>
+                        node to
+                        see what has been loaded into the catalog in TAPIS.</p>
+                    <img src="uploadToIC_image9.png" alt="icon" class="toolPage_image ">
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="uploadToIC_image10.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+                    <p>
+                    <p>If the load has been successful, something similar will appear. The <strong>URL</strong> is the
+                        link to the
+                        information loaded in the catalog.</p>
+                    </p>
+                    <img src="uploadToIC_image8.png" alt="icon" class="toolPage_image ">
+                    <p>This is the URL of the example:
+                        <a
+                            href="https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/8a9aaea8-f01f-4683-b3a3-aaf62df887ea">https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/8a9aaea8-f01f-4683-b3a3-aaf62df887ea</a>
+                    </p>
+                    <p>
+                    <p>This is the result of the <strong>loaded information</strong>. The image shows the table created
+                        from the <strong>GeoJSON
+                            node</strong>. In the <strong><i>metadata</i></strong>, all calculated quality data will
+                        appear. In <strong><i>PRODUCTOpenLink</i></strong>, you will find
+                        the data uploaded to the Interplanetary File System (IPFS) (<a
+                            href="https://ipfs.ogc.secd.eu/">https://ipfs.ogc.secd.eu/</a>). With this link, you can
+                        download the data to your computer.</p>
+                    <p><i>The download of the data in the GeoJSON node is not guaranteed. It is delayed to allow time
+                            for the
+                            data to be loaded into the catalog, but there is no confirmation that the data has been
+                            successfully loaded yet.</i></p>
+                    </p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                                Determining data quality of a sequence of observations from a Geopackage equivalent to a
+                                STA</a></li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
-
-
     </main>
 </body>
 

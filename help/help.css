@@ -151,7 +151,9 @@ body {
 .button {
     cursor: pointer;
 }
-
+.mainTools {
+    margin-top: 200px;
+}
 /* El header en horitzontal */
 .descriptionToolsHeader {
     display: flex;
@@ -179,24 +181,29 @@ body {
 /* ===== Logo + text ===== */
 .descriptionToolsHeader {
     cursor: pointer;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-top: 0px;
 }
 
 /* Opcional: reduir margin */
 #content_navBar {
-    margin-top: 0;
-    /* ja està a la mateixa alçada */
-    flex: 1;
-    /* que ocupi l'espai restant */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-top: 110px;
+    background-color: white;
+    z-index: 1000;
 }
 
-/* ===== Navbar ===== */
 #navBar {
     display: flex;
     justify-content: space-around;
-    /* distribuir elements uniformement */
-    flex-wrap: wrap;
-    /* que baixi si no hi ha espai */
     align-items: center;
+    flex-wrap: wrap;
     width: 100%;
 }
 

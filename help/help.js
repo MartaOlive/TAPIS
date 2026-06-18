@@ -64,7 +64,7 @@ const headerNavBar = `<div onclick="openTapisPage()">
                 </tr>
             </table>
         </div>
-        <div id="content_navBar">
+        <div id="content_navBar" >
             <div id="navBar">
                 <div id="navBar_howTAPISWorks"></div>
                 <div id="navBar_servicesAndApis"></div>
@@ -78,8 +78,12 @@ const headerNavBar = `<div onclick="openTapisPage()">
                 <div id="navBar_nodeOperations"></div>
                 <div id="navBar_navBarButtons"></div>
             </div>
-        </div>`
-
+        </div>
+        <div>
+            <button onclick='OpenHelpFromHelp(event);'><img src="../help.png" height="20" valign="middle">Help</button>
+             <button onclick='OpenRecipesFromHelp(event);'><img src="../documentation.png" height="20"
+                     valign="middle">Recipes</button>
+       </div>`
 function StartDocumentationPage() {
     var c = "";
     //howTAPISWorks
@@ -431,6 +435,6 @@ function OpenHelpFromHelp(event) {
     window.open("https://www.tapis.grumets.cat/tapis/help/index.htm", "TapisHelp");
 }
 
-function zoomToImage(img){
-  img.classList.toggle("zoom");
+function zoomToImage(img) {
+    img.classList.toggle("zoom");
 }

@@ -17,136 +17,142 @@
     <header class="descriptionToolsHeader" id="toolPage_header_navBarButtons">
     </header>
     <main>
-        <div>
-            <button onclick='OpenHelpFromHelp(event);'><img src="../help.png" height="20" valign="middle">Help</button>
-            <button onclick='OpenRecipesFromHelp(event);'><img src="../documentation.png" height="20"
-                    valign="middle">Recipes</button>
-        </div>
-        <h1 class="toolPage_mainTitle">Navegation bar buttons</h1> <!--general title -->
-        <div id="toolPage_navBarButtons" class="toolBoxParent"></div> <!--all tools-->
+        <div class="mainTools">
+            <div>
+                <button onclick='OpenHelpFromHelp(event);'><img src="../help.png" height="20"
+                        valign="middle">Help</button>
+                <button onclick='OpenRecipesFromHelp(event);'><img src="../documentation.png" height="20"
+                        valign="middle">Recipes</button>
+            </div>
+            <h1 class="toolPage_mainTitle">Navegation bar buttons</h1> <!--general title -->
+            <div id="toolPage_navBarButtons" class="toolBoxParent"></div> <!--all tools-->
 
-        <div class="toolPage_main"> <!--general explanation-->
-            <div class="toolPage_main_text generalExplanation">
-                <p>
-                    You can find these tools on TAPIS at the <strong>top right of the interface.</strong> These are more
-                    <strong>general tools</strong>
-                    and do not work with nodes.
-                </p>
+            <div class="toolPage_main"> <!--general explanation-->
+                <div class="toolPage_main_text generalExplanation">
+                    <p>
+                        You can find these tools on TAPIS at the <strong>top right of the interface.</strong> These are
+                        more
+                        <strong>general tools</strong>
+                        and do not work with nodes.
+                    </p>
 
-                <p>
-                    Here you can find options such as <i>how to log in, how to load or save a node schema, how to access
-                        configurations, or how to access to this documentation, among others.</i>
-                </p>
+                    <p>
+                        Here you can find options such as <i>how to log in, how to load or save a node schema, how to
+                            access
+                            configurations, or how to access to this documentation, among others.</i>
+                    </p>
 
-                <img src="navBarTools.png" alt="icon" class="toolPage_image">
+                    <img src="navBarTools.png" alt="icon" class="toolPage_image">
 
+                </div>
+            </div>
+
+
+
+            <div class="toolPage_main" id="reload">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../reload.png" alt="icon reload"
+                            class="toolPage_title_icon">Refresh
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="openNetwork">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../openNetwork.png" alt="icon openNetwork"
+                            class="toolPage_title_icon">Open
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="openURLNetwork">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../openURLNetwork.png" alt="icon openURLNetwork"
+                            class="toolPage_title_icon">Save as...
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="login">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../login.png" alt="icon login"
+                            class="toolPage_title_icon">Login
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
+                                Creating
+                                two new datastream of observations</a></li>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
+                                Determining data quality of a sequence of observations from a Geopackage equivalent to a
+                                STA</a></li>
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="config">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../config.png" alt="icon config"
+                            class="toolPage_title_icon">Configuration
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="help">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../help.png" alt="icon help" class="toolPage_title_icon">Help
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="documentation">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../documentation.png" alt="icon documentation"
+                            class="toolPage_title_icon">Documentation
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                </div>
             </div>
         </div>
-
-
-
-        <div class="toolPage_main" id="reload">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../reload.png" alt="icon reload"
-                        class="toolPage_title_icon">Refresh
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="openNetwork">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../openNetwork.png" alt="icon openNetwork"
-                        class="toolPage_title_icon">Open
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="openURLNetwork">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../openURLNetwork.png" alt="icon openURLNetwork"
-                        class="toolPage_title_icon">Save as...
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="login">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../login.png" alt="icon login" class="toolPage_title_icon">Login
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6: Creating
-                            two new datastream of observations</a></li>
-                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
-                            Determining data quality of a sequence of observations from a Geopackage equivalent to a
-                            STA</a></li>
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="config">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../config.png" alt="icon config"
-                        class="toolPage_title_icon">Configuration
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="help">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../help.png" alt="icon help" class="toolPage_title_icon">Help
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-        <div class="toolPage_main" id="documentation">
-            <div class="toolPage_main_text">
-                <h2 class="toolPage_title"><img src="../documentation.png" alt="icon documentation"
-                        class="toolPage_title_icon">Documentation
-                </h2>
-                <p><strong>Setting Up the Node: </strong></p>
-                <p><strong>How to Use the Node: </strong></p>
-                <p> <strong>Recipes where this tool is used:</strong> </p>
-                <ul>
-
-                </ul>
-                <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-            </div>
-        </div>
-
     </main>
 </body>
 
