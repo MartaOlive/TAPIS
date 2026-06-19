@@ -152,7 +152,7 @@ body {
     cursor: pointer;
 }
 .mainTools {
-    margin-top: 200px;
+    margin-top: 180px;
 }
 /* El header en horitzontal */
 .descriptionToolsHeader {
@@ -194,7 +194,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    margin-top: 110px;
+    margin-top: 100px;
     background-color: white;
     z-index: 1000;
 }
