@@ -28,6 +28,8 @@
 	<script type="text/javascript" src="wicket.js" async defer></script>
 	<script type="text/javascript" src="ngeohash.js" async defer></script>
 	<script type="text/javascript" src="h3-js.js" async defer></script><!--https://github.com/uber/h3-js-->
+	<script type="text/javascript" src="proj4.js"></script>
+	<script type="text/javascript" src="crs.js"></script>
 	<script type="text/javascript" src="hello.all.min.js"></script>
 	<script type="text/javascript" src="authenix.js" async defer></script>
 	<script type="text/javascript" src="mmn_postmessage.js" async defer></script>
@@ -143,8 +145,8 @@
 				</label>
 				<br>
 				<span style="display: flex;align-items: center;">Window disposition: 
-				<label style="display: flex;align-items: center;"><input type="radio" name="DialogConfigurationDiv" id="DialogConfigurationDivSideBySide" checked="checked" ></input><img src="SideBySide.png"></label>
-				<label style="display: flex;align-items: center;"><input type="radio" name="DialogConfigurationDiv" id="DialogConfigurationDivOverUnder" ></input><img src="OverUnder.png"></label>
+				<label style="display: flex;align-items: center;"><input type="radio" name="DialogConfigurationDiv" id="DialogConfigurationDivSideBySide" checked="checked"></input><img src="SideBySide.png"></label>
+				<label style="display: flex;align-items: center;"><input type="radio" name="DialogConfigurationDiv" id="DialogConfigurationDivOverUnder"></input><img src="OverUnder.png"></label>
 				</span>
 				<br>
 				<label><input type="checkbox" id="DialogConfigurationAddGeolocationHeader"></input>Add geolocation header</label><br>
@@ -1357,15 +1359,27 @@
 
 	<dialog id="DialogSaveTable" onClose='hideNodeDialog("DialogSaveTable", event)'>
 		<form>
-			Save the table as CSV
+			Save table
 			<br>
-			<label>CSV delimiter:
-				<input type="text" id="DialogSaveTableDelimiter" size="2" maxlength="1" value=";"></input>
-			</label>
-			<!--span id="DialogSaveTableOptions"></span--><br>
+			<fieldset>
+				<legend>CSV+CSVW</legend>
+				<label>CSV delimiter:
+					<input type="text" id="DialogSaveTableDelimiter" size="2" maxlength="1" value=";"></input>
+				</label>
+				<div class="center">
+					<button value="csv" onClick="SaveCSV(event)" formmethod="dialog">Save CSV</button>
+					<button value="dbf" onClick="SaveDBF(event)" formmethod="dialog">Save DBF</button>
+					<button value="csvw" onClick="SaveCSVW(event)" formmethod="dialog">Save CSVW</button>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>DBF</legend>
+				<label><input type="checkbox" id="DialogSaveTableForceExtendedDBF"></input> Force extended DBF</label>
+				<div class="center">
+					<button value="dbf" onClick="SaveDBF(event)" formmethod="dialog">Save DBF</button> 
+				</div>
+			</fieldset>
 			<div class="center">
-				<button value="default" onClick="SaveTable(event)" formmethod="dialog">Save CSV</button>
-				<button value="csvw" onClick="SaveCSVW(event)" formmethod="dialog">Save CSVW</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
@@ -1593,11 +1607,15 @@
 				<br>
 				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="LL" id="DialogAddColumnGeoRadioLL" checked="checked">Point coordinates:</label>
 				<fieldset>
-				<label>Longitude:
+				<label>CRS:
+					<select id="DialogAddColumnGeoCRSSelect"></select>
+				</label>
+				<br>
+				<label>X or Longitude:
 					<span id="DialogAddColumnGeoLongitude"></span>
 				</label>
 				<br>
-				<label>Latitude:
+				<label>Y or Latitude:
 					<span id="DialogAddColumnGeoLatitude"></span>
 				</label>
 				</fieldset>
@@ -1612,10 +1630,17 @@
 					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="UberH3" id="DialogAddColumnGeoRadioUberH3Out" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioUberH3Out");' >Uber H3</label><br>
 					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="LL" id="DialogAddColumnGeoRadioLLOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioLLOut");' >Point coordinates</label>
 				</fieldset>
-				<legend>New column</legend>
-				<label><span id="DialogAddColumnGeoNameOut">Column name:</span><input type="text" size="30" id="DialogAddColumnGeoNameText" value="Geometry"></input><br>
-				<label><span id="DialogAddColumnGeoLatitudeNameOut" style="display:none;">Latitude:</span><input type="text" size="30" id="DialogAddColumnGeoLatitudeNameText" value="Latitude" style="display:none;"></input>
-				<label><span id="DialogAddColumnGeoLevel" style="display:none;">Level:</span><input type="text" size="3" id="DialogAddColumnGeoLevelText" value="10" style="display:none;"></input>
+				<fieldset>
+				<legend>New column name(s)</legend>
+					<span id="DialogAddColumnGeoCRSOutAll" style="display:none;">
+						<span id="DialogAddColumnGeoCRSOut">CRS:</span>
+						<select id="DialogAddColumnGeoCRSOutSelect"></select>
+						<br>
+					</span>
+					<span id="DialogAddColumnGeoNameOutAll"><label><span id="DialogAddColumnGeoNameOut">Column name:</span> <input type="text" size="30" id="DialogAddColumnGeoNameText" value="Geometry"></input><br></span>
+					<span id="DialogAddColumnGeoLatitudeNameOutAll" style="display:none;"><label><span id="DialogAddColumnGeoLatitudeNameOut">Y or Latitude:</span> <input type="text" size="30" id="DialogAddColumnGeoLatitudeNameText" value="Latitude"></input><br></span>
+					<span id="DialogAddColumnGeoLevelAll"><label><span id="DialogAddColumnGeoLevel">Level:</span><input type="text" size="3" id="DialogAddColumnGeoLevelText" value="10"></input></span>
+				</fieldset>
 			</fieldset>
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick="GetAddColumnGeo(event)" formmethod="dialog">Add</button>

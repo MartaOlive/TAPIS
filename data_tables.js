@@ -1434,6 +1434,8 @@ var columnCreated=false, record, json, point;
 				point=getFirstCoordinateGeoJSONGeometry(json);
 				if (!point)
 					continue;
+				if (!isProj4CRS84(selectedOptions.CRSOut))
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, point);
 				record[selectedOptions.nameOut]=point[0];
 				record[selectedOptions.latitudeOut]=point[1];
 				columnCreated=true;
@@ -1477,6 +1479,8 @@ var columnCreated=false, record, json, point;
 				point=getFirstCoordinateGeoJSONGeometry(json);
 				if (!point)
 					continue;
+				if (!isProj4CRS84(selectedOptions.CRSOut))
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, point);
 				record[selectedOptions.nameOut]=point[0];
 				record[selectedOptions.latitudeOut]=point[1];
 				columnCreated=true;
@@ -1510,8 +1514,14 @@ var columnCreated=false, record, json, point;
 			}
 			else if (selectedOptions.radioOut=="LL") {
 				//JSON-->LL (only if points)
-				record[selectedOptions.nameOut]=point.longitude;
-				record[selectedOptions.latitudeOut]=point.latitude;
+				if (!isProj4CRS84(selectedOptions.CRSOut)) {
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, [point.longitude, point.latitude]);
+					record[selectedOptions.nameOut]=point[0];
+					record[selectedOptions.latitudeOut]=point[1];
+				} else {
+					record[selectedOptions.nameOut]=point.longitude;
+					record[selectedOptions.latitudeOut]=point.latitude;
+				}
 				columnCreated=true;
 			}
 		}
@@ -1542,6 +1552,8 @@ var columnCreated=false, record, json, point;
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="LL") {
+				if (!isProj4CRS84(selectedOptions.CRSOut))
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, point);
 				record[selectedOptions.nameOut]=point[1];
 				record[selectedOptions.latitudeOut]=point[0];
 				columnCreated=true;
@@ -1554,7 +1566,10 @@ var columnCreated=false, record, json, point;
 			record=data[i];
 			if (!record[selectedOptions.longitudeIn] || !record[selectedOptions.latitudeIn])
 				continue;
-			json={type:"Point", coordinates:[record[selectedOptions.longitudeIn], record[selectedOptions.latitudeIn]]};
+			if (!isProj4CRS84(selectedOptions.CRSIn)) {
+				json={type:"Point", coordinates: proj4(selectedOptions.CRSIn, "EPSG:4326", [record[selectedOptions.longitudeIn], record[selectedOptions.latitudeIn]])};
+			} else
+				json={type:"Point", coordinates:[record[selectedOptions.longitudeIn], record[selectedOptions.latitudeIn]]};
 			if (selectedOptions.radioOut=="JSON") {
 				record[selectedOptions.nameOut]=json;
 				columnCreated=true;
@@ -1574,8 +1589,14 @@ var columnCreated=false, record, json, point;
 			}
 			else if (selectedOptions.radioOut=="LL") {
 				//JSON-->LL (only if points)
-				record[selectedOptions.nameOut]=record[selectedOptions.longitudeIn];
-				record[selectedOptions.latitudeOut]=record[selectedOptions.latitudeIn];
+				if (!isProj4CRS84(selectedOptions.CRSOut)) {					
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, [record[selectedOptions.longitudeIn], record[selectedOptions.latitudeIn]]);
+					record[selectedOptions.nameOut]=point[0];
+					record[selectedOptions.latitudeOut]=point[1];
+				} else {
+					record[selectedOptions.nameOut]=record[selectedOptions.longitudeIn];
+					record[selectedOptions.latitudeOut]=record[selectedOptions.latitudeIn];
+				}
 				columnCreated=true;
 			}
 		}

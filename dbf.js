@@ -191,6 +191,274 @@ function ParseDBF(buffer) {
 	return dbf;
 }
 
+function getDBFTypeFromAttributeTypeFromDBFType(datatype) {
+	switch (datatype) {
+		case "string":
+		case "array":
+		case "object":
+		case "geometry":
+			return "C";
+		case "boolean": 
+			return "L";
+		case "integer":
+		case "number":
+			return "N";
+	}
+	return "";
+}
+
+function addDBFsizeDBFtypeAttributes(data, dataAttributes) {
+	var dataAttributesArray = Object.keys(dataAttributes), len;
+	for (var i=0; i<dataAttributesArray.length;i++) {
+		var dataAttribute=dataAttributes[dataAttributesArray[i]];
+		dataAttribute.DBFtype=getDBFTypeFromAttributeTypeFromDBFType(dataAttribute.type)
+		dataAttribute.DBFsize=dataAttribute.DBFtype=="L" ? 1 : 0;
+	}
+	for (var i=0; i<data.length;i++) {
+		var record=data[i];
+		var keys = Object.keys(record), len;
+		for (var k = 0; k < keys.length; k++) {
+			if (dataAttributes[keys[k]]) {
+				var dataAttribute=dataAttributes[keys[k]]
+				if (dataAttribute.type=="string") {
+					len=record[keys[k]].length;
+				} else if (dataAttribute.type=="array" || dataAttribute.type=="object") {
+					try {
+						len=JSON.stringify(record[keys[k]]).length;
+					} catch(error) {
+						len=0;
+					}
+				} else if (dataAttribute.type=="integer" || dataAttribute.type=="number") {
+					len=record[keys[k]]<0 ? Math.floor(Math.log10(Math.abs(record[keys[k]])))+2 : Math.floor(Math.log10(record[keys[k]]))+1;
+					if (dataAttribute.type=="number")
+						len+=7;  //The dot and 6 decimal figures.
+				} else {
+					len=0;
+				}
+				if (dataAttribute.DBFsize<len)
+					dataAttribute.DBFsize=len;
+			}
+		}
+	}
+}
+
+function addDBFnameAttributes(dataAttributes, isMMExtended) {
+	var dataAttributesArray = Object.keys(dataAttributes);
+	var c;
+	var offset=32+32*dataAttributesArray.length+1;
+	for (var i=0; i<dataAttributesArray.length;i++) {
+		var dataAttribute=dataAttributes[dataAttributesArray[i]];
+		if (!dataAttribute.DBFtype)
+			continue;
+		//Review the names and convert them to classic names
+		//Review the size:
+		//dataAttribute.DBFname=dataAttributesArray[i].length>10 ? dataAttributesArray[i].substring(0,10) : dataAttributesArray[i];
+		dataAttribute.DBFname=dataAttributesArray[i];
+		//Review the caracters one by one
+		if (dataAttribute.DBFname.charAt(0)=="_" || (dataAttribute.DBFname.charAt(6)=="_" && (dataAttribute.DBFname.charAt(7)=='0' || dataAttribute.DBFname.charAt(7)=='1' || dataAttribute.DBFname.charAt(7)=='2')))
+			dataAttribute.DBFname=dataAttribute.DBFname.substring(0,6).toUpperCase() + (i<9 ? "00" + (i+1) : (i<99 ? "0" + (i+1) : i+1));
+		else {
+			dataAttribute.DBFname=dataAttribute.DBFname.toUpperCase();
+			for (var i_c=0; i_c<(dataAttribute.DBFname.length>10 ? 10 : dataAttribute.DBFname.length); i_c++) {
+				if (dataAttribute.DBFname.length>10 && i_c==6) {
+					dataAttribute.DBFname=dataAttribute.DBFname.substring(0, i_c) + "_" + (i<9 ? "00" + (i+1) : (i<99 ? "0" + (i+1) : i+1));
+					break;
+				}
+				c=dataAttribute.DBFname.charAt(i_c);
+				if ((c>='A' && c<='Z') || (c>='0' && c<='9') || c=='_')
+					continue;
+				dataAttribute.DBFname=dataAttribute.DBFname.substring(0, i_c) + "_" + dataAttribute.DBFname.substring(i_c+1);
+			}
+		}
+		if (isMMExtended) {
+			dataAttribute.DBFextendedName=(dataAttributesArray[i]>128 ? dataAttributesArray[i].substring(0,128) : dataAttributesArray[i]).replaceAll('`','_').replaceAll('[','_').replaceAll(']','_').replaceAll('¨','_');
+			dataAttribute.DBFoffsetExtendedName=offset;
+			offset+=dataAttribute.DBFextendedName.length;
+		}
+	}
+}
+
+function isNecessaryExtendedDBF(dataAttributes) {
+	var dataAttributesArray = Object.keys(dataAttributes);
+	//In dBASE III+ de max is 128, In dBASE IV is 255.
+	if (dataAttributesArray.length>255)
+		return true;
+	for (var i=0; i<dataAttributesArray.length; i++) {
+		var dataAttribute=dataAttributes[dataAttributesArray[i]];
+		if (dataAttribute.DBFtype=="C" && dataAttribute.DBFsize>254)
+			return true;
+	}
+	return false;
+}
+
+function integerToUint8Array(myArr, offset, num, size) {
+	for (var i = 0; i < size; i++) {
+		myArr[offset+i] = num % 256;
+		num = Math.floor(num / 256);
+	}
+}
+
+function createUintArrayDBF(data, dataAttributesIn, forceExtendedDBF){
+	var dataAttributes=dataAttributesIn ? deapCopy(dataAttributesIn) : getDataAttributes(data);
+	var dataAttributesArray = Object.keys(dataAttributes);
+	
+	addDBFsizeDBFtypeAttributes(data, dataAttributes);
+	//Determine if this needs to be an extended DBF. 
+	var isMMExtended=forceExtendedDBF ? true : isNecessaryExtendedDBF(dataAttributes);
+	//We do not consider incompatible field names, as a reason to have a extended DBF. We generate compatible names instead.
+	addDBFnameAttributes(dataAttributes, isMMExtended);
+	var offsetFirstRecord=32+32*dataAttributesArray.length+1;
+	if (isMMExtended) {
+		for (var i=0; i<dataAttributesArray.length; i++)
+			offsetFirstRecord+=dataAttributes[dataAttributesArray[i]].DBFextendedName.length;
+	}
+	var recordSize=1;
+	for (var i=0; i<dataAttributesArray.length; i++)
+		recordSize+=dataAttributes[dataAttributesArray[i]].DBFsize;
+
+	var DBFarray = new Uint8Array(offsetFirstRecord + recordSize*data.length);
+
+	DBFarray[0]=isMMExtended ? 0x90 : 0x3;  //version
+	var today = new Date();
+	DBFarray[1]=today.getFullYear()-1900;
+	DBFarray[2]=today.getMonth()+1;
+	DBFarray[3]=today.getDate();
+	integerToUint8Array(DBFarray, 4, data.length, 4);  //nrows
+	integerToUint8Array(DBFarray, 8, offsetFirstRecord, 2);  //two lower bytes
+	integerToUint8Array(DBFarray, 10, recordSize, 4);
+	DBFarray[14]=0;  //Transaction flag
+	DBFarray[15]=0;  //Encription flag
+	//dBaseIV multi-user environment use
+	for (var i=16; i<28; i++)
+		DBFarray[i]=0;
+	DBFarray[28]=0;  //Production index exists
+	DBFarray[29]=0x14;  //OEM850
+	if (isMMExtended)
+		integerToUint8Array(DBFarray, 30, Math.floor(offsetFirstRecord/65536), 2);  //two higher bytes
+	else {
+		DBFarray[30]=0;
+		DBFarray[31]=0;	
+	}
+	var offset=32;
+	var dataAttribute;
+	for (var i=0; i<dataAttributesArray.length; i++) {
+		dataAttribute=dataAttributes[dataAttributesArray[i]];
+		for (var j=0; j<dataAttribute.DBFname.length; j++)
+			DBFarray[offset+j]=dataAttribute.DBFname.charCodeAt(j);
+		for (; j<11; j++)
+			DBFarray[offset+j]=0;
+		DBFarray[offset+11]=dataAttribute.DBFtype.charCodeAt(0);
+		DBFarray[offset+12]=0;
+		DBFarray[offset+13]=0;
+		DBFarray[offset+14]=0;
+		DBFarray[offset+15]=0;
+		DBFarray[offset+16]=(isMMExtended && dataAttribute.DBFtype=="C") ? 0 : dataAttribute.DBFsize%256;
+		DBFarray[offset+17]=dataAttribute.type=="number" ? (dataAttribute.type=="integer" ? 0 : 6) : 0;  //Decimal figures
+		DBFarray[offset+18]=0;
+		DBFarray[offset+19]=0;
+		DBFarray[offset+20]=0;  //dBaseIV work area ID
+		if (isMMExtended)
+			integerToUint8Array(DBFarray, offset+21, dataAttribute.DBFsize, 4);
+		else {
+			DBFarray[offset+21]=0;
+			DBFarray[offset+22]=0;	
+			DBFarray[offset+23]=0;	
+			DBFarray[offset+24]=0;	
+		}
+		if (isMMExtended) {
+			integerToUint8Array(DBFarray, offset+25, dataAttribute.DBFoffsetExtendedName, 4);
+			integerToUint8Array(DBFarray, offset+29, dataAttribute.DBFextendedName.length, 1);
+		}
+		else {
+			DBFarray[offset+25]=0;
+			DBFarray[offset+26]=0;
+			DBFarray[offset+27]=0;
+			DBFarray[offset+28]=0;
+			DBFarray[offset+29]=0;		
+		}
+		DBFarray[offset+30]=0;
+		DBFarray[offset+31]=0;  //Field is part of production index
+		offset+=32;
+	}
+	DBFarray[offset]=13;  //End of header
+	offset++;
+	if (isMMExtended) {
+		for (var i=0; i<dataAttributesArray.length; i++) {
+			var dataAttribute=dataAttributes[dataAttributesArray[i]];
+			for (var j=0; j<dataAttribute.DBFextendedName.length; j++) {
+				DBFarray[offset+j]=ansiToOem(dataAttribute.DBFextendedName.charCodeAt(j));
+			}
+			offset+=dataAttribute.DBFextendedName.length;
+		}
+	}
+	var s;
+	for (var i=0; i<data.length; i++) {
+		var record=data[i];
+		DBFarray[offset]=0;
+		offset++;
+		for (var j=0; j<dataAttributesArray.length; j++) {
+			var dataAttribute=dataAttributes[dataAttributesArray[j]];
+			var cell=record[dataAttributesArray[j]];
+			if (cell){
+				switch (dataAttribute.type) {
+					case "array":
+					case "object":
+					case "geometry":
+						try {
+							s=JSON.stringify(cell);
+						} catch (error) {
+							s="";
+						}
+						break;
+					case "string":
+						s=cell;
+						break;
+					case "boolean": 
+						s=cell ? "T" : "F";
+						break;					
+					case "integer":
+						try {
+							s=Number.parseFloat(cell).toFixed(0);
+						} catch (error) {
+							s="";
+						}
+						break;						
+					case "number":
+						try {
+							s=Number.parseFloat(cell).toFixed(6);
+						} catch (error) {
+							s="";
+						}
+						break;
+					default:
+						s="";
+				}
+			} else
+				s="";
+
+			if (dataAttribute.DBFtype=="N") {
+				for (var k=0; k<dataAttribute.DBFsize-s.length; k++) {
+					DBFarray[offset+k]=32;
+				}
+				offset+=dataAttribute.DBFsize-s.length;
+				for (var k=0; k<s.length; k++) {
+					DBFarray[offset+k]=s.charCodeAt(k);
+				}
+				offset+=s.length;
+			} else {
+				for (var k=0; k<s.length; k++) {
+					DBFarray[offset+k]=(dataAttribute.DBFtype=="C") ? ansiToOem(s.charCodeAt(k)) : s.charCodeAt(k);
+				}
+				for (; k<dataAttribute.DBFsize; k++) {
+					DBFarray[offset+k]=32;
+				}
+				offset+=dataAttribute.DBFsize;
+			}
+		}
+	}
+	return DBFarray;
+}
+
 function getAttributeTypeFromDBFType(datatype) {
 	switch (datatype) {
 		case 'C':
@@ -222,4 +490,3 @@ function getDataAttributesDBF(dbf){
 	}
 	return dataAttributes;
 }
-

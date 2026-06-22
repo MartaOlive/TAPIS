@@ -64,7 +64,7 @@ const headerNavBar = `<div onclick="openTapisPage()">
                 </tr>
             </table>
         </div>
-        <div id="content_navBar" >
+        <div id="content_navBar">
             <div id="navBar">
                 <div id="navBar_howTAPISWorks"></div>
                 <div id="navBar_servicesAndApis"></div>
