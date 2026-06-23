@@ -1,0 +1,474 @@
+{
+	"nodes": [
+		{
+			"id": "5spk0.3ohlma",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Day": "2024-12-31T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.33,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.81,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.17
+				},
+				{
+					"Day": "2025-01-01T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.32,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.79,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.17
+				},
+				{
+					"Day": "2025-01-02T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.32,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.78,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.17
+				},
+				{
+					"Day": "2025-01-03T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.31,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.76,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.18
+				},
+				{
+					"Day": "2025-01-04T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.3,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.75,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.18
+				},
+				{
+					"Day": "2025-01-05T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.28,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.73,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.18
+				},
+				{
+					"Day": "2025-01-06T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.27,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.71,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.18
+				},
+				{
+					"Day": "2025-01-07T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.25,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.69,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.18
+				},
+				{
+					"Day": "2025-01-08T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.24,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.67,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.18
+				},
+				{
+					"Day": "2025-01-09T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.23,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.65,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.18
+				},
+				{
+					"Day": "2025-01-10T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.2,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.63,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.18
+				},
+				{
+					"Day": "2025-01-11T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.19,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.61,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.17
+				},
+				{
+					"Day": "2025-01-12T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.17,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.58,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.17
+				},
+				{
+					"Day": "2025-01-13T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.15,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.56,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.16
+				},
+				{
+					"Day": "2025-01-14T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.14,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.54,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.15
+				},
+				{
+					"Day": "2025-01-15T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.12,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.51,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.15
+				},
+				{
+					"Day": "2025-01-16T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.11,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.47,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.14
+				},
+				{
+					"Day": "2025-01-17T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.11,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.43,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.14
+				},
+				{
+					"Day": "2025-01-18T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.11,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.41,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.13
+				},
+				{
+					"Day": "2025-01-19T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.08,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.38,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.13
+				},
+				{
+					"Day": "2025-01-20T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.08,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.36,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.13
+				},
+				{
+					"Day": "2025-01-21T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.07,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.33,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.12
+				},
+				{
+					"Day": "2025-01-22T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.06,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.31,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.12
+				},
+				{
+					"Day": "2025-01-23T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.04,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.28,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.12
+				},
+				{
+					"Day": "2025-01-24T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.03,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.24,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.11
+				},
+				{
+					"Day": "2025-01-25T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136.03,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.2,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.11
+				},
+				{
+					"Day": "2025-01-26T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.16,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.11
+				},
+				{
+					"Day": "2025-01-27T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 136,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.13,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.11
+				},
+				{
+					"Day": "2025-01-28T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.99,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.13,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.1
+				},
+				{
+					"Day": "2025-01-29T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.96,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.1,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.09
+				},
+				{
+					"Day": "2025-01-30T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.96,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.07,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.09
+				},
+				{
+					"Day": "2025-01-31T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.95,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 780.04,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.09
+				},
+				{
+					"Day": "2025-02-01T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.92,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.99,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.08
+				},
+				{
+					"Day": "2025-02-02T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.91,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.95,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.08
+				},
+				{
+					"Day": "2025-02-03T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.9,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.91,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.07
+				},
+				{
+					"Day": "2025-02-04T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.88,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.86,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.07
+				},
+				{
+					"Day": "2025-02-05T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.87,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.81,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.05
+				},
+				{
+					"Day": "2025-02-06T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.87,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.77,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.04
+				},
+				{
+					"Day": "2025-02-07T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.84,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.74,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.04
+				},
+				{
+					"Day": "2025-02-08T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.87,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.73,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.03
+				},
+				{
+					"Day": "2025-02-09T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.88,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.71,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.03
+				},
+				{
+					"Day": "2025-02-10T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.88,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.68,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.03
+				},
+				{
+					"Day": "2025-02-11T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.88,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.65,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.02
+				},
+				{
+					"Day": "2025-02-12T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.88,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.62,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.02
+				},
+				{
+					"Day": "2025-02-13T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.88,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.59,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.02
+				},
+				{
+					"Day": "2025-02-14T00:00:00.000",
+					"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": 135.87,
+					"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": 779.58,
+					"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": 460.02
+				}
+			],
+			"STAdataAttributes": {
+				"Day": {
+					"type": "isodatetime"
+				},
+				"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean": {
+					"type": "number"
+				},
+				"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean": {
+					"type": "number"
+				},
+				"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean": {
+					"type": "number"
+				}
+			},
+			"x": -70,
+			"y": 5
+		},
+		{
+			"id": "40puo.djjl7k",
+			"label": "Scatter Plot",
+			"image": "ScatterPlot.png",
+			"shape": "circularImage",
+			"STAattributesToSelect": {
+				"parentNodesInformation": {
+					"5spk0.3ohlma": {
+						"attr": [
+							"Day",
+							"Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean",
+							"Reservoir of la Llosa del Cavall (Navàs)_Absolute_level_Mean",
+							"Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean"
+						],
+						"nodeLabel": "CSV"
+					}
+				},
+				"dataGroupsSelectedToScatterPlot": [
+					{
+						"nodeSelected": "5spk0.3ohlma",
+						"X": "Day",
+						"Y": "Day",
+						"selectedYaxis": "left",
+						"color": "#f79646",
+						"legendText": "",
+						"graphicType": "line"
+					}
+				],
+				"sorted": true,
+				"config": {
+					"type": "line",
+					"data": {
+						"labels": [],
+						"datasets": [
+							{
+								"label": "",
+								"data": [],
+								"borderWidth": 2,
+								"fill": false
+							}
+						]
+					},
+					"options": {
+						"responsive": true,
+						"scales": {
+							"x": {
+								"axis": "x",
+								"beginAtZero": true,
+								"type": "category",
+								"ticks": {
+									"minRotation": 0,
+									"maxRotation": 50,
+									"mirror": false,
+									"textStrokeWidth": 0,
+									"textStrokeColor": "",
+									"padding": 3,
+									"display": true,
+									"autoSkip": true,
+									"autoSkipPadding": 3,
+									"labelOffset": 0,
+									"minor": {},
+									"major": {},
+									"align": "center",
+									"crossAlign": "near",
+									"showLabelBackdrop": false,
+									"backdropColor": "rgba(255, 255, 255, 0.75)",
+									"backdropPadding": 2,
+									"color": "#666"
+								},
+								"display": true,
+								"offset": false,
+								"reverse": false,
+								"bounds": "ticks",
+								"grace": 0,
+								"grid": {
+									"display": true,
+									"lineWidth": 1,
+									"drawBorder": true,
+									"drawOnChartArea": true,
+									"drawTicks": true,
+									"tickLength": 8,
+									"offset": false,
+									"borderDash": [],
+									"borderDashOffset": 0,
+									"borderWidth": 1,
+									"color": "rgba(0,0,0,0.1)",
+									"borderColor": "rgba(0,0,0,0.1)"
+								},
+								"title": {
+									"display": false,
+									"text": "",
+									"padding": {
+										"top": 4,
+										"bottom": 4
+									},
+									"color": "#666"
+								},
+								"id": "x",
+								"position": "bottom"
+							},
+							"y": {
+								"axis": "y",
+								"beginAtZero": true,
+								"type": "linear",
+								"ticks": {
+									"minRotation": 0,
+									"maxRotation": 50,
+									"mirror": false,
+									"textStrokeWidth": 0,
+									"textStrokeColor": "",
+									"padding": 3,
+									"display": true,
+									"autoSkip": true,
+									"autoSkipPadding": 3,
+									"labelOffset": 0,
+									"minor": {},
+									"major": {},
+									"align": "center",
+									"crossAlign": "near",
+									"showLabelBackdrop": false,
+									"backdropColor": "rgba(255, 255, 255, 0.75)",
+									"backdropPadding": 2,
+									"color": "#666"
+								},
+								"display": true,
+								"offset": false,
+								"reverse": false,
+								"bounds": "ticks",
+								"grace": 0,
+								"grid": {
+									"display": true,
+									"lineWidth": 1,
+									"drawBorder": true,
+									"drawOnChartArea": true,
+									"drawTicks": true,
+									"tickLength": 8,
+									"offset": false,
+									"borderDash": [],
+									"borderDashOffset": 0,
+									"borderWidth": 1,
+									"color": "rgba(0,0,0,0.1)",
+									"borderColor": "rgba(0,0,0,0.1)"
+								},
+								"title": {
+									"display": false,
+									"text": "",
+									"padding": {
+										"top": 4,
+										"bottom": 4
+									},
+									"color": "#666"
+								},
+								"id": "y",
+								"position": "left"
+							}
+						},
+						"plugins": {}
+					}
+				}
+			},
+			"x": 60,
+			"y": -16
+		}
+	],
+	"edges": [
+		{
+			"from": "5spk0.3ohlma",
+			"to": "40puo.djjl7k",
+			"arrows": "from"
+		}
+	]
+}

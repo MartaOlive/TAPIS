@@ -301,15 +301,26 @@ var r_max,r_min, n=values.length;
 
 
 //Values are an array of {x: y:} The funcion assumes a linear equation y=ax+b
-function linearRegressionFunc(values){
-var n=values.length, sx=0, sy=0, sxx=0, sxy=0, syy=0, value;
+function linearRegressionFunc(values,isDate){ 
+	var n=values.length, sx=0, sy=0, sxx=0, sxy=0, syy=0, value, ms;
+
 	for (var i=0; i<n; i++) {
 		value=values[i];
-		sx+=value.x;
-		sxx+=value.x*value.x;
+		if (isDate){
+			ms=new Date(value.x).getTime();
+			sx += ms;
+			sxx+=ms*ms;
+		}else{
+			sx+=value.x;
+			sxx+=value.x*value.x;
+		}
 		sy+=value.y;
 		syy+=value.y*value.y;
-		sxy+=value.x*value.y;		
+		if(isDate){
+			sxy+=ms*value.y;
+		}else{
+			sxy+=value.x*value.y;	
+		}
 	}
 	var nsxx_sxsx=n*sxx-sx*sx;
 	var nsxy_sxsy=n*sxy-sx*sy;
@@ -318,3 +329,19 @@ var n=values.length, sx=0, sy=0, sxx=0, sxy=0, syy=0, value;
 		b: sy/n-a*sx/n, 
 		r: nsxy_sxsy/Math.sqrt(nsxx_sxsx*(n*syy-sy*sy))};
 }
+
+
+function itIsADate(values,property){
+		var regex=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
+		var date=false;
+		for(var i=0; i<values.length;i++){
+			if (regex.test(values[i][property])){
+				date=true;
+			}else{
+				date=false;
+				break;
+			}
+		}
+	return date;
+}
+

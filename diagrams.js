@@ -427,14 +427,23 @@ function UpdateScatterPlot(event) {
 		if (dataGroups[e].regressionLine && nodeData.length>1)
 		{
 			var itemsReg=[];
-			var linReg=linearRegressionFunc(items);
-			itemsReg.push({ x: items[0].x, y: linReg.a*items[0].x+linReg.b, group: e });
-			itemsReg.push({ x: items[nodeData.length-1].x, y: linReg.a*items[nodeData.length-1].x+linReg.b, group: e });
+			var isDate=itIsADate(items,"x");
+			var linReg=(isDate)?linearRegressionFunc(items, true ):linearRegressionFunc(items);					
+
+			if(isDate){
+				itemsReg.push({ x: items[0].x, y: linReg.a*new Date(items[0].x).getTime()+linReg.b, group: e });
+			 	itemsReg.push({ x: items[nodeData.length-1].x, y: linReg.a*new Date(items[nodeData.length-1].x).getTime()+linReg.b, group: e });
+			}else{
+				itemsReg.push({ x: items[0].x, y: linReg.a*items[0].x+linReg.b, group: e });
+				itemsReg.push({ x: items[nodeData.length-1].x, y: linReg.a*items[nodeData.length-1].x+linReg.b, group: e });
+			}
+				
+			var regresionLineColor= darkenHex(dataGroups[e].color, 0.8)
 			data.datasets.push(
 				{
 					label: label+" r="+linReg.r.toFixed(5),
-					backgroundColor: dataGroups[e].color,
-					borderColor: dataGroups[e].color,
+					backgroundColor: regresionLineColor,
+					borderColor: regresionLineColor,
 					fill: false,
 					data: itemsReg,
 					yAxisID: "yAxis" + dataGroups[e].selectedYaxis,
@@ -442,8 +451,27 @@ function UpdateScatterPlot(event) {
 					type: "line"
 				}
 			);
+			
+			for(var u=0;u<itemsReg.length;u++){
+				record = itemsReg[u];
+				if (leftOrRight == "left") {
+					if (minyLeft > record.y)
+						minyLeft = record.y;
+					if (maxyLeft < record.y)
+						maxyLeft = record.y;
+				} else {
+					if (minyRight > record.y)
+						minyRight = record.y;
+					if (maxyRight < record.y)
+						maxyRight = record.y;
+				}
+			}
 		}
+
+
+
 	}
+
 	//Y axis
 	var finalMinYLeft = minyLeft - (maxyLeft - minyLeft) * 0.025;
 	var finalMinYRight = minyRight - (maxyRight - minyRight) * 0.025;
@@ -463,8 +491,8 @@ function UpdateScatterPlot(event) {
 		if ((axisXType=="isodatetime")){
 			maxx=new Date(maxx);
 			minx= new Date(minx);
-			maxx.setDate(maxx.getDate() + 1);
-			minx.setDate(minx.getDate() - 1);
+			maxx.setDate(maxx.getDate() + 5);
+			minx.setDate(minx.getDate() - 5);
 		}else{
 			maxx++;
 			minx--;
@@ -617,6 +645,14 @@ function UpdateScatterPlot(event) {
 	node.STAattributesToSelect.config=config;
 	networkNodes.update(node);
 	drawScatterPlot(node);
+}
+
+function darkenHex(hex, factor) { // make regresion line darker than original
+    const r = Math.floor(parseInt(hex.substr(1, 2), 16) * factor);
+    const g = Math.floor(parseInt(hex.substr(3, 2), 16) * factor);
+    const b = Math.floor(parseInt(hex.substr(5, 2), 16) * factor);
+
+    return `rgb(${r},${g},${b})`;
 }
 	
 function CloseDialogScatterPlot(event) {
