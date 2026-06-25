@@ -1,0 +1,21 @@
+ID,Habitat,Animal Type,Count
+1,Forest,Avian Species,35
+2,Forest,Reptilian Species,12
+3,Forest,Mammalian Species,18
+4,Forest,Insect Species,40
+5,Grassland,Avian Species,20
+6,Grassland,Reptilian Species,8
+7,Grassland,Mammalian Species,25
+8,Grassland,Insect Species,30
+9,Riparian Zone,Avian Species,28
+10,Riparian Zone,Reptilian Species,15
+11,Riparian Zone,Mammalian Species,10
+12,Riparian Zone,Insect Species,22
+13,Mountainous Area,Avian Species,40
+14,Mountainous Area,Reptilian Species,10
+15,Mountainous Area,Mammalian Species,20
+16,Mountainous Area,Insect Species,18
+17,Urban Area,Avian Species,15
+18,Urban Area,Reptilian Species,5
+19,Urban Area,Mammalian Species,8
+20,Urban Area,Insect Species,50

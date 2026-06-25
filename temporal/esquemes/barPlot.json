@@ -1,0 +1,163 @@
+{
+	"nodes": [
+		{
+			"id": "6o8q5.ac3mie",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"ID": 1,
+					"Habitat": "Forest",
+					"Animal Type": "Avian Species",
+					"Count": 35
+				},
+				{
+					"ID": 2,
+					"Habitat": "Forest",
+					"Animal Type": "Reptilian Species",
+					"Count": 12
+				},
+				{
+					"ID": 3,
+					"Habitat": "Forest",
+					"Animal Type": "Mammalian Species",
+					"Count": 18
+				},
+				{
+					"ID": 4,
+					"Habitat": "Forest",
+					"Animal Type": "Insect Species",
+					"Count": 40
+				},
+				{
+					"ID": 5,
+					"Habitat": "Grassland",
+					"Animal Type": "Avian Species",
+					"Count": 20
+				},
+				{
+					"ID": 6,
+					"Habitat": "Grassland",
+					"Animal Type": "Reptilian Species",
+					"Count": 8
+				},
+				{
+					"ID": 7,
+					"Habitat": "Grassland",
+					"Animal Type": "Mammalian Species",
+					"Count": 25
+				},
+				{
+					"ID": 8,
+					"Habitat": "Grassland",
+					"Animal Type": "Insect Species",
+					"Count": 30
+				},
+				{
+					"ID": 9,
+					"Habitat": "Riparian Zone",
+					"Animal Type": "Avian Species",
+					"Count": 28
+				},
+				{
+					"ID": 10,
+					"Habitat": "Riparian Zone",
+					"Animal Type": "Reptilian Species",
+					"Count": 15
+				},
+				{
+					"ID": 11,
+					"Habitat": "Riparian Zone",
+					"Animal Type": "Mammalian Species",
+					"Count": 10
+				},
+				{
+					"ID": 12,
+					"Habitat": "Riparian Zone",
+					"Animal Type": "Insect Species",
+					"Count": 22
+				},
+				{
+					"ID": 13,
+					"Habitat": "Mountainous Area",
+					"Animal Type": "Avian Species",
+					"Count": 40
+				},
+				{
+					"ID": 14,
+					"Habitat": "Mountainous Area",
+					"Animal Type": "Reptilian Species",
+					"Count": 10
+				},
+				{
+					"ID": 15,
+					"Habitat": "Mountainous Area",
+					"Animal Type": "Mammalian Species",
+					"Count": 20
+				},
+				{
+					"ID": 16,
+					"Habitat": "Mountainous Area",
+					"Animal Type": "Insect Species",
+					"Count": 18
+				},
+				{
+					"ID": 17,
+					"Habitat": "Urban Area",
+					"Animal Type": "Avian Species",
+					"Count": 15
+				},
+				{
+					"ID": 18,
+					"Habitat": "Urban Area",
+					"Animal Type": "Reptilian Species",
+					"Count": 5
+				},
+				{
+					"ID": 19,
+					"Habitat": "Urban Area",
+					"Animal Type": "Mammalian Species",
+					"Count": 8
+				},
+				{
+					"ID": 20,
+					"Habitat": "Urban Area",
+					"Animal Type": "Insect Species",
+					"Count": 50
+				}
+			],
+			"STAdataAttributes": {
+				"ID": {
+					"type": "integer"
+				},
+				"Habitat": {
+					"type": "string"
+				},
+				"Animal Type": {
+					"type": "string"
+				},
+				"Count": {
+					"type": "integer"
+				}
+			},
+			"x": -39,
+			"y": -42
+		},
+		{
+			"id": "72ftk.mcr48t",
+			"label": "Bar Plot",
+			"image": "BarPlot.png",
+			"shape": "circularImage",
+			"x": 22,
+			"y": 54
+		}
+	],
+	"edges": [
+		{
+			"from": "6o8q5.ac3mie",
+			"to": "72ftk.mcr48t",
+			"arrows": "from"
+		}
+	]
+}

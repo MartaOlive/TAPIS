@@ -1767,8 +1767,8 @@
 			<form>
 			<fieldset>
     				<legend>Plot type:</legend>
-				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypeBar" checked="checked"></input>Bar</label>
-				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypePie"></input>Pie</label>
+				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypeBar" checked="checked" onclick="disableClassificationInBarPlot(false)"></input>Bar</label>
+				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypePie" onclick="disableClassificationInBarPlot(true)"></input>Pie</label>
 			</fieldset>
 			<fieldset>
     				<legend>Axes:</legend>

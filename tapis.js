@@ -10783,6 +10783,12 @@ function formatLocalDate(date) {
 
 	return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}Z`;
 }
+
+function disableClassificationInBarPlot(disable){
+	  document.getElementById("DialogBarPlotSeriesSelect").disabled = disable;
+}
+
+
 /*function giveMeNetworkInformation(event) {
 			hideNodeDialog("DialogContextMenu", event);
 			console.log(networkNodes.get());
