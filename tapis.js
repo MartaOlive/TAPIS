@@ -5908,10 +5908,9 @@ function SaveCSV(event) {
 
 function SaveDBF(event) {
 	hideNodeDialog("DialogSaveTable", event);
-	var delimiter=document.getElementById("DialogSaveTableDelimiter").value;
 	var parentNode=GetFirstParentNode(currentNode);
 	if (parentNode) {
-		SaveLocalDataFile(createUintArrayDBF(parentNode.STAdata, parentNode.STAdataAttributes), 
+		SaveLocalDataFile(createUintArrayDBF(parentNode.STAdata, parentNode.STAdataAttributes, document.getElementById("DialogSaveTableForceExtendedDBF").checked ? true : false), 
 				(IdOfSTAEntity(parentNode) == -1) ?  "table" : STAEntitiesArray[IdOfSTAEntity(parentNode)], ".dbf", "application/dbase"); 
 	}
 }
@@ -10783,12 +10782,9 @@ function formatLocalDate(date) {
 
 	return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}Z`;
 }
-
 function disableClassificationInBarPlot(disable){
 	  document.getElementById("DialogBarPlotSeriesSelect").disabled = disable;
 }
-
-
 /*function giveMeNetworkInformation(event) {
 			hideNodeDialog("DialogContextMenu", event);
 			console.log(networkNodes.get());

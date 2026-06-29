@@ -399,7 +399,7 @@ function createUintArrayDBF(data, dataAttributesIn, forceExtendedDBF){
 		for (var j=0; j<dataAttributesArray.length; j++) {
 			var dataAttribute=dataAttributes[dataAttributesArray[j]];
 			var cell=record[dataAttributesArray[j]];
-			if (cell){
+			if (typeof cell !== "undefined" && cell!=null) {
 				switch (dataAttribute.type) {
 					case "array":
 					case "object":

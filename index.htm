@@ -94,7 +94,7 @@
 				<span id="UserInfoText"></span>
 				<button id="buttonReloadSTA" onclick='reloadSTA(event);'onmouseover='showHelpToolTip(event, "", "Reload all schema to upload the data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="reload.png" height="20" valign="middle"> Refresh</button>
 				<label class=labelbotton onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenNetwork.png" height="20" valign="middle" > Open...
-				<input type="file" id="openNetworkFileName" hidden onchange='openFileNetwork(event);'/>
+				<input type="file" accept=".json" id="openNetworkFileName" hidden onchange='openFileNetwork(event);'/>
 				</label> <!-- https://dev.to/faddalibrahim/how-to-create-a-custom-file-upload-button-using-html-css-and-javascript-1c03 -->
 				<button onclick='document.getElementById("DialogOpenURLNetwork").showModal();' onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data from a webside or from Help examples" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenURLNetwork.png" height="20" valign="middle"> Open URL...</button>
 				<button onclick='saveNetwork(event);'onmouseover='showHelpToolTip(event, "", "Save your Tapis schema with nodes and data as a JSON to be able to open it later" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="SaveNetwork.png" height="20" valign="middle"> Save as...</button>
@@ -1368,7 +1368,6 @@
 				</label>
 				<div class="center">
 					<button value="csv" onClick="SaveCSV(event)" formmethod="dialog">Save CSV</button>
-					<button value="dbf" onClick="SaveDBF(event)" formmethod="dialog">Save DBF</button>
 					<button value="csvw" onClick="SaveCSVW(event)" formmethod="dialog">Save CSVW</button>
 				</div>
 			</fieldset>

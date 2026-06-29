@@ -169,4 +169,3 @@ const dataQuality = {
 }
 const dataQualityArray = Object.keys(dataQuality);
 const dataQualityType = { singular: " Table tool for data quality", plural: "Table tools for data quality" }
-

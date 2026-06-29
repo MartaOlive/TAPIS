@@ -1,0 +1,388 @@
+/* Receipes */
+/* .listContainer {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.mainInList {
+    width: fit-content;
+    padding: 10px 14px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.secondaryInList {
+    width: fit-content;
+    padding: 8px 12px;
+    background-color: #f7f9fc;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    margin-left: 28px;
+    margin-bottom: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+} */
+body {
+    overflow: auto;
+}
+
+/* Contenidor vertical */
+.recipeContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Targeta de cada recipe */
+.recipeCard {
+    padding: 18px 20px;
+    background: white;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Títol del recipe */
+.recipeTitle {
+    display: block;
+    font-weight: 600;
+    font-size: 20px;
+    text-decoration: none;
+    color: #252525;
+    margin-bottom: 8px;
+}
+
+/* Cooking methods */
+.recipeChildren a {
+    display: block;
+    font-size: 16px;
+    /* lleugerament més gran */
+    text-decoration: none;
+    color: #252525;
+    margin-top: 4px;
+    margin-left: 20px;
+    /* més endins que el recipe */
+}
+
+/* Hover per tots els links */
+.recipeTitle:hover {
+    font-size: 21px;
+}
+
+.recipeChildren a:hover {
+    font-size: 17px;
+}
+
+/* ToolsPage  */
+.toolBoxParent {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.toolBoxParentTitle {
+    text-align: center;
+    color: #252525;
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 5px
+}
+
+.toolBox {
+    border: 1px solid #ababab;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    width: 120px;
+    height: 115px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    padding: 5px;
+    cursor: pointer;
+
+}
+
+.link_a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.toolBox:hover {
+    background-color: #eef0f1;
+}
+
+.toolBox:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 #b4b7b9;
+}
+
+.toolBoxText {
+    color: #252525;
+    font-weight: 500;
+}
+
+.entities {
+    width: 150px;
+}
+
+.tapisTool {
+    width: 230px;
+}
+
+/* EveryToolPage */
+
+
+/* General */
+body {
+    background-color: #f0f0f0;
+}
+
+.button {
+    cursor: pointer;
+}
+.mainTools {
+    margin-top: 180px;
+}
+/* El header en horitzontal */
+.descriptionToolsHeader {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 10px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    gap: 20px;
+}
+
+.toolPage_mainTitle {
+    text-align: center;
+    color: #252525;
+    width: 100%;
+    padding-top: 50px;
+    margin-bottom: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 50px;
+}
+
+
+
+/* ===== Logo + text ===== */
+.descriptionToolsHeader {
+    cursor: pointer;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-top: 0px;
+}
+
+/* Opcional: reduir margin */
+#content_navBar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-top: 100px;
+    background-color: white;
+    z-index: 1000;
+}
+
+#navBar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+/* ===== Dropdowns ===== */
+.dropdown {
+    flex: 0 1 120px;
+    max-width: 120px;
+    text-align: center;
+    font-size: 16px;
+    white-space: normal;
+    position: relative;
+    padding: 8px 5px;
+}
+
+.blue {
+    color: rgb(2, 166, 240);
+}
+
+/* .dropdown:hover {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+} */
+
+/* ===== Contingut desplegable ===== */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    max-width: 150px;
+    border-radius: 10px;
+    /* marges arrodonits */
+    padding: 5px 0;
+    /* espai interior */
+    z-index: 10;
+    /* box-shadow: 0 2px 5px rgba(0,0,0,0.1); */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover>div:first-child {
+    font-weight: bold;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 8px 12px;
+    border-bottom: 1px solid #cccccc;
+    text-decoration: none;
+    color: #252525;
+    background-color: #ffffff;
+}
+
+.dropdown-content a:hover {
+    background-color: #e0e0e0;
+    /* hover destacat */
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.toolPage_main {
+    width: 80%;
+    background-color: white;
+    margin: 0 auto;
+    margin-top: 50px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 8px;
+    margin-bottom: 50px;
+
+}
+
+.toolPage_main_text {
+    width: 80%;
+    margin: 0 auto;
+    padding-bottom: 50px;
+    font-size: 20px;
+    text-align: justify;
+}
+
+.imageSTAZoom {
+    width: 100%;
+    height: 500px;
+    border: 1px solid #ccc;
+    overflow: hidden;
+
+}
+
+.imageSTAZoom img {
+    max-width: 100%;
+    cursor: grab;
+}
+
+.generalExplanation {
+    padding-top: 50px
+}
+
+.toolPage_title {
+    text-align: center;
+    color: #252525;
+    width: 100%;
+    padding-top: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+}
+
+.toolPage_title_icon {
+    height: 60px;
+}
+
+.toolPage_image {
+    max-width: 90%;
+    height: auto;
+    width: auto;
+    margin: 20px auto;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 2px;
+    box-sizing: border-box;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+
+}
+
+.image-wrapper {
+    overflow: auto;
+    max-width: 100%;
+    transition: all 0.4s ease;
+    cursor: zoom-in;
+}
+
+.image-wrapper.zoom {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 90vw;
+    height: 90vh;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background: white;
+    padding: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    cursor: zoom-out;
+
+}
+
+/* imatge */
+.zoomable {
+    transition: transform 0.4s ease;
+}
+
+.image-wrapper.zoom img {
+    max-width: none;
+}
+
+.zoomable.zoom {
+    transform: scale(2);
+    transform-origin: top left;
+    cursor: zoom-out;
+}
+
+
+.roundCorner {
+    color: white;
+    font-size: smaller;
+    border-radius: 0.2em;
+    background: #888888;
+    padding: 0.2em;
+    display: inline-block;
+    min-width: 1em;
+    margin: 0 auto;
+    text-align: center;
+}

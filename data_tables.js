@@ -446,7 +446,7 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 
 
 function GroupRecordsData(dataSorted, i_ini, i_end, dataAttributesArray, groupByParams) {
-	var record={}, recordSorted=dataSorted[i_ini], aggrFuncName, valuesString=null, values=null, r, countDefined=-1;
+	var record={}, recordSorted=dataSorted[i_ini], aggrFuncName, valuesString=null, values=null, r, countDefined=-1, dataAttributeName;
 	//Populate groupByAttr
 	//if (date) groupByParams.groupByAttr.push(groupByParams.groupByDate[1]) //Add date attribute
 	for (var j=0; j<dataAttributesArray.length; j++) {
@@ -455,78 +455,82 @@ function GroupRecordsData(dataSorted, i_ini, i_end, dataAttributesArray, groupBy
 	}
 	
 	for (var j=0; j<dataAttributesArray.length; j++) {
-		if (groupByParams.aggregationAttr[dataAttributesArray[j]]) {
-			for (var k=0; k<groupByParams.aggregationAttr[dataAttributesArray[j]].length; k++) {
+		dataAttributeName=dataAttributesArray[j];
+		if (groupByParams.aggregationAttr[dataAttributeName]) {
+			for (var k=0; k<groupByParams.aggregationAttr[dataAttributeName].length; k++) {
 				//Calculate the aggregations
 				//Populate the aggregated columns
-				aggrFuncName=groupByParams.aggregationAttr[dataAttributesArray[j]][k];
+				aggrFuncName=groupByParams.aggregationAttr[dataAttributeName][k];
 				if (aggrFuncName=="Count")
-					record[dataAttributesArray[j]+"_"+aggrFuncName]=i_end-i_ini+1;
+					record[dataAttributeName+"_"+aggrFuncName]=i_end-i_ini+1;
 				else if (aggrFuncName=="FirstValue")
-					record[dataAttributesArray[j]+"_"+aggrFuncName]=dataSorted[i_ini][dataAttributesArray[j]];
+					record[dataAttributeName+"_"+aggrFuncName]=dataSorted[i_ini][dataAttributeName];
 				else if (aggrFuncName=="LastValue")
-					record[dataAttributesArray[j]+"_"+aggrFuncName]=dataSorted[i_end][dataAttributesArray[j]];
+					record[dataAttributeName+"_"+aggrFuncName]=dataSorted[i_end][dataAttributeName];
 				else if (aggrFuncName=="RandomValue")
-					record[dataAttributesArray[j]+"_"+aggrFuncName]=dataSorted[Math.floor(Math.random()*(i_end-i_ini+1)+i_ini)][dataAttributesArray[j]];
+					record[dataAttributeName+"_"+aggrFuncName]=dataSorted[Math.floor(Math.random()*(i_end-i_ini+1)+i_ini)][dataAttributeName];
 				else if (aggrFuncName=="CountDefined" || aggrFuncName=="ProportionDefined") {
 					if (countDefined==-1) {
 						countDefined=0;
 						for (var i=i_ini; i<=i_end; i++){
-							if (typeof dataSorted[i][dataAttributesArray[j]] === "undefined" || dataSorted[i][dataAttributesArray[j]]===null || dataSorted[i][dataAttributesArray[j]]==="")
+							if (typeof dataSorted[i][dataAttributeName] === "undefined" || dataSorted[i][dataAttributeName]===null || dataSorted[i][dataAttributeName]==="")
 								continue;
 							countDefined++;
 						}
 					}
 					if (aggrFuncName=="CountDefined")
-						record[dataAttributesArray[j]+"_"+aggrFuncName]=countDefined;
+						record[dataAttributeName+"_"+aggrFuncName]=countDefined;
 					else if (aggrFuncName=="ProportionDefined")
-						record[dataAttributesArray[j]+"_"+aggrFuncName]=countDefined/(i_end-i_ini+1)*100;
+						record[dataAttributeName+"_"+aggrFuncName]=countDefined/(i_end-i_ini+1)*100;
 				}
 				else {
 					if (aggrFuncName=="Concatenate") {
 						r="";
 						for (var i=i_ini; i<=i_end; i++){
-							if (typeof dataSorted[i][dataAttributesArray[j]] === "undefined" || dataSorted[i][dataAttributesArray[j]]===null)
+							if (typeof dataSorted[i][dataAttributeName] === "undefined" || dataSorted[i][dataAttributeName]===null)
 								continue;
-							r+=dataSorted[i][dataAttributesArray[j]] + " ";
+							r+=dataSorted[i][dataAttributeName] + " ";
 						}
-						record[dataAttributesArray[j]+"_"+aggrFuncName]=r.slice(0, -1);  //remove last space;
+						record[dataAttributeName+"_"+aggrFuncName]=r.slice(0, -1);  //remove last space;
 						continue;
 					}
 					if  (aggrFuncName=="Mode" || aggrFuncName=="Median" || aggrFuncName=="Q1" || aggrFuncName=="Q3") {
-						if (valuesString==null) {
+						if (valuesString==null) {  //Reuse the same array for the next aggregation function
 							valuesString=[];
 							for (var i=i_ini; i<=i_end; i++){
-								if (typeof dataSorted[i][dataAttributesArray[j]] === "undefined" || dataSorted[i][dataAttributesArray[j]]===null)
+								if (typeof dataSorted[i][dataAttributeName] === "undefined" || dataSorted[i][dataAttributeName]===null)
 									continue;
-								valuesString.push(dataSorted[i][dataAttributesArray[j]]);
+								valuesString.push(dataSorted[i][dataAttributeName]);
 							}
 						}
 						if (valuesString.length==0 || !window["aggrFunc"+aggrFuncName])
 							continue;
-						record[dataAttributesArray[j]+"_"+aggrFuncName]=window["aggrFunc"+aggrFuncName](valuesString);
+						record[dataAttributeName+"_"+aggrFuncName]=window["aggrFunc"+aggrFuncName](valuesString);
 					} else {
-						if (values==null) {
+						if (values==null) {  //Reuse the same array for the next aggregation function
 							values=[];
 							for (var i=i_ini; i<=i_end; i++){
-								if (typeof dataSorted[i][dataAttributesArray[j]] === "undefined" || dataSorted[i][dataAttributesArray[j]]===null || dataSorted[i][dataAttributesArray[j]]==="")
+								if (typeof dataSorted[i][dataAttributeName] === "undefined" || dataSorted[i][dataAttributeName]===null || dataSorted[i][dataAttributeName]==="")
 									continue;
-								else if (typeof dataSorted[i][dataAttributesArray[j]] === 'string'){
-									r=parseFloat(dataSorted[i][dataAttributesArray[j]]);
+								else if (typeof dataSorted[i][dataAttributeName] === 'string'){
+									r=parseFloat(dataSorted[i][dataAttributeName]);
 									if (Number.isNaN(r))
 										continue;
 									values.push(r);
 								}
 								else
-									values.push(dataSorted[i][dataAttributesArray[j]]);
+									values.push(dataSorted[i][dataAttributeName]);
 							}
 						}
 						if (values.length==0 || !window["aggrFunc"+aggrFuncName])
 							continue;
-						record[dataAttributesArray[j]+"_"+aggrFuncName]=window["aggrFunc"+aggrFuncName](values);
+						record[dataAttributeName+"_"+aggrFuncName]=window["aggrFunc"+aggrFuncName](values);
 					}
 				}
 			}
+			values=null;  //Prevent reusing the array for the next attribute.
+			valuesString=null;
+			countDefined=-1;
 		}
 	}
 	return record;
@@ -554,9 +558,9 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 		if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1)
 			dataCurrentAttributes[dataAttributesArray[j]]=deapCopy(dataAttributes[dataAttributesArray[j]]);  //list of attributes to groupBy 
 	}
-	if (groupByParams.groupByDate.length!=0)dataCurrentAttributes[groupByParams.groupByDate[1]]=deapCopy(dataAttributes[groupByParams.groupByDate[1]]); //Date attribute
 
-	if(groupByParams.groupByDate.length!=0){
+	if (groupByParams.groupByDate.length!=0){
+		dataCurrentAttributes[groupByParams.groupByDate[1]]=deapCopy(dataAttributes[groupByParams.groupByDate[1]]); //Date attribute
 		var x;
 		switch (groupByParams.groupByDate[0].toLowerCase()){
 			case "year": 
@@ -601,7 +605,7 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 			if (groupByParams.aggregationAttr[dataAttributesArray[j]])
 				recordSorted[dataAttributesArray[j]]=record[dataAttributesArray[j]];
 
-			if (groupByParams.groupByDate[1]) //Column for date
+			if (groupByParams.groupByDate.length && groupByParams.groupByDate[1]) //Column for date
 				recordSorted[groupByParams.groupByDate[1]]=record[groupByParams.groupByDate[1]].substr(0,x); //part of the date to group
 
 		}
@@ -610,7 +614,7 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 	}
 
 	//Sort the data by groupByAttr 
-	var arrayToSort= groupByParams.groupByAttr.concat(groupByParams.groupByDate[1])
+	var arrayToSort= groupByParams.groupByDate.length ? groupByParams.groupByAttr.concat(groupByParams.groupByDate[1]) : groupByParams.groupByAttr;
 	var sortRecords=function (a, b) {  
 		for (var j=0; j<arrayToSort.length; j++) {
 			
@@ -1580,19 +1584,22 @@ var columnCreated=false, record, json, point;
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="Geohash") {
-				record[selectedOptions.nameOut]=ngeohash_encode(record[selectedOptions.latitudeIn], record[selectedOptions.longitudeIn], selectedOptions.level);
+				record[selectedOptions.nameOut]=ngeohash_encode(isProj4CRS84(selectedOptions.CRSIn) ? record[selectedOptions.latitudeIn] : json.coordinates[1], isProj4CRS84(selectedOptions.CRSIn) ? record[selectedOptions.longitudeIn] : json.coordinates[0], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="UberH3") {
-				record[selectedOptions.nameOut]=h3.latLngToCell(record[selectedOptions.latitudeIn], record[selectedOptions.longitudeIn], selectedOptions.level);
+				record[selectedOptions.nameOut]=h3.latLngToCell(isProj4CRS84(selectedOptions.CRSIn) ? record[selectedOptions.latitudeIn] : json.coordinates[1], isProj4CRS84(selectedOptions.CRSIn) ? record[selectedOptions.longitudeIn] : json.coordinates[0], selectedOptions.level);
 				columnCreated=true;
 			}
 			else if (selectedOptions.radioOut=="LL") {
 				//JSON-->LL (only if points)
 				if (!isProj4CRS84(selectedOptions.CRSOut)) {					
-					point=proj4("EPSG:4326", selectedOptions.CRSOut, [record[selectedOptions.longitudeIn], record[selectedOptions.latitudeIn]]);
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, isProj4CRS84(selectedOptions.CRSIn) ? [record[selectedOptions.longitudeIn], record[selectedOptions.latitudeIn]] : json.coordinates);
 					record[selectedOptions.nameOut]=point[0];
 					record[selectedOptions.latitudeOut]=point[1];
+				} else if (!isProj4CRS84(selectedOptions.CRSIn)) {
+					record[selectedOptions.nameOut]=json.coordinates[0];
+					record[selectedOptions.latitudeOut]=json.coordinates[1];
 				} else {
 					record[selectedOptions.nameOut]=record[selectedOptions.longitudeIn];
 					record[selectedOptions.latitudeOut]=record[selectedOptions.latitudeIn];

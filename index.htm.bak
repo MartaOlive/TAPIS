@@ -27,6 +27,9 @@
 	<script type="text/javascript" src="crypto-js.min.js" async defer></script> 
 	<script type="text/javascript" src="wicket.js" async defer></script>
 	<script type="text/javascript" src="ngeohash.js" async defer></script>
+	<script type="text/javascript" src="h3-js.js" async defer></script><!--https://github.com/uber/h3-js-->
+	<script type="text/javascript" src="proj4.js"></script>
+	<script type="text/javascript" src="crs.js"></script>
 	<script type="text/javascript" src="hello.all.min.js"></script>
 	<script type="text/javascript" src="authenix.js" async defer></script>
 	<script type="text/javascript" src="mmn_postmessage.js" async defer></script>
@@ -38,6 +41,7 @@
 	<script type="text/javascript" src="geojson.js" async defer></script>
 	<script type="text/javascript" src="json.js" async defer></script>
 	<script type="text/javascript" src="jsonld.js" async defer></script>
+	<script type="text/javascript" src="csvw.js" async defer></script>
 	<script type="text/javascript" src="edc.js" async defer></script>
 	<script type="text/javascript" src="statistics.js"></script>
 	<script type="text/javascript" src="data_tables.js"></script>
@@ -51,6 +55,9 @@
 	<script type="text/javascript" src="diagrams.js"></script>
 	<script type="text/javascript" src="aws.js"></script>
 	<script type="text/javascript" src="tapis.js"></script>
+	<script type="text/javascript" src="t_nodes.js"></script>
+	<script type="text/javascript" src="autocompleteMultiCreate.js"></script>
+	<script type="text/javascript" src="data_quality.js"></script>
 
 	<link rel="stylesheet" href="tapis.css">
 	<link rel="stylesheet" href="vis.network.css">
@@ -87,14 +94,15 @@
 				<span id="UserInfoText"></span>
 				<button id="buttonReloadSTA" onclick='reloadSTA(event);'onmouseover='showHelpToolTip(event, "", "Reload all schema to upload the data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="reload.png" height="20" valign="middle"> Refresh</button>
 				<label class=labelbotton onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenNetwork.png" height="20" valign="middle" > Open...
-				<input type="file" id="openNetworkFileName" hidden onchange='openFileNetwork(event);'/>
+				<input type="file" accept=".json" id="openNetworkFileName" hidden onchange='openFileNetwork(event);'/>
 				</label> <!-- https://dev.to/faddalibrahim/how-to-create-a-custom-file-upload-button-using-html-css-and-javascript-1c03 -->
 				<button onclick='document.getElementById("DialogOpenURLNetwork").showModal();' onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data from a webside or from Help examples" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenURLNetwork.png" height="20" valign="middle"> Open URL...</button>
 				<button onclick='saveNetwork(event);'onmouseover='showHelpToolTip(event, "", "Save your Tapis schema with nodes and data as a JSON to be able to open it later" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="SaveNetwork.png" height="20" valign="middle"> Save as...</button>
 				<button id="buttonOpenLogin" onclick='OpenLogin(event);' onmouseover='showHelpToolTip(event, "", "Login to be able to have access to certain places")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Login</button>
-				<button id="buttonOpenLogout" onclick='OpenLogout(event);' style="display: none");' onmouseover='showHelpToolTip(event, "", "Close your sesion")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Logout</button>
+				<button id="buttonOpenLogout" onclick='OpenLogout(event);' style="display: none";' onmouseover='showHelpToolTip(event, "", "Close your sesion")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Logout</button>
 				<button onclick='OpenConfiguration(event);'onmouseover='showHelpToolTip(event, "", "To modify display configurations")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )' ><img src="config.png" height="20" valign="middle">Configuration</button>
-				<button onclick='OpenHelp(event);' onmouseover='showHelpToolTip(event, "", "Explanations of how to use TAPIS and Examples")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="help.png" height="20" valign="middle">Help</button>
+				<button onclick='OpenHelp(event);' onmouseover='showHelpToolTip(event, "", "Explanations of how to use TAPIS: Tools")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="help.png" height="20" valign="middle">Help</button>
+				<button onclick='OpenRecipes(event);' onmouseover='showHelpToolTip(event, "", "Explanations of how to use TAPIS and Examples")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="documentation.png" height="20" valign="middle">Recipes</button>
 			</td>
 		</tr>
 	</table>
@@ -129,7 +137,7 @@
 
 	<div id="HelpToolTip" style="min-height: 1px; overflow: hidden; display:none; position: fixed; background-color: #f6eba3; width:300px; border-style: ridge; padding: 5px; text-align:left">help</div>
 
-	<dialog id="DialogConfiguration">
+	<dialog id="DialogConfiguration" onClose='hideNodeDialog("DialogConfiguration", event)';>
 		<form>
 			<p>
 				<label>Table font size ratio:
@@ -145,14 +153,14 @@
 				<label><input type="checkbox" checked="checked" id="DialogConfigurationOnlyStartNodeButtons"></input>Show start node buttons only</label>
 			</p>
 			<div class="center">
-				<button value="default" onClick="ChangeConfiguration(event)">OK</button>
-				<button value="default" onClick="ApplyConfiguration(event)">Apply</button>
+				<button value="default" onClick="ChangeConfiguration(event)" formmethod="dialog">OK</button>
+				<button value="default" onClick="ApplyConfiguration(event)" formmethod="dialog">Apply</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
-	<dialog id="DialogLink">
+	<dialog id="DialogLink" onClose='hideNodeDialog("DialogLink", event)'>
 		<form>
 			<p>
 				Link to: <span id="DialogLinkLink"></span><p>
@@ -160,7 +168,7 @@
 				<label><input type="radio" name="DialogLinkHowOpen" id="DialogLinkOpenWindow"></input>Open as JSON in a separate window</label>
 			</p>
 			<div class="center">
-				<button value="default" onClick="OpenLink(event)">OK</button>
+				<button value="default" onClick="OpenLink(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogLinkNodeId"></input>
@@ -170,7 +178,7 @@
 	</dialog>
 
 
-	<dialog id="DialogOpenURLNetwork">
+	<dialog id="DialogOpenURLNetwork" onClose='hideNodeDialog("DialogOpenURLNetwork", event)'>
 		<form>
 			<p>
 				<label>Network URL:
@@ -190,11 +198,12 @@
 						<option value="help/recipe05_01_spatialFilterTemperature.json">Recipe 5a: Selecting temperatures from an area</option>
 						<option value="help/recipe05_02_FilteringByDistance.json">Recipe 5b:Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
 						<option value="help/recipe06_creatingTwoDatastreamOfObservations.json">Recipe 6: Creating a new stream of observations</option>
-						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>						<option value="help/recipe09_stackedBarChart.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>
+						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>						
 						<option value="help/recipe08_s3BucketViewCSV.json">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</option>
 						<option value="help/recipe09_stackedBarChart.json">Recipe 9: Drawing a stacked bar chart</option>
 						<!--option value="help/recipe10_edcsta.json">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</option-->
 						<option value="help/recipe11_pivotTables.json">Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns</option>
+						<option value="help/recipe12_dataQuality.json">Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</option>
 					</select>
 				</label>
 			</p>
@@ -205,7 +214,7 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogSTAURL">
+	<dialog id="DialogSTAURL" onClose='hideNodeDialog("DialogSTAURL", event)' >
 		<div id="divTitleDialogSTAURL" class="center" style="font-size: large;"></div>
 		<form>
 			<p>
@@ -225,7 +234,7 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogS3Bucket">
+	<dialog id="DialogS3Bucket" onClose='hideNodeDialog("DialogS3Bucket", event)'>
 		<div id="divTitleDialogS3Bucket" class="center" style="font-size: large;"></div>
 		<form>
 			<p>
@@ -255,7 +264,7 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogEDC">
+	<dialog id="DialogEDC" onClose='hideNodeDialog("DialogEDC", event)'>
 		<div id="divTitleDialogEDC" class="center" style="font-size: large;"></div>
 		<form>
 			<p>
@@ -282,7 +291,7 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogSTAViewQuery">
+	<dialog id="DialogSTAViewQuery" onClose='hideNodeDialog("DialogSTAViewQuery", event)'>
 		<form>
 			<p>
 				STA query URL:
@@ -294,33 +303,33 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogCreateUpdateDeleteEntity">
+	<dialog id="DialogCreateUpdateDeleteEntity" onClose='hideNodeDialog("DialogCreateUpdateDeleteEntity", event)'>
 		<form>
 			<span id="dlgCreateUpdateDeleteEntityAttributes">
 			</span>
 			<div class="center">
-				<button value="default" id="dlgCreateUpdateDeleteEntityCreate" onClick="GetCreateEntity(event)">Create</button>
-				<button value="default" id="dlgCreateUpdateDeleteEntityUpdate" onClick="GetUpdateEntity(event)">Update</button>
-				<button value="default" id="dlgCreateUpdateDeleteEntityDelete" onClick="AskForDeleteEntity(event)">Delete</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityCreate" onClick="GetCreateEntity(event)" formmethod="dialog">Create</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityUpdate" onClick="GetUpdateEntity(event)" formmethod="dialog">Update</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityDelete" onClick="AskForDeleteEntity(event)" formmethod="dialog">Delete</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
-	<dialog id="DialogCreateUpdateDeleteEntity_MultiDatastreams">
+	<dialog id="DialogCreateUpdateDeleteEntity_MultiDatastreams" onClose='hideNodeDialog("DialogCreateUpdateDeleteEntity_MultiDatastreams", event)'>
 		<form>
 			<span id="dlgCreateUpdateDeleteEntityAttributes_MultiDatastreams">
 			</span>
 			<div class="center">
-				<button value="default" id="dlgCreateUpdateDeleteEntityCreate_MultiDatastreams" onClick="GetCreateEntityMultiDatastream(event)">Create</button>
-				<button value="default" id="dlgCreateUpdateDeleteEntityUpdate_MultiDatastreams" onClick="GetUpdateEntityMultiDatastream(event)">Update</button>
-				<button value="default" id="dlgCreateUpdateDeleteEntityDelete_MultiDatastreams" onClick="AskForDeleteEntity(event)">Delete</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityCreate_MultiDatastreams" onClick="GetCreateEntityMultiDatastream(event)" formmethod="dialog">Create</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityUpdate_MultiDatastreams" onClick="GetUpdateEntityMultiDatastream(event)" formmethod="dialog">Update</button>
+				<button value="default" id="dlgCreateUpdateDeleteEntityDelete_MultiDatastreams" onClick="AskForDeleteEntity(event)" formmethod="dialog">Delete</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
-	<dialog id="DialogReplaceTextInTable">
+	<dialog id="DialogReplaceTextInTable" onClose='hideNodeDialog("DialogReplaceTextInTable", event)'>
 		<form>
 			<span id="dlgDialogReplaceTextInTable">
 				<fieldset>
@@ -339,10 +348,52 @@
 
 			</span>
 			<div class="center">
-				<button value="default" id="dlgReplaceOkButton" onClick="ReplaceTextInTableApplyButton(event)">Apply</button>
+				<button value="default" id="dlgReplaceOkButton" onClick="ReplaceTextInTableApplyButton(event)" formmethod="dialog">Apply</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogReplaceTextInTableNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogMultiCreateSTARepeatedEntities" >
+		<form>
+			<span id="DialogMultiCreateSTARepeatedEntities_span"></span>
+			</span>
+			<br>
+			<button type="button" value="default" onClick="chooseAttributesInRepeatedPropertiesInMultiCreateSTADialogOkButton(event)" >OK</button>
+			<input type="hidden" id="DialogMultiCreateSTARepeatedEntitiesNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogMultiCreateSTAINaturalist"  >
+		<form>
+			<span id="DialogMultiCreateSTAINaturalist_span">
+				<fieldset><legend>Observations to create in STA Plus Service</legend>
+				<label><input type="checkbox" name="ObservationsToCreate" value="photo" checked id="ObservationsToCreate_photo">Photos</label><br>
+				<label><input type="checkbox" name="ObservationsToCreate" value="userIdentification" checked id="ObservationsToCreate_userIdentification">Specie, identification by user</label><br>
+				<label><input type="checkbox" name="ObservationsToCreate" value="othersIdentification" checked id="ObservationsToCreate_othersIdentification">Identification by other users (comments)</label><br>
+				</fieldset>
+				<fieldset>
+					<legend>Node with INaturalist observations</legend>
+					<select id="DialogMultiCreateSTAINaturalist_select"></select>
+				</fieldset>
+			</span>
+			
+			<br>
+			<button  onClick="ChooseObservationsToCreateINAT2STAPlus(event)" formmethod="dialog" >OK</button>
+			<button value="cancel" formmethod="dialog">Cancel</button>
+			<input type="hidden" id="DialogMultiCreateSTAINaturalistNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogMultiCreateSTA" >
+		<form>
+			<span><a href="https://localhost/tapis/help/STAplusSensingEntities.png" target="_blank" style="font-style: italic;"> Show STAplus scheme </a></span>
+			<br><br>
+			<span id="DialogMultiCreateSTA_span"></span>
+			<button value="default"  onClick="oKButtonInDialogMultiCreateSTA(event)" formmethod="dialog">OK</button>
+			<button value="cancel" formmethod="dialog">Cancel</button>
+			<input type="hidden" id="DialogMultiCreateSTANodeId"></input>
 		</form>
 	</dialog>
 
@@ -355,7 +406,7 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogCreateUpdateDeleteRecord">
+	<dialog id="DialogCreateUpdateDeleteRecord" onClose='hideNodeDialog("DialogCreateUpdateDeleteRecord", event)'>
 		<form>
 			<span id="dlgCreateUpdateDeleteRecordProperties">
 			</span>
@@ -366,15 +417,15 @@
 				<button value="next" id="dlgCreateUpdateDeleteRecordNext" onClick="GetNextRecord(event)">&nbsp;&gt;&nbsp;</button>
 				<button value="next" id="dlgCreateUpdateDeleteRecordLast" onClick="GetLastRecord(event)">&gt;&gt;</button>
 				<br>
-				<button value="default" id="dlgCreateUpdateDeleteRecordCreate" onClick="GetCreateRecord(event)">Insert</button>
-				<button value="default" id="dlgCreateUpdateDeleteRecordUpdate" onClick="GetUpdateRecord(event)">Update</button>
-				<button value="default" id="dlgCreateUpdateDeleteRecordDelete" onClick="AskForDeleteRecord(event)">Delete</button>
+				<button value="default" id="dlgCreateUpdateDeleteRecordCreate" onClick="GetCreateRecord(event)" formmethod="dialog">Insert</button>
+				<button value="default" id="dlgCreateUpdateDeleteRecordUpdate" onClick="GetUpdateRecord(event)" formmethod="dialog">Update</button>
+				<button value="default" id="dlgCreateUpdateDeleteRecordDelete" onClick="AskForDeleteRecord(event)" formmethod="dialog">Delete</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
-	<dialog id="DialogSeparateColumns">
+	<dialog id="DialogSeparateColumns" onClose='hideNodeDialog("DialogSeparateColumns", event)'>
 		<form>
 			Separate columns:
 			<br><br>
@@ -399,13 +450,13 @@
 			<label for="DialogSeparateColumns_RemovePresent">Remove already present elements</label>
 
 			<div class="center">
-				<button value="default" onClick="SeparateColumns(event)">OK</button>
+				<button value="default" onClick="SeparateColumns(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
-	<dialog id="DialogGroupBy">
+	<dialog id="DialogGroupBy" onClose='hideNodeDialog("DialogGroupBy", event)'>
 		<form>
 			<table border="0">
 			<tr>
@@ -442,7 +493,7 @@
 			</tr>
 			</table>
 			<div class="center">
-				<button value="default" onClick="GetGroupBy(event)">OK</button>
+				<button value="default" onClick="GetGroupBy(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogGroupByNodeId"></input>
@@ -689,7 +740,7 @@
 		</form>
 	</dialog>
 	
-	<dialog id="DialogColumnStatistics">
+	<dialog id="DialogColumnStatistics" onClose='hideNodeDialog("DialogColumnStatistics", event)'>
 		<form>
  				<span>For each column, rows with the follow statistics will be created:</span><br>
 				<div style="display: inline-block;">
@@ -710,14 +761,14 @@
 
 			<br>
 			<div  style="text-align: center">
-				<button value="default" onClick="createColumnStatistics(event)">Ok</button>
+				<button value="default" onClick="createColumnStatistics(event)" formmethod="dialog">Ok</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogColumnStatisticsNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogPivotTable">
+	<dialog id="DialogPivotTable" onClose='hideNodeDialog("DialogPivotTable", event)' >
 		<form>
  			<div> 
 				<fieldset>
@@ -766,13 +817,13 @@
 				</fieldset>
 			</div>
 			<div  style="text-align: center">
-				<button value="default" onClick="okButtonInPivotTable(event)">Ok</button>
-				<button value="cancel" formmethod="dialog">Cancel</button>
+				<button value="default" onClick="okButtonInPivotTable(event)" formmethod="dialog">Ok</button>
+				<button value="cancel"formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogPivotTableNodeId"></input>
 		</form>
 	</dialog>
-	<dialog id="DialogConcatenateTables">
+	<dialog id="DialogConcatenateTables" onClose='hideNodeDialog("DialogConcatenateTables", event)'>
 		<form >
 			<fieldset> 
 				<legend> Choose one option</legend>
@@ -784,26 +835,26 @@
 
 			<br>
 			<div  style="text-align: center">
-				<button value="default" onClick="concatenateTables()">Ok</button>
+				<button value="default" onClick="concatenateTables()" formmethod="dialog">Ok</button>
 				<button value="cancel" formmethod="dialog" >Cancel</button>
 			</div>			
 		</form>		
 	</dialog>
 	
-	<dialog id="DialogSelectColumns">
+	<dialog id="DialogSelectColumns" onClose='hideNodeDialog("DialogSelectColumns", event)'>
 		<form>
 			Select columns:
 			<span id="DialogSelectColumnsHTML">
 			</span>
 			<div class="center">
-				<button value="default" onClick="GetSelectColumns(event)">OK</button>
+				<button value="default" onClick="GetSelectColumns(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogSelectColumnsNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogExpandColumn">
+	<dialog id="DialogExpandColumn" onClose='hideNodeDialog("DialogExpandColumn", event)'>
 		<form>
 			Select column with the entity to see more details (expand):
 			<span id="DialogExpandColumnHTML">
@@ -813,14 +864,168 @@
 				<input type="text" id="ExpandColumnNumberOfRecords" size="6" maxlength="6" value="100"></input>
 			</label-->
 			<div class="center">
-				<button value="default" onClick="GetExpandColumn(event)">OK</button>
+				<button value="default" onClick="GetExpandColumn(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogExpandColumnNodeId"></input>
 		</form>
 	</dialog>
+		<dialog id="DialogUploadIC" onClose='hideNodeDialog("DialogUploadIC", event)'>
+		<form>
+			<span>Title: <input type="text" id="DialogUploadIC_title" value=""></span><br>
+			<span>Author: <input type="text" id="DialogUploadIC_author" value=""></span><br>
+			<label>License:<select id="DialogUploadIC_license">
+				<option value="CC0">Creative Commons Public domain 1.0 (CC0) </option>
+				<option value="CC BY" selected>Creative Commons Attribution 4.0 (CC BY) </option>
+				<option value="CC BY-SA">Creative Commons Attribution Share Alike 4.0 (BY-SA) </option>
+				<option value="CC BY-ND">Creative Commons Attribution No Derivatives 4.0 (BY-ND) </option>
+				<option value="CC BY-NC">Creative Commons Attribution Non Commercial 4.0 (BY-NC) </option>
+				<option value="CC BY-NC-SA">Creative Commons Attribution Non Commercia Share Alike l4.0 (BY-NC-SA) </option>
+				<option value="CC BY-NC-ND">Creative Commons Attribution Non Commercial No Derivatives 4.0 (BY-NC-ND) </option>			
+			</select></label>
 
-	<dialog id="DialogSelectExpands">
+			<fieldset><legend>Geographic information</legend>
+				<fieldset><legend><input type="radio" id="DialogUploadIC_radio_geographic_column" name="DialogUploadIC_radio" checked>Columns</legend>
+					<label>X (longitude): <select id="DialogUploadIC_columns_longitude"></select></label>
+					<label>Y (latitude): <select id="DialogUploadIC_columns_latitude"></select></label>
+				</fieldset>
+				<fieldset><legend><input type="radio" id="DialogUploadIC_radio_geographic_input" name="DialogUploadIC_radio">Manually</legend>
+					<label for="DialogUploadIC_input_xmin"> X minimum: </label> <input type="text" id="DialogUploadIC_input_xmin" style="margin-bottom: 10px">
+					<label for="DialogUploadIC_input_xmax" style="margin-left: 15px"> X maximum: </label> <input type="text" id="DialogUploadIC_input_xmax" style="margin-bottom: 10px"><br>
+					<label for="DialogUploadIC_input_ymin"> Y minimum: </label> <input type="text" id="DialogUploadIC_input_ymin">
+					<label for="DialogUploadIC_input_ymax" style="margin-left: 15px"> Y maximum: </label> <input type="text" id="DialogUploadIC_input_ymax"> <br>
+				</fieldset>				
+			</fieldset>
+			<fieldset>
+				<legend>Date column</legend>
+				<fieldset><legend><input type="radio" id="DialogUploadIC_radio_date_column" name="DialogUploadIC_radio_geographic" checked>Column</legend>
+					<select id="DialogUploadIC_date"></select>
+				</fieldset>
+				<fieldset><legend><input type="radio"  id="DialogUploadIC_radio_date_input" name="DialogUploadIC_radio_geographic">Manually</legend>
+				<table>
+					<tbody>
+						<tr>
+							<td><label>Start:</label></td>
+							<td><input id="DialogUploadIC_inputText_start" type="text" placeholder="YYYY-MM-DDTHH:MM:SS" style="width:150px" onchange="addTimeToTemporalQualityCalendar('DialogUploadIC_inputText_start','DialogUploadIC_calendar_start')"></td>
+							<td><input type="datetime-local" id="DialogUploadIC_calendar_start" onchange="addTimeToTemporalQualityCalendar('DialogUploadIC_calendar_start','DialogUploadIC_inputText_start')"></td>
+						</tr>
+						<tr>
+							<td><label>End:</label></td>
+							<td><input id="DialogUploadIC_inputText_end" type="text" placeholder="YYYY-MM-DDTHH:MM:SS" style="width:150px" onchange="addTimeToTemporalQualityCalendar('DialogUploadIC_inputText_end','DialogUploadIC_calendar_end')"></td>
+							<td><input type="datetime-local" id="DialogUploadIC_calendar_end" onchange="addTimeToTemporalQualityCalendar('DialogUploadIC_calendar_end','DialogUploadIC_inputText_end')"></td>
+						</tr>
+					</tbody>
+				</table>
+			</fieldset></fieldset>
+			<label><input type="checkbox" cheked id="DialogUploadIC_checkbox_checkresult">Add GeoJSON node to check the result</label>
+			<div class="center" style="margin-top:10px">
+				<button type="button" value="default" onClick="GetUploadIC(event)" >OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogUploadICNodeId"></input>
+		</form>
+	</dialog>
+
+		<dialog id="DialogUncertainty" onClose='hideNodeDialog("DialogUncertainty", event)'>
+		<form><span> Uncertainty</span><br><br>
+			<label>Result Column: <select id="DialogUncertainty_select_resultColumn"></select>	</label><br><br>
+			<div>
+				<fieldset><legend>Temporal grouping</legend>
+				<div style="display: flex; gap: 20px; align-items: flex-start;">
+					<table>
+						<tr>
+							<td style="text-align: center;"><strong>Column:</strong></td>
+						</tr>
+						<tr>
+							<td>
+								<select id="DialogUncertainty_select_temporalColumn"></select>	
+							</td>
+						</tr>
+					</table>
+					<table>
+						<tr>
+							<td style="text-align: center;"><strong>Period:</strong></td>
+						</tr>
+						<tr>
+							<td>
+								<input type="number" id="DialogUncertainty_input_temporalValue" style="width: 50px">	
+							</td>
+						</tr>
+					</table>
+					<table >
+							<tr>
+								<td colspan="2" style="text-align: center;"><strong>Time unit:</strong></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_years" value= "years"></td>
+								<td><label for="DialogUncertainty_radio_years">Years</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_months" value="months"></td>
+								<td><label for="DialogUncertainty_radio_months">Months</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_days" value="days"></td>
+								<td><label for="DialogUncertainty_radio_days">Days</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_hours" value="hours"></td>
+								<td><label for="DialogUncertainty_radio_hours">Hours</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_minutes" value="minutes"></td>
+								<td><label for="DialogUncertainty_radio_minutes">Minutes</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="DialogUncertainty_radio" id="DialogUncertainty_radio_seconds" value="seconds"checked></td>
+								<td><label for="DialogUncertainty_radio_seconds" >Seconds</label></td>
+							</tr>
+						</table><div></div>						
+				</fieldset>
+				<fieldset><legend>Positional grouping</legend>
+					<div style="display: flex; gap: 20px; align-items: flex-start;">
+						<table>
+							<tr>
+								<td style="text-align: center;"><strong>Column X:</strong></td>
+							</tr>
+							<tr>
+								<td>
+									<select id="DialogUncertainty_select_PositionalColumn_x"></select>	
+								</td>
+							</tr>
+						</table>
+						<table>
+							<tr>
+								<td style="text-align: center;"><strong>Column Y:</strong></td>
+							</tr>
+							<tr>
+								<td>
+									<select id="DialogUncertainty_select_PositionalColumn_y"></select>
+								</td>
+							</tr>
+						</table>
+						<table>
+							<tr>
+								<td style="text-align: center;"><strong>Distance:</strong></td>
+							</tr>
+							<tr>
+								<td><input type="number" id="DialogUncertainty_input_number" style="width: 50px"></input>
+								<span> m</span>
+								</td>
+							</tr>
+						</table>
+				</fieldset>
+
+			</div>
+			<div class="center" style="margin-top:10px">
+				<button type="button" value="default" onClick="GetUncertainty(event)" >OK</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogUncertaintyNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogSelectExpands" onClose='hideNodeDialog("DialogSelectExpands", event)'>
 		<form>
 			<fieldset id="DialogSelectExpandsHTML">
 				<legend>Choose entities you want details (expand) and attributes to select</legend>
@@ -828,14 +1033,14 @@
 				</span>
 			</fieldset>
 			<div class="center">
-				<button value="default" onClick="GetSelectExpands(event)">OK</button>
+				<button value="default" onClick="GetSelectExpands(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogSelectExpandsNodeId"></input>
 		</form>
 	</dialog>
 	
-	<dialog id="DialogFilterRowEntities">
+	<dialog id="DialogFilterRowEntities" onClose='hideNodeDialog("DialogFilterRowEntities", event)'>
 		<form>
 			<fieldset id="DialogFilterRowEntitiesHTML">
 				<legend>Choose the way to get to the Entity you want to filter</legend>
@@ -844,25 +1049,25 @@
 			</fieldset>
 			
 			<div class="center">
-				<button value="default" onClick="OkButtonInRowFilterEntities(event)">OK</button>
+				<button value="default" onClick="OkButtonInRowFilterEntities(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
-	<dialog id="DialogSelectNRecords">
+	<dialog id="DialogSelectNRecords" onClose='hideNodeDialog("DialogSelectNRecords", event)'>
 		<form>
 			<label>Number records to request:
 				<input type="text" id="SelectNumberOfRecords" size="6" maxlength="6" value="100"></input>
 			</label>
 			<div class="center">
-				<button value="default" onClick="GetSelectNRecords(event)">OK</button>
+				<button value="default" onClick="GetSelectNRecords(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
-	<dialog id="DialogSelectSortBy">
+	<dialog id="DialogSelectSortBy" onClose='hideNodeDialog("DialogSelectSortBy", event)'>
 		<form>
 			<fieldset id="DialogSelectSortByHTML">
 				<legend>Select the criteria for sorting:</legend>
@@ -873,14 +1078,14 @@
 			<label><input type="radio" id="SelectSortByAsc" name="SelectSortByArcDesc" checked />ascending</label>
 			<label><input type="radio" id="SelectSortByDesc" name="SelectSortByArcDesc" />descending</label>
 			<div class="center">
-				<button value="default" onClick="GetSelectSortBy(event)">OK</button>
+				<button value="default" onClick="GetSelectSortBy(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogSelectSortByNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogSelectRangeSTA">
+	<dialog id="DialogSelectRangeSTA" onClose='hideNodeDialog("DialogSelectRangeSTA", event)'>
 		<form>
 			<label>Number records to skip from the start:
 				<input type="text" id="SelectRangeSkipSTA" size="6" maxlength="10" value="0"></input>
@@ -890,55 +1095,55 @@
 				<input type="text" id="SelectRangeTopSTA" size="6" maxlength="10" value="100"></input>
 			</label>
 			<div class="center">
-				<button value="default" onClick="GetSelectRangeSTA(event)">OK</button>
+				<button value="default" onClick="GetSelectRangeSTA(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogSelectRangeSTANodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogSelectRow">
+	<dialog id="DialogSelectRow" onClose='hideNodeDialog("DialogSelectRow", event)'>
 		<div id="divTitleSelectRow" class="center" style="font-size: large;"></div>
 		<form>
 			Select an element:
 			<span id="DialogSelectRowTable">
 			</span>
 			<div class="center">
-				<button value="default" onClick="GetSelectRow(event)">OK</button>
+				<button value="default" onClick="GetSelectRow(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogSelectRowNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogSelectResource">
+	<dialog id="DialogSelectResource" onClose='hideNodeDialog("DialogSelectResource", event)'>
 		<div id="divTitleSelectResource" class="center" style="font-size: large;"></div>
 		<form>
 			<label>Identifier of resource to select: 
 				<input type="text" id="DialogSelectResourceId"></label>
 			</span>
 			<div class="center">
-				<button value="default" onClick="GetSelectResource(event)">OK</button>
+				<button value="default" onClick="GetSelectResource(event)" formmethod="dialog" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogSelectResourceNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogFilterRows">
+	<dialog id="DialogFilterRows" onClose='hideNodeDialog("DialogFilterRows", event)'>
 		<div id="divTitleSelectRows" class="center" style="font-size: large;"></div>
 		<form>
 			Filter:
 			<div id="DialogSelectRowsFilter">
 			</div>
 			<div class="center">
-				<button value="default" onClick="GetFilterRows(event)">OK</button>
+				<button value="default" onClick="GetFilterRows(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogFilterRowsNodeId"></input>
 		</form>
 	</dialog>
-	<dialog id="DialogFilterRowsByTime"> 
+	<dialog id="DialogFilterRowsByTime" onClose='hideNodeDialog("DialogFilterRowsByTime", event)'> 
 		
 		<form>
 
@@ -963,13 +1168,13 @@
 			</select>
 			</fieldset>
 				<div class="center">
-					<button value="default" onClick="filterRowsByTimeOkButton()">OK</button>
+					<button value="default" onClick="filterRowsByTimeOkButton()" formmethod="dialog">OK</button>
 					<button value="cancel" formmethod="dialog">Cancel</button>
 				</div>
 		</form>
 
 	</dialog>
-	<dialog id="DialogGeospatialFilterRowsByDistance">
+	<dialog id="DialogGeospatialFilterRowsByDistance" onClose='hideNodeDialog("DialogGeospatialFilterRowsByDistance", event)'>
 		
 		<form>
 			<fieldset>
@@ -1003,13 +1208,13 @@
 			<label for="geoDistance_value">Distance</label><input type="number" id ="geoDistance_input_value" style="width:50px" min="0" value="0">
 
 			<div class="center">
-				<button value="default" onClick="GetGeoDistanceFilter(event)">OK</button>
+				<button value="default" onClick="GetGeoDistanceFilter(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
-	<dialog id="DialogJoinTables">
+	<dialog id="DialogJoinTables" onClose='hideNodeDialog("DialogJoinTables", event)'>
 		<form>
 			<fieldset>
 				<legend>Row matching fields</legend>
@@ -1023,14 +1228,14 @@
 				<label><input type="radio" id="DialogJoinTablesNotMatchBothTables" name="JoinTablesNotMatch" />Add records from both tables</label>
 			</fieldset>
 			<div class="center">
-				<button value="default" onClick="GetJoinTables(event)">OK</button>
+				<button value="default" onClick="GetJoinTables(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
 
-	<dialog id="DialogContextMenu">
+	<dialog id="DialogContextMenu" onClick='startingNodeContextId=null;hideNodeDialog("DialogContextMenu", event)'>
 		<form>
 			<p>
 				<span id="ButtonsContextMenuObjects"></span><br>
@@ -1044,24 +1249,24 @@
 
 			</p>
 			<div class="center">
-				<button value="cancel" onClick="startingNodeContextId=null;" formmethod="dialog">Cancel</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 		<div id="ContextMenuHelpToolTip" style="min-height: 1px; overflow: hidden; display:none; position: fixed; background-color: yellow; width:300px; border-style: groove; padding: 5px;">help</div>
 	</dialog>
 
-	<dialog id="DialogEdgeContextMenu">
+	<dialog id="DialogEdgeContextMenu" onClick='startingEdgeContextId=null;hideNodeDialog("DialogEdgeContextMenu", event)'>
 		<form>
 			<p>
 				<button onclick='removeEdge(event, "DialogEdgeContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a connection between two nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
 			</p>
 			<div class="center">
-				<button value="cancel" onClick="startingEdgeContextId=null;" formmethod="dialog">Cancel</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
-	<dialog id="DialogOK">
+	<dialog id="DialogOK" onClose='hideNodeDialog("DialogOK", event)'>
 		<form>
 			<span id="DialogOKOptions"></span><br>
 			<span id="DialogOKHTML">
@@ -1072,7 +1277,7 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogImportCSV">
+	<dialog id="DialogImportCSV" onClose='hideNodeDialog("DialogImportCSV", event)'>
 		<form>
 			Import CSV file table
 			<br>
@@ -1120,18 +1325,23 @@
 			<br>
 			<fieldset>
 				<legend>Meaning source</legend>
-				<label><input type="radio" id="DialogImportMeaningCSVSourceFile" name="DialogImportMeaningCSVSource" value="file" checked="checked" onClick="SelectImportMeaningCSVSource(event)">
+				<label><input type="radio" id="DialogImportMeaningCSVSourceNone" name="DialogImportMeaningCSVSource" value="none"> None</input></label><br>
+				<label><input type="radio" id="DialogImportMeaningCSVSourceFile" name="DialogImportMeaningCSVSource" value="file" checked="checked"
+ onClick='SelectImportMeaningFileSource(event, "CSV");'>
 				Local CSVW file: <input type="file" id="DialogImportMeaningCSVSourceFileText" accept=".csvw,.json" onChange="ReadFileImportCSVW(event)"></input></label><br>
-				<label><input type="radio" id="DialogImportMeaningCSVSourceURL" name="DialogImportMeaningCSVSource" value="url" onClick='SelectImportMeaningFileSource(event, "CSV")'>
+
+				<label><input type="radio" id="DialogImportMeaningCSVSourceURL" name="DialogImportMeaningCSVSource" value="url" onClick='SelectImportMeaningFileSource(event, "CSV");'>
 				CSVW URL: <input type="text" size="70" id="DialogImportMeaningCSVSourceURLInput" onChange="ReadURLImportCSVW(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningCSVSourceURLButton" onClick="ReadURLImportCSVW(event)" disabled="disabled">Load</button></label><br>
-				<label><input type="radio" id="DialogImportMeaningCSVSourceAuto" name="DialogImportMeaningCSVSource" value="auto" onClick='SelectImportMeaningFileSource(event, "CSV")'>
+				<label><input type="radio" id="DialogImportMeaningCSVSourceAuto" name="DialogImportMeaningCSVSource" value="auto" onClick='SelectImportMeaningFileSource(event, "CSV");'>
 				Automatic retrieve of shared meaning</label><br>
 			</fieldset>
 			<br>
 			<fieldset>
 				<legend>CSV source</legend>
+				<label><input type="radio" id="DialogImportCSVSourceNew" name="DialogImportCSVSource" value="new"> New based on CSVW</input></label><br>
 				<label><input type="radio" id="DialogImportCSVSourceFile" name="DialogImportCSVSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "CSV")'>
-				Local file: <input type="file" accept=".csv,*.txt" id="DialogImportCSVSourceFileText" onChange="ReadFileImportCSV(event)"></input></label><br>
+				<!--  <input type="file" accept=".csv,*.txt" id="DialogImportCSVSourceFileText" onChange="ReadFileImportCSV(event)"></input></label><br> -->
+				Local file:<button type="button" onclick="openFileDialog()">Open CSV</button><span id="fileNameLabel">No file selected</span><input type="file" id="csvInput" accept=".csv,.txt" style="display:none"  onchange="ReadFileImportCSV(event)"><br>
 				<label><input type="radio" id="DialogImportCSVSourceURL" name="DialogImportCSVSource" value="url" onClick='SelectImportFileSource(event, "CSV")'>
 				URL: <input type="text" size="70" id="DialogImportCSVSourceURLInput" onChange="ReadURLImportCSV(event)" disabled="disabled"></input> <button type="button" id="DialogImportCSVSourceURLButton" onClick="ReadURLImportCSV(event)" disabled="disabled">Load</button></label><br>
 				<label>Suggested CSV URLs:
@@ -1140,43 +1350,55 @@
 
 			</fieldset>
 			<div class="center">
-				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "CSV")'>Done</button>
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "CSV")' formmethod="dialog">Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
 			<input type="hidden" id="DialogImportCSVNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogSaveTable">
+	<dialog id="DialogSaveTable" onClose='hideNodeDialog("DialogSaveTable", event)'>
 		<form>
-			Save the table as CSV
+			Save table
 			<br>
-			<label>CSV delimiter:
-				<input type="text" id="DialogSaveTableDelimiter" size="2" maxlength="1" value=";"></input>
-			</label>
-			<!--span id="DialogSaveTableOptions"></span--><br>
+			<fieldset>
+				<legend>CSV+CSVW</legend>
+				<label>CSV delimiter:
+					<input type="text" id="DialogSaveTableDelimiter" size="2" maxlength="1" value=";"></input>
+				</label>
+				<div class="center">
+					<button value="csv" onClick="SaveCSV(event)" formmethod="dialog">Save CSV</button>
+					<button value="csvw" onClick="SaveCSVW(event)" formmethod="dialog">Save CSVW</button>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>DBF</legend>
+				<label><input type="checkbox" id="DialogSaveTableForceExtendedDBF"></input> Force extended DBF</label>
+				<div class="center">
+					<button value="dbf" onClick="SaveDBF(event)" formmethod="dialog">Save DBF</button> 
+				</div>
+			</fieldset>
 			<div class="center">
-				<button value="default" onClick="SaveTable(event)">Save CSV</button>
-				<button value="csvw" onClick="SaveCSVW(event)">Save CSVW</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
 	</dialog>
 
-	<dialog id="DialogMeaningTable">
+	<dialog id="DialogMeaningTable" onClose='hideNodeDialog("DialogMeaningTable", event)'>
 		<form>
-			<span id="DialogMeaningTableTitle"></span>
+			Column name, type, meaning and units
 			<br>
 			<span id="DialogMeaningFields"></span>
 			<div class="center">
-				<button value="default" onClick="SaveMeaningTable(event)">Ok</button>
-				<button value="share" onClick="ShareMeaningTable(event)">Share</button>
+				<button value="default" onClick="SaveMeaningTable(event)" formmethod="dialog">Ok</button>
+				<button value="share" onClick="ShareMeaningTable(event)" formmethod="dialog">Share</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
+			<input type="hidden" id="DialogMeaningTableNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogImportGeoJSON">
+	<dialog id="DialogImportGeoJSON" onClose='hideNodeDialog("DialogImportGeoJSON", event)'>
 		<form>
 			Import GeoJSON
 			<br>
@@ -1191,7 +1413,7 @@
 				<legend>Meaning source</legend>
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceFile" name="DialogImportMeaningGeoJSONSource" value="file" checked="checked" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				Local GeoJSON schema file: <input type="file" id="DialogImportMeaningGeoJSONSourceFileText" accept=".json" onChange="ReadFileImportGeoJSONSchema(event)"></input></label><br>
-				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceURL" name="DialogImportMeaningGeoJSONSource" value="url" onClick='SelectImportMeaningFileSource(event, "GeoJSON")'>
+				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceURL" name="DialogImportMeaningGeoJSONSource" value="url" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				GeoJSON schema URL: <input type="text" size="70" id="DialogImportMeaningGeoJSONSourceURLInput" onChange="ReadURLImportGeoJSONSchema(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSONSchema(event)" disabled="disabled">Load</button></label><br>
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceAuto" name="DialogImportMeaningGeoJSONSource" value="auto" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				Automatic retrieve of shared meaning</label><br>
@@ -1212,14 +1434,14 @@
 
 			</fieldset>
 			<div class="center">
-				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GeoJSON")'>Done</button>
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GeoJSON")' formmethod="dialog">Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>			
 			<input type="hidden" id="DialogImportGeoJSONNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogImportDBF">
+	<dialog id="DialogImportDBF" onClose='hideNodeDialog("DialogImportDBF", event)'>
 		<form>
 			Import dBASE III+, IV and MiraMon DBF Extended
 			<br>
@@ -1232,14 +1454,14 @@
 				URL: <input type="text" size="70" id="DialogImportDBFSourceURLInput" onChange="ReadURLImportDBF(event)" disabled="disabled"></input> <button type="button" id="DialogImportDBFSourceURLButton" onClick="ReadURLImportDBF(event)" disabled="disabled">Load</button></label><br>
 			</fieldset>
 			<div class="center">
-				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "DBF")'>Done</button>
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "DBF")' formmethod="dialog">Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
 			<input type="hidden" id="DialogImportDBFNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogImportGPKG">
+	<dialog id="DialogImportGPKG" onClose='hideNodeDialog("DialogImportGPKG", event)'>
 		<form>
 			Import Geopackage
 			<br>
@@ -1252,14 +1474,14 @@
 				URL: <input type="text" size="70" id="DialogImportGPKGSourceURLInput" onChange="ReadURLImportGPKG(event)" disabled="disabled"></input> <button type="button" id="DialogImportGPKGSourceURLButton" onClick="ReadURLImportGPKG(event)" disabled="disabled">Load</button></label><br>
 			</fieldset>
 			<div class="center">
-				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GPKG")'>Done</button>
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GPKG")' formmethod="dialog">Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
 			<input type="hidden" id="DialogImportGPKGNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogImportJSONLD">
+	<dialog id="DialogImportJSONLD" onClose='hideNodeDialog("DialogImportJSONLD", event)'>
 		<form>
 			Import JSON-LD
 			<br>
@@ -1277,14 +1499,14 @@
 				URL: <input type="text" size="70" id="DialogImportJSONLDSourceURLInput" onChange="ReadURLImportJSONLD(event)" disabled="disabled"></input> <button type="button" id="DialogImportJSONLDSourceURLButton" onClick="ReadURLImportJSONLD(event)" disabled="disabled">Load</button></label><br>
 			</fieldset>
 			<div class="center">
-				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSONLD")'>Done</button>
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSONLD")' formmethod="dialog">Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
 			<input type="hidden" id="DialogImportJSONLDNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogImportJSON">
+	<dialog id="DialogImportJSON" onClose='hideNodeDialog("DialogImportJSON", event)'>
 		<form>
 			Import JSON
 			<fieldset>
@@ -1302,27 +1524,38 @@
 				<button type="button" id="DialogImportJSONSourceURLButtonMulti" onClick="ReadURLImportJSONMultiple(event)" disabled="disabled" >Load</button></label><br> 
 			</fieldset>
 			<div class="center">
-				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSON")'>Done</button>
+				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSON")' formmethod="dialog">Done</button>
 				<button value="cancel" formmethod="dialog">Close</button>
 			</div>
 			<input type="hidden" id="DialogImportJSONNodeId"></input>
 		</form>
 	</dialog>
 	
-	<dialog id="DialogSaveLayer">
+	<dialog id="DialogSaveLayer" onClose='hideNodeDialog("DialogSaveLayer", event)'>
 		<form>
 			<span id="DialogSaveLayerTitle"></span>
+			Title: <input id="DialogSaveLayerDescription" value="Layer from TAPIS" />
 			<fieldset>
 				<legend>Position:</legend>
-				<label>Place description*:
+				<label>Symbolizer (text or color)*:
 					<span id="DialogSaveLayerPlace"></span>
 				</label>
 				<br>
-				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerGeo">Geometry*:
-					<span id="DialogSaveLayerGeometry"></span>
+				<fieldset>
+				<legend>Geometry*:</legend>
+				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerGeo">Geometry:
+					<span id="DialogSaveLayerSelectGeometry"></span>
 				</label>
 				<br>
-				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerLL" checked="checked">Point coordinates*:</label>
+				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerGeoHash">Geohash:
+					<span id="DialogSaveLayerSelectGeohash"></span>
+				</label>
+				<br>
+				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerUberH3">Uber H3:
+					<span id="DialogSaveLayerSelectUberH3"></span>
+				</label>
+				<br>
+				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerLL" checked="checked">Point coordinates:</label>
 				<fieldset>
 				<label>Longitude:
 					<span id="DialogSaveLayerLongitude"></span>
@@ -1332,12 +1565,16 @@
 					<span id="DialogSaveLayerLatitude"></span>
 				</label>
 				</fieldset>
+				</fieldset>
 			</fieldset>
 			<br>
-			<label>Date and time:
-				<span id="DialogSaveLayerTime"></span>
-			</label>
-			<span id="DialogSaveLayerVariableDefUoM"></span>
+			<fieldset>
+				<legend>Time Series (optional)</legend>
+				<label>Date and time:
+					<span id="DialogSaveLayerTime"></span>
+				</label>
+				<span id="DialogSaveLayerVariableDefUoM"></span>
+			</fieldset>
 			<br>
 			<div class="center">
 				<span id="DialogSaveLayerSave"></span>
@@ -1346,9 +1583,9 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogAddColumnGeo">
+	<dialog id="DialogAddColumnGeo" onClose='hideNodeDialog("DialogAddColumnGeo", event)'>
 		<form name="DialogAddColumnGeoForm">
-			Add column with tranformed geometry
+			Add column with transformed geometry
 			<fieldset>
 				<legend>Input</legend>
 				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="JSON" id="DialogAddColumnGeoRadioJSON">GeoJSON Geometry:
@@ -1360,16 +1597,24 @@
 				</label>
 				<br>
 				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="Geohash" id="DialogAddColumnGeoRadioGeohash">Geohash:
-					<span id="DialogAddColumnGeoGeohash"></span>
+					<span id="DialogAddColumnGeohash"></span>
+				</label>
+				<br>
+				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="UberH3" id="DialogAddColumnGeoRadioUberH3">Uber H3:
+					<span id="DialogAddColumnUberH3"></span>
 				</label>
 				<br>
 				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="LL" id="DialogAddColumnGeoRadioLL" checked="checked">Point coordinates:</label>
 				<fieldset>
-				<label>Longitude:
+				<label>CRS:
+					<select id="DialogAddColumnGeoCRSSelect"></select>
+				</label>
+				<br>
+				<label>X or Longitude:
 					<span id="DialogAddColumnGeoLongitude"></span>
 				</label>
 				<br>
-				<label>Latitude:
+				<label>Y or Latitude:
 					<span id="DialogAddColumnGeoLatitude"></span>
 				</label>
 				</fieldset>
@@ -1381,21 +1626,75 @@
 					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="JSON" id="DialogAddColumnGeoRadioJSONOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioJSONOut");' checked="checked">GeoJSON Geometry</label><br>
 					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="WKT" id="DialogAddColumnGeoRadioWKTOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioWKTOut");' >Well Known Text</label><br>
 					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="Geohash" id="DialogAddColumnGeoRadioGeohashOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioGeohashOut");' >Geohash</label><br>
+					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="UberH3" id="DialogAddColumnGeoRadioUberH3Out" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioUberH3Out");' >Uber H3</label><br>
 					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="LL" id="DialogAddColumnGeoRadioLLOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioLLOut");' >Point coordinates</label>
 				</fieldset>
-				<legend>New columns</legend>
-				<label><span id="DialogAddColumnGeoNameOut">Column name:</span><input type="text" size="30" id="DialogAddColumnGeoNameText" value="Geometry"></input><br>
-				<label><span id="DialogAddColumnGeoLatitudeNameOut" style="display:none;">Latitude:</span><input type="text" size="30" id="DialogAddColumnGeoLatitudeNameText" value="Latitude" style="display:none;"></input> 
+				<fieldset>
+				<legend>New column name(s)</legend>
+					<span id="DialogAddColumnGeoCRSOutAll" style="display:none;">
+						<span id="DialogAddColumnGeoCRSOut">CRS:</span>
+						<select id="DialogAddColumnGeoCRSOutSelect"></select>
+						<br>
+					</span>
+					<span id="DialogAddColumnGeoNameOutAll"><label><span id="DialogAddColumnGeoNameOut">Column name:</span> <input type="text" size="30" id="DialogAddColumnGeoNameText" value="Geometry"></input><br></span>
+					<span id="DialogAddColumnGeoLatitudeNameOutAll" style="display:none;"><label><span id="DialogAddColumnGeoLatitudeNameOut">Y or Latitude:</span> <input type="text" size="30" id="DialogAddColumnGeoLatitudeNameText" value="Latitude"></input><br></span>
+					<span id="DialogAddColumnGeoLevelAll"><label><span id="DialogAddColumnGeoLevel">Level:</span><input type="text" size="3" id="DialogAddColumnGeoLevelText" value="10"></input></span>
+				</fieldset>
 			</fieldset>
 			<div class="center">
-				<button value="ok" formmethod="dialog" onClick="GetAddColumnGeo(event)">Add</button>
+				<button value="ok" formmethod="dialog" onClick="GetAddColumnGeo(event)" formmethod="dialog">Add</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogAddColumnGeoNodeId"></input>
 		</form>
 	</dialog>
 
-	<dialog id="DialogGUF">
+	<dialog id="DialogDGGSCodesBbox" onClose='hideNodeDialog("DialogDGGSCodesBbox", event)'>
+		<form name="DialogDGGSCodesBboxForm">
+			DGGS codes table from geospatial extent
+			<fieldset>
+				<legend>Geospatial extent</legend>
+				<label>Minimum longitude: <input type="text" id="DialogDGGSCodesBboxMinLong" size="16" value="-120"></input></label>
+				<br>
+				<label>Minimum latitude: <input type="text" id="DialogDGGSCodesBboxMinLat" size="16" value="-70"></input></label>
+				<br>
+				<label>Maximum longitude: <input type="text" id="DialogDGGSCodesBboxMaxLong" size="16" value="120"></input></label>
+				<br>
+				<label>Maximum latitude: <input type="text" id="DialogDGGSCodesBboxMaxLat" size="16" value="70"></input></label>
+				<br>
+			</fieldset>
+			<br>
+			<fieldset>
+				<legend>DGGS code type:</legend>
+				<label><input type="radio" name="DialogDGGSCodesBboxCode" value="Geohash" id="DialogDGGSCodesBboxCodeGeohash">Geohash</label><br>
+				<label><input type="radio" name="DialogDGGSCodesBboxCode" value="UberH3" id="DialogDGGSCodesBboxCodeUberH3" checked="checked">Uber H3</label><br>
+			</fieldset>
+			<br>
+			<label>Level: <input type="text" size="2" id="DialogDGGSCodesBboxLevel" value="9"></input><label>
+			<label><input type="checkbox" id="DialogDGGSCodesBboxParents" checked="checked">Parent levels</label><br>
+			<label><input type="checkbox" id="DialogDGGSCodesBboxCentroid" checked="checked">Add centroid coordinates</label><br>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick="GetCreateTableDGGSCodes(event)" formmethod="dialog">Create</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogDGGSCodesBboxNodeId"></input>
+		</form>
+	</dialog>
+	<dialog id="DialogCreateNewTable" onClose='hideNodeDialog("DialogCreateNewTable", event)'>
+		<form name="DialogDialogCreateNewTable">
+			<span style="font-weight: bold;display: block;">Create a new table</span>
+			<div style="margin-bottom: 20px;">
+			<label>List of columns (separed by comas): </label> 
+				<input type="text" id="DialogDialogCreateNewTable_columnList" style="width: 400px; height: 50px;" value="">
+			</div>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick="GetCreateNewTable(event)" formmethod="dialog">Create</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogCreateNewTableNodeId"></input>
+		</form>
+	</dialog>
+	<dialog id="DialogGUF" onClose='hideNodeDialog("DialogGUF", event)'>
 		<form>
 			Geospatial user feedback
 			<fieldset>
@@ -1406,9 +1705,9 @@
 			</fieldset>
 			<br>
 			<div class="center">
-				<button value="add" onClick="AddGUF(event)">Add feedback</button>
-				<button value="edit" onClick='EditGUF(event)'>Edit previous feedback</button>
-				<button value="ok" formmethod="dialog" onClick="ShowGUF(event)">Get feedback</button>
+				<button value="add" onClick="AddGUF(event)" formmethod="dialog">Add feedback</button>
+				<button value="edit" onClick='EditGUF(event)' formmethod="dialog">Edit previous feedback</button>
+				<button value="ok" formmethod="dialog" onClick="ShowGUF(event)" formmethod="dialog">Get feedback</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
@@ -1559,6 +1858,19 @@
 		</form>
 	</dialog>
 
+	<!--dialog id="DialogSubscribe">
+		<span id="DialogSubscribeTitle"></span>
+		<form>
+		<br>
+		<div class="center">
+			<button value="ok" onClick="PrepareRefreshSubscribe(event)">Ok</button>
+			<button value="stop" onClick="StopRefreshSubscribe(event)">Stop refresh</button>
+			<button value="cancel" onClick="CloseDialogSubscribe(event)" formmethod="dialog">Close</button>
+		</div>
+		<input type="hidden" id="DialogSubscribeNodeId"></input>
+		</form>
+	</dialog-->
+
 	<dialog id="DialogCountResults">
 		<span id="DialogCountResultsTitle"></span>
 		<form>
@@ -1577,7 +1889,7 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogUploadObservations">
+	<dialog id="DialogUploadObservations" onClose='hideNodeDialog("DialogUploadObservations", event)'>
 		<div id="DialogUploadObservationsLoginFirst" style="display: none;">
 			<form>
 				To upload data in a STA server, you should Login first.<br>
@@ -1627,20 +1939,620 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogCalculateStatisticsSTA">
+	<dialog id="DialogCalculateStatisticsSTA" onClose='hideNodeDialog("DialogCalculateStatisticsSTA", event)'>
 		<form>
 			Upload statistical values to STA
 			<div class="center">
-				<button value="default" id="dlgDialogCalculateStatisticsSTACreate" onClick="UploadCalculateStatisticsSTAEvent(event, true)">Create</button>
-				<button value="default" id="dlgDialogCalculateStatisticsSTAContinue" onClick="UploadCalculateStatisticsSTAEvent(event, false)">Continue</button>
+				<button value="default" id="dlgDialogCalculateStatisticsSTACreate" onClick="UploadCalculateStatisticsSTAEvent(event, true)" formmethod="dialog">Create</button>
+				<button value="default" id="dlgDialogCalculateStatisticsSTAContinue" onClick="UploadCalculateStatisticsSTAEvent(event, false)" formmethod="dialog">Continue</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogCalculateStatisticsSTANodeId"></input>
 		</form>
 	</dialog>
 
+	<dialog id="DialogQualityCompletnessOmission" onClose='hideNodeDialog("DialogQualityCompletnessOmission", event)'>
+		<form>
+			<h3> Completness omission </h3>
+			<div id="DialogQualityCompletnessOmission_attributesList"></div>
+			<div>
+				<label><input type="checkbox" value="Omission_flagBadRecords" id="dataQuality_omission_flag" name="dataQuality_omission">Flag the bad records (true/false)</label><br>
+			</div>
+			<div class="center">
+				<button value="ok" onClick="okButtonDataQualityCompletnessOmission(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
 
-	<!--dialog id="UploadTimeAverages">
+		<input type="hidden" id="DialogQualityCompletnessOmissionNodeId"></input>
+		</form>
+	</dialog>
+	<dialog id="DialogQualityLogicalConsistency" onClose='hideNodeDialog("DialogQualityLogicalConsistency", event)'>
+		<form>
+			<h3> Logical consistency</h3>
+			<div id="DialogQualityLogicalConsistency_table_div">
+				<table style="border:2px solid black; border-collapse:collapse;">
+					<thead>
+						<th style="border:1px solid black; padding:6px; border-right:1px solid black; text-align:center;"> Target data</th>
+						<th style="border:1px solid black; padding:6px; text-align:center;">Reference data</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="border:1px solid black; padding:6px; border-right:1px solid black; text-align:center;" id="DialogQualityLogicalConsistency_table_0">
+
+							</td>
+							<td style="border:1px solid black; padding:6px; text-align:center;" id="DialogQualityLogicalConsistency_table_1">
+
+							</td>
+						</tr>
+						<tr>
+							<td style="border-top:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:1px solid black; text-align:center; padding-bottom:0px;">
+								Column 1
+							</td>
+							<td style="border-top:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:1px solid black; text-align:center; padding-bottom:0px;">
+								Column 1
+							</td>
+						</tr>
+						<tr>
+							<td style="border-bottom:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:1px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute1_0"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+							<td style="border-bottom:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:1px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute1_1"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-top:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:1px solid black; text-align:center; padding-bottom:0px;">
+								Column 2
+							</td>
+							<td style="border-top:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:1px solid black; text-align:center; padding-bottom:0px;">
+								Column 2
+							</td>
+						</tr>
+						<tr>
+							<td style="border-bottom:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:1px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute2_0"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+							<td style="border-bottom:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:1px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute2_1"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-top:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:1px solid black; text-align:center; padding-bottom:0px;">
+								Column 3
+							</td>
+							<td style="border-top:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:1px solid black; text-align:center; padding-bottom:0px;">
+								Column 3
+							</td>
+						</tr>
+						<tr>
+							<td style="border-bottom:1px solid black; border-left:1px solid black; padding:6px;
+									border-right:1px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute3_0"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+							<td style="border-bottom:1px solid black; border-right:1px solid black; padding:6px;
+									border-left:1px solid black; text-align:center;">
+								<select id="DialogQualityLogicalConsistency_selectAttribute3_1"
+										style="margin:0 5px 0 5px;"></select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				</div>
+			<div style="margin-top: 20px;">
+				<label><input type="checkbox" value="logicalConsistency_flagBadRecords" id="dataQuality_logicalConsistency_flag" name="dataQuality_logicalConsistency">Flag the bad records (true/false)</label>
+			</div>
+			<div class="center" style="margin-top: 20px;">
+				<button value="ok" onClick="okButtonDataQualityDialogQualityLogicalConsistency(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogQualityLogicalConsistencyNodeId"></input>
+		</form>
+	</dialog>
+	<dialog id="DialogQualityTemporalQuality" onClose='hideNodeDialog("DialogQualityTemporalQuality", event)'>
+		<form>
+			<h3> Temporal quality </h3>
+			<div id="DialogQualityTemporalQuality_attributesList">
+				<label>Temporal column: </label><select  id="TemporalQuality_select_temporalColumn"></select>
+			</div>
+			<fieldset><legend><label><input type="checkbox"  value="TemporalQuality_calculate_temporalAccuracy" id="TemporalQuality_checkbox_calculate_temporalAccuracy" name="TemporalQuality_checkbox_calculate">Temporal accuracy</label></legend>
+				<table style="border-collapse: collapse; width: 100%;">
+					<tbody>
+
+						<tr>
+							<td colspan="2" style="padding: 10px; text-align: left;">
+								<label>
+									<input type="radio" name="TemporalQuality_radio_temporalAccuracy" id="TemporalQuality_radio_temporalAccuracy_uncertaintyColumn" value="uncertaintyColumn" checked>
+									Mean of the values in the 
+								</label>
+								<label style="margin-right: 10px;">uncertainty column:</label>
+								<select id="TemporalQuality_select_temporalAccuracy_uncertantyColumn">
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td style="padding: 10px; text-align: left; width: 50%; vertical-align: top;">
+								<label>
+									<input type="radio" name="TemporalQuality_radio_temporalAccuracy" 	id="TemporalQuality_radio_temporalAccuracy_evaluateColumn" value="calculate">	Standard deviation of the temporal column
+								</label>
+							</td>
+							<td style="padding: 10px; text-align: left; width: 50%;">
+								<fieldset>
+									<legend>Grouping mode</legend>
+
+									<label>
+										<input type="radio" 
+											id="TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_group" 
+											name="TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping" 
+											checked>
+										Grouped by column
+									</label>
+									<select id="TemporalQuality_radio_temporalAccuracy_evaluateColumn_grouping_select">
+									</select>
+
+									<br><br>
+
+									<label style="margin-left: 20px;">
+										<input type="checkbox" 
+											id="TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox" 
+											checked>
+										Create new columns with mean and uncertainty
+									</label>
+
+									<br><br>
+
+									<label>
+										<input type="radio" 
+											id="TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_all" 
+											name="TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping">
+										All records
+									</label>
+
+								</fieldset>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+				</fieldset>
+				
+
+
+			</fieldset>
+			<fieldset><legend><label><input type="checkbox" value="TemporalQuality_calculate_temporalValidity" id="TemporalQuality_checkbox_calculate_temporalValidity" name="TemporalQuality_checkbox_calculate">Temporal validity</label></legend>
+				<table>
+					<tbody>
+						<tr>
+							<td><label>From:</label></td>
+							<td><input id="DialogQualityTemporalQuality_validity_inputText_from" type="text" placeholder="YYYY-MM-DDTHH:MM:SS" style="width:150px" onchange="addTimeToTemporalQualityCalendar('DialogQualityTemporalQuality_validity_inputText_from','DialogQualityTemporalQuality_validity_calendar_from')" ></td>
+							<td><input type="datetime-local" id="DialogQualityTemporalQuality_validity_calendar_from" onchange="addTimeToTemporalQualityCalendar('DialogQualityTemporalQuality_validity_calendar_from','DialogQualityTemporalQuality_validity_inputText_from')"></td>
+						</tr>
+						<tr>
+							<td><label>To:</label></td>
+							<td><input id="DialogQualityTemporalQuality_validity_inputText_to" type="text" placeholder="YYYY-MM-DDTHH:MM:SS" style="width:150px" onchange="addTimeToTemporalQualityCalendar('DialogQualityTemporalQuality_validity_inputText_to','DialogQualityTemporalQuality_validity_calendar_to')" ></td>
+							<td><input type="datetime-local" id="DialogQualityTemporalQuality_validity_calendar_to" onchange="addTimeToTemporalQualityCalendar('DialogQualityTemporalQuality_validity_calendar_to','DialogQualityTemporalQuality_validity_inputText_to')"></td>
+						</tr>
+					</tbody>
+				</table>
+				
+				<br>
+				
+
+
+			</fieldset>
+			<fieldset><legend><label><input type="checkbox" value="TemporalQuality_calculate_temporalResolution" id="TemporalQuality_checkbox_calculate_temporalResolution" name="TemporalQuality_checkbox_calculate">Temporal resolution</label></legend>
+				<div style="text-align: center; margin-bottom: 15px;">
+					<p>Expected resolution (Values with higher resolutions will be accepted, but those with lower resolutions will not):</p>
+					<table class="tablesmall" style="margin: 0 auto;">
+						<thead>
+						<tr>
+							<th></th>
+							<th>Format</th>
+							<th>Description</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_year" value="year"></td>
+							<td>YYYY</td>
+							<td>Year</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_month" value="month"></td>
+							<td>YYYY-MM</td>
+							<td>Month</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_day" value="day"></td>
+							<td>YYYY-MM-DD</td>
+							<td>Day</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_hour" value="hour"></td>
+							<td>YYYY-MM-DDTHH</td>
+							<td>Hour</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_minute" value="minute"></td>
+							<td>YYYY-MM-DDTHH:mm</td>
+							<td>Minute</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_seconds" value="second" checked></td>
+							<td>YYYY-MM-DDTHH:mm:ss</td>
+							<td>Second</td>
+						</tr>
+						<tr>
+							<td><input type= "radio" name="TemporalQuality_resolution_radio" id="TemporalQuality_resolution_radio_fraction" value="fraction"></td>
+							<td>YYYY-MM-DDTHH:mm:ss.fff</td>
+							<td>Fractions of a second</td>
+						</tr>
+						</tbody>
+					</table>
+				
+				</div>
+			</fieldset>
+			<fieldset >
+				<legend><label><input type="checkbox"value="TemporalQuality_calculate_temporalConsistency" id="TemporalQuality_checkbox_calculate_temporalConsistency"name="TemporalQuality_checkbox_calculate">Temporal consistency</label></legend>
+					<div style="display: flex; flex-direction: row; align-items: flex-start; gap: 20px;">
+					<table>
+						<tr>
+							<td style="text-align: center;"><strong>Number:</strong></td>
+						</tr>
+						<tr>
+							<td>
+								<input type="text" id="TemporalQuality_consistency_toleranceNumber" style="width: 50px">	
+							</td>
+						</tr>
+					</table>
+					<table >
+							<tr>
+								<td colspan="2" style="text-align: center;"><strong>Time unit:</strong></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_years" value= "years"></td>
+								<td><label for="TemporalQuality_consistency_radio_years">Years</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_months" value="months"></td>
+								<td><label for="TemporalQuality_consistency_radio_months">Months</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_days" value="days"></td>
+								<td><label for="TemporalQuality_consistency_radio_days">Days</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_hours" value="hours"></td>
+								<td><label for="TemporalQuality_consistency_radio_hours">Hours</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_minutes" value="minutes"></td>
+								<td><label for="TemporalQuality_consistency_radio_minutes">Minutes</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_consistency_radio" id="TemporalQuality_consistency_radio_seconds" value="seconds"checked></td>
+								<td><label for="TemporalQuality_consistency_radio_seconds" >Seconds</label></td>
+							</tr>
+						</table>
+						<br>
+						<table>
+							<tr>
+								<td style="text-align: center;"><strong>Tolerance:</strong></td>
+							</tr>
+							<tr>
+								<td>
+									<label><span id="TemporalQuality_consistency_toleranceRange_span">2</span>%</label><br>
+									<input type="range"
+										id="TemporalQuality_consistency_toleranceRange"
+										min="0" max="15" value="2" step="1"
+										oninput="document.getElementById('TemporalQuality_consistency_toleranceRange_span').textContent=this.value">
+								</td>
+							</tr>
+						</table>
+						<table>
+						<tbody>
+							<tr>
+								<td colspan="2" style="text-align: center;"><strong>Interval method:</strong></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_intervalMethod_radio" id="TemporalQuality_intervalMethod_radio_local"  value="local"></td>
+								<td><label for="TemporalQuality_intervalMethod_radio_local" >Distance to the previous data</label></td>
+							</tr>
+							<tr>
+								<td><input type="radio" name="TemporalQuality_intervalMethod_radio" id="TemporalQuality_intervalMethod_radio_global" value="global" checked></td>
+								<td><label for="TemporalQuality_intervalMethod_radio_global">Distance from the global interval baseline</label></td>
+							</tr>
+						</tbody>
+					</table><br>
+
+					</div>
+					<div><span style="color: red; font-weight: bold;">&#x26A0;</span>
+						<span style="font-style: italic;">This test may not be accurate if the data includes the original timezone’s daylight saving time change. The test applies the time change of your own country; <br>if your data comes from a different timezone, take this into account. <br> In this case, it is recommended to split the dataset into segments that do not include the transition</span>
+						<div><br><label><input type="checkbox" id="TemporalQuality_checkbox_sort" checked>Sort records</label><br><br>						
+					</div>
+			</fieldset>
+			<br>
+			<div>
+				<label for="TemporalQuality_checkbox_flag"><input type="checkbox" id="TemporalQuality_checkbox_flag">Flag the bad records (true/false)</label><br>
+			</div>
+			<div class="center">
+				<button value="ok" onClick="okButtonDataQualityTemporalQuality(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<br>
+			<input type="hidden" id="DialogQualityTemporalQualityNodeId"></input>
+		</form>
+	</dialog>
+
+
+
+	<dialog id="DialogQualityPositionalQuality" onClose='hideNodeDialog("DialogQualityPositionalQuality", event)'>
+		<form>
+			<h3> Positional quality</h3>
+			<fieldset id="DialogQualityPositionalQuality_geometricPositions"><legend>Geographic coordinates:</legend>
+				<div style="margin-bottom: 10px;"><label>Longitude: </label><select id="PositionalQuality_select_geometricPositions_longitude"></select></div>
+				<div><label>Latitude: </label><select id="PositionalQuality_select_geometricPositions_latitude"></select></div>
+			</fieldset>
+			<div>
+				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalAccuracy" checked="checked">Positional accuracy</label></legend>
+					<table style="text-align: center; border-collapse: collapse;">
+						<tr>
+							<td style="border-right: 2px solid #ccc; padding: 10px;">
+								<label>
+									<input type="radio" name="PositionalQuality_radio_positionalAccuracy"
+										id="PositionalQuality_radio_positionalAccuracy_uncertantlyColumn" checked>
+									Mean of the uncertainties of each position.
+								</label>
+							</td>
+
+							<td style="padding: 10px;">
+								<label>
+									<input type="radio" name="PositionalQuality_radio_positionalAccuracy"
+										id="PositionalQuality_radio_positionalAccuracy_evaluateColumn">
+									Mean of the values in the geometry column (Root Mean Square Error)
+								</label>
+							</td>
+						</tr>
+
+						<tr>
+							<td style="border-right: 2px solid #ccc;">
+								<label style="margin-right: 10px;">Uncertainty column:</label>
+								<select id="PositionalQuality_select_positionalAccuracy_uncertantlyColumn"></select><br>
+							</td>
+
+							<td>
+								<label style="margin-right: 10px; padding-bottom: 0px;">Coordinates units</label>
+								<select id="PositionalQuality_radio_positionalAccuracy_uncertantlyColumn_degreeMeters">
+									<option value="deg">Degrees</option>
+									<option value="m">Meters</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td style="border-right: 2px solid #ccc; padding: 10px;"></td>
+							<td style="padding: 10px; text-align: left;">
+								<fieldset> <legend>Grouping mode</legend>
+									<label><input type="radio" id="PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_group" name="PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping" checked=""> Grouped by column</label><label>Grouping column:  </label><select id="PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_select"></select><br>
+									<label style="margin-left: 20px;"><input type="checkbox" id="PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox" checked> Create new columns with mean and uncertantly </label> <br>
+
+									<label><input type="radio" id="PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_all" name="PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping"> All records</label>
+								</fieldset>
+							</td>
+						</tr>
+
+					</table>
+				</fieldset>
+				<fieldset><legend><label><input type="checkbox" id="PositionalQuality_checkbox_positionalValidity">Positional validity</label></legend>
+					<label for ="PositionalQuality_input_positionalValidity_xmin"> X minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmin" style="margin-bottom: 10px">
+					<label for ="PositionalQuality_input_positionalValidity_xmax" style="margin-left: 15px"> X maximum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_xmax" style="margin-bottom: 10px"><br>
+					<label for ="PositionalQuality_input_positionalValidity_ymin"> Y minimum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_ymin">
+					<label for ="PositionalQuality_input_positionalValidity_ymax" style="margin-left: 15px"> Y maximum: </label> <input type="text" id="PositionalQuality_input_positionalValidity_ymax"> <br><br>
+					<label><input type="checkbox"  id="dataQuality_temporalValidity_flag">Flag the bad records (true/false)</label><br>
+				</fieldset>
+			</div>
+			<div>
+			
+
+			</div>
+			<div class="center">
+				<button value="ok" onClick="okButtonDataQualityPositionalQuality(event)" >Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+
+		<input type="hidden" id="DialogQualityPositionalQualityNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogQualityThematicQuality" onClose='hideNodeDialog("DialogQualityThematicQuality", event)'>
+		<form>
+			<h3> Thematic quality</h3>
+
+			<div style="margin-bottom: 20px;"> 
+				<label><strong>Table to assess: </strong></label>
+				<span id="ThematicQuality_select_tableAssess"></span>
+			</div>
+
+			<div>
+
+				<fieldset>
+					<legend>
+						<input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy_column">
+						Thematic accuracy by accuracy column
+					</legend>
+					<label>Mean of uncertainty column: </label>
+					<select id="DialogQualityThematicQuality_select_uncertantyColumn"></select>
+				</fieldset>
+
+				<br>
+
+				<div style="display:flex; gap:20px; align-items:flex-start;">
+
+					<div style="min-width:250px; max-width:300px;">
+						<div style="background:#f5f5f5; padding:10px; border-radius:6px;">
+							<label><strong>Attribute selection</strong></label>
+							<br><br>
+
+							<label>Column to assess:</label><br>
+							<select id="DialogQualityThematicQuality_attributesList"></select>
+
+							<br><br>
+
+							<small style="color:#666;">
+								Used for thematic accuracy by values and thematic validity
+							</small>
+						</div>
+					</div>
+
+					<div style="flex:1;">
+
+						<fieldset>
+							<legend>
+								<label>
+									<input type="checkbox" id="ThematicQuality_checkbox_ThematicAccuracy_values">
+									Thematic accuracy by values
+								</label>
+							</legend>
+
+							<table style="width:100%; border-collapse:collapse;">
+								<tr>
+									<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
+										<label>
+											<input type="radio" id="thematicQuality_radio_thematicAccuracy_string" name="thematicQuality_radio_thematicAccuracy_way" value="alfaNum" onclick="enableGroupingModeInThematicQuality(true)" checked>
+											Mode of non-numeric column (Most frequent value and its frequency)
+										</label>
+									</td>
+
+									<td rowspan="2" style="vertical-align:top; padding:10px;">
+										<fieldset>
+											<legend>Grouping mode</legend>
+
+											<label>
+												<input type="radio" id="thematicQuality_radio_thematicAccuracy_group" name="thematicQuality_radio_thematicAccuracy_grouping" checked>
+												Grouped by column
+											</label>
+
+											<label>
+												Grouping column:
+												<select id="DialogQualityThematicQuality_select_accuracy_group"></select>
+											</label>
+
+											<br>
+
+											<label style="margin-left:30px;">
+												<input type="checkbox" id="thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox" checked>
+												Create new columns with grouped result
+											</label>
+
+											<br>
+
+											<label>
+												<input type="radio" id="thematicQuality_radio_thematicAccuracy_column" name="thematicQuality_radio_thematicAccuracy_grouping">
+												All records
+											</label>
+										</fieldset>
+									</td>
+								</tr>
+
+								<tr>
+									<td style="border-right:2px solid #ccc; vertical-align:top; padding:10px; text-align:left;">
+										<label>
+											<input type="radio" id="thematicQuality_radio_thematicAccuracy_number" name="thematicQuality_radio_thematicAccuracy_way" value="number" onclick="enableGroupingModeInThematicQuality(true)">
+											Mean of the standard deviation (numeric)
+										</label>
+									</td>
+								</tr>
+							</table>
+
+						</fieldset>
+
+						<br>
+
+						<fieldset>
+							<legend>
+								<label>
+									<input type="checkbox" id="ThematicQuality_checkbox_ThematicValidity">
+									Thematic validity
+								</label>
+							</legend>
+
+							<div>
+								<label>Table with list of possible values: </label>
+								<span id="ThematicQuality_select_tableList"></span>
+							</div>
+
+							<label>
+								<input type="radio" id="thematicQuality_radio_thematicValidity_list" name="thematicQuality_radio_thematicValidity" checked>
+								List of values
+							</label>
+
+							<select id="DialogQualityThematic_select_Validity"></select>
+
+							<br>
+
+							<label>
+								<input type="radio" id="thematicQuality_radio_thematicValidity_range" name="thematicQuality_radio_thematicValidity">
+								Range
+							</label>
+
+							<label style="margin-left: 15px">
+								From:<input type="text" id="thematicQuality_input_thematicValidity_from">
+							</label>
+
+							<label>
+								To: <input type="text" id="thematicQuality_input_thematicValidity_to">
+							</label>
+
+							<br>
+
+							<label>
+								<input type="checkbox" id="dataQuality_thematicValidity_flag">
+								Flag the bad records (true/false)
+							</label>
+						</fieldset>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="center">
+				<button value="default" onClick="okButtonDataQualityThematicQuality(event)">Ok</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+
+			<input type="hidden" id="DialogQualityThematicQualityNodeId">
+		</form>
+	</dialog>
+
+
+
+	 
+
+
+
+
+	<dialog id="dataQualityResult" onClose='hideNodeDialog("DialogQualityTemporalQuality", event)'>
+		<form>
+			<div id="dataQualityResult_info"> </div>
+			<br>
+			<div class="center"> <button value="cancel" formmethod="dialog">Close</button></div>
+		</form>
+	</dialog>
+
+
+
+
+
+	<!--dialog id="UploadTimeAverages" onClose='hideNodeDialog("UploadTimeAverages", event)'>
 		<div id="UploadTimeAveragesLoginFirst" style="display: none;">
 		<form>
 			To upload data in a STA server, you should Login first.<br>

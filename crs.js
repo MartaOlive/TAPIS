@@ -55,7 +55,8 @@ var crs4proj4=[
 	{"id": "EPSG:27572",     "projStr": "+title=Lambert Conformal Conic Zone II ext NTF +proj=lcc +lat_1=46.8 +lat_0=46.8 +lon_0=0 +k_0=0.99987742 +x_0=600000 +y_0=2200000 +ellps=clrk80ign +pm=paris +towgs84=-168,-60,320,0,0,0,0 +units=m +no_defs +type=crs"},
 	{"id": "EPSG:27573",     "projStr": "+title=Lambert Conformal Conic Zone III ext NTF +proj=lcc +lat_1=44.1 +lat_0=44.1 +lon_0=0 +k_0=0.999877499 +x_0=600000 +y_0=3200000 +ellps=clrk80ign +pm=paris +towgs84=-168,-60,320,0,0,0,0 +units=m +no_defs +type=crs"},
 	{"id": "EPSG:3035",      "projStr": "+title=Lambert Equal Area (LAEA) ETRS89 +proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs"},
-	{"id": "EPSG:3395",      "projStr": "+title=Mercator Equator - WGS84 +proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs"}
+	{"id": "EPSG:3395",      "projStr": "+title=Mercator Equator - WGS84 +proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs"},
+	{"id": "ESRI:54009",	 "projStr": "+title=Mollweide - WGS84 +proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs"}
 ];
 
 var crs4proj4Alias=[
