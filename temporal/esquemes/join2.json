@@ -1,0 +1,241 @@
+{
+	"nodes": [
+		{
+			"id": "6qvhq.30b019",
+			"label": "1",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"City": "Madrid",
+					"Temperature (C)": 22,
+					"Country": "Spain",
+					"Humidity (%)": 60
+				},
+				{
+					"City": "Paris",
+					"Temperature (C)": 18,
+					"Country": "France",
+					"Humidity (%)": 70
+				},
+				{
+					"City": "Berlin",
+					"Temperature (C)": 16,
+					"Country": "Germany",
+					"Humidity (%)": 65
+				},
+				{
+					"City": "Amsterdam",
+					"Temperature (C)": 17,
+					"Country": "Netherlands",
+					"Humidity (%)": 68
+				},
+				{
+					"City": "Vienna",
+					"Temperature (C)": 19,
+					"Country": "Austria",
+					"Humidity (%)": 63
+				},
+				{
+					"City": "Prague",
+					"Temperature (C)": 15,
+					"Country": "Czechia",
+					"Humidity (%)": 72
+				},
+				{
+					"City": "Brussels",
+					"Temperature (C)": 18,
+					"Country": "Belgium",
+					"Humidity (%)": 69
+				},
+				{
+					"City": "Copenhagen",
+					"Temperature (C)": 14,
+					"Country": "Denmark",
+					"Humidity (%)": 75
+				},
+				{
+					"City": "Dublin",
+					"Temperature (C)": 13,
+					"Country": "Ireland",
+					"Humidity (%)": 80
+				},
+				{
+					"City": "Zurich",
+					"Temperature (C)": 20,
+					"Country": "Switzerland",
+					"Humidity (%)": 62
+				}
+			],
+			"STAdataAttributes": {
+				"City": {
+					"type": "string"
+				},
+				"Temperature (C)": {
+					"type": "integer"
+				},
+				"Country": {
+					"type": "string"
+				},
+				"Humidity (%)": {
+					"type": "integer"
+				}
+			},
+			"x": 31,
+			"y": -109
+		},
+		{
+			"id": "92ak4.u8jdc2",
+			"label": "2",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"City": "Madrid",
+					"Temperature (C)": 25,
+					"Wind Speed (km/h)": 15,
+					"Condition": "Sunny"
+				},
+				{
+					"City": "Rome",
+					"Temperature (C)": 24,
+					"Wind Speed (km/h)": 10,
+					"Condition": "Cloudy"
+				},
+				{
+					"City": "Lisbon",
+					"Temperature (C)": 21,
+					"Wind Speed (km/h)": 20,
+					"Condition": "Windy"
+				},
+				{
+					"City": "Athens",
+					"Temperature (C)": 27,
+					"Wind Speed (km/h)": 12,
+					"Condition": "Sunny"
+				},
+				{
+					"City": "Oslo",
+					"Temperature (C)": 12,
+					"Wind Speed (km/h)": 18,
+					"Condition": "Rainy"
+				},
+				{
+					"City": "Helsinki",
+					"Temperature (C)": 10,
+					"Wind Speed (km/h)": 22,
+					"Condition": "Snowy"
+				},
+				{
+					"City": "Stockholm",
+					"Temperature (C)": 11,
+					"Wind Speed (km/h)": 16,
+					"Condition": "Cloudy"
+				},
+				{
+					"City": "Warsaw",
+					"Temperature (C)": 14,
+					"Wind Speed (km/h)": 14,
+					"Condition": "Rainy"
+				},
+				{
+					"City": "Budapest",
+					"Temperature (C)": 19,
+					"Wind Speed (km/h)": 11,
+					"Condition": "Sunny"
+				},
+				{
+					"City": "Zagreb",
+					"Temperature (C)": 20,
+					"Wind Speed (km/h)": 13,
+					"Condition": "Clear"
+				}
+			],
+			"STAdataAttributes": {
+				"City": {
+					"type": "string"
+				},
+				"Temperature (C)": {
+					"type": "integer"
+				},
+				"Wind Speed (km/h)": {
+					"type": "integer"
+				},
+				"Condition": {
+					"type": "string"
+				}
+			},
+			"x": 45,
+			"y": 94
+		},
+		{
+			"id": "77sjf.t80cfk",
+			"label": "Join Tables",
+			"image": "JoinTables.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"City": "Madrid",
+					"Temperature (C)": 25,
+					"Country": "Spain",
+					"Humidity (%)": 60,
+					"Wind Speed (km/h)": 15,
+					"Condition": "Sunny"
+				}
+			],
+			"STAdataAttributes": {
+				"City": {
+					"type": "string"
+				},
+				"Temperature (C)": {
+					"type": "integer"
+				},
+				"Country": {
+					"type": "string"
+				},
+				"Humidity (%)": {
+					"type": "integer"
+				},
+				"Wind Speed (km/h)": {
+					"type": "integer"
+				},
+				"Condition": {
+					"type": "string"
+				}
+			},
+			"STAJoinTables": {
+				"RowMatching": [
+					{
+						"left": "City",
+						"right": "City"
+					}
+				],
+				"NotMatch": "Remove"
+			},
+			"x": -51,
+			"y": -2
+		}
+	],
+	"edges": [
+		{
+			"from": "6qvhq.30b019",
+			"to": "5bhem.fc6pqu",
+			"arrows": "from"
+		},
+		{
+			"from": "92ak4.u8jdc2",
+			"to": "5bhem.fc6pqu",
+			"arrows": "from"
+		},
+		{
+			"from": "6qvhq.30b019",
+			"to": "77sjf.t80cfk",
+			"arrows": "from"
+		},
+		{
+			"from": "92ak4.u8jdc2",
+			"to": "77sjf.t80cfk",
+			"arrows": "from"
+		}
+	]
+}

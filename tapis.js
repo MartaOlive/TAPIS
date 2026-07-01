@@ -4796,6 +4796,8 @@ function GetJoinTables(event) {
 			parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(parentNodes[1].STAdata), 
 			currentNode.STAdataAttributes, currentNode.STAJoinTables);
 	networkNodes.update(currentNode);
+	updateQueryAndTableArea(currentNode);
+
 }
 
 function UpdateChildenSTAURL(parentNode, currentSTAURLroot, previousSTAURLroot) {

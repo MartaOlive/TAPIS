@@ -435,8 +435,8 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 			if (!matchRightRecord[j]) {
 				dataCurrent.push({});
 				for (var i=0; i<dataRightAttributesArray.length; i++) {
-					if (dataRightNameInJoin[i]!=null)
-						dataCurrent[dataCurrent.length-1][dataRightNameInJoin[i]]=dataRightSorted[j][dataRightAttributesArray[i]];
+					//if (dataRightNameInJoin[i]!=null)
+						dataCurrent[dataCurrent.length-1][dataRightAttributesArray[i]]=dataRightSorted[j][dataRightAttributesArray[i]];
 				}
 			}
 		}
