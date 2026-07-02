@@ -359,29 +359,30 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 	for (var i=0; i<dataLeftAttributesArray.length; i++) {
 		dataCurrentAttributes[dataLeftAttributesArray[i]]=deapCopy(dataLeftAttributes[dataLeftAttributesArray[i]]);
 	}
-	for (var i=0; i<dataRightAttributesArray.length; i++) {
-		for (var j=0; j<options.RowMatching.length; j++)
-			if (dataRightAttributesArray[i]==options.RowMatching[j].right)
-				break; 
-		if (j<options.RowMatching.length) {
-			dataRightNameInJoin[i]==null;
+	for (var i = 0; i < dataRightAttributesArray.length; i++) {
+		for (var j = 0; j < options.RowMatching.length; j++)
+			if (dataRightAttributesArray[i] == options.RowMatching[j].right)
+				break;
+		if (j < options.RowMatching.length) {
+			dataRightNameInJoin[i] == null;
 			continue; //This should be not included as it is already there.
 		}
-		for (var j=0; j<dataLeftAttributesArray.length; j++) {
-			if (dataLeftAttributesArray==dataRightAttributesArray) {
+
+		for (var j = 0; j < dataRightAttributesArray.length; j++) {
+			if (dataLeftAttributesArray.includes(dataRightAttributesArray[i])) {
 				//Change the name
-				dataRightNameInJoin[i]=dataRightAttributesArray+"_"+Math.floor(Math.random() * 100000);
-				dataCurrentAttributes[dataRightNameInJoin[i]]=deapCopy(dataRightAttributes[dataRightAttributesArray[i]]);
+				dataRightNameInJoin[i] = dataRightAttributesArray[i] + "_Table2";
+				dataCurrentAttributes[dataRightNameInJoin[i]] = deapCopy(dataRightAttributes[dataRightAttributesArray[i]]);
 				break;
 			}
-		}
-		if (j<dataLeftAttributesArray.length) //Already done
+		} //Canviant aixo
+		if (j < dataLeftAttributesArray.length) //Already done
 			continue;
 		//Add
-		dataRightNameInJoin[i]=dataRightAttributesArray[i];
-		dataCurrentAttributes[dataRightNameInJoin[i]]=deapCopy(dataRightAttributes[dataRightAttributesArray[i]]);
+		dataRightNameInJoin[i] = dataRightAttributesArray[i];
+		dataCurrentAttributes[dataRightNameInJoin[i]] = deapCopy(dataRightAttributes[dataRightAttributesArray[i]]);
 	}
-			
+
 	var dataCurrentAttributesArray = Object.keys(dataCurrentAttributes);
 	
 	//Sort a duplicate of the second tabla by the matching criteria.
@@ -436,7 +437,14 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 				dataCurrent.push({});
 				for (var i=0; i<dataRightAttributesArray.length; i++) {
 					//if (dataRightNameInJoin[i]!=null)
-						dataCurrent[dataCurrent.length-1][dataRightAttributesArray[i]]=dataRightSorted[j][dataRightAttributesArray[i]];
+					for (var e=0;e<options.RowMatching.length;e++){
+						if (options.RowMatching[e].right==dataRightAttributesArray[i]){
+							dataCurrent[dataCurrent.length-1][options.RowMatching[e].left]=dataRightSorted[j][dataRightAttributesArray[i]];
+							break;
+						}else{
+							dataCurrent[dataCurrent.length-1][dataRightAttributesArray[i]]=dataRightSorted[j][dataRightAttributesArray[i]];
+						}
+					}
 				}
 			}
 		}

@@ -1,0 +1,122 @@
+{
+	"nodes": [
+		{
+			"id": "4nma1.f96s4v",
+			"label": "Taula1",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"idTaula1": 1,
+					"lletra": "a"
+				},
+				{
+					"idTaula1": 2,
+					"lletra": "b"
+				},
+				{
+					"idTaula1": 3,
+					"lletra": "c"
+				},
+				{
+					"idTaula1": 4,
+					"lletra": "d"
+				},
+				{
+					"idTaula1": 5,
+					"lletra": "e"
+				}
+			],
+			"STAdataAttributes": {
+				"idTaula1": {
+					"type": "integer"
+				},
+				"lletra": {
+					"type": "string"
+				}
+			},
+			"x": -72,
+			"y": 38
+		},
+		{
+			"id": "3batu.n8m4ksg",
+			"label": "Taula2",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"idTaula2": 1,
+					"lletra": "M"
+				},
+				{
+					"idTaula2": 3,
+					"lletra": "N"
+				},
+				{
+					"idTaula2": 4,
+					"lletra": "O"
+				},
+				{
+					"idTaula2": 8,
+					"lletra": "P"
+				}
+			],
+			"STAdataAttributes": {
+				"idTaula2": {
+					"type": "integer"
+				},
+				"lletra": {
+					"type": "string"
+				}
+			},
+			"x": 88,
+			"y": 52
+		},
+		{
+			"id": "6uajj.gqheq3",
+			"label": "Join Tables",
+			"image": "JoinTables.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"idTaula2": 1,
+					"lletra": "M"
+				},
+				{
+					"idTaula2": 3,
+					"lletra": "N"
+				},
+				{
+					"idTaula2": 4,
+					"lletra": "O"
+				},
+				{
+					"idTaula2": 8,
+					"lletra": "P"
+				}
+			],
+			"STAdataAttributes": {
+				"idTaula2": {
+					"type": "integer"
+				},
+				"lletra": {
+					"type": "string"
+				}
+			},
+			"x": 21,
+			"y": -32
+		}
+	],
+	"edges": [
+		{
+			"from": "4nma1.f96s4v",
+			"to": "6uajj.gqheq3",
+			"arrows": "from"
+		},
+		{
+			"from": "3batu.n8m4ksg",
+			"to": "6uajj.gqheq3",
+			"arrows": "from"
+		}
+	]
+}
