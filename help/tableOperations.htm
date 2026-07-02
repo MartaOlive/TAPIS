@@ -18,7 +18,7 @@
     </header>
     <main>
         <div class="mainTools">
- 
+
             <h1 class="toolPage_mainTitle">Generic table tools</h1> <!--general title -->
             <div id="toolPage_tableOperations" class="toolBoxParent"></div> <!--all tools-->
 
@@ -158,7 +158,8 @@
                         <strong>entering
                             the record number</strong>, and then
                         click the <i><strong>Delete button</strong></i>. When you have finished, click <i>Cancel</i> to
-                        close the dialog.</p>
+                        close the dialog.
+                    </p>
 
                     <img src="editRecord_image5.png" alt="icon" class="toolPage_image ">
 
@@ -542,7 +543,8 @@
                         click the <i>arrow on the right </i>(as explained above), select the value, and press the
                         <i>OK</i>
                         button to
-                        automatically populate the field.</p>
+                        automatically populate the field.
+                    </p>
 
                     <p><strong>Add a new condition below</strong>:
                         By clicking <i>Add a new condition below</i>, a new "line" (<strong>condition</strong>) is added
@@ -682,13 +684,89 @@
                             class="toolPage_title_icon">Join tables
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
-
+                    <img src="joinTables_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>
+                        The <strong>Join Tables</strong> tool allows you to <strong>merge two tables</strong>. This tool
+                        can be used with
+                        any type of data. The only <strong>requirement</strong> is that the two tables have at least
+                        <strong>one corresponding column</strong>,
+                        containing matching values, regardless of whether the column names are the same.
+                    </p>
+
+                    <p>
+                        To perform the join, the tool must be connected to <strong>two nodes containing data</strong>.
+                    </p>
+
+                    <p>
+                        Different types of joins are supported. You can create a table containing only the matching
+                        records (<strong>Discard</strong>), append the matching data from the second table to the first
+                        table (<strong>Add records of 1st table</strong>), or combine both
+                        tables into a single result (<strong>Add records from both tables</strong>).
+                    </p>
+
+                    <p>
+                        If both tables contain <strong>columns with the same name</strong> (other than the join
+                        key), the column from the
+                        second table will be automatically renamed by appending <i>_table2</i> to its name. This
+                        suffix can later be changed using the <a
+                            href="https://www.tapis.grumets.cat/tapis/help/TableOperations.htm#Meaning">Column
+                            Meaning</a> tool.
+                    </p>
+                    <p>Theses are the tables used in this example:</p>
+                    <img src="joinTables_image1.png" alt="icon" class="toolPage_image">
+
+                    <p>To display the dialog, <i>double left-click</i> on the node.
+
+                    <p>
+                        This dialog is divided into two sections.
+                    </p>
+
+                    <p>
+                        In the upper section (<strong>Row Matching Fields</strong>), you select the pair(s) of columns
+                        that will be used to match records between the two tables. A join can be performed using one or
+                        multiple pairs of matching columns, allowing more precise record matching.
+                    </p>
+
+                    <p>
+                        The lower section defines the type of join and the resulting output table:
+                    </p>
+
+                    <ul>
+                        <li>
+                            <strong>Discard</strong>: Creates a new table containing only the records that have matching
+                            values in both tables (inner join).
+                        </li>
+                        <img src="joinTables_image3.png" alt="icon" class="toolPage_image">
+                        <img src="joinTables_image4.png" alt="icon" class="toolPage_image">
+                        <li>
+                            <strong>Add records of 1st table</strong>: Keeps all records from the first table and
+                            appends the matching columns from the second table whenever a match is found (left join).
+                        </li>
+                        <img src="joinTables_image5.png" alt="icon" class="toolPage_image">
+                        <img src="joinTables_image6.png" alt="icon" class="toolPage_image">
+                        <li>
+                            <strong>Join all records</strong>: Combines all records from both tables, including those
+                            without a matching counterpart (full outer join).
+                        </li>
+                    </ul>
+
+
+                    <img src="joinTables_image7.png" alt="icon" class="toolPage_image">
+                    <img src="joinTables_image8.png" alt="icon" class="toolPage_image">
+
+
+
+
+
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
-                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
-                                Determining data quality of a sequence of observations from a Geopackage equivalent to a
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe
+                                12:
+                                Determining data quality of a sequence of observations from a Geopackage equivalent
+                                to a
                                 STA</a></li>
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
@@ -876,7 +954,8 @@
                     <p><strong>Select attributes:</strong> Check the checkboxes of the attributes
                         <strong>(columns)</strong>
                         you want to
-                        aggregate. You should select two or more attributes.</p>
+                        aggregate. You should select two or more attributes.
+                    </p>
 
                     <p><strong>Aggregations:</strong> Select which <strong> statistical procedure</strong> you want to
                         apply
@@ -1350,7 +1429,8 @@
                         you want.
                         You can use any kind of data, but you need to have <strong>geographic data</strong> (in a column
                         or written manually)
-                        and <strong>date data</strong> (in a column or written manually).</p>
+                        and <strong>date data</strong> (in a column or written manually).
+                    </p>
                     <p>To perform this procedure, you need to be logged in(<a
                             href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">Login button</a>).
                     </p>
@@ -1387,7 +1467,8 @@
                         use and select or
                         complete the fields. To enter the date manually, you can use the calendar. Click on the
                         <strong>calendar</strong> to
-                        display it and select the desired date. This date will be added to the field automatically.</p>
+                        display it and select the desired date. This date will be added to the field automatically.
+                    </p>
                     <img src="uploadToIC_image6.png" alt="icon" class="toolPage_image ">
                     <p><strong>Add GeoJSON node to check the result:</strong> Check the checkbox if you want to add a <a
                             href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportGeoJSON">GeoJSON</a>
