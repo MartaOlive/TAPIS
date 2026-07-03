@@ -204,7 +204,7 @@ function getConnectionSTAEntity(parentNode, node) {
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 	if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
-		return "It is not possible to link an STAnode after no STA node"
+		return "It is not possible to link an STAnode after no STA node" //Falta afegir OGCApi Collection xq utilitza el filter i mirar si algo més
 	}
 	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" || node.image == "CalculateStatisticsSTA.png") )
 		return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
