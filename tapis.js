@@ -477,7 +477,7 @@ function textOperationButton(parentDivId, prefixDivId, operation, name, descript
 		s+="onmouseover='showHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\", \"" + 
 			"<b>" + (description ? description : name) + "</b><hr>" + help + "<hr>" + (type ? type + "<br>" : "") + (options?.startNode ? "<i>Start node</i><br>" : "") + (options?.leafNode ? "<i>Leaf node</i><br>" : "") + 
 			"\")' onmousemove='moveHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\")' onmouseout='hideHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\")' "
-	return s + "onclick='addCircularImage(" + (parentDivId ? "event" : "null") + ", "+ (parentDivId ? ("\""+parentDivId+"\"") : "null") +", \"" + name + "\", \"" + operation + ".png\");'><img src='" + operation + ".png' height='20' valign='middle'> " + (description ? description : name) + "</button> ";
+	return s + "class='generalButton' onclick='addCircularImage(" + (parentDivId ? "event" : "null") + ", "+ (parentDivId ? ("\""+parentDivId+"\"") : "null") +", \"" + name + "\", \"" + operation + ".png\");'><img src='" + operation + ".png' height='20' valign='middle'> " + (description ? description : name) + "</button> ";
 }
 
 async function InitSTAPage() {
@@ -501,15 +501,18 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 	var parentNode= networkNodes.get(nodeId);
 	var node = {image:""};
 	const nCol=7;
-	var provisional="";
+	var provisional;
 	var cdns=[];
 	var generalBox= "<div class='SectionButtonsContextMenu'><div class='TitleButtonsContextMenu' style='background-color: COLOR;'>TITLE</div><div class='ButtonsButtonsContextMenu'>CONTENT</div></div><br>";
 
 	provisional=[];
+	provisional.push("<div class='tdGeneralButtons contextMenuGeneralButtons '>");
 	for (var i = 0; i < ServicesAndAPIsArray.length; i++) { //mirar com gestionar aquests			
 		provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", ServicesAndAPIsArray[i], ServicesAndAPIs[ServicesAndAPIsArray[i]].name, ServicesAndAPIs[ServicesAndAPIsArray[i]].description, ServicesAndAPIs[ServicesAndAPIsArray[i]].help, ServicesAndAPIs[ServicesAndAPIsArray[i]], "Data Input tool", ServicesAndAPIsType.singular),
 				(i+1)%nCol==0 || i == ServicesAndAPIsArray.length-1 ? "<br>" : " ");
+		
 	}
+	provisional.push("</div>");
 	cdns.push(generalBox.replace("TITLE", ServicesAndAPIsType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 	
 	provisional=[];
@@ -519,8 +522,12 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntitiesArray[i], STAEntitiesArray[i], STAEntitiesArray[i], STAEntities[STAEntitiesArray[i]].help, null, STAEntitiesType.singular), 
 				(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
 	}
-	if (provisional.length>1)
+	if (provisional.length>1){
+		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
+		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE", STAEntitiesType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+	}
+		
 
 	provisional=[];
 
@@ -533,8 +540,11 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit),
 				(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
 	}
-	if (provisional.length>1)
+	if (provisional.length>1){
+		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
+		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE", STAEntitiesType.pluralEdit).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+	}
 
 	provisional=[];
 	for (var i = 0; i < STASpecialQueriesArray.length; i++) {
@@ -543,8 +553,12 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STASpecialQueriesArray[i], STASpecialQueriesArray[i], STASpecialQueries[STASpecialQueriesArray[i]].description, STASpecialQueries[STASpecialQueriesArray[i]].help, null, STASpecialQueriesType.singular),
 				(i+1)%nCol==0 || i == STASpecialQueriesArray.length-1 ? "<br>" : " ");
 	}
-	if (provisional.length>1)
+	if (provisional.length>1){
+		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
+		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE",STASpecialQueriesType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+
+	}
 
 	provisional=[];
 	for (var i = 0; i < STAOperationsArray.length; i++) {
@@ -553,8 +567,12 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAOperationsArray[i], STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].description, STAOperations[STAOperationsArray[i]].help, STAOperations[STAOperationsArray[i]], STAOperationsType.singular),
 				(i+1)%nCol==0 || i == STAOperationsArray.length-1 ? "<br>" : " ");
 	}
-	if (provisional.length>1)
+	if (provisional.length>1){
+		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
+		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE",STAOperationsType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+	}
+		
 
 	provisional=[];
 	for (var i = 0; i < TableOperationsArray.length; i++) {
@@ -563,8 +581,12 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", TableOperationsArray[i], TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].description, TableOperations[TableOperationsArray[i]].help, TableOperations[TableOperationsArray[i]], TableOperationsType.singular),
 				(i+1)%nCol==0 || i == TableOperationsArray.length-1 ? "<br>" : " ");
 	}
-	if (provisional.length>1)
+	if (provisional.length>1){
+		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
+		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE",TableOperationsType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
+	}
+		
 
 	provisional=[];
 	for (var i = 0; i < tableStatisticsVisualizeArray.length; i++) {
@@ -573,8 +595,12 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", tableStatisticsVisualizeArray[i], tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].help, tableStatisticsVisualize[tableStatisticsVisualizeArray[i]], tableStatisticsVisualizeType.singular),
 				(i+1)%nCol==0 || i == tableStatisticsVisualizeArray.length-1 ? "<br>" : " ");
 	}
-	if (provisional.length>1)
+	if (provisional.length>1){
+		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
+		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE",tableStatisticsVisualizeType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
+	}
+		
 	provisional=[];
 	for (var i = 0; i < dataQualityArray.length; i++) {
 		node.image= dataQualityArray[i]+".png";
@@ -582,8 +608,12 @@ function PopulateContextMenu(nodeId){ //Chage to show only linkable nodes
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", dataQualityArray[i], dataQuality[dataQualityArray[i]].description, dataQuality[dataQualityArray[i]].description, dataQuality[dataQualityArray[i]].help, dataQuality[dataQualityArray[i]], dataQualityType.singular),
 				(i+1)%nCol==0 || i == dataQualityArray.length-1 ? "<br>" : " ");
 	}
-	if (provisional.length>1)
+	if (provisional.length>1){
+		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
+		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE",dataQualityType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
+	}
+		
 
 	
 	//cdns.push("</div>");

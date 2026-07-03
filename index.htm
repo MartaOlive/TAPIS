@@ -105,8 +105,8 @@
 		</tr>
 	</table>
 
-	<span id="ButtonsSTAEntities"></span>
-	<button  onclick='addEdge();' onmouseover='showHelpToolTip(event, "", "Connect two nodes.<hr> Click on the end node and drop it on the previous node")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="connect.png" height="20" valign="middle">Connect two nodes</button><br>
+	<span id="ButtonsSTAEntities" class="tdGeneralButtons mainPageGeneralButtons"></span>
+	<button  class="generalButton" onclick='addEdge();'  onmouseover='showHelpToolTip(event, "", "Connect two nodes.<hr> Click on the end node and drop it on the previous node")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="connect.png" height="20" valign="middle">Connect two nodes</button><br>
 
 	<div>
 		<div id="mynetwork" style="float: left; width: 59.4%; height: 400px;"></div>
@@ -1240,9 +1240,10 @@
 				<div class="SectionButtonsContextMenu">
 					<div class="TitleButtonsContextMenu">Node operations</div>
 					<div class="ButtonsButtonsContextMenu" >
-				<button onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a node and any connection to previous nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
-				<button onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Renames de node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.<small>")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="rename.png" height="20" valign="middle">Rename</button>
-					</div>
+					<div class="tdGeneralButtons contextMenuGeneralButtons ">
+						<button class="generalButton" onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a node and any connection to previous nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
+						<button class="generalButton" onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Renames de node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.<small>")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="rename.png" height="20" valign="middle">Rename</button>
+					</div></div>
 				</div>
 
 			</p>
