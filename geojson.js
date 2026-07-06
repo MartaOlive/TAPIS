@@ -10,7 +10,7 @@
   
 	The TAPIS client is free software under the terms of the MIT License
 
-	Copyright (c) 2025 Joan Masó
+	Copyright (c) 2023-2026 Joan Masó
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 	
-	The TAPIS can be updated from https://github.com/joanma747/tapis.
+	The TAPIS can be updated from https://github.com/grumets/tapis.
 
 	Aquest codi JavaScript ha estat idea de Joan Masó Pau (joan maso at uab cat) 
 	dins del grup del MiraMon. MiraMon és un projecte del 
@@ -42,7 +42,7 @@
 	
 	En particular, el TAPIS es distribueix sota els termes de la llicència MIT.
 	
-	El TAPIS es pot actualitzar des de https://github.com/joanma747/tapis.
+	El TAPIS es pot actualitzar des de https://github.com/grumets/tapis.
 */
 
 const geojsonGeometryTypes=["Point", "MultiPoint", "LineString", "MultiLineString", "Polygon", "MultiPolygon", "GeometryCollection"];

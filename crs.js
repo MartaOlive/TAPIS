@@ -9,7 +9,7 @@
   
 	The TAPIS client is free software under the terms of the MIT License
 
-	Copyright (c) 2026 Joan Masó
+	Copyright (c) 2023-2026 Joan Masó
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE.
 	
-	The TAPIS can be updated from https://github.com/joanma747/tapis.
+	The TAPIS can be updated from https://github.com/grumets/tapis.
 
 	Aquest codi JavaScript ha estat idea de Joan Masó Pau (joan maso at uab cat) 
 	dins del grup del MiraMon. MiraMon és un projecte del 
@@ -41,7 +41,7 @@
 	
 	En particular, el TAPIS es distribueix sota els termes de la llicència MIT.
 	
-	El TAPIS es pot actualitzar des de https://github.com/joanma747/tapis.
+	El TAPIS es pot actualitzar des de https://github.com/grumets/tapis.
 */
 
 //proj4js format can be extracted from: https://epsg.io/23031
@@ -80,12 +80,12 @@ function startProj4() {
 }
 
 function getOptionsSelectProj4(selectedId) {
-var s="", projArray = Object.keys(proj4.defs);
+var cdns=[], projArray = Object.keys(proj4.defs);
 
 	for (var i=0; i<projArray.length; i++)
-		s+="<option value=\""+projArray[i]+"\""+ ((selectedId && projArray[i]==selectedId) || projArray[i]=="CRS84"? "selected=\"selected\"" : "") +">" + 
-			getTitleProj4(projArray[i], proj4.defs[projArray[i]])+"</option>";
-	return s;
+		cdns.push("<option value=\"", projArray[i], "\"", ((selectedId && projArray[i]==selectedId) || projArray[i]=="CRS84"? "selected=\"selected\"" : ""), ">", 
+			getTitleProj4(projArray[i], proj4.defs[projArray[i]]), "</option>");
+	return cdns.join("");
 }
 
 function isProj4CRS84(id) {

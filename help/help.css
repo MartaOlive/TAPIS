@@ -54,7 +54,6 @@ body {
     text-decoration: none;
     color: #252525;
     margin-bottom: 8px;
-    transition: font-size 0.2s ease;
 }
 
 /* Cooking methods */
@@ -67,7 +66,6 @@ body {
     margin-top: 4px;
     margin-left: 20px;
     /* més endins que el recipe */
-    transition: font-size 0.2s ease;
 }
 
 /* Hover per tots els links */

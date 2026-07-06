@@ -203,7 +203,7 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-	if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
+    if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
 		return "It is not possible to link an STAnode after no STA node" //Falta afegir OGCApi Collection xq utilitza el filter i mirar si algo més
 	}
 	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" || node.image == "CalculateStatisticsSTA.png") )
@@ -560,7 +560,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
 		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE",STASpecialQueriesType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
-	}
+
 	provisional=[];
 	for (var i = 0; i < STAOperationsArray.length; i++) {
 		node.image= STAOperationsArray[i]+".png";
@@ -573,7 +573,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE",STAOperationsType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 	}
-
+		
 	provisional=[];
 	for (var i = 0; i < TableOperationsArray.length; i++) {
 		node.image= TableOperationsArray[i]+".png";
@@ -599,7 +599,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE",tableStatisticsVisualizeType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
 	}
-
+		
 	provisional=[];
 	for (var i = 0; i < dataQualityArray.length; i++) {
 		node.image= dataQualityArray[i]+".png";
@@ -611,7 +611,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
 		provisional.push("</div>");
 		cdns.push(generalBox.replace("TITLE",dataQualityType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
-	}
+	}	
 	document.getElementById("ButtonsContextMenuObjects").innerHTML = cdns.join("");
 }
 
@@ -5121,47 +5121,47 @@ function GetGeoJSON(data, selectedOptions) {
 					if (selectedOptions.DGGS=="Geohash")
 					{
 						var bbox=ngeohash_decode_bbox(a[selectedOptions.zoneId])
-					geojson.features.push({
-						"type": "Feature",
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [ [ 
-								[ bbox[1], bbox[0] ], 
-								[ bbox[1], bbox[2] ], 
-								[ bbox[3], bbox[2] ], 
-								[ bbox[3], bbox[0] ], 
-								[ bbox[1], bbox[0] ]
-							] ]
-						},
-						"properties": {
-						}
-					});
+						geojson.features.push({
+							"type": "Feature",
+							"geometry": {
+								"type": "Polygon",
+								"coordinates": [ [ 
+									[ bbox[1], bbox[0] ], 
+									[ bbox[1], bbox[2] ], 
+									[ bbox[3], bbox[2] ], 
+									[ bbox[3], bbox[0] ], 
+									[ bbox[1], bbox[0] ]
+								] ]
+							},
+							"properties": {
+							}
+						});
 					} else if (selectedOptions.DGGS=="UberH3") {
 						var hexagon=h3.cellToBoundary(a[selectedOptions.zoneId]);
 						for (var c=0; c<hexagon.length; c++)
 							hexagon[c]=hexagon[c].reverse()
 						hexagon.push(hexagon[0]);
-					geojson.features.push({
-						"type": "Feature",
+						geojson.features.push({
+							"type": "Feature",
 							"geometry": {
 								"type": "Polygon",
 								"coordinates": [ hexagon ]
 							},
-						"properties": {
-						}
-					});
+							"properties": {
+							}
+						});
 					} else {
 						var hexagon=DGGSToBoundary(selectedOptions.DGGS, a[selectedOptions.zoneId]);
-					hexagon.push(hexagon[0]);
-					geojson.features.push({
-						"type": "Feature",
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [ hexagon ]
-						},
-						"properties": {
-						}
-					});
+						hexagon.push(hexagon[0]);
+						geojson.features.push({
+							"type": "Feature",
+							"geometry": {
+								"type": "Polygon",
+								"coordinates": [ hexagon ]
+							},
+							"properties": {
+							}
+						});
 					}
 				} else {
 					geojson.features.push({
@@ -10831,8 +10831,7 @@ function formatLocalDate(date) {
 function disableClassificationInBarPlot(disable){
 	  document.getElementById("DialogBarPlotSeriesSelect").disabled = disable;
 }
-
-//function giveMeNetworkInformation(event) {
-//			hideNodeDialog("DialogContextMenu", event);
-//			console.log(networkNodes.get());
-//}
+/*function giveMeNetworkInformation(event) {
+			hideNodeDialog("DialogContextMenu", event);
+			console.log(networkNodes.get());
+}*/
