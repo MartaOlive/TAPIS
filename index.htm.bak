@@ -28,8 +28,9 @@
 	<script type="text/javascript" src="wicket.js" async defer></script>
 	<script type="text/javascript" src="ngeohash.js" async defer></script>
 	<script type="text/javascript" src="h3-js.js" async defer></script><!--https://github.com/uber/h3-js-->
-	<script type="text/javascript" src="proj4.js"></script>
+	<script type="text/javascript" src="proj4.js" async defer></script>
 	<script type="text/javascript" src="crs.js"></script>
+	<script type="text/javascript" src="dggs.js" async defer></script>
 	<script type="text/javascript" src="hello.all.min.js"></script>
 	<script type="text/javascript" src="authenix.js" async defer></script>
 	<script type="text/javascript" src="mmn_postmessage.js" async defer></script>
@@ -64,7 +65,7 @@
 	<!--link rel="stylesheet" href="vis-timeline-graph2d.min.css"-->
 </head>
 
-<body onLoad="StartSTAPage();" onkeydown="KeySTAPage(event);">
+<body onLoad="StartSTAPage();" unOnLoad="StopSTAPage();" onkeydown="KeySTAPage(event);">
 	<table border="0" style="width:100%">
 		<tr>
 			<td>
@@ -90,25 +91,23 @@
 					</tr>
 				</table>				
 			</td>
-			<td align="right" valign="top">
+			<td align="right" valign="top" class="tdGeneralButtons">
 				<span id="UserInfoText"></span>
-				<button id="buttonReloadSTA" onclick='reloadSTA(event);'onmouseover='showHelpToolTip(event, "", "Reload all schema to upload the data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="reload.png" height="20" valign="middle"> Refresh</button>
-				<label class=labelbotton onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenNetwork.png" height="20" valign="middle" > Open...
-				<input type="file" accept=".json" id="openNetworkFileName" hidden onchange='openFileNetwork(event);'/>
-				</label> <!-- https://dev.to/faddalibrahim/how-to-create-a-custom-file-upload-button-using-html-css-and-javascript-1c03 -->
-				<button onclick='document.getElementById("DialogOpenURLNetwork").showModal();' onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data from a webside or from Help examples" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="OpenURLNetwork.png" height="20" valign="middle"> Open URL...</button>
-				<button onclick='saveNetwork(event);'onmouseover='showHelpToolTip(event, "", "Save your Tapis schema with nodes and data as a JSON to be able to open it later" )' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="SaveNetwork.png" height="20" valign="middle"> Save as...</button>
-				<button id="buttonOpenLogin" onclick='OpenLogin(event);' onmouseover='showHelpToolTip(event, "", "Login to be able to have access to certain places")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Login</button>
-				<button id="buttonOpenLogout" onclick='OpenLogout(event);' style="display: none";' onmouseover='showHelpToolTip(event, "", "Close your sesion")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="login.png" height="20" valign="middle"> Logout</button>
-				<button onclick='OpenConfiguration(event);'onmouseover='showHelpToolTip(event, "", "To modify display configurations")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )' ><img src="config.png" height="20" valign="middle">Configuration</button>
-				<button onclick='OpenHelp(event);' onmouseover='showHelpToolTip(event, "", "Explanations of how to use TAPIS: Tools")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="help.png" height="20" valign="middle">Help</button>
-				<button onclick='OpenRecipes(event);' onmouseover='showHelpToolTip(event, "", "Explanations of how to use TAPIS and Examples")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="documentation.png" height="20" valign="middle">Recipes</button>
+				<button id="buttonReloadSTA" class="generalButton" onclick="reloadSTA(event);" onmouseover='showHelpToolTip(event, "", "Reload all schema to upload the data")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="reload.png" alt="Reload"><span>Refresh</span></button>
+				<button class="generalButton" onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="OpenNetwork.png" alt="Open"><span>Open...</span><input type="file" accept=".json" id="openNetworkFileName" hidden onchange="openFileNetwork(event);"></button>
+				<button class="generalButton" onclick='document.getElementById("DialogOpenURLNetwork").showModal();' onmouseover='showHelpToolTip(event, "", "Open a JSON Tapis schema with nodes and data from a website or from Help examples")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="OpenURLNetwork.png" alt="Open URL"><span>Open URL...</span></button>
+				<button class="generalButton" onclick="saveNetwork(event);" onmouseover='showHelpToolTip(event, "", "Save your Tapis schema with nodes and data as a JSON to be able to open it later")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="SaveNetwork.png" alt="Save"><span>Save as...</span></button>
+				<button id="buttonOpenLogin" class="generalButton" onclick="OpenLogin(event);" onmouseover='showHelpToolTip(event, "", "Login to be able to have access to certain places")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="login.png" alt="Login"><span>Login</span></button>
+				<button id="buttonOpenLogout" class="generalButton" onclick="OpenLogout(event);" style="display:none;" onmouseover='showHelpToolTip(event, "", "Close your session")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="login.png" alt="Logout"><span>Logout</span></button>
+				<button class="generalButton" onclick="OpenConfiguration(event);" onmouseover='showHelpToolTip(event, "", "Modify display configuration")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="config.png" alt="Configuration"><span>Configuration</span></button>
+				<button class="generalButton" onclick="OpenHelp(event);" onmouseover='showHelpToolTip(event, "", "Explanations of how to use TAPIS: Tools")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="help.png" alt="Help"><span>Help</span></button>
+				<button class="generalButton" onclick="OpenRecipes(event);" onmouseover='showHelpToolTip(event, "", "Explanations of how to use TAPIS and Examples")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="documentation.png" alt="Recipes"><span>Recipes</span></button>
 			</td>
 		</tr>
 	</table>
 
-	<span id="ButtonsSTAEntities"></span>
-	<button onclick='addEdge();' onmouseover='showHelpToolTip(event, "", "Connect two nodes.<hr> Click on the end node and drop it on the previous node")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="connect.png" height="20" valign="middle">Connect two nodes</button><br>
+	<span id="ButtonsSTAEntities" class="tdGeneralButtons mainPageGeneralButtons"></span>
+	<button  class="generalButton" onclick='addEdge();'  onmouseover='showHelpToolTip(event, "", "Connect two nodes.<hr> Click on the end node and drop it on the previous node")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="connect.png" height="20" valign="middle">Connect two nodes</button><br>
 
 	<div>
 		<div id="mynetwork" style="float: left; width: 59.4%; height: 400px;"></div>
@@ -1242,9 +1241,10 @@
 				<div class="SectionButtonsContextMenu">
 					<div class="TitleButtonsContextMenu">Node operations</div>
 					<div class="ButtonsButtonsContextMenu" >
-				<button onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a node and any connection to previous nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
-				<button onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Renames de node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.<small>")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="rename.png" height="20" valign="middle">Rename</button>
-					</div>
+					<div class="tdGeneralButtons contextMenuGeneralButtons ">
+						<button class="generalButton" onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Remove a node and any connection to previous nodes")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle">Remove</button>
+						<button class="generalButton" onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", "Renames de node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.<small>")' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="rename.png" height="20" valign="middle">Rename</button>
+					</div></div>
 				</div>
 
 			</p>
@@ -1533,8 +1533,8 @@
 	
 	<dialog id="DialogSaveLayer" onClose='hideNodeDialog("DialogSaveLayer", event)'>
 		<form>
-			<span id="DialogSaveLayerTitle"></span>
-			Title: <input id="DialogSaveLayerDescription" value="Layer from TAPIS" />
+			<span id="DialogSaveLayerTitle"></span><br>
+			Title: <input id="DialogSaveLayerDescription" size="80" value="Layer from TAPIS" />
 			<fieldset>
 				<legend>Position:</legend>
 				<label>Symbolizer (text or color)*:
@@ -1547,13 +1547,17 @@
 					<span id="DialogSaveLayerSelectGeometry"></span>
 				</label>
 				<br>
-				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerGeoHash">Geohash:
-					<span id="DialogSaveLayerSelectGeohash"></span>
+				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerDGGS">DGGS:
+				</label><br>
+				<fieldset>
+					<label>DGGS:
+						<select id="DialogSaveLayerDGGSSelect" onChange="document.getElementById('DialogSaveLayerDGGS').click()"></select>
 				</label>
 				<br>
-				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerUberH3">Uber H3:
-					<span id="DialogSaveLayerSelectUberH3"></span>
+					<label>Zone id:
+						<span id="DialogSaveLayerSelectZoneId"></span>
 				</label>
+				</fieldset>
 				<br>
 				<label><input type="radio" name="DialogSaveLayerGeoLL" id="DialogSaveLayerLL" checked="checked">Point coordinates:</label>
 				<fieldset>
@@ -1588,26 +1592,29 @@
 			Add column with transformed geometry
 			<fieldset>
 				<legend>Input</legend>
-				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="JSON" id="DialogAddColumnGeoRadioJSON">GeoJSON Geometry:
+				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LL" value="JSON" id="DialogAddColumnGeoRadioJSON">GeoJSON Geometry:
 					<span id="DialogAddColumnGeoJSON"></span>
 				</label>
 				<br>
-				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="WKT" id="DialogAddColumnGeoRadioWKT">Well Known Text:
+				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LL" value="WKT" id="DialogAddColumnGeoRadioWKT">Well Known Text:
 					<span id="DialogAddColumnGeoWKT"></span>
 				</label>
 				<br>
-				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="Geohash" id="DialogAddColumnGeoRadioGeohash">Geohash:
-					<span id="DialogAddColumnGeohash"></span>
+				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LL" value="DGGS" id="DialogAddColumnGeoRadioDGGS">DGGS:
+				<fieldset>
+					<label>DGGS:
+						<select id="DialogAddColumnGeoDGGSSelect" onChange="document.getElementById('DialogAddColumnGeoRadioDGGS').click()"></select>
 				</label>
 				<br>
-				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="UberH3" id="DialogAddColumnGeoRadioUberH3">Uber H3:
-					<span id="DialogAddColumnUberH3"></span>
+					<label>Zone id:
+						<span id="DialogAddColumnGeoZoneId"></span>
 				</label>
+				</fieldset>
 				<br>
-				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LL" value="LL" id="DialogAddColumnGeoRadioLL" checked="checked">Point coordinates:</label>
+				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LL" value="LL" id="DialogAddColumnGeoRadioLL" checked="checked">Point coordinates:</label>
 				<fieldset>
 				<label>CRS:
-					<select id="DialogAddColumnGeoCRSSelect"></select>
+						<select id="DialogAddColumnGeoCRSSelect" onChange="document.getElementById('DialogAddColumnGeoRadioLL').click()"></select>
 				</label>
 				<br>
 				<label>X or Longitude:
@@ -1621,13 +1628,17 @@
 			</fieldset>
 			<br>
 			<fieldset>
+				<legend>Output</legend>
 				<fieldset>
 					<legend>Type:</legend>
-					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="JSON" id="DialogAddColumnGeoRadioJSONOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioJSONOut");' checked="checked">GeoJSON Geometry</label><br>
-					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="WKT" id="DialogAddColumnGeoRadioWKTOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioWKTOut");' >Well Known Text</label><br>
-					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="Geohash" id="DialogAddColumnGeoRadioGeohashOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioGeohashOut");' >Geohash</label><br>
-					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="UberH3" id="DialogAddColumnGeoRadioUberH3Out" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioUberH3Out");' >Uber H3</label><br>
-					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_geohash_LLOut" value="LL" id="DialogAddColumnGeoRadioLLOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioLLOut");' >Point coordinates</label>
+					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LLOut" value="JSON" id="DialogAddColumnGeoRadioJSONOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioJSONOut");document.getElementById("DialogAddColumnGeoNameText").value="Geometry"' checked="checked">GeoJSON Geometry</label><br>
+					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LLOut" value="WKT" id="DialogAddColumnGeoRadioWKTOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioWKTOut");document.getElementById("DialogAddColumnGeoNameText").value="WKT";' >Well Known Text</label><br>
+					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LLOut" value="DGGS" id="DialogAddColumnGeoRadioDGGSOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioDGGSOut");document.getElementById("DialogAddColumnGeoNameText").value=document.getElementById("DialogAddColumnGeoDGGSOutSelect").value;' >DGGS: </label>
+					<label>
+						<select id="DialogAddColumnGeoDGGSOutSelect" onChange="document.getElementById('DialogAddColumnGeoRadioDGGSOut').click()"></select>
+					</label>
+					<br>
+					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LLOut" value="LL" id="DialogAddColumnGeoRadioLLOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioLLOut");' >Point coordinates</label>
 				</fieldset>
 				<fieldset>
 				<legend>New column name(s)</legend>
@@ -1664,11 +1675,8 @@
 				<br>
 			</fieldset>
 			<br>
-			<fieldset>
-				<legend>DGGS code type:</legend>
-				<label><input type="radio" name="DialogDGGSCodesBboxCode" value="Geohash" id="DialogDGGSCodesBboxCodeGeohash">Geohash</label><br>
-				<label><input type="radio" name="DialogDGGSCodesBboxCode" value="UberH3" id="DialogDGGSCodesBboxCodeUberH3" checked="checked">Uber H3</label><br>
-			</fieldset>
+			<label>DGGS:
+				<select id="DialogDGGSCodesBboxCodeSelect"></select>
 			<br>
 			<label>Level: <input type="text" size="2" id="DialogDGGSCodesBboxLevel" value="9"></input><label>
 			<label><input type="checkbox" id="DialogDGGSCodesBboxParents" checked="checked">Parent levels</label><br>
@@ -1766,8 +1774,8 @@
 			<form>
 			<fieldset>
     				<legend>Plot type:</legend>
-				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypeBar" checked="checked"></input>Bar</label>
-				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypePie"></input>Pie</label>
+				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypeBar" checked="checked" onclick="disableClassificationInBarPlot(false)"></input>Bar</label>
+				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypePie" onclick="disableClassificationInBarPlot(true)"></input>Pie</label>
 			</fieldset>
 			<fieldset>
     				<legend>Axes:</legend>

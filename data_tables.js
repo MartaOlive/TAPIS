@@ -1714,11 +1714,14 @@ var data=[], dataAttributes={}, cells, g;
 				}
 			}
 		} else {
-			for (var i=0; i<cells.length; i++)
+			for (var i=0; i<cells.length; i++) {
+				data[i]={};
 				data[i][selectedOptions.DGGS]=cells[i];
+			}
 		}
 	}
- 	dataAttributes={ [selectedOptions.DGGS]: {type: "string", description: selectedOptions.DGGS + " Zone Ids at level " + l + (selectedOptions.parents ? " and below" : "")}};
+	dataAttributes={};
+ 	dataAttributes[selectedOptions.DGGS]={type: "string", description: selectedOptions.DGGS + " Zone Ids at level " + l + (selectedOptions.parents ? " and below" : "")};
 	if (selectedOptions.centroid) {
 		dataAttributes.longitude={type: "number", description: "Longitude"};
 		dataAttributes.latitude={type: "number", description: "Latitude"};

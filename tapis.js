@@ -5121,47 +5121,47 @@ function GetGeoJSON(data, selectedOptions) {
 					if (selectedOptions.DGGS=="Geohash")
 					{
 						var bbox=ngeohash_decode_bbox(a[selectedOptions.zoneId])
-					geojson.features.push({
-						"type": "Feature",
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [ [ 
-								[ bbox[1], bbox[0] ], 
-								[ bbox[1], bbox[2] ], 
-								[ bbox[3], bbox[2] ], 
-								[ bbox[3], bbox[0] ], 
-								[ bbox[1], bbox[0] ]
-							] ]
-						},
-						"properties": {
-						}
-					});
+						geojson.features.push({
+							"type": "Feature",
+							"geometry": {
+								"type": "Polygon",
+								"coordinates": [ [ 
+									[ bbox[1], bbox[0] ], 
+									[ bbox[1], bbox[2] ], 
+									[ bbox[3], bbox[2] ], 
+									[ bbox[3], bbox[0] ], 
+									[ bbox[1], bbox[0] ]
+								] ]
+							},
+							"properties": {
+							}
+						});
 					} else if (selectedOptions.DGGS=="UberH3") {
 						var hexagon=h3.cellToBoundary(a[selectedOptions.zoneId]);
 						for (var c=0; c<hexagon.length; c++)
 							hexagon[c]=hexagon[c].reverse()
 						hexagon.push(hexagon[0]);
-					geojson.features.push({
-						"type": "Feature",
+						geojson.features.push({
+							"type": "Feature",
 							"geometry": {
 								"type": "Polygon",
 								"coordinates": [ hexagon ]
 							},
-						"properties": {
-						}
-					});
+							"properties": {
+							}
+						});
 					} else {
 						var hexagon=DGGSToBoundary(selectedOptions.DGGS, a[selectedOptions.zoneId]);
-					hexagon.push(hexagon[0]);
-					geojson.features.push({
-						"type": "Feature",
-						"geometry": {
-							"type": "Polygon",
-							"coordinates": [ hexagon ]
-						},
-						"properties": {
-						}
-					});
+						hexagon.push(hexagon[0]);
+						geojson.features.push({
+							"type": "Feature",
+							"geometry": {
+								"type": "Polygon",
+								"coordinates": [ hexagon ]
+							},
+							"properties": {
+							}
+						});
 					}
 				} else {
 					geojson.features.push({
