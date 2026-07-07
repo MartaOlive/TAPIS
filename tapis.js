@@ -8451,24 +8451,28 @@ function addColumnToListCreateColumn(event){
 	var columnName= document.getElementById("columnNameCreateColumns").value;
 	var n= TypeOfValuesRadiobuttons.length;
 	
-	if (columnName.length==0) columnName="noname";
-	var columnNameExist=columnExistInTheTable(columnName); //Search if name for column is not repeated
-
-	if(columnNameExist){ //It will not be added because column name already exist
-		alert("Chosen column name already exists, change it to add column to the list ");
+	if (columnName.length==0) {
+		alert("It is necessary to assign a name to the new column")
 	}else{
-		for (var i = 0; i <n ; i++) {
-		if (TypeOfValuesRadiobuttons[i].checked){
-			var columnName= document.getElementById("columnNameCreateColumns").value;
-			var number= document.getElementById("inputText_"+TypeOfValuesRadiobuttons[i].value)?.value;
-			if (number=="") //to avoid undefined in column list and problems afeter
-					number="0";
-			currentNode.STAnewColumnsToAdd.push([TypeOfValuesRadiobuttons[i].value,columnName,number]);
+		var columnNameExist=columnExistInTheTable(columnName); //Search if name for column is not repeated
+
+		if(columnNameExist){ //It will not be added because column name already exist
+			alert("Chosen column name already exists, change it to add column to the list ");
+		}else{
+			for (var i = 0; i <n ; i++) {
+				if (TypeOfValuesRadiobuttons[i].checked){
+					var columnName= document.getElementById("columnNameCreateColumns").value;
+					var number= document.getElementById("inputText_"+TypeOfValuesRadiobuttons[i].value)?.value;
+					if (number=="") //to avoid undefined in column list and problems afeter
+							number="0";
+					currentNode.STAnewColumnsToAdd.push([TypeOfValuesRadiobuttons[i].value,columnName,number]);
+				}
+			} 
+			networkNodes.update(currentNode);
+			drawTableInColumnBoxTableInCreateColumns();
 		}
-		} 
-		networkNodes.update(currentNode);
-		drawTableInColumnBoxTableInCreateColumns();
 	}
+
 
 }
 
