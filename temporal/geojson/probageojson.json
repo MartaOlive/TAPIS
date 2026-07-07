@@ -1,0 +1,119 @@
+{
+	"nodes": [
+		{
+			"id": "aenn.2dp12mi",
+			"label": "GeoJSON",
+			"image": "ImportGeoJSON.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Nom": "Parc de la Creueta del Coll",
+					"Nom_institucional": "",
+					"Adreça": "el Coll,77",
+					"addresses_neighborhood_name": "el Coll",
+					"addresses_district_name": "Gràcia",
+					"addresses_zip_code": "08023",
+					"secondary_filters_name": "Parcs i jardins",
+					"URL": "https://ajuntament.barcelona.cat/gracia/es/guia-del-distrito/agenda/parc-de-la-creueta-del-coll_92086020872",
+					"Imatge": " https://estatics-nasia.dtibcn.cat/nasia-pro/media/2016%2C01%2CAZ8Q6336-760x428.jpg",
+					"geometry": {
+						"type": "Point",
+						"coordinates": [
+							428655.0697,
+							4585652.737
+						]
+					}
+				},
+				{
+					"Nom": "Jardins d'Ana Figuera",
+					"Nom_institucional": "",
+					"Adreça": "Sant Martí de Provençals,5",
+					"addresses_neighborhood_name": "Sant Martí de Provençals",
+					"addresses_district_name": "Sant Martí",
+					"addresses_zip_code": "08020",
+					"secondary_filters_name": "Parcs i jardins",
+					"URL": "https://ajuntament.barcelona.cat/santmarti/es/el-distrito-y-sus-barrios/sant-marti-de-provencals/equipamientos/jardins-dana-figuera_99400550297 ",
+					"Imatge": "https://lh3.googleusercontent.com/p/AF1QipNLa2OjBHUIqyTA-QYGREU_ylG1zC31crZLRyV9=s680-w680-h510 ",
+					"geometry": {
+						"type": "Point",
+						"coordinates": [
+							433339.386,
+							4585299.233
+						]
+					}
+				},
+				{
+					"Nom": "Jardí d'Assumpció Català",
+					"Nom_institucional": "",
+					"Adreça": "la Nova Esquerra de l'Eixample,305",
+					"addresses_neighborhood_name": "la Nova Esquerra de l'Eixample",
+					"addresses_district_name": "Eixample",
+					"addresses_zip_code": "08029",
+					"secondary_filters_name": "Parcs i jardins",
+					"URL": "https://guia.barcelona.cat/es/detall/jardi-dassumpcio-catala_99400582805.html ",
+					"Imatge": " https://lh3.googleusercontent.com/p/AF1QipO8seRRva_OcrE4qd98UQ5zDCA3iFB40kDll1V7=s680-w680-h510",
+					"geometry": {
+						"type": "Point",
+						"coordinates": [
+							428636.1526,
+							4582347.536
+						]
+					}
+				},
+				{
+					"Nom": "Jardins Interior d'Illa de Sebastià Gasch",
+					"Nom_institucional": "",
+					"Adreça": "la Nova Esquerra de l'Eixample,87",
+					"addresses_neighborhood_name": "la Nova Esquerra de l'Eixample",
+					"addresses_district_name": "Eixample",
+					"addresses_zip_code": "08015",
+					"secondary_filters_name": "Interiors d'illa",
+					"URL": "https://guia.barcelona.cat/es/detall/jardins-interior-d-illa-de-sebastia-gasch_94165135054.html ",
+					"Imatge": "https://estatics-nasia.dtibcn.cat/nasia-pro/media/jardi-dinterior-dilla-de-sebastia-g.760x428.d38321da.jpg ",
+					"geometry": {
+						"type": "Point",
+						"coordinates": [
+							429206.6193,
+							4581193.243
+						]
+					}
+				}
+			],
+			"STAdataAttributes": {
+				"Nom": {
+					"type": "string"
+				},
+				"Nom_institucional": {
+					"type": "string"
+				},
+				"Adreça": {
+					"type": "string"
+				},
+				"addresses_neighborhood_name": {
+					"type": "string"
+				},
+				"addresses_district_name": {
+					"type": "string"
+				},
+				"addresses_zip_code": {
+					"type": "string"
+				},
+				"secondary_filters_name": {
+					"type": "string"
+				},
+				"URL": {
+					"type": "string"
+				},
+				"Imatge": {
+					"type": "string"
+				},
+				"geometry": {
+					"type": "geometry"
+				}
+			},
+			"x": 12,
+			"y": -50
+		}
+	],
+	"edges": []
+}

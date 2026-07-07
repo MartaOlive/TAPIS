@@ -267,7 +267,7 @@
     height: 60px;
     padding: 4px;
 
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -277,12 +277,20 @@
     border: 1px solid #d5d5d5;
     border-radius: 6px;
 
+    box-sizing: border-box;
+
+    appearance: none;
+    -webkit-appearance: none;
+    font: inherit;
+
+    text-decoration: none;
+    vertical-align: top;
+
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
 
     cursor: pointer;
     transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
-
 
 .generalButton img {
     width: 20px;
@@ -310,6 +318,7 @@
 .generalButton:focus {
     outline: none;
 }
+
 .tdGeneralButtons {
     display: flex;
     flex-direction: row;
@@ -322,8 +331,8 @@
 .contextMenuGeneralButtons {
     justify-content: center;
 }
+
 .mainPageGeneralButtons {
     justify-content: flex-start;
 }
-
 
