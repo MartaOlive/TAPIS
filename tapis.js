@@ -394,8 +394,6 @@ function StartSTAPage() {
 	}, networkOptions);
 	setEventFunctionsNetwork();
 	PrepareTextAreaCalculator();
-	startProj4();
-	startDGGAL();
 	UpdateConfiguration();
 
 	InitSTAPage();  //promise
@@ -486,6 +484,8 @@ function textOperationButton(parentDivId, prefixDivId, operation, name, descript
 }
 
 async function InitSTAPage() {
+	startProj4();
+	await startDGGAL();
 	var response=await HTTPJSONData("config.json");
 	config=(response && response.obj) ? response.obj : null;
 	if (!config)
@@ -499,6 +499,60 @@ async function InitSTAPage() {
 	window.addEventListener("message", MessageSTAPage);
 	if (window.opener)
 		window.opener.postMessage(JSON.stringify({msg: "Tapis is listening"}), "*");
+	await AnalyzeQueryParams();
+}
+
+async function AnalyzeQueryParams() {
+	if (location.search && location.search.substring(0,1)=="?")
+	{
+		var query={}, net=null;
+		var kvp=location.search.substring(1, location.search.length).split("&");
+		for(var i_key=0; i_key<kvp.length; i_key++)
+		{
+			var j = kvp[i_key].indexOf("=");  // Gets the first index where a space occours
+			if (j==-1)
+			{
+				alert("Format error in query URL '"+location.search+"', Key and value pair (KVP) '"+kvp[i_key]+"' without '='.").
+				break;
+			}
+			query[unescape(kvp[i_key].substring(0, j)).toUpperCase()]=unescape(kvp[i_key].substring(j+1));
+		}
+
+		//Now we explore all params in the correct order. If net==null, other params about this will not be exectute. 
+		if (query["SCHEMA"]) {
+			try {
+				var value=await HTTPJSONData(query["SCHEMA"]);
+				net=(value && value.obj) ? value.obj : null;
+				if (!net)
+					showInfoMessage("Error downloading TAPIS schema \'"+query["SCHEMA"]+"\'");
+			} catch (error) {
+				showInfoMessage("Error downloading TAPIS schema \'"+query["SCHEMA"]+"\': " + error.message);
+				net=null;
+			}
+			if (net) {
+				openNetwork(net);
+				showInfoMessage('Download TAPIS schema completed.');
+			}
+		}
+		if (query["REFRESH"]) {
+			await reloadSTA();
+		}
+		if (query["OPEN"]) {
+			//Look for a node called 'query["OPEN"]'
+			var nodesArray=networkNodes.get();
+			var found=false;
+			for (var i=0; i<nodesArray.length; i++) {
+				var node=nodesArray[i];
+				if (node.label==query["OPEN"]) {
+					networkDoubleClick({nodes:[node.id]});
+					found=true;
+					break;
+				}
+			}
+			if (!found)
+				showInfoMessage("Error opening \'" + query["OPEN"] + "\'. Not found in the schema");
+		}
+	}
 }
 
 function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
@@ -6172,39 +6226,68 @@ function getMaxLevelDGGSHashUber(dggrsName) {
 	return getMaxLevelDGGS(dggrsName);
 }
 
-function GetSelectedOptionsAddColumnGeo(){
+function GetSelectedOptionsAddColumnPnt(){
 	var selectedOptions={};
-	//selectedOptions.radioIn=document.getElementById("DialogAddColumnGeoRadioJSON_WKT_DGGS_LL").value;
-	selectedOptions.radioIn=document.DialogAddColumnGeoForm.DialogAddColumnGeoRadioJSON_WKT_DGGS_LL.value;
-	selectedOptions.JSONIn=document.getElementById("DialogAddColumnGeoJSONSelect").value;
-	selectedOptions.WKTIn=document.getElementById("DialogAddColumnGeoWKTSelect").value;
-	selectedOptions.zoneIdIn=document.getElementById("DialogAddColumnGeoZoneIdSelect").value;
-	selectedOptions.DGGSIn=document.getElementById("DialogAddColumnGeoDGGSSelect").value;
-	selectedOptions.CRSIn=document.getElementById("DialogAddColumnGeoCRSSelect").value;
-	selectedOptions.longitudeIn=document.getElementById("DialogAddColumnGeoLongitudeSelect").value;
-	selectedOptions.latitudeIn=document.getElementById("DialogAddColumnGeoLatitudeSelect").value;
+	//selectedOptions.radioIn=document.getElementById("DialogAddColumnPntRadioJSON_WKT_DGGS_LL").value;
+	selectedOptions.radioIn=document.DialogAddColumnPntForm.DialogAddColumnPntRadioJSON_WKT_DGGS_LL.value;
+	selectedOptions.JSONIn=document.getElementById("DialogAddColumnPntJSONSelect").value;
+	selectedOptions.WKTIn=document.getElementById("DialogAddColumnPntWKTSelect").value;
+	selectedOptions.zoneIdIn=document.getElementById("DialogAddColumnPntZoneIdSelect").value;
+	selectedOptions.DGGSIn=document.getElementById("DialogAddColumnPntDGGSSelect").value;
+	selectedOptions.CRSIn=document.getElementById("DialogAddColumnPntCRSSelect").value;
+	selectedOptions.longitudeIn=document.getElementById("DialogAddColumnPntLongitudeSelect").value;
+	selectedOptions.latitudeIn=document.getElementById("DialogAddColumnPntLatitudeSelect").value;
 
-	selectedOptions.radioOut=document.DialogAddColumnGeoForm.DialogAddColumnGeoRadioJSON_WKT_DGGS_LLOut.value;
-	selectedOptions.CRSOut=document.getElementById("DialogAddColumnGeoCRSOutSelect").value;
-	selectedOptions.nameOut=document.getElementById("DialogAddColumnGeoNameText").value;
-	selectedOptions.latitudeOut=document.getElementById("DialogAddColumnGeoLatitudeNameText").value;
+	selectedOptions.radioOut=document.DialogAddColumnPntForm.DialogAddColumnPntRadioJSON_WKT_DGGS_LLOut.value;
+	selectedOptions.CRSOut=document.getElementById("DialogAddColumnPntCRSOutSelect").value;
+	selectedOptions.nameOut=document.getElementById("DialogAddColumnPntNameText").value;
+	selectedOptions.latitudeOut=document.getElementById("DialogAddColumnPntLatitudeNameText").value;
 	if (selectedOptions.radioOut=="DGGS") {
-		selectedOptions.level=parseInt(document.getElementById("DialogAddColumnGeoLevelText").value);
-		selectedOptions.DGGSOut=document.getElementById("DialogAddColumnGeoDGGSOutSelect").value
+		selectedOptions.level=parseInt(document.getElementById("DialogAddColumnPntLevelText").value);
+		selectedOptions.DGGSOut=document.getElementById("DialogAddColumnPntDGGSOutSelect").value
 		if (isNaN(selectedOptions.level) || selectedOptions.level<=0 || selectedOptions.level>getMaxLevelDGGSHashUber(selectedOptions.DGGSOut)) {
 			alert("Level is not a positive number or it is higher than " + getMaxLevelDGGSHashUber(selectedOptions.DGGSOut) + ". The level 10 will be used instead.");
 			selectedOptions.level=10;
 		}
 	}	
-
 	return selectedOptions;
 }
 
-function GetAddColumnGeo(event) {
-	hideNodeDialog("DialogAddColumnGeo", event);
-	var node=getNodeDialog("DialogAddColumnGeo");
-	var selectedOptions=GetSelectedOptionsAddColumnGeo();
-	AddColumnGeoFromAnother(node.STAdata, node.STAdataAttributes, selectedOptions);
+function GetAddColumnPnt(event) {
+	hideNodeDialog("DialogAddColumnPnt", event);
+	var node=getNodeDialog("DialogAddColumnPnt");
+	var selectedOptions=GetSelectedOptionsAddColumnPnt();
+	AddColumnPntFromAnother(node.STAdata, node.STAdataAttributes, selectedOptions);
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
+}
+
+function GetSelectedOptionsAddColumnBBox(){
+	var selectedOptions={};
+	selectedOptions.radioIn=document.DialogAddColumnBBoxForm.DialogAddColumnBBoxRadioJSON_WKT_LL.value;
+	selectedOptions.JSONIn=document.getElementById("DialogAddColumnBBoxJSONSelect").value;
+	selectedOptions.WKTIn=document.getElementById("DialogAddColumnBBoxWKTSelect").value;
+	selectedOptions.CRSIn=document.getElementById("DialogAddColumnBBoxCRSSelect").value;
+	selectedOptions.minLongIn=document.getElementById("DialogAddColumnBBoxMinLongitudeSelect").value;
+	selectedOptions.minLatIn=document.getElementById("DialogAddColumnBBoxMinLatitudeSelect").value;
+	selectedOptions.maxLongIn=document.getElementById("DialogAddColumnBBoxMaxLongitudeSelect").value;
+	selectedOptions.maxLatIn=document.getElementById("DialogAddColumnBBoxMaxLatitudeSelect").value;
+
+	selectedOptions.radioOut=document.DialogAddColumnBBoxForm.DialogAddColumnBBoxRadioJSON_WKT_LLOut.value;
+	selectedOptions.CRSOut=document.getElementById("DialogAddColumnBBoxCRSOutSelect").value;
+	selectedOptions.nameOut=document.getElementById("DialogAddColumnBBoxNameText").value;
+	selectedOptions.minLatOut=document.getElementById("DialogAddColumnBBoxMinLatitudeNameText").value;
+	selectedOptions.maxLongOut=document.getElementById("DialogAddColumnBBoxMaxLongitudeNameText").value;
+	selectedOptions.maxLatOut=document.getElementById("DialogAddColumnBBoxMaxLatitudeNameText").value;
+	return selectedOptions;
+}
+
+function GetAddColumnBBox(event) {
+	hideNodeDialog("DialogAddColumnBBox", event);
+	var node=getNodeDialog("DialogAddColumnBBox");
+	var selectedOptions=GetSelectedOptionsAddColumnBBox();
+	AddColumnBBoxFromAnother(node.STAdata, node.STAdataAttributes, selectedOptions);
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
 	UpdateChildenTable(node);
@@ -6249,39 +6332,71 @@ var cdns=[];
 	return cdns.join("");
 }
 
-function ShowAddColumnGeoDialog(node) {
+function ShowAddColumnPntDialog(node) {
 	var dataAttributes=currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(node.STAdata);
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoJSON", dataAttributes, "geometry", "document.getElementById('DialogAddColumnGeoRadioJSON').click()"); 
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoWKT", dataAttributes, "wkt", "document.getElementById('DialogAddColumnGeoRadioWKT').click()");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoZoneId", dataAttributes, "zone id", "document.getElementById('DialogAddColumnGeoRadioDGGS').click()");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoLongitude", dataAttributes, "long", "document.getElementById('DialogAddColumnGeoRadioLL').click()");
-	PopulateSelectSaveLayerDialog("DialogAddColumnGeoLatitude", dataAttributes, "lat", "document.getElementById('DialogAddColumnGeoRadioLL').click()");
-	document.getElementById("DialogAddColumnGeoCRSSelect").innerHTML=getOptionsSelectProj4();
-	document.getElementById("DialogAddColumnGeoCRSOutSelect").innerHTML=getOptionsSelectProj4();
-	document.getElementById("DialogAddColumnGeoDGGSSelect").innerHTML=getOptionsSelectDGGSHashUber();
-	document.getElementById("DialogAddColumnGeoDGGSOutSelect").innerHTML=getOptionsSelectDGGSHashUber();
+	PopulateSelectSaveLayerDialog("DialogAddColumnPntJSON", dataAttributes, "geometry", "document.getElementById('DialogAddColumnPntRadioJSON').click()"); 
+	PopulateSelectSaveLayerDialog("DialogAddColumnPntWKT", dataAttributes, "wkt", "document.getElementById('DialogAddColumnPntRadioWKT').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnPntZoneId", dataAttributes, "zone id", "document.getElementById('DialogAddColumnPntRadioDGGS').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnPntLongitude", dataAttributes, "long", "document.getElementById('DialogAddColumnPntRadioLL').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnPntLatitude", dataAttributes, "lat", "document.getElementById('DialogAddColumnPntRadioLL').click()");
+	document.getElementById("DialogAddColumnPntCRSSelect").innerHTML=getOptionsSelectProj4();
+	document.getElementById("DialogAddColumnPntCRSOutSelect").innerHTML=getOptionsSelectProj4();
+	document.getElementById("DialogAddColumnPntDGGSSelect").innerHTML=getOptionsSelectDGGSHashUber();
+	document.getElementById("DialogAddColumnPntDGGSOutSelect").innerHTML=getOptionsSelectDGGSHashUber();
 
-	saveNodeDialog("DialogAddColumnGeo", node);
-	ChangeAddColumnGeoRadioOut();
+	saveNodeDialog("DialogAddColumnPnt", node);
+	ChangeAddColumnPntRadioOut();
 }
 
-function ChangeAddColumnGeoRadioOut(event) {
-	if (document.getElementById("DialogAddColumnGeoRadioJSONOut").checked || 
-	    document.getElementById("DialogAddColumnGeoRadioWKTOut").checked ||
-	    document.getElementById("DialogAddColumnGeoRadioDGGSOut").checked) {
-		document.getElementById("DialogAddColumnGeoNameOut").innerHTML="Column name:";
-		document.getElementById("DialogAddColumnGeoLatitudeNameOutAll").style.display="none";
-		document.getElementById("DialogAddColumnGeoCRSOutAll").style.display="none";
+function ChangeAddColumnPntRadioOut(event) {
+	if (document.getElementById("DialogAddColumnPntRadioJSONOut").checked || 
+	    document.getElementById("DialogAddColumnPntRadioWKTOut").checked ||
+	    document.getElementById("DialogAddColumnPntRadioDGGSOut").checked) {
+		document.getElementById("DialogAddColumnPntNameOut").innerHTML="Column name:";
+		document.getElementById("DialogAddColumnPntLatitudeNameOutAll").style.display="none";
+		document.getElementById("DialogAddColumnPntCRSOutAll").style.display="none";
 	} else {
-		document.getElementById("DialogAddColumnGeoNameOut").innerHTML="X or Longitude:";
-		document.getElementById("DialogAddColumnGeoNameText").value="Longitude";
-		document.getElementById("DialogAddColumnGeoLatitudeNameOut").innetHTML="Latitude";
-		document.getElementById("DialogAddColumnGeoLatitudeNameOutAll").style.display="inline";
-		document.getElementById("DialogAddColumnGeoCRSOutAll").style.display="inline";
+		document.getElementById("DialogAddColumnPntNameOut").innerHTML="X or Longitude:";
+		document.getElementById("DialogAddColumnPntNameText").value="Longitude";
+		document.getElementById("DialogAddColumnPntLatitudeNameOut").innetHTML="Latitude";
+		document.getElementById("DialogAddColumnPntLatitudeNameOutAll").style.display="inline";
+		document.getElementById("DialogAddColumnPntCRSOutAll").style.display="inline";
 	}
-	document.getElementById("DialogAddColumnGeoLevelAll").style.display=document.getElementById("DialogAddColumnGeoRadioDGGSOut").checked ? "inline" : "none";
+	document.getElementById("DialogAddColumnPntLevelAll").style.display=document.getElementById("DialogAddColumnPntRadioDGGSOut").checked ? "inline" : "none";
 }
 
+function ShowAddColumnBBoxDialog(node) {
+	var dataAttributes=currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(node.STAdata);
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxJSON", dataAttributes, "geometry", "document.getElementById('DialogAddColumnBBoxRadioJSON').click()"); 
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxWKT", dataAttributes, "wkt", "document.getElementById('DialogAddColumnBBoxRadioWKT').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMinLongitude", dataAttributes, "MinLong", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMinLatitude", dataAttributes, "MinLat", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMaxLongitude", dataAttributes, "MaxLong", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMaxLatitude", dataAttributes, "MaxLat", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
+	document.getElementById("DialogAddColumnBBoxCRSSelect").innerHTML=getOptionsSelectProj4();
+	document.getElementById("DialogAddColumnBBoxCRSOutSelect").innerHTML=getOptionsSelectProj4();
+
+	saveNodeDialog("DialogAddColumnBBox", node);
+	ChangeAddColumnBBoxRadioOut();
+}
+
+function ChangeAddColumnBBoxRadioOut(event) {
+	if (document.getElementById("DialogAddColumnBBoxRadioJSONOut").checked || 
+	    document.getElementById("DialogAddColumnBBoxRadioWKTOut").checked) {
+		document.getElementById("DialogAddColumnBBoxNameOut").innerHTML="Column name:";
+		document.getElementById("DialogAddColumnBBoxMinLatitudeNameOutAll").style.display="none";
+		document.getElementById("DialogAddColumnBBoxMaxLongitudeNameOutAll").style.display="none";
+		document.getElementById("DialogAddColumnBBoxMaxLatitudeNameOutAll").style.display="none";
+		document.getElementById("DialogAddColumnBBoxCRSOutAll").style.display="none";
+	} else {
+		document.getElementById("DialogAddColumnBBoxNameOut").innerHTML="Minimum X or Longitude:";
+		document.getElementById("DialogAddColumnBBoxNameText").value="MinLong";
+		document.getElementById("DialogAddColumnBBoxMinLatitudeNameOutAll").style.display="inline";
+		document.getElementById("DialogAddColumnBBoxMaxLongitudeNameOutAll").style.display="inline";
+		document.getElementById("DialogAddColumnBBoxMaxLatitudeNameOutAll").style.display="inline";
+		document.getElementById("DialogAddColumnBBoxCRSOutAll").style.display="inline";
+	}
+}
 
 function SaveLayer(event) {
 	hideNodeDialog("DialogSaveLayer", event);
@@ -7290,7 +7405,7 @@ function KeySTAPage(event) {
 
 	if (aDialogIsOpen)
 		return;
-if (event.code == "F2" || event.code == "Delete" || event.code == "Insert" || event.code == "Enter"){
+	if (event.code == "F2" || event.code == "Delete" || event.code == "Insert" || event.code == "Enter"){
 			event.preventDefault();
 		var nodeId = network.getSelectedNodes();
 		if (nodeId && nodeId.length) {
@@ -7932,7 +8047,7 @@ function networkDoubleClick(params) {
 				showNodeDialog("DialogColumnsCalculator");
 			}
 		}
-		else if (currentNode.image == "AddColumnGeo.png") {
+		else if (currentNode.image == "AddColumnPnt.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			
 			if (parentNode.STAdata && !currentNode.STAdata)
@@ -7940,8 +8055,19 @@ function networkDoubleClick(params) {
 			if (!currentNode.STAdataAttributes)
 				currentNode.STAdataAttributes=deapCopy(parentNode.STAdataAttributes ? parentNode.STAdataAttributes: getDataAttributes(currentNode.STAdata));
 			networkNodes.update(currentNode);
-			ShowAddColumnGeoDialog(currentNode);
-			showNodeDialog("DialogAddColumnGeo");
+			ShowAddColumnPntDialog(currentNode);
+			showNodeDialog("DialogAddColumnPnt");
+		}
+		else if (currentNode.image == "AddColumnBBox.png") {
+			var parentNode=GetFirstParentNode(currentNode);
+			
+			if (parentNode.STAdata && !currentNode.STAdata)
+				currentNode.STAdata=deapCopy(parentNode.STAdata);
+			if (!currentNode.STAdataAttributes)
+				currentNode.STAdataAttributes=deapCopy(parentNode.STAdataAttributes ? parentNode.STAdataAttributes: getDataAttributes(currentNode.STAdata));
+			networkNodes.update(currentNode);
+			ShowAddColumnBBoxDialog(currentNode);
+			showNodeDialog("DialogAddColumnBBox");
 		}
 		else if (currentNode.image =="ConcatenateTables.png") {
 			showNodeDialog("DialogConcatenateTables");
@@ -8308,25 +8434,29 @@ function openFileNetwork(event) {
 	reader.readAsText(input.files[0]);
 }
 
-function openURLNetwork(event) {
-	hideNodeDialog("DialogOpenURLNetwork");
-	HTTPJSONData(document.getElementById("DialogOpenURLNetworkInput").value).then(
+function openURLNetwork(url) {
+	HTTPJSONData(url).then(
 				function(value) {
 					openNetwork(value.obj);
-					showInfoMessage('Download network completed.'); 
+					showInfoMessage('Download TAPIS schema completed.'); 
 				},
 				function(error) { 
-					showInfoMessage('Error downloading network. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage('Error downloading TAPIS schema. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
 					console.log(error) ;
 				}
 			);	
+}
+
+function openURLNetworkDialog(event) {
+	hideNodeDialog("DialogOpenURLNetwork");
+	openURLNetwork(document.getElementById("DialogOpenURLNetworkInput").value);	
 }
 
 function saveNetwork(event) {
 	var pos=network.getPositions()
 	var posArray=Object.keys(pos);
 	var data={nodes:[], edges:[]};
-	data.nodes.push(...deapCopy(networkNodes.get())); //Hi ha  hagut canvis en el networNodes..per accedir als nodes es fa així, el ._data no conté res
+	data.nodes.push(...deapCopy(networkNodes.get()));
 	for (var i=0; i<posArray.length; i++)
 	{
 		data.nodes[i].x=pos[posArray[i]].x;

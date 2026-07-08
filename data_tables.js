@@ -362,7 +362,7 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 	for (var i=0; i<dataRightAttributesArray.length; i++) {
 		for (var j=0; j<options.RowMatching.length; j++)
 			if (dataRightAttributesArray[i]==options.RowMatching[j].right)
-				break;
+				break; 
 		if (j<options.RowMatching.length) {
 			dataRightNameInJoin[i]==null;
 			continue; //This should be not included as it is already there.
@@ -1394,7 +1394,7 @@ function ReplaceTextInTable(data, dataAttributes, searchValue, replaceValue, num
 	return data;
 }
 
-function AddColumnGeoFromAnother(data, dataAttributes, selectedOptions) {
+function AddColumnPntFromAnother(data, dataAttributes, selectedOptions) {
 var columnCreated=false, record, json, point;
 
 	if (selectedOptions.radioIn=="WKT" || selectedOptions.radioOut=="WKT")
@@ -1617,7 +1617,8 @@ var columnCreated=false, record, json, point;
 	else if (selectedOptions.radioIn=="LL") {
 		for (var i=0; i<data.length; i++) {
 			record=data[i];
-			if (!record[selectedOptions.longitudeIn] || !record[selectedOptions.latitudeIn])
+			if (typeof record[selectedOptions.longitudeIn]==="undefined" || record[selectedOptions.longitudeIn]==null || record[selectedOptions.longitudeIn]==="" || 
+			    typeof record[selectedOptions.latitudeIn]==="undefined" || record[selectedOptions.latitudeIn]==null || record[selectedOptions.latitudeIn]==="")
 				continue;
 			if (!isProj4CRS84(selectedOptions.CRSIn)) {
 				json={type:"Point", coordinates: proj4(selectedOptions.CRSIn, "EPSG:4326", [record[selectedOptions.longitudeIn], record[selectedOptions.latitudeIn]])};
@@ -1670,8 +1671,157 @@ var columnCreated=false, record, json, point;
 			dataAttributes[selectedOptions.nameOut].type="string";
 		else if (selectedOptions.radioOut=="LL") {
 			dataAttributes[selectedOptions.nameOut].type="number";
-			dataAttributes[selectedOptions.latitudeOut]={}
-			dataAttributes[selectedOptions.latitudeOut].type="number";
+			dataAttributes[selectedOptions.latitudeOut]={type: "number"};
+		}
+		return 0;
+	}
+	return 1;
+}
+
+function AddColumnBBoxFromAnother(data, dataAttributes, selectedOptions) {
+var columnCreated=false, record, json, point, point2, bbox;
+
+	if (selectedOptions.radioIn=="WKT" || selectedOptions.radioOut=="WKT")
+		var wkt = new Wkt.Wkt();
+	if (selectedOptions.radioIn=="JSON") {
+		for (var i=0; i<data.length; i++) {
+			record=data[i];
+			if (!record[selectedOptions.JSONIn])
+				continue;
+			if (typeof record[selectedOptions.JSONIn] === "object")
+				json=record[selectedOptions.JSONIn]
+			else {
+				try {
+					json=JSON.parse(record[selectedOptions.JSONIn]);
+				} catch (error) {
+					continue;
+				}
+			}
+			
+			if (selectedOptions.radioOut=="JSON") {
+				record[selectedOptions.nameOut]=record[selectedOptions.JSONIn];
+				columnCreated=true;
+			} else if (selectedOptions.radioOut=="WKT") {
+				wkt.read(JSON.stringify(json));
+				record[selectedOptions.nameOut]=wkt.write();
+				columnCreated=true;
+			} else if (selectedOptions.radioOut=="LL") {
+				//JSON-->LL (only if points)
+				bbox=getBBoxCoordinateGeoJSONGeometry(json);
+				if (!bbox)
+					continue;
+				if (!isProj4CRS84(selectedOptions.CRSOut)) {
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, [bbox.minLong, bbox.minLat]);
+					record[selectedOptions.nameOut]=point[0];
+					record[selectedOptions.minLatOut]=point[1];
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, [bbox.maxLong, bbox.maxLat]);
+					record[selectedOptions.maxLongOut]=point[0];
+					record[selectedOptions.maxLatOut]=point[1];
+				} else {
+					record[selectedOptions.nameOut]=bbox.minLong;
+					record[selectedOptions.minLatOut]=bbox.minLat;
+					record[selectedOptions.maxLongOut]=bbox.maxLong;
+					record[selectedOptions.maxLatOut]=bbox.maxLat;
+				}
+				columnCreated=true;
+			}
+		}
+	}
+	else if (selectedOptions.radioIn=="WKT") {
+		for (var i=0; i<data.length; i++) {
+			record=data[i];
+			if (!record[selectedOptions.WKTIn])
+				continue;
+			wkt.read(record[selectedOptions.WKTIn]);
+			json=wkt.toJson();
+			if (selectedOptions.radioOut=="JSON") {
+				record[selectedOptions.nameOut]=json;
+				columnCreated=true;
+			} else if (selectedOptions.radioOut=="WKT") {
+				record[selectedOptions.nameOut]=record[selectedOptions.WKTIn];
+				columnCreated=true;
+			} else if (selectedOptions.radioOut=="LL") {
+				//JSON-->LL (only if points)
+				bbox=getBBoxCoordinateGeoJSONGeometry(json);
+				if (!bbox)
+					continue;
+				if (!isProj4CRS84(selectedOptions.CRSOut)) {
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, [bbox.minLong, bbox.minLat]);
+					record[selectedOptions.nameOut]=point[0];
+					record[selectedOptions.minLatOut]=point[1];
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, [bbox.maxLong, bbox.maxLat]);
+					record[selectedOptions.maxLongOut]=point[0];
+					record[selectedOptions.maxLatOut]=point[1];
+				} else {
+					record[selectedOptions.nameOut]=bbox.minLong;
+					record[selectedOptions.minLatOut]=bbox.minLat;
+					record[selectedOptions.maxLongOut]=bbox.maxLong;
+					record[selectedOptions.maxLatOut]=bbox.maxLat;
+				}
+				columnCreated=true;
+			}
+		}
+	}
+	else if (selectedOptions.radioIn=="LL") {
+		for (var i=0; i<data.length; i++) {
+			record=data[i];
+			if (typeof record[selectedOptions.minLongIn]==="undefined" || record[selectedOptions.minLongIn]==null || record[selectedOptions.minLongIn]==="" || 
+				typeof record[selectedOptions.minLatIn]==="undefined" || record[selectedOptions.minLatIn]==null || record[selectedOptions.minLatIn]==="" || 
+				typeof record[selectedOptions.maxLongIn]==="undefined" || record[selectedOptions.maxLongIn]==null || record[selectedOptions.maxLongIn]==="" || 
+				typeof record[selectedOptions.maxLatIn]==="undefined" || record[selectedOptions.maxLatIn]==null || record[selectedOptions.maxLatIn]==="")
+				continue;
+			if (!isProj4CRS84(selectedOptions.CRSIn)) {
+				point=proj4(selectedOptions.CRSIn, "EPSG:4326", [record[selectedOptions.minLongIn], record[selectedOptions.minLatIn]]);
+				point2=proj4(selectedOptions.CRSIn, "EPSG:4326", [record[selectedOptions.maxLongIn], record[selectedOptions.maxLatIn]]);
+				json={type:"Polygon", coordinates: [[[point[0], point[1]], [point2[0], point[1]], 
+								[point2[0], point2[1]], [point[0], point2[1]], [point[0], point[1]]]]};
+			} else
+				json={type:"Polygon", coordinates:[[[record[selectedOptions.minLongIn], record[selectedOptions.minLatIn]], [record[selectedOptions.maxLongIn], record[selectedOptions.minLatIn]], 
+								[record[selectedOptions.maxLongIn], record[selectedOptions.maxLatIn]], [record[selectedOptions.minLongIn], record[selectedOptions.maxLatIn]], [record[selectedOptions.minLongIn], record[selectedOptions.minLatIn]]]]};
+			if (selectedOptions.radioOut=="JSON") {
+				record[selectedOptions.nameOut]=json;
+				columnCreated=true;
+			} else if (selectedOptions.radioOut=="WKT") {
+				wkt.read(JSON.stringify(json));
+				record[selectedOptions.nameOut]=wkt.write();
+				columnCreated=true;
+			} else if (selectedOptions.radioOut=="LL") {
+				//JSON-->LL (only if points)
+				if (!isProj4CRS84(selectedOptions.CRSOut)) {					
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, isProj4CRS84(selectedOptions.CRSIn) ? [record[selectedOptions.minLongIn], record[selectedOptions.minLatIn]] : json.coordinates[0][0]);
+					record[selectedOptions.nameOut]=point[0];
+					record[selectedOptions.minLatOut]=point[1];
+					point=proj4("EPSG:4326", selectedOptions.CRSOut, isProj4CRS84(selectedOptions.CRSIn) ? [record[selectedOptions.maxLongIn], record[selectedOptions.maxLatIn]] : json.coordinates[0][2]);
+					record[selectedOptions.maxLongOut]=point[0];
+					record[selectedOptions.maxLatOut]=point[1];
+				} else if (!isProj4CRS84(selectedOptions.CRSIn)) {
+					record[selectedOptions.nameOut]=json.coordinates[0][0][0];
+					record[selectedOptions.minLatOut]=json.coordinates[0][0][1];
+					record[selectedOptions.maxLongOut]=json.coordinates[0][2][0];
+					record[selectedOptions.maxLatOut]=json.coordinates[0][2][1];
+				} else {
+					record[selectedOptions.nameOut]=record[selectedOptions.minLongIn];
+					record[selectedOptions.minLatOut]=record[selectedOptions.minLatIn];
+					record[selectedOptions.maxLongOut]=record[selectedOptions.maxLongIn];
+					record[selectedOptions.maxLatOut]=record[selectedOptions.maxLatIn];
+				}
+				columnCreated=true;
+			}
+		}
+	}
+	if (columnCreated==true) {
+		dataAttributes[selectedOptions.nameOut]={};
+		if (selectedOptions.radioOut=="JSON")
+			dataAttributes[selectedOptions.nameOut].type="geometry";
+		else if (selectedOptions.radioOut=="WKT")
+			dataAttributes[selectedOptions.nameOut].type="geometry";
+		else if (selectedOptions.radioOut=="DGGS")
+			dataAttributes[selectedOptions.nameOut].type="string";
+		else if (selectedOptions.radioOut=="LL") {
+			dataAttributes[selectedOptions.nameOut].type="number";
+			dataAttributes[selectedOptions.minLatOut]={type: "number"};
+			dataAttributes[selectedOptions.maxLongOut]={type: "number"};
+			dataAttributes[selectedOptions.maxLatOut]={type: "number"};
 		}
 		return 0;
 	}

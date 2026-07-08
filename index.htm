@@ -180,34 +180,34 @@
 	<dialog id="DialogOpenURLNetwork" onClose='hideNodeDialog("DialogOpenURLNetwork", event)'>
 		<form>
 			<p>
-				<label>Network URL:
+				<label>TAPIS saved schema URL:
 					<input type="text" id="DialogOpenURLNetworkInput" size="100"></input>
 				</label>
 				<br>
-				<label>Suggested stored networks:
+				<label>Recipe stored schemas:
 					<select id="DialogOpenURLNetworkSelect" onChange="PopulateInputFromSelect(event, 'DialogOpenURLNetwork');">
 						<option "">-- Select an option--</option>
-						<option value="help/recipe01_01_STA_UML_model.json">Recipe 1, cooking method 1: Understanding the concept of Datastream in STAplus</option>
-						<option value="help/recipe01_02_observedProperties3URLs.json">Recipe 1: cooking method 2: Visiting the same entity from different paths</option>
-						<option value="help/recipe02_PartyObservationsParty.json">Recipe 2, both methods: Show the current evolution of a variable captured by a particular party</option>
-						<option value="help/recipe02_01_PartyObservations.json">Recipe 2, cooking method 1: Recurrently selecting a row using entity identifiers</option>
-						<option value="help/recipe02_02_ObservationsParty.json">Recipe 2, cooking method 2: Filtering observations</option>
-						<option value="help/recipe03_OpenMap.json">Recipe 3: Show a map of all observation features in an STA service</option>
-						<option value="help/recipe04_CSV_meaning.json">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</option>
-						<option value="help/recipe05_01_spatialFilterTemperature.json">Recipe 5a: Selecting temperatures from an area</option>
-						<option value="help/recipe05_02_FilteringByDistance.json">Recipe 5b:Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
-						<option value="help/recipe06_creatingTwoDatastreamOfObservations.json">Recipe 6: Creating a new stream of observations</option>
-						<option value="help/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>						
-						<option value="help/recipe08_s3BucketViewCSV.json">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</option>
-						<option value="help/recipe09_stackedBarChart.json">Recipe 9: Drawing a stacked bar chart</option>
-						<!--option value="help/recipe10_edcsta.json">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</option-->
-						<option value="help/recipe11_pivotTables.json">Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns</option>
-						<option value="help/recipe12_dataQuality.json">Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</option>
+						<option value="recipes/recipe01_01_STA_UML_model.json">Recipe 1, cooking method 1: Understanding the concept of Datastream in STAplus</option>
+						<option value="recipes/recipe01_02_observedProperties3URLs.json">Recipe 1: cooking method 2: Visiting the same entity from different paths</option>
+						<option value="recipes/recipe02_PartyObservationsParty.json">Recipe 2, both methods: Show the current evolution of a variable captured by a particular party</option>
+						<option value="recipes/recipe02_01_PartyObservations.json">Recipe 2, cooking method 1: Recurrently selecting a row using entity identifiers</option>
+						<option value="recipes/recipe02_02_ObservationsParty.json">Recipe 2, cooking method 2: Filtering observations</option>
+						<option value="recipes/recipe03_OpenMap.json">Recipe 3: Show a map of all observation features in an STA service</option>
+						<option value="recipes/recipe04_CSV_meaning.json">Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it</option>
+						<option value="recipes/recipe05_01_spatialFilterTemperature.json">Recipe 5a: Selecting temperatures from an area</option>
+						<option value="recipes/recipe05_02_FilteringByDistance.json">Recipe 5b:Selecting temperatures whose distance from a certain point is greater or lower than an established distance</option>
+						<option value="recipes/recipe06_creatingTwoDatastreamOfObservations.json">Recipe 6: Creating a new stream of observations</option>
+						<option value="recipes/recipe07_catalogueViewFeedback.json">Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset</option>						
+						<option value="recipes/recipe08_s3BucketViewCSV.json">Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</option>
+						<option value="recipes/recipe09_stackedBarChart.json">Recipe 9: Drawing a stacked bar chart</option>
+						<!--option value="recipes/recipe10_edcsta.json">Recipe 10: Connecting to a Eclipse Data Connector (Data Space)</option-->
+						<option value="recipes/recipe11_pivotTables.json">Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns</option>
+						<option value="recipes/recipe12_dataQuality.json">Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</option>
 					</select>
 				</label>
 			</p>
 			<div class="center">
-				<button value="default" id="DialogDialogOpenURLNetworkInputOk" onClick="openURLNetwork(event)" formmethod="dialog">OK</button>
+				<button value="default" id="DialogDialogOpenURLNetworkInputOk" onClick="openURLNetworkDialog(event)" formmethod="dialog">OK</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 		</form>
@@ -1587,42 +1587,42 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogAddColumnGeo" onClose='hideNodeDialog("DialogAddColumnGeo", event)'>
-		<form name="DialogAddColumnGeoForm">
-			Add column with transformed geometry
+	<dialog id="DialogAddColumnPnt" onClose='hideNodeDialog("DialogAddColumnPnt", event)'>
+		<form name="DialogAddColumnPntForm">
+			Add column with transformed point geometry
 			<fieldset>
 				<legend>Input</legend>
-				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LL" value="JSON" id="DialogAddColumnGeoRadioJSON">GeoJSON Geometry:
-					<span id="DialogAddColumnGeoJSON"></span>
+				<label><input type="radio" name="DialogAddColumnPntRadioJSON_WKT_DGGS_LL" value="JSON" id="DialogAddColumnPntRadioJSON">GeoJSON Geometry:
+					<span id="DialogAddColumnPntJSON"></span>
 				</label>
 				<br>
-				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LL" value="WKT" id="DialogAddColumnGeoRadioWKT">Well Known Text:
-					<span id="DialogAddColumnGeoWKT"></span>
+				<label><input type="radio" name="DialogAddColumnPntRadioJSON_WKT_DGGS_LL" value="WKT" id="DialogAddColumnPntRadioWKT">Well Known Text:
+					<span id="DialogAddColumnPntWKT"></span>
 				</label>
 				<br>
-				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LL" value="DGGS" id="DialogAddColumnGeoRadioDGGS">DGGS:
+				<label><input type="radio" name="DialogAddColumnPntRadioJSON_WKT_DGGS_LL" value="DGGS" id="DialogAddColumnPntRadioDGGS">DGGS:
 				<fieldset>
 					<label>DGGS:
-						<select id="DialogAddColumnGeoDGGSSelect" onChange="document.getElementById('DialogAddColumnGeoRadioDGGS').click()"></select>
+						<select id="DialogAddColumnPntDGGSSelect" onChange="document.getElementById('DialogAddColumnPntRadioDGGS').click()"></select>
 					</label>
 					<br>
 					<label>Zone id:
-						<span id="DialogAddColumnGeoZoneId"></span>
+						<span id="DialogAddColumnPntZoneId"></span>
 					</label>
 				</fieldset>
 				<br>
-				<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LL" value="LL" id="DialogAddColumnGeoRadioLL" checked="checked">Point coordinates:</label>
+				<label><input type="radio" name="DialogAddColumnPntRadioJSON_WKT_DGGS_LL" value="LL" id="DialogAddColumnPntRadioLL" checked="checked">Point coordinates:</label>
 				<fieldset>
 					<label>CRS:
-						<select id="DialogAddColumnGeoCRSSelect" onChange="document.getElementById('DialogAddColumnGeoRadioLL').click()"></select>
+						<select id="DialogAddColumnPntCRSSelect" onChange="document.getElementById('DialogAddColumnPntRadioLL').click()"></select>
 					</label>
 					<br>
 					<label>X or Longitude:
-						<span id="DialogAddColumnGeoLongitude"></span>
+						<span id="DialogAddColumnPntLongitude"></span>
 					</label>
 					<br>
 					<label>Y or Latitude:
-						<span id="DialogAddColumnGeoLatitude"></span>
+						<span id="DialogAddColumnPntLatitude"></span>
 					</label>
 				</fieldset>
 			</fieldset>
@@ -1631,32 +1631,98 @@
 				<legend>Output</legend>
 				<fieldset>
 					<legend>Type:</legend>
-					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LLOut" value="JSON" id="DialogAddColumnGeoRadioJSONOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioJSONOut");document.getElementById("DialogAddColumnGeoNameText").value="Geometry"' checked="checked">GeoJSON Geometry</label><br>
-					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LLOut" value="WKT" id="DialogAddColumnGeoRadioWKTOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioWKTOut");document.getElementById("DialogAddColumnGeoNameText").value="WKT";' >Well Known Text</label><br>
-					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LLOut" value="DGGS" id="DialogAddColumnGeoRadioDGGSOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioDGGSOut");document.getElementById("DialogAddColumnGeoNameText").value=document.getElementById("DialogAddColumnGeoDGGSOutSelect").value;' >DGGS: </label>
+					<label><input type="radio" name="DialogAddColumnPntRadioJSON_WKT_DGGS_LLOut" value="JSON" id="DialogAddColumnPntRadioJSONOut" onChange='ChangeAddColumnPntRadioOut(event, "DialogAddColumnPntRadioJSONOut");document.getElementById("DialogAddColumnPntNameText").value="Geometry"' checked="checked">GeoJSON Geometry</label><br>
+					<label><input type="radio" name="DialogAddColumnPntRadioJSON_WKT_DGGS_LLOut" value="WKT" id="DialogAddColumnPntRadioWKTOut" onChange='ChangeAddColumnPntRadioOut(event, "DialogAddColumnPntRadioWKTOut");document.getElementById("DialogAddColumnPntNameText").value="WKT";' >Well Known Text</label><br>
+					<label><input type="radio" name="DialogAddColumnPntRadioJSON_WKT_DGGS_LLOut" value="DGGS" id="DialogAddColumnPntRadioDGGSOut" onChange='ChangeAddColumnPntRadioOut(event, "DialogAddColumnPntRadioDGGSOut");document.getElementById("DialogAddColumnPntNameText").value=document.getElementById("DialogAddColumnPntDGGSOutSelect").value;' >DGGS: </label>
 					<label>
-						<select id="DialogAddColumnGeoDGGSOutSelect" onChange="document.getElementById('DialogAddColumnGeoRadioDGGSOut').click()"></select>
+						<select id="DialogAddColumnPntDGGSOutSelect" onChange="document.getElementById('DialogAddColumnPntRadioDGGSOut').click()"></select>
 					</label>
 					<br>
-					<label><input type="radio" name="DialogAddColumnGeoRadioJSON_WKT_DGGS_LLOut" value="LL" id="DialogAddColumnGeoRadioLLOut" onChange='ChangeAddColumnGeoRadioOut(event, "DialogAddColumnGeoRadioLLOut");' >Point coordinates</label>
+					<label><input type="radio" name="DialogAddColumnPntRadioJSON_WKT_DGGS_LLOut" value="LL" id="DialogAddColumnPntRadioLLOut" onChange='ChangeAddColumnPntRadioOut(event, "DialogAddColumnPntRadioLLOut");' >Point coordinates</label>
 				</fieldset>
 				<fieldset>
 				<legend>New column name(s)</legend>
-					<span id="DialogAddColumnGeoCRSOutAll" style="display:none;">
-						<span id="DialogAddColumnGeoCRSOut">CRS:</span>
-						<select id="DialogAddColumnGeoCRSOutSelect"></select>
+					<span id="DialogAddColumnPntCRSOutAll" style="display:none;">
+						<span id="DialogAddColumnPntCRSOut">CRS:</span>
+						<select id="DialogAddColumnPntCRSOutSelect"></select>
 						<br>
 					</span>
-					<span id="DialogAddColumnGeoNameOutAll"><label><span id="DialogAddColumnGeoNameOut">Column name:</span> <input type="text" size="30" id="DialogAddColumnGeoNameText" value="Geometry"></input><br></span>
-					<span id="DialogAddColumnGeoLatitudeNameOutAll" style="display:none;"><label><span id="DialogAddColumnGeoLatitudeNameOut">Y or Latitude:</span> <input type="text" size="30" id="DialogAddColumnGeoLatitudeNameText" value="Latitude"></input><br></span>
-					<span id="DialogAddColumnGeoLevelAll"><label><span id="DialogAddColumnGeoLevel">Level:</span><input type="text" size="3" id="DialogAddColumnGeoLevelText" value="10"></input></span>
+					<span id="DialogAddColumnPntNameOutAll"><label><span id="DialogAddColumnPntNameOut">Column name:</span> <input type="text" size="30" id="DialogAddColumnPntNameText" value="Geometry"></input><br></span>
+					<span id="DialogAddColumnPntLatitudeNameOutAll" style="display:none;"><label><span id="DialogAddColumnPntLatitudeNameOut">Y or Latitude:</span> <input type="text" size="30" id="DialogAddColumnPntLatitudeNameText" value="Latitude"></input><br></span>
+					<span id="DialogAddColumnPntLevelAll"><label><span id="DialogAddColumnPntLevel">Level:</span><input type="text" size="3" id="DialogAddColumnPntLevelText" value="10"></input></span>
 				</fieldset>
 			</fieldset>
 			<div class="center">
-				<button value="ok" formmethod="dialog" onClick="GetAddColumnGeo(event)" formmethod="dialog">Add</button>
+				<button value="ok" formmethod="dialog" onClick="GetAddColumnPnt(event)" formmethod="dialog">Add</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
-			<input type="hidden" id="DialogAddColumnGeoNodeId"></input>
+			<input type="hidden" id="DialogAddColumnPntNodeId"></input>
+		</form>
+	</dialog>
+
+	<dialog id="DialogAddColumnBBox" onClose='hideNodeDialog("DialogAddColumnBBox", event)'>
+		<form name="DialogAddColumnBBoxForm">
+			Add column with transformed BoundingBox geometry
+			<fieldset>
+				<legend>Input</legend>
+				<label><input type="radio" name="DialogAddColumnBBoxRadioJSON_WKT_LL" value="JSON" id="DialogAddColumnBBoxRadioJSON">GeoJSON Geometry:
+					<span id="DialogAddColumnBBoxJSON"></span>
+				</label>
+				<br>
+				<label><input type="radio" name="DialogAddColumnBBoxRadioJSON_WKT_LL" value="WKT" id="DialogAddColumnBBoxRadioWKT">Well Known Text:
+					<span id="DialogAddColumnBBoxWKT"></span>
+				</label>
+				<br>
+				<label><input type="radio" name="DialogAddColumnBBoxRadioJSON_WKT_LL" value="LL" id="DialogAddColumnBBoxRadioLL" checked="checked">Coordinates:</label>
+				<fieldset>
+					<label>CRS:
+						<select id="DialogAddColumnBBoxCRSSelect" onChange="document.getElementById('DialogAddColumnBBoxRadioLL').click()"></select>
+					</label>
+					<br>
+					<label>Minimum X or Longitude:
+						<span id="DialogAddColumnBBoxMinLongitude"></span>
+					</label>
+					<br>
+					<label>Minimum Y or Latitude:
+						<span id="DialogAddColumnBBoxMinLatitude"></span>
+					</label>
+					<br>
+					<label>Maximum X or Longitude:
+						<span id="DialogAddColumnBBoxMaxLongitude"></span>
+					</label>
+					<br>
+					<label>Maximum Y or Latitude:
+						<span id="DialogAddColumnBBoxMaxLatitude"></span>
+					</label>
+				</fieldset>
+			</fieldset>
+			<br>
+			<fieldset>
+				<legend>Output</legend>
+				<fieldset>
+					<legend>Type:</legend>
+					<label><input type="radio" name="DialogAddColumnBBoxRadioJSON_WKT_LLOut" value="JSON" id="DialogAddColumnBBoxRadioJSONOut" onChange='ChangeAddColumnBBoxRadioOut(event, "DialogAddColumnBBoxRadioJSONOut");document.getElementById("DialogAddColumnBBoxNameText").value="Geometry"' checked="checked">GeoJSON Geometry</label><br>
+					<label><input type="radio" name="DialogAddColumnBBoxRadioJSON_WKT_LLOut" value="WKT" id="DialogAddColumnBBoxRadioWKTOut" onChange='ChangeAddColumnBBoxRadioOut(event, "DialogAddColumnBBoxRadioWKTOut");document.getElementById("DialogAddColumnBBoxNameText").value="WKT";' >Well Known Text</label><br>
+					<label><input type="radio" name="DialogAddColumnBBoxRadioJSON_WKT_LLOut" value="LL" id="DialogAddColumnBBoxRadioLLOut" onChange='ChangeAddColumnBBoxRadioOut(event, "DialogAddColumnBBoxRadioLLOut");' >Point coordinates</label>
+				</fieldset>
+				<fieldset>
+				<legend>New column name(s)</legend>
+					<span id="DialogAddColumnBBoxCRSOutAll" style="display:none;">
+						<span id="DialogAddColumnBBoxCRSOut">CRS:</span>
+						<select id="DialogAddColumnBBoxCRSOutSelect"></select>
+						<br>
+					</span>
+					<span id="DialogAddColumnBBoxNameOutAll"><label><span id="DialogAddColumnBBoxNameOut">Column name:</span> <input type="text" size="30" id="DialogAddColumnBBoxNameText" value="Geometry"></input><br></span>
+					<span id="DialogAddColumnBBoxMinLatitudeNameOutAll" style="display:none;"><label><span id="DialogAddColumnBBoxMinLatitudeNameOut">Minimum Y or Latitude:</span> <input type="text" size="30" id="DialogAddColumnBBoxMinLatitudeNameText" value="MinLat"></input><br></span>
+					<span id="DialogAddColumnBBoxMaxLongitudeNameOutAll" style="display:none;"><label><span id="DialogAddColumnBBoxMaxLongitudeNameOut">Maximum Y or Longitude:</span> <input type="text" size="30" id="DialogAddColumnBBoxMaxLongitudeNameText" value="MaxLong"></input><br></span>
+					<span id="DialogAddColumnBBoxMaxLatitudeNameOutAll" style="display:none;"><label><span id="DialogAddColumnBBoxMaxLatitudeNameOut">Maximum Y or Latitude:</span> <input type="text" size="30" id="DialogAddColumnBBoxMaxLatitudeNameText" value="MaxLat"></input><br></span>
+				</fieldset>
+			</fieldset>
+			<div class="center">
+				<button value="ok" formmethod="dialog" onClick="GetAddColumnBBox(event)" formmethod="dialog">Add</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogAddColumnBBoxNodeId"></input>
 		</form>
 	</dialog>
 

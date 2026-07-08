@@ -642,7 +642,6 @@ var data;
 		return;
 	}
 
-	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
 	var dataAttributesArray=ShowPropagateNodeSelectedSelectExpands(node, parentNode)
 
 	var selectedColumns=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin).selected;

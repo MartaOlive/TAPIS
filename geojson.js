@@ -91,6 +91,7 @@ var data=[], feature;
 }
 
 //This funcion support both a feature or a geometry as input
+//Returns and array of 2 numbers
 function getFirstCoordinateGeoJSONGeometry(geometry) {
 	if (geometry.geometry)
 		geometry=geometry.geometry;
@@ -98,12 +99,72 @@ function getFirstCoordinateGeoJSONGeometry(geometry) {
 		return null;
 	if (geometry.type=="Point")
 		return geometry.coordinates;
-	else if ((geometry.type=="MultiPoint" || geometry.type=="LineString") && geometry.coordinates[0].length)
+	if ((geometry.type=="MultiPoint" || geometry.type=="LineString") && geometry.coordinates[0].length)
 		return geometry.coordinates[0];
-	else if ((geometry.type=="MultiLineString" || geometry.type=="Polygon") && geometry.coordinates[0].length && geometry.coordinates[0][0].length)
+	if ((geometry.type=="MultiLineString" || geometry.type=="Polygon") && geometry.coordinates[0].length && geometry.coordinates[0][0].length)
 		return geometry.coordinates[0][0];
-	else if (geometry.type=="MultiPolygon" && geometry.coordinates[0].length && geometry.coordinates[0][0].length && geometry.coordinates[0][0][0].length)
+	if (geometry.type=="MultiPolygon" && geometry.coordinates[0].length && geometry.coordinates[0][0].length && geometry.coordinates[0][0][0].length)
 		return geometry.coordinates[0][0][0];
-	else 
+	return null;
+}
+
+//This funcion support both a feature or a geometry as input
+function getBBoxCoordinateGeoJSONGeometry(geometry) {
+	var bbox;
+	if (geometry.geometry)
+		geometry=geometry.geometry;
+	if (!geometry.coordinates || !geometry.coordinates.length)
 		return null;
+	if (geometry.type=="Point" && geometry.coordinates[0].length) {
+		return {minLong:geometry.coordinates[0], minLat: geometry.coordinates[0], minLong:geometry.coordinates[0], minLat: geometry.coordinates[0]};
+	}
+	if ((geometry.type=="MultiPoint" || geometry.type=="LineString") && geometry.coordinates[0].length) {
+		bbox={minLong:geometry.coordinates[0][0], minLat: geometry.coordinates[0][1], maxLong:geometry.coordinates[0][0], maxLat: geometry.coordinates[0][1]};
+		for (var i=1; i<geometry.coordinates.length; i++) {
+			if (bbox.minLong>geometry.coordinates[i][0])
+				bbox.minLong=geometry.coordinates[i][0];
+			else if (bbox.maxLong<geometry.coordinates[i][0])
+				bbox.maxLong=geometry.coordinates[i][0];
+			if (bbox.minLat>geometry.coordinates[i][1])
+				bbox.minLat=geometry.coordinates[i][1];
+			else if (bbox.maxLat<geometry.coordinates[i][1])
+				bbox.maxLat=geometry.coordinates[i][1];
+		}
+		return bbox;
+	}
+	if ((geometry.type=="MultiLineString" || geometry.type=="Polygon") && geometry.coordinates[0].length && geometry.coordinates[0][0].length) {
+		bbox={minLong:geometry.coordinates[0][0][0], minLat: geometry.coordinates[0][0][1], maxLong:geometry.coordinates[0][0][0], maxLat: geometry.coordinates[0][0][1]};
+		for (var j=0; j<geometry.coordinates.length; j++) {
+			for (var i=(j==0 ? 1 : 0); i<geometry.coordinates[j].length; i++) {
+				if (bbox.minLong>geometry.coordinates[j][i][0])
+					bbox.minLong=geometry.coordinates[j][i][0];
+				else if (bbox.maxLong<geometry.coordinates[j][i][0])
+					bbox.maxLong=geometry.coordinates[j][i][0];
+				if (bbox.minLat>geometry.coordinates[j][i][1])
+					bbox.minLat=geometry.coordinates[j][i][1];
+				else if (bbox.maxLat<geometry.coordinates[j][i][1])
+					bbox.maxLat=geometry.coordinates[j][i][1];
+			}
+		}
+		return bbox;
+	}
+	if (geometry.type=="MultiPolygon" && geometry.coordinates[0].length && geometry.coordinates[0][0].length && geometry.coordinates[0][0][0].length) {
+		bbox={minLong:geometry.coordinates[0][0][0][0], minLat: geometry.coordinates[0][0][0][1], maxLong:geometry.coordinates[0][0][0][0], maxLat: geometry.coordinates[0][0][0][1]};
+		for (var k=0; k<geometry.coordinates.length; k++) {
+			for (var j=0; j<geometry.coordinates[k].length; j++) {
+				for (var i=(j==0 && k==0 ? 1 : 0); i<geometry.coordinates[k][j].length; i++) {
+					if (bbox.minLong>geometry.coordinates[k][j][i][0])
+						bbox.minLong=geometry.coordinates[k][j][i][0];
+					else if (bbox.maxLong<geometry.coordinates[k][j][i][0])
+						bbox.maxLong=geometry.coordinates[k][j][i][0];
+					if (bbox.minLat>geometry.coordinates[k][j][i][1])
+						bbox.minLat=geometry.coordinates[k][j][i][1];
+					else if (bbox.maxLat<geometry.coordinates[k][j][i][1])
+						bbox.maxLat=geometry.coordinates[k][j][i][1];
+				}
+			}
+		}
+		return bbox;
+	}
+	return null;
 }
