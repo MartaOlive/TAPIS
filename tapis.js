@@ -1289,13 +1289,67 @@ function TransformDatesToISO(data) {
 		}
 	}
 }
+function evaluateIfItIsADate(value){
+	/*Accept:
+		2026
+		2026-07
+		2026-07-08
+		2026-07-08T14
+		2026-07-08T14:30
+		2026-07-08T14:30:45
+		2026-07-08T14:30:45.1
+		2026-07-08T14:30:45.12
+		2026-07-08T14:30:45.123
+		2026-07-08T14:30:45Z
+		2026-07-08T14:30:45.123Z*/
 
+	var regex = /^\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{2}(\.\d{1,3})?)?)?Z?)?)?)?$/;
+	return regex.test(value);
+
+}
 function TransformTextCSVToTable(csvText, url, node) {
+	var dynamicTyping = document.getElementById("DialogImportCSVStringTyping").checked;
+
+	if (!dynamicTyping) {
+		//there is any interval? ex:  2024-06-23T06:10:00Z/2024-07-12T17:30:00Z
+		var csvText_lines = csvText.split(/\r?\n/);
+		
+		var currentRecord;
+		//Delimiter
+		const delimiterTest = Papa.parse(csvText, {
+			header: true,
+			delimiter: "",
+			skipEmptyLines: true
+		});
+		var columns= csvText_lines[0].split(delimiterTest.meta.delimiter);
+		var itIsAnInterval=[], currentRecord_splited;
+		for (var a=0;a<columns.length;a++){
+			itIsAnInterval.push(false);
+		}
+		for (var i=1;i<csvText_lines.length;i++){
+			currentRecord= csvText_lines[i].split(delimiterTest.meta.delimiter);
+			for(var e=0;e<currentRecord.length;e++){
+				if (itIsAnInterval[e]!=true){
+					currentRecord_splited= currentRecord[e].split("/");
+					if (currentRecord_splited.length==2){ //possible interval
+						if (evaluateIfItIsADate(currentRecord_splited[0])&&evaluateIfItIsADate(currentRecord_splited[1])){
+							itIsAnInterval[e]=true;
+						}
+					}
+				}
+			}
+		}
+		dynamicTyping={}
+		for (var u=0;u<columns.length;u++){
+			dynamicTyping[columns[u]]=!itIsAnInterval[u]
+		}
+	}
+
 	try
 	{
 		var result = Papa.parse(csvText, {delimiter: (document.getElementById("DialogImportCSVDelimiterAuto").checked ? null : (document.getElementById("DialogImportCSVDelimiterText").checked ? document.getElementById("DialogImportCSVDelimiter").value : '\t')),
 			header: document.getElementById("DialogImportCSVHeader").checked,
-			dynamicTyping: document.getElementById("DialogImportCSVStringTyping").checked ? false : true,
+			dynamicTyping: dynamicTyping,
 			skipEmptyLines: true});
 		var node=getNodeDialog("DialogImportCSV");
 		node.STAdata=result.data;
