@@ -1302,8 +1302,11 @@ function TransformDatesToISO(data) {
 function TransformCSVToTable(csvText) {
 	var result = Papa.parse(csvText, {delimiter: (document.getElementById("DialogImportCSVDelimiterAuto").checked ? null : (document.getElementById("DialogImportCSVDelimiterText").checked ? document.getElementById("DialogImportCSVDelimiter").value : '\t')),
 		header: document.getElementById("DialogImportCSVHeader").checked,
-		dynamicTyping: document.getElementById("DialogImportCSVStringTyping").checked ? false : true,
+		dynamicTyping: false,
 		skipEmptyLines: true});
+	// if (document.getElementById("DialogImportCSVStringTyping").checked ){
+
+	// } 
 	if (result && result.data) {
 		TransformDatesToISO(result.data);  //Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
 		//We can consider to remove dynamicTyping because is generating all sort of problems with dates and then analize the response ourselves.
@@ -1353,7 +1356,7 @@ function TransformTextCSVToTable(csvText, url, node) {
 }
 
 function openFileDialog() { //Click the hide input type =file. All this is necessary to allow to load same file again and show file name. 
-    document.getElementById("csvInput").click();
+    document.getElementById("DialogImportCSVSourceFileText").click();
 }
 
 function ReadFileImportCSV(event) {
