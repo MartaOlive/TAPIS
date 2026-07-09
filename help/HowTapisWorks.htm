@@ -18,7 +18,7 @@
     </header>
     <main>
         <div class="mainTools">
- 
+
             <h1 class="toolPage_mainTitle">How TAPIS Works</h1> <!--general title -->
             <div id="toolPage_howTapisWorks" class="toolBoxParent"></div> <!--all tools-->
 
@@ -40,14 +40,16 @@
                         A part of a classical rows and columns tabular representation, data can be presented as bar
                         charts,
                         pie charts, scatter plots, and maps. TAPIS is integrated with <a
-                            href="https://github.com/grumets/nimmbus" target="_blank">NiMMbus</a> (MiraMon implementation of the
+                            href="https://github.com/grumets/nimmbus" target="_blank">NiMMbus</a> (MiraMon
+                        implementation of the
                         Geospatial
-                        User Feedback) and with the <a href="https://github.com/grumets/MiraMonMapBrowser" target="_blank">MiraMon Map
+                        User Feedback) and with the <a href="https://github.com/grumets/MiraMonMapBrowser"
+                            target="_blank">MiraMon Map
                             Browser</a>.
                     <p>
                     <p>
-                        While the project is completely independent from the <a
-                            href="https://orangedatamining.com/" target="_blank">Orange
+                        While the project is completely independent from the <a href="https://orangedatamining.com/"
+                            target="_blank">Orange
                             data mining</a> software, it has been inspired by its GUI design. If you have used Orange in
                         the
                         past, you will immediately know how TAPIS works.
@@ -134,20 +136,91 @@
                     <div>
                     </div>
                 </div>
-                <div class="toolPage_main" id="STAnodesVsTableNodes">
-                    <div class="toolPage_main_text">
-                        <h2 class="toolPage_title">SensorThings API nodes vs Table nodes </h2>
-                        Some operations are performed by TAPIS directly (the ones that has grey icons) and some others
-                        are
-                        performed by the STA (the ones that has blue elements in the icon). For the STA icons, TAPIS
-                        will
-                        only build queries and wait for the STA server to return the new table. A blue node can commonly
-                        be
-                        a source node for a grey node but a grey node cannot be a source node for a blue node.
+            </div>
+            <div class="toolPage_main" id="STAnodesVsTableNodes">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title">SensorThings API nodes vs Table nodes </h2>
+                    Some operations are performed by TAPIS directly (the ones that has grey icons) and some others
+                    are
+                    performed by the STA (the ones that has blue elements in the icon). For the STA icons, TAPIS
+                    will
+                    only build queries and wait for the STA server to return the new table. A blue node can commonly
+                    be
+                    a source node for a grey node but a grey node cannot be a source node for a blue node.
 
-                    </div>
                 </div>
             </div>
+            <div class="toolPage_main" id="URL parameters">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title">Open an schema directly (using URL parameters)</h2>
+
+                    <p>It is possible to open a <strong> JSON schema</strong> hosted on the internet by <strong>adding
+                            parameters</strong> to the <i>Tapis URL</i>.
+                        The same mechanism can also be used to <strong>open a dialog directly</strong> from that schema
+                        (for example a BarPlot) by including an
+                        additional parameter in the URL. <strong>Data can also be reset</strong> (adding another
+                        parameter), but only if
+                        it was loaded from an <i>online
+                            source</i>, such as an <a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#sta"
+                            target='_blank'>STA service</a> or a <a
+                            href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportJSON"
+                            target='_blank'>JSON</a>, <a
+                            href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportCSV"
+                            target='_blank'>CSV</a>, or other file retrieved from a URL.</p>
+
+                    <p>These are the parameters:</p>
+
+                    <ul>
+                        <li>
+                            <strong>schema</strong>: Uploads a previously saved schema. This is useful to force TAPIS to
+                            start with a specific uploaded schema. It is equivalent to clicking the
+                            <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#openNetwork"
+                                target='_blank'>Open button</a> .
+                        </li>
+
+                        <li>
+                            <strong>open</strong>: Opens one of the <strong>dialogs</strong> in the schema by its
+                            <strong>label</strong> (please ensure
+                            node labels are unique before saving the schema). This parameter is typically used to open a
+                            diagram (such as a <a
+                                href="https://www.tapis.grumets.cat/tapis/help/statisticsvisualize.htm#ScatterPlot"
+                                target="_blank">scatter plot</a> or <a
+                                href="https://www.tapis.grumets.cat/tapis/help/statisticsvisualize.htm#BarPlot"
+                                target="_blank">bar chart</a>) immediately after loading the schema. <strong></strong>It
+                            must
+                            be used together with schema</strong>. It is equivalent to <i>double-clicking</i> the
+                            corresponding node.
+                        </li>
+
+                        <li>
+                            <strong>refresh=1</strong>: By default, when using the <strong>schema</strong> parameter,
+                            TAPIS loads the data stored with the saved schema. If the data provided by a service has
+                            changed, those changes are ignored. When <strong>refresh=1</strong> is specified, TAPIS
+                            reloads the data from the original source (currently supported only by selected node types).
+                            If a scatter plot or bar chart is open, it is refreshed automatically. This is equivalent to
+                            clicking the <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#reload"
+                                target="_blank">Refresh</a> button.
+                        </li>
+                    </ul>
+                    <p>
+                        The following example illustrates how these parameters can be used. In this case, one of the
+                        schemas stored internally in TAPIS has been used: <strong>Recipe 5</strong>.
+                    </p>
+                    <p>Example 1: </p>
+                    <p> <strong>
+                            https://www.tapis.grumets.cat/?schema=recipes/recipe05_01_spatialFilterTemperature.json
+                        </strong></p>
+
+                    <img src="URLParameters_image2.png" class="toolPage_image">
+                    <p>Example 2: </p>
+                    <p> <strong>
+                            https://www.tapis.grumets.cat/?schema=recipes/recipe05_01_spatialFilterTemperature.json&open=ScatterPlot&reset=1
+                        </strong></p>
+
+                    <img src="URLParameters_image1.png" class="toolPage_image">
+                </div>
+            </div>
+        </div>
     </main>
 </body>
 

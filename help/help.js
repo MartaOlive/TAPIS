@@ -336,7 +336,8 @@ function createNavBar() {
     <a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm#howStart">How start</a>
     <a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm#connectingNodes">Connecting nodes</a>
     <a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm#leafNodes">Leaf nodes</a>
-    <a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm#STAnodesVsTableNodes">STAnodes vs table nodes</a>`
+    <a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm#STAnodesVsTableNodes">STAnodes vs table nodes</a>
+    <a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm#URLParameters">Open an schema directly</a>`
     c += `</div></div></div>`
     document.getElementById("navBar_howTAPISWorks").innerHTML = c;
     //Services And Apis

@@ -1289,7 +1289,7 @@ function TransformDatesToISO(data) {
 		}
 	}
 }
-function evaluateIfItIsADate(value){
+function evaluateIfItIsISOADate(value){
 	/*Accept:
 		2026
 		2026-07
@@ -1305,8 +1305,8 @@ function evaluateIfItIsADate(value){
 
 	var regex = /^\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{2}(\.\d{1,3})?)?)?Z?)?)?)?$/;
 	return regex.test(value);
-
 }
+
 function TransformTextCSVToTable(csvText, url, node) {
 	var dynamicTyping = document.getElementById("DialogImportCSVStringTyping").checked;
 
@@ -1332,7 +1332,7 @@ function TransformTextCSVToTable(csvText, url, node) {
 				if (itIsAnInterval[e]!=true){
 					currentRecord_splited= currentRecord[e].split("/");
 					if (currentRecord_splited.length==2){ //possible interval
-						if (evaluateIfItIsADate(currentRecord_splited[0])&&evaluateIfItIsADate(currentRecord_splited[1])){
+						if (evaluateIfItIsISODate(currentRecord_splited[0])&&evaluateIfItIsISODate(currentRecord_splited[1])){
 							itIsAnInterval[e]=true;
 						}
 					}
