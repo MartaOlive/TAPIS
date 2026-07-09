@@ -57,14 +57,11 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 				document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display="inline-block";	
 				
 			}
-			
 		}
 	}else{
 		document.getElementById("DialogScatterPlotAxisXSort").checked=true;	
 		document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display="none";
 	}
-
-	
 
 	
 	var noData = true, attributesArray = [], allAttributes, allAttributesKeys, objectWithParentNodesInfo = {};
@@ -139,8 +136,6 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 	document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
 	createDialogWithSelectWithGroupsScatterPlot(node);
 	drawScatterPlot(node);
-	
-
 }
 
 function createDialogWithSelectWithGroupsScatterPlot(node) {
@@ -263,9 +258,11 @@ function updateSelectInformationScatterPlot(numberDialog, keyToChange, typeOfSel
 	networkNodes.update(node);
 	createDialogWithSelectWithGroupsScatterPlot(node);
 }
+
 function drawScatterPlot(node){
 		var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'))
-	if (chart)ScatterPlotChart.destroy();
+	if (chart)
+		ScatterPlotChart.destroy();
 	ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), node.STAattributesToSelect.config);
 }
 
@@ -282,7 +279,6 @@ function ShowBarPlotDialog(parentNodes, node) {
 	PopulateSelectSaveLayerDialog("DialogBarPlotAxisX", dataAttributes, node && node.barPlotOptions && node.barPlotOptions.axisX ? node.barPlotOptions.axisX : "phenomenonTime");
 	PopulateSelectSaveLayerDialog("DialogBarPlotSeries", dataAttributes, node && node.barPlotOptions && node.barPlotOptions.series ? node.barPlotOptions.series : "");
 	PopulateSelectSaveLayerDialog("DialogBarPlotAxisY", dataAttributes, node && node.barPlotOptions && node.barPlotOptions.axisY ? node.barPlotOptions.axisY : "result");
-
 
 	if (parentNodes.length < 2)
 		document.getElementById("DialogBarPlotVariable").innerHTML = '<input id="DialogBarPlotVariableInput" value="' + (node && node.barPlotOptions && node.barPlotOptions.labelY ? node.barPlotOptions.labelY : '') + '">';
@@ -868,4 +864,3 @@ function DrawImageViewer(event) {
 function CloseDialogImageViewer(event) {
 	hideNodeDialog("DialogImageViewer", event);
 }
-

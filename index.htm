@@ -1331,7 +1331,7 @@
 				Local CSVW file: <input type="file" id="DialogImportMeaningCSVSourceFileText" accept=".csvw,.json" onChange="ReadFileImportCSVW(event)"></input></label><br>
 
 				<label><input type="radio" id="DialogImportMeaningCSVSourceURL" name="DialogImportMeaningCSVSource" value="url" onClick='SelectImportMeaningFileSource(event, "CSV");'>
-				CSVW URL: <input type="text" size="70" id="DialogImportMeaningCSVSourceURLInput" onChange="ReadURLImportCSVW(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningCSVSourceURLButton" onClick="ReadURLImportCSVW(event)" disabled="disabled">Load</button></label><br>
+				CSVW URL: <input type="text" size="70" id="DialogImportMeaningCSVSourceURLInput" disabled="disabled"></input> <button type="button" id="DialogImportMeaningCSVSourceURLButton" onClick="ReadURLImportCSVW(event)" disabled="disabled">Load</button></label><br>
 				<label><input type="radio" id="DialogImportMeaningCSVSourceAuto" name="DialogImportMeaningCSVSource" value="auto" onClick='SelectImportMeaningFileSource(event, "CSV");'>
 				Automatic retrieve of shared meaning</label><br>
 			</fieldset>
@@ -1340,10 +1340,9 @@
 				<legend>CSV source</legend>
 				<label><input type="radio" id="DialogImportCSVSourceNew" name="DialogImportCSVSource" value="new"> New based on CSVW</input></label><br>
 				<label><input type="radio" id="DialogImportCSVSourceFile" name="DialogImportCSVSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "CSV")'>
-				<!--  <input type="file" accept=".csv,*.txt" id="DialogImportCSVSourceFileText" onChange="ReadFileImportCSV(event)"></input></label><br> -->
-				Local file:<button type="button" onclick="openFileDialog()">Open CSV</button><span id="fileNameLabel">No file selected</span><input type="file" id="csvInput" accept=".csv,.txt" style="display:none"  onchange="ReadFileImportCSV(event)"><br>
+				Local file:<button type="button" onclick="openFileDialog()">Open CSV</button><span id="fileNameLabel">No file selected</span><input type="file" id="DialogImportCSVSourceFileText" accept=".csv,.txt" style="display:none"  onchange="ReadFileImportCSV(event)"><br>
 				<label><input type="radio" id="DialogImportCSVSourceURL" name="DialogImportCSVSource" value="url" onClick='SelectImportFileSource(event, "CSV")'>
-				URL: <input type="text" size="70" id="DialogImportCSVSourceURLInput" onChange="ReadURLImportCSV(event)" disabled="disabled"></input> <button type="button" id="DialogImportCSVSourceURLButton" onClick="ReadURLImportCSV(event)" disabled="disabled">Load</button></label><br>
+				URL: <input type="text" size="70" id="DialogImportCSVSourceURLInput" disabled="disabled"></input> <button type="button" id="DialogImportCSVSourceURLButton" onClick="ReadURLImportCSV(event)" disabled="disabled">Load</button></label><br>
 				<label>Suggested CSV URLs:
 					<select id="DialogImportCSVSourceURLSelect" onChange="PopulateInputFromSelect(event, 'DialogImportCSVSourceURL')"></select>
 				</label>
@@ -1414,7 +1413,7 @@
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceFile" name="DialogImportMeaningGeoJSONSource" value="file" checked="checked" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				Local GeoJSON schema file: <input type="file" id="DialogImportMeaningGeoJSONSourceFileText" accept=".json" onChange="ReadFileImportGeoJSONSchema(event)"></input></label><br>
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceURL" name="DialogImportMeaningGeoJSONSource" value="url" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
-				GeoJSON schema URL: <input type="text" size="70" id="DialogImportMeaningGeoJSONSourceURLInput" onChange="ReadURLImportGeoJSONSchema(event)" disabled="disabled"></input> <button type="button" id="DialogImportMeaningGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSONSchema(event)" disabled="disabled">Load</button></label><br>
+				GeoJSON schema URL: <input type="text" size="70" id="DialogImportMeaningGeoJSONSourceURLInput" disabled="disabled"></input> <button type="button" id="DialogImportMeaningGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSONSchema(event)" disabled="disabled">Load</button></label><br>
 				<label><input type="radio" id="DialogImportMeaningGeoJSONSourceAuto" name="DialogImportMeaningGeoJSONSource" value="auto" onClick='SelectImportMeaningFileSource(event, "GeoJSON");'>
 				Automatic retrieve of shared meaning</label><br>
 			</fieldset>
@@ -1424,7 +1423,7 @@
 				<label><input type="radio" id="DialogImportGeoJSONSourceFile" name="DialogImportGeoJSONSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "GeoJSON")'>
 				Local file: <input type="file" accept=".geojson,*.json" id="DialogImportGeoJSONSourceFileText" onChange="ReadFileImportGeoJSON(event)"></input></label><br>
 				<label><input type="radio" id="DialogImportGeoJSONSourceURL" name="DialogImportGeoJSONSource" value="url" onClick='SelectImportFileSource(event, "GeoJSON")'>
-				URL: <input type="text" size="70" id="DialogImportGeoJSONSourceURLInput" onChange="ReadURLImportGeoJSON(event)" disabled="disabled"></input> <button type="button" id="DialogImportGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSON(event)" disabled="disabled">Load</button></label><br>
+				URL: <input type="text" size="70" id="DialogImportGeoJSONSourceURLInput" disabled="disabled"></input> <button type="button" id="DialogImportGeoJSONSourceURLButton" onClick="ReadURLImportGeoJSON(event)" disabled="disabled">Load</button></label><br>
 				<label>Suggested GeoJSON URLs:
 					<select id="DialogImportGeoJSONSourceURLSelect" onChange="PopulateInputFromSelect(event, 'DialogImportGeoJSONSourceURL')"></select>
 				</label><br>
@@ -1451,7 +1450,7 @@
 				<label><input type="radio" id="DialogImportDBFSourceFile" name="DialogImportDBFSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "DBF")'>
 				Local file: <input type="file" accept=".dbf" id="DialogImportDBFSourceFileText" onChange="ReadFileImportDBF(event)"></input></label><br>
 				<label><input type="radio" id="DialogImportDBFSourceURL" name="DialogImportDBFSource" value="url" onClick='SelectImportFileSource(event, "DBF")'>
-				URL: <input type="text" size="70" id="DialogImportDBFSourceURLInput" onChange="ReadURLImportDBF(event)" disabled="disabled"></input> <button type="button" id="DialogImportDBFSourceURLButton" onClick="ReadURLImportDBF(event)" disabled="disabled">Load</button></label><br>
+				URL: <input type="text" size="70" id="DialogImportDBFSourceURLInput" disabled="disabled"></input> <button type="button" id="DialogImportDBFSourceURLButton" onClick="ReadURLImportDBF(event)" disabled="disabled">Load</button></label><br>
 			</fieldset>
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "DBF")' formmethod="dialog">Done</button>
@@ -1471,7 +1470,7 @@
 				<label><input type="radio" id="DialogImportGPKGSourceFile" name="DialogImportGPKGSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "GPKG")'>
 				Local file: <input type="file" accept=".gpkg" id="DialogImportGPKGSourceFileText" onChange="ReadFileImportGPKG(event)"></input></label><br>
 				<label><input type="radio" id="DialogImportGPKGSourceURL" name="DialogImportGPKGSource" value="url" onClick='SelectImportFileSource(event, "GPKG")'>
-				URL: <input type="text" size="70" id="DialogImportGPKGSourceURLInput" onChange="ReadURLImportGPKG(event)" disabled="disabled"></input> <button type="button" id="DialogImportGPKGSourceURLButton" onClick="ReadURLImportGPKG(event)" disabled="disabled">Load</button></label><br>
+				URL: <input type="text" size="70" id="DialogImportGPKGSourceURLInput" disabled="disabled"></input> <button type="button" id="DialogImportGPKGSourceURLButton" onClick="ReadURLImportGPKG(event)" disabled="disabled">Load</button></label><br>
 			</fieldset>
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "GPKG")' formmethod="dialog">Done</button>
@@ -1496,7 +1495,7 @@
 				<label><input type="radio" id="DialogImportJSONLDSourceFile" name="DialogImportJSONLDSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "JSONLD")'>
 				Local file: <input type="file" accept=".json;*.jsonld" id="DialogImportJSONLDSourceFileText" onChange="ReadFileImportJSONLD(event)"></input></label><br>
 				<label><input type="radio" id="DialogImportJSONLDSourceURL" name="DialogImportJSONLDSource" value="url" onClick='SelectImportFileSource(event, "JSONLD")'>
-				URL: <input type="text" size="70" id="DialogImportJSONLDSourceURLInput" onChange="ReadURLImportJSONLD(event)" disabled="disabled"></input> <button type="button" id="DialogImportJSONLDSourceURLButton" onClick="ReadURLImportJSONLD(event)" disabled="disabled">Load</button></label><br>
+				URL: <input type="text" size="70" id="DialogImportJSONLDSourceURLInput" disabled="disabled"></input> <button type="button" id="DialogImportJSONLDSourceURLButton" onClick="ReadURLImportJSONLD(event)" disabled="disabled">Load</button></label><br>
 			</fieldset>
 			<div class="center">
 				<button value="ok" formmethod="dialog" onClick='RetrieveMeaningTable(event, "JSONLD")' formmethod="dialog">Done</button>
@@ -1515,7 +1514,7 @@
 				Local file: <input type="file" accept=".json" id="DialogImportJSONSourceFileText" onChange="ReadFileImportJSON(event)" multiple></input></label><br>
 				<label><input type="radio" id="DialogImportJSONSourceURL" name="DialogImportJSONSource" value="url" onClick='SelectImportFileSource(event, "JSON")'>
 				URL single: 
-				 <input type="text" size="70" id="DialogImportJSONSourceURLInput" onChange="ReadURLImportJSON(event)" disabled="disabled"></input> 
+				 <input type="text" size="70" id="DialogImportJSONSourceURLInput" disabled="disabled"></input> 
 				 <button type="button" id="DialogImportJSONSourceURLButton" onclick="ReadURLImportJSON(event)" disabled="disabled">Load</button> 
 				<br>
 				<input type="radio" id="DialogImportJSONSourceURLList" name="DialogImportJSONSource" value="urlList" onClick='SelectImportFileSource(event, "JSON")'>
