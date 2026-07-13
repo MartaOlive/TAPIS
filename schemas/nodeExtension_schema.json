@@ -55,7 +55,7 @@
 						"secretKey": {"type": "string"},
 						"service": {"type": "string"}
 					} 
-				}
+				},
 				"facts": { 
 					"description": "Security parameters to be used in the FACTS",
 					"type": "object",
