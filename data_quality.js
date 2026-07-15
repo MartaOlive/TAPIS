@@ -1475,3 +1475,96 @@ function calculateDataQualityThematicValidityWithRange(data,from, to,  metadata,
     return [count, (count / data.length) * 100]
 
 }
+
+//Misclassification Matrix
+
+const confusionMatrix = { //classified -> References
+    "Pinus sylvestris": {
+        "Pinus sylvestris": 12,
+        "Pinus nigra": 2,
+        "Quercus ilex": 1,
+        "Fagus sylvatica": 1
+    },
+    "Pinus nigra": {
+        "Pinus sylvestris": 3,
+        "Pinus nigra": 15,
+        "Quercus ilex": 2,
+        "Fagus sylvatica": 1
+    },
+    "Quercus ilex": {
+        "Pinus sylvestris": 1,
+        "Pinus nigra": 1,
+        "Quercus ilex": 15,
+        "Fagus sylvatica": 2
+    },
+    "Fagus sylvatica": {
+        "Pinus sylvestris": 0,
+        "Pinus nigra": 2,
+        "Quercus ilex": 3,
+        "Fagus sylvatica": 17
+    }
+};
+
+var obj={
+	totalnumber: 80,
+	totalsclassified:{
+		"Pinus sylvestris": 16,
+		"Pinus nigra": 20,
+		"Quercus ilex": 19,
+		"Fagus sylvatica": 25
+
+	},
+	 totalReference : {
+		"Pinus sylvestris": 16,
+		"Pinus nigra": 20,
+		"Quercus ilex": 24,
+		"Fagus sylvatica": 20
+	},
+	wellclassified: {
+		"Pinus sylvestris": 12,
+		"Pinus nigra": 15,
+		"Quercus ilex": 15,
+		"Fagus sylvatica": 17
+	}, 
+	numberOfWellClassified: wellclassified["Pinus sylvestris"] +wellclassified["Pinus nigra"] +wellclassified["Quercus ilex"] +wellclassified["Fagus sylvatica"] ,
+	overallAccuracy : numberOfWellClassified /totalnumber,
+	overallError: 1-overallAccuracy,
+	ProducerAccuracy :{// metrica per classes, no te global
+    	"Pinus sylvestris": truePositives["Pinus sylvestris"] / totalReference["Pinus sylvestris"],
+    	"Pinus nigra": truePositives["Pinus nigra"] / totalReference["Pinus nigra"],
+    	"Quercus ilex": truePositives["Quercus ilex"] / totalReference["Quercus ilex"],
+    	"Fagus sylvatica": truePositives["Fagus sylvatica"] / totalReference["Fagus sylvatica"]
+	},
+	UserAccuracy :{// metrica per classes, no te global
+    	"Pinus sylvestris": truePositives["Pinus sylvestris"] / totalsclassified["Pinus sylvestris"],
+    	"Pinus nigra": truePositives["Pinus nigra"] / totalsclassified["Pinus nigra"],
+    	"Quercus ilex": truePositives["Quercus ilex"] / totalsclassified["Quercus ilex"],
+    	"Fagus sylvatica": truePositives["Fagus sylvatica"] / totalsclassified["Fagus sylvatica"]
+	},
+	omissionError:OmissionError = {
+    "Pinus sylvestris": 1 - ProducerAccuracy["Pinus sylvestris"],
+    "Pinus nigra": 1 - ProducerAccuracy["Pinus nigra"],
+    "Quercus ilex": 1 - ProducerAccuracy["Quercus ilex"],
+    "Fagus sylvatica": 1 - ProducerAccuracy["Fagus sylvatica"]
+	},
+	CommissionError : {
+    "Pinus sylvestris": 1 - UserAccuracy["Pinus sylvestris"],
+    "Pinus nigra": 1 - UserAccuracy["Pinus nigra"],
+    "Quercus ilex": 1 - UserAccuracy["Quercus ilex"],
+    "Fagus sylvatica": 1 - UserAccuracy["Fagus sylvatica"]
+	},
+	indexKappa:{
+		ObservedAgreement:(wellclassified["Pinus sylvestris"] + wellclassified["Pinus nigra"] + wellclassified["Quercus ilex"] + wellclassified["Fagus sylvatica"])/totalnumber, //total de ben classificats/total
+		multiplicationsTotals: totalsclassified["Pinus sylvestris"] * totalReference["Pinus sylvestris"] +
+                 totalsclassified["Pinus nigra"] * totalReference["Pinus nigra"] +
+                 totalsclassified["Quercus ilex"] * totalReference["Quercus ilex"] +
+                 totalsclassified["Fagus sylvatica"] * totalReference["Fagus sylvatica"],
+		expectedAgreement: multiplicationsTotals/(totalnumber*totalnumber),
+		
+		resultindexKappa: (ObservedAgreement -expectedAgreemen)/(1-expectedAgreemen)
+	}
+
+
+}
+
+

@@ -2039,60 +2039,65 @@
 		<input type="hidden" id="DialogQualityCompletnessOmissionNodeId"></input>
 		</form>
 	</dialog>
-	<dialog id="DialogQualityMisclassificationMatrix" onClose='hideNodeDialog("DialogQualityMisclassificationMatrix", event)'>
+	<dialog id="DialogQualityMisclassificationMatrix"
+		onClose='hideNodeDialog("DialogQualityMisclassificationMatrix", event)'>
 		<form>
 			<h3> Misclassification matrix</h3>
 			<div>
-			<fieldset>
-				<legend>Add columns to compare</legend>
+				<fieldset>
+					<legend>Add columns to compare</legend>
 
-				<div style="display:flex; align-items:end; gap:10px;">
-					<div style="flex:1;">
-						<label for="Misclassification_select_classified">Classified</label><br>
-						<select id="Misclassification_select_classified" style="width:100%;"></select>
+					<div style="display:flex; align-items:end; gap:10px;">
+						<div style="flex:1;">
+							<label for="Misclassification_select_classified">Classified</label><br>
+							<select id="Misclassification_select_classified" style="width:100%;"></select>
+						</div>
+
+						<div style="flex:1;">
+							<label for="Misclassification_select_reference">Reference</label><br>
+							<select id="Misclassification_select_reference" style="width:100%;"></select>
+						</div>
+
+						<div>
+							<button type="button" onclick="addColumnToMisclassificationMatrixTable(event)">Add</button>
+						</div>
 					</div>
+				</fieldset>
 
-					<div style="flex:1;">
-						<label for="Misclassification_select_reference">Reference</label><br>
-						<select id="Misclassification_select_reference" style="width:100%;"></select>
-					</div>
-
-					<div>
-						<button type="button" onlclick="addColumnToMisclassificationMatrixTable(event)">Add</button>
-					</div>
-				</div>
-			</fieldset>
-
-			<br>
-			<p>Columns to compare: </p>
-			<table id="Misclassification_table_pairs" border="1" style=" width:100%;">
-				<thead>
-					<tr>
-						<th>Classified</th>
-						<th>Reference</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr class="placeholder">
-						<td style="color:#888;"><em>No columns added yet</em></td>
-						<td style="color:#888;"><em>No columns added yet</em></td>
-					</tr>
-				</tbody>
-			</table>
-
-			<br>
-			</p>
-			<div id="Misclassification_matrix_container"
-				style="border:1px solid #999; min-height:250px; padding:10px;">
-				<p>Matrix calculated</p>
-				<!-- The confusion (misclassification) matrix will be displayed here -->
+				<br>
+				<p>Columns to compare: </p>
+				<div id="Misclassification_table_pairs_div"></div>
+				<br>
+				</p>
 			</div>
+			<div>
+				<p>
+					In addition to the <strong>Misclassification Matrix</strong>, the following accuracy metrics will be
+					calculated:
+				</p>
+
+				<ul>
+					<li>Overall Accuracy</li>
+					<li>Overall Error</li>
+					<li>Producer's Accuracy (Recall)</li>
+					<li>User's Accuracy (Precision)</li>
+					<li>Omission Error (1 − Recall)</li>
+					<li>Commission Error (1 − Precision)</li>
+					<li>Cohen's Kappa (Kappa Coefficient)</li>
+				</ul>
 			</div>
+			<div>
+				<ul>
+
+				</ul>
+			</div>
+
 			<div class="center">
-				<button value="ok" onClick="okButtonDataQualityCompletnessOmission(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+				<button value="ok" onClick="okButtonDataQualityMisclassificationmatrix(event)"
+					formmethod="dialog">Ok</button> <button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 
-		<input type="hidden" id="DialogQualityMisclassificationMatrixNodeId"></input>
+			<input type="hidden" id="DialogQualityMisclassificationMatrixNodeId"></input>
 		</form>
 	</dialog>
 	<dialog id="DialogQualityLogicalConsistency" onClose='hideNodeDialog("DialogQualityLogicalConsistency", event)'>

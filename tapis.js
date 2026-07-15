@@ -8069,7 +8069,7 @@ function networkDoubleClick(params) {
 					currentNode.STAnewColumnsToAdd=[]; //First time: To create it. Later: To erase old values					
 				}
 				networkNodes.update(currentNode);
-				drawTableInColumnBoxTableInAggregateColumns()
+				drawTableInColumnBoxTableInAggregateColumns(currentNode)
 				showNodeDialog("DialogAggregateColumns");
 			}
 		}
@@ -8197,10 +8197,14 @@ function networkDoubleClick(params) {
 		
 		else if (currentNode.image == "misclassificationMatrix.png") {
 			var parentNode=GetFirstParentNode(currentNode);
+			saveNodeDialog("DialogQualityMisclassificationMatrix", currentNode)
 			if (parentNode && parentNode.STAdata) {
 				currentNode.STAdata= deapCopy(parentNode.STAdata);
 				currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
 				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				if (!currentNode.STAcolumnsList){
+					currentNode.STAcolumnsList=[]; //First time: To create it. Later: To erase old values					
+				}
 				populateDialogQualityMisclassificationMatrix(currentNode);
 			// 	networkNodes.update(currentNode);
 			 	showNodeDialog("DialogQualityMisclassificationMatrix");
@@ -8624,7 +8628,7 @@ function deleteRowInColumnsBoxTable(number){
 
 function columnExistInTheTable(node, columnName, column){
 	var columnList;
-	if (column)columnList=	node.STAcolumnsList.column;
+	if (column)columnList=	node.STAcolumnsList[column];
 	else columnList= node.STAcolumnsList;
 	var n= columnList.length, columnNameExist=false;
 	
@@ -8636,7 +8640,7 @@ function columnExistInTheTable(node, columnName, column){
 	}
 	if (!columnNameExist){
 		columnList.push(columnName); //Add to Column list to avoid duplicates
-		if (column) node.STAcolumnsList.column=columnList
+		if (column) node.STAcolumnsList[column]=columnList
 		else node.STAcolumnsList=columnList;
 	}
 
@@ -8817,34 +8821,35 @@ function addColumnToListAggregateColumns(event) {
 			STANewColumnsArray.push(columnName, attributesArray);
 			if (document.getElementById("chooseNumberDecimals_0").checked)
 				STANewColumnsArray.push(document.getElementById("chooseNumberDecimals_0_input").value);
-			currentNode.STAnewColumnsToAdd.push(STANewColumnsArray); //[typeOfOperation,columnName,[attributes]]
-			networkNodes.update(currentNode);
-			drawTableInColumnBoxTableInAggregateColumns();
+			node.STAnewColumnsToAdd.push(STANewColumnsArray); //[typeOfOperation,columnName,[attributes]]
+			networkNodes.update(node);
+			drawTableInColumnBoxTableInAggregateColumns(node);
 		}
 	}
 }
 
-function drawTableInColumnBoxTableInAggregateColumns(){
+function drawTableInColumnBoxTableInAggregateColumns(node){
 	var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListAggregateColumns");
 	var cdns;
 	var tableHTML=`<table border=1><tr><th>Attributes</th><th>Operation</th><th>Column name</th><th>Number of decimals</th><th></th></tr>`;
-	if (currentNode.STAnewColumnsToAdd.length!=0){
-		var n= currentNode.STAnewColumnsToAdd.length, attributes="";
+	
+	if (node.STAnewColumnsToAdd.length!=0){
+		var n= node.STAnewColumnsToAdd.length, attributes="";
 		for (var i=0;i<n;i++){
 			attributes="";//restart
-			for (var a =0; a<currentNode.STAnewColumnsToAdd[i][2].length; a++){
+			for (var a =0; a<node.STAnewColumnsToAdd[i][2].length; a++){
 				if (a!=0){
 					attributes+=", ";
 				}
-				attributes +=currentNode.STAnewColumnsToAdd[i][2][a];
+				attributes +=node.STAnewColumnsToAdd[i][2][a];
 				
 			}
-			tableHTML+=`<tr><td>${attributes}</td><td>${currentNode.STAnewColumnsToAdd[i][0]}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td>`;
-			if (currentNode.STAnewColumnsToAdd[i][3]){ //number of decimals
-				tableHTML+=`<td>${currentNode.STAnewColumnsToAdd[i][3]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`;
+			tableHTML+=`<tr><td>${attributes}</td><td>${node.STAnewColumnsToAdd[i][0]}</td><td>${node.STAnewColumnsToAdd[i][1]}</td>`;
+			if (node.STAnewColumnsToAdd[i][3]){ //number of decimals
+				tableHTML+=`<td>${node.STAnewColumnsToAdd[i][3]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`;
 			}else{
 				tableHTML+=`<td> </td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`;
-		}
+			}
 		}
 	}else{
 		tableHTML+=`<tr style="height:20px"><td></td><td></td><td></td><td></td><td></td></tr>`
@@ -11059,82 +11064,90 @@ function populateDialogQualityMisclassificationMatrix(node){
 	node.STAcolumnsList ={};
 	node.STAcolumnsList.classified=[];
 	node.STAcolumnsList.reference=[];
+	drawTableInMisclassificationMatrix(node);
 }
 
 
 function addColumnToMisclassificationMatrixTable(event){
 	event.preventDefault();
-	var node= getNodeDialog("")
-	var selectClassified = document.getElementsByName("Misclassification_select_classified"); 
-	var selectReference = document.getElementsByName("Misclassification_select_reference"); 
+	var node= getNodeDialog("DialogQualityMisclassificationMatrix");
+	var selectClassified = document.getElementById("Misclassification_select_classified"); 
+	var selectReference = document.getElementById("Misclassification_select_reference"); 
 	
 	var classifiedValue= selectClassified.options[selectClassified.selectedIndex].value;
-	var ReferenceValue= selectReference.options[selectReference.selectedIndex].value;
+	var referenceValue= selectReference.options[selectReference.selectedIndex].value;
 
-	columnNameExist = columnExistInTheTable(node, classifiedValue, "classified"); //Search if name for column is not repeated
-	if (columnNameExist){
-		columnNameExist = columnExistInTheTable(node, ReferenceValue, "reference"); //Search if name for column is not repeated
-	}
-	if (columnNameExist) { //It will not be added because column name already exist
-		alert("Chosen column name already exists, change it to add column to the list ");
-	} else {
-		drawTableInMisclassificationMatrix()
+	var columnNameExistClassified = columnExistInTheTable(node, classifiedValue, "classified"); //Search if name for column is not repeated
+	if (!columnNameExistClassified){
+		var columnNameExistReference = columnExistInTheTable(node, referenceValue, "reference"); //Search if name for column is not repeated
+		if(!columnNameExistReference){
 
-
-	}
-
-
-
-
-//////////////////////////////
-	var STANewColumnsArray = [], attributesArray = [], attribute;
-	var dataKeys = Object.keys(currentNode.STAdata[0]);
-	var typeOfOperationLenght = TypeOfOperation.length, dataKeysLenght = dataKeys.length;
-	var columnName;
-
-	var typeOfOperationExist = false, atLeast2attributesSelected = false;
-	//Operation
-	for (var i = 0; i < typeOfOperationLenght; i++) { //Take operation 
-		if (TypeOfOperation[i].checked) {
-			STANewColumnsArray.push(TypeOfOperation[i].id.split("AggrgatedColumns_")[1]);
-			typeOfOperationExist = true;
+			drawTableInMisclassificationMatrix(node)
+		}else{
+			node.STAcolumnsList.classified.splice(node.STAcolumnsList.classified.indexOf(classifiedValue), 1); //erase from first select, already added. 
+			alert(`Chosen column name (${referenceValue}) already exists, change it to add column to the list`)
 		}
+	}else{
+		alert(`Chosen column name (${classifiedValue}) already exists, change it to add column to the list`);
 	}
 
-//attributes
-	for (var a = 0; a < dataKeysLenght; a++) {
-		attribute = document.getElementById("columnsFielset_" + a);
-		if (attribute.checked)
-			attributesArray.push(dataKeys[a]);
-	}
-	if (attributesArray.length >= 2)
-		atLeast2attributesSelected = true;
-
-	if (typeOfOperationExist == false || atLeast2attributesSelected == false) {
-		alert("At least two attributes and one aggregation method have to be selected");
-	} else {//All is correct, new column can be added to the list
-		//columnName
-		if (document.getElementById("columnNameRadioAggregateColumns_personalized").checked) {
-			columnName = document.getElementById("columnNameAggregateColumns").value;
-			if (columnName.length == 0) columnName = "noname";
-		} else {
-			columnName = document.getElementById("columnNameAggregateColumns_span").value;
-		}
-		var columnNameExist = columnExistInTheTable(columnName); //Search if name for column is not repeated
-	
-		if (columnNameExist) { //It will not be added because column name already exist
-			alert("Chosen column name already exists, change it to add column to the list ");
-		} else { //It can be added
-			STANewColumnsArray.push(columnName, attributesArray);
-			if (document.getElementById("chooseNumberDecimals_0").checked)
-				STANewColumnsArray.push(document.getElementById("chooseNumberDecimals_0_input").value);
-			currentNode.STAnewColumnsToAdd.push(STANewColumnsArray); //[typeOfOperation,columnName,[attributes]]
-			networkNodes.update(currentNode);
-			drawTableInColumnBoxTableInAggregateColumns();
-		}
-	}
 }
 
+function drawTableInMisclassificationMatrix(node){ //no va
+	var spanColumnsListMisclasificationMatrix=document.getElementById("Misclassification_table_pairs_div");
+		var tableHTML=`<table id="Misclassification_table_pairs" border="1" style=" width:100%;"><thead><tr><th>Classified</th><th>Reference</th></tr></thead><tbody>`;
+	if (node.STAcolumnsList.classified.length!=0){
+
+		
+		var n= node.STAcolumnsList.classified.length, attributes="";
+		for (var i=0;i<n;i++){
+
+			tableHTML+=`<tr><td>${node.STAcolumnsList.classified[i]}</td><td>${node.STAcolumnsList.reference[i]}</td>`;
+		}
+
+	}else{
+		tableHTML+=`<tr class="placeholder"><td style="color:#888;"><em>No columns added yet</em></td><td style="color:#888;"><em>No columns added yet</em></td></tr></tbody>`
+	}
+	tableHTML+=`</tbody></table>`;
+	spanColumnsListMisclasificationMatrix.innerHTML= tableHTML;
+
+}
+
+function okButtonDataQualityMisclassificationmatrix(event){
+	
+}
+
+
+// function drawTableInColumnBoxTableInAggregateColumns(){
+// 	var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListAggregateColumns");
+// 	var cdns;
+// 	var tableHTML=`<table border=1><tr><th>Attributes</th><th>Operation</th><th>Column name</th><th>Number of decimals</th><th></th></tr>`;
+// 	if (currentNode.STAnewColumnsToAdd.length!=0){
+// 		var n= currentNode.STAnewColumnsToAdd.length, attributes="";
+// 		for (var i=0;i<n;i++){
+// 			attributes="";//restart
+// 			for (var a =0; a<currentNode.STAnewColumnsToAdd[i][2].length; a++){
+// 				if (a!=0){
+// 					attributes+=", ";
+// 				}
+// 				attributes +=currentNode.STAnewColumnsToAdd[i][2][a];
+				
+// 			}
+// 			tableHTML+=`<tr><td>${attributes}</td><td>${currentNode.STAnewColumnsToAdd[i][0]}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td>`;
+// 			if (currentNode.STAnewColumnsToAdd[i][3]){ //number of decimals
+// 				tableHTML+=`<td>${currentNode.STAnewColumnsToAdd[i][3]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`;
+// 			}else{
+// 				tableHTML+=`<td> </td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`;
+// 		}
+// 		}
+// 	}else{
+// 		tableHTML+=`<tr style="height:20px"><td></td><td></td><td></td><td></td><td></td></tr>`
+// 	}
+	
+// 	tableHTML+=`</table>`;
+// 	cdns=[tableHTML];
+// 	spanColumnsListAggregateColumns.innerHTML=cdns;
+// }
 //function giveMeNetworkInformation(event) {
 //			hideNodeDialog("DialogContextMenu", event);
 //			console.log(networkNodes.get());
