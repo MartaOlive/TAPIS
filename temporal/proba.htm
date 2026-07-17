@@ -28,40 +28,99 @@
 
 </body>
 <script>
-	for (var i = 0; i < dataRightAttributesArray.length; i++) {
-		for (var j = 0; j < options.RowMatching.length; j++)
-			if (dataRightAttributesArray[i] == options.RowMatching[j].right)
-				break;
-		if (j < options.RowMatching.length) {
-			dataRightNameInJoin[i] == null;
-			continue; //This should be not included as it is already there.
+	const confusionMatrix = { //classified -> References
+
+		"Pinus sylvestris": {
+			"Pinus sylvestris": 12,
+			"Pinus nigra": 2,
+			"Quercus ilex": 1,
+			"Fagus sylvatica": 1
+		},
+		"Pinus nigra": {
+			"Pinus sylvestris": 3,
+			"Pinus nigra": 13,
+			"Quercus ilex": 2,
+			"Fagus sylvatica": 1
+		},
+		"Quercus ilex": {
+			"Pinus sylvestris": 1,
+			"Pinus nigra": 1,
+			"Quercus ilex": 14,
+			"Fagus sylvatica": 2
+		},
+		"Fagus sylvatica": {
+			"Pinus nigra": 2,
+			"Quercus ilex": 3,
+			"Fagus sylvatica": 22
+		}
+	};
+
+
+
+
+	var confusionmatrixResult = {
+		totalSamples: 80,
+		totalsClassified: { //files _> Tenint en compte la primera key 
+			"Pinus sylvestris": 16,
+			"Pinus nigra": 19,
+			"Quercus ilex": 18,
+			"Fagus sylvatica": 27
+
+		},
+		totalReference: { //columnes --> mirat al reves 
+			"Pinus sylvestris": 16,
+			"Pinus nigra": 18,
+			"Quercus ilex": 20,
+			"Fagus sylvatica": 26
+		},
+		wellclassified: { //diagonal, mateix.
+			"Pinus sylvestris": 16,
+			"Pinus nigra": 18,
+			"Quercus ilex": 20,
+			"Fagus sylvatica": 26
+		},
+		numberOfWellClassified: wellclassified["Pinus sylvestris"] + wellclassified["Pinus nigra"] + wellclassified["Quercus ilex"] + wellclassified["Fagus sylvatica"],
+		overallAccuracy: numberOfWellClassified / totalSamples,
+		overallError: 1 - overallAccuracy,
+		ProducerAccuracy: {// metrica per classes, no te global
+			"Pinus sylvestris": wellclassified["Pinus sylvestris"] / totalReference["Pinus sylvestris"],
+			"Pinus nigra": wellclassified["Pinus nigra"] / totalReference["Pinus nigra"],
+			"Quercus ilex": wellclassified["Quercus ilex"] / totalReference["Quercus ilex"],
+			"Fagus sylvatica": wellclassified["Fagus sylvatica"] / totalReference["Fagus sylvatica"]
+		},
+		UserAccuracy: {// metrica per classes, no te global
+			"Pinus sylvestris": wellclassified["Pinus sylvestris"] / totalsclassified["Pinus sylvestris"],
+			"Pinus nigra": wellclassified["Pinus nigra"] / totalsclassified["Pinus nigra"],
+			"Quercus ilex": wellclassified["Quercus ilex"] / totalsclassified["Quercus ilex"],
+			"Fagus sylvatica": wellclassified["Fagus sylvatica"] / totalsclassified["Fagus sylvatica"]
+		},
+		omissionError: OmissionError = {
+			"Pinus sylvestris": 1 - ProducerAccuracy["Pinus sylvestris"],
+			"Pinus nigra": 1 - ProducerAccuracy["Pinus nigra"],
+			"Quercus ilex": 1 - ProducerAccuracy["Quercus ilex"],
+			"Fagus sylvatica": 1 - ProducerAccuracy["Fagus sylvatica"]
+		},
+		commissionError: {
+			"Pinus sylvestris": 1 - UserAccuracy["Pinus sylvestris"],
+			"Pinus nigra": 1 - UserAccuracy["Pinus nigra"],
+			"Quercus ilex": 1 - UserAccuracy["Quercus ilex"],
+			"Fagus sylvatica": 1 - UserAccuracy["Fagus sylvatica"]
+		},
+		
+		indexKappa: {
+			ObservedAgreement: (wellclassified["Pinus sylvestris"] + wellclassified["Pinus nigra"] + wellclassified["Quercus ilex"] + wellclassified["Fagus sylvatica"]) / totalSamples, //total de ben classificats/total
+			multiplicationsTotals: totalsclassified["Pinus sylvestris"] * totalReference["Pinus sylvestris"] +
+				totalsclassified["Pinus nigra"] * totalReference["Pinus nigra"] +
+				totalsclassified["Quercus ilex"] * totalReference["Quercus ilex"] +
+				totalsclassified["Fagus sylvatica"] * totalReference["Fagus sylvatica"],
+			expectedAgreement: multiplicationsTotals / (totalSamples * totalSamples),
+
+			resultindexKappa: (ObservedAgreement - expectedAgreemen) / (1 - expectedAgreemen)
 		}
 
-		// for (var j=0; j<dataLeftAttributesArray.length; j++) {
-		// 	if (dataLeftAttributesArray[i]==dataRightAttributesArray) {
-		// 		//Change the name
-		// 		dataRightNameInJoin[i]=dataRightAttributesArray+"_"+Math.floor(Math.random() * 100000);
-		// 		dataCurrentAttributes[dataRightNameInJoin[i]]=deapCopy(dataRightAttributes[dataRightAttributesArray[i]]);
-		// 		break;
-		// 	}
-		// }
 
-		for (var j = 0; j < dataRightAttributesArray.length; j++) {
-			if (dataLeftAttributesArray.includes(dataRightAttributesArray[i])) {
-				//Change the name
-				dataRightNameInJoin[i] = dataRightAttributesArray[i] + "_" + Math.floor(Math.random() * 100000);
-				dataCurrentAttributes[dataRightNameInJoin[i]] = deapCopy(dataRightAttributes[dataRightAttributesArray[i]]);
-				break;
-			}
-		} //Canviant aixo
-		if (j < dataLeftAttributesArray.length) //Already done
-			continue;
-		//Add
-		dataRightNameInJoin[i] = dataRightAttributesArray[i];
-		dataCurrentAttributes[dataRightNameInJoin[i]] = deapCopy(dataRightAttributes[dataRightAttributesArray[i]]);
 	}
 
-	var dataCurrentAttributesArray = Object.keys(dataCurrentAttributes);
 </script>
 
 </html>

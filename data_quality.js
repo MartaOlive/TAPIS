@@ -1475,96 +1475,190 @@ function calculateDataQualityThematicValidityWithRange(data,from, to,  metadata,
     return [count, (count / data.length) * 100]
 
 }
+function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedReferencedAttributes, confusionmatrixResult) {
+	var confusionMatrix = {}, classified, reference, cathegoriesClassification=[], cathegoriesReference=[];
+	for (var a = 0; a < data.length; a++) {
+		for (var e = 0; e<classifiedReferencedAttributes.classified.length; e++) {
+			//build attributes
+			if (e == 0) {
+				classified = data[a][classifiedReferencedAttributes.classified[e]];
+				reference = data[a][classifiedReferencedAttributes.reference[e]];
+			} else {
+				classified += "-" + data[a][classifiedReferencedAttributes.classified[e]];
+				reference += "-" + data[a][classifiedReferencedAttributes.reference[e]];
+			}
+			//add to matrix
+			if (e == classifiedReferencedAttributes.classified.length - 1) {
+				// if (!cathegoriesClassification.includes(classified))cathegoriesClassification.push(classified);
+				// if (!cathegoriesReference.includes(reference))cathegoriesReference.push(reference);
 
-//Misclassification Matrix
-
-const confusionMatrix = { //classified -> References
-    "Pinus sylvestris": {
-        "Pinus sylvestris": 12,
-        "Pinus nigra": 2,
-        "Quercus ilex": 1,
-        "Fagus sylvatica": 1
-    },
-    "Pinus nigra": {
-        "Pinus sylvestris": 3,
-        "Pinus nigra": 15,
-        "Quercus ilex": 2,
-        "Fagus sylvatica": 1
-    },
-    "Quercus ilex": {
-        "Pinus sylvestris": 1,
-        "Pinus nigra": 1,
-        "Quercus ilex": 15,
-        "Fagus sylvatica": 2
-    },
-    "Fagus sylvatica": {
-        "Pinus sylvestris": 0,
-        "Pinus nigra": 2,
-        "Quercus ilex": 3,
-        "Fagus sylvatica": 17
-    }
-};
-
-var obj={
-	totalnumber: 80,
-	totalsclassified:{
-		"Pinus sylvestris": 16,
-		"Pinus nigra": 20,
-		"Quercus ilex": 19,
-		"Fagus sylvatica": 25
-
-	},
-	 totalReference : {
-		"Pinus sylvestris": 16,
-		"Pinus nigra": 20,
-		"Quercus ilex": 24,
-		"Fagus sylvatica": 20
-	},
-	wellclassified: {
-		"Pinus sylvestris": 12,
-		"Pinus nigra": 15,
-		"Quercus ilex": 15,
-		"Fagus sylvatica": 17
-	}, 
-	numberOfWellClassified: wellclassified["Pinus sylvestris"] +wellclassified["Pinus nigra"] +wellclassified["Quercus ilex"] +wellclassified["Fagus sylvatica"] ,
-	overallAccuracy : numberOfWellClassified /totalnumber,
-	overallError: 1-overallAccuracy,
-	ProducerAccuracy :{// metrica per classes, no te global
-    	"Pinus sylvestris": truePositives["Pinus sylvestris"] / totalReference["Pinus sylvestris"],
-    	"Pinus nigra": truePositives["Pinus nigra"] / totalReference["Pinus nigra"],
-    	"Quercus ilex": truePositives["Quercus ilex"] / totalReference["Quercus ilex"],
-    	"Fagus sylvatica": truePositives["Fagus sylvatica"] / totalReference["Fagus sylvatica"]
-	},
-	UserAccuracy :{// metrica per classes, no te global
-    	"Pinus sylvestris": truePositives["Pinus sylvestris"] / totalsclassified["Pinus sylvestris"],
-    	"Pinus nigra": truePositives["Pinus nigra"] / totalsclassified["Pinus nigra"],
-    	"Quercus ilex": truePositives["Quercus ilex"] / totalsclassified["Quercus ilex"],
-    	"Fagus sylvatica": truePositives["Fagus sylvatica"] / totalsclassified["Fagus sylvatica"]
-	},
-	omissionError:OmissionError = {
-    "Pinus sylvestris": 1 - ProducerAccuracy["Pinus sylvestris"],
-    "Pinus nigra": 1 - ProducerAccuracy["Pinus nigra"],
-    "Quercus ilex": 1 - ProducerAccuracy["Quercus ilex"],
-    "Fagus sylvatica": 1 - ProducerAccuracy["Fagus sylvatica"]
-	},
-	CommissionError : {
-    "Pinus sylvestris": 1 - UserAccuracy["Pinus sylvestris"],
-    "Pinus nigra": 1 - UserAccuracy["Pinus nigra"],
-    "Quercus ilex": 1 - UserAccuracy["Quercus ilex"],
-    "Fagus sylvatica": 1 - UserAccuracy["Fagus sylvatica"]
-	},
-	indexKappa:{
-		ObservedAgreement:(wellclassified["Pinus sylvestris"] + wellclassified["Pinus nigra"] + wellclassified["Quercus ilex"] + wellclassified["Fagus sylvatica"])/totalnumber, //total de ben classificats/total
-		multiplicationsTotals: totalsclassified["Pinus sylvestris"] * totalReference["Pinus sylvestris"] +
-                 totalsclassified["Pinus nigra"] * totalReference["Pinus nigra"] +
-                 totalsclassified["Quercus ilex"] * totalReference["Quercus ilex"] +
-                 totalsclassified["Fagus sylvatica"] * totalReference["Fagus sylvatica"],
-		expectedAgreement: multiplicationsTotals/(totalnumber*totalnumber),
-		
-		resultindexKappa: (ObservedAgreement -expectedAgreemen)/(1-expectedAgreemen)
+				if (Object.hasOwn(confusionMatrix, classified)) {
+					if (Object.hasOwn(confusionMatrix[classified], reference)) {
+						confusionMatrix[classified][reference] += 1;
+					} else {
+						confusionMatrix[classified][reference] = 1;
+					}
+				} else {
+					confusionMatrix[classified] = {};
+					confusionMatrix[classified][reference] = 1;
+				}
+			}
+		}
 	}
+	//calculate  totalClassified, totalReference, wellClassified
+	confusionmatrixResult.totalSamples= data.length;
+	var classificationKeys= Object.keys(confusionMatrix);
+	var referenceKeys, totalClassified={}, totalReference={},wellClassified={} ;
+	for (var i=0;i<classificationKeys.length;i++){ //same keys as confusionmatrix
+		referenceKeys= Object.keys(confusionMatrix[classificationKeys[i]]);
+		totalClassified[classificationKeys[i]]=0
+		wellClassified[classificationKeys[i]] = 0; //it is possible to have empty cathegories
+		for (var u=0;u<referenceKeys.length;u++){
+			totalClassified[classificationKeys[i]]+=confusionMatrix[classificationKeys[i]][referenceKeys[u]];
+			if(Object.hasOwn(totalReference, referenceKeys[u]))totalReference[referenceKeys[u]]+=confusionMatrix[classificationKeys[i]][referenceKeys[u]]
+			else totalReference[referenceKeys[u]]=confusionMatrix[classificationKeys[i]][referenceKeys[u]];
+			if(classificationKeys[i]==referenceKeys[u])wellClassified[classificationKeys[i]]= confusionMatrix[classificationKeys[i]][referenceKeys[u]]
+		}
+	}
+	confusionmatrixResult.totalClassified=totalClassified;
+	confusionmatrixResult.totalReference=totalReference;
+	confusionmatrixResult.wellClassified=wellClassified;
+	var wellClassifiedKeys=Object.keys(wellClassified);
+	var numberOfWellClassified=0;
+	var producerAccuracy={}, producerAccuracyValue, userAccuracy={},userAccuracyValue, omissionError={},CommissionError={};
+	for (var b=0;b<wellClassifiedKeys.length;b++){
+		numberOfWellClassified+=wellClassified[wellClassifiedKeys[b]];
+		//producerAccuracy
+		producerAccuracyValue= wellClassified[wellClassifiedKeys[b]]/totalReference[wellClassifiedKeys[b]]
+		producerAccuracy[wellClassifiedKeys[b]]= producerAccuracyValue;
+		omissionError[wellClassifiedKeys[b]]= 1- producerAccuracyValue;
+		//UserAccuracy
+		userAccuracyValue= wellClassified[wellClassifiedKeys[b]]/totalClassified[wellClassifiedKeys[b]];
+		userAccuracy[wellClassifiedKeys[b]]= userAccuracyValue;
+		comissionError[wellClassifiedKeys[b]]= 1-userAccuracyValue;
 
+	}
+	confusionmatrixResult.numberOfWellClassified=numberOfWellClassified;
+	confusionmatrixResult.producerAccuracy=producerAccuracy;
+	confusionmatrixResult.userAccuracy=userAccuracy;
+	confusionmatrixResult.overallAccuracy= numberOfWellClassified/confusionmatrixResult.totalSamples;
+	confusionmatrixResult.overallError= 1-confusionmatrixResult.overallAccuracy;
 
+	confusionmatrixResult.indexKappa.observedAgreement= numberOfWellClassified/confusionmatrixResult.totalSamples;
+	totalClassified_totalReference_product=0;
+
+	var totalClassified_totalReference_keys= [...new Set([ ...Object.keys(totalClassified), ...Object.keys(totalReference)])]
+	
+	for(var d=0;d<totalClassified_totalReference_keys.length;d++){
+		totalClassified_totalReference_product+=totalClassified[totalClassified_totalReference_keys[d]] * totalReference[totalClassified_totalReference_keys[d]]
+	}
+	confusionmatrixResult.indexKappa.expectedAgreement= totalClassified_totalReference_product/confusionmatrixResult.totalSamples**2;
+	confusionmatrixResult.indexKappa.result= (confusionmatrixResult.indexKappa.observedAgreement-confusionmatrixResult.indexKappa.expectedAgreement)/(1-confusionmatrixResult.indexKappa.expectedAgreement);
+	
+	//mirar si ho calcula tot bé
 }
+// //Misclassification Matrix
+
+// const confusionMatrix = { //classified -> References
+//     "Pinus sylvestris": {
+//         "Pinus sylvestris": 12,
+//         "Pinus nigra": 2,
+//         "Quercus ilex": 1,
+//         "Fagus sylvatica": 1
+//     },
+//     "Pinus nigra": {
+//         "Pinus sylvestris": 3,
+//         "Pinus nigra": 15,
+//         "Quercus ilex": 2,
+//         "Fagus sylvatica": 1
+//     },
+//     "Quercus ilex": {
+//         "Pinus sylvestris": 1,
+//         "Pinus nigra": 1,
+//         "Quercus ilex": 15,
+//         "Fagus sylvatica": 2
+//     },
+//     "Fagus sylvatica": {
+//         "Pinus sylvestris": 0,
+//         "Pinus nigra": 2,
+//         "Quercus ilex": 3,
+//         "Fagus sylvatica": 17
+//     }
+// };
+// var matrix= {
+// 	"classes": [
+// 		"Pinus sylvestris",
+// 		"Pinus nigra",
+// 		"Quercus ilex",
+// 		"Fagus sylvatica"
+// 	],
+// 	"matrix": [
+// 		[12, 3, 1, 0],
+// 		[2, 15, 1, 2],
+// 		[1, 2, 15, 6],
+// 		[1, 0, 2, 17]
+// 	]
+// }
+// var confusionmatrixResult={
+// 	totalnumber: 80,
+// 	totalsclassified:{ //files _> Tenint en compte la primera key 
+// 		"Pinus sylvestris": 16,
+// 		"Pinus nigra": 20,
+// 		"Quercus ilex": 19,
+// 		"Fagus sylvatica": 25
+
+// 	},
+// 	 totalReference : { //columnes --> mirat al reves 
+// 		"Pinus sylvestris": 16,
+// 		"Pinus nigra": 20,
+// 		"Quercus ilex": 24,
+// 		"Fagus sylvatica": 20
+// 	},
+// 	wellclassified: { //diagonal, mateix.
+// 		"Pinus sylvestris": 12,
+// 		"Pinus nigra": 15,
+// 		"Quercus ilex": 15,
+// 		"Fagus sylvatica": 17
+// 	}, 
+// 	numberOfWellClassified: wellclassified["Pinus sylvestris"] +wellclassified["Pinus nigra"] +wellclassified["Quercus ilex"] +wellclassified["Fagus sylvatica"] ,
+// 	overallAccuracy : numberOfWellClassified /totalnumber,
+// 	overallError: 1-overallAccuracy,
+// 	ProducerAccuracy :{// metrica per classes, no te global
+//     	"Pinus sylvestris": truePositives["Pinus sylvestris"] / totalReference["Pinus sylvestris"],
+//     	"Pinus nigra": truePositives["Pinus nigra"] / totalReference["Pinus nigra"],
+//     	"Quercus ilex": truePositives["Quercus ilex"] / totalReference["Quercus ilex"],
+//     	"Fagus sylvatica": truePositives["Fagus sylvatica"] / totalReference["Fagus sylvatica"]
+// 	},
+// 	UserAccuracy :{// metrica per classes, no te global
+//     	"Pinus sylvestris": truePositives["Pinus sylvestris"] / totalsclassified["Pinus sylvestris"],
+//     	"Pinus nigra": truePositives["Pinus nigra"] / totalsclassified["Pinus nigra"],
+//     	"Quercus ilex": truePositives["Quercus ilex"] / totalsclassified["Quercus ilex"],
+//     	"Fagus sylvatica": truePositives["Fagus sylvatica"] / totalsclassified["Fagus sylvatica"]
+// 	},
+// 	omissionError:OmissionError = {
+//     "Pinus sylvestris": 1 - ProducerAccuracy["Pinus sylvestris"],
+//     "Pinus nigra": 1 - ProducerAccuracy["Pinus nigra"],
+//     "Quercus ilex": 1 - ProducerAccuracy["Quercus ilex"],
+//     "Fagus sylvatica": 1 - ProducerAccuracy["Fagus sylvatica"]
+// 	},
+// 	CommissionError : {
+//     "Pinus sylvestris": 1 - UserAccuracy["Pinus sylvestris"],
+//     "Pinus nigra": 1 - UserAccuracy["Pinus nigra"],
+//     "Quercus ilex": 1 - UserAccuracy["Quercus ilex"],
+//     "Fagus sylvatica": 1 - UserAccuracy["Fagus sylvatica"]
+// 	},
+// 	indexKappa:{
+// 		ObservedAgreement:(wellclassified["Pinus sylvestris"] + wellclassified["Pinus nigra"] + wellclassified["Quercus ilex"] + wellclassified["Fagus sylvatica"])/totalnumber, //total de ben classificats/total
+// 		multiplicationsTotals: totalsclassified["Pinus sylvestris"] * totalReference["Pinus sylvestris"] +
+//                  totalsclassified["Pinus nigra"] * totalReference["Pinus nigra"] +
+//                  totalsclassified["Quercus ilex"] * totalReference["Quercus ilex"] +
+//                  totalsclassified["Fagus sylvatica"] * totalReference["Fagus sylvatica"],
+// 		expectedAgreement: multiplicationsTotals/(totalnumber*totalnumber),
+		
+// 		resultindexKappa: (ObservedAgreement -expectedAgreemen)/(1-expectedAgreemen)
+// 	}
+
+
+// }
 
 

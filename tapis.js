@@ -11114,7 +11114,11 @@ function drawTableInMisclassificationMatrix(node){ //no va
 }
 
 function okButtonDataQualityMisclassificationmatrix(event){
-	
+	var node= getNodeDialog("DialogQualityMisclassificationMatrix");
+	var metadata= (node.STAmetadata)?deapCopy(node.STAmetadata):{};
+	var confusionmatrixResult={};
+	calculateDataQualityMisclassificationMatrix(node.STAdata,metadata,node.STAcolumnsList,confusionmatrixResult  )
+
 }
 
 
