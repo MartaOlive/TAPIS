@@ -1525,7 +1525,7 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 	confusionmatrixResult.wellClassified=wellClassified;
 	var wellClassifiedKeys=Object.keys(wellClassified);
 	var numberOfWellClassified=0;
-	var producerAccuracy={}, producerAccuracyValue, userAccuracy={},userAccuracyValue, omissionError={},CommissionError={};
+	var producerAccuracy={}, producerAccuracyValue, userAccuracy={},userAccuracyValue, omissionError={},comissionError={};
 	for (var b=0;b<wellClassifiedKeys.length;b++){
 		numberOfWellClassified+=wellClassified[wellClassifiedKeys[b]];
 		//producerAccuracy
@@ -1541,11 +1541,13 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 	confusionmatrixResult.numberOfWellClassified=numberOfWellClassified;
 	confusionmatrixResult.producerAccuracy=producerAccuracy;
 	confusionmatrixResult.userAccuracy=userAccuracy;
+	confusionmatrixResult.omissionError=omissionError;
+	confusionmatrixResult.comissionError=comissionError;
 	confusionmatrixResult.overallAccuracy= numberOfWellClassified/confusionmatrixResult.totalSamples;
 	confusionmatrixResult.overallError= 1-confusionmatrixResult.overallAccuracy;
-
+	confusionmatrixResult.indexKappa={}
 	confusionmatrixResult.indexKappa.observedAgreement= numberOfWellClassified/confusionmatrixResult.totalSamples;
-	totalClassified_totalReference_product=0;
+	var totalClassified_totalReference_product=0;
 
 	var totalClassified_totalReference_keys= [...new Set([ ...Object.keys(totalClassified), ...Object.keys(totalReference)])]
 	
@@ -1555,7 +1557,7 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 	confusionmatrixResult.indexKappa.expectedAgreement= totalClassified_totalReference_product/confusionmatrixResult.totalSamples**2;
 	confusionmatrixResult.indexKappa.result= (confusionmatrixResult.indexKappa.observedAgreement-confusionmatrixResult.indexKappa.expectedAgreement)/(1-confusionmatrixResult.indexKappa.expectedAgreement);
 	
-	//mirar si ho calcula tot bé
+	
 }
 // //Misclassification Matrix
 
