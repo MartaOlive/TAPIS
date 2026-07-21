@@ -1475,8 +1475,8 @@ function calculateDataQualityThematicValidityWithRange(data,from, to,  metadata,
     return [count, (count / data.length) * 100]
 
 }
-function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedReferencedAttributes, confusionmatrixResult) {
-	var confusionMatrix = {}, classified, reference, cathegoriesClassification=[], cathegoriesReference=[];
+function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedReferencedAttributes, confusionMatrixResult) {
+	var confusionMatrix = {}, classified, reference, categoriesClassification=[], categoriesReference=[];
 	for (var a = 0; a < data.length; a++) {
 		for (var e = 0; e<classifiedReferencedAttributes.classified.length; e++) {
 			//build attributes
@@ -1489,8 +1489,6 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 			}
 			//add to matrix
 			if (e == classifiedReferencedAttributes.classified.length - 1) {
-				// if (!cathegoriesClassification.includes(classified))cathegoriesClassification.push(classified);
-				// if (!cathegoriesReference.includes(reference))cathegoriesReference.push(reference);
 
 				if (Object.hasOwn(confusionMatrix, classified)) {
 					if (Object.hasOwn(confusionMatrix[classified], reference)) {
@@ -1503,10 +1501,29 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 					confusionMatrix[classified][reference] = 1;
 				}
 			}
+			if(!categoriesClassification.includes(classified))categoriesClassification.push(classified);
+			if(!categoriesReference.includes(reference))categoriesReference.push(reference);
 		}
 	}
+	//All categories together to add classification and references categories. To calculate index Kappa is necessary to have it all. 
+	var allCategories= [...categoriesClassification,...categoriesReference];
+	//If a classified doesn't exist in reference or other way round:
+	for (var f=0;f<allCategories.length;f++){
+		if (!Object.hasOwn(confusionMatrix, allCategories[f]))confusionMatrix[allCategories[f]]={};
+		for(var g=0;g<allCategories.length;g++){
+			if (!Object.hasOwn(confusionMatrix[allCategories[f]], allCategories[g]))confusionMatrix[allCategories[f]][allCategories[g]]=0;
+		}
+	}
+
+
+	//matrix
+	var matrix={};
+
+	console.log (confusionMatrix);
+
+
 	//calculate  totalClassified, totalReference, wellClassified
-	confusionmatrixResult.totalSamples= data.length;
+	confusionMatrixResult.totalSamples= data.length;
 	var classificationKeys= Object.keys(confusionMatrix);
 	var referenceKeys, totalClassified={}, totalReference={},wellClassified={} ;
 	for (var i=0;i<classificationKeys.length;i++){ //same keys as confusionmatrix
@@ -1520,9 +1537,9 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 			if(classificationKeys[i]==referenceKeys[u])wellClassified[classificationKeys[i]]= confusionMatrix[classificationKeys[i]][referenceKeys[u]]
 		}
 	}
-	confusionmatrixResult.totalClassified=totalClassified;
-	confusionmatrixResult.totalReference=totalReference;
-	confusionmatrixResult.wellClassified=wellClassified;
+	confusionMatrixResult.totalClassified=totalClassified;
+	confusionMatrixResult.totalReference=totalReference;
+	confusionMatrixResult.wellClassified=wellClassified;
 	var wellClassifiedKeys=Object.keys(wellClassified);
 	var numberOfWellClassified=0;
 	var producerAccuracy={}, producerAccuracyValue, userAccuracy={},userAccuracyValue, omissionError={},comissionError={};
@@ -1538,129 +1555,104 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 		comissionError[wellClassifiedKeys[b]]= 1-userAccuracyValue;
 
 	}
-	confusionmatrixResult.numberOfWellClassified=numberOfWellClassified;
-	confusionmatrixResult.producerAccuracy=producerAccuracy;
-	confusionmatrixResult.userAccuracy=userAccuracy;
-	confusionmatrixResult.omissionError=omissionError;
-	confusionmatrixResult.comissionError=comissionError;
-	confusionmatrixResult.overallAccuracy= numberOfWellClassified/confusionmatrixResult.totalSamples;
-	confusionmatrixResult.overallError= 1-confusionmatrixResult.overallAccuracy;
-	confusionmatrixResult.indexKappa={}
-	confusionmatrixResult.indexKappa.observedAgreement= numberOfWellClassified/confusionmatrixResult.totalSamples;
+	confusionMatrixResult.numberOfWellClassified=numberOfWellClassified;
+	confusionMatrixResult.producerAccuracy=producerAccuracy;
+	confusionMatrixResult.userAccuracy=userAccuracy;
+	confusionMatrixResult.omissionError=omissionError;
+	confusionMatrixResult.comissionError=comissionError;
+	confusionMatrixResult.overallAccuracy= numberOfWellClassified/confusionMatrixResult.totalSamples;
+	confusionMatrixResult.overallError= 1-confusionMatrixResult.overallAccuracy;
+	confusionMatrixResult.indexKappa={}
+	confusionMatrixResult.indexKappa.observedAgreement= numberOfWellClassified/confusionMatrixResult.totalSamples;
 	var totalClassified_totalReference_product=0;
 
 	var totalClassified_totalReference_keys= [...new Set([ ...Object.keys(totalClassified), ...Object.keys(totalReference)])]
 	
 	for(var d=0;d<totalClassified_totalReference_keys.length;d++){
-		totalClassified_totalReference_product+=totalClassified[totalClassified_totalReference_keys[d]] * totalReference[totalClassified_totalReference_keys[d]]
+				totalClassified_totalReference_product+=totalClassified[totalClassified_totalReference_keys[d]] * totalReference[totalClassified_totalReference_keys[d]]
+ 			if(Number.isNaN(totalClassified_totalReference_product))debugger
 	}
-	confusionmatrixResult.indexKappa.expectedAgreement= totalClassified_totalReference_product/confusionmatrixResult.totalSamples**2;
-	confusionmatrixResult.indexKappa.result= (confusionmatrixResult.indexKappa.observedAgreement-confusionmatrixResult.indexKappa.expectedAgreement)/(1-confusionmatrixResult.indexKappa.expectedAgreement);
+	confusionMatrixResult.indexKappa.expectedAgreement= totalClassified_totalReference_product/confusionMatrixResult.totalSamples**2;
+	confusionMatrixResult.indexKappa.result= (confusionMatrixResult.indexKappa.observedAgreement-confusionMatrixResult.indexKappa.expectedAgreement)/(1-confusionMatrixResult.indexKappa.expectedAgreement);
 	
-	
+	if (!metadata.dataQualityInfos)	metadata.dataQualityInfos=[];
+		metadata.dataQualityInfos.push(
+			{
+				"reports": [
+					{
+					"type": "DQ_ThematicClassificationCorrectness",
+					"measureIdentification": {
+						"code": "MisclassificationMatrix",
+						"domains": [
+						{
+							"name": "ClassificationCorrectness",
+							"params": [
+								{
+									"name": "classified attribute",
+									"value": classified
+								},
+								{
+									"name": "reference attribute",
+									"value": reference
+								}
+							]
+						}
+						]
+					},
+
+					"results": [
+						{
+						"type": "DQ_QuantitativeResult",
+
+						"errorStatistic": {
+							"metric": {
+							"name": "misclassification matrix",
+							"params": [
+								{
+								"name": "subtype",
+								"value": "matrix"
+								}
+							]
+							}
+						},
+
+						"valueType": "matrix",
+
+						"values": [
+							// Posar la matriu
+						],
+
+						"derivedResults": {
+							"overallAccuracy": confusionMatrixResult.overallAccuracy,
+							"overallError": confusionMatrixResult.overallError,
+
+							"kappa": {
+								"value": confusionMatrixResult.indexKappa.result,
+								"observedAgreement": confusionMatrixResult.indexKappa.observedAgreement,
+								"expectedAgreement": confusionMatrixResult.indexKappa.expectedAgreement
+							},
+
+							"producerAccuracy": confusionMatrixResult.producerAccuracy,
+							"userAccuracy": confusionMatrixResult.userAccuracy,
+
+							"omissionError": confusionMatrixResult.omissionError,
+							"commissionError": confusionMatrixResult.comissionError
+						}
+						}
+					]
+					}
+				]
+				})
+
+				console.log (metadata)
+
+
+
+
+	return confusionMatrixResult;
+
+
 }
-// //Misclassification Matrix
 
-// const confusionMatrix = { //classified -> References
-//     "Pinus sylvestris": {
-//         "Pinus sylvestris": 12,
-//         "Pinus nigra": 2,
-//         "Quercus ilex": 1,
-//         "Fagus sylvatica": 1
-//     },
-//     "Pinus nigra": {
-//         "Pinus sylvestris": 3,
-//         "Pinus nigra": 15,
-//         "Quercus ilex": 2,
-//         "Fagus sylvatica": 1
-//     },
-//     "Quercus ilex": {
-//         "Pinus sylvestris": 1,
-//         "Pinus nigra": 1,
-//         "Quercus ilex": 15,
-//         "Fagus sylvatica": 2
-//     },
-//     "Fagus sylvatica": {
-//         "Pinus sylvestris": 0,
-//         "Pinus nigra": 2,
-//         "Quercus ilex": 3,
-//         "Fagus sylvatica": 17
-//     }
-// };
-// var matrix= {
-// 	"classes": [
-// 		"Pinus sylvestris",
-// 		"Pinus nigra",
-// 		"Quercus ilex",
-// 		"Fagus sylvatica"
-// 	],
-// 	"matrix": [
-// 		[12, 3, 1, 0],
-// 		[2, 15, 1, 2],
-// 		[1, 2, 15, 6],
-// 		[1, 0, 2, 17]
-// 	]
-// }
-// var confusionmatrixResult={
-// 	totalnumber: 80,
-// 	totalsclassified:{ //files _> Tenint en compte la primera key 
-// 		"Pinus sylvestris": 16,
-// 		"Pinus nigra": 20,
-// 		"Quercus ilex": 19,
-// 		"Fagus sylvatica": 25
-
-// 	},
-// 	 totalReference : { //columnes --> mirat al reves 
-// 		"Pinus sylvestris": 16,
-// 		"Pinus nigra": 20,
-// 		"Quercus ilex": 24,
-// 		"Fagus sylvatica": 20
-// 	},
-// 	wellclassified: { //diagonal, mateix.
-// 		"Pinus sylvestris": 12,
-// 		"Pinus nigra": 15,
-// 		"Quercus ilex": 15,
-// 		"Fagus sylvatica": 17
-// 	}, 
-// 	numberOfWellClassified: wellclassified["Pinus sylvestris"] +wellclassified["Pinus nigra"] +wellclassified["Quercus ilex"] +wellclassified["Fagus sylvatica"] ,
-// 	overallAccuracy : numberOfWellClassified /totalnumber,
-// 	overallError: 1-overallAccuracy,
-// 	ProducerAccuracy :{// metrica per classes, no te global
-//     	"Pinus sylvestris": truePositives["Pinus sylvestris"] / totalReference["Pinus sylvestris"],
-//     	"Pinus nigra": truePositives["Pinus nigra"] / totalReference["Pinus nigra"],
-//     	"Quercus ilex": truePositives["Quercus ilex"] / totalReference["Quercus ilex"],
-//     	"Fagus sylvatica": truePositives["Fagus sylvatica"] / totalReference["Fagus sylvatica"]
-// 	},
-// 	UserAccuracy :{// metrica per classes, no te global
-//     	"Pinus sylvestris": truePositives["Pinus sylvestris"] / totalsclassified["Pinus sylvestris"],
-//     	"Pinus nigra": truePositives["Pinus nigra"] / totalsclassified["Pinus nigra"],
-//     	"Quercus ilex": truePositives["Quercus ilex"] / totalsclassified["Quercus ilex"],
-//     	"Fagus sylvatica": truePositives["Fagus sylvatica"] / totalsclassified["Fagus sylvatica"]
-// 	},
-// 	omissionError:OmissionError = {
-//     "Pinus sylvestris": 1 - ProducerAccuracy["Pinus sylvestris"],
-//     "Pinus nigra": 1 - ProducerAccuracy["Pinus nigra"],
-//     "Quercus ilex": 1 - ProducerAccuracy["Quercus ilex"],
-//     "Fagus sylvatica": 1 - ProducerAccuracy["Fagus sylvatica"]
-// 	},
-// 	CommissionError : {
-//     "Pinus sylvestris": 1 - UserAccuracy["Pinus sylvestris"],
-//     "Pinus nigra": 1 - UserAccuracy["Pinus nigra"],
-//     "Quercus ilex": 1 - UserAccuracy["Quercus ilex"],
-//     "Fagus sylvatica": 1 - UserAccuracy["Fagus sylvatica"]
-// 	},
-// 	indexKappa:{
-// 		ObservedAgreement:(wellclassified["Pinus sylvestris"] + wellclassified["Pinus nigra"] + wellclassified["Quercus ilex"] + wellclassified["Fagus sylvatica"])/totalnumber, //total de ben classificats/total
-// 		multiplicationsTotals: totalsclassified["Pinus sylvestris"] * totalReference["Pinus sylvestris"] +
-//                  totalsclassified["Pinus nigra"] * totalReference["Pinus nigra"] +
-//                  totalsclassified["Quercus ilex"] * totalReference["Quercus ilex"] +
-//                  totalsclassified["Fagus sylvatica"] * totalReference["Fagus sylvatica"],
-// 		expectedAgreement: multiplicationsTotals/(totalnumber*totalnumber),
-		
-// 		resultindexKappa: (ObservedAgreement -expectedAgreemen)/(1-expectedAgreemen)
-// 	}
-
-
-// }
 
 

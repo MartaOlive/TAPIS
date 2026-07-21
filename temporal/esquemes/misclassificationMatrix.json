@@ -8,6 +8,429 @@
 			"STAdata": [
 				{
 					"SampleID": "1",
+					"Reference": "Pinus canariensis",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "2",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "3",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "4",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "5",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "6",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "7",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "8",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "9",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "10",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "11",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "12",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "13",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "14",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "15",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "16",
+					"Reference": "Pinus sylvestris",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "17",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "18",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "19",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "20",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "21",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "22",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "23",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "24",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "25",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "26",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "27",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "28",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "29",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "30",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "31",
+					"Reference": "Pinus nigra",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "32",
+					"Reference": "Pinus nigra",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "33",
+					"Reference": "Pinus nigra",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "34",
+					"Reference": "Pinus nigra",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "35",
+					"Reference": "Quercus ilex",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "36",
+					"Reference": "Quercus ilex",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "37",
+					"Reference": "Quercus ilex",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "38",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus robur"
+				},
+				{
+					"SampleID": "39",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "40",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "41",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "42",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "43",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "44",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "45",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "46",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "47",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "48",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "49",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "50",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "51",
+					"Reference": "Quercus ilex",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "52",
+					"Reference": "Quercus ilex",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "53",
+					"Reference": "Quercus ilex",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "54",
+					"Reference": "Quercus ilex",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "55",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Pinus nigra"
+				},
+				{
+					"SampleID": "56",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "57",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Quercus ilex"
+				},
+				{
+					"SampleID": "58",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "59",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "60",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "61",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "62",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "63",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "64",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "65",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "66",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "67",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "68",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "69",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "70",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "71",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "72",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Pinus sylvestris"
+				},
+				{
+					"SampleID": "73",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "74",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "75",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "76",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "77",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "78",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "79",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				},
+				{
+					"SampleID": "80",
+					"Reference": "Fagus sylvatica",
+					"Classified": "Fagus sylvatica"
+				}
+			],
+			"x": 59,
+			"y": 8,
+			"STAdataAttributes": {
+				"SampleID": {
+					"type": "string"
+				},
+				"Reference": {
+					"type": "string"
+				},
+				"Classified": {
+					"type": "string"
+				}
+			}
+		},
+		{
+			"id": "18uh.n2c9qqio",
+			"label": "Misclassification Matrix",
+			"image": "misclassificationMatrix.png",
+			"shape": "circularImage",
+			"x": -41,
+			"y": -42,
+			"STAdata": [
+				{
+					"SampleID": "1",
 					"Reference": "Pinus sylvestris",
 					"Classified": "Pinus sylvestris"
 				},
@@ -407,8 +830,6 @@
 					"Classified": "Fagus sylvatica"
 				}
 			],
-			"x": 59,
-			"y": 8,
 			"STAdataAttributes": {
 				"SampleID": {
 					"type": "string"
@@ -419,15 +840,12 @@
 				"Classified": {
 					"type": "string"
 				}
+			},
+			"STAmetadata": {},
+			"STAcolumnsList": {
+				"classified": [],
+				"reference": []
 			}
-		},
-		{
-			"id": "18uh.n2c9qqio",
-			"label": "Misclassification Matrix",
-			"image": "misclassificationMatrix.png",
-			"shape": "circularImage",
-			"x": -41,
-			"y": -42
 		}
 	],
 	"edges": [

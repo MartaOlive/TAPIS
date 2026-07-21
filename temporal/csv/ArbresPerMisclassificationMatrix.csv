@@ -1,5 +1,5 @@
 SampleID,Reference,Classified
-1,Pinus sylvestris,Pinus sylvestris
+1,Pinus canariensis,Pinus sylvestris
 2,Pinus sylvestris,Pinus sylvestris
 3,Pinus sylvestris,Pinus sylvestris
 4,Pinus sylvestris,Pinus sylvestris
@@ -36,7 +36,7 @@ SampleID,Reference,Classified
 35,Quercus ilex,Pinus sylvestris
 36,Quercus ilex,Pinus nigra
 37,Quercus ilex,Pinus nigra
-38,Quercus ilex,Quercus ilex
+38,Quercus ilex,Quercus robur
 39,Quercus ilex,Quercus ilex
 40,Quercus ilex,Quercus ilex
 41,Quercus ilex,Quercus ilex
