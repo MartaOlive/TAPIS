@@ -1509,7 +1509,7 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 		}
 	}
 	//All categories together to add classification and references categories. To calculate index Kappa is necessary to have it all. 
-	var allCategories= [...categoriesClassification,...categoriesReference];
+	var allCategories= [...new Set([...categoriesClassification,...categoriesReference])];
 	//If a classified doesn't exist in reference or other way round:
 	for (var f=0;f<allCategories.length;f++){
 		if (!Object.hasOwn(confusionMatrix, allCategories[f]))confusionMatrix[allCategories[f]]={};
@@ -1520,9 +1520,16 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 
 
 	//matrix
-	var matrix={};
-
-	console.log (confusionMatrix);
+	var matrix=[], rows;
+	for (var r=0;r<allCategories.length;r++){
+		rows=[];
+		for (var s=0;s<allCategories.length;s++){
+			rows.push(confusionMatrix[allCategories[r]][allCategories[s]])
+		}
+		matrix.push(rows)
+	}
+	var valuesInMetadata=  [{"rows": allCategories, "columns": allCategories, "matrix": matrix}];
+	
 
 
 	//calculate  totalClassified, totalReference, wellClassified
@@ -1622,7 +1629,7 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 						"valueType": "matrix",
 
 						"values": [
-							// Posar la matriu
+							valuesInMetadata
 						],
 
 						"derivedResults": {
@@ -1647,7 +1654,6 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 				]
 				})
 
-				console.log (metadata)
 
 
 
