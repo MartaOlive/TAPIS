@@ -1501,8 +1501,11 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 					confusionMatrix[classified][reference] = 1;
 				}
 			}
-			if(!categoriesClassification.includes(classified))categoriesClassification.push(classified);
-			if(!categoriesReference.includes(reference))categoriesReference.push(reference);
+			if (e==classifiedReferencedAttributes.classified.length-1){
+				if(!categoriesClassification.includes(classified))categoriesClassification.push(classified);
+				if(!categoriesReference.includes(reference))categoriesReference.push(reference);
+			}
+
 		}
 	}
 	//All categories together to add classification and references categories. To calculate index Kappa is necessary to have it all. 
