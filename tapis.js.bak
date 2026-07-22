@@ -1632,7 +1632,7 @@ function TransformTextJSONToTable(json, jsonText, url, node, lastOne) {
 	if(node.STAdata && lastOne!="onlyOne"&& lastOne!="firstOne"){
 		node.STAdata.push(...result);
 	}else{
-		node.STAdata=result;
+	node.STAdata=result;
 	}
 
 	if (lastOne=="yes" || lastOne=="onlyOne"){
@@ -4979,31 +4979,39 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 		//if (node.image == "SeparateColumns.png")
 			//SeparateColumnsNode(node, parentNode); No se si te sentit perque ara hi ha més possibilitats que quan es va pensar això
 		//else 
-		if (node.image == "SelectColumnsTable.png") {
+		if (node.image == "SelectColumnsTable.png")
+		{
 			//pensar com es podria fer.
 			showInfoMessage("Automatic update of SelectColumns not implemented for table nodes.");
-		} else if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || (STAOperations[removeFileExtension(node.image)] && STAOperations[removeFileExtension(node.image)].callSTALoad)) {
+		}
+		else if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || (STAOperations[removeFileExtension(node.image)] && STAOperations[removeFileExtension(node.image)].callSTALoad))  
+		{
 			showInfoMessage("Updating "+ removeFileExtension(node.image) + " ...");
 			await LoadJSONNodeSTAData(node);
-		} else if (node.image == "OneValueSTA.png") {
+		}
+		else if (node.image == "OneValueSTA.png")
+		{
 			if (node.STAtimeOut) {
 				clearTimeout(node.STAtimeOut);
 				node.STAtimeOut=null;
 			}
 			await RequestLastObservationAndRefreshOneValueSTA(node);
-		} else if (node.image == "CountResultsSTA.png") {
+		}
+		else if (node.image == "CountResultsSTA.png")
+		{
 			if (node.STAtimeOut) {
 				clearTimeout(node.STAtimeOut);
 				node.STAtimeOut=null;
 			}
 			await requestAndRefreshCountResults(node, node.STAredrawPeriodCount);
-		} else if (node.image == "GroupBy.png") {
-			UpdateGroupBy(node);
-			UpdateChildenLoadJSONCallback(node);
-		} else if (node.image == "ScatterPlot.png") {
+		}
+		else if (node.image == "ScatterPlot.png")
+		{
 			if (isNodeDialogOpen("DialogScatterPlot"))
 				UpdateScatterPlot(null);
-		} else if (node.image == "BarPlot.png") {
+		}
+		else if (node.image == "BarPlot.png")
+		{
 			if (isNodeDialogOpen("DialogBarPlot"))
 				DrawBarPlot(null);
 		}
@@ -5230,7 +5238,7 @@ function GetGeoJSON(data, selectedOptions) {
 							}
 						});
 					} else if (selectedOptions.DGGS=="UberH3") {
-						var hexagon=h3.cellToBoundary(typeof a[selectedOptions.zoneId]==="number" ? a[selectedOptions.zoneId].toString(16) : a[selectedOptions.zoneId]);
+						var hexagon=h3.cellToBoundary(a[selectedOptions.zoneId]);
 						for (var c=0; c<hexagon.length; c++)
 							hexagon[c]=hexagon[c].reverse()
 						hexagon.push(hexagon[0]);

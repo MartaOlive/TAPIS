@@ -182,7 +182,7 @@
 			}
 			var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 			const dataAttributesArray = Object.keys(dataAttributes);
-			var dateTypeAttr=[], s;
+			var dateTypeAttr=[],s;
 
 			for (var a = 0; a < dataAttributesArray.length; a++) {
 				if (document.getElementById("GroupBySelects_" + a).checked) { //groupBy				
@@ -216,16 +216,4 @@
 			networkNodes.update(node);
 			updateQueryAndTableArea(node);
 			UpdateChildenTable(node);
-		}
-		function UpdateGroupBy(node) {
-			var parentNode=GetFirstParentNode(node);
-			var data = parentNode.STAdata ? parentNode.STAdata : node.STAdata;
-			if (!data || !data.length) {
-				return;
-			}
-			var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
-			var dataCurrentAttributes={};
-			node.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, node.groupByParams);
-			node.STAdataAttributes=dataCurrentAttributes;
-			networkNodes.update(node);
 		}

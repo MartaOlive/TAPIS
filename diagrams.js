@@ -56,7 +56,7 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 				document.getElementById("DialogScatterPlotAxisXSort").checked=false;
 				document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display="inline-block";	
 				
-			}
+			}			
 		}
 	}else{
 		document.getElementById("DialogScatterPlotAxisXSort").checked=true;	
@@ -260,7 +260,7 @@ function updateSelectInformationScatterPlot(numberDialog, keyToChange, typeOfSel
 }
 
 function drawScatterPlot(node){
-		var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'))
+	var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'))
 	if (chart)
 		ScatterPlotChart.destroy();
 	ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), node.STAattributesToSelect.config);
