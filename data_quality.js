@@ -50,15 +50,15 @@
 //statistics.js is needed (Some functions needed are defined there)
 
 function calculateDataQualityCompletnessOmission(data, attribute,metadata, flag) {
-    var rate;
+    var omissionRate;
     var count = 0;
     for (var i = 0; i < data.length; i++) {
         if (data[i][attribute] != null && data[i][attribute] != undefined && data[i][attribute] != "") {
-            count++;
-            if (flag) data[i]["Omission Flag"] = "True";
-        } else if (flag) data[i]["Omission Flag"] = "False";
+            count++; //not empty
+            if (flag) data[i]["Omission Flag"] = false;
+        } else if (flag) data[i]["Omission Flag"] = true;
     }
-    rate = (data.length - count) / data.length * 100;
+    omissionRate = (data.length - count) / data.length * 100;
     if (!metadata.dataQualityInfos)
 		metadata.dataQualityInfos=[];
 	metadata.dataQualityInfos.push(
@@ -103,7 +103,7 @@ function calculateDataQualityCompletnessOmission(data, attribute,metadata, flag)
 								}
 							},
 							"valueType": "number",
-							"values": [ rate.toFixed(2) ]
+							"values": [ omissionRate.toFixed(2) ]
 						}
 					]
 				}
@@ -111,7 +111,7 @@ function calculateDataQualityCompletnessOmission(data, attribute,metadata, flag)
 		});
 
 
-    return [count, data.length - count, rate.toFixed(2), 100 - rate.toFixed(2)];//data, Total, true, false, %omission, %completesa
+    return {"notEmpty":count, "empty":data.length - count, "omissionRate":omissionRate, "completnessRate":100-omissionRate }//[count, data.length - count, rate.toFixed(2), 100 - rate.toFixed(2)];//data, Total, true, false, %omission, %completesa
 }
 
 function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references,metadata, flag) {
@@ -1534,6 +1534,7 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 
 	//calculate  totalClassified, totalReference, wellClassified
 	confusionMatrixResult.totalSamples= data.length;
+	confusionMatrixResult.matrix = valuesInMetadata;
 	var classificationKeys= Object.keys(confusionMatrix);
 	var referenceKeys, totalClassified={}, totalReference={},wellClassified={} ;
 	for (var i=0;i<classificationKeys.length;i++){ //same keys as confusionmatrix

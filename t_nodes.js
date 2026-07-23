@@ -166,7 +166,8 @@ const dataQuality = {
 	logicalConsistency: { description: "Logical consistency", help: "Performs a logical consistency check to identify contradictions and ensure coherent data relationships." },
 	temporalQuality: { description: "Temporal quality", help: "Allows calculating temporal consistency, temporal validity and temporal resolution." },
 	positionalQuality: { description: "Positional quality", help: "Allows calculating positional accuracy and positional validity" },
-	thematicQuality: { description: "Thematic quality", help: "Allows calculating thematic accuracy and thematic validity" }
+	thematicQuality: { description: "Thematic quality", help: "Allows calculating thematic accuracy and thematic validity" },
+	qualityResultsViewer: { description: "Quality results viewer", help: "Allows you to visualize the complete results from the linked quality node" }
 
 }
 const dataQualityArray = Object.keys(dataQuality);

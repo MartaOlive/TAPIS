@@ -203,6 +203,7 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
+	if (node.image=="qualityResultsViewer.png" && (parentNode.image!="uncertainty.png" && parentNode.image!="completenessomission.png" && parentNode.image!="misclassificationMatrix.png" && parentNode.image!="logicalConsistency.png" && parentNode.image!="temporalQuality.png" && parentNode.image!="thematicQuality.png" && parentNode.image!="positionalQuality.png" )) return "Quality Results Viewer can only be connected to a quality node";
 	if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
 		return "It is not possible to link an STAnode after no STA node" //Falta afegir OGCApi Collection xq utilitza el filter i mirar si algo més
 	}
@@ -8253,7 +8254,29 @@ function networkDoubleClick(params) {
 				alert("Parent node must have data to analyze");
 			}
 		}
+		else if (currentNode.image == "qualityResultsViewer.png") {
+			var parentNode=GetParentNodes(currentNode);
+			if(parentNode[0].STAQualityNodeResults ) currentNode.STAQualityNodeResults=parentNode[0].STAQualityNodeResults;
+			populateDialogdataQualityResult(parentNode[0], currentNode)
+				//networkNodes.update(currentNode);
+			showNodeDialog("DialogDataQualityResult");
+			
+
+
+
+			// if (parentNode) {
+			// 	if (populateDialogQualityThematicQuality(currentNode)){
+			// 		networkNodes.update(currentNode);
+			// 		showNodeDialog("DialogQualityThematicQuality");
+			// 	}else{
+			// 		alert("Only 2 parents are allowed");
+			// 	}
+
+			// }else{
+			// 	alert("Parent node must have data to analyze");
+			// }
 		
+		}
 	}
 }
 
@@ -9865,25 +9888,38 @@ function okButtonDataQualityCompletnessOmission(event){
 	var infoDataOmission;
 	var metadata= (node.STAmetadata)?deapCopy(node.STAmetadata):{}
 
-	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected,metadata, flag); //Response:data, Total, true, false, %omission, %completness
-
+	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected,metadata, flag); //Response:{"notEmpty", "empty", "omissionRate", "completnessRate"}
 	node.STAdata=data;
 	node.STAdataAttributes=getDataAttributes(data);
 	node.STAmetadata=metadata;
+	var STAQualityNodeResults=infoDataOmission;
+	STAQualityNodeResults.dataLength=data.length;
+	STAQualityNodeResults.selected=selected;
+
+	node.STAQualityNodeResults=STAQualityNodeResults
 	networkNodes.update(node);
 	hideNodeDialog("DialogQualityCompletnessOmission", event);
-	
-	document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
-	<thead> 
-	<th>Column</th><th>Total records</th><th>Empty records</th>
-	<th>Omission rate</th><th>Completeness rate</th></tr></thead>
-	<tbody><tr>
-	<td>${selected}</td><td>${data.length}</td><td>${infoDataOmission[0]}</td>
-	<td>${infoDataOmission[1]}</td><td>${infoDataOmission[2]}</td>
-	</tr></tbody></table>`;
-	showNodeDialog("dataQualityResult");
-	
+	populateDialogdataQualityResultCompletnessOmission(node);
+	showNodeDialog("DialogDataQualityResult");
 	updateQueryAndTableArea(node);
+}
+
+function populateDialogdataQualityResultCompletnessOmission(node){
+	if (node.STAQualityNodeResults){
+		var STAQualityNodeResults= node.STAQualityNodeResults;
+		document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
+		<thead> 
+		<th>Column</th><th>Total records</th><th>Empty records</th>
+		<th>Omission rate</th><th>Completeness rate</th></tr></thead>
+		<tbody><tr>
+		<td>${STAQualityNodeResults.selected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.empty}</td>
+		<td>${STAQualityNodeResults.omissionRate}</td><td>${STAQualityNodeResults.completnessRate}</td>
+		</tr></tbody></table>`;
+	}else populateDialogdataQualityResultEmpty();
+
+}
+function populateDialogdataQualityResultEmpty(){
+	document.getElementById("dataQualityResult_info").innerHTML = `<p  style="padding:10px;">No quality results have been calculated in the previous node.</p>`;
 }
 
 function populateDialogQualityLogicalConsistency(node){
@@ -10444,6 +10480,7 @@ function okButtonDataQualityThematicQuality(event) {
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		hideNodeDialog("DialogQualityThematicQuality", event);
+	
 	}
 }
 
@@ -11109,41 +11146,134 @@ function okButtonDataQualityMisclassificationmatrix(event){
 	var node= getNodeDialog("DialogQualityMisclassificationMatrix");
 	var metadata= (node.STAmetadata)?deapCopy(node.STAmetadata):{};
 	var confusionmatrixResult={};
-	var confusionMatrixResult= calculateDataQualityMisclassificationMatrix(node.STAdata,metadata,node.STAcolumnsList,confusionmatrixResult  )
+	var confusionMatrixResult= calculateDataQualityMisclassificationMatrix(node.STAdata,metadata,node.STAcolumnsList,confusionmatrixResult);
+	node.STAQualityNodeResults=confusionMatrixResult
+	node.STAmetadata = metadata;
+	networkNodes.update(node);
+	hideNodeDialog("DialogQualityMisclassificationMatrix", event);
+	populateDialogdataQualityResultMisclassificationMatrix(node);
+	showNodeDialog("DialogDataQualityResult");
+	updateQueryAndTableArea(node);
+}
+function populateDialogdataQualityResultMisclassificationMatrix(node) {
+	if (node.STAQualityNodeResults){
+		var confusionMatrixResults=node.STAQualityNodeResults;
+	var html = "";
+    // Confusion Matrix
+    html += "<h3>Confusion Matrix</h3>";
+    html += "<table class='tablesmall'>";
+    html += "<thead><tr><th></th>";
 
+    confusionMatrixResults.matrix[0].columns.forEach(column => {
+        html += `<th>${column}</th>`;
+    });
+
+    html += "</tr></thead><tbody>";
+
+    confusionMatrixResults.matrix[0].matrix.forEach((row, i) => {
+        html += `<tr><th>${confusionMatrixResults.matrix[0].rows[i]}</th>`;
+        row.forEach(value => {
+            html += `<td>${value}</td>`;
+        });
+        html += "</tr>";
+    });
+    html += "</tbody></table>";
+
+    // Global statistics
+
+    html += "<h3>Accuracy statistics</h3>";
+    html += "<table class='tablesmall'>";
+    html += `
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
+
+    html += `
+        <tr>
+            <td>Overall Accuracy</td>
+			<td>${(confusionMatrixResults.overallAccuracy === null || Number.isNaN(confusionMatrixResults.overallAccuracy)) ? "N/A" : confusionMatrixResults.overallAccuracy}</td>
+        </tr>
+        <tr>
+            <td>Overall Error</td>
+           <td>${(confusionMatrixResults.overallError === null || Number.isNaN(confusionMatrixResults.overallError)) ? "N/A" : confusionMatrixResults.overallError}</td>
+        </tr>
+        <tr>
+            <td>Cohen's Kappa (Kappa Coefficient)</td>
+            <td>${(confusionMatrixResults.indexKappa.result === null || Number.isNaN(confusionMatrixResults.indexKappa.result)) ? "N/A" : confusionMatrixResults.indexKappa.result}</td>
+        </tr>
+    `;
+
+    html += "</tbody></table>";
+
+    // Per-class statistics
+
+    html += "<h3>Per-class accuracy</h3>";
+    html += "<table class='tablesmall'>";
+    html += `
+        <thead>
+            <tr>
+                <th>Class</th>
+                <th>Producer's Accuracy (Recall)</th>
+                <th>User's Accuracy (Precision)</th>
+                <th>Omission Error (1 − Recall)</th>
+                <th>Commission Error (1 − Precision)</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
+
+    Object.keys(confusionMatrixResults.producerAccuracy).forEach(category => {
+
+        html += `
+            <tr>
+                <td>${category}</td>
+				<td>${(confusionMatrixResults.producerAccuracy[category] === null || Number.isNaN(confusionMatrixResults.producerAccuracy[category])) ? "N/A" : confusionMatrixResults.producerAccuracy[category]}</td>
+				<td>${(confusionMatrixResults.userAccuracy[category] === null || Number.isNaN(confusionMatrixResults.userAccuracy[category])) ? "N/A" : confusionMatrixResults.userAccuracy[category]}</td>
+				<td>${(confusionMatrixResults.omissionError[category] === null || Number.isNaN(confusionMatrixResults.omissionError[category])) ? "N/A" : confusionMatrixResults.omissionError[category]}</td>
+				<td>${(confusionMatrixResults.comissionError[category] === null || Number.isNaN(confusionMatrixResults.comissionError[category])) ? "N/A" : confusionMatrixResults.comissionError[category]}</td>
+            </tr>
+        `;
+
+    });
+
+    html += "</tbody></table>";
+	document.getElementById("dataQualityResult_info").innerHTML=html;
+
+	}else populateDialogdataQualityResultEmpty();
+    
+   
+}
+
+function populateDialogdataQualityResult(parentNode, node){
+	switch (parentNode.image){
+		case "completenessomission.png":
+			populateDialogdataQualityResultCompletnessOmission(node);
+			break;
+		case "misclassificationMatrix.png":
+			populateDialogdataQualityResultMisclassificationMatrix(node);
+			break;
+		case "logicalConsistency.png":
+
+			break;
+		case "temporalQuality.png":
+
+			break;
+
+		case "positionalQuality.png":
+
+			break;
+		case "thematicQuality.png":
+
+			break;
+	}
 }
 
 
-// function drawTableInColumnBoxTableInAggregateColumns(){
-// 	var spanColumnsListAggregateColumns=document.getElementById("spanColumnsListAggregateColumns");
-// 	var cdns;
-// 	var tableHTML=`<table border=1><tr><th>Attributes</th><th>Operation</th><th>Column name</th><th>Number of decimals</th><th></th></tr>`;
-// 	if (currentNode.STAnewColumnsToAdd.length!=0){
-// 		var n= currentNode.STAnewColumnsToAdd.length, attributes="";
-// 		for (var i=0;i<n;i++){
-// 			attributes="";//restart
-// 			for (var a =0; a<currentNode.STAnewColumnsToAdd[i][2].length; a++){
-// 				if (a!=0){
-// 					attributes+=", ";
-// 				}
-// 				attributes +=currentNode.STAnewColumnsToAdd[i][2][a];
-				
-// 			}
-// 			tableHTML+=`<tr><td>${attributes}</td><td>${currentNode.STAnewColumnsToAdd[i][0]}</td><td>${currentNode.STAnewColumnsToAdd[i][1]}</td>`;
-// 			if (currentNode.STAnewColumnsToAdd[i][3]){ //number of decimals
-// 				tableHTML+=`<td>${currentNode.STAnewColumnsToAdd[i][3]}</td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`;
-// 			}else{
-// 				tableHTML+=`<td> </td><td><button onclick='deleteRowInColumnsBoxTable(${i})'><img src="trash.png" alt="Remove" title="Remove"></button></td></tr>`;
-// 		}
-// 		}
-// 	}else{
-// 		tableHTML+=`<tr style="height:20px"><td></td><td></td><td></td><td></td><td></td></tr>`
-// 	}
-	
-// 	tableHTML+=`</table>`;
-// 	cdns=[tableHTML];
-// 	spanColumnsListAggregateColumns.innerHTML=cdns;
-// }
 //function giveMeNetworkInformation(event) {
 //			hideNodeDialog("DialogContextMenu", event);
 //			console.log(networkNodes.get());
