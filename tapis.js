@@ -9970,17 +9970,8 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 	var select, selected, selectedTarget, selectedReference;
 	var idTarget, idReference;
 	var numTargued, numReference;
-
-	//Wich node is target and wich reference
-	// select= document.getElementById("DialogQualityLogicalConsistency_select_targetOrReference_0");
-	// selected= select.options[select.selectedIndex].value;
-	// if(selected=="target"){
-		numTargued=0;
-		numReference=1; 
-	// }else{
-	// 	numTargued=1;
-	// 	numReference=0; 	
-	// }
+	numTargued=0;
+	numReference=1; 
 
 	for (var i=1;i<4;i++){
 		select=document.getElementById(`DialogQualityLogicalConsistency_selectAttribute${i}_${numTargued}`);
@@ -10015,25 +10006,37 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 		node.STAdata= dataTarget;
 		node.STAdataAttributes= getDataAttributes(dataTarget);
 		node.STAmetadata=metadata;
+		var STAQualityNodeResults=infoDatalogicalConsistency;
+		STAQualityNodeResults.targets=targets;
+		STAQualityNodeResults.references=references;
+		STAQualityNodeResults.dataLength=dataTargetLength;
+		node.STAQualityNodeResults=STAQualityNodeResults
 		networkNodes.update(node);
 		hideNodeDialog("DialogQualityLogicalConsistency", event);
-
-		document.getElementById("dataQualityResult_info").innerHTML=`<table class="tablesmall">
-			<thead > 
-			<th >Target columns</th><th >Reference columns</th><th>Total records</th>
-			<th>True records</th><th>Logical consistancy rate</th></tr></thead>
-			<tbody><tr>
-			<td>${targets}</td><td>${references}</td>
-			<td>${dataTargetLength}</td>
-			<td>${infoDatalogicalConsistency[0]}</td><td>${infoDatalogicalConsistency[1]}</td>
-			</tr></tbody></table>`
-		showNodeDialog("dataQualityResult");
+		populateDialogdataQualityResultLogicalConsistency(node);
+		showNodeDialog("DialogDataQualityResult");
 		updateQueryAndTableArea(node);
+
+
 
 	}else{
 		alert("target node and reference node are the same are identified as the same")
 	}
 	}
+}
+function populateDialogdataQualityResultLogicalConsistency(node){
+	var STAQualityNodeResults=node.STAQualityNodeResults;
+	if (node.STAQualityNodeResults){
+		document.getElementById("dataQualityResult_info").innerHTML=`<table class="tablesmall">
+			<thead > 
+			<th >Target columns</th><th >Reference columns</th><th>Total records</th>
+			<th>True records</th><th>Logical consistancy rate</th></tr></thead>
+			<tbody><tr>
+			<td>${STAQualityNodeResults.targets}</td><td>${STAQualityNodeResults.references}</td>
+			<td>${STAQualityNodeResults.dataLength}</td>
+			<td>${STAQualityNodeResults.logicalCorrect}</td><td>${STAQualityNodeResults.logicalConsistencyRate}</td>
+			</tr></tbody></table>`
+	}else populateDialogdataQualityResultEmpty();
 }
 
 function populateDialogQualityTemporalQuality(node){
@@ -10073,9 +10076,18 @@ function okButtonDataQualityTemporalQuality(event){
 
 	var flag=(document.getElementById("TemporalQuality_checkbox_flag").checked)?true:false;
 	var sort= (document.getElementById("TemporalQuality_checkbox_sort").checked)?true:false;
-	var datalength=data.length;
+	var dataLength=data.length;
 	var metadata= (node.STAmetadata)? deapCopy(node.STAmetadata) :{}
-	var newData={};
+
+	var STAQualityNodeResults={
+		"accuracy":{},
+		"validity":{},
+		"resolution":{},
+		"consistency":{},
+		"dataLength": dataLength,
+		"attributesSelected":attributeSelected
+
+	}
 
 	if (temporalAccuracy){
 		var accuracyMethod=document.querySelector('input[name="TemporalQuality_radio_temporalAccuracy"]:checked')
@@ -10086,7 +10098,7 @@ function okButtonDataQualityTemporalQuality(event){
 			var selectUncertantly= document.getElementById("TemporalQuality_select_temporalAccuracy_uncertantyColumn");
 			var attributeSelectedUncertantly= selectUncertantly.options[selectUncertantly.selectedIndex].value;
 			//if (node.STAdataAttributes[attributeSelectedUncertantly].type == "number" || node.STAdataAttributes[attributeSelectedUncertantly].type== "integer") {
-				newData.accuracy=accuracyFromUncertaintyInTemporal(data, metadata, attributeSelectedUncertantly)
+				STAQualityNodeResults.accuracy=accuracyFromUncertaintyInTemporal(data, metadata, attributeSelectedUncertantly)
 				//valid=true;
 			//} else {
 				// valid=false;
@@ -10099,63 +10111,75 @@ function okButtonDataQualityTemporalQuality(event){
 				var temporalUncertaintyGroupColumn= document.getElementById("TemporalQuality_radio_temporalAccuracy_evaluateColumn_grouping_select");
 				var temporalUncertaintyGroupColumnValue= temporalUncertaintyGroupColumn.options[temporalUncertaintyGroupColumn.selectedIndex].value;
 				var newColumn= document.getElementById("TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox").checked?true:false;
-				newData.accuracy=calculateTemporalAccuracyFromTimes(data, attributeSelected,metadata,temporalUncertaintyGroupColumnValue, newColumn)
+				STAQualityNodeResults.accuracy=calculateTemporalAccuracyFromTimes(data, attributeSelected,metadata,temporalUncertaintyGroupColumnValue, newColumn)
 			}else{ //all
-				newData.accuracy=calculateTemporalAccuracyFromTimes(data, attributeSelected,metadata)
+				STAQualityNodeResults.accuracy=calculateTemporalAccuracyFromTimes(data, attributeSelected,metadata)
 			}
 			
 		}
 	}
 
-
-
 	if (validity_calculate){
-		newData.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag);
+		STAQualityNodeResults.validity=calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag);
 	} 
 	
 	if (resolution_calculate){
-		newData.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata,flag);
+		STAQualityNodeResults.resolution= calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata,flag);
 	} 
 	if (consistency_calculate){
 		if(sort)sortDates(data, attributeSelected);
-		newData.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,metadata, flag);
+		STAQualityNodeResults.consistency= calculateDataQualityTemporalConsistency(data, attributeSelected, consistencyInput,consistencyRadioValue, consistencyRadioMethod,tolerance,metadata, flag);
 	}
 
 	
-	// if (newData.validity==null || newData.resolution==null ||newData.consistency==null)
-	// 	alert("The attribute selected must be a Date");
-	// else{
-		node.STAdata= data;
-		node.STAdataAttributes= getDataAttributes(data);
-		node.STAmetadata= metadata;
-		networkNodes.update(node);
-		updateQueryAndTableArea(node);
-		hideNodeDialog("DialogQualityTemporalQuality", event);
 
-		if(validity_calculate||resolution_calculate||consistency_calculate||temporalAccuracy ){
-			var html="";
-			if(validity_calculate||resolution_calculate||consistency_calculate){
-			html= `<table class="tablesmall">
-						<thead > 
-						<th></th><th>Column</th><th>Total records</th><th>True records</th><th>Rate</th></tr></thead><tbody>`;
-			
-			}
+	node.STAdata= data;
+	node.STAdataAttributes= getDataAttributes(data);
+	node.STAmetadata= metadata;
+	node.STAQualityNodeResults=STAQualityNodeResults;
 
-			if(validity_calculate)html+= `<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.validity[0]}</td><td>${newData.validity[1]}</td></tr>`
-			if(resolution_calculate)html+= `<tr><td>Temporal resolution</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.resolution[0]}</td><td>${newData.resolution[1]}</td></tr>`
-			if(consistency_calculate)html+= `<tr><td>Temporal consistency</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.consistency[0]}</td><td>${newData.consistency[1]}</td></tr>`
-			html+=`</tbody></table>`;
-			if (temporalAccuracy){
-				html+= `<table class="tablesmall">
-						<thead > 
-						<th></th><th>Column</th><th>Total records</th><th>Accuracy value</th></tr></thead><tbody>
-						<tr><td>Temporal validity</td><td>${attributeSelected}</td><td>${datalength}</td><td>${newData.accuracy}</td></tr>`
-			}
-			
-			document.getElementById("dataQualityResult_info").innerHTML= html
-			showNodeDialog("dataQualityResult");
+	networkNodes.update(node);
+	hideNodeDialog("DialogQualityTemporalQuality", event);
+	populateDialogdataQualityResultTemporalQuality(node);
+	showNodeDialog("DialogDataQualityResult");
+	updateQueryAndTableArea(node);
+}
+function populateDialogdataQualityResultTemporalQuality(node){
+
+	var STAQualityNodeResults=node.STAQualityNodeResults;
+	if (node.STAQualityNodeResults){
+	if (Object.keys(STAQualityNodeResults.validity).length !== 0 ||Object.keys(STAQualityNodeResults.resolution).length !== 0 ||Object.keys(STAQualityNodeResults.consistency).length !== 0) {
+
+    var  html = ` <table class="tablesmall">
+            <thead>
+                <tr>
+                    <th></th><th>Column</th><th>Total records</th><th>True records</th> <th>Rate</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+}
+		if(Object.keys(STAQualityNodeResults.validity).length!=0){
+			html+= `<tr><td>Temporal validity</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.validity.trueTemporalValidiy}</td><td>${STAQualityNodeResults.validity.temporalValidityRate}</td></tr>`
 		}
-	//}	
+		if(Object.keys(STAQualityNodeResults.resolution).length!=0){
+			html+= `<tr><td>Temporal resolution</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.resolution.trueTemporalResolution}</td><td>${STAQualityNodeResults.resolution.temporalResolutionRate}</td></tr>`
+		}
+		if(Object.keys(STAQualityNodeResults.consistency).length!=0){
+			html+= `<tr><td>Temporal consistency</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.consistency.trueTemporalConsistency}</td><td>${STAQualityNodeResults.consistency.temporalConsistencyRate}</td></tr>`
+		}
+		html+=`</tbody></table> <br>`;
+		if(Object.keys(STAQualityNodeResults.accuracy).length!=0){
+			html+= `<table class="tablesmall">
+			<thead > 
+			<th></th><th>Column</th><th>Total records</th><th>Accuracy value</th></tr></thead><tbody>
+			<tr><td>Temporal validity</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.accuracy.accuracyValue}</td></tr>`
+		
+		}
+		document.getElementById("dataQualityResult_info").innerHTML= html
+
+	}else populateDialogdataQualityResultEmpty();
 }
 
 function populateDialogQualityPositionalQuality(node){
@@ -11258,17 +11282,18 @@ function populateDialogdataQualityResult(parentNode, node){
 			populateDialogdataQualityResultMisclassificationMatrix(node);
 			break;
 		case "logicalConsistency.png":
-
+			populateDialogdataQualityResultLogicalConsistency(node);
 			break;
 		case "temporalQuality.png":
-
+			populateDialogdataQualityResultTemporalQuality(node);
 			break;
 
 		case "positionalQuality.png":
+			populateDialogdataQualityResultPositionalQuality(node);
 
 			break;
 		case "thematicQuality.png":
-
+			populateDialogdataQualityResultThematicQuality(node);
 			break;
 	}
 }

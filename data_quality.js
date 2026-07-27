@@ -193,8 +193,8 @@ function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targe
 				}
 			]
 		});
-    return [count, (count / dataTarget.length) * 100];
-}
+    return {"logicalCorrect":count, "logicalConsistencyRate":(count / dataTarget.length) * 100 };
+} 	
 
 function calculateDataQualityTemporalValidity(data, attributeSelected, from, to, metadata, flag) {
     var attributes = getDataAttributes(data); 
@@ -276,8 +276,7 @@ function calculateDataQualityTemporalValidity(data, attributeSelected, from, to,
 				}
 			]
 		});
-    return ([count, (count / data.length) * 100])
-
+    return  {"trueTemporalValidiy":count, "temporalValidityRate":(count / data.length) * 100 };
 }
 function calculateDataQualityTemporalResolution(data, attributeSelected, resolutionRadioValue, metadata, flag) {
     var attributes = getDataAttributes(data); 
@@ -417,7 +416,7 @@ function calculateDataQualityTemporalResolution(data, attributeSelected, resolut
 				}
 			]
 		});
-    return ([count, (count / data.length) * 100]);
+    return {"trueTemporalResolution":count, "temporalResolutionRate":(count / data.length) * 100 };
 }
 
 function calculateDataQualityTemporalConsistency(data, attributeSelected, number, consistencyRadioValue, consistencyRadioMethod, tolerance, metadata, flag) {
@@ -574,7 +573,7 @@ function calculateDataQualityTemporalConsistency(data, attributeSelected, number
 				}
 			]
 		});
-    return [count, (count / data.length) * 100]
+    return {"trueTemporalConsistency":count, "temporalConsistencyRate":(count / data.length) * 100 };
 }
 
 function returnValidRange(currentData, number, tolerance, consistencyRadioValue) {
@@ -629,9 +628,8 @@ function accuracyFromUncertaintyQuality(data, metadata, uncertaintyAttribute, cl
 	var uncertainties=[];
 	for (var i=0; i<data.length; i++)
 		uncertainties.push(data[i][uncertaintyAttribute]);
-
-	var accuracyValue=parseFloat(aggrFuncMean(uncertainties).toPrecision(4));
-
+	var accuracyValue=parseFloat(aggrFuncMean(uncertainties));
+	
 	if (!metadata.dataQualityInfos)
 		metadata.dataQualityInfos=[];
 	metadata.dataQualityInfos.push(
@@ -673,7 +671,7 @@ function accuracyFromUncertaintyQuality(data, metadata, uncertaintyAttribute, cl
 			]
 		});
 
-	return accuracyValue;
+	return {"accuracyValue":accuracyValue};
 }
 
 function accuracyFromUncertaintyInPositions(data, metadata, uncertaintyAttribute) {
@@ -745,7 +743,7 @@ function calculateTemporalAccuracyFromTimes(data,timeColumn,metadata,groupColumn
 				}
 			]
 		});
-		return accuracyValue;
+		return {"accuracyValue":accuracyValue};
 }
 
 function createObjectToGroupTemporalRecords(data,groupColumn, timeColumn){
