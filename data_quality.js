@@ -851,7 +851,7 @@ function accuracyValuesInMetersWithPoints(data, metadata,  longAttribute, latAtt
 			]
 		});
 
-    return globalAccuracy;
+    return {"accuracyValue":globalAccuracy};
 
 }
 
@@ -934,7 +934,8 @@ function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, lo
 				}
 			]
 		});
-    return [count, (count / data.length) * 100]
+
+    return {"truePositionalValidity":count, "positionalValidityRate":(count / data.length) * 100 };
 }
 
 var RootURLQualityML="https://www.qualityml.org/";

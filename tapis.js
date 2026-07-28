@@ -10216,6 +10216,16 @@ function okButtonDataQualityPositionalQuality(event){
 	var valid, accuracyValue;
 	var data=node.STAdata;
 	var metadata= (node.STAmetadata) ? deapCopy(node.STAmetadata) : {};
+		var STAQualityNodeResults={
+		"accuracy":{},
+		"validity":{},
+		"dataLength": data.length,
+		"attributeSelectedLong":attributeSelectedLong,
+		"attributeSelectedLat":attributeSelectedLat
+
+
+	}
+
 
 	if (positionalAccuracy){
 		var accuracyMethod= (document.getElementById("PositionalQuality_radio_positionalAccuracy_uncertantlyColumn").checked)?"uncertantlyColumn": "geometryColumns";
@@ -10223,13 +10233,17 @@ function okButtonDataQualityPositionalQuality(event){
 		if (accuracyMethod=="uncertantlyColumn"){			
 			var selectUncertantly= document.getElementById("PositionalQuality_select_positionalAccuracy_uncertantlyColumn");
 			var attributeSelectedUncertantly= selectUncertantly.options[selectUncertantly.selectedIndex].value;
+			STAQualityNodeResults.attributeSelectedUncertantly=attributeSelectedUncertantly;
 			if (node.STAdataAttributes[attributeSelectedUncertantly].type == "number" || node.STAdataAttributes[attributeSelectedUncertantly].type== "integer") {
-				accuracyValue=accuracyFromUncertaintyInPositions(data, metadata, attributeSelectedUncertantly);
+				STAQualityNodeResults.accuracy.accuracyMethod=accuracyMethod;
+				STAQualityNodeResults.accuracy={...STAQualityNodeResults.accuracy,...accuracyFromUncertaintyInPositions(data, metadata, attributeSelectedUncertantly)};
+				
 				valid=true;
 			} else {
 				valid=false;
 				alert("Selected uncertainly column must be of a 'number' type");
 			}
+			
 		} else { 
 			var selectUnit= document.getElementById("PositionalQuality_radio_positionalAccuracy_uncertantlyColumn_degreeMeters");
 			var selectUnitValue= selectUnit.options[selectUnit.selectedIndex].value;
@@ -10238,12 +10252,15 @@ function okButtonDataQualityPositionalQuality(event){
 				var selectGroupingColumn= document.getElementById("PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_select");
 				var selectGroupingColumnValue= selectGroupingColumn.options[selectGroupingColumn.selectedIndex].value;
 				grouped=selectGroupingColumnValue;
+				STAQualityNodeResults.accuracy.grouped=selectGroupingColumnValue;
 				var newColumns= (document.getElementById("PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox").checked)?true:false;
 			}else{
 				grouped=false;
 			}
-			accuracyValue = accuracyValuesInMetersWithPoints(data, metadata, attributeSelectedLong, attributeSelectedLat, selectUnitValue, grouped, newColumns);
-			if (accuracyValue==null){
+			STAQualityNodeResults.accuracy.accuracyMethod=accuracyMethod;
+			STAQualityNodeResults.accuracy ={...STAQualityNodeResults.accuracy, ...accuracyValuesInMetersWithPoints(data, metadata, attributeSelectedLong, attributeSelectedLat, selectUnitValue, grouped, newColumns)};
+			
+			if (STAQualityNodeResults.accuracy==null){
 				valid=false;
 				alert("Selected collumn must have a geometry type");
 			}
@@ -10258,6 +10275,7 @@ function okButtonDataQualityPositionalQuality(event){
 		var ymax=document.getElementById("PositionalQuality_input_positionalValidity_ymax").value;
 		var tag= (document.getElementById("dataQuality_temporalValidity_flag").checked)?true:false;
 		var positionalValidityRate= calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, attributeSelectedLong, attributeSelectedLat, metadata, tag)
+		STAQualityNodeResults.validity.positionalValidityRate=positionalValidityRate;
 		if (positionalValidityRate==null){
 			valid=false;
 			alert("Selected collumn must have a geometry type");
@@ -10269,61 +10287,72 @@ function okButtonDataQualityPositionalQuality(event){
 		}
 	}
 	if (valid) {
+
 		node.STAdata=data;
 		node.STAdataAttributes= getDataAttributes(data);
 		node.STAmetadata= metadata;
-		networkNodes.update(node);
-		updateQueryAndTableArea(node);
-		hideNodeDialog("DialogQualityPositionalQuality", event);
-		
+		node.STAQualityNodeResults=STAQualityNodeResults;
 		if (positionalAccuracy || positionalValidity ){
-			var html="";
-			if(positionalAccuracy){
-				
-				html+= `<div> Positional accuracy <br>
-					<table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
-					<tbody>`
-
-				if(accuracyMethod=="uncertantlyColumn"){
-					html+=`<tr>
-						<td>${attributeSelectedUncertantly} </td>
-						<td> Standard deviation </td>
-						<td> ${accuracyValue}</td>
-						</tr>`
-				}else{
-					html+=`<tr>
-					 	<td>${attributeSelectedLong},${attributeSelectedLat} </td>`
-						if (grouped)html+=`<td> Standard deviation of RMSE across groups </td>`
-						else html+=`<td> global RMSE </td>`
-					 	html+=`<td> ${accuracyValue} m</td>
-						</tr>`
-				}
-				html+="</tbody></table></div>"
-			}
-			html+="<br>"
-			if (positionalValidity){
-				var positionValidityRateValue;
-				if (!Number.isInteger(positionalValidityRate[1]))
-					positionValidityRateValue= positionalValidityRate[1].toFixed(3);
-				else 
-				 	positionValidityRateValue = positionalValidityRate[1];
-				 	html+= `<div> Positional validity <br>
-				 	<table class="tablesmall"><thead><th>Columns</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
-						<tbody><tr>
-					 		<td>${attributeSelectedLong},${attributeSelectedLat}</td>
-					 		<td>${dataLength}</td>
-					 		<td>${positionalValidityRate[0]}</td>
-					 		<td>${positionValidityRateValue}</td>
-					 	</tr>`;
-			}
+			populateDialogdataQualityResultPositionalQuality(node);
+			showNodeDialog("DialogDataQualityResult");	
+			networkNodes.update(node);
+			updateQueryAndTableArea(node);
+			hideNodeDialog("DialogQualityPositionalQuality", event);	
 			
-			document.getElementById("dataQualityResult_info").innerHTML= html
-			showNodeDialog("dataQualityResult");		
 		} else
-			alert("No option selected. Nothing to do.");
+			alert("No option selected. Nothing to do.");	
+
+
+		
+
 	}
 }
+function populateDialogdataQualityResultPositionalQuality(node){
+	if (node.STAQualityNodeResults){
+		var STAQualityNodeResults=node.STAQualityNodeResults;
+		var html = "";
 
+
+	if(Object.keys(STAQualityNodeResults.accuracy).length!=0){
+		html+= `<div> <b>Positional accuracy</b> <br>
+			<table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
+			<tbody>`
+
+		if(STAQualityNodeResults.accuracy.accuracyMethod=="uncertantlyColumn"){
+			html+=`<tr>
+				<td>${STAQualityNodeResults.attributeSelectedUncertantly} </td>
+				<td> Standard deviation </td>
+				<td> ${STAQualityNodeResults.accuracy.accuracyValue}</td>
+				</tr>`
+		}else{
+			html+=`<tr>
+				<td>${STAQualityNodeResults.attributeSelectedLong},${STAQualityNodeResults.attributeSelectedLat} </td>`
+				if (STAQualityNodeResults.accuracy.grouped)html+=`<td> Standard deviation of RMSE across groups </td>`
+				else html+=`<td> global RMSE </td>`
+				html+=`<td> ${STAQualityNodeResults.accuracy.accuracyValue.accuracyValue} m</td>
+				</tr>`
+		}
+		html+="</tbody></table></div>"
+	}
+	html+="<br>";
+	if(Object.keys(STAQualityNodeResults.validity).length!=0){
+		var positionValidityRateValue;
+		if (!Number.isInteger(STAQualityNodeResults.validity.positionValidityRateValue))
+			positionValidityRateValue= STAQualityNodeResults.validity.positionalValidityRate.positionalValidityRate.toFixed(3);
+		else 
+			positionValidityRateValue = STAQualityNodeResults.validity.positionValidityRateValue;
+			html+= `<div><b> Positional validity</b><br>
+			<table class="tablesmall"><thead><th>Columns</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
+				<tbody><tr>
+					<td>${STAQualityNodeResults.attributeSelectedLong},${STAQualityNodeResults.attributeSelectedLat}</td>
+					<td>${STAQualityNodeResults.dataLength}</td>
+					<td>${STAQualityNodeResults.validity.positionalValidityRate.truePositionalValidity}</td>
+					<td>${positionValidityRateValue}</td>
+				</tr>`;
+		}
+	document.getElementById("dataQualityResult_info").innerHTML= html;
+	}else populateDialogdataQualityResultEmpty();
+}
 
 function populateDialogQualityThematicQuality(node){
 	var parentNodes=GetParentNodes(node);
@@ -11269,8 +11298,6 @@ function populateDialogdataQualityResultMisclassificationMatrix(node) {
 	document.getElementById("dataQualityResult_info").innerHTML=html;
 
 	}else populateDialogdataQualityResultEmpty();
-    
-   
 }
 
 function populateDialogdataQualityResult(parentNode, node){
