@@ -10025,8 +10025,9 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 	}
 }
 function populateDialogdataQualityResultLogicalConsistency(node){
-	var STAQualityNodeResults=node.STAQualityNodeResults;
+	
 	if (node.STAQualityNodeResults){
+		var STAQualityNodeResults=node.STAQualityNodeResults;
 		document.getElementById("dataQualityResult_info").innerHTML=`<table class="tablesmall">
 			<thead > 
 			<th >Target columns</th><th >Reference columns</th><th>Total records</th>
@@ -10146,20 +10147,21 @@ function okButtonDataQualityTemporalQuality(event){
 }
 function populateDialogdataQualityResultTemporalQuality(node){
 
-	var STAQualityNodeResults=node.STAQualityNodeResults;
+	
 	if (node.STAQualityNodeResults){
-	if (Object.keys(STAQualityNodeResults.validity).length !== 0 ||Object.keys(STAQualityNodeResults.resolution).length !== 0 ||Object.keys(STAQualityNodeResults.consistency).length !== 0) {
+		var STAQualityNodeResults=node.STAQualityNodeResults;
+		if (Object.keys(STAQualityNodeResults.validity).length !== 0 ||Object.keys(STAQualityNodeResults.resolution).length !== 0 ||Object.keys(STAQualityNodeResults.consistency).length !== 0) {
 
-    var  html = ` <table class="tablesmall">
-            <thead>
-                <tr>
-                    <th></th><th>Column</th><th>Total records</th><th>True records</th> <th>Rate</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
+		var  html = ` <table class="tablesmall">
+				<thead>
+					<tr>
+						<th></th><th>Column</th><th>Total records</th><th>True records</th> <th>Rate</th>
+					</tr>
+				</thead>
+				<tbody>
+		`;
 
-}
+		}
 		if(Object.keys(STAQualityNodeResults.validity).length!=0){
 			html+= `<tr><td>Temporal validity</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.validity.trueTemporalValidiy}</td><td>${STAQualityNodeResults.validity.temporalValidityRate}</td></tr>`
 		}
@@ -10216,14 +10218,12 @@ function okButtonDataQualityPositionalQuality(event){
 	var valid, accuracyValue;
 	var data=node.STAdata;
 	var metadata= (node.STAmetadata) ? deapCopy(node.STAmetadata) : {};
-		var STAQualityNodeResults={
+	var STAQualityNodeResults={
 		"accuracy":{},
 		"validity":{},
 		"dataLength": data.length,
 		"attributeSelectedLong":attributeSelectedLong,
 		"attributeSelectedLat":attributeSelectedLat
-
-
 	}
 
 
@@ -10311,31 +10311,30 @@ function populateDialogdataQualityResultPositionalQuality(node){
 	if (node.STAQualityNodeResults){
 		var STAQualityNodeResults=node.STAQualityNodeResults;
 		var html = "";
+	
+		if(Object.keys(STAQualityNodeResults.accuracy).length!=0){
+			html+= `<div> <b>Positional accuracy</b> <br>
+				<table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
+				<tbody>`
 
-
-	if(Object.keys(STAQualityNodeResults.accuracy).length!=0){
-		html+= `<div> <b>Positional accuracy</b> <br>
-			<table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
-			<tbody>`
-
-		if(STAQualityNodeResults.accuracy.accuracyMethod=="uncertantlyColumn"){
-			html+=`<tr>
-				<td>${STAQualityNodeResults.attributeSelectedUncertantly} </td>
-				<td> Standard deviation </td>
-				<td> ${STAQualityNodeResults.accuracy.accuracyValue}</td>
-				</tr>`
-		}else{
-			html+=`<tr>
-				<td>${STAQualityNodeResults.attributeSelectedLong},${STAQualityNodeResults.attributeSelectedLat} </td>`
-				if (STAQualityNodeResults.accuracy.grouped)html+=`<td> Standard deviation of RMSE across groups </td>`
-				else html+=`<td> global RMSE </td>`
-				html+=`<td> ${STAQualityNodeResults.accuracy.accuracyValue.accuracyValue} m</td>
-				</tr>`
+			if(STAQualityNodeResults.accuracy.accuracyMethod=="uncertantlyColumn"){
+				html+=`<tr>
+					<td>${STAQualityNodeResults.attributeSelectedUncertantly} </td>
+					<td> Standard deviation </td>
+					<td> ${STAQualityNodeResults.accuracy.accuracyValue}</td>
+					</tr>`
+			}else{
+				html+=`<tr>
+					<td>${STAQualityNodeResults.attributeSelectedLong},${STAQualityNodeResults.attributeSelectedLat} </td>`
+					if (STAQualityNodeResults.accuracy.grouped)html+=`<td> Standard deviation of RMSE across groups </td>`
+					else html+=`<td> global RMSE </td>`
+					html+=`<td> ${STAQualityNodeResults.accuracy.accuracyValue.accuracyValue} m</td>
+					</tr>`
+			}
+			html+="</tbody></table></div>"
 		}
-		html+="</tbody></table></div>"
-	}
-	html+="<br>";
-	if(Object.keys(STAQualityNodeResults.validity).length!=0){
+		html+="<br>";
+		if(Object.keys(STAQualityNodeResults.validity).length!=0){
 		var positionValidityRateValue;
 		if (!Number.isInteger(STAQualityNodeResults.validity.positionValidityRateValue))
 			positionValidityRateValue= STAQualityNodeResults.validity.positionalValidityRate.positionalValidityRate.toFixed(3);
@@ -10350,8 +10349,9 @@ function populateDialogdataQualityResultPositionalQuality(node){
 					<td>${positionValidityRateValue}</td>
 				</tr>`;
 		}
-	document.getElementById("dataQualityResult_info").innerHTML= html;
-	}else populateDialogdataQualityResultEmpty();
+		document.getElementById("dataQualityResult_info").innerHTML= html;
+	}
+	else populateDialogdataQualityResultEmpty();
 }
 
 function populateDialogQualityThematicQuality(node){
@@ -10393,6 +10393,7 @@ function enableGroupingModeInThematicQuality(desvest){
 }
 
 function okButtonDataQualityThematicQuality(event) {
+	event.preventDefault();
 	var valid1=false, valid2=false;
 	var node = getNodeDialog("DialogQualityThematicQuality");
 	var parentNodes=GetParentNodes(node);
@@ -10407,11 +10408,21 @@ function okButtonDataQualityThematicQuality(event) {
 	} 
 
 	var thematicValidity = (document.getElementById("ThematicQuality_checkbox_ThematicValidity").checked) ? true : false;
-	
 	var thematicAttribute = document.getElementById("DialogQualityThematicQuality_attributesList");
 	var thematicAttributeSelected = thematicAttribute.options[thematicAttribute.selectedIndex].value;
 	var metadata = (parentNodes[0].STAmetadata) ? deapCopy(parentNodes[0].STAmetadata) : {};
 	var dataToEvaluate = parentNodes[0].STAdata;
+	var STAQualityNodeResults={
+		"accuracy":{},
+		"validity":{},
+		"dataLength": dataToEvaluate.length,
+		"inputWayValue": inputWayValue,
+		"thematicAttributeSelected":thematicAttributeSelected
+		
+
+	}
+
+
 	//var nodeIds = document.getElementById("DialogQualityThematicQuality").getAttribute("data-nodeids");
 	//nodeIds = nodeIds.includes("_")?nodeIds.split("_"):nodeIds; //only one doesn't have _
 	//var referenceNodeId;
@@ -10423,9 +10434,11 @@ function okButtonDataQualityThematicQuality(event) {
 	if (thematicAccuracy) {
 		var grouped = false, newColumns = false;
 		if (inputWayValue == "accuracyStaDev") {
-			var uncertantuColumn = document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn");
-			var uncertantuColumnValue = uncertantuColumn.options[uncertantuColumn.selectedIndex].value;
-			var globalAccuracyValue = accuracyFromUncertaintyThematicQuality(dataToEvaluate, metadata, uncertantuColumnValue);
+			var uncertantyColumn = document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn");
+			var uncertantyColumnValue = uncertantyColumn.options[uncertantyColumn.selectedIndex].value;
+			var globalAccuracyValue = accuracyFromUncertaintyThematicQuality(dataToEvaluate, metadata, uncertantyColumnValue);
+			STAQualityNodeResults.accuracy.uncertantyColumnValue=uncertantyColumnValue;
+			STAQualityNodeResults.accuracy={...STAQualityNodeResults.accuracy,...globalAccuracyValue};
 			valid1=true;
 		}
 		if(document.getElementById("ThematicQuality_checkbox_ThematicAccuracy_values").checked){
@@ -10434,17 +10447,21 @@ function okButtonDataQualityThematicQuality(event) {
 			if (groupingMode == "grouped") {
 				var groupingSelect = document.getElementById("DialogQualityThematicQuality_select_accuracy_group");
 				grouped = groupingSelect.options[groupingSelect.selectedIndex].value;
+				STAQualityNodeResults.accuracy.grouped= grouped;
 				if (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) newColumns = true;
 			}
 			var inputWayGroup = document.querySelector('input[name="thematicQuality_radio_thematicAccuracy_way"]:checked')
 			var inputWayValue2 = inputWayGroup.value; // alfaNum, number	
+			STAQualityNodeResults.inputWayValue2= inputWayValue2;
 			if (inputWayValue2 == "alfaNum") {
 				// var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
 				var globalAccuracyValue2 = accuracyFromAlfaNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
+				STAQualityNodeResults.accuracy={...STAQualityNodeResults.accuracy,...globalAccuracyValue2};
 				valid1=true;
 			}else if(inputWayValue2 == "number") { //num
 				// var newColumns = (document.getElementById("thematicQuality_radio_thematicAccuracy_grouping_groupCheckbox").checked) ? true : false;
 				var globalAccuracyValue2 = accuracyFromNumValuesInThematicQuality(dataToEvaluate, metadata, thematicAttributeSelected, grouped, newColumns)
+				STAQualityNodeResults.accuracy={...STAQualityNodeResults.accuracy,...globalAccuracyValue2};
 				if (globalAccuracyValue2!=null)	valid1=true;
 			}
 		}
@@ -10462,10 +10479,12 @@ function okButtonDataQualityThematicQuality(event) {
 				var referenceData = parentNodes[1].STAdata;
 			//var referenceData = networkNodes.get(referenceNodeId).STAdata;
 			var thematicValidity = calculateDataQualityThematicValidityWithAList(dataToEvaluate, referenceData, metadata, thematicAttributeSelected, referenceAttributeValue, flag);
+			STAQualityNodeResults.validity={...STAQualityNodeResults.validity,...thematicValidity};		
 		} else {
 			var from = document.getElementById("thematicQuality_input_thematicValidity_from").value
 			var to = document.getElementById("thematicQuality_input_thematicValidity_to").value
 			var thematicValidity = calculateDataQualityThematicValidityWithRange(dataToEvaluate, from, to, metadata, thematicAttributeSelected, flag)
+			STAQualityNodeResults.validity={...STAQualityNodeResults.validity,...thematicValidity};		
 		}
 		valid2= typeof thematicValidity == "string"?  false: true;
 	}else{
@@ -10474,69 +10493,108 @@ function okButtonDataQualityThematicQuality(event) {
 		
 	if (valid1 && valid2) {
 
-		if (thematicAccuracy || thematicValidity) {
-			var html = "";
-			if (thematicAccuracy) {
-
-				html += `<div> Thematic accuracy <br>
-				<table class="tablesmall"><thead><th>Column</th><th>Method</th><th>Value</th></tr></thead>
-				<tbody>`
-
-				if (inputWayValue == "accuracyStaDev") {
-					html += `<tr>
-					<td>${uncertantuColumnValue} </td>
-					<td> Standard deviation </td>
-					<td> ${globalAccuracyValue}</td>
-					</tr>`
-				} 
-				
-				if (inputWayValue2 == "alfaNum") {
-					html += `<tr>
-					<td>${thematicAttributeSelected} </td>`
-					if (grouped) html += `<td> Mean of percentatge of mode value </td>`
-					else html += `<td> Percentatge of mode value </td>`
-					html += `<td> ${globalAccuracyValue2} </td>
-					</tr>`
-				}else if(inputWayValue2 == "number"){
-					html += `<tr>
-					<td>${thematicAttributeSelected} </td>`
-					if (grouped) html += `<td> Standard deviation of standard deviations across the groups  </td>`
-					else html += `<td> Standard deviation </td>`
-					html += `<td> ${globalAccuracyValue2} </td>
-					</tr>`
-
-				}
-				html += "</tbody></table></div>"
-			}
-			html += "<br>"
-			if (thematicValidity) {
-				html += `<div> Thematic validity <br>
-					<table class="tablesmall"><thead><th>Columns</th><th>Total records</th><th>True records </th><th>Rate</th></tr></thead>
-						<tbody><tr>
-							<td>${thematicAttributeSelected}</td>
-							<td>${dataToEvaluate.length}</td>
-							<td>${thematicValidity[0]}</td>
-							<td>${thematicValidity[1]}</td>
-						</tr>`;
-				html += "</tbody></table></div>"
-			}
-			document.getElementById("dataQualityResult_info").innerHTML = html;
-			showNodeDialog("dataQualityResult");	
-		}
-		else {
-			alert(thematicValidity);
-		}
 		node.STAdata = dataToEvaluate;
 		node.STAdataAttributes = getDataAttributes(dataToEvaluate);
 		node.STAmetadata = metadata;
-		
+		node.STAQualityNodeResults=STAQualityNodeResults;
+		populateDialogdataQualityResultThematicQuality(node);
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		hideNodeDialog("DialogQualityThematicQuality", event);
-	
+		showNodeDialog("DialogDataQualityResult");	
+	}
+	else {
+		alert(thematicValidity);
+	}
+
+}
+function populateDialogdataQualityResultThematicQuality(node) {
+
+	if (node.STAQualityNodeResults) {
+		var STAQualityNodeResults = node.STAQualityNodeResults;
+
+		var html = "";
+
+		if (Object.keys(STAQualityNodeResults.accuracy).length != 0) {
+
+			html += `<div> <b>Thematic accuracy </b> <br>
+				<table class="tablesmall">
+					<thead>
+						<tr>
+							<th>Column</th>
+							<th>Method</th>
+							<th>Value</th>
+						</tr>
+					</thead>
+					<tbody>`;
+
+			if (STAQualityNodeResults.inputWayValue == "accuracyStaDev") {
+				html += `<tr>
+					<td>${STAQualityNodeResults.accuracy.uncertaintyColumnValue}</td>
+					<td>Standard deviation</td>
+					<td>${STAQualityNodeResults.accuracy.accuracyValue}</td>
+				</tr>`;
+			}
+
+			if (STAQualityNodeResults.inputWayValue2 == "alfaNum") {
+				html += `<tr>
+					<td>${STAQualityNodeResults.thematicAttributeSelected}</td>`;
+
+				if (STAQualityNodeResults.accuracy.hasOwnProperty("grouped"))
+					html += `<td>Mean percentage of mode value</td>`;
+				else
+					html += `<td>Percentage of mode value</td>`;
+
+				html += `<td>${STAQualityNodeResults.accuracy.accuracyValue}</td>
+				</tr>`;
+			}
+			else if (STAQualityNodeResults.inputWayValue2 == "number") {
+				html += `<tr>
+					<td>${STAQualityNodeResults.thematicAttributeSelected}</td>`;
+
+				if (STAQualityNodeResults.accuracy.hasOwnProperty("grouped"))
+					html += `<td>Standard deviation of standard deviations across the groups</td>`;
+				else
+					html += `<td>Standard deviation</td>`;
+
+				html += `<td>${STAQualityNodeResults.accuracy.accuracyValue}</td>
+				</tr>`;
+			}
+
+			html += `</tbody></table></div>`;
+		}
+
+		html += "<br>";
+
+		if (Object.keys(STAQualityNodeResults.validity).length != 0) {
+			html += `<div><b> Thematic validity </b><br>
+				<table class="tablesmall">
+					<thead>
+						<tr>
+							<th>Columns</th>
+							<th>Total records</th>
+							<th>True records</th>
+							<th>Rate</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>${STAQualityNodeResults.thematicAttributeSelected}</td>
+							<td>${STAQualityNodeResults.dataLength}</td>
+							<td>${STAQualityNodeResults.validity.trueThematicValidity}</td>
+							<td>${STAQualityNodeResults.validity.thematicValidityRate}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>`;
+		}
+
+		document.getElementById("dataQualityResult_info").innerHTML = html;
+
+	} else {
+		populateDialogdataQualityResultEmpty();
 	}
 }
-
 function GetCreateNewTable(event){
 	var node=  getNodeDialog("DialogCreateNewTable");
 	var inputValue= document.getElementById("DialogDialogCreateNewTable_columnList").value;

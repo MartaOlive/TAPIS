@@ -1163,7 +1163,7 @@ function accuracyFromAlfaNumValuesInThematicQuality (data, metadata, thematicAtt
 				}
 			]
 		});
-		return globalAccuracyValue;
+		return {"accuracyValue":globalAccuracyValue};
 }
 
 function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicAlfaNum(data,groupingColumn, valuesColumn){
@@ -1255,7 +1255,7 @@ function accuracyFromNumValuesInThematicQuality (data, metadata, thematicAttribu
 				}
 			]
 		});
-	return accuracyValue;
+	return {"accuracyValue":accuracyValue};
 }
 
 function createObjectWithDifferentPossibilitiesInColumnsInQualityThematicNum(data,groupingColumn, valuesColumn){
@@ -1377,7 +1377,8 @@ function calculateDataQualityThematicValidityWithAList(dataToEvaluate,referenceD
 				}
 			]
 		});
-    return [count, (count / dataToEvaluate.length) * 100]
+    return {"trueThematicValidity":count, "thematicValidityRate":(count / dataToEvaluate.length) * 100 };
+
 }
 
 function calculateDataQualityThematicValidityWithRange(data,from, to,  metadata, thematicAttributeSelected,flag){
@@ -1471,7 +1472,7 @@ function calculateDataQualityThematicValidityWithRange(data,from, to,  metadata,
 				}
 			]
 		});
-    return [count, (count / data.length) * 100]
+    return {"trueThematicValidity":count, "thematicValidityRate":(count / data.length) * 100 };
 
 }
 function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedReferencedAttributes, confusionMatrixResult) {
