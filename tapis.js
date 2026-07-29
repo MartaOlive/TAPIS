@@ -5079,15 +5079,15 @@ function getDataAttributes(data) {
 }
 
 function getDataAttributeType(data, columnName) {
-	var type, dataAttributeType="undefined";
+	var dataAttributeType="undefined";
 
 	if (isAttributeAnyURI(columnName))
 		return "anyURI";
 
 	for (var i = 0; i < data.length; i++) {
-		var record=data[i];
-		if (typeof record[columnName] !== "undefined") {
-			dataAttributeType=modifyDataAttributeTypeNewRecord(dataAttributeType, getJSONTypeOrISODatetime(record[columnName]))
+		var cell=data[i][columnName];
+		if (typeof cell !== "undefined") {
+			dataAttributeType=modifyDataAttributeTypeNewRecord(dataAttributeType, getJSONTypeOrISODatetime(cell))
 			if (dataAttributeType=="object")
 				return dataAttributeType;
 		}
@@ -5095,6 +5095,34 @@ function getDataAttributeType(data, columnName) {
 	return dataAttributeType;
 }
 
+function tryDataAttribute(data, columnName, type) {
+	for (var i = 0; i < data.length; i++) {
+		var cell=data[i][columnName];
+		if (typeof cell !== "undefined" && cell!=null) {
+			if (type=="number" || type=="integer"){
+				if (cell!=+cell && !Number.isNaN(cell))  //numbers, numbers in strings or empty strings. Inspired in https://stackoverflow.com/questions/20169217/how-to-write-isnumber-in-javascript
+					return false;
+			} 
+			if (type=="integer") {
+				if (!Number.isInteger(+cell) && !Number.isNaN(cell))  //integers, integers in strings or empty strings
+					return false;
+			}
+		}
+	}
+	return true;
+}
+
+function convertDataToAttributeType(data, columnName, type) {
+	for (var i = 0; i < data.length; i++) {
+		var record=data[i];
+		if (typeof record[columnName] !== "undefined" && record[columnName]!=null && !Number.isNaN(record[columnName])) {
+			if (type=="number")
+				record[columnName]=+record[columnName];
+			else if (type=="integer")
+				record[columnName]=BigInt(record[columnName])==+record[columnName] ? +record[columnName] : BigInt(record[columnName]);
+		}
+	}
+}
 
 //Add the definition URL to a preexisting dataAttributes based on the STA Entity requested.
 function addSemanticsSTADataAttributes(dataAttributes, url) {
@@ -5231,7 +5259,7 @@ function GetGeoJSON(data, selectedOptions) {
 							}
 						});
 					} else if (selectedOptions.DGGS=="UberH3") {
-						var hexagon=h3.cellToBoundary(typeof a[selectedOptions.zoneId]==="number" ? a[selectedOptions.zoneId].toString(16) : a[selectedOptions.zoneId]);
+						var hexagon=h3.cellToBoundary((typeof a[selectedOptions.zoneId]==="number" || typeof a[selectedOptions.zoneId]==="bigint") ? a[selectedOptions.zoneId].toString(16) : a[selectedOptions.zoneId]);
 						for (var c=0; c<hexagon.length; c++)
 							hexagon[c]=hexagon[c].reverse()
 						hexagon.push(hexagon[0]);
@@ -5292,7 +5320,7 @@ function GetGeoJSON(data, selectedOptions) {
 			for (var j=0; j<propertiesArray.length; j++) {
 				if (propertiesArray[j]==selectedOptions?.place || propertiesArray[j]==selectedOptions?.longitude || propertiesArray[j]==selectedOptions?.latitude)
 					continue;
-				geojson.features[i].properties[propertiesArray[j]]=a[propertiesArray[j]];
+				geojson.features[i].properties[propertiesArray[j]]=typeof a[propertiesArray[j]]==="bigint" ? a[propertiesArray[j]].toString() : a[propertiesArray[j]];
 			}
 		}
 	}
@@ -5791,8 +5819,9 @@ function GetHTMLVariableDefUoM(suffix, params) {
 		cdns.push('	<label>Data type:',
 			'		<span id="DialogMeaningVariableType' + suffix + '"></span>');
 		if (params.columnName)
-			cdns.push(' <a href="javascript:void(0)" style="text-decoration: none;" onClick="RecalculateColumnType(\'', params.columnName, '\');">reevaluate</a>');
-		cdns.push('		</label>',
+			cdns.push(' <a href="javascript:void(0)" style="text-decoration: none;" onClick="recalculateColumnType(\'', params.columnName, '\');">reevaluate</a>');
+		cdns.push('		<span id="DialogMeaningVariableTypeChange' + suffix + '"></span>',
+			'		</label>',
 			'	<br>');
 	cdns.push('	<span id="DialogMeaningVariableDescriptionUoM' + suffix + '">',
 		'		<label>Description:',
@@ -5916,7 +5945,7 @@ function PopulateDialogSaveLayerVarUoM(i, varUoM) {
 	document.getElementById("DialogMeaningVariableUoMDefinitionInput_"+i).value=varUoM.UoMDefinition ? varUoM.UoMDefinition : "";
 }
 
-function RecalculateColumnType(columnName) {
+function recalculateColumnType(columnName) {
 	var node=getNodeDialog("DialogMeaningTable");
 	if (!node.STAdataAttributes)
 		return;
@@ -5926,6 +5955,24 @@ function RecalculateColumnType(columnName) {
 	var type=getDataAttributeType(node.STAdata, columnName);
 	if (type!="null")
 		node.STAdataAttributes[columnName].type=type;
+	networkNodes.update(node);
+	ShowMeaningTableDialog(node);
+}
+
+function tryAndConvertColumnType(columnName, type) {
+	var node=getNodeDialog("DialogMeaningTable");
+	if (!node.STAdataAttributes)
+		return;
+	
+	if (!tryDataAttribute(node.STAdata, columnName, type)) {
+		alert("Some value(s) of the data impide to excute this transformation.")	
+		return;
+	}
+	if (!confirm("This will save other previous changes in the dialog. Do you want to continue?"))
+		return;
+	node.STAdataAttributes=GetMeaningTable(node);
+	convertDataToAttributeType(node.STAdata, columnName, type);
+	node.STAdataAttributes[columnName].type=type;
 	networkNodes.update(node);
 	ShowMeaningTableDialog(node);
 }
@@ -5957,6 +6004,7 @@ function ShowMeaningTableDialog(node) {
 
 		document.getElementById("DialogSaveLayerName_"+i).innerHTML='<input id="DialogSaveLayerNameInput_' + i + '" type="text" size="50" value="'+dataAttributesArray[i]+'">';
 		document.getElementById("DialogMeaningVariableType_"+i).innerHTML=getHTMLCharacterAttributeType(dataAttributes[dataAttributesArray[i]].type);
+		document.getElementById("DialogMeaningVariableTypeChange_"+i).innerHTML=(dataAttributes[dataAttributesArray[i]].type=="string") ? ', <a href="javascript:void(0)" style="text-decoration: none;" onClick="tryAndConvertColumnType(\'' + dataAttributesArray[i] + '\', \'number\');">to number</a>, <a href="javascript:void(0)" style="text-decoration: none;" onClick="tryAndConvertColumnType(\'' + dataAttributesArray[i] + '\', \'integer\');">to integer</a>' : '';
 		document.getElementById("DialogMeaningVariableDescription_"+i).innerHTML='<input id="DialogMeaningVariableDescriptionInput_' + i + '" type="text" size="50" value="a">';
 		document.getElementById("DialogMeaningVariableDefinition_"+i).innerHTML='<input id="DialogMeaningVariableDefinitionInput_' + i + '" type="text" size="50" value="">';
 		document.getElementById("DialogMeaningVariableUoM_"+i).innerHTML='<input id="DialogMeaningVariableUoMInput_' + i + '" type="text" size="30" value="">';
@@ -7445,10 +7493,15 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 function KeySTAPage(event) {
 	//if (event.keyCode == 113)  //F2
 
+	switch (event.code) {
+		case "F1":
+			event.preventDefault();
+			OpenHelp();
+			return;
+	}
 	if (aDialogIsOpen)
 		return;
-	if (event.code == "F2" || event.code == "Delete" || event.code == "Insert" || event.code == "Enter"){
-			event.preventDefault();
+	if (event.code == "F1" || event.code == "F2" || event.code == "Delete" || event.code == "Insert" || event.code == "Enter"){
 		var nodeId = network.getSelectedNodes();
 		if (nodeId && nodeId.length) {
 			switch (event.code) {
@@ -8507,7 +8560,7 @@ function openFileNetwork(event) {
 		//Transform the JSON text in something in memory
 		try
 		{
-			openNetwork(JSON.parse(reader.result));
+			openNetwork(JSONparse(reader.result));
 			document.getElementById("openNetworkFileName").value = null;  //https://stackoverflow.com/questions/3528359/html-input-type-file-file-selection-event
 		}
 		catch (e) 
@@ -8553,7 +8606,7 @@ function saveNetwork(event) {
 		delete edgesArray[i].id;
 	}
 	data.edges.push(...deapCopy(edgesArray));
-	SaveLocalDataFile(JSON.stringify(data, null, "\t"), "network", ".json", "application/json");
+	SaveLocalDataFile(JSONstringify(data, null, "\t"), "network", ".json", "application/json");
 }
 
 async function reloadSTA(event) {

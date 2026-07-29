@@ -190,8 +190,24 @@ function compareRightTable(a, b, options) {
 	return 0;
 }
 
+function JSONstringify(o, f, r) {
+	return JSON.stringify(o, function (key, value) {
+			if (f) 
+				return f(key, typeof value === "bigint" ? { $bigint: value.toString() } : value);
+			return typeof value === "bigint" ? { $bigint: value.toString() } : value;
+		}, r);
+}
+
+function JSONparse(s, f) {
+	return JSON.parse(s, function (key, value) {
+			if (f)
+				return f(key, value !== null && typeof value === "object" && "$bigint" in value &&  typeof value.$bigint === "string" ? BigInt(value.$bigint): value);
+			return value !== null && typeof value === "object" && "$bigint" in value &&  typeof value.$bigint === "string" ? BigInt(value.$bigint): value;
+		});
+}
+
 function deapCopy(o) {
-	return JSON.parse(JSON.stringify(o));
+	return JSONparse(JSONstringify(o));
 }
 
 //function removeFromArrayIfPresentInRecord(record, items, recordNamesArray, iLastName)
@@ -1548,7 +1564,7 @@ var columnCreated=false, record, json, point;
 			record=data[i];
 			if (!record[selectedOptions.zoneIdIn])
 				continue;
-			point=h3.cellToLatLng(typeof record[selectedOptions.zoneIdIn]==="number" ? record[selectedOptions.zoneIdIn].toString(16) : record[selectedOptions.zoneIdIn]);
+			point=h3.cellToLatLng((typeof record[selectedOptions.zoneIdIn]==="number" || typeof record[selectedOptions.zoneIdIn]==="bigint") ? record[selectedOptions.zoneIdIn].toString(16) : record[selectedOptions.zoneIdIn]);
 			json={type:"Point", coordinates:[point[1], point[0]]};
 			if (selectedOptions.radioOut=="JSON") {
 				record[selectedOptions.nameOut]=json;
@@ -1562,7 +1578,7 @@ var columnCreated=false, record, json, point;
 					record[selectedOptions.nameOut]=ngeohash_encode(point[0], point[1], selectedOptions.level);
 					columnCreated=true;
 				} else if (selectedOptions.DGGSOut=="UberH3") {
-					record[selectedOptions.nameOut]=typeof (record[selectedOptions.zoneIdIn])==="number" ? record[selectedOptions.zoneIdIn].toString(16) : record[selectedOptions.zoneIdIn];
+					record[selectedOptions.nameOut]=typeof (record[selectedOptions.zoneIdIn]==="number" || record[selectedOptions.zoneIdIn]==="bigint") ? record[selectedOptions.zoneIdIn].toString(16) : record[selectedOptions.zoneIdIn];
 					columnCreated=true;
 				} else {
 					record[selectedOptions.nameOut]=LongLatToDGGS(selectedOptions.DGGSOut, {longitude: point[1], latitude: point[0]}, selectedOptions.level);

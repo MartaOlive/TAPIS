@@ -1836,7 +1836,7 @@ var data=[], j=0, dataAttributes={}, cells, g;
 			cells=ngeohash_bboxes(selectedOptions.minLat, selectedOptions.minLong, selectedOptions.maxLat, selectedOptions.maxLong, selectedOptions.level);		
 		else if (selectedOptions.DGGS=="UberH3"){
 			if (selectedOptions.maxLong-selectedOptions.minLong>180) {  //avoiding retrieving the cells from the "other side of the Earth".
-			cells=h3.polygonToCellsExperimental([[selectedOptions.minLat, selectedOptions.minLong],
+				cells=h3.polygonToCellsExperimental([[selectedOptions.minLat, selectedOptions.minLong],
 						[selectedOptions.maxLat, selectedOptions.minLong], 
 						[selectedOptions.maxLat, 0],
 						[selectedOptions.minLat, 0],
@@ -1844,7 +1844,7 @@ var data=[], j=0, dataAttributes={}, cells, g;
 				cells.push(...h3.polygonToCellsExperimental([[selectedOptions.minLat, 0],
 						[selectedOptions.maxLat, 0], 
 						[selectedOptions.maxLat, selectedOptions.maxLong],
-						[selectedOptions.minLat, selectedOptions.maxLong], 
+						[selectedOptions.minLat, selectedOptions.maxLong],
 						[selectedOptions.minLat, 0]], l, h3.POLYGON_TO_CELLS_FLAGS.containmentOverlapping));
 				cells=[...new Set(cells)];   //This avoids repetitions in the list.
 			} else
