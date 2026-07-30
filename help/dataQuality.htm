@@ -18,7 +18,7 @@
     </header>
     <main>
         <div class="mainTools">
- 
+
             <h1 class="toolPage_mainTitle">Table tools for data quality</h1>
             <div id="toolPage_dataQuality" class="toolBoxParent"></div>
 
@@ -80,7 +80,8 @@
                     <p>These are the results of the aggregation. In addition, there is a
                         <strong><i>groupCount</i></strong>
                         column
-                        indicating the number of values aggregated in each group.</p>
+                        indicating the number of values aggregated in each group.
+                    </p>
                     <img src="uncertainty_image3.png" alt="icon" class="toolPage_image">
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
@@ -127,9 +128,10 @@
                         <strong>missing (false)</strong>.
                     </p>
                     <img src="completnessOmission_image1.png" alt="icon" class="toolPage_image">
-                    <p>This is the result of the calculation. This dialog only appears after calculating the rate. To
-                        view
-                        the result again, click on <a>Metadata</a> at the top of the table below.</p>
+                    <p>This is the result of the calculation. This dialog is used to view the calculation result. To
+                        view it again later, use the <a
+                            href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#qualityResultsViewer">Quality
+                            results viewer</a> tool.</p>
                     <img src="completnessOmission_image2.png" alt="icon" class="toolPage_image">
                     <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
                             far</strong>.</p>
@@ -143,6 +145,73 @@
                     <!-- <ul>
                 </ul> -->
                     <p> <i>No one yet</i></p>
+                </div>
+            </div>
+            <div class="toolPage_main" id="misclassificationMatrix">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../misclassificationMatrix.png"
+                            alt="icon misclassificationMatrix" class="toolPage_title_icon">Misclassification Matrix
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong>
+                    </p>
+
+                    <img src="misclassificationMatrix_image0.png" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+
+                    <p><strong>Misclassification matrix</strong> tool</p>
+
+                    <p><strong>Misclassification matrix</strong> tool allows you to generate a misclassification matrix
+                        and the corresponding <strong> accuracy
+                            metric</strong>s from a table containing both the <strong>classified data and the
+                            reference</strong> (ground truth) data
+                        in separate columns.</p>
+
+                    <p>Comparisons can be performed using a single column or by aggregating multiple columns.</p>
+
+                    <p>Below are the data used as an example.</p>
+                    <img src="misclassificationMatrix_image1.png" alt="icon" class="toolPage_image">
+
+                    <p>To display the dialog, <i>double left-click</i> on the node.
+                        This section contains two <strong>drop-down lists</strong> where you must select the
+                        <strong>classified column</strong> and its
+                        corresponding <strong>reference column</strong> as a pair. After selecting a pair, click
+                        <i>Add</i> to
+                        include it in the <strong>columns to compare</strong> list below.
+                    </p>
+
+                    <p>To perform a combined comparison, you can select multiple column pairs and add them to the list
+                        one by one.</p>
+
+                    <img src="misclassificationMatrix_image2.png" alt="icon" class="toolPage_image">
+
+                    <p>Below is an example using only two columns.</p>
+                    <img src="misclassificationMatrix_image3.png" alt="icon" class="toolPage_image">
+                    <p>This is the result of the calculation. This dialog is used to view the calculation result. To
+                        view it again later, use the <a
+                            href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#qualityResultsViewer">Quality
+                            results viewer</a> tool.</p>
+
+
+                    <img src="misclassificationMatrix_image4.png" alt="icon" class="toolPage_image">
+                    <!-- //Falta la foto de la matadata perque no va la metadata -->
+                    <p>Below is an example where two classified columns are compared with their corresponding reference columns, combining the results into a single comparison.</p>
+                    <img src="misclassificationMatrix_image5.png" alt="icon" class="toolPage_image">
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <p>This is the result of the calculation. This dialog is used to view the calculation result. To
+                            view it again later, use the <a
+                                href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#qualityResultsViewer">Quality
+                                results viewer</a> tool.</p>
+                        <img src="misclassificationMatrix_image6.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
+                     <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                            far</strong>.</p>
+                            <!-- //Falta la foto de la matadata perque no va la metadata -->
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
+                    <!-- <ul>
+
+                </ul> -->
                 </div>
             </div>
             <div class="toolPage_main" id="logicalConsistency">
@@ -195,16 +264,18 @@
                         logical consistency evaluation.
 
                         If you want to check whether values in a <strong>single column</strong> are correct, you should
-                        perform a <a
-                            href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#thematicQuality" target="_blank">Thematic
+                        perform a <a href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#thematicQuality"
+                            target="_blank">Thematic
                             quality
                             evaluation (Thematic validity)</a>.
                     </p>
                     <p>The image below shows the selected values for this example.</p>
                     <img src="logicalConsistency_image3.png" alt="icon" class="toolPage_image">
-                    <p>This is the result of the calculation. This dialog only appears after calculating the rate. To
-                        view
-                        the result again, click on <a>Metadata</a> at the top of the table below.</p>
+
+                    <p>This is the result of the calculation. This dialog is used to view the calculation result. To
+                        view it again later, use the <a
+                            href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#qualityResultsViewer">Quality
+                            results viewer</a> tool.</p>
                     <img src="logicalConsistency_image4.png" alt="icon" class="toolPage_image">
                     <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
                             far</strong>.</p>
@@ -316,9 +387,11 @@
                             column with mean
                             uncertainty</i> option.</p>
                     <img src="temporalQuality_image3.png" alt="icon" class="toolPage_image">
-                    <p>This is the result of the calculation. This dialog only appears after calculating the rate. To
-                        view
-                        the result again, click on <a>Metadata</a> at the top of the table below.</p>
+
+                    <p>This is the result of the calculation. This dialog is used to view the calculation result. To
+                        view it again later, use the <a
+                            href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#qualityResultsViewer">Quality
+                            results viewer</a> tool.</p>
                     <img src="temporalQuality_image4.png" alt="icon" class="toolPage_image">
                     <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
                             far</strong>.</p>
@@ -336,9 +409,11 @@
                         click
                         outside the calendar to close it. The date will be filled in automatically.</p>
                     <img src="temporalQuality_image9.png" alt="icon" class="toolPage_image">
-                    <p>This is the result of the calculation. This dialog only appears after calculating the rate. To
-                        view
-                        the result again, click on <a>Metadata</a> at the top of the table below.</p>
+
+                    <p>This is the result of the calculation. This dialog is used to view the calculation result. To
+                        view it again later, use the <a
+                            href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#qualityResultsViewer">Quality
+                            results viewer</a> tool.</p>
 
                     <img src="temporalQuality_image10.png" alt="icon" class="toolPage_image">
                     <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
@@ -368,9 +443,11 @@
                         precision, which will be considered <strong>invalid</strong>.
                     </p>
                     <img src="temporalQuality_image14.png" alt="icon" class="toolPage_image">
-                    <p>This is the result of the calculation. This dialog only appears after calculating the rate. To
-                        view
-                        the result again, click on <a>Metadata</a> at the top of the table below.</p>
+
+                    <p>This is the result of the calculation. This dialog is used to view the calculation result. To
+                        view it again later, use the <a
+                            href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#qualityResultsViewer">Quality
+                            results viewer</a> tool.</p>
 
                     <img src="temporalQuality_image15.png" alt="icon" class="toolPage_image">
                     <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
@@ -408,9 +485,11 @@
                         data.
                     </p>
                     <img src="temporalQuality_image19.png" alt="icon" class="toolPage_image">
-                    <p>This is the result of the calculation. This dialog only appears after calculating the rate. To
-                        view
-                        the result again, click on <a>Metadata</a> at the top of the table below.</p>
+
+                    <p>This is the result of the calculation. This dialog is used to view the calculation result. To
+                        view it again later, use the <a
+                            href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#qualityResultsViewer">Quality
+                            results viewer</a> tool.</p>
 
                     <img src="temporalQuality_image20.png" alt="icon" class="toolPage_image">
                     <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
@@ -764,7 +843,30 @@
                     </ul>
                 </div>
             </div>
+        </div>
+        <div class="toolPage_main" id="qualityResultsViewer">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../qualityResultsViewer.png" alt="icon qualityResultsViewer"
+                        class="toolPage_title_icon">Quality Results Viewer
+                </h2>
+                <p><strong>Setting Up the Node: </strong>
+                </p>
 
+                <img src="qualityResultsViewer_image0.png" class="toolPage_image" style="height:350px;width: auto; ">
+
+
+                <div class="image-wrapper" onclick="zoomToImage(this)">
+                    <img src="qualityResultsViewer_image2.png" alt="icon" class="toolPage_image zoomable">
+                </div>
+
+
+
+                <p> <strong>Recipes where this tool is used:</strong> </p>
+                <p> <i>No one yet</i></p>
+                <!-- <ul>
+
+                </ul> -->
+            </div>
         </div>
     </main>
 </body>

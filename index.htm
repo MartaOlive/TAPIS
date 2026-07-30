@@ -1341,7 +1341,7 @@
 				<legend>CSV source</legend>
 				<label><input type="radio" id="DialogImportCSVSourceNew" name="DialogImportCSVSource" value="new"> New based on CSVW</input></label><br>
 				<label><input type="radio" id="DialogImportCSVSourceFile" name="DialogImportCSVSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "CSV")'>
-				Local file:<button type="button" onclick="openFileDialog()">Open CSV</button><span id="fileNameLabel">No file selected</span><input type="file" id="DialogImportCSVSourceFileText" accept=".csv,.txt" style="display:none"  onchange="ReadFileImportCSV(event)"><br>
+				Local file:<button type="button" onclick='document.getElementById("DialogImportCSVSourceFileText").click();'>Open CSV</button><span id="fileNameLabel">No file selected</span><input type="file" id="DialogImportCSVSourceFileText" accept=".csv,.txt" style="display:none"  onchange="ReadFileImportCSV(event)"><br>
 				<label><input type="radio" id="DialogImportCSVSourceURL" name="DialogImportCSVSource" value="url" onClick='SelectImportFileSource(event, "CSV")'>
 				URL: <input type="text" size="70" id="DialogImportCSVSourceURLInput" disabled="disabled"></input> <button type="button" id="DialogImportCSVSourceURLButton" onClick="ReadURLImportCSV(event)" disabled="disabled">Load</button></label><br>
 				<label>Suggested CSV URLs:

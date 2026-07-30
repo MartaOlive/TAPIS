@@ -1302,10 +1302,12 @@ function TransformDatesToISO(data) {
 }
 function TransformCSVToTable(csvText) {
 	var result = Papa.parse(csvText, {delimiter: (document.getElementById("DialogImportCSVDelimiterAuto").checked ? null : (document.getElementById("DialogImportCSVDelimiterText").checked ? document.getElementById("DialogImportCSVDelimiter").value : '\t')),
-		header: document.getElementById("DialogImportCSVHeader").checked,
-		dynamicTyping: false,
-		skipEmptyLines: true});
-	console.log(getDataAttributesSimple(result.data))// if (document.getElementById("DialogImportCSVStringTyping").checked ){
+	header: document.getElementById("DialogImportCSVHeader").checked,
+		
+	dynamicTyping: document.getElementById("DialogImportCSVStringTyping").checked ? false : true,
+	//dynamicTyping: false,
+	skipEmptyLines: true});
+	//console.log(getDataAttributesSimple(result.data))// if (document.getElementById("DialogImportCSVStringTyping").checked ){
 
 	// } 
 	if (result && result.data) {
@@ -1354,10 +1356,6 @@ function TransformTextCSVToTable(csvText, url, node) {
 		node.STAdata=null;
 		networkNodes.update(node);
 	}
-}
-
-function openFileDialog() { //Click the hide input type =file. All this is necessary to allow to load same file again and show file name. 
-    document.getElementById("DialogImportCSVSourceFileText").click();
 }
 
 function ReadFileImportCSV(event) {
@@ -8312,23 +8310,7 @@ function networkDoubleClick(params) {
 			if(parentNode[0].STAQualityNodeResults ) currentNode.STAQualityNodeResults=parentNode[0].STAQualityNodeResults;
 			populateDialogdataQualityResult(parentNode[0], currentNode)
 				//networkNodes.update(currentNode);
-			showNodeDialog("DialogDataQualityResult");
-			
-
-
-
-			// if (parentNode) {
-			// 	if (populateDialogQualityThematicQuality(currentNode)){
-			// 		networkNodes.update(currentNode);
-			// 		showNodeDialog("DialogQualityThematicQuality");
-			// 	}else{
-			// 		alert("Only 2 parents are allowed");
-			// 	}
-
-			// }else{
-			// 	alert("Parent node must have data to analyze");
-			// }
-		
+			showNodeDialog("DialogDataQualityResult");		
 		}
 	}
 }

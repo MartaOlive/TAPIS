@@ -330,7 +330,20 @@ function linearRegressionFunc(values,isDate){
 		r: nsxy_sxsy/Math.sqrt(nsxx_sxsx*(n*syy-sy*sy))};
 }
 function itIsADate(values,property){
-		var regex=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
+	/*Accept:
+		2026
+		2026-07
+		2026-07-08
+		2026-07-08T14
+		2026-07-08T14:30
+		2026-07-08T14:30:45
+		2026-07-08T14:30:45.1
+		2026-07-08T14:30:45.12
+		2026-07-08T14:30:45.123
+		2026-07-08T14:30:45Z
+		2026-07-08T14:30:45.123Z*/
+
+	var regex = /^\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{2}(\.\d{1,3})?)?)?Z?)?)?)?$/;
 		var date=false;
 		for(var i=0; i<values.length;i++){
 			if (regex.test(values[i][property])){

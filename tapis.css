@@ -293,8 +293,8 @@
 }
 
 .generalButton img {
-    width: 20px;
-    height: 20px;
+    width: auto;
+    height: 40px;
 }
 
 .generalButton span {
