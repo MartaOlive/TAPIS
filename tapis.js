@@ -1280,7 +1280,7 @@ function ReadURLImportGeoJSONSchema() {
 			);	
 }
 
-function TransformDatesToISO(data) {
+function TransformDatesToISO(data,node) {
 	var record, s;
 	for (var r=0; r<data.length; r++) {
 		record=data[r];
@@ -1290,17 +1290,21 @@ function TransformDatesToISO(data) {
 				delete record[keys[k]];
 				continue;
 			}
-			if (record[keys[k]] && record[keys[k]].getMonth && record[keys[k]].toISOString) {
-				s=record[keys[k]].toISOString();
-				if (s.length==24 && s.endsWith(".000Z"))
-					record[keys[k]]=s.substring(0,19)+"Z";
+			if (record[keys[k]] instanceof Date && !isNaN(record[keys[k]].getTime())) {
+				s = record[keys[k]].toISOString();
+				if (s.length == 24 && s.endsWith(".000Z"))
+					record[keys[k]] = s.substring(0,19) + "Z";
 				else
-					record[keys[k]]=s;
+					record[keys[k]] = s;
+			}else if (record[keys[k]] instanceof Date && isNaN(record[keys[k]].getTime())){
+				if (node){
+					node.STAISOAlert=true;
+				}
 			}
 		}
 	}
 }
-function TransformCSVToTable(csvText) {
+function TransformCSVToTable(csvText,node) {
 	var result = Papa.parse(csvText, {delimiter: (document.getElementById("DialogImportCSVDelimiterAuto").checked ? null : (document.getElementById("DialogImportCSVDelimiterText").checked ? document.getElementById("DialogImportCSVDelimiter").value : '\t')),
 	header: document.getElementById("DialogImportCSVHeader").checked,
 		
@@ -1311,8 +1315,10 @@ function TransformCSVToTable(csvText) {
 
 	// } 
 	if (result && result.data) {
-		TransformDatesToISO(result.data);  //Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
+		if (node)
+		TransformDatesToISO(result.data,node);  //Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
 		//We can consider to remove dynamicTyping because is generating all sort of problems with dates and then analize the response ourselves.
+		else TransformDatesToISO(result.data)
 		return result.data;
 	}
 	return null;
@@ -1339,7 +1345,7 @@ function evaluateIfItIsISOADate(value){
 function TransformTextCSVToTable(csvText, url, node) {
 	var data;
 	try {
-		data = TransformCSVToTable(csvText);
+		data = TransformCSVToTable(csvText,node);
 	} catch (e) {
 		showInfoMessage("CSV parse error: " + e + " The file content fragment:\n" + csvText.substring(0, 1000));
 		data = null;
@@ -1349,6 +1355,7 @@ function TransformTextCSVToTable(csvText, url, node) {
 		node.STAdata=data;
 		if (url)
 			node.STAfileUrl=url;
+		if (node.STAISOAlert) alert ("One of the attributes contains data that looks like a date. The CSV import process cannot distinguish whether this value is a valid date or another type of data (for example, a time interval), which causes an error. The affected values have been loaded as null. To preserve and visualize this information, reload the CSV file with the Import numbers as strings option enabled. Then, use the meaning functionality to convert the data to the appropriate type")
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		UpdateChildenTable(node);
@@ -7170,7 +7177,7 @@ function ShowMetadataDialog(nodeId) {
 	var node=networkNodes.get(nodeId);
 	if (node && node.STAmetadata) {
 		document.getElementById("dataQualityResult_info").innerHTML= metadataAsHTML(node.STAmetadata);
-		showNodeDialog("dataQualityResult");		
+		showNodeDialog("DialogDataQualityResult");		
 	}
 }
 
@@ -11298,8 +11305,9 @@ function okButtonDataQualityMisclassificationmatrix(event){
 	networkNodes.update(node);
 	hideNodeDialog("DialogQualityMisclassificationMatrix", event);
 	populateDialogdataQualityResultMisclassificationMatrix(node);
-	showNodeDialog("DialogDataQualityResult");
 	updateQueryAndTableArea(node);
+	showNodeDialog("DialogDataQualityResult");
+	
 }
 function populateDialogdataQualityResultMisclassificationMatrix(node) {
 	if (node.STAQualityNodeResults){

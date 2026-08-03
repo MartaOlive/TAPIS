@@ -939,6 +939,95 @@ function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, lo
 }
 
 var RootURLQualityML="https://www.qualityml.org/";
+const qualityMLMeasures  = [ //Check whether it exists beforehand to avoid creating an unfold that triggers the alert indicating it does not exist.
+  "ChronologicalError",
+  "CompletenessCommission",
+  "CompletenessOmission",
+  "ConceptualConsistency",
+  "ConceptualSchema",
+  "DomainConsistency",
+  "Excess",
+  "FormatConsistency",
+  "GrammaticalConsistency",
+  "InvalidGeometries",
+  "InvalidOverlapsLines",
+  "InvalidOverlapsPoints",
+  "InvalidOverlapsSurfaces",
+  "LogicalConsistency",
+  "MeasureBasedOnMetric",
+  "Misclassification",
+  "PositionalAccuracy",
+  "Precision",
+  "SemanticAccuracy",
+  "TemporalConsistency",
+  "TemporalDensity",
+  "TemporalDistanceDistribution",
+  "TemporalValidity",
+  "ThematicAccuracy",
+  "TimeAccuracy",
+  "TopologicalConsistency",
+  "ValueDomain",
+  "LevelOfConfidence",
+  "LevelOfLikelihood"
+];
+const qualityMLDomains = [
+    "PredictedValues",
+    "ActualValues",
+    "PredictedArea",
+    "ActualArea",
+    "DifferentialErrorsX",
+    "DifferentialErrorsY",
+    "DifferentialErrors1D",
+    "DifferentialErrors2D",
+    "DifferentialErrors3D",
+    "NonConformance",
+    "Conformance",
+    "TemporalDistance",
+    "Dates"
+];
+const qualityMLMetrics = [
+    "Items",
+    "CommissionError",
+    "FalsePositiveRate",
+    "OmissionError",
+    "MeanAbsolutePercentageError",
+    "MeanAbsolute",
+    "MeanAbsolute2D",
+    "ConfusionMatrix",
+    "RelativeConfusionMatrix",
+    "KappaCoefficient",
+    "Accuracy",
+    "Reliability",
+    "AverageReliability",
+    "AverageAccuracy",
+    "OverallAccuracy",
+    "AbsoluteFrequency",
+    "AreaUnderROCCurve",
+    "CoefficientOfDetermination",
+    "CoefficientOfCorrelation",
+    "CorrespondenceMatrix",
+    "Entropy",
+    "FalseDiscoveryRate",
+    "GiniIndex",
+    "MajorityCategories",
+    "F1Score",
+    "FBetaScore",
+    "MatthewsCorrelationCoefficient",
+    "IntersectionOverUnion",
+    "NumberMajorCategories",
+    "PositivePredictiveValue",
+    "Promiscuity",
+    "Purity",
+    "RelativeCorrespondenceMatrix",
+    "RelativeFrequency",
+    "Sensitivity",
+    "Specificity",
+    "StandardDeviation",
+    "Variance",
+    "CategoricalLevel5LowHigh",
+    "CategoricalLevel7Probability",
+    "Half-lengthConfidenceInterval"
+];
 
 function FoldOrUnFoldIFrameInfo(nom)
 {
@@ -997,10 +1086,11 @@ var cdns=[];
 				cdns.push("<hr style='width:30%; margin: auto;'><h3>", getUpperCammelCaseAsTitle(report.type), "</h3>");
 				if (report.measureIdentification) {
 					if (report.measureIdentification.code) {
-						cdns.push("<b>Measure:</b>", getUpperCammelCaseAsTitle(report.measureIdentification.code), UnfoldButtonIFrame("ShowQualitat_q"+q+"_r"+r, RootURLQualityML+"1.0/measure/"+report.measureIdentification.code), "<br>");
-						for (var d=0; d<report.measureIdentification.domains.length; d++) {
+						// Avoid creating an iframe with a measure that does not exist and avoid the alert from this page.
+							cdns.push("<b>Measure:</b>", getUpperCammelCaseAsTitle(report.measureIdentification.code), qualityMLMeasures.includes(report.measureIdentification.code) ? UnfoldButtonIFrame("ShowQualitat_q"+q+"_r"+r, RootURLQualityML+"1.0/measure/"+report.measureIdentification.code) : "", "<br>");						
+							for (var d=0; d<report.measureIdentification.domains.length; d++) {
 							var domain=report.measureIdentification.domains[d];
-							cdns.push("<b>Domain:</b> ", getUpperCammelCaseAsTitle(domain.name), UnfoldButtonIFrame("ShowQualitat_q"+q+"_r"+r+"_d"+d, RootURLQualityML+"1.0/domain/"+domain.name), "<br>");
+							cdns.push("<b>Domain:</b> ", getUpperCammelCaseAsTitle(domain.name), qualityMLDomains.includes(domain.name) ? UnfoldButtonIFrame("ShowQualitat_q"+q+"_r"+r+"_d"+d, RootURLQualityML+"1.0/domain/"+domain.name) : "", "<br>");							
 							if (domain.params && domain.params.length) {
 								for (var p=0; p<domain.params.length; p++)
 									cdns.push("<b>", domain.params[p].name, ":</b> ", domain.params[p].value, "<br>");
@@ -1011,7 +1101,7 @@ var cdns=[];
 						var result=report.results[rr];
 						if (result.errorStatistic && result.errorStatistic.metric && result.errorStatistic.metric.name) {
 							var metric=result.errorStatistic.metric;
-							cdns.push("<b>", getUpperCammelCaseAsTitle(metric.name), UnfoldButtonIFrame("ShowQualitat_q"+q+"_r"+r+"_rr"+rr, RootURLQualityML+"1.0/metrics/"+metric.name), ":</b> <big>");
+							cdns.push("<b>", getUpperCammelCaseAsTitle(metric.name), qualityMLMetrics.includes(metric.name) ? UnfoldButtonIFrame("ShowQualitat_q"+q+"_r"+r+"_rr"+rr, RootURLQualityML+"1.0/metrics/"+metric.name) : "", ":</b> <big>");							
 							for (var v=0; v<report.results[rr].values.length; v++) {
 								cdns.push(report.results[rr].values[v]);
 								if (v+1<report.results[rr].values.length)
@@ -1593,10 +1683,10 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 					{
 					"type": "DQ_ThematicClassificationCorrectness",
 					"measureIdentification": {
-						"code": "MisclassificationMatrix",
+						"code": "Misclassification",
 						"domains": [
 						{
-							"name": "ClassificationCorrectness",
+							"name": "Misclassification",
 							"params": [
 								{
 									"name": "classified attribute",
@@ -1617,7 +1707,7 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 
 						"errorStatistic": {
 							"metric": {
-							"name": "misclassification matrix",
+							"name": "Misclassification",
 							"params": [
 								{
 								"name": "subtype",
@@ -1630,7 +1720,7 @@ function calculateDataQualityMisclassificationMatrix(data, metadata, classifiedR
 						"valueType": "matrix",
 
 						"values": [
-							valuesInMetadata
+							JSON.stringify(valuesInMetadata)
 						],
 
 						"derivedResults": {
