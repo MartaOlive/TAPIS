@@ -1,0 +1,382 @@
+{
+	"nodes": [
+		{
+			"id": "51odk.f6dr89",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"id": 1,
+					"full_name": "John smith",
+					"address": "25 Oak Street",
+					"city": "London",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 2,
+					"full_name": "Emily Johnson",
+					"address": "14 Maple Avenue",
+					"city": "Manchester",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 3,
+					"full_name": "Michael Williams",
+					"address": "82 Pine Road",
+					"city": "Liverpool",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 4,
+					"full_name": "Sarah Brown",
+					"address": "7 King Street",
+					"city": "Bristol",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 5,
+					"full_name": "David Jones",
+					"address": "31 High Street",
+					"city": "Leeds",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 6,
+					"full_name": "Emily Johnson",
+					"address": "14 Maple Avenue",
+					"city": "Manchester",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 7,
+					"full_name": "Robert Davis",
+					"address": "56 Queen Road",
+					"city": "Birmingham",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 8,
+					"full_name": "Jessica Miller",
+					"address": "19 Park Lane",
+					"city": "Oxford",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 9,
+					"full_name": "Michael Williams",
+					"address": "82 Pine Road",
+					"city": "Liverpool",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 10,
+					"full_name": "Daniel Wilson",
+					"address": "44 Victoria Street",
+					"city": "Edinburgh",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 11,
+					"full_name": "Lisa Anderson",
+					"address": "103 Church Road",
+					"city": "Glasgow",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 12,
+					"full_name": "John Smith",
+					"address": "25 Oak Street",
+					"city": "London",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 13,
+					"full_name": "Christopher Taylor",
+					"address": "68 Station Road",
+					"city": "Cambridge",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 14,
+					"full_name": "Emma Thomas",
+					"address": "12 Garden Street",
+					"city": "York",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 15,
+					"full_name": "Olivia Moore",
+					"address": "90 River Road",
+					"city": "Cardiff",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 16,
+					"full_name": "John Smith",
+					"address": "48 River Lane",
+					"city": "Brighton",
+					"country": "United Kingdom"
+				},
+				{
+					"id": 17,
+					"full_name": "Emily Johnson",
+					"address": "90 Park Avenue",
+					"city": "Birmingham",
+					"country": "United Kingdom"
+				}
+			],
+			"STAdataAttributes": {
+				"id": {
+					"type": "integer"
+				},
+				"full_name": {
+					"type": "string"
+				},
+				"address": {
+					"type": "string"
+				},
+				"city": {
+					"type": "string"
+				},
+				"country": {
+					"type": "string"
+				}
+			},
+			"x": 33,
+			"y": -47
+		},
+		{
+			"id": "18cri.ubjftc",
+			"label": "Completness comission (duplicate)",
+			"image": "completenessComission.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"id": 1,
+					"full_name": "John Smith",
+					"address": "25 Oak Street",
+					"city": "London",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 2,
+					"full_name": "Emily Johnson",
+					"address": "14 Maple Avenue",
+					"city": "Manchester",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 3,
+					"full_name": "Michael Williams",
+					"address": "82 Pine Road",
+					"city": "Liverpool",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 4,
+					"full_name": "Sarah Brown",
+					"address": "7 King Street",
+					"city": "Bristol",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 5,
+					"full_name": "David Jones",
+					"address": "31 High Street",
+					"city": "Leeds",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 6,
+					"full_name": "Emily Johnson",
+					"address": "14 Maple Avenue",
+					"city": "Manchester",
+					"country": "United Kingdom",
+					"Comission Flag": true
+				},
+				{
+					"id": 7,
+					"full_name": "Robert Davis",
+					"address": "56 Queen Road",
+					"city": "Birmingham",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 8,
+					"full_name": "Jessica Miller",
+					"address": "19 Park Lane",
+					"city": "Oxford",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 9,
+					"full_name": "Michael Williams",
+					"address": "82 Pine Road",
+					"city": "Liverpool",
+					"country": "United Kingdom",
+					"Comission Flag": true
+				},
+				{
+					"id": 10,
+					"full_name": "Daniel Wilson",
+					"address": "44 Victoria Street",
+					"city": "Edinburgh",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 11,
+					"full_name": "Lisa Anderson",
+					"address": "103 Church Road",
+					"city": "Glasgow",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 12,
+					"full_name": "John Smith",
+					"address": "25 Oak Street",
+					"city": "London",
+					"country": "United Kingdom",
+					"Comission Flag": true
+				},
+				{
+					"id": 13,
+					"full_name": "Christopher Taylor",
+					"address": "68 Station Road",
+					"city": "Cambridge",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 14,
+					"full_name": "Emma Thomas",
+					"address": "12 Garden Street",
+					"city": "York",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 15,
+					"full_name": "Olivia Moore",
+					"address": "90 River Road",
+					"city": "Cardiff",
+					"country": "United Kingdom",
+					"Comission Flag": false
+				},
+				{
+					"id": 16,
+					"full_name": "John Smith",
+					"address": "48 River Lane",
+					"city": "Brighton",
+					"country": "United Kingdom",
+					"Comission Flag": true
+				},
+				{
+					"id": 17,
+					"full_name": "Emily Johnson",
+					"address": "90 Park Avenue",
+					"city": "Birmingham",
+					"country": "United Kingdom",
+					"Comission Flag": true
+				}
+			],
+			"STAdataAttributes": {
+				"id": {
+					"type": "integer"
+				},
+				"full_name": {
+					"type": "string"
+				},
+				"address": {
+					"type": "string"
+				},
+				"city": {
+					"type": "string"
+				},
+				"country": {
+					"type": "string"
+				},
+				"Comission Flag": {
+					"type": "boolean"
+				}
+			},
+			"STAmetadata": {
+				"dataQualityInfos": [
+					{
+						"reports": [
+							{
+								"type": "DQ_CompletenessComission",
+								"measureIdentification": {
+									"code": "Duplicate",
+									"domains": [
+										{
+											"name": "NonConformance",
+											"params": [
+												{
+													"name": "column",
+													"value": "full_name"
+												}
+											]
+										}
+									]
+								},
+								"results": [
+									{
+										"type": "DQ_QuantitativeResult",
+										"errorStatistic": {
+											"metric": {
+												"name": "items",
+												"params": [
+													{
+														"name": "subtype",
+														"value": "rate"
+													},
+													{
+														"name": "min",
+														"value": 0
+													},
+													{
+														"name": "max",
+														"value": 100
+													}
+												]
+											}
+										},
+										"valueType": "number",
+										"values": [
+											"29.41"
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			"x": -45,
+			"y": 40,
+			"STAQualityNodeResults": {
+				"duplicated": 5,
+				"comissionRate": 29.411764705882355,
+				"dataLength": 17,
+				"selected": "full_name"
+			}
+		}
+	],
+	"edges": [
+		{
+			"from": "51odk.f6dr89",
+			"to": "18cri.ubjftc",
+			"arrows": "from"
+		}
+	]
+}

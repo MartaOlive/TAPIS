@@ -2039,6 +2039,23 @@
 		<input type="hidden" id="DialogQualityCompletnessOmissionNodeId"></input>
 		</form>
 	</dialog>
+
+	<dialog id="DialogQualityCompletnessComission" onClose='hideNodeDialog("DialogQualityCompletnessComission", event)'>
+		<form>
+			<h3> Completness comission (duplicate) </h3>
+			<div id="DialogQualityCompletnessComission_attributesList"></div>
+			<div style="margin-bottom: 20px;">
+				<label><input type="checkbox" value="comission_lowerUpperCase" id="dataQuality_comission_lowerUpperCase" name="dataQuality_comission_lowerUpperCase">Treat uppercase and lowercase as identical</label><br>
+				<label><input type="checkbox" value="comission_flagBadRecords" id="dataQuality_comission_flag" name="dataQuality_comission">Flag the bad records (true/false)</label>
+			</div>
+			<div class="center">
+				<button value="ok" onClick="okButtonDataQualityCompletnessComission(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
+			</div>
+
+		<input type="hidden" id="DialogQualityCompletnessComissionNodeId"></input>
+		</form>
+	</dialog>
+
 	<dialog id="DialogQualityMisclassificationMatrix"
 		onClose='hideNodeDialog("DialogQualityMisclassificationMatrix", event)'>
 		<form>

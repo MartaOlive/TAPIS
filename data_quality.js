@@ -113,6 +113,92 @@ function calculateDataQualityCompletnessOmission(data, attribute,metadata, flag)
 
     return {"notEmpty":count, "empty":data.length - count, "omissionRate":omissionRate, "completnessRate":100-omissionRate }//[count, data.length - count, rate.toFixed(2), 100 - rate.toFixed(2)];//data, Total, true, false, %omission, %completesa
 }
+function calculateDataQualityCompletnessComission(data, attribute,metadata,lowerUpperCase, flag) {
+	var comissionRate;
+	var differentValues = new Set();
+	var count = 0;
+
+	for (var i = 0; i < data.length; i++) {
+		var value = data[i][attribute];
+
+		if (value != null && value != undefined && value != "") {
+
+			// Ignore uppercase/lowercase differences if requested
+			if (lowerUpperCase) {
+				value = String(value).toLowerCase();
+			}
+
+			if (differentValues.has(value)) {
+				count++; // Duplicate found
+				if (flag) data[i]["Comission Flag"] = true;
+			} else {
+				differentValues.add(value);
+				if (flag) data[i]["Comission Flag"] = false;
+			}
+		} else {
+			if (flag) data[i]["Comission Flag"] = false;
+		}
+	}
+    comissionRate = (count / data.length) * 100;
+    if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_CompletenessComission",
+					"measureIdentification": {
+						"code": "Duplicate",
+						"domains": [
+							{
+								"name": "NonConformance",
+								"params": [
+										{
+										"name": "column",
+										"value": attribute
+											}
+										]
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "items",
+									"params":[
+										{
+											"name":"subtype",
+											"value":"rate"
+										},
+                                        {
+                                            "name": "min",
+                                            "value":0
+                                        },
+                                        {
+                                            "name": "max",
+                                            "value":100
+                                        }
+                                    ]
+								}
+							},
+							"valueType": "number",
+							"values": [ comissionRate.toFixed(2) ]
+						}
+					]
+				}
+			]
+		});
+
+
+    return {"duplicated":count,  "comissionRate":comissionRate }
+}
+
+
+
+
+
 
 function calculateDataQualityLogicalConsistency(dataTarget, dataReference, targets, references,metadata, flag) {
     var count = 0;

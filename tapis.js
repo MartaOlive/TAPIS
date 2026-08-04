@@ -203,7 +203,7 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-	if (node.image=="qualityResultsViewer.png" && (parentNode.image!="uncertainty.png" && parentNode.image!="completenessomission.png" && parentNode.image!="misclassificationMatrix.png" && parentNode.image!="logicalConsistency.png" && parentNode.image!="temporalQuality.png" && parentNode.image!="thematicQuality.png" && parentNode.image!="positionalQuality.png" )) return "Quality Results Viewer can only be connected to a quality node";
+	if (node.image=="qualityResultsViewer.png" && (parentNode.image!="uncertainty.png" && parentNode.image!="completenessomission.png"&& parentNode.image!="completenessComission.png" && parentNode.image!="misclassificationMatrix.png" && parentNode.image!="logicalConsistency.png" && parentNode.image!="temporalQuality.png" && parentNode.image!="thematicQuality.png" && parentNode.image!="positionalQuality.png" )) return "Quality Results Viewer can only be connected to a quality node";
 	if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
 		return "It is not possible to link an STAnode after no STA node" //Falta afegir OGCApi Collection xq utilitza el filter i mirar si algo més
 	}
@@ -8245,6 +8245,19 @@ function networkDoubleClick(params) {
 				alert("Parent node must have data to analyze");
 			}
 		}
+		else if (currentNode.image == "completenessComission.png") {
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode && parentNode.STAdata) {
+				currentNode.STAdata= deapCopy(parentNode.STAdata);
+				currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				populateDialogQualityCompletnessComission(currentNode);
+				networkNodes.update(currentNode);
+				showNodeDialog("DialogQualityCompletnessComission");
+			}else{
+				alert("Parent node must have data to analyze");
+			}
+		}
 		
 		else if (currentNode.image == "misclassificationMatrix.png") {
 			var parentNode=GetFirstParentNode(currentNode);
@@ -9909,6 +9922,11 @@ function populateDialogQualityCompletnessOmission(node){
 	saveNodeDialog("DialogQualityCompletnessOmission", node);
 	document.getElementById("DialogQualityCompletnessOmission_attributesList").innerHTML=attributesCheckboxModule;
 }
+function populateDialogQualityCompletnessComission(node){
+	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "comission", "Column");
+	saveNodeDialog("DialogQualityCompletnessComission", node);
+	document.getElementById("DialogQualityCompletnessComission_attributesList").innerHTML=attributesCheckboxModule;
+}
 
 function populateAttributesListSelect(attributes,place, text){
 	var attributesKeys=Object.keys(attributes);
@@ -9944,6 +9962,47 @@ function okButtonDataQualityCompletnessOmission(event){
 	populateDialogdataQualityResultCompletnessOmission(node);
 	showNodeDialog("DialogDataQualityResult");
 	updateQueryAndTableArea(node);
+}
+
+function okButtonDataQualityCompletnessComission(event){
+	var node= getNodeDialog("DialogQualityCompletnessComission");
+	var data= node.STAdata;
+	var select= document.getElementById("attributeList_comission");
+	var selected= select.options[select.selectedIndex].value;
+	var flag= (document.getElementById("dataQuality_comission_flag").checked)?true:false;
+	var lowerUpperCase= (document.getElementById("dataQuality_comission_lowerUpperCase").checked)?true:false;
+	var infoDataComission;
+	var metadata= (node.STAmetadata)?deapCopy(node.STAmetadata):{}
+
+	infoDataComission= calculateDataQualityCompletnessComission(data, selected,metadata,lowerUpperCase, flag); //Response: {"duplicated":count,  "comissionRate":comissionRate}
+	node.STAdata=data;
+	node.STAdataAttributes=getDataAttributes(data);
+	node.STAmetadata=metadata;
+	var STAQualityNodeResults=infoDataComission;
+	STAQualityNodeResults.dataLength=data.length;
+	STAQualityNodeResults.selected=selected;
+
+	node.STAQualityNodeResults=STAQualityNodeResults
+	networkNodes.update(node);
+	hideNodeDialog("DialogQualityCompletnessComission", event);
+	populateDialogdataQualityResultCompletnessComission(node);
+	showNodeDialog("DialogDataQualityResult");
+	updateQueryAndTableArea(node);
+}
+
+function populateDialogdataQualityResultCompletnessComission(node){
+	if (node.STAQualityNodeResults){
+		var STAQualityNodeResults= node.STAQualityNodeResults;
+		document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
+		<thead> 
+		<th>Column</th><th>Total records</th><th>Duplicated records</th>
+		<th>Comission rate</th></tr></thead>
+		<tbody><tr>
+		<td>${STAQualityNodeResults.selected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.duplicated}</td>
+		<td>${STAQualityNodeResults.comissionRate}</td>
+		</tr></tbody></table>`;
+	}else populateDialogdataQualityResultEmpty();
+
 }
 
 function populateDialogdataQualityResultCompletnessOmission(node){
@@ -11405,6 +11464,9 @@ function populateDialogdataQualityResult(parentNode, node){
 	switch (parentNode.image){
 		case "completenessomission.png":
 			populateDialogdataQualityResultCompletnessOmission(node);
+			break;
+		case "completenessComission.png":
+			populateDialogdataQualityResultCompletnessComission(node);
 			break;
 		case "misclassificationMatrix.png":
 			populateDialogdataQualityResultMisclassificationMatrix(node);
