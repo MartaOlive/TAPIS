@@ -147,11 +147,92 @@
                     <p> <i>No one yet</i></p>
                 </div>
             </div>
+            <div class="toolPage_main" id="completenessComission">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../completenessComission.png" alt="icon completenessComission"
+                            class="toolPage_title_icon">Completness comission (duplicate)
+                    </h2>
+                    <p><strong>Completeness commission (duplicate)</strong> evaluates whether a dataset <strong>contains
+                            redundant or duplicated values beyond the expected unique records</strong>. It identifies
+                        <strong>duplicate data entries</strong> by detecting repeated occurrences of the same value or
+                        record, enabling the calculation of the <strong>duplicate rate</strong> and helping assess the
+                        uniqueness and integrity of the dataset.
+                    </p>
+
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="completnessComission_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Completeness comission</strong> tool allows you to calculate the <strong>rate of
+                            completeness
+                            comission (duplicates)</strong>
+                        in your data. You can calculate the rate for <strong>one column</strong> at a time, but you
+                        <strong>can link as many nodes</strong> as
+                        you want to carry out different comission calculations. The result obtained each time will be
+                        added
+                        to the <strong>metadata</strong>.
+                    </p>
+                    <p>This is the data used in the example:</p>
+                    <img src="completnessComission_image1.png" alt="icon" class="toolPage_image">
+                    <p>To display the dialog, <i>double-click</i> the node with the left mouse button. This node is
+                        simple:
+                        it only includes a <strong>selector for the column to evaluate</strong>, a checkbox to ignore
+                        uppercase and lowercase differences <strong>(Treat uppercase and lowercase as
+                            identical)</strong> and a <strong>checkbox
+                            to
+                            create a new column</strong>. The
+                        value of this new column depends on whether the evaluated column contains a <strong>value
+                            (true)</strong> or is
+                        <strong>missing (false)</strong>.
+                    </p>
+
+                    <p>First, consider an example where uppercase and lowercase letters are treated as different
+                        characters. Select the column to evaluate from the <i>drop-down list</i>. In this example, the checkbox
+                        is enabled to create a new column that flags duplicate records,excluding the first occurrence (<i>lag the bar records</i>F)
+                    </p>
+                    <img src="completnessComission_image2.png" alt="icon" class="toolPage_image">
+
+                    <p>This is the result of the calculation. This dialog is used to view the calculation result. To
+                        view it again later, use the <a
+                            href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#qualityResultsViewer">Quality
+                            results viewer</a> tool.</p>
+                    <img src="completnessComission_image3.png" alt="icon" class="toolPage_image">
+                    <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so
+                            far</strong>.</p>
+                    <img src="completnessComission_image4.png" alt="icon" class="toolPage_image">
+                    <p>Here you can see the new column created, containing <strong>true or false values</strong> based
+                        on
+                        the omission
+                        calculation.</p>
+                    <img src="completnessComission_image5.png" alt="icon" class="toolPage_image">
+                    <p>This is the same example, but treating uppercase and lowercase letters as identical.</p> 
+                    <img src="completnessComission_image6.png" alt="icon" class="toolPage_image">
+                    <img src="completnessComission_image7.png" alt="icon" class="toolPage_image">
+                    <img src="completnessComission_image8.png" alt="icon" class="toolPage_image">
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <!-- <ul>
+                </ul> -->
+                    <p> <i>No one yet</i></p>
+                </div>
+            </div>
+
+
+
             <div class="toolPage_main" id="misclassificationMatrix">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../misclassificationMatrix.png"
                             alt="icon misclassificationMatrix" class="toolPage_title_icon">Misclassification Matrix
                     </h2>
+                    <p><strong>Misclassification Matrix</strong> evaluates whether a dataset's <strong>predicted
+                            classifications correctly match their corresponding reference classes</strong>. It
+                        summarizes classification outcomes in a <strong>confusion matrix</strong>, enabling the
+                        calculation of performance metrics such as <strong>Overall Accuracy</strong>, <strong>Overall
+                            Error</strong>, <strong>Producer's Accuracy (Recall)</strong>, <strong>User's Accuracy
+                            (Precision)</strong>, <strong>Omission Error</strong>, <strong>Commission Error</strong>,
+                        and <strong>Cohen's Kappa (Kappa Coefficient)</strong>.</p>
+
                     <p><strong>Setting Up the Node: </strong>
                     </p>
 

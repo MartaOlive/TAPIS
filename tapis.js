@@ -3535,7 +3535,7 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 	}
 	cdns.push('</fieldset>')
 	//Properties
-	cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters' style="margint-top=10px"><legend>Propertires</legend>`)
+	cdns.push(`<fieldset id='dlgCreateUpdateDeleteEntity_attributes' style="margint-top=10px"><legend>Propertires</legend>`)
 		//<input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_0'value=""></input><label> : </label> <input type='text' id='dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_0' value="">
 		cdns.push(`<button onclick="addNewKVPonCreateUpdateDeleteEntity(-1,'properties','add','')"> Add more properties</button>
 		</fieldset>`);
@@ -4378,23 +4378,26 @@ async function GetUpdateEntity(event){
 
 	}
 	//properties
-	var childrenNodesProperties=document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters").childNodes;
-	var objectProperties={}, property="",propertiesOrParameters;
-	for (var e=0;e<childrenNodesProperties.length;e++){
-		if (childrenNodesProperties[e].nodeName=="INPUT"){
-			if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_")){
-				if (childrenNodesProperties[e].value!="")objectProperties[childrenNodesProperties[e].value]="";
-				property=childrenNodesProperties[e].value;
-				continue;
+	if(document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters")){ //Some entities doen't have properties
+		var childrenNodesProperties=document.getElementById("dlgCreateUpdateDeleteEntity_PropertiesOrParameters").childNodes;
+		var objectProperties={}, property="",propertiesOrParameters;
+		for (var e=0;e<childrenNodesProperties.length;e++){
+			if (childrenNodesProperties[e].nodeName=="INPUT"){
+				if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_key_")){
+					if (childrenNodesProperties[e].value!="")objectProperties[childrenNodesProperties[e].value]="";
+					property=childrenNodesProperties[e].value;
+					continue;
+				}
+				if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_")){
+					if (property!="")objectProperties[property]=childrenNodesProperties[e].value;
+					continue;
+				}
 			}
-			if (childrenNodesProperties[e].id.includes("dlgCreateUpdateDeleteEntity_PropertiesOrParameters_value_")){
-				if (property!="")objectProperties[property]=childrenNodesProperties[e].value;
-				continue;
-			}
+			if (childrenNodesProperties[e].nodeName=="LEGEND")propertiesOrParameters=childrenNodesProperties[e].outerText;
 		}
-		if (childrenNodesProperties[e].nodeName=="LEGEND")propertiesOrParameters=childrenNodesProperties[e].outerText;
+		if (objectProperties!={"":""})obj[propertiesOrParameters]=objectProperties; //avoid empty
 	}
-	if (objectProperties!={"":""})obj[propertiesOrParameters]=objectProperties; //avoid empty
+
 		
 
 	if (allowToSend==true){
