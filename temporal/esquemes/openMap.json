@@ -1,0 +1,256 @@
+{
+	"nodes": [
+		{
+			"id": "6pkea.u76b51",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"codi": "0000024AR",
+					"lat": 41.4372502,
+					"long": 2.1652948,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx"
+				},
+				{
+					"codi": "0000033AR",
+					"lat": 41.4375329,
+					"long": 2.1658555,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina"
+				},
+				{
+					"codi": "0000040AR",
+					"lat": 41.4373958,
+					"long": 2.165629,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000045AR",
+					"lat": 41.4372855,
+					"long": 2.1659007,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana"
+				},
+				{
+					"codi": "0000052AR",
+					"lat": 41.4371989,
+					"long": 2.1659492,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000058AR",
+					"lat": 41.4371556,
+					"long": 2.1653393,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000063AR",
+					"lat": 41.4370159,
+					"long": 2.1660801,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000067AR",
+					"lat": 41.437125,
+					"long": 2.1652153,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000074AR",
+					"lat": 41.4369747,
+					"long": 2.1660931,
+					"cientific_name": "Populus alba 'Pyramidalis'",
+					"catalan_name": "Àlber boleana"
+				},
+				{
+					"codi": "0000081AR",
+					"lat": 41.4368815,
+					"long": 2.1650099,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000086AR",
+					"lat": 41.4368517,
+					"long": 2.1653217,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000089AR",
+					"lat": 41.4367974,
+					"long": 2.1655729,
+					"cientific_name": "Cupressus sempervirens",
+					"catalan_name": "Xiprer"
+				},
+				{
+					"codi": "0000096AR",
+					"lat": 41.4367442,
+					"long": 2.1662775,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000099AR",
+					"lat": 41.4366048,
+					"long": 2.1661132,
+					"cientific_name": "Olea europaea",
+					"catalan_name": "Olivera"
+				},
+				{
+					"codi": "0000102AR",
+					"lat": 41.4363902,
+					"long": 2.1649714,
+					"cientific_name": "Tamarix africana",
+					"catalan_name": "Tamariu"
+				},
+				{
+					"codi": "0000109AR",
+					"lat": 41.4362869,
+					"long": 2.1649293,
+					"cientific_name": "Pinus halepensis",
+					"catalan_name": "Pi blanc"
+				},
+				{
+					"codi": "0000114AR",
+					"lat": 41.4361698,
+					"long": 2.1651746,
+					"cientific_name": "Pinus halepensis",
+					"catalan_name": "Pi blanc"
+				},
+				{
+					"codi": "0000118AR",
+					"lat": 41.436381,
+					"long": 2.1658102,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000124AR",
+					"lat": 41.4363516,
+					"long": 2.1661457,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000129AR",
+					"lat": 41.4374433,
+					"long": 2.166102,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina"
+				},
+				{
+					"codi": "0000135AR",
+					"lat": 41.4374091,
+					"long": 2.1663594,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina"
+				},
+				{
+					"codi": "0000141AR",
+					"lat": 41.4372311,
+					"long": 2.1662898,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina"
+				},
+				{
+					"codi": "0000147AR",
+					"lat": 41.4371934,
+					"long": 2.1664538,
+					"cientific_name": "Quercus ilex",
+					"catalan_name": "Alzina"
+				},
+				{
+					"codi": "0000150AR",
+					"lat": 41.4371113,
+					"long": 2.1661431,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000153AR",
+					"lat": 41.4370209,
+					"long": 2.1664633,
+					"cientific_name": "Magnolia grandiflora",
+					"catalan_name": "Magnòlia"
+				},
+				{
+					"codi": "0000155AR",
+					"lat": 41.4373591,
+					"long": 2.1666639,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx"
+				},
+				{
+					"codi": "0000159AR",
+					"lat": 41.4373701,
+					"long": 2.1668118,
+					"cientific_name": "Populus nigra 'Italica'",
+					"catalan_name": "Pollancre gavatx"
+				},
+				{
+					"codi": "0000160AR",
+					"lat": 41.4372719,
+					"long": 2.16665,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000078AR",
+					"lat": 41.4370058,
+					"long": 2.1651811,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				},
+				{
+					"codi": "0000059AR",
+					"lat": 41.4370903,
+					"long": 2.1658415,
+					"cientific_name": "Tipuana tipu",
+					"catalan_name": "Tipuana"
+				}
+			],
+			"STAdataAttributes": {
+				"codi": {
+					"type": "string"
+				},
+				"lat": {
+					"type": "number"
+				},
+				"long": {
+					"type": "number"
+				},
+				"cientific_name": {
+					"type": "string"
+				},
+				"catalan_name": {
+					"type": "string"
+				}
+			},
+			"x": -85,
+			"y": 5
+		},
+		{
+			"id": "3bd8s.137pf4",
+			"label": "Open Map",
+			"image": "OpenMap.png",
+			"shape": "circularImage",
+			"x": 28,
+			"y": 13
+		}
+	],
+	"edges": [
+		{
+			"from": "6pkea.u76b51",
+			"to": "3bd8s.137pf4",
+			"arrows": "from"
+		}
+	]
+}

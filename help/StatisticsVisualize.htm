@@ -110,9 +110,10 @@
 
                     <p>
                         In this case, you can use a <strong>filtering tool</strong> (<a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA" target="_blank">STA</a> or
-                        <a
-                            href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#FilterRowsTable" target="_blank">Table</a>,
+                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA"
+                            target="_blank">STA</a> or
+                        <a href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#FilterRowsTable"
+                            target="_blank">Table</a>,
                         depending on your needs and preferences) <strong>to reduce the amount of data</strong>
                         before connecting it to the <i>Scatter Plot</i> tool.
                     </p>
@@ -127,7 +128,8 @@
                     <p>Each <strong>series</strong> represents a dataset that will draw either a line on the chart or a
                         set of related points. Datasets are expected to be organized by <strong>columns</strong>. If
                         your data is organized by <strong>rows</strong> instead, you can use the <a
-                            href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#PivotTable" target="_blank">Pivot
+                            href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#PivotTable"
+                            target="_blank">Pivot
                             Table</a> tool to <strong>restructure the table</strong> into a suitable format.</p>
 
                     <p>The <strong>Data From selector</strong> allows you to choose which of the connected nodes will
@@ -297,7 +299,8 @@
                     <img src="BarPLot_image6.png" alt="icon" class="toolPage_image">
                     <p>
                         It is possible to use the
-                        <a href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#AggregateColumns" target="_blank">Aggregate
+                        <a href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#AggregateColumns"
+                            target="_blank">Aggregate
                             Column</a> tool
                         to concatenate categories and create more understandable labels. This is the result.
                     </p>
@@ -365,7 +368,78 @@
                         Map
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="openMap_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>
+                        The <strong>Open Map</strong> tool allows you to visualize data containing spatial coordinates
+                        in the <strong>MiraMon Web Map Browser</strong>. It supports data provided as <strong>Geometry
+                            (GeoJSON)</strong>, <strong>latitude and longitude coordinates</strong>, or
+                        <strong>DGGS</strong>. Both <strong>static data</strong> and <strong>time series</strong> are
+                        supported.
+                    </p>
+                    <p>This is the data used in the example:</p>
+                    <img src="openMap_image1.png" alt="icon" class="toolPage_image">
+                    <p>
+                        <i>Double-click</i> the left mouse button to open the dialog. Here, you can define the
+                        <strong>title</strong> that will
+                        be displayed for the TAPIS data in the map legend.
+                    </p>
+
+                    <p>
+                        In the <strong>Position</strong> section, you can configure the label to be displayed on the map
+                        (<strong>Symbolizer</strong>) and the spatial coordinates (<strong>Geometry</strong>). Select
+                        the <strong>coordinate type</strong> using the corresponding <i>radio button</i>
+                        (<strong>Geometry,DGGS or Coordinates</strong>), then choose the appropriate column
+                        from the <i>drop-down</i> menus that contains the coordinate values.
+                    </p>
+
+                    <p>
+                        Optionally, you can also configure the <i>drop-down</i> menus required to display the data as a
+                        <strong>time series</strong>.
+                    </p>
+                    <img src="openMap_image2.png" alt="icon" class="toolPage_image">
+
+                    <p>This is the selection used for the example dataset.</p>
+                    <img src="openMap_image3.png" alt="icon" class="toolPage_image">
+                    <p>
+                        After clicking <strong>OK</strong>, a new window will open displaying your data in the
+                        <a href="https://www.miramon.cat/eng/Prod-NavegadorServidor.htm" target="_blank">
+                            MiraMon Map Browser
+                        </a>.
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="openMap_image4.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+                    <p>
+                        You can <strong>zoom</strong> in to get closer to the map and view your points in more detail.
+                        Use the <strong>+</strong> and <strong>-</strong> buttons to adjust the zoom level,
+                        or use the tool located at the top of the map to <strong>draw a rectangle</strong> and zoom into
+                        the selected
+                        area.
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="openMap_image5.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+                    <p>
+                        Use the <strong>Information tool</strong> (next to the zoom controls) to retrieve information
+                        about the point you click on.
+                        A small window will open displaying the data associated with that point.
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="openMap_image6.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+                    <p>Example using Time series: </p>
+                    <img src="openMap_image7.png" alt="icon" class="toolPage_image">
+                    <img src="openMap_image8.png" alt="icon" class="toolPage_image">
+                    <p>
+                        Use <strong>Select</strong> to load the data for another time period.
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="openMap_image9.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="openMap_image10.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="openMap_image11.png" alt="icon"
+                            class="toolPage_image zoomable"></div>
+
+
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
