@@ -290,7 +290,8 @@
                     <p>With <i>Ok</i> button you can <srong>save your changes</srong>. If you want to keep this schema
                         to
                         load with other data with same attributes you can <a
-                            hrf="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#SaveTable" target="_blank">Save table as
+                            hrf="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#SaveTable"
+                            target="_blank">Save table as
                             CSVW</a></p>
 
 
@@ -711,7 +712,8 @@
                         key), the column from the
                         second table will be automatically renamed by appending <i>_table2</i> to its name. This
                         suffix can later be changed using the <a
-                            href="https://www.tapis.grumets.cat/tapis/help/TableOperations.htm#Meaning" target="_blank">Column
+                            href="https://www.tapis.grumets.cat/tapis/help/TableOperations.htm#Meaning"
+                            target="_blank">Column
                             Meaning</a> tool.
                     </p>
                     <p>Theses are the tables used in this example:</p>
@@ -911,7 +913,8 @@
                     <p>
                         This is the resulting data. In this case, you can see that the data is sorted by the
                         <i>River_basin</i> attribute. Unlike <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SortBySTA" target="_blank">Sort by STA</a>,
+                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SortBySTA"
+                            target="_blank">Sort by STA</a>,
                         <strong>all records remain the same</strong> as the originally loaded data, but are sorted
                         differently.
                     </p>
@@ -1016,7 +1019,8 @@
                         <li>Column with an<strong> auto-incremental value</strong> starting from an <i>initial value</i>
                         </li>
                         <li><strong>Empty column</strong> (you can edit it record by record using the <a
-                                href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#EditRecord" target="_blank">Edit
+                                href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#EditRecord"
+                                target="_blank">Edit
                                 record
                             </a> tool)</li>
                     </ul>
@@ -1028,7 +1032,8 @@
                     </p>
 
                     <p>For the example shown, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportCSV" target="_blank">CSV import</a> has
+                            href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportCSV" target="_blank">CSV
+                            import</a> has
                         been
                         used.</p>
 
@@ -1124,7 +1129,7 @@
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
-                        <div class="toolPage_main" id="AddColumnBBox">
+            <div class="toolPage_main" id="AddColumnBBox">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../AddColumnBBox.png" alt="icon AddColumnBBox"
                             class="toolPage_title_icon">Add BBox column
@@ -1212,13 +1217,300 @@
                 </ul> -->
                 </div>
             </div>
+
             <div class="toolPage_main" id="PivotTable">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../PivotTable.png" alt="icon PivotTable"
                             class="toolPage_title_icon">Pivot table
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="recipe11_initialTable.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Pivot Table</strong> allows users to <strong>summarize and reorganize your
+                            data</strong> by grouping records into rows and columns. It provides <strong>aggregated
+                            statistics</strong> such as counts, sums, averages, minimums, and maximums, making it easier
+                        to analyze large datasets, compare categories, and identify patterns and trends. This tool can
+                        be applied to any kind of data</p>
+                    <p>
+                    <p>In this example, each record in the table represents a measurement of the amount of water in a
+                        reservoir on a specific date (1000 records). To facilitate data analysis, the table needs to be
+                        reorganized by transforming the values in the
+                        <strong>Station</strong> column into separate columns.
+                    </p>
+
+                    <img src="recipe11_dataToPivot.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        <strong>Double-click</strong> to open the dialog.
+
+                        Column names <strong>cannot be repeated</strong>, and <strong>at least one column must be added
+                            to each
+                            section</strong>. The tool is inspired by the <strong>Excel PivotTable</strong> feature,
+                        where the columns to
+                        be preserved from the original table are assigned to one of the available sections to define the
+                        structure of the
+                        new table.
+                        <br><br>
+                        There are <strong>three different sections</strong> for assigning columns and values to the new
+                        table:
+                    </p>
+
+                    <ol>
+                        <li><strong>Columns:</strong> The <strong>unique values</strong> of the selected column(s) will
+                            be transformed into
+                            <strong>new columns</strong> in the resulting table. Therefore, the columns selected here
+                            should contain a
+                            relatively <strong>small number of unique values</strong>; otherwise, the number of columns
+                            in the resulting
+                            table may become very large. It is possible to select <strong>more than one column</strong>.
+                            In that case, the
+                            new column names will be created by <strong>concatenating the selected values</strong> in
+                            the specified order,
+                            where the <strong>first selected column takes precedence</strong> over the following ones.
+                        </li>
+
+                        <li><strong>Rows:</strong> This section defines which <strong>column(s)</strong> will remain as
+                            rows in the
+                            resulting table. Unlike the original table, <strong>duplicate row values are
+                                removed</strong>. As with
+                            <strong>Columns</strong>, more than one column can be selected. In that case, the selected
+                            values are
+                            <strong>concatenated</strong> to form the row identifier.
+                        </li>
+
+                        <li><strong>Values:</strong> The values from the selected <strong>value column(s)</strong> will
+                            populate the
+                            intersections between the generated rows and columns. If <strong>multiple records correspond
+                                to the same
+                                cell</strong>, the selected <strong>aggregation function</strong> is applied. If more
+                            than one value column
+                            is selected, <strong>additional columns are created</strong>, repeating each generated
+                            column once for every
+                            selected value column.
+                        </li>
+                    </ol>
+                    <p>The general appearance of the dialog is shown below:</p>
+                    <img src="recipe11_dialog.png" alt="icon" class="toolPage_image">
+                    <u><b>Example 1: One attribute assigned to each section</b></u><br>
+                    In this first example, a single attribute has been assigned to each section
+                    (<strong>Columns</strong>, <strong>Rows</strong>, and <strong>Values</strong>). This is the simplest
+                    configuration, as there are no combinations of multiple columns, rows, or value fields. The
+                    resulting table preserves a single row attribute while removing duplicate values (the
+                    <strong>reference column</strong>, which in this example is <strong>Day</strong>) and transforms the
+                    unique values of the column assigned to <strong>Columns</strong> into new column headers. The cells
+                    at the intersections of the generated rows and columns are then populated with the values from the
+                    column assigned to <strong>Values</strong>.<br>
+                    <img src="recipe11_pivotTableDialog.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        A fragment of the resulting table is shown below. In this case, the <strong>reference
+                            column</strong> is
+                        <strong>Day</strong>, which contains the unique values from the original table (the attribute
+                        assigned to the
+                        <strong>Rows</strong> section). The remaining columns correspond to the unique values of the
+                        original
+                        <strong>Station</strong> column (the attribute assigned to the <strong>Columns</strong>
+                        section). Each unique
+                        station value becomes a new column. Since only one attribute has been assigned to the
+                        <strong>Columns</strong>
+                        section, each generated column appears only once, using its corresponding value as the column
+                        name. The values in
+                        the resulting cells are calculated according to the selected <strong>aggregation
+                            function</strong>.
+                        <br><br>
+
+                        <strong>List of columns (attributes) in the resulting table:</strong>
+                    </p>
+
+                    <ul>
+                        <li>Day <i>(Preserved from the original table)</i></li>
+                        <li>Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean</li>
+                        <li>Reservoir of la Llosa del Cavall (Navas)_Absolute_level_Mean</li>
+                        <li>Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean</li>
+                        <li>Reservoir of Susqueda (Osor)_Absolute_level_Mean</li>
+                        <li>Reservoir of Sau (Vilanova de Sau)_Absolute_level_Mean</li>
+                        <li>Reservoir of Foix (Castellet i la Gornal)_Absolute_level_Mean</li>
+                        <li>Reservoir of la Baells (Cercs)_Absolute_level_Mean</li>
+                        <li>Reservoir of Riudecanyes_Absolute_level_Mean</li>
+                        <li>Reservoir of Sant Ponç (Clariana de Cardener)_Absolute_level_Mean</li>
+                    </ul>
+
+
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="recipe11_resultTable_Simple.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+
+                    <p>
+                        With the data from the resulting table, it is now possible to create a <a
+                            href="https://www.tapis.grumets.cat/tapis/help/statisticsvisualize.htm#ScatterPlot">scatter
+                            plot</a> showing the
+                        evolution of the
+                        water level in one or more reservoirs.
+                    </p>
+
+                    <br>
+                    <u><b>Example 2: Adding two attributes to Values</b></u><br>
+                    In this example, two attributes have been assigned to the <strong>Values</strong> section. As
+                    mentioned before, adding
+                    more than one value attribute creates an additional set of columns. This new set of columns is
+                    generated by combining
+                    each selected <strong>Value</strong> attribute with every column created from the unique values of
+                    the selected
+                    <strong>Columns</strong> attribute.
+                    <br><br>
+
+                    <img src="recipe11_pivotTableDialog_2_values.png" alt="icon" class="toolPage_image">
+
+                    <p><strong>List of column names in the resulting table:</strong></p>
+
+                    <ul>
+                        <li>Day <i>(Preserved from the original table)</i></li>
+                        <li>Reservoir of Darnius Boadella (Darnius)_Absolute_level_Mean</li>
+                        <li>Reservoir of Darnius Boadella (Darnius)_volume_stored_Mean</li>
+                        <li>Reservoir of la Llosa del Cavall (Navas)_Absolute_level_Mean</li>
+                        <li>Reservoir of la Llosa del Cavall (Navas)_volume_stored_Mean</li>
+                        <li>Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Mean</li>
+                        <li>Reservoir of Siurana (Cornudella de Montsant)_volume_stored_Mean</li>
+                        <li>Reservoir of Susqueda (Osor)_Absolute_level_Mean</li>
+                        <li>Reservoir of Susqueda (Osor)_volume_stored_Mean</li>
+                        <li>Reservoir of Sau (Vilanova de Sau)_Absolute_level_Mean</li>
+                        <li>Reservoir of Sau (Vilanova de Sau)_volume_stored_Mean</li>
+                        <li>Reservoir of Foix (Castellet i la Gornal)_Absolute_level_Mean</li>
+                        <li>Reservoir of Foix (Castellet i la Gornal)_volume_stored_Mean</li>
+                        <li>Reservoir of la Baells (Cercs)_Absolute_level_Mean</li>
+                        <li>Reservoir of la Baells (Cercs)_volume_stored_Mean</li>
+                        <li>Reservoir of Riudecanyes_Absolute_level_Mean</li>
+                        <li>Reservoir of Riudecanyes_volume_stored_Mean</li>
+                        <li>Reservoir of Sant Ponç (Clariana de Cardener)_Absolute_level_Mean</li>
+                        <li>Reservoir of Sant Ponç (Clariana de Cardener)_volume_stored_Mean</li>
+                    </ul>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="recipe11_resultTable_2_values.png"
+                            alt="icon" class="toolPage_image zoomable"></div>
+
+                    <u><b>Example 3: Adding two attributes to Columns</b></u><br>
+                    In this example, two attributes have been assigned to the <strong>Columns</strong> section. The new
+                    columns are
+                    created by combining the unique values from the selected columns in the original table
+                    (<strong>County</strong> and
+                    <strong>Station</strong>). In other words, each unique value from the first selected column is
+                    concatenated with each
+                    unique value from the following selected column(s), generating a new column for each combination.
+                    <br><br>
+
+                    <img src="recipe11_pivotTableDialog_2_columns.png" alt="icon" class="toolPage_image">
+
+                    <br><br>
+
+                    <strong>List of new columns (attributes):</strong>
+
+                    <ul>
+                        <li>Day <i>(Preserved from the original table)</i></li>
+                        <li>Alt Emporda_Reservoir of Darnius Boadella (Darnius)_Absolute_level_Sum</li>
+                        <li>Solsona_Reservoir of la Llosa del Cavall (Navas)_Absolute_level_Sum</li>
+                        <li>Priorat_Reservoir of Siurana (Cornudella de Montsant)_Absolute_level_Sum</li>
+                        <li>La Selva_Reservoir of Susqueda (Osor)_Absolute_level_Sum</li>
+                        <li>Osona_Reservoir of Sau (Vilanova de Sau)_Absolute_level_Sum</li>
+                        <li>Alt Penedes_Reservoir of Foix (Castellet i la Gornal)_Absolute_level_Sum</li>
+                        <li>Bergueda_Reservoir of la Baells (Cercs)_Absolute_level_Sum</li>
+                        <li>Baix Camp_Reservoir of Riudecanyes_Absolute_level_Sum</li>
+                        <li>Solsona_Reservoir of Sant Ponç (Clariana de Cardener)_Absolute_level_Sum</li>
+                    </ul>
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="recipe11_resultTable_2_columns.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
+
+                    <u><b>Example 4: Adding two attributes to Rows</b></u><br>
+                    This works in the same way as the combination explained in <strong>"Adding more than one attribute
+                        to Columns"</strong>.
+                    However, in this case, the combination is applied to the <strong>reference column</strong> values
+                    instead of creating
+                    new columns. The name of this new column is generated by combining the names of the original columns
+                    assigned to the
+                    <strong>Rows</strong> section.
+                    <br><br>
+
+                    <img src="recipe11_pivotTableDialog_2_rows.png" alt="icon" class="toolPage_image">
+
+                    <br><br>
+
+                    The resulting columns follow the same behaviour explained in the first example, where all unique
+                    values from the
+                    selected <strong>Columns</strong> attribute are transformed into new columns.
+                    <br><br>
+
+                    <strong>Examples of values from the reference column, resulting from the combination of the original
+                        columns selected
+                        in the Rows section (<strong>Day</strong> + <strong>Province</strong>):</strong>
+
+                    <ul>
+                        <li>2024-12-31T00:00:00.000_Girona</li>
+                        <li>2024-12-31T00:00:00.000_Lleida</li>
+                        <li>2024-12-31T00:00:00.000_Tarragona</li>
+                        <li>2024-12-31T00:00:00.000_Barcelona</li>
+                        <li>2025-01-01T00:00:00.000_Girona</li>
+                        <li>2025-01-01T00:00:00.000_Lleida</li>
+                        <li>2025-01-01T00:00:00.000_Tarragona</li>
+                        <li>2025-01-01T00:00:00.000_Barcelona</li>
+                    </ul>
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="recipe11_resultTable_2_rows.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
+                    <u><b>Example 5: Adding Columns and Values without any Row attribute</b></u><br>
+                    The <strong>Pivot Table</strong> tool always returns a table. It is possible to create a table
+                    without assigning
+                    attributes to the <strong>Rows</strong> or <strong>Columns</strong> sections; however, at least one
+                    of these sections
+                    must contain an attribute. This example shows the result when no attribute is assigned to the
+                    <strong>Rows</strong>
+                    section.
+                    <br><br>
+
+                    <img src="recipe11_pivotTableDialog_without_rows.png" alt="icon" class="toolPage_image">
+
+                    <br><br>
+
+                    The resulting table will contain the same columns as in the first example, except for the
+                    <strong>reference
+                        column</strong> (in that case, <strong>Day</strong>). Additionally, an
+                    <strong>Aggregation</strong> column is created,
+                    containing the name of the attribute selected in the <strong>Values</strong> section. If more than
+                    one attribute is
+                    assigned to the <strong>Values</strong> section, each selected value attribute will generate a new
+                    row. The values in
+                    the remaining columns will correspond to the result of the selected aggregation function.
+                    <br><br>
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="recipe11_resultTable_without_rows.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
+
+                    <u><b>Example 6: Adding Rows and Values without any Column attribute</b></u><br>
+                    In this case, attributes have been assigned to the <strong>Rows</strong> and <strong>Values</strong>
+                    sections, but no
+                    attribute has been assigned to the <strong>Columns</strong> section. Therefore, no new columns are
+                    generated from
+                    unique values of an original column. Instead, the resulting table keeps the structure defined by the
+                    selected
+                    <strong>Rows</strong> attributes, and each attribute assigned to the <strong>Values</strong> section
+                    generates a new
+                    column. The values in these columns correspond to the result of the selected <strong>aggregation
+                        function</strong>.
+                    <br><br>
+
+                    <img src="recipe11_pivotTableDialog_without_columns.png" alt="icon" class="toolPage_image">
+
+                    <br><br>
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="recipe11_resultTable_without_columns.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
+
+
+
+
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
@@ -1449,7 +1741,8 @@
                         and <strong>date data</strong> (in a column or written manually).
                     </p>
                     <p>To perform this procedure, you need to be logged in(<a
-                            href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login" target="_blank">Login button</a>).
+                            href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login"
+                            target="_blank">Login button</a>).
                     </p>
                     <div class="image-wrapper" onclick="zoomToImage(this)"><img src="uploadToIC_image7.png" alt="icon"
                             class="toolPage_image zoomable"></div>
@@ -1488,7 +1781,8 @@
                     </p>
                     <img src="uploadToIC_image6.png" alt="icon" class="toolPage_image ">
                     <p><strong>Add GeoJSON node to check the result:</strong> Check the checkbox if you want to add a <a
-                            href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportGeoJSON" target="_blank">GeoJSON</a>
+                            href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#ImportGeoJSON"
+                            target="_blank">GeoJSON</a>
                         node to
                         see what has been loaded into the catalog in TAPIS.</p>
                     <img src="uploadToIC_image9.png" alt="icon" class="toolPage_image ">
@@ -1501,16 +1795,16 @@
                     </p>
                     <img src="uploadToIC_image8.png" alt="icon" class="toolPage_image ">
                     <p>This is the URL of the example:
-                        <a
-                            href="https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/8a9aaea8-f01f-4683-b3a3-aaf62df887ea" target="_blank">https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/8a9aaea8-f01f-4683-b3a3-aaf62df887ea</a>
+                        <a href="https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/8a9aaea8-f01f-4683-b3a3-aaf62df887ea"
+                            target="_blank">https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/8a9aaea8-f01f-4683-b3a3-aaf62df887ea</a>
                     </p>
                     <p>
                     <p>This is the result of the <strong>loaded information</strong>. The image shows the table created
                         from the <strong>GeoJSON
                             node</strong>. In the <strong><i>metadata</i></strong>, all calculated quality data will
                         appear. In <strong><i>PRODUCTOpenLink</i></strong>, you will find
-                        the data uploaded to the Interplanetary File System (IPFS) (<a
-                            href="https://ipfs.ogc.secd.eu/" target="_blank">https://ipfs.ogc.secd.eu/</a>). With this link, you can
+                        the data uploaded to the Interplanetary File System (IPFS) (<a href="https://ipfs.ogc.secd.eu/"
+                            target="_blank">https://ipfs.ogc.secd.eu/</a>). With this link, you can
                         download the data to your computer.</p>
                     <p><i>The download of the data in the GeoJSON node is not guaranteed. It is delayed to allow time
                             for the
