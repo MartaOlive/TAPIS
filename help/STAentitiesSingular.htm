@@ -18,13 +18,15 @@
     </header>
     <main>
         <div class="mainTools">
- 
-            <h1 class="toolPage_mainTitle">STA entities create, edit or delete tool</h1> <!--general title -->
-            <div id="toolPage_STAentitiesSingular" class="toolBoxParent"></div> <!--all tools-->
 
-            <div class="toolPage_main"> <!--general explanation-->
+            <h1 class="toolPage_mainTitle">STA entities create, edit or delete tool</h1>
+            <div id="toolPage_STAentitiesSingular" class="toolBoxParent"></div>
+
+            <div class="toolPage_main">
                 <div class="toolPage_main_text generalExplanation">
                     <p>These tools allow you to create, edit, or delete a record in an STA service.</p>
+                    <p>Depending on the node that is linked, different options will be available. Each option is
+                        explained in its corresponding section.</p>
 
                     <strong>Create</strong>
 
@@ -80,170 +82,534 @@
                             class="toolPage_title_icon">Campaign
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="Campaign_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A label for the Campaign entity, commonly
+                            expressed as a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A short description of the Campaign
+                            entity.</li>
+                        <li><strong>classification</strong> (<em>ValueCode [0..1]</em>): Indicates whether the data
+                            streams or observation groups of the Campaign contain sensitive information.</li>
+                        <li><strong>termsOfUse</strong> (<em>CharacterString</em>): The terms of use applicable to the
+                            Campaign entity.</li>
+                        <li><strong>privacyPolicy</strong> (<em>CharacterString [0..1]</em>): The terms of use
+                            concerning personal data contained in the Campaign entity.</li>
+                        <li><strong>url</strong> (<em>URL [0..1]</em>): The URL providing additional information about
+                            the Campaign that cannot be captured in the entity itself.</li>
+                        <li><strong>creationTime</strong> (<em>TM Instant</em>): The time at which the Campaign entity
+                            was created.</li>
+                        <li><strong>startTime</strong> (<em>TM Instant [0..1]</em>): The starting time of the Campaign.
+                        </li>
+                        <li><strong>endTime</strong> (<em>TM Instant [0..1]</em>): The ending time of the Campaign.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
                     <ul>
 
                     </ul>
-
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="Cell">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../Cell.png" alt="icon Cell" class="toolPage_title_icon">Cell
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="Cell_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the Cell
+                            entity, commonly a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
+                            of the Cell entity.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional information about the Cell.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="Datastream">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../Datastream.png" alt="icon Datastream"
                             class="toolPage_title_icon">Datastream
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
-                    <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
+                    <img src="Datastream_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
 
+                    <p><strong>How to Use the Node: </strong></p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the
+                            Datastream entity, commonly a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
+                            of the Datastream entity.</li>
+                        <li><strong>unitOfMeasurement</strong> (<em>UnitOfMeasurement</em>): The unit of measurement
+                            used by the Datastream.</li>
+                        <li><strong>observationType</strong> (<em>URI</em>): The type of Observation used by the
+                            Datastream.</li>
+                        <li><strong>phenomenonTime</strong> (<em>TM_Object [0..1]</em>): The time interval during which
+                            the Datastream's Observations occur.</li>
+                        <li><strong>resultTime</strong> (<em>TM_Object [0..1]</em>): The time interval during which the
+                            Datastream's Observations are received by the system.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional information about the Datastream.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
+                    <ul>
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
                                 Creating
                                 two new datastream of observations</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="FeatureOfInterest">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../FeatureOfInterest.png" alt="icon FeatureOfInterest"
                             class="toolPage_title_icon">FeatureOfInterest
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="FeatureOfInterest_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the
+                            FeatureOfInterest entity, commonly a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
+                            of the FeatureOfInterest entity.</li>
+                        <li><strong>encodingType</strong> (<em>CharacterString</em>): The encoding type of the feature.
+                        </li>
+                        <li><strong>feature</strong> (<em>Any</em>): The feature itself, encoded according to the
+                            specified encoding type.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional information about the FeatureOfInterest.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="HistoricalLocation">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../HistoricalLocation.png" alt="icon HistoricalLocation"
                             class="toolPage_title_icon">HistoricalLocation
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="HistoricalLocation_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>time</strong> (<em>TM_Object</em>): The time when the Thing's location was changed.
+                        </li>
+                        <li><strong>location</strong> (<em>Location</em>): The Location entity associated with the Thing
+                            at the specified time.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="License">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../License.png" alt="icon License"
                             class="toolPage_title_icon">License
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="License_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A label for the License entity, commonly
+                            expressed as a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString [0..1]</em>): A short description of the
+                            License entity.</li>
+                        <li><strong>definition</strong> (<em>URI</em>): A URI referencing the definition of the License.
+                        </li>
+                        <li><strong>logo</strong> (<em>CharacterString [0..1]</em>): The URI of the logo associated with
+                            the License.</li>
+                        <li><strong>attributionText</strong> (<em>CharacterString [0..1]</em>): The text to be used as
+                            attribution when required by the License.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="Location">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../Location.png" alt="icon Location"
                             class="toolPage_title_icon">Location
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
-                    <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
+                    <img src="Location_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
 
+                    <p><strong>How to Use the Node: </strong></p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the
+                            Location entity, commonly a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
+                            of the Location entity.</li>
+                        <li><strong>encodingType</strong> (<em>CharacterString</em>): The encoding type of the location.
+                        </li>
+                        <li><strong>location</strong> (<em>Any</em>): The location of the Thing, expressed according to
+                            the specified encoding type.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional information about the Location.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
+                    <ul>
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
                                 Creating
                                 two new datastream of observations</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="MultiDatastream">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../MultiDatastream.png" alt="icon MultiDatastream"
                             class="toolPage_title_icon">MultiDatastream
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="MultiDatastream_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the
+                            MultiDatastream entity, commonly a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
+                            of the MultiDatastream entity.</li>
+                        <li><strong>unitOfMeasurements</strong> (<em>UnitOfMeasurement Array</em>): The units of
+                            measurement used by the MultiDatastream.</li>
+                        <li><strong>observationType</strong> (<em>URI</em>): The type of Observation used by the
+                            MultiDatastream.</li>
+                        <li><strong>observedArea</strong> (<em>GeoJSON Polygon [0..1]</em>): The geographical area
+                            covered by the MultiDatastream.</li>
+                        <li><strong>phenomenonTime</strong> (<em>TM_Object [0..1]</em>): The time interval during which
+                            the MultiDatastream's Observations occur.</li>
+                        <li><strong>resultTime</strong> (<em>TM_Object [0..1]</em>): The time interval during which the
+                            MultiDatastream's Observations are received by the system.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional information about the MultiDatastream.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="ObservationGroup">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../ObservationGroup.png" alt="icon ObservationGroup"
                             class="toolPage_title_icon">ObservationGroup
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="ObservationGroup_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A label for the ObservationGroup entity,
+                            commonly expressed as a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A short description of the
+                            ObservationGroup entity.</li>
+                        <li><strong>purpose</strong> (<em>CharacterString [0..1]</em>): A short description of the
+                            purpose of the ObservationGroup entity.</li>
+                        <li><strong>creationTime</strong> (<em>TM Instant</em>): The time at which the ObservationGroup
+                            was created.</li>
+                        <li><strong>endTime</strong> (<em>TM Instant [0..1]</em>): The end time of the ObservationGroup.
+                        </li>
+                        <li><strong>termsOfUse</strong> (<em>CharacterString [0..1]</em>): The terms of use applicable
+                            to the ObservationGroup entity.</li>
+                        <li><strong>privacyPolicy</strong> (<em>CharacterString [0..1]</em>): The terms of use
+                            concerning personal data contained in the ObservationGroup entity.</li>
+                        <li><strong>dataQuality</strong> (<em>JSON Object [0..1]</em>): Quality information concerning
+                            the observations contained in the group.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): Additional properties associated
+                            with the ObservationGroup.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="Observation">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../Observation.png" alt="icon Observation"
                             class="toolPage_title_icon">Observation
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="Observation_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>phenomenonTime</strong> (<em>TM_Object</em>): The time at which the Observation
+                            takes place.</li>
+                        <li><strong>result</strong> (<em>Any</em>): The estimated value of the observed property.</li>
+                        <li><strong>resultTime</strong> (<em>DateTime [0..1]</em>): The time when the Observation result
+                            was received by the system.</li>
+                        <li><strong>resultQuality</strong> (<em>DQ_Element [0..1]</em>): Quality information concerning
+                            the Observation result.</li>
+                        <li><strong>validTime</strong> (<em>TM_Period [0..1]</em>): The time period during which the
+                            Observation result is valid.</li>
+                        <li><strong>parameters</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional parameters associated with the Observation.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional information about the Observation.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="ObservedProperty">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../ObservedProperty.png" alt="icon ObservedProperty"
                             class="toolPage_title_icon">ObservedProperty
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
-                    <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
+                    <img src="ObservedProperty_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
 
+                    <p><strong>How to Use the Node: </strong></p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the
+                            ObservedProperty entity, commonly a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
+                            of the ObservedProperty entity.</li>
+                        <li><strong>definition</strong> (<em>URI</em>): The URI defining the ObservedProperty.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional information about the ObservedProperty.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
+                    <ul>
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
                                 Creating
                                 two new datastream of observations</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="Party">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../Party.png" alt="icon Party"
                             class="toolPage_title_icon">Party
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="Party_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>Party</strong> tool allows you to create a new <strong>Party</strong> entity in the
+                        connected STA service. To create a Party, the Party tool only needs to be linked to the STA
+                        service, as it does not depend on any other entity. As with the other tools, you must also be
+                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
+                        TAPIS.
+                    </p>
+                    <p>In this case, you can only <strong>create</strong> an entity; <strong>editing</strong> or
+                        <strong>deleting</strong> it is <strong>not supported</strong>.
+                    </p>
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>role</strong> (<em>CharacterString</em>): The role of the Party. The possible values
+                            are <strong>individual</strong> or <strong>institutional</strong>.</li>
+                        <li><strong>description</strong> (<em>CharacterString [0..1]</em>): A short description of the
+                            Party.</li>
+                        <li><strong>displayName</strong> (<em>CharacterString [0..1]</em>): A name commonly used to
+                            address or refer to the Party.</li>
+                        <li><strong>authId</strong> (<em>CharacterString [0..1]</em>): A system-wide unique identifier
+                            used to uniquely identify the Party, such as an identifier obtained from an authentication
+                            system.</li>
+                    </ul>
+                    <p><strong>Create</strong></p>
+                    <p>To create a new <strong>Party</strong>, you must be logged in to TAPIS. When you log in, the
+                        system generates a code that is used as the <strong>authorId</strong> associated with that
+                        login.</p>
+                    <p>To open the dialog, <i>double-click</i> with the left mouse button. Two fields will be filled in
+                        automatically: the <strong>authorId</strong>, which is the code generated during the TAPIS login
+                        and cannot be modified, and the <strong>role</strong>, which can be modified but is mandatory.
+                        “Complete the remaining fields
+                    </p>
+                    <img src="Party_image1.png" alt="icon" class="toolPage_image">
+
+                    <p>This is the data for the example. Once you have finished, click <strong>Create</strong>. </p>
+                    <img src="Party_image2.png" alt="icon" class="toolPage_image">
+                    <p>If the entity has been created successfully, a text similar to this will appear on the right. You
+                        can view the entity you have just created by clicking on the text following <strong>Available
+                            at:</strong></p>
+                    <p><i>If the entity you are trying to create already exists, it will not be created again. However,
+                            the
+                            displayed text will be the same.</i></p>
+                    <img src="Party_image3.png" alt="icon" class="toolPage_image">
+                    <p>This is the result that opens in a new page when you click the link following <strong>Available
+                            at:</strong>.</p>
+                    <img src="Party_image4.png" alt="icon" class="toolPage_image">
+                    <p>If you want to see how the STA service has been updated with the new information, link the
+                        corresponding entity tool in its plural form (<strong>Parties</strong>).</p>
+                    <img src="Party_image5.png" alt="icon" class="toolPage_image">
+                    <p>Here is the result showing the loaded data.</p>
+                    <img src="Party_image6.png" alt="icon" class="toolPage_image">
+                    <p></p>
+                    <p><strong>Edit</strong></p>
+                    <p>Not suported</p>
+                    <p><strong>Delete</strong></p>
+                    <p>Not suported</p>
+
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
@@ -251,55 +617,127 @@
                                 Creating
                                 two new datastream of observations</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="Relation">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../Relation.png" alt="icon Relation"
                             class="toolPage_title_icon">Relation
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="Relation_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>role</strong> (<em>URI</em>): A URI referencing the definition of the Relation
+                            entity.</li>
+                        <li><strong>description</strong> (<em>CharacterString [0..1]</em>): A short description of the
+                            Relation entity.</li>
+                        <li><strong>externalResource</strong> (<em>URI [0..1]</em>): A URI referencing the external
+                            resource associated with the Relation.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): Additional properties associated
+                            with the Relation.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="Sensor">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../Sensor.png" alt="icon Sensor"
                             class="toolPage_title_icon">Sensor
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
-                    <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
+                    <img src="Sensor_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
 
+                    <p><strong>How to Use the Node: </strong></p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the Sensor
+                            entity, commonly a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
+                            of the Sensor entity.</li>
+                        <li><strong>encodingType</strong> (<em>CharacterString</em>): The encoding type of the metadata
+                            describing the Sensor.</li>
+                        <li><strong>metadata</strong> (<em>Any</em>): The metadata describing the Sensor, encoded
+                            according to the specified encoding type.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional information about the Sensor.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
+                    <ul>
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
                                 Creating
                                 two new datastream of observations</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+
+
             <div class="toolPage_main" id="Thing">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../Thing.png" alt="icon Thing"
                             class="toolPage_title_icon">Thing
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
-                    <p><strong>How to Use the Node: </strong></p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
+                    <img src="Thing_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
 
+                    <p><strong>How to Use the Node: </strong></p>
+
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the Thing
+                            entity, commonly a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
+                            of the Thing entity.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional information about the Thing.</li>
+                    </ul>
+
+                    <p><strong>create</strong></p>
+                    <p></p>
+
+                    <p><strong>Edit</strong></p>
+                    <p></p>
+
+                    <p><strong>Delete</strong></p>
+                    <p></p>
+
+                    <p><strong>Recipes where this tool is used:</strong></p>
+                    <ul>
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
                                 Creating
                                 two new datastream of observations</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
 

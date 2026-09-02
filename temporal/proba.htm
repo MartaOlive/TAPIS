@@ -26,6 +26,63 @@
 
 <body>
 	<iframe src=\"", url, "\" id=\"",id,"_iframe\" style=\"display: none\" width=\"99%\" height=\"180\" scrolling=\"auto\"></iframe>
+	<p><strong>Setting Up the Node: </strong></p>
+                    <img src="Party_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>Party</strong> tool allows you to create a new <strong>Party</strong> entity in the
+                        connected STA service. To create a Party, the Party tool only needs to be linked to the STA
+                        service, as it does not depend on any other entity. As with the other tools, you must also be
+                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
+                        TAPIS.
+                    </p>
+                    <p>In this case, you can only <strong>create</strong> an entity; <strong>editing</strong> or
+                        <strong>deleting</strong> it is <strong>not supported</strong>.
+                    </p>
+                    <h4><u>Attributes of the entity</u></h4>
+                    <ul>
+                        <li><strong>role</strong> (<em>CharacterString</em>): The role of the Party. The possible values
+                            are <strong>individual</strong> or <strong>institutional</strong>.</li>
+                        <li><strong>description</strong> (<em>CharacterString [0..1]</em>): A short description of the
+                            Party.</li>
+                        <li><strong>displayName</strong> (<em>CharacterString [0..1]</em>): A name commonly used to
+                            address or refer to the Party.</li>
+                        <li><strong>authId</strong> (<em>CharacterString [0..1]</em>): A system-wide unique identifier
+                            used to uniquely identify the Party, such as an identifier obtained from an authentication
+                            system.</li>
+                    </ul>
+                    <p><strong>Create</strong></p>
+                    <p>To create a new <strong>Party</strong>, you must be logged in to TAPIS. When you log in, the
+                        system generates a code that is used as the <strong>authorId</strong> associated with that
+                        login.</p>
+                    <p>To open the dialog, <i>double-click</i> with the left mouse button. Two fields will be filled in
+                        automatically: the <strong>authorId</strong>, which is the code generated during the TAPIS login
+                        and cannot be modified, and the <strong>role</strong>, which can be modified but is mandatory.
+                        “Complete the remaining fields
+                    </p>
+                    <img src="Party_image1.png" alt="icon" class="toolPage_image">
+
+                    <p>This is the data for the example. Once you have finished, click <strong>Create</strong>. </p>
+                    <img src="Party_image2.png" alt="icon" class="toolPage_image">
+                    <p>If the entity has been created successfully, a text similar to this will appear on the right. You
+                        can view the entity you have just created by clicking on the text following <strong>Available
+                            at:</strong></p>
+                    <p><i>If the entity you are trying to create already exists, it will not be created again. However,
+                            the
+                            displayed text will be the same.</i></p>
+                    <img src="Party_image3.png" alt="icon" class="toolPage_image">
+                    <p>This is the result that opens in a new page when you click the link following <strong>Available
+                            at:</strong>.</p>
+                    <img src="Party_image4.png" alt="icon" class="toolPage_image">
+                    <p>If you want to see how the STA service has been updated with the new information, link the
+                        corresponding entity tool in its plural form (<strong>Parties</strong>).</p>
+                    <img src="Party_image5.png" alt="icon" class="toolPage_image">
+                    <p>Here is the result showing the loaded data.</p>
+                    <img src="Party_image6.png" alt="icon" class="toolPage_image">
+                    <p></p>
+                    <p><strong>Edit</strong></p>
+                    <p>Not suported</p>
+                    <p><strong>Delete</strong></p>
+                    <p>Not suported</p>
 </body>
 <script>
 	const confusionMatrix = { //classified -> References
