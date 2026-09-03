@@ -224,7 +224,7 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 	var idNode=IdOfSTAEntity(node);
 	if (idNode<0)
 		return null;
-	if (parentNode.image=="FilterRowsSTA.png" && parentNode.STAdata.length==1){ //FilterRow (1 record) +STAEntity
+	if (parentNode.image === "FilterRowsSTA.png" && parentNode.STAdata.length === 1) {//FilterRow (1 record) +STAEntity or Selec resource
 		//Linked in the schema?
 		var parentLastEntity=getSTAURLLastEntity(parentNode.STAURL);
 		if (STAEntities[parentLastEntity]){ //plural? (It has to be, but in case of...)
@@ -235,6 +235,7 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 
 		else return null;
 	}
+	
 	if (!parentNode.STAURL)
 		return null;
 	if (node.image == "MergeExpandsSTA.png" && STAOperations[removeFileExtension(parentNode.image)])
@@ -595,9 +596,11 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 		if(parentNode.STAEntityName== STAEntitiesArray[i]){
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit),
 				(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
-		}else if ( !nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null)
+		}else if (!nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null ||(reasonNodeDoesNotFitWithPrevious(node, parentNode)!=null && getSTAURLLastEntity(parentNode.STAURL)==removeFileExtension(node.image))){
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit),
 				(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
+		}
+			
 	}
 	if (provisional.length>1){
 		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
