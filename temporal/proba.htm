@@ -25,7 +25,6 @@
 	</style>
 
 <body>
-	<iframe src=\"", url, "\" id=\"",id,"_iframe\" style=\"display: none\" width=\"99%\" height=\"180\" scrolling=\"auto\"></iframe>
 	<p><strong>Setting Up the Node: </strong></p>
                     <img src="Party_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
                     <p><strong>How to Use the Node: </strong></p>
@@ -40,15 +39,16 @@
                     </p>
                     <h4><u>Attributes of the entity</u></h4>
                     <ul>
-                        <li><strong>role</strong> (<em>CharacterString</em>): The role of the Party. The possible values
-                            are <strong>individual</strong> or <strong>institutional</strong>.</li>
-                        <li><strong>description</strong> (<em>CharacterString [0..1]</em>): A short description of the
-                            Party.</li>
-                        <li><strong>displayName</strong> (<em>CharacterString [0..1]</em>): A name commonly used to
-                            address or refer to the Party.</li>
-                        <li><strong>authId</strong> (<em>CharacterString [0..1]</em>): A system-wide unique identifier
-                            used to uniquely identify the Party, such as an identifier obtained from an authentication
-                            system.</li>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the Sensor
+                            entity, commonly a descriptive name.</li>
+                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
+                            of the Sensor entity.</li>
+                        <li><strong>encodingType</strong> (<em>CharacterString</em>): The encoding type of the metadata
+                            describing the Sensor.</li>
+                        <li><strong>metadata</strong> (<em>Any</em>): The metadata describing the Sensor, encoded
+                            according to the specified encoding type.</li>
+                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                            additional information about the Sensor.</li>
                     </ul>
                     <p><strong>Create</strong></p>
                     <p>To create a new <strong>Party</strong>, you must be logged in to TAPIS. When you log in, the
