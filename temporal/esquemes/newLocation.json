@@ -1,0 +1,98 @@
+{
+	"nodes": [
+		{
+			"id": "61a3q.h3s3gu",
+			"label": "STA plus",
+			"image": "sta.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+			"STAdata": null,
+			"x": 45,
+			"y": 4
+		},
+		{
+			"id": "3sko7.ov7tcv",
+			"label": "Location",
+			"image": "Location.png",
+			"shape": "circularImage",
+			"STAentitiesObject": {
+				"name": "Universitat Autònoma de Barcelona",
+				"description": "Location of the Universitat Autònoma de Barcelona campus in Bellaterra",
+				"encodingType": "application/geo+json",
+				"location": {
+					"type": "Point",
+					"coordinates": [
+						2.105144,
+						41.500627
+					]
+				},
+				"properties": {},
+				"@iot.id": 2665
+			},
+			"STAEntitiesRequiredNotLinked": [],
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(2665)",
+			"STAdata": [
+				{
+					"name": "Universitat Autònoma de Barcelona",
+					"description": "Location of the Universitat Autònoma de Barcelona campus in Bellaterra",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							2.105144,
+							41.500627
+						]
+					},
+					"properties": {},
+					"@iot.id": 2665
+				}
+			],
+			"x": 161,
+			"y": 5
+		},
+		{
+			"id": "6did8.b9gl6a",
+			"label": "Locations",
+			"image": "Locations.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations",
+			"STAEntityName": "Locations",
+			"STAdata": null,
+			"x": -48,
+			"y": 5
+		},
+		{
+			"id": "4l8g7.oul5n7",
+			"label": "Select Resource",
+			"image": "SelectResourceSTA.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(2665)",
+			"STAResourceId": 2665,
+			"STAdata": null,
+			"x": -164,
+			"y": -1
+		}
+	],
+	"edges": [
+		{
+			"from": "61a3q.h3s3gu",
+			"to": "3sko7.ov7tcv",
+			"arrows": "from"
+		},
+		{
+			"from": "61a3q.h3s3gu",
+			"to": "5dv4r.l027tv",
+			"arrows": "from"
+		},
+		{
+			"from": "61a3q.h3s3gu",
+			"to": "6did8.b9gl6a",
+			"arrows": "from"
+		},
+		{
+			"from": "6did8.b9gl6a",
+			"to": "4l8g7.oul5n7",
+			"arrows": "from"
+		}
+	]
+}
