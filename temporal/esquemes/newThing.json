@@ -1,0 +1,1850 @@
+{
+	"nodes": [
+		{
+			"id": "lq97.edutojs",
+			"label": "STA plus",
+			"image": "sta.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+			"STAdata": [
+				{
+					"name": "Campaigns",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Campaigns"
+				},
+				{
+					"name": "Datastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams"
+				},
+				{
+					"name": "FeaturesOfInterest",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest"
+				},
+				{
+					"name": "HistoricalLocations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/HistoricalLocations"
+				},
+				{
+					"name": "Licenses",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses"
+				},
+				{
+					"name": "Locations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations"
+				},
+				{
+					"name": "MultiDatastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams"
+				},
+				{
+					"name": "Observations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations"
+				},
+				{
+					"name": "ObservationGroups",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups"
+				},
+				{
+					"name": "ObservedProperties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties"
+				},
+				{
+					"name": "Parties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Parties"
+				},
+				{
+					"name": "Relations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Relations"
+				},
+				{
+					"name": "Sensors",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors"
+				},
+				{
+					"name": "Things",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
+				}
+			],
+			"x": -125,
+			"y": 22
+		},
+		{
+			"id": "67ngr.badrlc",
+			"label": "Locations",
+			"image": "Locations.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations",
+			"STAEntityName": "Locations",
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(1)",
+					"@iot.id": 1,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(1)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(1)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(2)",
+					"@iot.id": 2,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(2)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(2)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(3)",
+					"@iot.id": 3,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(3)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(3)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(4)",
+					"@iot.id": 4,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(4)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(4)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(5)",
+					"@iot.id": 5,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(5)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(5)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(6)",
+					"@iot.id": 6,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(6)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(6)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(7)",
+					"@iot.id": 7,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(7)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(7)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(8)",
+					"@iot.id": 8,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(8)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(8)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(9)",
+					"@iot.id": 9,
+					"name": "Spitzingsee",
+					"description": "Hotel Gundl Alm",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(9)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(9)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(10)",
+					"@iot.id": 10,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(10)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(10)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(11)",
+					"@iot.id": 11,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(11)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(11)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(12)",
+					"@iot.id": 12,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(12)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(12)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(13)",
+					"@iot.id": 13,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(13)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(13)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(14)",
+					"@iot.id": 14,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(14)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(14)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(15)",
+					"@iot.id": 15,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(15)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(15)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(16)",
+					"@iot.id": 16,
+					"name": "Spitzingsee",
+					"description": "Hotel Gundl Alm",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(16)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(16)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(17)",
+					"@iot.id": 17,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(17)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(17)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(18)",
+					"@iot.id": 18,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(18)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(18)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(19)",
+					"@iot.id": 19,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(19)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(19)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(20)",
+					"@iot.id": 20,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(20)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(20)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(21)",
+					"@iot.id": 21,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(21)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(21)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(22)",
+					"@iot.id": 22,
+					"name": "Spitzingsee",
+					"description": "Hotel Gundl Alm",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(22)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(22)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(23)",
+					"@iot.id": 23,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(23)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(23)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(24)",
+					"@iot.id": 24,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(24)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(24)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(25)",
+					"@iot.id": 25,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(25)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(25)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(27)",
+					"@iot.id": 27,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(27)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(27)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(28)",
+					"@iot.id": 28,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(28)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(28)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(30)",
+					"@iot.id": 30,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(30)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(30)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(48)",
+					"@iot.id": 48,
+					"name": "Spitzingsee",
+					"description": "Hotel Gundl Alm",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(48)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(48)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(49)",
+					"@iot.id": 49,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(49)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(49)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(53)",
+					"@iot.id": 53,
+					"name": "Spitzingsee",
+					"description": "Hotel Gundl Alm",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(53)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(53)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(68)",
+					"@iot.id": 68,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(68)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(68)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(69)",
+					"@iot.id": 69,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(69)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(69)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(71)",
+					"@iot.id": 71,
+					"name": "Spitzingsee",
+					"description": "Hotel Gundl Alm",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							11.88533,
+							47.659664
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(71)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(71)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(72)",
+					"@iot.id": 72,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(72)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(72)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(74)",
+					"@iot.id": 74,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(74)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(74)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(76)",
+					"@iot.id": 76,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(76)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(76)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(79)",
+					"@iot.id": 79,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310929,
+							-6.23586
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(79)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(79)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(80)",
+					"@iot.id": 80,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(80)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(80)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(81)",
+					"@iot.id": 81,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310929,
+							-6.23586
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(81)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(81)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(82)",
+					"@iot.id": 82,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(82)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(82)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(83)",
+					"@iot.id": 83,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310929,
+							-6.23586
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(83)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(83)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(84)",
+					"@iot.id": 84,
+					"name": "Bristol",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							51.455109,
+							-2.621857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(84)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(84)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(85)",
+					"@iot.id": 85,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310711,
+							-6.235629
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(85)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(85)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(86)",
+					"@iot.id": 86,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310703,
+							-6.235638
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(86)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(86)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(87)",
+					"@iot.id": 87,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32266,
+							-6.276825
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(87)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(87)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(88)",
+					"@iot.id": 88,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.323023,
+							-6.277168
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(88)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(88)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(89)",
+					"@iot.id": 89,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32302,
+							-6.277139
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(89)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(89)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(90)",
+					"@iot.id": 90,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32303,
+							-6.277143
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(90)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(90)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(91)",
+					"@iot.id": 91,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.322606,
+							-6.276457
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(91)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(91)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(92)",
+					"@iot.id": 92,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.322603,
+							-6.276463
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(92)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(92)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(93)",
+					"@iot.id": 93,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32266,
+							-6.276825
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(93)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(93)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(94)",
+					"@iot.id": 94,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.335271,
+							-6.255883
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(94)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(94)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(95)",
+					"@iot.id": 95,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.335271,
+							-6.255883
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(95)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(95)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(96)",
+					"@iot.id": 96,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.370811,
+							-6.293909
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(96)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(96)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(97)",
+					"@iot.id": 97,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.370811,
+							-6.293909
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(97)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(97)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(98)",
+					"@iot.id": 98,
+					"name": "Valencia",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							39.463056,
+							-0.407851
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(98)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(98)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(99)",
+					"@iot.id": 99,
+					"name": "Valencia",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							39.454678,
+							-0.403103
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(99)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(99)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(100)",
+					"@iot.id": 100,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(100)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(100)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(101)",
+					"@iot.id": 101,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310929,
+							-6.23586
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(101)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(101)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(102)",
+					"@iot.id": 102,
+					"name": "Bristol",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							51.455109,
+							-2.621857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(102)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(102)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(103)",
+					"@iot.id": 103,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310711,
+							-6.235629
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(103)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(103)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(104)",
+					"@iot.id": 104,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310703,
+							-6.235638
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(104)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(104)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(105)",
+					"@iot.id": 105,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32266,
+							-6.276825
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(105)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(105)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(106)",
+					"@iot.id": 106,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.323023,
+							-6.277168
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(106)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(106)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(107)",
+					"@iot.id": 107,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32302,
+							-6.277139
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(107)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(107)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(108)",
+					"@iot.id": 108,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32303,
+							-6.277143
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(108)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(108)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(109)",
+					"@iot.id": 109,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.322606,
+							-6.276457
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(109)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(109)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(110)",
+					"@iot.id": 110,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.322603,
+							-6.276463
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(110)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(110)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(111)",
+					"@iot.id": 111,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32266,
+							-6.276825
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(111)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(111)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(112)",
+					"@iot.id": 112,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.335271,
+							-6.255883
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(112)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(112)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(113)",
+					"@iot.id": 113,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.335271,
+							-6.255883
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(113)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(113)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(114)",
+					"@iot.id": 114,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.370811,
+							-6.293909
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(114)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(114)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(115)",
+					"@iot.id": 115,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.370811,
+							-6.293909
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(115)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(115)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(116)",
+					"@iot.id": 116,
+					"name": "Valencia",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							39.463056,
+							-0.407851
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(116)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(116)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(117)",
+					"@iot.id": 117,
+					"name": "Valencia",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							39.454678,
+							-0.403103
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(117)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(117)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(118)",
+					"@iot.id": 118,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(118)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(118)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(119)",
+					"@iot.id": 119,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310929,
+							-6.23586
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(119)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(119)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(120)",
+					"@iot.id": 120,
+					"name": "Bristol",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							51.455109,
+							-2.621857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(120)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(120)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(121)",
+					"@iot.id": 121,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310711,
+							-6.235629
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(121)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(121)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(122)",
+					"@iot.id": 122,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310703,
+							-6.235638
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(122)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(122)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(123)",
+					"@iot.id": 123,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32266,
+							-6.276825
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(123)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(123)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(124)",
+					"@iot.id": 124,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.323023,
+							-6.277168
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(124)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(124)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(125)",
+					"@iot.id": 125,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32302,
+							-6.277139
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(125)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(125)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(126)",
+					"@iot.id": 126,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32303,
+							-6.277143
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(126)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(126)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(127)",
+					"@iot.id": 127,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.322606,
+							-6.276457
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(127)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(127)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(128)",
+					"@iot.id": 128,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.322603,
+							-6.276463
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(128)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(128)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(129)",
+					"@iot.id": 129,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32266,
+							-6.276825
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(129)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(129)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(130)",
+					"@iot.id": 130,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.335271,
+							-6.255883
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(130)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(130)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(131)",
+					"@iot.id": 131,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.335271,
+							-6.255883
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(131)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(131)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(132)",
+					"@iot.id": 132,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.370811,
+							-6.293909
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(132)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(132)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(133)",
+					"@iot.id": 133,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.370811,
+							-6.293909
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(133)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(133)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(134)",
+					"@iot.id": 134,
+					"name": "Valencia",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							39.463056,
+							-0.407851
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(134)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(134)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(135)",
+					"@iot.id": 135,
+					"name": "Valencia",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							39.454678,
+							-0.403103
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(135)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(135)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(136)",
+					"@iot.id": 136,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.311814,
+							-6.235857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(136)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(136)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(137)",
+					"@iot.id": 137,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310929,
+							-6.23586
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(137)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(137)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(138)",
+					"@iot.id": 138,
+					"name": "Bristol",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							51.455109,
+							-2.621857
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(138)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(138)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(139)",
+					"@iot.id": 139,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310711,
+							-6.235629
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(139)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(139)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(140)",
+					"@iot.id": 140,
+					"name": "Dundrum",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.310703,
+							-6.235638
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(140)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(140)/Things"
+				},
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(141)",
+					"@iot.id": 141,
+					"name": "Dublin",
+					"description": "A beautiful, beautiful place",
+					"encodingType": "application/geo+json",
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							53.32266,
+							-6.276825
+						]
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(141)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(141)/Things"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/description"
+				},
+				"encodingType": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/encodingType"
+				},
+				"location": {
+					"type": "geometry",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/location"
+				},
+				"HistoricalLocations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/HistoricalLocations@iot.navigationLink"
+				},
+				"Things@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/Things@iot.navigationLink"
+				}
+			},
+			"x": -29,
+			"y": 104
+		},
+		{
+			"id": "2a0u4.4qim7vg",
+			"label": "Select Resource",
+			"image": "SelectResourceSTA.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(2665)",
+			"STAdata": [
+				{
+					"@iot.selfLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(2665)",
+					"@iot.id": 2665,
+					"name": "Universitat Autònoma de Barcelona",
+					"description": "Location of the Universitat Autònoma de Barcelona campus in Bellaterra",
+					"encodingType": "application/geo+json",
+					"location": {
+						"coordinates": [
+							"2.105144",
+							"41.500627"
+						]
+					},
+					"properties": {
+						"City": "Cerdanyola del Vallès",
+						"Site": "Universitat Autònoma de Barcelona",
+						"Campus": "Bellaterra"
+					},
+					"HistoricalLocations@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(2665)/HistoricalLocations",
+					"Things@iot.navigationLink": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations(2665)/Things"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "integer",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/@iot.id"
+				},
+				"name": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/name"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/description"
+				},
+				"encodingType": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/encodingType"
+				},
+				"location": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/location"
+				},
+				"properties": {
+					"type": "object",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/properties"
+				},
+				"HistoricalLocations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/HistoricalLocations@iot.navigationLink"
+				},
+				"Things@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/Things@iot.navigationLink"
+				}
+			},
+			"STAResourceId": 2665,
+			"x": 97,
+			"y": 93
+		},
+		{
+			"id": "48hof.3do90h",
+			"label": "Thing",
+			"image": "Thing.png",
+			"shape": "circularImage",
+			"STAentitiesObject": {
+				"Locations": [
+					{
+						"@iot.id": 2665
+					}
+				]
+			},
+			"STAEntitiesRequiredNotLinked": [],
+			"x": 199,
+			"y": 17
+		}
+	],
+	"edges": [
+		{
+			"from": "lq97.edutojs",
+			"to": "67ngr.badrlc",
+			"arrows": "from"
+		},
+		{
+			"from": "67ngr.badrlc",
+			"to": "2a0u4.4qim7vg",
+			"arrows": "from"
+		},
+		{
+			"from": "2a0u4.4qim7vg",
+			"to": "48hof.3do90h",
+			"arrows": "from"
+		},
+		{
+			"from": "lq97.edutojs",
+			"to": "q6e.87pgvhdo",
+			"arrows": "from"
+		},
+		{
+			"from": "q6e.87pgvhdo",
+			"to": "21f8e.rcvhou",
+			"arrows": "from"
+		},
+		{
+			"from": "lq97.edutojs",
+			"to": "8qnu6.8dl55c",
+			"arrows": "from"
+		},
+		{
+			"from": "8qnu6.8dl55c",
+			"to": "231jl.og64seg",
+			"arrows": "from"
+		},
+		{
+			"from": "231jl.og64seg",
+			"to": "8kbpn.3drha8",
+			"arrows": "from"
+		},
+		{
+			"from": "231jl.og64seg",
+			"to": "8rqnn.0im2dq",
+			"arrows": "from"
+		}
+	]
+}

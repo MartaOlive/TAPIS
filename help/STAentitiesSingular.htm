@@ -78,637 +78,42 @@
             <!-- CAMPAIGN -->
 
             <div class="toolPage_main" id="Campaign">
-                <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../Campaign.png" alt="icon Campaign" class="toolPage_title_icon">Campaign
-                    </h2>
-
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="Campaign_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
-
-                    <p><strong>How to Use the Node: </strong></p>
-
-                    <p>The <strong>Campaign</strong> tool allows you to create a new <strong>Campaign</strong> entity
-                        in the connected STA service. To create a Campaign, the Campaign tool only needs to be linked
-                        to the STA service and to any required entities. As with the other tools, you must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>name</strong> (<em>CharacterString</em>): A label for the Campaign entity, commonly
-                            expressed as a descriptive name.</li>
-                        <li><strong>description</strong> (<em>CharacterString</em>): A short description of the Campaign
-                            entity.</li>
-                        <li><strong>classification</strong> (<em>ValueCode [0..1]</em>): Indicates whether the data
-                            streams or observation groups of the Campaign contain sensitive information.</li>
-                        <li><strong>termsOfUse</strong> (<em>CharacterString</em>): The terms of use applicable to the
-                            Campaign entity.</li>
-                        <li><strong>privacyPolicy</strong> (<em>CharacterString [0..1]</em>): The terms of use
-                            concerning personal data contained in the Campaign entity.</li>
-                        <li><strong>url</strong> (<em>URL [0..1]</em>): The URL providing additional information about
-                            the Campaign that cannot be captured in the entity itself.</li>
-                        <li><strong>creationTime</strong> (<em>TM Instant</em>): The time at which the Campaign entity
-                            was created.</li>
-                        <li><strong>startTime</strong> (<em>TM Instant [0..1]</em>): The starting time of the Campaign.
-                        </li>
-                        <li><strong>endTime</strong> (<em>TM Instant [0..1]</em>): The ending time of the Campaign.</li>
-                    </ul>
-
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>Campaign</strong>, you must be logged in to TAPIS. When you log in,
-                        your login is associated with the corresponding <strong>Party</strong> entity.</p>
-
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The dialog contains all the
-                        attributes of the Campaign and any required linked entities. Required linked entities are added
-                        automatically. Complete the remaining fields and click <strong>Create</strong>.</p>
-                    <img src="Campaign_image1.png" alt="Campaign create dialog" class="toolPage_image">
-
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right.
-                        You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
-                    </p>
-                    <img src="Campaign_image2.png" alt="Campaign creation result" class="toolPage_image">
-
-                    <p>This is the result that opens in a new page when you click the link following
-                        <strong>Available at:</strong>.
-                    </p>
-                    <img src="Campaign_image3.png" alt="Campaign entity" class="toolPage_image">
-
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>Campaigns</strong>).</p>
-                    <img src="Campaign_image4.png" alt="Campaigns" class="toolPage_image">
-
-                    <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> a Campaign, you must first link a tool that allows you to
-                        <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).
-                    </p>
-
-                    <p>Continuing with the selected record, <i>double-click</i> the <strong>Campaign</strong> tool to
-                        open the dialog. All editable fields can be modified.</p>
-                    <img src="Campaign_image5.png" alt="Campaign edit dialog" class="toolPage_image">
-
-                    <p>Once you have made the changes, click the <strong>Update</strong> button to automatically send
-                        the request to the <strong>STA service</strong>. If the operation is successful, a message
-                        similar to the following will appear on the right-hand side.</p>
-                    <img src="Campaign_image6.png" alt="Campaign updated" class="toolPage_image">
-
-                    <p>Clicking on the Campaign ID will open a new browser tab displaying the updated entity.</p>
-
-                    <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> a Campaign from the STA service, as in the case of editing a Campaign,
-                        you must first select it using a tool that allows you to <strong>select the corresponding
-                            record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Campaign will open,
-                        displaying all its information. The same dialog as the one used for editing the Campaign will
-                        appear. To delete the Campaign, simply click the <strong>Delete</strong> button.</p>
-                    <img src="Campaign_image7.png" alt="Campaign delete dialog" class="toolPage_image">
-
-                    <p><strong>Recipes where this tool is used:</strong></p>
-                    <ul>
-                    </ul>
-                </div>
+               
             </div>
 
 
             <!-- CELL -->
 
             <div class="toolPage_main" id="Cell">
-                <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../Cell.png" alt="icon Cell" class="toolPage_title_icon">Cell
-                    </h2>
-
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="Cell_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
-
-                    <p><strong>How to Use the Node: </strong></p>
-
-                    <p>The <strong>Cell</strong> tool allows you to create a new <strong>Cell</strong> entity in the
-                        connected STA service. To create a Cell, the Cell tool only needs to be linked to the STA
-                        service, as it does not depend on any other entity. As with the other tools, you must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the Cell
-                            entity, commonly a descriptive name.</li>
-                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
-                            of the Cell entity.</li>
-                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
-                            additional information about the Cell.</li>
-                    </ul>
-
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>Cell</strong>, you must be logged in to TAPIS.</p>
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The dialog contains all the
-                        attributes of the Cell. The <strong>Properties</strong> field is not mandatory. You can add as
-                        many properties as you want, one by one.</p>
-                    <img src="Cell_image1.png" alt="Cell create dialog" class="toolPage_image">
-
-                    <p>Once you have finished, click <strong>Create</strong>.</p>
-
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right.
-                        You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
-                    </p>
-                    <img src="Cell_image2.png" alt="Cell creation result" class="toolPage_image">
-
-                    <p>This is the result that opens in a new page when you click the link following
-                        <strong>Available at:</strong>.
-                    </p>
-                    <img src="Cell_image3.png" alt="Cell entity" class="toolPage_image">
-
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>Cells</strong>).</p>
-                    <img src="Cell_image4.png" alt="Cells" class="toolPage_image">
-
-                    <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> a Cell, you must first select it using a tool that allows you to
-                        <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).
-                    </p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Cell will open,
-                        displaying all its information. All fields are editable except for fields automatically provided
-                        by the STA service.</p>
-                    <img src="Cell_image5.png" alt="Cell edit dialog" class="toolPage_image">
-
-                    <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
-                        the <strong>STA service</strong>. If the operation is successful, a message similar to the
-                        following will appear on the right-hand side.</p>
-                    <img src="Cell_image6.png" alt="Cell updated" class="toolPage_image">
-
-                    <p>Clicking on the Cell ID will open a new browser tab displaying the updated entity.</p>
-
-                    <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> a Cell from the STA service, you must first select it using a tool
-                        that allows you to <strong>select the corresponding record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Cell will open,
-                        displaying all its information. The same dialog as the one used for editing the Cell will
-                        appear. To delete the Cell, simply click the <strong>Delete</strong> button.</p>
-                    <img src="Cell_image7.png" alt="Cell delete dialog" class="toolPage_image">
-
-                    <p><strong>Recipes where this tool is used:</strong></p>
-                    <ul>
-                    </ul>
-                </div>
+               
             </div>
 
 
             <!-- DATASTREAM -->
 
             <div class="toolPage_main" id="Datastream">
-                <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../Datastream.png" alt="icon Datastream" class="toolPage_title_icon">Datastream
-                    </h2>
-
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="Datastream_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
-
-                    <p><strong>How to Use the Node: </strong></p>
-
-                    <p>The <strong>Datastream</strong> tool allows you to create a new <strong>Datastream</strong>
-                        entity in the connected STA service. To create a Datastream, the Datastream tool must be linked
-                        to the STA service and to all required entities. You must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the
-                            Datastream entity, commonly a descriptive name.</li>
-                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
-                            of the Datastream entity.</li>
-                        <li><strong>unitOfMeasurement</strong> (<em>UnitOfMeasurement</em>): The unit of measurement
-                            used by the Datastream.</li>
-                        <li><strong>observationType</strong> (<em>URI</em>): The type of Observation used by the
-                            Datastream.</li>
-                        <li><strong>phenomenonTime</strong> (<em>TM_Object [0..1]</em>): The time interval during which
-                            the Datastream's Observations occur.</li>
-                        <li><strong>resultTime</strong> (<em>TM_Object [0..1]</em>): The time interval during which the
-                            Datastream's Observations are received by the system.</li>
-                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
-                            additional information about the Datastream.</li>
-                    </ul>
-
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>Datastream</strong>, you must be logged in to TAPIS. The Datastream
-                        tool must be linked to the STA service and to all required entities.</p>
-
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The required linked entities
-                        and their IDs are added automatically. The dialog contains the attributes of the Datastream.
-                        Complete the remaining fields and click <strong>Create</strong>.</p>
-                    <img src="Datastream_image1.png" alt="Datastream create dialog" class="toolPage_image">
-
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right.
-                        You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
-                    </p>
-                    <img src="Datastream_image2.png" alt="Datastream creation result" class="toolPage_image">
-
-                    <p>This is the result that opens in a new page when you click the link following
-                        <strong>Available at:</strong>.
-                    </p>
-                    <img src="Datastream_image3.png" alt="Datastream entity" class="toolPage_image">
-
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>Datastreams</strong>).</p>
-                    <img src="Datastream_image4.png" alt="Datastreams" class="toolPage_image">
-
-                    <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> a Datastream, you must first select it using a tool that allows you to
-                        <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).
-                    </p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Datastream will open,
-                        displaying all its information. Modify the editable fields.</p>
-                    <img src="Datastream_image5.png" alt="Datastream edit dialog" class="toolPage_image">
-
-                    <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
-                        the <strong>STA service</strong>. If the operation is successful, a message similar to the
-                        following will appear on the right-hand side.</p>
-                    <img src="Datastream_image6.png" alt="Datastream updated" class="toolPage_image">
-
-                    <p>Clicking on the Datastream ID will open a new browser tab displaying the updated entity.</p>
-
-                    <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> a Datastream from the STA service, you must first select it using a
-                        tool that allows you to <strong>select the corresponding record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Datastream will open,
-                        displaying all its information. The same dialog as the one used for editing the Datastream will
-                        appear. To delete the Datastream, simply click the <strong>Delete</strong> button.</p>
-                    <img src="Datastream_image7.png" alt="Datastream delete dialog" class="toolPage_image">
-
-                    <p><strong>Recipes where this tool is used:</strong></p>
-                    <ul>
-                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
-                                Creating two new datastream of observations</a></li>
-                    </ul>
-                </div>
+                
             </div>
 
 
             <!-- FEATURE OF INTEREST -->
 
             <div class="toolPage_main" id="FeatureOfInterest">
-                <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../FeatureOfInterest.png" alt="icon FeatureOfInterest"
-                            class="toolPage_title_icon">FeatureOfInterest
-                    </h2>
-
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="FeatureOfInterest_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
-
-                    <p><strong>How to Use the Node: </strong></p>
-
-                    <p>The <strong>FeatureOfInterest</strong> tool allows you to create a new
-                        <strong>FeatureOfInterest</strong> entity in the connected STA service. The FeatureOfInterest
-                        tool must be linked to the STA service and to any required entities. You must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the
-                            FeatureOfInterest entity, commonly a descriptive name.</li>
-                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
-                            of the FeatureOfInterest entity.</li>
-                        <li><strong>encodingType</strong> (<em>CharacterString</em>): The encoding type of the feature.
-                        </li>
-                        <li><strong>feature</strong> (<em>Any</em>): The feature itself, encoded according to the
-                            specified encoding type.</li>
-                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
-                            additional information about the FeatureOfInterest.</li>
-                    </ul>
-
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>FeatureOfInterest</strong>, you must be logged in to TAPIS.</p>
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The dialog contains all the
-                        attributes of the FeatureOfInterest. The <strong>Properties</strong> field is not mandatory.
-                        Complete the fields and click <strong>Create</strong>.</p>
-                    <img src="FeatureOfInterest_image1.png" alt="FeatureOfInterest create dialog"
-                        class="toolPage_image">
-
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right.
-                        You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
-                    </p>
-                    <img src="FeatureOfInterest_image2.png" alt="FeatureOfInterest creation result"
-                        class="toolPage_image">
-
-                    <p>This is the result that opens in a new page when you click the link following
-                        <strong>Available at:</strong>.
-                    </p>
-                    <img src="FeatureOfInterest_image3.png" alt="FeatureOfInterest entity" class="toolPage_image">
-
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>FeaturesOfInterest</strong>).</p>
-                    <img src="FeatureOfInterest_image4.png" alt="FeaturesOfInterest" class="toolPage_image">
-
-                    <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> a FeatureOfInterest, you must first select it using a tool that allows
-                        you to <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this
-                        FeatureOfInterest will open, displaying all its information. Modify the editable fields.</p>
-                    <img src="FeatureOfInterest_image5.png" alt="FeatureOfInterest edit dialog" class="toolPage_image">
-
-                    <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
-                        the <strong>STA service</strong>. If the operation is successful, a message similar to the
-                        following will appear on the right-hand side.</p>
-                    <img src="FeatureOfInterest_image6.png" alt="FeatureOfInterest updated" class="toolPage_image">
-
-                    <p>Clicking on the FeatureOfInterest ID will open a new browser tab displaying the updated entity.
-                    </p>
-
-                    <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> a FeatureOfInterest from the STA service, you must first select it
-                        using a tool that allows you to <strong>select the corresponding record</strong> (you can use
-                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).
-                    </p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this FeatureOfInterest will
-                        open, displaying all its information. The same dialog as the one used for editing the
-                        FeatureOfInterest will appear. To delete the FeatureOfInterest, simply click the
-                        <strong>Delete</strong> button.
-                    </p>
-                    <img src="FeatureOfInterest_image7.png" alt="FeatureOfInterest delete dialog"
-                        class="toolPage_image">
-
-                    <p><strong>Recipes where this tool is used:</strong></p>
-                    <ul>
-                    </ul>
-                </div>
+                
             </div>
 
 
             <!-- HISTORICAL LOCATION -->
 
             <div class="toolPage_main" id="HistoricalLocation">
-                <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../HistoricalLocation.png" alt="icon HistoricalLocation"
-                            class="toolPage_title_icon">HistoricalLocation
-                    </h2>
-
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="HistoricalLocation_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
-
-                    <p><strong>How to Use the Node: </strong></p>
-
-                    <p>The <strong>HistoricalLocation</strong> tool allows you to create, edit, or delete a
-                        <strong>HistoricalLocation</strong> entity in the connected STA service. To create a
-                        HistoricalLocation, the tool must be linked to the STA service and to the required related
-                        entities. You must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>time</strong> (<em>TM_Object</em>): The time when the Thing's location was changed.
-                        </li>
-                        <li><strong>location</strong> (<em>Location</em>): The Location entity associated with the Thing
-                            at the specified time.</li>
-                    </ul>
-
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>HistoricalLocation</strong>, you must be logged in to TAPIS. The tool
-                        must be linked to the STA service and to the required related entities.</p>
-
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The required linked entities
-                        and their IDs are added automatically. Complete the remaining fields and click
-                        <strong>Create</strong>.
-                    </p>
-                    <img src="HistoricalLocation_image1.png" alt="HistoricalLocation create dialog"
-                        class="toolPage_image">
-
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right.
-                        You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
-                    </p>
-                    <img src="HistoricalLocation_image2.png" alt="HistoricalLocation creation result"
-                        class="toolPage_image">
-
-                    <p>This is the result that opens in a new page when you click the link following
-                        <strong>Available at:</strong>.
-                    </p>
-                    <img src="HistoricalLocation_image3.png" alt="HistoricalLocation entity" class="toolPage_image">
-
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>HistoricalLocations</strong>).</p>
-                    <img src="HistoricalLocation_image4.png" alt="HistoricalLocations" class="toolPage_image">
-
-                    <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> a HistoricalLocation, you must first select it using a tool that allows
-                        you to <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this HistoricalLocation
-                        will open, displaying all its information. Modify the editable fields.</p>
-                    <img src="HistoricalLocation_image5.png" alt="HistoricalLocation edit dialog"
-                        class="toolPage_image">
-
-                    <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
-                        the <strong>STA service</strong>. If the operation is successful, a message similar to the
-                        following will appear on the right-hand side.</p>
-                    <img src="HistoricalLocation_image6.png" alt="HistoricalLocation updated" class="toolPage_image">
-
-                    <p>Clicking on the HistoricalLocation ID will open a new browser tab displaying the updated entity.
-                    </p>
-
-                    <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> a HistoricalLocation from the STA service, you must first select it
-                        using a tool that allows you to <strong>select the corresponding record</strong> (you can use
-                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).
-                    </p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this HistoricalLocation
-                        will open, displaying all its information. The same dialog as the one used for editing the
-                        HistoricalLocation will appear. To delete the HistoricalLocation, simply click the
-                        <strong>Delete</strong> button.
-                    </p>
-                    <img src="HistoricalLocation_image7.png" alt="HistoricalLocation delete dialog"
-                        class="toolPage_image">
-
-                    <p><strong>Recipes where this tool is used:</strong></p>
-                    <ul>
-                    </ul>
-                </div>
+                
             </div>
 
 
             <!-- LICENSE -->
 
             <div class="toolPage_main" id="License">
-                <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../License.png" alt="icon License" class="toolPage_title_icon">License
-                    </h2>
-
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="License_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
-
-                    <p><strong>How to Use the Node: </strong></p>
-
-                    <p>The <strong>License</strong> tool allows you to create a new <strong>License</strong> entity in
-                        the connected STA service. To create a License, the License tool only needs to be linked to the
-                        STA service, as it does not depend on any other entity. As with the other tools, you must also
-                        be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>name</strong> (<em>CharacterString</em>): A label for the License entity, commonly
-                            expressed as a descriptive name.</li>
-                        <li><strong>description</strong> (<em>CharacterString [0..1]</em>): A short description of the
-                            License entity.</li>
-                        <li><strong>definition</strong> (<em>URI</em>): A URI referencing the definition of the License.
-                        </li>
-                        <li><strong>logo</strong> (<em>CharacterString [0..1]</em>): The URI of the logo associated with
-                            the License.</li>
-                        <li><strong>attributionText</strong> (<em>CharacterString [0..1]</em>): The text to be used as
-                            attribution when required by the License.</li>
-                    </ul>
-
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>License</strong>, you must be logged in to TAPIS.</p>
-
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The dialog contains all the
-                        attributes of the License. Complete the fields and click <strong>Create</strong>.</p>
-                    <img src="License_image1.png" alt="License create dialog" class="toolPage_image">
-
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right.
-                        You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
-                    </p>
-                    <img src="License_image2.png" alt="License creation result" class="toolPage_image">
-
-                    <p>This is the result that opens in a new page when you click the link following
-                        <strong>Available at:</strong>.
-                    </p>
-                    <img src="License_image3.png" alt="License entity" class="toolPage_image">
-
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>Licenses</strong>).</p>
-                    <img src="License_image4.png" alt="Licenses" class="toolPage_image">
-
-                    <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> a License, you must first select it using a tool that allows you to
-                        <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).
-                    </p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this License will open,
-                        displaying all its information. Modify the editable fields.</p>
-                    <img src="License_image5.png" alt="License edit dialog" class="toolPage_image">
-
-                    <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
-                        the <strong>STA service</strong>. If the operation is successful, a message similar to the
-                        following will appear on the right-hand side.</p>
-                    <img src="License_image6.png" alt="License updated" class="toolPage_image">
-
-                    <p>Clicking on the License ID will open a new browser tab displaying the updated entity.</p>
-
-                    <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> a License from the STA service, you must first select it using a tool
-                        that allows you to <strong>select the corresponding record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this License will open,
-                        displaying all its information. The same dialog as the one used for editing the License will
-                        appear. To delete the License, simply click the <strong>Delete</strong> button.</p>
-                    <img src="License_image7.png" alt="License delete dialog" class="toolPage_image">
-
-                    <p><strong>Recipes where this tool is used:</strong></p>
-                    <ul>
-                    </ul>
-                </div>
+                
             </div>
 
 
@@ -854,340 +259,21 @@
             <!-- MULTIDATASTREAM -->
 
             <div class="toolPage_main" id="MultiDatastream">
-                <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../MultiDatastream.png" alt="icon MultiDatastream"
-                            class="toolPage_title_icon">MultiDatastream
-                    </h2>
-
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="MultiDatastream_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
-
-                    <p><strong>How to Use the Node: </strong></p>
-
-                    <p>The <strong>MultiDatastream</strong> tool allows you to create a new
-                        <strong>MultiDatastream</strong> entity in the connected STA service. To create a
-                        MultiDatastream, the MultiDatastream tool must be linked to the STA service and to all required
-                        entities. You must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the
-                            MultiDatastream entity, commonly a descriptive name.</li>
-                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
-                            of the MultiDatastream entity.</li>
-                        <li><strong>unitOfMeasurements</strong> (<em>UnitOfMeasurement Array</em>): The units of
-                            measurement used by the MultiDatastream.</li>
-                        <li><strong>observationType</strong> (<em>URI</em>): The type of Observation used by the
-                            MultiDatastream.</li>
-                        <li><strong>observedArea</strong> (<em>GeoJSON Polygon [0..1]</em>): The geographical area
-                            covered by the MultiDatastream.</li>
-                        <li><strong>phenomenonTime</strong> (<em>TM_Object [0..1]</em>): The time interval during which
-                            the MultiDatastream's Observations occur.</li>
-                        <li><strong>resultTime</strong> (<em>TM_Object [0..1]</em>): The time interval during which the
-                            MultiDatastream's Observations are received by the system.</li>
-                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
-                            additional information about the MultiDatastream.</li>
-                    </ul>
-
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>MultiDatastream</strong>, you must be logged in to TAPIS. The
-                        MultiDatastream tool must be linked to the STA service and to all required entities.</p>
-
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The required linked entities
-                        and their IDs are added automatically. Complete the remaining fields and click
-                        <strong>Create</strong>.
-                    </p>
-                    <img src="MultiDatastream_image1.png" alt="MultiDatastream create dialog" class="toolPage_image">
-
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right.
-                        You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
-                    </p>
-                    <img src="MultiDatastream_image2.png" alt="MultiDatastream creation result" class="toolPage_image">
-
-                    <p>This is the result that opens in a new page when you click the link following
-                        <strong>Available at:</strong>.
-                    </p>
-                    <img src="MultiDatastream_image3.png" alt="MultiDatastream entity" class="toolPage_image">
-
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>MultiDatastreams</strong>).</p>
-                    <img src="MultiDatastream_image4.png" alt="MultiDatastreams" class="toolPage_image">
-
-                    <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> a MultiDatastream, you must first select it using a tool that allows
-                        you to <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this MultiDatastream will
-                        open, displaying all its information. Modify the editable fields.</p>
-                    <img src="MultiDatastream_image5.png" alt="MultiDatastream edit dialog" class="toolPage_image">
-
-                    <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
-                        the <strong>STA service</strong>. If the operation is successful, a message similar to the
-                        following will appear on the right-hand side.</p>
-                    <img src="MultiDatastream_image6.png" alt="MultiDatastream updated" class="toolPage_image">
-
-                    <p>Clicking on the MultiDatastream ID will open a new browser tab displaying the updated entity.</p>
-
-                    <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> a MultiDatastream from the STA service, you must first select it
-                        using a tool that allows you to <strong>select the corresponding record</strong> (you can use
-                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).
-                    </p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this MultiDatastream will
-                        open, displaying all its information. The same dialog as the one used for editing the
-                        MultiDatastream will appear. To delete the MultiDatastream, simply click the
-                        <strong>Delete</strong> button.
-                    </p>
-                    <img src="MultiDatastream_image7.png" alt="MultiDatastream delete dialog" class="toolPage_image">
-
-                    <p><strong>Recipes where this tool is used:</strong></p>
-                    <ul>
-                    </ul>
-                </div>
-            </div>
+               
 
 
             <!-- OBSERVATION GROUP -->
 
             <div class="toolPage_main" id="ObservationGroup">
-                <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../ObservationGroup.png" alt="icon ObservationGroup"
-                            class="toolPage_title_icon">ObservationGroup
-                    </h2>
-
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="ObservationGroup_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
-
-                    <p><strong>How to Use the Node: </strong></p>
-
-                    <p>The <strong>ObservationGroup</strong> tool allows you to create a new
-                        <strong>ObservationGroup</strong> entity in the connected STA service. To create an
-                        ObservationGroup, the tool must be linked to the STA service and to the required entities. You
-                        must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>name</strong> (<em>CharacterString</em>): A label for the ObservationGroup entity,
-                            commonly expressed as a descriptive name.</li>
-                        <li><strong>description</strong> (<em>CharacterString</em>): A short description of the
-                            ObservationGroup entity.</li>
-                        <li><strong>purpose</strong> (<em>CharacterString [0..1]</em>): A short description of the
-                            purpose of the ObservationGroup entity.</li>
-                        <li><strong>creationTime</strong> (<em>TM Instant</em>): The time at which the ObservationGroup
-                            was created.</li>
-                        <li><strong>endTime</strong> (<em>TM Instant [0..1]</em>): The end time of the ObservationGroup.
-                        </li>
-                        <li><strong>termsOfUse</strong> (<em>CharacterString [0..1]</em>): The terms of use applicable
-                            to the ObservationGroup entity.</li>
-                        <li><strong>privacyPolicy</strong> (<em>CharacterString [0..1]</em>): The terms of use
-                            concerning personal data contained in the ObservationGroup entity.</li>
-                        <li><strong>dataQuality</strong> (<em>JSON Object [0..1]</em>): Quality information concerning
-                            the observations contained in the group.</li>
-                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): Additional properties associated
-                            with the ObservationGroup.</li>
-                    </ul>
-
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>ObservationGroup</strong>, you must be logged in to TAPIS. The tool
-                        must be linked to the STA service and to the required entities.</p>
-
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The required linked entities
-                        and their IDs are added automatically. Complete the available fields and click
-                        <strong>Create</strong>.
-                    </p>
-                    <img src="ObservationGroup_image1.png" alt="ObservationGroup create dialog" class="toolPage_image">
-
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right.
-                        You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
-                    </p>
-                    <img src="ObservationGroup_image2.png" alt="ObservationGroup creation result"
-                        class="toolPage_image">
-
-                    <p>This is the result that opens in a new page when you click the link following
-                        <strong>Available at:</strong>.
-                    </p>
-                    <img src="ObservationGroup_image3.png" alt="ObservationGroup entity" class="toolPage_image">
-
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>ObservationGroups</strong>).</p>
-                    <img src="ObservationGroup_image4.png" alt="ObservationGroups" class="toolPage_image">
-
-                    <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> an ObservationGroup, you must first select it using a tool that allows
-                        you to <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this ObservationGroup will
-                        open, displaying all its information. Modify the editable fields.</p>
-                    <img src="ObservationGroup_image5.png" alt="ObservationGroup edit dialog" class="toolPage_image">
-
-                    <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
-                        the <strong>STA service</strong>. If the operation is successful, a message similar to the
-                        following will appear on the right-hand side.</p>
-                    <img src="ObservationGroup_image6.png" alt="ObservationGroup updated" class="toolPage_image">
-
-                    <p>Clicking on the ObservationGroup ID will open a new browser tab displaying the updated entity.
-                    </p>
-
-                    <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> an ObservationGroup from the STA service, you must first select it
-                        using a tool that allows you to <strong>select the corresponding record</strong> (you can use
-                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).
-                    </p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this ObservationGroup will
-                        open, displaying all its information. The same dialog as the one used for editing the
-                        ObservationGroup will appear. To delete the ObservationGroup, simply click the
-                        <strong>Delete</strong> button.
-                    </p>
-                    <img src="ObservationGroup_image7.png" alt="ObservationGroup delete dialog" class="toolPage_image">
-
-                    <p><strong>Recipes where this tool is used:</strong></p>
-                    <ul>
-                    </ul>
-                </div>
+               
+               
             </div>
 
 
             <!-- OBSERVATION -->
 
             <div class="toolPage_main" id="Observation">
-                <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../Observation.png" alt="icon Observation" class="toolPage_title_icon">Observation
-                    </h2>
-
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="Observation_image0.png" alt="icon Observation" class="toolPage_image"
-                        style="width: 450px;">
-
-                    <p><strong>How to Use the Node: </strong></p>
-
-                    <p>The <strong>Observation</strong> tool allows you to create a new <strong>Observation</strong>
-                        entity in the connected STA service. To create an Observation, the Observation tool must be
-                        linked to the STA service and to all required entities. You must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>phenomenonTime</strong> (<em>TM_Object</em>): The time at which the Observation
-                            takes place.</li>
-                        <li><strong>result</strong> (<em>Any</em>): The estimated value of the observed property.</li>
-                        <li><strong>resultTime</strong> (<em>DateTime [0..1]</em>): The time when the Observation result
-                            was received by the system.</li>
-                        <li><strong>resultQuality</strong> (<em>DQ_Element [0..1]</em>): Quality information concerning
-                            the Observation result.</li>
-                        <li><strong>validTime</strong> (<em>TM_Period [0..1]</em>): The time period during which the
-                            Observation result is valid.</li>
-                        <li><strong>parameters</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
-                            additional parameters associated with the Observation.</li>
-                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
-                            additional information about the Observation.</li>
-                    </ul>
-
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>Observation</strong>, you must be logged in to TAPIS. The Observation
-                        tool must be linked to the STA service and to all required entities.</p>
-
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The required linked entities
-                        and their IDs are added automatically. Complete the remaining fields and click
-                        <strong>Create</strong>.
-                    </p>
-                    <img src="Observation_image1.png" alt="Observation create dialog" class="toolPage_image">
-
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right.
-                        You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
-                    </p>
-                    <img src="Observation_image2.png" alt="Observation creation result" class="toolPage_image">
-
-                    <p>This is the result that opens in a new page when you click the link following
-                        <strong>Available at:</strong>.
-                    </p>
-                    <img src="Observation_image3.png" alt="Observation entity" class="toolPage_image">
-
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>Observations</strong>).</p>
-
-
-                    <p><strong>Edit</strong></p>
-                    <img src="Observation_image4.png" alt="Observations" class="toolPage_image">
-                    <p>To <strong>edit</strong> an Observation, you must first select it using a tool that allows you
-                        to <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Observation will open,
-                        displaying all its information. Modify the editable fields.</p>
-                    <img src="Observation_image5.png" alt="Observation edit dialog" class="toolPage_image">
-
-                    <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
-                        the <strong>STA service</strong>. If the operation is successful, a message similar to the
-                        following will appear on the right-hand side.</p>
-                    <img src="Observation_image6.png" alt="Observation updated" class="toolPage_image">
-
-                    <p>Clicking on the Observation ID will open a new browser tab displaying the updated entity.</p>
-
-                    <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> an Observation from the STA service, you must first select it using a
-                        tool that allows you to <strong>select the corresponding record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Observation will open,
-                        displaying all its information. The same dialog as the one used for editing the Observation will
-                        appear. To delete the Observation, simply click the <strong>Delete</strong> button.</p>
-                    <img src="Observation_image7.png" alt="Observation delete dialog" class="toolPage_image">
-
-                    <p><strong>Recipes where this tool is used:</strong></p>
-                    <ul>
-                    </ul>
-                </div>
+               
             </div>
 
 
@@ -1342,7 +428,7 @@
 
 
 
-            <!-- PARTY - KEPT AS PROVIDED -->
+            <!-- PARTY  -->
 
             <div class="toolPage_main" id="Party">
                 <div class="toolPage_main_text">
@@ -1421,101 +507,7 @@
             <!-- RELATION -->
 
             <div class="toolPage_main" id="Relation">
-                <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../Relation.png" alt="icon Relation" class="toolPage_title_icon">Relation
-                    </h2>
-
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="Relation_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
-
-                    <p><strong>How to Use the Node: </strong></p>
-
-                    <p>The <strong>Relation</strong> tool allows you to create a new <strong>Relation</strong> entity
-                        in the connected STA service. To create a Relation, the Relation tool must be linked to the STA
-                        service and to the required entities. You must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>role</strong> (<em>URI</em>): A URI referencing the definition of the Relation
-                            entity.</li>
-                        <li><strong>description</strong> (<em>CharacterString [0..1]</em>): A short description of the
-                            Relation entity.</li>
-                        <li><strong>externalResource</strong> (<em>URI [0..1]</em>): A URI referencing the external
-                            resource associated with the Relation.</li>
-                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): Additional properties associated
-                            with the Relation.</li>
-                    </ul>
-
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>Relation</strong>, you must be logged in to TAPIS.</p>
-
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The dialog contains all the
-                        attributes of the Relation and any required linked entities. Complete the fields and click
-                        <strong>Create</strong>.
-                    </p>
-                    <img src="Relation_image1.png" alt="Relation create dialog" class="toolPage_image">
-
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right.
-                        You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
-                    </p>
-                    <img src="Relation_image2.png" alt="Relation creation result" class="toolPage_image">
-
-                    <p>This is the result that opens in a new page when you click the link following
-                        <strong>Available at:</strong>.
-                    </p>
-                    <img src="Relation_image3.png" alt="Relation entity" class="toolPage_image">
-
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>Relations</strong>).</p>
-                    <img src="Relation_image4.png" alt="Relations" class="toolPage_image">
-
-                    <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> a Relation, you must first select it using a tool that allows you to
-                        <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).
-                    </p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Relation will open,
-                        displaying all its information. Modify the editable fields.</p>
-                    <img src="Relation_image5.png" alt="Relation edit dialog" class="toolPage_image">
-
-                    <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
-                        the <strong>STA service</strong>. If the operation is successful, a message similar to the
-                        following will appear on the right-hand side.</p>
-                    <img src="Relation_image6.png" alt="Relation updated" class="toolPage_image">
-
-                    <p>Clicking on the Relation ID will open a new browser tab displaying the updated entity.</p>
-
-                    <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> a Relation from the STA service, you must first select it using a
-                        tool that allows you to <strong>select the corresponding record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Relation will open,
-                        displaying all its information. The same dialog as the one used for editing the Relation will
-                        appear. To delete the Relation, simply click the <strong>Delete</strong> button.</p>
-                    <img src="Relation_image7.png" alt="Relation delete dialog" class="toolPage_image">
-
-                    <p><strong>Recipes where this tool is used:</strong></p>
-                    <ul>
-                    </ul>
-                </div>
+               
             </div>
 
 
@@ -1648,81 +640,160 @@
 
             <div class="toolPage_main" id="Thing">
                 <div class="toolPage_main_text">
-                    <h2 class="toolPage_title">
-                        <img src="../Thing.png" alt="icon Thing" class="toolPage_title_icon">Thing
+                    <h2 class="toolPage_title"><img src="../Thing.png" alt="icon Thing"
+                            class="toolPage_title_icon">Thing
                     </h2>
-
                     <p><strong>Setting Up the Node: </strong></p>
-                    <img src="Thing_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
+                    <img src="Thing_image0.png" alt="icon" class="toolPage_image" style="width: 600px;">
 
                     <p><strong>How to Use the Node: </strong></p>
 
-                    <p>The <strong>Thing</strong> tool allows you to create a new <strong>Thing</strong> entity in the
-                        connected STA service. To create a Thing, the Thing tool must be linked to the STA service and
-                        to any required entities. You must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
+                    <p>The <strong>Thing</strong> tool allows you to <strong>create, edit, and delete</strong> Things
+                        in the connected STA service.</p>
+
+                    <p>To perform any of these actions, you must be <a
+                            href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
+                        TAPIS. When you <strong>create</strong> a Thing, it is automatically associated with the
+                        <strong>Party</strong> associated with the account you used to log in to TAPIS.
                     </p>
 
-                    <h4><u>Attributes of the entity</u></h4>
+                    <p>You can only <strong>edit</strong> or <strong>delete</strong> entities associated with your
+                        <strong>Party</strong>.
+                    </p>
+                    <strong><i>Related entities</i></strong>
                     <ul>
-                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the Thing
-                            entity, commonly a descriptive name.</li>
-                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
-                            of the Thing entity.</li>
+                        <li><strong>Party</strong> (<em>mandatory</em>): The Party associated with the Thing. A
+                            <strong>Party</strong> must be linked to create the Thing.
+                        </li>
+
+                        <li><strong>Location</strong> (<em>optional</em>): Specifies the location of the Thing.
+                            A Thing may be associated with one or more Locations.</li>
+
+                        <li><strong>HistoricalLocation</strong> (<em>optional</em>): Stores information about
+                            the current and previous locations of the Thing over time.</li>
+
+                        <li><strong>Datastream</strong> (<em>optional</em>): Represents a data stream produced
+                            by the Thing. A Thing may be associated with one or more Datastreams.</li>
+                    </ul>
+                    <strong><i>Attributes of the entity</i></strong>
+                    <ul>
+                        <li><strong>name</strong> (<em>CharacterString</em>): A property that provides a label for the
+                            Thing entity, commonly a descriptive name. <strong>This field is mandatory.</strong></li>
+
+                        <li><strong>description</strong> (<em>CharacterString</em>): A short description of the
+                            corresponding Thing entity. <strong>This field is mandatory.</strong></li>
+
                         <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
-                            additional information about the Thing.</li>
+                            additional user-defined information about the Thing. <strong>This field is
+                                optional.</strong></li>
                     </ul>
 
                     <p><strong>Create</strong></p>
-                    <p>To create a new <strong>Thing</strong>, you must be logged in to TAPIS.</p>
 
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The dialog contains all the
-                        attributes of the Thing. The <strong>Properties</strong> field is not mandatory. You can add as
-                        many properties as you want, one by one.</p>
-                    <img src="Thing_image1.png" alt="Thing create dialog" class="toolPage_image">
+                    <img src="Thing_image12.png" alt="icon" class="toolPage_image">
+                    <p>To create a new <strong>Thing</strong> entity, some related <strong>entities are
+                            mandatory</strong>,
+                        while others are optional. See the list described above for the required and optional
+                        related entities.</p>
+
+                    <p>To open the dialog, <i>double-click</i> with the left mouse button. The dialog contains
+                        the attributes of the Thing. The <strong>name</strong> and <strong>description</strong>
+                        fields are mandatory, while the <strong>Properties</strong> field is optional.</p>
+
+                    <p>The <strong>ID</strong> of the linked entities will be loaded automatically in the dialog
+                        that opens. If a required entity is not linked, the message <strong>You need to link
+                            one</strong> will be displayed.</p>
+
+                    <p>The <strong>Party</strong> linked to the Thing must be the same as the <strong>Party</strong>
+                        automatically assigned by TAPIS based on the account used to log in.</p>
+
+
+                    <img src="Thing_image1.png" alt="icon" class="toolPage_image">
+
+                    <p>This is the data for the example. Once you have finished, click <strong>Create</strong>.</p>
+
+                    <img src="Thing_image2.png" alt="icon" class="toolPage_image">
 
                     <p>If the entity has been created successfully, a text similar to this will appear on the right.
                         You can view the entity you have just created by clicking on the text following
-                        <strong>Available
-                            at:</strong>.
+                        <strong>Available at:</strong>
                     </p>
-                    <img src="Thing_image2.png" alt="Thing creation result" class="toolPage_image">
+
+                    <p><i>If the entity you are trying to create already exists, it will not be created again.
+                            However, the displayed text will be the same.</i></p>
+
+                    <img src="Thing_image3.png" alt="icon" class="toolPage_image">
 
                     <p>This is the result that opens in a new page when you click the link following
                         <strong>Available at:</strong>.
                     </p>
-                    <img src="Thing_image3.png" alt="Thing entity" class="toolPage_image">
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="Thing_image4.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
 
                     <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>Things</strong>).</p>
-                    <img src="Thing_image4.png" alt="Things" class="toolPage_image">
+                        corresponding entity tool in its plural form (<strong>Things</strong>). If the service contains
+                        a large number of Things, use a tool to select the desired Thing. In this case, the
+                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                            Resource</a> tool is used. Use the ID provided in the information under <i>Available
+                            at:</i>.
+                    </p>
+
+                    <img src="Thing_image5.png" alt="icon" class="toolPage_image">
+
+                    <p>Here is the result showing the loaded data.</p>
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="Thing_image6.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
+
+                    <p></p>
 
                     <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> a Thing, you must first select it using a tool that allows you to
-                        <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+
+                    <p>To <strong>edit</strong> a record associated with your <strong>Party</strong>, you must first
+                        link a tool that allows you to <strong>select only that specific record</strong> (you can use
+                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
                             Resource</a>, <a
                             href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
                             Row</a>, or <a
                             href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).
+                            Rows</a>). Continuing with the previous example, <i>right-click</i> and add the
+                        <strong>Thing</strong> tool.
                     </p>
 
+                    <img src="Thing_image7.png" alt="icon" class="toolPage_image">
+
                     <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Thing will open,
-                        displaying all its information. Modify the editable fields.</p>
-                    <img src="Thing_image5.png" alt="Thing edit dialog" class="toolPage_image">
+                        displaying all its information. All fields are editable except for the <strong>ID</strong>
+                        field.</p>
+
+                    <img src="Thing_image8.png" alt="icon" class="toolPage_image">
+
+                    <p>In this example, we will add two properties to the existing Thing. To add properties, simply
+                        click <strong>Add more properties</strong> to display the fields where you can enter them.
+                        Properties can also be deleted by clicking the <strong>trash</strong> icon.</p>
+
+                    <img src="Thing_image9.png" alt="icon" class="toolPage_image">
 
                     <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
                         the <strong>STA service</strong>. If the operation is successful, a message similar to the
                         following will appear on the right-hand side.</p>
-                    <img src="Thing_image6.png" alt="Thing updated" class="toolPage_image">
+
+                    <img src="Thing_image10.png" alt="icon" class="toolPage_image">
 
                     <p>Clicking on the Thing ID will open a new browser tab displaying the updated entity.</p>
 
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="Thing_image11.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
+
                     <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> a Thing from the STA service, you must first select it using a tool
-                        that allows you to <strong>select the corresponding record</strong> (you can use <a
+
+                    <p>To <strong>delete</strong> a Thing from the STA service, as in the case of editing a Thing, you
+                        must first select it using a tool that allows you to <strong>select the corresponding
+                            record</strong> (you can use <a
                             href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
                             Resource</a>, <a
                             href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
@@ -1730,10 +801,13 @@
                             href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
                             Rows</a>).</p>
 
+                    <img src="Thing_image7.png" alt="icon" class="toolPage_image">
+
                     <p>By <i>double-clicking</i> with the left mouse button, the dialog for this Thing will open,
                         displaying all its information. The same dialog as the one used for editing the Thing will
                         appear. To delete the Thing, simply click the <strong>Delete</strong> button.</p>
-                    <img src="Thing_image7.png" alt="Thing delete dialog" class="toolPage_image">
+
+                    <img src="Thing_image8.png" alt="icon" class="toolPage_image">
 
                     <p><strong>Recipes where this tool is used:</strong></p>
                     <ul>
@@ -1742,6 +816,7 @@
                     </ul>
                 </div>
             </div>
+
 
         </div>
     </main>

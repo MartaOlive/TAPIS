@@ -3693,7 +3693,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			continue;
 		}
 		//Attributes in general
-		cdns.push('<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" data-STArequired='+(STAEntities[entityName].properties[i].required ? "true" : "false")+' style=" font-weight: bold;">', (STAEntities[entityName].properties[i].required=="true")? STAEntities[entityName].properties[i].name+'*':STAEntities[entityName].properties[i].name, ': </label>');
+		cdns.push('<label for="dlgCreateUpdateDeleteEntity_', STAEntities[entityName].properties[i].name, '" data-STArequired='+(STAEntities[entityName].properties[i].required ? "true" : "false")+' style=" font-weight: bold;">', (STAEntities[entityName].properties[i].required==true)? STAEntities[entityName].properties[i].name+'*':STAEntities[entityName].properties[i].name, ': </label>');
 
 
 		//Special inputs with calendar
@@ -3908,7 +3908,7 @@ function createEntitiesInCreateEntity(currentNode,entitiesParentArray){
 					if (getSTAEntityPlural(entitiesParentArray[u][0], false) == "Datastreams" || (getSTAEntityPlural(entitiesParentArray[u][0], false) == "MultiDatastreams" && datastream != "linked")) {
 						datastream = "linked";
 					}
-					entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}`,(entitiesLinked[e].required == "true")?'* ':'',`: <a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
+					entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesParentArray[u][0]}`,(entitiesLinked[e].required == true)?'* ':'',`: <a href="${entitiesParentArray[u][2]}"> ${entitiesParentArray[u][1]}</a></span><br>`);
 					if (entitiesLinked[e].name==getSTAEntityPlural(entitiesLinked[e].name, false)){ //Plural
 						entitiesObject[entitiesLinked[e].name]=[{"@iot.id":entitiesParentArray[u][1]}];
 					}else{
@@ -3921,14 +3921,14 @@ function createEntitiesInCreateEntity(currentNode,entitiesParentArray){
 				else {
 					if (u == entitiesParentArray.length - 1) { //If there is not any 
 						if (getSTAEntityPlural(entitiesLinked[e].name, false) != "MultiDatastreams" && getSTAEntityPlural(entitiesLinked[e].name, false) != "Datastreams") {
-							entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}`,(entitiesLinked[e].required == "true")? '*: <span style="color: red; font-style: italic" >You need to link one</span>':  `: <span style="color: #897F7F; font-style: italic">none</span>`,'</span><br>');
-							if (entitiesLinked[e].required == "true"){
+							entitiesRequired.push(`<span style=" font-weight: bold;">${entitiesLinked[e].name}`,(entitiesLinked[e].required == true)? '*: <span style="color: red; font-style: italic" >You need to link one</span>':  `: <span style="color: #897F7F; font-style: italic">none</span>`,'</span><br>');
+							if (entitiesLinked[e].required == true){
 								entitiesRequiedNotLinked.push(entitiesLinked[e].name);
 							}
 
 						} else if (getSTAEntityPlural(entitiesLinked[e].name, false) == "MultiDatastreams" && datastream != "linked") {
-							entitiesRequired.push(`<span style="font-weight: bold;">Datastreams/MultiDatastreams`, (entitiesLinked[e].required == "true")?'*: <span style="color: red; font-style: italic" >You need to link one</span></span>':': <span style="color: #897F7F; font-style: italic" >none</span>', '</span> <br>');
-							if (entitiesLinked[e].required == "true")entitiesRequiedNotLinked.push("Datastream or MultiDatastream");
+							entitiesRequired.push(`<span style="font-weight: bold;">Datastreams/MultiDatastreams`, (entitiesLinked[e].required == true)?'*: <span style="color: red; font-style: italic" >You need to link one</span></span>':': <span style="color: #897F7F; font-style: italic" >none</span>', '</span> <br>');
+							if (entitiesLinked[e].required == true)entitiesRequiedNotLinked.push("Datastream or MultiDatastream");
 						}
 					}
 				}
