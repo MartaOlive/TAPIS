@@ -596,9 +596,9 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 		if(parentNode.STAEntityName== STAEntitiesArray[i]){
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit),
 				(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
-		}else if (!nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null ||(reasonNodeDoesNotFitWithPrevious(node, parentNode)!=null && getSTAURLLastEntity(parentNode.STAURL)==removeFileExtension(node.image))){
+		} else if (!nodeId ||reasonNodeDoesNotFitWithPrevious(node, parentNode)==null ||( reasonNodeDoesNotFitWithPrevious(node, parentNode)!=null && parentNode.STAURL && getSTAURLLastEntity(parentNode.STAURL)==removeFileExtension(node.image))){
 			provisional.push(textOperationButton("DialogContextMenu", "ContextMenu", STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].singular, STAEntities[STAEntitiesArray[i]].helpEdit, null, STAEntitiesType.singularEdit),
-				(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
+			(i+1)%nCol==0 || i == STAEntitiesArray.length-1 ? "<br>" : " ");
 		}
 			
 	}
