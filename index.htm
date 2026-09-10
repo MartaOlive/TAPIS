@@ -1874,6 +1874,69 @@
 		</tr></table>
 	</dialog>
 
+	<dialog id="DialogRadarPlot">
+		<table border="0"><tr>
+		<td class="DialogRadarPlotForm">
+			<span id="DialogRadarPlotTitle"></span>
+			<form>
+			<fieldset>
+				<legend>Data layout:</legend>
+				<label><input type="radio" name="DialogRadarPlotLayout" id="DialogRadarPlotLayoutWide" checked="checked" onclick="toggleRadarPlotLayout()"></input> Columns as axes</label>
+				<label><input type="radio" name="DialogRadarPlotLayout" id="DialogRadarPlotLayoutLong" onclick="toggleRadarPlotLayout()"></input> Categories as axes</label>
+			</fieldset>
+			<fieldset id="DialogRadarPlotWideFieldset">
+				<legend>Wide table:</legend>
+				<label><b>Item column</b> (city, name...):
+					<span id="DialogRadarPlotSeriesLabel"></span>
+				</label>
+				<br>
+				<label>Numeric columns (radar axes):</label>
+				<div id="DialogRadarPlotAxesList"></div>
+			</fieldset>
+			<fieldset id="DialogRadarPlotLongFieldset" style="display:none;">
+				<legend>Long table:</legend>
+				<label>Categories:
+					<span id="DialogRadarPlotAxisX"></span>
+				</label>
+			</fieldset>
+			<fieldset id="DialogRadarPlotSeriesModeFieldset">
+				<legend>Series mode:</legend>
+				<label><input type="radio" name="DialogRadarPlotSeriesMode" id="DialogRadarPlotSeriesModeAll" checked="checked" onclick="toggleRadarPlotSeriesMode()"></input> All</label>
+				<label><input type="radio" name="DialogRadarPlotSeriesMode" id="DialogRadarPlotSeriesModeSeries" onclick="toggleRadarPlotSeriesMode()"></input> Series</label>
+				<div id="DialogRadarPlotSeriesAllHint">All series are created automatically. Colors are assigned on Draw.</div>
+				<div id="DialogRadarPlotSeriesManual" style="display:none;">
+					<div id="DialogRadarPlotSeriesToolbar" class="DialogRadarPlotSeriesToolbar"></div>
+					<div id="DialogRadarPlotSeriesDiv"></div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend>Options:</legend>
+				<label><input type="checkbox" id="DialogRadarPlotNormalize"></input> Normalize values (0-100)</label>
+				<br>
+				<label><input type="checkbox" id="DialogRadarPlotFill" checked="checked"></input> Fill area</label>
+				<br>
+				<label><input type="checkbox" id="DialogRadarPlotBeginZero" checked="checked"></input> Begin at zero</label>
+				<br>
+				<label>Graphic title:
+					<input type="text" id="DialogRadarPlotTitleInput"></input>
+				</label>
+			</fieldset>
+			<br>
+			<div class="center">
+				<button value="draw" onClick="DrawRadarPlot(event)">Draw</button>
+				<button value="ok" onClick="CloseDialogRadarPlot(event)" formmethod="dialog">Close</button>
+			</div>
+			<input type="hidden" id="DialogRadarPlotNodeId"></input>
+			</form>
+		</td>
+		<td style="vertical-align: top;">
+			<div id="DialogRadarPlotVisualization">
+				<canvas id="DialogRadarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas>
+			</div>
+		</td>
+		</tr></table>
+	</dialog>
+
 	<dialog id="DialogImageViewer">
 		<table border="0"><tr><td>
 			<span id="DialogImageViewerTitle"></span>

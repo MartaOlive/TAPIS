@@ -153,6 +153,7 @@ const tableStatisticsVisualize = {
 	ColumnStatistics: { description: "Columns statistics", leafNode: true, help: "Create a table where, for each column the main statistics for the column values of all records are recorded." },
 	ScatterPlot: { description: "Scatter Plot", leafNode: true, help: "Creates a scatter plot with a the values of the column of a table." },
 	BarPlot: { description: "Bar Plot", leafNode: true, help: "Create a bar or pie chart with a the values of the column of a table." },
+	RadarPlot: { description: "Radar Plot", leafNode: true, help: "Create a radar (spider) chart. Add series one by one (a city, or a metric) like the Scatter Plot." },
 	ImageViewer: { description: "Image Viewer", leafNode: true, help: "Shows the pictures referenced by a column. Assumes that the content of the column are url to images supported by the browser (commonly in JPEG or PNG format)." },
 	OpenMap: { description: "Open Map", leafNode: true, help: "Opens a table as a map in a map browser interface. It requires two columns with a latitude and longitude values." }
 }

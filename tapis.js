@@ -5019,6 +5019,9 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 		} else if (node.image == "BarPlot.png") {
 			if (isNodeDialogOpen("DialogBarPlot"))
 				DrawBarPlot(null);
+		} else if (node.image == "RadarPlot.png") {
+			if (isNodeDialogOpen("DialogRadarPlot"))
+				DrawRadarPlot(null);
 		}
 	}
 }
@@ -7565,6 +7568,64 @@ var network;
 	document.getElementById("eventSpanContent").innerText = JSON.stringify(params, null, 4);
 	console.log("click event, getNodeAt returns: " + this.getNodeAt(params.pointer.DOM));
 });*/
+function ShowRadarPlotDialog(parentNodes, node) {
+	saveNodeDialog("DialogRadarPlot", node);
+	var hasSavedOptions = !!(node.radarPlotOptions);
+	var parentInfo = ensureRadarPlotSeriesState(node, parentNodes);
+	var parentIds = Object.keys(parentInfo);
+	var dataAttributes, options, layout, seriesMode, seriesLabelDefault, seriesDiv, seriesToolbar;
+	networkNodes.update(node);
+	if (!parentIds.length) {
+		document.getElementById("DialogRadarPlotTitle").innerHTML = "No data to show.";
+		clearRadarPlotChart();
+		return;
+	}
+	document.getElementById("DialogRadarPlotTitle").innerHTML = "Radar plot";
+
+	dataAttributes = getRadarSharedDataAttributes(parentNodes);
+	options = node.radarPlotOptions || {};
+	layout = options.layout == "long" ? "long" : "wide";
+	seriesMode = getRadarPlotSeriesMode(options);
+	seriesLabelDefault = options.seriesLabel || guessRadarSeriesLabel(dataAttributes);
+
+	document.getElementById("DialogRadarPlotLayoutWide").checked = layout == "wide";
+	document.getElementById("DialogRadarPlotLayoutLong").checked = layout == "long";
+
+	PopulateSelectSaveLayerDialog("DialogRadarPlotSeriesLabel", dataAttributes, seriesLabelDefault, "onRadarPlotSharedColumnChange()");
+	PopulateSelectSaveLayerDialog("DialogRadarPlotAxisX", dataAttributes, options.axisX || seriesLabelDefault, "onRadarPlotSharedColumnChange()");
+	populateRadarPlotAxesList(dataAttributes, hasSavedOptions ? options.axes : null);
+
+	document.getElementById("DialogRadarPlotNormalize").checked = options.normalize ? true : false;
+	document.getElementById("DialogRadarPlotFill").checked = options.fill === false ? false : true;
+	document.getElementById("DialogRadarPlotBeginZero").checked = options.beginAtZero === false ? false : true;
+	document.getElementById("DialogRadarPlotTitleInput").value = options.title ? options.title : "";
+	document.getElementById("DialogRadarPlotSeriesModeAll").checked = seriesMode == "all";
+	document.getElementById("DialogRadarPlotSeriesModeSeries").checked = seriesMode == "series";
+
+	applyRadarPlotLayoutDisplay();
+	applyRadarPlotSeriesModeDisplay(seriesMode);
+	if (seriesMode == "series")
+		createDialogWithSelectWithGroupsRadarPlot(node);
+	else {
+		seriesDiv = document.getElementById("DialogRadarPlotSeriesDiv");
+		seriesToolbar = document.getElementById("DialogRadarPlotSeriesToolbar");
+		if (seriesDiv)
+			seriesDiv.innerHTML = "";
+		if (seriesToolbar)
+			seriesToolbar.innerHTML = "";
+	}
+
+	clearRadarPlotChart();
+	// Restore a previous Draw without alerts. First open (no saved options) stays blank.
+	if (hasSavedOptions && radarPlotHasDrawableOptions(options)) {
+		if (layout == "wide") {
+			if (getSelectedRadarPlotAxes().length >= 3)
+				DrawRadarPlot();
+		} else if (document.getElementById("DialogRadarPlotAxisXSelect") && document.getElementById("DialogRadarPlotAxisXSelect").value)
+			DrawRadarPlot();
+	}
+}
+
 function networkDoubleClick(params) {
 	/*params.event = "[original event]";
 	document.getElementById("eventSpanHeading").innerText = "doubleClick event:";
@@ -7851,6 +7912,14 @@ function networkDoubleClick(params) {
 				if (parentNodes[0].STAdata)
 					ShowBarPlotDialog(parentNodes, currentNode);
 				showNodeDialog("DialogBarPlot");
+			}
+		}
+		else if (currentNode.image == "RadarPlot.png") {
+			var parentNodes=GetParentNodes(currentNode);
+			if (parentNodes && parentNodes[0]) {
+				if (parentNodes[0].STAdata)
+					ShowRadarPlotDialog(parentNodes, currentNode);
+				showNodeDialog("DialogRadarPlot");
 			}
 		}
 		else if (currentNode.image == "ImageViewer.png") {
