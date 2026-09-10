@@ -78,202 +78,518 @@
             <!-- CAMPAIGN -->
 
             <div class="toolPage_main" id="Campaign">
-               
+
             </div>
 
 
             <!-- CELL -->
 
             <div class="toolPage_main" id="Cell">
-               
+
             </div>
 
 
             <!-- DATASTREAM -->
 
             <div class="toolPage_main" id="Datastream">
-                
+
             </div>
 
 
             <!-- FEATURE OF INTEREST -->
 
             <div class="toolPage_main" id="FeatureOfInterest">
-                
-            </div>
-
-
-            <!-- HISTORICAL LOCATION -->
-
-            <div class="toolPage_main" id="HistoricalLocation">
-                
-            </div>
-
-
-            <!-- LICENSE -->
-
-            <div class="toolPage_main" id="License">
-                
-            </div>
-
-
-            <!-- LOCATION -->
-
-            <div class="toolPage_main" id="Location">
                 <div class="toolPage_main_text">
-                    <h2 class="toolPage_title"><img src="../Location.png" alt="icon Location"
-                            class="toolPage_title_icon">Location
+                    <h2 class="toolPage_title">
+                        <img src="../FeatureOfInterest.png" alt="icon FeatureOfInterest"
+                            class="toolPage_title_icon">FeatureOfInterest
                     </h2>
+
                     <p><strong>Setting Up the Node: </strong></p>
-                    <img src="Location_image0.png" alt="icon" class="toolPage_image" style="width: 600px;">
+
+                    <img src="FeatureOfInterest_image0.png" alt="icon" class="toolPage_image" style="width: 600px;">
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>Location</strong> tool allows you to <strong>create, edit, and delete</strong>
-                        locations
-                        in the connected STA service.</p>
-                    <p>To perform any of these actions, you must be <a
-                            href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS. When you <strong>create</strong> a location, it is automatically associated with the
-                        <strong>Party</strong> associated with the account you used to log in to TAPIS.
-                    </p>
-                    <p>You can only <strong>edit</strong> or <strong>delete</strong> entities associated with your
-                        <strong>Party</strong>.
+
+                    <p>
+                        The <strong>FeatureOfInterest</strong> tool allows you to
+                        <strong>create, edit, and delete</strong> FeatureOfInterest entities
+                        in the connected STA service.
                     </p>
 
-                    <h4><u>Attributes of the entity</u></h4>
+                    <p>
+                        To perform any of these actions, you must be
+                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">
+                            logged in
+                        </a>
+                        to TAPIS.
+                    </p>
+
+                    <p>
+                        A <strong>FeatureOfInterest</strong> represents the real-world entity,
+                        object, or phenomenon that is the subject of an
+                        <strong>Observation</strong>. It identifies the entity, object, or
+                        phenomenon whose properties are being observed.
+                    </p>
+
+                    <p>
+                        A FeatureOfInterest is directly related
+                        to <strong>Observations</strong>. Each Observation refers to exactly
+                        one FeatureOfInterest, while a FeatureOfInterest can be associated
+                        with zero or more Observations.
+                    </p>
+
+                    <strong><i>Related entities</i></strong>
+
                     <ul>
-                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the
-                            Location
-                            entity, commonly a descriptive name.</li>
-                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
-                            of the Location entity.</li>
-                        <li><strong>encodingType</strong> (<em>CharacterString</em>): The encoding type of the metadata
-                            describing the Location.</li>
-                        <li><strong>location</strong> (<em>Any</em>): The location data, encoded according to the
-                            specified
-                            encoding type.</li>
-                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
-                            additional information about the Location.</li>
+                        <li>
+                            <strong>Observation</strong> (<em>optional</em>):
+                            Represents an observation made of the FeatureOfInterest.
+                            A FeatureOfInterest may be associated with one or more
+                            Observations, but it is not necessary to have an Observation
+                            when creating a FeatureOfInterest.
+                        </li>
+                    </ul>
+
+                    <strong><i>Attributes of the entity</i></strong>
+
+                    <ul>
+                        <li>
+                            <strong>name</strong> (<em>CharacterString</em>):
+                            A property that provides a label for the FeatureOfInterest
+                            entity, commonly a descriptive name.
+                            <strong>This field is mandatory.</strong>
+                        </li>
+
+                        <li>
+                            <strong>description</strong> (<em>CharacterString</em>):
+                            A description of the corresponding FeatureOfInterest entity.
+                            <strong>This field is mandatory.</strong>
+                        </li>
+
+                        <li>
+                            <strong>encodingType</strong> (<em>ValueCode</em>):
+                            Specifies the encoding type of the <strong>feature</strong>
+                            property.
+                            <strong>This field is mandatory.</strong>
+                        </li>
+
+                        <li>
+                            <strong>feature</strong> (<em>Any</em>):
+                            Describes the FeatureOfInterest. The content and structure of
+                            this property depend on the value of
+                            <strong>encodingType</strong>.
+                            <strong>This field is mandatory.</strong>
+                        </li>
+
+                        <li>
+                            <strong>properties</strong> (<em>JSON Object [0..1]</em>):
+                            A JSON object containing additional user-defined information
+                            about the FeatureOfInterest.
+                            <strong>This field is optional.</strong>
+                        </li>
                     </ul>
 
                     <p><strong>Create</strong></p>
-                    <img src="Location_image12.png" alt="icon" class="toolPage_image">
-                    <p>To create a new <strong>Location</strong> entity, the corresponding tool only needs to be
-                        <strong>linked to
-                            the STA service</strong>, as it does not depend on any other entity.
-                        To open the dialog, <i>double-click</i> with the left mouse button. The dialog contains all the
-                        attributes of the location. The <strong>Properties</strong> field is not mandatory. You can add
-                        as
-                        many properties as you want, one by one.
+
+                    <img src="FeatureOfInterest_image12.png" alt="icon" class="toolPage_image">
+
+                    <p> To create a new <strong>FeatureOfInterest</strong> entity, the corresponding tool only needs to
+                        be linked to the <strong>STA service</strong>, as it does not depend on any other entity. The
+                        <strong>name</strong>, <strong>description</strong>, <strong>encodingType</strong>, and
+                        <strong>feature</strong> attributes of the <strong>FeatureOfInterest</strong> are mandatory,
+                        while the <strong>properties</strong> attribute is optional. </p>
+
+                    <p>
+                        To open the dialog, <i>double-click</i> with the left mouse button.
+                        The dialog contains the attributes of the FeatureOfInterest.
+                        The <strong>name</strong>, <strong>description</strong>,
+                        <strong>encodingType</strong>, and <strong>feature</strong>
+                        fields are mandatory, while the <strong>Properties</strong>
+                        field is optional.
                     </p>
-                    <img src="Location_image1.png" alt="icon" class="toolPage_image">
 
-                    <p>This is the data for the example. Once you have finished, click <strong>Create</strong>. </p>
-                    <img src="Location_image2.png" alt="icon" class="toolPage_image">
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right. You
-                        can view the entity you have just created by clicking on the text following <strong>Available
-                            at:</strong></p>
-                    <p><i>If the entity you are trying to create already exists, it will not be created again. However,
-                            the
-                            displayed text will be the same.</i></p>
-                    <img src="Location_image3.png" alt="icon" class="toolPage_image">
-                    <p>This is the result that opens in a new page when you click the link following <strong>Available
-                            at:</strong>.</p>
-                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="Location_image4.png" alt="icon"
-                            class="toolPage_image zoomable"></div>
+                    <p>
+                        The <strong>ID</strong> of the FeatureOfInterest is generated
+                        automatically by the STA service when the entity is created.
+                        If a required attribute is not provided, the message
+                        <strong>You need to fill in this field</strong> will be displayed.
+                    </p>
 
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>Locations</strong>). If the service
-                        contains
-                        a large number of locations, use a tool to select the desired location. In this case, the <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a> tool is used. Use the ID provided in the information under <i>Available
-                            at:</i>.</p>
-                    <img src="Location_image5.png" alt="icon" class="toolPage_image">
-                    <p>Here is the result showing the loaded data.</p>
-                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="Location_image6.png" alt="icon"
-                            class="toolPage_image zoomable"></div>
-                    <p></p>
+                    <p>
+                        The value entered in <strong>encodingType</strong> must identify
+                        the encoding used by the <strong>feature</strong> property.
+                        For example, a FeatureOfInterest represented as a geographic
+                        feature can use an appropriate GeoJSON encoding type and provide
+                        the corresponding GeoJSON object in the <strong>feature</strong>
+                        field.
+                    </p>
+
+                    <img src="FeatureOfInterest_image1.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        This is the data for the example. Once you have finished, click
+                        <strong>Create</strong>.
+                    </p>
+
+                    <img src="FeatureOfInterest_image2.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        If the entity has been created successfully, a text similar to this
+                        will appear on the right. You can view the entity you have just
+                        created by clicking on the text following
+                        <strong>Available at:</strong>.
+                    </p>
+
+                    <p>
+                        <i>
+                            If the entity you are trying to create already exists, it will
+                            not be created again. However, the displayed text will be the same.
+                        </i>
+                    </p>
+
+                    <img src="FeatureOfInterest_image3.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        This is the result that opens in a new page when you click the link
+                        following <strong>Available at:</strong>.
+                    </p>
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="FeatureOfInterest_image4.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
+
+                    <p>
+                        If you want to see how the STA service has been updated with the new
+                        information, link the corresponding entity tool in its plural form
+                        (<strong>FeaturesOfInterest</strong>).
+                    </p>
+
+                    <p>
+                        If the service contains a large number of FeatureOfInterest entities,
+                        use a tool to select the desired FeatureOfInterest. In this case,
+                        the
+                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">
+                            Select Resource
+                        </a>
+                        tool is used. Use the ID provided in the information under
+                        <i>Available at:</i>.
+                    </p>
+
+                    <img src="FeatureOfInterest_image5.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        Here is the result showing the loaded FeatureOfInterest data.
+                    </p>
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="FeatureOfInterest_image6.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
 
                     <p><strong>Edit</strong></p>
-                    <p>To <strong>edit</strong> a record associated with your <strong>Party</strong>, you must first
-                        link a tool that
-                        allows you to <strong>select only that specific record</strong> (you can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>). Continuing with the previous example, <i>right-click</i> and add the
-                        <strong>Location</strong> tool.
+
+                    <p>
+                        To <strong>edit</strong> a FeatureOfInterest, you must first link a
+                        tool that allows you to <strong>select only that specific
+                            record</strong>. You can use
+                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">
+                            Select Resource
+                        </a>,
+                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">
+                            Select Row
+                        </a>,
+                        or
+                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">
+                            Filter Rows
+                        </a>.
                     </p>
-                    <img src="Location_image7.png" alt="icon" class="toolPage_image">
 
-                    <p>By <i>double-clicking </i> with the left mouse button, the dialog for this location will open,
-                        displaying all its information. All fields are editable except for the <strong>ID</strong>
-                        field.</p>
-                    <img src="Location_image8.png" alt="icon" class="toolPage_image">
+                    <p>
+                        Continuing with the previous example, <i>right-click</i> and add
+                        the <strong>FeatureOfInterest</strong> tool.
+                    </p>
 
-                    <p>In this example, we will add two properties to the existing location. To add properties, simply
-                        click <strong>Add more properties</strong> to display the fields where you can enter them.
-                        Properties can also be deleted by clicking the <strong>trash</strong> icon.</p>
-                    <img src="Location_image9.png" alt="icon" class="toolPage_image">
+                    <img src="FeatureOfInterest_image7.png" alt="icon" class="toolPage_image">
 
-                    <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
-                        the <strong>STA service </strong>. If the operation is successful, a message similar to the
-                        following will appear on the right-hand side.</p>
-                    <img src="Location_image10.png" alt="icon" class="toolPage_image">
+                    <p>
+                        By <i>double-clicking</i> with the left mouse button, the dialog
+                        for this FeatureOfInterest will open, displaying all its
+                        information.
+                    </p>
 
-                    <p>Clicking on the location ID will open a new browser tab displaying the updated entity.</p>
-                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="Location_image11.png" alt="icon"
-                            class="toolPage_image zoomable"></div>
+                    <p>
+                        All fields are editable except for the <strong>ID</strong> field.
+                    </p>
+
+                    <img src="FeatureOfInterest_image8.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        In this example, we will add two properties to the existing
+                        FeatureOfInterest. To add properties, simply click
+                        <strong>Add more properties</strong> to display the fields where
+                        you can enter them.
+                    </p>
+
+                    <p>
+                        Properties can also be deleted by clicking the
+                        <strong>trash</strong> icon.
+                    </p>
+
+                    <img src="FeatureOfInterest_image9.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        Once this is done, click the <strong>Update</strong> button to
+                        automatically send the request to the <strong>STA service</strong>.
+                        If the operation is successful, a message similar to the following
+                        will appear on the right-hand side.
+                    </p>
+
+                    <img src="FeatureOfInterest_image10.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        Clicking on the FeatureOfInterest ID will open a new browser tab
+                        displaying the updated entity.
+                    </p>
+
+                    <div class="image-wrapper" onclick="zoomToImage(this)">
+                        <img src="FeatureOfInterest_image11.png" alt="icon" class="toolPage_image zoomable">
+                    </div>
 
                     <p><strong>Delete</strong></p>
-                    <p>To <strong>delete</strong> a location from the STA service, as in the case of editing a location,
-                        you
-                        must first
-                        select it using a tool that allows you to <strong> select the corresponding record </strong>(you
-                        can use <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
-                            Resource</a>, <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
-                            Row</a>, or <a
-                            href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
-                            Rows</a>).</p>
-                    <img src="Location_image7.png" alt="icon" class="toolPage_image">
 
-                    <p>By <i>double-clicking</i> with the left mouse button, the dialog for this location will open,
-                        displaying all its information. The same dialog as the one used for editing the location will
-                        appear. To delete the location, simply click the <strong>Delete</strong> button.</p>
-                    <img src="Location_image8.png" alt="icon" class="toolPage_image">
+                    <p>
+                        To <strong>delete</strong> a FeatureOfInterest from the STA service,
+                        as in the case of editing a FeatureOfInterest, you must first
+                        select it using a tool that allows you to
+                        <strong>select the corresponding record</strong>.
+                    </p>
+
+                    <p>
+                        You can use
+                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">
+                            Select Resource
+                        </a>,
+                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">
+                            Select Row
+                        </a>,
+                        or
+                        <a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">
+                            Filter Rows
+                        </a>.
+                    </p>
+
+                    <img src="FeatureOfInterest_image7.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        By <i>double-clicking</i> with the left mouse button, the dialog
+                        for this FeatureOfInterest will open, displaying all its
+                        information.
+                    </p>
+
+                    <p>
+                        The same dialog as the one used for editing the
+                        FeatureOfInterest will appear. To delete the
+                        FeatureOfInterest, simply click the <strong>Delete</strong>
+                        button.
+                    </p>
+
+                    <img src="FeatureOfInterest_image8.png" alt="icon" class="toolPage_image">
+
+                    <p>
+                        <strong>Important:</strong> the FeatureOfInterest is the entity
+                        being observed by an Observation. Deleting a FeatureOfInterest
+                        that is referenced by existing Observations may therefore be
+                        subject to the constraints and behaviour implemented by the
+                        connected STA service.
+                    </p>
 
                     <p><strong>Recipes where this tool is used:</strong></p>
+
                     <ul>
-                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
-                                Creating
-                                two new datastream of observations</a></li>
+                        <li>
+                            <a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">
+                                Recipe 6: Creating two new datastream of observations
+                            </a>
+                        </li>
                     </ul>
+
                 </div>
             </div>
 
+        </div>
 
-            <!-- MULTIDATASTREAM -->
 
-            <div class="toolPage_main" id="MultiDatastream">
-               
+        <!-- HISTORICAL LOCATION -->
+
+        <div class="toolPage_main" id="HistoricalLocation">
+
+        </div>
+
+
+        <!-- LICENSE -->
+
+        <div class="toolPage_main" id="License">
+
+        </div>
+
+
+        <!-- LOCATION -->
+
+        <div class="toolPage_main" id="Location">
+            <div class="toolPage_main_text">
+                <h2 class="toolPage_title"><img src="../Location.png" alt="icon Location"
+                        class="toolPage_title_icon">Location
+                </h2>
+                <p><strong>Setting Up the Node: </strong></p>
+                <img src="Location_image0.png" alt="icon" class="toolPage_image" style="width: 600px;">
+                <p><strong>How to Use the Node: </strong></p>
+                <p>The <strong>Location</strong> tool allows you to <strong>create, edit, and delete</strong>
+                    locations
+                    in the connected STA service.</p>
+                <p>To perform any of these actions, you must be <a
+                        href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
+                    TAPIS. When you <strong>create</strong> a location, it is automatically associated with the
+                    <strong>Party</strong> associated with the account you used to log in to TAPIS.
+                </p>
+                <p>You can only <strong>edit</strong> or <strong>delete</strong> entities associated with your
+                    <strong>Party</strong>.
+                </p>
+
+                <h4><u>Attributes of the entity</u></h4>
+                <ul>
+                    <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the
+                        Location
+                        entity, commonly a descriptive name.</li>
+                    <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
+                        of the Location entity.</li>
+                    <li><strong>encodingType</strong> (<em>CharacterString</em>): The encoding type of the metadata
+                        describing the Location.</li>
+                    <li><strong>location</strong> (<em>Any</em>): The location data, encoded according to the
+                        specified
+                        encoding type.</li>
+                    <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
+                        additional information about the Location.</li>
+                </ul>
+
+                <p><strong>Create</strong></p>
+                <img src="Location_image12.png" alt="icon" class="toolPage_image">
+                <p>To create a new <strong>Location</strong> entity, the corresponding tool only needs to be
+                    <strong>linked to
+                        the STA service</strong>, as it does not depend on any other entity.
+                    To open the dialog, <i>double-click</i> with the left mouse button. The dialog contains all the
+                    attributes of the location. The <strong>Properties</strong> field is not mandatory. You can add
+                    as
+                    many properties as you want, one by one.
+                </p>
+                <img src="Location_image1.png" alt="icon" class="toolPage_image">
+
+                <p>This is the data for the example. Once you have finished, click <strong>Create</strong>. </p>
+                <img src="Location_image2.png" alt="icon" class="toolPage_image">
+                <p>If the entity has been created successfully, a text similar to this will appear on the right. You
+                    can view the entity you have just created by clicking on the text following <strong>Available
+                        at:</strong></p>
+                <p><i>If the entity you are trying to create already exists, it will not be created again. However,
+                        the
+                        displayed text will be the same.</i></p>
+                <img src="Location_image3.png" alt="icon" class="toolPage_image">
+                <p>This is the result that opens in a new page when you click the link following <strong>Available
+                        at:</strong>.</p>
+                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="Location_image4.png" alt="icon"
+                        class="toolPage_image zoomable"></div>
+
+                <p>If you want to see how the STA service has been updated with the new information, link the
+                    corresponding entity tool in its plural form (<strong>Locations</strong>). If the service
+                    contains
+                    a large number of locations, use a tool to select the desired location. In this case, the <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        Resource</a> tool is used. Use the ID provided in the information under <i>Available
+                        at:</i>.</p>
+                <img src="Location_image5.png" alt="icon" class="toolPage_image">
+                <p>Here is the result showing the loaded data.</p>
+                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="Location_image6.png" alt="icon"
+                        class="toolPage_image zoomable"></div>
+                <p></p>
+
+                <p><strong>Edit</strong></p>
+                <p>To <strong>edit</strong> a record associated with your <strong>Party</strong>, you must first
+                    link a tool that
+                    allows you to <strong>select only that specific record</strong> (you can use <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        Resource</a>, <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
+                        Row</a>, or <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
+                        Rows</a>). Continuing with the previous example, <i>right-click</i> and add the
+                    <strong>Location</strong> tool.
+                </p>
+                <img src="Location_image7.png" alt="icon" class="toolPage_image">
+
+                <p>By <i>double-clicking </i> with the left mouse button, the dialog for this location will open,
+                    displaying all its information. All fields are editable except for the <strong>ID</strong>
+                    field.</p>
+                <img src="Location_image8.png" alt="icon" class="toolPage_image">
+
+                <p>In this example, we will add two properties to the existing location. To add properties, simply
+                    click <strong>Add more properties</strong> to display the fields where you can enter them.
+                    Properties can also be deleted by clicking the <strong>trash</strong> icon.</p>
+                <img src="Location_image9.png" alt="icon" class="toolPage_image">
+
+                <p>Once this is done, click the <strong>Update</strong> button to automatically send the request to
+                    the <strong>STA service </strong>. If the operation is successful, a message similar to the
+                    following will appear on the right-hand side.</p>
+                <img src="Location_image10.png" alt="icon" class="toolPage_image">
+
+                <p>Clicking on the location ID will open a new browser tab displaying the updated entity.</p>
+                <div class="image-wrapper" onclick="zoomToImage(this)"><img src="Location_image11.png" alt="icon"
+                        class="toolPage_image zoomable"></div>
+
+                <p><strong>Delete</strong></p>
+                <p>To <strong>delete</strong> a location from the STA service, as in the case of editing a location,
+                    you
+                    must first
+                    select it using a tool that allows you to <strong> select the corresponding record </strong>(you
+                    can use <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectResourceSTA">Select
+                        Resource</a>, <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#SelectRowSTA">Select
+                        Row</a>, or <a
+                        href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#FilterRowsSTA">Filter
+                        Rows</a>).</p>
+                <img src="Location_image7.png" alt="icon" class="toolPage_image">
+
+                <p>By <i>double-clicking</i> with the left mouse button, the dialog for this location will open,
+                    displaying all its information. The same dialog as the one used for editing the location will
+                    appear. To delete the location, simply click the <strong>Delete</strong> button.</p>
+                <img src="Location_image8.png" alt="icon" class="toolPage_image">
+
+                <p><strong>Recipes where this tool is used:</strong></p>
+                <ul>
+                    <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe06" target="_blank">Recipe 6:
+                            Creating
+                            two new datastream of observations</a></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- MULTIDATASTREAM -->
+
+        <div class="toolPage_main" id="MultiDatastream">
+
 
 
             <!-- OBSERVATION GROUP -->
 
             <div class="toolPage_main" id="ObservationGroup">
-               
-               
+
+
             </div>
 
 
             <!-- OBSERVATION -->
 
             <div class="toolPage_main" id="Observation">
-               
+
             </div>
 
 
@@ -507,7 +823,7 @@
             <!-- RELATION -->
 
             <div class="toolPage_main" id="Relation">
-               
+
             </div>
 
 

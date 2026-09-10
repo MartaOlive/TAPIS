@@ -4286,12 +4286,12 @@ async function GetUpdateEntity(event){
 	
 	var obj={}, obj2={},idSplited, allowToSend=true;
 	for (var i=0;i<childrenNodes.length;i++){		
-		if (currentNode.label=="Location"&&  childrenNodes[i].nodeName=="FIELDSET" ){
+		if (currentNode.label=="Location" ||currentNode.label=="FeatureOfInterest" &&  childrenNodes[i].nodeName=="FIELDSET" ){
 			childrenNodes2=childrenNodes[i].childNodes;
 			for (var e=0;e<childrenNodes2.length;e++){
 				if (childrenNodes2[e].nodeName=="INPUT"){
 					idSplited=childrenNodes2[e].id.split("dlgCreateUpdateDeleteEntity_")[1];
-					if (idSplited=="location_longitude"){
+					if (idSplited=="location_longitude" || idSplited=="feature_longitude" ){
 						if (childrenNodes2[e].value=="" && childrenNodes2[e].dataset.starequired=="true"){
 							alert("Longitude parameter is required, please fill in the box before send");
 							allowToSend=false;
@@ -4303,14 +4303,15 @@ async function GetUpdateEntity(event){
 						continue;
 					}
 
-					if (idSplited=="location_latitude"){
+					if (idSplited=="location_latitude" || idSplited=="feature_latitude"){
 						if (childrenNodes2[e].value=="" && childrenNodes2[e].dataset.starequired=="true"){
 							alert("Latitude parameter is required, please fill in the box before send");
 							allowToSend=false;
 							break;
 						}else{
-					obj2["coordinates"].push(childrenNodes2[e].value);
-					obj["location"]=obj2;
+							obj2["coordinates"].push(childrenNodes2[e].value);
+							if (idSplited=="feature_latitude")obj["feature"]=obj2; //FOI
+							else obj["location"]=obj2; //Location
 						}
 					
 				}
@@ -4419,7 +4420,7 @@ async function GetUpdateEntity(event){
 async function GetUpdateEntityMultiDatastream(event){
 	event.preventDefault(); 
 	var obj = obtainDataInMultiDatastreamsCreationAndUpdate("update");
-	var id = parseInt(document.getElementById("dlgCreateUpdateDeleteEntity_id").value);
+	var id = parseInt(document.getElementById("dlgCreateUpdateDeleteEntity_id").value); //MIrar si es nomes numero o tambe te lletra com el party o el license 
 	var parentNodes=GetParentNodes(currentNode);
 	var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNodes[0].STAURL), false);
 	var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,id);
