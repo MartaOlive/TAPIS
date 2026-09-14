@@ -455,3 +455,9 @@
 	height: 560px;
 }
 
+#DialogRadarPlot .DialogRadarPlotSavePng {
+	width: 720px;
+	margin-top: 12px;
+	text-align: center;
+}
+

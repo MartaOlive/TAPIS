@@ -1,0 +1,119 @@
+{
+	"nodes": [
+		{
+			"id": "1j8jf.trk45k",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"ciutat": "Barcelona",
+					"seguretat": 65,
+					"transport": 82,
+					"oci": 95,
+					"gastronomia": 92,
+					"espais_verds": 70,
+					"cost_vida": 45
+				},
+				{
+					"ciutat": "Madrid",
+					"seguretat": 72,
+					"transport": 88,
+					"oci": 90,
+					"gastronomia": 95,
+					"espais_verds": 68,
+					"cost_vida": 52
+				},
+				{
+					"ciutat": "ValÃ¨ncia",
+					"seguretat": 78,
+					"transport": 76,
+					"oci": 85,
+					"gastronomia": 88,
+					"espais_verds": 86,
+					"cost_vida": 72
+				},
+				{
+					"ciutat": "Sevilla",
+					"seguretat": 74,
+					"transport": 68,
+					"oci": 91,
+					"gastronomia": 94,
+					"espais_verds": 80,
+					"cost_vida": 78
+				},
+				{
+					"ciutat": "Bilbao",
+					"seguretat": 85,
+					"transport": 79,
+					"oci": 82,
+					"gastronomia": 90,
+					"espais_verds": 88,
+					"cost_vida": 58
+				},
+				{
+					"ciutat": "Lisboa",
+					"seguretat": 70,
+					"transport": 75,
+					"oci": 89,
+					"gastronomia": 91,
+					"espais_verds": 83,
+					"cost_vida": 65
+				}
+			],
+			"x": 15,
+			"y": -56
+		},
+		{
+			"id": "7mba6.5jomeh",
+			"label": "Radar Plot",
+			"image": "RadarPlot.png",
+			"shape": "circularImage",
+			"radarPlotParentNodes": {
+				"1j8jf.trk45k": {
+					"nodeLabel": "CSV",
+					"numericNames": [
+						"seguretat",
+						"transport",
+						"oci",
+						"gastronomia",
+						"espais_verds",
+						"cost_vida"
+					],
+					"nonNumericNames": [
+						"ciutat"
+					]
+				}
+			},
+			"radarPlotOptions": {
+				"layout": "wide",
+				"normalize": false,
+				"fill": true,
+				"beginAtZero": true,
+				"title": "",
+				"seriesMode": "all",
+				"seriesAll": true,
+				"seriesGroups": [],
+				"axes": [
+					"seguretat",
+					"transport",
+					"oci",
+					"gastronomia",
+					"espais_verds",
+					"cost_vida"
+				],
+				"seriesLabel": "ciutat",
+				"drawn": true
+			},
+			"x": 4,
+			"y": 59
+		}
+	],
+	"edges": [
+		{
+			"from": "1j8jf.trk45k",
+			"to": "7mba6.5jomeh",
+			"arrows": "from"
+		}
+	]
+}

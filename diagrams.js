@@ -1730,6 +1730,89 @@ function CloseDialogRadarPlot(event) {
 	hideNodeDialog("DialogRadarPlot", event);
 }
 
+function radarPlotPngBlobFromDataUrl(dataUrl) {
+	var parts, mime, binary, i, bytes;
+	if (!dataUrl || dataUrl.indexOf(",") == -1)
+		return null;
+	parts = dataUrl.split(",");
+	mime = (parts[0].match(/:(.*?);/) || [])[1] || "image/png";
+	binary = atob(parts[1]);
+	bytes = new Uint8Array(binary.length);
+	for (i = 0; i < binary.length; i++)
+		bytes[i] = binary.charCodeAt(i);
+	return new Blob([bytes], { type: mime });
+}
+
+function downloadRadarPlotPngBlob(blob) {
+	var url = URL.createObjectURL(blob);
+	var link = document.createElement("a");
+	link.href = url;
+	link.download = "radar-plot.png";
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
+	window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+
+function saveRadarPlotPngBlob(blob) {
+	if (window.showSaveFilePicker) {
+		window.showSaveFilePicker({
+			suggestedName: "radar-plot.png",
+			types: [{
+				description: "PNG image",
+				accept: { "image/png": [".png"] }
+			}]
+		}).then(function (handle) {
+			return handle.createWritable();
+		}).then(function (writable) {
+			return writable.write(blob).then(function () { return writable.close(); });
+		}).catch(function () {
+			downloadRadarPlotPngBlob(blob);
+		});
+		return;
+	}
+	downloadRadarPlotPngBlob(blob);
+}
+
+function SaveRadarPlot(event) {
+	var canvas, dataUrl;
+	if (event)
+		event.preventDefault();
+	canvas = RadarPlotChart && RadarPlotChart.canvas ? RadarPlotChart.canvas : document.getElementById("DialogRadarPlotVisualizationCanvas");
+	if (!RadarPlotChart || !canvas) {
+		alert("Draw the radar chart first.");
+		return;
+	}
+	function onBlob(blob) {
+		if (!blob) {
+			alert("The chart image could not be saved.");
+			return;
+		}
+		saveRadarPlotPngBlob(blob);
+	}
+	try {
+		if (canvas.toBlob) {
+			canvas.toBlob(function (blob) {
+				if (blob) {
+					onBlob(blob);
+					return;
+				}
+				try {
+					dataUrl = RadarPlotChart.toBase64Image ? RadarPlotChart.toBase64Image("image/png") : canvas.toDataURL("image/png");
+					onBlob(radarPlotPngBlobFromDataUrl(dataUrl));
+				} catch (e) {
+					alert("The chart image could not be saved.");
+				}
+			}, "image/png");
+			return;
+		}
+		dataUrl = RadarPlotChart.toBase64Image ? RadarPlotChart.toBase64Image("image/png") : canvas.toDataURL("image/png");
+		onBlob(radarPlotPngBlobFromDataUrl(dataUrl));
+	} catch (e) {
+		alert("The chart image could not be saved.");
+	}
+}
+
 function DrawImageViewer(event) {
 	event.preventDefault(); // We don't want to submit this form
 	var node = getNodeDialog("DialogImageViewer");
