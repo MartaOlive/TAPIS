@@ -203,7 +203,7 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-	if (node.image=="qualityResultsViewer.png" && (parentNode.image!="uncertainty.png" && parentNode.image!="completenessomission.png"&& parentNode.image!="completenessComission.png" && parentNode.image!="misclassificationMatrix.png" && parentNode.image!="logicalConsistency.png" && parentNode.image!="temporalQuality.png" && parentNode.image!="thematicQuality.png" && parentNode.image!="positionalQuality.png" )) return "Quality Results Viewer can only be connected to a quality node";
+	if (node.image=="qualityResultsViewer.png" && (parentNode.image!="uncertainty.png" && parentNode.image!="completness.png" && parentNode.image!="misclassificationMatrix.png" && parentNode.image!="logicalConsistency.png" && parentNode.image!="temporalQuality.png" && parentNode.image!="thematicQuality.png" && parentNode.image!="positionalQuality.png" )) return "Quality Results Viewer can only be connected to a quality node";
 	if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
 		return "It is not possible to link an STAnode after no STA node" //Falta afegir OGCApi Collection xq utilitza el filter i mirar si algo més
 	}
@@ -8308,28 +8308,15 @@ function networkDoubleClick(params) {
 				alert("Parent node must have data to replace it");
 			}
 		}
-		else if (currentNode.image == "completenessomission.png") {
+		else if (currentNode.image == "completness.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode && parentNode.STAdata) {
 				currentNode.STAdata= deapCopy(parentNode.STAdata);
 				currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
 				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
-				populateDialogQualityCompletnessOmission(currentNode);
+				populateDialogCompleteness(currentNode);
 				networkNodes.update(currentNode);
-				showNodeDialog("DialogQualityCompletnessOmission");
-			}else{
-				alert("Parent node must have data to analyze");
-			}
-		}
-		else if (currentNode.image == "completenessComission.png") {
-			var parentNode=GetFirstParentNode(currentNode);
-			if (parentNode && parentNode.STAdata) {
-				currentNode.STAdata= deapCopy(parentNode.STAdata);
-				currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
-				populateDialogQualityCompletnessComission(currentNode);
-				networkNodes.update(currentNode);
-				showNodeDialog("DialogQualityCompletnessComission");
+				showNodeDialog("DialogCompleteness");
 			}else{
 				alert("Parent node must have data to analyze");
 			}
@@ -8388,8 +8375,8 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "thematicQuality.png") {
-			var parentNode=GetParentNodes(currentNode);
-			if (parentNode) {
+			var parentNodes=GetParentNodes(currentNode);
+			if (parentNodes && parentNodes.length && parentNodes[0].STAdata) {
 				if (populateDialogQualityThematicQuality(currentNode)){
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityThematicQuality");
@@ -8402,11 +8389,14 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "qualityResultsViewer.png") {
-			var parentNode=GetParentNodes(currentNode);
-			if(parentNode[0].STAQualityNodeResults ) currentNode.STAQualityNodeResults=parentNode[0].STAQualityNodeResults;
-			populateDialogdataQualityResult(parentNode[0], currentNode)
-				//networkNodes.update(currentNode);
-			showNodeDialog("DialogDataQualityResult");		
+			var parentNodes=GetParentNodes(currentNode);
+			if (!parentNodes || !parentNodes.length) {
+				populateDialogdataQualityResultEmpty();
+			} else {
+				if (parentNodes[0].STAQualityNodeResults) currentNode.STAQualityNodeResults=parentNodes[0].STAQualityNodeResults;
+				populateDialogdataQualityResult(parentNodes[0], currentNode);
+			}
+			showNodeDialog("DialogDataQualityResult");
 		}
 	}
 }
@@ -9993,15 +9983,38 @@ function okButtonInPivotTable(event){
 		alert (newData) //Error
 }
 
-function populateDialogQualityCompletnessOmission(node){
-	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "omission", "Column");
-	saveNodeDialog("DialogQualityCompletnessOmission", node);
-	document.getElementById("DialogQualityCompletnessOmission_attributesList").innerHTML=attributesCheckboxModule;
+function populateDialogCompleteness(node){
+	document.getElementById("Completeness_omission_attributesList").innerHTML=populateAttributesListSelect(node.STAdataAttributes, "omission", "Column");
+	document.getElementById("Completeness_commission_attributesList").innerHTML=populateAttributesListSelect(node.STAdataAttributes, "commission", "Column");
+	document.getElementById("Completeness_excess_attributesList").innerHTML=populateAttributesListSelect(node.STAdataAttributes, "excess", "Column");
+	saveNodeDialog("DialogCompleteness", node);
+	var options=node.STACompletenessOptions || {};
+	document.getElementById("Completeness_check_omission").checked=!!options.omission;
+	document.getElementById("Completeness_check_commission").checked=!!options.commission;
+	document.getElementById("Completeness_check_excess").checked=!!options.excess;
+	var expectedRecords=options.expectedRecords;
+	if (expectedRecords==null) expectedRecords=options.allowedDuplicates;
+	document.getElementById("Completeness_expectedRecords").value=(expectedRecords!=null)?expectedRecords:0;
+	if (options.omissionColumn) document.getElementById("attributeList_omission").value=options.omissionColumn;
+	if (options.commissionColumn) document.getElementById("attributeList_commission").value=options.commissionColumn;
+	if (options.excessColumn) document.getElementById("attributeList_excess").value=options.excessColumn;
+	document.getElementById("dataQuality_omission_flag").checked=!!options.omissionFlag;
+	document.getElementById("dataQuality_comission_flag").checked=!!options.commissionFlag;
+	document.getElementById("dataQuality_comission_lowerUpperCase").checked=!!options.lowerUpperCase;
+	toggleCompletenessOptions();
 }
-function populateDialogQualityCompletnessComission(node){
-	var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "comission", "Column");
-	saveNodeDialog("DialogQualityCompletnessComission", node);
-	document.getElementById("DialogQualityCompletnessComission_attributesList").innerHTML=attributesCheckboxModule;
+
+function toggleCompletenessOptions(){
+	var omissionOn=document.getElementById("Completeness_check_omission").checked;
+	var commissionOn=document.getElementById("Completeness_check_commission").checked;
+	var excessOn=document.getElementById("Completeness_check_excess").checked;
+	document.getElementById("attributeList_omission").disabled=!omissionOn;
+	document.getElementById("dataQuality_omission_flag").disabled=!omissionOn;
+	document.getElementById("attributeList_commission").disabled=!commissionOn;
+	document.getElementById("dataQuality_comission_flag").disabled=!commissionOn;
+	document.getElementById("dataQuality_comission_lowerUpperCase").disabled=!commissionOn;
+	document.getElementById("attributeList_excess").disabled=!excessOn;
+	document.getElementById("Completeness_expectedRecords").disabled=!excessOn;
 }
 
 function populateAttributesListSelect(attributes,place, text){
@@ -10015,85 +10028,147 @@ function populateAttributesListSelect(attributes,place, text){
 	return c;
 }
 
-function okButtonDataQualityCompletnessOmission(event){
-	var node= getNodeDialog("DialogQualityCompletnessOmission");
-	var data= node.STAdata;
-	var select= document.getElementById("attributeList_omission");
-	var selected= select.options[select.selectedIndex].value;
-	var flag= (document.getElementById("dataQuality_omission_flag").checked)?true:false;
-	var infoDataOmission;
-	var metadata= (node.STAmetadata)?deapCopy(node.STAmetadata):{}
+function completenessSelectValue(selectId){
+	var select= document.getElementById(selectId);
+	if (!select || select.selectedIndex<0) return "";
+	return select.options[select.selectedIndex].value;
+}
 
-	infoDataOmission= calculateDataQualityCompletnessOmission(data, selected,metadata, flag); //Response:{"notEmpty", "empty", "omissionRate", "completnessRate"}
+function completenessCell(value){
+	return (value===undefined || value===null || value==="") ? "" : value;
+}
+
+function okButtonDataQualityCompleteness(event){
+	event.preventDefault();
+	var omissionOn=document.getElementById("Completeness_check_omission").checked;
+	var commissionOn=document.getElementById("Completeness_check_commission").checked;
+	var excessOn=document.getElementById("Completeness_check_excess").checked;
+	if (!omissionOn && !commissionOn && !excessOn){
+		alert("Select at least one Completeness check.");
+		return;
+	}
+	var node= getNodeDialog("DialogCompleteness");
+	var data= node.STAdata;
+	var metadata= (node.STAmetadata)?deapCopy(node.STAmetadata):{};
+	var omissionColumn=completenessSelectValue("attributeList_omission");
+	var commissionColumn=completenessSelectValue("attributeList_commission");
+	var excessColumn=completenessSelectValue("attributeList_excess");
+	var expectedRecords=parseInt(document.getElementById("Completeness_expectedRecords").value, 10);
+	if (isNaN(expectedRecords) || expectedRecords<0) expectedRecords=0;
+	var omissionFlag=document.getElementById("dataQuality_omission_flag").checked;
+	var commissionFlag=document.getElementById("dataQuality_comission_flag").checked;
+	var lowerUpperCase=document.getElementById("dataQuality_comission_lowerUpperCase").checked;
+
+	node.STACompletenessOptions={
+		omission:omissionOn,
+		commission:commissionOn,
+		excess:excessOn,
+		omissionColumn:omissionColumn,
+		commissionColumn:commissionColumn,
+		excessColumn:excessColumn,
+		expectedRecords:expectedRecords,
+		omissionFlag:omissionFlag,
+		commissionFlag:commissionFlag,
+		lowerUpperCase:lowerUpperCase
+	};
+
+	var STAQualityNodeResults={
+		dataLength: data.length,
+		checks: []
+	};
+
+	if (omissionOn){
+		var infoDataOmission= calculateDataQualityCompletnessOmission(data, omissionColumn, metadata, omissionOn && omissionFlag);
+		STAQualityNodeResults.checks.push({
+			check: "Omission",
+			column: omissionColumn,
+			empty: infoDataOmission.empty,
+			omissionRate: infoDataOmission.omissionRate,
+			completnessRate: infoDataOmission.completnessRate
+		});
+	}
+	if (commissionOn){
+		var infoDataComission= calculateDataQualityCompletnessComission(data, commissionColumn, metadata, lowerUpperCase, commissionOn && commissionFlag);
+		STAQualityNodeResults.checks.push({
+			check: "Commission (duplicates)",
+			column: commissionColumn,
+			duplicated: infoDataComission.duplicated,
+			comissionRate: infoDataComission.comissionRate
+		});
+	}
+	if (excessOn){
+		var infoDataExcess= calculateDataQualityCompletnessComissionExcess(data, metadata, expectedRecords, excessColumn);
+		STAQualityNodeResults.checks.push({
+			check: "Commission excess",
+			column: excessColumn,
+			expected: infoDataExcess.expected,
+			excess: infoDataExcess.excess,
+			excessRate: infoDataExcess.excessRate
+		});
+	}
+
 	node.STAdata=data;
 	node.STAdataAttributes=getDataAttributes(data);
 	node.STAmetadata=metadata;
-	var STAQualityNodeResults=infoDataOmission;
-	STAQualityNodeResults.dataLength=data.length;
-	STAQualityNodeResults.selected=selected;
-
-	node.STAQualityNodeResults=STAQualityNodeResults
+	node.STAQualityNodeResults=STAQualityNodeResults;
 	networkNodes.update(node);
-	hideNodeDialog("DialogQualityCompletnessOmission", event);
-	populateDialogdataQualityResultCompletnessOmission(node);
+	hideNodeDialog("DialogCompleteness", event);
+	populateDialogQualityCompleteness(node);
 	showNodeDialog("DialogDataQualityResult");
 	updateQueryAndTableArea(node);
 }
 
-function okButtonDataQualityCompletnessComission(event){
-	var node= getNodeDialog("DialogQualityCompletnessComission");
-	var data= node.STAdata;
-	var select= document.getElementById("attributeList_comission");
-	var selected= select.options[select.selectedIndex].value;
-	var flag= (document.getElementById("dataQuality_comission_flag").checked)?true:false;
-	var lowerUpperCase= (document.getElementById("dataQuality_comission_lowerUpperCase").checked)?true:false;
-	var infoDataComission;
-	var metadata= (node.STAmetadata)?deapCopy(node.STAmetadata):{}
-
-	infoDataComission= calculateDataQualityCompletnessComission(data, selected,metadata,lowerUpperCase, flag); //Response: {"duplicated":count,  "comissionRate":comissionRate}
-	node.STAdata=data;
-	node.STAdataAttributes=getDataAttributes(data);
-	node.STAmetadata=metadata;
-	var STAQualityNodeResults=infoDataComission;
-	STAQualityNodeResults.dataLength=data.length;
-	STAQualityNodeResults.selected=selected;
-
-	node.STAQualityNodeResults=STAQualityNodeResults
-	networkNodes.update(node);
-	hideNodeDialog("DialogQualityCompletnessComission", event);
-	populateDialogdataQualityResultCompletnessComission(node);
-	showNodeDialog("DialogDataQualityResult");
-	updateQueryAndTableArea(node);
+function completenessRateCell(value){
+	if (value===undefined || value===null || value==="") return "";
+	return (typeof value==="number") ? value.toFixed(2) : value;
 }
 
-function populateDialogdataQualityResultCompletnessComission(node){
-	if (node.STAQualityNodeResults){
+function populateDialogQualityCompleteness(node){
+	if (node.STAQualityNodeResults && node.STAQualityNodeResults.checks && node.STAQualityNodeResults.checks.length){
 		var STAQualityNodeResults= node.STAQualityNodeResults;
-		document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
-		<thead> 
-		<th>Column</th><th>Total records</th><th>Duplicated records</th>
-		<th>Comission rate</th></tr></thead>
-		<tbody><tr>
-		<td>${STAQualityNodeResults.selected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.duplicated}</td>
-		<td>${STAQualityNodeResults.comissionRate}</td>
-		</tr></tbody></table>`;
+		var total=STAQualityNodeResults.dataLength;
+		var html="<h3>Completeness</h3>";
+		for (var i=0;i<STAQualityNodeResults.checks.length;i++){
+			var row=STAQualityNodeResults.checks[i];
+			if (row.check=="Omission"){
+				html+=`<div><b>Omission</b><br>
+				<table class="tablesmall"><thead><tr>
+				<th>Column</th><th>Total records</th><th>Empty records</th>
+				<th>Omission rate</th><th>Completeness rate</th></tr></thead>
+				<tbody><tr>
+				<td>${completenessCell(row.column)}</td>
+				<td>${completenessCell(total)}</td>
+				<td>${completenessCell(row.empty)}</td>
+				<td>${completenessRateCell(row.omissionRate)}</td>
+				<td>${completenessRateCell(row.completnessRate)}</td>
+				</tr></tbody></table></div><br>`;
+			}else if (row.check=="Commission (duplicates)"){
+				html+=`<div><b>Commission (duplicates)</b><br>
+				<table class="tablesmall"><thead><tr>
+				<th>Column</th><th>Total records</th><th>Duplicated records</th>
+				<th>Duplication rate</th></tr></thead>
+				<tbody><tr>
+				<td>${completenessCell(row.column)}</td>
+				<td>${completenessCell(total)}</td>
+				<td>${completenessCell(row.duplicated)}</td>
+				<td>${completenessRateCell(row.comissionRate)}</td>
+				</tr></tbody></table></div><br>`;
+			}else if (row.check=="Commission excess"){
+				html+=`<div><b>Commission excess</b><br>
+				<table class="tablesmall"><thead><tr>
+				<th>Column</th><th>Total records</th><th>Expected records</th><th>Excess</th>
+				<th>Excess rate</th></tr></thead>
+				<tbody><tr>
+				<td>${completenessCell(row.column)}</td>
+				<td>${completenessCell(total)}</td>
+				<td>${completenessCell(row.expected)}</td>
+				<td>${completenessCell(row.excess)}</td>
+				<td>${completenessRateCell(row.excessRate)}</td>
+				</tr></tbody></table></div><br>`;
+			}
+		}
+		document.getElementById("dataQualityResult_info").innerHTML= html;
 	}else populateDialogdataQualityResultEmpty();
-
-}
-
-function populateDialogdataQualityResultCompletnessOmission(node){
-	if (node.STAQualityNodeResults){
-		var STAQualityNodeResults= node.STAQualityNodeResults;
-		document.getElementById("dataQualityResult_info").innerHTML= `<table class="tablesmall">
-		<thead> 
-		<th>Column</th><th>Total records</th><th>Empty records</th>
-		<th>Omission rate</th><th>Completeness rate</th></tr></thead>
-		<tbody><tr>
-		<td>${STAQualityNodeResults.selected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.empty}</td>
-		<td>${STAQualityNodeResults.omissionRate}</td><td>${STAQualityNodeResults.completnessRate}</td>
-		</tr></tbody></table>`;
-	}else populateDialogdataQualityResultEmpty();
-
 }
 function populateDialogdataQualityResultEmpty(){
 	document.getElementById("dataQualityResult_info").innerHTML = `<p  style="padding:10px;">No quality results have been calculated in the previous node.</p>`;
@@ -10533,8 +10608,10 @@ function populateDialogdataQualityResultPositionalQuality(node){
 
 function populateDialogQualityThematicQuality(node){
 	var parentNodes=GetParentNodes(node);
-	if (!parentNodes || !parentNodes.length)
+	if (!parentNodes || !parentNodes.length || !parentNodes[0].STAdata)
 		return;
+	if (parentNodes.length>2)
+		return false;
 	saveNodeDialog("DialogQualityThematicQuality", node);
 	var select=createSelectForThematicQuality(parentNodes[0]);
 
@@ -10692,7 +10769,7 @@ function populateDialogdataQualityResultThematicQuality(node) {
 
 		var html = "";
 
-		if (Object.keys(STAQualityNodeResults.accuracy).length != 0) {
+		if (STAQualityNodeResults.accuracy && Object.keys(STAQualityNodeResults.accuracy).length != 0) {
 
 			html += `<div> <b>Thematic accuracy </b> <br>
 				<table class="tablesmall">
@@ -10743,7 +10820,7 @@ function populateDialogdataQualityResultThematicQuality(node) {
 
 		html += "<br>";
 
-		if (Object.keys(STAQualityNodeResults.validity).length != 0) {
+		if (STAQualityNodeResults.validity && Object.keys(STAQualityNodeResults.validity).length != 0) {
 			html += `<div><b> Thematic validity </b><br>
 				<table class="tablesmall">
 					<thead>
@@ -11537,12 +11614,13 @@ function populateDialogdataQualityResultMisclassificationMatrix(node) {
 }
 
 function populateDialogdataQualityResult(parentNode, node){
+	if (!parentNode) {
+		populateDialogdataQualityResultEmpty();
+		return;
+	}
 	switch (parentNode.image){
-		case "completenessomission.png":
-			populateDialogdataQualityResultCompletnessOmission(node);
-			break;
-		case "completenessComission.png":
-			populateDialogdataQualityResultCompletnessComission(node);
+		case "completness.png":
+			populateDialogQualityCompleteness(node);
 			break;
 		case "misclassificationMatrix.png":
 			populateDialogdataQualityResultMisclassificationMatrix(node);
@@ -11553,13 +11631,14 @@ function populateDialogdataQualityResult(parentNode, node){
 		case "temporalQuality.png":
 			populateDialogdataQualityResultTemporalQuality(node);
 			break;
-
 		case "positionalQuality.png":
 			populateDialogdataQualityResultPositionalQuality(node);
-
 			break;
 		case "thematicQuality.png":
 			populateDialogdataQualityResultThematicQuality(node);
+			break;
+		default:
+			populateDialogdataQualityResultEmpty();
 			break;
 	}
 }

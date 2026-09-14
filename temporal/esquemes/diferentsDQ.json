@@ -788,8 +788,8 @@
 		},
 		{
 			"id": "8748s.hj9bu4",
-			"label": "Completness omission",
-			"image": "completenessomission.png",
+			"label": "Completeness",
+			"image": "completness.png",
 			"shape": "circularImage",
 			"STAdata": [
 				{

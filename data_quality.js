@@ -146,13 +146,13 @@ function calculateDataQualityCompletnessComission(data, attribute,metadata,lower
 
 			if (differentValues.has(value)) {
 				count++; // Duplicate found
-				if (flag) data[i]["Comission Flag"] = true;
+				if (flag) data[i]["Duplicate Flag"] = true;
 			} else {
 				differentValues.add(value);
-				if (flag) data[i]["Comission Flag"] = false;
+				if (flag) data[i]["Duplicate Flag"] = false;
 			}
 		} else {
-			if (flag) data[i]["Comission Flag"] = false;
+			if (flag) data[i]["Duplicate Flag"] = false;
 		}
 	}
     comissionRate = (count / data.length) * 100;
@@ -209,6 +209,55 @@ function calculateDataQualityCompletnessComission(data, attribute,metadata,lower
 
 
     return {"duplicated":count,  "comissionRate":comissionRate }
+}
+
+function calculateDataQualityCompletnessComissionExcess(data, metadata, expected, attribute) {
+	var total = data.length;
+	var expectedCount = (typeof expected === "number" && !isNaN(expected)) ? expected : 0;
+	if (expectedCount < 0) expectedCount = 0;
+	var excess = Math.max(0, total - expectedCount);
+	var excessRate = total ? (excess / total) * 100 : 0;
+	if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos=[];
+	var excessParams = [
+		{ "name": "expectedRecords", "value": expectedCount }
+	];
+	if (attribute) excessParams.push({ "name": "column", "value": attribute });
+	metadata.dataQualityInfos.push(
+		{
+			"reports": [
+				{
+					"type": "DQ_CompletenessComission",
+					"measureIdentification": {
+						"code": "ExcessItems",
+						"domains": [
+							{
+								"name": "NonConformance",
+								"params": excessParams
+							}
+						]
+					},
+					"results": [
+						{
+							"type": "DQ_QuantitativeResult",
+							"errorStatistic": {
+								"metric": {
+									"name": "items",
+									"params":[
+										{ "name":"subtype", "value":"rate" },
+										{ "name": "min", "value":0 },
+										{ "name": "max", "value":100 }
+									]
+								}
+							},
+							"valueType": "number",
+							"values": [ excessRate.toFixed(2) ]
+						}
+					]
+				}
+			]
+		});
+	return {"expected": expectedCount, "total": total, "excess": excess, "excessRate": excessRate};
 }
 
 

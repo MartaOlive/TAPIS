@@ -2091,34 +2091,30 @@
 		</form>
 	</dialog>
 
-	<dialog id="DialogQualityCompletnessOmission" onClose='hideNodeDialog("DialogQualityCompletnessOmission", event)'>
+	<dialog id="DialogCompleteness" onClose='hideNodeDialog("DialogCompleteness", event)'>
 		<form>
-			<h3> Completness omission </h3>
-			<div id="DialogQualityCompletnessOmission_attributesList"></div>
-			<div>
-				<label><input type="checkbox" value="Omission_flagBadRecords" id="dataQuality_omission_flag" name="dataQuality_omission">Flag the bad records (true/false)</label><br>
-			</div>
-			<div class="center">
-				<button value="ok" onClick="okButtonDataQualityCompletnessOmission(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
-			</div>
-
-		<input type="hidden" id="DialogQualityCompletnessOmissionNodeId"></input>
-		</form>
-	</dialog>
-
-	<dialog id="DialogQualityCompletnessComission" onClose='hideNodeDialog("DialogQualityCompletnessComission", event)'>
-		<form>
-			<h3> Completness comission (duplicate) </h3>
-			<div id="DialogQualityCompletnessComission_attributesList"></div>
-			<div style="margin-bottom: 20px;">
+			<h3>Completeness</h3>
+			<fieldset>
+				<legend><label><input type="checkbox" id="Completeness_check_omission" onclick="toggleCompletenessOptions()">Omission</label></legend>
+				<div id="Completeness_omission_attributesList"></div>
+				<label><input type="checkbox" value="Omission_flagBadRecords" id="dataQuality_omission_flag" name="dataQuality_omission">Flag the bad records (true/false)</label>
+			</fieldset>
+			<fieldset>
+				<legend><label><input type="checkbox" id="Completeness_check_commission" onclick="toggleCompletenessOptions()">Commission (duplicates)</label></legend>
+				<div id="Completeness_commission_attributesList"></div>
 				<label><input type="checkbox" value="comission_lowerUpperCase" id="dataQuality_comission_lowerUpperCase" name="dataQuality_comission_lowerUpperCase">Treat uppercase and lowercase as identical</label><br>
 				<label><input type="checkbox" value="comission_flagBadRecords" id="dataQuality_comission_flag" name="dataQuality_comission">Flag the bad records (true/false)</label>
+			</fieldset>
+			<fieldset>
+				<legend><label><input type="checkbox" id="Completeness_check_excess" onclick="toggleCompletenessOptions()">Commission excess</label></legend>
+				<div id="Completeness_excess_attributesList"></div>
+				<label>Expected records: <input type="number" id="Completeness_expectedRecords" min="0" step="1" value="0"></label>
+			</fieldset>
+			<div class="center" style="margin-top: 12px;">
+				<button value="ok" onClick="okButtonDataQualityCompleteness(event)" formmethod="dialog">Ok</button>
+				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
-			<div class="center">
-				<button value="ok" onClick="okButtonDataQualityCompletnessComission(event)" formmethod="dialog">Ok</button>	<button value="cancel" formmethod="dialog">Cancel</button>
-			</div>
-
-		<input type="hidden" id="DialogQualityCompletnessComissionNodeId"></input>
+			<input type="hidden" id="DialogCompletenessNodeId"></input>
 		</form>
 	</dialog>
 
@@ -2743,7 +2739,7 @@
 			</div>
 
 			<div class="center">
-				<button value="default" onClick="okButtonDataQualityThematicQuality(event)">Ok</button>
+				<button type="button" value="ok" onClick="okButtonDataQualityThematicQuality(event)">Ok</button>
 				<button value="cancel" formmethod="dialog">Cancel</button>
 			</div>
 
@@ -2758,7 +2754,7 @@
 
 
 
-	<dialog id="DialogDataQualityResult" onClose='hideNodeDialog("DialogQualityTemporalQuality", event)'>
+	<dialog id="DialogDataQualityResult" onClose='hideNodeDialog("DialogDataQualityResult", event)'>
 		<form>
 			<div id="dataQualityResult_info"> </div>
 			<br>

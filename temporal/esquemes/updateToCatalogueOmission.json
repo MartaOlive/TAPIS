@@ -1365,8 +1365,8 @@
 		},
 		{
 			"id": "21kam.fv93vvg",
-			"label": "data completness omission",
-			"image": "completenessomission.png",
+			"label": "Completeness",
+			"image": "completness.png",
 			"shape": "circularImage",
 			"x": -79,
 			"y": -136,
@@ -2854,8 +2854,8 @@
 		},
 		{
 			"id": "59da.6v8867r",
-			"label": "data completness omission",
-			"image": "completenessomission.png",
+			"label": "Completeness",
+			"image": "completness.png",
 			"shape": "circularImage",
 			"x": 116,
 			"y": 25,

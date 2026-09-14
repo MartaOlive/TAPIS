@@ -162,8 +162,7 @@ const tableStatisticsVisualizeType = { singular: " Table tool for statistics and
 
 const dataQuality = {
 	uncertainty: { description: "Uncertainty", help: "Group values by time and space and calculate its uncertainties" },
-	completenessomission: { description: "Completness omission", help: "The degree to which all required data is present and recorded without missing or incomplete values" },
-	completenessComission: { description: "Completness comission (duplicate)", help: "The degree to which data contains redundant feature instances resulting from exact duplications, where only the additional duplicated occurrences beyond the original instance are considered errors" },
+	completness: { description: "Completeness", help: "Optional checks (numbers only, no pass/fail). Omission: empty or missing values in a column (optional Omission Flag). Commission (duplicates): duplicated records in a column (optional treat uppercase and lowercase as identical; optional Duplicate Flag). Commission excess: extra records beyond an expected record count (excess = max(0, total − expected); excess rate = excess / total)." },
 	misclassificationMatrix: { description: "Misclassification Matrix", help: "The degree to which the assigned classifications correspond to the reference classifications, as represented by a matrix of correctly and incorrectly classified items" },
 	logicalConsistency: { description: "Logical consistency", help: "Performs a logical consistency check to identify contradictions and ensure coherent data relationships." },
 	temporalQuality: { description: "Temporal quality", help: "Allows calculating temporal consistency, temporal validity and temporal resolution." },
