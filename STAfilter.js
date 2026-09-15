@@ -74,6 +74,7 @@ function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
 	if (typeof actualNode.STACounter === "undefined")
 		actualNode.STACounter = [];
 
+	/* Old FilterRowsSTA dialog UI. Replaced by filterSTADlg.js. Still used by Table/OGC/CSV for shared node fields above.
 	if (actualNodeLabel == "FilterRowsSTA.png") { //Only necessary in STA Filter, not in CSV
 		if (typeof actualNode.STAUrlAPI === "undefined")
 			actualNode.STAUrlAPI = "";
@@ -85,6 +86,7 @@ function addNecessaryVariablesToFilterRowsSTANode(actualNode) {
 			};
 
 	}
+	*/
 
 	networkNodes.update(actualNode);
 }
@@ -122,22 +124,27 @@ function createSelectorRowFilters(number) {
 	var dialogType;
 
 	if (nodeLabel == "FilterRowsSTA.png") {
-		if (parentNode.OGCType) { //OGCAPIFeatures
+		if (parentNode.OGCType) { //OGCAPIFeatures (FilterRowsTable / OGC still use this dialog)
 			if (parentNode.OGCType == "OGCAPIitems") {
 				dialogType = "withoutEntities_3selectors"; //columns, condition, values
 			}
-		} else { //FilterRowSTA from STA API
+		}
+		/* Old FilterRowsSTA dialog UI. Replaced by filterSTADlg.js.
+		else { //FilterRowSTA from STA API
 			dialogType = "withEntities_4selectors"; //entities, properties,condition,values
 		}
+		*/
 	} else { //CSV
 		dialogType = "withoutEntities_3selectors"; //columns, condition, values
 	}
+	/* Old FilterRowsSTA 4-selector UI. Replaced by filterSTADlg.js.
 	if (dialogType == "withEntities_4selectors") {
 		createEntitySelectorInFilterRows(selectorInfo, number);
 		createPropertySelectInFilterRows(selectorInfo, number);
 	} else { //withoutEntities_3selectors
+	*/
 		createColumsSelectorFilterRows(selectorInfo, number);
-	}
+	/* } */
 	//In both cases 
 	createConditionSelectInFilterRows(selectorInfo, number);
 	createValueSelectInFilterRows(selectorInfo, number);
@@ -312,7 +319,7 @@ async function askForCollectionQueryables() {
 
 
 
-//Entiy input, dialog...
+/* Old FilterRowsSTA dialog UI (entity picker). Replaced by filterSTADlg.js. Kept for reference.
 function createEntitySelectorInFilterRows(selectorInfo, count) {
 	var optionsRow = document.getElementById("optionsRow_" + count);
 
@@ -549,6 +556,7 @@ function showInputProperty(count) {
 		inputForProperty.style.display = "none";
 	}
 }
+*/
 function extractLastEntityFromTextFromInputInFilterRow(textFromInput) {
 	var arrayFromText, lastEntity;
 	if (textFromInput.includes("/")) { //only first entity
@@ -560,6 +568,7 @@ function extractLastEntityFromTextFromInputInFilterRow(textFromInput) {
 	return lastEntity;
 
 }
+/* Old FilterRowsSTA property list UI. Replaced by filterSTADlg.js. Kept for reference.
 const unitOfMeasurementExtension = ["unitOfMeasurement/name", "unitOfMeasurement/symbol", "unitOfMeasurement/definition"]; //Datastream
 const featureExtension = ["feature/", "feature/type", "feature/coordinates/0", "feature/coordinates/1", "feature/type", "feature/geometry/type", "feature/geometry/coordinates/0", "feature/geometry/coordinates/1", "feature/properties/"] //featureOfInterest
 const locationExtension = ["location/", "location/type", "location/properties/", "location/geometry/type", "location/geometry/coordinates", "location/coordinates"]
@@ -659,6 +668,7 @@ function fillPropertySelector(number, lastEntity, selectorInfo) { //lastEntity: 
 		document.getElementById("inputForProperty_" + number).value = selectorInfo[0][2][1];
 	}
 }
+*/
 
 //condition select
 function createConditionSelectInFilterRows(selectorInfo, count) {
@@ -980,6 +990,7 @@ async function fillValueSelectorFilterRow(count) {
 	selectorValueInterval2.innerHTML = "";
 	var arrayValuesArranged;
 
+	/* Old FilterRowsSTA 4-selector value fill. Replaced by FilterSTALoadUniqueValuesFromAPI in filterSTADlg.js.
 	if (selectProperty) { //It is STA data? (4selectors)
 		var inputForEntityFilterRowValue = document.getElementById("inputForEntityFilterRow_" + count).value;
 		var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(inputForEntityFilterRowValue, true));
@@ -988,11 +999,6 @@ async function fillValueSelectorFilterRow(count) {
 		var url = getURLWithoutQueryParams(urlNode.STAURL); //Erase first entitie ex: https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/observations. Erase observations
 		url= removeFirstEntityInURL(url);
 		url+=entity;
-		//Find the entity to search values
-		// var parentLabel = node.STAEntityName;
-		// if (parentLabel != entity) {
-		// 	url = url.replace(parentLabel, entity);
-		// }
 		if (typeof node.STAentityValuesForSelect !== "undefined") {
 			if (entity != node.STAentityValuesForSelect[0]) { //avoid to call to API for same entity
 				dataToFillSelect = await loadAPIDataWithReturn(url, "EntitiesFilterRow");
@@ -1031,6 +1037,7 @@ async function fillValueSelectorFilterRow(count) {
 			arrayValuesArranged = sortValuesNumbersOrText(arrayValors); //arrange values 
 		}
 	} else { //CSV, OGCAPIFeature (3selectors)
+	*/
 		var selectorColumns = document.getElementById("selectorColumns_" + count);
 		var selectorColumnsValue = selectorColumns.options[selectorColumns.selectedIndex].value;
 		arrayValuesArranged = obtainValuesFromSTAdataInCSV(selectorColumnsValue);
@@ -1040,7 +1047,7 @@ async function fillValueSelectorFilterRow(count) {
 		} else {
 			valueUndefined = true;
 		}
-	}
+	/* } */
 
 	if (typeof arrayValuesArranged !== "undefined") {
 		for (var i = 0; i < arrayValuesArranged.length; i++) { //create select options and fill selector
@@ -1213,6 +1220,7 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 		selectorValueHasChildren = false;
 	}
 	var node= getNodeDialog("DialogFilterRows");
+	/* Old FilterRowsSTA dialog UI. Replaced by filterSTADlg.js.
 	if (node.image == "FilterRowsSTA.png") {
 		if (selectorProperty) { //!OGCAPI
 			var selectorPropertyValue = selectorProperty.options[selectorProperty.selectedIndex].value;
@@ -1223,6 +1231,7 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 			}
 		}
 	}
+	*/
 
 
 	if (selectorConditionValue == " [a,b] " || selectorConditionValue == " (a,b] " || selectorConditionValue == " [a,b) " || selectorConditionValue == " (a,b) ") {
@@ -1238,6 +1247,7 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 				inputTextInterval2STA.style.display = "inline-block";
 			}
 			//PropertySelect finals with "/" . Selector for value has to be hidden
+			/* Old FilterRowsSTA dialog UI. Replaced by filterSTADlg.js.
 			if (node.image == "FilterRowsSTA.png") {
 				if (selectorPropertyValue.charAt(selectorPropertyValue.length - 1) == "/") {
 					inputTextInterval1STA.style.display = "inline-block";
@@ -1246,6 +1256,7 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 					selectorValueInterval2.style.display = "none";
 				}
 			}
+			*/
 		} else { //inputs are shown
 			if (selectorValueHasChildren) { //show display button
 				displaySelectInterval.style.display = "inline-block";
@@ -1276,12 +1287,14 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 			}
 			//PropertySelect finals with "/" . Selector for value has to be hidden
 
+			/* Old FilterRowsSTA dialog UI. Replaced by filterSTADlg.js.
 			if (node.image == "FilterRowsSTA.png") {
 				if (selectorPropertyValue.charAt(selectorPropertyValue.length - 1) == "/") {
 					inputText.style.display = "inline-block";
 					selectorValue.style.display = "none"
 				}
 			}
+			*/
 		} else { //inputs are shown
 			if (selectorValueHasChildren) { //show display button
 				displaySelect.style.display = "inline-block";
@@ -1300,6 +1313,7 @@ function showAndHiddeSelectorAndInputsFilterRow(number) {
 	}
 }
 var stopSearchparentLabel = false;
+/* Old FilterRowsSTA entity dialog. Replaced by filterSTADlg.js.
 function searchParentLabel() {
 	var entity = "0";
 	var node= getNodeDialog("DialogFilterRows");
@@ -1311,6 +1325,7 @@ function searchParentLabel() {
 	}
 	return entity;
 }
+*/
 ////////////////New Table////////////////////
 function GetFilterTable(elem, nodeId, first) //Built table //The second will be called by showFilter
 {
@@ -1483,11 +1498,13 @@ function addNewElement(elem, fromBiggest) {
 		}
 	}
 
+	/* Old FilterRowsSTA dialog UI. Replaced by filterSTADlg.js.
 	if (node.image == "FilterRowsSTA.png") {
 		var entity = getSTAEntityPlural(getNodeDialog("DialogFilterRows").STAEntityName);
 		node.STAFilterRowEntities["optionsRow" + nextNumber] = [entity];
 
 	}
+	*/
 
 	if (fromBiggest == false) {
 		takeSelectInformation();//take selector values and update an external variable
@@ -1501,9 +1518,11 @@ function DeleteElementButton(numberOfElement) {
 	//Delete elemen from node.STAFilterRowEntities 
 	var node= getNodeDialog("DialogFilterRows");
 	var nodeLabel = node.image;
+	/* Old FilterRowsSTA dialog UI. Replaced by filterSTADlg.js.
 	if (nodeLabel == "FilterRowsSTA.png") {
 		delete node.STAFilterRowEntities["optionsRow" + numberOfElement];
 	}
+	*/
 
 	searchElementToDelete(numberOfElement, node.STAelementFilter, node.id);
 }
@@ -1626,6 +1645,7 @@ function takeSelectInformation() {
 		arrayInfo.push(counter[i]); //they are out of order, it is necessary to put each info in its place when painting the select
 
 		if (optionsRow != null) {
+			/* Old FilterRowsSTA 4-selector capture. Replaced by filterSTADlg.js. Table/OGC/CSV still use the column branch.
 			if (node.image == "FilterRowsSTA.png" && !node.STAOGCAPIconformance) {
 
 				inputForEntityFilterRow = document.getElementById("inputForEntityFilterRow_" + counter[i]);
@@ -1639,11 +1659,12 @@ function takeSelectInformation() {
 				}
 				arrayInfo.push(inputForEntityFilterRowValue, selectorPropertyValue);
 			} else { //CSV
+			*/
 				var selectorColumns = document.getElementById("selectorColumns_" + counter[i]);
 				var selectorColumnsSelected = selectorColumns.options[selectorColumns.selectedIndex].value;
 				arrayInfo.push(selectorColumnsSelected, "no");
 
-			}
+			/* } */
 			selectorCondition = document.getElementById("selectorCondition_" + counter[i]);
 			selectorConditionValue = selectorCondition.options[selectorCondition.selectedIndex].value;
 			arrayInfo.push(selectorConditionValue);
@@ -2032,6 +2053,7 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 
 	addNecessaryVariablesToFilterRowsSTANode(node);
 	
+	/* Old FilterRowsSTA dialog open. Replaced by filterSTADlg.js. OGC without FilterRowsSTA still uses ShowFilterTable via FilterRowsTable.
 	if (node.image=="FilterRowsSTA.png" && node.STAOGCAPIconformance){
 		if (node.STAOGCAPIconformance.includes("filter")){ //Create Filters if the API allows to filter its information	
 			ShowFilterTable();
@@ -2039,8 +2061,9 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 		showFilterTableWithoutFilters(); //OGCAPIFeatures without filter option		
 		}
 	}else{
-		ShowFilterTable(); //STA and CSV 
-	}
+	*/
+		ShowFilterTable(); // Table / CSV / OGC via FilterRowsTable
+	/* } */
 }
 
 function GetFilterRows(event) {
@@ -2076,10 +2099,13 @@ function GetFilterRows(event) {
 		}else{
 			GetFilterRowsTable(node); //No filter, use table filter
 		}
-	} else if (node.image == "FilterRowsSTA.png") { //STA
+	}
+	/* Old FilterRowsSTA apply. Replaced by FilterSTAApplyFilterToNode in filterSTADlg.js.
+	else if (node.image == "FilterRowsSTA.png") { //STA
 		GetFilterRowsSTA(node);
 		showInfoMessage("Filtering STA rows...");
 	}
+	*/
 	hideNodeDialog("DialogFilterRows");
 	networkNodes.update(node);
 }
@@ -2094,6 +2120,8 @@ function GetFilterRowsTable(node) {
 	UpdateChildenTable(node);		
 }
 
+/* Old FilterRowsSTA apply from DialogFilterRows. Replaced by FilterSTAApplyFilterToNode in filterSTADlg.js.
+   createObjectToKeepForFilter and FinalizeSelectedSelectExpands are still used by the new apply path.
 function GetFilterRowsSTA(node) {
 	var previousSTAURL = node.STAURL;
 
@@ -2120,6 +2148,7 @@ function GetFilterRowsSTA(node) {
 	hideNodeDialog("DialogFilterRows");
 	FinalizeSelectedSelectExpands(node, previousSTAURL, "Filtering STA by selected criteria... ");	
 	}
+*/
 	async function GetFilterRowsOGCAPIFeatures(node){
 		var previousNode=networkNodes.get(network.getConnectedNodes(node.id, "from"));
 		var previousURL = previousNode[0].STAURL;//put URL ready to add things 

@@ -8105,6 +8105,7 @@ function networkDoubleClick(params) {
 			}
 		}
 		else if (currentNode.image == "FilterSTA.png" || currentNode.image == "FilterRowsSTA.png") {
+			// Old DialogFilterRows STA UI replaced by filterSTADlg.js (ShowFilterSTADialog).
 			ShowFilterSTADialog();
 			showNodeDialog("DialogFilterSTA");
 		}

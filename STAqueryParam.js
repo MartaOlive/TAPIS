@@ -139,7 +139,9 @@ function builtFilterSTAsentence(STAFilter){
 	var STAFilterSchemaKeys= Object.keys(STAFilter.filterSchema);
 	STAFilterSchemaKeys= STAFilterSchemaKeys.sort();
 	var url="";
+	/* Old FilterRowsSTA dialog lookup. New path uses STAFilter.filterOData first; schema rebuild does not need DialogFilterRows.
 	var node= getNodeDialog("DialogFilterRows");
+	*/
 	var STAFilterCopia=deapCopy(STAFilter.filterSchema);
 	var group;
 

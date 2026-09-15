@@ -535,7 +535,7 @@
 }
 
 #DialogFilterSTA .FilterSTAGroupLogic {
-	display: flex;
+	display: none;
 	flex-direction: column;
 	justify-content: center;
 	align-items: flex-start;
@@ -545,6 +545,10 @@
 	font-weight: normal;
 	padding: 4px 2px 4px 8px;
 	border-left: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+#DialogFilterSTA .FilterSTAGroupLogic.FilterSTAGroupLogicVisible {
+	display: flex;
 }
 
 #DialogFilterSTA .FilterSTAGroupToolbar {

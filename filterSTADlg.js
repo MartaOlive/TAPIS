@@ -1217,10 +1217,9 @@ function buildSTAFilterGroupFromTree(group) {
 	}
 	if (!parts.length)
 		return "(" + FilterSTAIncompletePlaceholder + ")";
-	var joined = parts.join(" " + nexus + " ");
-	if (parts.length > 1)
-		return "(" + joined + ")";
-	return joined;
+	if (parts.length === 1)
+		return parts[0];
+	return "(" + parts.join(" " + nexus + " ") + ")";
 }
 
 function buildSTAFilterFromFilterSTATree(tree) {
@@ -1233,27 +1232,51 @@ function buildSTAFilterFromFilterSTATree(tree) {
 	return FilterSTAIncompletePlaceholder;
 }
 
-function FilterSTAGroupLogic(group) {
-	var box = null;
-	for (var i = 0; i < group.children.length; i++) {
-		var child = group.children[i];
-		if (child.classList && child.classList.contains("FilterSTAGroupLogic")) {
-			box = child;
-			break;
-		}
+function FilterSTAGroupLogicBox(group) {
+	var i, k, child;
+	if (!group)
+		return null;
+	for (i = 0; i < group.children.length; i++) {
+		child = group.children[i];
+		if (child.classList && child.classList.contains("FilterSTAGroupLogic"))
+			return child;
 		if (child.classList && child.classList.contains("FilterSTAGroupBody")) {
-			for (var k = 0; k < child.children.length; k++) {
-				if (child.children[k].classList && child.children[k].classList.contains("FilterSTAGroupLogic")) {
-					box = child.children[k];
-					break;
-				}
+			for (k = 0; k < child.children.length; k++) {
+				if (child.children[k].classList && child.children[k].classList.contains("FilterSTAGroupLogic"))
+					return child.children[k];
 			}
 		}
 	}
+	return null;
+}
+
+function FilterSTASyncGroupLogicVisibility(group) {
+	var box = FilterSTAGroupLogicBox(group);
+	if (!box)
+		return;
+	if (FilterSTADirectChildren(group).length > 1)
+		box.classList.add("FilterSTAGroupLogicVisible");
+	else
+		box.classList.remove("FilterSTAGroupLogicVisible");
+}
+
+function FilterSTASyncAllGroupLogicVisibility() {
+	var dlg = document.getElementById("DialogFilterSTA");
+	var groups, i;
+	if (!dlg)
+		return;
+	groups = dlg.getElementsByClassName("FilterSTAGroup");
+	for (i = 0; i < groups.length; i++)
+		FilterSTASyncGroupLogicVisibility(groups[i]);
+}
+
+function FilterSTAGroupLogic(group) {
+	var box = FilterSTAGroupLogicBox(group);
+	var inputs, j;
 	if (!box)
 		return "and";
-	var inputs = box.getElementsByTagName("input");
-	for (var j = 0; j < inputs.length; j++) {
+	inputs = box.getElementsByTagName("input");
+	for (j = 0; j < inputs.length; j++) {
 		if (inputs[j].type === "radio" && inputs[j].checked)
 			return inputs[j].value;
 	}
@@ -1557,6 +1580,7 @@ function FilterSTAUpdatePreview() {
 	var root = document.getElementById("DialogFilterSTARoot");
 	if (!span || !root)
 		return;
+	FilterSTASyncAllGroupLogicVisibility();
 	span.textContent = buildSTAFilterFromFilterSTATree(FilterSTAReadGroup(root)) || "";
 }
 
