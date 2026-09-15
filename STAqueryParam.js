@@ -130,6 +130,12 @@ function GetQueryParamSelectedSelectExpands(selectedExpands, recursive) {
 }
 
 function builtFilterSTAsentence(STAFilter){
+	if (!STAFilter)
+		return "";
+	if (STAFilter.filterOData)
+		return STAFilter.filterOData;
+	if (!STAFilter.filterSchema)
+		return "";
 	var STAFilterSchemaKeys= Object.keys(STAFilter.filterSchema);
 	STAFilterSchemaKeys= STAFilterSchemaKeys.sort();
 	var url="";

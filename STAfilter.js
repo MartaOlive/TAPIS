@@ -210,8 +210,8 @@ function fillColumsSelectorFilterRows(selectorInfo, count) { //withoutEntities_3
 	}
 }
 
-function obtainValuesFromSTAdataInCSV(column) {
-	var node= getNodeDialog("DialogFilterRows");
+function obtainValuesFromSTAdataInCSV(column, dataNode) {
+	var node= dataNode || getNodeDialog("DialogFilterRows");
 	var data = node.STAdata;
 	var valuesArray = []
 	for (var i = 0; i < data.length; i++) {
@@ -983,8 +983,9 @@ async function fillValueSelectorFilterRow(count) {
 	if (selectProperty) { //It is STA data? (4selectors)
 		var inputForEntityFilterRowValue = document.getElementById("inputForEntityFilterRow_" + count).value;
 		var entity = getSTAEntityPlural(extractLastEntityFromTextFromInputInFilterRow(inputForEntityFilterRowValue, true));
-		var node= getNodeDialog("DialogFilterRows");
-		var url = getURLWithoutQueryParams(node.STAURL); //Erase first entitie ex: https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/observations. Erase observations
+		var node= getSTAFilterValueSourceNode();
+		var urlNode = (node && node.STAURL) ? node : GetFirstParentNode(node);
+		var url = getURLWithoutQueryParams(urlNode.STAURL); //Erase first entitie ex: https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/observations. Erase observations
 		url= removeFirstEntityInURL(url);
 		url+=entity;
 		//Find the entity to search values
@@ -1005,6 +1006,8 @@ async function fillValueSelectorFilterRow(count) {
 			node.STAentityValuesForSelect = [entity, dataToFillSelect];
 			dataToFillSelect = node.STAentityValuesForSelect[1];
 		}
+		if (!dataToFillSelect)
+			dataToFillSelect = [];
 		var selectProperty = document.getElementById("selectorProperty_" + count);
 		var selectPropertyValue = selectProperty.options[selectProperty.selectedIndex].value;
 		valueUndefined = true;
@@ -1177,7 +1180,18 @@ function changesInInputValueRowFilter(wichinputText, number) { //and refill cond
 	changeSelectConditionValues(number, wichinputText, value1, valueInput1, valueInput2);
 }
 //General selects in FilterRow
+function getSTAFilterValueSourceNode() {
+	var staDlg = document.getElementById("DialogFilterSTA");
+	if (staDlg && staDlg.open)
+		return getNodeDialog("DialogFilterSTA");
+	return getNodeDialog("DialogFilterRows");
+}
+
 function showAndHiddeSelectorAndInputsFilterRow(number) {
+
+	var selectorConditionEl = document.getElementById("selectorCondition_" + number);
+	if (!selectorConditionEl)
+		return;
 
 	var divFilterContainer = document.getElementById("divFilterContainer_" + number);
 	var divFilterContainer2 = document.getElementById("divFilterContainer2_" + number);

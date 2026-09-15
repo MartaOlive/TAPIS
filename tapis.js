@@ -207,7 +207,7 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 	if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
 		return "It is not possible to link an STAnode after no STA node" //Falta afegir OGCApi Collection xq utilitza el filter i mirar si algo més
 	}
-	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" || node.image == "CalculateStatisticsSTA.png") )
+	if (parentNode.image == "sta.png" && (node.image == "FilterSTA.png" || node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" || node.image == "CalculateStatisticsSTA.png") )
 		return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
 	if (parentNode.image == "sta.png" || parentNode.image=="staRoot.png" || parentNode.image=="edcAsset.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
 		return null;
@@ -224,7 +224,7 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 	var idNode=IdOfSTAEntity(node);
 	if (idNode<0)
 		return null;
-	if (parentNode.image === "FilterRowsSTA.png" && parentNode.STAdata.length === 1) {//FilterRow (1 record) +STAEntity or Selec resource
+	if ((parentNode.image === "FilterSTA.png" || parentNode.image === "FilterRowsSTA.png") && parentNode.STAdata.length === 1) {//FilterRow (1 record) +STAEntity or Selec resource
 		//Linked in the schema?
 		var parentLastEntity=getSTAURLLastEntity(parentNode.STAURL);
 		if (STAEntities[parentLastEntity]){ //plural? (It has to be, but in case of...)
@@ -7240,10 +7240,10 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		LoadJSONNodeSTAData(nodeTo);
 		return true;
 	}
-	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "RecursiveExpandSTA.png" || nodeTo.image == "SelectRowSTA.png" || nodeTo.image=="SelectResourceSTA.png" || nodeTo.image == "FilterRowsSTA.png")) {
+	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "RecursiveExpandSTA.png" || nodeTo.image == "SelectRowSTA.png" || nodeTo.image=="SelectResourceSTA.png" || nodeTo.image == "FilterSTA.png" || nodeTo.image == "FilterRowsSTA.png")) {
 		var plural;
 		(getSTAEntityPlural(nodeFrom.STAEntityName) == nodeFrom.STAEntityName)? plural=true: plural=false;
-		if(nodeTo.image == "FilterRowsSTA.png"){
+		if(nodeTo.image == "FilterSTA.png" || nodeTo.image == "FilterRowsSTA.png"){
 			if (plural==true){
 				nodeTo.STAURL = nodeFrom.STAURL;
 				if (nodeFrom.STASelectedExpands)
@@ -8104,7 +8104,11 @@ function networkDoubleClick(params) {
 				showNodeDialog("DialogSelectResource");
 			}
 		}
-		else if (currentNode.image == "FilterRowsSTA.png" || currentNode.image == "FilterRowsTable.png") {
+		else if (currentNode.image == "FilterSTA.png" || currentNode.image == "FilterRowsSTA.png") {
+			ShowFilterSTADialog();
+			showNodeDialog("DialogFilterSTA");
+		}
+		else if (currentNode.image == "FilterRowsTable.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode) {
 				if (parentNode.STAOGCAPIconformance){
@@ -8121,9 +8125,6 @@ function networkDoubleClick(params) {
 				}
 				if (parentNode.STAEntityName)
 					currentNode.STAEntityName = deapCopy(parentNode.STAEntityName);
-				/*if (parentNode.OGCType){
-					currentNode.OGCType="OGCAPIitem";
-				}*/
 				ShowTableFilterRowsDialog(parentNode, currentNode);
 				showNodeDialog("DialogFilterRows");
 			}
@@ -11642,6 +11643,7 @@ function populateDialogdataQualityResult(parentNode, node){
 			break;
 	}
 }
+
 
 
 //function giveMeNetworkInformation(event) {

@@ -461,3 +461,195 @@
 	text-align: center;
 }
 
+#DialogFilterSTA .FilterSTAGroup {
+	background-color: #f3eadf;
+	border: 1px solid #d4c6b4;
+	padding: 10px 12px 12px;
+	margin-top: 8px;
+	outline: none;
+}
+
+#DialogFilterSTA .FilterSTAGroup .FilterSTAGroup {
+	margin-left: 14px;
+	background-color: #d7e6de;
+	border-color: #a8c0b4;
+}
+
+#DialogFilterSTA .FilterSTAGroup .FilterSTAGroup .FilterSTAGroup {
+	background-color: #f3eadf;
+	border-color: #d4c6b4;
+}
+
+#DialogFilterSTA .FilterSTAGroup .FilterSTAGroup .FilterSTAGroup .FilterSTAGroup {
+	background-color: #d7e6de;
+	border-color: #a8c0b4;
+}
+
+#DialogFilterSTA .FilterSTAGroup.FilterSTAGroupSelected {
+	background-image: linear-gradient(rgba(140, 118, 176, 0.22), rgba(140, 118, 176, 0.22));
+	border-color: #b9a8d0;
+	box-shadow: inset 0 0 0 1px rgba(140, 118, 176, 0.28);
+	outline: none;
+}
+
+#DialogFilterSTA .FilterSTAGroup.FilterSTAGroupDropTarget {
+	background-image: linear-gradient(rgba(70, 130, 95, 0.24), rgba(70, 130, 95, 0.24));
+	border-color: #8fb89a;
+	box-shadow: inset 0 0 0 1px rgba(90, 140, 110, 0.22);
+	outline: none;
+}
+
+#DialogFilterSTA .FilterSTADragging {
+	opacity: 0.75;
+	background-image: linear-gradient(rgba(210, 140, 60, 0.28), rgba(210, 140, 60, 0.28)) !important;
+	border-color: #d4a373 !important;
+	box-shadow: 0 0 0 2px rgba(196, 140, 80, 0.4);
+}
+
+#DialogFilterSTA .FilterSTAGroup > legend.FilterSTAGroupLegend {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	width: calc(100% - 10px);
+	gap: 12px;
+	box-sizing: border-box;
+	padding: 0 4px;
+}
+
+#DialogFilterSTA .FilterSTAGroupLegendStart {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	min-width: 0;
+}
+
+#DialogFilterSTA .FilterSTAGroupBody {
+	display: flex;
+	align-items: stretch;
+	gap: 10px;
+}
+
+#DialogFilterSTA .FilterSTAGroupChildren {
+	flex: 1;
+	min-width: 0;
+}
+
+#DialogFilterSTA .FilterSTAGroupLogic {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 4px;
+	flex-shrink: 0;
+	white-space: nowrap;
+	font-weight: normal;
+	padding: 4px 2px 4px 8px;
+	border-left: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+#DialogFilterSTA .FilterSTAGroupToolbar {
+	margin: 4px 0 2px 0;
+}
+
+#DialogFilterSTA .FilterSTAConditionCard {
+	background-color: #fffdfb;
+	border: 1px solid #e4ddd4;
+}
+
+#DialogFilterSTA .FilterSTAConditionCard.FilterSTAConditionSelected {
+	background-image: linear-gradient(rgba(176, 110, 155, 0.40), rgba(176, 110, 155, 0.40));
+	border-color: #c08aae;
+	box-shadow: inset 0 0 0 2px rgba(176, 90, 145, 0.42);
+}
+
+#DialogFilterSTA .FilterSTAEntityRow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin-top: 2px;
+}
+
+#DialogFilterSTA .FilterSTAEntityLabel {
+	font-weight: bold;
+}
+
+#DialogFilterSTA .FilterSTAEntityPath {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px;
+}
+
+#DialogFilterSTA .FilterSTAEntityChip {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 2px 8px;
+	border: 1px solid #cfc4b6;
+	border-radius: 12px;
+	background: #f7f1ea;
+	font-size: 0.95em;
+}
+
+#DialogFilterSTA .FilterSTAEntityChipRoot {
+	background: #ebe3d8;
+	font-weight: 600;
+}
+
+#DialogFilterSTA .FilterSTAEntitySep {
+	color: #7a6f64;
+}
+
+#DialogFilterSTA .FilterSTAChipRemove {
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	padding: 0 2px;
+	line-height: 1;
+	font-size: 1.1em;
+}
+
+#DialogFilterSTA .FilterSTAPropertyRow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin-top: 6px;
+}
+
+#DialogFilterSTA .FilterSTAPropertyCascade,
+#DialogFilterSTA .FilterSTAPropertyHop {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px;
+}
+
+#DialogFilterSTA .FilterSTAProperty,
+#DialogFilterSTA .FilterSTAPropertyNest {
+	max-width: 180px;
+}
+
+#DialogFilterSTA .FilterSTAPropertyKeyInput {
+	min-width: 8em;
+}
+
+#DialogFilterSTA .FilterSTARelatedSelect {
+	max-width: 160px;
+}
+
+#DialogFilterSTA .FilterSTADragHandle {
+	cursor: grab;
+}
+
+#DialogFilterSTA .FilterSTADragging .FilterSTADragHandle {
+	cursor: grabbing;
+}
+
+#DialogFilterSTA .FilterSTAValue,
+#DialogFilterSTA .FilterSTAValueA,
+#DialogFilterSTA .FilterSTAValueB {
+	min-width: 12em;
+}
+
