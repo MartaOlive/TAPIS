@@ -1715,8 +1715,8 @@
 		},
 		{
 			"id": "824c.1teek4u",
-			"label": "Filter Rows (STA)",
-			"image": "FilterSTA.png",
+			"label": "Filter Rows",
+			"image": "FilterRowsSTA.png",
 			"shape": "circularImage",
 			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations",
 			"STAdata": [

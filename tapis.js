@@ -204,10 +204,10 @@ function getConnectionSTAEntity(parentNode, node) {
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 	if (node.image=="qualityResultsViewer.png" && (parentNode.image!="uncertainty.png" && parentNode.image!="completness.png" && parentNode.image!="misclassificationMatrix.png" && parentNode.image!="logicalConsistency.png" && parentNode.image!="temporalQuality.png" && parentNode.image!="thematicQuality.png" && parentNode.image!="positionalQuality.png" )) return "Quality Results Viewer can only be connected to a quality node";
-	if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
+	if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && parentNode.image != "ogcAPICols.png" && parentNode.image != "ogcAPIItems.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
 		return "It is not possible to link an STAnode after no STA node" //Falta afegir OGCApi Collection xq utilitza el filter i mirar si algo més
 	}
-	if (parentNode.image == "sta.png" && (node.image == "FilterSTA.png" || node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" || node.image == "CalculateStatisticsSTA.png") )
+	if (parentNode.image == "sta.png" && (node.image == "FilterRowsSTA.png" || node.image == "SelectRowSTA.png" || node.image == "SelectResourceSTA.png" || node.image == "GeoFilterPolSTA.png" || node.image == "SelectColumnsSTA.png" || node.image == "ExpandColumnSTA.png"  || node.image == "MergeExpandsSTA.png" || node.image == "RecursiveExpandSTA.png" || node.image == "SortBySTA.png" || node.image == "RangeSTA.png" || node.image == "OneValueSTA.png" || node.image == "SubscribeSTA.png" || node.image == "CountResultsSTA.png" || node.image == "CalculateStatisticsSTA.png") )
 		return "The operation cannot be applied to the root of an STA. (Suggestion: connect a STA Entity first)";
 	if (parentNode.image == "sta.png" || parentNode.image=="staRoot.png" || parentNode.image=="edcAsset.png" || parentNode.image=="ogcAPICols.png" || parentNode.image=="csw.png")
 		return null;
@@ -224,7 +224,7 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 	var idNode=IdOfSTAEntity(node);
 	if (idNode<0)
 		return null;
-	if ((parentNode.image === "FilterSTA.png" || parentNode.image === "FilterRowsSTA.png") && parentNode.STAdata.length === 1) {//FilterRow (1 record) +STAEntity or Selec resource
+	if (parentNode.image === "FilterRowsSTA.png" && parentNode.STAdata.length === 1) {//FilterRow (1 record) +STAEntity or Selec resource
 		//Linked in the schema?
 		var parentLastEntity=getSTAURLLastEntity(parentNode.STAURL);
 		if (STAEntities[parentLastEntity]){ //plural? (It has to be, but in case of...)
@@ -7240,11 +7240,14 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		LoadJSONNodeSTAData(nodeTo);
 		return true;
 	}
-	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "RecursiveExpandSTA.png" || nodeTo.image == "SelectRowSTA.png" || nodeTo.image=="SelectResourceSTA.png" || nodeTo.image == "FilterSTA.png" || nodeTo.image == "FilterRowsSTA.png")) {
+	if (staNodes && nodeFrom.STAURL && (nodeTo.image == "RecursiveExpandSTA.png" || nodeTo.image == "SelectRowSTA.png" || nodeTo.image=="SelectResourceSTA.png" || nodeTo.image == "FilterRowsSTA.png")) {
 		var plural;
 		(getSTAEntityPlural(nodeFrom.STAEntityName) == nodeFrom.STAEntityName)? plural=true: plural=false;
-		if(nodeTo.image == "FilterSTA.png" || nodeTo.image == "FilterRowsSTA.png"){
-			if (plural==true){
+		if(nodeTo.image == "FilterRowsSTA.png"){
+			var parentIsOgcApi = nodeFrom.image == "ogcAPICols.png" || nodeFrom.image == "ogcAPIItems.png" ||
+				nodeFrom.OGCType == "OGCAPIcollections" || nodeFrom.OGCType == "OGCAPIcollection" ||
+				nodeFrom.OGCType == "OGCAPIitems" || nodeFrom.OGCType == "OGCAPIitem";
+			if (plural==true || parentIsOgcApi){
 				nodeTo.STAURL = nodeFrom.STAURL;
 				if (nodeFrom.STASelectedExpands)
 					nodeTo.STASelectedExpands=deapCopy(nodeFrom.STASelectedExpands);
@@ -7254,6 +7257,12 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 					nodeTo.STAdataAttributes = deapCopy(nodeFrom.STAdataAttributes);
 				if (nodeFrom.STAsecurity)
 					nodeTo.STAsecurity=deapCopy(nodeFrom.STAsecurity);
+				if (nodeFrom.STAOGCAPIconformance)
+					nodeTo.STAOGCAPIconformance=nodeFrom.STAOGCAPIconformance;
+				if (nodeFrom.STAOGCAPIqueryable)
+					nodeTo.STAOGCAPIqueryable=nodeFrom.STAOGCAPIqueryable;
+				if (nodeFrom.OGCType && !nodeTo.OGCType)
+					nodeTo.OGCType = nodeFrom.OGCType;
 
 				networkNodes.update(nodeTo);
 				if (addEdge)
@@ -7392,7 +7401,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		}
 		return true;
 	}
-	if (tableNodes && (nodeTo.image == "Meaning.png" || 
+	if (tableNodes && (nodeTo.image == "Meaning.png" ||
 				nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "SelectRowTable.png" || 
 				nodeTo.image == "FilterRowsTable.png" || nodeTo.image == "JoinTables.png")){
 		if (nodeFrom.STAdata)
@@ -8104,31 +8113,12 @@ function networkDoubleClick(params) {
 				showNodeDialog("DialogSelectResource");
 			}
 		}
-		else if (currentNode.image == "FilterSTA.png" || currentNode.image == "FilterRowsSTA.png") {
-			// Old DialogFilterRows STA UI replaced by filterSTADlg.js (ShowFilterSTADialog).
-			ShowFilterSTADialog();
-			showNodeDialog("DialogFilterSTA");
+		else if (currentNode.image == "FilterRowsSTA.png") {
+			OpenFilterRowsAfterOgcCollections(currentNode);
 		}
 		else if (currentNode.image == "FilterRowsTable.png") {
-			var parentNode=GetFirstParentNode(currentNode);
-			if (parentNode) {
-				if (parentNode.STAOGCAPIconformance){
-					currentNode.STAOGCAPIconformance=parentNode.STAOGCAPIconformance;
-				}
-				if (parentNode.STAOGCAPIqueryable){
-					currentNode.STAOGCAPIqueryable=parentNode.STAOGCAPIqueryable;
-				}
-				if (parentNode.STASelectedExpands){
-					if (!currentNode.STASelectedExpands)currentNode.STASelectedExpands= deapCopy(parentNode.STASelectedExpands);
-				}
-				if (parentNode.STASelectExpandNextOrigin){
-					currentNode.STASelectExpandNextOrigin= deapCopy(parentNode.STASelectExpandNextOrigin);
-				}
-				if (parentNode.STAEntityName)
-					currentNode.STAEntityName = deapCopy(parentNode.STAEntityName);
-				ShowTableFilterRowsDialog(parentNode, currentNode);
-				showNodeDialog("DialogFilterRows");
-			}
+			if (GetFirstParentNode(currentNode))
+				OpenFilterRowsAfterOgcCollections(currentNode);
 		}
 		else if (currentNode.image == "FilterRowsByTime.png"){							
 			currentNode.STAEntityName= parentNode.STAEntityName;

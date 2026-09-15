@@ -54,6 +54,7 @@
 	<script type="text/javascript" src="groupByDlg.js"></script>
 	<script type="text/javascript" src="STAfilter.js"></script>
 	<script type="text/javascript" src="filterSTADlg.js"></script>
+	<script type="text/javascript" src="filterOGCDlg.js"></script>
 	<script type="text/javascript" src="diagrams.js"></script>
 	<script type="text/javascript" src="aws.js"></script>
 	<script type="text/javascript" src="tapis.js"></script>
@@ -1147,7 +1148,7 @@
 		</form>
 	</dialog>
 	<dialog id="DialogFilterSTA" onClose='FilterSTADialogClosed(event)'>
-		<div class="center" style="font-size: large;">Filter rows (STA)</div>
+		<div class="center" style="font-size: large;">Filter Rows</div>
 		<form>
 			<div id="DialogFilterSTAParentURL" style="font-size: small; word-break: break-all; margin: 8px 0;">Parent URL: (none)</div>
 			<div id="DialogFilterSTATree"></div>
@@ -1157,6 +1158,19 @@
 				<button value="cancel" onClick="FilterSTACancel(event)" formmethod="dialog">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogFilterSTANodeId"></input>
+		</form>
+	</dialog>
+	<dialog id="DialogFilterOGC" onClose='FilterOGCDialogClosed(event)'>
+		<div class="center" style="font-size: large;">Filter Rows (OGC API Features)</div>
+		<form>
+			<div id="DialogFilterOGCParentURL" style="font-size: small; word-break: break-all; margin: 8px 0;">Parent URL: (none)</div>
+			<div id="DialogFilterOGCTree"></div>
+			<div style="margin-top: 10px; font-family: monospace;">filter = <span id="DialogFilterOGCFilterPreview"></span></div>
+			<div class="center">
+				<button type="button" value="default" onClick="FilterOGCOk(event)">OK</button>
+				<button type="button" value="cancel" onClick="FilterOGCCancel(event)">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogFilterOGCNodeId"></input>
 		</form>
 	</dialog>
 	<dialog id="DialogFilterRowsByTime" onClose='hideNodeDialog("DialogFilterRowsByTime", event)'> 

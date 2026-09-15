@@ -285,7 +285,13 @@ async function askForConformanceInOGCAPIFeatures(node) {
 	var url = node.STAURL.endsWith("/collections") ? node.STAURL.substring(0, node.STAURL.length-"/collections".length) : node.STAURL;
 	url += "/conformance?f=json";
 	var conformanceInformation = await loadAPIDataWithReturn(url, "OGCAPIConformance"); //ask for conformance (what can I do with this API)
-	var conformanceArray = []
+	var conformanceArray = [];
+	if (!conformanceInformation || !conformanceInformation.length) {
+		node = networkNodes.get(node.id);
+		node.STAOGCAPIconformance = conformanceArray;
+		networkNodes.update(node);
+		return;
+	}
 	for (var i = 0; i < conformanceInformation.length; i++) {
 		for (var a = 0; a < filterInConformance.length; a++) {
 			if (conformanceInformation[i].includes(filterInConformance[a])) {
@@ -300,14 +306,18 @@ async function askForConformanceInOGCAPIFeatures(node) {
 	networkNodes.update(node);
 }
 
-async function askForCollectionQueryables() {
-	var node= getNodeDialog("DialogFilterRows");
+async function askForCollectionQueryables(node) {
+	node = node || getNodeDialog("DialogFilterOGC") || getNodeDialog("DialogFilterRows");
+	if (!node || !node.STAURL)
+		return;
 	var url = node.STAURL;
 	var index = url.indexOf("/items");
+	if (index === -1)
+		return;
 	url = url.slice(0, index);
 	url += "/queryables?f=json";
 	var queryablesInformation = await loadAPIDataWithReturn(url, "OGCAPIqueryables");
-	if (Object.keys(queryablesInformation).length != 0) {
+	if (queryablesInformation && Object.keys(queryablesInformation).length != 0) {
 		node.STAOGCAPIqueryable = queryablesInformation;
 	} else {
 		node.STAOGCAPIqueryable = "no";
@@ -1191,6 +1201,9 @@ function getSTAFilterValueSourceNode() {
 	var staDlg = document.getElementById("DialogFilterSTA");
 	if (staDlg && staDlg.open)
 		return getNodeDialog("DialogFilterSTA");
+	var ogcDlg = document.getElementById("DialogFilterOGC");
+	if (ogcDlg && ogcDlg.open)
+		return getNodeDialog("DialogFilterOGC");
 	return getNodeDialog("DialogFilterRows");
 }
 
@@ -1896,13 +1909,13 @@ function readInformationRowFilterTable(elem, nexus, parent,node) {  //Table (not
 }
 
 var stopreadInformationRowFilterOGCAPIFeatures = false;
-function readInformationRowFilterOGCAPIFeatures(elem, entity, nexus, parent) { //OGCAPIFeatures
-	var node= getNodeDialog("DialogFilterRows");
+function readInformationRowFilterOGCAPIFeatures(elem, entity, nexus, parent, node) { //OGCAPIFeatures
+	node = node || getNodeDialog("DialogFilterOGC") || getNodeDialog("DialogFilterRows");
 	var infoFilter = node.STAinfoFilter;
 	if (stopreadInformationRowFilterOGCAPIFeatures == false) {
 		if (typeof elem === "object") {
 			for (var i = 0; i < elem.elems.length; i++) {
-				readInformationRowFilterOGCAPIFeatures(elem.elems[i], entity, elem.nexus, elem);
+				readInformationRowFilterOGCAPIFeatures(elem.elems[i], entity, elem.nexus, elem, node);
 			}
 			if (node.STAUrlAPICounter.length != infoFilter.length && node.STAUrlAPICounter.length != 0 && nexus != "no" && parent != "no") {
 				node.STAUrlAPI += " " + nexus + " ";
@@ -1910,8 +1923,9 @@ function readInformationRowFilterOGCAPIFeatures(elem, entity, nexus, parent) { /
 		}
 		else { //Build URL
 			//Last Array, which contains the filters 
-			var data = "", condition;;
+			var data = "", condition = "";
 			for (var i = 0; i < infoFilter.length; i++) {
+				condition = "";
 				switch (infoFilter[i][3]) {
 					case ' = ':
 						condition = " = ";
@@ -1936,16 +1950,21 @@ function readInformationRowFilterOGCAPIFeatures(elem, entity, nexus, parent) { /
 					var parentLenght = parent.elems.length;
 					var indexOf = parent.elems.indexOf(elem);
 					var apostropheOrSpace;
-					var typeOfValue = infoFilter[i][5];//it is not posible to take the information of data type because every API calls it diferent (type, data type...)		
+					var typeOfValue = (infoFilter[i][3] == ' [a,b] ' || infoFilter[i][3] == ' (a,b] ' || infoFilter[i][3] == ' [a,b) ' || infoFilter[i][3] == ' (a,b) ') ? infoFilter[i][6] : infoFilter[i][5];
 					(typeOfValue == "number") ? apostropheOrSpace = "" : apostropheOrSpace = "'"; //Canviar segons el tipus que posi a la queryable
 
 					// if (indexOf == 0) {
 					// 	data += "(";
 					// }
-					if (condition == ' = ' || condition == ' &ne; ' || condition == ' &ge; ' || condition == ' > ' || condition == ' &le; ' || condition == ' < ') { //passarho a com Table+
+					if (condition == ' = ' || condition == ' != ' || condition == ' >= ' || condition == ' > ' || condition == ' <= ' || condition == ' < ') {
 
 						data += "(" + infoFilter[i][1] + condition + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + ")";
 
+					}
+					else if (infoFilter[i][3] == ' [a,b] ' || infoFilter[i][3] == ' (a,b] ' || infoFilter[i][3] == ' [a,b) ' || infoFilter[i][3] == ' (a,b) ') {
+						var lo = (infoFilter[i][3] == ' (a,b] ' || infoFilter[i][3] == ' (a,b) ') ? " > " : " >= ";
+						var hi = (infoFilter[i][3] == ' [a,b) ' || infoFilter[i][3] == ' (a,b) ') ? " < " : " <= ";
+						data += "(" + infoFilter[i][1] + lo + apostropheOrSpace + infoFilter[i][4] + apostropheOrSpace + " AND " + infoFilter[i][1] + hi + apostropheOrSpace + infoFilter[i][5] + apostropheOrSpace + ")";
 					}
 					//by the moment, only this can be filtered
 					if ((indexOf + 1) != parentLenght) {
@@ -2013,19 +2032,23 @@ function applyEvalAndFilterData(node) {
 	networkNodes.update(node);
 }
 
-async function askForCollectionQueryables() {
-	var node= getNodeDialog("DialogFilterRows");
+async function askForCollectionQueryables(node) {
+	node = node || getNodeDialog("DialogFilterOGC") || getNodeDialog("DialogFilterRows");
+	if (!node || !node.STAURL)
+		return;
 	var url = node.STAURL;
 	var index = url.indexOf("/items");
+	if (index === -1)
+		return;
 	url = url.slice(0, index);
 	url += "/queryables?f=json";
 	var queryablesInformation = await loadAPIDataWithReturn(url, "OGCAPIqueryables");
-	if (Object.keys(queryablesInformation).length != 0) {
+	if (queryablesInformation && Object.keys(queryablesInformation).length != 0) {
 		node.STAOGCAPIqueryable = queryablesInformation;
 	} else {
 		node.STAOGCAPIqueryable = "no";
 	}
-
+	networkNodes.update(node);
 }
 function ShowTableFilterRowsDialog(parentNode, node) {
 
@@ -2062,7 +2085,7 @@ function ShowTableFilterRowsDialog(parentNode, node) {
 		}
 	}else{
 	*/
-		ShowFilterTable(); // Table / CSV / OGC via FilterRowsTable
+		ShowFilterTable(); // Table / CSV. OGC collections with filter use DialogFilterOGC.
 	/* } */
 }
 
@@ -2149,6 +2172,8 @@ function GetFilterRowsSTA(node) {
 	FinalizeSelectedSelectExpands(node, previousSTAURL, "Filtering STA by selected criteria... ");	
 	}
 */
+	/* Old OGC API apply from DialogFilterRows (STAelementFilter → STAUrlAPI).
+	   DialogFilterOGC applies CQL on the parent URL in FilterOGCApplyFilterToNode. */
 	async function GetFilterRowsOGCAPIFeatures(node){
 		var previousNode=networkNodes.get(network.getConnectedNodes(node.id, "from"));
 		var previousURL = previousNode[0].STAURL;//put URL ready to add things 
@@ -2156,10 +2181,8 @@ function GetFilterRowsSTA(node) {
 			node.STAUrlAPICounter = []; // I need to restart it 
 			stopreadInformationRowFilterOGCAPIFeatures = false;
 			node.STAURL = previousURL  +"?filter=";
-			if (node.STAUrlAPI){
-				node.STAUrlAPI="";
-			}
-			readInformationRowFilterOGCAPIFeatures(node.STAelementFilter, "no", "no"); //apply filter
+			node.STAUrlAPI="";
+			readInformationRowFilterOGCAPIFeatures(node.STAelementFilter, "no", "no", undefined, node); //apply filter
 			node.STAURL = node.STAURL+node.STAUrlAPI+"&f=json";
 			node.OGCExpectedLength = 100;
 			LoadJSONNodeSTAData(node);

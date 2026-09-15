@@ -625,30 +625,46 @@ function FilterSTAValueDataNode() {
 	return parentNode || node;
 }
 
+function FilterSTAWalkPartsWithIotId(parts) {
+	var list = [parts];
+	if (parts && parts.length && parts[parts.length - 1] === "id") {
+		var alt = parts.slice(0, -1);
+		alt.push("@iot.id");
+		list.push(alt);
+	} else if (parts && parts.length === 1 && parts[0] === "id")
+		list.push(["@iot.id"]);
+	return list;
+}
+
 function FilterSTATableHasProperty(dataNode, path, prop) {
 	if (!dataNode || !prop)
 		return false;
 	var propParts = FilterSTAPropertyPathParts(prop);
 	var parts = (path && path.length) ? path.concat(propParts) : propParts;
-	var flat = parts.join("/");
+	var variants = FilterSTAWalkPartsWithIotId(parts);
+	var v, flat, r, cur, n;
 	if (dataNode.STAdataAttributes) {
-		if (dataNode.STAdataAttributes[flat])
-			return true;
-		if ((!path || !path.length) && dataNode.STAdataAttributes[prop])
+		for (v = 0; v < variants.length; v++) {
+			flat = variants[v].join("/");
+			if (dataNode.STAdataAttributes[flat])
+				return true;
+			if ((!path || !path.length) && dataNode.STAdataAttributes[variants[v][variants[v].length - 1]])
+				return true;
+		}
+		if (dataNode.STAdataAttributes["@iot.id"] && (prop === "id" || propParts[propParts.length - 1] === "id"))
 			return true;
 	}
 	if (!dataNode.STAdata || !dataNode.STAdata.length)
 		return false;
-	var found = false;
-	var n = Math.min(dataNode.STAdata.length, 250);
-	for (var r = 0; r < n; r++) {
-		var cur = FilterSTAWalkRecord(dataNode.STAdata[r], parts);
-		if (typeof cur !== "undefined") {
-			found = true;
-			break;
+	n = Math.min(dataNode.STAdata.length, 250);
+	for (v = 0; v < variants.length; v++) {
+		for (r = 0; r < n; r++) {
+			cur = FilterSTAWalkRecord(dataNode.STAdata[r], variants[v]);
+			if (typeof cur !== "undefined")
+				return true;
 		}
 	}
-	return found;
+	return false;
 }
 
 function FilterSTANestedUniqueValues(data, column) {
@@ -752,12 +768,23 @@ async function FilterSTAFillValueSelectors(card) {
 		entityInput.value = FilterSTAEntityInputValue(path);
 	var dataNode = FilterSTAValueDataNode();
 	var localValues = null;
+	var column, aliases, a, more;
 	if (prop && dataNode && FilterSTATableHasProperty(dataNode, path, prop)) {
-		if ((!path || !path.length) && prop.indexOf("/") === -1 && typeof obtainValuesFromSTAdataInCSV === "function")
-			localValues = obtainValuesFromSTAdataInCSV(prop, dataNode);
-		else {
-			var column = path.length ? (path.join("/") + "/" + prop) : prop;
-			localValues = FilterSTANestedUniqueValues(dataNode.STAdata, column);
+		column = path.length ? (path.join("/") + "/" + prop) : prop;
+		aliases = [column];
+		if (prop === "id" || FilterSTAPropertyPathParts(prop).slice(-1)[0] === "id") {
+			aliases.push(path.length ? (path.join("/") + "/@iot.id") : "@iot.id");
+			if (column !== "id")
+				aliases.push(column.replace(/\/id$/, "/@iot.id"));
+		}
+		localValues = [];
+		for (a = 0; a < aliases.length; a++) {
+			if (aliases[a].indexOf("/") === -1 && typeof obtainValuesFromSTAdataInCSV === "function")
+				more = obtainValuesFromSTAdataInCSV(aliases[a], dataNode);
+			else
+				more = FilterSTANestedUniqueValues(dataNode.STAdata, aliases[a]);
+			if (more && more.length)
+				localValues = localValues.concat(more);
 		}
 	}
 	if (localValues && localValues.length)
@@ -1414,111 +1441,23 @@ function FilterSTABindDialogEvents() {
 	});
 }
 
-function FilterSTAOperatorToOld(op) {
-	var map = {
-		eq: " = ",
-		ne: " &ne; ",
-		ge: " &ge; ",
-		gt: " > ",
-		le: " &le; ",
-		lt: " < ",
-		interval_cc: " [a,b] ",
-		interval_oc: " (a,b] ",
-		interval_co: " [a,b) ",
-		interval_oo: " (a,b) ",
-		contains: "contains",
-		not_contains: "no contains",
-		startswith: "starts with",
-		endswith: "ends with",
-		year: "year",
-		month: "month",
-		day: "day",
-		hour: "hour",
-		minute: "minute",
-		date: "date"
-	};
-	return map[op] || op;
+function FilterSTAStripLegacyFilterFields(node) {
+	if (!node)
+		return;
+	delete node.STAboxNames;
+	delete node.STAconditionsFilter;
+	delete node.STACounter;
+	delete node.STAelementFilter;
+	delete node.STAinfoFilter;
+	delete node.STAFilterSchema;
+	delete node.STAFilterRowEntities;
+	delete node.STAUrlAPI;
+	delete node.STAUrlAPICounter;
 }
 
-function FilterSTAGuessValueType(value) {
-	if (value === null || typeof value === "undefined")
-		return "text";
-	var s = String(value).trim();
-	if (/^(true|false)$/i.test(s) || /^-?\d+(\.\d+)?([eE][+-]?\d+)?$/.test(s))
-		return "number";
-	return "text";
-}
-
-function FilterSTAConditionToInfoRow(cond, rowId, entityName) {
-	var plural = (typeof getSTAEntityPlural === "function") ? getSTAEntityPlural(entityName) : (entityName || "");
-	var hops = (cond.entityPath && cond.entityPath.length) ? cond.entityPath.slice() : [];
-	var entityPath = hops.length ? (plural ? (plural + "/" + hops.join("/")) : hops.join("/")) : plural;
-	var prop = (cond.property && String(cond.property).trim()) ? String(cond.property).trim() : "";
-	var slash = prop.indexOf("/");
-	var propArr = slash === -1 ? [prop] : [prop.slice(0, slash), prop.slice(slash)];
-	var oldOp = FilterSTAOperatorToOld(cond.operator);
-	var row = [rowId, entityPath, propArr, oldOp];
-	if (FilterSTAIsIntervalOperator(cond.operator)) {
-		row.push(cond.valueA || "", cond.valueB || "");
-	} else {
-		row.push(cond.value || "", FilterSTAGuessValueType(cond.value));
-	}
-	return { row: row, entities: [plural].concat(hops) };
-}
-
-function FilterSTATreeToElementFilter(tree, ctx) {
-	var children = (tree && tree.children) ? tree.children : [];
-	var elems = [];
-	var maxChildLevel = -1;
-	for (var i = 0; i < children.length; i++) {
-		var child = children[i];
-		if (!child)
-			continue;
-		if (child.type === "group") {
-			var nested = FilterSTATreeToElementFilter(child, ctx);
-			elems.push(nested);
-			var lvl = parseInt(String(nested.boxName).charAt(0), 10);
-			if (!isNaN(lvl) && lvl > maxChildLevel)
-				maxChildLevel = lvl;
-		} else {
-			var rowId = ctx.nextRow++;
-			var mapped = FilterSTAConditionToInfoRow(child, rowId, ctx.entityName);
-			ctx.filterData.push(mapped.row);
-			ctx.filterRowEntities["optionsRow" + rowId] = mapped.entities;
-			elems.push(rowId);
-		}
-	}
-	var level = maxChildLevel < 0 ? 0 : maxChildLevel + 1;
-	if (typeof ctx.nextGroup[level] === "undefined")
-		ctx.nextGroup[level] = 0;
-	var boxName = level + "_" + ctx.nextGroup[level]++;
-	return {
-		elems: elems,
-		nexus: elems.length > 1 ? ((tree && tree.logic === "or") ? "or" : "and") : null,
-		boxName: boxName
-	};
-}
-
-function FilterSTAPersistTreeAsOldFilter(node) {
-	var tree = node.STAFilterTree;
-	var ctx = {
-		nextRow: 0,
-		nextGroup: {},
-		filterData: [],
-		filterRowEntities: {},
-		entityName: node.STAEntityName
-	};
-	if (tree && tree.type === "group") {
-		node.STAelementFilter = FilterSTATreeToElementFilter(tree, ctx);
-		node.STAinfoFilter = ctx.filterData;
-		node.STAFilterRowEntities = ctx.filterRowEntities;
-		if (typeof createObjectToKeepForFilter === "function")
-			createObjectToKeepForFilter(node, node.STAelementFilter, {});
-	}
+function FilterSTAFilterForSelectedExpands(node) {
 	return {
 		entity: node.STAEntityName,
-		filterSchema: node.STAFilterSchema,
-		filterData: node.STAinfoFilter,
 		filterOData: node.STAFilterOData
 	};
 }
@@ -1571,6 +1510,7 @@ function FilterSTASaveTreeToNode() {
 		return;
 	node.STAFilterTree = FilterSTAReadGroup(root);
 	node.STAFilterOData = buildSTAFilterFromFilterSTATree(node.STAFilterTree);
+	FilterSTAStripLegacyFilterFields(node);
 	if (typeof networkNodes !== "undefined" && networkNodes.update)
 		networkNodes.update(node);
 }
@@ -1613,7 +1553,10 @@ function FilterSTAApplyFilterToNode(node) {
 	var selectedExpands = GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
 	if (!selectedExpands)
 		selectedExpands = node.STASelectedExpands = { selected: [], expanded: {} };
-	selectedExpands.filter = FilterSTAPersistTreeAsOldFilter(node);
+	selectedExpands.filter = FilterSTAFilterForSelectedExpands(node);
+	FilterSTAStripLegacyFilterFields(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
 	FinalizeSelectedSelectExpands(node, previousSTAURL, "Filtering STA by selected criteria... ");
 	if (typeof updateQueryAndTableArea === "function")
 		updateQueryAndTableArea(node);
@@ -1631,6 +1574,9 @@ function FilterSTAOk(event) {
 
 function FilterSTACancel(event) {
 	FilterSTARevertUncommittedTree();
+	var node = getNodeDialog("DialogFilterSTA");
+	if (node && typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
 	hideNodeDialog("DialogFilterSTA", event);
 }
 
@@ -1647,6 +1593,9 @@ function ShowFilterSTADialog() {
 	node = getNodeDialog("DialogFilterSTA") || currentNode;
 	if (!node)
 		return;
+	FilterSTAStripLegacyFilterFields(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
 	FilterSTAUiGeneration++;
 	FilterSTATreeSnapshot = node.STAFilterTree ? JSON.stringify(node.STAFilterTree) : null;
 	FilterSTABindDialogEvents();
