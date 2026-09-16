@@ -1101,6 +1101,8 @@ function FilterTableStripLegacyFilterFields(node) {
 	delete node.STAFilterRowEntities;
 	delete node.STAUrlAPI;
 	delete node.STAUrlAPICounter;
+	delete node.STAtable;
+	delete node.STAtableCounter;
 }
 
 function FilterTableCloneTree(tree) {
@@ -1196,6 +1198,32 @@ function FilterTableAsDate(value) {
 	return isNaN(d.getTime()) ? null : d;
 }
 
+function FilterTableIsConditionComplete(cond) {
+	if (!cond || cond.type !== "condition" || !cond.property || !cond.operator)
+		return false;
+	if (FilterTableIsIntervalOperator(cond.operator))
+		return !!(cond.valueA && String(cond.valueA).trim() && cond.valueB && String(cond.valueB).trim());
+	return !!(cond.value && String(cond.value).trim());
+}
+
+function FilterTablePruneTreeForApply(tree) {
+	var i, child, children, kept;
+	if (!tree)
+		return null;
+	if (tree.type === "condition")
+		return FilterTableIsConditionComplete(tree) ? tree : null;
+	children = tree.children || [];
+	kept = [];
+	for (i = 0; i < children.length; i++) {
+		child = FilterTablePruneTreeForApply(children[i]);
+		if (child)
+			kept.push(child);
+	}
+	if (!kept.length)
+		return null;
+	return { type: "group", logic: tree.logic === "or" ? "or" : "and", children: kept };
+}
+
 function FilterTableConditionMatches(cond, record) {
 	var cell = FilterTableGetRecordValue(record, cond.property);
 	var op = cond.operator;
@@ -1287,24 +1315,34 @@ function FilterTableTreeMatches(tree, record) {
 }
 
 function FilterTableApplyFilterToNode(node) {
-	var parentNode, source, filtered, i;
+	var parentNode, source, filtered, i, tree;
 	if (!node)
-		return;
-	if (!node.STAFilterExpr || node.STAFilterExpr.indexOf(FilterTableIncompletePlaceholder) !== -1)
 		return;
 	FilterTableStripLegacyFilterFields(node);
 	parentNode = (typeof GetFirstParentNode === "function") ? GetFirstParentNode(node) : null;
 	source = (parentNode && parentNode.STAdata) ? parentNode.STAdata : null;
-	if (!source || !source.length)
+	if (!source) {
+		if (typeof networkNodes !== "undefined" && networkNodes.update)
+			networkNodes.update(node);
 		return;
+	}
 	if (typeof deapCopy === "function")
 		source = deapCopy(source);
-	filtered = [];
-	for (i = 0; i < source.length; i++) {
-		if (FilterTableTreeMatches(node.STAFilterTreeTable, source[i]))
-			filtered.push(source[i]);
+	tree = FilterTablePruneTreeForApply(node.STAFilterTreeTable);
+	if (!tree) {
+		delete node.STAFilterTreeTable;
+		delete node.STAFilterExpr;
+		node.STAdata = source;
+	} else {
+		node.STAFilterTreeTable = tree;
+		node.STAFilterExpr = buildTableFilterFromFilterTableTree(tree);
+		filtered = [];
+		for (i = 0; i < source.length; i++) {
+			if (FilterTableTreeMatches(tree, source[i]))
+				filtered.push(source[i]);
+		}
+		node.STAdata = filtered;
 	}
-	node.STAdata = filtered;
 	if (parentNode && parentNode.STAdataAttributes)
 		node.STAdataAttributes = typeof deapCopy === "function" ? deapCopy(parentNode.STAdataAttributes) : parentNode.STAdataAttributes;
 	if (typeof networkNodes !== "undefined" && networkNodes.update)
@@ -1315,6 +1353,12 @@ function FilterTableApplyFilterToNode(node) {
 		network.selectNodes([node.id]);
 	if (typeof updateQueryAndTableArea === "function")
 		updateQueryAndTableArea(node);
+	else {
+		if (typeof ShowQueryNode === "function")
+			ShowQueryNode(node);
+		if (typeof ShowTableNode === "function")
+			ShowTableNode(node);
+	}
 }
 
 async function FilterTableOk(event) {
@@ -1358,8 +1402,6 @@ async function ShowFilterTableDialog() {
 		return;
 	parentNode = GetFirstParentNode(node);
 	if (parentNode) {
-		if (parentNode.STAdata)
-			node.STAdata = deapCopy(parentNode.STAdata);
 		if (!node.STAdataAttributes)
 			node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : (parentNode.STAdata ? getDataAttributes(parentNode.STAdata) : node.STAdataAttributes);
 	}
