@@ -79,7 +79,7 @@ function FilterOGCIsCollectionsPath(node, parentNode) {
 function FilterOGCAllowsApiFilter(node, parentNode) {
 	var conf = (node && node.STAOGCAPIconformance) || (parentNode && parentNode.STAOGCAPIconformance);
 	if (!conf)
-		return true;
+		return false;
 	return conf.indexOf("filter") !== -1;
 }
 
@@ -142,17 +142,20 @@ async function OpenFilterRowsAfterOgcCollections(node) {
 		showNodeDialog("DialogFilterTable");
 		return;
 	}
-	if (FilterOGCIsCollectionsPath(node, parentNode)) {
+	if (node.image === "FilterRowsSTA.png" && FilterOGCIsCollectionsPath(node, parentNode)) {
 		await FilterOGCEnsureConformance(node);
 		node = (typeof networkNodes !== "undefined" && networkNodes.get) ? (networkNodes.get(node.id) || node) : node;
 		parentNode = (typeof GetFirstParentNode === "function") ? GetFirstParentNode(node) : parentNode;
-		if (typeof FilterOGCAllowsApiFilter !== "function" || FilterOGCAllowsApiFilter(node, parentNode)) {
-			if (typeof currentNode !== "undefined")
-				currentNode = node;
+		if (typeof currentNode !== "undefined")
+			currentNode = node;
+		if (FilterOGCAllowsApiFilter(node, parentNode)) {
 			await ShowFilterOGCDialog();
 			showNodeDialog("DialogFilterOGC");
-			return;
+		} else {
+			await ShowFilterTableDialog();
+			showNodeDialog("DialogFilterTable");
 		}
+		return;
 	}
 	if (node.image === "FilterRowsSTA.png") {
 		ShowFilterSTADialog();
