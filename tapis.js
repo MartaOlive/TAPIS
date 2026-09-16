@@ -7200,9 +7200,9 @@ var TableToolApiWarnPending = null;
 
 function TableToolApiWarnImages() {
 	return {
-		"SelectColumnsTable.png": { table: "SelectColumnsTable.png", sta: "SelectColumnsSTA.png", name: "Select Columns table" },
-		"SelectRowTable.png": { table: "SelectRowTable.png", sta: "SelectRowSTA.png", name: "Select Row table" },
-		"FilterRowsTable.png": { table: "FilterRowsTable.png", sta: "FilterRowsSTA.png", name: "Filter Rows table" }
+		"SelectColumnsTable.png": { table: "SelectColumnsTable.png", sta: "SelectColumnsSTA.png", name: "Select Columns table", apiName: "SelectColumnsSTA tool" },
+		"SelectRowTable.png": { table: "SelectRowTable.png", sta: "SelectRowSTA.png", name: "Select Row table", apiName: "SelectRowSTA tool" },
+		"FilterRowsTable.png": { table: "FilterRowsTable.png", sta: "FilterRowsSTA.png", name: "Filter Rows table", apiName: "FilterRowsSTA tool" }
 	};
 }
 
@@ -7237,19 +7237,19 @@ function ShowTableToolApiWarnDialog(node, afterAction) {
 	saveNodeDialog("DialogTableToolApiWarn", node);
 	textEl = document.getElementById("DialogTableToolApiWarnText");
 	if (textEl)
-		textEl.innerHTML = "You are using data that comes from an API service. Using the tool <b>" + info.name + "</b> will be applied directly on the <b>loaded data</b> and not through an API query. Are you sure you want to continue using this tool, or its corresponding tool on the <b>STA service</b>?";
+		textEl.innerHTML = "You are using data that comes from an API service. Using the tool <b>" + info.name + "</b> will be applied directly on the <b>loaded data</b> and not through an API query. Do you want to switch to <b>\"" + info.apiName + "\"</b>?";
 	yesImg = document.getElementById("DialogTableToolApiWarnYesImg");
 	noImg = document.getElementById("DialogTableToolApiWarnNoImg");
 	if (yesImg) {
-		yesImg.src = info.table;
-		yesImg.alt = info.name;
+		yesImg.src = info.sta;
+		yesImg.alt = info.apiName;
 	}
 	if (noImg) {
-		noImg.src = info.sta;
-		noImg.alt = info.name + " STA";
+		noImg.src = info.table;
+		noImg.alt = info.name;
 	}
-	document.getElementById("DialogTableToolApiWarnYesLabel").innerHTML = "Yes, I assume I want to apply it on the <b>loaded data</b>";
-	document.getElementById("DialogTableToolApiWarnNoLabel").innerHTML = "No, I want to use the same tool but on the <b>STA service</b>";
+	document.getElementById("DialogTableToolApiWarnYesLabel").innerHTML = "Yes — <b>RECOMMENDED</b>";
+	document.getElementById("DialogTableToolApiWarnNoLabel").innerHTML = "No <span><i>(use only if the API is not supporting the required filter)</i></span>";
 	showNodeDialog("DialogTableToolApiWarn");
 	return true;
 }
@@ -7348,13 +7348,13 @@ function TableToolApiWarnApplyChoice(useLoadedData) {
 function TableToolApiWarnYes(event) {
 	if (event && event.preventDefault)
 		event.preventDefault();
-	TableToolApiWarnApplyChoice(true);
+	TableToolApiWarnApplyChoice(false);
 }
 
 function TableToolApiWarnNo(event) {
 	if (event && event.preventDefault)
 		event.preventDefault();
-	TableToolApiWarnApplyChoice(false);
+	TableToolApiWarnApplyChoice(true);
 }
 
 function TableToolApiWarnClosed(event) {
