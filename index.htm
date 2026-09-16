@@ -1186,6 +1186,21 @@
 			<input type="hidden" id="DialogFilterTableNodeId"></input>
 		</form>
 	</dialog>
+	<dialog id="DialogTableToolApiWarn" onClose='TableToolApiWarnClosed(event)'>
+		<div class="center" style="font-size: large;">API data and table tools</div>
+		<p id="DialogTableToolApiWarnText" style="max-width: 34em; margin: 12px 0;"></p>
+		<div class="TableToolApiWarnChoices">
+			<button type="button" id="DialogTableToolApiWarnYes" onClick="TableToolApiWarnYes(event)">
+				<img id="DialogTableToolApiWarnYesImg" alt="" height="36" width="36">
+				<span id="DialogTableToolApiWarnYesLabel"></span>
+			</button>
+			<button type="button" id="DialogTableToolApiWarnNo" onClick="TableToolApiWarnNo(event)">
+				<img id="DialogTableToolApiWarnNoImg" alt="" height="36" width="36">
+				<span id="DialogTableToolApiWarnNoLabel"></span>
+			</button>
+		</div>
+		<input type="hidden" id="DialogTableToolApiWarnNodeId"></input>
+	</dialog>
 	<dialog id="DialogFilterRowsByTime" onClose='hideNodeDialog("DialogFilterRowsByTime", event)'> 
 		
 		<form>

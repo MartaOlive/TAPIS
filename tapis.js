@@ -7196,6 +7196,172 @@ function ShowMetadataDialog(nodeId) {
 	null means connection should not be done.
 	true means all done
 	false means pending.*/
+var TableToolApiWarnPending = null;
+
+function TableToolApiWarnImages() {
+	return {
+		"SelectColumnsTable.png": { table: "SelectColumnsTable.png", sta: "SelectColumnsSTA.png", name: "Select Columns table" },
+		"SelectRowTable.png": { table: "SelectRowTable.png", sta: "SelectRowSTA.png", name: "Select Row table" },
+		"FilterRowsTable.png": { table: "FilterRowsTable.png", sta: "FilterRowsSTA.png", name: "Filter Rows table" }
+	};
+}
+
+function IsTableToolWithStaCounterpart(node) {
+	return !!(node && TableToolApiWarnImages()[node.image]);
+}
+
+function IsStaApiSourceNode(node) {
+	var key;
+	if (!node || !node.image)
+		return false;
+	key = removeFileExtension(node.image);
+	if (key === "sta" || key === "staRoot" || key === "ogcAPICols" || key === "ogcAPIItems")
+		return true;
+	if (typeof STAOperations !== "undefined" && STAOperations[key])
+		return true;
+	if (typeof STAEntities !== "undefined" && STAEntities[key])
+		return true;
+	if (typeof STAEntitiesArray !== "undefined" && STAEntitiesArray.indexOf(key) !== -1)
+		return true;
+	return false;
+}
+
+function ShowTableToolApiWarnDialog(node, afterAction) {
+	var info = TableToolApiWarnImages()[node.image];
+	var yesImg, noImg, textEl;
+	if (!info)
+		return false;
+	TableToolApiWarnPending = { nodeId: node.id, afterAction: afterAction || "connect", tableImage: node.image };
+	if (typeof currentNode !== "undefined")
+		currentNode = node;
+	saveNodeDialog("DialogTableToolApiWarn", node);
+	textEl = document.getElementById("DialogTableToolApiWarnText");
+	if (textEl)
+		textEl.innerHTML = "You are using data that comes from an API service. Using the tool <b>" + info.name + "</b> will be applied directly on the <b>loaded data</b> and not through an API query. Are you sure you want to continue using this tool, or its corresponding tool on the <b>STA service</b>?";
+	yesImg = document.getElementById("DialogTableToolApiWarnYesImg");
+	noImg = document.getElementById("DialogTableToolApiWarnNoImg");
+	if (yesImg) {
+		yesImg.src = info.table;
+		yesImg.alt = info.name;
+	}
+	if (noImg) {
+		noImg.src = info.sta;
+		noImg.alt = info.name + " STA";
+	}
+	document.getElementById("DialogTableToolApiWarnYesLabel").innerHTML = "Yes, I assume I want to apply it on the <b>loaded data</b>";
+	document.getElementById("DialogTableToolApiWarnNoLabel").innerHTML = "No, I want to use the same tool but on the <b>STA service</b>";
+	showNodeDialog("DialogTableToolApiWarn");
+	return true;
+}
+
+function TableToolApiWarnSwitchToSta(node, parentNode) {
+	var info, staKey, staLabel;
+	if (!node)
+		return;
+	info = TableToolApiWarnImages()[node.image];
+	if (!info)
+		return;
+	node.image = info.sta;
+	staKey = removeFileExtension(info.sta);
+	staLabel = (typeof STAOperations !== "undefined" && STAOperations[staKey] && STAOperations[staKey].description) ? STAOperations[staKey].description : info.name;
+	node.label = staLabel;
+	if (parentNode) {
+		if (parentNode.STAURL)
+			node.STAURL = parentNode.STAURL;
+		if (parentNode.STASelectedExpands)
+			node.STASelectedExpands = typeof deapCopy === "function" ? deapCopy(parentNode.STASelectedExpands) : parentNode.STASelectedExpands;
+		if (parentNode.STAEntityName)
+			node.STAEntityName = parentNode.STAEntityName;
+		if (parentNode.STAsecurity)
+			node.STAsecurity = typeof deapCopy === "function" ? deapCopy(parentNode.STAsecurity) : parentNode.STAsecurity;
+		if (parentNode.STAOGCAPIconformance)
+			node.STAOGCAPIconformance = parentNode.STAOGCAPIconformance;
+		if (parentNode.STAOGCAPIqueryable)
+			node.STAOGCAPIqueryable = parentNode.STAOGCAPIqueryable;
+		if (parentNode.OGCType && !node.OGCType)
+			node.OGCType = parentNode.OGCType;
+		if (parentNode.STAdata && typeof deapCopy === "function")
+			node.STAdata = deapCopy(parentNode.STAdata);
+		if (parentNode.STAdataAttributes && typeof deapCopy === "function")
+			node.STAdataAttributes = deapCopy(parentNode.STAdataAttributes);
+	}
+	delete node.STATableToolUseLoadedData;
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+}
+
+function TableToolApiWarnOpenToolDialog(node) {
+	var parentNode;
+	if (!node)
+		return;
+	if (typeof currentNode !== "undefined")
+		currentNode = node;
+	parentNode = (typeof GetFirstParentNode === "function") ? GetFirstParentNode(node) : null;
+	if (node.image === "SelectColumnsTable.png" && parentNode) {
+		ShowTableSelectColumnsDialog("SelectColumns", parentNode, node, true);
+		showNodeDialog("DialogSelectColumns");
+	} else if (node.image === "SelectColumnsSTA.png" && parentNode) {
+		ShowTableSTASelectColumnsDialog("SelectColumns", parentNode, node);
+		showNodeDialog("DialogSelectColumns");
+	} else if (node.image === "SelectRowTable.png" && parentNode) {
+		ShowTableSelectRowDialog(parentNode, node);
+		showNodeDialog("DialogSelectRow");
+	} else if (node.image === "SelectRowSTA.png" && parentNode) {
+		node.STAEntityName = parentNode.STAEntityName;
+		if (parentNode.STAURL)
+			ShowTableSelectRowDialog(parentNode, node);
+		showNodeDialog("DialogSelectRow");
+	} else if (node.image === "FilterRowsTable.png") {
+		if (typeof OpenFilterRowsAfterOgcCollections === "function")
+			OpenFilterRowsAfterOgcCollections(node);
+	} else if (node.image === "FilterRowsSTA.png") {
+		if (typeof OpenFilterRowsAfterOgcCollections === "function")
+			OpenFilterRowsAfterOgcCollections(node);
+	}
+}
+
+function TableToolApiWarnApplyChoice(useLoadedData) {
+	var pending = TableToolApiWarnPending;
+	var node, parentNode;
+	TableToolApiWarnPending = null;
+	hideNodeDialog("DialogTableToolApiWarn");
+	if (!pending)
+		return;
+	node = (typeof networkNodes !== "undefined" && networkNodes.get) ? networkNodes.get(pending.nodeId) : null;
+	if (!node)
+		return;
+	parentNode = (typeof GetFirstParentNode === "function") ? GetFirstParentNode(node) : null;
+	if (useLoadedData) {
+		node.STATableToolUseLoadedData = true;
+		if (typeof networkNodes !== "undefined" && networkNodes.update)
+			networkNodes.update(node);
+		if (pending.afterAction === "dblclick")
+			TableToolApiWarnOpenToolDialog(node);
+		return;
+	}
+	TableToolApiWarnSwitchToSta(node, parentNode);
+	node = networkNodes.get(pending.nodeId);
+	if (pending.afterAction === "dblclick")
+		TableToolApiWarnOpenToolDialog(node);
+}
+
+function TableToolApiWarnYes(event) {
+	if (event && event.preventDefault)
+		event.preventDefault();
+	TableToolApiWarnApplyChoice(true);
+}
+
+function TableToolApiWarnNo(event) {
+	if (event && event.preventDefault)
+		event.preventDefault();
+	TableToolApiWarnApplyChoice(false);
+}
+
+function TableToolApiWarnClosed(event) {
+	if (TableToolApiWarnPending)
+		TableToolApiWarnApplyChoice(true);
+}
+
 function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 {
 	var errorText=reasonNodeDoesNotFitWithPrevious(nodeTo, nodeFrom);
@@ -7415,6 +7581,8 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		if (IsTableToolWithStaCounterpart(nodeTo) && IsStaApiSourceNode(nodeFrom) && !nodeTo.STATableToolUseLoadedData)
+			ShowTableToolApiWarnDialog(nodeTo, "connect");
 		return true;
 	}
 	if (tableNodes && nodeTo.image == "SeparateColumns.png") {
@@ -8043,7 +8211,9 @@ function networkDoubleClick(params) {
 		}				
 		else if (currentNode.image == "SelectColumnsTable.png") {
 			var parentNode=GetFirstParentNode(currentNode);
-			if (parentNode) {
+			if (parentNode && IsStaApiSourceNode(parentNode) && !currentNode.STATableToolUseLoadedData) {
+				ShowTableToolApiWarnDialog(currentNode, "dblclick");
+			} else if (parentNode) {
 				ShowTableSelectColumnsDialog("SelectColumns", parentNode, currentNode, true);
 				showNodeDialog("DialogSelectColumns");
 			}
@@ -8086,6 +8256,9 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "SelectRowSTA.png" || currentNode.image == "SelectRowTable.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 
+			if (currentNode.image == "SelectRowTable.png" && parentNode && IsStaApiSourceNode(parentNode) && !currentNode.STATableToolUseLoadedData) {
+				ShowTableToolApiWarnDialog(currentNode, "dblclick");
+			} else {
 			if (currentNode.image == "SelectRowSTA.png")currentNode.STAEntityName= parentNode.STAEntityName;
 			if (parentNode) {
 				if (parentNode.STAOGCAPIconformance){
@@ -8097,6 +8270,7 @@ function networkDoubleClick(params) {
 					ShowTableSelectRowDialog(parentNode, currentNode);
 				}
 				showNodeDialog("DialogSelectRow");
+			}
 			}
 		}
 		else if (currentNode.image == "SelectResourceSTA.png" || currentNode.image == "SelectResourceTable.png") {
@@ -8117,7 +8291,10 @@ function networkDoubleClick(params) {
 			OpenFilterRowsAfterOgcCollections(currentNode);
 		}
 		else if (currentNode.image == "FilterRowsTable.png") {
-			if (GetFirstParentNode(currentNode))
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode && IsStaApiSourceNode(parentNode) && !currentNode.STATableToolUseLoadedData)
+				ShowTableToolApiWarnDialog(currentNode, "dblclick");
+			else if (parentNode)
 				OpenFilterRowsAfterOgcCollections(currentNode);
 		}
 		else if (currentNode.image == "FilterRowsByTime.png"){							

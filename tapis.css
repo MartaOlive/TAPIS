@@ -698,3 +698,22 @@
 	max-width: 180px;
 }
 
+.TableToolApiWarnChoices {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.TableToolApiWarnChoices button {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	text-align: left;
+	padding: 8px 10px;
+	cursor: pointer;
+}
+
+.TableToolApiWarnChoices img {
+	flex-shrink: 0;
+}
+
