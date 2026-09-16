@@ -565,7 +565,18 @@ function FilterSTAGroupHtml(isRoot, depth, logic) {
 		"</fieldset>";
 }
 
-function FilterSTAConditionCardHtml(state) {
+function FilterSTAConditionStripeClass(parentDepth) {
+	return ((parentDepth + 1) % 2 === 0) ? "FilterSTAConditionEven" : "FilterSTAConditionOdd";
+}
+
+function FilterSTASetConditionStripe(card, parentDepth) {
+	if (!card)
+		return;
+	card.classList.remove("FilterSTAConditionOdd", "FilterSTAConditionEven");
+	card.classList.add(FilterSTAConditionStripeClass(parentDepth));
+}
+
+function FilterSTAConditionCardHtml(state, parentDepth) {
 	state = state || {};
 	var id = FilterSTANextId("FilterSTACond");
 	var count = String(FilterSTAIdSeq);
@@ -578,7 +589,8 @@ function FilterSTAConditionCardHtml(state) {
 		inputType = "number";
 	var propParts = FilterSTAPropertyPathParts(state.property);
 	var propAttr = state.property ? ' data-property-path="' + FilterSTAEscapeAttr(state.property) + '"' : "";
-	return '<fieldset class="FilterSTAConditionCard" id="' + id + '" data-row-count="' + count + '"' + propAttr + ' style="margin-top:8px;">' +
+	var stripe = FilterSTAConditionStripeClass(parentDepth || 1);
+	return '<fieldset class="FilterSTAConditionCard ' + stripe + '" id="' + id + '" data-row-count="' + count + '"' + propAttr + ' style="margin-top:8px;">' +
 		'<legend><span class="FilterSTADragHandle" title="Drag condition" draggable="true" ondragstart="FilterSTAOnDragStart(event)" ondragend="FilterSTAOnDragEnd(event)">&#8942;&#8942;</span> Condition ' +
 		'<button type="button" title="Duplicate" onclick="FilterSTADuplicateItem(this)">Duplicate</button> ' +
 		'<button type="button" onclick="FilterSTARemoveItem(this)">Remove</button></legend>' +
@@ -866,7 +878,7 @@ function FilterSTAAddEmptyCondition(group) {
 	var host = FilterSTAGroupChildren(group);
 	if (!host)
 		return null;
-	host.insertAdjacentHTML("beforeend", FilterSTAConditionCardHtml());
+	host.insertAdjacentHTML("beforeend", FilterSTAConditionCardHtml(null, parseInt(group.getAttribute("data-depth") || "1", 10)));
 	var card = host.lastElementChild;
 	FilterSTAFillValueSelectors(card);
 	return card;
@@ -910,7 +922,9 @@ function FilterSTADuplicateItem(btn) {
 	var group = btn.closest(".FilterSTAGroup");
 	var root = document.getElementById("DialogFilterSTARoot");
 	if (card) {
-		card.insertAdjacentHTML("afterend", FilterSTAConditionCardHtml(FilterSTAReadCondition(card)));
+		var parent = FilterSTAClosestGroup(card);
+		var parentDepth = parent ? parseInt(parent.getAttribute("data-depth") || "1", 10) : 1;
+		card.insertAdjacentHTML("afterend", FilterSTAConditionCardHtml(FilterSTAReadCondition(card), parentDepth));
 		var clone = card.nextElementSibling;
 		FilterSTAFillValueSelectors(clone);
 		FilterSTASetSelectedCondition(clone);
@@ -1018,12 +1032,17 @@ function FilterSTASetDropTarget(group) {
 }
 
 function FilterSTAOnDragOver(event) {
+	var overCard;
 	if (!FilterSTADragId)
 		return;
 	event.preventDefault();
 	event.stopPropagation();
 	event.dataTransfer.dropEffect = "move";
-	FilterSTASetDropTarget(FilterSTAClosestGroup(event.target));
+	overCard = event.target.closest ? event.target.closest(".FilterSTAConditionCard") : null;
+	if (overCard)
+		FilterSTAClearDropTargets(null);
+	else
+		FilterSTASetDropTarget(FilterSTAClosestGroup(event.target));
 }
 
 function FilterSTAOnDragLeave(event) {
@@ -1061,6 +1080,8 @@ function FilterSTARetargetDepths(group, depth) {
 		var c = host.children[i];
 		if (c.classList && c.classList.contains("FilterSTAGroup"))
 			FilterSTARetargetDepths(c, depth + 1);
+		else if (c.classList && c.classList.contains("FilterSTAConditionCard"))
+			FilterSTASetConditionStripe(c, depth);
 	}
 }
 
@@ -1094,6 +1115,8 @@ function FilterSTAOnDrop(event) {
 		host.appendChild(item);
 	if (item.classList.contains("FilterSTAGroup"))
 		FilterSTARetargetDepths(item, parseInt(targetGroup.getAttribute("data-depth") || "1", 10) + 1);
+	else if (item.classList.contains("FilterSTAConditionCard"))
+		FilterSTASetConditionStripe(item, parseInt(targetGroup.getAttribute("data-depth") || "1", 10));
 	FilterSTAUpdatePreview();
 }
 
@@ -1325,9 +1348,16 @@ function FilterSTASetSelectedCondition(card) {
 		return;
 	FilterSTAClearSelectedConditions();
 	card.classList.add("FilterSTAConditionSelected");
-	var group = FilterSTAClosestGroup(card);
-	if (group)
-		FilterSTASetSelectedGroup(group);
+	FilterSTAClearSelectedGroups();
+}
+
+function FilterSTAClearSelectedGroups() {
+	var dlg = document.getElementById("DialogFilterSTA");
+	if (!dlg)
+		return;
+	var els = dlg.getElementsByClassName("FilterSTAGroupSelected");
+	while (els.length)
+		els[0].classList.remove("FilterSTAGroupSelected");
 }
 
 function FilterSTASetSelectedGroup(group) {
@@ -1338,6 +1368,7 @@ function FilterSTASetSelectedGroup(group) {
 	for (var i = 0; i < els.length; i++)
 		els[i].classList.remove("FilterSTAGroupSelected");
 	group.classList.add("FilterSTAGroupSelected");
+	FilterSTAClearSelectedConditions();
 }
 
 /*
@@ -1402,7 +1433,7 @@ function FilterSTAMountGroup(host, node, isRoot, depth) {
 		if (children[i].type === "group")
 			FilterSTAMountGroup(childHost, children[i], false, depth + 1);
 		else
-			childHost.insertAdjacentHTML("beforeend", FilterSTAConditionCardHtml(children[i]));
+			childHost.insertAdjacentHTML("beforeend", FilterSTAConditionCardHtml(children[i], depth));
 	}
 	return groupEl;
 }
@@ -1423,18 +1454,16 @@ function FilterSTABindDialogEvents() {
 	dlg.addEventListener("click", function (e) {
 		var card = e.target.closest ? e.target.closest(".FilterSTAConditionCard") : null;
 		var group = FilterSTAClosestGroup(e.target);
+		if (e.target.closest && e.target.closest("button"))
+			return;
 		if (card)
 			FilterSTASetSelectedCondition(card);
+		else if (group)
+			FilterSTASetSelectedGroup(group);
 		else {
 			FilterSTAClearSelectedConditions();
-			if (group)
-				FilterSTASetSelectedGroup(group);
+			FilterSTAClearSelectedGroups();
 		}
-	});
-	dlg.addEventListener("focusin", function (e) {
-		var card = e.target.closest ? e.target.closest(".FilterSTAConditionCard") : null;
-		if (card)
-			FilterSTASetSelectedCondition(card);
 	});
 	dlg.addEventListener("dragend", function () {
 		FilterSTAClearDropTargets(null);
@@ -1588,7 +1617,7 @@ function FilterSTADialogClosed(event) {
 }
 
 function ShowFilterSTADialog() {
-	var node, parentNode, url, host, root, tree, card;
+	var node, parentNode, url, host, root, tree;
 	saveNodeDialog("DialogFilterSTA", currentNode);
 	node = getNodeDialog("DialogFilterSTA") || currentNode;
 	if (!node)
@@ -1610,14 +1639,8 @@ function ShowFilterSTADialog() {
 	else
 		host.insertAdjacentHTML("beforeend", FilterSTAGroupHtml(true, 1, "and"));
 	root = document.getElementById("DialogFilterSTARoot") || host.firstElementChild;
-	if (root) {
-		if (!FilterSTADirectChildren(root).length) {
-			card = FilterSTAAddEmptyCondition(root);
-			if (card)
-				FilterSTASetSelectedCondition(card);
-		}
-		FilterSTASetSelectedGroup(root);
-	}
+	if (root && !FilterSTADirectChildren(root).length)
+		FilterSTAAddEmptyCondition(root);
 	FilterSTAFillAllValueSelectors();
 	FilterSTAUpdatePreview();
 }

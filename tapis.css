@@ -461,52 +461,57 @@
 	text-align: center;
 }
 
-#DialogFilterSTA .FilterSTAGroup, #DialogFilterOGC .FilterOGCGroup {
-	background-color: #f3eadf;
-	border: 1px solid #d4c6b4;
+#DialogFilterSTA .FilterSTAGroup, #DialogFilterOGC .FilterOGCGroup, #DialogFilterTable .FilterTableGroup {
+	border: 1px solid #D1D0CF;
 	padding: 10px 12px 12px;
 	margin-top: 8px;
 	outline: none;
 }
 
-#DialogFilterSTA .FilterSTAGroup .FilterSTAGroup, #DialogFilterOGC .FilterOGCGroup .FilterOGCGroup {
+#DialogFilterSTA .FilterSTAGroup .FilterSTAGroup,
+#DialogFilterOGC .FilterOGCGroup .FilterOGCGroup,
+#DialogFilterTable .FilterTableGroup .FilterTableGroup {
 	margin-left: 14px;
-	background-color: #d7e6de;
-	border-color: #a8c0b4;
 }
 
-#DialogFilterSTA .FilterSTAGroup .FilterSTAGroup .FilterSTAGroup, #DialogFilterOGC .FilterOGCGroup .FilterOGCGroup .FilterOGCGroup {
-	background-color: #f3eadf;
-	border-color: #d4c6b4;
+#DialogFilterSTA .FilterSTAGroupOdd, #DialogFilterOGC .FilterOGCGroupOdd {
+	background-color: #ffffff;
+	border-color: #9FDEF5;
 }
 
-#DialogFilterSTA .FilterSTAGroup .FilterSTAGroup .FilterSTAGroup .FilterSTAGroup, #DialogFilterOGC .FilterOGCGroup .FilterOGCGroup .FilterOGCGroup .FilterOGCGroup {
-	background-color: #d7e6de;
-	border-color: #a8c0b4;
+#DialogFilterSTA .FilterSTAGroupEven, #DialogFilterOGC .FilterOGCGroupEven {
+	background-color: #9FDEF5;
+	border-color: #67AFD6;
 }
 
-#DialogFilterSTA .FilterSTAGroup.FilterSTAGroupSelected, #DialogFilterOGC .FilterOGCGroup.FilterOGCGroupSelected {
-	background-image: linear-gradient(rgba(140, 118, 176, 0.22), rgba(140, 118, 176, 0.22));
-	border-color: #b9a8d0;
-	box-shadow: inset 0 0 0 1px rgba(140, 118, 176, 0.28);
-	outline: none;
+#DialogFilterSTA .FilterSTAGroupSelected, #DialogFilterOGC .FilterOGCGroupSelected,
+#DialogFilterSTA .FilterSTAGroupDropTarget, #DialogFilterOGC .FilterOGCGroupDropTarget {
+	background-color: #67AFD6;
+	border-color: #67AFD6;
 }
 
-#DialogFilterSTA .FilterSTAGroup.FilterSTAGroupDropTarget, #DialogFilterOGC .FilterOGCGroup.FilterOGCGroupDropTarget {
-	background-image: linear-gradient(rgba(70, 130, 95, 0.24), rgba(70, 130, 95, 0.24));
-	border-color: #8fb89a;
-	box-shadow: inset 0 0 0 1px rgba(90, 140, 110, 0.22);
-	outline: none;
+#DialogFilterTable .FilterTableGroupOdd {
+	background-color: #ffffff;
+	border-color: #D1D0CF;
 }
 
-#DialogFilterSTA .FilterSTADragging, #DialogFilterOGC .FilterOGCDragging {
+#DialogFilterTable .FilterTableGroupEven {
+	background-color: #D1D0CF;
+	border-color: #949494;
+}
+
+#DialogFilterTable .FilterTableGroupSelected,
+#DialogFilterTable .FilterTableGroupDropTarget {
+	background-color: #949494;
+	border-color: #949494;
+}
+
+#DialogFilterSTA .FilterSTADragging, #DialogFilterOGC .FilterOGCDragging, #DialogFilterTable .FilterTableDragging {
 	opacity: 0.75;
-	background-image: linear-gradient(rgba(210, 140, 60, 0.28), rgba(210, 140, 60, 0.28)) !important;
-	border-color: #d4a373 !important;
-	box-shadow: 0 0 0 2px rgba(196, 140, 80, 0.4);
+	box-shadow: 0 0 0 2px rgba(80, 80, 80, 0.25);
 }
 
-#DialogFilterSTA .FilterSTAGroup > legend.FilterSTAGroupLegend, #DialogFilterOGC .FilterOGCGroup > legend.FilterOGCGroupLegend {
+#DialogFilterSTA .FilterSTAGroup > legend.FilterSTAGroupLegend, #DialogFilterOGC .FilterOGCGroup > legend.FilterOGCGroupLegend, #DialogFilterTable .FilterTableGroup > legend.FilterTableGroupLegend {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
@@ -516,25 +521,59 @@
 	padding: 0 4px;
 }
 
-#DialogFilterSTA .FilterSTAGroupLegendStart, #DialogFilterOGC .FilterOGCGroupLegendStart {
+#DialogFilterSTA .FilterSTAGroupLegendStart, #DialogFilterOGC .FilterOGCGroupLegendStart, #DialogFilterTable .FilterTableGroupLegendStart {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
 	min-width: 0;
 }
 
-#DialogFilterSTA .FilterSTAGroupBody, #DialogFilterOGC .FilterOGCGroupBody {
+#DialogFilterSTA .FilterSTAGroupBody, #DialogFilterOGC .FilterOGCGroupBody, #DialogFilterTable .FilterTableGroupBody {
 	display: flex;
 	align-items: stretch;
 	gap: 10px;
 }
 
-#DialogFilterSTA .FilterSTAGroupChildren, #DialogFilterOGC .FilterOGCGroupChildren {
+#DialogFilterSTA .FilterSTAGroupChildren, #DialogFilterOGC .FilterOGCGroupChildren, #DialogFilterTable .FilterTableGroupChildren {
 	flex: 1;
 	min-width: 0;
 }
 
-#DialogFilterSTA .FilterSTAGroupLogic, #DialogFilterOGC .FilterOGCGroupLogic {
+#DialogFilterSTA .FilterSTAGroupToolbar, #DialogFilterOGC .FilterOGCGroupToolbar, #DialogFilterTable .FilterTableGroupToolbar {
+	margin: 4px 0 2px 0;
+}
+
+#DialogFilterSTA .FilterSTAConditionCard.FilterSTAConditionOdd, #DialogFilterOGC .FilterOGCConditionCard.FilterOGCConditionOdd {
+	background-color: #ffffff;
+	border: 1px solid #D1D0CF;
+}
+
+#DialogFilterSTA .FilterSTAConditionCard.FilterSTAConditionEven, #DialogFilterOGC .FilterOGCConditionCard.FilterOGCConditionEven {
+	background-color: #9FDEF5;
+	border: 1px solid #67AFD6;
+}
+
+#DialogFilterTable .FilterTableConditionCard.FilterTableConditionOdd {
+	background-color: #ffffff;
+	border: 1px solid #D1D0CF;
+}
+
+#DialogFilterTable .FilterTableConditionCard.FilterTableConditionEven {
+	background-color: #D1D0CF;
+	border: 1px solid #949494;
+}
+
+#DialogFilterSTA .FilterSTAConditionCard.FilterSTAConditionSelected, #DialogFilterOGC .FilterOGCConditionCard.FilterOGCConditionSelected {
+	background-color: #67AFD6;
+	border-color: #67AFD6;
+}
+
+#DialogFilterTable .FilterTableConditionCard.FilterTableConditionSelected {
+	background-color: #949494;
+	border-color: #949494;
+}
+
+#DialogFilterSTA .FilterSTAGroupLogic, #DialogFilterOGC .FilterOGCGroupLogic, #DialogFilterTable .FilterTableGroupLogic {
 	display: none;
 	flex-direction: column;
 	justify-content: center;
@@ -547,23 +586,8 @@
 	border-left: 1px solid rgba(0, 0, 0, 0.12);
 }
 
-#DialogFilterSTA .FilterSTAGroupLogic.FilterSTAGroupLogicVisible, #DialogFilterOGC .FilterOGCGroupLogic.FilterOGCGroupLogicVisible {
+#DialogFilterSTA .FilterSTAGroupLogic.FilterSTAGroupLogicVisible, #DialogFilterOGC .FilterOGCGroupLogic.FilterOGCGroupLogicVisible, #DialogFilterTable .FilterTableGroupLogic.FilterTableGroupLogicVisible {
 	display: flex;
-}
-
-#DialogFilterSTA .FilterSTAGroupToolbar, #DialogFilterOGC .FilterOGCGroupToolbar {
-	margin: 4px 0 2px 0;
-}
-
-#DialogFilterSTA .FilterSTAConditionCard, #DialogFilterOGC .FilterOGCConditionCard {
-	background-color: #fffdfb;
-	border: 1px solid #e4ddd4;
-}
-
-#DialogFilterSTA .FilterSTAConditionCard.FilterSTAConditionSelected, #DialogFilterOGC .FilterOGCConditionCard.FilterOGCConditionSelected {
-	background-image: linear-gradient(rgba(176, 110, 155, 0.40), rgba(176, 110, 155, 0.40));
-	border-color: #c08aae;
-	box-shadow: inset 0 0 0 2px rgba(176, 90, 145, 0.42);
 }
 
 #DialogFilterSTA .FilterSTAEntityRow {
@@ -647,11 +671,11 @@
 	max-width: 160px;
 }
 
-#DialogFilterSTA .FilterSTADragHandle, #DialogFilterOGC .FilterOGCDragHandle {
+#DialogFilterSTA .FilterSTADragHandle, #DialogFilterOGC .FilterOGCDragHandle, #DialogFilterTable .FilterTableDragHandle {
 	cursor: grab;
 }
 
-#DialogFilterSTA .FilterSTADragging .FilterSTADragHandle, #DialogFilterOGC .FilterOGCDragging .FilterOGCDragHandle {
+#DialogFilterSTA .FilterSTADragging .FilterSTADragHandle, #DialogFilterOGC .FilterOGCDragging .FilterOGCDragHandle, #DialogFilterTable .FilterTableDragging .FilterTableDragHandle {
 	cursor: grabbing;
 }
 
@@ -660,7 +684,17 @@
 #DialogFilterSTA .FilterSTAValueB,
 #DialogFilterOGC .FilterOGCValue,
 #DialogFilterOGC .FilterOGCValueA,
-#DialogFilterOGC .FilterOGCValueB {
+#DialogFilterOGC .FilterOGCValueB,
+#DialogFilterTable .FilterTableValue,
+#DialogFilterTable .FilterTableValueA,
+#DialogFilterTable .FilterTableValueB {
 	min-width: 12em;
+}
+
+#DialogFilterOGC .FilterOGCProperty,
+#DialogFilterOGC .FilterOGCPropertyNest,
+#DialogFilterTable .FilterTableProperty,
+#DialogFilterTable .FilterTablePropertyNest {
+	max-width: 180px;
 }
 

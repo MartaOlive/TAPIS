@@ -135,6 +135,13 @@ async function OpenFilterRowsAfterOgcCollections(node) {
 	FilterOGCCopyParentFilterMeta(node, parentNode);
 	if (typeof networkNodes !== "undefined" && networkNodes.update)
 		networkNodes.update(node);
+	if (node.image === "FilterRowsTable.png") {
+		if (typeof currentNode !== "undefined")
+			currentNode = node;
+		await ShowFilterTableDialog();
+		showNodeDialog("DialogFilterTable");
+		return;
+	}
 	if (FilterOGCIsCollectionsPath(node, parentNode)) {
 		await FilterOGCEnsureConformance(node);
 		node = (typeof networkNodes !== "undefined" && networkNodes.get) ? (networkNodes.get(node.id) || node) : node;
@@ -150,6 +157,11 @@ async function OpenFilterRowsAfterOgcCollections(node) {
 	if (node.image === "FilterRowsSTA.png") {
 		ShowFilterSTADialog();
 		showNodeDialog("DialogFilterSTA");
+	} else if (node.image === "FilterRowsTable.png") {
+		if (typeof currentNode !== "undefined")
+			currentNode = node;
+		await ShowFilterTableDialog();
+		showNodeDialog("DialogFilterTable");
 	} else if (parentNode) {
 		ShowTableFilterRowsDialog(parentNode, node);
 		showNodeDialog("DialogFilterRows");
@@ -470,14 +482,26 @@ function FilterOGCGroupHtml(isRoot, depth, logic) {
 		"</fieldset>";
 }
 
-function FilterOGCConditionCardHtml(state) {
+function FilterOGCConditionStripeClass(parentDepth) {
+	return ((parentDepth + 1) % 2 === 0) ? "FilterOGCConditionEven" : "FilterOGCConditionOdd";
+}
+
+function FilterOGCSetConditionStripe(card, parentDepth) {
+	if (!card)
+		return;
+	card.classList.remove("FilterOGCConditionOdd", "FilterOGCConditionEven");
+	card.classList.add(FilterOGCConditionStripeClass(parentDepth));
+}
+
+function FilterOGCConditionCardHtml(state, parentDepth) {
 	state = state || {};
 	var id = FilterOGCNextId("FilterOGCCond");
 	var count = String(FilterOGCIdSeq);
 	var interval = FilterOGCIsIntervalOperator(state.operator);
 	var propParts = FilterOGCPropertyPathParts(state.property);
 	var propAttr = state.property ? ' data-property-path="' + FilterOGCEscapeAttr(state.property) + '"' : "";
-	return '<fieldset class="FilterOGCConditionCard" id="' + id + '" data-row-count="' + count + '"' + propAttr + ' style="margin-top:8px;">' +
+	var stripe = FilterOGCConditionStripeClass(parentDepth || 1);
+	return '<fieldset class="FilterOGCConditionCard ' + stripe + '" id="' + id + '" data-row-count="' + count + '"' + propAttr + ' style="margin-top:8px;">' +
 		'<legend><span class="FilterOGCDragHandle" title="Drag condition" draggable="true" ondragstart="FilterOGCOnDragStart(event)" ondragend="FilterOGCOnDragEnd(event)">&#8942;&#8942;</span> Condition ' +
 		'<button type="button" title="Duplicate" onclick="FilterOGCDuplicateItem(this)">Duplicate</button> ' +
 		'<button type="button" onclick="FilterOGCRemoveItem(this)">Remove</button></legend>' +
@@ -670,7 +694,7 @@ function FilterOGCAddEmptyCondition(group) {
 	var host = FilterOGCGroupChildren(group);
 	if (!host)
 		return null;
-	host.insertAdjacentHTML("beforeend", FilterOGCConditionCardHtml());
+	host.insertAdjacentHTML("beforeend", FilterOGCConditionCardHtml(null, parseInt(group.getAttribute("data-depth") || "1", 10)));
 	var card = host.lastElementChild;
 	FilterOGCFillValueSelectors(card);
 	return card;
@@ -714,7 +738,9 @@ function FilterOGCDuplicateItem(btn) {
 	var group = btn.closest(".FilterOGCGroup");
 	var root = document.getElementById("DialogFilterOGCRoot");
 	if (card) {
-		card.insertAdjacentHTML("afterend", FilterOGCConditionCardHtml(FilterOGCReadCondition(card)));
+		var parent = FilterOGCClosestGroup(card);
+		var parentDepth = parent ? parseInt(parent.getAttribute("data-depth") || "1", 10) : 1;
+		card.insertAdjacentHTML("afterend", FilterOGCConditionCardHtml(FilterOGCReadCondition(card), parentDepth));
 		var clone = card.nextElementSibling;
 		FilterOGCFillValueSelectors(clone);
 		FilterOGCSetSelectedCondition(clone);
@@ -813,12 +839,17 @@ function FilterOGCSetDropTarget(group) {
 }
 
 function FilterOGCOnDragOver(event) {
+	var overCard;
 	if (!FilterOGCDragId)
 		return;
 	event.preventDefault();
 	event.stopPropagation();
 	event.dataTransfer.dropEffect = "move";
-	FilterOGCSetDropTarget(FilterOGCClosestGroup(event.target));
+	overCard = event.target.closest ? event.target.closest(".FilterOGCConditionCard") : null;
+	if (overCard)
+		FilterOGCClearDropTargets(null);
+	else
+		FilterOGCSetDropTarget(FilterOGCClosestGroup(event.target));
 }
 
 function FilterOGCOnDragLeave(event) {
@@ -856,6 +887,8 @@ function FilterOGCRetargetDepths(group, depth) {
 		var c = host.children[i];
 		if (c.classList && c.classList.contains("FilterOGCGroup"))
 			FilterOGCRetargetDepths(c, depth + 1);
+		else if (c.classList && c.classList.contains("FilterOGCConditionCard"))
+			FilterOGCSetConditionStripe(c, depth);
 	}
 }
 
@@ -889,6 +922,8 @@ function FilterOGCOnDrop(event) {
 		host.appendChild(item);
 	if (item.classList.contains("FilterOGCGroup"))
 		FilterOGCRetargetDepths(item, parseInt(targetGroup.getAttribute("data-depth") || "1", 10) + 1);
+	else if (item.classList.contains("FilterOGCConditionCard"))
+		FilterOGCSetConditionStripe(item, parseInt(targetGroup.getAttribute("data-depth") || "1", 10));
 	FilterOGCUpdatePreview();
 }
 
@@ -1041,9 +1076,16 @@ function FilterOGCSetSelectedCondition(card) {
 		return;
 	FilterOGCClearSelectedConditions();
 	card.classList.add("FilterOGCConditionSelected");
-	var group = FilterOGCClosestGroup(card);
-	if (group)
-		FilterOGCSetSelectedGroup(group);
+	FilterOGCClearSelectedGroups();
+}
+
+function FilterOGCClearSelectedGroups() {
+	var dlg = document.getElementById("DialogFilterOGC");
+	if (!dlg)
+		return;
+	var els = dlg.getElementsByClassName("FilterOGCGroupSelected");
+	while (els.length)
+		els[0].classList.remove("FilterOGCGroupSelected");
 }
 
 function FilterOGCSetSelectedGroup(group) {
@@ -1054,6 +1096,7 @@ function FilterOGCSetSelectedGroup(group) {
 	for (var i = 0; i < els.length; i++)
 		els[i].classList.remove("FilterOGCGroupSelected");
 	group.classList.add("FilterOGCGroupSelected");
+	FilterOGCClearSelectedConditions();
 }
 
 function FilterOGCReadCondition(card) {
@@ -1091,7 +1134,7 @@ function FilterOGCMountGroup(host, node, isRoot, depth) {
 		if (children[i].type === "group")
 			FilterOGCMountGroup(childHost, children[i], false, depth + 1);
 		else
-			childHost.insertAdjacentHTML("beforeend", FilterOGCConditionCardHtml(children[i]));
+			childHost.insertAdjacentHTML("beforeend", FilterOGCConditionCardHtml(children[i], depth));
 	}
 	return groupEl;
 }
@@ -1112,18 +1155,16 @@ function FilterOGCBindDialogEvents() {
 	dlg.addEventListener("click", function (e) {
 		var card = e.target.closest ? e.target.closest(".FilterOGCConditionCard") : null;
 		var group = FilterOGCClosestGroup(e.target);
+		if (e.target.closest && e.target.closest("button"))
+			return;
 		if (card)
 			FilterOGCSetSelectedCondition(card);
+		else if (group)
+			FilterOGCSetSelectedGroup(group);
 		else {
 			FilterOGCClearSelectedConditions();
-			if (group)
-				FilterOGCSetSelectedGroup(group);
+			FilterOGCClearSelectedGroups();
 		}
-	});
-	dlg.addEventListener("focusin", function (e) {
-		var card = e.target.closest ? e.target.closest(".FilterOGCConditionCard") : null;
-		if (card)
-			FilterOGCSetSelectedCondition(card);
 	});
 	dlg.addEventListener("dragend", function () {
 		FilterOGCClearDropTargets(null);
@@ -1291,7 +1332,7 @@ async function FilterOGCEnsureQueryables(node) {
 }
 
 async function ShowFilterOGCDialog() {
-	var node, parentNode, url, host, root, tree, card;
+	var node, parentNode, url, host, root, tree;
 	saveNodeDialog("DialogFilterOGC", currentNode);
 	node = getNodeDialog("DialogFilterOGC") || currentNode;
 	if (!node)
@@ -1332,14 +1373,8 @@ async function ShowFilterOGCDialog() {
 	else
 		host.insertAdjacentHTML("beforeend", FilterOGCGroupHtml(true, 1, "and"));
 	root = document.getElementById("DialogFilterOGCRoot") || host.firstElementChild;
-	if (root) {
-		if (!FilterOGCDirectChildren(root).length) {
-			card = FilterOGCAddEmptyCondition(root);
-			if (card)
-				FilterOGCSetSelectedCondition(card);
-		}
-		FilterOGCSetSelectedGroup(root);
-	}
+	if (root && !FilterOGCDirectChildren(root).length)
+		FilterOGCAddEmptyCondition(root);
 	await FilterOGCFillAllValueSelectors();
 	FilterOGCUpdatePreview();
 }

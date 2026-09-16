@@ -55,6 +55,7 @@
 	<script type="text/javascript" src="STAfilter.js"></script>
 	<script type="text/javascript" src="filterSTADlg.js"></script>
 	<script type="text/javascript" src="filterOGCDlg.js"></script>
+	<script type="text/javascript" src="filterTableDlg.js"></script>
 	<script type="text/javascript" src="diagrams.js"></script>
 	<script type="text/javascript" src="aws.js"></script>
 	<script type="text/javascript" src="tapis.js"></script>
@@ -1171,6 +1172,18 @@
 				<button type="button" value="cancel" onClick="FilterOGCCancel(event)">Cancel</button>
 			</div>
 			<input type="hidden" id="DialogFilterOGCNodeId"></input>
+		</form>
+	</dialog>
+	<dialog id="DialogFilterTable" onClose='FilterTableDialogClosed(event)'>
+		<div class="center" style="font-size: large;">Filter Rows (table)</div>
+		<form>
+			<div id="DialogFilterTableTree"></div>
+			<div style="margin-top: 10px; font-family: monospace;">filter = <span id="DialogFilterTableFilterPreview"></span></div>
+			<div class="center">
+				<button type="button" value="default" onClick="FilterTableOk(event)">OK</button>
+				<button type="button" value="cancel" onClick="FilterTableCancel(event)">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogFilterTableNodeId"></input>
 		</form>
 	</dialog>
 	<dialog id="DialogFilterRowsByTime" onClose='hideNodeDialog("DialogFilterRowsByTime", event)'> 

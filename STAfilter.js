@@ -2133,6 +2133,7 @@ function GetFilterRows(event) {
 	networkNodes.update(node);
 }
 
+/* Old DialogFilterRows apply. FilterRowsTable.png now uses FilterTableApplyFilterToNode in filterTableDlg.js. */
 function GetFilterRowsTable(node) {
 	stopreadInformationRowFilterTable = false;
 	node.STAtableCounter = [];
