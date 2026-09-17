@@ -1089,6 +1089,203 @@ function calculateDataQualityPositionalValidity(data, xmin, xmax, ymin, ymax, lo
     return {"truePositionalValidity":count, "positionalValidityRate":(count / data.length) * 100 };
 }
 
+function FormatConsistencyEscapeRegExp(text) {
+	return String(text).replace(/[\\^$*+?.()|[\]{}]/g, "\\$&");
+}
+
+function FormatConsistencyTokenToRegExp(token) {
+	var piece, n;
+	if (!token)
+		return "";
+	if (token.type === "anyLetter")
+		piece = "[A-Za-z]";
+	else if (token.type === "anyDigit")
+		piece = "[0-9]";
+	else if (token.type === "letterOrDigit")
+		piece = "[A-Za-z0-9]";
+	else if (token.type === "any")
+		piece = ".";
+	else if (token.type === "sign")
+		piece = "[+\\-]";
+	else if (token.type === "hyphen")
+		piece = "\\-";
+	else if (token.type === "dot")
+		piece = "\\.";
+	else if (token.type === "letter" || token.type === "digit")
+		piece = FormatConsistencyEscapeRegExp(token.value);
+	else if (token.type === "interval")
+		piece = "[" + FormatConsistencyEscapeRegExp(token.from) + "-" + FormatConsistencyEscapeRegExp(token.to) + "]";
+	else
+		return "";
+	n = token.count != null ? parseInt(token.count, 10) : 1;
+	if (!isNaN(n) && n > 1)
+		return piece + "{" + n + "}";
+	return piece;
+}
+
+function FormatConsistencyCustomRegExp(tokens) {
+	var i, source;
+	source = "^";
+	if (!tokens || !tokens.length)
+		return null;
+	for (i = 0; i < tokens.length; i++)
+		source += FormatConsistencyTokenToRegExp(tokens[i]);
+	source += "$";
+	try {
+		return new RegExp(source);
+	} catch (e) {
+		return null;
+	}
+}
+
+function FormatConsistencyDateRegExp(pattern) {
+	var map = {
+		"YYYY": "^\\d{4}$",
+		"YYYY-MM": "^\\d{4}-\\d{2}$",
+		"YYYY-MM-DD": "^\\d{4}-\\d{2}-\\d{2}$",
+		"YYYY-MM-DDTHH:mm": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}$",
+		"YYYY-MM-DDTHH:mm:ss": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$",
+		"YYYY-MM-DDTHH:mm:ss.s": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d$",
+		"YYYY-MM-DDTHH:mm:ss.sss": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}$",
+		"YYYY-MM-DDTHH:mm:ssZ": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$",
+		"YYYY-MM-DDTHH:mm:ss.sssZ": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$",
+		"YYYY-MM-DDTHH:mm:ss±hh:mm": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}[+\u2212\\-]\\d{2}:\\d{2}$"
+	};
+	return new RegExp(map[pattern] || map["YYYY-MM-DD"]);
+}
+
+function FormatConsistencyValueMatches(raw, options) {
+	var value, format, re, compact, prefix, prefixLen, numberLen, digits;
+	if (raw === null || raw === undefined)
+		return false;
+	value = String(raw).trim();
+	if (value === "")
+		return false;
+	format = options.format;
+	if (format === "date")
+		return FormatConsistencyDateRegExp(options.datePattern).test(value);
+	if (format === "time") {
+		if (options.timePattern === "HH:mm")
+			return /^\d{2}:\d{2}$/.test(value);
+		return /^\d{2}:\d{2}:\d{2}$/.test(value);
+	}
+	if (format === "coordinates" || format === "latLon") {
+		if (options.coordPattern === "signed" || options.latLonPattern === "signed")
+			return /^[+\u2212\-]\d+(\.\d+)?$/.test(value);
+		if (options.coordPattern === "dms")
+			return /^\d{1,3}[°º]\s*\d{1,2}['′]\s*\d{1,2}(?:\.\d+)?["″]\s*[NSEWnsew]$/.test(value);
+		if (options.coordPattern === "ddm")
+			return /^\d{1,3}[°º]\s*\d{1,2}(?:\.\d+)?['′]\s*[NSEWnsew]$/.test(value);
+		if (options.coordPattern === "utm")
+			return /^(?:[1-9]|[1-5]\d|60)[C-HJ-NP-X]\s+\d+(?:\.\d+)?\s+\d+(?:\.\d+)?$/.test(value);
+		if (options.coordPattern === "cartesian" || options.coordPattern === "geocentric")
+			return /^-?\d+(\.\d+)?$/.test(value);
+		return /^-?\d+(\.\d+)?$/.test(value);
+	}
+	if (format === "telephone") {
+		compact = value.replace(/\s+/g, "");
+		if (options.telPrefixMode === "length") {
+			digits = compact.replace(/^\+/, "").replace(/\D/g, "");
+			prefixLen = parseInt(options.telPrefixLength, 10);
+			numberLen = parseInt(options.telNumberLength, 10);
+			if (isNaN(prefixLen) || prefixLen < 0)
+				prefixLen = 0;
+			if (isNaN(numberLen) || numberLen < 1)
+				return false;
+			return digits.length === (prefixLen + numberLen);
+		}
+		prefix = String(options.telPrefix || "").replace(/\s+/g, "");
+		numberLen = parseInt(options.telNumberLength, 10);
+		if (!prefix || isNaN(numberLen) || numberLen < 1)
+			return false;
+		if (compact.indexOf(prefix) !== 0)
+			return false;
+		digits = compact.slice(prefix.length).replace(/\D/g, "");
+		return digits.length === numberLen;
+	}
+	if (format === "email")
+		return /^.+@.+\.[^.]+$/.test(value);
+	if (format === "uuid") {
+		if (/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(value))
+			return true;
+		return !!(options.uuidAllowNoHyphens && /^[0-9a-fA-F]{32}$/.test(value));
+	}
+	if (format === "dottedNumbers")
+		return /^-?\d+\.\d+$/.test(value) && value.indexOf(",") === -1;
+	if (format === "custom") {
+		re = FormatConsistencyCustomRegExp(options.patternTokens);
+		return !!(re && re.test(value));
+	}
+	return false;
+}
+
+function calculateDataQualityFormatConsistency(data, attribute, metadata, options) {
+	var i, invalidItems, totalItems, physicalStructureConflictsRate;
+	totalItems = data.length;
+	invalidItems = 0;
+	for (i = 0; i < totalItems; i++) {
+		if (!FormatConsistencyValueMatches(data[i][attribute], options))
+			invalidItems++;
+	}
+	physicalStructureConflictsRate = totalItems ? (invalidItems / totalItems) * 100 : 0;
+	if (!metadata.dataQualityInfos)
+		metadata.dataQualityInfos = [];
+	metadata.dataQualityInfos.push({
+		"reports": [
+			{
+				"type": "DQ_FormatConsistency",
+				"measureIdentification": {
+					"code": "PhysicalStructureConflicts",
+					"domains": [
+						{
+							"name": "NonConformance",
+							"params": [
+								{
+									"name": "column",
+									"value": attribute
+								}
+							]
+						}
+					]
+				},
+				"results": [
+					{
+						"type": "DQ_QuantitativeResult",
+						"errorStatistic": {
+							"metric": {
+								"name": "items",
+								"params": [
+									{
+										"name": "subtype",
+										"value": "rate"
+									},
+									{
+										"name": "min",
+										"value": 0
+									},
+									{
+										"name": "max",
+										"value": 100
+									}
+								]
+							}
+						},
+						"valueType": "number",
+						"values": [
+							physicalStructureConflictsRate.toFixed(2)
+						]
+					}
+				]
+			}
+		]
+	});
+	return {
+		invalidItems: invalidItems,
+		totalItems: totalItems,
+		physicalStructureConflictsRate: physicalStructureConflictsRate
+	};
+}
+
 var RootURLQualityML="https://www.qualityml.org/";
 const qualityMLMeasures  = [ //Check whether it exists beforehand to avoid creating an unfold that triggers the alert indicating it does not exist.
   "Excess",

@@ -1,0 +1,64 @@
+{
+	"nodes": [
+		{
+			"id": "5dl8n.dtocib",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"sensor_id": "TEMP001",
+					"temperature": 21.5,
+					"longitude": 2.1652948,
+					"latitude": 41.4372502,
+					"date": "2026-08-07T08:00:00Z"
+				},
+				{
+					"sensor_id": "TEMP001",
+					"temperature": 22.1,
+					"longitude": 2.1652948,
+					"latitude": 41.4372502,
+					"date": "2026-08-07T09:00:00Z"
+				},
+				{
+					"sensor_id": "TEMP001",
+					"temperature": 23.4,
+					"longitude": 2.1652948,
+					"latitude": 41.4372502,
+					"date": "2026-08-07T10:00:00Z"
+				},
+				{
+					"sensor_id": "TEMP001",
+					"temperature": 24.8,
+					"longitude": 2.1652948,
+					"latitude": 41.4372502,
+					"date": "2026-08-07T11:00:00Z"
+				},
+				{
+					"sensor_id": "TEMP001",
+					"temperature": 25.6,
+					"longitude": 2.1652948,
+					"latitude": 41.4372502,
+					"date": "2026-08-07T12:00:00Z"
+				}
+			],
+			"x": -33,
+			"y": -47
+		},
+		{
+			"id": "a5oa.gde12oe",
+			"label": "Format consistency",
+			"image": "formatConsistency.png",
+			"shape": "circularImage",
+			"x": 23,
+			"y": 54
+		}
+	],
+	"edges": [
+		{
+			"from": "5dl8n.dtocib",
+			"to": "a5oa.gde12oe",
+			"arrows": "from"
+		}
+	]
+}

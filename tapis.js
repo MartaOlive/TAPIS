@@ -203,7 +203,7 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
-	if (node.image=="qualityResultsViewer.png" && (parentNode.image!="uncertainty.png" && parentNode.image!="completness.png" && parentNode.image!="misclassificationMatrix.png" && parentNode.image!="logicalConsistency.png" && parentNode.image!="temporalQuality.png" && parentNode.image!="thematicQuality.png" && parentNode.image!="positionalQuality.png" )) return "Quality Results Viewer can only be connected to a quality node";
+	if (node.image=="qualityResultsViewer.png" && (parentNode.image!="uncertainty.png" && parentNode.image!="completness.png" && parentNode.image!="misclassificationMatrix.png" && parentNode.image!="logicalConsistency.png" && parentNode.image!="formatConsistency.png" && parentNode.image!="temporalQuality.png" && parentNode.image!="thematicQuality.png" && parentNode.image!="positionalQuality.png" )) return "Quality Results Viewer can only be connected to a quality node";
 	if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && parentNode.image != "ogcAPICols.png" && parentNode.image != "ogcAPIItems.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
 		return "It is not possible to link an STAnode after no STA node" //Falta afegir OGCApi Collection xq utilitza el filter i mirar si algo més
 	}
@@ -8490,6 +8490,19 @@ function networkDoubleClick(params) {
 				alert("Parent node must have data to analyze");
 			}
 		}
+		else if (currentNode.image == "formatConsistency.png") {
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode && parentNode.STAdata) {
+				currentNode.STAdata= deapCopy(parentNode.STAdata);
+				currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				populateDialogFormatConsistency(currentNode);
+				networkNodes.update(currentNode);
+				showNodeDialog("DialogFormatConsistency");
+			}else{
+				alert("Parent node must have data to analyze");
+			}
+		}
 		
 		else if (currentNode.image == "misclassificationMatrix.png") {
 			var parentNode=GetFirstParentNode(currentNode);
@@ -10152,6 +10165,306 @@ function okButtonInPivotTable(event){
 		alert (newData) //Error
 }
 
+var FormatConsistencyPatternTokens = [];
+
+function FormatConsistencySelectedFormat() {
+	var radios = document.getElementsByName("FormatConsistency_format");
+	var i;
+	for (i = 0; i < radios.length; i++) {
+		if (radios[i].checked)
+			return radios[i].value;
+	}
+	return "date";
+}
+
+function FormatConsistencySetPanelControls(panel, enabled) {
+	var els, i;
+	if (!panel)
+		return;
+	els = panel.querySelectorAll("input, select, button, textarea");
+	for (i = 0; i < els.length; i++)
+		els[i].disabled = !enabled;
+}
+
+function FormatConsistencyOnFormatChange() {
+	var format = FormatConsistencySelectedFormat();
+	var panels = document.getElementsByClassName("FormatConsistencyPanel");
+	var i, id, active;
+	for (i = 0; i < panels.length; i++) {
+		id = panels[i].id || "";
+		active = (id === "FormatConsistency_panel_" + format);
+		FormatConsistencySetPanelControls(panels[i], active);
+	}
+	if (format === "telephone")
+		FormatConsistencyToggleTelephonePrefix();
+}
+
+function FormatConsistencyToggleTelephonePrefix() {
+	var specific = document.getElementById("FormatConsistency_telPrefixMode_value");
+	var useValue = !!(specific && specific.checked);
+	document.getElementById("FormatConsistency_telPrefix").disabled = !useValue;
+	document.getElementById("FormatConsistency_telPrefixLength").disabled = useValue;
+}
+
+function FormatConsistencyTokenRepeat(token) {
+	var n = token && token.count != null ? parseInt(token.count, 10) : 1;
+	if (isNaN(n) || n < 1)
+		return 1;
+	return n;
+}
+
+function FormatConsistencyTokenLabel(token) {
+	var label, n;
+	if (!token)
+		return "";
+	if (token.type === "anyLetter")
+		label = "A–Z";
+	else if (token.type === "anyDigit")
+		label = "0–9";
+	else if (token.type === "letterOrDigit")
+		label = "A/9";
+	else if (token.type === "any")
+		label = "Any";
+	else if (token.type === "hyphen")
+		label = "-";
+	else if (token.type === "dot")
+		label = ".";
+	else if (token.type === "letter")
+		label = "'" + token.value + "'";
+	else if (token.type === "digit")
+		label = token.value;
+	else if (token.type === "interval")
+		label = "[" + token.from + "–" + token.to + "]";
+	else
+		label = token.type;
+	n = FormatConsistencyTokenRepeat(token);
+	if (n > 1)
+		label += "×" + n;
+	return label;
+}
+
+function FormatConsistencyRenderPattern() {
+	var host = document.getElementById("FormatConsistency_patternPreview");
+	var i, html;
+	if (!host)
+		return;
+	if (!FormatConsistencyPatternTokens.length) {
+		host.textContent = "";
+		return;
+	}
+	html = "";
+	for (i = 0; i < FormatConsistencyPatternTokens.length; i++)
+		html += '<span class="FormatConsistencyToken" title="' + FormatConsistencyTokenLabel(FormatConsistencyPatternTokens[i]) + '">' +
+			FormatConsistencyTokenLabel(FormatConsistencyPatternTokens[i]) +
+			'<button type="button" onclick="FormatConsistencyRemovePatternToken(' + i + ')">×</button></span>';
+	host.innerHTML = html;
+}
+
+function FormatConsistencyReadRepeatCount() {
+	var el = document.getElementById("FormatConsistency_patternTimes");
+	var n = el ? parseInt(el.value, 10) : 1;
+	if (isNaN(n) || n < 1)
+		n = 1;
+	if (el)
+		el.value = 1;
+	return n;
+}
+
+function FormatConsistencyAddPatternToken(type, extra) {
+	var token = { type: type, count: FormatConsistencyReadRepeatCount() };
+	if (extra) {
+		if (extra.value != null)
+			token.value = extra.value;
+		if (extra.from != null)
+			token.from = extra.from;
+		if (extra.to != null)
+			token.to = extra.to;
+	}
+	FormatConsistencyPatternTokens.push(token);
+	FormatConsistencyRenderPattern();
+}
+
+function FormatConsistencyRemovePatternToken(index) {
+	FormatConsistencyPatternTokens.splice(index, 1);
+	FormatConsistencyRenderPattern();
+}
+
+function FormatConsistencyAddDefinedLetter() {
+	var el = document.getElementById("FormatConsistency_patternLetter");
+	var v = el ? String(el.value || "").trim() : "";
+	if (!v || !/^[A-Za-z]$/.test(v)) {
+		alert("Enter one letter.");
+		return;
+	}
+	FormatConsistencyAddPatternToken("letter", { value: v });
+	el.value = "";
+}
+
+function FormatConsistencyAddDefinedDigit() {
+	var el = document.getElementById("FormatConsistency_patternDigit");
+	var v = el ? String(el.value || "").trim() : "";
+	if (!v || !/^[0-9]$/.test(v)) {
+		alert("Enter one digit.");
+		return;
+	}
+	FormatConsistencyAddPatternToken("digit", { value: v });
+	el.value = "";
+}
+
+function FormatConsistencyAddInterval() {
+	var fromEl = document.getElementById("FormatConsistency_patternFrom");
+	var toEl = document.getElementById("FormatConsistency_patternTo");
+	var from = fromEl ? String(fromEl.value || "").trim() : "";
+	var to = toEl ? String(toEl.value || "").trim() : "";
+	if (!from || !to || from.length !== 1 || to.length !== 1) {
+		alert("Enter one character in each interval field.");
+		return;
+	}
+	FormatConsistencyAddPatternToken("interval", { from: from, to: to });
+	fromEl.value = "";
+	toEl.value = "";
+}
+
+function FormatConsistencyCheckedValue(name, fallback) {
+	var radios = document.getElementsByName(name);
+	var i;
+	for (i = 0; i < radios.length; i++) {
+		if (radios[i].checked)
+			return radios[i].value;
+	}
+	return fallback;
+}
+
+function FormatConsistencyFillColumnSelect(node, selected) {
+	var sel, attrs, keys, i, html;
+	sel = document.getElementById("FormatConsistency_column");
+	if (!sel)
+		return;
+	attrs = node.STAdataAttributes || {};
+	keys = Object.keys(attrs);
+	html = "";
+	for (i = 0; i < keys.length; i++)
+		html += '<option value="' + keys[i] + '">' + keys[i] + '</option>';
+	sel.innerHTML = html;
+	if (selected)
+		sel.value = selected;
+}
+
+function populateDialogFormatConsistency(node) {
+	var options, radios, i, found, el;
+	saveNodeDialog("DialogFormatConsistency", node);
+	options = node.STAFormatConsistencyOptions || {};
+	FormatConsistencyFillColumnSelect(node, options.column);
+	radios = document.getElementsByName("FormatConsistency_format");
+	found = false;
+	for (i = 0; i < radios.length; i++) {
+		radios[i].checked = (radios[i].value === options.format);
+		if (radios[i].checked)
+			found = true;
+	}
+	if (!found && (options.format === "latLon" || options.format === "latitude" || options.format === "longitude")) {
+		for (i = 0; i < radios.length; i++) {
+			if (radios[i].value === "coordinates") {
+				radios[i].checked = true;
+				found = true;
+				break;
+			}
+		}
+	}
+	if (!found && radios.length)
+		radios[0].checked = true;
+	el = document.getElementById("FormatConsistency_datePattern");
+	if (el)
+		el.value = options.datePattern || "YYYY-MM-DD";
+	el = document.getElementById("FormatConsistency_timePattern");
+	if (el)
+		el.value = options.timePattern || "HH:mm:ss";
+	el = document.getElementById("FormatConsistency_coordPattern");
+	if (el) {
+		el.value = options.coordPattern || (options.latLonPattern === "signed" ? "signed" : (options.latLonPattern === "decimal" ? "dd" : "dd"));
+	}
+	if (options.telPrefixMode === "length")
+		document.getElementById("FormatConsistency_telPrefixMode_length").checked = true;
+	else
+		document.getElementById("FormatConsistency_telPrefixMode_value").checked = true;
+	document.getElementById("FormatConsistency_telPrefix").value = options.telPrefix || "";
+	document.getElementById("FormatConsistency_telPrefixLength").value = (options.telPrefixLength != null) ? options.telPrefixLength : 2;
+	document.getElementById("FormatConsistency_telNumberLength").value = (options.telNumberLength != null) ? options.telNumberLength : 9;
+	document.getElementById("FormatConsistency_uuidAllowNoHyphens").checked = !!options.uuidAllowNoHyphens;
+	FormatConsistencyPatternTokens = (options.patternTokens && options.patternTokens.length) ? JSON.parse(JSON.stringify(options.patternTokens)) : [];
+	FormatConsistencyRenderPattern();
+	FormatConsistencyOnFormatChange();
+}
+
+function okButtonDataQualityFormatConsistency(event) {
+	var node, data, metadata, options, info;
+	if (event && event.preventDefault)
+		event.preventDefault();
+	node = getNodeDialog("DialogFormatConsistency");
+	if (!node)
+		return;
+	options = {
+		column: document.getElementById("FormatConsistency_column").value,
+		format: FormatConsistencySelectedFormat(),
+		datePattern: document.getElementById("FormatConsistency_datePattern").value,
+		timePattern: document.getElementById("FormatConsistency_timePattern").value,
+		coordPattern: document.getElementById("FormatConsistency_coordPattern").value,
+		telPrefixMode: FormatConsistencyCheckedValue("FormatConsistency_telPrefixMode", "value"),
+		telPrefix: document.getElementById("FormatConsistency_telPrefix").value,
+		telPrefixLength: parseInt(document.getElementById("FormatConsistency_telPrefixLength").value, 10),
+		telNumberLength: parseInt(document.getElementById("FormatConsistency_telNumberLength").value, 10),
+		uuidAllowNoHyphens: document.getElementById("FormatConsistency_uuidAllowNoHyphens").checked,
+		patternTokens: JSON.parse(JSON.stringify(FormatConsistencyPatternTokens))
+	};
+	if (!options.column) {
+		alert("Select a column to evaluate.");
+		return;
+	}
+	if (options.format === "custom" && (!options.patternTokens || !options.patternTokens.length)) {
+		alert("Add at least one piece to the custom pattern.");
+		return;
+	}
+	node.STAFormatConsistencyOptions = options;
+	data = node.STAdata;
+	metadata = (node.STAmetadata) ? deapCopy(node.STAmetadata) : {};
+	info = calculateDataQualityFormatConsistency(data, options.column, metadata, options);
+	node.STAdata = data;
+	node.STAdataAttributes = getDataAttributes(data);
+	node.STAmetadata = metadata;
+	node.STAQualityNodeResults = {
+		dataLength: info.totalItems,
+		column: options.column,
+		format: options.format,
+		invalidItems: info.invalidItems,
+		physicalStructureConflictsRate: info.physicalStructureConflictsRate
+	};
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	hideNodeDialog("DialogFormatConsistency", event);
+	populateDialogQualityFormatConsistency(node);
+	showNodeDialog("DialogDataQualityResult");
+	updateQueryAndTableArea(node);
+}
+
+function populateDialogQualityFormatConsistency(node) {
+	var results, html;
+	results = node.STAQualityNodeResults;
+	if (!results) {
+		populateDialogdataQualityResultEmpty();
+		return;
+	}
+	html = "<h3>Format consistency</h3>";
+	html += '<table class="tablesmall"><thead><tr>';
+	html += "<th>Column</th><th>Total records</th><th>Invalid records</th><th>Physical structure conflicts rate</th>";
+	html += "</tr></thead><tbody><tr>";
+	html += "<td>" + completenessCell(results.column) + "</td>";
+	html += "<td>" + completenessCell(results.dataLength) + "</td>";
+	html += "<td>" + completenessCell(results.invalidItems) + "</td>";
+	html += "<td>" + completenessRateCell(results.physicalStructureConflictsRate) + "</td>";
+	html += "</tr></tbody></table>";
+	document.getElementById("dataQualityResult_info").innerHTML = html;
+}
+
 function populateDialogCompleteness(node){
 	document.getElementById("Completeness_omission_attributesList").innerHTML=populateAttributesListSelect(node.STAdataAttributes, "omission", "Column");
 	document.getElementById("Completeness_commission_attributesList").innerHTML=populateAttributesListSelect(node.STAdataAttributes, "commission", "Column");
@@ -11796,6 +12109,9 @@ function populateDialogdataQualityResult(parentNode, node){
 			break;
 		case "logicalConsistency.png":
 			populateDialogdataQualityResultLogicalConsistency(node);
+			break;
+		case "formatConsistency.png":
+			populateDialogQualityFormatConsistency(node);
 			break;
 		case "temporalQuality.png":
 			populateDialogdataQualityResultTemporalQuality(node);

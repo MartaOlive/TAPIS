@@ -165,6 +165,7 @@ const dataQuality = {
 	completness: { description: "Completeness", help: "Optional checks (numbers only, no pass/fail). Omission: empty or missing values in a column (optional Omission Flag). Commission (duplicates): duplicated records in a column (optional treat uppercase and lowercase as identical; optional Duplicate Flag). Commission excess: extra records beyond an expected record count (excess = max(0, total − expected); excess rate = excess / total)." },
 	misclassificationMatrix: { description: "Misclassification Matrix", help: "The degree to which the assigned classifications correspond to the reference classifications, as represented by a matrix of correctly and incorrectly classified items" },
 	logicalConsistency: { description: "Logical consistency", help: "Performs a logical consistency check to identify contradictions and ensure coherent data relationships." },
+	formatConsistency: { description: "Format consistency", help: "Checks that values follow the expected format." },
 	temporalQuality: { description: "Temporal quality", help: "Allows calculating temporal consistency, temporal validity and temporal resolution." },
 	positionalQuality: { description: "Positional quality", help: "Allows calculating positional accuracy and positional validity" },
 	thematicQuality: { description: "Thematic quality", help: "Allows calculating thematic accuracy and thematic validity" },

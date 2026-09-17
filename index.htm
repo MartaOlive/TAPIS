@@ -2173,6 +2173,128 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogFormatConsistency" onClose='hideNodeDialog("DialogFormatConsistency", event)'>
+		<form>
+			<h3>Format consistency</h3>
+			<div id="DialogFormatConsistencyBody">
+				<div class="FormatConsistencyColumnRow">
+					<label>Column: <select id="FormatConsistency_column"></select></label>
+				</div>
+				<fieldset>
+					<legend>Format</legend>
+				<div class="FormatConsistencyOption">
+					<label class="FormatConsistencyRadio"><input type="radio" name="FormatConsistency_format" id="FormatConsistency_format_date" value="date" onclick="FormatConsistencyOnFormatChange()"> Date</label>
+					<div id="FormatConsistency_panel_date" class="FormatConsistencyPanel">
+						<label>ISO 8601 pattern:
+							<select id="FormatConsistency_datePattern">
+								<option value="YYYY">YYYY</option>
+								<option value="YYYY-MM">YYYY-MM</option>
+								<option value="YYYY-MM-DD">YYYY-MM-DD</option>
+								<option value="YYYY-MM-DDTHH:mm">YYYY-MM-DDTHH:mm</option>
+								<option value="YYYY-MM-DDTHH:mm:ss">YYYY-MM-DDTHH:mm:ss</option>
+								<option value="YYYY-MM-DDTHH:mm:ss.s">YYYY-MM-DDTHH:mm:ss.s</option>
+								<option value="YYYY-MM-DDTHH:mm:ss.sss">YYYY-MM-DDTHH:mm:ss.sss</option>
+								<option value="YYYY-MM-DDTHH:mm:ssZ">YYYY-MM-DDTHH:mm:ssZ</option>
+								<option value="YYYY-MM-DDTHH:mm:ss.sssZ">YYYY-MM-DDTHH:mm:ss.sssZ</option>
+								<option value="YYYY-MM-DDTHH:mm:ss±hh:mm">YYYY-MM-DDTHH:mm:ss±hh:mm</option>
+							</select>
+						</label>
+					</div>
+				</div>
+				<div class="FormatConsistencyOption">
+					<label class="FormatConsistencyRadio"><input type="radio" name="FormatConsistency_format" id="FormatConsistency_format_time" value="time" onclick="FormatConsistencyOnFormatChange()"> Time</label>
+					<div id="FormatConsistency_panel_time" class="FormatConsistencyPanel">
+						<label>Pattern:
+							<select id="FormatConsistency_timePattern">
+								<option value="HH:mm">HH:mm</option>
+								<option value="HH:mm:ss">HH:mm:ss</option>
+							</select>
+						</label>
+					</div>
+				</div>
+				<div class="FormatConsistencyOption">
+					<label class="FormatConsistencyRadio"><input type="radio" name="FormatConsistency_format" id="FormatConsistency_format_coordinates" value="coordinates" onclick="FormatConsistencyOnFormatChange()"> Coordinates</label>
+					<div id="FormatConsistency_panel_coordinates" class="FormatConsistencyPanel">
+						<select id="FormatConsistency_coordPattern">
+							<option value="dd">Decimal Degrees (DD) — e.g. 41.40338</option>
+							<option value="signed">Signed Decimal Degrees — e.g. +41.40338</option>
+							<option value="dms">Degrees, minutes and seconds (DMS) — e.g. 41°24′12.2″N</option>
+							<option value="ddm">Degrees and decimal minutes (DDM) — e.g. 41°24.2033′N</option>
+							<option value="utm">UTM (Universal Transverse Mercator) — e.g. 31T 430595 4581266</option>
+							<option value="cartesian">Cartesian / projected (X, Y) — e.g. 430595.12</option>
+							<option value="geocentric">Geocentric (X, Y, Z) — e.g. 4788300.12</option>
+						</select>
+					</div>
+				</div>
+				<div class="FormatConsistencyOption">
+					<label class="FormatConsistencyRadio"><input type="radio" name="FormatConsistency_format" id="FormatConsistency_format_telephone" value="telephone" onclick="FormatConsistencyOnFormatChange()"> Telephone</label>
+					<div id="FormatConsistency_panel_telephone" class="FormatConsistencyPanel">
+						<span class="FormatConsistencyInline">
+							<label><input type="radio" name="FormatConsistency_telPrefixMode" id="FormatConsistency_telPrefixMode_value" value="value" onclick="FormatConsistencyToggleTelephonePrefix()"> Specific prefix</label>
+							<input type="text" id="FormatConsistency_telPrefix" placeholder="+34" size="8">
+						</span>
+						<span class="FormatConsistencyInline">
+							<label><input type="radio" name="FormatConsistency_telPrefixMode" id="FormatConsistency_telPrefixMode_length" value="length" onclick="FormatConsistencyToggleTelephonePrefix()"> Prefix length (digits)</label>
+							<input type="number" id="FormatConsistency_telPrefixLength" min="0" value="2" style="width:4em;">
+						</span>
+						<span class="FormatConsistencyInline">
+							<label>Digits after prefix: <input type="number" id="FormatConsistency_telNumberLength" min="1" value="9" style="width:4em;"></label>
+						</span>
+					</div>
+				</div>
+				<div class="FormatConsistencyOption">
+					<label class="FormatConsistencyRadio"><input type="radio" name="FormatConsistency_format" id="FormatConsistency_format_email" value="email" onclick="FormatConsistencyOnFormatChange()"> Email</label>
+					<div id="FormatConsistency_panel_email" class="FormatConsistencyPanel">
+						Must contain <b>@</b> and a <b>.</b> before the suffix.
+					</div>
+				</div>
+				<div class="FormatConsistencyOption">
+					<label class="FormatConsistencyRadio"><input type="radio" name="FormatConsistency_format" id="FormatConsistency_format_uuid" value="uuid" onclick="FormatConsistencyOnFormatChange()"> UUID identification</label>
+					<div id="FormatConsistency_panel_uuid" class="FormatConsistencyPanel">
+						Canonical shape: 8-4-4-4-12 hexadecimal digits.
+						<label><input type="checkbox" id="FormatConsistency_uuidAllowNoHyphens"> Also accept 32 digits without hyphens</label>
+					</div>
+				</div>
+				<div class="FormatConsistencyOption">
+					<label class="FormatConsistencyRadio"><input type="radio" name="FormatConsistency_format" id="FormatConsistency_format_dottedNumbers" value="dottedNumbers" onclick="FormatConsistencyOnFormatChange()"> Decimal point (not comma)</label>
+					<div id="FormatConsistency_panel_dottedNumbers" class="FormatConsistencyPanel">
+						International number: decimals after a <b>.</b> (e.g. 12.5). A comma as decimal separator is not accepted.
+					</div>
+				</div>
+				<div class="FormatConsistencyOption FormatConsistencyOptionWide">
+					<label class="FormatConsistencyRadio"><input type="radio" name="FormatConsistency_format" id="FormatConsistency_format_custom" value="custom" onclick="FormatConsistencyOnFormatChange()"> Custom pattern</label>
+					<div id="FormatConsistency_panel_custom" class="FormatConsistencyPanel">
+						<div id="FormatConsistency_patternPreview" class="FormatConsistencyPatternTrack"></div>
+						<div class="FormatConsistencyBuilder">
+							<label class="FormatConsistencyTimes">× <input type="number" id="FormatConsistency_patternTimes" min="1" value="1" style="width:3.2em;" title="Repeat the next piece this many times"></label>
+							<button type="button" class="FormatConsistencyChipBtn" title="Any letter" onclick="FormatConsistencyAddPatternToken('anyLetter')">A–Z</button>
+							<button type="button" class="FormatConsistencyChipBtn" title="Any digit" onclick="FormatConsistencyAddPatternToken('anyDigit')">0–9</button>
+							<button type="button" class="FormatConsistencyChipBtn" title="Letter or digit" onclick="FormatConsistencyAddPatternToken('letterOrDigit')">A/9</button>
+							<button type="button" class="FormatConsistencyChipBtn" title="Any character" onclick="FormatConsistencyAddPatternToken('any')">Any</button>
+							<button type="button" class="FormatConsistencyChipBtn" title="Hyphen" onclick="FormatConsistencyAddPatternToken('hyphen')">-</button>
+							<button type="button" class="FormatConsistencyChipBtn" title="Dot" onclick="FormatConsistencyAddPatternToken('dot')">.</button>
+							<span class="FormatConsistencyBuilderSep"></span>
+							<input type="text" id="FormatConsistency_patternLetter" maxlength="1" size="1" title="Specific letter">
+							<button type="button" class="FormatConsistencyChipBtn" onclick="FormatConsistencyAddDefinedLetter()">Letter</button>
+							<input type="text" id="FormatConsistency_patternDigit" maxlength="1" size="1" title="Specific digit">
+							<button type="button" class="FormatConsistencyChipBtn" onclick="FormatConsistencyAddDefinedDigit()">Digit</button>
+							<input type="text" id="FormatConsistency_patternFrom" maxlength="1" size="1" title="Interval from">
+							<span>–</span>
+							<input type="text" id="FormatConsistency_patternTo" maxlength="1" size="1" title="Interval to">
+							<button type="button" class="FormatConsistencyChipBtn" onclick="FormatConsistencyAddInterval()">Range</button>
+						</div>
+					</div>
+				</div>
+				</fieldset>
+			</div>
+			<div class="center" style="margin-top: 12px;">
+				<button type="button" value="ok" onClick="okButtonDataQualityFormatConsistency(event)">Ok</button>
+				<button type="button" value="cancel" onClick="hideNodeDialog('DialogFormatConsistency', event)">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogFormatConsistencyNodeId"></input>
+		</form>
+	</dialog>
+
 	<dialog id="DialogQualityMisclassificationMatrix"
 		onClose='hideNodeDialog("DialogQualityMisclassificationMatrix", event)'>
 		<form>
