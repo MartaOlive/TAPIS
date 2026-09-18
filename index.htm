@@ -768,6 +768,23 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogTransposeTable" onClose='hideNodeDialog("DialogTransposeTable", event)'>
+		<form>
+			<p>Rows become columns and columns become rows. Values of the header column become the new column names.</p>
+			<label>Header column:
+				<select id="TransposeTable_headerColumn"></select>
+			</label><br>
+			<label>Name of the attribute column:
+				<input type="text" id="TransposeTable_attributeColumnName" value="Column" size="20">
+			</label>
+			<div class="center" style="margin-top: 12px;">
+				<button type="button" value="ok" onClick="okButtonInTransposeTable(event)">Ok</button>
+				<button type="button" value="cancel" onClick="hideNodeDialog('DialogTransposeTable', event)">Cancel</button>
+			</div>
+			<input type="hidden" id="DialogTransposeTableNodeId"></input>
+		</form>
+	</dialog>
+
 	<dialog id="DialogPivotTable" onClose='hideNodeDialog("DialogPivotTable", event)' >
 		<form>
  			<div> 

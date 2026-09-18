@@ -138,6 +138,7 @@ const TableOperations = {
 	AddColumnBBox: { description: "Add BBox column", help: "Adds a new bounding box column to your table that is a format transformation of a preexisting bounding box column. The column can be a GeoJSON geometry (polygon), a Well Known Text (polygon), or four columns with longitude/latitude coordinates."},
 	ColumnsCalculator: { description: "Columns calculator", help: "Adds a new column to your table where for each record the new column contains the result of an operation involving other column values of that record." },
 	PivotTable: { description: "Pivot table", help: "Create a new table where some column content is transponsed into new columns" },
+	TransposeTable: { description: "Transpose table", help: "Swap rows and columns; new column names come from values of a chosen header column." },
 	ColumnStatistics: { description: "Columns statistics", help: "Create a table where, for each column the main statistics for the column values of all records are recorded." },
 	SeparateColumns: { description: "Separate Columns", help: "Splits a column containing a JSON object into separated new columns and removes the original column." },
 	SaveTable: { description: "Save Table", leafNode: true, help: "Saves the table contained in the node as a CSV (and CSVW if the column definition is semantically enriched; see &#39;meaning&#39;)." },

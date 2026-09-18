@@ -8424,6 +8424,15 @@ function networkDoubleClick(params) {
 			populatePivotTableDialog(currentNode);
 			showNodeDialog("DialogPivotTable");
 		}
+		else if (currentNode.image=="TransposeTable.png"){
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode && parentNode.STAdata) {
+				populateTransposeTableDialog(currentNode);
+				showNodeDialog("DialogTransposeTable");
+			}else{
+				alert("Parent node must have data to transpose");
+			}
+		}
 		else if (currentNode.image =="ColumnStatistics.png") {
 			saveNodeDialog("DialogColumnStatistics", currentNode);
 			showNodeDialog("DialogColumnStatistics");
@@ -10067,6 +10076,64 @@ function createAndLoadImportGeoJSONNode(data,url){
 	node.STAdataAttributes=attributes;
 	updateQueryAndTableArea(node);
 	networkNodes.update(node);
+}
+
+function populateTransposeTableDialog(node){
+	var parentNode, attributes, i, options, selected, sel, nameEl;
+	saveNodeDialog("DialogTransposeTable", node);
+	parentNode=GetFirstParentNode(node);
+	if (!parentNode || !parentNode.STAdata) {
+		alert("Parent node must have data to transpose");
+		return;
+	}
+	node.STAdata=deapCopy(parentNode.STAdata);
+	node.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+	if (!node.STATransposeTable)
+		node.STATransposeTable={};
+	networkNodes.update(node);
+	attributes=Object.keys(node.STAdataAttributes || {});
+	options="";
+	for (i=0;i<attributes.length;i++)
+		options+='<option value="'+attributes[i]+'">'+attributes[i]+'</option>';
+	sel=document.getElementById("TransposeTable_headerColumn");
+	sel.innerHTML=options;
+	selected=node.STATransposeTable.headerColumn;
+	if (selected && attributes.indexOf(selected)!==-1)
+		sel.value=selected;
+	else if (attributes.length)
+		sel.value=attributes[0];
+	nameEl=document.getElementById("TransposeTable_attributeColumnName");
+	nameEl.value=node.STATransposeTable.attributeColumnName || "Column";
+}
+
+function okButtonInTransposeTable(event){
+	var node, headerColumn, attributeColumnName, newData;
+	if (event && event.preventDefault)
+		event.preventDefault();
+	node=getNodeDialog("DialogTransposeTable");
+	if (!node)
+		return;
+	headerColumn=document.getElementById("TransposeTable_headerColumn").value;
+	attributeColumnName=String(document.getElementById("TransposeTable_attributeColumnName").value || "").trim();
+	if (!headerColumn) {
+		alert("Select a header column.");
+		return;
+	}
+	if (!attributeColumnName) {
+		alert("Enter a name for the attribute column.");
+		return;
+	}
+	node.STATransposeTable={ headerColumn: headerColumn, attributeColumnName: attributeColumnName };
+	newData=buildTransposeTable(node.STAdata, node.STAdataAttributes, headerColumn, attributeColumnName);
+	if (typeof newData==="string") {
+		alert(newData);
+		return;
+	}
+	node.STAdata=newData;
+	node.STAdataAttributes=getDataAttributes(newData);
+	networkNodes.update(node);
+	hideNodeDialog("DialogTransposeTable", event);
+	updateQueryAndTableArea(node);
 }
 
 function populatePivotTableDialog(node){

@@ -1167,6 +1167,53 @@ function SortTableByColumns(data, columnsSelected, AscOrDesc) {
 	return data;
 }
 
+// Transpose table: headerColumn values become new column names; other attributes become rows.
+// attributeColumnName is the name of the first column that holds former attribute names.
+// Returns a new data array, or an error string.
+function buildTransposeTable(data, dataAttributes, headerColumn, attributeColumnName){
+	var attributes, otherAttrs, i, r, headerVal, headers, seen, rowObj, newData;
+	if (!data || !data.length)
+		return "Error: No data to transpose";
+	if (!headerColumn)
+		return "Error: A header column is required";
+	attributeColumnName=String(attributeColumnName || "").trim();
+	if (!attributeColumnName)
+		return "Error: A name for the attribute column is required";
+	attributes=dataAttributes ? Object.keys(dataAttributes) : Object.keys(data[0] || {});
+	if (attributes.indexOf(headerColumn)===-1)
+		return "Error: Header column not found in the table";
+	otherAttrs=[];
+	for (i=0;i<attributes.length;i++){
+		if (attributes[i]!==headerColumn)
+			otherAttrs.push(attributes[i]);
+	}
+	if (!otherAttrs.length)
+		return "Error: Need at least one column besides the header column";
+	headers=[];
+	seen={};
+	for (r=0;r<data.length;r++){
+		headerVal=data[r][headerColumn];
+		if (headerVal===null || headerVal===undefined || headerVal==="")
+			return "Error: Header column has empty values; every row needs a name for the new columns";
+		headerVal=String(headerVal);
+		if (seen[headerVal])
+			return "Error: Header column values must be unique (duplicate: "+headerVal+")";
+		seen[headerVal]=true;
+		headers.push(headerVal);
+	}
+	if (seen[attributeColumnName])
+		return "Error: Attribute column name \""+attributeColumnName+"\" coincides with a header value";
+	newData=[];
+	for (i=0;i<otherAttrs.length;i++){
+		rowObj={};
+		rowObj[attributeColumnName]=otherAttrs[i];
+		for (r=0;r<data.length;r++)
+			rowObj[headers[r]]=data[r][otherAttrs[i]];
+		newData.push(rowObj);
+	}
+	return newData;
+}
+
 //Marta, please describe the inputs and outputs and what the function does.
 function buildPivotTable(data, rows, columns, values, aggregation){
 	var allowedKey=false;
