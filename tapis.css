@@ -336,6 +336,18 @@
     justify-content: flex-start;
 }
 
+.EditRecordField {
+    margin: 0 0 10px 0;
+}
+
+.EditRecordTextarea {
+    width: 98%;
+    max-width: 52em;
+    box-sizing: border-box;
+    font-family: inherit;
+    resize: vertical;
+}
+
 #DialogRadarPlot {
 	max-width: 96vw;
 	max-height: 94vh;

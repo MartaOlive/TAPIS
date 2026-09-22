@@ -4592,8 +4592,12 @@ function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
 		}
 		else
 			value=cell;
-		cdns.push('<label for="dlgCreateUpdateDeleteRecord_', dataAttributesArray[a], '">', GetHTMLdataAttribute(dataAttributesArray[a], dataAttributes[dataAttributesArray[a]]), ': </label>',
-			'<input id="dlgCreateUpdateDeleteRecord_', dataAttributesArray[a], '" type="text" size="', value.length ? (value.length>100 ? 100 : value.length) : 20, '" value="', value , '"><br>');
+		value=String(value);
+		var nLines=(value.match(/\n/g) || []).length + 1;
+		var rows=Math.min(12, Math.max(2, nLines, Math.ceil(value.length / 60)));
+		var escaped=value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+		cdns.push('<div class="EditRecordField"><label for="dlgCreateUpdateDeleteRecord_', dataAttributesArray[a], '">', GetHTMLdataAttribute(dataAttributesArray[a], dataAttributes[dataAttributesArray[a]]), ':</label><br>',
+			'<textarea id="dlgCreateUpdateDeleteRecord_', dataAttributesArray[a], '" rows="', rows, '" cols="80" class="EditRecordTextarea">', escaped, '</textarea></div>');
 	}
 	cdns.push('<input id="dlgCreateUpdateDeleteRecordInitialId" type="hidden" value="', iRecord, '">');
 	document.getElementById("dlgCreateUpdateDeleteRecordNumber").value=iRecord+1;

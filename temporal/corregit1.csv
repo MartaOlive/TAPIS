@@ -1,0 +1,69 @@
+scope;key;field;cat;spa
+2
+STASpecialQueries;ObsLayer;description;Capa d'observacions;Capa de observaciones
+3
+STAOperations;RecursiveExpandSTA;description;Expansió recursiva;Expansión recursiva
+4
+STAOperations;ExpandColumnSTA;description;Expandeix l'entitat;Expandir entidad
+5
+STAOperations;MergeExpandsSTA;description;Fusiona les expansions;Fusionar expansiones
+6
+STAOperations;SelectResourceSTA;description;Selecciona registre;Seleccionar registro
+7
+STAOperations;FilterRowsSTA;description;Filtra files;Filtrar filas
+8
+STAOperations;FilterRowsByTime;description;Filtra files per temps;Filtrar filas por tiempo
+9
+STAOperations;GeoFilterPolSTA;description;Filtra files per polígon;Filtrar filas por polígono
+10
+STAOperations;GeoFilterPntSTA;description;Filtra files per distància;Filtrar filas por distancia
+11
+STAOperations;RangeSTA;description;Interval de registres;Intervalo de registros
+12
+STAOperations;UploadObservations;description;Puja a STA;Subir a STA
+13
+STAOperations;CalculateStatisticsSTA;description;Puja les estadístiques a STA;Subir estadísticas a STA
+14
+STAOperations;CountResultsSTA;description;Compta els resultats;Contar resultados
+15
+STAOperations;ViewQuerySTA;description;Visualitza la consulta;Ver la consulta
+16
+STAOperations;SubscribeSTA;description;Subscripció i alerta;Suscripción y alerta
+17
+TableOperations;Table;description;Visualitza la taula;Ver la tabla
+18
+TableOperations;EditRecord;description;Editar registres;Editar registros
+19
+TableOperations;Meaning;description;Significat de la columna;Significado de la columna
+20
+TableOperations;FilterRowsTable;description;Filtra files;Filtrar filas
+21
+TableOperations;Replace;description;Substitueix;Sustituir
+22
+TableOperations;JoinTables;description;Uneix les taules;Unir tablas
+23
+TableOperations;ConcatenateTables;description;Concatenar columnes;Concatenar columnas
+24
+TableOperations;GroupBy;description;Agrupa per;Agrupar por
+25
+TableOperations;AggregateColumns;description;Agregar columnes;Agregar columnas
+26
+TableOperations;AddColumnPnt;description;Afegeix columna de punt;Agregar columna de punto
+27
+TableOperations;AddColumnBBox;description;Afegeix columna BBox;Agregar columna BBox
+28
+TableOperations;PivotTable;description;Taula dinàmica;Tabla dinámica
+29
+TableOperations;TransposeTable;description;Transposar taula;Transponer tabla
+30
+TableOperations;ColumnStatistics;description;Estadístiques de columnes;Estadísticas de las columnas
+31
+TableOperations;SeparateColumns;description;Separar columnes;Separar columnas
+32
+TableOperations;SaveTable;description;Desa la taula;Guardar tabla
+33
+TableOperations;SaveLayer;description;Desa la capa;Guardar capa
+34
+TableOperations;guf;description;Aporta comentari;Aportar comentario
+35
+TableOperations;uploadToIC;description;Puja al catàleg immutable;Subir al catálogo inmutable

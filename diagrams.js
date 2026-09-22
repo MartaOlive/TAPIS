@@ -850,7 +850,7 @@ function guessRadarSeriesLabel(dataAttributes) {
 	var names = getNonNumericAttributeNames(dataAttributes);
 	if (!names.length)
 		return "";
-	var preferred = ["ciutat", "city", "name", "label", "municipi", "nom"];
+	var preferred = ["name", "nom", "label", "item"];
 	var i, p, lower;
 	for (p = 0; p < preferred.length; p++) {
 		for (i = 0; i < names.length; i++) {
@@ -1163,7 +1163,7 @@ function createDialogWithSelectWithGroupsRadarPlot(node) {
 				groups[i].item = items.length ? items[0] : "";
 			if (!groups[i].legendText)
 				groups[i].legendText = groups[i].item;
-			cdns += '<div class="DialogRadarPlotSeriesRow"><label>City / item: <select id="DialogRadarPlotItemSelect_' + i + '" onchange="updateSelectInformationRadarPlot(\'' + i + '\',\'item\',\'select\',\'DialogRadarPlotItemSelect_' + i + '\',\'' + node.id + '\')">';
+			cdns += '<div class="DialogRadarPlotSeriesRow"><label>Item: <select id="DialogRadarPlotItemSelect_' + i + '" onchange="updateSelectInformationRadarPlot(\'' + i + '\',\'item\',\'select\',\'DialogRadarPlotItemSelect_' + i + '\',\'' + node.id + '\')">';
 			for (p = 0; p < items.length; p++)
 				cdns += radarHtmlOption(items[p], items[p] == groups[i].item);
 			cdns += '</select></label></div>';
@@ -1688,7 +1688,7 @@ function DrawRadarPlot(event) {
 
 	if (!seriesData.length) {
 		if (event)
-			alert(seriesAll ? "No series could be created from the selected columns." : "Add at least one series with a city or value column.");
+			alert(seriesAll ? "No series could be created from the selected columns." : "Add at least one series with an item or value column.");
 		return;
 	}
 

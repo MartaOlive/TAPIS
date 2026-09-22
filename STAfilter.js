@@ -156,7 +156,7 @@ async function askForCollectionQueryables(node) {
 
 	networkNodes.update(node);
 
-
+}
 
 /* ===== filterSTADlg.js (moved into STAfilter.js) ===== */
 

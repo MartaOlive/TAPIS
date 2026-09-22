@@ -1,0 +1,914 @@
+scope;key;field;eng;cat;spa;revisat
+DialogOpenURLNetwork;selectOption;option;-- Select an option--;-- Seleccioneu una opci¢--;-- Seleccione una opci¢n--;si
+DialogConfiguration;percent;text;%;%;%;si
+DialogImportJSONLD;forcesDuplicateGeom;text;(Forces to duplicate the geometry, if included);(Foráa la duplicaci¢ de la geometria, si s'inclou);(Fuerza la duplicaci¢n de la geometr°a, si se incluye);si
+DialogGUF;mandatoryNote;text;(mandatory to add);(obligatori per afegir);(obligatorio para a§adir);si
+DialogImportJSONLD;sometimesTooBig;text;(Sometimes is too big to be imported);(A vegades Çs massa gran per importar-lo);(A veces es demasiado grande para importarlo);si
+clarification;entityDeleted;text;{0} {1} has been deleted.;{0} {1} s'ha suprimit.;{0} {1} se ha eliminado.;s
+clarification;entityUpdated;text;{0} {1} updated.;{0} {1} s'ha actualitzat.;{0} {1} actualizado.;s
+alert;paramRequiredGeneric;text;{0} parameter is required, please fill in the box before send;El parÖmetre {0} Çs obligatori, ompliu la casella abans d'enviar;El par†metro {0} es obligatorio, rellene la casilla antes de enviar;si
+clarification;waitingSeconds;text;{0}. Waiting {1} seconds ...;{0}. Esperant {1} segons ...;{0}. Esperando {1} segundos ...;s
+clarification;waitingForUpdates;text;{0}. Waiting for updates ...;{0}. Esperant actualitzacions ...;{0}. Esperando actualizaciones ...;s
+DialogFormatConsistency;digit09;button;0?9;0?9;0?9;si
+alert;radarNeedThreeCategories;text;A radar chart needs at least three categories. The selected column has {0} unique values.;Un grÖfic de radar necessita almenys tres categories. La columna seleccionada tÇ {0} valors £nics.;Un gr†fico de radar necesita al menos tres categor°as. La columna seleccionada tiene {0} valores £nicos.;si
+DialogFormatConsistency;letterOrDigit;button;A/9;A/9;A/9;si
+DialogS3Bucket;accessKey;label;Access Key:;Clau d'accÇs:;Clave de acceso:;si
+chrome;add;button;Add;Afegeix;A§adir;si
+DialogPivotTable;addColumn;button;Add a Column;Afegeix una columna;A§adir una columna;si
+DialogPivotTable;addRow;button;Add a Row;Afegeix una fila;A§adir una fila;si
+DialogPivotTable;addValue;button;Add a Value;Afegeix un valor;A§adir un valor;si
+alert;addAtLeastOneCustomPatternPiece;text;Add at least one piece to the custom pattern.;Afegiu almenys una peáa al patr¢ personalitzat.;A§ada al menos una pieza al patr¢n personalizado.;si
+alert;addSeriesWithCityOrValue;text;Add at least one series with an item or value column;Afegiu almenys una särie amb una columna d'elements o de valors.;Agregue al menos una serie con una columna de elementos o de valores;si
+alert;addAtLeastOneSeries;text;Add at least one series.;Afegiu almenys una särie.;A§ada al menos una serie.;si
+TableOperations;AddColumnBBox;description;Add BBox column;Afegeix una columna BBox;A§adir columna BBox;si
+DialogDGGSCodesBbox;addCentroid;label;Add centroid coordinates;Afegeix les coordenades del centroide;A§adir las coordenadas del centroide;si
+DialogCreateColumns;addColumnToList;button;Add column to list;Afegeix la columna a la llista;A§adir la columna a la lista;si
+DialogAggregateColumns;addColumnToList;button;Add column to list;Afegeix la columna a la llista;A§adir la columna a la lista;si
+DialogColumnsCalculator;addColumnToList;button;Add column to list;Afegeix la columna a la llista;A§adir la columna a la lista;si
+DialogQualityMisclassificationMatrix;addColumns;title;Add columns to compare;Afegeix columnes per comparar;A§adir columnas para comparar;si
+DialogGUF;addFeedback;button;Add feedback;Afegeix comentaris;A§adir comentarios;si
+DialogUploadIC;addGeojsonNode;label;Add GeoJSON node to check the result;Afegeix un node GeoJSON per comprovar el resultat;A§adir un nodo GeoJSON para comprobar el resultado;si
+DialogConfiguration;addGeolocationHeader;label;Add geolocation header;Afegeix la capáalera de geolocalitzaci¢;A§adir la cabecera de geolocalizaci¢n;si
+DialogImportJSONLD;addGeometry;label;Add geometry;Afegeix geometria;A§adir geometr°a;si
+DialogImportJSONLD;addObservations;label;Add observations;Afegeix observacions;A§adir observaciones;si
+TableOperations;AddColumnPnt;description;Add point column;Afegeix una columna de punt;A§adir columna de punto;si
+DialogJoinTables;addBoth;label;Add records from both tables;Afegeix els registres de les dues taules;A§adir los registros de ambas tablas;si
+DialogJoinTables;addFirst;label;Add records of 1st table;Afegeix els registres de la 1a taula;A§adir los registros de la 1¶ tabla;si
+DialogLink;addToGraph;label;Add to the graph;Afegeix al grÖfic;A§adir al gr†fico;si
+clarification;addingGeojsonNode;text;Adding GeoJSON node with data uploaded;S'estÖ afegint un node GeoJSON amb les dades pujades;A§adiendo un nodo GeoJSON con los datos subidos;s
+TableOperations;AddColumnBBox;help;Adds a new bounding box column to your table that is a format transformation of a preexisting bounding box column. The column can be a GeoJSON geometry (polygon), a Well Known Text (polygon), or four columns with longitude/latitude coordinates.;Afegeix a la vostra taula una nova columna de BBox (caixa envoltant) que Çs una transformaci¢ de format d'una columna de BBox preexistent. La columna pot ser una geometria GeoJSON (pol°gon), un Well Known Text (pol°gon) o quatre columnes amb coordenades de longitud/latitud.;A§ade a su tabla una nueva columna de BBox (caja envolvente) que es una transformaci¢n de formato de una columna de BBox preexistente. La columna puede ser una geometr°a GeoJSON (pol°gono), un Well Known Text (pol°gono) o cuatro columnas con coordenadas de longitud/latitud.;si
+TableOperations;AggregateColumns;help;Adds a new column to a table with the aggregation of other previous selected columns.;Afegeix una nova columna a la taula amb l'agregaci¢ d'altres columnes seleccionades präviament.;A§ade una nueva columna a la tabla con la agregaci¢n de otras columnas seleccionadas previamente.;si
+TableOperations;ColumnsCalculator;help;Adds a new column to your table where for each record the new column contains the result of an operation involving other column values of that record.;Afegeix una nova columna a la vostra taula on, per a cada registre, la nova columna contÇ el resultat d'una operaci¢ que utilitza altres valors de columna d'aquell registre.;A§ade una nueva columna a su tabla donde, para cada registro, la nueva columna contiene el resultado de una operaci¢n que utiliza otros valores de columna de ese registro.;si
+TableOperations;CreateColumns;help;Adds a new column to your table. This column can be left empty, filled with a constant value or filled with an autoincremental value.;Afegeix una nova columna a la taula. Aquesta columna es pot deixar buida, omplir amb un valor constant o omplir amb un valor autoincremental.;A§ade una nueva columna a la tabla. Esta columna se puede dejar vac°a, rellenar con un valor constante o rellenar con un valor autoincremental.;si
+TableOperations;AddColumnPnt;help;Adds a new point column to your table that is a format transformation of a preexisting point column. The column can be a GeoJSON geometry (point), a Well Known Text (point), DGGS (polygon zone), or a pair of longitude/latitude columns.;Afegeix a la vostra taula una nova columna de punt que Çs una transformaci¢ de format d'una columna de punt preexistent. La columna pot ser una geometria GeoJSON (punt), un Well Known Text (punt), DGGS (zona poligonal) o un parell de columnes de longitud/latitud.;A§ade a su tabla una nueva columna de punto que es una transformaci¢n de formato de una columna de punto preexistente. La columna puede ser una geometr°a GeoJSON (punto), un Well Known Text (punto), DGGS (zona poligonal) o un par de columnas de longitud/latitud.;si
+TableOperations;AggregateColumns;description;Aggregate Columns;Agrega  columnes;Agrega columnas;si
+DialogFilterRowsByTime;aggregateBy;label;Aggregate data by:;Agrega les dades per:;Agregar los datos por:;si
+DialogGroupBy;aggregations;title;Aggregations:;Agregacions:;Agregaciones:;si
+DialogAggregateColumns;aggregations;title;Aggregations:;Agregacions:;Agregaciones:;si
+DialogOneValue;alertingValue;label;Alerting value (optional):;Valor d'alerta (opcional):;Valor de alerta (opcional):;si
+DialogRadarPlot;all;label;All;Tot;Todo;si
+DialogQualityTemporalQuality;allRecords;label;All records;Tots els registres;Todos los registros;si
+DialogQualityPositionalQuality;allRecords;label;All records;Tots els registres;Todos los registros;si
+DialogQualityThematicQuality;allRecords;label;All records;Tots els registres;Todos los registros;si
+alert;xAxisSameType;text;All series in X axis has to have same type of data;Totes les säries de l'eix X han de contenir el mateix tipus de dades;Todas las series del eje X deben contener el mismo tipo de datos;si
+dataQuality;positionalQuality;help;Allows calculating positional accuracy and positional validity;Permet calcular l'exactitud posicional i la validesa posicional;Permite calcular la exactitud posicional y la validez posicional;si
+dataQuality;temporalQuality;help;Allows calculating temporal consistency, temporal validity and temporal resolution.;Permet calcular la consistäncia temporal, la validesa temporal i la resoluci¢ temporal.;Permite calcular la consistencia temporal, la validez temporal y la resoluci¢n temporal.;si
+dataQuality;thematicQuality;help;Allows calculating thematic accuracy and thematic validity;Permet calcular l'exactitud temÖtica i la validesa temÖtica;Permite calcular la exactitud tem†tica y la validez tem†tica;si
+dataQuality;qualityResultsViewer;help;Allows you to visualize the complete results from the linked quality node;Permet visualitzar els resultats complets del node de qualitat enllaáat;Permite visualizar los resultados completos del nodo de calidad vinculado;si
+DialogFormatConsistency;also32Digits;label;Also accept 32 digits without hyphens;Accepta tambÇ 32 d°gits sense guionets;Aceptar tambiÇn 32 d°gitos sin guiones;si
+DialogColumnsCalculator;and;button;and;i;y;si
+DialogFormatConsistency;any;button;Any;Qualsevol;Cualquiera;si
+DialogFormatConsistency;anyCharacter;label;Any character;Qualsevol carÖcter;Cualquier car†cter;si
+DialogFormatConsistency;anyDigit;label;Any digit;Qualsevol d°git;Cualquier d°gito;si
+DialogFormatConsistency;anyLetter;label;Any letter;Qualsevol lletra;Cualquier letra;si
+DialogTableToolApiWarn;title;title;API data and table tools;Dades d'API i eines de taula;Datos de API y herramientas de tabla;si
+chrome;apply;button;Apply;Aplica;Aplicar;si
+clarification;applyingFilterWait;text;Applying filter ... It may take a while, please wait;"S'estÖ aplicant el filtre ... Pot trigar una estona; espereu";"Aplicando el filtro ... Puede tardar un poco; espere";si
+DialogSelectSortBy;ascending;label;ascending;ascendent;ascendente;si
+alert;needTwoAttrsOneAggregation;text;At least two attributes and one aggregation method have to be selected;Cal seleccionar almenys dos atributs i un mätode d'agregaci¢;Debe seleccionar al menos dos atributos y un mÇtodo de agregaci¢n;si
+DialogQualityThematicQuality;attributeSelection;label;Attribute selection;Selecci¢ d'atributs;Selecci¢n de atributos;si
+DialogColumnsCalculator;attribute;label;Attribute:;Atribut:;Atributo:;si
+DialogGroupBy;attributesToAggregate;title;Attributes to aggregate:;Atributs a agregar:;Atributos a agregar:;si
+DialogImportCSV;auto;label;Auto;Auto;Auto;si
+DialogCreateColumns;autoincremental;label;Autoincemental value;Valor autoincremental;Valor autoincremental;si
+DialogImportCSV;autoMeaning;label;Automatic retrieve of shared meaning;Recuperaci¢ automÖtica del significat compartit;Recuperaci¢n autom†tica del significado compartido;si
+DialogImportGeoJSON;autoMeaning;label;Automatic retrieve of shared meaning;Recuperaci¢ automÖtica del significat compartit;Recuperaci¢n autom†tica del significado compartido;si
+clarification;autoUpdateSelectColumnsNotImpl;text;Automatic update of SelectColumns not implemented for table nodes.;L'actualitzaci¢ automÖtica de Selecciona columnes STA no estÖ implementada per als nodes de taula.;La actualizaci¢n autom†tica de Selecciona columnas STA no est† implementada para los nodos de tabla.;si
+clarification;availableAt;text;Available at: {0};Disponible a: {0};Disponible en: {0};s
+DialogBarPlot;axes;title;Axes:;Eixos:;Ejes:;si
+DialogFormatConsistency;letterAZ;button;A?Z;A?Z;A?Z;si
+DialogBarPlot;bar;label;Bar;Barres;Barras;si
+tableStatisticsVisualize;BarPlot;description;Bar Plot;GrÖfic de barres;Gr†fico de barras;si
+DialogRadarPlot;beginAtZero;label;Begin at zero;Comenáa al zero;Empezar en el  cero;si
+alert;bothParentsEvaluateAndReference;text;Both a parent to evaluate and a reference parent are required.;Cal tant un node pare per avaluar com un node pare de referäncia.;Se requiere tanto un nodo padre para evaluar como un nodo padre de referencia.;si
+chrome;cancel;button;Cancel;Cancel˙la;Cancelar;s
+alert;cannotFindIotIdInParent;text;Cannot find @iot.id in parent node {0}. Did you removed in a select?;No es pot trobar @iot.id en el node pare {0}. L'heu eliminat en una selecci¢?;No se puede encontrar @iot.id en el nodo padre {0}. ®Lo ha eliminado en una selecci¢n?;si
+alert;cannotFindIotId;text;Cannot find @iot.id. Did you removed in a select?;No es pot trobar @iot.id. L'heu eliminat en una selecci¢?;No se puede encontrar @iot.id. ®Lo ha eliminado en una selecci¢n?;si
+DialogFormatConsistency;cartesian;option;Cartesian / projected (X, Y) ? e.g. 430595.12;Cartesianes / projectades (X, Y) ? p. ex. 430595.12;Cartesianas / proyectadas (X, Y) ? p. ej. 430595.12;si
+DialogEDC;catalogUrl;label;Catalog URL:;URL del catÖleg:;URL del cat†logo:;si
+alert;catalogVersionUnsupported;text;Catalog version not supported.;La versi¢ del catÖleg no Çs compatible.;La versi¢n del cat†logo no es compatible.;si
+DialogEDC;catalogVersion;label;Catalog version:;Versi¢ del catÖleg:;Versi¢n del cat†logo:;si
+DialogSTAURL;titleOgcCsw;title;Catalogues (OGC CSW);CatÖlegs (OGC CSW);Cat†logos (OGC CSW);si
+DialogRadarPlot;categoriesAsAxes;label;Categories as axes;Categories com a eixos;Categor°as como ejes;si
+DialogBarPlot;categories;label;Categories:;Categories:;Categor°as:;si
+DialogRadarPlot;categories;label;Categories:;Categories:;Categor°as:;si
+DialogGeospatialFilterRowsByDistance;centerPoint;title;Center Point;Punt central;Punto central;si
+dataQuality;formatConsistency;help;Checks that values follow the expected format.;Comprova que els valors segueixen el format esperat.;Comprueba que los valores siguen el formato esperado.;si
+DialogSelectExpands;chooseEntities;title;Choose entities you want details (expand) and attributes to select;Escolliu les entitats de les quals voleu detalls (expand) i els atributs a seleccionar;Elija las entidades de las que desea detalles (expand) y los atributos a seleccionar;si
+DialogConcatenateTables;chooseOption;title;Choose one option;Escolliu una opci¢;Elija una opci¢n;si
+DialogFilterRowEntities;chooseWay;title;Choose the way to get to the Entity you want to filter;Escolliu el cam° per arribar a l'entitat que voleu filtrar;Elija el camino para llegar a la entidad que desea filtrar;si
+alert;columnNameAlreadyExistsTpl;text;Chosen column name ({0}) already exists, change it to add column to the list;"El nom de columna seleccionat ({0}) ja existeix; canvieu-lo per afegir la columna a la llista";"El nombre de columna seleccionado ({0}) ya existe; c†mbielo para a§adir la columna a la lista";si
+alert;columnNameAlreadyExists;text;Chosen column name already exists, change it to add column to the list;"El nom de columna seleccionat ja existeix; canvieu-lo per afegir la columna a la llista";"El nombre de columna seleccionado ya existe; c†mbielo para a§adir la columna a la lista";si
+DialogBarPlot;classification;label;Classification (optional):;Classificaci¢ (opcional):;Clasificaci¢n (opcional):;si
+DialogQualityMisclassificationMatrix;classified;label;Classified;Classificat;Clasificado;si
+chrome;close;button;Close;Tanca;Cerrar;si
+DialogGUF;code;label;Code*:;Codi*:;C¢digo*:;s
+DialogGUF;codespace;label;Codespace*:;Espai de codis*:;Espacio de c¢digos*:;s
+DialogUploadIC;column;title;Column;Columna;Columna;s
+DialogQualityLogicalConsistency;columnN;label;Column {0};Columna {0};Columna {0};s
+alert;columnListEmpty;text;Column list is empty. Table will not be created.;La llista de columnes Çs buida. La taula no es crearÖ.;La lista de columnas est† vac°a. La tabla no se crear†.;s
+TableOperations;Meaning;description;Column meaning;Significat de la columna;Significado de la columna;s
+DialogMeaningTable;heading;text;Column name, type, meaning and units;Nom de columna, tipus, significat i unitats;Nombre de columna, tipo, significado y unidades;s
+DialogCreateColumns;columnName;title;Column name:;Nom de la columna:;Nombre de la columna:;s
+DialogAggregateColumns;columnName;title;Column name:;Nom de la columna:;Nombre de la columna:;s
+DialogColumnsCalculator;columnName;title;Column name:;Nom de la columna:;Nombre de la columna:;s
+DialogAddColumnPnt;columnName;label;Column name:;Nom de la columna:;Nombre de la columna:;s
+DialogAddColumnBBox;columnName;label;Column name:;Nom de la columna:;Nombre de la columna:;s
+DialogQualityThematicQuality;columnToAssess;label;Column to assess:;Columna a d'avaluar:;Columna que a evaluar:;s
+DialogUncertainty;columnX;text;Column X:;Columna X:;Columna X:;s
+DialogUncertainty;columnY;text;Column Y:;Columna Y:;Columna Y:;s
+DialogUncertainty;column;text;Column:;Columna:;Columna:;s
+DialogFormatConsistency;column;label;Column:;Columna:;Columna:;s
+DialogPivotTable;columns;title;Columns;Columnes;Columnas;s
+DialogUploadIC;columns;title;Columns;Columnes;Columnas;s
+DialogRadarPlot;columnsAsAxes;label;Columns as axes;Columnes com a eixos;Columnas como ejes;s
+TableOperations;ColumnsCalculator;description;Columns calculator;Calculadora de columnes;Calculadora de columnas;si
+TableOperations;ColumnStatistics;description;Columns statistics;Estad°stiques de les columnes;Estad°sticas de las columnas;si
+tableStatisticsVisualize;ColumnStatistics;description;Columns statistics;Estad°stiques de columnes;Estad°sticas de columnas;si
+DialogQualityMisclassificationMatrix;columnsToCompare;text;Columns to compare:;Columnes per comparar:;Columnas para comparar:;s
+DialogSeparateColumns;columnsToSeparate;title;Columns to separate:;Columnes que cal separar:;Columnas que se deben separar:;s
+DialogSeparateColumns;columnsWithJson;label;Columns with JSON objects;Columnes amb objectes JSON;Columnas con objetos JSON;s
+DialogCompleteness;commissionDup;title;Commission (duplicates);Comissi¢ (duplicats);Comisi¢n (duplicados);s
+DialogCompleteness;commissionExcess;title;Commission excess;ExcÇs de comissi¢;Exceso de comisi¢n;s
+clarification;completed;text;Completed.;S'ha completat.;Completado.;s
+dataQuality;completness;description;Completeness;Completesa;Completitud;s
+DialogCompleteness;title;title;Completeness;Completesa;Completitud;s
+STASpecialQueriesType;Type;plural;Complex queries;Consultes complexes;Consultas complejas;s
+STASpecialQueriesType;Type;singular;Complex query;Consulta complexa;Consulta compleja;si
+DialogConcatenateTables;allColumns;label;Concatenate all columns;Concatena totes les columnes;Concatenar todas las columnas;s
+TableOperations;ConcatenateTables;description;Concatenate Columns;Concatena  columnes;Concatena columnas;si
+DialogConcatenateTables;onlyRepeated;label;Concatenate only repeated columns;Concatena nomÇs les columnes repetides;Concatenar s¢lo las columnas repetidas;s
+clarification;connected;text;Connected.;Connectat.;Conectado.;s
+clarification;connectionSameNode;text;Connection to the same node is not allowed.;No es permet la connexi¢ amb el mateix node.;No se permite la conexi¢n con el mismo nodo.;s
+DialogCreateColumns;constantValue;label;Constant value;Valor constant;Valor constante;s
+DialogEDC;consumerUrl;label;Consumer URL:;URL del consumidor:;URL del consumidor:;s
+chrome;continue;button;Continue;Continua;Continuar;s
+DialogGeospatialFilterRowsByDistance;coordX;label;Coordinate X:;Coordenada X:;Coordenada X:;s
+DialogGeospatialFilterRowsByDistance;coordY;label;Coordinate Y:;Coordenada Y:;Coordenada Y:;s
+DialogFormatConsistency;coordinates;label;Coordinates;Coordenades;Coordenadas;s
+DialogQualityPositionalQuality;coordinatesUnits;label;Coordinates units;Unitats de les coordenades;Unidades de las coordenadas;s
+DialogAddColumnBBox;coordinates;label;Coordinates:;Coordenades:;Coordenadas:;s
+STAOperations;CountResultsSTA;description;Count results;Compta els resultats;Conta los resultados;si
+chrome;create;button;Create;Crea;Crear;s
+tableStatisticsVisualize;BarPlot;help;Create a bar or pie chart with a the values of the column of a table.;Crea un grÖfic de barres o de sectors amb els valors de la columna d'una taula.;Crea un gr†fico de barras o de sectores con los valores de la columna de una tabla.;s
+TableOperations;PivotTable;help;Create a new table where some column content is transponsed into new columns;Crea una nova taula on el contingut d'algunes columnes es transposa en noves columnes;Crea una nueva tabla donde el contenido de algunas columnas se transpone en nuevas columnas;si
+tableStatisticsVisualize;RadarPlot;help;Create a radar (spider) chart. Add series one by one (an item or a metric) like the Scatter Plot.;Crea un grÖfic de radar (aranya). Afegeix les säries una a una com al grÖfic de dispersi¢.;Crea un gr†fico de radar (ara§a). A§ade las series una a una como en el gr†fico de dispersi¢n.;si
+TableOperations;ConcatenateTables;help;Create a single table by adding the records of the second table to the first one. The columns with the same name in both tables are merged in a sigle column.;Crea una £nica taula afegint els registres de la segona taula a la primera. Les columnes amb el mateix nom a totes dues taules es fusionen en una sola columna.;Crea una £nica tabla a§adiendo los registros de la segunda tabla a la primera. Las columnas con el mismo nombre en ambas tablas se fusionan en una sola columna.;si
+TableOperations;ColumnStatistics;help;Create a table where, for each column the main statistics for the column values of all records are recorded.;Crea una taula on, per a cada columna, es calculen les estad°stiques principals dels valors de la columna de tots els registres.;Crea una tabla donde, para cada columna, se calculan las estad°sticas principales de los valores de la columna de todos los registros.;si
+tableStatisticsVisualize;ColumnStatistics;help;Create a table where, for each column the main statistics for the column values of all records are recorded.;Crea una taula on, per a cada columna, es calculen les estad°stiques principals dels valors de la columna de tots els registres.;Crea una tabla donde, para cada columna, se calculan las estad°sticas principales de los valores de la columna de todos los registros.;si
+TableOperations;CreateColumns;description;Create Columns;Crea columnes;Crea columnas;si
+DialogQualityThematicQuality;createGroupedResult;label;Create new columns with grouped result;Crea columnes noves amb el resultat agrupat;Crear columnas nuevas con el resultado agrupado;s
+DialogQualityTemporalQuality;createMeanUncertaintyCols;label;Create new columns with mean and uncertainty;Crea columnes noves amb la mitjana i la incertesa;Crear columnas nuevas con la media y la incertidumbre;s
+DialogQualityPositionalQuality;createMeanUncertainty;label;Create new columns with mean and uncertantly;Crea columnes noves amb la mitjana i la incertesa;Crear columnas nuevas con la media y la incertidumbre;s
+tableStatisticsVisualize;ScatterPlot;help;Creates a scatter plot with a the values of the column of a table.;Crea un grÖfic de dispersi¢ amb els valors de la columna d'una taula.;Crea un gr†fico de dispersi¢n con los valores de la columna de una tabla.;si
+TableOperations;JoinTables;help;Creates a single table that is the result of joining two tables using some selected column values in both tables to defined the merge criteria.;Crea una £nica taula que Çs el resultat d'unir dues taules utilitzant els valors d'algunes columnes seleccionades a totes dues taules per definir el criteri de fusi¢.;Crea una £nica tabla que es el resultado de unir dos tablas utilizando los valores de algunas columnas seleccionadas en ambas tablas para definir el criterio de fusi¢n.;si
+TableOperations;GroupBy;help;Creates a table will the columns containng selected statistics of the aggregation of some records that have the same values other selected columns.;Crea una taula amb les columnes que contenen les estad°stiques seleccionades de l'agregaci¢ d'alguns registres que tenen els mateixos valors en altres columnes seleccionades.;Crea una tabla con las columnas que contienen las estad°sticas seleccionadas de la agregaci¢n de algunos registros que tienen los mismos valores en otras columnas seleccionadas.;si
+clarification;creatingEntity;text;Creating a/an {0}...;S'estÖ creant un/a {0}...;Se est† creando un/a {0}...;s
+DialogUploadIC;ccBy;option;Creative Commons Attribution 4.0 (CC BY);Creative Commons Reconeixement 4.0 (CC BY);Creative Commons Atribuci¢n 4.0 (CC BY);s
+DialogUploadIC;ccByNd;option;Creative Commons Attribution No Derivatives 4.0 (BY-ND);Creative Commons Reconeixement Sense Obres Derivades 4.0 (BY-ND);Creative Commons Atribuci¢n Sin Obras Derivadas 4.0 (BY-ND);s
+DialogUploadIC;ccByNcSa;option;Creative Commons Attribution Non Commercia Share Alike l4.0 (BY-NC-SA);Creative Commons Reconeixement No Comercial Compartir Igual 4.0 (BY-NC-SA);Creative Commons Atribuci¢n No Comercial Compartir Igual 4.0 (BY-NC-SA);s
+DialogUploadIC;ccByNc;option;Creative Commons Attribution Non Commercial 4.0 (BY-NC);Creative Commons Reconeixement No Comercial 4.0 (BY-NC);Creative Commons Atribuci¢n No Comercial 4.0 (BY-NC);s
+DialogUploadIC;ccByNcNd;option;Creative Commons Attribution Non Commercial No Derivatives 4.0 (BY-NC-ND);Creative Commons Reconeixement No Comercial Sense Obres Derivades 4.0 (BY-NC-ND);Creative Commons Atribuci¢n No Comercial Sin Obras Derivadas 4.0 (BY-NC-ND);s
+DialogUploadIC;ccBySa;option;Creative Commons Attribution Share Alike 4.0 (BY-SA);Creative Commons Reconeixement Compartir Igual 4.0 (BY-SA);Creative Commons Atribuci¢n Compartir Igual 4.0 (BY-SA);s
+DialogUploadIC;cc0;option;Creative Commons Public domain 1.0 (CC0);Creative Commons Domini p£blic 1.0 (CC0);Creative Commons Dominio p£blico 1.0 (CC0);s
+clarification;credentialsReceived;text;Credentials received;S'han rebut les credencials;Se han recibido las credenciales;s
+DialogAddColumnPnt;crs;label;CRS:;CRS:;CRS:;s
+DialogAddColumnBBox;crs;label;CRS:;CRS:;CRS:;s
+DialogSaveTable;csvDelimiter;label;CSV delimiter:;Delimitador CSV:;Delimitador CSV:;s
+clarification;csvParseError;text;CSV parse error: {0} The file content fragment:\n{1};Error en l'anÖlisi del CSV: {0} Fragment del contingut del fitxer:\n{1};Error en el an†lisis del CSV: {0} Fragmento del contenido del archivo:\n{1};si
+DialogImportCSV;csvSource;title;CSV source;Font del CSV;Fuente del CSV;s
+DialogSaveTable;csvCsvw;title;CSV+CSVW;CSV+CSVW;CSV+CSVW;s
+DialogImportCSV;csvwUrl;label;CSVW URL:;URL del CSVW:;URL del CSVW:;s
+DialogFormatConsistency;customPattern;label;Custom pattern;Patr¢ personalitzat;Patr¢n personalizado;s
+DialogRadarPlot;dataLayout;title;Data layout:;Disposici¢ de les dades:;Disposici¢n de los datos:;s
+DialogScatterPlot;dataTimeTicks;label;Data time ticks interval:;Interval de marques de temps de les dades:;Intervalo de marcas de tiempo de los datos:;s
+clarification;datastreamAvailableSta;text;Datastream {0} available in STA;Datastream {0} disponible a STA;Datastream {0} disponible en STA;s
+DialogFormatConsistency;date;label;Date;Data;Fecha;s
+DialogSaveLayer;dateAndTime;label;Date and time:;Data i hora:;Fecha y hora:;s
+DialogUploadObservations;dateAndTime;label;Date and time:;Data i hora:;Fecha y hora:;s
+DialogUploadIC;dateColumn;title;Date column;Columna amb la data;Columna con la fecha;s
+DialogFilterRowsByTime;day;option;Day;Dia;D°a;s
+DialogUncertainty;days;label;Days;Dies;D°as;s
+DialogQualityTemporalQuality;days;label;Days;Dies;D°as;s
+DialogSaveTable;dbf;title;DBF;DBF;DBF;s
+clarification;dbfParseError;text;DBF parse error: {0};Error d'anÖlisi de la DBF: {0};Error de an†lisis de la DBF: {0};si
+DialogImportDBF;source;title;DBF source;Font DBF;Fuente DBF;s
+clarification;dbfLoaded;text;DBF table has been loaded.;S'ha carregat la taula DBF.;Se ha cargado la tabla DBF.;si
+clarification;dbfNoRecords;text;DBF table has no records.;La taula DBF no tÇ registres.;La tabla DBF no tiene registros.;si
+DialogFormatConsistency;dd;option;Decimal Degrees (DD) ? e.g. 41.40338;Graus decimals (DD) ? p. ex. 41.40338;Grados decimales (DD) ? p. ej. 41.40338;s
+DialogFormatConsistency;decimalPoint;label;Decimal point (not comma);Punt decimal (no coma);Punto decimal (no coma);s
+alert;definitionUomRequired;text;Definition (unitOfMeasurements) parameter is required, please fill in the box before send;"El parÖmetre de definici¢ (unitOfMeasurements) Çs obligatori; ompliu la casella abans d'enviar-lo";"El par†metro de definici¢n (unitOfMeasurements) es obligatorio; rellene la casilla antes de enviarlo";si
+DialogQualityPositionalQuality;degrees;option;Degrees;Graus;Grados;s
+DialogFormatConsistency;ddm;option;Degrees and decimal minutes (DDM) ? e.g. 41¯24.2033?N;Graus i minuts decimals (DDM) ? p. ex. 41¯24.2033?N;Grados y minutos decimales (DDM) ? p. ej. 41¯24.2033?N;s
+DialogFormatConsistency;dms;option;Degrees, minutes and seconds (DMS) ? e.g. 41¯24?12.2?N;Graus, minuts i segons (DMS) ? p. ex. 41¯24?12.2?N;Grados, minutos y segundos (DMS) ? p. ej. 41¯24?12.2?N;s
+chrome;delete;button;Delete;Suprimeix;Eliminar;s
+clarification;deletingEntity;text;Deleting  {0} {1} ...;S'estÖ suprimint {0} {1} ...;Eliminando {0} {1} ...;s
+DialogSeparateColumns;delimitedBy;label;delimited by:;delimitades per:;delimitadas por:;s
+DialogImportCSV;delimiter;title;Delimiter;Delimitador;Delimitador;s
+DialogSelectSortBy;descending;label;descending;descendent;descendente;s
+DialogQualityTemporalQuality;description;label;Description;Descripci¢;Descripci¢n;s
+alert;descriptionRequired;text;Description parameter is required, please fill in the box before send;El parÖmetre description Çs obligatori, ompliu la casella abans d'enviar;El par†metro description es obligatorio, rellene la casilla antes de enviar;si
+DialogSaveLayer;dggs;label;DGGS:;DGGS:;DGGS:;s
+DialogAddColumnPnt;dggs;label;DGGS:;DGGS:;DGGS:;s
+DialogDGGSCodesBbox;dggs;label;DGGS:;DGGS:;DGGS:;s
+DialogFormatConsistency;digit;button;Digit;D°git;D°gito;s
+DialogFormatConsistency;digitsAfterPrefix;label;Digits after prefix:;D°gits desprÇs del prefix:;D°gitos despuÇs del prefijo:;s
+DialogJoinTables;discard;label;Discard;Descarta;Descartar;s
+DialogGeospatialFilterRowsByDistance;distance;label;Distance;DistÖncia;Distancia;s
+DialogQualityTemporalQuality;distanceBaseline;label;Distance from the global interval baseline;DistÖncia des de la l°nia base de l'interval global;Distancia desde la l°nea base del intervalo global;s
+DialogQualityTemporalQuality;distancePrevious;label;Distance to the previous data;DistÖncia respecte de les dades anteriors;Distancia respecto de los datos anteriores;s
+DialogUncertainty;distance;text;Distance:;DistÖncia:;Distancia:;s
+chrome;done;button;Done;Fet;Hecho;s
+DialogFormatConsistency;dot;label;Dot;Punt;Punto;s
+clarification;downloadCsvCompleted;text;Download CSV completed.;S'ha completat la baixada de CSV.;Se ha completado la descarga de CSV.;si
+clarification;downloadCsvwCompleted;text;Download CSVW completed.;S'ha completat la baixada del CSVW.;Se ha completado la descarga del CSVW.;si
+clarification;downloadDbfCompleted;text;Download DBF completed.;S'ha completat la baixada de la DBF.;Se ha completado la descarga de la DBF.;si
+clarification;downloadGeojsonCompleted;text;Download GeoJSON completed.;S'ha completat la baixada del GeoJSON.;Se ha completado la descarga del GeoJSON.;s
+clarification;downloadGeojsonSchemaCompleted;text;Download GeoJSON schema completed.;S'ha completat la baixada de l'esquema GeoJSON.;Se ha completado la descarga del esquema GeoJSON.;si
+clarification;downloadGpkgCompleted;text;Download GPKG completed.;S'ha completat la baixada de GPKG.;Se ha completado la descarga de GPKG.;si
+clarification;downloadJsonCompleted;text;Download JSON completed.;S'ha completat la baixada del JSON.;Se ha completado la descarga del JSON.;si
+clarification;downloadJsonldCompleted;text;Download JSONLD completed.;S'ha completat la baixada de JSONLD.;Se ha completado la descarga de JSONLD.;s
+clarification;downloadSchemaCompleted;text;Download TAPIS schema completed.;S'ha completat la baixada de l'esquema TAPIS.;Se ha completado la descarga del esquema TAPIS.;si
+chrome;draw;button;Draw;Dibuixa;Dibujar;s
+alert;drawRadarFirst;text;Draw the radar chart first.;Dibuixeu primer el grÖfic de radar.;Dibuje primero el gr†fico de radar.;si
+DialogUploadObservations;eachRowFoi;label;Each row represents a feature of interest with several observed properties;Cada fila representa una caracter°stica d'interäs amb diverses propietats observades;Cada fila representa una caracter°stica de interÇs con varias propiedades observadas;s
+DialogEDC;title;title;Eclipse DataSpace Connector;Conector Eclipse DataSpace;Conector Eclipse DataSpace;s
+clarification;edcCatalogCompleted;text;EDC catalog request completed.;S'ha completat la sol˙licitud del catÖleg EDC.;Se ha completado la solicitud del cat†logo EDC.;s
+clarification;edcContractFailedAfterN;text;EDC contract negociation failed after {0} iterations;La negociaci¢ del contracte EDC ha fallat desprÇs de {0} iteracions;La negociaci¢n del contrato EDC ha fallado despuÇs de {0} iteraciones;s
+clarification;edcContractFailedDot;text;EDC contract negociation failed.;Ha fallat la negociaci¢ del contracte EDC.;Ha fallado la negociaci¢n del contrato EDC.;s
+clarification;edcContractFailedDetail;text;EDC contract negociation failed. <br>name: {0} message: {1} at: {2} text: {3};Ha fallat la negociaci¢ del contracte EDC. <br>name: {0} missatge: {1} a: {2} text: {3};Ha fallado la negociaci¢n del contrato EDC. <br>name: {0} mensaje: {1} en: {2} texto: {3};s
+clarification;edcContractFailed;text;EDC contract negociation failed: {0};Ha fallat la negociaci¢ del contracte EDC: {0};Ha fallado la negociaci¢n del contrato EDC: {0};s
+clarification;edcContractInitiated;text;EDC contract negociation iniciated...;S'ha iniciat la negociaci¢ del contracte EDC...;Se ha iniciado la negociaci¢n del contrato EDC...;s
+clarification;edcContractSuccessful;text;EDC contract negociation successful.;La negociaci¢ del contracte EDC ha estat satisfactïria.;La negociaci¢n del contrato EDC se ha realizado correctamente.;s
+clarification;edcGettingUrlFailed;text;EDC getting URL for transfer request failed{0};Ha fallat l'obtenci¢ de l'URL EDC per a la sol˙licitud de transferäncia{0};Ha fallado la obtenci¢n de la URL EDC para la solicitud de transferencia{0};s
+clarification;edcRawTransferCompleted;text;"EDC Raw data transfer completed. It it is not automatically transformed into a table, use the relevant ""format"" tool to do so.";S'ha completat la transferäncia de dades sense processar d'EDC. Si no es transforma automÖticament en una taula, useu l'eina de ÆformatØ corresponent per fer-ho.;Se ha completado la transferencia de datos sin procesar de EDC. Si no se transforma autom†ticamente en una tabla, use la herramienta de ÆformatoØ correspondiente para hacerlo.;s
+clarification;edcTransferFailedAfterN;text;EDC transfer request failed after {0} iterations;La sol˙licitud de transferäncia EDC ha fallat desprÇs de {0} iteracions;La solicitud de transferencia EDC ha fallado despuÇs de {0} iteraciones;s
+clarification;edcTransferFailedDetail;text;EDC transfer request failed. <br>name: {0} message: {1} at: {2} text: {3};Ha fallat la sol˙licitud de transferäncia EDC. <br>name: {0} missatge: {1} a: {2} text: {3};Ha fallado la solicitud de transferencia EDC. <br>name: {0} mensaje: {1} en: {2} texto: {3};s
+clarification;edcTransferFailedDetailsAre;text;EDC transfer request failed. Details are: {0};Ha fallat la sol˙licitud de transferäncia EDC. Els detalls s¢n: {0};Ha fallado la solicitud de transferencia EDC. Los detalles son: {0};s
+clarification;edcTransferFailed;text;EDC transfer request failed{0};Ha fallat la sol˙licitud de transferäncia EDC{0};Ha fallado la solicitud de transferencia EDC{0};s
+clarification;edcTransferStartConfirmed;text;EDC transfer request start confirmed.;S'ha confirmat l'inici de la sol˙licitud de transferäncia EDC.;Se ha confirmado el inicio de la solicitud de transferencia EDC.;s
+clarification;edcTransferRequested;text;EDC transfer requested...;S'ha sol˙licitat la transferäncia EDC...;Se ha solicitado la transferencia EDC...;s
+clarification;edcUrlObtained;text;EDC URL for transfer obtained.;S'ha obtingut l'URL EDC per a la transferäncia.;Se ha obtenido la URL EDC para la transferencia.;s
+DialogGUF;editPrevious;button;Edit previous feedback;Edita els comentaris anteriors;Editar los comentarios anteriores;s
+TableOperations;EditRecord;description;Edit record;Edita registres;Editar registros;si
+DialogFormatConsistency;email;label;Email;Correu electrïnic;Correo electr¢nico;s
+DialogCreateColumns;emptyColumn;label;Empty column;Columna buida;Columna vac°a;s
+DialogImportCSV;encoding;label;Encoding:;Codificaci¢:;Codificaci¢n:;s
+alert;endBeforeStart;text;End date can't be before start date;La data final no pot ser anterior a la data inicial;La fecha final no puede ser anterior a la fecha inicial;si
+DialogUploadIC;end;label;End:;Final:;Fin:;s
+alert;enterAttributeColumnName;text;Enter a name for the attribute column.;Introduãu un nom per a la columna d'atributs.;Introduzca un nombre para la columna de atributos.;si
+alert;enterOneCharEachInterval;text;Enter one character in each interval field.;Introduãu una lletra en cada camp d'interval.;Introduzca una letra en cada campo de intervalo.;si
+alert;enterOneDigit;text;Enter one digit.;Introduãu una xifra.;Introduzca una cifra.;si
+alert;enterOneLetter;text;Enter one letter.;Introduãu una lletra.;Introduzca una letra.;si
+clarification;errorCreatingEntity;text;Error creating entity. <br>name: {0} message: {1} at: {2} text: {3};Error en crear l'entitat. <br>name: {0} missatge: {1} a: {2} text: {3};Error al crear la entidad. <br>name: {0} mensaje: {1} en: {2} texto: {3};s
+clarification;errorDeleting;text;Error deleting;Error en suprimir;Error al eliminar;s
+clarification;errorDownloadingCsv;text;Error downloading CSV. <br>name: {0} message: {1} at: {2} text: {3};Error en baixar el CSV. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al descargar el CSV. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};si
+clarification;errorDownloadingCsvw;text;Error downloading CSVW. <br>name: {0} message: {1} at: {2} text: {3};Error en baixar CSVW. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al descargar CSVW. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};si
+clarification;errorDownloadingDbf;text;Error downloading DBF. <br>name: {0} message: {1} at: {2} text: {3};Error en baixar la DBF. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al descargar la DBF. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};si
+clarification;errorDownloadingGeojsonSchema;text;Error downloading GeoJSON Schema. <br>name: {0} message: {1} at: {2} text: {3};Error en baixar l'esquema GeoJSON. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al descargar el esquema GeoJSON. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};si
+clarification;errorDownloadingGeojson;text;Error downloading GeoJSON. <br>name: {0} message: {1} at: {2} text: {3};Error en baixar el GeoJSON. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al descargar el GeoJSON. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};s
+clarification;errorDownloadingGpkg;text;Error downloading GPKG. <br>name: {0} message: {1} at: {2} text: {3};Error en baixar GPKG. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al descargar GPKG. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};si
+clarification;errorDownloadingGpkgResponse;text;Error downloading GPKG. <br>Response: {0};Error en baixar GPKG. <br>Resposta: {0};Error al descargar GPKG. <br>Respuesta: {0};si
+clarification;errorDownloadingGpkgUnexpectedType;text;Error downloading GPKG. <br>Unexpected media type: {0};Error en baixar GPKG. <br>Tipus de mitjÖ inesperat: {0};Error al descargar GPKG. <br>Tipo de medio inesperado: {0};si
+clarification;errorDownloadingJson;text;Error downloading JSON;Error en baixar el JSON;Error al descargar el JSON;s
+clarification;errorDownloadingJsonDetail;text;Error downloading JSON. <br>name: {0} message: {1} at: {2} text: {3};Error en baixar el JSON. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al descargar el JSON. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};s
+clarification;errorDownloadingJsonld;text;Error downloading JSONLD. <br>name: {0} message: {1} at: {2} text: {3};Error en baixar el JSONLD. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al descargar el JSONLD. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};s
+clarification;errorDownloadingSchema;text;Error downloading TAPIS schema '{0}';Error en baixar l'esquema TAPIS Æ{0}Ø;Error al descargar el esquema TAPIS Æ{0}Ø;si
+clarification;errorDownloadingSchemaWithMsg;text;Error downloading TAPIS schema '{0}': {1};Error en baixar l'esquema TAPIS Æ{0}Ø: {1};Error al descargar el esquema TAPIS Æ{0}Ø: {1};si
+clarification;errorDownloadingSchemaDetail;text;Error downloading TAPIS schema. <br>name: {0} message: {1} at: {2} text: {3};Error en baixar l'esquema TAPIS. <br>name: {0} missatge: {1} a: {2} text: {3};Error al descargar el esquema TAPIS. <br>name: {0} mensaje: {1} en: {2} texto: {3};s
+clarification;errorRequestingEdc;text;Error in requesting EDC catalog. <br>name: {0} message: {1} at: {2} text: {3};Error en sol˙licitar el catÖleg EDC. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al solicitar el cat†logo EDC. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};s
+clarification;errorRequestingS3;text;Error in requesting S3 Bucket root folder. <br>name: {0} message: {1} at: {2} text: {3};Error en sol˙licitar la carpeta arrel del contenidor S3. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al solicitar la carpeta ra°z del contenedor S3. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};s
+clarification;errorInWallet;text;Error in wallet: {0};Error a la cartera: {0};Error en la cartera: {0};s
+clarification;errorInterpreting;text;Error interpreting {0}: {1};Error en interpretar {0}: {1};Error al interpretar {0}: {1};si
+clarification;errorLoadingConfig;text;Error loading 'config.json';Error en carregar Æconfig.jsonØ;Error al cargar Æconfig.jsonØ;si
+clarification;errorOpeningNotInSchema;text;Error opening '{0}'. Not found in the schema;Error en obrir Æ{0}Ø. No s'ha trobat a l'esquema;Error al abrir Æ{0}Ø. No se ha encontrado en el esquema;si
+clarification;errorRetrieving;text;Error retrieving {0};Error en recuperar {0};Error al recuperar {0};si
+clarification;errorUpdatingEntity;text;Error updating {0} {1} updated.;Error en actualitzar {0} {1}.;Error al actualizar {0} {1}.;s
+clarification;errorUpdatingMultiDatastream;text;Error updating MultiDatastream {0} updated.;Error en actualitzar MultiDatastream {0}.;Error al actualizar MultiDatastream {0}.;s
+clarification;errorUploadingObs;text;Error uploading Observations to STA. <br>name: {0} message: {1} at: {2} text: {3};Error en pujar Observations a STA. <br>nom: {0} missatge: {1} a: {2} text: {3};Error al cargar Observations en STA. <br>nombre: {0} mensaje: {1} en: {2} texto: {3};s
+clarification;httpErrorGeneric;text;Error: HTTP {0} URL: {1}, HTTP code: {2}, Description: {3}{4};Error: HTTP {0} URL: {1}, codi HTTP: {2}, descripci¢: {3}{4};Error: HTTP {0} URL: {1}, c¢digo HTTP: {2}, descripci¢n: {3}{4};s
+STAOperations;ExpandColumnSTA;description;Expand entity;Expandeix l'entitat;Expande la entidad;si
+DialogCompleteness;expectedRecords;label;Expected records:;Registres esperats:;Registros esperados:;s
+DialogQualityTemporalQuality;expectedResolution;text;Expected resolution (Values with higher resolutions will be accepted, but those with lower resolutions will not):;Resoluci¢ esperada (s'acceptaran els valors amb resolucions mÇs altes, perï no els que tinguin resolucions mÇs baixes):;Resoluci¢n esperada (se aceptar†n los valores con resoluciones m†s altas, pero no los que tengan resoluciones m†s bajas):;s
+DialogImportGeoJSON;externalDataFrom;label;External data from:;Dades externes de:;Datos externos de:;s
+DialogGeospatialFilterRowsByDistance;foiFeature;label;FeatureOfInterest-feature;FeatureOfInterest-feature;FeatureOfInterest-feature;s
+TableOperations;guf;description;Feedback;Comentaris/suggeriments;Comentarios/Sugerencias;si
+DialogSaveLayer;fieldN;label;Field {0}:;Camp {0}:;Campo {0}:;s
+DialogRadarPlot;fillArea;label;Fill area;Omplir l'Örea;Rellenar el †rea;s
+clarification;filterApplied;text;Filter applied;S'ha aplicat el filtre;Se ha aplicado el filtro;s
+STAOperations;FilterRowsSTA;description;Filter Rows;Filtra les files;Filtra las filas;si
+TableOperations;FilterRowsTable;description;Filter Rows;Filtra files;Filtra filas;si
+STAOperations;GeoFilterPntSTA;description;Filter Rows by Distance;Filtra les files per distÖncia;Filtrar las filas por distancia;si
+STAOperations;GeoFilterPolSTA;description;Filter Rows by Polygon;Filtra les files per pol°gon;Filtrar las filas por pol°gono;si
+STAOperations;FilterRowsByTime;description;Filter Rows by time;Filtra les files per temps;Filtra las filas por tiempo;si
+clarification;filteringStaByPolygon;text;Filtering STA rows by polygon...;S'estan filtrant les files STA per pol°gon...;Filtrando las filas STA por pol°gono...;s
+clarification;filteringStaRows;text;Filtering STA rows...;S'estan filtrant les files STA...;Filtrando las filas STA...;s
+TableOperations;Replace;help;Find and replace text, numbers, or data in one column or across the whole table;Cerca i substitueix text, n£meros o dates en una columna o a tota la taula;Buscar y sustituir texto, n£meros o fechas en una columna o en toda la tabla;si
+DialogCompleteness;flagBad;label;Flag the bad records (true/false);Marca els registres incorrectes (true/false);Marcar los registros incorrectos (true/false);s
+DialogQualityLogicalConsistency;flagBad;label;Flag the bad records (true/false);Marca els registres incorrectes (true/false);Marcar los registros incorrectos (true/false);s
+DialogQualityTemporalQuality;flagBad;label;Flag the bad records (true/false);Marca els registres incorrectes (true/false);Marcar los registros incorrectos (true/false);s
+DialogQualityPositionalQuality;flagBad;label;Flag the bad records (true/false);Marca els registres incorrectes (true/false);Marcar los registros incorrectos (true/false);s
+DialogQualityThematicQuality;flagBad;label;Flag the bad records (true/false);Marca els registres incorrectes (true/false);Marcar los registros incorrectos (true/false);s
+DialogSaveTable;forceExtendedDbf;label;Force extended DBF;Foráa la DBF extesa;Forzar la DBF extendida;s
+DialogFormatConsistency;format;title;Format;Format;Formato;s
+DialogQualityTemporalQuality;format;label;Format;Format;Formato;s
+dataQuality;formatConsistency;description;Format consistency;Consistäncia de format;Consistencia de formato;si
+DialogFormatConsistency;title;title;Format consistency;Consistäncia de format;Consistencia de formato;s
+alert;queryUrlKvpNoEquals;text;Format error in query URL '{0}', Key and value pair (KVP) '{1}' without '='.;Error de format a l'URL de consulta '{0}', el parell clau-valor (KVP) '{1}' no tÇ '='.;Error de formato en la URL de consulta '{0}', el par clave-valor (KVP) '{1}' no tiene '='.;si
+DialogColumnsCalculator;formula;label;Formula:;F¢rmula:;F¢rmula:;s
+DialogFilterRowsByTime;from;label;From:;Des de:;Desde:;s
+DialogQualityTemporalQuality;from;label;From:;Des de:;Desde:;s
+DialogQualityThematicQuality;from;label;From:;Des de:;Desde:;s
+TableOperationsType;Type;singular;Generic table tool;Eina general per taula ;Herramienta general para  tabla ;si
+TableOperationsType;Type;plural;Generic table tools;Eines generals per a taules;Herramientas generales para tablas;si
+DialogFormatConsistency;geocentric;option;Geocentric (X, Y, Z) ? e.g. 4788300.12;Geocäntriques (X, Y, Z) ? p. ex. 4788300.12;GeocÇntricas (X, Y, Z) ? p. ej. 4788300.12;s
+DialogQualityPositionalQuality;geoCoords;title;Geographic coordinates:;Coordenades geogrÖfiques:;Coordenadas geogr†ficas:;s
+DialogUploadIC;geoInfo;title;Geographic information;Informaci¢ geogrÖfica;Informaci¢n geogr†fica;s
+DialogAddColumnPnt;geojsonGeometry;label;GeoJSON Geometry:;Geometria GeoJSON:;Geometr°a GeoJSON:;s
+DialogAddColumnBBox;geojsonGeometry;label;GeoJSON Geometry:;Geometria GeoJSON:;Geometr°a GeoJSON:;s
+clarification;geojsonOnlyFeatureCollection;text;GeoJSON parse error. The only supported GeoJSONs are the ones containing a root type FeatureCollection.;Error en l'anÖlisi de GeoJSON. Els £nics GeoJSON compatibles s¢n els que contenen un tipus arrel FeatureCollection.;Error de an†lisis del GeoJSON. Los £nicos GeoJSON compatibles son los que contienen un tipo ra°z FeatureCollection.;s
+clarification;geojsonParseError;text;GeoJSON parse error: {0} The file content fragment:\n{1};Error d'anÖlisi del GeoJSON: {0} Fragment del contingut del fitxer:\n{1};Error de an†lisis del GeoJSON: {0} Fragmento del contenido del archivo:\n{1};s
+DialogImportGeoJSON;schemaUrl;label;GeoJSON schema URL:;URL de l'esquema GeoJSON:;URL del esquema GeoJSON:;s
+DialogImportGeoJSON;geojsonSource;title;GeoJSON source;Font GeoJSON;Fuente GeoJSON;s
+clarification;geolocationIs;text;Geolocation is long: {0} lat: {1};La geolocalitzaci¢ Çs longitud: {0} latitud: {1};La geolocalizaci¢n es longitud: {0} latitud: {1};s
+clarification;geolocationNotSupported;text;Geolocation not supported by the web browser;El navegador web no admet la geolocalitzaci¢;El navegador web no admite la geolocalizaci¢n;s
+DialogSaveLayer;geometryStar;title;Geometry*:;Geometria*:;Geometr°a*:;s
+DialogSaveLayer;geometry;label;Geometry:;Geometria:;Geometr°a:;s
+clarification;gpkgNoTables;text;GeoPackage database has no tables.;La base de dades GeoPackage no contÇ taules.;La base de datos GeoPackage no contiene tablas.;si
+clarification;gpkgDbLoaded;text;GeoPackage database table has been loaded.;S'ha carregat la taula de la base de dades GeoPackage.;Se ha cargado la tabla de la base de datos GeoPackage.;si
+clarification;gpkgParseError;text;Geopackage parse error: {0};Error en l'anÖlisi de GeoPackage: {0};Error en el an†lisis de GeoPackage: {0};si
+DialogImportGPKG;source;title;Geopackage source;Font Geopackage;Fuente Geopackage;s
+clarification;gpkgTableLoaded;text;GeoPackage table has been loaded.;S'ha carregat la taula GeoPackage.;Se ha cargado la tabla GeoPackage.;si
+clarification;gpkgTableNoRecords;text;GeoPackage table has no records.;La taula GeoPackage no contÇ registres.;La tabla GeoPackage no contiene registros.;si
+DialogDGGSCodesBbox;extent;title;Geospatial extent;Extensi¢ geoespacial;Extensi¢n geoespacial;s
+DialogGUF;getFeedback;button;Get feedback;ObtÇn comentaris/suggeriments;Obtener comentarios/sugerencias;s
+STAOperations;ExpandColumnSTA;help;Gets a table by adding columns resulting of the expansion of the properties of a linked entity. For example, in a Datastream add properties of ObservedProperties. Requeres to be connected to a SensorThings API or a STAplus node.;S' obtÇ una taula afegint columnes que resulten de l'expansi¢ de les propietats d'una entitat enllaáada. Per exemple, en un Datastream, afegeix les propietats d'ObservedProperties. Cal que estigui connectat a un node SensorThings API o STAplus.;Se obtiene una tabla a§adiendo columnas que resultan de la expansi¢n de las propiedades de una entidad vinculada. Por ejemplo, en un Datastream, a§ade las propiedades de ObservedProperties. Requiere estar conectado a un nodo SensorThings API o STAplus.;si
+STAOperations;MergeExpandsSTA;help;Gets a table by merging the fields of two branches originated as an expansion of the same entity. For example, in a Datastream node, a branch started by expanding ObservedProperties properties and a branch started by expanding Thing properties can be merged in a single branch by connecting the two branches as inputs to this node.;S'obtÇ una taula fusionant els camps de dues branques originades com a expansi¢ de la mateixa entitat. Per exemple, en un node Datastream, una branca iniciada expandint les propietats d'ObservedProperties i una branca iniciada expandint les propietats de Thing es poden fusionar en una sola branca connectant les dues branques com a entrades d'aquest node.;Se obtiene una tabla fusionando los campos de dos ramas originadas como expansi¢n de la misma entidad. Por ejemplo, en un nodo Datastream, una rama iniciada expandiendo las propiedades de ObservedProperties y una rama iniciada expandiendo las propiedades de Thing se pueden fusionar en una sola rama conectando ambas ramas como entradas de este nodo.;si
+STAOperations;RecursiveExpandSTA;help;Gets a table by selecting some columns and adding columns by expanding the properties of linked entities recursively. Needs to be connected to a SensorThings API or a STAplus node.;ObtÇ una taula seleccionant algunes columnes i afegint columnes que resulten d'expandir les propietats de les entitats enllaáades de manera recursiva. Cal que estigui connectat a un node SensorThings API o STAplus.;Se obtiene una tabla seleccionando algunas columnas y a§adiendo columnas que resultan de expandir las propiedades de las entidades vinculadas de forma recursiva. Requiere estar conectado a un nodo SensorThings API o STAplus.;si
+STAOperations;SelectColumnsSTA;help;Gets a table only with columns selected. Requeres to be connected to a SensorThings API or a STAplus node.;S'obtÇ una taula nomÇs amb les columnes seleccionades. Cal que estigui connectat a un node SensorThings API o STAplus.;Se obtiene una tabla solo con las columnas seleccionadas. Requiere que estÇ conectado a un nodo SensorThings API o STAplus.;si
+STAOperations;SelectRowSTA;help;Gets a table only with the selected record. Requeres to be connected to another SensorThings API or a STAplus entity. A single record is required to related entities to this one and navegate the SensorThings API or a STAplus data model.;S'obtÇ una taula nomÇs amb el registre seleccionat. Cal que estigui connectat a una altra entitat SensorThings API o STAplus. ês necessari un £nic registre per relacionar altres entitats amb aquesta i navegar pel model de dades de SensorThings API o STAplus.;Se obtiene una tabla solo con el registro seleccionado. Requiere estar conectado a otra entidad SensorThings API o STAplus. Se necesita un £nico registro para relacionar otras entidades con esta y navegar por el modelo de datos de SensorThings API o STAplus.;si
+STAOperations;SelectResourceSTA;help;Gets a table only with the selected resource. Requeres to be connected to another SensorThings API or a STAplus entity. A single record is required to related entities to this one and navegate the SensorThings API or a STAplus data model.;S'obtÇ una taula nomÇs amb el recurs seleccionat. Cal que estigui connectat a una altra entitat SensorThings API o STAplus. ês necessari un £nic registre per relacionar altres entitats amb aquesta i navegar pel model de dades de SensorThings API o STAplus.;Se obtiene una tabla solo con el recurso seleccionado. Requiere estar conectado a otra entidad SensorThings API o STAplus. Se necesita un £nico registro para relacionar otras entidades con esta y navegar por el modelo de datos de SensorThings API o STAplus.;si
+STAOperations;RangeSTA;help;Gets a table with a subset of the records limiting the number of records and skiping some initial records. Implements $top and $skip. Requeres to be connected to a SensorThings API or a STAplus node.;S'obtÇ una taula amb un subconjunt dels registres limitant el nombre de registres i ometent alguns registres inicials. Implementa $top i $skip. Cal que estigui connectat a un node SensorThings API o STAplus.;Se obtiene una tabla con un subconjunto de los registros limitando el n£mero de registros y omitiendo algunos registros iniciales. Implementa $top y $skip. Requiere estar conectado a un nodo SensorThings API o STAplus.;si
+TableOperations;SortByTables;help;Gets a table with data sorted by a given criteria.;S'obtÇ una taula amb les dades ordenades segons un criteri determinat.;Se obtiene una tabla con los datos ordenados seg£n un criterio determinado.;si
+STAOperations;SortBySTA;help;Gets a table with data sorted by a given criteria. Requeres to be connected to a SensorThings API or a STAplus node.;S'obtÇ una taula amb les dades ordenades segons un criteri determinat. Cal que estigui connectat a un node SensorThings API o STAplus.;Se obtiene una tabla con los datos ordenados seg£n un criterio determinado. Requiere estar conectado a un nodo SensorThings API o STAplus.;si
+STAOperations;FilterRowsByTime;help;Gets a table with records that match with a time interval. It is possible to group them by time periods. Requeres to be connected to a SensorThings API or a STAplus node.;S'obtÇ una taula amb els registres que coincideixen amb un interval de temps determinat. ês possible agrupar-los per per°odes de temps. Cal que estigui connectat a un node SensorThings API o STAplus.;Se obtiene una tabla con los registros que coinciden con un intervalo de tiempo seleccionado. Es posible agruparlos por per°odos de tiempo. Requiere estar conectado a un nodo SensorThings API o STAplus.;si
+STAOperations;GeoFilterPntSTA;help;Gets a table with the records that are closer that a given distance of a point. Requeres to be connected to a SensorThings API or a STAplus node.;S'obtÇ una taula amb els registres que es troben a una distÖncia inferior a una distÖncia donada respecte d'un punt. Cal que estigui connectat a un node SensorThings API o STAplus.;Se obtiene una tabla con los registros que se encuentran a una distancia inferior a una distancia dada respecto de un punto. Requiere estar conectado a un nodo SensorThings API o STAplus.;si
+STAOperations;FilterRowsSTA;help;Gets a table with the records that match your conditions. Requires a connection to a SensorThings API or STAplus node. Double-click to open the filter dialog.;S'obtÇ una taula amb els registres que compleixen les condicions seleccionades. Requereix una connexi¢ a un node SensorThings API o STAplus. Feu doble clic per obrir el diÖleg de filtre.;Se obtiene una tabla con los registros que cumplen las condiciones seleccionadas. Requiere una conexi¢n a un nodo SensorThings API o STAplus. Haga doble clic para abrir el di†logo de filtro.;si
+STAOperations;GeoFilterPolSTA;help;Gets a table with the records within a polygon. Requeres to be connected to another SensorThings API or a STAplus entity and to a table with a record that has a geometry (polygon).;S'obtÇ una taula amb els registres continguts dins d'un pol°gon. Cal que estigui connectat a una altra entitat SensorThings API o STAplus i a una taula amb un registre que tingui una geometria (pol°gon).;Se obtiene una tabla con los registros contenidos dentro de un pol°gono. Requiere estar conectado a otra entidad SensorThings API o STAplus y a una tabla con un registro que tenga una geometr°a (pol°gono).;si
+clarification;gettingNumberOfItems;text;Getting number of items;S'estÖ obtenint el nombre d'elements;Se est† obteniendo el n£mero de elementos;s
+clarification;gettingLastObservation;text;Getting the last observation...;S'estÖ obtenint l'£ltima Observation...;Se est† obteniendo la £ltima Observation...;s
+DialogScatterPlot;graphicConfig;title;Graphic configuration;Configuraci¢ del grÖfic;Configuraci¢n del gr†fico;s
+DialogScatterPlot;graphicTitle;label;Graphic title:;T°tol del grÖfic:;T°tulo del gr†fico:;s
+DialogRadarPlot;graphicTitle;label;Graphic title:;T°tol del grÖfic:;T°tulo del gr†fico:;s
+TableOperations;GroupBy;description;Group by;Agrupa per;Agrupar por;si
+dataQuality;uncertainty;help;Group values by time and space and calculate its uncertainties;Agrupa els valors per temps i espai i en calcula les incerteses;Agrupa los valores por tiempo y espacio y calcula sus incertidumbres;si
+DialogGroupBy;groupByDateRounding;title;GroupBy date rounding:;Arrodoniment de la data per agrupar:;Redondeo de la fecha para agrupar:;s
+DialogGroupBy;groupBy;title;GroupBy:;Agrupa per:;Agrupar por:;s
+DialogQualityTemporalQuality;groupedByColumn;label;Grouped by column;Agrupat per columna;Agrupado por columna;s
+DialogQualityPositionalQuality;groupedByColumn;label;Grouped by column;Agrupat per columna;Agrupado por columna;s
+DialogQualityThematicQuality;groupedByColumn;label;Grouped by column;Agrupat per columna;Agrupado por columna;s
+DialogQualityPositionalQuality;groupingColumn;label;Grouping column:;Columna d'agrupament:;Columna de agrupaci¢n:;s
+DialogQualityThematicQuality;groupingColumn;label;Grouping column:;Columna d'agrupament:;Columna de agrupaci¢n:;s
+DialogQualityTemporalQuality;groupingMode;title;Grouping mode;Mode d'agrupament;Modo de agrupaci¢n;s
+DialogQualityPositionalQuality;groupingMode;title;Grouping mode;Mode d'agrupament;Modo de agrupaci¢n;s
+DialogQualityThematicQuality;groupingMode;title;Grouping mode;Mode d'agrupament;Modo de agrupaci¢n;s
+DialogTransposeTable;headerColumn;label;Header column:;Columna de capáalera:;Columna de cabecera:;s
+DialogFilterRowsByTime;hour;option;Hour;Hora;Hora;s
+DialogUncertainty;hours;label;Hours;Hores;Horas;s
+DialogQualityTemporalQuality;hours;label;Hours;Hores;Horas;s
+DialogCreateUpdateDeleteEntity_numberOfMultiDatastream;howManyFields;label;How many fields do you want to introduce in the multidatastream?;Quants camps voleu introduir al MultiDatastream?;®Cu†ntos campos quiere introducir en el MultiDatastream?;s
+clarification;httpResponseCode;text;HTTP Response Code: {0} reading {1}: {2};Codi de resposta HTTP: {0} en llegir {1}: {2};C¢digo de respuesta HTTP: {0} al leer {1}: {2};si
+DialogFormatConsistency;hyphen;label;Hyphen;Guionet;Guion;s
+DialogMultiCreateSTAINaturalist;idByOtherUsers;label;Identification by other users (comments);Identificaci¢ per part d'altres usuaris (comentaris);Identificaci¢n por parte de otros usuarios (comentarios);s
+DialogSelectResource;identifier;label;Identifier of resource to select:;Identificador del recurs a seleccionar:;Identificador del recurso a seleccionar:;s
+DialogColumnsCalculator;if;button;If;Si;Si;s
+DialogScatterPlot;strangeBehavior;text;If your graph presents a strange behavior, try sorting the data by the column used on the X axis.;Si el vostre grÖfic presenta un comportament estrany, proveu d'ordenar les dades per la columna utilitzada a l'eix X.;Si su gr†fico presenta un comportamiento extra§o, intente ordenar los datos por la columna utilizada en el eje X.;s
+DialogImageViewer;imageSize;label;Image size (px):;Mida de la imatge (px):;Tama§o de la imagen (px):;s
+DialogImageViewer;imageSources;title;Image Sources:;Fonts d'imatge:;Fuentes de imagen:;s
+DialogImageViewer;imageUrl;label;Image URL:;URL de la imatge:;URL de la imagen:;s
+tableStatisticsVisualize;ImageViewer;description;Image Viewer;Visor d'imatges;Visor de im†genes;si
+DialogImportCSV;title;title;Import CSV file table;Importa una taula de fitxer CSV;Importar tabla de archivo CSV;s
+DialogImportDBF;title;title;Import dBASE III+, IV and MiraMon DBF Extended;Importa dBASE III+, IV i MiraMon DBF ampliat;Importar dBASE III+, IV y MiraMon DBF extendido;s
+DialogImportGeoJSON;title;title;Import GeoJSON;Importa GeoJSON;Importar GeoJSON;s
+DialogImportGPKG;title;title;Import Geopackage;Importa Geopackage;Importar Geopackage;s
+DialogImportJSON;title;title;Import JSON;Importa JSON;Importar JSON;s
+DialogImportJSONLD;title;title;Import JSON-LD;Importa JSON-LD;Importar JSON-LD;s
+DialogImportCSV;importNumbersAsStrings;label;Import numbers as strings;Importa els n£meros com a text;Importar los n£meros como texto;s
+DialogQualityMisclassificationMatrix;metricsNote;text;In addition to the Misclassification Matrix , the following accuracy metrics will be calculated:;A mÇs a mÇs de la matriu de classificaci¢ errïnia, es calcularan les mätriques d'exactitud segÅents:;Adem†s de la matriz de clasificaci¢n err¢nea, se calcular†n las siguientes mÇtricas de exactitud:;s
+DialogReplaceTextInTable;inAllTable;label;In all table;A tota la taula;En toda la tabla;s
+DialogReplaceTextInTable;inOneColumn;label;In one column;En una columna;En una columna;s
+DialogImportJSONLD;include;title;Include;Inclou;Incluir;s
+alert;incompatibleNode;text;Incompatible node. {0}. It has not been added.;Node incompatible. {0}. No s'ha afegit.;Nodo incompatible. {0}. No se ha a§adido.;si
+DialogAddColumnPnt;input;title;Input;Entrada;Entrada;s
+DialogAddColumnBBox;input;title;Input;Entrada;Entrada;s
+chrome;insert;button;Insert;Insereix;Insertar;s
+DialogFormatConsistency;intervalFrom;label;Interval from;Interval des de;Intervalo desde;s
+DialogQualityTemporalQuality;intervalMethod;text;Interval method:;Mätode d'interval:;MÇtodo de intervalo:;s
+DialogFormatConsistency;intervalTo;label;Interval to;Interval fins a;Intervalo hasta;s
+alert;invalidUnitAssumeSeconds;text;Invalid unit. Assumint seconds;Unitat no vÖlida. S'assumiran segons;Unidad no v†lida. Se asumir†n segundos;si
+DialogFormatConsistency;isoPattern;label;ISO 8601 pattern:;Patr¢ ISO 8601:;Patr¢n ISO 8601:;s
+alert;assignNameNewColumn;text;It is necessary to assign a name to the new column;Cal assignar un nom a la columna nova;Es necesario asignar un nombre a la columna nueva;si
+alert;linkOneNodeWithDataProperty;text;It is necessary to link one node with a data property;Cal enllaáar un node amb una propietat de dades;Es necesario enlazar un nodo con una propiedad de datos;si
+alert;linkOnlyOneStaNode;text;It is necessary to link only one node with data from STA source;Cal enllaáar nomÇs un node amb dades d'una font STA;Es necesario enlazar £nicamente un nodo con datos de una fuente STA;si
+alert;selectAData;text;It is necessary to select a Data;Cal seleccionar una dada;Es necesario seleccionar un dato;si
+DialogRadarPlot;itemColumn;label;Item column:;Columna d'element):;Columna de elemento:;s
+TableOperations;JoinTables;description;Join Tables;Uni¢ de taules;Unir tablas;si
+clarification;jsonLoaded;text;JSON has been loaded.;S'ha carregat el JSON.;Se ha cargado el JSON.;s
+clarification;jsonMessageParseError;text;JSON message parse error: {0} The file content is:\n{1};Error d'anÖlisi del missatge JSON: {0} El contingut del fitxer Çs:\n{1};Error de an†lisis del mensaje JSON: {0} El contenido del archivo es:\n{1};si
+clarification;jsonMessageParseErrorResponse;text;JSON message parse error: {0} The response was:\n{1};Error d'anÖlisi del missatge JSON: {0} La resposta ha estat:\n{1};Error de an†lisis del mensaje JSON: {0} La respuesta ha sido:\n{1};si
+clarification;jsonParseError;text;JSON parse error: {0}\n File content fragment:\n{1};Error d'anÖlisi del JSON: {0}\n Fragment del contingut del fitxer:\n{1};Error de an†lisis del JSON: {0}\n Fragmento del contenido del archivo:\n{1};s
+clarification;jsonNoRecords;text;JSON resulted in no records.;El JSON no ha generat cap registre.;El JSON no ha generado ning£n registro.;s
+DialogImportJSON;source;title;JSON source;Font JSON;Fuente JSON;s
+clarification;jsonldLoaded;text;JSON-LD has been loaded.;S'ha carregat JSON-LD.;Se ha cargado JSON-LD.;s
+clarification;jsonldParseError;text;JSONLD parse error: {0}\n File content fragment:\n{1};Error en l'anÖlisi de JSONLD: {0}\n Fragment del contingut del fitxer:\n{1};Error en el an†lisis de JSONLD: {0}\n Fragmento del contenido del archivo:\n{1};si
+clarification;jsonldNoRecords;text;JSON-LD resulted in no records.;JSON-LD no ha generat cap registre.;JSON-LD no ha generado ning£n registro.;si
+DialogImportJSONLD;source;title;JSON-LD source;Font JSON-LD;Fuente JSON-LD;s
+DialogScatterPlot;label;label;Label:;Etiqueta:;Etiqueta:;s
+DialogImageViewer;label;label;Label:;Etiqueta:;Etiqueta:;s
+DialogSTAURL;landingPageUrl;label;Landing page URL:;URL de la pÖgina d'inici:;URL de la p†gina de inicio:;s
+DialogS3Bucket;landingPageUrl;label;Landing page URL:;URL de la pÖgina d'inici:;URL de la p†gina de inicio:;s
+alert;latitudeRequired;text;Latitude parameter is required, please fill in the box before send;El parÖmetre latitude Çs obligatori, ompliu la casella abans d'enviar;El par†metro latitude es obligatorio, rellene la casilla antes de enviar;si
+DialogSaveLayer;latitude;label;Latitude:;Latitud:;Latitud:;s
+DialogUploadObservations;latitude;label;Latitude:;Latitud:;Latitud:;s
+DialogQualityPositionalQuality;latitude;label;Latitude:;Latitud:;Latitud:;s
+DialogScatterPlot;leftLabel;label;Left label:;Etiqueta esquerra:;Etiqueta izquierda:;s
+DialogFormatConsistency;letter;button;Letter;Lletra;Letra;s
+DialogFormatConsistency;letterOrDigitLbl;label;Letter or digit;Lletra o d°git;Letra o d°gito;s
+alert;dggsLevelInvalid;text;Level is not a positive number or it is higher than {0}. The level 10 will be used instead.;El nivell no Çs un nombre positiu o Çs superior a {0}. En el seu lloc, s'utilitzarÖ el nivell 10.;El nivel no es un n£mero positivo o es superior a {0}. En su lugar, se utilizar† el nivel 10.;si
+DialogDGGSCodesBbox;level;label;Level:;Nivell:;Nivel:;s
+DialogUploadIC;license;label;License:;License:;License:;s
+STASpecialQueries;ObsLayer;help;Link to STAplus service to add a query to this url to obtain a table with phenomenomTime and results from Observations, unitsOfMeasurements and ObservedProperty from Datastreams and a description from the featureOfInterest related.;Enllaá al servei STAplus per afegir una consulta a aquest URL i obtenir una taula amb phenomenomTime i els resultats de les Observations, les unitsOfMeasurements i l'ObservedProperty dels Datastreams i una descripci¢ del featureOfInterest relacionat.;Enlace al servicio STAplus para a§adir una consulta a esta URL y obtener una tabla con phenomenomTime y los resultados de las Observations, las unitsOfMeasurements y la ObservedProperty de los Datastreams y una descripci¢n del featureOfInterest relacionado.;si
+DialogLink;linkTo;text;Link to:;Enllaá a:;Enlace a:;s
+DialogCreateNewTable;listColumns;label;List of columns (separed by comas):;Llista de columnes (separades per comes):;Lista de columnas (separadas por comas):;s
+DialogCreateColumns;listOfColumns;label;List of columns to add;Llista de columnes a afegir;Lista de columnas a a§adir;s
+DialogAggregateColumns;listOfColumns;label;List of columns to add;Llista de columnes a afegir;Lista de columnas a a§adir;s
+DialogColumnsCalculator;listOfColumns;label;List of columns to add;Llista de columnes a afegir;Lista de columnas a a§adir;s
+DialogQualityThematicQuality;listOfValues;label;List of values;Llista de valors;Lista de valores;s
+DialogSeparateColumns;listsInColumns;label;Lists in columns:;Llistes en columnes:;Listas en columnas:;s
+chrome;load;button;Load;Carrega;Cargar;s
+clarification;loadingStaCount;text;Loading STA count...;S'estÖ carregant el recompte de STA...;Se est† cargando el recuento de STA...;s
+DialogImportCSV;localCsvw;label;Local CSVW file:;Fitxer CSVW local:;Archivo CSVW local:;s
+DialogImportCSV;localFile;label;Local file:;Fitxer local:;Archivo local:;s
+DialogImportGeoJSON;localFile;label;Local file:;Fitxer local:;Archivo local:;s
+DialogImportDBF;localFile;label;Local file:;Fitxer local:;Archivo local:;s
+DialogImportGPKG;localFile;label;Local file:;Fitxer local:;Archivo local:;s
+DialogImportJSONLD;localFile;label;Local file:;Fitxer local:;Archivo local:;s
+DialogImportJSON;localFile;label;Local file:;Fitxer local:;Archivo local:;s
+DialogImportGeoJSON;localSchema;label;Local GeoJSON schema file:;Fitxer d'esquema GeoJSON local:;Archivo de esquema GeoJSON local:;s
+clarification;locationUnavailable;text;Location information is unavailable.;La informaci¢ de la ubicaci¢ no estÖ disponible.;La informaci¢n de la ubicaci¢n no est† disponible.;s
+DialogGeospatialFilterRowsByDistance;locationsLocation;label;Locations-location;Locations-location;Locations-location;s
+dataQuality;logicalConsistency;description;Logical consistency;Consistäncia lïgica;Consistencia l¢gica;si
+DialogQualityLogicalConsistency;title;title;Logical consistency;Consistäncia lïgica;Consistencia l¢gica;s
+DialogRadarPlot;longTable;title;Long table:;Taula llarga:;Tabla larga:;s
+alert;longitudeRequired;text;Longitude parameter is required, please fill in the box before send;El parÖmetre longitude Çs obligatori, ompliu la casella abans d'enviar;El par†metro longitude es obligatorio, rellene la casilla antes de enviar;si
+DialogSaveLayer;longitude;label;Longitude:;Longitud:;Longitud:;s
+DialogUploadObservations;longitude;label;Longitude:;Longitud:;Longitud:;s
+DialogQualityPositionalQuality;longitude;label;Longitude:;Longitud:;Longitud:;s
+DialogUploadIC;manually;title;Manually;Manualment;Manualmente;s
+DialogDGGSCodesBbox;maxLat;label;Maximum latitude:;Latitud mÖxima:;Latitud m†xima:;s
+DialogDGGSCodesBbox;maxLon;label;Maximum longitude:;Longitud mÖxima:;Longitud m†xima:;s
+DialogAddColumnBBox;maxX;label;Maximum X or Longitude:;X o longitud mÖxima:;X o longitud m†xima:;s
+DialogAddColumnBBox;maxY;label;Maximum Y or Latitude:;Y o latitud mÖxima:;Y o latitud m†xima:;s
+DialogQualityThematicQuality;meanStdDev;label;Mean of the standard deviation (numeric);Mitjana de la desviaci¢ estÖndard (numärica);Media de la desviaci¢n est†ndar (numÇrica);s
+DialogQualityPositionalQuality;meanUncertainties;label;Mean of the uncertainties of each position.;Mitjana de les incerteses de cada posici¢.;Media de las incertidumbres de cada posici¢n.;s
+DialogQualityTemporalQuality;meanUncertainty;label;Mean of the values in the;Mitjana dels valors de la;Media de los valores de la;s
+DialogQualityPositionalQuality;meanRmse;label;Mean of the values in the geometry column (Root Mean Square Error);Mitjana dels valors de la columna de geometria (error quadrÖtic mitjÖ);Media de los valores de la columna de geometr°a (error cuadr†tico medio);s
+DialogQualityThematicQuality;meanUncertainty;label;Mean of uncertainty column:;Mitjana de la columna d'incertesa:;Media de la columna de incertidumbre:;s
+clarification;meaningFromNimmbus;text;Meaning retrieved from NiMMbus.;S'ha recuperat el significat des de NiMMbus.;Se ha recuperado el significado des de NiMMbus.;si
+DialogImportCSV;meaningSource;title;Meaning source;Font del significat;Fuente del significado;s
+DialogImportGeoJSON;meaningSource;title;Meaning source;Font del significat;Fuente del significado;s
+clarification;mediaTypeNotSupported;text;Media type (a.k.a format) not supported in this itinerary;El tipus de mitjÖ (tambÇ anomenat format) no Çs compatible amb aquest itinerari;El tipo de medio (tambiÇn llamado formato) no es compatible con este itinerario;s
+STAOperations;MergeExpandsSTA;description;Merge Expands;Fusiona les expansions;Fusiona las expansiones;si
+DialogJoinTables;mergedNoMatch;title;Merged records that do not match;Registres fusionats que no coincideixen;Registros fusionados que no coinciden;s
+clarification;s3MetadataCompleted;text;Metadata retrieval from the S3 Bucket completed.;S'ha completat la recuperaci¢ de les metadades del contenidor S3.;Se ha completado la recuperaci¢n de los metadatos del contenedor S3.;si
+DialogQualityPositionalQuality;meters;option;Meters;Metres;Metros;s
+DialogDGGSCodesBbox;minLat;label;Minimum latitude:;Latitud m°nima:;Latitud m°nima:;s
+DialogDGGSCodesBbox;minLon;label;Minimum longitude:;Longitud m°nima:;Longitud m°nima:;s
+DialogAddColumnBBox;minX;label;Minimum X or Longitude:;X o longitud m°nima:;X o longitud m°nima:;s
+DialogAddColumnBBox;minY;label;Minimum Y or Latitude:;Y o latitud m°nima:;Y o latitud m°nima:;s
+DialogFilterRowsByTime;minute;option;Minute;Minut;Minuto;s
+DialogUncertainty;minutes;label;Minutes;Minuts;Minutos;s
+DialogQualityTemporalQuality;minutes;label;Minutes;Minuts;Minutos;s
+clarification;mapBrowserClosed;text;MiraMon Map Browser has been closed.;S'ha tancat el navegador de mapes de MiraMon.;Se ha cerrado el navegador de mapas de MiraMon.;s
+clarification;mapBrowserReady;text;MiraMon Map Browser is open and ready to show layers.;El navegador de mapes de MiraMon estÖ obert i preparat per mostrar les capes.;El navegador de mapas de MiraMon est† abierto y preparado para mostrar las capas.;s
+dataQuality;misclassificationMatrix;description;Misclassification Matrix;Matriu de confusi¢;Matriz de confusi¢n;si
+DialogQualityMisclassificationMatrix;title;title;Misclassification matrix;Matriu de confussi¢;Matriz de confusi¢n;s
+DialogQualityThematicQuality;modeNonNumeric;label;Mode of non-numeric column (Most frequent value and its frequency);Moda de la columna no numärica (valor mÇs freqÅent i la seva freqÅäncia);Moda de la columna no numÇrica (valor m†s frecuente y su frecuencia);s
+DialogFilterRowsByTime;month;option;Month;Mes;Mes;s
+DialogUncertainty;months;label;Months;Mesos;Meses;s
+DialogQualityTemporalQuality;months;label;Months;Mesos;Meses;s
+clarification;multiDatastreamUpdated;text;MultiDatastream {0} updated.;MultiDatastream {0} s'ha actualitzat.;MultiDatastream {0} actualizado.;s
+alert;multiObservationDataTypeRequired;text;multiObservationDataType parameter is required, please fill in the box before send;El parÖmetre multiObservationDataType Çs obligatori, ompliu la casella abans d'enviar;El par†metro multiObservationDataType es obligatorio, rellene la casilla antes de enviar;si
+DialogTransposeTable;attrColumnName;label;Name of the attribute column:;Nom de la columna del atributs:;Nombre de la columna de los atributos:;s
+alert;nameRequired;text;Name parameter is required, please fill in the box before send;El parÖmetre name Çs obligatori, ompliu la casella abans d'enviar;El par†metro name es obligatorio, rellene la casilla antes de enviar;si
+DialogImportCSV;newBasedOnCsvw;label;New based on CSVW;Nou basat en CSVW;Nuevo basado en CSVW;s
+DialogAddColumnPnt;newColumnNames;title;New column name(s);Nom(s) de la nova columna;Nombre(s) de la nueva columna;s
+DialogAddColumnBBox;newColumnNames;title;New column name(s);Nom(s) de la nova columna;Nombre(s) de la nueva columna;s
+clarification;newColumnsAdded;text;New columns have been added;S'han afegit columnes noves;Se han a§adido columnas nuevas;s
+clarification;newRecordWaitingUpdates;text;New record added to table. Waiting for updates ...;S'ha afegit un registre nou a la taula. Esperant actualitzacions ...;Se ha a§adido un nuevo registro a la tabla. Esperando actualizaciones ...;s
+DialogTableToolApiWarn;noUseOnlyIf;button;No (use only if the API is not supporting the required filter);No (feu-ho servir nomÇs si l'API no admet el filtre requerit);No (usar s¢lo si la API no admite el filtro requerido);s
+clarification;noDataInParent;text;No data loaded in the parent node.;No s'han carregat dades al node pare.;No se han cargado datos en el nodo padre.;s
+clarification;noDataToOperate;text;No data to operate on.;No hi ha dades amb quä operar.;No hay datos con los que operar.;s
+DialogJoinTables;noData;text;No data to show.;No hi ha dades per mostrar.;No hay datos que mostrar.;s
+DialogRadarPlot;noData;text;No data to show.;No hi ha dades per mostrar.;No hay datos que mostrar.;s
+DialogOneValue;noData;text;No data to show.;No hi ha dades per mostrar.;No hay datos que mostrar.;s
+chrome;noDataToShow;text;No data to show.;No hi ha dades per mostrar.;No hay datos que mostrar.;s
+DialogImportCSV;noFileSelected;text;No file selected;No s'ha seleccionat cap fitxer;No se ha seleccionado ning£n archivo;s
+alert;noOptionSelected;text;No option selected. Nothing to do.;No s'ha seleccionat cap opci¢. No hi ha res a fer.;No se ha seleccionado ninguna opci¢n. No hay nada que hacer.;si
+alert;noSeriesFromColumns;text;No series could be created from the selected columns.;No s'ha pogut crear cap särie a partir de les columnes seleccionades.;No se ha podido crear ninguna serie a partir de las columnas seleccionadas.;si
+DialogQualityLogicalConsistency;nodeName;text;Node name:;Nom del node:;Nombre del nodo:;s
+DialogContextMenu;nodeOperations;title;Node operations;Operacions de node;Operaciones de nodo;s
+DialogMultiCreateSTAINaturalist;inatNodeLegend;title;Node with INaturalist observations;Node amb Observations d'iNaturalist;Nodo con Observations de iNaturalist;s
+DialogImportCSV;none;label;None;Cap;Ninguno;s
+DialogRadarPlot;normalize;label;Normalize values (0-100);Normalitza els valors (0-100);Normalizar los valores (0-100);s
+DialogColumnsCalculator;not;button;not;no;no;s
+alert;parentsDifferentRootUrl;text;Not all parent nodes are from the same root URL: {0}, {1};No tots els nodes pare provenen de la mateixa URL arrel: {0}, {1};No todos los nodos padre proceden de la misma URL ra°z: {0}, {1};si
+DialogSelectNRecords;numberRecords;label;Number records to request:;Nombre de registres a demanar:;N£mero de registros a solicitar:;s
+DialogSelectRangeSTA;request;label;Number records to request:;Nombre de registres a demanar:;N£mero de registros a solicitar:;s
+DialogSelectRangeSTA;skip;label;Number records to skip from the start:;Nombre de registres a saltar des del comenáament:;N£mero de registros a saltar desde el principio:;s
+DialogQualityTemporalQuality;number;text;Number:;Xifra:;N£mero:;s
+DialogRadarPlot;numericColumns;label;Numeric columns (radar axes):;Columnes numäriques (eixos del radar):;Columnas numÇricas (ejes del radar):;s
+clarification;observationAvailableUnderDs;text;Observation {0} available in STA under Datastream {1};Observation {0} disponible a STA sota el Datastream {1};Observation {0} disponible en STA bajo el Datastream {1};s
+DialogOneValue;observationTime;label;Observation time:;Observation time:;Observation time:;s
+STASpecialQueries;ObsLayer;description;Observations Layer;Capa d'Observations;Capa de Observations;si
+DialogMultiCreateSTAINaturalist;obsLegend;title;Observations to create in STA Plus Service;Observations que s'han de crear al servei STAplus;Observations que se deben crear en el servicio STAplus;s
+alert;observationTypeRequired;text;ObservationType parameter is required, please fill in the box before send;El parÖmetre observationType Çs obligatori, ompliu la casella abans d'enviar;El par†metro observationType es obligatorio, rellene la casilla antes de enviar;si
+TableOperations;FilterRowsTable;help;Obtain a table with the records that match the contitions. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL.;S'obtÇ una taula amb els registres que compleixen les condicions seleccionades. No Çs recomanable per a entitats de SensorThings API o STAplus, ja que elimina l'URL STA.;Obtiene una tabla con los registros que cumplen las condiciones seleccionadas. No se recomienda para entidades de SensorThings API o STAplus, ya que elimina la URL STA.;si
+TableOperations;SelectColumnsTable;help;Obtains a table only with the selected columns. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL.;S'obtÇ una taula nomÇs amb les columnes seleccionades. No Çs recomanable per a entitats de SensorThings API o STAplus, ja que elimina l'URL STA.;Se obtiene una tabla solo con las columnas seleccionadas. No se recomienda para entidades de SensorThings API o STAplus, ya que elimina la URL STA.;si
+TableOperations;SelectRowTable;help;Obtains a table only with the selected record. Not recommended for SensorThings API or a STAplus entities as it removes the STA URL.;S'obtÇ una taula nomÇs amb el registre seleccionat. No Çs recomanable per a entitats de SensorThings API o STAplus, ja que elimina l'URL STA.;Se obtiene una tabla solo con el registro seleccionado. No se recomienda para entidades de SensorThings API o STAplus, ya que elimina la URL STA.;si
+DialogSTAURL;titleOgcApiItems;title;OGC API collection to extract items;Col˙lecci¢ OGC API de la qual extreure elements;Colecci¢n OGC API de la que extraer elementos;s
+DialogSTAURL;titleOgcApiLanding;title;OGC API landing page;PÖgina d'inici d'OGC API;P†gina de inicio de OGC API;s
+chrome;ok;button;OK;Acceptar;Aceptar;s
+chrome;okLower;button;Ok;Acceptar;Aceptar;s
+DialogCompleteness;omission;title;Omission;Omissi¢;Omisi¢n;s
+alert;csvIsoDateAmbiguity;text;One of the attributes contains data that looks like a date. The CSV import process cannot distinguish whether this value is a valid date or another type of data (for example, a time interval), which causes an error. The affected values have been loaded as null. To preserve and visualize this information, reload the CSV file with the Import numbers as strings option enabled. Then, use the meaning functionality to convert the data to the appropriate type;Un dels atributs contÇ dades que semblen una data. El procÇs d'importaci¢ de CSV no pot distingir si aquest valor Çs una data vÖlida o un altre tipus de dada (per exemple, un interval de temps), cosa que provoca un error. Els valors afectats s'han carregat com a nuls. Per conservar i visualitzar aquesta informaci¢, torneu a carregar el fitxer CSV amb l'opci¢ Importa els n£meros com a cadenes activada. DesprÇs, useu la funcionalitat de significat per convertir les dades al tipus adequat;Uno de los atributos contiene datos que parecen una fecha. El proceso de importaci¢n de CSV no puede distinguir si este valor es una fecha v†lida u otro tipo de dato (por ejemplo, un intervalo de tiempo), lo que provoca un error. Los valores afectados se han cargado como nulos. Para conservar y visualizar esta informaci¢n, vuelva a cargar el archivo CSV con la opci¢n Importar los n£meros como cadenas activada. DespuÇs, use la funcionalidad de significado para convertir los datos al tipo adecuado;si
+alert;parentSameEntity;text;One parent node is the same as the entity {0}. This is for update or delete the entity. In this case, only one parent node is allowed.;Un node pare Çs la mateixa entitat {0}. Aixï serveix per actualitzar o suprimir l'entitat. En aquest cas, nomÇs es permet un node pare.;Un nodo padre es la misma entidad {0}. Esto sirve para actualizar o eliminar la entidad. En este caso, solo se permite un nodo padre.;si
+alert;parentSameEntityMultiDs;text;One parent node is the same as the entity MultiDatastream. This is for update or delete the entity. In this case, only one parent node is allowed.;Un node pare Çs la mateixa entitat MultiDatastream. Aixï serveix per actualitzar o suprimir l'entitat. En aquest cas, nomÇs es permet un node pare.;Un nodo padre es la misma entidad MultiDatastream. Esto sirve para actualizar o eliminar la entidad. En este caso, solo se permite un nodo padre.;si
+STAOperations;OneValueSTA;description;One Value;Un valor;Un valor;si
+alert;onlyTwoParentsAllowed;text;Only 2 parents are allowed;NomÇs es permeten 2 nodes pare;Solo se permiten 2 nodos padre;si
+chrome;open;button;Open;Obre;Abrir;s
+DialogLink;openAsJson;label;Open as JSON in a separate window;Obre com a JSON en una finestra a part ;Abrir como JSON en una ventana separada;s
+DialogImportCSV;openCsv;button;Open CSV;Obre el CSV;Abrir CSV;s
+DialogSaveLayer;openMapBrowser;title;Open in the Map Browser;Obre al navegador de mapes;Abrir en el navegador de mapas;s
+tableStatisticsVisualize;OpenMap;description;Open Map;Obre a un mapa;Abrir en un mapa;si
+clarification;openingWallet;text;Opening wallet...;S'estÖ obrint la cartera...;Abriendo la cartera...;s
+tableStatisticsVisualize;OpenMap;help;Opens a table as a map in a map browser interface. It requires two columns with a latitude and longitude values.;Obre una taula com un mapa en una interf°cie d'un navegador de mapes. Requereix dues columnes amb valors de latitud i longitud.;Abre una tabla como un mapa en una interfaz de un navegador de mapas. Requiere dos columnas con valores de latitud y longitud.;si
+DialogGeospatialFilterRowsByDistance;operator;label;Operator;Operador;Operador;s
+DialogColumnsCalculator;operatorsLegend;title;Operators and functions for the formula:;Operadors i funcions per a la f¢rmula:;Operadores y funciones para la f¢rmula:;s
+dataQuality;completness;help;"Optional checks (numbers only, no pass/fail). Omission: empty or missing values in a column (optional Omission Flag). Commission (duplicates): duplicated records in a column (optional treat uppercase and lowercase as identical; optional Duplicate Flag). Commission excess: extra records beyond an expected record count.";"Comprovacions opcionals (nomÇs xifres, sense aprovat/suspens). Omissi¢: valors buits o absents en una columna (indicador d'omissi¢ opcional). Comissi¢ (duplicats): registres duplicats en una columna (opcionalment, tracta les maj£scules i les min£scules com a idäntiques; indicador de duplicat opcional). ExcÇs de comissi¢: registres addicionals mÇs enllÖ del recompte de registres esperat.";"Comprobaciones opcionales (solo cifras, sin aprobado/suspenso). Omisi¢n: valores vac°os o ausentes en una columna (indicador de omisi¢n opcional). Comisi¢n (duplicados): registros duplicados en una columna (opcionalmente, trata las may£sculas y las min£sculas como idÇnticas; indicador de duplicado opcional). Exceso de comisi¢n: registros adicionales m†s all† del recuento de registros esperado.";si
+DialogRadarPlot;options;title;Options:;Opcions:;Opciones:;s
+DialogColumnsCalculator;or;button;or;o;o;s
+DialogAddColumnPnt;output;title;Output;Sortida;Salida;s
+DialogAddColumnBBox;output;title;Output;Sortida;Salida;s
+DialogDGGSCodesBbox;parentLevels;label;Parent levels;Nivells pare;Niveles padre;s
+alert;parentNotEntityOrRelated;text;Parent node ({0}) is not a/an {1} or is directly related to a/an {1};El node pare ({0}) no Çs un {1} ni estÖ directament relacionat amb un {1};El nodo padre ({0}) no es un {1} ni est† directamente relacionado con un {1};si
+alert;parentNotMultiDatastream;text;Parent node ({0}) is not a/an MultiDatastream or is directly related to a/an MultiDatastream;El node pare ({0}) no Çs un MultiDatastream ni estÖ directament relacionat amb un MultiDatastream;El nodo padre ({0}) no es un MultiDatastream ni est† directamente relacionado con un MultiDatastream;si
+alert;parentNotDirectlyRelated;text;Parent node ({0}) is not directly related to a/an {1};El node pare ({0}) no estÖ relacionat directament amb un/a {1};El nodo padre ({0}) no est† relacionado directamente con un/a {1};si
+alert;parentQuotedMoreThanOne;text;Parent node '{0}' has more than a single record. Please select a record first.;El node pare Æ{0}Ø tÇ mÇs d'un registre. Seleccioneu primer un registre.;El nodo padre Æ{0}Ø tiene m†s de un registro. Seleccione primero un registro.;si
+alert;parentMoreThanOneRecord;text;Parent node has more than a single record. Please select a record first.;El node pare tÇ mÇs d'un registre. Seleccioneu primer un registre.;El nodo padre tiene m†s de un registro. Seleccione primero un registro.;si
+alert;parentMoreThanOneRowIgnored;text;Parent node has more than one row. Please select on row first. It will be ignored.;El node pare tÇ mÇs d'una fila. Seleccioneu primer una fila. S'ignorarÖ.;El nodo padre tiene m†s de una fila. Seleccione primero una fila. Se ignorar†.;si
+alert;parentNoDataLoadedIgnored;text;Parent node has no data loaded. It will be ignored.;El node pare no tÇ dades carregades. S'ignorarÖ.;El nodo padre no tiene datos cargados. Se ignorar†.;si
+alert;parentNoDataUrlIgnored;text;Parent node has no dataURL column. It will be ignored.;El node pare no tÇ cap columna dataURL. S'ignorarÖ.;El nodo padre no tiene ninguna columna dataURL. Se ignorar†.;si
+alert;parentNoDataUrlOrHrefIgnored;text;Parent node has no 'dataURL' or 'href' column. It will be ignored.;El node pare no tÇ cap columna ÆdataURLØ ni ÆhrefØ. S'ignorarÖ.;El nodo padre no tiene ninguna columna ÆdataURLØ ni ÆhrefØ. Se ignorar†.;si
+alert;parentNoStaData;text;Parent node has no STA data associated;El node pare no tÇ dades STA associades;El nodo padre no tiene datos STA asociados;si
+alert;parentOutOfRange;text;Parent node is out of range;El node pare Çs fora de l'interval;El nodo padre est† fuera del intervalo;si
+alert;parentMustHaveDataAnalyze;text;Parent node must have data to analyze;El node pare ha de tenir dades per analitzar-les;El nodo padre debe tener datos para analizarlos;si
+alert;parentMustHaveDataEdit;text;Parent node must have data to edite it;El node pare ha de tenir dades per editar-les;El nodo padre debe tener datos para editarlos;si
+alert;parentMustHaveDataReplace;text;Parent node must have data to replace it;El node pare ha de tenir dades per substituir-les;El nodo padre debe tener datos para reemplazarlos;si
+alert;parentMustHaveDataTranspose;text;Parent node must have data to transpose;El node pare ha de tenir dades per transposar-les;El nodo padre debe tener datos para transponerlos;si
+alert;parentNodesNoData;text;Parent nodes do not contain data;Els nodes pare no contenen dades;Los nodos padre no contienen datos;si
+alert;parentsNeededStaRoot;text;Parent(s) node(s) are needed to know about the STA root url;Calen node(s) pare per conäixer l'URL arrel de l'STA;Se necesitan nodo(s) padre para conocer la URL ra°z del STA;si
+alert;parentsNeededMergeExpands;text;Parent(s) node(s) are needed to merge expands;Calen nodes pare per fusionar les expansions;Se necesitan nodos padre para fusionar las expansiones;si
+alert;parseErrorFieldContent;text;Parse error: {0} The field content is:\n{1};Error d'anÖlisi: {0} El contingut del camp Çs:\n{1};Error de an†lisis: {0} El contenido del campo es:\n{1};si
+DialogFormatConsistency;patternTime;label;Pattern:;Patr¢:;Patr¢n:;s
+dataQuality;logicalConsistency;help;Performs a logical consistency check to identify contradictions and ensure coherent data relationships.;Fa una comprovaci¢ de consistäncia lïgica per identificar contradiccions i garantir relacions coherents entre les dades.;Realiza una comprobaci¢n de consistencia l¢gica para identificar contradicciones y garantizar relaciones coherentes entre los datos.;si
+DialogFilterRowsByTime;period;title;Period;Per°ode;Periodo;s
+DialogUncertainty;period;text;Period:;Per°ode:;Periodo:;s
+DialogCreateColumns;personalized;label;Personalized;Personalitzat;Personalizado;s
+DialogAggregateColumns;personalized;label;Personalized;Personalitzat;Personalizado;s
+DialogColumnsCalculator;personalized;label;Personalized;Personalitzat;Personalizado;s
+DialogMultiCreateSTAINaturalist;photos;label;Photos;Fotos;Fotos;s
+DialogBarPlot;pie;label;Pie;Sectors;Sectores;s
+TableOperations;PivotTable;description;Pivot table;Taula dinÖmica;Tabla din†mica;si
+DialogUploadObservations;placeDescription;label;Place description:;Descripci¢ del lloc:;Descripci¢n del lugar:;s
+alert;selectImageUrlColumn;text;Please, select a column that has urls to images in it;Seleccioneu una columna que contingui URL d'imatges;Seleccione una columna que contenga URL de im†genes;si
+DialogBarPlot;plotType;title;Plot type:;Tipus de grÖfic:;Tipo de gr†fico:;s
+DialogAddColumnBBox;pointCoordinates;label;Point coordinates;Coordenades del punt;Coordenadas del punto;s
+DialogSaveLayer;pointCoordinates;label;Point coordinates:;Coordenades del punt:;Coordenadas del punto:;s
+DialogAddColumnPnt;pointCoordinates;label;Point coordinates:;Coordenades del punt:;Coordenadas del punto:;s
+DialogGeospatialFilterRowsByDistance;positionSource;title;Position source;Font de la posici¢;Fuente de la posici¢n;s
+DialogSaveLayer;position;title;Position:;Posici¢:;Posici¢n:;s
+DialogUploadObservations;position;title;Position:;Posici¢:;Posici¢n:;s
+DialogQualityPositionalQuality;positionalAccuracy;title;Positional accuracy;Exactitud posicional;Exactitud posicional;s
+DialogUncertainty;positionalGrouping;title;Positional grouping;Agrupaci¢ posicional;Agrupaci¢n posicional;s
+dataQuality;positionalQuality;description;Positional quality;Qualitat posicional;Calidad posicional;si
+DialogQualityPositionalQuality;title;title;Positional quality;Qualitat posicional;Calidad posicional;s
+DialogQualityPositionalQuality;positionalValidity;title;Positional validity;Validesa posicional;Validez posicional;s
+DialogFormatConsistency;prefixLength;label;Prefix length (digits);Longitud del prefix (d°gits);Longitud del prefijo (d°gitos);s
+clarification;pressMouseDragConnect;text;Press the mouse botton on the starting node (child node), and drag and drop the mouse on the end node (parent node).;Premeu el bot¢ del ratol° sobre el node inicial (node fill), arrossegueu-lo i deixeu-lo anar sobre el node final (node pare).;Presione el bot¢n del rat¢n sobre el nodo inicial (nodo hijo), arr†strelo y suÇltelo sobre el nodo final (nodo padre).;s
+DialogFilterRowsByTime;property;label;Property:;Propietat:;Propiedad:;s
+dataQuality;qualityResultsViewer;description;Quality results viewer;Visor dels resultats de qualitat;Visor de los resultados de calidad;si
+tableStatisticsVisualize;RadarPlot;description;Radar Plot;GrÖfic de radar;Gr†fico de radar;si
+DialogRadarPlot;title;title;Radar plot;GrÖfic de radar;Gr†fico de radar;s
+DialogFormatConsistency;range;button;Range;Interval;Intervalo;s
+DialogQualityThematicQuality;range;label;Range;Interval;Intervalo;s
+DialogOpenURLNetwork;recipe1m1;option;Recipe 1, cooking method 1: Understanding the concept of Datastream in STAplus;Recipe 1, cooking method 1: Understanding the concept of Datastream in STAplus;Recipe 1, cooking method 1: Understanding the concept of Datastream in STAplus;s
+DialogOpenURLNetwork;recipe1m2;option;Recipe 1: cooking method 2: Visiting the same entity from different paths;Recipe 1: cooking method 2: Visiting the same entity from different paths;Recipe 1: cooking method 2: Visiting the same entity from different paths;s
+DialogOpenURLNetwork;recipe11;option;Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns;Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns;Recipe 11: Pivoting a table, from values in the rows of a selected column to new columns;s
+DialogOpenURLNetwork;recipe12;option;Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA;Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA;Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA;s
+DialogOpenURLNetwork;recipe2both;option;Recipe 2, both methods: Show the current evolution of a variable captured by a particular party;Recipe 2, both methods: Show the current evolution of a variable captured by a particular party;Recipe 2, both methods: Show the current evolution of a variable captured by a particular party;s
+DialogOpenURLNetwork;recipe2m1;option;Recipe 2, cooking method 1: Recurrently selecting a row using entity identifiers;Recipe 2, cooking method 1: Recurrently selecting a row using entity identifiers;Recipe 2, cooking method 1: Recurrently selecting a row using entity identifiers;s
+DialogOpenURLNetwork;recipe2m2;option;Recipe 2, cooking method 2: Filtering observations;Recipe 2, cooking method 2: Filtering observations;Recipe 2, cooking method 2: Filtering observations;s
+DialogOpenURLNetwork;recipe3;option;Recipe 3: Show a map of all observation features in an STA service;Recipe 3: Show a map of all observation features in an STA service;Recipe 3: Show a map of all observation features in an STA service;s
+DialogOpenURLNetwork;recipe4;option;Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it;Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it;Recipe 4: Add semantics (meaning) to a table and share, retrieve and store it;s
+DialogOpenURLNetwork;recipe5a;option;Recipe 5a: Selecting temperatures from an area;Recipe 5a: Selecting temperatures from an area;Recipe 5a: Selecting temperatures from an area;s
+DialogOpenURLNetwork;recipe5b;option;Recipe 5b:Selecting temperatures whose distance from a certain point is greater or lower than an established distance;Recipe 5b:Selecting temperatures whose distance from a certain point is greater or lower than an established distance;Recipe 5b:Selecting temperatures whose distance from a certain point is greater or lower than an established distance;s
+DialogOpenURLNetwork;recipe6;option;Recipe 6: Creating a new stream of observations;Recipe 6: Creating a new stream of observations;Recipe 6: Creating a new stream of observations;s
+DialogOpenURLNetwork;recipe7;option;Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset;Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset;Recipe 7: Connecting to a data catalogue and giving user feedback about a dataset;s
+DialogOpenURLNetwork;recipe8;option;Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket;Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket;Recipe 8: Connecting to a S3 service and retreive and view a CSV file in a S3 bucket;s
+DialogOpenURLNetwork;recipe9;option;Recipe 9: Drawing a stacked bar chart;Recipe 9: Drawing a stacked bar chart;Recipe 9: Drawing a stacked bar chart;s
+DialogOpenURLNetwork;recipeSchemas;label;Recipe stored schemas:;Esquemes emmagatzemats de les receptes:;Esquemas almacenados de las recetas:;s
+STAOperations;RangeSTA;description;Record range;Interval de registres;Intervalo de registros;si
+STAOperations;RecursiveExpandSTA;description;Recursive Expand;Expansi¢ recursiva;Expansi¢n recursiva;si
+DialogQualityMisclassificationMatrix;reference;label;Reference;Referäncia;Referencia;s
+DialogQualityLogicalConsistency;referenceData;label;Reference data;Dades de referäncia;Datos de referencia;s
+clarification;refreshCancelled;text;Refresh cancelled.;S'ha cancel˙lat l'actualitzaci¢.;Se ha cancelado la actualizaci¢n.;s
+DialogOneValue;refreshTime;label;Refresh time ( not applicable with WebSub enabled ):;Temps de refresc ( no aplicable amb WebSub habilitat ):;Tiempo de refresco ( no aplicable con WebSub habilitado ):;s
+DialogCountResults;refreshTime;label;Refresh time:;Temps d'actualitzaci¢:;Tiempo de actualizaci¢n:;s
+clarification;reloadCsvCompleted;text;Reload CSV records and dependencies completed.;S'ha completat la recÖrrega dels registres CSV i les dependäncies.;Se ha completado la recarga de los registros CSV y las dependencias.;s
+clarification;reloadCsv;text;Reload CSV records and dependencies...;S'estan tornant a carregar els registres CSV i les dependäncies...;Volviendo a cargar los registros CSV y las dependencias...;s
+clarification;reloadOgcApiCompleted;text;Reload OGC API collections page and dependencies completed.;S'ha completat la recÖrrega de la pÖgina de les col˙leccions d'OGC API i les dependäncies.;Se ha completado la recarga de la p†gina de las colecciones de OGC API y las dependencias.;s
+clarification;reloadOgcApi;text;Reload OGC API collections page and dependencies...;Tornant a carregar la pÖgina de col˙leccions d'OGC API i les dependäncies...;Volviendo a cargar la p†gina de colecciones de OGC API y las dependencias...;s
+clarification;reloadOgcCswCompleted;text;Reload OGC CSW records and dependencies completed.;S'ha completat la recÖrrega dels registres OGC CSW i les dependäncies.;Se ha completado la recarga de los registros OGC CSW y las dependencias.;s
+clarification;reloadOgcCsw;text;Reload OGC CSW records and dependencies...;S'estan tornant a carregar els registres OGC CSW i les dependäncies...;Volviendo a cargar los registros OGC CSW y las dependencias...;s
+clarification;reloadStaHomeCompleted;text;Reload STA home page and dependencies completed.;S'ha completat la recÖrrega de la pÖgina d'inici d'STA i les dependäncies.;Se ha completado la recarga de la p†gina de inicio de STA y las dependencias.;s
+clarification;reloadStaHome;text;Reload STA home page and dependencies...;Tornant a carregar la pÖgina d'inici d'STA i les dependäncies...;Volviendo a cargar la p†gina de inicio de STA y las dependencias...;s
+DialogContextMenu;remove;button;Remove;Elimina;Eliminar;s
+DialogEdgeContextMenu;remove;button;Remove;Elimina;Eliminar;s
+DialogEdgeContextMenu;removeHelp;help;Remove a connection between two nodes;Elimina una connexi¢ entre dos nodes;Eliminar una conexi¢n entre dos nodos;s
+DialogContextMenu;removeHelp;help;Remove a node and any connection to previous nodes;Elimina un node i qualsevol connexi¢ amb els nodes anteriors;Eliminar un nodo y cualquier conexi¢n con los nodos anteriores;s
+DialogSeparateColumns;removeAlreadyPresent;label;Remove already present elements;Elimina els elements ja presents;Eliminar los elementos ya presentes;s
+DialogContextMenu;rename;button;Rename;Reanomena;Renombrar;s
+DialogContextMenu;renameHelp;help;"Renames de node.<hr> You can change the text by default to make it more explainatory. Do not rename ""One Value"" or ""Count"" nodes.";"Reanomena el node.<hr> Podeu canviar el text per defecte per fer-lo mÇs explicatiu. No reanomeneu els nodes ""Un valor"" ni ""Compta"".";"Renombra el nodo.<hr> Puede cambiar el texto por defecto para hacerlo m†s explicativo. No renombre los nodos ""Un valor"" ni ""Contar"".";s
+DialogFormatConsistency;repeatPiece;label;Repeat the next piece this many times;Repetiu la peáa segÅent aquest nombre de vegades;Repita la pieza siguiente este n£mero de veces;s
+DialogPivotTable;repeatedAgg;title;Repited values aggregated by:;Valors repetits agregats per:;Valores repetidos agregados por:;s
+TableOperations;Replace;description;Replace;Substitueix;Sustituir;si
+DialogReplaceTextInTable;replace;label;Replace:;Substitueix:;Reemplazar:;s
+clarification;locationTimeout;text;Request location timeOut.;S'ha esgotat el temps de la sol˙licitud d'ubicaci¢.;Se ha agotado el tiempo de la solicitud de ubicaci¢n.;s
+clarification;requestingToSta;text;Requesting {0} to STA...;S'estÖ sol˙licitant {0} a STA...;Solicitando {0} a STA...;s
+clarification;requestingCsvUrl;text;Requesting CSV URL table...;S'estÖ sol˙licitant la taula de l'URL CSV...;Solicitando la tabla de la URL CSV...;s
+clarification;requestingFeedback;text;Requesting Feedback...;S'estan sol˙licitant comentaris/suggeräncies...;Solicitando comentarios/sugerencias...;si
+clarification;requestingFeedback;text;Requesting Feedback...;S'estan sol˙licitant comentaris/suggeriments...;Solicitando comentarios/sugerencias...;si
+clarification;requestingOgcApi;text;Requesting OGC API collections page...;S'estÖ sol˙licitant la pÖgina de les col˙leccions d'OGC API...;Solicitando la p†gina de las colecciones de OGC API...;s
+clarification;requestingOgcCsw;text;Requesting OGC CSW collections...;S'estan sol˙licitant les col˙leccions OGC CSW...;Solicitando las colecciones OGC CSW...;s
+clarification;requestingStaPage;text;Requesting STA page...;S'estÖ sol˙licitant la pÖgina STA...;Solicitando la p†gina STA...;s
+DialogSeparateColumns;result;title;Result;Resultat;Resultado;s
+DialogUncertainty;resultColumn;label;Result Column:;Columna resultant:;Columna resultante:;s
+TableOperations;guf;help;Retreives the geospatial user feedback related to the single row present in the table (e.g. a record forma CSW catalogue). It also allows for adding or editing feedback. It uses the NiMMbus repository and interface.;"Recupera els ""geospatial user feedback"" (comentaris/suggeriments)  relacionats amb l'£nica fila present a la taula (p. ex. un registre d'un catÖleg CSW). TambÇ permet afegir o editar comentaris. Utilitza el repositori i la interf°cie de NiMMbus.";"Recupera los comentarios ""geospatial user feedback"" (comentarios/sugerencias) con la £nica fila presente en la tabla (p. ej. un registro de un cat†logo CSW). TambiÇn permite a§adir o editar comentarios. Utiliza el repositorio y la interfaz de NiMMbus.";si
+clarification;retrievingS3Metadata;text;Retrieving extra metadata from S3 Bucket. This may take some time...;S'estan recuperant les metadades addicionals del contenidor S3. Aixï podria trigar una estona...;Se est†n recuperando los metadatos adicionales del contenedor S3. Esto puede tardar un tiempo...;si
+STAOperations;CountResultsSTA;help;Returns the total number of records returned by the API query without loading them in a table. Only with STA data. Requeres to be connected to a SensorThings API or a STAplus entity node. This node can not be connected to other dependend nodes.;Retorna el nombre total de registres que retorna la consulta a l'API sense carregar-los en una taula. NomÇs amb dades STA. Cal que estigui connectat a un node d'entitat SensorThings API o STAplus. Aquest node no es pot connectar a altres nodes dependents.;Devuelve el n£mero total de registros que devuelve la consulta a la API sin cargarlos en una tabla. Solo con datos STA. Requiere estar conectado a un nodo de entidad SensorThings API o STAplus. Este nodo no puede conectarse a otros nodos dependientes.;si
+DialogScatterPlot;rightLabel;label;Right label:;Etiqueta de la dreta:;Etiqueta de la derecha:;s
+DialogJoinTables;rowMatching;title;Row matching fields;Camps de coincidäncia de files;Campos de coincidencia de filas;s
+DialogPivotTable;rows;title;Rows;Files;Filas;s
+DialogTransposeTable;help;text;Rows become columns and columns become rows. Values of the header column become the new column names.;Les files es converteixen en columnes i les columnes en files. Els valors de la columna de capáalera esdevenen els noms de les columnes noves.;Las filas se convierten en columnas y las columnas en filas. Los valores de la columna de cabecera se convierten en los nuevos nombres de columna.;s
+DialogS3Bucket;titleBucket;title;S3 Bucket;Bucket S3;Bucket S3;s
+clarification;s3BucketContentCompleted;text;S3 Bucket content request completed.;S'ha completat la sol˙licitud del contingut del contenidor S3.;Se ha completado la solicitud del contenido del contenedor S3.;s
+DialogS3Bucket;titleService;title;S3 Service;Servei S3;Servicio S3;s
+clarification;s3BucketListCompleted;text;S3 Service bucket list request completed.;S'ha completat la sol˙licitud de la llista de contenidors del servei S3.;Se ha completado la solicitud de la lista de contenedores del servicio S3.;si
+DialogS3Bucket;s3Service;label;S3 Service:;Servei S3:;Servicio S3:;s
+DialogRadarPlot;savePng;button;Save as PNG;Desa com a PNG;Guardar como PNG;s
+DialogSaveTable;saveCsv;button;Save CSV;Desa CSV;Guardar CSV;s
+DialogSaveTable;saveCsvw;button;Save CSVW;Desa CSVW;Guardar CSVW;s
+DialogSaveTable;saveDbf;button;Save DBF;Desa DBF;Guardar DBF;s
+DialogSaveLayer;saveGeojson;button;Save GeoJSON;Desa GeoJSON;Guardar GeoJSON;s
+TableOperations;SaveLayer;description;Save Layer;Desa la capa;Guardar la capa;si
+TableOperations;SaveTable;description;Save Table;Desa la taula;Guardar la tabla;si
+DialogSaveTable;title;title;Save table;Desa la taula;Guardar tabla;s
+DialogSaveLayer;saveAsGeojson;title;Save table as GeoJSON;Desa la taula com a GeoJSON;Guardar la tabla como GeoJSON;s
+STAOperations;UploadObservations;help;Saves some observations to a SensorThings API or a STAplus server.;Desa algunes observacions en un servidor SensorThings API o STAplus.;Guarda algunas observaciones en un servidor SensorThings API o STAplus.;si
+STAOperations;CalculateStatisticsSTA;help;Saves statistics of Observations in SensorThings API or a STAplus server.;Desa les estad°stiques d'Observations a un servidor SensorThings API o STAplus.;Guarda las estad°sticas de Observations en un servidor SensorThings API o STAplus.;si
+TableOperations;SaveLayer;help;Saves the table as a GeoJSON. It requires two columns with a latitude and longitude values.;Desa la taula com un GeoJSON. Requereix dues columnes amb valors de latitud i longitud.;Guarda la tabla como un GeoJSON. Requiere dos columnas con valores de latitud y longitud.;si
+TableOperations;SaveTable;help;"Saves the table contained in the node as a CSV (and CSVW if the column definition is semantically enriched; see 'meaning').";"Desa la taula continguda en el node com a CSV (i CSVW si la definici¢ de les columnes estÖ enriquida semÖnticament; consulta 'significat').";"Guarda la tabla contenida en el nodo como CSV (y CSVW si la definici¢n de las columnas est† enriquecida sem†nticamente; consulta 'significado').";si
+tableStatisticsVisualize;ScatterPlot;description;Scatter Plot;GrÖfic de dispersi¢;Gr†fico de dispersi¢n;si
+DialogReplaceTextInTable;search;label;Search:;Cerca:;Buscar:;s
+DialogUncertainty;seconds;label;Seconds;Segons;Segundos;s
+DialogOneValue;seconds;text;seconds;segons;segundos;s
+DialogCountResults;seconds;text;seconds;segons;segundos;s
+DialogQualityTemporalQuality;seconds;label;Seconds;Segons;Segundos;s
+DialogS3Bucket;secretKey;label;Secret Key:;Clau secreta:;Clave secreta:;s
+alert;selectCategoriesColumn;text;Select a categories column.;Seleccioneu una columna de categories.;Seleccione una columna de categor°as.;si
+alert;selectColumnToEvaluate;text;Select a column to evaluate.;Seleccioneu una columna per avaluar.;Seleccione una columna para evaluar.;si
+alert;selectHeaderColumn;text;Select a header column.;Seleccioneu una columna de capáalera.;Seleccione una columna de cabecera.;si
+alert;selectItemColumn;text;Select an item column.;Seleccioneu una columna d'elements.;Seleccione una columna de elementos.;si
+alert;selectAtLeastOneCompleteness;text;Select at least one Completeness check.;Seleccioneu almenys una comprovaci¢ de completesa.;Seleccione al menos una comprobaci¢n de completitud.;si
+alert;radarNeedThreeNumericCols;text;Select at least three numeric columns to use as radar axes.;Seleccioneu almenys tres columnes numäriques per utilitzar-les com a eixos del radar.;Seleccione al menos tres columnas numÇricas para utilizarlas como ejes del radar.;si
+DialogAggregateColumns;selectAttributes;title;Select attributes:;Seleccioneu els atributs:;Seleccione los atributos:;s
+STAOperations;SelectColumnsSTA;description;Select Columns;Selecciona columnes;Selecciona columnas;si
+TableOperations;SelectColumnsTable;description;Select Columns;Selecciona columnes;Selecciona columnas;si
+STAOperations;SelectResourceSTA;description;Select Resource;Selecciona un registre;Seleccionar un registro;si
+STAOperations;SelectRowSTA;description;Select Row;Selecciona una fila;Selecciona una fila;si
+TableOperations;SelectRowTable;description;Select Row;Selecciona una fila;Selecciona una fila;s
+DialogSelectSortBy;criteria;title;Select the criteria for sorting:;Seleccioneu els criteris d'ordenaci¢:;Seleccione los criterios de ordenaci¢n:;s
+DialogOneValue;selectValue;text;Select value to see the last value;Seleccioneu el valor per veure l'£ltim valor;Seleccione el valor para ver el £ltimo valor;s
+DialogCreateColumns;selectOperation;title;Select your operation:;Seleccioneu l'operaci¢:;Seleccione la operaci¢n:;s
+alert;columnMustHaveGeometry;text;Selected collumn must have a geometry type;La columna seleccionada ha de se de tipus geomätric;La columna seleccionada debe ser de tipo geomÇtrico;si
+alert;uncertaintyColMustBeNumber;text;Selected uncertainly column must be of a 'number' type;La columna d'incertesa seleccionada ha de ser del tipus numäric;La columna de incertidumbre seleccionada debe ser de tipo numÇrico;si
+clarification;selectingExpandingSta;text;Selecting and Expanding STA columns...;S'estan seleccionant i expandint les columnes STA...;Seleccionando y expandiendo las columnas STA...;s
+clarification;selectingOgcResource;text;Selecting OGC resource...;S'estÖ seleccionant el recurs OGC...;Seleccionando el recurso OGC...;s
+clarification;selectingOgcRow;text;Selecting OGC row...;S'estÖ seleccionant la fila OGC...;Seleccionando la fila OGC...;s
+DialogUploadObservations;sensorInstance;label;Sensor instance id or name:;Identificador o nom de la instÖncia del Sensor:;Identificador o nombre de la instancia del Sensor:;s
+DialogUploadObservations;sensorReference;label;Sensor reference or type:;Referäncia o tipus de Sensor:;Referencia o tipo de Sensor:;s
+DialogSTAURL;titleSta;title;SensorThings API and STAplus;SensorThings API i STAplus;SensorThings API y STAplus;s
+TableOperations;SeparateColumns;description;Separate Columns;Separa les columnes;Separa columnas;si
+DialogImportJSON;separatedByComma;text;Separated by comma;Separades per coma;Separadas por coma;s
+DialogSeparateColumns;separedNewColumns;label;separed into new columns;separades en columnes noves;separadas en columnas nuevas;s
+DialogSeparateColumns;separedNewRecords;label;separed into new records;separades en registres nous;separadas en registros nuevos;s
+DialogRadarPlot;series;label;Series;Säries;Series;s
+DialogRadarPlot;seriesMode;title;Series mode:;Mode de säries:;Modo de series:;s
+DialogAggregateColumns;decimalFigures;title;Set number of decimal figures:;Establiu el nombre de xifres decimals:;Establezca el n£mero de cifras decimales:;s
+DialogColumnsCalculator;decimalFigures;title;Set number of decimal figures:;Establiu el nombre de xifres decimals:;Establezca el n£mero de cifras decimales:;s
+DialogUploadObservations;severalPropsSingleCol;label;Several ObservedProperties of the same feature in a single column and in multiple rows;Diverses ObservedProperties de la mateixa caracter°stica en una sola columna i en diverses files;Varias ObservedPropertiess de la misma caracter°stica en una sola columna y en varias filas;s
+chrome;share;button;Share;Comparteix;Compartir;s
+clarification;sharingMeaningRedirect;text;Sharing Meaning. Redirected to NiMMbus (please authenticate and save).;S'estÖ compartint el significat. SRedireccionant cap a NiMMbus (autentiqueu-vos i deseu-lo).;Compartiendo el significado. Redireccionando hacia NiMMbus (autent°quese y gu†rdelo).;si
+chrome;showRowNumbers;label;Show row numbers;Mostra els n£meros de les files;Mostrar los n£meros de las filas;s
+DialogConfiguration;showStartNodeButtonsOnly;label;Show start node buttons only;Mostra nomÇs els botons del node inicial;Mostrar solo los botones del nodo inicial;s
+TableOperations;Table;help;Shows a table of the dependent node in a dialog box. Since the table behind the active node is represented in the table area, the use of this operation is no longer recommended.;Mostra en un quadre de diÖleg la taula del node dependent. Com que la taula que hi ha darrere del node actiu es representa a l'Örea de taula, l'£s d'aquesta operaci¢ ja no Çs recomanable.;Muestra en un cuadro de di†logo la tabla del nodo dependiente. Dado que la tabla que hay detr†s del nodo activo se representa en el †rea de tabla, el uso de esta operaci¢n ya no es recomendable.;si
+TableOperations;EditRecord;help;Shows and allows editing a record in the table of the related node. NOTE: If you are using data from a web service and you ask for data again, this change will be lost.;Mostra i permet editar els registres de la taula del node relacionat. NOTA: Si utilitzeu dades d'un servei web i torneu a demanar les dades, aquest canvi es perdrÖ.;Muestra y permite editar los registros de la tabla del nodo relacionado. NOTA: Si utiliza datos de un servicio web y vuelve a pedir los datos, este cambio se perder†.;si
+TableOperations;Meaning;help;Shows and allows editing the semantics (definition and units of measure) of the table columns.;Mostra i permet editar la semÖntica (definici¢ i unitats de mesura) de les columnes de la taula.;Muestra y permite editar la sem†ntica (definici¢n y unidades de medida) de las columnas de la tabla.;si
+STAOperations;ViewQuerySTA;help;Shows the completed URL that is used to make the query to obtain the data from a service or an API of the depended node in a dialog box. Since the URL behind the active node is always represented in the query and table area, the use of this operation is no longer recommended.;Mostra en un quadre de diÖleg l'URL complet que s'utilitza per fer la consulta per obtenir les dades d'un servei o d'una API del node dependent. Com que l'URL que hi ha darrere del node actiu sempre es representa a l'Örea de consulta i de taula, l'£s d'aquesta operaci¢ ja no Çs recomanable.;Muestra en un cuadro de di†logo la URL completa que se utiliza para hacer la consulta para obtener los datos de un servicio o de una API del nodo dependiente. Dado que la URL que hay detr†s del nodo activo siempre se representa en el †rea de consulta y de tabla, el uso de esta operaci¢n ya no es recomendable.;si
+STAOperations;OneValueSTA;help;Shows the last posted value. This value is updated according to the time period you set. Requeres to be connected to another SensorThings API or a STAplus entity. If WebSub available, it subscribes to a topic, opens a websocket connection and waits for updates, if not, it generates a HTTP request every n seconds. Do not requre to connect to previous sort by time. This node can not be connected to other dependend nodes.;"Mostra l'£ltim valor publicat. Aquest valor s'actualitza segons el per°ode de temps que s'estableixi. Cal que estigui connectat a una altra entitat SensorThings API o STAplus. Si WebSub estÖ disponible, se subscriu a un tema, obre una connexi¢ websocket i espera actualitzacions; si no, genera una petici¢ HTTP cada n segons. No cal connectar-lo a una eina d'ordenaci¢ temporal. Aquest node no es pot connectar a altres nodes dependents.";"Muestra el £ltimo valor publicado. Este valor se actualiza seg£n el per°odo de tiempo que se establezca. Requiere estar conectado a otra entidad SensorThings API o STAplus. Si WebSub est† disponible, se suscribe a un tema, abre una conexi¢n websocket y espera actualizaciones; si no, genera una solicitud HTTP cada n segundos. No es necesario conectarlo a una herramienta de ordenaci¢n temporal. Este nodo no puede conectarse a otros nodos dependientes.";si
+tableStatisticsVisualize;ImageViewer;help;Shows the pictures referenced by a column. Assumes that the content of the column are url to images supported by the browser (commonly in JPEG or PNG format).;Mostra les imatges referenciades d'una columna. Considera que el contingut de la columna s¢n URL d'imatges compatibles amb el navegador (habitualment en format JPEG o PNG).;Muestra las im†genes referenciadas de una columna. Supone que el contenido de la columna son URL de im†genes compatibles con el navegador (habitualmente en formato JPEG o PNG).;si
+DialogFormatConsistency;signedDd;option;Signed Decimal Degrees ? e.g. +41.40338;Graus decimals amb signe ? p. ex. +41.40338;Grados decimales con signo ? p. ej. +41.40338;s
+alert;signedOutError;text;Signed out error: {0};Error en tancar la sessi¢: {0};Error al cerrar sesi¢n: {0};si
+alert;signedOutFrom;text;Signed out from {0}.;S'ha tancat la sessi¢ a {0}.;Se ha cerrado la sesi¢n en {0}.;si
+alert;signinError;text;Signin error: {0};Error en l'inici de la sessi¢: {0};Error al iniciar sesi¢n: {0};si
+alert;sizeNotIntegerUse200;text;Size is not an integer number. Using 200 instead;La mida no Çs un nombre enter. En el seu lloc, s'utilitzarÖ 200;El tama§o no es un n£mero entero. En su lugar, se utilizar† 200;si
+alert;sizeOutOfRangeUse200;text;Size is out of the [2,2000] range. Using 200 instead;La mida Çs fora de l'interval [2,2000]. En el seu lloc, s'utilitzarÖ 200;El tama§o est† fuera del intervalo [2,2000]. En su lugar, se utilizar† 200;si
+alert;transformationValuesBlock;text;Some value(s) of the data impide to excute this transformation.;Alguns valors de les dades impedeixen executar aquesta transformaci¢.;Algunos valores de los datos impiden ejecutar esta transformaci¢n.;si
+STAOperations;SortBySTA;description;Sort by;Ordena per;Ordenar por;si
+TableOperations;SortByTables;description;Sort by;Ordena per;Ordenar por;si
+DialogQualityTemporalQuality;sortRecords;label;Sort records;Ordena els registres;Ordenar los registros;s
+DialogScatterPlot;sortByX;label;Sort values by X;Ordena els valors per X;Ordenar los valores por X;s
+DialogMultiCreateSTAINaturalist;specieIdByUser;label;Specie, identification by user;Espäcie, identificaci¢ per part de l'usuari;Especie, identificaci¢n por parte del usuario;s
+DialogFormatConsistency;specificDigit;label;Specific digit;D°git espec°fic;D°gito espec°fico;s
+DialogFormatConsistency;specificLetter;label;Specific letter;Lletra espec°fica;Letra espec°fica;s
+DialogFormatConsistency;specificPrefix;label;Specific prefix;Prefix espec°fic;Prefijo espec°fico;s
+TableOperations;SeparateColumns;help;Splits a column containing a JSON object into separated new columns and removes the original column.;Divideix una columna que contÇ un objecte JSON en noves columnes separades i elimina la columna original.;Divide una columna que contiene un objeto JSON en nuevas columnas separadas y elimina la columna original.;si
+DialogSTAViewQuery;staQueryUrl;text;STA query URL:;URL de la consulta STA:;URL de la consulta STA:;s
+DialogUploadObservations;staServiceUrl;label;STA service URL:;URL del servei STA:;URL del servicio STA:;s
+STAOperationsType;Type;singular;STA tool;Eina STA;Herramienta STA;si
+STAOperationsType;Type;plural;STA tools;Eines STA;Herramientas STA;si
+DialogQualityTemporalQuality;stdDevTemporal;label;Standard deviation of the temporal column;Desviaci¢ estÖndard de la columna temporal;Desviaci¢n est†ndar de la columna temporal;s
+DialogUploadIC;start;label;Start:;Inici:;Inicio:;s
+DialogOneValue;stopRefresh;button;Stop refresh;Atura l'actualitzaci¢;Detener la actualizaci¢n;s
+DialogCountResults;stopRefresh;button;Stop refresh;Atura l'actualitzaci¢;Detener la actualizaci¢n;s
+STAOperations;SubscribeSTA;description;Subscribe and alert;Subscripci¢ i alerta;Suscripci¢n y alerta;si
+STAOperations;SubscribeSTA;help;Subscribes to notifications of change in the parent resource. It requires that the parent node is a STA or STAplus with WebSub available. Then it subscribes to a topic and opens a websocket connection and waits for updates. When new records are received, they are immediately added to the table.;Se subscriu a les notificacions de canvi del recurs pare. Cal que el node pare sigui un STA o un STAplus amb WebSub disponible. DesprÇs se subscriu a un tema, obre una connexi¢ websocket i espera actualitzacions. Quan es reben registres nous, s'afegeixen immediatament a la taula.;Se suscribe a las notificaciones de cambio del recurso padre. Requiere que el nodo padre sea un STA o un STAplus con WebSub disponible. Luego se suscribe a un tema, abre una conexi¢n websocket y espera actualizaciones. Cuando se reciben registros nuevos, se a§aden inmediatamente a la tabla.;si
+DialogImportCSV;suggestedCsvUrls;label;Suggested CSV URLs:;URL de CSV suggerides:;URL de CSV sugeridas:;s
+DialogImportGeoJSON;suggestedUrls;label;Suggested GeoJSON URLs:;URL de GeoJSON suggerides:;URL de GeoJSON sugeridas:;s
+DialogSTAURL;suggestedServices;label;Suggested services:;Serveis suggerits:;Servicios sugeridos:;s
+DialogS3Bucket;suggestedServices;label;Suggested services:;Serveis suggerits:;Servicios sugeridos:;s
+DialogEDC;suggestedServices;label;Suggested services:;Serveis suggerits:;Servicios sugeridos:;s
+DialogAggregateColumns;suggested;label;Suggested:;Suggerit:;Sugerido:;s
+TableOperations;TransposeTable;help;"Swap rows and columns; new column names come from values of a chosen header column.";"Intercanvia files i columnes; els nous noms de columna provenen dels valors d'una columna de capáalera escollida.";"Intercambia filas y columnas; los nuevos nombres de columna provienen de los valores de una columna de cabecera elegida.";si
+alert;symbolRequired;text;Symbol parameter is required, please fill in the box before send;"El parÖmetre de Symbol Çs obligatori; ompliu la casella abans d'enviar";"El par†metro de Symbol es obligatorio; rellene la casilla antes de enviar";s
+DialogSaveLayer;symbolizer;label;Symbolizer (text or color)*:;Simbolitzador (text o color)*:;Simbolizador (texto o color)*:;s
+clarification;syntaxErrorReading;text;Syntax error reading {0}: {1};Error de sintaxi en llegir {0}: {1};Error de sintaxis al leer {0}: {1};si
+DialogImportCSV;tab;label;Tab;Tabulador;Tabulador;s
+DialogConfiguration;fontSizeRatio;label;Table font size ratio:;Relaci¢ de mida de la lletra de la taula:;Proporci¢n del tama§o de letra de la tabla:;s
+DialogQualityThematicQuality;tableToAssess;label;Table to assess:;Taula a avaluar:;Tabla a evaluar:;s
+dataQualityType;Type;singular;Table tool for data quality;Eina de taula per a la qualitat de les dades;Herramienta de tabla para la calidad de los datos;si
+tableStatisticsVisualizeType;Type;singular;Table tool for statistics and visualization;Eina de taula per a estad°stiques i visualitzaci¢;Herramienta de tabla para estad°sticas y visualizaci¢n;si
+dataQualityType;Type;plural;Table tools for data quality;Eines de taula per a la qualitat de les dades;Herramientas de tabla para la calidad de los datos;si
+tableStatisticsVisualizeType;Type;plural;Table tools for statistics and visualization;Eines de taula per a estad°stiques i visualitzaci¢;Herramientas de tabla para estad°sticas y visualizaci¢n;si
+DialogQualityThematicQuality;tablePossibleValues;label;Table with list of possible values:;Taula amb la llista de valors possibles:;Tabla con la lista de valores posibles:;s
+DialogOpenURLNetwork;schemaUrl;label;TAPIS saved schema URL:;URL de l'esquema TAPIS desat:;URL del esquema TAPIS guardado:;s
+DialogQualityLogicalConsistency;targetData;label;Target data;Dades objectiu;Datos objetivo;s
+alert;targetAndReferenceSame;text;target node and reference node are the same are identified as the same;El node objectiu i el node de referäncia s¢n el mateix i s'identifiquen com a tal;El nodo objetivo y el nodo de referencia son el mismo y se identifican como tal;si
+DialogGUF;target;title;Target:;Objectiu:;Objetivo:;s
+DialogFormatConsistency;telephone;label;Telephone;Teläfon;TelÇfono;s
+DialogQualityTemporalQuality;temporalAccuracy;title;Temporal accuracy;Exactitud temporal;Exactitud temporal;s
+DialogQualityTemporalQuality;temporalColumn;label;Temporal column:;Columna temporal:;Columna temporal:;s
+DialogQualityTemporalQuality;temporalConsistency;title;Temporal consistency;Consistäncia temporal;Consistencia temporal;s
+DialogUncertainty;temporalGrouping;title;Temporal grouping;Agrupaci¢ temporal;Agrupaci¢n temporal;s
+dataQuality;temporalQuality;description;Temporal quality;Qualitat temporal;Calidad temporal;si
+DialogQualityTemporalQuality;title;title;Temporal quality;Qualitat temporal;Calidad temporal;s
+DialogQualityTemporalQuality;temporalResolution;title;Temporal resolution;Resoluci¢ temporal;Resoluci¢n temporal;s
+DialogQualityTemporalQuality;temporalValidity;title;Temporal validity;Validesa temporal;Validez temporal;s
+clarification;assetAddedDq4sta;text;The asset has been added to DQ4STA at URL: {0};L'actiu s'ha afegit a DQ4STA a l'URL: {0};El activo se ha a§adido a DQ4STA en la URL: {0};s
+alert;chartImageSaveFailed;text;The chart image could not be saved.;No s'ha pogut desar la imatge del grÖfic.;No se ha podido guardar la imagen del gr†fico.;si
+alert;groupByXMustBeNumber;text;The column selected to group by position (X) must be a number-type column;La columna seleccionada per agrupar per posici¢ (X) ha de ser una columna de tipus numäric;La columna seleccionada para agrupar por posici¢n (X) debe ser una columna de tipo numÇrico;si
+alert;groupByYMustBeNumber;text;The column selected to group by position (Y) must be a number-type column;La columna seleccionada per agrupar per posici¢ (Y) ha de ser una columna de tipus numäric;La columna seleccionada para agrupar por posici¢n (Y) debe ser una columna de tipo numÇrico;si
+alert;groupByTimeMustBeTime;text;The column selected to group by time must be a time-type column;La columna seleccionada per agrupar per temps ha de ser una columna de tipus temporal;La columna seleccionada para agrupar por tiempo debe ser una columna de tipo temporal;si
+alert;separateColMustBeString;text;The content of column selected to separate must be 'string' type;El contingut de la columna seleccionada per separar ha de ser del tipus ÆstringØ;El contenido de la columna seleccionada para separar debe ser de tipo ÆstringØ;si
+alert;featureLocationPointOnly;text;The coordinates format for 'feature' or 'location' is not supported. Only a Point structure is supported: Array of two decimal numbers.;El format de coordenades per a 'feature' o 'location' no Çs compatible. NomÇs s'admet una estructura Point: una matriu de dos nombres decimals.;El formato de coordenadas para 'feature' o 'location' no es compatible. Solo se admite una estructura Point: un array de dos n£meros decimales.;si
+alert;dataMustContainMetadata;text;The data has to contain metadata;Les dades han de contenir metadades;Los datos deben contener metadatos;si
+alert;dataMustHaveAttributes;text;The data has to had attributes;Les dades han de tenir atributs;Los datos deben tener atributos;si
+dataQuality;misclassificationMatrix;help;The degree to which the assigned classifications correspond to the reference classifications, as represented by a matrix of correctly and incorrectly classified items;El grau en quä les classificacions assignades es corresponen amb les classificacions de referäncia, representat mitjanáant una matriu d'elements classificats correctament i incorrectament;El grado en que las clasificaciones asignadas se corresponden con las clasificaciones de referencia, representado mediante una matriz de elementos clasificados correcta e incorrectamente;si
+alert;entityExpandMustBeList;text;The entity expanded must be a list to apply the filter.;L'entitat expandida ha de ser una llista per aplicar el filtre.;La entidad expandida debe ser una lista para aplicar el filtro.;si
+DialogImportCSV;firstLineNames;label;The first line contains field names;La primera l°nia contÇ els noms dels camps;La primera l°nea contiene los nombres de los campos;s
+alert;formatRequestNotImplemented;text;The format requets from an external source ({0}) is not implemented yet;La sol˙licitud de format des d'una font externa ({0}) encara no ha estat implementada;La solicitud de formato desde una fuente externa ({0}) a£n no ha estado implementada;si
+alert;intervalTooLongForGraphic;text;The interval of the data selected is too long to apply to the graphic. Filter interval to make it shorter or choose a bigger interval to X axis;L'interval de les dades seleccionades Çs massa llarg per aplicar-lo al grÖfic. Filtreu l'interval per fer-lo mÇs curt o trieu un interval mÇs gran per a l'eix X;El intervalo de los datos seleccionados es demasiado largo para aplicarlo al gr†fico. Filtre el intervalo para acortarlo o elija un intervalo mayor para el eje X;si
+alert;nodeConnectedMustHaveData;text;The node conected has to have data;El node connectat ha de tenir dades;El nodo conectado debe tener datos;si
+DialogQualityThematicQuality;accuracyByCol;title;Thematic accuracy by accuracy column;Exactitud temÖtica per columna d'exactitud;Exactitud tem†tica por columna de exactitud;s
+DialogQualityThematicQuality;accuracyByValues;title;Thematic accuracy by values;Exactitud temÖtica per valors;Exactitud tem†tica por valores;s
+dataQuality;thematicQuality;description;Thematic quality;Qualitat temÖtica;Calidad tem†tica;si
+DialogQualityThematicQuality;title;title;Thematic quality;Qualitat temÖtica;Calidad tem†tica;s
+DialogQualityThematicQuality;thematicValidity;title;Thematic validity;Validesa temÖtica;Validez tem†tica;s
+alert;noColumnsInListToAdd;text;There are no columns in the list to add, nothing will be added to the table;"No hi ha cap columna per afegir a la llista; no s'afegirÖ res a la taula";"No hay ninguna columna que a§adir en la lista; no se a§adir† nada a la tabla";si
+alert;nonStaNodeMultipleRegisters;text;There is a node linked not STA with more than one register, if you want to use it, apply a select row to choose your register;"Hi ha enllaáat un node que no Çs STA amb mÇs d'un registre; si voleu utilitzar-lo, apliqueu una selecci¢ de fila per triar el registre";"Hay enlazado un nodo que no es STA con m†s de un registro; si desea utilizarlo, aplique una selecci¢n de fila para elegir el registro";si
+alert;moreThanOneSingleRegisterNode;text;There is more than one node with only one register linked. Link only one node with one register to use to take the coordenates;Hi ha mÇs d'un node enllaáat amb un sol registre. Enllaceu nomÇs un node amb un registre per utilitzar-lo per obtenir les coordenades;Hay m†s de un nodo enlazado con un solo registro. Enlace £nicamente un nodo con un registro para utilizarlo para obtener las coordenadas;si
+clarification;errorWithUrl;text;There was an error with {0}: {1};S'ha produãt un error amb {0}: {1};Se ha producido un error con {0}: {1};si
+alert;attributeAlreadyAddedIn;text;This attribute has already been added in {0};Aquest atribut ja s'ha afegit a {0};Este atributo ya se ha a§adido en {0};si
+alert;datesInvalid;text;This procedure must contain date information. Introduced dates do not meet this requirement;Aquest procediment ha de contenir informaci¢ tipus data. Les dades introduãdes no compleixen aquest requisit;Este procedimiento debe contener informaci¢n tipo fecha. Los datos introducidao no cumplen este requisito;si
+alert;needDateColumn;text;This procedure must contain date information. The selected column do not meet this requirement;Aquest procediment ha de contenir informaci¢ tipus data. La columna seleccionada no compleix aquest requisit;Este procedimiento debe contener informaci¢n tipo fecha. La columna seleccionada no cumple este requisito;si
+alert;needGeographicColumns;text;This procedure must contain geographical information. The selected columns do not meet this requirement;Aquest procediment ha de contenir informaci¢ geogrÖfica. Les columnes seleccionades no compleixen aquest requisit;Este procedimiento debe contener informaci¢n geogr†fica. Las columnas seleccionadas no cumplen este requisito;si
+alert;geographicValuesInvalid;text;This procedure must contain geographical information. Values introduced are not valid;Aquest procediment ha de contenir informaci¢ geogrÖfica. Els valors introduãts no s¢n vÖlids;Este procedimiento debe contener informaci¢n geogr†fica. Los valores introducidos no son v†lidos;si
+alert;websubUnsupported;text;This STA as a whole or this particular request does not support WebSbu and updates are not posible,;Aquest STA en conjunt o aquesta petici¢ en particular no admet WebSub i les actualitzacions no s¢n possibles,;Este STA en conjunto o esta solicitud en particular no admite WebSub y las actualizaciones no son posibles,;si
+DialogFormatConsistency;time;label;Time;Hora;Hora;s
+DialogSaveLayer;timeSeries;title;Time Series (optional);Särie temporal (opcional);Serie temporal (opcional);s
+DialogUncertainty;timeUnit;text;Time unit:;Unitat de temps:;Unidad de tiempo:;s
+DialogQualityTemporalQuality;timeUnit;text;Time unit:;Unitat de temps:;Unidad de tiempo:;s
+DialogGUF;titleMandatory;label;Title (mandatory to add) :;T°tol (obligatori per afegir) :;T°tulo (obligatorio para a§adir) :;s
+DialogSaveLayer;titleField;label;Title:;T°tol:;T°tulo:;s
+DialogFilterRowsByTime;aggregateOptional;title;"To aggregate data by (Optional. Only available with ""Observations""):";"Per agregar les dades per (Opcional. NomÇs disponible amb ""Observations""):";"Para agregar los datos por (Opcional. S¢lo disponible con ""Observations""):";s
+alert;dateRoundingNeedOneDate;text;To apply date rounding one date type attribute is has to be selected;Per aplicar l'arrodoniment de dates, cal seleccionar un atribut de tipus data;Para aplicar el redondeo de fechas, debe seleccionar un atributo de tipo fecha;si
+alert;dateRoundingOneDateOnly;text;To apply date rounding only one date type attribute is allowed to be selected;Per aplicar l'arrodoniment de dates, nomÇs es permet seleccionar un atribut de tipus data;Para aplicar el redondeo de fechas, solo se permite seleccionar un atributo de tipo fecha;si
+DialogFilterRowsByTime;to;label;To:;Fins a:;Hasta:;s
+DialogQualityTemporalQuality;to;label;To:;Fins a:;Hasta:;s
+DialogQualityThematicQuality;to;label;To:;Fins a:;Hasta:;s
+DialogQualityTemporalQuality;tolerance;text;Tolerance:;TolerÖncia:;Tolerancia:;s
+alert;tooManySeriesShowingFirst;text;Too many series ({0}). Showing the first {1} series.;Massa säries ({0}). Es mostren les primeres {1} säries.;Demasiadas series ({0}). Se muestran las primeras {1} series.;si
+alert;tooManySeries20;text;Too many series (20). Remove one before adding another.;Massa säries (20). Suprimiu-ne una abans d'afegir-ne una altra.;Demasiadas series (20). Elimine una antes de a§adir otra.;si
+TableOperations;TransposeTable;description;Transpose table;Transposa la taula;Transponer la tabla;si
+DialogReplaceTextInTable;treatDatesAsText;label;Treat dates as text;Tracta les dates com a text;Tratar las fechas como texto;s
+DialogReplaceTextInTable;treatNumbersAsText;label;Treat numbers as text;Tracta els nombres com a text;Tratar los n£meros como texto;s
+DialogCompleteness;treatCaseIdentical;label;Treat uppercase and lowercase as identical;Tracta les maj£scules i les min£scules com a idäntiques;Tratar las may£sculas y las min£sculas como idÇnticas;s
+DialogJoinTables;twoTablesRequired;text;Two tables are required.;Calen dues taules.;Se necesitan dos tablas.;s
+DialogAddColumnPnt;type;title;Type:;Tipus:;Tipo:;s
+DialogAddColumnBBox;type;title;Type:;Tipus:;Tipo:;s
+dataQuality;uncertainty;description;Uncertainty;Incertesa;Incertidumbre;si
+DialogQualityTemporalQuality;uncertaintyColumn;label;uncertainty column:;columna d'incertesa:;columna de incertidumbre:;s
+DialogQualityPositionalQuality;uncertaintyColumn;label;Uncertainty column:;Columna d'incertesa:;Columna de incertidumbre:;s
+clarification;unknownLocationError;text;Unknown error obtaining Location ({0}).;Error desconegut en obtenir la Location ({0}).;Error desconocido al obtener la Location ({0}).;s
+chrome;update;button;Update;Actualitza;Actualizar;s
+clarification;updatingEntity;text;Updating  {0} {1} ...;S'estÖ actualitzant {0} {1} ...;Actualizando {0} {1} ...;s
+clarification;updatingMultiDatastream;text;Updating MultiDatastream {0} ...;S'estÖ actualitzant MultiDatastream {0} ...;Actualizando MultiDatastream {0} ...;s
+chrome;upload;button;Upload;Puja;Subir;s
+TableOperations;uploadToIC;help;Upload data and metadata to an inmutable catalog.;Puja les dades i les metadades a un catÖleg immutable.;Sube los datos y los metadatos a un cat†logo inmutable.;si
+STAOperations;UploadObservations;description;Upload in STA;Puja a STA;Subir a STA;si
+clarification;uploadObsCompleted;text;Upload observations in STA completed.;S'ha completat la pujada d'Observations a STA.;Se ha completado la carga de Observations en STA.;s
+clarification;uploadObsStarted;text;Upload observations in STA started...;S'ha iniciat la pujada d'Observations a STA...;Se ha iniciado la carga de Observations en STA...;s
+STAOperations;CalculateStatisticsSTA;description;Upload statistics in STA;Puja les estad°stiques a STA;Subir estad°sticas a STA;si
+TableOperations;uploadToIC;description;Upload to inmutable catalog;Puja al catÖleg immutable;Subir al cat†logo inmutable;si
+DialogImportJSON;urlList;label;URL list:;Llista d'URL:;Lista de URL:;s
+DialogImportJSON;urlSingle;label;URL single:;URL individual:;URL individual:;s
+DialogImportCSV;url;label;URL:;URL:;URL:;s
+DialogImportGeoJSON;url;label;URL:;URL:;URL:;s
+DialogImportDBF;url;label;URL:;URL:;URL:;s
+DialogImportGPKG;url;label;URL:;URL:;URL:;s
+DialogImportJSONLD;url;label;URL:;URL:;URL:;s
+DialogQualityThematicQuality;usedForNote;text;Used for thematic accuracy by values and thematic validity;S'utilitza per a l'exactitud temÖtica per valors i la validesa temÖtica;Se utiliza para la exactitud tem†tica por valores y la validez tem†tica;s
+clarification;userDeniedLocation;text;User denied request location.;L'usuari ha denegat la sol˙licitud d'ubicaci¢.;El usuario ha denegado la solicitud de ubicaci¢n.;s
+DialogFormatConsistency;utm;option;UTM (Universal Transverse Mercator) ? e.g. 31T 430595 4581266;UTM (Universal Transverse Mercator) ? p. ex. 31T 430595 4581266;UTM (Universal Transverse Mercator) ? p. ej. 31T 430595 4581266;s
+DialogFormatConsistency;uuid;label;UUID identification;Identificaci¢ UUID;Identificaci¢n UUID;s
+DialogPivotTable;values;title;Values;Valors;Valores;s
+DialogBarPlot;values;label;Values:;Valors:;Valores:;s
+DialogBarPlot;variableName;label;Variable name (optional):;Nom de la variable (opcional):;Nombre de la variable (opcional):;s
+DialogOneValue;variable;label;Variable:;Variable:;Variable:;s
+STAOperations;ViewQuerySTA;description;View Query;Visualitza la consulta;Ver la consulta;si
+TableOperations;Table;description;View Table;Visualitza la taula;Ver la tabla;si
+DialogAddColumnPnt;wkt;label;Well Known Text:;Well Known Text:;Well Known Text:;s
+DialogAddColumnBBox;wkt;label;Well Known Text:;Well Known Text:;Well Known Text:;s
+DialogRadarPlot;wideTable;title;Wide table:;Taula ampla:;Tabla ancha:;s
+DialogConfiguration;windowDisposition;label;Window disposition:;Disposici¢ de la finestra:;Disposici¢n de la ventana:;s
+DialogColumnsCalculator;writeInFormula;button;Write in the formula;Escriu a la f¢rmula;Escribir en la f¢rmula;s
+alert;wrongFeatureLocationFormat;text;Wrong format for 'feature' or 'location'. I cannot find the coordinates.;Format incorrecte per a 'feature' o 'location'. No es poden trobar les coordenades.;Formato incorrecto para 'feature' o 'location'. No se pueden encontrar las coordenadas.;si
+DialogUploadIC;xLongitude;label;X (longitude):;X (longitud):;X (longitud):;s
+DialogScatterPlot;xAxis;title;X axis;Eix X;Eje X;s
+DialogUploadIC;xMax;label;X maximum:;X mÖxima:;X m†xima:;s
+DialogQualityPositionalQuality;xMax;label;X maximum:;X mÖxima:;X m†xima:;s
+DialogUploadIC;xMin;label;X minimum:;X m°nima:;X m°nima:;s
+DialogQualityPositionalQuality;xMin;label;X minimum:;X m°nima:;X m°nima:;s
+DialogAddColumnPnt;xOrLon;label;X or Longitude:;X o longitud:;X o longitud:;s
+alert;xminHigherXmax;text;XMin value is higher than XMax value;El valor XMin Çs superior al valor XMax;El valor XMin es superior al valor XMax;si
+DialogColumnsCalculator;xor;button;xor;xor;xor;s
+DialogUploadIC;yLatitude;label;Y (latitude):;Y (latitud):;Y (latitud):;s
+DialogScatterPlot;yAxis;title;Y axis;Eix Y;Eje Y;s
+DialogUploadIC;yMax;label;Y maximum:;Y mÖxima:;Y m†xima:;s
+DialogQualityPositionalQuality;yMax;label;Y maximum:;Y mÖxima:;Y m†xima:;s
+DialogUploadIC;yMin;label;Y minimum:;Y m°nima:;Y m°nima:;s
+DialogQualityPositionalQuality;yMin;label;Y minimum:;Y m°nima:;Y m°nima:;s
+DialogAddColumnPnt;yOrLat;label;Y or Latitude:;Y o latitud:;Y o latitud:;s
+DialogFilterRowsByTime;year;option;Year;Any;A§o;s
+DialogUncertainty;years;label;Years;Anys;A§os;s
+DialogQualityTemporalQuality;years;label;Years;Anys;A§os;s
+DialogTableToolApiWarn;yesRecommended;button;Yes ? RECOMMENDED;S° ? RECOMANAT;S° ? RECOMENDADO;s
+DialogAggregateColumns;yes;label;Yes:;S°:;S°:;s
+DialogColumnsCalculator;yes;label;Yes:;S°:;S°:;s
+alert;yminHigherYmax;text;YMin value is higher than YMax value;El valor YMin Çs superior al valor YMax;El valor YMin es superior al valor YMax;si
+DialogTableToolApiWarn;body;text;"You are using data that comes from an API service. Using the tool {0} will be applied directly on the loaded data and not through an API query. Do you want to switch to ""{1}""?";"Esteu utilitzant dades que provenen d'un servei API. L'eina {0} s'aplicarÖ directament a les dades carregades i no mitjanáant una consulta a l'API. Voleu canviar a ""{1}""?";"Est† utilizando datos que provienen de un servicio API. La herramienta {0} se aplicar† directamente sobre los datos cargados y no a travÇs de una consulta a la API. ®Desea cambiar a ""{1}""?";s
+alert;connectMultiDatastreamsRequired;text;You have to connect MultiDatastreams node with a compatible node STA \n Required nodes: Party,Sensor,ObservedProperty,Thing.\n Optional nodes: Campaigns, License,Observations;Heu de connectar el node MultiDatastreams amb un node STA compatible \n Nodes obligatoris: Party,Sensor,ObservedProperty,Thing.\n Nodes opcionals: Campaigns, License,Observations;Debe conectar el nodo MultiDatastreams con un nodo STA compatible \n Nodos obligatorios: Party,Sensor,ObservedProperty,Thing.\n Nodos opcionales: Campaigns, License,Observations;si
+alert;linkEntitiesRequired;text;You need to Link entities required to create the new entity;Heu d'enllaáar les entitats necessÖries per crear l'entitat nova;Debe enlazar las entidades necesarias para crear la nueva entidad;si
+DialogSaveLayer;zoneId;label;Zone id:;Id de zona:;Id de zona:;s
+DialogAddColumnPnt;zoneId;label;Zone id:;Id de zona:;Id de zona:;s
