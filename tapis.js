@@ -247,13 +247,53 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 }
 
 
-window.onbeforeunload = function () { return "Your work will be lost."; }
+window.onbeforeunload = function () { return DonaCadena({cat: "Es perdran els canvis.", spa: "Se perderá el trabajo.", eng: "Your work will be lost."}); }
 
-function showInfoMessage(msg){
-	var elem=document.getElementById("clarification");
-	elem.innerHTML += (msg + "<br>");
-	elem.scrollTop=elem.scrollHeight;  //https://stackoverflow.com/questions/11715646/scroll-automatically-to-the-bottom-of-the-page
+var TapisClarificationLog = [];
+
+function ResolveClarificationArg(a)
+{
+	if (a && typeof a === "object" && (a.cat != null || a.spa != null || a.eng != null))
+		return DonaCadena(a);
+	return a;
 }
+
+function RenderClarificationEntry(entry)
+{
+	if (entry && typeof entry === "object" && entry.__i18n) {
+		var args = (entry.__args || []).map(ResolveClarificationArg);
+		return DonaCadenaFmt.apply(null, [entry.__i18n].concat(args));
+	}
+	if (entry && typeof entry === "object" && (entry.cat != null || entry.spa != null || entry.eng != null))
+		return DonaCadena(entry);
+	return entry;
+}
+
+function RefreshClarificationPanel()
+{
+	var elem = document.getElementById("clarification");
+	if (!elem)
+		return;
+	var html = "";
+	for (var i = 0; i < TapisClarificationLog.length; i++)
+		html += RenderClarificationEntry(TapisClarificationLog[i]) + "<br>";
+	elem.innerHTML = html;
+	elem.scrollTop = elem.scrollHeight;
+}
+
+function showInfoMessage(msg)
+{
+	var entry;
+	if (msg && typeof msg === "object" && (msg.cat != null || msg.spa != null || msg.eng != null) && arguments.length > 1)
+		entry = { __i18n: msg, __args: Array.prototype.slice.call(arguments, 1) };
+	else if (msg && typeof msg === "object" && msg.__i18n)
+		entry = msg;
+	else
+		entry = msg;
+	TapisClarificationLog.push(entry);
+	RefreshClarificationPanel();
+}
+
 
 
 //Returns the id of the selected resource in the last part of the path. So extracts in the "entities(id)" extracts the id
@@ -377,7 +417,7 @@ function ChangeToHTTPS(question) {
 		if (!question)
 			location.replace("https:" + location.href.substring(s_protocol.length));
 		else {
-			response=confirm("The page is not using secured HTTPS. Do you want to change to HTTPS?")
+			response=confirm(DonaCadena({cat: "La pàgina no usa HTTPS segur. Voleu canviar a HTTPS?", spa: "La página no usa HTTPS seguro. ¿Quiere cambiar a HTTPS?", eng: "The page is not using secured HTTPS. Do you want to change to HTTPS?"}))
 			if (response)
 				location.replace("https:" + location.href.substring(s_protocol.length));
 		}
@@ -477,22 +517,32 @@ function hideHelpToolTip(event, prefix) {
 }
 
 function textOperationButton(parentDivId, prefixDivId, operation, name, description, help, options, type) {
+	var desc = description ? DonaCadena(description) : null;
+	var helpText = help ? DonaCadena(help) : null;
+	var typeText = type ? DonaCadena(type) : null;
+	var nameStr = name ? DonaCadena(name) : "";
+	if (nameStr == null)
+		nameStr = "";
+	var label = desc ? desc : nameStr;
+	var startNodeLabel = DonaCadena({cat: "Node inicial", spa: "Nodo inicial", eng: "Start node"});
+	var leafNodeLabel = DonaCadena({cat: "Node final", spa: "Nodo final", eng: "Leaf node"});
 	var s = "<button ";
-	if (help)
+	if (helpText)
 		s+="onmouseover='showHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\", \"" + 
-			"<b>" + (description ? description : name) + "</b><hr>" + help + "<hr>" + (type ? type + "<br>" : "") + (options?.startNode ? "<i>Start node</i><br>" : "") + (options?.leafNode ? "<i>Leaf node</i><br>" : "") + 
+			"<b>" + EscapeForHelpTooltip(label) + "</b><hr>" + EscapeForHelpTooltip(helpText) + "<hr>" + (typeText ? EscapeForHelpTooltip(typeText) + "<br>" : "") + (options?.startNode ? "<i>" + EscapeForHelpTooltip(startNodeLabel) + "</i><br>" : "") + (options?.leafNode ? "<i>" + EscapeForHelpTooltip(leafNodeLabel) + "</i><br>" : "") + 
 			"\")' onmousemove='moveHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\")' onmouseout='hideHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\")' "
-	return s + "class='generalButton' onclick='addCircularImage(" + (parentDivId ? "event" : "null") + ", "+ (parentDivId ? ("\""+parentDivId+"\"") : "null") +", \"" + name + "\", \"" + operation + ".png\");'><img src='" + operation + ".png' height='20' valign='middle'> " + (description ? description : name) + "</button> ";
+	return s + "class='generalButton' onclick='addCircularImage(" + (parentDivId ? "event" : "null") + ", "+ (parentDivId ? ("\""+parentDivId+"\"") : "null") +", \"" + EscapeForJsHtmlAttr(nameStr) + "\", \"" + operation + ".png\");'><img src='" + operation + ".png' height='20' valign='middle'> " + label + "</button> ";
 }
 
 async function InitSTAPage() {
+	InitTapisLanguage();
 	startProj4();
 	await startDGGAL();
 	var response=await HTTPJSONData("config.json");
 	config=(response && response.obj) ? response.obj : null;
 	if (!config)
 	{
-		showInfoMessage("Error loading \'config.json\'");
+		showInfoMessage({cat: "Error en carregar 'config.json'", spa: "Error al cargar 'config.json'", eng: "Error loading 'config.json'"});
 		return;
 	}
 	
@@ -514,7 +564,7 @@ async function AnalyzeQueryParams() {
 			var j = kvp[i_key].indexOf("=");  // Gets the first index where a space occours
 			if (j==-1)
 			{
-				alert("Format error in query URL '"+location.search+"', Key and value pair (KVP) '"+kvp[i_key]+"' without '='.").
+				alert(DonaCadenaFmt({cat: "Error de format a l'URL de consulta '{0}', el parell clau-valor (KVP) '{1}' no té '='.", spa: "Error de formato en la URL de consulta '{0}', el par clave-valor (KVP) '{1}' no tiene '='.", eng: "Format error in query URL '{0}', Key and value pair (KVP) '{1}' without '='."}, location.search, kvp[i_key])).
 				break;
 			}
 			query[unescape(kvp[i_key].substring(0, j)).toUpperCase()]=unescape(kvp[i_key].substring(j+1));
@@ -526,14 +576,14 @@ async function AnalyzeQueryParams() {
 				var value=await HTTPJSONData(query["SCHEMA"]);
 				net=(value && value.obj) ? value.obj : null;
 				if (!net)
-					showInfoMessage("Error downloading TAPIS schema \'"+query["SCHEMA"]+"\'");
+					showInfoMessage({cat: "Error en baixar l'esquema TAPIS «{0}»", spa: "Error al descargar el esquema TAPIS «{0}»", eng: "Error downloading TAPIS schema '{0}'"}, query["SCHEMA"]);
 			} catch (error) {
-				showInfoMessage("Error downloading TAPIS schema \'"+query["SCHEMA"]+"\': " + error.message);
+				showInfoMessage({cat: "Error en baixar l'esquema TAPIS «{0}»: {1}", spa: "Error al descargar el esquema TAPIS «{0}»: {1}", eng: "Error downloading TAPIS schema '{0}': {1}"}, query["SCHEMA"], error.message);
 				net=null;
 			}
 			if (net) {
 				openNetwork(net);
-				showInfoMessage('Download TAPIS schema completed.');
+				showInfoMessage({cat: "S'ha completat la baixada de l'esquema TAPIS.", spa: "Se ha completado la descarga del esquema TAPIS.", eng: "Download TAPIS schema completed."});
 			}
 		}
 		if (query["OPEN"]) {
@@ -549,7 +599,7 @@ async function AnalyzeQueryParams() {
 				}
 			}
 			if (!found)
-				showInfoMessage("Error opening \'" + query["OPEN"] + "\'. Not found in the schema");
+				showInfoMessage({cat: "Error en obrir «{0}». No s'ha trobat a l'esquema", spa: "Error al abrir «{0}». No se ha encontrado en el esquema", eng: "Error opening '{0}'. Not found in the schema"}, query["OPEN"]);
 		}
 		if (query["REFRESH"]) {
 			await reloadSTA();
@@ -573,7 +623,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 				(i+1)%nCol==0 || i == ServicesAndAPIsArray.length-1 ? "<br>" : " ");
 	}
 	provisional.push("</div>");
-	cdns.push(generalBox.replace("TITLE", ServicesAndAPIsType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+	cdns.push(generalBox.replace("TITLE", DonaCadena(ServicesAndAPIsType.plural)).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 	
 	provisional=[];
 	for (var i = 0; i < STAEntitiesArray.length; i++) { //Plural
@@ -585,7 +635,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 	if (provisional.length>1){
 		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
 		provisional.push("</div>");
-		cdns.push(generalBox.replace("TITLE", STAEntitiesType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+		cdns.push(generalBox.replace("TITLE", DonaCadena(STAEntitiesType.plural)).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 	}
 		
 
@@ -605,7 +655,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 	if (provisional.length>1){
 		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
 		provisional.push("</div>");
-		cdns.push(generalBox.replace("TITLE", STAEntitiesType.pluralEdit).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+		cdns.push(generalBox.replace("TITLE", DonaCadena(STAEntitiesType.pluralEdit)).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 	}
 
 	provisional=[];
@@ -618,7 +668,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 	if (provisional.length>1){
 		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
 		provisional.push("</div>");
-		cdns.push(generalBox.replace("TITLE",STASpecialQueriesType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+		cdns.push(generalBox.replace("TITLE",DonaCadena(STASpecialQueriesType.plural)).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 	}
 	provisional=[];
 	for (var i = 0; i < STAOperationsArray.length; i++) {
@@ -630,7 +680,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 	if (provisional.length>1){
 		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
 		provisional.push("</div>");
-		cdns.push(generalBox.replace("TITLE",STAOperationsType.plural).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
+		cdns.push(generalBox.replace("TITLE",DonaCadena(STAOperationsType.plural)).replace("COLOR", "rgb(127,217,255)").replace("CONTENT", provisional.join("")));
 	}
 
 	provisional=[];
@@ -643,7 +693,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 	if (provisional.length>1){
 		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
 		provisional.push("</div>");
-		cdns.push(generalBox.replace("TITLE",TableOperationsType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
+		cdns.push(generalBox.replace("TITLE",DonaCadena(TableOperationsType.plural)).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
 	}
 
 	provisional=[];
@@ -656,7 +706,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 	if (provisional.length>1){
 		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
 		provisional.push("</div>");
-		cdns.push(generalBox.replace("TITLE",tableStatisticsVisualizeType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
+		cdns.push(generalBox.replace("TITLE",DonaCadena(tableStatisticsVisualizeType.plural)).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
 	}
 
 	provisional=[];
@@ -669,7 +719,7 @@ function PopulateContextMenu(nodeId){ //Change to show only linkable nodes
 	if (provisional.length>1){
 		provisional[0]="<div class='tdGeneralButtons contextMenuGeneralButtons '>" + provisional[0];
 		provisional.push("</div>");
-		cdns.push(generalBox.replace("TITLE",dataQualityType.plural).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
+		cdns.push(generalBox.replace("TITLE",DonaCadena(dataQualityType.plural)).replace("COLOR","rgb(183,183,183)").replace("CONTENT", provisional.join("")));
 	}
 	document.getElementById("ButtonsContextMenuObjects").innerHTML = cdns.join("");
 }
@@ -869,17 +919,17 @@ async function getSimplifyGUFRecord(metadata){
 	var response=await HTTPJSONData(metadata['link']['@href']);
 	var wpsexecute=(response && response.text) ? response.text : null;
 	if (!wpsexecute) {
-		showInfoMessage("Error retrieving "+metadata['link']['@href']);
+		showInfoMessage({cat: "Error en recuperar {0}", spa: "Error al recuperar {0}", eng: "Error retrieving {0}"}, metadata['link']['@href']);
 		return simpleUrlRecord;
 	}
 	var wpsex=JSON.parse(xml2json(parseXml(wpsexecute), false, null));
 	if (!wpsex || !wpsex['wps:ExecuteResponse'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'] || !wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'].length) {
-		showInfoMessage("Error retrieving "+metadata['link']['@href']);
+		showInfoMessage({cat: "Error en recuperar {0}", spa: "Error al recuperar {0}", eng: "Error retrieving {0}"}, metadata['link']['@href']);
 		return simpleUrlRecord;
 	}
 	var outp=wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'][wpsex['wps:ExecuteResponse']['wps:ProcessOutputs']['wps:Output'].length-1]
 	if (!outp || !outp['wps:Data'] || !outp['wps:Data']['wps:ComplexData'] || !outp['wps:Data']['wps:ComplexData']['guf:GUF_FeedbackItem']) {
-		showInfoMessage("Error retrieving "+metadata['link']['@href']);
+		showInfoMessage({cat: "Error en recuperar {0}", spa: "Error al recuperar {0}", eng: "Error retrieving {0}"}, metadata['link']['@href']);
 		return simpleUrlRecord;
 	}
 	var feedbackItem=outp['wps:Data']['wps:ComplexData']['guf:GUF_FeedbackItem'];
@@ -961,7 +1011,7 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 			response = await fetch(url_fetch);
 	}
 	catch (error) {
-		showInfoMessage('There was an error with ' + node.STAURL + ": " + error.message);
+		showInfoMessage({cat: "S'ha produït un error amb {0}: {1}", spa: "Se ha producido un error con {0}: {1}", eng: "There was an error with {0}: {1}"}, node.STAURL, error.message);
 		console.log('There was an error', error);
 		node.STAdata = null;
 		networkNodes.update(node);
@@ -969,7 +1019,7 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 	}
 	// Uses the 'optional chaining' operator
 	if (!(response?.ok)) {
-		showInfoMessage("HTTP Response Code: " + response?.status + " reading <small>" + node.STAURL + "</small>: " + response?.statusText);
+		showInfoMessage({cat: "Codi de resposta HTTP: {0} en llegir {1}: {2}", spa: "Código de respuesta HTTP: {0} al leer {1}: {2}", eng: "HTTP Response Code: {0} reading {1}: {2}"}, response?.status, "<small>" + node.STAURL + "</small>", response?.statusText);
 		console.log("HTTP Response Code: " + response?.status + ": " + response?.statusText);
 		node.STAdata = null;
 		networkNodes.update(node);
@@ -984,14 +1034,14 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 			jsonData = await response.json();
 	} catch (error) {
 		if (error instanceof SyntaxError) {
-			showInfoMessage('Syntax error reading ' + node.STAURL + ": " + error.message);
+			showInfoMessage({cat: "Error de sintaxi en llegir {0}: {1}", spa: "Error de sintaxis al leer {0}: {1}", eng: "Syntax error reading {0}: {1}"}, node.STAURL, error.message);
 			console.log('There was a SyntaxError', error);
 			node.STAdata = null;
 			networkNodes.update(node);
 			return;
 		}
 		else {
-			showInfoMessage('Error interpreting ' + node.STAURL + ": " + error.message);
+			showInfoMessage({cat: "Error en interpretar {0}: {1}", spa: "Error al interpretar {0}: {1}", eng: "Error interpreting {0}: {1}"}, node.STAURL, error.message);
 			console.log('There was an error', error);
 			node.STAdata = null;
 			networkNodes.update(node);
@@ -1066,7 +1116,7 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 		}
 		networkNodes.update(node);
 		if (node.image!="FilterRowsByTime.png") {
-			showInfoMessage("Completed."); 
+			showInfoMessage({cat: "S'ha completat.", spa: "Completado.", eng: "Completed."}); 
 		}
 		updateQueryAndTableArea(node);
 		await UpdateChildenLoadJSONCallback(node);
@@ -1137,7 +1187,7 @@ function RetrieveMeaningTableCallback(usage_descr, params_function) {
 	if (usage_descr.codeMediaType=="application/json" && usage_descr.schema==urlSchemaMeaning)
 		params_function.node.STAdataAttributes=JSON.parse(usage_descr.code);  //The saved format is tha TAPIS internal format
 	networkNodes.update(params_function.node);
-	showInfoMessage("Meaning retrieved from NiMMbus.");
+	showInfoMessage({cat: "S'ha recuperat el significat des de NiMMbus.", spa: "Se ha recuperado el significado des de NiMMbus.", eng: "Meaning retrieved from NiMMbus."});
 }
 
 
@@ -1159,7 +1209,7 @@ function RetrieveMeaningTable(event, type) {
 		currentNode.STAdata[0]=createEmptyRecordData(currentNode.STAdataAttributes);
 	}
 	if (!currentNode.STAdata) {
-		if (confirm("No data has been loaded. Do you want to close this window anyway?"))
+		if (confirm(DonaCadena({cat: "No s'han carregat dades. Voleu tancar aquesta finestra igualment?", spa: "No se han cargado datos. ¿Quiere cerrar esta ventana de todos modos?", eng: "No data has been loaded. Do you want to close this window anyway?"})))
 			hideNodeDialog("DialogImport"+type);
 	}
 	else{
@@ -1215,7 +1265,7 @@ function ReadFileImportCSVW(event) {
 		}
 		catch (e) 
 		{
-			showInfoMessage("JSON message parse error: " + e + " The file content is:\n" + reader.result);
+			showInfoMessage({cat: "Error d'anàlisi del missatge JSON: {0} El contingut del fitxer és:\n{1}", spa: "Error de análisis del mensaje JSON: {0} El contenido del archivo es:\n{1}", eng: "JSON message parse error: {0} The file content is:\n{1}"}, e, reader.result);
 			node.STAdataAttributes=null;
 			networkNodes.update(node);
 			return;
@@ -1228,11 +1278,11 @@ function ReadURLImportCSVW() {
 	var node=getNodeDialog("DialogImportCSV");
 	HTTPJSONData(document.getElementById("DialogImportMeaningCSVSourceURLInput").value).then(
 				function(value) { 
-					showInfoMessage('Download CSVW completed.'); 
+					showInfoMessage({cat: "S'ha completat la baixada del CSVW.", spa: "Se ha completado la descarga del CSVW.", eng: "Download CSVW completed."}); 
 					TransformTextCSVWToDataAttributes(value.text, node);
 				},
 				function(error) { 
-					showInfoMessage('Error downloading CSVW. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en baixar CSVW. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al descargar CSVW. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error downloading CSVW. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -1258,7 +1308,7 @@ function ReadFileImportGeoJSONSchema(event) {
 		}
 		catch (e) 
 		{
-			showInfoMessage("JSON message parse error: " + e + " The file content is:\n" + reader.result);
+			showInfoMessage({cat: "Error d'anàlisi del missatge JSON: {0} El contingut del fitxer és:\n{1}", spa: "Error de análisis del mensaje JSON: {0} El contenido del archivo es:\n{1}", eng: "JSON message parse error: {0} The file content is:\n{1}"}, e, reader.result);
 			node.STAdataAttributes=null;
 			networkNodes.update(node);
 			return;
@@ -1271,13 +1321,13 @@ function ReadURLImportGeoJSONSchema() {
 	var node=getNodeDialog("DialogImportGeoJSON");
 	HTTPJSONData(document.getElementById("DialogImportMeaningGeoJSONSourceURLInput").value).then(
 				function(value) { 
-					showInfoMessage('Download GeoJSON schema completed.'); 
+					showInfoMessage({cat: "S'ha completat la baixada de l'esquema GeoJSON.", spa: "Se ha completado la descarga del esquema GeoJSON.", eng: "Download GeoJSON schema completed."}); 
 					node.STAdataAttributes=TransformTextGeoJSONSchemaToDataAttributes(value.text);
 					networkNodes.update(node);
 					UpdateChildenTable(node);
 				},
 				function(error) { 
-					showInfoMessage('Error downloading GeoJSON Schema. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en baixar l'esquema GeoJSON. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al descargar el esquema GeoJSON. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error downloading GeoJSON Schema. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -1350,7 +1400,7 @@ function TransformTextCSVToTable(csvText, url, node) {
 	try {
 		data = TransformCSVToTable(csvText,node);
 	} catch (e) {
-		showInfoMessage("CSV parse error: " + e + " The file content fragment:\n" + csvText.substring(0, 1000));
+		showInfoMessage({cat: "Error en l'anàlisi del CSV: {0} Fragment del contingut del fitxer:\n{1}", spa: "Error en el análisis del CSV: {0} Fragmento del contenido del archivo:\n{1}", eng: "CSV parse error: {0} The file content fragment:\n{1}"}, e, csvText.substring(0, 1000));
 		data = null;
 	}
 	if (data) {
@@ -1358,7 +1408,7 @@ function TransformTextCSVToTable(csvText, url, node) {
 		node.STAdata=data;
 		if (url)
 			node.STAfileUrl=url;
-		if (node.STAISOAlert) alert ("One of the attributes contains data that looks like a date. The CSV import process cannot distinguish whether this value is a valid date or another type of data (for example, a time interval), which causes an error. The affected values have been loaded as null. To preserve and visualize this information, reload the CSV file with the Import numbers as strings option enabled. Then, use the meaning functionality to convert the data to the appropriate type")
+		if (node.STAISOAlert) alert(DonaCadena({cat: "Un dels atributs conté dades que semblen una data. El procés d'importació de CSV no pot distingir si aquest valor és una data vàlida o un altre tipus de dada (per exemple, un interval de temps), cosa que provoca un error. Els valors afectats s'han carregat com a nuls. Per conservar i visualitzar aquesta informació, torneu a carregar el fitxer CSV amb l'opció Importa els números com a cadenes activada. Després, useu la funcionalitat de significat per convertir les dades al tipus adequat", spa: "Uno de los atributos contiene datos que parecen una fecha. El proceso de importación de CSV no puede distinguir si este valor es una fecha válida u otro tipo de dato (por ejemplo, un intervalo de tiempo), lo que provoca un error. Los valores afectados se han cargado como nulos. Para conservar y visualizar esta información, vuelva a cargar el archivo CSV con la opción Importar los números como cadenas activada. Después, use la funcionalidad de significado para convertir los datos al tipo adecuado", eng: "One of the attributes contains data that looks like a date. The CSV import process cannot distinguish whether this value is a valid date or another type of data (for example, a time interval), which causes an error. The affected values have been loaded as null. To preserve and visualize this information, reload the CSV file with the Import numbers as strings option enabled. Then, use the meaning functionality to convert the data to the appropriate type"}))
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		UpdateChildenTable(node);
@@ -1398,11 +1448,11 @@ function ReadURLImportCSV(event, url, security) {
 
 	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, node.STAURL)).then(
 				function(value) { 
-					showInfoMessage('Download CSV completed.'); 
+					showInfoMessage({cat: "S'ha completat la baixada de CSV.", spa: "Se ha completado la descarga de CSV.", eng: "Download CSV completed."}); 
 					TransformTextCSVToTable(value.text, node.STAURL, node);
 				},
 				function(error) { 
-					showInfoMessage('Error downloading CSV. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en baixar el CSV. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al descargar el CSV. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error downloading CSV. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -1414,9 +1464,9 @@ function TransformBinaryDBFToTable(buffer, url) {
 	node.STAdata=dbf.records;
 	node.STAdataAttributes=getDataAttributesDBF(dbf);
 	if (dbf.records.length==0)
-		showInfoMessage("DBF table has no records.");
+		showInfoMessage({cat: "La taula DBF no té registres.", spa: "La tabla DBF no tiene registros.", eng: "DBF table has no records."});
 	else
-		showInfoMessage("DBF table has been loaded.");
+		showInfoMessage({cat: "S'ha carregat la taula DBF.", spa: "Se ha cargado la tabla DBF.", eng: "DBF table has been loaded."});
 	if (node.STAdata) {
 		if (url)
 			node.STAfileUrl=url;
@@ -1424,7 +1474,7 @@ function TransformBinaryDBFToTable(buffer, url) {
 		updateQueryAndTableArea(node);
 		UpdateChildenTable(node);
 	} else {
-		showInfoMessage("DBF parse error: " + e);
+		showInfoMessage({cat: "Error d'anàlisi de la DBF: {0}", spa: "Error de análisis de la DBF: {0}", eng: "DBF parse error: {0}"}, e);
 		node.STAdata=null;
 		networkNodes.update(node);
 		return;
@@ -1456,11 +1506,11 @@ function ReadURLImportDBF(event, url, security) {
 
 	HTTPBinaryData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, node.STAURL)).then(
 				function(value) { 
-					showInfoMessage('Download DBF completed.'); 
+					showInfoMessage({cat: "S'ha completat la baixada de la DBF.", spa: "Se ha completado la descarga de la DBF.", eng: "Download DBF completed."}); 
 					TransformBinaryDBFToTable(value.arrayBuf, document.getElementById("DialogImportDBFSourceURLInput").value);
 				},
 				function(error) { 
-					showInfoMessage('Error downloading DBF. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en baixar la DBF. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al descargar la DBF. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error downloading DBF. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -1471,9 +1521,9 @@ function TransformBinaryGPKGToTable(buffer, url, node) {
 		node.STAdata=gpkg.records;
 		node.STAdataAttributes=gpkg.attributes;
 		if (gpkg.records.length==0)
-			showInfoMessage("GeoPackage database has no tables.");
+			showInfoMessage({cat: "La base de dades GeoPackage no conté taules.", spa: "La base de datos GeoPackage no contiene tablas.", eng: "GeoPackage database has no tables."});
 		else
-			showInfoMessage("GeoPackage database table has been loaded.");
+			showInfoMessage({cat: "S'ha carregat la taula de la base de dades GeoPackage.", spa: "Se ha cargado la tabla de la base de datos GeoPackage.", eng: "GeoPackage database table has been loaded."});
 		if (node.STAdata) {
 			if (url)
 				node.STAfileUrl=url;
@@ -1483,7 +1533,7 @@ function TransformBinaryGPKGToTable(buffer, url, node) {
 			updateQueryAndTableArea(node);
 			UpdateChildenTable(node);
 		} else {
-			showInfoMessage("Geopackage parse error: " + e);
+			showInfoMessage({cat: "Error en l'anàlisi de GeoPackage: {0}", spa: "Error en el análisis de GeoPackage: {0}", eng: "Geopackage parse error: {0}"}, e);
 			node.STAdata=null;
 			networkNodes.update(node);
 			return;
@@ -1496,15 +1546,15 @@ function TransformBinaryGPKGTableToTable(node, tableName) {
 	node.STAdata=gpkg.records;
 	node.STAdataAttributes=gpkg.attributes;
 	if (gpkg.records.length==0)
-		showInfoMessage("GeoPackage table has no records.");
+		showInfoMessage({cat: "La taula GeoPackage no conté registres.", spa: "La tabla GeoPackage no contiene registros.", eng: "GeoPackage table has no records."});
 	else
-		showInfoMessage("GeoPackage table has been loaded.");
+		showInfoMessage({cat: "S'ha carregat la taula GeoPackage.", spa: "Se ha cargado la tabla GeoPackage.", eng: "GeoPackage table has been loaded."});
 	if (node.STAdata) {
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		UpdateChildenTable(node);
 	} else {
-		showInfoMessage("Geopackage parse error: " + e);
+		showInfoMessage({cat: "Error en l'anàlisi de GeoPackage: {0}", spa: "Error en el análisis de GeoPackage: {0}", eng: "Geopackage parse error: {0}"}, e);
 		node.STAdata=null;
 		networkNodes.update(node);
 		return;
@@ -1528,19 +1578,19 @@ function ReadURLImportGPKG(event, url, security) {
 				function(value) { 
 					if (value.arrayBuf) {
 						if (value.responseHeaders["Content-type"]!="application/geopackage+sqlite3") {
-							showInfoMessage('Error downloading GPKG. <br>Unexpected media type: ' + value.responseHeaders["Content-type"]);
+							showInfoMessage({cat: "Error en baixar GPKG. <br>Tipus de mitjà inesperat: {0}", spa: "Error al descargar GPKG. <br>Tipo de medio inesperado: {0}", eng: "Error downloading GPKG. <br>Unexpected media type: {0}"}, value.responseHeaders["Content-type"]);
 							console.log('Error downloading GPKG. Unexpected media type: ' + value.responseHeaders["Content-type"]);
 						} else {
-							showInfoMessage('Download GPKG completed.'); 
+							showInfoMessage({cat: "S'ha completat la baixada de GPKG.", spa: "Se ha completado la descarga de GPKG.", eng: "Download GPKG completed."}); 
 							TransformBinaryGPKGToTable(value.arrayBuf, url ? url : document.getElementById("DialogImportGPKGSourceURLInput").value, node);
 						}
 					} else {
-						showInfoMessage('Error downloading GPKG. <br>Response: ' + value.text);
+						showInfoMessage({cat: "Error en baixar GPKG. <br>Resposta: {0}", spa: "Error al descargar GPKG. <br>Respuesta: {0}", eng: "Error downloading GPKG. <br>Response: {0}"}, value.text);
 						console.log("Error downloading GPKG.") ;
 					}
 				},
 				function(error) { 
-					showInfoMessage('Error downloading GPKG. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en baixar GPKG. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al descargar GPKG. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error downloading GPKG. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -1553,22 +1603,22 @@ function TransformTextJSONLDToTable(jsonldText, addGeo, addObs, url, node) {
 	}
 	catch (e) 
 	{
-		showInfoMessage("JSONLD parse error: " + e + "\n File content fragment:\n" + jsonldText.substring(0, 1000));
+		showInfoMessage({cat: "Error en l'anàlisi de JSONLD: {0}\n Fragment del contingut del fitxer:\n{1}", spa: "Error en el análisis de JSONLD: {0}\n Fragmento del contenido del archivo:\n{1}", eng: "JSONLD parse error: {0}\n File content fragment:\n{1}"}, e, jsonldText.substring(0, 1000));
 		node.STAdata=null;
 		networkNodes.update(node);
 		return;
 	}
 	var result=ParseJSONLD(jsonld, addGeo, addObs)
 	if (result.error) {
-		showInfoMessage("JSONLD parse error: " + result.error + "\n File content fragment:\n" + jsonldText.substring(0,1000));
+		showInfoMessage({cat: "Error en l'anàlisi de JSONLD: {0}\n Fragment del contingut del fitxer:\n{1}", spa: "Error en el análisis de JSONLD: {0}\n Fragmento del contenido del archivo:\n{1}", eng: "JSONLD parse error: {0}\n File content fragment:\n{1}"}, result.error, jsonldText.substring(0,1000));
 		return;
 	}
 	node.STAdata=result.data;
 	node.STAdataAttributes=result.dataAttributes;
 	if (node.STAdata.length==0)
-		showInfoMessage("JSON-LD resulted in no records.");
+		showInfoMessage({cat: "JSON-LD no ha generat cap registre.", spa: "JSON-LD no ha generado ningún registro.", eng: "JSON-LD resulted in no records."});
 	else
-		showInfoMessage("JSON-LD has been loaded.");
+		showInfoMessage({cat: "S'ha carregat JSON-LD.", spa: "Se ha cargado JSON-LD.", eng: "JSON-LD has been loaded."});
 	if (node.STAdata) {
 		if (url)
 			node.STAfileUrl=url;
@@ -1576,7 +1626,7 @@ function TransformTextJSONLDToTable(jsonldText, addGeo, addObs, url, node) {
 		updateQueryAndTableArea(node);
 		UpdateChildenTable(node);
 	} else {
-		showInfoMessage("JSONLD parse error: " + e + "\n File content fragment:\n" + jsonldText.substring(0,1000));
+		showInfoMessage({cat: "Error en l'anàlisi de JSONLD: {0}\n Fragment del contingut del fitxer:\n{1}", spa: "Error en el análisis de JSONLD: {0}\n Fragmento del contenido del archivo:\n{1}", eng: "JSONLD parse error: {0}\n File content fragment:\n{1}"}, e, jsonldText.substring(0,1000));
 		node.STAdata=null;
 		networkNodes.update(node);
 		return;
@@ -1589,7 +1639,7 @@ function ReadFileImportJSONLD(event) {
 	var reader = new FileReader();
 	reader.onload = function() {
 		TransformTextJSONLDToTable(reader.result, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, null, node);
-		showInfoMessage("JSON-LD has been loaded.");
+		showInfoMessage({cat: "S'ha carregat JSON-LD.", spa: "Se ha cargado JSON-LD.", eng: "JSON-LD has been loaded."});
 	};
 	reader.readAsText(input.files[0]);   //By default it assumes "UTF8" as encoding
 }
@@ -1611,11 +1661,11 @@ function ReadURLImportJSONLD(event, url, security) {
 
 	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, node.STAURL)).then(
 				function(value) { 
-					showInfoMessage('Download JSONLD completed.'); 
+					showInfoMessage({cat: "S'ha completat la baixada de JSONLD.", spa: "Se ha completado la descarga de JSONLD.", eng: "Download JSONLD completed."}); 
 					TransformTextJSONLDToTable(value.obj ? value.obj : value.text, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, node.STAURL, node);
 				},
 				function(error) { 
-					showInfoMessage('Error downloading JSONLD. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en baixar el JSONLD. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al descargar el JSONLD. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error downloading JSONLD. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -1630,7 +1680,7 @@ function TransformTextJSONToTable(json, jsonText, url, node, lastOne) {
 		}
 		catch (e) 
 		{
-			showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0, 1000));
+			showInfoMessage({cat: "Error d'anàlisi del JSON: {0}\n Fragment del contingut del fitxer:\n{1}", spa: "Error de análisis del JSON: {0}\n Fragmento del contenido del archivo:\n{1}", eng: "JSON parse error: {0}\n File content fragment:\n{1}"}, e, jsonText.substring(0, 1000));
 			node.STAdata=null;
 			networkNodes.update(node);
 			return;
@@ -1646,9 +1696,9 @@ function TransformTextJSONToTable(json, jsonText, url, node, lastOne) {
 
 	if (lastOne=="yes" || lastOne=="onlyOne"){
 		if (node.STAdata.length==0)
-			showInfoMessage("JSON resulted in no records.");
+			showInfoMessage({cat: "El JSON no ha generat cap registre.", spa: "El JSON no ha generado ningún registro.", eng: "JSON resulted in no records."});
 		else
-			showInfoMessage("JSON has been loaded.");
+			showInfoMessage({cat: "S'ha carregat el JSON.", spa: "Se ha cargado el JSON.", eng: "JSON has been loaded."});
 		if (node.STAdata) {
 			node.STAdataAttributes=getDataAttributes(node.STAdata);
 			if (url)
@@ -1657,7 +1707,7 @@ function TransformTextJSONToTable(json, jsonText, url, node, lastOne) {
 			updateQueryAndTableArea(node);
 			UpdateChildenTable(node);
 		} else {
-			showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0,1000));
+			showInfoMessage({cat: "Error d'anàlisi del JSON: {0}\n Fragment del contingut del fitxer:\n{1}", spa: "Error de análisis del JSON: {0}\n Fragmento del contenido del archivo:\n{1}", eng: "JSON parse error: {0}\n File content fragment:\n{1}"}, e, jsonText.substring(0,1000));
 			node.STAdata=null;
 			networkNodes.update(node);
 			return;
@@ -1697,7 +1747,7 @@ async function ReadFileImportJSON(event) {
 						}	
 					}
 				}
-		showInfoMessage("JSON has been loaded.");
+		showInfoMessage({cat: "S'ha carregat el JSON.", spa: "Se ha cargado el JSON.", eng: "JSON has been loaded."});
 				networkNodes.update(node);
 				updateQueryAndTableArea(node);
 				UpdateChildenTable(node);
@@ -1708,7 +1758,7 @@ async function ReadFileImportJSON(event) {
 		text=await  file.text();
 		TransformTextJSONToTable(null, text, null, node, "onlyOne");
 		updateQueryAndTableArea(node);
-		showInfoMessage("JSON has been loaded.");
+		showInfoMessage({cat: "S'ha carregat el JSON.", spa: "Se ha cargado el JSON.", eng: "JSON has been loaded."});
 	}
 }
 
@@ -1723,7 +1773,7 @@ function IsJSONaSTARootPage(json, jsonText) {
 		}
 		catch (e) 
 		{
-			showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0, 1000));
+			showInfoMessage({cat: "Error d'anàlisi del JSON: {0}\n Fragment del contingut del fitxer:\n{1}", spa: "Error de análisis del JSON: {0}\n Fragmento del contenido del archivo:\n{1}", eng: "JSON parse error: {0}\n File content fragment:\n{1}"}, e, jsonText.substring(0, 1000));
 			return false;
 		}
 	}
@@ -1754,7 +1804,7 @@ async function IsJSONaOGCAPI(json, jsonText) {
 		}
 		catch (e) 
 		{
-			showInfoMessage("JSON parse error: " + e + "\n File content fragment:\n" + jsonText.substring(0, 1000));
+			showInfoMessage({cat: "Error d'anàlisi del JSON: {0}\n Fragment del contingut del fitxer:\n{1}", spa: "Error de análisis del JSON: {0}\n Fragmento del contenido del archivo:\n{1}", eng: "JSON parse error: {0}\n File content fragment:\n{1}"}, e, jsonText.substring(0, 1000));
 			return false;
 		}
 	}
@@ -1794,10 +1844,10 @@ function ReadURLImportJSON(event, url, security) {
 	HTTPJSONData(node.STAURL, null, null, null, getHeadersFromSecurity(node.STAsecurity, node.STAURL)).then(
 				async function(value) {
 					if (typeof value.ok !== undefined && value.ok===false) {
-						showInfoMessage('Error downloading JSON');
+						showInfoMessage({cat: "Error en baixar el JSON", spa: "Error al descargar el JSON", eng: "Error downloading JSON"});
 						return; 
 					}
-					showInfoMessage('Download JSON completed.');
+					showInfoMessage({cat: "S'ha completat la baixada del JSON.", spa: "Se ha completado la descarga del JSON.", eng: "Download JSON completed."});
 					if (IsJSONaSTARootPage(value.obj, value.text)) {
 						delete node.OGCType;
 						node.image = "staRoot.png";
@@ -1815,7 +1865,7 @@ function ReadURLImportJSON(event, url, security) {
 						TransformTextJSONToTable(value.obj, value.text, node.STAURL, node, "onlyOne");
 				},
 				function(error) { 
-					showInfoMessage('Error downloading JSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en baixar el JSON. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al descargar el JSON. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error downloading JSON. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -1871,7 +1921,7 @@ function TransformTextGeoJSONToTable(jsonText, url, node) {
 	}
 	catch (e) 
 	{
-		showInfoMessage("GeoJSON parse error: " + e + " The file content fragment:\n" + jsonText.substring(0, 1000));
+		showInfoMessage({cat: "Error d'anàlisi del GeoJSON: {0} Fragment del contingut del fitxer:\n{1}", spa: "Error de análisis del GeoJSON: {0} Fragmento del contenido del archivo:\n{1}", eng: "GeoJSON parse error: {0} The file content fragment:\n{1}"}, e, jsonText.substring(0, 1000));
 		node.STAdata=null;
 		networkNodes.update(node);
 		return;
@@ -1883,7 +1933,7 @@ function TransformObjGeoJSONToTable(geojson, url, node) {
 	node.STAdata=TransformGeoJSONToTable(geojson);
 	if (!node.STAdata)
 	{
-		showInfoMessage("GeoJSON parse error. The only supported GeoJSONs are the ones containing a root type FeatureCollection.");
+		showInfoMessage({cat: "Error en l'anàlisi de GeoJSON. Els únics GeoJSON compatibles són els que contenen un tipus arrel FeatureCollection.", spa: "Error de análisis del GeoJSON. Los únicos GeoJSON compatibles son los que contienen un tipo raíz FeatureCollection.", eng: "GeoJSON parse error. The only supported GeoJSONs are the ones containing a root type FeatureCollection."});
 		networkNodes.update(node);
 		return;
 	}
@@ -1924,7 +1974,7 @@ function ReadURLImportGeoJSON() {
 	var node=getNodeDialog("DialogImportGeoJSON");
 	HTTPJSONData(document.getElementById("DialogImportGeoJSONSourceURLInput").value).then(
 				function(value) { 
-					showInfoMessage('Download GeoJSON completed.');
+					showInfoMessage({cat: "S'ha completat la baixada del GeoJSON.", spa: "Se ha completado la descarga del GeoJSON.", eng: "Download GeoJSON completed."});
 					if (value.obj) 
 						TransformObjGeoJSONToTable(value.obj, document.getElementById("DialogImportGeoJSONSourceURLInput").value, node);
 					else
@@ -1932,7 +1982,7 @@ function ReadURLImportGeoJSON() {
 
 				},
 				function(error) { 
-					showInfoMessage('Error downloading GeoJSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en baixar el GeoJSON. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al descargar el GeoJSON. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error downloading GeoJSON. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -2001,7 +2051,7 @@ function OpenLogin(event) {
 		},
 		function(e) 
 		{
-			alert("Signin error: " + e.error.message);
+			alert(DonaCadenaFmt({cat: "Error en l'inici de la sessió: {0}", spa: "Error al iniciar sesión: {0}", eng: "Signin error: {0}"}, e.error.message));
 			document.getElementById("UserInfoText").innerHTML="";
 			CriptoName=null;
 		}
@@ -2013,11 +2063,11 @@ function OpenLogout(event) {
 		function(success) {
 			document.getElementById("buttonOpenLogin").style.display="inline-block";
 			document.getElementById("buttonOpenLogout").style.display="none";
-			alert("Signed out from"+ " " + "authenix" + ". ");
+			alert(DonaCadenaFmt({cat: "S'ha tancat la sessió a {0}.", spa: "Se ha cerrado la sesión en {0}.", eng: "Signed out from {0}."}, "authenix"));
 			document.getElementById("UserInfoText").innerHTML="";
 			CriptoName=null;
 		}, function(e) {
-			alert("Signed out error: "  + e.error.message);
+			alert(DonaCadenaFmt({cat: "Error en tancar la sessió: {0}", spa: "Error al cerrar sesión: {0}", eng: "Signed out error: {0}"}, e.error.message));
 			document.getElementById("UserInfoText").innerHTML="";
 			CriptoName=null;
 		});
@@ -2102,7 +2152,7 @@ function GetSTAURLEvent(event, url) {
 
 async function AddMetadataToS3ServiceResponse(node) {
 	var obj, record;
-	showInfoMessage('Retrieving extra metadata from S3 Bucket. This may take some time...');
+	showInfoMessage({cat: "S'estan recuperant les metadades addicionals del contenidor S3. Això podria trigar una estona...", spa: "Se están recuperando los metadatos adicionales del contenedor S3. Esto puede tardar un tiempo...", eng: "Retrieving extra metadata from S3 Bucket. This may take some time..."});
 	for (var i=0; i<node.STAdata.length; i++) {
 		record=node.STAdata[i];
 		var locationURL=transformStringIntoLocation(record.href);
@@ -2137,7 +2187,7 @@ async function AddMetadataToS3ServiceResponse(node) {
 				updateQueryAndTableArea(node);
 		}
 	}
-	showInfoMessage('Metadata retrieval from the S3 Bucket completed.'); 
+	showInfoMessage({cat: "S'ha completat la recuperació de les metadades del contenidor S3.", spa: "Se ha completado la recuperación de los metadatos del contenedor S3.", eng: "Metadata retrieval from the S3 Bucket completed."}); 
 }
 
 function TransformS3ServiceResponseToDataAttributes(node, text) {
@@ -2179,13 +2229,13 @@ function GetDialogS3BucketEvent(event, url, security) {
 	HTTPJSONData(node.STAURL, null, null, null, getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, node.STAsecurity.S3)).then(
 				function(value) {
 					if (node.OGCType == "S3Buckets")
-						showInfoMessage('S3 Service bucket list request completed.'); 
+						showInfoMessage({cat: "S'ha completat la sol·licitud de la llista de contenidors del servei S3.", spa: "Se ha completado la solicitud de la lista de contenedores del servicio S3.", eng: "S3 Service bucket list request completed."}); 
 					else
-						showInfoMessage('S3 Bucket content request completed.'); 
+						showInfoMessage({cat: "S'ha completat la sol·licitud del contingut del contenidor S3.", spa: "Se ha completado la solicitud del contenido del contenedor S3.", eng: "S3 Bucket content request completed."}); 
 					TransformS3ServiceResponseToDataAttributes(node, value.text);
 				},
 				function(error) { 
-					showInfoMessage('Error in requesting S3 Bucket root folder. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en sol·licitar la carpeta arrel del contenidor S3. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al solicitar la carpeta raíz del contenedor S3. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error in requesting S3 Bucket root folder. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -2235,7 +2285,7 @@ function GetDialogEDCEvent(event) {
 		if (document.getElementById("DialogEDCounterPartyAddress"))
 			obj.counterPartyAddress=document.getElementById("DialogEDCounterPartyAddress").value;
 	} else {
-		alert("Catalog version not supported.")
+		alert(DonaCadena({cat: "La versió del catàleg no és compatible.", spa: "La versión del catálogo no es compatible.", eng: "Catalog version not supported."}))
 		return;
 	}
 	networkNodes.update(currentNode);
@@ -2245,11 +2295,11 @@ function GetDialogEDCEvent(event) {
 
 	HTTPJSONData(currentNode.STAURL, null, "POST", obj, {'Accept': '*/*', 'x-api-key': 'edc'}).then(
 				function(value) { 
-					showInfoMessage('EDC catalog request completed.'); 
+					showInfoMessage({cat: "S'ha completat la sol·licitud del catàleg EDC.", spa: "Se ha completado la solicitud del catálogo EDC.", eng: "EDC catalog request completed."}); 
 					TransformEDCCatalogResponseToDataAttributes(currentNode, value.obj);
 				},
 				function(error) { 
-					showInfoMessage('Error in requesting EDC catalog. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en sol·licitar el catàleg EDC. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al solicitar el catálogo EDC. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error in requesting EDC catalog. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);
@@ -2292,7 +2342,7 @@ function GetOptionsSelectDialog(suggestedURLs) {
 	var cdns=[], stas;
 	if (suggestedURLs)
 	{
-		cdns.push('<option value="">-- Select one option below --</option>');
+		cdns.push('<option value="">' + DonaCadena({cat: "-- Seleccioneu una opció a sota --", spa: "-- Seleccione una opción abajo --", eng: "-- Select one option below --"}) + '</option>');
 		for (var g=0; g<suggestedURLs.length; g++) {
 			cdns.push('<optgroup label="', suggestedURLs[g].group, '">');
 			stas=suggestedURLs[g].STAs;
@@ -2308,7 +2358,7 @@ function GetOptionsObjectSelectDialog(suggestedURLs) {
 	var cdns=[], stas;
 	if (suggestedURLs)
 	{
-		cdns.push('<option value="">-- Select one option below --</option>');
+		cdns.push('<option value="">' + DonaCadena({cat: "-- Seleccioneu una opció a sota --", spa: "-- Seleccione una opción abajo --", eng: "-- Select one option below --"}) + '</option>');
 		for (var g=0; g<suggestedURLs.length; g++) {
 			cdns.push('<optgroup label="', suggestedURLs[g].group, '">');
 			stas=suggestedURLs[g].URLs;
@@ -2778,12 +2828,12 @@ function AddJoinTablesRowMatching(nodeLeft, nodeRight, node, add)
 function ShowJoinTablesDialog(parentNodes, node) {
 	var dataLeft = parentNodes[0].STAdata;
 	if (!dataLeft || !dataLeft.length) {
-		document.getElementById("DialogJoinTablesRowMatching").innerHTML = "No data to show.";
+		document.getElementById("DialogJoinTablesRowMatching").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 																																																																																																																																																		}
 	if (parentNodes.length<2)
 	{
-		document.getElementById("DialogJoinTablesRowMatching").innerHTML = "Two tables are required.";
+		document.getElementById("DialogJoinTablesRowMatching").innerHTML = DonaCadena({cat: "Calen dues taules.", spa: "Se requieren dos tablas.", eng: "Two tables are required."});
 		return;
 	}
 	AddJoinTablesRowMatching(parentNodes[0], parentNodes[1], node, false);
@@ -2809,10 +2859,10 @@ function ShowOneValueDialog(node) {
 	var data = parentNode.STAdata;
 
 	if (!data || !data.length) {
-		document.getElementById("DialogOneValueTitle").innerHTML = "No data to show.";
+		document.getElementById("DialogOneValueTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
-	document.getElementById("DialogOneValueTitle").innerHTML = "Select value to see the last value";
+	document.getElementById("DialogOneValueTitle").innerHTML = DonaCadena({cat: "Seleccioneu el valor per veure el darrer valor", spa: "Seleccione el valor para ver el último valor", eng: "Select value to see the last value"});
 
 	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 	PopulateSelectSaveLayerDialog("DialogOneValueVariable", dataAttributes, node.STAOneValue && node.STAOneValue.variable ? node.STAOneValue.variable : "result");
@@ -2852,7 +2902,7 @@ function StopRefreshOneValue(event) {
 
 	if (node.STAtimeOut) {
 		clearTimeout(node.STAtimeOut);
-		showInfoMessage("Refresh cancelled.");
+		showInfoMessage({cat: "S'ha cancel·lat l'actualització.", spa: "Se ha cancelado la actualización.", eng: "Refresh cancelled."});
 	} else {
 		UnSubscribeTopicToWebHub(node.id);
 	}
@@ -2886,7 +2936,7 @@ function stopRefreshCountResults(event) {
 
 	if (node.STAtimeOut) {
 		clearInterval(node.STAtimeOut);
-		showInfoMessage("Refresh cancelled.");
+		showInfoMessage({cat: "S'ha cancel·lat l'actualització.", spa: "Se ha cancelado la actualización.", eng: "Refresh cancelled."});
 	}
 }
 
@@ -2925,7 +2975,7 @@ function StopRefreshSubscribe(event) {
 
 	if (node.STAtimeOut) {
 		clearTimeout(node.STAtimeOut);
-		showInfoMessage("Refresh cancelled.");
+		showInfoMessage({cat: "S'ha cancel·lat l'actualització.", spa: "Se ha cancelado la actualización.", eng: "Refresh cancelled."});
 	} else {
 		UnSubscribeTopicToWebHub(node.id);
 	}
@@ -2988,9 +3038,9 @@ var label, value;
 	}
 	networkNodes.update(node);
 	if (node.STAtimeOut)
-		showInfoMessage(node.label + ". Waiting " + node.STAOneValue.redrawPeriod + " seconds ...");
+		showInfoMessage({cat: "{0}. Esperant {1} segons ...", spa: "{0}. Esperando {1} segundos ...", eng: "{0}. Waiting {1} seconds ..."}, node.label, node.STAOneValue.redrawPeriod);
 	else
-		showInfoMessage(node.label + ". Waiting for updates ...");
+		showInfoMessage({cat: "{0}. Esperant actualitzacions ...", spa: "{0}. Esperando actualizaciones ...", eng: "{0}. Waiting for updates ..."}, node.label);
 
 	return node.label;
 }
@@ -2998,7 +3048,7 @@ var label, value;
 function addRecordToTableAndShow(node, record) {
 	node.STAdata.unshift(record);
 	networkNodes.update(node);
-	showInfoMessage("New record added to table. Waiting for updates ...");
+	showInfoMessage({cat: "S'ha afegit un registre nou a la taula. Esperant actualitzacions ...", spa: "Se ha añadido un nuevo registro a la tabla. Esperando actualizaciones ...", eng: "New record added to table. Waiting for updates ..."});
 	updateQueryAndTableArea(node);
 	UpdateChildenLoadJSONCallback(node);
 }
@@ -3023,7 +3073,7 @@ async function RequestLastObservationAndRefreshOneValueSTA(node) {
 					GetQueryParamSelectedSelectExpands(node.STASelectedExpands));
 
 	networkNodes.update(node);
-	showInfoMessage("Getting the last observation...");
+	showInfoMessage({cat: "S'està obtenint l'última Observation...", spa: "Se está obteniendo la última Observation...", eng: "Getting the last observation..."});
 	await LoadJSONNodeSTAData(node);
 
 	//Redraw the label
@@ -3061,14 +3111,14 @@ async function requestAndRefreshCountResults(node, period) {
 					GetQueryParamSelectedSelectExpands(node.STASelectedExpands));
 	node.STAURL = AddQueryParamsToURL(RemoveQueryParamFromURL(node.STAURL, "$count"), "$count=true");
 
-	showInfoMessage("Getting number of items");
+	showInfoMessage({cat: "S'està obtenint el nombre d'elements", spa: "Se está obteniendo el número de elementos", eng: "Getting number of items"});
 	var numberOfResults = await loadAPIDataWithReturn(node.STAURL, "CountResults");
 
 	//Redraw the label	
 	node.label = "Items: " + numberOfResults;
 
 	//Redraw	
-	showInfoMessage(node.label + ". Waiting " + period + " seconds ...");
+	showInfoMessage({cat: "{0}. Esperant {1} segons ...", spa: "{0}. Esperando {1} segundos ...", eng: "{0}. Waiting {1} seconds ..."}, node.label, period);
 	node.STAtimeOut=setTimeout(requestAndRefreshCountResults, period*1000, node, period);
 	networkNodes.update(node);
 }
@@ -3090,7 +3140,7 @@ var selectedExpands;
 	if (websub && websub.hub && websub.self && config.WebSocketUrl && config.WebHookUrl) {
 		SubscribeTopicToWebHub(config.WebSocketUrl, config.WebHookUrl, websub.hub, websub.self, node.id, 300, UpdateNodeId, showInfoMessage);
 	} else {
-		alert("This STA as a whole or this particular request does not support WebSbu and updates are not posible,")
+		alert(DonaCadena({cat: "Aquest STA en conjunt o aquesta petició en particular no admet WebSub i les actualitzacions no són possibles,", spa: "Este STA en conjunto o esta solicitud en particular no admite WebSub y las actualizaciones no son posibles,", eng: "This STA as a whole or this particular request does not support WebSbu and updates are not posible,"}))
 	}
 }
 
@@ -3115,13 +3165,13 @@ function AddKeysToFilter(url, obj, prefix) {
 				else if (value.coordinates)
 					coords=value.coordinates;
 				else {
-					alert("Wrong format for 'feature' or 'location'. I cannot find the coordinates.");
+					alert(DonaCadena({cat: "Format incorrecte per a 'feature' o 'location'. No es poden trobar les coordenades.", spa: "Formato incorrecto para 'feature' o 'location'. No se pueden encontrar las coordenadas.", eng: "Wrong format for 'feature' or 'location'. I cannot find the coordinates."}));
 					continue;
 				}
 				if (!Array.isArray(coords) || 
 					coords.length<2 || 
 					Array.isArray(coords[0]) || Array.isArray(coords[1])) {
-					alert("The coordinates format for 'feature' or 'location' is not supported. Only a Point structure is supported: Array of two decimal numbers.");
+					alert(DonaCadena({cat: "El format de coordenades per a 'feature' o 'location' no és compatible. Només s'admet una estructura Point: una matriu de dos nombres decimals.", spa: "El formato de coordenadas para 'feature' o 'location' no es compatible. Solo se admite una estructura Point: un array de dos números decimales.", eng: "The coordinates format for 'feature' or 'location' is not supported. Only a Point structure is supported: Array of two decimal numbers."}));
 					continue;
 				}
 				url+=(url=="" ? "" : " and ") + "st_equals(" + propName + ", geography'POINT (" + coords[0] + " " + coords[1] + ")')";
@@ -3295,7 +3345,7 @@ async function UploadObservationsSTA(url, data, dataAttributes, selectedOptions)
 		datastreamIds[i]=await GetDatastreamId(url, partyId, obsPropId, sensorId, thingId, dataAttributesArray[i], dataAttributes[dataAttributesArray[i]].description, dataAttributes[dataAttributesArray[i]].UoM, dataAttributes[dataAttributesArray[i]].UoMSymbol, dataAttributes[dataAttributesArray[i]].UoMDefinition);
 		if (!datastreamIds[i] && datastreamIds[i]!==0)
 			return;
-		showInfoMessage("Datastream <a href='" + getUrlToId(url, "Datastreams", datastreamIds[i]) + "' target='_blank'>" + datastreamIds[i] + "</a> available in STA");
+		showInfoMessage({cat: "Datastream {0} disponible a STA", spa: "Datastream {0} disponible en STA", eng: "Datastream {0} available in STA"}, "<a href='" + getUrlToId(url, "Datastreams", datastreamIds[i]) + "' target='_blank'>" + datastreamIds[i] + "</a>");
 	}
 	for (var i = 0; i < data.length; i++) {
 		record=data[i];
@@ -3315,7 +3365,7 @@ async function UploadObservationsSTA(url, data, dataAttributes, selectedOptions)
 			var observationId=await GetObservationId(url, datastreamIds[k], FoIId, record[selectedOptions.time], record[keys[k]]);
 			if (!observationId && observationId!==0)
 				return;
-			showInfoMessage("Observation <a href='" + getUrlToId(url, "Observations", observationId) + "' target='_blank'>" + observationId + "</a> available in STA under Datastream <a href='" + getUrlToId(url, "Datastreams", datastreamIds[k]) + "' target='_blank'>" + datastreamIds[k] + "</a>");
+			showInfoMessage({cat: "Observation {0} disponible a STA sota el Datastream {1}", spa: "Observation {0} disponible en STA bajo el Datastream {1}", eng: "Observation {0} available in STA under Datastream {1}"}, "<a href='" + getUrlToId(url, "Observations", observationId) + "' target='_blank'>" + observationId + "</a>", "<a href='" + getUrlToId(url, "Datastreams", datastreamIds[k]) + "' target='_blank'>" + datastreamIds[k] + "</a>");
 		}
 	}
 	return;  //value	
@@ -3328,13 +3378,13 @@ function UploadObservationsSTAURL(event) {
 		var url=document.getElementById("DialogSTAUploadURLInput").value;
 		if (url.charAt(url.length - 1) == '/')
 			url = url.slice(0, -1);  //remove last character
-		showInfoMessage('Upload observations in STA started...');
+		showInfoMessage({cat: "S'ha iniciat la pujada d'Observations a STA...", spa: "Se ha iniciado la carga de Observations en STA...", eng: "Upload observations in STA started..."});
 		UploadObservationsSTA(url,
 			parentNode.STAdata,
 			parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata),
 			GetSelectedOptionsUploadObservations()).then(
-				function(value) { showInfoMessage('Upload observations in STA completed.'); },
-				function(error) { showInfoMessage('Error uploading Observations to STA. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+				function(value) { showInfoMessage({cat: "S'ha completat la pujada d'Observations a STA.", spa: "Se ha completado la carga de Observations en STA.", eng: "Upload observations in STA completed."}); },
+				function(error) { showInfoMessage({cat: "Error en pujar Observations a STA. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al cargar Observations en STA. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error uploading Observations to STA. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;}
 			);
 	}
@@ -3353,7 +3403,7 @@ function GetSelectNRecords(event) {
 			currentNode.STASelectedExpands.top=parseInt(document.getElementById("SelectNumberOfRecords").value);
 	}
 	networkNodes.update(currentNode);
-	showInfoMessage("Loading STA count...");
+	showInfoMessage({cat: "S'està carregant el recompte de STA...", spa: "Se está cargando el recuento de STA...", eng: "Loading STA count..."});
 	UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
 	LoadJSONNodeSTAData(currentNode);
 }
@@ -3384,7 +3434,7 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 	var cdns = [], entitiesParentArray = [], entitiesParentArrayObservedProperties = [];
 	var parentNodes = GetParentNodes(currentNode);
 	if (parentNodes.length == 0) {
-		alert("Parent(s) node(s) are needed to know about the STA root url");
+		alert(DonaCadena({cat: "Calen node(s) pare per conèixer l'URL arrel de l'STA", spa: "Se necesitan nodo(s) padre para conocer la URL raíz del STA", eng: "Parent(s) node(s) are needed to know about the STA root url"}));
 		return false;
 	}
 	cdns.push('<span id="dlgCreateUpdateDeleteEntityType" style="font-weight:bold">MultiDatastream</span>:<br><br>'); //Title (Entity name) 
@@ -3393,27 +3443,27 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 		var parentNode = parentNodes[i];
 		var parentEntityName = getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), false);
 		if (!parentNode.STAdata || parentNode.STAdata.length == 0) {
-			alert("Parent node has no STA data associated");
+			alert(DonaCadena({cat: "El node pare no té dades STA associades", spa: "El nodo padre no tiene datos STA asociados", eng: "Parent node has no STA data associated"}));
 			return false;
 		}
 		if (parentNode.image != "sta.png") {
 			if (parentNode.STAdata.length > 1) {
-				alert("Parent node has more than a single record. Please select a record first.");
+				alert(DonaCadena({cat: "El node pare té més d'un registre. Seleccioneu primer un registre.", spa: "El nodo padre tiene más de un registro. Seleccione primero un registro.", eng: "Parent node has more than a single record. Please select a record first."}));
 				return false;
 			}
 			if (parentEntityName != entityName && returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName) == -1 && returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular) == -1) {
-				alert("Parent node (" + STAEntities[parentEntityName].singular + ") is not a/an MultiDatastream or is directly related to a/an MultiDatastream");
+				alert(DonaCadenaFmt({cat: "El node pare ({0}) no és un MultiDatastream ni està directament relacionat amb un MultiDatastream", spa: "El nodo padre ({0}) no es un MultiDatastream ni está directamente relacionado con un MultiDatastream", eng: "Parent node ({0}) is not a/an MultiDatastream or is directly related to a/an MultiDatastream"}, STAEntities[parentEntityName].singular));
 				return false;
 			}
 			if (parentEntityName == entityName) { //Update or delete
 				actionToDo = "update_delete";
 				if (i > 1) {
-					alert("One parent node is the same as the entity MultiDatastream. This is for update or delete the entity. In this case, only one parent node is allowed.");
+					alert(DonaCadena({cat: "Un node pare és la mateixa entitat MultiDatastream. Això serveix per actualitzar o suprimir l'entitat. En aquest cas, només es permet un node pare.", spa: "Un nodo padre es la misma entidad MultiDatastream. Esto sirve para actualizar o eliminar la entidad. En este caso, solo se permite un nodo padre.", eng: "One parent node is the same as the entity MultiDatastream. This is for update or delete the entity. In this case, only one parent node is allowed."}));
 					return false;
 				}
 				var record = parentNode.STAdata[0]; //Info from parentNode used to complete in update
 				if (!record["@iot.id"]) {
-					alert("Cannot find @iot.id. Did you removed in a select?");
+					alert(DonaCadena({cat: "No es pot trobar @iot.id. L'heu eliminat en una selecció?", spa: "No se puede encontrar @iot.id. ¿Lo ha eliminado en una selección?", eng: "Cannot find @iot.id. Did you removed in a select?"}));
 					return false;
 				}
 				//Update or delete
@@ -3423,7 +3473,7 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 				actionToDo = "create" //CREATE
 				var record = parentNode.STAdata[0]; //Info from parentNode used to complete in update
 				if (!record["@iot.id"]) {
-					alert("Cannot find @iot.id in parent node " + STAEntities[parentEntityName].singular + ". Did you removed in a select?");
+					alert(DonaCadenaFmt({cat: "No es pot trobar @iot.id en el node pare {0}. L'heu eliminat en una selecció?", spa: "No se puede encontrar @iot.id en el nodo padre {0}. ¿Lo ha eliminado en una selección?", eng: "Cannot find @iot.id in parent node {0}. Did you removed in a select?"}, STAEntities[parentEntityName].singular));
 					return false;
 				}
 
@@ -3439,7 +3489,7 @@ function PopulateCreateUpdateDeleteEntityMultiDatastreams(entityName, currentNod
 			}
 		}
 		else if (parentNodes.length == 1 && parentNodes[0].image == "sta.png") {
-			alert("You have to connect MultiDatastreams node with a compatible node STA \n Required nodes: Party,Sensor,ObservedProperty,Thing.\n Optional nodes: Campaigns, License,Observations");
+			alert(DonaCadena({cat: "Heu de connectar el node MultiDatastreams amb un node STA compatible \n Nodes obligatoris: Party,Sensor,ObservedProperty,Thing.\n Nodes opcionals: Campaigns, License,Observations", spa: "Debe conectar el nodo MultiDatastreams con un nodo STA compatible \n Nodos obligatorios: Party,Sensor,ObservedProperty,Thing.\n Nodos opcionales: Campaigns, License,Observations", eng: "You have to connect MultiDatastreams node with a compatible node STA \n Required nodes: Party,Sensor,ObservedProperty,Thing.\n Optional nodes: Campaigns, License,Observations"}));
 			return false;
 
 		} else if (parentNodes.length > 1 && parentNodes[0].image == "sta.png") {
@@ -3595,7 +3645,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 
 	var parentNodes=GetParentNodes(currentNode);
 	if (parentNodes.length==0) {
-		alert("Parent(s) node(s) are needed to know about the STA root url");
+		alert(DonaCadena({cat: "Calen node(s) pare per conèixer l'URL arrel de l'STA", spa: "Se necesitan nodo(s) padre para conocer la URL raíz del STA", eng: "Parent(s) node(s) are needed to know about the STA root url"}));
 		return false;
 	}
 
@@ -3607,27 +3657,27 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 		var parentNode=parentNodes[i];
 		var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNode.STAURL), false);
 		if (!parentNode.STAdata || parentNode.STAdata.length==0){
-			alert("Parent node has no STA data associated");
+			alert(DonaCadena({cat: "El node pare no té dades STA associades", spa: "El nodo padre no tiene datos STA asociados", eng: "Parent node has no STA data associated"}));
 			return false;
 		}
 		if (parentNode.image != "sta.png"){
 			if (parentNode.STAdata.length>1){
-				alert("Parent node has more than a single record. Please select a record first.");
+				alert(DonaCadena({cat: "El node pare té més d'un registre. Seleccioneu primer un registre.", spa: "El nodo padre tiene más de un registro. Seleccione primero un registro.", eng: "Parent node has more than a single record. Please select a record first."}));
 				return false;
 			}				
 			if (parentEntityName!=entityName && returnIndexEntityRelatedInSTAEntity(entityName, parentEntityName)==-1 && returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular)==-1) {
-				alert("Parent node ("+STAEntities[parentEntityName].singular+") is not a/an " + STAEntities[entityName].singular + " or is directly related to a/an " +  STAEntities[entityName].singular);
+				alert(DonaCadenaFmt({cat: "El node pare ({0}) no és un {1} ni està directament relacionat amb un {1}", spa: "El nodo padre ({0}) no es un {1} ni está directamente relacionado con un {1}", eng: "Parent node ({0}) is not a/an {1} or is directly related to a/an {1}"}, STAEntities[parentEntityName].singular, STAEntities[entityName].singular));
 				return false;
 			}
 			if (parentEntityName==entityName) { //Update or delete
 				actionToDo="update_delete";
 				if (i>1) {
-					alert("One parent node is the same as the entity " + STAEntities[entityName].singular + ". This is for update or delete the entity. In this case, only one parent node is allowed.");
+					alert(DonaCadenaFmt({cat: "Un node pare és la mateixa entitat {0}. Això serveix per actualitzar o suprimir l'entitat. En aquest cas, només es permet un node pare.", spa: "Un nodo padre es la misma entidad {0}. Esto sirve para actualizar o eliminar la entidad. En este caso, solo se permite un nodo padre.", eng: "One parent node is the same as the entity {0}. This is for update or delete the entity. In this case, only one parent node is allowed."}, STAEntities[entityName].singular));
 					return false;
 				}
 				var record=parentNode.STAdata[0]; //Info from parentNode used to complete in update
 				if (!record["@iot.id"]){
-					alert("Cannot find @iot.id. Did you removed in a select?");
+					alert(DonaCadena({cat: "No es pot trobar @iot.id. L'heu eliminat en una selecció?", spa: "No se puede encontrar @iot.id. ¿Lo ha eliminado en una selección?", eng: "Cannot find @iot.id. Did you removed in a select?"}));
 					return false;
 				}
 				//Update or delete
@@ -3637,7 +3687,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 				actionToDo="create" //CREATE
 				var record=parentNode.STAdata[0]; //Info from parentNode used to complete in update
 				if (!record["@iot.id"]){
-					alert("Cannot find @iot.id in parent node " + STAEntities[parentEntityName].singular + ". Did you removed in a select?");
+					alert(DonaCadenaFmt({cat: "No es pot trobar @iot.id en el node pare {0}. L'heu eliminat en una selecció?", spa: "No se puede encontrar @iot.id en el nodo padre {0}. ¿Lo ha eliminado en una selección?", eng: "Cannot find @iot.id in parent node {0}. Did you removed in a select?"}, STAEntities[parentEntityName].singular));
 					return false;
 				}
 				//Prepare entities linked to be added to Dialog						
@@ -3782,7 +3832,7 @@ function PopulateCreateUpdateDeleteEntity(entityName, currentNode) {
 			if (CriptoName && CriptoName!="Anonymous")
 				document.getElementById("dlgCreateUpdateDeleteEntity_authId").value=CriptoName;
 			else {
-				if (!confirm("To create a STA Party, you should login first. Do you want to try to continue without login?"))
+				if (!confirm(DonaCadena({cat: "Per crear un STA Party, primer us heu d'autenticar. Voleu continuar sense autenticar-vos?", spa: "Para crear un STA Party, primero debe iniciar sesión. ¿Quiere intentar continuar sin iniciar sesión?", eng: "To create a STA Party, you should login first. Do you want to try to continue without login?"})))
 					return false;
 				document.getElementById("dlgCreateUpdateDeleteEntity_authId").value="";
 			}
@@ -4001,14 +4051,14 @@ function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
 			//For the moment in supporting only a point
 			obj[STAEntities[entityName].properties[i].name]={"type": "Point", "coordinates": []};
 				if (document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value==""&& document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").getAttribute("data-starequired")=="true"){
-					alert("Longitude parameter is required, please fill in the box before send");
+					alert(DonaCadena({cat: "El paràmetre longitude és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro longitude es obligatorio, rellene la casilla antes de enviar", eng: "Longitude parameter is required, please fill in the box before send"}));
 					allowToSend=false;
 				}else{
 			obj[STAEntities[entityName].properties[i].name].coordinates[0]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_longitude").value);
 				}
 
 				if (document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value==""&& document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").getAttribute("data-starequired")=="true"){
-					alert("Latitude parameter is required, please fill in the box before send");
+					alert(DonaCadena({cat: "El paràmetre latitude és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro latitude es obligatorio, rellene la casilla antes de enviar", eng: "Latitude parameter is required, please fill in the box before send"}));
 					allowToSend=false;
 				}else{
 			obj[STAEntities[entityName].properties[i].name].coordinates[1]=parseFloat(document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name+"_latitude").value);
@@ -4027,7 +4077,7 @@ function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
 			if (STAEntities[entityName].properties[i].name=="multiObservationDataType"){
 				var textArea=document.getElementById("dlgCreateUpdateDeleteEntity_multiObservationDataType_textAreaList");
 				if (textArea.value==""&& textArea.getAttribute("data-starequired")=="true"){
-					alert("multiObservationDataType parameter is required, please fill in the box before send");
+					alert(DonaCadena({cat: "El paràmetre multiObservationDataType és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro multiObservationDataType es obligatorio, rellene la casilla antes de enviar", eng: "multiObservationDataType parameter is required, please fill in the box before send"}));
 					allowToSend=false;
 				
 				}else{
@@ -4057,7 +4107,7 @@ function obtainDataInEntitiesCreationAndUpdate(operation,entityName){
 			prop=document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).value;
 			if (prop!=="") 	obj[STAEntities[entityName].properties[i].name]=(entityName=="Observations" && STAEntities[entityName].properties[i].name=="result" && !isNaN(prop)) ? parseFloat(prop) : prop;
 			else if (prop=="" && document.getElementById("dlgCreateUpdateDeleteEntity_"+STAEntities[entityName].properties[i].name).getAttribute("data-starequired")=="true") {
-				alert( STAEntities[entityName].properties[i].name+" parameter is required, please fill in the box before send");
+				alert(DonaCadenaFmt({cat: "El paràmetre {0} és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro {0} es obligatorio, rellene la casilla antes de enviar", eng: "{0} parameter is required, please fill in the box before send"}, STAEntities[entityName].properties[i].name));
 				allowToSend=false;
 				break;
 			}
@@ -4080,21 +4130,21 @@ function obtainDataInMultiDatastreamsCreationAndUpdate(operation){
 		obj["name"]=document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_name").value;
 
 	}else{
-		alert("Name parameter is required, please fill in the box before send")
+		alert(DonaCadena({cat: "El paràmetre name és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro name es obligatorio, rellene la casilla antes de enviar", eng: "Name parameter is required, please fill in the box before send"}))
 		allowToSend=false;
 	}
 	if (document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_description").value!=""){
 		obj["description"]=document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_description").value;
 
 	}else{
-		alert("Description parameter is required, please fill in the box before send")
+		alert(DonaCadena({cat: "El paràmetre description és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro description es obligatorio, rellene la casilla antes de enviar", eng: "Description parameter is required, please fill in the box before send"}))
 		allowToSend=false;
 	}
 	if (document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_observationType").value!=""){
 		obj["observationType"]=document.getElementById("dlgCreateUpdateDeleteEntity_MultiDatastreams_observationType").value;
 
 	}else{
-		alert("ObservationType parameter is required, please fill in the box before send")
+		alert(DonaCadena({cat: "El paràmetre observationType és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro observationType es obligatorio, rellene la casilla antes de enviar", eng: "ObservationType parameter is required, please fill in the box before send"}))
 		allowToSend=false;
 	}
 	
@@ -4160,21 +4210,21 @@ function GetCreateEntityMultiDatastream(event){
 			if (parentNode.image == "sta.png")
 				continue;
 			if (i!=0 && getSTAURLRoot(parentNode.STAURL)!=url) {
-				alert("Not all parent nodes are from the same root URL: " + getSTAURLRoot(parentNode.STAURL) + ", " + url);
+				alert(DonaCadenaFmt({cat: "No tots els nodes pare provenen de la mateixa URL arrel: {0}, {1}", spa: "No todos los nodos padre proceden de la misma URL raíz: {0}, {1}", eng: "Not all parent nodes are from the same root URL: {0}, {1}"}, getSTAURLRoot(parentNode.STAURL), url));
 				continue;
 			}
 	}
 	var obj = obtainDataInMultiDatastreamsCreationAndUpdate("create");
 
 	if (obj!=false){
-		showInfoMessage("Creating a/an "+ STAEntities[entityName].singular +"...");
+		showInfoMessage({cat: "S'està creant un/a {0}...", spa: "Se está creando un/a {0}...", eng: "Creating a/an {0}..."}, STAEntities[entityName].singular);
 
 	GetObjectId(url, entityName, obj).then(
 		function(value) {
 			if (value)
 			{ 
 				hideNodeDialog("DialogCreateUpdateDeleteEntity_MultiDatastreams");
-				showInfoMessage('Available at: <a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
+				showInfoMessage({cat: "Disponible a: {0}", spa: "Disponible en: {0}", eng: "Available at: {0}"}, '<a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
 				node.STAURL=getUrlToId(url, entityName, value);
 				node.STAdata=[];
 				node.STAdata.push(obj);
@@ -4183,14 +4233,14 @@ function GetCreateEntityMultiDatastream(event){
 			}
 		},
 		function(error) { 
-			showInfoMessage('Error creating entity. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+			showInfoMessage({cat: "Error en crear l'entitat. <br>name: {0} missatge: {1} a: {2} text: {3}", spa: "Error al crear la entidad. <br>name: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error creating entity. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 			console.log(error) ;
 		}
 	);	
 		}
 	
 	}else{
-		alert("You need to Link entities required to create the new entity") 
+		alert(DonaCadena({cat: "Heu d'enllaçar les entitats necessàries per crear l'entitat nova", spa: "Debe enlazar las entidades necesarias para crear la nueva entidad", eng: "You need to Link entities required to create the new entity"})) 
 	}	
 }
 
@@ -4214,7 +4264,7 @@ function GetCreateEntity(event) {
 			if (parentNode.image == "sta.png")
 				continue;
 			if (i != 0 && getSTAURLRoot(parentNode.STAURL) != url) {
-				alert("Not all parent nodes are from the same root URL: " + getSTAURLRoot(parentNode.STAURL) + ", " + url);
+				alert(DonaCadenaFmt({cat: "No tots els nodes pare provenen de la mateixa URL arrel: {0}, {1}", spa: "No todos los nodos padre proceden de la misma URL raíz: {0}, {1}", eng: "Not all parent nodes are from the same root URL: {0}, {1}"}, getSTAURLRoot(parentNode.STAURL), url));
 				continue;
 			}
 
@@ -4225,16 +4275,16 @@ function GetCreateEntity(event) {
 			else if (returnIndexEntityRelatedInSTAEntity(entityName, STAEntities[parentEntityName].singular) != -1)
 				var entity = STAEntities[parentEntityName].singular;
 			else {
-				alert("Parent node (" + STAEntities[parentEntityName].singular + ") is not directly related to a/an " + STAEntities[entityName].singular);
+				alert(DonaCadenaFmt({cat: "El node pare ({0}) no està relacionat directament amb un/a {1}", spa: "El nodo padre ({0}) no está relacionado directamente con un/a {1}", eng: "Parent node ({0}) is not directly related to a/an {1}"}, STAEntities[parentEntityName].singular, STAEntities[entityName].singular));
 				continue;
 			}
 
 			if (!parentNode.STAdata || parentNode.STAdata.length == 0) {
-				alert("Parent node has no STA data associated");
+				alert(DonaCadena({cat: "El node pare no té dades STA associades", spa: "El nodo padre no tiene datos STA asociados", eng: "Parent node has no STA data associated"}));
 				return;
 			}
 			if (parentNode.STAdata.length > 1) {
-				alert("Parent node '" + STAEntities[parentEntityName].singular + "' has more than a single record. Please select a record first.");
+				alert(DonaCadenaFmt({cat: "El node pare «{0}» té més d'un registre. Seleccioneu primer un registre.", spa: "El nodo padre «{0}» tiene más de un registro. Seleccione primero un registro.", eng: "Parent node '{0}' has more than a single record. Please select a record first."}, STAEntities[parentEntityName].singular));
 				return;
 			}
 			
@@ -4246,12 +4296,12 @@ function GetCreateEntity(event) {
 		
 		if (obj != false) {
 			hideNodeDialog("DialogCreateUpdateDeleteEntity");
-			showInfoMessage("Creating a/an " + STAEntities[entityName].singular + "...");
+			showInfoMessage({cat: "S'està creant un/a {0}...", spa: "Se está creando un/a {0}...", eng: "Creating a/an {0}..."}, STAEntities[entityName].singular);
 			GetObjectId(url, entityName, obj).then(
 				function (value) {
 					if (value) {
 						hideNodeDialog("DialogCreateUpdateDeleteEntity");
-						showInfoMessage('Available at: <a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
+						showInfoMessage({cat: "Disponible a: {0}", spa: "Disponible en: {0}", eng: "Available at: {0}"}, '<a href="' + getUrlToId(url, entityName, value) + '" target="_blank">' + value + '</a>');
 						node.STAURL = getUrlToId(url, entityName, value);
 						node.STAdata = [];
 						node.STAdata.push(obj);
@@ -4260,14 +4310,14 @@ function GetCreateEntity(event) {
 					}
 				},
 				function (error) {
-					showInfoMessage('Error creating entity. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en crear l'entitat. <br>name: {0} missatge: {1} a: {2} text: {3}", spa: "Error al crear la entidad. <br>name: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error creating entity. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error);
 				}
 			);
 		}
 
 	} else {
-		alert("You need to Link entities required to create the new entity")
+		alert(DonaCadena({cat: "Heu d'enllaçar les entitats necessàries per crear l'entitat nova", spa: "Debe enlazar las entidades necesarias para crear la nueva entidad", eng: "You need to Link entities required to create the new entity"}))
 	}
 }
 async function GetUpdateEntity(event){
@@ -4293,7 +4343,7 @@ async function GetUpdateEntity(event){
 					idSplited=childrenNodes2[e].id.split("dlgCreateUpdateDeleteEntity_")[1];
 					if (idSplited=="location_longitude" || idSplited=="feature_longitude" ){
 						if (childrenNodes2[e].value=="" && childrenNodes2[e].dataset.starequired=="true"){
-							alert("Longitude parameter is required, please fill in the box before send");
+							alert(DonaCadena({cat: "El paràmetre longitude és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro longitude es obligatorio, rellene la casilla antes de enviar", eng: "Longitude parameter is required, please fill in the box before send"}));
 							allowToSend=false;
 							break;
 						}else{
@@ -4305,7 +4355,7 @@ async function GetUpdateEntity(event){
 
 					if (idSplited=="location_latitude" || idSplited=="feature_latitude"){
 						if (childrenNodes2[e].value=="" && childrenNodes2[e].dataset.starequired=="true"){
-							alert("Latitude parameter is required, please fill in the box before send");
+							alert(DonaCadena({cat: "El paràmetre latitude és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro latitude es obligatorio, rellene la casilla antes de enviar", eng: "Latitude parameter is required, please fill in the box before send"}));
 							allowToSend=false;
 							break;
 						}else{
@@ -4328,7 +4378,7 @@ async function GetUpdateEntity(event){
 					idSplited=childrenNodes2[e].id.split("dlgCreateUpdateDeleteEntity_")[1];
 					if (idSplited=="unitOfMeasurement_name"){
 						if (childrenNodes2[e].value=="" && childrenNodes2[e].dataset.starequired=="true"){
-							alert("Name parameter is required, please fill in the box before send");
+							alert(DonaCadena({cat: "El paràmetre name és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro name es obligatorio, rellene la casilla antes de enviar", eng: "Name parameter is required, please fill in the box before send"}));
 							allowToSend=false;
 							break;
 						}else{
@@ -4339,7 +4389,7 @@ async function GetUpdateEntity(event){
 					}
 					if (idSplited=="unitOfMeasurement_symbol"){
 						if (childrenNodes2[e].value=="" && childrenNodes2[e].dataset.starequired=="true"){
-							alert("Symbol parameter is required, please fill in the box before send");
+							alert(DonaCadena({cat: "El paràmetre de Symbol és obligatori; ompliu la casella abans d'enviar", spa: "El parámetro de Symbol es obligatorio; rellene la casilla antes de enviar", eng: "Symbol parameter is required, please fill in the box before send"}));
 							allowToSend=false;
 							break;
 						}else{
@@ -4350,7 +4400,7 @@ async function GetUpdateEntity(event){
 					}
 					if (idSplited=="unitOfMeasurement_definition"){
 						if (childrenNodes2[e].value=="" && childrenNodes2[e].dataset.starequired=="true"){
-							alert("Definition (unitOfMeasurements) parameter is required, please fill in the box before send");
+							alert(DonaCadena({cat: "El paràmetre de definició (unitOfMeasurements) és obligatori; ompliu la casella abans d'enviar-lo", spa: "El parámetro de definición (unitOfMeasurements) es obligatorio; rellene la casilla antes de enviarlo", eng: "Definition (unitOfMeasurements) parameter is required, please fill in the box before send"}));
 							allowToSend=false;
 							break;
 						}else{
@@ -4369,7 +4419,7 @@ async function GetUpdateEntity(event){
 			idSplited=childrenNodes[i].id.split("dlgCreateUpdateDeleteEntity_")[1];
 			 if (childrenNodes[i].value=="" && childrenNodes[i].dataset.starequired=="true"){
 			 //document.getElementById(childrenNodes[i].id).getAttribute("dataset-starequired")=="true"
-				alert(idSplited +" parameter is required, please fill in the box before send");
+				alert(DonaCadenaFmt({cat: "El paràmetre {0} és obligatori, ompliu la casella abans d'enviar", spa: "El parámetro {0} es obligatorio, rellene la casilla antes de enviar", eng: "{0} parameter is required, please fill in the box before send"}, idSplited));
 				allowToSend=false;
 				break;
 			}else{
@@ -4405,13 +4455,13 @@ async function GetUpdateEntity(event){
 		
 
 	if (allowToSend==true){
-		showInfoMessage("Updating  "+ STAEntities[entityName].singular +" "+id+" ...");
+		showInfoMessage({cat: "S'està actualitzant {0} {1} ...", spa: "Actualizando {0} {1} ...", eng: "Updating  {0} {1} ..."}, STAEntities[entityName].singular, id);
 	 var response= await HTTPJSONData(url,null,"PUT",obj);
 		 hideNodeDialog("DialogCreateUpdateDeleteEntity");
 	 if (response.ok)
-		showInfoMessage(STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
+		showInfoMessage({cat: "{0} {1} s'ha actualitzat.", spa: "{0} {1} actualizado.", eng: "{0} {1} updated."}, STAEntities[entityName].singular, "<a href='"+url+"'target='_blank'>"+id+"</a>");
 	 else{
-		showInfoMessage("Error updating "+STAEntities[entityName].singular +" "+"<a href='"+url+"'target='_blank'>"+id+"</a> updated.");
+		showInfoMessage({cat: "Error en actualitzar {0} {1}.", spa: "Error al actualizar {0} {1}.", eng: "Error updating {0} {1} updated."}, STAEntities[entityName].singular, "<a href='"+url+"'target='_blank'>"+id+"</a>");
 
 	 }
 	}			
@@ -4446,13 +4496,13 @@ async function GetUpdateEntityMultiDatastream(event){
 		
 
 	if (obj != false) {
-		showInfoMessage("Updating MultiDatastream " + id + " ...");
+		showInfoMessage({cat: "S'està actualitzant MultiDatastream {0} ...", spa: "Actualizando MultiDatastream {0} ...", eng: "Updating MultiDatastream {0} ..."}, id);
 		var response = await HTTPJSONData(url, null, "PUT", obj);
 		hideNodeDialog("DialogCreateUpdateDeleteEntity_MultiDatastreams");
 		if (response.ok)
-			showInfoMessage("MultiDatastream <a href='" + url + "'target='_blank'>" + id + "</a> updated.");
+			showInfoMessage({cat: "MultiDatastream {0} s'ha actualitzat.", spa: "MultiDatastream {0} actualizado.", eng: "MultiDatastream {0} updated."}, "<a href='" + url + "'target='_blank'>" + id + "</a>");
 		else
-			showInfoMessage("Error updating MultiDatastream <a href='" + url + "'target='_blank'>" + id + "</a> updated.");
+			showInfoMessage({cat: "Error en actualitzar MultiDatastream {0}.", spa: "Error al actualizar MultiDatastream {0}.", eng: "Error updating MultiDatastream {0} updated."}, "<a href='" + url + "'target='_blank'>" + id + "</a>");
 	}
 }
 
@@ -4463,7 +4513,7 @@ function AskForDeleteEntity(event){
 	var entityNameSingular= STAEntities[entityName].singular;
 	var id= parentNodes[0].STAResourceId;
 
-	if (true==confirm("Do you want to erase "+entityNameSingular+" "+parentNodes[0].STAResourceId))
+	if (true==confirm(DonaCadenaFmt({cat: "Voleu esborrar {0} {1}?", spa: "¿Quiere borrar {0} {1}?", eng: "Do you want to erase {0} {1}?"}, entityNameSingular, parentNodes[0].STAResourceId)))
 		GetDeleteEntity(entityName, id)
 }
 
@@ -4474,16 +4524,16 @@ async function GetDeleteEntity(entityName, id){
 	var parentNodes=GetParentNodes(currentNode);
 	var url=parentNodes[0].STAURL;
 
-	showInfoMessage("Deleting  "+ entityName +" "+id+" ...");
+	showInfoMessage({cat: "S'està suprimint {0} {1} ...", spa: "Eliminando {0} {1} ...", eng: "Deleting  {0} {1} ..."}, entityName, id);
 	var id = parseInt(document.getElementById("dlgCreateUpdateDeleteEntity_id").value);
 	var parentEntityName=getSTAEntityPlural(getSTAURLLastEntity(parentNodes[0].STAURL), false);
 	var url=getUrlToId(getSTAURLRoot(parentNodes[0].STAURL),parentEntityName,id);
 
 	var response= await HTTPJSONData(url,null,"DELETE",null);
 	if (response?.ok)
-		showInfoMessage(STAEntities[entityName].singular +" "+id+" has been deleted.");
+		showInfoMessage({cat: "{0} {1} s'ha suprimit.", spa: "{0} {1} se ha eliminado.", eng: "{0} {1} has been deleted."}, STAEntities[entityName].singular, id);
 	else
-		showInfoMessage("Error deleting"+ STAEntities[entityName].singular +" "+id);
+		showInfoMessage({cat: "Error en suprimir {0} {1}", spa: "Error al eliminar {0} {1}", eng: "Error deleting {0} {1}"}, STAEntities[entityName].singular, id);
 }
 
 
@@ -4544,7 +4594,7 @@ function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
 	var cdns=[];
 	var data= currentNode.STAdata;
 	if (iRecord<0 || iRecord>=data.length) {
-		alert("Parent node is out of range");
+		alert(DonaCadena({cat: "El node pare és fora de l'interval", spa: "El nodo padre está fuera del intervalo", eng: "Parent node is out of range"}));
 		return false;
 	}
 
@@ -4574,7 +4624,7 @@ function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
 			} 
 		}
 		if (a<dataAttributesArray.length) {
-			if (false==confirm("Values has been modified but not saved by pressing 'update'. Do you want to continue and loose the modifications?"))
+			if (false==confirm(DonaCadena({cat: "S'han modificat valors però no s'han desat amb 'update'. Voleu continuar i perdre les modificacions?", spa: "Se han modificado valores pero no se han guardado pulsando 'update'. ¿Quiere continuar y perder las modificaciones?", eng: "Values has been modified but not saved by pressing 'update'. Do you want to continue and loose the modifications?"})))
 				return false;
 		}
 	}
@@ -4647,7 +4697,7 @@ function GetLastRecord(event) {
 function UpdateRecordId(node, iRecord) {
 	var data=node.STAdata; 
 	if (iRecord<0 || iRecord>=data.length) {
-		alert("Parent node is out of range");
+		alert(DonaCadena({cat: "El node pare és fora de l'interval", spa: "El nodo padre está fuera del intervalo", eng: "Parent node is out of range"}));
 		return false;
 	}
 	var dataAttributes = node.STAdataAttributes;
@@ -4674,7 +4724,7 @@ function UpdateRecordId(node, iRecord) {
 				try {
 					record[dataAttributesArray[a]]=JSON.parse(value);
 				} catch (e) {
-					alert("Parse error: " + e + " The field content is:\n" + value);
+					alert(DonaCadenaFmt({cat: "Error d'anàlisi: {0} El contingut del camp és:\n{1}", spa: "Error de análisis: {0} El contenido del campo es:\n{1}", eng: "Parse error: {0} The field content is:\n{1}"}, e, value));
 					return false;
 				}
 				updated=true;
@@ -4694,7 +4744,7 @@ function GetCreateRecord(event) {
 	var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
 	var data=currentNode.STAdata;
 	if (iRecord<0 || iRecord>=data.length) {
-		alert("Parent node is out of range");
+		alert(DonaCadena({cat: "El node pare és fora de l'interval", spa: "El nodo padre está fuera del intervalo", eng: "Parent node is out of range"}));
 		return false;
 	}
 	data.splice(iRecord+1, 0, deapCopy(data[iRecord]));
@@ -4713,13 +4763,13 @@ function GetUpdateRecord(event) {
 
 function AskForDeleteRecord(event) {
 	event.preventDefault(); 
-	if (false==confirm("Do you want to erase this record?"))
+	if (false==confirm(DonaCadena({cat: "Voleu esborrar aquest registre?", spa: "¿Quiere borrar este registro?", eng: "Do you want to erase this record?"})))
 		return
 
 	var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
 	var data=currentNode.STAdata;
 	if (iRecord<0 || iRecord>=data.length) {
-		alert("Parent node is out of range");
+		alert(DonaCadena({cat: "El node pare és fora de l'interval", spa: "El nodo padre está fuera del intervalo", eng: "Parent node is out of range"}));
 		return false;
 	}
 	data.splice(iRecord, 1);
@@ -4798,7 +4848,7 @@ function GetSelectRow(event, iToSelect) {
 		
 	networkNodes.update(node);
 	if (requiresLoadJSON) {
-		showInfoMessage("Selecting OGC row...");
+		showInfoMessage({cat: "S'està seleccionant la fila OGC...", spa: "Seleccionando la fila OGC...", eng: "Selecting OGC row..."});
 		UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
 		LoadJSONNodeSTAData(node);
 	}
@@ -4844,7 +4894,7 @@ function GetSelectResource(event, resourceId) {
 		node.STAURL = AddQueryParamsToURL(getURLWithoutQueryParams(node.STAURL) + getParentesisODataFromId(node.STAResourceId), getURLQueryParams(node.STAURL));
 	}
 		
-	showInfoMessage("Selecting OGC resource...");
+	showInfoMessage({cat: "S'està seleccionant el recurs OGC...", spa: "Seleccionando el recurso OGC...", eng: "Selecting OGC resource..."});
 	UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
 	LoadJSONNodeSTAData(node);
 }
@@ -4913,7 +4963,7 @@ function DoGeoFilterRows(node) {
 		node.STAURL=AddQueryParamsToURL(parentNode.STAURL, "$filter="+geo);
 
 	networkNodes.update(node);
-	showInfoMessage("Filtering STA rows by polygon...");
+	showInfoMessage({cat: "S'estan filtrant les files STA per polígon...", spa: "Filtrando las filas STA por polígono...", eng: "Filtering STA rows by polygon..."});
 	UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
 	LoadJSONNodeSTAData(node);
 }
@@ -4998,9 +5048,9 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 		//else 
 		if (node.image == "SelectColumnsTable.png") {
 			//pensar com es podria fer.
-			showInfoMessage("Automatic update of SelectColumns not implemented for table nodes.");
+			showInfoMessage({cat: "L'actualització automàtica de Selecciona columnes STA no està implementada per als nodes de taula.", spa: "La actualización automática de Selecciona columnas STA no está implementada para los nodos de tabla.", eng: "Automatic update of SelectColumns not implemented for table nodes."});
 		} else if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || (STAOperations[removeFileExtension(node.image)] && STAOperations[removeFileExtension(node.image)].callSTALoad)) {
-			showInfoMessage("Updating "+ removeFileExtension(node.image) + " ...");
+			showInfoMessage({cat: "S'està actualitzant {0} ...", spa: "Actualizando {0} ...", eng: "Updating {0} ..."}, removeFileExtension(node.image));
 			await LoadJSONNodeSTAData(node);
 		} else if (node.image == "OneValueSTA.png") {
 			if (node.STAtimeOut) {
@@ -5154,20 +5204,29 @@ function addSemanticsSTADataAttributes(dataAttributes, url) {
 }
 
 function ShowTableOptionsDiv(node, optionsDiv, fn_showTable) {
+	var rowNumbersObj = {cat: "Mostra els números de les files", spa: "Mostrar los números de las filas", eng: "Show row numbers"};
+	var selfNavObj = {cat: "Mostra els enllaços self i de navegació", spa: "Mostrar los enlaces self y de navegación", eng: "Show self and navigation links"};
+	var metadataObj = {cat: "Metadades", spa: "Metadatos", eng: "Metadata"};
+	var rowNumbersLabel = DonaCadena(rowNumbersObj);
+	var selfNavLabel = DonaCadena(selfNavObj);
+	var metadataLabel = DonaCadena(metadataObj);
+	var rowNumbersAttr = EscapeForJsHtmlAttr(JSON.stringify(rowNumbersObj));
+	var selfNavAttr = EscapeForJsHtmlAttr(JSON.stringify(selfNavObj));
+	var metadataAttr = EscapeForJsHtmlAttr(JSON.stringify(metadataObj));
 	if (node.STAdata && node.STAdata.length)
-		document.getElementById(optionsDiv).innerHTML="<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "RowNumber") || document.getElementById(optionsDiv + "RowNumber").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "RowNumber' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> Show row numbers</label> &ensp;" +
-								"<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "SelfNavLink") || document.getElementById(optionsDiv + "SelfNavLink").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "SelfNavLink' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> Show self and navigation links</label>";
+		document.getElementById(optionsDiv).innerHTML="<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "RowNumber") || document.getElementById(optionsDiv + "RowNumber").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "RowNumber' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> <span data-lang=\"" + rowNumbersAttr + "\">" + rowNumbersLabel + "</span></label> &ensp;" +
+								"<label><input type='checkbox' "+ ((!document.getElementById(optionsDiv + "SelfNavLink") || document.getElementById(optionsDiv + "SelfNavLink").checked) ? "checked='checked' " : "") +"id='" + optionsDiv + "SelfNavLink' onChange='"+fn_showTable+"(networkNodes.get(\"" + node.id + "\"));'/> <span data-lang=\"" + selfNavAttr + "\">" + selfNavLabel + "</span></label>";
 	else
 		document.getElementById(optionsDiv).innerHTML="";
 	if (node.STAmetadata)
-		document.getElementById(optionsDiv).innerHTML+=" <a href='javascript:void(0)' style='text-decoration: none;' onClick='ShowMetadataDialog(\""+node.id+"\")'><img src='metadata.png' alt='metadata' title='metadata'> Metadata </a>";
+		document.getElementById(optionsDiv).innerHTML+=" <a href='javascript:void(0)' style='text-decoration: none;' onClick='ShowMetadataDialog(\""+node.id+"\")'><img src='metadata.png' alt='metadata' title='" + EscapeForJsHtmlAttr(metadataLabel) + "'> <span data-lang=\"" + metadataAttr + "\">" + metadataLabel + "</span> </a>";
 }
 
 function ShowTableDialog(node) {
 	var data = node.STAdata;
 
 	if (!data || !data.length) {
-		document.getElementById("DialogOKHTML").innerHTML = "No data to show.";
+		document.getElementById("DialogOKHTML").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 
@@ -5936,17 +5995,17 @@ function GetSelectedOptionsSaveLayer(descripUoM){
 function ShowSaveLayerDialog(node) {
 	document.getElementById("DialogSaveLayerVariableDefUoM").innerHTML=GetHTMLVariableDefUoM("", {nameInLegend: false, showValue: true})
 	ShowSaveLayerDialogSelects(node, true);
-	document.getElementById("DialogSaveLayerTitle").innerHTML="Save table as GeoJSON";
-	document.getElementById("DialogSaveLayerSave").innerHTML="<button value=\"default\" onClick=\"SaveLayer(event)\">Save GeoJSON</button> " +
-		"<button onClick=\"SaveLayerSchema(event)\">Save JSON Schema</button> " +
-		"<button onClick=\"SaveLayerMetaschema(event)\">Save JSON Metaschema</button>";
+	document.getElementById("DialogSaveLayerTitle").innerHTML=DonaCadena({cat: "Desa la taula com a GeoJSON", spa: "Guardar la tabla como GeoJSON", eng: "Save table as GeoJSON"});
+	document.getElementById("DialogSaveLayerSave").innerHTML="<button value=\"default\" onClick=\"SaveLayer(event)\">" + DonaCadena({cat: "Desa GeoJSON", spa: "Guardar GeoJSON", eng: "Save GeoJSON"}) + "</button> " +
+		"<button onClick=\"SaveLayerSchema(event)\">" + DonaCadena({cat: "Desa l'esquema JSON", spa: "Guardar el esquema JSON", eng: "Save JSON Schema"}) + "</button> " +
+		"<button onClick=\"SaveLayerMetaschema(event)\">" + DonaCadena({cat: "Desa el metaesquema JSON", spa: "Guardar el metaesquema JSON", eng: "Save JSON Metaschema"}) + "</button>";
 }
 
 function ShowOpenMapDialog(node) {
 	document.getElementById("DialogSaveLayerVariableDefUoM").innerHTML=GetHTMLVariableDefUoM("", {nameInLegend: false, showValue: true});
 	ShowSaveLayerDialogSelects(node, true);
-	document.getElementById("DialogSaveLayerTitle").innerHTML="Open in the Map Browser";
-	document.getElementById("DialogSaveLayerSave").innerHTML="<button value=\"default\" onClick=\"OpenMap(event)\">Open</button>";
+	document.getElementById("DialogSaveLayerTitle").innerHTML=DonaCadena({cat: "Obre al navegador de mapes", spa: "Abrir en el navegador de mapas", eng: "Open in the Map Browser"});
+	document.getElementById("DialogSaveLayerSave").innerHTML="<button value=\"default\" onClick=\"OpenMap(event)\">" + DonaCadena({cat: "Obre", spa: "Abrir", eng: "Open"}) + "</button>";
 }
 
 function PopulateDialogSaveLayerVariableFromDropDownSelect(i) {
@@ -5968,7 +6027,7 @@ function recalculateColumnType(columnName) {
 	var node=getNodeDialog("DialogMeaningTable");
 	if (!node.STAdataAttributes)
 		return;
-	if (!confirm("This will save other previous changes in the dialog. Do you want to continue?"))
+	if (!confirm(DonaCadena({cat: "Això desarà altres canvis previs del diàleg. Voleu continuar?", spa: "Esto guardará otros cambios previos del diálogo. ¿Quiere continuar?", eng: "This will save other previous changes in the dialog. Do you want to continue?"})))
 		return;
 	node.STAdataAttributes=GetMeaningTable(node);
 	var type=getDataAttributeType(node.STAdata, columnName);
@@ -5984,10 +6043,10 @@ function tryAndConvertColumnType(columnName, type) {
 		return;
 	
 	if (!tryDataAttribute(node.STAdata, columnName, type)) {
-		alert("Some value(s) of the data impide to excute this transformation.")	
+		alert(DonaCadena({cat: "Alguns valors de les dades impedeixen executar aquesta transformació.", spa: "Algunos valores de los datos impiden ejecutar esta transformación.", eng: "Some value(s) of the data impide to excute this transformation."}))	
 		return;
 	}
-	if (!confirm("This will save other previous changes in the dialog. Do you want to continue?"))
+	if (!confirm(DonaCadena({cat: "Això desarà altres canvis previs del diàleg. Voleu continuar?", spa: "Esto guardará otros cambios previos del diálogo. ¿Quiere continuar?", eng: "This will save other previous changes in the dialog. Do you want to continue?"})))
 		return;
 	node.STAdataAttributes=GetMeaningTable(node);
 	convertDataToAttributeType(node.STAdata, columnName, type);
@@ -6006,11 +6065,11 @@ function ShowMeaningTableDialog(node) {
 	document.getElementById("DialogMeaningFields").innerHTML="";
 	for (var i = 0; i < dataAttributesArray.length; i++) {
 		document.getElementById("DialogMeaningFields").innerHTML+=GetHTMLVariableDefUoM("_" + i, {nameInLegend: true, showValue: false, showType: true, showPredefOptions:true, nodeId: node.id, columnName: dataAttributesArray[i]});
-		document.getElementById("DialogSaveLayerVariable_"+i).innerHTML="Field "+(i+1)+ ": " + dataAttributesArray[i];
+		document.getElementById("DialogSaveLayerVariable_"+i).innerHTML=DonaCadenaFmt({cat: "Camp {0}: ", spa: "Campo {0}: ", eng: "Field {0}: "}, (i+1)) + dataAttributesArray[i];
 
 		cdns=[];
 		cdns.push('<select id="DialogMeaningVariableDropDownSelect_' + i + '" onChange="PopulateDialogSaveLayerVariableFromDropDownSelect(' + i + ')">',
-			"<option value='{\"g\":-1}'>--Select to populate below--</option>");
+			"<option value='{\"g\":-1}'>" + DonaCadena({cat: "--Seleccioneu per omplir a sota--", spa: "--Seleccione para rellenar abajo--", eng: "--Select to populate below--"}) + "</option>");
 		for (var g=0; g<config.suggestedVarUoMs.length; g++) {
 			cdns.push('<optgroup label="', config.suggestedVarUoMs[g].group, '">');
 			vus=config.suggestedVarUoMs[g].varUoMs;
@@ -6089,7 +6148,7 @@ function ShareMeaningTable(event) {
 		ru_platform: "https://github.com/joanma747/TAPIS", ru_version: 0.9, ru_schema: urlSchemaMeaning},
 		"eng", "" //access_token_type
 	);
-	showInfoMessage("Sharing Meaning. Redirected to NiMMbus (please authenticate and save).");
+	showInfoMessage({cat: "S'està compartint el significat. SRedireccionant cap a NiMMbus (autentiqueu-vos i deseu-lo).", spa: "Compartiendo el significado. Redireccionando hacia NiMMbus (autentíquese y guárdelo).", eng: "Sharing Meaning. Redirected to NiMMbus (please authenticate and save)."});
 }
 
 function SaveCSV(event) {
@@ -6353,7 +6412,7 @@ function GetSelectedOptionsAddColumnPnt(){
 		selectedOptions.level=parseInt(document.getElementById("DialogAddColumnPntLevelText").value);
 		selectedOptions.DGGSOut=document.getElementById("DialogAddColumnPntDGGSOutSelect").value
 		if (isNaN(selectedOptions.level) || selectedOptions.level<=0 || selectedOptions.level>getMaxLevelDGGSHashUber(selectedOptions.DGGSOut)) {
-			alert("Level is not a positive number or it is higher than " + getMaxLevelDGGSHashUber(selectedOptions.DGGSOut) + ". The level 10 will be used instead.");
+			alert(DonaCadenaFmt({cat: "El nivell no és un nombre positiu o és superior a {0}. En el seu lloc, s'utilitzarà el nivell 10.", spa: "El nivel no es un número positivo o es superior a {0}. En su lugar, se utilizará el nivel 10.", eng: "Level is not a positive number or it is higher than {0}. The level 10 will be used instead."}, getMaxLevelDGGSHashUber(selectedOptions.DGGSOut)));
 			selectedOptions.level=10;
 		}
 	}	
@@ -6460,11 +6519,11 @@ function ChangeAddColumnPntRadioOut(event) {
 	if (document.getElementById("DialogAddColumnPntRadioJSONOut").checked || 
 	    document.getElementById("DialogAddColumnPntRadioWKTOut").checked ||
 	    document.getElementById("DialogAddColumnPntRadioDGGSOut").checked) {
-		document.getElementById("DialogAddColumnPntNameOut").innerHTML="Column name:";
+		document.getElementById("DialogAddColumnPntNameOut").innerHTML=DonaCadena({cat: "Nom de la columna:", spa: "Nombre de la columna:", eng: "Column name:"});
 		document.getElementById("DialogAddColumnPntLatitudeNameOutAll").style.display="none";
 		document.getElementById("DialogAddColumnPntCRSOutAll").style.display="none";
 	} else {
-		document.getElementById("DialogAddColumnPntNameOut").innerHTML="X or Longitude:";
+		document.getElementById("DialogAddColumnPntNameOut").innerHTML=DonaCadena({cat: "X o longitud:", spa: "X o longitud:", eng: "X or Longitude:"});
 		document.getElementById("DialogAddColumnPntNameText").value="Longitude";
 		document.getElementById("DialogAddColumnPntLatitudeNameOut").innetHTML="Latitude";
 		document.getElementById("DialogAddColumnPntLatitudeNameOutAll").style.display="inline";
@@ -6491,13 +6550,13 @@ function ShowAddColumnBBoxDialog(node) {
 function ChangeAddColumnBBoxRadioOut(event) {
 	if (document.getElementById("DialogAddColumnBBoxRadioJSONOut").checked || 
 	    document.getElementById("DialogAddColumnBBoxRadioWKTOut").checked) {
-		document.getElementById("DialogAddColumnBBoxNameOut").innerHTML="Column name:";
+		document.getElementById("DialogAddColumnBBoxNameOut").innerHTML=DonaCadena({cat: "Nom de la columna:", spa: "Nombre de la columna:", eng: "Column name:"});
 		document.getElementById("DialogAddColumnBBoxMinLatitudeNameOutAll").style.display="none";
 		document.getElementById("DialogAddColumnBBoxMaxLongitudeNameOutAll").style.display="none";
 		document.getElementById("DialogAddColumnBBoxMaxLatitudeNameOutAll").style.display="none";
 		document.getElementById("DialogAddColumnBBoxCRSOutAll").style.display="none";
 	} else {
-		document.getElementById("DialogAddColumnBBoxNameOut").innerHTML="Minimum X or Longitude:";
+		document.getElementById("DialogAddColumnBBoxNameOut").innerHTML=DonaCadena({cat: "X o longitud mínima:", spa: "X o longitud mínima:", eng: "Minimum X or Longitude:"});
 		document.getElementById("DialogAddColumnBBoxNameText").value="MinLong";
 		document.getElementById("DialogAddColumnBBoxMinLatitudeNameOutAll").style.display="inline";
 		document.getElementById("DialogAddColumnBBoxMaxLongitudeNameOutAll").style.display="inline";
@@ -6565,7 +6624,7 @@ function ShowGUF(event) {
 	networkNodes.update(currentNode);
 
 	UpdateChildenSTAURL(currentNode, currentNode.STAURL, previousSTAURL);
-	showInfoMessage("Requesting Feedback...");
+	showInfoMessage({cat: "S'estan sol·licitant comentaris/suggerències...", spa: "Solicitando comentarios/sugerencias...", eng: "Requesting Feedback..."});
 	LoadJSONNodeSTAData(currentNode);
 }
 
@@ -6631,7 +6690,7 @@ function AddCircularImageInterpretingURL(url, mediatype, security) {
 		ReadURLImportDBF(event, url, security);
 	} else {
 		node.STAdata=[{"Content-Type": value.responseHeaders["Content-Type"], "Content-Length": value.responseHeaders["Content-Length"]}];
-		showInfoMessage("Media type (a.k.a format) not supported in this itinerary")  //We need to work on extending support for other formats.
+		showInfoMessage({cat: "El tipus de mitjà (també anomenat format) no és compatible amb aquest itinerari", spa: "El tipo de medio (también llamado formato) no es compatible con este itinerario", eng: "Media type (a.k.a format) not supported in this itinerary"})  //We need to work on extending support for other formats.
 	}
 }
 
@@ -6644,9 +6703,9 @@ function MessageSTAPage(event) {
 			//console.log("data received: ", event.data);
 			if (event.data.message) {
 				if (event.data.message != "You must select a connection in your Wallet first!")
-					showInfoMessage("Error in wallet: " + event.data.message);
+					showInfoMessage({cat: "Error a la cartera: {0}", spa: "Error en la cartera: {0}", eng: "Error in wallet: {0}"}, event.data.message);
 			} else {
-				showInfoMessage("Credentials received");
+				showInfoMessage({cat: "S'han rebut les credencials", spa: "Se han recibido las credenciales", eng: "Credentials received"});
                 		showInfoMessage(event.data['x-facts-key']);
 		                factsAsset.walletWindow.close();
         		        factsAsset.walletWindow = null;
@@ -6670,20 +6729,20 @@ function MessageSTAPage(event) {
 		}
 		catch (e) 
 		{
-			showInfoMessage("JSON message parse error: " + e + " The response was:\n" + event.data);
+			showInfoMessage({cat: "Error d'anàlisi del missatge JSON: {0} La resposta ha estat:\n{1}", spa: "Error de análisis del mensaje JSON: {0} La respuesta ha sido:\n{1}", eng: "JSON message parse error: {0} The response was:\n{1}"}, e, event.data);
 			return;
 		}
 
 		if (data.msg === MMN_PM_IsListening)
 		{
-			showInfoMessage("MiraMon Map Browser is open and ready to show layers.");
+			showInfoMessage({cat: "El navegador de mapes de MiraMon està obert i preparat per mostrar les capes.", spa: "El navegador de mapas de MiraMon está abierto y preparado para mostrar las capas.", eng: "MiraMon Map Browser is open and ready to show layers."});
 			DisplayMapMMN();
 			return;
 		}
 
 		if (data.msg === MMN_PM_Closed)
 		{
-			showInfoMessage("MiraMon Map Browser has been closed.");
+			showInfoMessage({cat: "S'ha tancat el navegador de mapes de MiraMon.", spa: "Se ha cerrado el navegador de mapas de MiraMon.", eng: "MiraMon Map Browser has been closed."});
 			MiraMonMapBrowserVars.mmn=null;
 			MiraMonMapBrowserVars.mmnURL=null;
 			return;
@@ -6696,14 +6755,14 @@ function MessageSTAPage(event) {
 	}
 	catch (e) 
 	{
-		showInfoMessage("JSON message parse error: " + e + " The response was:\n" + event.data);
+		showInfoMessage({cat: "Error d'anàlisi del missatge JSON: {0} La resposta ha estat:\n{1}", spa: "Error de análisis del mensaje JSON: {0} La respuesta ha sido:\n{1}", eng: "JSON message parse error: {0} The response was:\n{1}"}, e, event.data);
 		return;
 	}
 
 	if (!data.type)
 		return;
 	if (data.type!=="GeoJSON"){
-		alert("The format requets from an external source (" + data.type + ") is not implemented yet")
+		alert(DonaCadenaFmt({cat: "La sol·licitud de format des d'una font externa ({0}) encara no ha estat implementada", spa: "La solicitud de formato desde una fuente externa ({0}) aún no ha estado implementada", eng: "The format requets from an external source ({0}) is not implemented yet"}, data.type))
 		return;
 	}
 	createAndLoadImportGeoJSONNode(JSON.stringify(data.data),data.url)
@@ -6726,7 +6785,7 @@ function ShowTableSelectRowDialog(parentNode, node) {
 		addSTAEntityNameAsTitleDialog("divTitleSelectRow", node);
 
 	if (!data || !data.length) {
-		document.getElementById("DialogSelectRowTable").innerHTML = "No data to show.";
+		document.getElementById("DialogSelectRowTable").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 	document.getElementById("DialogSelectRowTable").innerHTML = getHTMLTable(data, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data), 
@@ -6746,7 +6805,7 @@ function ShowSelectResourceDialog(parentNode, node) {
 		addSTAEntityNameAsTitleDialog("divTitleSelectResource", node);
 
 	if (!data || !data.length) {
-		document.getElementById("DialogSelectResourceId").value = "No data to show.";
+		document.getElementById("DialogSelectResourceId").value = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 	document.getElementById("DialogSelectResourceId").value = (node.STAResourceId) ? node.STAResourceId : "";
@@ -6771,7 +6830,7 @@ function SeparateColumns(event) {
 		var columnName= selectColumnName.options[selectColumnName.selectedIndex].value;
 		var delimiter=document.getElementById("SeparateColumsInput_column").value;
 		if (!parentNode.STAdata) {
-			showInfoMessage("No data loaded in the parent node.");
+			showInfoMessage({cat: "No s'han carregat dades al node pare.", spa: "No se han cargado datos en el nodo padre.", eng: "No data loaded in the parent node."});
 			return;
 		}
 		if (document.getElementById("DialogSeparateColumnsAs_Columns").checked) //array columns
@@ -6789,7 +6848,7 @@ function SeparateColumns(event) {
 function populateSelectColumnSeparateColumns() {
 	var parentNode= GetFirstParentNode(currentNode);
 	if (!parentNode || !parentNode.STAdata) {
-		showInfoMessage("No data loaded in the parent node.");
+		showInfoMessage({cat: "No s'han carregat dades al node pare.", spa: "No se han cargado datos en el nodo padre.", eng: "No data loaded in the parent node."});
 		return;
 	}
 	currentNode.STAURL=null;
@@ -6993,7 +7052,7 @@ function OpenLink(event) {
 				startingNodeContextId=node.id;
 				currentNode=(node.image=="ogcAPIItems.png") ? AddSelectResourceIfNoThere(node, data[iRecord]["id"]) : node;
 				factsAsset.walletURL=data[iRecord][columnName.substring(0,columnName.length-"AssetLink".length)+"WalletUrl"];
-				showInfoMessage("Opening wallet...");
+				showInfoMessage({cat: "S'està obrint la cartera...", spa: "Abriendo la cartera...", eng: "Opening wallet..."});
 				var locationURL=transformStringIntoLocation(factsAsset.walletURL)
 				factsAsset.walletWindow = window.open(locationURL.protocol + "//" + locationURL.hostname + (locationURL.port ? ":"+locationURL.port : "") + "/connections/select", "_WALLET", 'popup=true');
 				factsAsset.assetURL = data[iRecord][columnName];
@@ -7241,7 +7300,7 @@ function ShowTableToolApiWarnDialog(node, afterAction) {
 	saveNodeDialog("DialogTableToolApiWarn", node);
 	textEl = document.getElementById("DialogTableToolApiWarnText");
 	if (textEl)
-		textEl.innerHTML = "You are using data that comes from an API service. Using the tool <b>" + info.name + "</b> will be applied directly on the <b>loaded data</b> and not through an API query. Do you want to switch to <b>\"" + info.apiName + "\"</b>?";
+		textEl.innerHTML = DonaCadenaFmt({cat: "Esteu utilitzant dades que provenen d'un servei API. L'eina <b>{0}</b> s'aplicarà directament a les <b>dades carregades</b> i no mitjançant una consulta a l'API. Voleu canviar a <b>\"{1}\"</b>?", spa: "Está utilizando datos que provienen de un servicio API. La herramienta <b>{0}</b> se aplicará directamente a los <b>datos cargados</b> y no mediante una consulta a la API. ¿Quiere cambiar a <b>\"{1}\"</b>?", eng: "You are using data that comes from an API service. Using the tool <b>{0}</b> will be applied directly on the <b>loaded data</b> and not through an API query. Do you want to switch to <b>\"{1}\"</b>?"}, info.name, info.apiName);
 	yesImg = document.getElementById("DialogTableToolApiWarnYesImg");
 	noImg = document.getElementById("DialogTableToolApiWarnNoImg");
 	if (yesImg) {
@@ -7252,8 +7311,8 @@ function ShowTableToolApiWarnDialog(node, afterAction) {
 		noImg.src = info.table;
 		noImg.alt = info.name;
 	}
-	document.getElementById("DialogTableToolApiWarnYesLabel").innerHTML = "Yes — <b>RECOMMENDED</b>";
-	document.getElementById("DialogTableToolApiWarnNoLabel").innerHTML = "No <span><i>(use only if the API is not supporting the required filter)</i></span>";
+	document.getElementById("DialogTableToolApiWarnYesLabel").innerHTML = DonaCadena({cat: "Sí — <b>RECOMANAT</b>", spa: "Sí — <b>RECOMENDADO</b>", eng: "Yes — <b>RECOMMENDED</b>"});
+	document.getElementById("DialogTableToolApiWarnNoLabel").innerHTML = DonaCadena({cat: "No <span><i>(feu-ho servir només si l'API no admet el filtre requerit)</i></span>", spa: "No <span><i>(usar sólo si la API no admite el filtro requerido)</i></span>", eng: "No <span><i>(use only if the API is not supporting the required filter)</i></span>"});
 	showNodeDialog("DialogTableToolApiWarn");
 	return true;
 }
@@ -7268,7 +7327,7 @@ function TableToolApiWarnSwitchToSta(node, parentNode) {
 	node.image = info.sta;
 	staKey = removeFileExtension(info.sta);
 	staLabel = (typeof STAOperations !== "undefined" && STAOperations[staKey] && STAOperations[staKey].description) ? STAOperations[staKey].description : info.name;
-	node.label = staLabel;
+	node.label = (staLabel && typeof staLabel === "object") ? DonaCadena(staLabel) : staLabel;
 	if (parentNode) {
 		if (parentNode.STAURL)
 			node.STAURL = parentNode.STAURL;
@@ -7374,7 +7433,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 	}*/
 	if (errorText)
 	{
-		alert("Incompatible node. " + errorText + ". It has not been added.");
+		alert(DonaCadenaFmt({cat: "Node incompatible. {0}. No s'ha afegit.", spa: "Nodo incompatible. {0}. No se ha añadido.", eng: "Incompatible node. {0}. It has not been added."}, errorText));
 		return null;
 	}
 	if (staNodes && nodeFrom.STAURL && IdOfSTAEntity(nodeTo) != -1) {
@@ -7391,7 +7450,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		showInfoMessage("Requesting " + STAEntitiesArray[IdOfSTAEntity(nodeTo)] + " to STA...");
+		showInfoMessage({cat: "S'està sol·licitant {0} a STA...", spa: "Solicitando {0} a STA...", eng: "Requesting {0} to STA..."}, STAEntitiesArray[IdOfSTAEntity(nodeTo)]);
 		LoadJSONNodeSTAData(nodeTo);
 		//nodeTo.STALastEntity = STAEntitiesArray[IdOfSTAEntity(nodeTo)]; //I will need it to Row Filter
 		return true;
@@ -7406,7 +7465,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		networkNodes.update(nodeTo);
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
-		showInfoMessage("Requesting " + STASpecialQueriesArray[IdOfSTASpecialQueries(nodeTo)] + " to STA...");
+		showInfoMessage({cat: "S'està sol·licitant {0} a STA...", spa: "Solicitando {0} a STA...", eng: "Requesting {0} to STA..."}, STASpecialQueriesArray[IdOfSTASpecialQueries(nodeTo)]);
 		LoadJSONNodeSTAData(nodeTo);
 		return true;
 	}
@@ -7439,7 +7498,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 					networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
 				return true;
 			}else{
-				alert ("The entity expanded must be a list to apply the filter.")
+				alert(DonaCadena({cat: "L'entitat expandida ha de ser una llista per aplicar el filtre.", spa: "La entidad expandida debe ser una lista para aplicar el filtro.", eng: "The entity expanded must be a list to apply the filter."}))
 				return null;
 			}
 			
@@ -7526,11 +7585,11 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		var locationSTAURL=transformStringIntoLocation(nodeTo.STAURL);
 		HTTPJSONData(nodeTo.STAURL, null, null, null, getAWSSignedHeaders(locationSTAURL.hostname, locationSTAURL.pathname, nodeTo.STAsecurity.S3)).then(
 				function(value) {
-					showInfoMessage('S3 Bucket content request completed.'); 
+					showInfoMessage({cat: "S'ha completat la sol·licitud del contingut del contenidor S3.", spa: "Se ha completado la solicitud del contenido del contenedor S3.", eng: "S3 Bucket content request completed."}); 
 					TransformS3ServiceResponseToDataAttributes(nodeTo, value.text);
 				},
 				function(error) { 
-					showInfoMessage('Error in requesting S3 Bucket root folder. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en sol·licitar la carpeta arrel del contenidor S3. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al solicitar la carpeta raíz del contenedor S3. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error in requesting S3 Bucket root folder. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -7730,10 +7789,10 @@ var networkOptions = {
 			addEdge: function (data, callback) {
 				//console.log('add edge', data);
 				if (data.from == data.to)
-					showInfoMessage("Connection to the same node is not allowed.");
+					showInfoMessage({cat: "No es permet la connexió amb el mateix node.", spa: "No se permite la conexión con el mismo nodo.", eng: "Connection to the same node is not allowed."});
 				else {
 					networkEdges.add([{ from: data.to, to: data.from, arrows: "from"}]);
-					showInfoMessage("Connected.");
+					showInfoMessage({cat: "Connectat.", spa: "Conectado.", eng: "Connected."});
 					StartCircularImage(networkNodes.get(data.from), networkNodes.get(data.to), false, true, true);
 				}
 				connectionInProcess = false;
@@ -7757,11 +7816,11 @@ function ShowRadarPlotDialog(parentNodes, node) {
 	var dataAttributes, options, layout, seriesMode, seriesLabelDefault, seriesDiv, seriesToolbar;
 	networkNodes.update(node);
 	if (!parentIds.length) {
-		document.getElementById("DialogRadarPlotTitle").innerHTML = "No data to show.";
+		document.getElementById("DialogRadarPlotTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		clearRadarPlotChart();
 		return;
 	}
-	document.getElementById("DialogRadarPlotTitle").innerHTML = "Radar plot";
+	document.getElementById("DialogRadarPlotTitle").innerHTML = DonaCadena({cat: "Gràfic de radar", spa: "Gráfico de radar", eng: "Radar plot"});
 
 	dataAttributes = getRadarSharedDataAttributes(parentNodes);
 	options = node.radarPlotOptions || {};
@@ -7816,7 +7875,7 @@ function networkDoubleClick(params) {
 		currentNode = networkNodes.get(params.nodes[0])
 		if (currentNode.image == "sta.png") {
 			saveNodeDialog("DialogSTAURL", currentNode);
-			document.getElementById("divTitleDialogSTAURL").innerHTML = "SensorThings API and STAplus";
+			document.getElementById("divTitleDialogSTAURL").innerHTML = DonaCadena({cat: "SensorThings API i STAplus", spa: "SensorThings API y STAplus", eng: "SensorThings API and STAplus"});
 			if (currentNode.STAURL)
 				document.getElementById("DialogSTAURLInput").value = currentNode.STAURL;
 			document.getElementById("DialogSTAURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedSTAurls);
@@ -7827,13 +7886,13 @@ function networkDoubleClick(params) {
 				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
 				var data=parentNode.STAdata;
 				if (!data || !data.length) 
-					alert("Parent node has no data loaded. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare no té dades carregades. S'ignorarà.", spa: "El nodo padre no tiene datos cargados. Se ignorará.", eng: "Parent node has no data loaded. It will be ignored."}));
 				else if (data.length>1)
-					alert("Parent node has more than one row. Please select on row first. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare té més d'una fila. Seleccioneu primer una fila. S'ignorarà.", spa: "El nodo padre tiene más de una fila. Seleccione primero una fila. Se ignorará.", eng: "Parent node has more than one row. Please select on row first. It will be ignored."}));
 				else {
 					var record=data[0];
 					if (!record.dataURL)
-						alert("Parent node has no dataURL column. It will be ignored.");
+						alert(DonaCadena({cat: "El node pare no té cap columna dataURL. S'ignorarà.", spa: "El nodo padre no tiene ninguna columna dataURL. Se ignorará.", eng: "Parent node has no dataURL column. It will be ignored."}));
 					else 
 						document.getElementById("DialogSTAURLInput").value = record.dataURL;
 				}
@@ -7842,20 +7901,20 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "ogcAPICols.png") {
 			saveNodeDialog("DialogSTAURL", currentNode);
-			document.getElementById("divTitleDialogSTAURL").innerHTML = "OGC API landing page";
+			document.getElementById("divTitleDialogSTAURL").innerHTML = DonaCadena({cat: "Pàgina d'inici d'OGC API", spa: "Página de inicio de OGC API", eng: "OGC API landing page"});
 			document.getElementById("DialogSTAURLInput").value = currentNode.STAURL ? (currentNode.STAURL.endsWith("/collections") ? currentNode.STAURL.substring(0, currentNode.STAURL.length-"/collections".length) : currentNode.STAURL) : "";
 			document.getElementById("DialogSTAURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedOGCAPIurls);
 			showNodeDialog("DialogSTAURL");
 		}
 		else if (currentNode.image == "ogcAPIItems.png") {
 			saveNodeDialog("DialogSTAURL", currentNode);
-			document.getElementById("divTitleDialogSTAURL").innerHTML = "OGC API collection to extract items";
+			document.getElementById("divTitleDialogSTAURL").innerHTML = DonaCadena({cat: "Col·lecció OGC API de la qual extreure elements", spa: "Colección OGC API de la que extraer elementos", eng: "OGC API collection to extract items"});
 			document.getElementById("DialogSTAURLInput").value = currentNode.STAURL;
 			showNodeDialog("DialogSTAURL");
 		}
 		else if (currentNode.image == "csw.png") {
 			saveNodeDialog("DialogSTAURL", currentNode);
-			document.getElementById("divTitleDialogSTAURL").innerHTML = "Catalogues (OGC CSW)";
+			document.getElementById("divTitleDialogSTAURL").innerHTML = DonaCadena({cat: "Catàlegs (OGC CSW)", spa: "Catálogos (OGC CSW)", eng: "Catalogues (OGC CSW)"});
 			if (currentNode.STAURL)
 				document.getElementById("DialogSTAURLInput").value = currentNode.STAURL;
 			document.getElementById("DialogSTAURLSelect").innerHTML = GetOptionsSelectDialog(config.suggestedCatalogues);
@@ -7865,7 +7924,7 @@ function networkDoubleClick(params) {
 			if (false==ChangeToHTTPS(true))
 				return;
 			saveNodeDialog("DialogS3Bucket", currentNode);
-			document.getElementById("divTitleDialogS3Bucket").innerHTML = "S3 Service";
+			document.getElementById("divTitleDialogS3Bucket").innerHTML = DonaCadena({cat: "Servei S3", spa: "Servicio S3", eng: "S3 Service"});
 			if (currentNode.STAURL)
 				document.getElementById("DialogS3BucketURL").value = currentNode.STAURL;
 			document.getElementById("DialogS3BucketSelect").innerHTML = GetOptionsObjectSelectDialog(config.suggestedS3Buckets);
@@ -7875,7 +7934,7 @@ function networkDoubleClick(params) {
 			if (false==ChangeToHTTPS(true))
 				return;
 			saveNodeDialog("DialogS3Bucket", currentNode);
-			document.getElementById("divTitleDialogS3Bucket").innerHTML = "S3 Bucket";
+			document.getElementById("divTitleDialogS3Bucket").innerHTML = DonaCadena({cat: "Bucket S3", spa: "Bucket S3", eng: "S3 Bucket"});
 			if (currentNode.STAURL)
 				document.getElementById("DialogS3BucketURL").value = currentNode.STAURL;
 			else
@@ -7894,7 +7953,7 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "edc.png") {
 			if (false==ChangeToHTTPS(true))
 				return;
-			document.getElementById("divTitleDialogEDC").innerHTML = "Eclipse DataSpace Connector";
+			document.getElementById("divTitleDialogEDC").innerHTML = DonaCadena({cat: "Conector Eclipse DataSpace", spa: "Conector Eclipse DataSpace", eng: "Eclipse DataSpace Connector"});
 			if (currentNode.STAURL)
 				document.getElementById("DialogEDCCatalogURL").value = currentNode.STAURL;
 			document.getElementById("DialogEDCSelect").innerHTML = GetOptionsObjectSelectDialog(config.suggestedEDCs);
@@ -7919,14 +7978,14 @@ function networkDoubleClick(params) {
 				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
 				var data=parentNode.STAdata;
 				if (!data || !data.length) 
-					alert("Parent node has no data loaded. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare no té dades carregades. S'ignorarà.", spa: "El nodo padre no tiene datos cargados. Se ignorará.", eng: "Parent node has no data loaded. It will be ignored."}));
 				else if (data.length>1)
-					alert("Parent node has more than one row. Please select on row first. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare té més d'una fila. Seleccioneu primer una fila. S'ignorarà.", spa: "El nodo padre tiene más de una fila. Seleccione primero una fila. Se ignorará.", eng: "Parent node has more than one row. Please select on row first. It will be ignored."}));
 				else {
 					var record=data[0];
 					var href=record.dataURL ? record.dataURL : record.href;
 					if (!href)
-						alert("Parent node has no 'dataURL' or 'href' column. It will be ignored.");
+						alert(DonaCadena({cat: "El node pare no té cap columna «dataURL» ni «href». S'ignorarà.", spa: "El nodo padre no tiene ninguna columna «dataURL» ni «href». Se ignorará.", eng: "Parent node has no 'dataURL' or 'href' column. It will be ignored."}));
 					else {
 						document.getElementById("DialogImportCSVSourceFile").checked=false;
 						document.getElementById("DialogImportCSVSourceURL").checked=true;
@@ -7953,14 +8012,14 @@ function networkDoubleClick(params) {
 				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
 				var data=parentNode.STAdata;
 				if (!data || !data.length) 
-					alert("Parent node has no data loaded. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare no té dades carregades. S'ignorarà.", spa: "El nodo padre no tiene datos cargados. Se ignorará.", eng: "Parent node has no data loaded. It will be ignored."}));
 				else if (data.length>1)
-					alert("Parent node has more than one row. Please select on row first. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare té més d'una fila. Seleccioneu primer una fila. S'ignorarà.", spa: "El nodo padre tiene más de una fila. Seleccione primero una fila. Se ignorará.", eng: "Parent node has more than one row. Please select on row first. It will be ignored."}));
 				else {
 					var record=data[0];
 					var href=record.dataURL ? record.dataURL : record.href;
 					if (!href)
-						alert("Parent node has no 'dataURL' or 'href' column. It will be ignored.");
+						alert(DonaCadena({cat: "El node pare no té cap columna «dataURL» ni «href». S'ignorarà.", spa: "El nodo padre no tiene ninguna columna «dataURL» ni «href». Se ignorará.", eng: "Parent node has no 'dataURL' or 'href' column. It will be ignored."}));
 					else {
 						document.getElementById("DialogImportJSONLDSourceFile").checked=false;
 						document.getElementById("DialogImportJSONLDSourceURL").checked=true;
@@ -7978,14 +8037,14 @@ function networkDoubleClick(params) {
 				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
 				var data=parentNode.STAdata;
 				if (!data || !data.length) 
-					alert("Parent node has no data loaded. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare no té dades carregades. S'ignorarà.", spa: "El nodo padre no tiene datos cargados. Se ignorará.", eng: "Parent node has no data loaded. It will be ignored."}));
 				else if (data.length>1)
-					alert("Parent node has more than one row. Please select on row first. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare té més d'una fila. Seleccioneu primer una fila. S'ignorarà.", spa: "El nodo padre tiene más de una fila. Seleccione primero una fila. Se ignorará.", eng: "Parent node has more than one row. Please select on row first. It will be ignored."}));
 				else {
 					var record=data[0];
 					var href=record.dataURL ? record.dataURL : record.href;
 					if (!href)
-						alert("Parent node has no 'dataURL' or 'href' column. It will be ignored.");
+						alert(DonaCadena({cat: "El node pare no té cap columna «dataURL» ni «href». S'ignorarà.", spa: "El nodo padre no tiene ninguna columna «dataURL» ni «href». Se ignorará.", eng: "Parent node has no 'dataURL' or 'href' column. It will be ignored."}));
 					else {
 						document.getElementById("DialogImportJSONSourceFile").checked=false;
 						document.getElementById("DialogImportJSONSourceURL").checked=true;
@@ -8003,13 +8062,13 @@ function networkDoubleClick(params) {
 				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
 				var data=parentNode.STAdata;
 				if (!data || !data.length) 
-					alert("Parent node has no data loaded. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare no té dades carregades. S'ignorarà.", spa: "El nodo padre no tiene datos cargados. Se ignorará.", eng: "Parent node has no data loaded. It will be ignored."}));
 				else if (data.length>1)
-					alert("Parent node has more than one row. Please select on row first. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare té més d'una fila. Seleccioneu primer una fila. S'ignorarà.", spa: "El nodo padre tiene más de una fila. Seleccione primero una fila. Se ignorará.", eng: "Parent node has more than one row. Please select on row first. It will be ignored."}));
 				else {
 					var record=data[0];
 					if (!record.dataURL)
-						alert("Parent node has no dataURL column. It will be ignored.");
+						alert(DonaCadena({cat: "El node pare no té cap columna dataURL. S'ignorarà.", spa: "El nodo padre no tiene ninguna columna dataURL. Se ignorará.", eng: "Parent node has no dataURL column. It will be ignored."}));
 					else {
 						document.getElementById("DialogImportDBFSourceFile").checked=false;
 						document.getElementById("DialogImportDBFSourceURL").checked=true;
@@ -8027,13 +8086,13 @@ function networkDoubleClick(params) {
 				// Has de table a dataURL and a schemaURL?, then I add this to the dialogbox.
 				var data=parentNode.STAdata;
 				if (!data || !data.length) 
-					alert("Parent node has no data loaded. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare no té dades carregades. S'ignorarà.", spa: "El nodo padre no tiene datos cargados. Se ignorará.", eng: "Parent node has no data loaded. It will be ignored."}));
 				else if (data.length>1)
-					alert("Parent node has more than one row. Please select on row first. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare té més d'una fila. Seleccioneu primer una fila. S'ignorarà.", spa: "El nodo padre tiene más de una fila. Seleccione primero una fila. Se ignorará.", eng: "Parent node has more than one row. Please select on row first. It will be ignored."}));
 				else {
 					var record=data[0];
 					if (!record.dataURL)
-						alert("Parent node has no dataURL column. It will be ignored.");
+						alert(DonaCadena({cat: "El node pare no té cap columna dataURL. S'ignorarà.", spa: "El nodo padre no tiene ninguna columna dataURL. Se ignorará.", eng: "Parent node has no dataURL column. It will be ignored."}));
 					else {
 						document.getElementById("DialogImportGPKGSourceFile").checked=false;
 						document.getElementById("DialogImportGPKGSourceURL").checked=true;
@@ -8140,13 +8199,13 @@ function networkDoubleClick(params) {
 			if (parentNode) {
 				var data=parentNode.STAdata;
 				if (!data || !data.length) 
-					alert("Parent node has no data loaded. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare no té dades carregades. S'ignorarà.", spa: "El nodo padre no tiene datos cargados. Se ignorará.", eng: "Parent node has no data loaded. It will be ignored."}));
 				else if (data.length>1)
-					alert("Parent node has more than one row. Please select on row first. It will be ignored.");
+					alert(DonaCadena({cat: "El node pare té més d'una fila. Seleccioneu primer una fila. S'ignorarà.", spa: "El nodo padre tiene más de una fila. Seleccione primero una fila. Se ignorará.", eng: "Parent node has more than one row. Please select on row first. It will be ignored."}));
 				else {
 					var record=data[0];
 					if (!record.dataURL)
-						alert("Parent node has no dataURL column. It will be ignored.");
+						alert(DonaCadena({cat: "El node pare no té cap columna dataURL. S'ignorarà.", spa: "El nodo padre no tiene ninguna columna dataURL. Se ignorará.", eng: "Parent node has no dataURL column. It will be ignored."}));
 					else {
 						document.getElementById("DialogGUFTitleInput").value=record.title;
 						document.getElementById("DialogGUFCodeInput").value=record.dataURL;
@@ -8177,14 +8236,14 @@ function networkDoubleClick(params) {
 						if (parentNode.STAmetadata && open==true) {
 							currentNode.STAmetadata= parentNode.STAmetadata;
 						}else{
-							alert("The data has to contain metadata");
+							alert(DonaCadena({cat: "Les dades han de contenir metadades", spa: "Los datos deben contener metadatos", eng: "The data has to contain metadata"}));
 						}
 					}else{
-						alert("The data has to had attributes");
+						alert(DonaCadena({cat: "Les dades han de tenir atributs", spa: "Los datos deben tener atributos", eng: "The data has to had attributes"}));
 					}
 				}else{
 					open=false;
-					alert("The node conected has to have data");
+					alert(DonaCadena({cat: "El node connectat ha de tenir dades", spa: "El nodo conectado debe tener datos", eng: "The node conected has to have data"}));
 				}				
 			}
 			if (open)showNodeDialog("DialogUploadIC");
@@ -8203,7 +8262,7 @@ function networkDoubleClick(params) {
 					networkNodes.update(currentNode);
 				}else{
 				 	open=false;
-				 	alert("The node conected has to have data");
+				 	alert(DonaCadena({cat: "El node connectat ha de tenir dades", spa: "El nodo conectado debe tener datos", eng: "The node conected has to have data"}));
 				 }				
 			}
 			if (open)showNodeDialog("DialogUncertainty");
@@ -8434,7 +8493,7 @@ function networkDoubleClick(params) {
 				populateTransposeTableDialog(currentNode);
 				showNodeDialog("DialogTransposeTable");
 			}else{
-				alert("Parent node must have data to transpose");
+				alert(DonaCadena({cat: "El node pare ha de tenir dades per transposar-les", spa: "El nodo padre debe tener datos para transponerlos", eng: "Parent node must have data to transpose"}));
 			}
 		}
 		else if (currentNode.image =="ColumnStatistics.png") {
@@ -8479,7 +8538,7 @@ function networkDoubleClick(params) {
 				if (PopulateCreateUpdateDeleteRecord(currentNode, 0, false))
 					showNodeDialog("DialogCreateUpdateDeleteRecord");
 			}else{
-				alert("Parent node must have data to edite it");
+				alert(DonaCadena({cat: "El node pare ha de tenir dades per editar-les", spa: "El nodo padre debe tener datos para editarlos", eng: "Parent node must have data to edite it"}));
 			}
 		}else if (currentNode.image == "Replace.png") {
 			//startingNodeContextId=currentNode.id;
@@ -8487,7 +8546,7 @@ function networkDoubleClick(params) {
 					populateReplace(currentNode);
 					showNodeDialog("DialogReplaceTextInTable");
 			}else{
-				alert("Parent node must have data to replace it");
+				alert(DonaCadena({cat: "El node pare ha de tenir dades per substituir-les", spa: "El nodo padre debe tener datos para reemplazarlos", eng: "Parent node must have data to replace it"}));
 			}
 		}
 		else if (currentNode.image == "completness.png") {
@@ -8500,7 +8559,7 @@ function networkDoubleClick(params) {
 				networkNodes.update(currentNode);
 				showNodeDialog("DialogCompleteness");
 			}else{
-				alert("Parent node must have data to analyze");
+				alert(DonaCadena({cat: "El node pare ha de tenir dades per analitzar-les", spa: "El nodo padre debe tener datos para analizarlos", eng: "Parent node must have data to analyze"}));
 			}
 		}
 		else if (currentNode.image == "formatConsistency.png") {
@@ -8513,7 +8572,7 @@ function networkDoubleClick(params) {
 				networkNodes.update(currentNode);
 				showNodeDialog("DialogFormatConsistency");
 			}else{
-				alert("Parent node must have data to analyze");
+				alert(DonaCadena({cat: "El node pare ha de tenir dades per analitzar-les", spa: "El nodo padre debe tener datos para analizarlos", eng: "Parent node must have data to analyze"}));
 			}
 		}
 		
@@ -8531,7 +8590,7 @@ function networkDoubleClick(params) {
 			// 	networkNodes.update(currentNode);
 			 	showNodeDialog("DialogQualityMisclassificationMatrix");
 			}else{
-				alert("Parent node must have data to analyze");
+				alert(DonaCadena({cat: "El node pare ha de tenir dades per analitzar-les", spa: "El nodo padre debe tener datos para analizarlos", eng: "Parent node must have data to analyze"}));
 			}
 		}
 		else if (currentNode.image == "logicalConsistency.png") {
@@ -8540,7 +8599,7 @@ function networkDoubleClick(params) {
 			if (populateDialogQualityLogicalConsistency(currentNode)){
 				showNodeDialog("DialogQualityLogicalConsistency");
 			}else{
-				alert ("Both a parent to evaluate and a reference parent are required.")
+				alert(DonaCadena({cat: "Cal tant un node pare per avaluar com un node pare de referència.", spa: "Se requiere tanto un nodo padre para evaluar como un nodo padre de referencia.", eng: "Both a parent to evaluate and a reference parent are required."}))
 			}
 		}
 		else if (currentNode.image == "temporalQuality.png") {
@@ -8553,7 +8612,7 @@ function networkDoubleClick(params) {
 				networkNodes.update(currentNode);
 				showNodeDialog("DialogQualityTemporalQuality");
 			}else{
-				alert("Parent node must have data to analyze");
+				alert(DonaCadena({cat: "El node pare ha de tenir dades per analitzar-les", spa: "El nodo padre debe tener datos para analizarlos", eng: "Parent node must have data to analyze"}));
 			}
 		}
 		else if (currentNode.image == "positionalQuality.png") {
@@ -8566,7 +8625,7 @@ function networkDoubleClick(params) {
 				networkNodes.update(currentNode);
 				showNodeDialog("DialogQualityPositionalQuality");
 			}else{
-				alert("Parent node must have data to analyze");
+				alert(DonaCadena({cat: "El node pare ha de tenir dades per analitzar-les", spa: "El nodo padre debe tener datos para analizarlos", eng: "Parent node must have data to analyze"}));
 			}
 		}
 		else if (currentNode.image == "thematicQuality.png") {
@@ -8576,11 +8635,11 @@ function networkDoubleClick(params) {
 					networkNodes.update(currentNode);
 					showNodeDialog("DialogQualityThematicQuality");
 				}else{
-					alert("Only 2 parents are allowed");
+					alert(DonaCadena({cat: "Només es permeten 2 nodes pare", spa: "Solo se permiten 2 nodos padre", eng: "Only 2 parents are allowed"}));
 				}
 
 			}else{
-				alert("Parent node must have data to analyze");
+				alert(DonaCadena({cat: "El node pare ha de tenir dades per analitzar-les", spa: "El nodo padre debe tener datos para analizarlos", eng: "Parent node must have data to analyze"}));
 			}
 		}
 		else if (currentNode.image == "qualityResultsViewer.png") {
@@ -8740,7 +8799,7 @@ function addCircularImage(event, dialog, label, image) {
 function removeNode(nodeId)
  {
 	var node=networkNodes.get(nodeId);
-	if (confirm("Do you want to remove the node '" + node.label + "'?"))
+	if (confirm(DonaCadenaFmt({cat: "Voleu eliminar el node '{0}'?", spa: "¿Quiere eliminar el nodo '{0}'?", eng: "Do you want to remove the node '{0}'?"}, node.label)))
 	{
 		if (node.image == "SubscribeSTA.png") {
 			UnSubscribeTopicToWebHub(node.id);
@@ -8765,7 +8824,7 @@ function removeCircularImage(event, dialog) {
 
 function renameNode(nodeId){
 	var node=networkNodes.get(nodeId);
-	var name=prompt("Change node label to:", node.label);
+	var name=prompt(DonaCadena({cat: "Canviar l'etiqueta del node a:", spa: "Cambiar la etiqueta del nodo a:", eng: "Change node label to:"}), node.label);
 	if (name!=null)
 	{
 		node.label=name;
@@ -8787,7 +8846,7 @@ function renameCircularImage(event, dialog) {
 function addEdge() {
 	network.addEdgeMode();
 	connectionInProcess = true;
-	showInfoMessage("Press the mouse botton on the starting node (child node), and drag and drop the mouse on the end node (parent node).");
+	showInfoMessage({cat: "Premeu el botó del ratolí sobre el node inicial (node fill), arrossegueu-lo i deixeu-lo anar sobre el node final (node pare).", spa: "Presione el botón del ratón sobre el nodo inicial (nodo hijo), arrástrelo y suéltelo sobre el nodo final (nodo padre).", eng: "Press the mouse botton on the starting node (child node), and drag and drop the mouse on the end node (parent node)."});
 }
 
 function removeEdge(event, dialog) {
@@ -8796,7 +8855,7 @@ function removeEdge(event, dialog) {
 	if (dialog)
 		hideNodeDialog(dialog);
 	if (startingEdgeContextId) {
-		if (confirm("Do you want to remove the edge?"))
+		if (confirm(DonaCadena({cat: "Voleu eliminar l'aresta?", spa: "¿Quiere eliminar la arista?", eng: "Do you want to remove the edge?"})))
 		{
 			networkEdges.remove(startingEdgeContextId);
 			startingEdgeContextId = null;
@@ -8828,7 +8887,7 @@ function openFileNetwork(event) {
 		}
 		catch (e) 
 		{
-			showInfoMessage("JSON message parse error: " + e + " The file content is:\n" + reader.result);
+			showInfoMessage({cat: "Error d'anàlisi del missatge JSON: {0} El contingut del fitxer és:\n{1}", spa: "Error de análisis del mensaje JSON: {0} El contenido del archivo es:\n{1}", eng: "JSON message parse error: {0} The file content is:\n{1}"}, e, reader.result);
 			return;
 		}
 	};
@@ -8839,10 +8898,10 @@ function openURLNetwork(url) {
 	HTTPJSONData(url).then(
 				function(value) {
 					openNetwork(value.obj);
-					showInfoMessage('Download TAPIS schema completed.'); 
+					showInfoMessage({cat: "S'ha completat la baixada de l'esquema TAPIS.", spa: "Se ha completado la descarga del esquema TAPIS.", eng: "Download TAPIS schema completed."}); 
 				},
 				function(error) { 
-					showInfoMessage('Error downloading TAPIS schema. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en baixar l'esquema TAPIS. <br>name: {0} missatge: {1} a: {2} text: {3}", spa: "Error al descargar el esquema TAPIS. <br>name: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error downloading TAPIS schema. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -8879,34 +8938,34 @@ async function reloadSTA(event) {
 		var node=nodesArray[i];
 		if (node.image=="sta.png" || node.image=="staRoot.png")
 		{
-			showInfoMessage("Reload STA home page and dependencies...");
-			showInfoMessage("Requesting STA page...");
+			showInfoMessage({cat: "Tornant a carregar la pàgina d'inici d'STA i les dependències...", spa: "Volviendo a cargar la página de inicio de STA y las dependencias...", eng: "Reload STA home page and dependencies..."});
+			showInfoMessage({cat: "S'està sol·licitant la pàgina STA...", spa: "Solicitando la página STA...", eng: "Requesting STA page..."});
 			await LoadJSONNodeSTAData(node, function () {
-				showInfoMessage("Reload STA home page and dependencies completed.");
+				showInfoMessage({cat: "S'ha completat la recàrrega de la pàgina d'inici d'STA i les dependències.", spa: "Se ha completado la recarga de la página de inicio de STA y las dependencias.", eng: "Reload STA home page and dependencies completed."});
 			});
 		}
 		else if (node.image=="ogcAPICols.png")
 		{
-			showInfoMessage("Reload OGC API collections page and dependencies...");
-			showInfoMessage("Requesting OGC API collections page...");
+			showInfoMessage({cat: "Tornant a carregar la pàgina de col·leccions d'OGC API i les dependències...", spa: "Volviendo a cargar la página de colecciones de OGC API y las dependencias...", eng: "Reload OGC API collections page and dependencies..."});
+			showInfoMessage({cat: "S'està sol·licitant la pàgina de les col·leccions d'OGC API...", spa: "Solicitando la página de las colecciones de OGC API...", eng: "Requesting OGC API collections page..."});
 			await LoadJSONNodeSTAData(node, function () {
-				showInfoMessage("Reload OGC API collections page and dependencies completed.");
+				showInfoMessage({cat: "S'ha completat la recàrrega de la pàgina de les col·leccions d'OGC API i les dependències.", spa: "Se ha completado la recarga de la página de las colecciones de OGC API y las dependencias.", eng: "Reload OGC API collections page and dependencies completed."});
 			});
 		}
 		else if (node.image=="csw.png")
 		{
-			showInfoMessage("Reload OGC CSW records and dependencies...");
-			showInfoMessage("Requesting OGC CSW collections...");
+			showInfoMessage({cat: "S'estan tornant a carregar els registres OGC CSW i les dependències...", spa: "Volviendo a cargar los registros OGC CSW y las dependencias...", eng: "Reload OGC CSW records and dependencies..."});
+			showInfoMessage({cat: "S'estan sol·licitant les col·leccions OGC CSW...", spa: "Solicitando las colecciones OGC CSW...", eng: "Requesting OGC CSW collections..."});
 			await LoadJSONNodeSTAData(node, function () {
-				showInfoMessage("Reload OGC CSW records and dependencies completed.");
+				showInfoMessage({cat: "S'ha completat la recàrrega dels registres OGC CSW i les dependències.", spa: "Se ha completado la recarga de los registros OGC CSW y las dependencias.", eng: "Reload OGC CSW records and dependencies completed."});
 			});
 		}
 		else if (node.image=="ImportCSV.png")
 		{
-			showInfoMessage("Reload CSV records and dependencies...");
-			showInfoMessage("Requesting CSV URL table...");
+			showInfoMessage({cat: "S'estan tornant a carregar els registres CSV i les dependències...", spa: "Volviendo a cargar los registros CSV y las dependencias...", eng: "Reload CSV records and dependencies..."});
+			showInfoMessage({cat: "S'està sol·licitant la taula de l'URL CSV...", spa: "Solicitando la tabla de la URL CSV...", eng: "Requesting CSV URL table..."});
 			await LoadJSONNodeSTAData(node, function () {
-				showInfoMessage("Reload CSV records and dependencies completed.");
+				showInfoMessage({cat: "S'ha completat la recàrrega dels registres CSV i les dependències.", spa: "Se ha completado la recarga de los registros CSV y las dependencias.", eng: "Reload CSV records and dependencies completed."});
 			});
 		}
 	}
@@ -8994,12 +9053,12 @@ function addColumnToListCreateColumn(event){
 	var n= TypeOfValuesRadiobuttons.length;
 	
 	if (columnName.length==0) {
-		alert("It is necessary to assign a name to the new column")
+		alert(DonaCadena({cat: "Cal assignar un nom a la columna nova", spa: "Es necesario asignar un nombre a la columna nueva", eng: "It is necessary to assign a name to the new column"}))
 	}else{
 		var columnNameExist=columnExistInTheTable(node, columnName); //Search if name for column is not repeated
 
 		if(columnNameExist){ //It will not be added because column name already exist
-			alert("Chosen column name already exists, change it to add column to the list ");
+			alert(DonaCadena({cat: "El nom de columna seleccionat ja existeix; canvieu-lo per afegir la columna a la llista", spa: "El nombre de columna seleccionado ya existe; cámbielo para añadir la columna a la lista", eng: "Chosen column name already exists, change it to add column to the list"}));
 		}else{
 			for (var i = 0; i <n ; i++) {
 				if (TypeOfValuesRadiobuttons[i].checked){
@@ -9077,7 +9136,7 @@ function addColumnsToTableInCreateColumns(){
 	node.STAdataAttributes= attributes;
 	networkNodes.update(node);
 	hideNodeDialog("DialogCreateColumns");
-	showInfoMessage("New columns have been added");
+	showInfoMessage({cat: "S'han afegit columnes noves", spa: "Se han añadido columnas nuevas", eng: "New columns have been added"});
 	updateQueryAndTableArea(node)
 }
 
@@ -9135,7 +9194,7 @@ function addColumnToListAggregateColumns(event) {
 		atLeast2attributesSelected = true;
 
 	if (typeOfOperationExist == false || atLeast2attributesSelected == false) {
-		alert("At least two attributes and one aggregation method have to be selected");
+		alert(DonaCadena({cat: "Cal seleccionar almenys dos atributs i un mètode d'agregació", spa: "Debe seleccionar al menos dos atributos y un método de agregación", eng: "At least two attributes and one aggregation method have to be selected"}));
 	} else {//All is correct, new column can be added to the list
 		//columnName
 		if (document.getElementById("columnNameRadioAggregateColumns_personalized").checked) {
@@ -9147,7 +9206,7 @@ function addColumnToListAggregateColumns(event) {
 		var columnNameExist = columnExistInTheTable(node, columnName); //Search if name for column is not repeated
 	
 		if (columnNameExist) { //It will not be added because column name already exist
-			alert("Chosen column name already exists, change it to add column to the list ");
+			alert(DonaCadena({cat: "El nom de columna seleccionat ja existeix; canvieu-lo per afegir la columna a la llista", spa: "El nombre de columna seleccionado ya existe; cámbielo para añadir la columna a la lista", eng: "Chosen column name already exists, change it to add column to the list"}));
 		} else { //It can be added
 			STANewColumnsArray.push(columnName, attributesArray);
 			if (document.getElementById("chooseNumberDecimals_0").checked)
@@ -9344,11 +9403,11 @@ function addColumnsToTableInAggregateColumns(event) {
 		var attributes= uploadDataAttributesAddingNewColumns(GetParentNodes(node)[0].STAdataAttributes,node.STAdata);
 		node.STAdataAttributes=attributes;
 		networkNodes.update(node);
-		showInfoMessage("New columns have been added");
+		showInfoMessage({cat: "S'han afegit columnes noves", spa: "Se han añadido columnas nuevas", eng: "New columns have been added"});
 		hideNodeDialog("DialogAggregateColumns");
 		updateQueryAndTableArea(node);
 	}else{
-		alert("There are no columns in the list to add, nothing will be added to the table")
+		alert(DonaCadena({cat: "No hi ha cap columna per afegir a la llista; no s'afegirà res a la taula", spa: "No hay ninguna columna que añadir en la lista; no se añadirá nada a la tabla", eng: "There are no columns in the list to add, nothing will be added to the table"}))
 	}
 
 
@@ -9451,7 +9510,7 @@ function addColumnToListColumnsCalculator(event){
 	if (columnName.length==0) columnName="noname";
 	var columnNameExist=columnExistInTheTable(node, columnName); //Search if name for column is not repeated
 	if(columnNameExist){ //It will not be added because column name already exist
-		alert("Chosen column name already exists, change it to add column to the list ");
+		alert(DonaCadena({cat: "El nom de columna seleccionat ja existeix; canvieu-lo per afegir la columna a la llista", spa: "El nombre de columna seleccionado ya existe; cámbielo para añadir la columna a la lista", eng: "Chosen column name already exists, change it to add column to the list"}));
 	}else{
 		var decimalNumber="";
 		if (document.getElementById("chooseNumberDecimalsCalculator_0").checked) {
@@ -9518,7 +9577,7 @@ function addColumnsToTableInColumnsCalculator(){
 	var attributes= uploadDataAttributesAddingNewColumns(GetParentNodes(node)[0].STAdataAttributes, node.STAdata, "calculator");
 	node.STAdataAttributes=attributes;
 	networkNodes.update(node);
-	showInfoMessage("New columns have been added");
+	showInfoMessage({cat: "S'han afegit columnes noves", spa: "Se han añadido columnas nuevas", eng: "New columns have been added"});
 	hideNodeDialog("DialogColumnsCalculator");
 	updateQueryAndTableArea(node);
 }
@@ -9707,12 +9766,12 @@ function takeParentsInformationInGeoDistance(){
 			currentNode.STAdataAttributes=parentNode.STAdataAttributes;
 			networkNodes.update(currentNode);
 		}else if (!parentNode.STAURL &&parentNode.STAdata.length>1){
-			alert ("There is a node linked not STA with more than one register, if you want to use it, apply a select row to choose your register")
+			alert(DonaCadena({cat: "Hi ha enllaçat un node que no és STA amb més d'un registre; si voleu utilitzar-lo, apliqueu una selecció de fila per triar el registre", spa: "Hay enlazado un nodo que no es STA con más de un registro; si desea utilizarlo, aplique una selección de fila para elegir el registro", eng: "There is a node linked not STA with more than one register, if you want to use it, apply a select row to choose your register"}))
 			
 			return false;
 		}else { //1 register
 			if (nodeWithUniqueRow==true){
-				alert ("There is more than one node with only one register linked. Link only one node with one register to use to take the coordenates")
+				alert(DonaCadena({cat: "Hi ha més d'un node enllaçat amb un sol registre. Enllaceu només un node amb un registre per utilitzar-lo per obtenir les coordenades", spa: "Hay más de un nodo enlazado con un solo registro. Enlace únicamente un nodo con un registro para utilizarlo para obtener las coordenadas", eng: "There is more than one node with only one register linked. Link only one node with one register to use to take the coordenates"}))
 				return false;
 			}
 			nodeWithUniqueRow=true;
@@ -9854,7 +9913,7 @@ var entityName;
 			var idNode=IdOfSTAEntity(parentNodes[0].STAEntityName);
 		
 			if (idNode<0){
-				alert("It is necessary to link only one node with data from STA source");
+				alert(DonaCadena({cat: "Cal enllaçar només un node amb dades d'una font STA", spa: "Es necesario enlazar únicamente un nodo con datos de una fuente STA", eng: "It is necessary to link only one node with data from STA source"}));
 				return false;
 			}
 			entityName=STAEntitiesArray[idNode];
@@ -9876,12 +9935,12 @@ var entityName;
 		else if (entityName=="ObservationGroups")
 			document.getElementById("filterRowsByTimeSelectProperty").innerHTML='<option value="creationTime">creationTime</option><option value="endTime">endTime</option>'
 		else {
-			alert("It is necessary to link one node with a data property");
+			alert(DonaCadena({cat: "Cal enllaçar un node amb una propietat de dades", spa: "Es necesario enlazar un nodo con una propiedad de datos", eng: "It is necessary to link one node with a data property"}));
 			return false;
 		}
 		return true;			
 	} else {
-		alert("It is necessary to link only one node with data from STA source");
+		alert(DonaCadena({cat: "Cal enllaçar només un node amb dades d'una font STA", spa: "Es necesario enlazar únicamente un nodo con datos de una fuente STA", eng: "It is necessary to link only one node with data from STA source"}));
 		return false;
 	}
 }
@@ -9894,7 +9953,7 @@ async function filterRowsByTimeOkButton(){
 	var dateFromValue= document.getElementById("filterRowsByTimeCalendarFrom").value;
 	var dateToValue= document.getElementById("filterRowsByTimeCalendarTo").value;
 	if (dateFromValue==""|| dateToValue =="")
-		alert("It is necessary to select a Data");
+		alert(DonaCadena({cat: "Cal seleccionar una dada", spa: "Es necesario seleccionar un dato", eng: "It is necessary to select a Data"}));
 	else{
 		hideNodeDialog("DialogFilterRowsByTime");
 		var url= prepareUrlToApplyFilter();
@@ -9903,7 +9962,7 @@ async function filterRowsByTimeOkButton(){
 		if (document.getElementById("aggregateDataYes").checked){
 			var selectAggregation= document.getElementById("filterRowsByTimeSelectAggregation");
 			var selectedAggregationValue= selectAggregation.options[selectAggregation.selectedIndex].value;
-			showInfoMessage("Applying filter ... It may take a while, please wait")
+			showInfoMessage({cat: "S'està aplicant el filtre ... Pot trigar una estona; espereu", spa: "Aplicando el filtro ... Puede tardar un poco; espere", eng: "Applying filter ... It may take a while, please wait"})
 			await askForAllDataResults(selectedValue);
 			var necessaryData= await prepareSTAdataToAggregateDataByChosenPeriodFunction(currentNode.STAdata, [selectedValue, "result"]); //await because can contain a lot of data 
 			var aggregatedData= await AggregateDataByChosenPeriod(necessaryData, selectedAggregationValue, true);
@@ -9917,7 +9976,7 @@ async function filterRowsByTimeOkButton(){
 			currentNode.STAdataStatistics= statistics;
 			//currentNode.STAdataAttributes=getDataAttributes(aggregatedData[1]);
 			networkNodes.update(currentNode);
-			showInfoMessage("Filter applied");
+			showInfoMessage({cat: "S'ha aplicat el filtre", spa: "Se ha aplicado el filtro", eng: "Filter applied"});
 		} 
 	}
 }
@@ -10087,7 +10146,7 @@ function populateTransposeTableDialog(node){
 	saveNodeDialog("DialogTransposeTable", node);
 	parentNode=GetFirstParentNode(node);
 	if (!parentNode || !parentNode.STAdata) {
-		alert("Parent node must have data to transpose");
+		alert(DonaCadena({cat: "El node pare ha de tenir dades per transposar-les", spa: "El nodo padre debe tener datos para transponerlos", eng: "Parent node must have data to transpose"}));
 		return;
 	}
 	node.STAdata=deapCopy(parentNode.STAdata);
@@ -10120,11 +10179,11 @@ function okButtonInTransposeTable(event){
 	headerColumn=document.getElementById("TransposeTable_headerColumn").value;
 	attributeColumnName=String(document.getElementById("TransposeTable_attributeColumnName").value || "").trim();
 	if (!headerColumn) {
-		alert("Select a header column.");
+		alert(DonaCadena({cat: "Seleccioneu una columna de capçalera.", spa: "Seleccione una columna de cabecera.", eng: "Select a header column."}));
 		return;
 	}
 	if (!attributeColumnName) {
-		alert("Enter a name for the attribute column.");
+		alert(DonaCadena({cat: "Introduïu un nom per a la columna d'atributs.", spa: "Introduzca un nombre para la columna de atributos.", eng: "Enter a name for the attribute column."}));
 		return;
 	}
 	node.STATransposeTable={ headerColumn: headerColumn, attributeColumnName: attributeColumnName };
@@ -10190,7 +10249,7 @@ function addTableRowInPivotTable(place){
 	var node= getNodeDialog("DialogPivotTable");
 	var select= document.getElementById("pivotTable"+place+"_select");
 	if (node.STApivotTable[place].includes(select.options[select.selectedIndex].value)){
-		alert("This attribute has already been added in "+place);
+		alert(DonaCadenaFmt({cat: "Aquest atribut ja s'ha afegit a {0}", spa: "Este atributo ya se ha añadido en {0}", eng: "This attribute has already been added in {0}"}, place));
 	}else{
 		node.STApivotTable[place].push(select.options[select.selectedIndex].value);
 		networkNodes.update(node);
@@ -10364,7 +10423,7 @@ function FormatConsistencyAddDefinedLetter() {
 	var el = document.getElementById("FormatConsistency_patternLetter");
 	var v = el ? String(el.value || "").trim() : "";
 	if (!v || !/^[A-Za-z]$/.test(v)) {
-		alert("Enter one letter.");
+		alert(DonaCadena({cat: "Introduïu una lletra.", spa: "Introduzca una letra.", eng: "Enter one letter."}));
 		return;
 	}
 	FormatConsistencyAddPatternToken("letter", { value: v });
@@ -10375,7 +10434,7 @@ function FormatConsistencyAddDefinedDigit() {
 	var el = document.getElementById("FormatConsistency_patternDigit");
 	var v = el ? String(el.value || "").trim() : "";
 	if (!v || !/^[0-9]$/.test(v)) {
-		alert("Enter one digit.");
+		alert(DonaCadena({cat: "Introduïu una xifra.", spa: "Introduzca una cifra.", eng: "Enter one digit."}));
 		return;
 	}
 	FormatConsistencyAddPatternToken("digit", { value: v });
@@ -10388,7 +10447,7 @@ function FormatConsistencyAddInterval() {
 	var from = fromEl ? String(fromEl.value || "").trim() : "";
 	var to = toEl ? String(toEl.value || "").trim() : "";
 	if (!from || !to || from.length !== 1 || to.length !== 1) {
-		alert("Enter one character in each interval field.");
+		alert(DonaCadena({cat: "Introduïu una lletra en cada camp d'interval.", spa: "Introduzca una letra en cada campo de intervalo.", eng: "Enter one character in each interval field."}));
 		return;
 	}
 	FormatConsistencyAddPatternToken("interval", { from: from, to: to });
@@ -10488,11 +10547,11 @@ function okButtonDataQualityFormatConsistency(event) {
 		patternTokens: JSON.parse(JSON.stringify(FormatConsistencyPatternTokens))
 	};
 	if (!options.column) {
-		alert("Select a column to evaluate.");
+		alert(DonaCadena({cat: "Seleccioneu una columna per avaluar.", spa: "Seleccione una columna para evaluar.", eng: "Select a column to evaluate."}));
 		return;
 	}
 	if (options.format === "custom" && (!options.patternTokens || !options.patternTokens.length)) {
-		alert("Add at least one piece to the custom pattern.");
+		alert(DonaCadena({cat: "Afegiu almenys una peça al patró personalitzat.", spa: "Añada al menos una pieza al patrón personalizado.", eng: "Add at least one piece to the custom pattern."}));
 		return;
 	}
 	node.STAFormatConsistencyOptions = options;
@@ -10597,7 +10656,7 @@ function okButtonDataQualityCompleteness(event){
 	var commissionOn=document.getElementById("Completeness_check_commission").checked;
 	var excessOn=document.getElementById("Completeness_check_excess").checked;
 	if (!omissionOn && !commissionOn && !excessOn){
-		alert("Select at least one Completeness check.");
+		alert(DonaCadena({cat: "Seleccioneu almenys una comprovació de completesa.", spa: "Seleccione al menos una comprobación de completitud.", eng: "Select at least one Completeness check."}));
 		return;
 	}
 	var node= getNodeDialog("DialogCompleteness");
@@ -10724,7 +10783,7 @@ function populateDialogQualityCompleteness(node){
 	}else populateDialogdataQualityResultEmpty();
 }
 function populateDialogdataQualityResultEmpty(){
-	document.getElementById("dataQualityResult_info").innerHTML = `<p  style="padding:10px;">No quality results have been calculated in the previous node.</p>`;
+	document.getElementById("dataQualityResult_info").innerHTML = `<p  style="padding:10px;">` + DonaCadena({cat: "No s'han calculat resultats de qualitat al node anterior.", spa: "No se han calculado resultados de calidad en el nodo anterior.", eng: "No quality results have been calculated in the previous node."}) + `</p>`;
 }
 
 function populateDialogQualityLogicalConsistency(node){
@@ -10732,16 +10791,16 @@ function populateDialogQualityLogicalConsistency(node){
 	saveNodeDialog("DialogQualityLogicalConsistency", node);
 	if (parentsNodes.length!=2) return false; //node to evaluate and reference nodes are required
 
-	document.getElementById("DialogQualityLogicalConsistency_table_0").innerHTML="Node name: "+ parentsNodes[0].label;
-	document.getElementById("DialogQualityLogicalConsistency_table_1").innerHTML="Node name: "+parentsNodes[1].label;
+	document.getElementById("DialogQualityLogicalConsistency_table_0").innerHTML=DonaCadenaFmt({cat: "Nom del node: {0}", spa: "Nombre del nodo: {0}", eng: "Node name: {0}"}, parentsNodes[0].label);
+	document.getElementById("DialogQualityLogicalConsistency_table_1").innerHTML=DonaCadenaFmt({cat: "Nom del node: {0}", spa: "Nombre del nodo: {0}", eng: "Node name: {0}"}, parentsNodes[1].label);
 	var div= document.getElementById("DialogQualityLogicalConsistency_table_div");
 	var options1="",options2="", objectKeys;
 	//node 1
 	if(!parentsNodes[0].STAdata){
-		alert("Parent nodes do not contain data");
+		alert(DonaCadena({cat: "Els nodes pare no contenen dades", spa: "Los nodos padre no contienen datos", eng: "Parent nodes do not contain data"}));
 		return false;
 	}
-	options1+=`<option value="" style="text-align: center;">--- Select column ---</option>`;
+	options1+=`<option value="" style="text-align: center;">` + DonaCadena({cat: "--- Seleccioneu columna ---", spa: "--- Seleccione columna ---", eng: "--- Select column ---"}) + `</option>`;
 	objectKeys=Object.keys(parentsNodes[0].STAdataAttributes);
 	for (var e=0;e<objectKeys.length;e++){
 		options1+=`<option value="${objectKeys[e]}">${objectKeys[e]}</option>`
@@ -10749,10 +10808,10 @@ function populateDialogQualityLogicalConsistency(node){
 	div.setAttribute("data-value_0", parentsNodes[0].id);
 	//node 2
 	if(!parentsNodes[1].STAdata){
-		alert("Parent nodes do not contain data");
+		alert(DonaCadena({cat: "Els nodes pare no contenen dades", spa: "Los nodos padre no contienen datos", eng: "Parent nodes do not contain data"}));
 		return false;
 	}
-	options2+=`<option value="" style="text-align: center;">--- Select column ---</option>`;
+	options2+=`<option value="" style="text-align: center;">` + DonaCadena({cat: "--- Seleccioneu columna ---", spa: "--- Seleccione columna ---", eng: "--- Select column ---"}) + `</option>`;
 	objectKeys=Object.keys(parentsNodes[1].STAdataAttributes);
 	for (var e=0;e<objectKeys.length;e++){
 		options2+=`<option value="${objectKeys[e]}">${objectKeys[e]}</option>`
@@ -10825,7 +10884,7 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 
 
 	}else{
-		alert("target node and reference node are the same are identified as the same")
+		alert(DonaCadena({cat: "El node objectiu i el node de referència són el mateix i s'identifiquen com a tal", spa: "El nodo objetivo y el nodo de referencia son el mismo y se identifican como tal", eng: "target node and reference node are the same are identified as the same"}))
 	}
 	}
 }
@@ -10908,7 +10967,7 @@ function okButtonDataQualityTemporalQuality(event){
 				//valid=true;
 			//} else {
 				// valid=false;
-				// alert("Selected uncertainly column must be of a 'number' type");
+				// alert(DonaCadena({cat: "La columna d'incertesa seleccionada ha de ser del tipus numèric", spa: "La columna de incertidumbre seleccionada debe ser de tipo numérico", eng: "Selected uncertainly column must be of a 'number' type"}));
 			//}
 			
 		}else{ //Calculate
@@ -11046,7 +11105,7 @@ function okButtonDataQualityPositionalQuality(event){
 				valid=true;
 			} else {
 				valid=false;
-				alert("Selected uncertainly column must be of a 'number' type");
+				alert(DonaCadena({cat: "La columna d'incertesa seleccionada ha de ser del tipus numèric", spa: "La columna de incertidumbre seleccionada debe ser de tipo numérico", eng: "Selected uncertainly column must be of a 'number' type"}));
 			}
 			
 		} else { 
@@ -11067,7 +11126,7 @@ function okButtonDataQualityPositionalQuality(event){
 			
 			if (STAQualityNodeResults.accuracy==null){
 				valid=false;
-				alert("Selected collumn must have a geometry type");
+				alert(DonaCadena({cat: "La columna seleccionada ha de se de tipus geomètric", spa: "La columna seleccionada debe ser de tipo geométrico", eng: "Selected collumn must have a geometry type"}));
 			}
 			else 
 				valid=true;
@@ -11083,7 +11142,7 @@ function okButtonDataQualityPositionalQuality(event){
 		STAQualityNodeResults.validity.positionalValidityRate=positionalValidityRate;
 		if (positionalValidityRate==null){
 			valid=false;
-			alert("Selected collumn must have a geometry type");
+			alert(DonaCadena({cat: "La columna seleccionada ha de se de tipus geomètric", spa: "La columna seleccionada debe ser de tipo geométrico", eng: "Selected collumn must have a geometry type"}));
 		} else {
 			valid=true;
 			node.STAdata= data;
@@ -11105,7 +11164,7 @@ function okButtonDataQualityPositionalQuality(event){
 			hideNodeDialog("DialogQualityPositionalQuality", event);	
 			
 		} else
-			alert("No option selected. Nothing to do.");	
+			alert(DonaCadena({cat: "No s'ha seleccionat cap opció. No hi ha res a fer.", spa: "No se ha seleccionado ninguna opción. No hay nada que hacer.", eng: "No option selected. Nothing to do."}));	
 
 
 		
@@ -11416,7 +11475,7 @@ function GetCreateNewTable(event){
 		updateQueryAndTableArea(node);
 
 	}else{
-		alert("Column list is empty. Table will not be created.")
+		alert(DonaCadena({cat: "La llista de columnes és buida. La taula no es crearà.", spa: "La lista de columnas está vacía. La tabla no se creará.", eng: "Column list is empty. Table will not be created."}))
 	}
 }
 function populateuploadToICDialogUploadIC(node){
@@ -11464,7 +11523,7 @@ async function GetUploadIC(event){
 			latMax= aggrFuncMaxValue(latValues);
 		}
 		else{
-			alert("This procedure must contain geographical information. The selected columns do not meet this requirement")
+			alert(DonaCadena({cat: "Aquest procediment ha de contenir informació geogràfica. Les columnes seleccionades no compleixen aquest requisit", spa: "Este procedimiento debe contener información geográfica. Las columnas seleccionadas no cumplen este requisito", eng: "This procedure must contain geographical information. The selected columns do not meet this requirement"}))
 			return;
 		}
 	}else{ //xmin, xmax, ymin, ymax
@@ -11475,7 +11534,7 @@ async function GetUploadIC(event){
 			longMax=document.getElementById("DialogUploadIC_input_xmax").value;
 			if (!pattern.test(longMax))columsAreNumbers=false;
 			if(parseFloat(longMin)>parseFloat(longMax)){
-				alert("XMin value is higher than XMax value");
+				alert(DonaCadena({cat: "El valor XMin és superior al valor XMax", spa: "El valor XMin es superior al valor XMax", eng: "XMin value is higher than XMax value"}));
 				return;
 			}
 			latMin=document.getElementById("DialogUploadIC_input_ymin").value;
@@ -11483,12 +11542,12 @@ async function GetUploadIC(event){
 			latMax= document.getElementById("DialogUploadIC_input_ymax").value;
 			if (!pattern.test(latMax))columsAreNumbers=false;
 			if(parseFloat(latMin)>parseFloat(latMax)){
-				alert("YMin value is higher than YMax value");
+				alert(DonaCadena({cat: "El valor YMin és superior al valor YMax", spa: "El valor YMin es superior al valor YMax", eng: "YMin value is higher than YMax value"}));
 				return;
 			}
 			
 			if (columsAreNumbers==false){
-				alert("This procedure must contain geographical information. Values introduced are not valid")
+				alert(DonaCadena({cat: "Aquest procediment ha de contenir informació geogràfica. Els valors introduïts no són vàlids", spa: "Este procedimiento debe contener información geográfica. Los valores introducidos no son válidos", eng: "This procedure must contain geographical information. Values introduced are not valid"}))
 				return;
 			}
 	}
@@ -11509,7 +11568,7 @@ async function GetUploadIC(event){
 			startDate=dataSorted[0][selectDateValue];
 			endDate=dataSorted[dataSorted.length-1][selectDateValue]
 		}else{
-			alert("This procedure must contain date information. The selected column do not meet this requirement")
+			alert(DonaCadena({cat: "Aquest procediment ha de contenir informació tipus data. La columna seleccionada no compleix aquest requisit", spa: "Este procedimiento debe contener información tipo fecha. La columna seleccionada no cumple este requisito", eng: "This procedure must contain date information. The selected column do not meet this requirement"}))
 			return;
 
 		}	
@@ -11523,11 +11582,11 @@ async function GetUploadIC(event){
 		var startDateAsDate=new Date(startDate);
 		var endDateAsDate=new Date(endDate);
 		if(startDateAsDate>endDateAsDate){
-			alert("End date can't be before start date");
+			alert(DonaCadena({cat: "La data final no pot ser anterior a la data inicial", spa: "La fecha final no puede ser anterior a la fecha inicial", eng: "End date can't be before start date"}));
 			return;
 		}
 		if (itsADate==false){
-			alert("This procedure must contain date information. Introduced dates do not meet this requirement")
+			alert(DonaCadena({cat: "Aquest procediment ha de contenir informació tipus data. Les dades introduïdes no compleixen aquest requisit", spa: "Este procedimiento debe contener información tipo fecha. Los datos introducidao no cumplen este requisito", eng: "This procedure must contain date information. Introduced dates do not meet this requirement"}))
 			return
 		}
 	}
@@ -11596,8 +11655,8 @@ async function GetUploadIC(event){
 
 		 	  setTimeout(addJSONNodeToCheckAddingToCalatongResult, 4000,node,"https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/"+id, );
 		}
-		showInfoMessage("The asset has been added to DQ4STA at URL: "+"https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/"+id )
-		if(checkResult)showInfoMessage("Adding GeoJSON node with data uploaded")
+		showInfoMessage({cat: "S'ha afegit l'actiu a DQ4STA a l'URL: {0}", spa: "Se ha añadido el activo a DQ4STA en la URL: {0}", eng: "The asset has been added to DQ4STA at URL: {0}"}, "https://ic.ogc.secd.eu/stac/collections/test_dq4sta/items/"+id)
+		if(checkResult)showInfoMessage({cat: "S'està afegint un node GeoJSON amb les dades pujades", spa: "Añadiendo un nodo GeoJSON con los datos subidos", eng: "Adding GeoJSON node with data uploaded"})
 		hideNodeDialog("DialogUploadIC", event);
 }
 function addJSONNodeToCheckAddingToCalatongResult(node,url){
@@ -11610,7 +11669,7 @@ function addJSONNodeToCheckAddingToCalatongResult(node,url){
 	//Executar gejson
 	HTTPJSONData(url).then(
 			function(value) { 
-				showInfoMessage('Download GeoJSON completed.');
+				showInfoMessage({cat: "S'ha completat la baixada del GeoJSON.", spa: "Se ha completado la descarga del GeoJSON.", eng: "Download GeoJSON completed."});
 				if (value.obj) 
 					TransformObjGeoJSONToTable(value.obj, url, nodeTo);
 				else
@@ -11618,7 +11677,7 @@ function addJSONNodeToCheckAddingToCalatongResult(node,url){
 
 			},
 			function(error) { 
-				showInfoMessage('Error downloading GeoJSON. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+				showInfoMessage({cat: "Error en baixar el GeoJSON. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al descargar el GeoJSON. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error downloading GeoJSON. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 				console.log(error) ;
 			}
 		);
@@ -11640,7 +11699,7 @@ async function uploadDataToIPFS(data){
 		var response= await HTTPJSONData(url, ['Location'], "POST", formData,null,"multipart/form-data")  
 	}
 	 catch (error) {
-		showInfoMessage('There was an error with ' + url + ": " + error.message);
+		showInfoMessage({cat: "S'ha produït un error amb {0}: {1}", spa: "Se ha producido un error con {0}: {1}", eng: "There was an error with {0}: {1}"}, url, error.message);
 	}
 	if ((response)) {
 		return response.responseHeaders.Location;
@@ -11691,17 +11750,17 @@ function GetUncertainty(event){
 
 	if (node.STAdataAttributes[selectTemporalColumnValue].type !="isodatetime"){
 		executeProcess=false;
-		alert("The column selected to group by time must be a time-type column");
+		alert(DonaCadena({cat: "La columna seleccionada per agrupar per temps ha de ser una columna de tipus temporal", spa: "La columna seleccionada para agrupar por tiempo debe ser una columna de tipo temporal", eng: "The column selected to group by time must be a time-type column"}));
 		return;
 	}
 	if (!node.STAdataAttributes[selectPositionalXColumnValue].type == "number" || !node.STAdataAttributes[selectPositionalXColumnValue].type== "integer"){
 		executeProcess=false;
-		alert("The column selected to group by position (X) must be a number-type column");
+		alert(DonaCadena({cat: "La columna seleccionada per agrupar per posició (X) ha de ser una columna de tipus numèric", spa: "La columna seleccionada para agrupar por posición (X) debe ser una columna de tipo numérico", eng: "The column selected to group by position (X) must be a number-type column"}));
 		return;
 	}
 	if (!node.STAdataAttributes[selectPositionalYColumnValue].type == "number" || !node.STAdataAttributes[selectPositionalYColumnValue].type== "integer"){
 		executeProcess=false;
-		alert("The column selected to group by position (Y) must be a number-type column");
+		alert(DonaCadena({cat: "La columna seleccionada per agrupar per posició (Y) ha de ser una columna de tipus numèric", spa: "La columna seleccionada para agrupar por posición (Y) debe ser una columna de tipo numérico", eng: "The column selected to group by position (Y) must be a number-type column"}));
 		return;
 	}
 
@@ -11920,7 +11979,7 @@ function calculateMeanAndDevInGroupInTime(data, dataToCalculate, indexToChange, 
 		var timeStaDev=aggrFuncStandardDeviation(msAdatesInMs)*0.6745;
 		switch (timeUnit) {
 			default:
-				alert("Invalid unit. Assumint seconds");
+				alert(DonaCadena({cat: "Unitat no vàlida. S'assumiran segons", spa: "Unidad no válida. Se asumirán segundos", eng: "Invalid unit. Assumint seconds"}));
 			case 'seconds':
 				timeStaDev=timeStaDev / 1000;
 				timeStaDev=parseFloat((timeStaDev).toFixed(2));
@@ -12032,10 +12091,10 @@ function addColumnToMisclassificationMatrixTable(event){
 			drawTableInMisclassificationMatrix(node)
 		}else{
 			node.STAcolumnsList.classified.splice(node.STAcolumnsList.classified.indexOf(classifiedValue), 1); //erase from first select, already added. 
-			alert(`Chosen column name (${referenceValue}) already exists, change it to add column to the list`)
+			alert(DonaCadenaFmt({cat: "El nom de columna seleccionat ({0}) ja existeix; canvieu-lo per afegir la columna a la llista", spa: "El nombre de columna seleccionado ({0}) ya existe; cámbielo para añadir la columna a la lista", eng: "Chosen column name ({0}) already exists, change it to add column to the list"}, referenceValue))
 		}
 	}else{
-		alert(`Chosen column name (${classifiedValue}) already exists, change it to add column to the list`);
+		alert(DonaCadenaFmt({cat: "El nom de columna seleccionat ({0}) ja existeix; canvieu-lo per afegir la columna a la llista", spa: "El nombre de columna seleccionado ({0}) ya existe; cámbielo para añadir la columna a la lista", eng: "Chosen column name ({0}) already exists, change it to add column to the list"}, classifiedValue));
 	}
 
 }

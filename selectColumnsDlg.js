@@ -53,7 +53,7 @@ function ShowTableSelectColumnsDialog(div_id, parentNode, node, selectDef, feven
 	selectedColumns=node["STA"+div_id];
 
 	if (!data || !data.length) {
-		document.getElementById("Dialog"+div_id+"HTML").innerHTML = "No data to show.";
+		document.getElementById("Dialog"+div_id+"HTML").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
@@ -79,7 +79,7 @@ function ShowTableSelectColumnsDialogSelect(div_id, parentNode, node, selected, 
 	var data = parentNode.STAdata ? parentNode.STAdata : node.STAdata
 
 	if (!data || !data.length) {
-		document.getElementById("Dialog"+div_id+"HTML").innerHTML = "No data to show.";
+		document.getElementById("Dialog"+div_id+"HTML").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);

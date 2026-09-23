@@ -1821,14 +1821,14 @@ function calculateDataQualityThematicValidityWithAList(dataToEvaluate,referenceD
 
 function calculateDataQualityThematicValidityWithRange(data,from, to,  metadata, thematicAttributeSelected,flag){
 	//Mirar si es numero la clumna e vaors triat
-	if (!from && !to)return "It is necessary to indicate a from or to number"; 
+	if (!from && !to)return DonaCadena({cat: "Cal indicar un número d'inici o de final", spa: "Es necesario indicar un número de inicio o de fin", eng: "It is necessary to indicate a from or to number"}); 
 	if (from) {
 		var fromNumber= Number(from);
-		if (isNaN(fromNumber)) return '"From" value is not a number'; 
+		if (isNaN(fromNumber)) return DonaCadena({cat: "El valor \"From\" no és un número", spa: "El valor \"From\" no es un número", eng: "\"From\" value is not a number"}); 
 	}
 	if (to) {
 		var toNumber= Number(to);
-		if (isNaN(toNumber)) return '"To" value is not a number'; 
+		if (isNaN(toNumber)) return DonaCadena({cat: "El valor \"To\" no és un número", spa: "El valor \"To\" no es un número", eng: "\"To\" value is not a number"}); 
 	}
 	var count=0;
 	for (var i=0; i<data.length;i++){

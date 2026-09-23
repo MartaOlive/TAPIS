@@ -129,11 +129,11 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 	}
 		
 	if (noData) {
-		document.getElementById("DialogScatterPlotTitle").innerHTML = "No data to show.";
+		document.getElementById("DialogScatterPlotTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 
-	document.getElementById("DialogScatterPlotTitle").innerHTML = "Scatter Plot";
+	document.getElementById("DialogScatterPlotTitle").innerHTML = DonaCadena({cat: "Gràfic de dispersió", spa: "Gráfico de dispersión", eng: "Scatter Plot"});
 	createDialogWithSelectWithGroupsScatterPlot(node);
 	drawScatterPlot(node);
 }
@@ -145,16 +145,16 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 	var parentNodesInformation = node.STAattributesToSelect.parentNodesInformation;
 	var parentNodesInformationKeys = Object.keys(parentNodesInformation);
 
-	var cdns = `<button onclick="addNewSelectGroupInScatterPlot('${node.id}')">Add new series</button>`
+	var cdns = `<button onclick="addNewSelectGroupInScatterPlot('${node.id}')">` + DonaCadena({cat: "Afegeix una sèrie nova", spa: "Añadir una serie nueva", eng: "Add new series"}) + `</button>`
 
 	for (var i = 0; i < dialogGroups.length; i++) { //dialog groups of data
-		cdns += `<fieldset><legend>Series ${i + 1}</legend><label  style="margin-right: 10px;margin-bottom:20px">Data from: <select style="margin-bottom:10px" id="DialogScatterPlotAxisNodesSelect_${i}" onchange="updateSelectInformationScatterPlot('${i}','nodeSelected','select','DialogScatterPlotAxisNodesSelect_${i}','${node.id}')"></label>`
+		cdns += `<fieldset><legend>` + DonaCadenaFmt({cat: "Sèrie {0}", spa: "Serie {0}", eng: "Series {0}"}, (i + 1)) + `</legend><label  style="margin-right: 10px;margin-bottom:20px">` + DonaCadena({cat: "Dades de:", spa: "Datos de:", eng: "Data from:"}) + ` <select style="margin-bottom:10px" id="DialogScatterPlotAxisNodesSelect_${i}" onchange="updateSelectInformationScatterPlot('${i}','nodeSelected','select','DialogScatterPlotAxisNodesSelect_${i}','${node.id}')"></label>`
 
 		for (var u = 0; u < parentNodesInformationKeys.length; u++) {
 			cdns += `<option value="${parentNodesInformationKeys[u]}" ${(dialogGroups[i].nodeSelected == parentNodesInformationKeys[u]) ? "selected=true" : ""} onchange="updateSelectInformationScatterPlot('${i}','nodeSelected','select','DialogScatterPlotAxisNodesSelect_${i}','${node.id}')">${parentNodesInformation[parentNodesInformationKeys[u]].nodeLabel}</option>`
 		}
 		cdns += `</select><br>
-				<label style="margin-right: 10px;margin-bottom:20px">Axis X: <select style="margin-bottom:10px" name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','select','DialogScatterPlotAxisXSelect_${i}','${node.id}')">`
+				<label style="margin-right: 10px;margin-bottom:20px">` + DonaCadena({cat: "Eix X:", spa: "Eje X:", eng: "Axis X:"}) + ` <select style="margin-bottom:10px" name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','select','DialogScatterPlotAxisXSelect_${i}','${node.id}')">`
 
 		for (var e = 0; e < parentNodesInformation[dialogGroups[i].nodeSelected].attr.length; e++) { //Select X
 			cdns += `<option value="${parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]}"`;
@@ -163,7 +163,7 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 		}
 
 		cdns += `</select></label><br>
-				<label style="margin-right: 10px;margin-bottom:20px">Axis Y: <select style="margin-bottom:10px" name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','select','DialogScatterPlotAxisYSelect_${i}','${node.id}')">`
+				<label style="margin-right: 10px;margin-bottom:20px">` + DonaCadena({cat: "Eix Y:", spa: "Eje Y:", eng: "Axis Y:"}) + ` <select style="margin-bottom:10px" name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','select','DialogScatterPlotAxisYSelect_${i}','${node.id}')">`
 		for (var e = 0; e < parentNodesInformation[dialogGroups[i].nodeSelected].attr.length; e++) { //Select Y
 			cdns += `<option value="${parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]}"`;
 			if (node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].Y == parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]) cdns += " selected=true "; //checked option
@@ -270,10 +270,10 @@ function ShowBarPlotDialog(parentNodes, node) {
 	saveNodeDialog("DialogBarPlot", node);
 	var data = parentNodes[0].STAdata;
 	if (!data || !data.length) {
-		document.getElementById("DialogBarPlotTitle").innerHTML = "No data to show.";
+		document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
-	document.getElementById("DialogBarPlotTitle").innerHTML = "Bar and pie plot";
+	document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "Gràfic de barres i sectors", spa: "Gráfico de barras y sectores", eng: "Bar and pie plot"});
 
 	var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
 	PopulateSelectSaveLayerDialog("DialogBarPlotAxisX", dataAttributes, node && node.barPlotOptions && node.barPlotOptions.axisX ? node.barPlotOptions.axisX : "phenomenonTime");
@@ -285,7 +285,7 @@ function ShowBarPlotDialog(parentNodes, node) {
 	else {
 		data = parentNodes[1].STAdata;
 		if (!data || data.length != 1) {
-			document.getElementById("DialogBarPlotTitle").innerHTML = "Second connection should only have one item. Continuing without title.";
+			document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "La segona connexió només hauria de tenir un element. Es continua sense títol.", spa: "La segunda conexión solo debería tener un elemento. Se continúa sin título.", eng: "Second connection should only have one item. Continuing without title."});
 			return;
 		}
 
@@ -308,12 +308,12 @@ function ShowBarPlotDialog(parentNodes, node) {
 function ShowImageViewerDialog(node, parentNodes) {
 	var data = parentNodes[0].STAdata;
 	if (!data || !data.length) {
-		document.getElementById("DialogImageViewerTitle").innerHTML = "No data to show.";
+		document.getElementById("DialogImageViewerTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 	saveNodeDialog("DialogImageViewer", node);
 
-	document.getElementById("DialogImageViewerTitle").innerHTML = "Image viewer";
+	document.getElementById("DialogImageViewerTitle").innerHTML = DonaCadena({cat: "Visor d'imatges", spa: "Visor de imágenes", eng: "Image viewer"});
 
 	var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
 	PopulateSelectSaveLayerDialog("DialogImageViewerURL", dataAttributes, "imageURL");
@@ -357,7 +357,7 @@ function UpdateScatterPlot(event) {
 			axisXType=currentAttributeType;
 		else{
 			if (axisXType!=currentAttributeType){ //avoid different types of X axis
-				alert("All series in X axis has to have same type of data");
+				alert(DonaCadena({cat: "Totes les sèries de l'eix X han de contenir el mateix tipus de dades", spa: "Todas las series del eje X deben contener el mismo tipo de datos", eng: "All series in X axis has to have same type of data"}));
 				return;
 			}
 		}
@@ -502,7 +502,7 @@ function UpdateScatterPlot(event) {
 	}
 
 	if (!executable) {
-		alert("The interval of the data selected is too long to apply to the graphic. Filter interval to make it shorter or choose a bigger interval to X axis");
+		alert(DonaCadena({cat: "L'interval de les dades seleccionades és massa llarg per aplicar-lo al gràfic. Filtreu l'interval per fer-lo més curt o trieu un interval més gran per a l'eix X", spa: "El intervalo de los datos seleccionados es demasiado largo para aplicarlo al gráfico. Filtre el intervalo para acortarlo o elija un intervalo mayor para el eje X", eng: "The interval of the data selected is too long to apply to the graphic. Filter interval to make it shorter or choose a bigger interval to X axis"}));
 		return;
 	}
 
@@ -907,7 +907,7 @@ function populateRadarPlotAxesList(dataAttributes, selectedAxes) {
 	var numericNames = getNumericAttributeNames(dataAttributes);
 	var cdns = [];
 	if (!numericNames.length) {
-		document.getElementById("DialogRadarPlotAxesList").innerHTML = "<em>No numeric columns found.</em>";
+		document.getElementById("DialogRadarPlotAxesList").innerHTML = "<em>" + DonaCadena({cat: "No s'han trobat columnes numèriques.", spa: "No se han encontrado columnas numéricas.", eng: "No numeric columns found."}) + "</em>";
 		return;
 	}
 	if (!selectedAxes)
@@ -1136,7 +1136,7 @@ function createDialogWithSelectWithGroupsRadarPlot(node) {
 	seriesLabelSelect = document.getElementById("DialogRadarPlotSeriesLabelSelect");
 	seriesLabel = seriesLabelSelect ? seriesLabelSelect.value : (node.radarPlotOptions ? node.radarPlotOptions.seriesLabel : "");
 	if (toolbar)
-		toolbar.innerHTML = '<button type="button" onclick="addNewSelectGroupInRadarPlot(\'' + node.id + '\')">Add new series</button>';
+		toolbar.innerHTML = '<button type="button" onclick="addNewSelectGroupInRadarPlot(\'' + node.id + '\')">' + DonaCadena({cat: "Afegeix una sèrie nova", spa: "Añadir una serie nueva", eng: "Add new series"}) + '</button>';
 	cdns = "";
 
 	for (i = 0; i < groups.length; i++) {
@@ -1148,8 +1148,8 @@ function createDialogWithSelectWithGroupsRadarPlot(node) {
 		numericNames = parentInfo[parentId] ? parentInfo[parentId].numericNames : [];
 		items = getRadarUniqueValues(data, seriesLabel);
 
-		cdns += '<fieldset><legend>Series ' + (i + 1) + '</legend>';
-		cdns += '<div class="DialogRadarPlotSeriesRow"><label>Data from: <select id="DialogRadarPlotNodeSelect_' + i + '" onchange="updateSelectInformationRadarPlot(\'' + i + '\',\'nodeSelected\',\'select\',\'DialogRadarPlotNodeSelect_' + i + '\',\'' + node.id + '\')">';
+		cdns += '<fieldset><legend>' + DonaCadenaFmt({cat: "Sèrie {0}", spa: "Serie {0}", eng: "Series {0}"}, (i + 1)) + '</legend>';
+		cdns += '<div class="DialogRadarPlotSeriesRow"><label>' + DonaCadena({cat: "Dades de:", spa: "Datos de:", eng: "Data from:"}) + ' <select id="DialogRadarPlotNodeSelect_' + i + '" onchange="updateSelectInformationRadarPlot(\'' + i + '\',\'nodeSelected\',\'select\',\'DialogRadarPlotNodeSelect_' + i + '\',\'' + node.id + '\')">';
 		for (p = 0; p < parentIds.length; p++) {
 			cdns += '<option value="' + ("" + parentIds[p]).replace(/"/g, "&quot;") + '"' +
 				(parentIds[p] == parentId ? ' selected="selected"' : '') + '>' +
@@ -1201,7 +1201,7 @@ function addNewSelectGroupInRadarPlot(nodeId) {
 	if (!node.radarPlotOptions.seriesGroups)
 		node.radarPlotOptions.seriesGroups = [];
 	if (node.radarPlotOptions.seriesGroups.length >= 20) {
-		alert("Too many series (20). Remove one before adding another.");
+		alert(DonaCadena({cat: "Massa sèries (20). Suprimiu-ne una abans d'afegir-ne una altra.", spa: "Demasiadas series (20). Elimine una antes de añadir otra.", eng: "Too many series (20). Remove one before adding another."}));
 		return;
 	}
 	layout = document.getElementById("DialogRadarPlotLayoutWide").checked ? "wide" : "long";
@@ -1497,7 +1497,7 @@ function buildRadarLongSeriesRow(parentNodes, axisX, valueColumn, labelsFull) {
 function limitRadarSeriesList(items, maxSeries, event) {
 	if (items.length > maxSeries) {
 		if (event)
-			alert("Too many series (" + items.length + "). Showing the first " + maxSeries + " series.");
+			alert(DonaCadenaFmt({cat: "Massa sèries ({0}). Es mostren les primeres {1} sèries.", spa: "Demasiadas series ({0}). Se muestran las primeras {1} series.", eng: "Too many series ({0}). Showing the first {1} series."}, items.length, maxSeries));
 		return items.slice(0, maxSeries);
 	}
 	return items;
@@ -1553,12 +1553,12 @@ function DrawRadarPlot(event) {
 	if (!seriesAll) {
 		if (!seriesGroups.length) {
 			if (event)
-				alert("Add at least one series.");
+				alert(DonaCadena({cat: "Afegiu almenys una sèrie.", spa: "Añada al menos una serie.", eng: "Add at least one series."}));
 			return;
 		}
 		if (seriesGroups.length > maxSeries) {
 			if (event)
-				alert("Too many series (" + seriesGroups.length + "). Showing the first " + maxSeries + " series.");
+				alert(DonaCadenaFmt({cat: "Massa sèries ({0}). Es mostren les primeres {1} sèries.", spa: "Demasiadas series ({0}). Se muestran las primeras {1} series.", eng: "Too many series ({0}). Showing the first {1} series."}, seriesGroups.length, maxSeries));
 			seriesGroups = seriesGroups.slice(0, maxSeries);
 		}
 	}
@@ -1579,14 +1579,14 @@ function DrawRadarPlot(event) {
 		node.radarPlotOptions.seriesLabel = seriesLabel;
 		if (axes.length < 3) {
 			if (event)
-				alert("Select at least three numeric columns to use as radar axes.");
+				alert(DonaCadena({cat: "Seleccioneu almenys tres columnes numèriques per utilitzar-les com a eixos del radar.", spa: "Seleccione al menos tres columnas numéricas para utilizarlas como ejes del radar.", eng: "Select at least three numeric columns to use as radar axes."}));
 			return;
 		}
 		labels = axes;
 		if (seriesAll) {
 			if (!seriesLabel) {
 				if (event)
-					alert("Select an item column.");
+					alert(DonaCadena({cat: "Seleccioneu una columna d'elements.", spa: "Seleccione una columna de elementos.", eng: "Select an item column."}));
 				return;
 			}
 			items = limitRadarSeriesList(getRadarUniqueValuesFromParents(parentNodes, seriesLabel), maxSeries, event);
@@ -1625,7 +1625,7 @@ function DrawRadarPlot(event) {
 		node.radarPlotOptions.axisX = axisX;
 		if (!axisX) {
 			if (event)
-				alert("Select a categories column.");
+				alert(DonaCadena({cat: "Seleccioneu una columna de categories.", spa: "Seleccione una columna de categorías.", eng: "Select a categories column."}));
 			return;
 		}
 		if (seriesAll) {
@@ -1634,7 +1634,7 @@ function DrawRadarPlot(event) {
 				labels.push(("" + labelsFull[i]).length > 35 ? ("" + labelsFull[i]).substring(0, 32) + "..." : labelsFull[i]);
 			if (labels.length < 3) {
 				if (event)
-					alert("A radar chart needs at least three categories. The selected column has " + labels.length + " unique values.");
+					alert(DonaCadenaFmt({cat: "Un gràfic de radar necessita almenys tres categories. La columna seleccionada té {0} valors únics.", spa: "Un gráfico de radar necesita al menos tres categorías. La columna seleccionada tiene {0} valores únicos.", eng: "A radar chart needs at least three categories. The selected column has {0} unique values."}, labels.length));
 				return;
 			}
 			valueColumns = limitRadarSeriesList(getRadarAutomaticValueColumns(parentNodes, axisX), maxSeries, event);
@@ -1661,7 +1661,7 @@ function DrawRadarPlot(event) {
 			}
 			if (labels.length < 3) {
 				if (event)
-					alert("A radar chart needs at least three categories. The selected column has " + labels.length + " unique values.");
+					alert(DonaCadenaFmt({cat: "Un gràfic de radar necessita almenys tres categories. La columna seleccionada té {0} valors únics.", spa: "Un gráfico de radar necesita al menos tres categorías. La columna seleccionada tiene {0} valores únicos.", eng: "A radar chart needs at least three categories. The selected column has {0} unique values."}, labels.length));
 				return;
 			}
 			for (g = 0; g < seriesGroups.length; g++) {
@@ -1688,7 +1688,7 @@ function DrawRadarPlot(event) {
 
 	if (!seriesData.length) {
 		if (event)
-			alert(seriesAll ? "No series could be created from the selected columns." : "Add at least one series with an item or value column.");
+			alert(seriesAll ? DonaCadena({cat: "No s'ha pogut crear cap sèrie a partir de les columnes seleccionades.", spa: "No se ha podido crear ninguna serie a partir de las columnas seleccionadas.", eng: "No series could be created from the selected columns."}) : DonaCadena({cat: "Afegiu almenys una sèrie amb una columna d'elements o de valors.", spa: "Agregue al menos una serie con una columna de elementos o de valores", eng: "Add at least one series with an item or value column"}));
 		return;
 	}
 
@@ -1780,12 +1780,12 @@ function SaveRadarPlot(event) {
 		event.preventDefault();
 	canvas = RadarPlotChart && RadarPlotChart.canvas ? RadarPlotChart.canvas : document.getElementById("DialogRadarPlotVisualizationCanvas");
 	if (!RadarPlotChart || !canvas) {
-		alert("Draw the radar chart first.");
+		alert(DonaCadena({cat: "Dibuixeu primer el gràfic de radar.", spa: "Dibuje primero el gráfico de radar.", eng: "Draw the radar chart first."}));
 		return;
 	}
 	function onBlob(blob) {
 		if (!blob) {
-			alert("The chart image could not be saved.");
+			alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
 			return;
 		}
 		saveRadarPlotPngBlob(blob);
@@ -1801,7 +1801,7 @@ function SaveRadarPlot(event) {
 					dataUrl = RadarPlotChart.toBase64Image ? RadarPlotChart.toBase64Image("image/png") : canvas.toDataURL("image/png");
 					onBlob(radarPlotPngBlobFromDataUrl(dataUrl));
 				} catch (e) {
-					alert("The chart image could not be saved.");
+					alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
 				}
 			}, "image/png");
 			return;
@@ -1809,7 +1809,7 @@ function SaveRadarPlot(event) {
 		dataUrl = RadarPlotChart.toBase64Image ? RadarPlotChart.toBase64Image("image/png") : canvas.toDataURL("image/png");
 		onBlob(radarPlotPngBlobFromDataUrl(dataUrl));
 	} catch (e) {
-		alert("The chart image could not be saved.");
+		alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
 	}
 }
 
@@ -1822,17 +1822,17 @@ function DrawImageViewer(event) {
 		if (node.STAdata) {
 			var urlColumn = document.getElementById("DialogImageViewerURLSelect").value;
 			if (!urlColumn) {
-				alert("Please, select a column that has urls to images in it");
+				alert(DonaCadena({cat: "Seleccioneu una columna que contingui URL d'imatges", spa: "Seleccione una columna que contenga URL de imágenes", eng: "Please, select a column that has urls to images in it"}));
 				return;
 			}
 			var labelColumn = document.getElementById("DialogImageViewerLabelSelect").value;
 			var size = parseInt(document.getElementById("DialogImageViewerSizeInput").value);
 			if (isNaN(size)) {
-				alert("Size is not an integer number. Using 200 instead");
+				alert(DonaCadena({cat: "La mida no és un nombre enter. En el seu lloc, s'utilitzarà 200", spa: "El tamaño no es un número entero. En su lugar, se utilizará 200", eng: "Size is not an integer number. Using 200 instead"}));
 				size = 200;
 			}
 			if (size < 2 || size > 2000) {
-				alert("Size is out of the [2,2000] range. Using 200 instead");
+				alert(DonaCadena({cat: "La mida és fora de l'interval [2,2000]. En el seu lloc, s'utilitzarà 200", spa: "El tamaño está fuera del intervalo [2,2000]. En su lugar, se utilizará 200", eng: "Size is out of the [2,2000] range. Using 200 instead"}));
 				size = 200;
 			}
 

@@ -51,7 +51,7 @@ function InitGPSPosition() {
 		IdGPSPosition=navigator.geolocation.watchPosition(UpdateGPSPosition, ErrorGPSPosition, {enableHighAccuracy: true, maximumAge: 8000});
 	else
 	{
-		showInfoMessage("Geolocation not supported by the web browser");
+		showInfoMessage({cat: "El navegador web no admet la geolocalització", spa: "El navegador web no admite la geolocalización", eng: "Geolocation not supported by the web browser"});
 		CancelGPSPosition();
 	}
 }
@@ -71,7 +71,7 @@ function UpdateGPSPosition(position) {
 	PreviousGPSPoint={long: position.coords.longitude, lat: position.coords.latitude};
 	if (!GPSPositionReported)
 	{
-		showInfoMessage("Geolocation is long: " + PreviousGPSPoint.long + " lat: " + PreviousGPSPoint.lat);
+		showInfoMessage({cat: "La geolocalització és longitud: {0} latitud: {1}", spa: "La geolocalización es longitud: {0} latitud: {1}", eng: "Geolocation is long: {0} lat: {1}"}, PreviousGPSPoint.long, PreviousGPSPoint.lat);
 		GPSPositionReported=true;
 	}
 }
@@ -79,20 +79,20 @@ function UpdateGPSPosition(position) {
 function ErrorGPSPosition(error) {
 	switch(error.code) {
 		case error.PERMISSION_DENIED:
-			showInfoMessage("User denied request location.");
+			showInfoMessage({cat: "L'usuari ha denegat la sol·licitud d'ubicació.", spa: "El usuario ha denegado la solicitud de ubicación.", eng: "User denied request location."});
 			CancelGPSPosition();
 			break;
 		case error.POSITION_UNAVAILABLE:
-			showInfoMessage("Location information is unavailable.");
+			showInfoMessage({cat: "La informació de la ubicació no està disponible.", spa: "La información de la ubicación no está disponible.", eng: "Location information is unavailable."});
 			CancelGPSPosition();
 			break;
 		case error.TIMEOUT:
-			showInfoMessage("Request location timeOut.");
+			showInfoMessage({cat: "S'ha esgotat el temps de la sol·licitud d'ubicació.", spa: "Se ha agotado el tiempo de la solicitud de ubicación.", eng: "Request location timeOut."});
 			CancelGPSPosition();
 			break;
 		case error.UNKNOWN_ERROR:
 		default:
-			showInfoMessage("Unknown error obtaining Location (" + error.code + ").");
+			showInfoMessage({cat: "Error desconegut en obtenir la Location ({0}).", spa: "Error desconocido al obtener la Location ({0}).", eng: "Unknown error obtaining Location ({0})."}, error.code);
 			break;
 	}
 }

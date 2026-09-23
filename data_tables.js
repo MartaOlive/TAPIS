@@ -323,7 +323,7 @@ function separateColumnArrayColumns(data, dataAttributes, columnName, delimiter)
 	var n=data.length, separateDataArray, resultData, resultDataAttributes;
 
 	if (dataAttributes[columnName].type!="string"){
-		alert("The content of column selected to separate must be 'string' type");
+		alert(DonaCadena({cat: "El contingut de la columna seleccionada per separar ha de ser del tipus «string»", spa: "El contenido de la columna seleccionada para separar debe ser de tipo «string»", eng: "The content of column selected to separate must be 'string' type"}));
 		return;
 	}
 
@@ -346,7 +346,7 @@ function separateColumnArrayRecords(data, dataAttributes, columnName, delimiter)
 	var n= data.length, resultData=[], separateDataArray;  //, newColumnName;
 
 	if (dataAttributes[columnName].type!="string") {
-		alert("The content of column selected to separate must be 'string' type");
+		alert(DonaCadena({cat: "El contingut de la columna seleccionada per separar ha de ser del tipus «string»", spa: "El contenido de la columna seleccionada para separar debe ser de tipo «string»", eng: "The content of column selected to separate must be 'string' type"}));
 		return;
 	}
 	for (var i=0;i<n;i++) {
@@ -1173,36 +1173,36 @@ function SortTableByColumns(data, columnsSelected, AscOrDesc) {
 function buildTransposeTable(data, dataAttributes, headerColumn, attributeColumnName){
 	var attributes, otherAttrs, i, r, headerVal, headers, seen, rowObj, newData;
 	if (!data || !data.length)
-		return "Error: No data to transpose";
+		return DonaCadena({cat: "Error: No hi ha dades per transposar", spa: "Error: No hay datos para transponer", eng: "Error: No data to transpose"});
 	if (!headerColumn)
-		return "Error: A header column is required";
+		return DonaCadena({cat: "Error: Cal una columna de capçalera", spa: "Error: Se requiere una columna de cabecera", eng: "Error: A header column is required"});
 	attributeColumnName=String(attributeColumnName || "").trim();
 	if (!attributeColumnName)
-		return "Error: A name for the attribute column is required";
+		return DonaCadena({cat: "Error: Cal un nom per a la columna d'atributs", spa: "Error: Se requiere un nombre para la columna de atributos", eng: "Error: A name for the attribute column is required"});
 	attributes=dataAttributes ? Object.keys(dataAttributes) : Object.keys(data[0] || {});
 	if (attributes.indexOf(headerColumn)===-1)
-		return "Error: Header column not found in the table";
+		return DonaCadena({cat: "Error: La columna de capçalera no es troba a la taula", spa: "Error: La columna de cabecera no se encuentra en la tabla", eng: "Error: Header column not found in the table"});
 	otherAttrs=[];
 	for (i=0;i<attributes.length;i++){
 		if (attributes[i]!==headerColumn)
 			otherAttrs.push(attributes[i]);
 	}
 	if (!otherAttrs.length)
-		return "Error: Need at least one column besides the header column";
+		return DonaCadena({cat: "Error: Cal almenys una columna a més de la de capçalera", spa: "Error: Se necesita al menos una columna además de la de cabecera", eng: "Error: Need at least one column besides the header column"});
 	headers=[];
 	seen={};
 	for (r=0;r<data.length;r++){
 		headerVal=data[r][headerColumn];
 		if (headerVal===null || headerVal===undefined || headerVal==="")
-			return "Error: Header column has empty values; every row needs a name for the new columns";
+			return DonaCadena({cat: "Error: La columna de capçalera té valors buits; cada fila necessita un nom per a les noves columnes", spa: "Error: La columna de cabecera tiene valores vacíos; cada fila necesita un nombre para las nuevas columnas", eng: "Error: Header column has empty values; every row needs a name for the new columns"});
 		headerVal=String(headerVal);
 		if (seen[headerVal])
-			return "Error: Header column values must be unique (duplicate: "+headerVal+")";
+			return DonaCadenaFmt({cat: "Error: Els valors de la columna de capçalera han de ser únics (duplicat: {0})", spa: "Error: Los valores de la columna de cabecera deben ser únicos (duplicado: {0})", eng: "Error: Header column values must be unique (duplicate: {0})"}, headerVal);
 		seen[headerVal]=true;
 		headers.push(headerVal);
 	}
 	if (seen[attributeColumnName])
-		return "Error: Attribute column name \""+attributeColumnName+"\" coincides with a header value";
+		return DonaCadenaFmt({cat: "Error: El nom de la columna d'atributs \"{0}\" coincideix amb un valor de capçalera", spa: "Error: El nombre de la columna de atributos \"{0}\" coincide con un valor de cabecera", eng: "Error: Attribute column name \"{0}\" coincides with a header value"}, attributeColumnName);
 	newData=[];
 	for (i=0;i<otherAttrs.length;i++){
 		rowObj={};
@@ -1230,10 +1230,10 @@ function buildPivotTable(data, rows, columns, values, aggregation){
 				break;
 			}
 	}
-	if (applyFunction==false) return "Error: Attributes betwen columns and rows can't be repited "
-	else if (!values || values.length==0) return "Error:It is necessary to send values";
-	else if((!columns|| columns.length==0) && (!rows|| rows.length==0 )) return "Error: It is necessary to send columns or rows";
-	else if(!aggregation ||allowedKey==false ) return "Error: It is necessary to send an allowed aggfregation type";
+	if (applyFunction==false) return DonaCadena({cat: "Error: Els atributs entre columnes i files no es poden repetir ", spa: "Error: Los atributos entre columnas y filas no se pueden repetir ", eng: "Error: Attributes betwen columns and rows can't be repited "})
+	else if (!values || values.length==0) return DonaCadena({cat: "Error: Cal enviar valors", spa: "Error: Es necesario enviar valores", eng: "Error:It is necessary to send values"});
+	else if((!columns|| columns.length==0) && (!rows|| rows.length==0 )) return DonaCadena({cat: "Error: Cal enviar columnes o files", spa: "Error: Es necesario enviar columnas o filas", eng: "Error: It is necessary to send columns or rows"});
+	else if(!aggregation ||allowedKey==false ) return DonaCadena({cat: "Error: Cal enviar un tipus d'agregació permès", spa: "Error: Es necesario enviar un tipo de agregación permitido", eng: "Error: It is necessary to send an allowed aggfregation type"});
  	else{
 
 		var newdataArray=[], newOject, rowName="", rowsValue,columnName, arrayAllColumns=[];
@@ -1398,7 +1398,7 @@ function ReplaceTextInTable(data, dataAttributes, searchValue, replaceValue, num
 						if (!isNaN(searchalueDate.getTime()) && !isNaN(replaceValueDate.getTime())) {
 							if (data[i][column] ==searchValue) data[i][column] = replaceValue;
 						}else{
-							return "The values introduced are not dates; replacement will not be possible."
+							return DonaCadena({cat: "Els valors introduïts no són dates; no es podrà fer el reemplaçament.", spa: "Los valores introducidos no son fechas; no será posible el reemplazo.", eng: "The values introduced are not dates; replacement will not be possible."})
 						}					
 					}
 					
@@ -1445,7 +1445,7 @@ function ReplaceTextInTable(data, dataAttributes, searchValue, replaceValue, num
 						if (!isNaN(searchalueDate.getTime()) && !isNaN(replaceValueDate.getTime())) {
 							if (data[i][column] ==searchValue) data[i][column] = replaceValue;
 						}else{
-							return "The values introduced are not dates; replacement will not be possible."
+							return DonaCadena({cat: "Els valors introduïts no són dates; no es podrà fer el reemplaçament.", spa: "Los valores introducidos no son fechas; no será posible el reemplazo.", eng: "The values introduced are not dates; replacement will not be possible."})
 						}
 					}
 					

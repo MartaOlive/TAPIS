@@ -336,6 +336,33 @@
     justify-content: flex-start;
 }
 
+.TapisLangFlags {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin: 0 6px 0 0;
+    vertical-align: middle;
+}
+
+.TapisLangFlag {
+    padding: 4px 6px !important;
+    min-width: 0;
+    line-height: 0;
+}
+
+.TapisLangFlag img {
+    display: block;
+    width: 24px;
+    height: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+}
+
+.TapisLangFlag.TapisLangActive {
+    outline: 2px solid #333;
+    outline-offset: 1px;
+}
+
 .EditRecordField {
     margin: 0 0 10px 0;
 }

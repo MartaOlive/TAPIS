@@ -273,7 +273,7 @@ function FilterSTAPathChipsHtml(path) {
 	for (var i = 0; i < path.length; i++) {
 		cdns.push('<span class="FilterSTAEntitySep">→</span>');
 		cdns.push('<span class="FilterSTAEntityChip">' + path[i] +
-			' <button type="button" class="FilterSTAChipRemove" title="Remove hop" onclick="FilterSTARemovePathHop(this,' + i + ')">×</button></span>');
+			' <button type="button" class="FilterSTAChipRemove" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Suprimeix el salt", spa: "Eliminar el salto", eng: "Remove hop"})) + '"  onclick="FilterSTARemovePathHop(this,' + i + ')">×</button></span>');
 	}
 	return cdns.join("");
 }
@@ -545,7 +545,7 @@ function FilterSTAPropertyHopHtml(depth, info, selected) {
 	var input = "";
 	if (info.openBag) {
 		var typedVal = selected && !selectedInList ? selected : "";
-		input = ' <input type="text" class="FilterSTAPropertyKeyInput" data-cascade-depth="' + depth + '" value="' + FilterSTAEscapeAttr(typedVal) + '" placeholder="or type a key" onchange="FilterSTAOnPropertyChange(this)" oninput="FilterSTAOnPropertyKeyType(this)">';
+		input = ' <input type="text" class="FilterSTAPropertyKeyInput" data-cascade-depth="' + depth + '" value="' + FilterSTAEscapeAttr(typedVal) + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "o escriviu una clau", spa: "o escriba una clave", eng: "or type a key"})) + '"  onchange="FilterSTAOnPropertyChange(this)" oninput="FilterSTAOnPropertyKeyType(this)">';
 	}
 	return '<span class="FilterSTAPropertyHop" data-cascade-depth="' + depth + '"> / ' +
 		'<select class="FilterSTAPropertyNest" data-cascade-depth="' + depth + '" onchange="FilterSTAOnPropertyChange(this)">' +
@@ -657,25 +657,25 @@ function FilterSTAGroupHtml(isRoot, depth, logic) {
 	var radioName = "FilterSTALogic_" + FilterSTALogicSeq;
 	var andChecked = (!logic || logic === "and") ? ' checked="checked"' : "";
 	var orChecked = (logic === "or") ? ' checked="checked"' : "";
-	var dragHandle = isRoot ? "" : '<span class="FilterSTADragHandle" title="Drag group" draggable="true" ondragstart="FilterSTAOnDragStart(event)" ondragend="FilterSTAOnDragEnd(event)">&#8942;&#8942;</span> ';
-	var dupBtn = isRoot ? "" : '<button type="button" title="Duplicate" onclick="FilterSTADuplicateItem(this)">Duplicate</button> ';
-	var removeBtn = isRoot ? "" : '<button type="button" onclick="FilterSTARemoveItem(this)">Remove</button>';
-	var addGroup = depth >= FilterSTAMaxGroupDepth ? "" : '<button type="button" onclick="FilterSTAAddGroup(this)">+ group</button> ';
+	var dragHandle = isRoot ? "" : '<span class="FilterSTADragHandle" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Arrossega el grup", spa: "Arrastrar el grupo", eng: "Drag group"})) + '"  draggable="true" ondragstart="FilterSTAOnDragStart(event)" ondragend="FilterSTAOnDragEnd(event)">&#8942;&#8942;</span> ';
+	var dupBtn = isRoot ? "" : '<button type="button" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"})) + '" onclick="FilterSTADuplicateItem(this)">' + DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"}) + '</button> ';
+	var removeBtn = isRoot ? "" : '<button type="button" onclick="FilterSTARemoveItem(this)">' + DonaCadena({cat: "Suprimeix", spa: "Eliminar", eng: "Remove"}) + '</button>';
+	var addGroup = depth >= FilterSTAMaxGroupDepth ? "" : '<button type="button" onclick="FilterSTAAddGroup(this)">' + DonaCadena({cat: "+ grup", spa: "+ grupo", eng: "+ group"}) + '</button> ';
 	var depthClass = (depth % 2 === 0) ? "FilterSTAGroupEven" : "FilterSTAGroupOdd";
 	return '<fieldset class="FilterSTAGroup ' + depthClass + '" data-depth="' + depth + '" id="' + id + '"' +
 		' ondragover="FilterSTAOnDragOver(event)" ondragleave="FilterSTAOnDragLeave(event)" ondrop="FilterSTAOnDrop(event)">' +
 		'<legend class="FilterSTAGroupLegend">' +
-		'<span class="FilterSTAGroupLegendStart">' + dragHandle + "Group " + dupBtn + removeBtn + "</span>" +
+		'<span class="FilterSTAGroupLegendStart">' + dragHandle + DonaCadena({cat: "Grup ", spa: "Grupo ", eng: "Group "}) + dupBtn + removeBtn + "</span>" +
 		"</legend>" +
 		'<div class="FilterSTAGroupToolbar">' +
-		'<button type="button" onclick="FilterSTAAddCondition(this)">+ condition</button> ' +
+		'<button type="button" onclick="FilterSTAAddCondition(this)">' + DonaCadena({cat: "+ condició", spa: "+ condición", eng: "+ condition"}) + '</button> ' +
 		addGroup +
 		"</div>" +
 		'<div class="FilterSTAGroupBody">' +
 		'<div class="FilterSTAGroupChildren"></div>' +
 		'<div class="FilterSTAGroupLogic">' +
-		'<label><input type="radio" name="' + radioName + '" value="and"' + andChecked + "> AND</label>" +
-		'<label><input type="radio" name="' + radioName + '" value="or"' + orChecked + "> OR</label>" +
+		'<label><input type="radio" name="' + radioName + '" value="and"' + andChecked + '> ' + DonaCadena({cat: "I", spa: "Y", eng: "AND"}) + '</label>' +
+		'<label><input type="radio" name="' + radioName + '" value="or"' + orChecked + '> ' + DonaCadena({cat: "O", spa: "O", eng: "OR"}) + '</label>' +
 		"</div></div>" +
 		"</fieldset>";
 }
@@ -706,17 +706,17 @@ function FilterSTAConditionCardHtml(state, parentDepth) {
 	var propAttr = state.property ? ' data-property-path="' + FilterSTAEscapeAttr(state.property) + '"' : "";
 	var stripe = FilterSTAConditionStripeClass(parentDepth || 1);
 	return '<fieldset class="FilterSTAConditionCard ' + stripe + '" id="' + id + '" data-row-count="' + count + '"' + propAttr + ' style="margin-top:8px;">' +
-		'<legend><span class="FilterSTADragHandle" title="Drag condition" draggable="true" ondragstart="FilterSTAOnDragStart(event)" ondragend="FilterSTAOnDragEnd(event)">&#8942;&#8942;</span> Condition ' +
-		'<button type="button" title="Duplicate" onclick="FilterSTADuplicateItem(this)">Duplicate</button> ' +
-		'<button type="button" onclick="FilterSTARemoveItem(this)">Remove</button></legend>' +
+		'<legend><span class="FilterSTADragHandle" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Arrossega la condició", spa: "Arrastrar la condición", eng: "Drag condition"})) + '"  draggable="true" ondragstart="FilterSTAOnDragStart(event)" ondragend="FilterSTAOnDragEnd(event)">&#8942;&#8942;</span> ' + DonaCadena({cat: "Condició", spa: "Condición", eng: "Condition"}) + ' ' +
+		'<button type="button" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"})) + '" onclick="FilterSTADuplicateItem(this)">' + DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"}) + '</button> ' +
+		'<button type="button" onclick="FilterSTARemoveItem(this)">' + DonaCadena({cat: "Suprimeix", spa: "Eliminar", eng: "Remove"}) + '</button></legend>' +
 		FilterSTAEntityPathHtml(path) +
 		'<input type="hidden" class="FilterSTAEntityInput" id="inputForEntityFilterRow_' + count + '" value="' + FilterSTAEscapeAttr(FilterSTAEntityInputValue(path)) + '">' +
-		'<div class="FilterSTAPropertyRow">Property: ' +
+		'<div class="FilterSTAPropertyRow">' + DonaCadena({cat: "Propietat: ", spa: "Propiedad: ", eng: "Property: "}) +
 		'<span class="FilterSTAPropertyCascade">' +
 		'<select class="FilterSTAProperty" id="selectorProperty_' + count + '" data-cascade-depth="0" onchange="FilterSTAOnPropertyChange(this)">' +
 		FilterSTAPropertyOptionsHtml(FilterSTALastEntityKey(path), propParts[0], path) + "</select>" +
 		"</span></div>" +
-		'<div style="margin-top:6px;">Operator: ' +
+		'<div style="margin-top:6px;">' + DonaCadena({cat: "Operador: ", spa: "Operador: ", eng: "Operator: "}) +
 		'<select class="FilterSTAOperator" onchange="FilterSTAOnOperatorChange(this)">' + FilterSTAOperatorOptionsHtml(state.operator) + "</select>" +
 		"</div>" +
 		FilterSTAValuePanelHtml(count, state, interval, inputType) +
@@ -731,12 +731,12 @@ function FilterSTAValuePanelHtml(count, state, interval, inputType) {
 	return '<div class="FilterSTAValuePanel" style="margin-top:6px;">' +
 		'<datalist id="' + listId + '"></datalist>' +
 		'<span class="FilterSTAValueSingle" style="display:' + (interval ? "none" : "inline") + ';">' +
-		'<label>Value: ' +
-		'<input type="' + inputType + '" class="FilterSTAValue" id="inputText_' + count + '" list="' + listId + '" value="' + v + '" placeholder="Enter a value" autocomplete="off">' +
+		'<label>' + DonaCadena({cat: "Valor: ", spa: "Valor: ", eng: "Value: "}) +
+		'<input type="' + inputType + '" class="FilterSTAValue" id="inputText_' + count + '" list="' + listId + '" value="' + v + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Introduïu un valor", spa: "Introduzca un valor", eng: "Enter a value"})) + '"  autocomplete="off">' +
 		"</label></span>" +
 		'<span class="FilterSTAValueInterval" style="display:' + (interval ? "inline" : "none") + ';">' +
-		'<label>a: <input type="text" class="FilterSTAValueA" id="inputTextInterval1_' + count + '" list="' + listId + '" value="' + a + '" placeholder="Enter a value" autocomplete="off"></label> ' +
-		'<label>b: <input type="text" class="FilterSTAValueB" id="inputTextInterval2_' + count + '" list="' + listId + '" value="' + b + '" placeholder="Enter a value" autocomplete="off"></label>' +
+		'<label>a: <input type="text" class="FilterSTAValueA" id="inputTextInterval1_' + count + '" list="' + listId + '" value="' + a + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Introduïu un valor", spa: "Introduzca un valor", eng: "Enter a value"})) + '"  autocomplete="off"></label> ' +
+		'<label>b: <input type="text" class="FilterSTAValueB" id="inputTextInterval2_' + count + '" list="' + listId + '" value="' + b + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Introduïu un valor", spa: "Introduzca un valor", eng: "Enter a value"})) + '"  autocomplete="off"></label>' +
 		"</span></div>";
 }
 
@@ -1626,7 +1626,7 @@ function FilterSTAClearDialogUi() {
 		span.textContent = "";
 	var urlEl = document.getElementById("DialogFilterSTAParentURL");
 	if (urlEl)
-		urlEl.textContent = "Parent URL: (none)";
+		urlEl.textContent = DonaCadena({cat: "URL pare: (cap)", spa: "URL padre: (ninguna)", eng: "Parent URL: (none)"});
 }
 
 function FilterSTARevertUncommittedTree() {
@@ -1701,7 +1701,7 @@ function FilterSTAApplyFilterToNode(node) {
 	FilterSTAStripLegacyFilterFields(node);
 	if (typeof networkNodes !== "undefined" && networkNodes.update)
 		networkNodes.update(node);
-	FinalizeSelectedSelectExpands(node, previousSTAURL, "Filtering STA by selected criteria... ");
+	FinalizeSelectedSelectExpands(node, previousSTAURL, {cat: "S'estan filtrant les dades STA amb els criteris seleccionats... ", spa: "Filtrando los datos STA con los criterios seleccionados... ", eng: "Filtering STA by selected criteria... "});
 	if (typeof updateQueryAndTableArea === "function")
 		updateQueryAndTableArea(node);
 }
@@ -1746,7 +1746,7 @@ function ShowFilterSTADialog() {
 	FilterSTAClearDialogUi();
 	parentNode = GetFirstParentNode(node);
 	url = (parentNode && parentNode.STAURL) ? parentNode.STAURL : (node.STAURL || "");
-	document.getElementById("DialogFilterSTAParentURL").textContent = url ? ("Parent URL: " + url) : "Parent URL: (none)";
+	document.getElementById("DialogFilterSTAParentURL").textContent = url ? (DonaCadena({cat: "URL pare: ", spa: "URL padre: ", eng: "Parent URL: "}) + url) : DonaCadena({cat: "URL pare: (cap)", spa: "URL padre: (ninguna)", eng: "Parent URL: (none)"});
 	host = document.getElementById("DialogFilterSTATree");
 	tree = (node.STAFilterTree && node.STAFilterTree.type === "group") ? FilterSTACloneTree(node.STAFilterTree) : null;
 	if (tree)
@@ -2075,7 +2075,7 @@ function FilterOGCPropertyHopHtml(depth, info, selected) {
 	var input = "";
 	if (info.openBag) {
 		var typedVal = selected && !selectedInList ? selected : "";
-		input = ' <input type="text" class="FilterOGCPropertyKeyInput" data-cascade-depth="' + depth + '" value="' + FilterOGCEscapeAttr(typedVal) + '" placeholder="or type a key" onchange="FilterOGCOnPropertyChange(this)" oninput="FilterOGCOnPropertyKeyType(this)">';
+		input = ' <input type="text" class="FilterOGCPropertyKeyInput" data-cascade-depth="' + depth + '" value="' + FilterOGCEscapeAttr(typedVal) + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "o escriviu una clau", spa: "o escriba una clave", eng: "or type a key"})) + '"  onchange="FilterOGCOnPropertyChange(this)" oninput="FilterOGCOnPropertyKeyType(this)">';
 	}
 	return '<span class="FilterOGCPropertyHop" data-cascade-depth="' + depth + '"> / ' +
 		'<select class="FilterOGCPropertyNest" data-cascade-depth="' + depth + '" onchange="FilterOGCOnPropertyChange(this)">' +
@@ -2181,25 +2181,25 @@ function FilterOGCGroupHtml(isRoot, depth, logic) {
 	var radioName = "FilterOGCLogic_" + FilterOGCLogicSeq;
 	var andChecked = (!logic || logic === "and") ? ' checked="checked"' : "";
 	var orChecked = (logic === "or") ? ' checked="checked"' : "";
-	var dragHandle = isRoot ? "" : '<span class="FilterOGCDragHandle" title="Drag group" draggable="true" ondragstart="FilterOGCOnDragStart(event)" ondragend="FilterOGCOnDragEnd(event)">&#8942;&#8942;</span> ';
-	var dupBtn = isRoot ? "" : '<button type="button" title="Duplicate" onclick="FilterOGCDuplicateItem(this)">Duplicate</button> ';
-	var removeBtn = isRoot ? "" : '<button type="button" onclick="FilterOGCRemoveItem(this)">Remove</button>';
-	var addGroup = depth >= FilterOGCMaxGroupDepth ? "" : '<button type="button" onclick="FilterOGCAddGroup(this)">+ group</button> ';
+	var dragHandle = isRoot ? "" : '<span class="FilterOGCDragHandle" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Arrossega el grup", spa: "Arrastrar el grupo", eng: "Drag group"})) + '"  draggable="true" ondragstart="FilterOGCOnDragStart(event)" ondragend="FilterOGCOnDragEnd(event)">&#8942;&#8942;</span> ';
+	var dupBtn = isRoot ? "" : '<button type="button" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"})) + '" onclick="FilterOGCDuplicateItem(this)">' + DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"}) + '</button> ';
+	var removeBtn = isRoot ? "" : '<button type="button" onclick="FilterOGCRemoveItem(this)">' + DonaCadena({cat: "Suprimeix", spa: "Eliminar", eng: "Remove"}) + '</button>';
+	var addGroup = depth >= FilterOGCMaxGroupDepth ? "" : '<button type="button" onclick="FilterOGCAddGroup(this)">' + DonaCadena({cat: "+ grup", spa: "+ grupo", eng: "+ group"}) + '</button> ';
 	var depthClass = (depth % 2 === 0) ? "FilterOGCGroupEven" : "FilterOGCGroupOdd";
 	return '<fieldset class="FilterOGCGroup ' + depthClass + '" data-depth="' + depth + '" id="' + id + '"' +
 		' ondragover="FilterOGCOnDragOver(event)" ondragleave="FilterOGCOnDragLeave(event)" ondrop="FilterOGCOnDrop(event)">' +
 		'<legend class="FilterOGCGroupLegend">' +
-		'<span class="FilterOGCGroupLegendStart">' + dragHandle + "Group " + dupBtn + removeBtn + "</span>" +
+		'<span class="FilterOGCGroupLegendStart">' + dragHandle + DonaCadena({cat: "Grup ", spa: "Grupo ", eng: "Group "}) + dupBtn + removeBtn + "</span>" +
 		"</legend>" +
 		'<div class="FilterOGCGroupToolbar">' +
-		'<button type="button" onclick="FilterOGCAddCondition(this)">+ condition</button> ' +
+		'<button type="button" onclick="FilterOGCAddCondition(this)">' + DonaCadena({cat: "+ condició", spa: "+ condición", eng: "+ condition"}) + '</button> ' +
 		addGroup +
 		"</div>" +
 		'<div class="FilterOGCGroupBody">' +
 		'<div class="FilterOGCGroupChildren"></div>' +
 		'<div class="FilterOGCGroupLogic">' +
-		'<label><input type="radio" name="' + radioName + '" value="and"' + andChecked + "> AND</label>" +
-		'<label><input type="radio" name="' + radioName + '" value="or"' + orChecked + "> OR</label>" +
+		'<label><input type="radio" name="' + radioName + '" value="and"' + andChecked + '> ' + DonaCadena({cat: "I", spa: "Y", eng: "AND"}) + '</label>' +
+		'<label><input type="radio" name="' + radioName + '" value="or"' + orChecked + '> ' + DonaCadena({cat: "O", spa: "O", eng: "OR"}) + '</label>' +
 		"</div></div>" +
 		"</fieldset>";
 }
@@ -2224,15 +2224,15 @@ function FilterOGCConditionCardHtml(state, parentDepth) {
 	var propAttr = state.property ? ' data-property-path="' + FilterOGCEscapeAttr(state.property) + '"' : "";
 	var stripe = FilterOGCConditionStripeClass(parentDepth || 1);
 	return '<fieldset class="FilterOGCConditionCard ' + stripe + '" id="' + id + '" data-row-count="' + count + '"' + propAttr + ' style="margin-top:8px;">' +
-		'<legend><span class="FilterOGCDragHandle" title="Drag condition" draggable="true" ondragstart="FilterOGCOnDragStart(event)" ondragend="FilterOGCOnDragEnd(event)">&#8942;&#8942;</span> Condition ' +
-		'<button type="button" title="Duplicate" onclick="FilterOGCDuplicateItem(this)">Duplicate</button> ' +
-		'<button type="button" onclick="FilterOGCRemoveItem(this)">Remove</button></legend>' +
-		'<div class="FilterOGCPropertyRow">Property: ' +
+		'<legend><span class="FilterOGCDragHandle" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Arrossega la condició", spa: "Arrastrar la condición", eng: "Drag condition"})) + '"  draggable="true" ondragstart="FilterOGCOnDragStart(event)" ondragend="FilterOGCOnDragEnd(event)">&#8942;&#8942;</span> ' + DonaCadena({cat: "Condició", spa: "Condición", eng: "Condition"}) + ' ' +
+		'<button type="button" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"})) + '" onclick="FilterOGCDuplicateItem(this)">' + DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"}) + '</button> ' +
+		'<button type="button" onclick="FilterOGCRemoveItem(this)">' + DonaCadena({cat: "Suprimeix", spa: "Eliminar", eng: "Remove"}) + '</button></legend>' +
+		'<div class="FilterOGCPropertyRow">' + DonaCadena({cat: "Propietat: ", spa: "Propiedad: ", eng: "Property: "}) +
 		'<span class="FilterOGCPropertyCascade">' +
 		'<select class="FilterOGCProperty" id="selectorColumns_' + count + '" data-cascade-depth="0" onchange="FilterOGCOnPropertyChange(this)">' +
 		FilterOGCPropertyOptionsHtml(propParts[0]) + "</select>" +
 		"</span></div>" +
-		'<div style="margin-top:6px;">Operator: ' +
+		'<div style="margin-top:6px;">' + DonaCadena({cat: "Operador: ", spa: "Operador: ", eng: "Operator: "}) +
 		'<select class="FilterOGCOperator" onchange="FilterOGCOnOperatorChange(this)">' + FilterOGCOperatorOptionsHtml(state.operator) + "</select>" +
 		"</div>" +
 		FilterOGCValuePanelHtml(count, state, interval) +
@@ -2247,12 +2247,12 @@ function FilterOGCValuePanelHtml(count, state, interval) {
 	return '<div class="FilterOGCValuePanel" style="margin-top:6px;">' +
 		'<datalist id="' + listId + '"></datalist>' +
 		'<span class="FilterOGCValueSingle" style="display:' + (interval ? "none" : "inline") + ';">' +
-		'<label>Value: ' +
-		'<input type="text" class="FilterOGCValue" id="inputText_' + count + '" list="' + listId + '" value="' + v + '" placeholder="Enter a value" autocomplete="off">' +
+		'<label>' + DonaCadena({cat: "Valor: ", spa: "Valor: ", eng: "Value: "}) +
+		'<input type="text" class="FilterOGCValue" id="inputText_' + count + '" list="' + listId + '" value="' + v + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Introduïu un valor", spa: "Introduzca un valor", eng: "Enter a value"})) + '"  autocomplete="off">' +
 		"</label></span>" +
 		'<span class="FilterOGCValueInterval" style="display:' + (interval ? "inline" : "none") + ';">' +
-		'<label>a: <input type="text" class="FilterOGCValueA" id="inputTextInterval1_' + count + '" list="' + listId + '" value="' + a + '" placeholder="Enter a value" autocomplete="off"></label> ' +
-		'<label>b: <input type="text" class="FilterOGCValueB" id="inputTextInterval2_' + count + '" list="' + listId + '" value="' + b + '" placeholder="Enter a value" autocomplete="off"></label>' +
+		'<label>a: <input type="text" class="FilterOGCValueA" id="inputTextInterval1_' + count + '" list="' + listId + '" value="' + a + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Introduïu un valor", spa: "Introduzca un valor", eng: "Enter a value"})) + '"  autocomplete="off"></label> ' +
+		'<label>b: <input type="text" class="FilterOGCValueB" id="inputTextInterval2_' + count + '" list="' + listId + '" value="' + b + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Introduïu un valor", spa: "Introduzca un valor", eng: "Enter a value"})) + '"  autocomplete="off"></label>' +
 		"</span></div>";
 }
 
@@ -2927,7 +2927,7 @@ function FilterOGCClearDialogUi() {
 		span.textContent = "";
 	var urlEl = document.getElementById("DialogFilterOGCParentURL");
 	if (urlEl)
-		urlEl.textContent = "Parent URL: (none)";
+		urlEl.textContent = DonaCadena({cat: "URL pare: (cap)", spa: "URL padre: (ninguna)", eng: "Parent URL: (none)"});
 }
 
 function FilterOGCRevertUncommittedTree() {
@@ -3087,7 +3087,7 @@ async function ShowFilterOGCDialog() {
 	FilterOGCBindDialogEvents();
 	FilterOGCClearDialogUi();
 	url = (parentNode && parentNode.STAURL) ? parentNode.STAURL : (node.STAURL || "");
-	document.getElementById("DialogFilterOGCParentURL").textContent = url ? ("Parent URL: " + url) : "Parent URL: (none)";
+	document.getElementById("DialogFilterOGCParentURL").textContent = url ? (DonaCadena({cat: "URL pare: ", spa: "URL padre: ", eng: "Parent URL: "}) + url) : DonaCadena({cat: "URL pare: (cap)", spa: "URL padre: (ninguna)", eng: "Parent URL: (none)"});
 	host = document.getElementById("DialogFilterOGCTree");
 	tree = (node.STAFilterTreeOGC && node.STAFilterTreeOGC.type === "group") ? FilterOGCCloneTree(node.STAFilterTreeOGC) : null;
 	if (tree)
@@ -3320,7 +3320,7 @@ function FilterTablePropertyHopHtml(depth, info, selected) {
 	var input = "";
 	if (info.openBag) {
 		var typedVal = selected && !selectedInList ? selected : "";
-		input = ' <input type="text" class="FilterTablePropertyKeyInput" data-cascade-depth="' + depth + '" value="' + FilterTableEscapeAttr(typedVal) + '" placeholder="or type a key" onchange="FilterTableOnPropertyChange(this)" oninput="FilterTableOnPropertyKeyType(this)">';
+		input = ' <input type="text" class="FilterTablePropertyKeyInput" data-cascade-depth="' + depth + '" value="' + FilterTableEscapeAttr(typedVal) + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "o escriviu una clau", spa: "o escriba una clave", eng: "or type a key"})) + '"  onchange="FilterTableOnPropertyChange(this)" oninput="FilterTableOnPropertyKeyType(this)">';
 	}
 	return '<span class="FilterTablePropertyHop" data-cascade-depth="' + depth + '"> / ' +
 		'<select class="FilterTablePropertyNest" data-cascade-depth="' + depth + '" onchange="FilterTableOnPropertyChange(this)">' +
@@ -3410,25 +3410,25 @@ function FilterTableGroupHtml(isRoot, depth, logic) {
 	var radioName = "FilterTableLogic_" + FilterTableLogicSeq;
 	var andChecked = (!logic || logic === "and") ? ' checked="checked"' : "";
 	var orChecked = (logic === "or") ? ' checked="checked"' : "";
-	var dragHandle = isRoot ? "" : '<span class="FilterTableDragHandle" title="Drag group" draggable="true" ondragstart="FilterTableOnDragStart(event)" ondragend="FilterTableOnDragEnd(event)">&#8942;&#8942;</span> ';
-	var dupBtn = isRoot ? "" : '<button type="button" title="Duplicate" onclick="FilterTableDuplicateItem(this)">Duplicate</button> ';
-	var removeBtn = isRoot ? "" : '<button type="button" onclick="FilterTableRemoveItem(this)">Remove</button>';
-	var addGroup = depth >= FilterTableMaxGroupDepth ? "" : '<button type="button" onclick="FilterTableAddGroup(this)">+ group</button> ';
+	var dragHandle = isRoot ? "" : '<span class="FilterTableDragHandle" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Arrossega el grup", spa: "Arrastrar el grupo", eng: "Drag group"})) + '"  draggable="true" ondragstart="FilterTableOnDragStart(event)" ondragend="FilterTableOnDragEnd(event)">&#8942;&#8942;</span> ';
+	var dupBtn = isRoot ? "" : '<button type="button" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"})) + '" onclick="FilterTableDuplicateItem(this)">' + DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"}) + '</button> ';
+	var removeBtn = isRoot ? "" : '<button type="button" onclick="FilterTableRemoveItem(this)">' + DonaCadena({cat: "Suprimeix", spa: "Eliminar", eng: "Remove"}) + '</button>';
+	var addGroup = depth >= FilterTableMaxGroupDepth ? "" : '<button type="button" onclick="FilterTableAddGroup(this)">' + DonaCadena({cat: "+ grup", spa: "+ grupo", eng: "+ group"}) + '</button> ';
 	var depthClass = (depth % 2 === 0) ? "FilterTableGroupEven" : "FilterTableGroupOdd";
 	return '<fieldset class="FilterTableGroup ' + depthClass + '" data-depth="' + depth + '" id="' + id + '"' +
 		' ondragover="FilterTableOnDragOver(event)" ondragleave="FilterTableOnDragLeave(event)" ondrop="FilterTableOnDrop(event)">' +
 		'<legend class="FilterTableGroupLegend">' +
-		'<span class="FilterTableGroupLegendStart">' + dragHandle + "Group " + dupBtn + removeBtn + "</span>" +
+		'<span class="FilterTableGroupLegendStart">' + dragHandle + DonaCadena({cat: "Grup ", spa: "Grupo ", eng: "Group "}) + dupBtn + removeBtn + "</span>" +
 		"</legend>" +
 		'<div class="FilterTableGroupToolbar">' +
-		'<button type="button" onclick="FilterTableAddCondition(this)">+ condition</button> ' +
+		'<button type="button" onclick="FilterTableAddCondition(this)">' + DonaCadena({cat: "+ condició", spa: "+ condición", eng: "+ condition"}) + '</button> ' +
 		addGroup +
 		"</div>" +
 		'<div class="FilterTableGroupBody">' +
 		'<div class="FilterTableGroupChildren"></div>' +
 		'<div class="FilterTableGroupLogic">' +
-		'<label><input type="radio" name="' + radioName + '" value="and"' + andChecked + "> AND</label>" +
-		'<label><input type="radio" name="' + radioName + '" value="or"' + orChecked + "> OR</label>" +
+		'<label><input type="radio" name="' + radioName + '" value="and"' + andChecked + '> ' + DonaCadena({cat: "I", spa: "Y", eng: "AND"}) + '</label>' +
+		'<label><input type="radio" name="' + radioName + '" value="or"' + orChecked + '> ' + DonaCadena({cat: "O", spa: "O", eng: "OR"}) + '</label>' +
 		"</div></div>" +
 		"</fieldset>";
 }
@@ -3458,15 +3458,15 @@ function FilterTableConditionCardHtml(state, parentDepth) {
 	var propAttr = state.property ? ' data-property-path="' + FilterTableEscapeAttr(state.property) + '"' : "";
 	var stripe = FilterTableConditionStripeClass(parentDepth || 1);
 	return '<fieldset class="FilterTableConditionCard ' + stripe + '" id="' + id + '" data-row-count="' + count + '"' + propAttr + ' style="margin-top:8px;">' +
-		'<legend><span class="FilterTableDragHandle" title="Drag condition" draggable="true" ondragstart="FilterTableOnDragStart(event)" ondragend="FilterTableOnDragEnd(event)">&#8942;&#8942;</span> Condition ' +
-		'<button type="button" title="Duplicate" onclick="FilterTableDuplicateItem(this)">Duplicate</button> ' +
-		'<button type="button" onclick="FilterTableRemoveItem(this)">Remove</button></legend>' +
-		'<div class="FilterTablePropertyRow">Property: ' +
+		'<legend><span class="FilterTableDragHandle" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Arrossega la condició", spa: "Arrastrar la condición", eng: "Drag condition"})) + '"  draggable="true" ondragstart="FilterTableOnDragStart(event)" ondragend="FilterTableOnDragEnd(event)">&#8942;&#8942;</span> ' + DonaCadena({cat: "Condició", spa: "Condición", eng: "Condition"}) + ' ' +
+		'<button type="button" title="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"})) + '" onclick="FilterTableDuplicateItem(this)">' + DonaCadena({cat: "Duplica", spa: "Duplicar", eng: "Duplicate"}) + '</button> ' +
+		'<button type="button" onclick="FilterTableRemoveItem(this)">' + DonaCadena({cat: "Suprimeix", spa: "Eliminar", eng: "Remove"}) + '</button></legend>' +
+		'<div class="FilterTablePropertyRow">' + DonaCadena({cat: "Propietat: ", spa: "Propiedad: ", eng: "Property: "}) +
 		'<span class="FilterTablePropertyCascade">' +
 		'<select class="FilterTableProperty" id="selectorColumns_' + count + '" data-cascade-depth="0" onchange="FilterTableOnPropertyChange(this)">' +
 		FilterTablePropertyOptionsHtml(propParts[0]) + "</select>" +
 		"</span></div>" +
-		'<div style="margin-top:6px;">Operator: ' +
+		'<div style="margin-top:6px;">' + DonaCadena({cat: "Operador: ", spa: "Operador: ", eng: "Operator: "}) +
 		'<select class="FilterTableOperator" onchange="FilterTableOnOperatorChange(this)">' + FilterTableOperatorOptionsHtml(state.operator) + "</select>" +
 		"</div>" +
 		FilterTableValuePanelHtml(count, state, interval, inputType) +
@@ -3482,12 +3482,12 @@ function FilterTableValuePanelHtml(count, state, interval, inputType) {
 	return '<div class="FilterTableValuePanel" style="margin-top:6px;">' +
 		'<datalist id="' + listId + '"></datalist>' +
 		'<span class="FilterTableValueSingle" style="display:' + (interval ? "none" : "inline") + ';">' +
-		'<label>Value: ' +
-		'<input type="' + inputType + '" class="FilterTableValue" id="inputText_' + count + '" list="' + listId + '" value="' + v + '" placeholder="Enter a value" autocomplete="off">' +
+		'<label>' + DonaCadena({cat: "Valor: ", spa: "Valor: ", eng: "Value: "}) +
+		'<input type="' + inputType + '" class="FilterTableValue" id="inputText_' + count + '" list="' + listId + '" value="' + v + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Introduïu un valor", spa: "Introduzca un valor", eng: "Enter a value"})) + '"  autocomplete="off">' +
 		"</label></span>" +
 		'<span class="FilterTableValueInterval" style="display:' + (interval ? "inline" : "none") + ';">' +
-		'<label>a: <input type="text" class="FilterTableValueA" id="inputTextInterval1_' + count + '" list="' + listId + '" value="' + a + '" placeholder="Enter a value" autocomplete="off"></label> ' +
-		'<label>b: <input type="text" class="FilterTableValueB" id="inputTextInterval2_' + count + '" list="' + listId + '" value="' + b + '" placeholder="Enter a value" autocomplete="off"></label>' +
+		'<label>a: <input type="text" class="FilterTableValueA" id="inputTextInterval1_' + count + '" list="' + listId + '" value="' + a + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Introduïu un valor", spa: "Introduzca un valor", eng: "Enter a value"})) + '"  autocomplete="off"></label> ' +
+		'<label>b: <input type="text" class="FilterTableValueB" id="inputTextInterval2_' + count + '" list="' + listId + '" value="' + b + '" placeholder="' + EscapeForJsHtmlAttr(DonaCadena({cat: "Introduïu un valor", spa: "Introduzca un valor", eng: "Enter a value"})) + '"  autocomplete="off"></label>' +
 		"</span></div>";
 }
 
@@ -6454,7 +6454,7 @@ async function ShowFilterTableDialog() {
 //	/* Old FilterRowsSTA apply. Replaced by FilterSTAApplyFilterToNode in filterSTADlg.js.
 //	else if (node.image == "FilterRowsSTA.png") { //STA
 //		GetFilterRowsSTA(node);
-//		showInfoMessage("Filtering STA rows...");
+//		showInfoMessage({cat: "S'estan filtrant les files STA...", spa: "Filtrando las filas STA...", eng: "Filtering STA rows..."});
 //	}
 //	*/
 //	hideNodeDialog("DialogFilterRows");

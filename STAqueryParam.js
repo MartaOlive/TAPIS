@@ -344,7 +344,10 @@ function FinalizeSelectedSelectExpands(node, previousSTAURL, message) {
 	if (s)
 		node.STAURL = AddQueryParamsToURL(node.STAURL, s);
 	networkNodes.update(node);
-	showInfoMessage(message);
+	if (arguments.length > 3)
+		showInfoMessage.apply(null, [message].concat(Array.prototype.slice.call(arguments, 3)));
+	else
+		showInfoMessage(message);
 	UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
 	LoadJSONNodeSTAData(node);
 }
@@ -367,7 +370,7 @@ function FinalizeSelectedSelectExpands(node, previousSTAURL, message) {
 					node.STAURL = AddQueryParamsToURL(node.STAURL, s);
 			}
 			networkNodes.update(node);
-			showInfoMessage("Selecting and Expanding STA columns...");
+			showInfoMessage({cat: "S'estan seleccionant i expandint les columnes STA...", spa: "Seleccionando y expandiendo las columnas STA...", eng: "Selecting and Expanding STA columns..."});
 			UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
 			LoadJSONNodeSTAData(node);
 		}
@@ -536,7 +539,7 @@ function FinalizeSelectedSelectExpands(node, previousSTAURL, message) {
 				var data = node.STAdata, selectedExpands=node.STASelectedExpands;
 		
 				if (!data || !data.length) {
-					document.getElementById("DialogSelectExpandsCheckBoxes").innerHTML = "No data to show.";
+					document.getElementById("DialogSelectExpandsCheckBoxes").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 					return;
 				}
 	
@@ -562,7 +565,7 @@ var data;
 
 	data = parentNode.STAdata;
 	if (!data) {
-		document.getElementById("Dialog"+div_id+"HTML").innerHTML = "No data to show.";
+		document.getElementById("Dialog"+div_id+"HTML").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 
@@ -635,7 +638,7 @@ function GetExpandColumn(event) {
 				delete expandedColumns[da];
 		}
 	}
-	FinalizeSelectedSelectExpands(node, previousSTAURL, "Expanding STA column...");
+	FinalizeSelectedSelectExpands(node, previousSTAURL, {cat: "S'estan expandint les columnes STA...", spa: "Expandiendo las columnas STA...", eng: "Expanding STA column..."});
 }
 
 ////////////// Select dialog
@@ -646,7 +649,7 @@ var data;
 
 	data = parentNode.STAdata;
 	if (!data) {
-		document.getElementById("Dialog"+div_id+"HTML").innerHTML = "No data to show.";
+		document.getElementById("Dialog"+div_id+"HTML").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 
@@ -701,7 +704,7 @@ function GetSelectColumnsSTA(event)
 
 	for (var a = 0; a < dataAttributesArray.length; a++)
 		selectedColumns[dataAttributesArray[a]]=(document.getElementById("SelectColumns_" + a).checked) ? true : false;
-	FinalizeSelectedSelectExpands(node, previousSTAURL, "Selecting STA columns...");
+	FinalizeSelectedSelectExpands(node, previousSTAURL, {cat: "S'estan seleccionant les columnes STA...", spa: "Seleccionando las columnas STA...", eng: "Selecting STA columns..."});
 }
 
 ////////////// Ranges: top and skip
@@ -713,7 +716,7 @@ function ShowTableRangeSTADialog(parentNode, node) {
 	var data = parentNode.STAdata;
 
 	if (!data || !data.length) {
-		showInfoMessage("No data to operate on.");
+		showInfoMessage({cat: "No hi ha dades amb què operar.", spa: "No hay datos con los que operar.", eng: "No data to operate on."});
 		return;
 	}
 	ShowPropagateNodeSelectedSelectExpands(node, parentNode);
@@ -744,7 +747,9 @@ function GetSelectRangeSTA(event) {
 	if (!isNaN(parseInt(document.getElementById("SelectRangeTopSTA").value)))
 		selectedExpands.top = parseInt(document.getElementById("SelectRangeTopSTA").value);
 
-	FinalizeSelectedSelectExpands(node, previousSTAURL, "Limiting the request to " + selectedExpands.top + " records " + (selectedExpands.skip ? "and skipping the first " + selectedExpands.skip : "" ) +  "...");
+	FinalizeSelectedSelectExpands(node, previousSTAURL, selectedExpands.skip
+		? {__i18n: {cat: "S'està limitant la petició a {0} registres i s'ometen els primers {1}...", spa: "Limitando la petición a {0} registros y omitiendo los primeros {1}...", eng: "Limiting the request to {0} records and skipping the first {1}..."}, __args: [selectedExpands.top, selectedExpands.skip]}
+		: {__i18n: {cat: "S'està limitant la petició a {0} registres...", spa: "Limitando la petición a {0} registros...", eng: "Limiting the request to {0} records..."}, __args: [selectedExpands.top]});
 }
 
 ////////////// SortBy (orderBy)
@@ -756,7 +761,7 @@ function ShowTableSelectSortByDialog(parentNode, node) {
 	var data = parentNode.STAdata;
 
 	if (!data || !data.length) {
-		document.getElementById("DialogSelectSortByRadioButtons").innerHTML = "No data to show.";
+		document.getElementById("DialogSelectSortByRadioButtons").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 
@@ -837,7 +842,11 @@ function GetSelectSortBySTA(parentNode, node){
 		if (document.getElementById("SelectSortByDesc") && document.getElementById("SelectSortByDesc").checked)
 			selectedExpands.orderBy.desc=true;	
 	}
-	FinalizeSelectedSelectExpands(node, previousSTAURL, "Sorting STA by "+ selectedExpands.orderBy.attribute + " (" + (selectedExpands.orderBy.desc ? "descending" : "ascending") + ")...");
+	FinalizeSelectedSelectExpands(node, previousSTAURL, {cat: "S'estan ordenant les dades STA per {0} ({1})...", spa: "Ordenando los datos STA por {0} ({1})...", eng: "Sorting STA by {0} ({1})..."},
+		selectedExpands.orderBy.attribute,
+		selectedExpands.orderBy.desc
+			? {cat: "descendent", spa: "descendente", eng: "descending"}
+			: {cat: "ascendent", spa: "ascendente", eng: "ascending"});
 }
 
 function GetSelectSortBySTables(parentNode, node){
@@ -888,7 +897,7 @@ function DoMergeExpandSTA(node) {
 	var previousSTAURL=node.STAURL;
 	var parentNodes=GetParentNodes(node);
 	if (parentNodes.length==0) {
-		alert("Parent(s) node(s) are needed to merge expands");
+		alert(DonaCadena({cat: "Calen nodes pare per fusionar les expansions", spa: "Se necesitan nodos padre para fusionar las expansiones", eng: "Parent(s) node(s) are needed to merge expands"}));
 		return false;
 	}
 	var parentNode=parentNodes[0]
@@ -931,6 +940,8 @@ function DoMergeExpandSTA(node) {
 	else
 		node.STAEntityName=parentNode.STAEntityName;
 	node.STASelectExpandNextOrigin=commonElements;
-	FinalizeSelectedSelectExpands(node, previousSTAURL, parentNodes.length==1 ? "Please connect other nodes to merge STA expands..." : "Merging STA " + parentNodes.length + " expands in a column...");
+	FinalizeSelectedSelectExpands(node, previousSTAURL, parentNodes.length==1
+		? {cat: "Connecteu altres nodes per fusionar les expansions STA...", spa: "Conecte otros nodos para fusionar las expansiones STA...", eng: "Please connect other nodes to merge STA expands..."}
+		: {__i18n: {cat: "S'estan fusionant {0} expansions STA en una columna...", spa: "Fusionando {0} expansiones STA en una columna...", eng: "Merging STA {0} expands in a column..."}, __args: [parentNodes.length]});
 }
 

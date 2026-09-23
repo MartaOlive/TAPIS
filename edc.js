@@ -226,14 +226,14 @@ function EDCNegociateContract(node, EDCConsumerURL, assetId, offerId, counterPar
 	HTTPJSONData(EDCConsumerURL+"/management/v3/contractnegotiations", null, "POST", obj).then(
 				function(value) {
 					if (value.obj && value.obj["@type"] && value.obj["@type"]=="IdResponse" && value.obj["@id"]) {
-						showInfoMessage('EDC contract negociation iniciated...');
+						showInfoMessage({cat: "S'ha iniciat la negociació del contracte EDC...", spa: "Se ha iniciado la negociación del contrato EDC...", eng: "EDC contract negociation iniciated..."});
 						EDCWaitForNegociationCompletition(node, EDCConsumerURL, value.obj["@id"], mediaType, 0);
 					} else {
-						showInfoMessage('EDC contract negociation failed: '+ JSON.stringify(value.obj));
+						showInfoMessage({cat: "Ha fallat la negociació del contracte EDC: {0}", spa: "Ha fallado la negociación del contrato EDC: {0}", eng: "EDC contract negociation failed: {0}"}, JSON.stringify(value.obj));
 					}
 				},
 				function(error) { 
-					showInfoMessage('EDC contract negociation failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Ha fallat la negociació del contracte EDC. <br>name: {0} missatge: {1} a: {2} text: {3}", spa: "Ha fallado la negociación del contrato EDC. <br>name: {0} mensaje: {1} en: {2} texto: {3}", eng: "EDC contract negociation failed. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);
@@ -247,26 +247,26 @@ function EDCVerifyNegociationCompletition(node, EDCConsumerURL, id, mediaType, n
 	HTTPJSONData(EDCConsumerURL+"/management/v2/contractnegotiations/"+id).then(
 				function(value) {
 					if (!value.obj || !value.obj["@type"] || value.obj["@type"]!="ContractNegotiation" || !value.obj.state) {
-						showInfoMessage('EDC contract negociation failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+						showInfoMessage(value.obj ? DonaCadenaFmt({cat: "Ha fallat la negociació del contracte EDC: {0}", spa: "Ha fallado la negociación del contrato EDC: {0}", eng: "EDC contract negociation failed: {0}"}, JSON.stringify(value.obj)) : DonaCadena({cat: "Ha fallat la negociació del contracte EDC.", spa: "Ha fallado la negociación del contrato EDC.", eng: "EDC contract negociation failed."}));
 						return;
 					}
 					if (value.obj.state!="FINALIZED") {
 						if (n==20) {
-							showInfoMessage('EDC contract negociation failed after ' + n + ' iterations');
+							showInfoMessage({cat: "La negociació del contracte EDC ha fallat després de {0} iteracions", spa: "La negociación del contrato EDC ha fallado después de {0} iteraciones", eng: "EDC contract negociation failed after {0} iterations"}, n);
 							return;
 						}
 						EDCWaitForNegociationCompletition(node, EDCConsumerURL, id, mediaType, n+1);
 						return;
 					} 	
 					if (!value.obj.contractAgreementId) {
-						showInfoMessage('EDC contract negociation failed: ' + JSON.stringify(value.obj));
+						showInfoMessage({cat: "Ha fallat la negociació del contracte EDC: {0}", spa: "Ha fallado la negociación del contrato EDC: {0}", eng: "EDC contract negociation failed: {0}"}, JSON.stringify(value.obj));
 						return;
 					}				
-					showInfoMessage('EDC contract negociation successful.');
+					showInfoMessage({cat: "La negociació del contracte EDC ha estat satisfactòria.", spa: "La negociación del contrato EDC se ha realizado correctamente.", eng: "EDC contract negociation successful."});
 					EDCRequestTransfer(node, EDCConsumerURL, value.obj.contractAgreementId, value.obj.counterPartyAddress, mediaType)
 				},
 				function(error) { 
-					showInfoMessage('EDC contract negociation failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Ha fallat la negociació del contracte EDC. <br>name: {0} missatge: {1} a: {2} text: {3}", spa: "Ha fallado la negociación del contrato EDC. <br>name: {0} mensaje: {1} en: {2} texto: {3}", eng: "EDC contract negociation failed. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error);
 				}
 			);
@@ -293,14 +293,14 @@ function EDCRequestTransfer(node, EDCConsumerURL, contractAgreementId, counterPa
 	HTTPJSONData(EDCConsumerURL+"/management/v2/transferprocesses", null, "POST", obj).then(
 				function(value) { 
 					if (value.obj && value.obj["@type"] && value.obj["@type"]=="IdResponse" && value.obj["@id"]) {
-						showInfoMessage('EDC transfer requested...');
+						showInfoMessage({cat: "S'ha sol·licitat la transferència EDC...", spa: "Se ha solicitado la transferencia EDC...", eng: "EDC transfer requested..."});
 						EDCWaitForTransferStarted(node, EDCConsumerURL, value.obj["@id"], mediaType, 0);
 					} else {
-						showInfoMessage('EDC transfer request failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+						showInfoMessage({cat: "Ha fallat la sol·licitud de transferència EDC{0}", spa: "Ha fallado la solicitud de transferencia EDC{0}", eng: "EDC transfer request failed{0}"}, (value.obj ? ": "+ JSON.stringify(value.obj) : "."));
 					}
 				},
 				function(error) { 
-					showInfoMessage('Error in requesting EDC catalog. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Error en sol·licitar el catàleg EDC. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al solicitar el catálogo EDC. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error in requesting EDC catalog. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error) ;
 				}
 			);	
@@ -314,30 +314,30 @@ function EDCVerifyEDCTransferStarted(node, EDCConsumerURL, id, mediaType, n) {
 	HTTPJSONData(EDCConsumerURL+"/management/v3/transferprocesses/"+id).then(
 				function(value) {
 					if (!value.obj || !value.obj["@type"] || value.obj["@type"]!="TransferProcess" || !value.obj.state) {
-						showInfoMessage('EDC transfer request failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+						showInfoMessage({cat: "Ha fallat la sol·licitud de transferència EDC{0}", spa: "Ha fallado la solicitud de transferencia EDC{0}", eng: "EDC transfer request failed{0}"}, (value.obj ? ": "+ JSON.stringify(value.obj) : "."));
 						return;
 					}
 					if (value.obj.state=="TERMINATED") {
-						showInfoMessage('EDC transfer request failed.' + (value.obj.errorDetail) ? " Details are: " + value.obj.errorDetail : "");
+						showInfoMessage(value.obj.errorDetail ? DonaCadenaFmt({cat: "Ha fallat la sol·licitud de transferència EDC. Els detalls són: {0}", spa: "Ha fallado la solicitud de transferencia EDC. Los detalles son: {0}", eng: "EDC transfer request failed. Details are: {0}"}, value.obj.errorDetail) : DonaCadenaFmt({cat: "Ha fallat la sol·licitud de transferència EDC{0}", spa: "Ha fallado la solicitud de transferencia EDC{0}", eng: "EDC transfer request failed{0}"}, "."));
 						return;
 					}
 					if (value.obj.state!="STARTED") {
 						if (n==20) {
-							showInfoMessage('EDC transfer request failed after ' + n + ' iterations');
+							showInfoMessage({cat: "La sol·licitud de transferència EDC ha fallat després de {0} iteracions", spa: "La solicitud de transferencia EDC ha fallado después de {0} iteraciones", eng: "EDC transfer request failed after {0} iterations"}, n);
 							return;
 						}
 						EDCWaitForTransferStarted(node, EDCConsumerURL, id, mediaType, n+1);
 						return;
 					} 	
 					/*if (!value.obj.contractId) {
-						showInfoMessage('EDC transfer request failed: ' + JSON.stringify(value.obj));
+						showInfoMessage({cat: "Ha fallat la sol·licitud de transferència EDC{0}", spa: "Ha fallado la solicitud de transferencia EDC{0}", eng: "EDC transfer request failed{0}"}, ": " + JSON.stringify(value.obj));
 						return;
 					}*/				
-					showInfoMessage('EDC transfer request start confirmed.');
+					showInfoMessage({cat: "S'ha confirmat l'inici de la sol·licitud de transferència EDC.", spa: "Se ha confirmado el inicio de la solicitud de transferencia EDC.", eng: "EDC transfer request start confirmed."});
 					EDCGetAddressToTransfer(node, EDCConsumerURL, id, mediaType);
 				},
 				function(error) { 
-					showInfoMessage('EDC transfer request failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Ha fallat la sol·licitud de transferència EDC. <br>name: {0} missatge: {1} a: {2} text: {3}", spa: "Ha fallado la solicitud de transferencia EDC. <br>name: {0} mensaje: {1} en: {2} texto: {3}", eng: "EDC transfer request failed. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error);
 				}
 			);
@@ -347,14 +347,14 @@ function EDCGetAddressToTransfer(node, EDCConsumerURL, id, mediaType) {
 	HTTPJSONData(EDCConsumerURL+"/management/v3/edrs/"+id+"/dataaddress").then(
 				function(value) {
 					if (!value.obj || !value.obj["@type"] || value.obj["@type"]!="DataAddress" || !value.obj.endpoint || !value.obj.authorization) {
-						showInfoMessage('EDC getting URL for transfer request failed' + (value.obj ? ': '+ JSON.stringify(value.obj) : '.'));
+						showInfoMessage({cat: "Ha fallat l'obtenció de l'URL EDC per a la sol·licitud de transferència{0}", spa: "Ha fallado la obtención de la URL EDC para la solicitud de transferencia{0}", eng: "EDC getting URL for transfer request failed{0}"}, (value.obj ? ": "+ JSON.stringify(value.obj) : "."));
 						return;
 					}
-					showInfoMessage('EDC URL for transfer obtained.');
+					showInfoMessage({cat: "S'ha obtingut l'URL EDC per a la transferència.", spa: "Se ha obtenido la URL EDC para la transferencia.", eng: "EDC URL for transfer obtained."});
 					EDCExectuteTransfer(node, value.obj.endpoint, value.obj.authorization, mediaType);
 				},
 				function(error) { 
-					showInfoMessage('EDC getting URL for transfer request failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Ha fallat l'obtenció de l'URL EDC per a la sol·licitud de transferència{0}", spa: "Ha fallado la obtención de la URL EDC para la solicitud de transferencia{0}", eng: "EDC getting URL for transfer request failed{0}"}, ". <br>name: " + error.name + " message: " + error.message + " at: " + error.at + " text: " + error.text);
 					console.log(error);
 				}
 			);
@@ -364,7 +364,7 @@ function EDCExectuteTransfer(node, url, authorization, mediaType) {
 	AddCircularImageInterpretingURL(url, mediaType, {Authorization: authorization});
 	//HTTPJSONData(url, ["Content-Type", "Content-Length"], null, null, {'Accept': '*/*', 'Authorization': authorization}).then(
 	/*			function(value) {
-					showInfoMessage('EDC Raw data transfer completed. It it is not automatically transformed into a table, use the relevant "format" tool to do so.');
+					showInfoMessage({cat: "S'ha completat la transferència de dades sense processar d'EDC. Si no es transforma automàticament en una taula, useu l'eina de «format» corresponent per fer-ho.", spa: "Se ha completado la transferencia de datos sin procesar de EDC. Si no se transforma automáticamente en una tabla, use la herramienta de «formato» correspondiente para hacerlo.", eng: "EDC Raw data transfer completed. It it is not automatically transformed into a table, use the relevant \"format\" tool to do so."});
 					node.STAURL=url;
 					if (!node.STAsecurity)
 						node.STAsecurity={};
@@ -387,7 +387,7 @@ function EDCExectuteTransfer(node, url, authorization, mediaType) {
 					updateQueryAndTableArea(node);
 				},
 				function(error) { 
-					showInfoMessage('EDC contract negociation failed. <br>name: ' + error.name + ' message: ' + error.message + ' at: ' + error.at + ' text: ' + error.text);
+					showInfoMessage({cat: "Ha fallat la negociació del contracte EDC. <br>name: {0} missatge: {1} a: {2} text: {3}", spa: "Ha fallado la negociación del contrato EDC. <br>name: {0} mensaje: {1} en: {2} texto: {3}", eng: "EDC contract negociation failed. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
 					console.log(error);
 				}
 			);*/

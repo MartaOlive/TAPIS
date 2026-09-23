@@ -361,7 +361,7 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend,
 		response = await fetch(url, options);
 	}
 	catch (error) {
-		showInfoMessage('There was an error with ' + url + ": " + error.message);
+		showInfoMessage({cat: "S'ha produït un error amb {0}: {1}", spa: "Se ha producido un error con {0}: {1}", eng: "There was an error with {0}: {1}"}, url, error.message);
 		console.log('There was an error', error);
 		return;
 	}
@@ -375,7 +375,7 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend,
 		}
 		else
 			body=await response.text();
-		showInfoMessage("Error: HTTP " + (method && method!="GET-HEAD" ? method : "GET") + " URL: " + url + ", HTTP code: " + response?.status + ", Description: "+ (response.statusText ? response.statusText : standardStatusText(response.status)) + (body ? ", " + body : ""));
+		showInfoMessage({cat: "Error: HTTP {0} URL: {1}, codi HTTP: {2}, descripció: {3}{4}", spa: "Error: HTTP {0} URL: {1}, código HTTP: {2}, descripción: {3}{4}", eng: "Error: HTTP {0} URL: {1}, HTTP code: {2}, Description: {3}{4}"}, (method && method!="GET-HEAD" ? method : "GET"), url, response?.status, (response.statusText ? response.statusText : standardStatusText(response.status)), (body ? ", " + body : ""));
 		console.log("HTTP Response Code: " + response?.status + ": " + response?.statusText + (body ? JSON.stringify(body) : ""));
 		return response;
 	}
@@ -396,12 +396,12 @@ async function HTTPJSONData(url, headersToGet, method, objToSend, headersToSend,
 			return {obj: null, text: await response.text(), responseHeaders: headersObj, ok: true};
 	} catch (error) {
 		if (error instanceof SyntaxError) {
-			showInfoMessage('Syntax error reading ' + url + ": " + error.message);
+			showInfoMessage({cat: "Error de sintaxi en llegir {0}: {1}", spa: "Error de sintaxis al leer {0}: {1}", eng: "Syntax error reading {0}: {1}"}, url, error.message);
 			console.log('There was a SyntaxError', error);
 			return;
 		}
 		else {
-			showInfoMessage('Error interpreting ' + url + ": " + error.message);
+			showInfoMessage({cat: "Error en interpretar {0}: {1}", spa: "Error al interpretar {0}: {1}", eng: "Error interpreting {0}: {1}"}, url, error.message);
 			console.log('There was an error', error);
 			return;
 		}
@@ -430,7 +430,7 @@ async function HTTPBinaryData(url, headersToGet, method, objToSend, headersToSen
 		response = await fetch(url, options);
 	}
 	catch (error) {
-		showInfoMessage('There was an error with ' + url + ": " + error.message);
+		showInfoMessage({cat: "S'ha produït un error amb {0}: {1}", spa: "Se ha producido un error con {0}: {1}", eng: "There was an error with {0}: {1}"}, url, error.message);
 		console.log('There was an error', error);
 		return;
 	}
@@ -444,7 +444,7 @@ async function HTTPBinaryData(url, headersToGet, method, objToSend, headersToSen
 		}
 		else
 			body=await response.text();
-		showInfoMessage("Error: HTTP " + (method && method!="GET-HEAD" ? method : "GET") + " URL: " + url + ", HTTP code: " + response?.status + ", Description: "+ (response.statusText ? response.statusText : standardStatusText(response.status)) + (body ? ", " + body : ""));
+		showInfoMessage({cat: "Error: HTTP {0} URL: {1}, codi HTTP: {2}, descripció: {3}{4}", spa: "Error: HTTP {0} URL: {1}, código HTTP: {2}, descripción: {3}{4}", eng: "Error: HTTP {0} URL: {1}, HTTP code: {2}, Description: {3}{4}"}, (method && method!="GET-HEAD" ? method : "GET"), url, response?.status, (response.statusText ? response.statusText : standardStatusText(response.status)), (body ? ", " + body : ""));
 		console.log("HTTP Response Code: " + response?.status + ": " + response?.statusText + (body ? JSON.stringify(body) : ""));
 		return response;
 	}
@@ -465,12 +465,12 @@ async function HTTPBinaryData(url, headersToGet, method, objToSend, headersToSen
 			return {arrayBuf: await response.arrayBuffer(), text: null, responseHeaders: headersObj, ok: true};
 	} catch (error) {
 		if (error instanceof SyntaxError) {
-			showInfoMessage('Syntax error reading ' + url + ": " + error.message);
+			showInfoMessage({cat: "Error de sintaxi en llegir {0}: {1}", spa: "Error de sintaxis al leer {0}: {1}", eng: "Syntax error reading {0}: {1}"}, url, error.message);
 			console.log('There was a SyntaxError', error);
 			return;
 		}
 		else {
-			showInfoMessage('Error interpreting ' + url + ": " + error.message);
+			showInfoMessage({cat: "Error en interpretar {0}: {1}", spa: "Error al interpretar {0}: {1}", eng: "Error interpreting {0}: {1}"}, url, error.message);
 			console.log('There was an error', error);
 			return;
 		}

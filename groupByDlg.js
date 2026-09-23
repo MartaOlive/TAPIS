@@ -206,9 +206,9 @@
 			}
 
 
-			if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length>1) alert("To apply date rounding only one date type attribute is allowed to be selected");
+			if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length>1) alert(DonaCadena({cat: "Per aplicar l'arrodoniment de dates, només es permet seleccionar un atribut de tipus data", spa: "Para aplicar el redondeo de fechas, solo se permite seleccionar un atributo de tipo fecha", eng: "To apply date rounding only one date type attribute is allowed to be selected"}));
 			else if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==1) node.groupByParams.groupByDate.push(...dateTypeAttr);
-			else if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==0) alert ("To apply date rounding one date type attribute is has to be selected");
+			else if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==0) alert(DonaCadena({cat: "Per aplicar l'arrodoniment de dates, cal seleccionar un atribut de tipus data", spa: "Para aplicar el redondeo de fechas, debe seleccionar un atributo de tipo fecha", eng: "To apply date rounding one date type attribute is has to be selected"}));
 
 			var dataCurrentAttributes={};
 			node.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, node.groupByParams);
