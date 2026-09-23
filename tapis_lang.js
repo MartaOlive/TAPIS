@@ -10,7 +10,7 @@
   
 	The TAPIS client is free software under the terms of the MIT License
 
-	Copyright (c) 2023-2026 Joan Masó
+	Copyright (c) 2023-2026 Joan Maso
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -31,13 +31,13 @@
 	SOFTWARE.
 	
 	Language helpers aligned with MiraMon DonaCadena / ParamCtrl.idioma.
+	Language preference is stored in localStorage only (not cookies).
 */
 
 var ParamCtrl = (typeof ParamCtrl !== "undefined" && ParamCtrl) ? ParamCtrl : { idioma: "eng" };
 
 var TapisIdiomesAdmesos = ["eng", "cat", "spa"];
-var TapisIdiomaCookie = "TapisIdioma";
-var TapisIdiomaCookieMaxAge = 60 * 60 * 24 * 365; // 1 year
+var TapisIdiomaStorageKey = "TapisIdioma";
 
 function DonaCadena(a)
 {
@@ -56,7 +56,7 @@ function DonaCadena(a)
 		return a.cze;
 	if (a.ger && ParamCtrl.idioma == "ger")
 		return a.ger;
-	if (a.eng)   //Si no hi ha l'idioma solicitat faig que xerri en anglès
+	if (a.eng)   //Si no hi ha l'idioma solicitat faig que xerri en angles
 		return a.eng;
 
 	if (a.cat == null && a.spa == null && a.eng == null && a.fre == null && a.cze == null && a.ger == null)  //Cas de cadena no multiidioma
@@ -80,7 +80,7 @@ function EscapeForHelpTooltip(s)
 	if (s == null)
 		return "";
 	/* HTML attribute is single-quoted; JS string inside uses double quotes.
-	   Escape for BOTH contexts so Catalan apostrophes (S'obté) do not break the markup. */
+	   Escape for BOTH contexts so Catalan apostrophes do not break the markup. */
 	return String(s)
 		.replace(/&/g, "&amp;")
 		.replace(/"/g, "&quot;")
@@ -100,28 +100,44 @@ function EscapeForJsHtmlAttr(s)
 		.replace(/\r?\n/g, " ");
 }
 
-function GetTapisCookie(name)
-{
-	var prefix = name + "=";
-	var parts = document.cookie.split(";");
-	for (var i = 0; i < parts.length; i++) {
-		var c = parts[i].trim();
-		if (c.indexOf(prefix) == 0)
-			return decodeURIComponent(c.substring(prefix.length));
-	}
-	return null;
-}
-
-function SetTapisCookie(name, value, maxAge)
-{
-	document.cookie = name + "=" + encodeURIComponent(value) +
-		"; Max-Age=" + (maxAge == null ? TapisIdiomaCookieMaxAge : maxAge) +
-		"; path=/; SameSite=Lax";
-}
-
 function IsTapisIdiomaAdmes(idioma)
 {
 	return idioma && TapisIdiomesAdmesos.indexOf(idioma) != -1;
+}
+
+function GetTapisIdiomaDesat()
+{
+	try {
+		var v = localStorage.getItem(TapisIdiomaStorageKey);
+		if (IsTapisIdiomaAdmes(v))
+			return v;
+	} catch (e) {}
+	/* One-time migration from old cookie, then clear it */
+	try {
+		var prefix = TapisIdiomaStorageKey + "=";
+		var parts = document.cookie.split(";");
+		for (var i = 0; i < parts.length; i++) {
+			var c = parts[i].trim();
+			if (c.indexOf(prefix) == 0) {
+				var fromCookie = decodeURIComponent(c.substring(prefix.length));
+				if (IsTapisIdiomaAdmes(fromCookie)) {
+					SetTapisIdiomaDesat(fromCookie);
+					return fromCookie;
+				}
+			}
+		}
+	} catch (e2) {}
+	return null;
+}
+
+function SetTapisIdiomaDesat(idioma)
+{
+	try {
+		localStorage.setItem(TapisIdiomaStorageKey, idioma);
+	} catch (e) {}
+	try {
+		document.cookie = TapisIdiomaStorageKey + "=; Max-Age=0; path=/; SameSite=Lax";
+	} catch (e2) {}
 }
 
 function GetTapisLanguageFromURL()
@@ -147,9 +163,9 @@ function ResolveTapisIdiomaInicial()
 	var fromUrl = GetTapisLanguageFromURL();
 	if (fromUrl)
 		return fromUrl;
-	var fromCookie = GetTapisCookie(TapisIdiomaCookie);
-	if (IsTapisIdiomaAdmes(fromCookie))
-		return fromCookie;
+	var fromStore = GetTapisIdiomaDesat();
+	if (fromStore)
+		return fromStore;
 	return "eng";
 }
 
@@ -205,7 +221,7 @@ function CanviaIdiomaTapis(idioma)
 	if (!IsTapisIdiomaAdmes(idioma))
 		idioma = "eng";
 	ParamCtrl.idioma = idioma;
-	SetTapisCookie(TapisIdiomaCookie, idioma);
+	SetTapisIdiomaDesat(idioma);
 	if (document.documentElement)
 		document.documentElement.lang = (idioma == "cat" ? "ca" : (idioma == "spa" ? "es" : "en"));
 	updateTapisLangFlags();
@@ -225,10 +241,8 @@ function InitTapisLanguage()
 	var idioma = ResolveTapisIdiomaInicial();
 	var fromUrl = GetTapisLanguageFromURL();
 	ParamCtrl.idioma = idioma;
-	if (fromUrl)
-		SetTapisCookie(TapisIdiomaCookie, idioma);
-	else if (!GetTapisCookie(TapisIdiomaCookie))
-		SetTapisCookie(TapisIdiomaCookie, idioma);
+	if (fromUrl || !GetTapisIdiomaDesat())
+		SetTapisIdiomaDesat(idioma);
 	if (document.documentElement)
 		document.documentElement.lang = (idioma == "cat" ? "ca" : (idioma == "spa" ? "es" : "en"));
 	updateTapisLangFlags();

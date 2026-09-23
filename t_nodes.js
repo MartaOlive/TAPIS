@@ -63,7 +63,7 @@ const ServicesAndAPIs = {
 	ImportJSON: { name: "JSON", description: "JSON", startNode: true, help: "Imports data from a JSON file and returns a table." },
 	ImportGeoJSON: { name: "GeoJSON", description: "GeoJSON", startNode: true, help: "Imports the features of a GeoJSON and returns a table where each feature is a record. One of the columns contains the geometry JSON object." },
 	CreateDGGS: { name: "Extent", description: "DGGS extent", startNode: true, help: "Create a table of all DGGS codes that are inside a geospatial extent. It can also add the position or the center of the cell." },
-	CreateNewTable: { name: "New table", description: "New table", startNode: true, help: "Create a new table from scratch." },
+	CreateNewTable: { name: {cat: "Taula nova", spa: "Tabla nueva", eng: "New table"}, description: {cat: "Taula nova", spa: "Tabla nueva", eng: "New table"}, startNode: true, help: {cat: "Crea una taula nova des de zero.", spa: "Crear una tabla nueva desde cero.", eng: "Create a new table from scratch."} },
 	staRoot: { name: "STA root", description: "STA root", help: "Returns to the root of the SensorThings API or STSTAplus service in use. In other words, removes the path and query parameters of the previous node." }
 };
 const ServicesAndAPIsArray = Object.keys(ServicesAndAPIs);
