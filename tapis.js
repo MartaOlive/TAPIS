@@ -4856,6 +4856,38 @@ function GetSelectRow(event, iToSelect) {
 		updateQueryAndTableArea(node);
 }
 
+function GetSelectRows(event) {
+	hideNodeDialog("DialogSelectRows", event);
+
+	var node=getNodeDialog("DialogSelectRows");
+	if (!node)
+		return;
+
+	var parentNode=GetFirstParentNode(node);
+	if (!parentNode)
+		return;
+
+	var elems = document.getElementsByName("SelectRowsCheck");
+	var selectedIds=[], selectedData=[];
+	for (var i = 0; i < elems.length; i++) {
+		if (!elems[i].checked)
+			continue;
+		var s = elems[i].id.substring("SelectRows_".length);
+		var id = (parseInt(s)==s) ? parseInt(s) : s;
+		selectedIds.push(id);
+		if (parentNode.STAdata && i < parentNode.STAdata.length)
+			selectedData.push(deapCopy(parentNode.STAdata[i]));
+	}
+	node.SelectedRowIds = selectedIds;
+	node.STAdata = selectedData;
+	if (parentNode.STAdataAttributes)
+		node.STAdataAttributes = deapCopy(parentNode.STAdataAttributes);
+	node.STAURL = null;
+
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
+}
+
 function GetSelectResource(event, resourceId) {
 	hideNodeDialog("DialogSelectResource", event);
 
@@ -6796,6 +6828,23 @@ function ShowTableSelectRowDialog(parentNode, node) {
 		null);
 }
 
+function ShowTableSelectRowsDialog(parentNode, node) {
+	saveNodeDialog("DialogSelectRows", node);
+
+	var data = parentNode.STAdata;
+
+	if (!data || !data.length) {
+		document.getElementById("DialogSelectRowsTable").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
+		return;
+	}
+	document.getElementById("DialogSelectRowsTable").innerHTML = getHTMLTable(data, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data), 
+		false, 
+		"SelectRows_", node.SelectedRowIds ? node.SelectedRowIds : [], null, "",
+		null, "",
+		null, "", null, "", 
+		null, true);
+}
+
 function ShowSelectResourceDialog(parentNode, node) {
 	saveNodeDialog("DialogSelectResource", node);
 
@@ -7374,6 +7423,9 @@ function TableToolApiWarnOpenToolDialog(node) {
 		if (parentNode.STAURL)
 			ShowTableSelectRowDialog(parentNode, node);
 		showNodeDialog("DialogSelectRow");
+	} else if (node.image === "SelectRowsTable.png" && parentNode) {
+		ShowTableSelectRowsDialog(parentNode, node);
+		showNodeDialog("DialogSelectRows");
 	} else if (node.image === "FilterRowsTable.png") {
 		if (typeof OpenFilterRowsAfterOgcCollections === "function")
 			OpenFilterRowsAfterOgcCollections(node);
@@ -7631,7 +7683,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		return true;
 	}
 	if (tableNodes && (nodeTo.image == "Meaning.png" ||
-				nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "SelectRowTable.png" || 
+				nodeTo.image == "SelectColumnsTable.png" || nodeTo.image == "SelectRowTable.png" || nodeTo.image == "SelectRowsTable.png" || 
 				nodeTo.image == "FilterRowsTable.png" || nodeTo.image == "JoinTables.png")){
 		if (nodeFrom.STAdata)
 			nodeTo.STAdata = deapCopy(nodeFrom.STAdata);  //This copy will be done again in "SelectColumnsTable.png" and "SelectRowTable.png". We do it here to have the full table while the user does not enter any selection
@@ -8334,6 +8386,13 @@ function networkDoubleClick(params) {
 				}
 				showNodeDialog("DialogSelectRow");
 			}
+			}
+		}
+		else if (currentNode.image == "SelectRowsTable.png") {
+			var parentNode=GetFirstParentNode(currentNode);
+			if (parentNode) {
+				ShowTableSelectRowsDialog(parentNode, currentNode);
+				showNodeDialog("DialogSelectRows");
 			}
 		}
 		else if (currentNode.image == "SelectResourceSTA.png" || currentNode.image == "SelectResourceTable.png") {

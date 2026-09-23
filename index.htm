@@ -1140,6 +1140,20 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogSelectRows" onClose='hideNodeDialog("DialogSelectRows", event)'>
+		<div id="divTitleSelectRowsMulti" class="center" style="font-size: large;"></div>
+		<form>
+			<span data-lang="{&quot;cat&quot;: &quot;Seleccioneu un o més elements:&quot;, &quot;spa&quot;: &quot;Seleccione uno o más elementos:&quot;, &quot;eng&quot;: &quot;Select one or more elements:&quot;}">Select one or more elements:</span>
+			<span id="DialogSelectRowsTable">
+			</span>
+			<div class="center">
+				<button value="default" onClick="GetSelectRows(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;D'acord&quot;, &quot;spa&quot;: &quot;Aceptar&quot;, &quot;eng&quot;: &quot;OK&quot;}">OK</span></button>
+				<button value="cancel" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Cancel·la&quot;, &quot;spa&quot;: &quot;Cancelar&quot;, &quot;eng&quot;: &quot;Cancel&quot;}">Cancel</span></button>
+			</div>
+			<input type="hidden" id="DialogSelectRowsNodeId"></input>
+		</form>
+	</dialog>
+
 	<dialog id="DialogSelectResource" onClose='hideNodeDialog("DialogSelectResource", event)'>
 		<div id="divTitleSelectResource" class="center" style="font-size: large;"></div>
 		<form>

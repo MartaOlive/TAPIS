@@ -789,10 +789,17 @@ function getHTMLTable(data, dataAttributesInput,
 		prefix_selectedEntityId, selectedEntityId, f_onclickselectEntity, onclickselectEntityParam, 
 		f_isAttributeAnyURI, isAttributeAnyURIParam,
 		f_onclickInsteadOfLink, onclickInsteadOfLinkParam, f_isAttributeClickInsteadOfLink, isAttributeClickInsteadOfLinkParam,
-		f_attributeToHide) {
+		f_attributeToHide, multiSelect) {
 	var dataAttributes = dataAttributesInput ? dataAttributesInput : getDataAttributesSimple(data); 
 	var cdns=[], needhref=[], needOnClick=[], record, cell, dataAttribute;
 	var dataAttributesArray = Object.keys(dataAttributes);
+	var selectedIds = null;
+	if (multiSelect && selectedEntityId!==null && typeof selectedEntityId!=="undefined") {
+		if (Array.isArray(selectedEntityId))
+			selectedIds = selectedEntityId;
+		else
+			selectedIds = [selectedEntityId];
+	}
 
 	cdns.push("<table class='tablesmall'><tr>");
 	if (rowNumbers)
@@ -822,7 +829,14 @@ function getHTMLTable(data, dataAttributesInput,
 		if (selectedEntityId!==null && typeof selectedEntityId!=="undefined")
 		{
 			var s=record["@iot.id"] ? record["@iot.id"] : i;
-			cdns.push("<td><input type='radio' name='SelectRowRadio' id='", prefix_selectedEntityId, s, "' ", f_onclickselectEntity ? "onClick='" + f_onclickselectEntity.name + "(\"" + onclickselectEntityParam+ "\");' " : "", s == selectedEntityId ? "checked='checked'" : "", "/></td>");
+			var isChecked;
+			if (multiSelect) {
+				isChecked = selectedIds && selectedIds.some(function(id) { return id == s; });
+				cdns.push("<td><input type='checkbox' name='SelectRowsCheck' id='", prefix_selectedEntityId, s, "' ", f_onclickselectEntity ? "onClick='" + f_onclickselectEntity.name + "(\"" + onclickselectEntityParam+ "\");' " : "", isChecked ? "checked='checked'" : "", "/></td>");
+			} else {
+				isChecked = (s == selectedEntityId);
+				cdns.push("<td><input type='radio' name='SelectRowRadio' id='", prefix_selectedEntityId, s, "' ", f_onclickselectEntity ? "onClick='" + f_onclickselectEntity.name + "(\"" + onclickselectEntityParam+ "\");' " : "", isChecked ? "checked='checked'" : "", "/></td>");
+			}
 		}
 		for (var a = 0; a < dataAttributesArray.length; a++) {
 			if (f_attributeToHide && f_attributeToHide(dataAttributesArray[a]))
