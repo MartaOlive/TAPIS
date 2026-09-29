@@ -1813,6 +1813,1148 @@ function SaveRadarPlot(event) {
 	}
 }
 
+/* ---------- Circular Chart (pie / doughnut) ---------- */
+
+var CircularChartInstance = null;
+var CircularChartLastLegend = null;
+
+var circularChartCenterTextPlugin = {
+	id: "centerText",
+	beforeDraw: function (chart) {
+		var opts = chart.options && chart.options.plugins && chart.options.plugins.centerText;
+		var text, ctx, area;
+		if (!opts || !opts.display || !opts.text)
+			return;
+		text = "" + opts.text;
+		if (!text.length)
+			return;
+		area = chart.chartArea;
+		if (!area)
+			return;
+		ctx = chart.ctx;
+		ctx.save();
+		ctx.font = opts.font || "bold 16px sans-serif";
+		ctx.fillStyle = opts.color || "#333";
+		ctx.textAlign = "center";
+		ctx.textBaseline = "middle";
+		ctx.fillText(text, (area.left + area.right) / 2, (area.top + area.bottom) / 2);
+		ctx.restore();
+	}
+};
+
+function clearCircularChart() {
+	var canvas, existing, legend;
+	if (CircularChartInstance) {
+		CircularChartInstance.destroy();
+		CircularChartInstance = null;
+	}
+	canvas = document.getElementById("DialogCircularChartVisualizationCanvas");
+	if (canvas && typeof Chart !== "undefined" && Chart.getChart) {
+		existing = Chart.getChart(canvas);
+		if (existing)
+			existing.destroy();
+	}
+	legend = document.getElementById("DialogCircularChartLegend");
+	if (legend)
+		legend.innerHTML = "";
+	CircularChartLastLegend = null;
+	hideCircularColorCard();
+}
+
+function circularChartTruncateLabel(value) {
+	var s = "" + value;
+	if (s.length > 35)
+		return s.substring(0, 32) + "...";
+	return s;
+}
+
+function getCircularChartSeriesMode(options) {
+	if (!options)
+		return "all";
+	if (options.seriesMode == "series" || options.seriesMode == "all")
+		return options.seriesMode;
+	if (options.seriesGroups && options.seriesGroups.length)
+		return "series";
+	return "all";
+}
+
+function isCircularChartSeriesModeAll() {
+	var allRadio = document.getElementById("DialogCircularChartSeriesModeAll");
+	return !allRadio || allRadio.checked;
+}
+
+function isCircularChartDoughnut() {
+	var radio = document.getElementById("DialogCircularChartTypeDoughnut");
+	return !!(radio && radio.checked);
+}
+
+function applyCircularChartTypeDisplay() {
+	var label = document.getElementById("DialogCircularChartCenterTextLabel");
+	if (label)
+		label.style.display = isCircularChartDoughnut() ? "" : "none";
+}
+
+function toggleCircularChartType() {
+	applyCircularChartTypeDisplay();
+}
+
+function applyCircularChartSeriesModeDisplay(seriesMode) {
+	var allPanel = document.getElementById("DialogCircularChartAllPanel");
+	var manual = document.getElementById("DialogCircularChartSeriesManual");
+	var allOn = seriesMode != "series";
+	if (allPanel)
+		allPanel.style.display = allOn ? "" : "none";
+	if (manual)
+		manual.style.display = allOn ? "none" : "";
+}
+
+function collectCircularParentNodesInfo(parentNodes) {
+	return collectRadarParentNodesInfo(parentNodes);
+}
+
+function getCircularSharedDataAttributes(parentNodes) {
+	return getRadarSharedDataAttributes(parentNodes);
+}
+
+function createDefaultCircularSeriesGroup(parentId, seriesGroups) {
+	var parentNode = networkNodes.get(parentId);
+	var data = parentNode && parentNode.STAdata ? parentNode.STAdata : [];
+	var attrs = parentNode ? (parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data)) : null;
+	var attrKeys = attrs ? Object.keys(attrs) : [];
+	var numericNames = attrs ? getNumericAttributeNames(attrs) : [];
+	var usedColumns = [], i;
+	seriesGroups = seriesGroups || [];
+	for (i = 0; i < seriesGroups.length; i++) {
+		if (seriesGroups[i].valueColumn)
+			usedColumns.push(seriesGroups[i].valueColumn);
+	}
+	var axisX = guessRadarSeriesLabel(attrs) || (attrKeys.length ? attrKeys[0] : "");
+	var valueColumn = nextUnusedRadarChoice(numericNames.length ? numericNames : attrKeys, usedColumns);
+	return {
+		nodeSelected: parentId,
+		axisX: axisX,
+		valueColumn: valueColumn,
+		classificationColumn: "",
+		color: ColorsForBarPlot[seriesGroups.length % ColorsForBarPlot.length],
+		legendText: valueColumn || ("Series " + (seriesGroups.length + 1))
+	};
+}
+
+function ensureCircularChartSeriesState(node, parentNodes) {
+	var parentInfo = collectCircularParentNodesInfo(parentNodes);
+	var parentIds = Object.keys(parentInfo);
+	var firstParent, dataAttributes, group, attrs;
+	node.circularChartParentNodes = parentInfo;
+	if (!node.circularChartOptions)
+		node.circularChartOptions = {};
+	if (!parentIds.length)
+		return parentInfo;
+	firstParent = networkNodes.get(parentIds[0]);
+	dataAttributes = firstParent.STAdataAttributes ? firstParent.STAdataAttributes : getDataAttributes(firstParent.STAdata);
+	node.circularChartOptions.seriesMode = getCircularChartSeriesMode(node.circularChartOptions);
+	if (!node.circularChartOptions.nodeSelected || !parentInfo[node.circularChartOptions.nodeSelected])
+		node.circularChartOptions.nodeSelected = parentIds[0];
+	if (!node.circularChartOptions.axisX)
+		node.circularChartOptions.axisX = guessRadarSeriesLabel(dataAttributes) || (Object.keys(dataAttributes)[0] || "");
+	if (!node.circularChartOptions.valueColumn) {
+		attrs = getNumericAttributeNames(dataAttributes);
+		node.circularChartOptions.valueColumn = attrs.length ? attrs[0] : (Object.keys(dataAttributes)[0] || "");
+	}
+	if (typeof node.circularChartOptions.classificationColumn === "undefined")
+		node.circularChartOptions.classificationColumn = "";
+	if (node.circularChartOptions.seriesMode == "series" && (!node.circularChartOptions.seriesGroups || !node.circularChartOptions.seriesGroups.length)) {
+		group = createDefaultCircularSeriesGroup(parentIds[0], []);
+		if (node.circularChartOptions.axisX)
+			group.axisX = node.circularChartOptions.axisX;
+		if (node.circularChartOptions.valueColumn) {
+			group.valueColumn = node.circularChartOptions.valueColumn;
+			group.legendText = node.circularChartOptions.valueColumn;
+		}
+		node.circularChartOptions.seriesGroups = [group];
+	}
+	return parentInfo;
+}
+
+function ensureCircularManualSeriesGroup(node) {
+	var parentIds;
+	if (!node)
+		return;
+	if (!node.circularChartOptions)
+		node.circularChartOptions = {};
+	if (node.circularChartOptions.seriesGroups && node.circularChartOptions.seriesGroups.length)
+		return;
+	parentIds = Object.keys(node.circularChartParentNodes || {});
+	if (!parentIds.length)
+		return;
+	node.circularChartOptions.seriesGroups = [createDefaultCircularSeriesGroup(parentIds[0], [])];
+}
+
+function toggleCircularChartSeriesMode() {
+	var node = getNodeDialog("DialogCircularChart");
+	var seriesMode = isCircularChartSeriesModeAll() ? "all" : "series";
+	if (node) {
+		if (!node.circularChartOptions)
+			node.circularChartOptions = {};
+		node.circularChartOptions.seriesMode = seriesMode;
+		if (seriesMode == "series")
+			ensureCircularManualSeriesGroup(node);
+		networkNodes.update(node);
+	}
+	applyCircularChartSeriesModeDisplay(seriesMode);
+	if (seriesMode == "series" && node)
+		createDialogWithSelectWithGroupsCircularChart(node);
+}
+
+function populateCircularChartAllNodeSelect(parentInfo, selectedId) {
+	var span = document.getElementById("DialogCircularChartAllNode");
+	var parentIds, cdns, i, id;
+	if (!span)
+		return;
+	parentIds = Object.keys(parentInfo || {});
+	cdns = '<select id="DialogCircularChartAllNodeSelect" onchange="onCircularChartAllNodeChange()">';
+	for (i = 0; i < parentIds.length; i++) {
+		id = parentIds[i];
+		cdns += '<option value="' + ("" + id).replace(/"/g, "&quot;") + '"' +
+			(id == selectedId ? ' selected="selected"' : "") + ">" +
+			("" + (parentInfo[id].nodeLabel || id)).replace(/&/g, "&amp;").replace(/</g, "&lt;") +
+			"</option>";
+	}
+	cdns += "</select>";
+	span.innerHTML = cdns;
+}
+
+function onCircularChartAllNodeChange() {
+	var node = getNodeDialog("DialogCircularChart");
+	var select = document.getElementById("DialogCircularChartAllNodeSelect");
+	var parentNode, dataAttributes;
+	if (!node || !select)
+		return;
+	if (!node.circularChartOptions)
+		node.circularChartOptions = {};
+	node.circularChartOptions.nodeSelected = select.value;
+	parentNode = networkNodes.get(select.value);
+	if (!parentNode || !parentNode.STAdata)
+		return;
+	dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
+	PopulateSelectSaveLayerDialog("DialogCircularChartAllAxisX", dataAttributes, node.circularChartOptions.axisX || guessRadarSeriesLabel(dataAttributes));
+	PopulateSelectSaveLayerDialog("DialogCircularChartAllValue", dataAttributes, node.circularChartOptions.valueColumn || (getNumericAttributeNames(dataAttributes)[0] || ""));
+	PopulateSelectSaveLayerDialog("DialogCircularChartAllClassification", dataAttributes, node.circularChartOptions.classificationColumn || "");
+	networkNodes.update(node);
+}
+
+function getCircularParentAttrNames(parentId) {
+	var parentNode = networkNodes.get(parentId);
+	var data, attrs;
+	if (!parentNode || !parentNode.STAdata)
+		return [];
+	data = parentNode.STAdata;
+	attrs = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
+	return Object.keys(attrs);
+}
+
+function createDialogWithSelectWithGroupsCircularChart(node) {
+	var container = document.getElementById("DialogCircularChartSeriesDiv");
+	var toolbar = document.getElementById("DialogCircularChartSeriesToolbar");
+	var groups, parentInfo, parentIds, cdns, i, p, parentId, attrNames;
+	if (!container)
+		return;
+	groups = node.circularChartOptions && node.circularChartOptions.seriesGroups ? node.circularChartOptions.seriesGroups : [];
+	parentInfo = node.circularChartParentNodes || {};
+	parentIds = Object.keys(parentInfo);
+	if (toolbar)
+		toolbar.innerHTML = '<button type="button" onclick="addNewSelectGroupInCircularChart(\'' + node.id + '\')">' + DonaCadena({cat: "Afegeix una sèrie nova", spa: "Añadir una serie nueva", eng: "Add new series"}) + "</button>";
+	cdns = "";
+	for (i = 0; i < groups.length; i++) {
+		parentId = getRadarSeriesParentId(groups[i], parentInfo);
+		if (parentId && groups[i].nodeSelected != parentId)
+			groups[i].nodeSelected = parentId;
+		attrNames = getCircularParentAttrNames(parentId);
+		if (attrNames.indexOf(groups[i].axisX) == -1)
+			groups[i].axisX = attrNames.length ? attrNames[0] : "";
+		if (attrNames.indexOf(groups[i].valueColumn) == -1)
+			groups[i].valueColumn = attrNames.length ? attrNames[Math.min(1, attrNames.length - 1)] : "";
+		if (typeof groups[i].classificationColumn === "undefined")
+			groups[i].classificationColumn = "";
+		else if (groups[i].classificationColumn && attrNames.indexOf(groups[i].classificationColumn) == -1)
+			groups[i].classificationColumn = "";
+		if (!groups[i].legendText)
+			groups[i].legendText = groups[i].valueColumn || ("Series " + (i + 1));
+
+		cdns += "<fieldset><legend>" + DonaCadenaFmt({cat: "Font {0}", spa: "Fuente {0}", eng: "Source {0}"}, (i + 1)) + "</legend>";
+		cdns += '<div class="DialogCircularChartSeriesRow"><label>' + DonaCadena({cat: "Dades de:", spa: "Datos de:", eng: "Data from:"}) + ' <select id="DialogCircularChartNodeSelect_' + i + '" onchange="updateSelectInformationCircularChart(\'' + i + '\',\'nodeSelected\',\'select\',\'DialogCircularChartNodeSelect_' + i + '\',\'' + node.id + '\')">';
+		for (p = 0; p < parentIds.length; p++) {
+			cdns += '<option value="' + ("" + parentIds[p]).replace(/"/g, "&quot;") + '"' +
+				(parentIds[p] == parentId ? ' selected="selected"' : "") + ">" +
+				("" + (parentInfo[parentIds[p]].nodeLabel || parentIds[p])).replace(/&/g, "&amp;").replace(/</g, "&lt;") +
+				"</option>";
+		}
+		cdns += "</select></label></div>";
+
+		cdns += '<div class="DialogCircularChartSeriesRow"><label>' + DonaCadena({cat: "Categories:", spa: "Categorías:", eng: "Categories:"}) + ' <select id="DialogCircularChartAxisXSelect_' + i + '" onchange="updateSelectInformationCircularChart(\'' + i + '\',\'axisX\',\'select\',\'DialogCircularChartAxisXSelect_' + i + '\',\'' + node.id + '\')">';
+		for (p = 0; p < attrNames.length; p++)
+			cdns += radarHtmlOption(attrNames[p], attrNames[p] == groups[i].axisX);
+		cdns += "</select></label></div>";
+
+		cdns += '<div class="DialogCircularChartSeriesRow"><label>' + DonaCadena({cat: "Valors:", spa: "Valores:", eng: "Values:"}) + ' <select id="DialogCircularChartValueSelect_' + i + '" onchange="updateSelectInformationCircularChart(\'' + i + '\',\'valueColumn\',\'select\',\'DialogCircularChartValueSelect_' + i + '\',\'' + node.id + '\')">';
+		for (p = 0; p < attrNames.length; p++)
+			cdns += radarHtmlOption(attrNames[p], attrNames[p] == groups[i].valueColumn);
+		cdns += "</select></label></div>";
+
+		cdns += '<div class="DialogCircularChartSeriesRow"><label>' + DonaCadena({cat: "Classificació (opcional):", spa: "Clasificación (opcional):", eng: "Classification (optional):"}) + ' <select id="DialogCircularChartClassSelect_' + i + '" onchange="updateSelectInformationCircularChart(\'' + i + '\',\'classificationColumn\',\'select\',\'DialogCircularChartClassSelect_' + i + '\',\'' + node.id + '\')">';
+		cdns += '<option value=""' + (!groups[i].classificationColumn ? ' selected="selected"' : "") + "></option>";
+		for (p = 0; p < attrNames.length; p++)
+			cdns += radarHtmlOption(attrNames[p], attrNames[p] == groups[i].classificationColumn);
+		cdns += "</select></label></div>";
+
+		cdns += '<button type="button" class="DialogCircularChartSeriesRemove" onclick="deleteSelectGroupInCircularChart(\'' + node.id + '\', \'' + i + '\')"><img src="trash.png" alt="Remove" title="Remove"></button>';
+		cdns += "</fieldset>";
+	}
+	container.innerHTML = cdns;
+}
+
+function addNewSelectGroupInCircularChart(nodeId) {
+	if (typeof event !== "undefined" && event)
+		event.preventDefault();
+	var node = networkNodes.get(nodeId);
+	var parentIds;
+	if (!node)
+		return;
+	parentIds = Object.keys(node.circularChartParentNodes || {});
+	if (!parentIds.length)
+		return;
+	if (!node.circularChartOptions)
+		node.circularChartOptions = {};
+	if (!node.circularChartOptions.seriesGroups)
+		node.circularChartOptions.seriesGroups = [];
+	if (node.circularChartOptions.seriesGroups.length >= 20) {
+		alert(DonaCadena({cat: "Massa sèries (20). Suprimiu-ne una abans d'afegir-ne una altra.", spa: "Demasiadas series (20). Elimine una antes de añadir otra.", eng: "Too many series (20). Remove one before adding another."}));
+		return;
+	}
+	node.circularChartOptions.seriesGroups.push(createDefaultCircularSeriesGroup(parentIds[0], node.circularChartOptions.seriesGroups));
+	networkNodes.update(node);
+	createDialogWithSelectWithGroupsCircularChart(node);
+}
+
+function deleteSelectGroupInCircularChart(nodeId, groupToDelete) {
+	if (typeof event !== "undefined" && event)
+		event.preventDefault();
+	var node = networkNodes.get(nodeId);
+	if (!node || !node.circularChartOptions || !node.circularChartOptions.seriesGroups)
+		return;
+	node.circularChartOptions.seriesGroups.splice(parseInt(groupToDelete), 1);
+	networkNodes.update(node);
+	createDialogWithSelectWithGroupsCircularChart(node);
+}
+
+function updateSelectInformationCircularChart(numberDialog, keyToChange, typeOfSelector, elementName, nodeId) {
+	var node = networkNodes.get(nodeId), value, element, previous, attrNames;
+	element = document.getElementById(elementName);
+	if (!node || !node.circularChartOptions || !node.circularChartOptions.seriesGroups || !element)
+		return;
+	if (typeOfSelector == "select")
+		value = element.options[element.selectedIndex].value;
+	else
+		value = element.value;
+
+	previous = node.circularChartOptions.seriesGroups[numberDialog][keyToChange];
+	node.circularChartOptions.seriesGroups[numberDialog][keyToChange] = value;
+
+	if ((keyToChange == "valueColumn" || keyToChange == "axisX") && (!node.circularChartOptions.seriesGroups[numberDialog].legendText || node.circularChartOptions.seriesGroups[numberDialog].legendText == previous))
+		node.circularChartOptions.seriesGroups[numberDialog].legendText = value;
+
+	if (keyToChange == "nodeSelected") {
+		attrNames = getCircularParentAttrNames(value);
+		if (attrNames.indexOf(node.circularChartOptions.seriesGroups[numberDialog].axisX) == -1)
+			node.circularChartOptions.seriesGroups[numberDialog].axisX = attrNames.length ? attrNames[0] : "";
+		if (attrNames.indexOf(node.circularChartOptions.seriesGroups[numberDialog].valueColumn) == -1)
+			node.circularChartOptions.seriesGroups[numberDialog].valueColumn = attrNames.length ? attrNames[Math.min(1, attrNames.length - 1)] : "";
+		if (node.circularChartOptions.seriesGroups[numberDialog].classificationColumn && attrNames.indexOf(node.circularChartOptions.seriesGroups[numberDialog].classificationColumn) == -1)
+			node.circularChartOptions.seriesGroups[numberDialog].classificationColumn = "";
+	}
+	networkNodes.update(node);
+	createDialogWithSelectWithGroupsCircularChart(node);
+}
+
+function buildCircularRingSums(data, axisX, valueColumn, labelsFull, classificationColumn, classificationValue) {
+	var sums = new Array(labelsFull.length).fill(0);
+	var i, record, key, idx, value, classText;
+	if (!data || !axisX || !valueColumn)
+		return sums;
+	for (i = 0; i < data.length; i++) {
+		record = data[i];
+		if (classificationColumn) {
+			classText = radarCellText(record[classificationColumn]);
+			if (classText != classificationValue)
+				continue;
+		}
+		key = record[axisX];
+		idx = labelsFull.indexOf(key);
+		if (idx == -1)
+			continue;
+		value = parseFloat(record[valueColumn]);
+		if (!isNaN(value))
+			sums[idx] += value;
+	}
+	return sums;
+}
+
+function collectCircularCategoryKeys(data, axisX, classificationColumn, classificationValue) {
+	var keys = [], i, record, key, classText;
+	if (!data || !axisX)
+		return keys;
+	for (i = 0; i < data.length; i++) {
+		record = data[i];
+		if (classificationColumn) {
+			classText = radarCellText(record[classificationColumn]);
+			if (classificationValue !== null && classText != classificationValue)
+				continue;
+		}
+		key = record[axisX];
+		if (keys.indexOf(key) == -1)
+			keys.push(key);
+	}
+	return keys;
+}
+
+function ensureCircularChartStyleState(options) {
+	if (!options.sliceColors)
+		options.sliceColors = {};
+	if (!options.ringColors)
+		options.ringColors = {};
+	if (!options.hiddenSlices)
+		options.hiddenSlices = [];
+	if (!options.hiddenRings)
+		options.hiddenRings = [];
+	if (typeof options.labelFontSize !== "number" || isNaN(options.labelFontSize))
+		options.labelFontSize = 11;
+	if (!options.labelFontColor)
+		options.labelFontColor = "#ffffff";
+	if (typeof options.titleFontSize !== "number" || isNaN(options.titleFontSize))
+		options.titleFontSize = 16;
+	if (typeof options.centerTextFontSize !== "number" || isNaN(options.centerTextFontSize))
+		options.centerTextFontSize = 16;
+}
+
+function clampCircularFontSize(n, min, max, fallback) {
+	n = parseInt(n, 10);
+	if (isNaN(n))
+		n = fallback;
+	if (n < min)
+		n = min;
+	if (n > max)
+		n = max;
+	return n;
+}
+
+function getCircularLabelFontSize() {
+	var el = document.getElementById("DialogCircularChartLabelSize");
+	return clampCircularFontSize(el ? el.value : 11, 8, 28, 11);
+}
+
+function getCircularTitleFontSize() {
+	var el = document.getElementById("DialogCircularChartTitleSize");
+	return clampCircularFontSize(el ? el.value : 16, 10, 36, 16);
+}
+
+function getCircularCenterTextFontSize() {
+	var el = document.getElementById("DialogCircularChartCenterTextSize");
+	return clampCircularFontSize(el ? el.value : 16, 10, 48, 16);
+}
+
+function getCircularLabelFontColor() {
+	var el = document.getElementById("DialogCircularChartLabelColor");
+	return (el && el.value) ? el.value : "#ffffff";
+}
+
+function syncCircularLabelStyleControls(options) {
+	var sizeEl = document.getElementById("DialogCircularChartLabelSize");
+	var sizeVal = document.getElementById("DialogCircularChartLabelSizeValue");
+	var colorEl = document.getElementById("DialogCircularChartLabelColor");
+	var titleSizeEl = document.getElementById("DialogCircularChartTitleSize");
+	var titleSizeVal = document.getElementById("DialogCircularChartTitleSizeValue");
+	var centerSizeEl = document.getElementById("DialogCircularChartCenterTextSize");
+	var centerSizeVal = document.getElementById("DialogCircularChartCenterTextSizeValue");
+	var size, titleSize, centerSize;
+	if (!options)
+		options = {};
+	size = (typeof options.labelFontSize === "number" && !isNaN(options.labelFontSize)) ? options.labelFontSize : 11;
+	titleSize = (typeof options.titleFontSize === "number" && !isNaN(options.titleFontSize)) ? options.titleFontSize : 16;
+	centerSize = (typeof options.centerTextFontSize === "number" && !isNaN(options.centerTextFontSize)) ? options.centerTextFontSize : 16;
+	if (sizeEl)
+		sizeEl.value = size;
+	if (sizeVal)
+		sizeVal.textContent = "" + size;
+	if (colorEl)
+		colorEl.value = options.labelFontColor || "#ffffff";
+	if (titleSizeEl)
+		titleSizeEl.value = titleSize;
+	if (titleSizeVal)
+		titleSizeVal.textContent = "" + titleSize;
+	if (centerSizeEl)
+		centerSizeEl.value = centerSize;
+	if (centerSizeVal)
+		centerSizeVal.textContent = "" + centerSize;
+}
+
+function onCircularLabelStyleChange(redraw) {
+	var node = getNodeDialog("DialogCircularChart");
+	var size = getCircularLabelFontSize();
+	var color = getCircularLabelFontColor();
+	var sizeVal = document.getElementById("DialogCircularChartLabelSizeValue");
+	if (sizeVal)
+		sizeVal.textContent = "" + size;
+	if (node) {
+		if (!node.circularChartOptions)
+			node.circularChartOptions = {};
+		ensureCircularChartStyleState(node.circularChartOptions);
+		node.circularChartOptions.labelFontSize = size;
+		node.circularChartOptions.labelFontColor = color;
+		networkNodes.update(node);
+	}
+	if (redraw && node && node.circularChartOptions && node.circularChartOptions.drawn)
+		DrawCircularChart();
+}
+
+function onCircularTitleStyleChange(redraw) {
+	var node = getNodeDialog("DialogCircularChart");
+	var size = getCircularTitleFontSize();
+	var sizeVal = document.getElementById("DialogCircularChartTitleSizeValue");
+	if (sizeVal)
+		sizeVal.textContent = "" + size;
+	if (node) {
+		if (!node.circularChartOptions)
+			node.circularChartOptions = {};
+		ensureCircularChartStyleState(node.circularChartOptions);
+		node.circularChartOptions.titleFontSize = size;
+		networkNodes.update(node);
+	}
+	if (redraw && node && node.circularChartOptions && node.circularChartOptions.drawn)
+		DrawCircularChart();
+}
+
+function onCircularCenterTextStyleChange(redraw) {
+	var node = getNodeDialog("DialogCircularChart");
+	var size = getCircularCenterTextFontSize();
+	var sizeVal = document.getElementById("DialogCircularChartCenterTextSizeValue");
+	if (sizeVal)
+		sizeVal.textContent = "" + size;
+	if (node) {
+		if (!node.circularChartOptions)
+			node.circularChartOptions = {};
+		ensureCircularChartStyleState(node.circularChartOptions);
+		node.circularChartOptions.centerTextFontSize = size;
+		networkNodes.update(node);
+	}
+	if (redraw && node && node.circularChartOptions && node.circularChartOptions.drawn)
+		DrawCircularChart();
+}
+
+function circularChartEscapeAttr(s) {
+	return ("" + s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+
+function circularChartEscapeJs(s) {
+	return ("" + s).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+function getCircularSliceColor(options, labelKey, index) {
+	if (options.sliceColors && options.sliceColors[labelKey])
+		return options.sliceColors[labelKey];
+	return ColorsForBarPlot[index % ColorsForBarPlot.length];
+}
+
+function getCircularRingColor(options, ringKey, index, fallback) {
+	if (options.ringColors && options.ringColors[ringKey])
+		return options.ringColors[ringKey];
+	if (fallback)
+		return fallback;
+	return ColorsForBarPlot[index % ColorsForBarPlot.length];
+}
+
+function isCircularLegendHidden(options, mode, key) {
+	var list = mode == "slice" ? options.hiddenSlices : options.hiddenRings;
+	return list && list.indexOf(key) != -1;
+}
+
+function hideCircularColorCard() {
+	var card = document.getElementById("DialogCircularChartColorCard");
+	if (card)
+		card.style.display = "none";
+}
+
+function onCircularChartTitleChange() {
+	var node = getNodeDialog("DialogCircularChart");
+	var titleEl = document.getElementById("DialogCircularChartTitleInput");
+	var title = titleEl ? (titleEl.value || "") : "";
+	if (!node)
+		return;
+	if (!node.circularChartOptions)
+		node.circularChartOptions = {};
+	node.circularChartOptions.title = title;
+	node.circularChartOptions.titleFontSize = getCircularTitleFontSize();
+	networkNodes.update(node);
+	if (node.circularChartOptions.drawn)
+		DrawCircularChart();
+}
+
+function onCircularChartCenterTextChange() {
+	var node = getNodeDialog("DialogCircularChart");
+	var el = document.getElementById("DialogCircularChartCenterText");
+	var text = el ? (el.value || "") : "";
+	if (!node)
+		return;
+	if (!node.circularChartOptions)
+		node.circularChartOptions = {};
+	node.circularChartOptions.centerText = text;
+	node.circularChartOptions.centerTextFontSize = getCircularCenterTextFontSize();
+	networkNodes.update(node);
+	if (node.circularChartOptions.drawn)
+		DrawCircularChart();
+}
+
+function buildCircularChartLegendHtml(node, mode, itemKeys, itemLabels, itemColors, ringNames) {
+	var container = document.getElementById("DialogCircularChartLegend");
+	var options, cdns, i, key, label, color, hidden, eyeTitle, hiddenFlags = [];
+	if (!container)
+		return;
+	if (!node.circularChartOptions)
+		node.circularChartOptions = {};
+	ensureCircularChartStyleState(node.circularChartOptions);
+	options = node.circularChartOptions;
+	cdns = "";
+	for (i = 0; i < itemKeys.length; i++) {
+		key = itemKeys[i];
+		label = itemLabels[i];
+		color = itemColors[i];
+		hidden = isCircularLegendHidden(options, mode, key);
+		hiddenFlags.push(hidden);
+		eyeTitle = hidden
+			? DonaCadena({cat: "Mostra", spa: "Mostrar", eng: "Show"})
+			: DonaCadena({cat: "Amaga", spa: "Ocultar", eng: "Hide"});
+		cdns += '<div class="DialogCircularChartLegendItem' + (hidden ? " is-hidden" : "") + '">';
+		cdns += '<button type="button" class="DialogCircularChartLegendSwatch" style="background-color:' + circularChartEscapeAttr(color) + ';" title="' +
+			DonaCadena({cat: "Canvia el color", spa: "Cambiar el color", eng: "Change color"}) +
+			'" onclick="onCircularLegendColorClick(\'' + circularChartEscapeJs(mode) + '\',\'' + circularChartEscapeJs(key) + '\', event)"></button>';
+		cdns += '<button type="button" class="DialogCircularChartLegendEye" title="' + circularChartEscapeAttr(eyeTitle) +
+			'" onclick="onCircularLegendEyeClick(\'' + circularChartEscapeJs(mode) + '\',\'' + circularChartEscapeJs(key) + '\')">' +
+			(hidden ? "&#10005;" : "&#128065;") + "</button>";
+		cdns += '<span class="DialogCircularChartLegendLabel">' + circularChartEscapeAttr(label) + "</span>";
+		cdns += "</div>";
+	}
+	if (ringNames && ringNames.length > 1) {
+		cdns += '<div class="DialogCircularChartRingsTitle">' +
+			DonaCadena({cat: "Corones (de fora a dins):", spa: "Coronas (de fuera a dentro):", eng: "Rings (outer to inner):"}) +
+			"</div>";
+		for (i = 0; i < ringNames.length; i++) {
+			cdns += '<div class="DialogCircularChartRingItem"><span class="DialogCircularChartRingIndex">' + (i + 1) + ".</span> " +
+				circularChartEscapeAttr(ringNames[i]) + "</div>";
+		}
+	}
+	container.innerHTML = cdns;
+	CircularChartLastLegend = {
+		mode: mode,
+		keys: itemKeys.slice(),
+		labels: itemLabels.slice(),
+		colors: itemColors.slice(),
+		hidden: hiddenFlags,
+		ringNames: ringNames && ringNames.length > 1 ? ringNames.slice() : []
+	};
+}
+
+function onCircularLegendEyeClick(mode, key) {
+	var node = getNodeDialog("DialogCircularChart");
+	var list, idx;
+	if (!node)
+		return;
+	if (!node.circularChartOptions)
+		node.circularChartOptions = {};
+	ensureCircularChartStyleState(node.circularChartOptions);
+	list = mode == "slice" ? node.circularChartOptions.hiddenSlices : node.circularChartOptions.hiddenRings;
+	idx = list.indexOf(key);
+	if (idx == -1)
+		list.push(key);
+	else
+		list.splice(idx, 1);
+	networkNodes.update(node);
+	hideCircularColorCard();
+	DrawCircularChart();
+}
+
+function onCircularLegendColorClick(mode, key, evt) {
+	var card = document.getElementById("DialogCircularChartColorCard");
+	var dialog = document.getElementById("DialogCircularChart");
+	var cdns, i, rect, dRect, left, top;
+	if (!card || !dialog)
+		return;
+	if (evt) {
+		evt.preventDefault();
+		evt.stopPropagation();
+	}
+	cdns = "";
+	for (i = 0; i < ColorsForBarPlot.length; i++) {
+		cdns += '<button type="button" class="DialogCircularChartColorCardSwatch" style="background-color:' + ColorsForBarPlot[i] +
+			';" title="' + ColorsForBarPlot[i] + '" onclick="applyCircularLegendColor(\'' + circularChartEscapeJs(mode) + '\',\'' +
+			circularChartEscapeJs(key) + '\',\'' + ColorsForBarPlot[i] + '\')"></button>';
+	}
+	cdns += '<label class="DialogCircularChartColorCardCustom">' + DonaCadena({cat: "Personalitzat:", spa: "Personalizado:", eng: "Custom:"}) +
+		' <input type="color" value="#1f77b4" onchange="applyCircularLegendColor(\'' + circularChartEscapeJs(mode) + '\',\'' +
+		circularChartEscapeJs(key) + '\', this.value)"></label>';
+	card.innerHTML = cdns;
+	card.style.display = "flex";
+	rect = (evt && evt.target && evt.target.getBoundingClientRect) ? evt.target.getBoundingClientRect() : null;
+	dRect = dialog.getBoundingClientRect();
+	if (rect) {
+		left = rect.left - dRect.left;
+		top = rect.bottom - dRect.top + 4;
+		if (left + 176 > dRect.width)
+			left = Math.max(8, dRect.width - 184);
+		card.style.left = left + "px";
+		card.style.top = top + "px";
+	}
+}
+
+function applyCircularLegendColor(mode, key, color) {
+	var node = getNodeDialog("DialogCircularChart");
+	if (!node)
+		return;
+	if (!node.circularChartOptions)
+		node.circularChartOptions = {};
+	ensureCircularChartStyleState(node.circularChartOptions);
+	if (mode == "slice")
+		node.circularChartOptions.sliceColors[key] = color;
+	else
+		node.circularChartOptions.ringColors[key] = color;
+	networkNodes.update(node);
+	hideCircularColorCard();
+	DrawCircularChart();
+}
+
+function circularChartRingDisplayName(sourceLabel, valueColumn, classificationValue) {
+	var base = sourceLabel || "";
+	if (classificationValue != null && classificationValue !== "") {
+		if (base)
+			return base + ": " + classificationValue;
+		return "" + classificationValue;
+	}
+	if (base && valueColumn && base != valueColumn)
+		return base + ": " + valueColumn;
+	return base || valueColumn || "Series";
+}
+
+function appendCircularRingsFromSource(data, axisX, valueColumn, classificationColumn, sourceLabel, labelsFull, seriesNames, seriesData, seriesColors, seriesKeys, maxSeries, event) {
+	var classValues, g, classVal, ringKey, keys, i, remaining;
+	if (!data || !axisX || !valueColumn)
+		return;
+	remaining = maxSeries - seriesNames.length;
+	if (remaining <= 0)
+		return;
+	if (classificationColumn) {
+		classValues = limitRadarSeriesList(getRadarUniqueValues(data, classificationColumn), remaining, event);
+		for (g = 0; g < classValues.length; g++) {
+			classVal = classValues[g];
+			keys = collectCircularCategoryKeys(data, axisX, classificationColumn, classVal);
+			for (i = 0; i < keys.length; i++) {
+				if (labelsFull.indexOf(keys[i]) == -1)
+					labelsFull.push(keys[i]);
+			}
+		}
+		for (g = 0; g < classValues.length; g++) {
+			classVal = classValues[g];
+			ringKey = circularChartRingDisplayName(sourceLabel, valueColumn, classVal);
+			seriesKeys.push(ringKey);
+			seriesNames.push(ringKey);
+			seriesData.push({ data: data, axisX: axisX, valueColumn: valueColumn, classificationColumn: classificationColumn, classificationValue: classVal });
+			seriesColors.push(ColorsForBarPlot[seriesColors.length % ColorsForBarPlot.length]);
+		}
+	} else {
+		keys = collectCircularCategoryKeys(data, axisX, null, null);
+		for (i = 0; i < keys.length; i++) {
+			if (labelsFull.indexOf(keys[i]) == -1)
+				labelsFull.push(keys[i]);
+		}
+		ringKey = circularChartRingDisplayName(sourceLabel, valueColumn, null);
+		seriesKeys.push(ringKey);
+		seriesNames.push(ringKey);
+		seriesData.push({ data: data, axisX: axisX, valueColumn: valueColumn, classificationColumn: null, classificationValue: null });
+		seriesColors.push(ColorsForBarPlot[seriesColors.length % ColorsForBarPlot.length]);
+	}
+}
+
+function finalizeCircularPendingRings(seriesData, labelsFull) {
+	var g, spec;
+	for (g = 0; g < seriesData.length; g++) {
+		spec = seriesData[g];
+		if (spec && spec.data)
+			seriesData[g] = buildCircularRingSums(spec.data, spec.axisX, spec.valueColumn, labelsFull, spec.classificationColumn, spec.classificationValue);
+	}
+}
+
+function DrawCircularChart(event) {
+	if (event)
+		event.preventDefault();
+	var node = getNodeDialog("DialogCircularChart");
+	if (!node)
+		return;
+	var parentNodes = GetParentNodes(node);
+	if (!parentNodes || !parentNodes.length)
+		return;
+
+	var plotType = isCircularChartDoughnut() ? "doughnut" : "pie";
+	var seriesAll = isCircularChartSeriesModeAll();
+	var title = document.getElementById("DialogCircularChartTitleInput").value || "";
+	var centerText = document.getElementById("DialogCircularChartCenterText").value || "";
+	var maxSeries = 20;
+	var labelsFull = [], labels = [], seriesNames = [], seriesData = [], seriesColors = [], seriesKeys = [];
+	var i, g, parentNode, data, axisX, valueColumn, classificationColumn, classValues, classVal;
+	var seriesGroups, backgroundColors, datasets, chartPlugins, labelsPlugin, options;
+	var legendMode, legendKeys, legendLabels, legendColors;
+
+	if (!node.circularChartOptions)
+		node.circularChartOptions = {};
+	ensureCircularChartStyleState(node.circularChartOptions);
+	options = node.circularChartOptions;
+	seriesGroups = options.seriesGroups || [];
+	options.plotType = plotType;
+	options.seriesMode = seriesAll ? "all" : "series";
+	options.title = title;
+	options.centerText = centerText;
+	options.labelFontSize = getCircularLabelFontSize();
+	options.labelFontColor = getCircularLabelFontColor();
+	options.titleFontSize = getCircularTitleFontSize();
+	options.centerTextFontSize = getCircularCenterTextFontSize();
+	syncCircularLabelStyleControls(options);
+
+	if (seriesAll) {
+		var nodeSelect = document.getElementById("DialogCircularChartAllNodeSelect");
+		var axisXSelect = document.getElementById("DialogCircularChartAllAxisXSelect");
+		var valueSelect = document.getElementById("DialogCircularChartAllValueSelect");
+		var classSelect = document.getElementById("DialogCircularChartAllClassificationSelect");
+		options.nodeSelected = nodeSelect ? nodeSelect.value : options.nodeSelected;
+		axisX = axisXSelect ? axisXSelect.value : "";
+		valueColumn = valueSelect ? valueSelect.value : "";
+		classificationColumn = classSelect ? classSelect.value : "";
+		options.axisX = axisX;
+		options.valueColumn = valueColumn;
+		options.classificationColumn = classificationColumn;
+
+		if (!axisX || !valueColumn) {
+			if (event)
+				alert(DonaCadena({cat: "Seleccioneu les columnes de categories i de valors.", spa: "Seleccione las columnas de categorías y de valores.", eng: "Select the categories and values columns."}));
+			return;
+		}
+		parentNode = networkNodes.get(options.nodeSelected);
+		if (!parentNode || !parentNode.STAdata) {
+			if (event)
+				alert(DonaCadena({cat: "No hi ha dades al node seleccionat.", spa: "No hay datos en el nodo seleccionado.", eng: "No data in the selected node."}));
+			return;
+		}
+		data = parentNode.STAdata;
+		if (classificationColumn) {
+			classValues = limitRadarSeriesList(getRadarUniqueValues(data, classificationColumn), maxSeries, event);
+			for (g = 0; g < classValues.length; g++) {
+				classVal = classValues[g];
+				var keys = collectCircularCategoryKeys(data, axisX, classificationColumn, classVal);
+				for (i = 0; i < keys.length; i++) {
+					if (labelsFull.indexOf(keys[i]) == -1)
+						labelsFull.push(keys[i]);
+				}
+			}
+			for (g = 0; g < classValues.length; g++) {
+				classVal = classValues[g];
+				seriesKeys.push(classVal);
+				seriesNames.push(classVal);
+				seriesData.push(buildCircularRingSums(data, axisX, valueColumn, labelsFull, classificationColumn, classVal));
+				seriesColors.push(ColorsForBarPlot[g % ColorsForBarPlot.length]);
+			}
+		} else {
+			labelsFull = collectCircularCategoryKeys(data, axisX, null, null);
+			seriesKeys.push(valueColumn);
+			seriesNames.push(valueColumn);
+			seriesData.push(buildCircularRingSums(data, axisX, valueColumn, labelsFull, null, null));
+			seriesColors.push(ColorsForBarPlot[0]);
+		}
+	} else {
+		if (!seriesGroups.length) {
+			if (event)
+				alert(DonaCadena({cat: "Afegiu almenys una sèrie.", spa: "Añada al menos una serie.", eng: "Add at least one series."}));
+			return;
+		}
+		options.seriesGroups = seriesGroups;
+		for (g = 0; g < seriesGroups.length; g++) {
+			parentNode = networkNodes.get(seriesGroups[g].nodeSelected);
+			if (!parentNode || !parentNode.STAdata || !seriesGroups[g].axisX || !seriesGroups[g].valueColumn)
+				continue;
+			var sourceLabel = "";
+			if (node.circularChartParentNodes && node.circularChartParentNodes[seriesGroups[g].nodeSelected] && node.circularChartParentNodes[seriesGroups[g].nodeSelected].nodeLabel)
+				sourceLabel = node.circularChartParentNodes[seriesGroups[g].nodeSelected].nodeLabel;
+			else if (parentNode.label)
+				sourceLabel = parentNode.label;
+			appendCircularRingsFromSource(
+				parentNode.STAdata,
+				seriesGroups[g].axisX,
+				seriesGroups[g].valueColumn,
+				seriesGroups[g].classificationColumn || "",
+				sourceLabel,
+				labelsFull,
+				seriesNames,
+				seriesData,
+				seriesColors,
+				seriesKeys,
+				maxSeries,
+				event
+			);
+		}
+		finalizeCircularPendingRings(seriesData, labelsFull);
+	}
+
+	for (i = 0; i < labelsFull.length; i++)
+		labels.push(circularChartTruncateLabel(labelsFull[i]));
+
+	if (!labels.length || !seriesData.length) {
+		if (event)
+			alert(DonaCadena({cat: "No s'ha pogut crear el gràfic amb les columnes seleccionades.", spa: "No se ha podido crear el gráfico con las columnas seleccionadas.", eng: "Could not create the chart with the selected columns."}));
+		return;
+	}
+
+	/* Always category/slice legend: color and hide apply to that category in every ring. */
+	legendMode = "slice";
+	datasets = [];
+	for (g = 0; g < seriesData.length; g++) {
+		backgroundColors = [];
+		for (i = 0; i < labelsFull.length; i++)
+			backgroundColors.push(getCircularSliceColor(options, labelsFull[i], i));
+		datasets.push({
+			label: seriesNames[g],
+			data: seriesData[g].slice(),
+			backgroundColor: backgroundColors,
+			borderColor: "#ffffff",
+			borderWidth: seriesData.length > 1 ? 2 : 0
+		});
+		for (i = 0; i < labelsFull.length; i++) {
+			if (isCircularLegendHidden(options, "slice", labelsFull[i]))
+				datasets[g].data[i] = 0;
+		}
+	}
+
+	labelsPlugin = {
+		render: "value",
+		precision: 0,
+		showZero: false,
+		fontSize: options.labelFontSize,
+		fontColor: options.labelFontColor,
+		fontStyle: "normal",
+		fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+		arc: true,
+		position: "default",
+		overlap: true,
+		showActualPercentages: seriesData.length == 1,
+		outsidePadding: 4,
+		textMargin: 4
+	};
+
+	chartPlugins = {
+		title: {
+			display: title != "",
+			text: title,
+			font: {
+				size: options.titleFontSize
+			}
+		},
+		legend: {
+			display: false
+		},
+		labels: labelsPlugin,
+		centerText: {
+			display: plotType == "doughnut" && centerText.length > 0,
+			text: centerText,
+			font: "bold " + options.centerTextFontSize + "px sans-serif",
+			color: "#333"
+		}
+	};
+
+	clearCircularChart();
+	hideCircularColorCard();
+	CircularChartInstance = new Chart(document.getElementById("DialogCircularChartVisualizationCanvas"), {
+		type: plotType,
+		data: { labels: labels, datasets: datasets },
+		options: {
+			maintainAspectRatio: false,
+			resizeDelay: 100,
+			plugins: chartPlugins
+		},
+		plugins: (plotType == "doughnut" && centerText.length > 0) ? [circularChartCenterTextPlugin] : []
+	});
+
+	legendKeys = [];
+	legendLabels = [];
+	legendColors = [];
+	for (i = 0; i < labelsFull.length; i++) {
+		legendKeys.push(labelsFull[i]);
+		legendLabels.push(labels[i]);
+		legendColors.push(getCircularSliceColor(options, labelsFull[i], i));
+	}
+	buildCircularChartLegendHtml(node, legendMode, legendKeys, legendLabels, legendColors, seriesNames);
+
+	options.drawn = true;
+	options.legendMode = legendMode;
+	networkNodes.update(node);
+}
+
+function CloseDialogCircularChart(event) {
+	hideNodeDialog("DialogCircularChart", event);
+}
+
+function circularChartPngBlobFromDataUrl(dataUrl) {
+	return radarPlotPngBlobFromDataUrl(dataUrl);
+}
+
+function downloadCircularChartPngBlob(blob) {
+	var url = URL.createObjectURL(blob);
+	var link = document.createElement("a");
+	link.href = url;
+	link.download = "circular-chart.png";
+	document.body.appendChild(link);
+	link.click();
+	document.body.removeChild(link);
+	window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+
+function saveCircularChartPngBlob(blob) {
+	if (window.showSaveFilePicker) {
+		window.showSaveFilePicker({
+			suggestedName: "circular-chart.png",
+			types: [{
+				description: "PNG image",
+				accept: { "image/png": [".png"] }
+			}]
+		}).then(function (handle) {
+			return handle.createWritable();
+		}).then(function (writable) {
+			return writable.write(blob).then(function () { return writable.close(); });
+		}).catch(function () {
+			downloadCircularChartPngBlob(blob);
+		});
+		return;
+	}
+	downloadCircularChartPngBlob(blob);
+}
+
+function buildCircularChartExportCanvas(chartCanvas, backgroundMode) {
+	var legend = CircularChartLastLegend;
+	var gap = 24;
+	var legendWidth = 220;
+	var rowH = 22;
+	var padTop = 12;
+	var swatch = 14;
+	var margin = (backgroundMode == "transparent") ? 0 : 24;
+	var chartW = chartCanvas.width;
+	var chartH = chartCanvas.height;
+	var n = (legend && legend.labels) ? legend.labels.length : 0;
+	var rings = (legend && legend.ringNames) ? legend.ringNames : [];
+	var ringsExtra = rings.length ? (10 + rowH + rings.length * rowH) : 0;
+	var legendBlockH = padTop + Math.max(n, 1) * rowH + 12 + ringsExtra;
+	var contentH = Math.max(chartH, legendBlockH);
+	var outW = margin + chartW + gap + legendWidth + margin;
+	var outH = margin + contentH + margin;
+	var out = document.createElement("canvas");
+	var ctx, i, y, x0, label, color, hidden, legendOffsetY, tw, chartY;
+	out.width = outW;
+	out.height = outH;
+	ctx = out.getContext("2d");
+	if (backgroundMode != "transparent") {
+		ctx.fillStyle = "#ffffff";
+		ctx.fillRect(0, 0, outW, outH);
+	} else {
+		ctx.clearRect(0, 0, outW, outH);
+	}
+	chartY = margin + Math.max(0, (contentH - chartH) / 2);
+	ctx.drawImage(chartCanvas, margin, chartY);
+	if (!n && !rings.length)
+		return out;
+	x0 = margin + chartW + gap;
+	legendOffsetY = margin + Math.max(0, (contentH - legendBlockH) / 2);
+	ctx.font = "12px sans-serif";
+	ctx.textBaseline = "middle";
+	for (i = 0; i < n; i++) {
+		y = legendOffsetY + padTop + i * rowH + rowH / 2;
+		color = legend.colors[i] || "#888888";
+		label = "" + (legend.labels[i] || "");
+		hidden = !!(legend.hidden && legend.hidden[i]);
+		ctx.globalAlpha = hidden ? 0.4 : 1;
+		ctx.fillStyle = color;
+		ctx.fillRect(x0, y - swatch / 2, swatch, swatch);
+		ctx.strokeStyle = "#666666";
+		ctx.strokeRect(x0 + 0.5, y - swatch / 2 + 0.5, swatch - 1, swatch - 1);
+		ctx.fillStyle = "#222222";
+		ctx.fillText(label, x0 + swatch + 8, y);
+		if (hidden) {
+			tw = ctx.measureText(label).width;
+			ctx.beginPath();
+			ctx.strokeStyle = "#222222";
+			ctx.moveTo(x0 + swatch + 8, y);
+			ctx.lineTo(x0 + swatch + 8 + tw, y);
+			ctx.stroke();
+		}
+		ctx.globalAlpha = 1;
+	}
+	if (rings.length) {
+		y = legendOffsetY + padTop + n * rowH + 14;
+		ctx.font = "bold 11px sans-serif";
+		ctx.fillStyle = "#444444";
+		ctx.fillText(DonaCadena({cat: "Corones (fora→dins):", spa: "Coronas (fuera→dentro):", eng: "Rings (outer→inner):"}), x0, y);
+		ctx.font = "11px sans-serif";
+		ctx.fillStyle = "#222222";
+		for (i = 0; i < rings.length; i++) {
+			y += rowH;
+			ctx.fillText((i + 1) + ". " + rings[i], x0, y);
+		}
+	}
+	return out;
+}
+
+function SaveCircularChart(event) {
+	var canvas, exportCanvas, useWhite;
+	if (event)
+		event.preventDefault();
+	canvas = CircularChartInstance && CircularChartInstance.canvas ? CircularChartInstance.canvas : document.getElementById("DialogCircularChartVisualizationCanvas");
+	if (!CircularChartInstance || !canvas) {
+		alert(DonaCadena({cat: "Dibuixeu primer el gràfic circular.", spa: "Dibuje primero el gráfico circular.", eng: "Draw the circular chart first."}));
+		return;
+	}
+	useWhite = confirm(DonaCadena({
+		cat: "Voleu fons blanc al PNG?\n\nD'acord = fons blanc\nCancel·la = fons transparent",
+		spa: "¿Quiere fondo blanco en el PNG?\n\nAceptar = fondo blanco\nCancelar = fondo transparente",
+		eng: "White background for the PNG?\n\nOK = white background\nCancel = transparent background"
+	}));
+	function onBlob(blob) {
+		if (!blob) {
+			alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
+			return;
+		}
+		saveCircularChartPngBlob(blob);
+	}
+	try {
+		exportCanvas = buildCircularChartExportCanvas(canvas, useWhite ? "white" : "transparent");
+		if (exportCanvas.toBlob) {
+			exportCanvas.toBlob(function (blob) {
+				if (blob) {
+					onBlob(blob);
+					return;
+				}
+				try {
+					onBlob(circularChartPngBlobFromDataUrl(exportCanvas.toDataURL("image/png")));
+				} catch (e) {
+					alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
+				}
+			}, "image/png");
+			return;
+		}
+		onBlob(circularChartPngBlobFromDataUrl(exportCanvas.toDataURL("image/png")));
+	} catch (e) {
+		alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
+	}
+}
+
 function DrawImageViewer(event) {
 	event.preventDefault(); // We don't want to submit this form
 	var node = getNodeDialog("DialogImageViewer");

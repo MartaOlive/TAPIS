@@ -5108,6 +5108,9 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 		} else if (node.image == "RadarPlot.png") {
 			if (isNodeDialogOpen("DialogRadarPlot"))
 				DrawRadarPlot(null);
+		} else if (node.image == "circularChart.png") {
+			if (isNodeDialogOpen("DialogCircularChart"))
+				DrawCircularChart(null);
 		}
 	}
 }
@@ -7918,6 +7921,58 @@ function ShowRadarPlotDialog(parentNodes, node) {
 	}
 }
 
+function ShowCircularChartDialog(parentNodes, node) {
+	saveNodeDialog("DialogCircularChart", node);
+	var hasSavedOptions = !!(node.circularChartOptions && node.circularChartOptions.drawn);
+	var parentInfo = ensureCircularChartSeriesState(node, parentNodes);
+	var parentIds = Object.keys(parentInfo);
+	var options, seriesMode, parentNode, dataAttributes, selectedNodeId;
+	networkNodes.update(node);
+	if (!parentIds.length) {
+		document.getElementById("DialogCircularChartTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
+		clearCircularChart();
+		return;
+	}
+	document.getElementById("DialogCircularChartTitle").innerHTML = DonaCadena({cat: "Gràfic circular", spa: "Gráfico circular", eng: "Circular chart"});
+
+	options = node.circularChartOptions || {};
+	seriesMode = getCircularChartSeriesMode(options);
+	selectedNodeId = options.nodeSelected && parentInfo[options.nodeSelected] ? options.nodeSelected : parentIds[0];
+
+	document.getElementById("DialogCircularChartTypePie").checked = options.plotType != "doughnut";
+	document.getElementById("DialogCircularChartTypeDoughnut").checked = options.plotType == "doughnut";
+	document.getElementById("DialogCircularChartSeriesModeAll").checked = seriesMode == "all";
+	document.getElementById("DialogCircularChartSeriesModeSeries").checked = seriesMode == "series";
+	document.getElementById("DialogCircularChartTitleInput").value = options.title ? options.title : "";
+	document.getElementById("DialogCircularChartCenterText").value = options.centerText ? options.centerText : "";
+	ensureCircularChartStyleState(options);
+	syncCircularLabelStyleControls(options);
+
+	populateCircularChartAllNodeSelect(parentInfo, selectedNodeId);
+	parentNode = networkNodes.get(selectedNodeId);
+	dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
+	PopulateSelectSaveLayerDialog("DialogCircularChartAllAxisX", dataAttributes, options.axisX || guessRadarSeriesLabel(dataAttributes));
+	PopulateSelectSaveLayerDialog("DialogCircularChartAllValue", dataAttributes, options.valueColumn || (getNumericAttributeNames(dataAttributes)[0] || ""));
+	PopulateSelectSaveLayerDialog("DialogCircularChartAllClassification", dataAttributes, options.classificationColumn || "");
+
+	applyCircularChartTypeDisplay();
+	applyCircularChartSeriesModeDisplay(seriesMode);
+	if (seriesMode == "series")
+		createDialogWithSelectWithGroupsCircularChart(node);
+	else {
+		var seriesDiv = document.getElementById("DialogCircularChartSeriesDiv");
+		var seriesToolbar = document.getElementById("DialogCircularChartSeriesToolbar");
+		if (seriesDiv)
+			seriesDiv.innerHTML = "";
+		if (seriesToolbar)
+			seriesToolbar.innerHTML = "";
+	}
+
+	clearCircularChart();
+	if (hasSavedOptions)
+		DrawCircularChart();
+}
+
 function networkDoubleClick(params) {
 	/*params.event = "[original event]";
 	document.getElementById("eventSpanHeading").innerText = "doubleClick event:";
@@ -8212,6 +8267,14 @@ function networkDoubleClick(params) {
 				if (parentNodes[0].STAdata)
 					ShowRadarPlotDialog(parentNodes, currentNode);
 				showNodeDialog("DialogRadarPlot");
+			}
+		}
+		else if (currentNode.image == "circularChart.png") {
+			var parentNodes=GetParentNodes(currentNode);
+			if (parentNodes && parentNodes[0]) {
+				if (parentNodes[0].STAdata)
+					ShowCircularChartDialog(parentNodes, currentNode);
+				showNodeDialog("DialogCircularChart");
 			}
 		}
 		else if (currentNode.image == "ImageViewer.png") {

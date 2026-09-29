@@ -2031,6 +2031,93 @@
 		</tr></table>
 	</dialog>
 
+	<dialog id="DialogCircularChart">
+		<table border="0"><tr>
+		<td class="DialogCircularChartForm">
+			<span id="DialogCircularChartTitle"></span>
+			<form>
+			<fieldset>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Tipus:&quot;, &quot;spa&quot;: &quot;Tipo:&quot;, &quot;eng&quot;: &quot;Type:&quot;}">Type:</span></legend>
+				<label><input type="radio" name="DialogCircularChartType" id="DialogCircularChartTypePie" checked="checked" onclick="toggleCircularChartType()"></input> <span data-lang="{&quot;cat&quot;: &quot;Sectors&quot;, &quot;spa&quot;: &quot;Sectores&quot;, &quot;eng&quot;: &quot;Pie&quot;}">Pie</span></label>
+				<label><input type="radio" name="DialogCircularChartType" id="DialogCircularChartTypeDoughnut" onclick="toggleCircularChartType()"></input> <span data-lang="{&quot;cat&quot;: &quot;Anell&quot;, &quot;spa&quot;: &quot;Anillo&quot;, &quot;eng&quot;: &quot;Doughnut&quot;}">Doughnut</span></label>
+			</fieldset>
+			<fieldset id="DialogCircularChartDataFieldset">
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Dades:&quot;, &quot;spa&quot;: &quot;Datos:&quot;, &quot;eng&quot;: &quot;Data:&quot;}">Data:</span></legend>
+				<label><input type="radio" name="DialogCircularChartSeriesMode" id="DialogCircularChartSeriesModeAll" checked="checked" onclick="toggleCircularChartSeriesMode()"></input> <span data-lang="{&quot;cat&quot;: &quot;Tot&quot;, &quot;spa&quot;: &quot;Todo&quot;, &quot;eng&quot;: &quot;All&quot;}">All</span></label>
+				<label><input type="radio" name="DialogCircularChartSeriesMode" id="DialogCircularChartSeriesModeSeries" onclick="toggleCircularChartSeriesMode()"></input> <span data-lang="{&quot;cat&quot;: &quot;Sèries&quot;, &quot;spa&quot;: &quot;Series&quot;, &quot;eng&quot;: &quot;Series&quot;}">Series</span></label>
+				<div id="DialogCircularChartAllPanel">
+					<div id="DialogCircularChartAllHint"><span data-lang="{&quot;cat&quot;: &quot;Una corona, o diverses si trieu una columna de classificació.&quot;, &quot;spa&quot;: &quot;Una corona, o varias si elige una columna de clasificación.&quot;, &quot;eng&quot;: &quot;One ring, or several if you choose a classification column.&quot;}">One ring, or several if you choose a classification column.</span></div>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Dades de:&quot;, &quot;spa&quot;: &quot;Datos de:&quot;, &quot;eng&quot;: &quot;Data from:&quot;}">Data from:</span>
+						<span id="DialogCircularChartAllNode"></span>
+					</label>
+					<br>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Categories:&quot;, &quot;spa&quot;: &quot;Categorías:&quot;, &quot;eng&quot;: &quot;Categories:&quot;}">Categories:</span>
+						<span id="DialogCircularChartAllAxisX"></span>
+					</label>
+					<br>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Valors:&quot;, &quot;spa&quot;: &quot;Valores:&quot;, &quot;eng&quot;: &quot;Values:&quot;}">Values:</span>
+						<span id="DialogCircularChartAllValue"></span>
+					</label>
+					<br>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Classificació (opcional):&quot;, &quot;spa&quot;: &quot;Clasificación (opcional):&quot;, &quot;eng&quot;: &quot;Classification (optional):&quot;}">Classification (optional):</span>
+						<span id="DialogCircularChartAllClassification"></span>
+					</label>
+				</div>
+				<div id="DialogCircularChartSeriesManual" style="display:none;">
+					<div id="DialogCircularChartSeriesToolbar" class="DialogCircularChartSeriesToolbar"></div>
+					<div id="DialogCircularChartSeriesDiv"></div>
+				</div>
+			</fieldset>
+			<fieldset>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
+				<label><span data-lang="{&quot;cat&quot;: &quot;Títol del gràfic:&quot;, &quot;spa&quot;: &quot;Título del gráfico:&quot;, &quot;eng&quot;: &quot;Graphic title:&quot;}">Graphic title:</span>
+					<input type="text" id="DialogCircularChartTitleInput" onchange="onCircularChartTitleChange()" onblur="onCircularChartTitleChange()"></input>
+				</label>
+				<label class="DialogCircularChartSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida del títol:&quot;, &quot;spa&quot;: &quot;Tamaño del título:&quot;, &quot;eng&quot;: &quot;Title size:&quot;}">Title size:</span>
+					<input type="range" id="DialogCircularChartTitleSize" min="10" max="36" value="16" oninput="onCircularTitleStyleChange(true)" onchange="onCircularTitleStyleChange(true)">
+					<span id="DialogCircularChartTitleSizeValue">16</span>
+				</label>
+				<br>
+				<label id="DialogCircularChartCenterTextLabel"><span data-lang="{&quot;cat&quot;: &quot;Text al centre:&quot;, &quot;spa&quot;: &quot;Texto en el centro:&quot;, &quot;eng&quot;: &quot;Center text:&quot;}">Center text:</span>
+					<input type="text" id="DialogCircularChartCenterText" onchange="onCircularChartCenterTextChange()" onblur="onCircularChartCenterTextChange()"></input>
+					<br>
+					<span data-lang="{&quot;cat&quot;: &quot;Mida del text:&quot;, &quot;spa&quot;: &quot;Tamaño del texto:&quot;, &quot;eng&quot;: &quot;Text size:&quot;}">Text size:</span>
+					<input type="range" id="DialogCircularChartCenterTextSize" min="10" max="48" value="16" oninput="onCircularCenterTextStyleChange(true)" onchange="onCircularCenterTextStyleChange(true)">
+					<span id="DialogCircularChartCenterTextSizeValue">16</span>
+				</label>
+				<div id="DialogCircularChartLabelStyle" class="DialogCircularChartLabelStyle">
+					<label><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>
+						<input type="range" id="DialogCircularChartLabelSize" min="8" max="28" value="11" oninput="onCircularLabelStyleChange(true)" onchange="onCircularLabelStyleChange(true)">
+						<span id="DialogCircularChartLabelSizeValue">11</span>
+					</label>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Color dels números:&quot;, &quot;spa&quot;: &quot;Color de los números:&quot;, &quot;eng&quot;: &quot;Number color:&quot;}">Number color:</span>
+						<input type="color" id="DialogCircularChartLabelColor" value="#ffffff" onchange="onCircularLabelStyleChange(true)">
+					</label>
+				</div>
+			</fieldset>
+			<br>
+			<div class="center">
+				<button value="draw" onClick="DrawCircularChart(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
+				<button value="ok" onClick="CloseDialogCircularChart(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
+			</div>
+			<input type="hidden" id="DialogCircularChartNodeId"></input>
+			</form>
+		</td>
+		<td style="vertical-align: top;">
+			<div class="DialogCircularChartVizRow">
+				<div id="DialogCircularChartVisualization">
+					<canvas id="DialogCircularChartVisualizationCanvas" style="width:100%; height:100%;"></canvas>
+				</div>
+				<div id="DialogCircularChartLegend" class="DialogCircularChartLegend" aria-label="Legend"></div>
+			</div>
+			<div id="DialogCircularChartColorCard" class="DialogCircularChartColorCard" style="display:none;"></div>
+			<div class="DialogCircularChartSavePng">
+				<button type="button" onClick="SaveCircularChart(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
+			</div>
+		</td>
+		</tr></table>
+	</dialog>
+
 	<dialog id="DialogImageViewer">
 		<table border="0"><tr><td>
 			<span id="DialogImageViewerTitle"></span>

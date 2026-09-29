@@ -1,0 +1,301 @@
+{
+	"nodes": [
+		{
+			"id": "7uig1.0mq87s",
+			"label": "CSV1",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Categoria": "Categoria A",
+					"Corona": "Corona 1",
+					"Valor": 25
+				},
+				{
+					"Categoria": "Categoria B",
+					"Corona": "Corona 1",
+					"Valor": 30
+				},
+				{
+					"Categoria": "Categoria C",
+					"Corona": "Corona 1",
+					"Valor": 15
+				},
+				{
+					"Categoria": "Categoria A",
+					"Corona": "Corona 2",
+					"Valor": 20
+				},
+				{
+					"Categoria": "Categoria B",
+					"Corona": "Corona 2",
+					"Valor": 35
+				},
+				{
+					"Categoria": "Categoria C",
+					"Corona": "Corona 2",
+					"Valor": 10
+				}
+			],
+			"x": 68,
+			"y": 111
+		},
+		{
+			"id": "47lf4.b5ht9s",
+			"label": "CSV2",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Categoria": "Categoria A",
+					"Corona": "Corona 1",
+					"Valor": 30
+				},
+				{
+					"Categoria": "Categoria B",
+					"Corona": "Corona 1",
+					"Valor": 10
+				},
+				{
+					"Categoria": "Categoria C",
+					"Corona": "Corona 1",
+					"Valor": 11
+				},
+				{
+					"Categoria": "Categoria A",
+					"Corona": "Corona 2",
+					"Valor": 21
+				},
+				{
+					"Categoria": "Categoria B",
+					"Corona": "Corona 2",
+					"Valor": 35
+				},
+				{
+					"Categoria": "Categoria C",
+					"Corona": "Corona 2",
+					"Valor": 10
+				}
+			],
+			"x": -7,
+			"y": -101
+		},
+		{
+			"id": "95e7d.mamlme",
+			"label": "Gràfic circular",
+			"image": "circularChart.png",
+			"shape": "circularImage",
+			"x": 56,
+			"y": -6,
+			"circularChartParentNodes": {
+				"47lf4.b5ht9s": {
+					"nodeLabel": "CSV2",
+					"numericNames": [
+						"Valor"
+					],
+					"nonNumericNames": [
+						"Categoria",
+						"Corona"
+					]
+				},
+				"7uig1.0mq87s": {
+					"nodeLabel": "CSV1",
+					"numericNames": [
+						"Valor"
+					],
+					"nonNumericNames": [
+						"Categoria",
+						"Corona"
+					]
+				}
+			},
+			"circularChartOptions": {
+				"seriesMode": "series",
+				"nodeSelected": "47lf4.b5ht9s",
+				"axisX": "Categoria",
+				"valueColumn": "Valor",
+				"classificationColumn": "Corona",
+				"sliceColors": {
+					"Categoria B": "#1f77b4",
+					"Categoria A": "#ff7f0e",
+					"Categoria C": "#dbdb8d"
+				},
+				"ringColors": {},
+				"hiddenSlices": [],
+				"hiddenRings": [],
+				"labelFontSize": 11,
+				"labelFontColor": "#ffffff",
+				"seriesGroups": [
+					{
+						"nodeSelected": "7uig1.0mq87s",
+						"axisX": "Categoria",
+						"valueColumn": "Valor",
+						"classificationColumn": "Corona",
+						"color": "#aec7e8",
+						"legendText": "Valor"
+					}
+				],
+				"plotType": "pie",
+				"title": "ggggg",
+				"centerText": "",
+				"drawn": true,
+				"legendMode": "slice"
+			}
+		},
+		{
+			"id": "32vco.8m7qkq",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Categoria": "AlimentaciÃ³",
+					"Corona": "Corona 1",
+					"Valor": 35
+				},
+				{
+					"Categoria": "Transport",
+					"Corona": "Corona 1",
+					"Valor": 20
+				},
+				{
+					"Categoria": "Habitatge",
+					"Corona": "Corona 1",
+					"Valor": 25
+				},
+				{
+					"Categoria": "Oci",
+					"Corona": "Corona 1",
+					"Valor": 10
+				},
+				{
+					"Categoria": "EducaciÃ³",
+					"Corona": "Corona 1",
+					"Valor": 10
+				},
+				{
+					"Categoria": "AlimentaciÃ³",
+					"Corona": "Corona 2",
+					"Valor": 30
+				},
+				{
+					"Categoria": "Transport",
+					"Corona": "Corona 2",
+					"Valor": 25
+				},
+				{
+					"Categoria": "Habitatge",
+					"Corona": "Corona 2",
+					"Valor": 20
+				},
+				{
+					"Categoria": "Oci",
+					"Corona": "Corona 2",
+					"Valor": 15
+				},
+				{
+					"Categoria": "EducaciÃ³",
+					"Corona": "Corona 2",
+					"Valor": 10
+				},
+				{
+					"Categoria": "AlimentaciÃ³",
+					"Corona": "Corona 3",
+					"Valor": 20
+				},
+				{
+					"Categoria": "Transport",
+					"Corona": "Corona 3",
+					"Valor": 30
+				},
+				{
+					"Categoria": "Habitatge",
+					"Corona": "Corona 3",
+					"Valor": 15
+				},
+				{
+					"Categoria": "Oci",
+					"Corona": "Corona 3",
+					"Valor": 20
+				},
+				{
+					"Categoria": "EducaciÃ³",
+					"Corona": "Corona 3",
+					"Valor": 15
+				}
+			],
+			"x": -141,
+			"y": -26
+		},
+		{
+			"id": "68667.k7e96s",
+			"label": "Gràfic circular",
+			"image": "circularChart.png",
+			"shape": "circularImage",
+			"circularChartParentNodes": {
+				"32vco.8m7qkq": {
+					"nodeLabel": "CSV",
+					"numericNames": [
+						"Valor"
+					],
+					"nonNumericNames": [
+						"Categoria",
+						"Corona"
+					]
+				}
+			},
+			"circularChartOptions": {
+				"seriesMode": "all",
+				"nodeSelected": "32vco.8m7qkq",
+				"axisX": "Categoria",
+				"valueColumn": "Valor",
+				"classificationColumn": "Corona",
+				"sliceColors": {},
+				"ringColors": {},
+				"hiddenSlices": [],
+				"hiddenRings": [],
+				"labelFontSize": 14,
+				"labelFontColor": "#292828",
+				"plotType": "doughnut",
+				"title": "Titooool",
+				"centerText": "Titol del centre",
+				"drawn": true,
+				"legendMode": "slice"
+			},
+			"x": -115,
+			"y": 94
+		}
+	],
+	"edges": [
+		{
+			"from": "7uig1.0mq87s",
+			"to": "5lqn3.15nthq",
+			"arrows": "from"
+		},
+		{
+			"from": "7uig1.0mq87s",
+			"to": "7pima.krsv9k",
+			"arrows": "from"
+		},
+		{
+			"from": "47lf4.b5ht9s",
+			"to": "7pima.krsv9k",
+			"arrows": "from"
+		},
+		{
+			"from": "47lf4.b5ht9s",
+			"to": "95e7d.mamlme",
+			"arrows": "from"
+		},
+		{
+			"from": "7uig1.0mq87s",
+			"to": "95e7d.mamlme",
+			"arrows": "from"
+		},
+		{
+			"from": "32vco.8m7qkq",
+			"to": "68667.k7e96s",
+			"arrows": "from"
+		}
+	]
+}
