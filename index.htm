@@ -1971,17 +1971,30 @@
 			<span id="DialogRadarPlotTitle"></span>
 			<form>
 			<fieldset>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Tipus:&quot;, &quot;spa&quot;: &quot;Tipo:&quot;, &quot;eng&quot;: &quot;Type:&quot;}">Type:</span></legend>
+				<label><input type="radio" name="DialogRadarPlotType" id="DialogRadarPlotTypeRadar" checked="checked" onclick="toggleRadarPlotType()"></input> <span data-lang="{&quot;cat&quot;: &quot;Radar&quot;, &quot;spa&quot;: &quot;Radar&quot;, &quot;eng&quot;: &quot;Radar&quot;}">Radar</span></label>
+				<label><input type="radio" name="DialogRadarPlotType" id="DialogRadarPlotTypePolar" onclick="toggleRadarPlotType()"></input> <span data-lang="{&quot;cat&quot;: &quot;Polar&quot;, &quot;spa&quot;: &quot;Polar&quot;, &quot;eng&quot;: &quot;Polar&quot;}">Polar</span></label>
+			</fieldset>
+			<fieldset>
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Disposició de les dades:&quot;, &quot;spa&quot;: &quot;Disposición de los datos:&quot;, &quot;eng&quot;: &quot;Data layout:&quot;}">Data layout:</span></legend>
 				<label><input type="radio" name="DialogRadarPlotLayout" id="DialogRadarPlotLayoutWide" checked="checked" onclick="toggleRadarPlotLayout()"></input> <span data-lang="{&quot;cat&quot;: &quot;Columnes com a eixos&quot;, &quot;spa&quot;: &quot;Columnas como ejes&quot;, &quot;eng&quot;: &quot;Columns as axes&quot;}">Columns as axes</span></label>
 				<label><input type="radio" name="DialogRadarPlotLayout" id="DialogRadarPlotLayoutLong" onclick="toggleRadarPlotLayout()"></input> <span data-lang="{&quot;cat&quot;: &quot;Categories com a eixos&quot;, &quot;spa&quot;: &quot;Categorías como ejes&quot;, &quot;eng&quot;: &quot;Categories as axes&quot;}">Categories as axes</span></label>
 			</fieldset>
+			<div id="DialogRadarPlotAllNodeWrap">
+				<label><span data-lang="{&quot;cat&quot;: &quot;Dades de:&quot;, &quot;spa&quot;: &quot;Datos de:&quot;, &quot;eng&quot;: &quot;Data from:&quot;}">Data from:</span>
+					<span id="DialogRadarPlotAllNode"></span>
+				</label>
+			</div>
 			<fieldset id="DialogRadarPlotWideFieldset">
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Taula ampla:&quot;, &quot;spa&quot;: &quot;Tabla ancha:&quot;, &quot;eng&quot;: &quot;Wide table:&quot;}">Wide table:</span></legend>
-				<label><b><span data-lang="{&quot;cat&quot;: &quot;Columna d'element&quot;, &quot;spa&quot;: &quot;Columna de elemento&quot;, &quot;eng&quot;: &quot;Item column&quot;}">Item column</span></b> <span data-lang="{&quot;cat&quot;: &quot;(nom, etiqueta...):&quot;, &quot;spa&quot;: &quot;(nombre, etiqueta...):&quot;, &quot;eng&quot;: &quot;(name, label...):&quot;}">(name, label...):</span>
+				<label id="DialogRadarPlotSeriesLabelRow"><b><span data-lang="{&quot;cat&quot;: &quot;Columna d'element&quot;, &quot;spa&quot;: &quot;Columna de elemento&quot;, &quot;eng&quot;: &quot;Item column&quot;}">Item column</span></b> <span data-lang="{&quot;cat&quot;: &quot;(nom, etiqueta...):&quot;, &quot;spa&quot;: &quot;(nombre, etiqueta...):&quot;, &quot;eng&quot;: &quot;(name, label...):&quot;}">(name, label...):</span>
 					<span id="DialogRadarPlotSeriesLabel"></span>
 				</label>
 				<br>
-				<label><span data-lang="{&quot;cat&quot;: &quot;Columnes numèriques (eixos del radar):&quot;, &quot;spa&quot;: &quot;Columnas numéricas (ejes del radar):&quot;, &quot;eng&quot;: &quot;Numeric columns (radar axes):&quot;}">Numeric columns (radar axes):</span></label>
+				<label id="DialogRadarPlotPolarItemRow" style="display:none;"><span data-lang="{&quot;cat&quot;: &quot;Element:&quot;, &quot;spa&quot;: &quot;Elemento:&quot;, &quot;eng&quot;: &quot;Item:&quot;}">Item:</span>
+					<select id="DialogRadarPlotPolarItemSelect"></select>
+				</label>
+				<label><span id="DialogRadarPlotAxesListLegend"><span data-lang="{&quot;cat&quot;: &quot;Columnes numèriques (eixos):&quot;, &quot;spa&quot;: &quot;Columnas numéricas (ejes):&quot;, &quot;eng&quot;: &quot;Numeric columns (axes):&quot;}">Numeric columns (axes):</span></span></label>
 				<div id="DialogRadarPlotAxesList"></div>
 			</fieldset>
 			<fieldset id="DialogRadarPlotLongFieldset" style="display:none;">
@@ -1989,12 +2002,16 @@
 				<label><span data-lang="{&quot;cat&quot;: &quot;Categories:&quot;, &quot;spa&quot;: &quot;Categorías:&quot;, &quot;eng&quot;: &quot;Categories:&quot;}">Categories:</span>
 					<span id="DialogRadarPlotAxisX"></span>
 				</label>
+				<br>
+				<label id="DialogRadarPlotPolarValueRow" style="display:none;"><span data-lang="{&quot;cat&quot;: &quot;Valors:&quot;, &quot;spa&quot;: &quot;Valores:&quot;, &quot;eng&quot;: &quot;Values:&quot;}">Values:</span>
+					<span id="DialogRadarPlotPolarValue"></span>
+				</label>
 			</fieldset>
 			<fieldset id="DialogRadarPlotSeriesModeFieldset">
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Mode de sèries:&quot;, &quot;spa&quot;: &quot;Modo de series:&quot;, &quot;eng&quot;: &quot;Series mode:&quot;}">Series mode:</span></legend>
 				<label><input type="radio" name="DialogRadarPlotSeriesMode" id="DialogRadarPlotSeriesModeAll" checked="checked" onclick="toggleRadarPlotSeriesMode()"></input> <span data-lang="{&quot;cat&quot;: &quot;Tot&quot;, &quot;spa&quot;: &quot;Todo&quot;, &quot;eng&quot;: &quot;All&quot;}">All</span></label>
 				<label><input type="radio" name="DialogRadarPlotSeriesMode" id="DialogRadarPlotSeriesModeSeries" onclick="toggleRadarPlotSeriesMode()"></input> <span data-lang="{&quot;cat&quot;: &quot;Sèries&quot;, &quot;spa&quot;: &quot;Series&quot;, &quot;eng&quot;: &quot;Series&quot;}">Series</span></label>
-				<div id="DialogRadarPlotSeriesAllHint"><span data-lang="{&quot;cat&quot;: &quot;Totes les sèries es creen automàticament. Els colors s'assignen en dibuixar.&quot;, &quot;spa&quot;: &quot;Todas las series se crean automáticamente. Los colores se asignan al dibujar.&quot;, &quot;eng&quot;: &quot;All series are created automatically. Colors are assigned on Draw.&quot;}">All series are created automatically. Colors are assigned on Draw.</span></div>
+				<div id="DialogRadarPlotSeriesAllHint"><span data-lang="{&quot;cat&quot;: &quot;Totes les sèries del node seleccionat. Multi-node: mode Sèries.&quot;, &quot;spa&quot;: &quot;Todas las series del nodo seleccionado. Multi-nodo: modo Series.&quot;, &quot;eng&quot;: &quot;All series from the selected node. Multi-node: Series mode.&quot;}">All series from the selected node. Multi-node: Series mode.</span></div>
 				<div id="DialogRadarPlotSeriesManual" style="display:none;">
 					<div id="DialogRadarPlotSeriesToolbar" class="DialogRadarPlotSeriesToolbar"></div>
 					<div id="DialogRadarPlotSeriesDiv"></div>
@@ -2004,12 +2021,26 @@
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
 				<label><input type="checkbox" id="DialogRadarPlotNormalize"></input> <span data-lang="{&quot;cat&quot;: &quot;Normalitza els valors (0-100)&quot;, &quot;spa&quot;: &quot;Normalizar los valores (0-100)&quot;, &quot;eng&quot;: &quot;Normalize values (0-100)&quot;}">Normalize values (0-100)</span></label>
 				<br>
-				<label><input type="checkbox" id="DialogRadarPlotFill" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Omplir l'àrea&quot;, &quot;spa&quot;: &quot;Rellenar el área&quot;, &quot;eng&quot;: &quot;Fill area&quot;}">Fill area</span></label>
+				<label id="DialogRadarPlotFillLabel"><input type="checkbox" id="DialogRadarPlotFill" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Omplir l'àrea&quot;, &quot;spa&quot;: &quot;Rellenar el área&quot;, &quot;eng&quot;: &quot;Fill area&quot;}">Fill area</span></label>
 				<br>
 				<label><input type="checkbox" id="DialogRadarPlotBeginZero" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el  cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
 				<br>
+				<label id="DialogRadarPlotSkipLabel"><input type="checkbox" id="DialogRadarPlotSkipMissing" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Salta punts absents&quot;, &quot;spa&quot;: &quot;Saltar puntos ausentes&quot;, &quot;eng&quot;: &quot;Skip missing points&quot;}">Skip missing points</span></label>
+				<br>
 				<label><span data-lang="{&quot;cat&quot;: &quot;Títol del gràfic:&quot;, &quot;spa&quot;: &quot;Título del gráfico:&quot;, &quot;eng&quot;: &quot;Graphic title:&quot;}">Graphic title:</span>
-					<input type="text" id="DialogRadarPlotTitleInput"></input>
+					<input type="text" id="DialogRadarPlotTitleInput" onchange="onRadarPlotTitleChange()" onblur="onRadarPlotTitleChange()"></input>
+				</label>
+				<label class="DialogRadarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida del títol:&quot;, &quot;spa&quot;: &quot;Tamaño del título:&quot;, &quot;eng&quot;: &quot;Title size:&quot;}">Title size:</span>
+					<input type="range" id="DialogRadarPlotTitleSize" min="10" max="36" value="16" oninput="onRadarPlotStyleChange(true)" onchange="onRadarPlotStyleChange(true)">
+					<span id="DialogRadarPlotTitleSizeValue">16</span>
+				</label>
+				<label class="DialogRadarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>
+					<input type="range" id="DialogRadarPlotTickSize" min="8" max="28" value="11" oninput="onRadarPlotStyleChange(true)" onchange="onRadarPlotStyleChange(true)">
+					<span id="DialogRadarPlotTickSizeValue">11</span>
+				</label>
+				<label class="DialogRadarPlotSizeRow" id="DialogRadarPlotPointLabelSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de les etiquetes:&quot;, &quot;spa&quot;: &quot;Tamaño de las etiquetas:&quot;, &quot;eng&quot;: &quot;Label size:&quot;}">Label size:</span>
+					<input type="range" id="DialogRadarPlotPointLabelSize" min="8" max="28" value="12" oninput="onRadarPlotStyleChange(true)" onchange="onRadarPlotStyleChange(true)">
+					<span id="DialogRadarPlotPointLabelSizeValue">12</span>
 				</label>
 			</fieldset>
 			<br>
@@ -2021,9 +2052,13 @@
 			</form>
 		</td>
 		<td style="vertical-align: top;">
-			<div id="DialogRadarPlotVisualization">
-				<canvas id="DialogRadarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas>
+			<div class="DialogRadarPlotVizRow">
+				<div id="DialogRadarPlotVisualization">
+					<canvas id="DialogRadarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas>
+				</div>
+				<div id="DialogRadarPlotLegend" class="DialogRadarPlotLegend" aria-label="Legend"></div>
 			</div>
+			<div id="DialogRadarPlotColorCard" class="DialogRadarPlotColorCard" style="display:none;"></div>
 			<div class="DialogRadarPlotSavePng">
 				<button type="button" onClick="SaveRadarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
 			</div>

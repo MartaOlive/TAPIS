@@ -379,6 +379,7 @@
 	max-width: 96vw;
 	max-height: 94vh;
 	overflow: auto;
+	position: relative;
 }
 
 #DialogRadarPlot > table {
@@ -411,9 +412,36 @@
 	margin: 4px 16px 8px 0;
 }
 
+#DialogRadarPlot #DialogRadarPlotAllNodeWrap {
+	margin: 0 0 12px 0;
+}
+
 #DialogRadarPlot #DialogRadarPlotTitleInput {
-	width: 260px;
+	width: 220px;
 	margin-left: 8px;
+}
+
+#DialogRadarPlot .DialogRadarPlotSizeRow {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: 6px;
+	margin: 6px 0;
+	white-space: nowrap;
+}
+
+#DialogRadarPlot .DialogRadarPlotSizeRow input[type="range"] {
+	width: 120px;
+	flex: 0 0 auto;
+	margin: 0;
+}
+
+#DialogRadarPlot #DialogRadarPlotTitleSizeValue,
+#DialogRadarPlot #DialogRadarPlotTickSizeValue,
+#DialogRadarPlot #DialogRadarPlotPointLabelSizeValue {
+	display: inline-block;
+	min-width: 1.5em;
+	flex: 0 0 auto;
 }
 
 #DialogRadarPlot #DialogRadarPlotAxesList {
@@ -468,17 +496,6 @@
 	margin-left: 6px;
 }
 
-#DialogRadarPlot #DialogRadarPlotSeriesDiv input[type="text"] {
-	width: 220px;
-}
-
-#DialogRadarPlot #DialogRadarPlotSeriesDiv input[type="color"] {
-	width: 28px;
-	height: 26px;
-	margin-left: 6px;
-	vertical-align: middle;
-}
-
 #DialogRadarPlot #DialogRadarPlotSeriesDiv .DialogRadarPlotSeriesRemove {
 	margin-top: 6px;
 	background-color: white;
@@ -489,13 +506,95 @@
 	margin: 0 6px;
 }
 
+#DialogRadarPlot .DialogRadarPlotVizRow {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
 #DialogRadarPlot #DialogRadarPlotVisualization {
-	width: 720px;
-	height: 560px;
+	width: 560px;
+	height: 520px;
+	flex: 0 0 auto;
+}
+
+#DialogRadarPlot .DialogRadarPlotLegend {
+	width: 200px;
+	max-height: 520px;
+	overflow: auto;
+	padding: 4px 0 4px 4px;
+	box-sizing: border-box;
+	flex: 0 0 auto;
+}
+
+#DialogRadarPlot .DialogRadarPlotLegendItem {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0 0 6px 0;
+	font-size: 12px;
+	line-height: 1.2;
+}
+
+#DialogRadarPlot .DialogRadarPlotLegendItem.is-hidden .DialogRadarPlotLegendLabel {
+	opacity: 0.45;
+	text-decoration: line-through;
+}
+
+#DialogRadarPlot .DialogRadarPlotLegendSwatch {
+	width: 14px;
+	height: 14px;
+	border: 1px solid #666;
+	border-radius: 2px;
+	padding: 0;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+#DialogRadarPlot .DialogRadarPlotLegendEye {
+	width: 22px;
+	height: 22px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	background: #fff;
+	cursor: pointer;
+	padding: 0;
+	font-size: 12px;
+	line-height: 1;
+	flex: 0 0 auto;
+}
+
+#DialogRadarPlot .DialogRadarPlotLegendLabel {
+	flex: 1 1 auto;
+	min-width: 0;
+	word-break: break-word;
+}
+
+#DialogRadarPlot .DialogRadarPlotColorCard {
+	position: absolute;
+	z-index: 40;
+	background: #fff;
+	border: 1px solid #888;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+	padding: 8px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	width: 176px;
+	box-sizing: border-box;
+}
+
+#DialogRadarPlot .DialogRadarPlotColorCardSwatch {
+	width: 22px;
+	height: 22px;
+	border: 1px solid #666;
+	border-radius: 2px;
+	padding: 0;
+	cursor: pointer;
 }
 
 #DialogRadarPlot .DialogRadarPlotSavePng {
-	width: 720px;
+	width: 100%;
 	margin-top: 12px;
 	text-align: center;
 }

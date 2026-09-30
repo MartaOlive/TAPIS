@@ -7869,37 +7869,55 @@ function ShowRadarPlotDialog(parentNodes, node) {
 	var parentInfo = ensureRadarPlotSeriesState(node, parentNodes);
 	var parentIds = Object.keys(parentInfo);
 	var dataAttributes, options, layout, seriesMode, seriesLabelDefault, seriesDiv, seriesToolbar;
+	var selectedNodeId, parentNode, polar;
 	networkNodes.update(node);
 	if (!parentIds.length) {
 		document.getElementById("DialogRadarPlotTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		clearRadarPlotChart();
 		return;
 	}
-	document.getElementById("DialogRadarPlotTitle").innerHTML = DonaCadena({cat: "Gràfic de radar", spa: "Gráfico de radar", eng: "Radar plot"});
+	document.getElementById("DialogRadarPlotTitle").innerHTML = DonaCadena({cat: "Gràfics polars", spa: "Gráficos polares", eng: "Polar charts"});
 
-	dataAttributes = getRadarSharedDataAttributes(parentNodes);
 	options = node.radarPlotOptions || {};
+	ensureRadarPlotStyleState(options);
 	layout = options.layout == "long" ? "long" : "wide";
 	seriesMode = getRadarPlotSeriesMode(options);
-	seriesLabelDefault = options.seriesLabel || guessRadarSeriesLabel(dataAttributes);
+	polar = options.plotType == "polar";
+	selectedNodeId = options.nodeSelected && parentInfo[options.nodeSelected] ? options.nodeSelected : parentIds[0];
+	parentNode = networkNodes.get(selectedNodeId);
+	// Tot/Polar: attrs from selected node. Series multi-node: union of all parents for shared axes list.
+	dataAttributes = (seriesMode == "series" && !polar)
+		? getRadarSharedDataAttributes(parentNodes)
+		: (parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata));
+	seriesLabelDefault = options.seriesLabel || guessRadarSeriesLabel(
+		parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata)
+	);
 
+	document.getElementById("DialogRadarPlotTypeRadar").checked = !polar;
+	document.getElementById("DialogRadarPlotTypePolar").checked = polar;
 	document.getElementById("DialogRadarPlotLayoutWide").checked = layout == "wide";
 	document.getElementById("DialogRadarPlotLayoutLong").checked = layout == "long";
 
+	populateRadarPlotAllNodeSelect(parentInfo, selectedNodeId);
 	PopulateSelectSaveLayerDialog("DialogRadarPlotSeriesLabel", dataAttributes, seriesLabelDefault, "onRadarPlotSharedColumnChange()");
 	PopulateSelectSaveLayerDialog("DialogRadarPlotAxisX", dataAttributes, options.axisX || seriesLabelDefault, "onRadarPlotSharedColumnChange()");
+	PopulateSelectSaveLayerDialog("DialogRadarPlotPolarValue", dataAttributes, options.polarValueColumn || (getNumericAttributeNames(dataAttributes)[0] || ""), "onRadarPlotSharedColumnChange()");
 	populateRadarPlotAxesList(dataAttributes, hasSavedOptions ? options.axes : null);
+	populateRadarPolarItemSelect(node);
 
 	document.getElementById("DialogRadarPlotNormalize").checked = options.normalize ? true : false;
 	document.getElementById("DialogRadarPlotFill").checked = options.fill === false ? false : true;
 	document.getElementById("DialogRadarPlotBeginZero").checked = options.beginAtZero === false ? false : true;
+	document.getElementById("DialogRadarPlotSkipMissing").checked = options.skipMissing === false ? false : true;
 	document.getElementById("DialogRadarPlotTitleInput").value = options.title ? options.title : "";
 	document.getElementById("DialogRadarPlotSeriesModeAll").checked = seriesMode == "all";
 	document.getElementById("DialogRadarPlotSeriesModeSeries").checked = seriesMode == "series";
+	syncRadarPlotStyleControls(options);
 
 	applyRadarPlotLayoutDisplay();
 	applyRadarPlotSeriesModeDisplay(seriesMode);
-	if (seriesMode == "series")
+	applyRadarPlotTypeDisplay();
+	if (seriesMode == "series" && !polar)
 		createDialogWithSelectWithGroupsRadarPlot(node);
 	else {
 		seriesDiv = document.getElementById("DialogRadarPlotSeriesDiv");
@@ -7911,7 +7929,6 @@ function ShowRadarPlotDialog(parentNodes, node) {
 	}
 
 	clearRadarPlotChart();
-	// Restore a previous Draw without alerts. First open (no saved options) stays blank.
 	if (hasSavedOptions && radarPlotHasDrawableOptions(options)) {
 		if (layout == "wide") {
 			if (getSelectedRadarPlotAxes().length >= 3)

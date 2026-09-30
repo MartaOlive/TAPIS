@@ -1,4 +1,4 @@
-/* 
+﻿/* 
 	This file is part of TAPIS. TAPIS is a web page and a Javascript code 
 	that builds queries and explore the STAplus content, saves it as CSV or 
 	GeoJSON and connects with the MiraMon Map Browser. While the project is 
@@ -8,7 +8,7 @@
   
 	The TAPIS client is free software under the terms of the MIT License
 
-	Copyright (c) 2023-2026 Joan Masó
+	Copyright (c) 2023-2026 Joan MasÃ³
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
@@ -30,15 +30,15 @@
     
 	The TAPIS can be updated from https://github.com/grumets/tapis.
 
-	Aquest codi JavaScript ha estat idea de Joan Masó Pau (joan maso at uab cat) 
-	dins del grup del MiraMon. MiraMon és un projecte del 
-	CREAF que elabora programari de Sistema d'Informació Geogràfica 
-	i de Teledetecció per a la visualització, consulta, edició i anàlisi 
-	de mapes ràsters i vectorials. Aquest progamari programari inclou
-	aplicacions d'escriptori i també servidors i clients per Internet.
-	No tots aquests productes són gratuïts o de codi obert. 
+	Aquest codi JavaScript ha estat idea de Joan MasÃ³ Pau (joan maso at uab cat) 
+	dins del grup del MiraMon. MiraMon Ã©s un projecte del 
+	CREAF que elabora programari de Sistema d'InformaciÃ³ GeogrÃ fica 
+	i de TeledetecciÃ³ per a la visualitzaciÃ³, consulta, ediciÃ³ i anÃ lisi 
+	de mapes rÃ sters i vectorials. Aquest progamari programari inclou
+	aplicacions d'escriptori i tambÃ© servidors i clients per Internet.
+	No tots aquests productes sÃ³n gratuÃ¯ts o de codi obert. 
     
-	En particular, el TAPIS es distribueix sota els termes de la llicència MIT.
+	En particular, el TAPIS es distribueix sota els termes de la llicÃ¨ncia MIT.
     
 	El TAPIS es pot actualitzar des de https://github.com/grumets/tapis.
 */
@@ -133,7 +133,7 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 		return;
 	}
 
-	document.getElementById("DialogScatterPlotTitle").innerHTML = DonaCadena({cat: "Gràfic de dispersió", spa: "Gráfico de dispersión", eng: "Scatter Plot"});
+	document.getElementById("DialogScatterPlotTitle").innerHTML = DonaCadena({cat: "GrÃ fic de dispersiÃ³", spa: "GrÃ¡fico de dispersiÃ³n", eng: "Scatter Plot"});
 	createDialogWithSelectWithGroupsScatterPlot(node);
 	drawScatterPlot(node);
 }
@@ -145,7 +145,7 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 	var parentNodesInformation = node.STAattributesToSelect.parentNodesInformation;
 	var parentNodesInformationKeys = Object.keys(parentNodesInformation);
 
-	var cdns = `<button onclick="addNewSelectGroupInScatterPlot('${node.id}')">` + DonaCadena({cat: "Afegeix una sèrie nova", spa: "Añadir una serie nueva", eng: "Add new series"}) + `</button>`
+	var cdns = `<button onclick="addNewSelectGroupInScatterPlot('${node.id}')">` + DonaCadena({cat: "Afegeix una Sèrie nova", spa: "AÃ±adir una serie nueva", eng: "Add new series"}) + `</button>`
 
 	for (var i = 0; i < dialogGroups.length; i++) { //dialog groups of data
 		cdns += `<fieldset><legend>` + DonaCadenaFmt({cat: "Sèrie {0}", spa: "Serie {0}", eng: "Series {0}"}, (i + 1)) + `</legend><label  style="margin-right: 10px;margin-bottom:20px">` + DonaCadena({cat: "Dades de:", spa: "Datos de:", eng: "Data from:"}) + ` <select style="margin-bottom:10px" id="DialogScatterPlotAxisNodesSelect_${i}" onchange="updateSelectInformationScatterPlot('${i}','nodeSelected','select','DialogScatterPlotAxisNodesSelect_${i}','${node.id}')"></label>`
@@ -273,7 +273,7 @@ function ShowBarPlotDialog(parentNodes, node) {
 		document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
-	document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "Gràfic de barres i sectors", spa: "Gráfico de barras y sectores", eng: "Bar and pie plot"});
+	document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "GrÃ fic de barres i sectors", spa: "GrÃ¡fico de barras y sectores", eng: "Bar and pie plot"});
 
 	var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
 	PopulateSelectSaveLayerDialog("DialogBarPlotAxisX", dataAttributes, node && node.barPlotOptions && node.barPlotOptions.axisX ? node.barPlotOptions.axisX : "phenomenonTime");
@@ -285,7 +285,7 @@ function ShowBarPlotDialog(parentNodes, node) {
 	else {
 		data = parentNodes[1].STAdata;
 		if (!data || data.length != 1) {
-			document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "La segona connexió només hauria de tenir un element. Es continua sense títol.", spa: "La segunda conexión solo debería tener un elemento. Se continúa sin título.", eng: "Second connection should only have one item. Continuing without title."});
+			document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "La segona connexiÃ³ nomÃ©s hauria de tenir un element. Es continua sense tÃ­tol.", spa: "La segunda conexiÃ³n solo deberÃ­a tener un elemento. Se continÃºa sin tÃ­tulo.", eng: "Second connection should only have one item. Continuing without title."});
 			return;
 		}
 
@@ -313,7 +313,7 @@ function ShowImageViewerDialog(node, parentNodes) {
 	}
 	saveNodeDialog("DialogImageViewer", node);
 
-	document.getElementById("DialogImageViewerTitle").innerHTML = DonaCadena({cat: "Visor d'imatges", spa: "Visor de imágenes", eng: "Image viewer"});
+	document.getElementById("DialogImageViewerTitle").innerHTML = DonaCadena({cat: "Visor d'imatges", spa: "Visor de imÃ¡genes", eng: "Image viewer"});
 
 	var dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(data);
 	PopulateSelectSaveLayerDialog("DialogImageViewerURL", dataAttributes, "imageURL");
@@ -357,7 +357,7 @@ function UpdateScatterPlot(event) {
 			axisXType=currentAttributeType;
 		else{
 			if (axisXType!=currentAttributeType){ //avoid different types of X axis
-				alert(DonaCadena({cat: "Totes les sèries de l'eix X han de contenir el mateix tipus de dades", spa: "Todas las series del eje X deben contener el mismo tipo de datos", eng: "All series in X axis has to have same type of data"}));
+				alert(DonaCadena({cat: "Totes les Sèries de l'eix X han de contenir el mateix tipus de dades", spa: "Todas las series del eje X deben contener el mismo tipo de datos", eng: "All series in X axis has to have same type of data"}));
 				return;
 			}
 		}
@@ -502,7 +502,7 @@ function UpdateScatterPlot(event) {
 	}
 
 	if (!executable) {
-		alert(DonaCadena({cat: "L'interval de les dades seleccionades és massa llarg per aplicar-lo al gràfic. Filtreu l'interval per fer-lo més curt o trieu un interval més gran per a l'eix X", spa: "El intervalo de los datos seleccionados es demasiado largo para aplicarlo al gráfico. Filtre el intervalo para acortarlo o elija un intervalo mayor para el eje X", eng: "The interval of the data selected is too long to apply to the graphic. Filter interval to make it shorter or choose a bigger interval to X axis"}));
+		alert(DonaCadena({cat: "L'interval de les dades seleccionades Ã©s massa llarg per aplicar-lo al grÃ fic. Filtreu l'interval per fer-lo mÃ©s curt o trieu un interval mÃ©s gran per a l'eix X", spa: "El intervalo de los datos seleccionados es demasiado largo para aplicarlo al grÃ¡fico. Filtre el intervalo para acortarlo o elija un intervalo mayor para el eje X", eng: "The interval of the data selected is too long to apply to the graphic. Filter interval to make it shorter or choose a bigger interval to X axis"}));
 		return;
 	}
 
@@ -886,6 +886,147 @@ function applyRadarPlotLayoutDisplay() {
 	var wide = document.getElementById("DialogRadarPlotLayoutWide").checked;
 	document.getElementById("DialogRadarPlotWideFieldset").style.display = wide ? "" : "none";
 	document.getElementById("DialogRadarPlotLongFieldset").style.display = wide ? "none" : "";
+	applyRadarPlotTypeDisplay();
+}
+
+function isRadarPlotPolar() {
+	var radio = document.getElementById("DialogRadarPlotTypePolar");
+	return !!(radio && radio.checked);
+}
+
+function applyRadarPlotTypeDisplay() {
+	var polar = isRadarPlotPolar();
+	var wide = document.getElementById("DialogRadarPlotLayoutWide") && document.getElementById("DialogRadarPlotLayoutWide").checked;
+	var seriesModeFs = document.getElementById("DialogRadarPlotSeriesModeFieldset");
+	var fillLabel = document.getElementById("DialogRadarPlotFillLabel");
+	var skipLabel = document.getElementById("DialogRadarPlotSkipLabel");
+	var pointLabelRow = document.getElementById("DialogRadarPlotPointLabelSizeRow");
+	var polarItemRow = document.getElementById("DialogRadarPlotPolarItemRow");
+	var polarValueRow = document.getElementById("DialogRadarPlotPolarValueRow");
+	var seriesLabelRow = document.getElementById("DialogRadarPlotSeriesLabelRow");
+	var allNodeWrap = document.getElementById("DialogRadarPlotAllNodeWrap");
+	var seriesAll = isRadarPlotSeriesModeAll();
+	if (seriesModeFs)
+		seriesModeFs.style.display = polar ? "none" : "";
+	if (fillLabel)
+		fillLabel.style.display = polar ? "none" : "";
+	if (skipLabel)
+		skipLabel.style.display = polar ? "none" : "";
+	if (pointLabelRow)
+		pointLabelRow.style.display = polar ? "none" : "";
+	if (polarItemRow)
+		polarItemRow.style.display = (polar && wide) ? "" : "none";
+	if (polarValueRow)
+		polarValueRow.style.display = (polar && !wide) ? "" : "none";
+	if (seriesLabelRow) {
+		if (polar)
+			seriesLabelRow.style.display = wide ? "" : "none";
+		else
+			seriesLabelRow.style.display = (wide && seriesAll) ? "" : "none";
+	}
+	if (allNodeWrap)
+		allNodeWrap.style.display = (polar || seriesAll) ? "" : "none";
+}
+
+function toggleRadarPlotType() {
+	var node = getNodeDialog("DialogRadarPlot");
+	applyRadarPlotTypeDisplay();
+	if (!node)
+		return;
+	if (!node.radarPlotOptions)
+		node.radarPlotOptions = {};
+	node.radarPlotOptions.plotType = isRadarPlotPolar() ? "polar" : "radar";
+	networkNodes.update(node);
+	if (isRadarPlotPolar()) {
+		document.getElementById("DialogRadarPlotSeriesModeAll").checked = true;
+		applyRadarPlotSeriesModeDisplay("all");
+		populateRadarPolarItemSelect(node);
+	} else if (!isRadarPlotSeriesModeAll())
+		createDialogWithSelectWithGroupsRadarPlot(node);
+}
+
+function populateRadarPlotAllNodeSelect(parentInfo, selectedId) {
+	var span = document.getElementById("DialogRadarPlotAllNode");
+	var parentIds, cdns, i, id;
+	if (!span)
+		return;
+	parentIds = Object.keys(parentInfo || {});
+	if (!selectedId || !parentInfo[selectedId])
+		selectedId = parentIds.length ? parentIds[0] : "";
+	cdns = '<select id="DialogRadarPlotAllNodeSelect" onchange="onRadarPlotAllNodeChange()">';
+	for (i = 0; i < parentIds.length; i++) {
+		id = parentIds[i];
+		cdns += '<option value="' + ("" + id).replace(/"/g, "&quot;") + '"' +
+			(id == selectedId ? ' selected="selected"' : "") + ">" +
+			("" + (parentInfo[id].nodeLabel || id)).replace(/&/g, "&amp;").replace(/</g, "&lt;") +
+			"</option>";
+	}
+	cdns += "</select>";
+	span.innerHTML = cdns;
+}
+
+function getRadarPlotSelectedAllNodeId(node) {
+	var select = document.getElementById("DialogRadarPlotAllNodeSelect");
+	var parentInfo = node && node.radarPlotParentNodes ? node.radarPlotParentNodes : {};
+	var ids = Object.keys(parentInfo);
+	if (select && select.value && parentInfo[select.value])
+		return select.value;
+	if (node && node.radarPlotOptions && node.radarPlotOptions.nodeSelected && parentInfo[node.radarPlotOptions.nodeSelected])
+		return node.radarPlotOptions.nodeSelected;
+	return ids.length ? ids[0] : "";
+}
+
+function onRadarPlotAllNodeChange() {
+	var node = getNodeDialog("DialogRadarPlot");
+	var select = document.getElementById("DialogRadarPlotAllNodeSelect");
+	var parentNode, dataAttributes, options;
+	if (!node || !select)
+		return;
+	if (!node.radarPlotOptions)
+		node.radarPlotOptions = {};
+	node.radarPlotOptions.nodeSelected = select.value;
+	parentNode = networkNodes.get(select.value);
+	if (!parentNode || !parentNode.STAdata)
+		return;
+	dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
+	options = node.radarPlotOptions;
+	PopulateSelectSaveLayerDialog("DialogRadarPlotSeriesLabel", dataAttributes, options.seriesLabel || guessRadarSeriesLabel(dataAttributes), "onRadarPlotSharedColumnChange()");
+	PopulateSelectSaveLayerDialog("DialogRadarPlotAxisX", dataAttributes, options.axisX || guessRadarSeriesLabel(dataAttributes), "onRadarPlotSharedColumnChange()");
+	populateRadarPlotAxesList(dataAttributes, options.axes);
+	PopulateSelectSaveLayerDialog("DialogRadarPlotPolarValue", dataAttributes, options.polarValueColumn || (getNumericAttributeNames(dataAttributes)[0] || ""), "onRadarPlotSharedColumnChange()");
+	populateRadarPolarItemSelect(node);
+	networkNodes.update(node);
+}
+
+function populateRadarPolarItemSelect(node) {
+	var select = document.getElementById("DialogRadarPlotPolarItemSelect");
+	var seriesLabelSelect = document.getElementById("DialogRadarPlotSeriesLabelSelect");
+	var parentId, parentNode, seriesLabel, items, i, selected, cdns;
+	if (!select)
+		return;
+	parentId = getRadarPlotSelectedAllNodeId(node);
+	parentNode = parentId ? networkNodes.get(parentId) : null;
+	seriesLabel = seriesLabelSelect ? seriesLabelSelect.value : (node.radarPlotOptions && node.radarPlotOptions.seriesLabel);
+	if (!seriesLabel && parentNode) {
+		var attrs = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
+		seriesLabel = guessRadarSeriesLabel(attrs);
+	}
+	items = parentNode && parentNode.STAdata ? getRadarUniqueValues(parentNode.STAdata, seriesLabel) : [];
+	selected = (node.radarPlotOptions && node.radarPlotOptions.selectedItem) || (items.length ? items[0] : "");
+	if (items.indexOf(selected) == -1)
+		selected = items.length ? items[0] : "";
+	cdns = "";
+	for (i = 0; i < items.length; i++)
+		cdns += radarHtmlOption(items[i], items[i] == selected);
+	select.innerHTML = cdns;
+	select.onchange = function () {
+		if (!node.radarPlotOptions)
+			node.radarPlotOptions = {};
+		node.radarPlotOptions.selectedItem = select.value;
+		networkNodes.update(node);
+	};
+	if (node.radarPlotOptions)
+		node.radarPlotOptions.selectedItem = selected;
 }
 
 function toggleRadarPlotLayout() {
@@ -907,7 +1048,7 @@ function populateRadarPlotAxesList(dataAttributes, selectedAxes) {
 	var numericNames = getNumericAttributeNames(dataAttributes);
 	var cdns = [];
 	if (!numericNames.length) {
-		document.getElementById("DialogRadarPlotAxesList").innerHTML = "<em>" + DonaCadena({cat: "No s'han trobat columnes numèriques.", spa: "No se han encontrado columnas numéricas.", eng: "No numeric columns found."}) + "</em>";
+		document.getElementById("DialogRadarPlotAxesList").innerHTML = "<em>" + DonaCadena({cat: "No s'han trobat columnes numÃ¨riques.", spa: "No se han encontrado columnas numÃ©ricas.", eng: "No numeric columns found."}) + "</em>";
 		return;
 	}
 	if (!selectedAxes)
@@ -931,10 +1072,14 @@ function getSelectedRadarPlotAxes() {
 	return selected;
 }
 
-function meanOrZero(sum, count) {
+function meanOrMissing(sum, count, skipMissing) {
 	if (!count)
-		return 0;
+		return skipMissing ? null : 0;
 	return sum / count;
+}
+
+function meanOrZero(sum, count) {
+	return meanOrMissing(sum, count, false);
 }
 
 function radarCellText(value) {
@@ -1031,8 +1176,8 @@ function createDefaultRadarSeriesGroup(parentId, layout, seriesLabel, seriesGrou
 	return {
 		nodeSelected: parentId,
 		item: item,
+		seriesLabel: seriesLabel || "",
 		valueColumn: valueColumn,
-		color: ColorsForBarPlot[seriesGroups.length % ColorsForBarPlot.length],
 		legendText: layout == "long" ? valueColumn : item
 	};
 }
@@ -1099,34 +1244,39 @@ function ensureRadarPlotSeriesState(node, parentNodes) {
 
 function onRadarPlotSharedColumnChange() {
 	var node = getNodeDialog("DialogRadarPlot");
-	var seriesLabelSelect, axisXSelect, groups, i, parentNode, data, items;
+	var seriesLabelSelect, axisXSelect, polarValueSelect, groups, i, parentNode, data, items;
 	if (!node)
 		return;
 	if (!node.radarPlotOptions)
 		node.radarPlotOptions = {};
 	seriesLabelSelect = document.getElementById("DialogRadarPlotSeriesLabelSelect");
 	axisXSelect = document.getElementById("DialogRadarPlotAxisXSelect");
+	polarValueSelect = document.getElementById("DialogRadarPlotPolarValueSelect");
 	if (seriesLabelSelect)
 		node.radarPlotOptions.seriesLabel = seriesLabelSelect.value;
 	if (axisXSelect)
 		node.radarPlotOptions.axisX = axisXSelect.value;
+	if (polarValueSelect)
+		node.radarPlotOptions.polarValueColumn = polarValueSelect.value;
 	groups = node.radarPlotOptions.seriesGroups || [];
 	for (i = 0; i < groups.length; i++) {
 		parentNode = networkNodes.get(groups[i].nodeSelected);
 		data = parentNode && parentNode.STAdata ? parentNode.STAdata : [];
-		items = getRadarUniqueValues(data, node.radarPlotOptions.seriesLabel);
+		items = getRadarUniqueValues(data, groups[i].seriesLabel || node.radarPlotOptions.seriesLabel);
 		if (items.indexOf(groups[i].item) == -1)
 			groups[i].item = items.length ? items[0] : "";
 	}
 	networkNodes.update(node);
-	createDialogWithSelectWithGroupsRadarPlot(node);
+	populateRadarPolarItemSelect(node);
+	if (!isRadarPlotSeriesModeAll() && !isRadarPlotPolar())
+		createDialogWithSelectWithGroupsRadarPlot(node);
 }
 
 function createDialogWithSelectWithGroupsRadarPlot(node) {
 	var container = document.getElementById("DialogRadarPlotSeriesDiv");
 	var toolbar = document.getElementById("DialogRadarPlotSeriesToolbar");
 	var groups, parentInfo, parentIds, layout, seriesLabelSelect, seriesLabel;
-	var cdns, i, p, parentId, parentNode, data, items, numericNames;
+	var cdns, i, p, parentId, parentNode, data, items, numericNames, attrs, groupSeriesLabel, nonNumeric;
 	if (!container)
 		return;
 	groups = node.radarPlotOptions && node.radarPlotOptions.seriesGroups ? node.radarPlotOptions.seriesGroups : [];
@@ -1136,7 +1286,7 @@ function createDialogWithSelectWithGroupsRadarPlot(node) {
 	seriesLabelSelect = document.getElementById("DialogRadarPlotSeriesLabelSelect");
 	seriesLabel = seriesLabelSelect ? seriesLabelSelect.value : (node.radarPlotOptions ? node.radarPlotOptions.seriesLabel : "");
 	if (toolbar)
-		toolbar.innerHTML = '<button type="button" onclick="addNewSelectGroupInRadarPlot(\'' + node.id + '\')">' + DonaCadena({cat: "Afegeix una sèrie nova", spa: "Añadir una serie nueva", eng: "Add new series"}) + '</button>';
+		toolbar.innerHTML = '<button type="button" onclick="addNewSelectGroupInRadarPlot(\'' + node.id + '\')">' + DonaCadena({cat: "Afegeix una Sèrie nova", spa: "AÃ±adir una serie nueva", eng: "Add new series"}) + '</button>';
 	cdns = "";
 
 	for (i = 0; i < groups.length; i++) {
@@ -1145,8 +1295,14 @@ function createDialogWithSelectWithGroupsRadarPlot(node) {
 			groups[i].nodeSelected = parentId;
 		parentNode = parentId ? networkNodes.get(parentId) : null;
 		data = parentNode && parentNode.STAdata ? parentNode.STAdata : [];
+		attrs = parentNode ? (parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data)) : null;
 		numericNames = parentInfo[parentId] ? parentInfo[parentId].numericNames : [];
-		items = getRadarUniqueValues(data, seriesLabel);
+		nonNumeric = parentInfo[parentId] ? parentInfo[parentId].nonNumericNames : [];
+		groupSeriesLabel = groups[i].seriesLabel || seriesLabel || (nonNumeric.length ? nonNumeric[0] : "");
+		if (groupSeriesLabel && nonNumeric.indexOf(groupSeriesLabel) == -1 && nonNumeric.length)
+			groupSeriesLabel = nonNumeric[0];
+		groups[i].seriesLabel = groupSeriesLabel;
+		items = getRadarUniqueValues(data, groupSeriesLabel);
 
 		cdns += '<fieldset><legend>' + DonaCadenaFmt({cat: "Sèrie {0}", spa: "Serie {0}", eng: "Series {0}"}, (i + 1)) + '</legend>';
 		cdns += '<div class="DialogRadarPlotSeriesRow"><label>' + DonaCadena({cat: "Dades de:", spa: "Datos de:", eng: "Data from:"}) + ' <select id="DialogRadarPlotNodeSelect_' + i + '" onchange="updateSelectInformationRadarPlot(\'' + i + '\',\'nodeSelected\',\'select\',\'DialogRadarPlotNodeSelect_' + i + '\',\'' + node.id + '\')">';
@@ -1159,6 +1315,10 @@ function createDialogWithSelectWithGroupsRadarPlot(node) {
 		cdns += '</select></label></div>';
 
 		if (layout == "wide") {
+			cdns += '<div class="DialogRadarPlotSeriesRow"><label>' + DonaCadena({cat: "Columna d'element:", spa: "Columna de elemento:", eng: "Item column:"}) + ' <select id="DialogRadarPlotSeriesLabelSelect_' + i + '" onchange="updateSelectInformationRadarPlot(\'' + i + '\',\'seriesLabel\',\'select\',\'DialogRadarPlotSeriesLabelSelect_' + i + '\',\'' + node.id + '\')">';
+			for (p = 0; p < nonNumeric.length; p++)
+				cdns += radarHtmlOption(nonNumeric[p], nonNumeric[p] == groupSeriesLabel);
+			cdns += '</select></label></div>';
 			if (items.indexOf(groups[i].item) == -1)
 				groups[i].item = items.length ? items[0] : "";
 			if (!groups[i].legendText)
@@ -1178,8 +1338,6 @@ function createDialogWithSelectWithGroupsRadarPlot(node) {
 			cdns += '</select></label></div>';
 		}
 
-		cdns += '<div class="DialogRadarPlotSeriesRow"><label>Color: <input type="color" id="DialogRadarPlotColor_' + i + '" value="' + (groups[i].color || ColorsForBarPlot[i % ColorsForBarPlot.length]) + '" onchange="updateSelectInformationRadarPlot(\'' + i + '\',\'color\',\'radio\',\'DialogRadarPlotColor_' + i + '\',\'' + node.id + '\')"></label></div>';
-		cdns += '<div class="DialogRadarPlotSeriesRow"><label>Legend title: <input type="text" id="DialogRadarPlotLegend_' + i + '" value="' + ("" + (groups[i].legendText || "")).replace(/&/g, "&amp;").replace(/"/g, "&quot;") + '" onchange="updateSelectInformationRadarPlot(\'' + i + '\',\'legendText\',\'radio\',\'DialogRadarPlotLegend_' + i + '\',\'' + node.id + '\')"></label></div>';
 		cdns += '<button type="button" class="DialogRadarPlotSeriesRemove" onclick="deleteSelectGroupInRadarPlot(\'' + node.id + '\', \'' + i + '\')"><img src="trash.png" alt="Remove" title="Remove"></button>';
 		cdns += '</fieldset>';
 	}
@@ -1201,7 +1359,7 @@ function addNewSelectGroupInRadarPlot(nodeId) {
 	if (!node.radarPlotOptions.seriesGroups)
 		node.radarPlotOptions.seriesGroups = [];
 	if (node.radarPlotOptions.seriesGroups.length >= 20) {
-		alert(DonaCadena({cat: "Massa sèries (20). Suprimiu-ne una abans d'afegir-ne una altra.", spa: "Demasiadas series (20). Elimine una antes de añadir otra.", eng: "Too many series (20). Remove one before adding another."}));
+		alert(DonaCadena({cat: "Massa Sèries (20). Suprimiu-ne una abans d'afegir-ne una altra.", spa: "Demasiadas series (20). Elimine una antes de aÃ±adir otra.", eng: "Too many series (20). Remove one before adding another."}));
 		return;
 	}
 	layout = document.getElementById("DialogRadarPlotLayoutWide").checked ? "wide" : "long";
@@ -1252,6 +1410,7 @@ function toggleRadarPlotSeriesMode() {
 		networkNodes.update(node);
 	}
 	applyRadarPlotSeriesModeDisplay(seriesMode);
+	applyRadarPlotTypeDisplay();
 	if (seriesMode == "series" && node)
 		createDialogWithSelectWithGroupsRadarPlot(node);
 }
@@ -1285,13 +1444,28 @@ function updateSelectInformationRadarPlot(numberDialog, keyToChange, typeOfSelec
 	if ((keyToChange == "item" || keyToChange == "valueColumn") && (!node.radarPlotOptions.seriesGroups[numberDialog].legendText || node.radarPlotOptions.seriesGroups[numberDialog].legendText == previous))
 		node.radarPlotOptions.seriesGroups[numberDialog].legendText = value;
 
+	if (keyToChange == "seriesLabel") {
+		parentNode = networkNodes.get(node.radarPlotOptions.seriesGroups[numberDialog].nodeSelected);
+		data = parentNode && parentNode.STAdata ? parentNode.STAdata : [];
+		items = getRadarUniqueValues(data, value);
+		if (items.indexOf(node.radarPlotOptions.seriesGroups[numberDialog].item) == -1)
+			node.radarPlotOptions.seriesGroups[numberDialog].item = items.length ? items[0] : "";
+		if (!node.radarPlotOptions.seriesGroups[numberDialog].legendText || node.radarPlotOptions.seriesGroups[numberDialog].legendText == previous)
+			node.radarPlotOptions.seriesGroups[numberDialog].legendText = node.radarPlotOptions.seriesGroups[numberDialog].item;
+	}
+
 	if (keyToChange == "nodeSelected") {
 		parentNode = networkNodes.get(value);
 		data = parentNode && parentNode.STAdata ? parentNode.STAdata : [];
 		attrs = parentNode ? (parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data)) : null;
-		seriesLabel = document.getElementById("DialogRadarPlotSeriesLabelSelect") ? document.getElementById("DialogRadarPlotSeriesLabelSelect").value : node.radarPlotOptions.seriesLabel;
-		items = getRadarUniqueValues(data, seriesLabel);
+		seriesLabel = node.radarPlotOptions.seriesGroups[numberDialog].seriesLabel ||
+			(document.getElementById("DialogRadarPlotSeriesLabelSelect") ? document.getElementById("DialogRadarPlotSeriesLabelSelect").value : node.radarPlotOptions.seriesLabel);
 		numericNames = attrs ? getNumericAttributeNames(attrs) : [];
+		var nonNumeric = attrs ? getNonNumericAttributeNames(attrs) : [];
+		if (seriesLabel && nonNumeric.indexOf(seriesLabel) == -1)
+			seriesLabel = nonNumeric.length ? nonNumeric[0] : "";
+		node.radarPlotOptions.seriesGroups[numberDialog].seriesLabel = seriesLabel;
+		items = getRadarUniqueValues(data, seriesLabel);
 		if (items.indexOf(node.radarPlotOptions.seriesGroups[numberDialog].item) == -1)
 			node.radarPlotOptions.seriesGroups[numberDialog].item = items.length ? items[0] : "";
 		if (numericNames.indexOf(node.radarPlotOptions.seriesGroups[numberDialog].valueColumn) == -1)
@@ -1319,19 +1493,18 @@ function radarExtent(values) {
 	return { min: minVal, max: maxVal };
 }
 
-function scaleRadarValue(value, minVal, range) {
+function scaleRadarValue(value, minVal, range, skipMissing) {
 	if (isMissingRadarValue(value))
-		return 0;
+		return skipMissing ? null : 0;
 	return ((value - minVal) / range) * 100;
 }
 
-function normalizeRadarSeries(datasets) {
+function normalizeRadarSeries(datasets, skipMissing) {
 	var nAxes, a, s, extent, range, column;
 	if (!datasets.length)
 		return;
 	nAxes = datasets[0].data.length;
 
-	// One series: scale across all axes of that series so each vertex keeps its magnitude.
 	if (datasets.length == 1) {
 		extent = radarExtent(datasets[0].data);
 		if (extent.min === null)
@@ -1340,11 +1513,10 @@ function normalizeRadarSeries(datasets) {
 		if (range == 0)
 			return;
 		for (a = 0; a < nAxes; a++)
-			datasets[0].data[a] = scaleRadarValue(datasets[0].data[a], extent.min, range);
+			datasets[0].data[a] = scaleRadarValue(datasets[0].data[a], extent.min, range, skipMissing);
 		return;
 	}
 
-	// Several series: scale each axis from the min/max of that axis across series.
 	for (a = 0; a < nAxes; a++) {
 		column = [];
 		for (s = 0; s < datasets.length; s++)
@@ -1356,44 +1528,88 @@ function normalizeRadarSeries(datasets) {
 		if (range == 0)
 			continue;
 		for (s = 0; s < datasets.length; s++)
-			datasets[s].data[a] = scaleRadarValue(datasets[s].data[a], extent.min, range);
+			datasets[s].data[a] = scaleRadarValue(datasets[s].data[a], extent.min, range, skipMissing);
 	}
 }
 
-function buildRadarRadialScale(normalize, beginAtZero, seriesData) {
+function buildRadarRadialScale(normalize, beginAtZero, seriesData, tickFontSize, pointLabelFontSize, isPolar) {
 	var scale = { beginAtZero: beginAtZero }, s, a, extent, values = [];
 	if (normalize) {
 		scale.min = 0;
 		scale.max = 100;
-		return scale;
+	} else {
+		for (s = 0; s < seriesData.length; s++) {
+			for (a = 0; a < seriesData[s].length; a++)
+				values.push(seriesData[s][a]);
+		}
+		extent = radarExtent(values);
+		if (extent.max !== null)
+			scale.suggestedMax = extent.max;
+		if (!beginAtZero && extent.min !== null)
+			scale.suggestedMin = extent.min;
 	}
-	for (s = 0; s < seriesData.length; s++) {
-		for (a = 0; a < seriesData[s].length; a++)
-			values.push(seriesData[s][a]);
-	}
-	extent = radarExtent(values);
-	if (extent.max !== null)
-		scale.suggestedMax = extent.max;
-	if (!beginAtZero && extent.min !== null)
-		scale.suggestedMin = extent.min;
+	scale.ticks = { font: { size: tickFontSize || 11 } };
+	if (!isPolar)
+		scale.pointLabels = { font: { size: pointLabelFontSize || 12 } };
 	return scale;
 }
 
-function buildRadarDatasets(labels, seriesNames, seriesData, fill, seriesColors) {
-	var datasets = [], label, color;
-	for (var c = 0; c < seriesNames.length; c++) {
-		label = ("" + seriesNames[c]);
+function ensureRadarPlotStyleState(options) {
+	if (!options.seriesColors)
+		options.seriesColors = {};
+	if (!options.sliceColors)
+		options.sliceColors = {};
+	if (!options.hiddenSeries)
+		options.hiddenSeries = [];
+	if (!options.hiddenSlices)
+		options.hiddenSlices = [];
+	if (typeof options.titleFontSize !== "number" || isNaN(options.titleFontSize))
+		options.titleFontSize = 16;
+	if (typeof options.tickFontSize !== "number" || isNaN(options.tickFontSize))
+		options.tickFontSize = 11;
+	if (typeof options.pointLabelFontSize !== "number" || isNaN(options.pointLabelFontSize))
+		options.pointLabelFontSize = 12;
+	if (typeof options.skipMissing !== "boolean")
+		options.skipMissing = true;
+}
+
+function getRadarSeriesColor(options, key, index, fallback) {
+	if (options.seriesColors && options.seriesColors[key])
+		return options.seriesColors[key];
+	if (fallback)
+		return fallback;
+	return ColorsForBarPlot[index % ColorsForBarPlot.length];
+}
+
+function getRadarSliceColor(options, key, index) {
+	if (options.sliceColors && options.sliceColors[key])
+		return options.sliceColors[key];
+	return ColorsForBarPlot[index % ColorsForBarPlot.length];
+}
+
+function isRadarLegendHidden(options, mode, key) {
+	var list = mode == "slice" ? options.hiddenSlices : options.hiddenSeries;
+	return list && list.indexOf(key) != -1;
+}
+
+function buildRadarDatasets(seriesNames, seriesKeys, seriesData, fill, seriesColors, options, skipMissing) {
+	var datasets = [], label, color, key, i;
+	for (i = 0; i < seriesNames.length; i++) {
+		label = ("" + seriesNames[i]);
 		if (label.length > 35)
 			label = label.substring(0, 32) + "...";
-		color = (seriesColors && seriesColors[c]) ? seriesColors[c] : ColorsForBarPlot[c % ColorsForBarPlot.length];
+		key = seriesKeys[i] || seriesNames[i];
+		color = getRadarSeriesColor(options, key, i, seriesColors[i]);
 		datasets.push({
 			label: label,
-			data: seriesData[c],
+			data: seriesData[i],
 			backgroundColor: hexColorWithAlpha(color, fill ? 0.2 : 0),
 			borderColor: color,
 			pointBackgroundColor: color,
 			borderWidth: 2,
-			fill: fill
+			fill: fill,
+			spanGaps: false,
+			hidden: isRadarLegendHidden(options, "series", key)
 		});
 	}
 	return datasets;
@@ -1450,7 +1666,7 @@ function getRadarAutomaticValueColumns(parentNodes, axisX) {
 	return names;
 }
 
-function buildRadarWideSeriesRow(parentNodes, seriesLabel, item, axes) {
+function buildRadarWideSeriesRow(parentNodes, seriesLabel, item, axes, skipMissing) {
 	var sums = new Array(axes.length).fill(0);
 	var counts = new Array(axes.length).fill(0);
 	var p, i, c, data, record, value;
@@ -1471,11 +1687,12 @@ function buildRadarWideSeriesRow(parentNodes, seriesLabel, item, axes) {
 			}
 		}
 	}
-	return sums.map(function (sum, a) { return meanOrZero(sum, counts[a]); });
+	return sums.map(function (sum, a) { return meanOrMissing(sum, counts[a], skipMissing); });
 }
 
-function buildRadarLongSeriesRow(parentNodes, axisX, valueColumn, labelsFull) {
+function buildRadarLongSeriesRow(parentNodes, axisX, valueColumn, labelsFull, skipMissing) {
 	var row = new Array(labelsFull.length).fill(0);
+	var counts = new Array(labelsFull.length).fill(0);
 	var p, i, c, data, record, value;
 	for (p = 0; p < parentNodes.length; p++) {
 		data = parentNodes[p] && parentNodes[p].STAdata;
@@ -1487,9 +1704,17 @@ function buildRadarLongSeriesRow(parentNodes, axisX, valueColumn, labelsFull) {
 			if (c == -1)
 				continue;
 			value = parseFloat(record[valueColumn]);
-			if (!isNaN(value))
+			if (!isNaN(value)) {
 				row[c] += value;
+				counts[c]++;
+			}
 		}
+	}
+	if (!skipMissing)
+		return row;
+	for (c = 0; c < row.length; c++) {
+		if (!counts[c])
+			row[c] = null;
 	}
 	return row;
 }
@@ -1497,15 +1722,17 @@ function buildRadarLongSeriesRow(parentNodes, axisX, valueColumn, labelsFull) {
 function limitRadarSeriesList(items, maxSeries, event) {
 	if (items.length > maxSeries) {
 		if (event)
-			alert(DonaCadenaFmt({cat: "Massa sèries ({0}). Es mostren les primeres {1} sèries.", spa: "Demasiadas series ({0}). Se muestran las primeras {1} series.", eng: "Too many series ({0}). Showing the first {1} series."}, items.length, maxSeries));
+			alert(DonaCadenaFmt({cat: "Massa Sèries ({0}). Es mostren les primeres {1} Sèries.", spa: "Demasiadas series ({0}). Se muestran las primeras {1} series.", eng: "Too many series ({0}). Showing the first {1} series."}, items.length, maxSeries));
 		return items.slice(0, maxSeries);
 	}
 	return items;
 }
 
 var RadarPlotChart = null;
+var RadarPlotLastLegend = null;
+
 function clearRadarPlotChart() {
-	var canvas, existing;
+	var canvas, existing, legend;
 	if (RadarPlotChart) {
 		RadarPlotChart.destroy();
 		RadarPlotChart = null;
@@ -1516,6 +1743,202 @@ function clearRadarPlotChart() {
 		if (existing)
 			existing.destroy();
 	}
+	legend = document.getElementById("DialogRadarPlotLegend");
+	if (legend)
+		legend.innerHTML = "";
+	RadarPlotLastLegend = null;
+	hideRadarColorCard();
+}
+
+function radarPlotEscapeAttr(s) {
+	return ("" + s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+
+function radarPlotEscapeJs(s) {
+	return ("" + s).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+function hideRadarColorCard() {
+	var card = document.getElementById("DialogRadarPlotColorCard");
+	if (card)
+		card.style.display = "none";
+}
+
+function clampRadarFontSize(n, min, max, fallback) {
+	n = parseInt(n, 10);
+	if (isNaN(n))
+		n = fallback;
+	if (n < min)
+		n = min;
+	if (n > max)
+		n = max;
+	return n;
+}
+
+function getRadarTitleFontSize() {
+	var el = document.getElementById("DialogRadarPlotTitleSize");
+	return clampRadarFontSize(el ? el.value : 16, 10, 36, 16);
+}
+
+function getRadarTickFontSize() {
+	var el = document.getElementById("DialogRadarPlotTickSize");
+	return clampRadarFontSize(el ? el.value : 11, 8, 28, 11);
+}
+
+function getRadarPointLabelFontSize() {
+	var el = document.getElementById("DialogRadarPlotPointLabelSize");
+	return clampRadarFontSize(el ? el.value : 12, 8, 28, 12);
+}
+
+function syncRadarPlotStyleControls(options) {
+	var titleEl = document.getElementById("DialogRadarPlotTitleSize");
+	var titleVal = document.getElementById("DialogRadarPlotTitleSizeValue");
+	var tickEl = document.getElementById("DialogRadarPlotTickSize");
+	var tickVal = document.getElementById("DialogRadarPlotTickSizeValue");
+	var pointEl = document.getElementById("DialogRadarPlotPointLabelSize");
+	var pointVal = document.getElementById("DialogRadarPlotPointLabelSizeValue");
+	if (!options)
+		options = {};
+	if (titleEl)
+		titleEl.value = options.titleFontSize || 16;
+	if (titleVal)
+		titleVal.textContent = "" + (options.titleFontSize || 16);
+	if (tickEl)
+		tickEl.value = options.tickFontSize || 11;
+	if (tickVal)
+		tickVal.textContent = "" + (options.tickFontSize || 11);
+	if (pointEl)
+		pointEl.value = options.pointLabelFontSize || 12;
+	if (pointVal)
+		pointVal.textContent = "" + (options.pointLabelFontSize || 12);
+}
+
+function onRadarPlotStyleChange(redraw) {
+	var node = getNodeDialog("DialogRadarPlot");
+	var titleSize = getRadarTitleFontSize();
+	var tickSize = getRadarTickFontSize();
+	var pointSize = getRadarPointLabelFontSize();
+	syncRadarPlotStyleControls({ titleFontSize: titleSize, tickFontSize: tickSize, pointLabelFontSize: pointSize });
+	if (node) {
+		if (!node.radarPlotOptions)
+			node.radarPlotOptions = {};
+		ensureRadarPlotStyleState(node.radarPlotOptions);
+		node.radarPlotOptions.titleFontSize = titleSize;
+		node.radarPlotOptions.tickFontSize = tickSize;
+		node.radarPlotOptions.pointLabelFontSize = pointSize;
+		networkNodes.update(node);
+	}
+	if (redraw && node && node.radarPlotOptions && node.radarPlotOptions.drawn)
+		DrawRadarPlot();
+}
+
+function onRadarPlotTitleChange() {
+	var node = getNodeDialog("DialogRadarPlot");
+	var titleEl = document.getElementById("DialogRadarPlotTitleInput");
+	if (!node)
+		return;
+	if (!node.radarPlotOptions)
+		node.radarPlotOptions = {};
+	node.radarPlotOptions.title = titleEl ? (titleEl.value || "") : "";
+	node.radarPlotOptions.titleFontSize = getRadarTitleFontSize();
+	networkNodes.update(node);
+	if (node.radarPlotOptions.drawn)
+		DrawRadarPlot();
+}
+
+function buildRadarPlotLegendHtml(node, mode, itemKeys, itemLabels, itemColors) {
+	var container = document.getElementById("DialogRadarPlotLegend");
+	var options, cdns, i, key, label, color, hidden, eyeTitle, hiddenFlags = [];
+	if (!container)
+		return;
+	if (!node.radarPlotOptions)
+		node.radarPlotOptions = {};
+	ensureRadarPlotStyleState(node.radarPlotOptions);
+	options = node.radarPlotOptions;
+	cdns = "";
+	for (i = 0; i < itemKeys.length; i++) {
+		key = itemKeys[i];
+		label = itemLabels[i];
+		color = itemColors[i];
+		hidden = isRadarLegendHidden(options, mode, key);
+		hiddenFlags.push(hidden);
+		eyeTitle = hidden
+			? DonaCadena({cat: "Mostra", spa: "Mostrar", eng: "Show"})
+			: DonaCadena({cat: "Amaga", spa: "Ocultar", eng: "Hide"});
+		cdns += '<div class="DialogRadarPlotLegendItem' + (hidden ? " is-hidden" : "") + '">';
+		cdns += '<button type="button" class="DialogRadarPlotLegendSwatch" style="background-color:' + radarPlotEscapeAttr(color) + ';" title="' +
+			DonaCadena({cat: "Canvia el color", spa: "Cambiar el color", eng: "Change color"}) +
+			'" onclick="onRadarLegendColorClick(\'' + radarPlotEscapeJs(mode) + '\',\'' + radarPlotEscapeJs(key) + '\', event)"></button>';
+		cdns += '<button type="button" class="DialogRadarPlotLegendEye" title="' + radarPlotEscapeAttr(eyeTitle) +
+			'" onclick="onRadarLegendEyeClick(\'' + radarPlotEscapeJs(mode) + '\',\'' + radarPlotEscapeJs(key) + '\')">' +
+			(hidden ? "&#10005;" : "&#128065;") + "</button>";
+		cdns += '<span class="DialogRadarPlotLegendLabel">' + radarPlotEscapeAttr(label) + "</span>";
+		cdns += "</div>";
+	}
+	container.innerHTML = cdns;
+	RadarPlotLastLegend = {
+		mode: mode,
+		keys: itemKeys.slice(),
+		labels: itemLabels.slice(),
+		colors: itemColors.slice(),
+		hidden: hiddenFlags
+	};
+}
+
+function onRadarLegendEyeClick(mode, key) {
+	var node = getNodeDialog("DialogRadarPlot");
+	var list, idx;
+	if (!node)
+		return;
+	if (!node.radarPlotOptions)
+		node.radarPlotOptions = {};
+	ensureRadarPlotStyleState(node.radarPlotOptions);
+	list = mode == "slice" ? node.radarPlotOptions.hiddenSlices : node.radarPlotOptions.hiddenSeries;
+	idx = list.indexOf(key);
+	if (idx == -1)
+		list.push(key);
+	else
+		list.splice(idx, 1);
+	networkNodes.update(node);
+	DrawRadarPlot();
+}
+
+function onRadarLegendColorClick(mode, key, evt) {
+	var card = document.getElementById("DialogRadarPlotColorCard");
+	var dialog = document.getElementById("DialogRadarPlot");
+	var cdns = "", i, color, rect, dRect;
+	if (!card || !dialog)
+		return;
+	for (i = 0; i < ColorsForBarPlot.length; i++) {
+		color = ColorsForBarPlot[i];
+		cdns += '<button type="button" class="DialogRadarPlotColorCardSwatch" style="background-color:' + color + ';" onclick="applyRadarLegendColor(\'' +
+			radarPlotEscapeJs(mode) + '\',\'' + radarPlotEscapeJs(key) + '\',\'' + radarPlotEscapeJs(color) + '\')"></button>';
+	}
+	cdns += '<input type="color" value="#888888" onchange="applyRadarLegendColor(\'' + radarPlotEscapeJs(mode) + '\',\'' + radarPlotEscapeJs(key) + '\', this.value)">';
+	card.innerHTML = cdns;
+	card.style.display = "flex";
+	rect = (evt && evt.target && evt.target.getBoundingClientRect) ? evt.target.getBoundingClientRect() : null;
+	dRect = dialog.getBoundingClientRect();
+	if (rect) {
+		card.style.left = Math.max(8, rect.left - dRect.left) + "px";
+		card.style.top = Math.max(8, rect.bottom - dRect.top + 4) + "px";
+	}
+}
+
+function applyRadarLegendColor(mode, key, color) {
+	var node = getNodeDialog("DialogRadarPlot");
+	if (!node)
+		return;
+	if (!node.radarPlotOptions)
+		node.radarPlotOptions = {};
+	ensureRadarPlotStyleState(node.radarPlotOptions);
+	if (mode == "slice")
+		node.radarPlotOptions.sliceColors[key] = color;
+	else
+		node.radarPlotOptions.seriesColors[key] = color;
+	networkNodes.update(node);
+	hideRadarColorCard();
+	DrawRadarPlot();
 }
 
 function DrawRadarPlot(event) {
@@ -1528,72 +1951,110 @@ function DrawRadarPlot(event) {
 	if (!parentNodes || !parentNodes.length)
 		return;
 
+	var polar = isRadarPlotPolar();
 	var layout = document.getElementById("DialogRadarPlotLayoutWide").checked ? "wide" : "long";
 	var normalize = document.getElementById("DialogRadarPlotNormalize").checked;
 	var fill = document.getElementById("DialogRadarPlotFill").checked;
 	var beginAtZero = document.getElementById("DialogRadarPlotBeginZero").checked;
-	var title = document.getElementById("DialogRadarPlotTitleInput").value;
+	var skipMissing = document.getElementById("DialogRadarPlotSkipMissing") ? document.getElementById("DialogRadarPlotSkipMissing").checked : true;
+	var title = document.getElementById("DialogRadarPlotTitleInput").value || "";
 	var seriesAll = isRadarPlotSeriesModeAll();
-	var labels = [], seriesNames = [], seriesData = [], seriesColors = [];
-	var record, value, i, c, g, parentNode, data, sums, counts, itemKey, row, labelsFull, items, valueColumns;
-	var maxSeries = 20;
+	var labels = [], labelsFull = [], seriesNames = [], seriesKeys = [], seriesData = [], seriesColors = [];
+	var record, value, i, c, g, parentNode, data, sums, counts, itemKey, row, items, valueColumns;
+	var maxSeries = 20, selectedNodeId, selectedParents, seriesLabel, axes, axisX, chartType, chartPlugins, datasets;
+	var legendMode, legendKeys, legendLabels, legendColors, bgColors, polarItem, polarValue, titleFontSize, tickFontSize, pointLabelFontSize;
 
 	if (!node.radarPlotOptions)
 		node.radarPlotOptions = {};
-	var seriesGroups = node.radarPlotOptions.seriesGroups || [];
-	node.radarPlotOptions.layout = layout;
-	node.radarPlotOptions.normalize = normalize;
-	node.radarPlotOptions.fill = fill;
-	node.radarPlotOptions.beginAtZero = beginAtZero;
-	node.radarPlotOptions.title = title;
-	node.radarPlotOptions.seriesMode = seriesAll ? "all" : "series";
-	node.radarPlotOptions.seriesAll = seriesAll;
-	node.radarPlotOptions.seriesGroups = seriesGroups;
+	ensureRadarPlotStyleState(node.radarPlotOptions);
+	var options = node.radarPlotOptions;
+	var seriesGroups = options.seriesGroups || [];
+	titleFontSize = getRadarTitleFontSize();
+	tickFontSize = getRadarTickFontSize();
+	pointLabelFontSize = getRadarPointLabelFontSize();
+	options.plotType = polar ? "polar" : "radar";
+	options.layout = layout;
+	options.normalize = normalize;
+	options.fill = fill;
+	options.beginAtZero = beginAtZero;
+	options.skipMissing = skipMissing;
+	options.title = title;
+	options.titleFontSize = titleFontSize;
+	options.tickFontSize = tickFontSize;
+	options.pointLabelFontSize = pointLabelFontSize;
+	options.seriesMode = seriesAll ? "all" : "series";
+	options.seriesAll = seriesAll;
+	options.seriesGroups = seriesGroups;
+	selectedNodeId = getRadarPlotSelectedAllNodeId(node);
+	options.nodeSelected = selectedNodeId;
+	syncRadarPlotStyleControls(options);
+
+	if (polar)
+		seriesAll = true;
 
 	if (!seriesAll) {
 		if (!seriesGroups.length) {
 			if (event)
-				alert(DonaCadena({cat: "Afegiu almenys una sèrie.", spa: "Añada al menos una serie.", eng: "Add at least one series."}));
+				alert(DonaCadena({cat: "Afegiu almenys una Sèrie.", spa: "AÃ±ada al menos una serie.", eng: "Add at least one series."}));
 			return;
 		}
 		if (seriesGroups.length > maxSeries) {
 			if (event)
-				alert(DonaCadenaFmt({cat: "Massa sèries ({0}). Es mostren les primeres {1} sèries.", spa: "Demasiadas series ({0}). Se muestran las primeras {1} series.", eng: "Too many series ({0}). Showing the first {1} series."}, seriesGroups.length, maxSeries));
+				alert(DonaCadenaFmt({cat: "Massa Sèries ({0}). Es mostren les primeres {1} Sèries.", spa: "Demasiadas series ({0}). Se muestran las primeras {1} series.", eng: "Too many series ({0}). Showing the first {1} series."}, seriesGroups.length, maxSeries));
 			seriesGroups = seriesGroups.slice(0, maxSeries);
 		}
 	}
 
-	if (layout == "wide") {
-		var axes = getSelectedRadarPlotAxes();
-		var seriesLabel = document.getElementById("DialogRadarPlotSeriesLabelSelect").value;
-		if (!seriesLabel) {
-			parentNode = parentNodes[0];
-			seriesLabel = guessRadarSeriesLabel(parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata));
-			if (seriesLabel) {
-				var seriesLabelSelect = document.getElementById("DialogRadarPlotSeriesLabelSelect");
-				if (seriesLabelSelect)
-					seriesLabelSelect.value = seriesLabel;
-			}
-		}
-		node.radarPlotOptions.axes = axes;
-		node.radarPlotOptions.seriesLabel = seriesLabel;
-		if (axes.length < 3) {
+	selectedParents = [];
+	if (seriesAll || polar) {
+		parentNode = networkNodes.get(selectedNodeId);
+		if (!parentNode || !parentNode.STAdata) {
 			if (event)
-				alert(DonaCadena({cat: "Seleccioneu almenys tres columnes numèriques per utilitzar-les com a eixos del radar.", spa: "Seleccione al menos tres columnas numéricas para utilizarlas como ejes del radar.", eng: "Select at least three numeric columns to use as radar axes."}));
+				alert(DonaCadena({cat: "No hi ha dades al node seleccionat.", spa: "No hay datos en el nodo seleccionado.", eng: "No data in the selected node."}));
+			return;
+		}
+		selectedParents = [parentNode];
+	}
+
+	if (layout == "wide") {
+		axes = getSelectedRadarPlotAxes();
+		seriesLabel = document.getElementById("DialogRadarPlotSeriesLabelSelect") ? document.getElementById("DialogRadarPlotSeriesLabelSelect").value : "";
+		options.axes = axes;
+		options.seriesLabel = seriesLabel;
+		if (axes.length < (polar ? 3 : 3)) {
+			if (event)
+				alert(DonaCadena({cat: "Seleccioneu almenys tres columnes numÃ¨riques.", spa: "Seleccione al menos tres columnas numÃ©ricas.", eng: "Select at least three numeric columns."}));
 			return;
 		}
 		labels = axes;
-		if (seriesAll) {
+		labelsFull = axes.slice();
+		if (polar) {
+			polarItem = document.getElementById("DialogRadarPlotPolarItemSelect") ? document.getElementById("DialogRadarPlotPolarItemSelect").value : options.selectedItem;
+			if (!seriesLabel) {
+				seriesLabel = guessRadarSeriesLabel(parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata));
+			}
+			if (!polarItem) {
+				items = getRadarUniqueValues(parentNode.STAdata, seriesLabel);
+				polarItem = items.length ? items[0] : "";
+			}
+			options.selectedItem = polarItem;
+			options.seriesLabel = seriesLabel;
+			seriesData.push(buildRadarWideSeriesRow(selectedParents, seriesLabel, polarItem, axes, false));
+			seriesNames.push(polarItem || seriesLabel || "Polar");
+			seriesKeys.push(polarItem || "polar");
+			seriesColors.push(ColorsForBarPlot[0]);
+		} else if (seriesAll) {
 			if (!seriesLabel) {
 				if (event)
 					alert(DonaCadena({cat: "Seleccioneu una columna d'elements.", spa: "Seleccione una columna de elementos.", eng: "Select an item column."}));
 				return;
 			}
-			items = limitRadarSeriesList(getRadarUniqueValuesFromParents(parentNodes, seriesLabel), maxSeries, event);
+			items = limitRadarSeriesList(getRadarUniqueValues(selectedParents[0].STAdata, seriesLabel), maxSeries, event);
 			for (g = 0; g < items.length; g++) {
 				seriesNames.push(items[g]);
-				seriesData.push(buildRadarWideSeriesRow(parentNodes, seriesLabel, items[g], axes));
-				seriesColors.push(ColorsForBarPlot[g % ColorsForBarPlot.length]);
+				seriesKeys.push(items[g]);
+				seriesData.push(buildRadarWideSeriesRow(selectedParents, seriesLabel, items[g], axes, skipMissing));
+				seriesColors.push(getRadarSeriesColor(options, items[g], g));
 			}
 		} else {
 			for (g = 0; g < seriesGroups.length; g++) {
@@ -1601,6 +2062,7 @@ function DrawRadarPlot(event) {
 				if (!parentNode || !parentNode.STAdata)
 					continue;
 				data = parentNode.STAdata;
+				seriesLabel = seriesGroups[g].seriesLabel || options.seriesLabel;
 				sums = new Array(axes.length).fill(0);
 				counts = new Array(axes.length).fill(0);
 				for (i = 0; i < data.length; i++) {
@@ -1615,33 +2077,56 @@ function DrawRadarPlot(event) {
 						}
 					}
 				}
-				seriesNames.push(seriesGroups[g].legendText || seriesGroups[g].item || ("Series " + (g + 1)));
-				seriesData.push(sums.map(function (sum, a) { return meanOrZero(sum, counts[a]); }));
-				seriesColors.push(seriesGroups[g].color || ColorsForBarPlot[g % ColorsForBarPlot.length]);
+				itemKey = seriesGroups[g].legendText || seriesGroups[g].item || ("Series " + (g + 1));
+				seriesNames.push(itemKey);
+				seriesKeys.push(itemKey);
+				seriesData.push(sums.map(function (sum, a) { return meanOrMissing(sum, counts[a], skipMissing); }));
+				seriesColors.push(getRadarSeriesColor(options, itemKey, g, seriesGroups[g].color));
 			}
 		}
 	} else {
-		var axisX = document.getElementById("DialogRadarPlotAxisXSelect").value;
-		node.radarPlotOptions.axisX = axisX;
+		axisX = document.getElementById("DialogRadarPlotAxisXSelect") ? document.getElementById("DialogRadarPlotAxisXSelect").value : "";
+		options.axisX = axisX;
 		if (!axisX) {
 			if (event)
-				alert(DonaCadena({cat: "Seleccioneu una columna de categories.", spa: "Seleccione una columna de categorías.", eng: "Select a categories column."}));
+				alert(DonaCadena({cat: "Seleccioneu una columna de categories.", spa: "Seleccione una columna de categorÃ­as.", eng: "Select a categories column."}));
 			return;
 		}
-		if (seriesAll) {
-			labelsFull = getRadarCategoryKeysFromParents(parentNodes, axisX);
+		if (polar) {
+			polarValue = document.getElementById("DialogRadarPlotPolarValueSelect") ? document.getElementById("DialogRadarPlotPolarValueSelect").value : options.polarValueColumn;
+			if (!polarValue) {
+				if (event)
+					alert(DonaCadena({cat: "Seleccioneu una columna de valors.", spa: "Seleccione una columna de valores.", eng: "Select a values column."}));
+				return;
+			}
+			options.polarValueColumn = polarValue;
+			labelsFull = getRadarCategoryKeysFromParents(selectedParents, axisX);
 			for (i = 0; i < labelsFull.length; i++)
 				labels.push(("" + labelsFull[i]).length > 35 ? ("" + labelsFull[i]).substring(0, 32) + "..." : labelsFull[i]);
 			if (labels.length < 3) {
 				if (event)
-					alert(DonaCadenaFmt({cat: "Un gràfic de radar necessita almenys tres categories. La columna seleccionada té {0} valors únics.", spa: "Un gráfico de radar necesita al menos tres categorías. La columna seleccionada tiene {0} valores únicos.", eng: "A radar chart needs at least three categories. The selected column has {0} unique values."}, labels.length));
+					alert(DonaCadenaFmt({cat: "Calen almenys tres categories. N'hi ha {0}.", spa: "Se necesitan al menos tres categorÃ­as. Hay {0}.", eng: "Need at least three categories. Found {0}."}, labels.length));
 				return;
 			}
-			valueColumns = limitRadarSeriesList(getRadarAutomaticValueColumns(parentNodes, axisX), maxSeries, event);
+			seriesData.push(buildRadarLongSeriesRow(selectedParents, axisX, polarValue, labelsFull, false));
+			seriesNames.push(polarValue);
+			seriesKeys.push(polarValue);
+			seriesColors.push(ColorsForBarPlot[0]);
+		} else if (seriesAll) {
+			labelsFull = getRadarCategoryKeysFromParents(selectedParents, axisX);
+			for (i = 0; i < labelsFull.length; i++)
+				labels.push(("" + labelsFull[i]).length > 35 ? ("" + labelsFull[i]).substring(0, 32) + "..." : labelsFull[i]);
+			if (labels.length < 3) {
+				if (event)
+					alert(DonaCadenaFmt({cat: "Un grÃ fic de radar necessita almenys tres categories. La columna seleccionada tÃ© {0} valors Ãºnics.", spa: "Un grÃ¡fico de radar necesita al menos tres categorÃ­as. La columna seleccionada tiene {0} valores Ãºnicos.", eng: "A radar chart needs at least three categories. The selected column has {0} unique values."}, labels.length));
+				return;
+			}
+			valueColumns = limitRadarSeriesList(getRadarAutomaticValueColumns(selectedParents, axisX), maxSeries, event);
 			for (g = 0; g < valueColumns.length; g++) {
 				seriesNames.push(valueColumns[g]);
-				seriesData.push(buildRadarLongSeriesRow(parentNodes, axisX, valueColumns[g], labelsFull));
-				seriesColors.push(ColorsForBarPlot[g % ColorsForBarPlot.length]);
+				seriesKeys.push(valueColumns[g]);
+				seriesData.push(buildRadarLongSeriesRow(selectedParents, axisX, valueColumns[g], labelsFull, skipMissing));
+				seriesColors.push(getRadarSeriesColor(options, valueColumns[g], g));
 			}
 		} else {
 			labelsFull = [];
@@ -1651,8 +2136,7 @@ function DrawRadarPlot(event) {
 					continue;
 				data = parentNode.STAdata;
 				for (i = 0; i < data.length; i++) {
-					record = data[i];
-					itemKey = record[axisX];
+					itemKey = data[i][axisX];
 					if (labelsFull.indexOf(itemKey) == -1) {
 						labelsFull.push(itemKey);
 						labels.push(("" + itemKey).length > 35 ? ("" + itemKey).substring(0, 32) + "..." : itemKey);
@@ -1661,7 +2145,7 @@ function DrawRadarPlot(event) {
 			}
 			if (labels.length < 3) {
 				if (event)
-					alert(DonaCadenaFmt({cat: "Un gràfic de radar necessita almenys tres categories. La columna seleccionada té {0} valors únics.", spa: "Un gráfico de radar necesita al menos tres categorías. La columna seleccionada tiene {0} valores únicos.", eng: "A radar chart needs at least three categories. The selected column has {0} unique values."}, labels.length));
+					alert(DonaCadenaFmt({cat: "Un grÃ fic de radar necessita almenys tres categories. La columna seleccionada tÃ© {0} valors Ãºnics.", spa: "Un grÃ¡fico de radar necesita al menos tres categorÃ­as. La columna seleccionada tiene {0} valores Ãºnicos.", eng: "A radar chart needs at least three categories. The selected column has {0} unique values."}, labels.length));
 				return;
 			}
 			for (g = 0; g < seriesGroups.length; g++) {
@@ -1670,59 +2154,104 @@ function DrawRadarPlot(event) {
 					continue;
 				data = parentNode.STAdata;
 				row = new Array(labelsFull.length).fill(0);
+				counts = new Array(labelsFull.length).fill(0);
 				for (i = 0; i < data.length; i++) {
 					record = data[i];
 					c = labelsFull.indexOf(record[axisX]);
 					if (c == -1)
 						continue;
 					value = parseFloat(record[seriesGroups[g].valueColumn]);
-					if (!isNaN(value))
+					if (!isNaN(value)) {
 						row[c] += value;
+						counts[c]++;
+					}
 				}
-				seriesNames.push(seriesGroups[g].legendText || seriesGroups[g].valueColumn || ("Series " + (g + 1)));
+				if (skipMissing) {
+					for (c = 0; c < row.length; c++) {
+						if (!counts[c])
+							row[c] = null;
+					}
+				}
+				itemKey = seriesGroups[g].legendText || seriesGroups[g].valueColumn || ("Series " + (g + 1));
+				seriesNames.push(itemKey);
+				seriesKeys.push(itemKey);
 				seriesData.push(row);
-				seriesColors.push(seriesGroups[g].color || ColorsForBarPlot[g % ColorsForBarPlot.length]);
+				seriesColors.push(getRadarSeriesColor(options, itemKey, g, seriesGroups[g].color));
 			}
 		}
 	}
 
 	if (!seriesData.length) {
 		if (event)
-			alert(seriesAll ? DonaCadena({cat: "No s'ha pogut crear cap sèrie a partir de les columnes seleccionades.", spa: "No se ha podido crear ninguna serie a partir de las columnas seleccionadas.", eng: "No series could be created from the selected columns."}) : DonaCadena({cat: "Afegiu almenys una sèrie amb una columna d'elements o de valors.", spa: "Agregue al menos una serie con una columna de elementos o de valores", eng: "Add at least one series with an item or value column"}));
+			alert(DonaCadena({cat: "No s'ha pogut crear el grÃ fic amb les columnes seleccionades.", spa: "No se ha podido crear el grÃ¡fico con las columnas seleccionadas.", eng: "Could not create the chart with the selected columns."}));
 		return;
 	}
 
 	if (normalize)
-		normalizeRadarSeries(seriesData.map(function (d) { return { data: d }; }));
+		normalizeRadarSeries(seriesData.map(function (d) { return { data: d }; }), skipMissing && !polar);
 
-	var chartData = {
-		labels: labels,
-		datasets: buildRadarDatasets(labels, seriesNames, seriesData, fill, seriesColors)
-	};
+	chartType = polar ? "polarArea" : "radar";
+	if (polar) {
+		bgColors = [];
+		for (i = 0; i < labelsFull.length; i++) {
+			bgColors.push(getRadarSliceColor(options, labelsFull[i], i));
+			if (isRadarLegendHidden(options, "slice", labelsFull[i]))
+				seriesData[0][i] = 0;
+		}
+		datasets = [{
+			label: seriesNames[0],
+			data: seriesData[0],
+			backgroundColor: bgColors,
+			borderWidth: 1
+		}];
+		legendMode = "slice";
+		legendKeys = labelsFull.slice();
+		legendLabels = labels.slice();
+		legendColors = bgColors.slice();
+		chartPlugins = {
+			title: { display: title != "", text: title, font: { size: titleFontSize } },
+			legend: { display: false },
+			labels: {
+				render: "value",
+				precision: 0,
+				showZero: false,
+				fontSize: tickFontSize,
+				fontColor: "#333333",
+				arc: true,
+				position: "default",
+				overlap: true
+			}
+		};
+	} else {
+		datasets = buildRadarDatasets(seriesNames, seriesKeys, seriesData, fill, seriesColors, options, skipMissing);
+		legendMode = "series";
+		legendKeys = seriesKeys.slice();
+		legendLabels = seriesNames.slice();
+		legendColors = [];
+		for (g = 0; g < seriesKeys.length; g++)
+			legendColors.push(getRadarSeriesColor(options, seriesKeys[g], g, seriesColors[g]));
+		chartPlugins = {
+			title: { display: title != "", text: title, font: { size: titleFontSize } },
+			legend: { display: false }
+		};
+	}
 
 	clearRadarPlotChart();
 	RadarPlotChart = new Chart(document.getElementById("DialogRadarPlotVisualizationCanvas"), {
-		type: "radar",
-		data: chartData,
+		type: chartType,
+		data: { labels: labels, datasets: datasets },
 		options: {
 			maintainAspectRatio: false,
 			resizeDelay: 100,
-			plugins: {
-				title: {
-					display: title != "",
-					text: title
-				},
-				legend: {
-					display: seriesNames.length > 0,
-					position: "right"
-				}
-			},
+			plugins: chartPlugins,
 			scales: {
-				r: buildRadarRadialScale(normalize, beginAtZero, seriesData)
+				r: buildRadarRadialScale(normalize, beginAtZero, seriesData, tickFontSize, pointLabelFontSize, polar)
 			}
 		}
 	});
-	node.radarPlotOptions.drawn = true;
+	buildRadarPlotLegendHtml(node, legendMode, legendKeys, legendLabels, legendColors);
+	options.drawn = true;
+	options.legendMode = legendMode;
 	networkNodes.update(node);
 }
 
@@ -1747,7 +2276,7 @@ function downloadRadarPlotPngBlob(blob) {
 	var url = URL.createObjectURL(blob);
 	var link = document.createElement("a");
 	link.href = url;
-	link.download = "radar-plot.png";
+	link.download = "polars-chart.png";
 	document.body.appendChild(link);
 	link.click();
 	document.body.removeChild(link);
@@ -1757,7 +2286,7 @@ function downloadRadarPlotPngBlob(blob) {
 function saveRadarPlotPngBlob(blob) {
 	if (window.showSaveFilePicker) {
 		window.showSaveFilePicker({
-			suggestedName: "radar-plot.png",
+			suggestedName: "polars-chart.png",
 			types: [{
 				description: "PNG image",
 				accept: { "image/png": [".png"] }
@@ -1774,42 +2303,105 @@ function saveRadarPlotPngBlob(blob) {
 	downloadRadarPlotPngBlob(blob);
 }
 
+function buildRadarPlotExportCanvas(chartCanvas, backgroundMode) {
+	var legend = RadarPlotLastLegend;
+	var gap = 24;
+	var legendWidth = 220;
+	var rowH = 22;
+	var padTop = 12;
+	var swatch = 14;
+	var margin = (backgroundMode == "transparent") ? 0 : 24;
+	var chartW = chartCanvas.width;
+	var chartH = chartCanvas.height;
+	var n = (legend && legend.labels) ? legend.labels.length : 0;
+	var legendBlockH = padTop + Math.max(n, 1) * rowH + 12;
+	var contentH = Math.max(chartH, legendBlockH);
+	var outW = margin + chartW + gap + legendWidth + margin;
+	var outH = margin + contentH + margin;
+	var out = document.createElement("canvas");
+	var ctx, i, y, x0, label, color, hidden, legendOffsetY, tw, chartY;
+	out.width = outW;
+	out.height = outH;
+	ctx = out.getContext("2d");
+	if (backgroundMode != "transparent") {
+		ctx.fillStyle = "#ffffff";
+		ctx.fillRect(0, 0, outW, outH);
+	} else {
+		ctx.clearRect(0, 0, outW, outH);
+	}
+	chartY = margin + Math.max(0, (contentH - chartH) / 2);
+	ctx.drawImage(chartCanvas, margin, chartY);
+	if (!n)
+		return out;
+	x0 = margin + chartW + gap;
+	legendOffsetY = margin + Math.max(0, (contentH - legendBlockH) / 2);
+	ctx.font = "12px sans-serif";
+	ctx.textBaseline = "middle";
+	for (i = 0; i < n; i++) {
+		y = legendOffsetY + padTop + i * rowH + rowH / 2;
+		color = legend.colors[i] || "#888888";
+		label = "" + (legend.labels[i] || "");
+		hidden = !!(legend.hidden && legend.hidden[i]);
+		ctx.globalAlpha = hidden ? 0.4 : 1;
+		ctx.fillStyle = color;
+		ctx.fillRect(x0, y - swatch / 2, swatch, swatch);
+		ctx.strokeStyle = "#666666";
+		ctx.strokeRect(x0 + 0.5, y - swatch / 2 + 0.5, swatch - 1, swatch - 1);
+		ctx.fillStyle = "#222222";
+		ctx.fillText(label, x0 + swatch + 8, y);
+		if (hidden) {
+			tw = ctx.measureText(label).width;
+			ctx.beginPath();
+			ctx.strokeStyle = "#222222";
+			ctx.moveTo(x0 + swatch + 8, y);
+			ctx.lineTo(x0 + swatch + 8 + tw, y);
+			ctx.stroke();
+		}
+		ctx.globalAlpha = 1;
+	}
+	return out;
+}
+
 function SaveRadarPlot(event) {
-	var canvas, dataUrl;
+	var canvas, exportCanvas, useWhite;
 	if (event)
 		event.preventDefault();
 	canvas = RadarPlotChart && RadarPlotChart.canvas ? RadarPlotChart.canvas : document.getElementById("DialogRadarPlotVisualizationCanvas");
 	if (!RadarPlotChart || !canvas) {
-		alert(DonaCadena({cat: "Dibuixeu primer el gràfic de radar.", spa: "Dibuje primero el gráfico de radar.", eng: "Draw the radar chart first."}));
+		alert(DonaCadena({cat: "Dibuixeu primer el grÃ fic.", spa: "Dibuje primero el grÃ¡fico.", eng: "Draw the chart first."}));
 		return;
 	}
+	useWhite = confirm(DonaCadena({
+		cat: "Voleu fons blanc al PNG?\n\nD'acord = fons blanc\nCancelÂ·la = fons transparent",
+		spa: "Â¿Quiere fondo blanco en el PNG?\n\nAceptar = fondo blanco\nCancelar = fondo transparente",
+		eng: "White background for the PNG?\n\nOK = white background\nCancel = transparent background"
+	}));
 	function onBlob(blob) {
 		if (!blob) {
-			alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
+			alert(DonaCadena({cat: "No s'ha pogut desar la imatge del grÃ fic.", spa: "No se ha podido guardar la imagen del grÃ¡fico.", eng: "The chart image could not be saved."}));
 			return;
 		}
 		saveRadarPlotPngBlob(blob);
 	}
 	try {
-		if (canvas.toBlob) {
-			canvas.toBlob(function (blob) {
+		exportCanvas = buildRadarPlotExportCanvas(canvas, useWhite ? "white" : "transparent");
+		if (exportCanvas.toBlob) {
+			exportCanvas.toBlob(function (blob) {
 				if (blob) {
 					onBlob(blob);
 					return;
 				}
 				try {
-					dataUrl = RadarPlotChart.toBase64Image ? RadarPlotChart.toBase64Image("image/png") : canvas.toDataURL("image/png");
-					onBlob(radarPlotPngBlobFromDataUrl(dataUrl));
+					onBlob(radarPlotPngBlobFromDataUrl(exportCanvas.toDataURL("image/png")));
 				} catch (e) {
-					alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
+					alert(DonaCadena({cat: "No s'ha pogut desar la imatge del grÃ fic.", spa: "No se ha podido guardar la imagen del grÃ¡fico.", eng: "The chart image could not be saved."}));
 				}
 			}, "image/png");
 			return;
 		}
-		dataUrl = RadarPlotChart.toBase64Image ? RadarPlotChart.toBase64Image("image/png") : canvas.toDataURL("image/png");
-		onBlob(radarPlotPngBlobFromDataUrl(dataUrl));
+		onBlob(radarPlotPngBlobFromDataUrl(exportCanvas.toDataURL("image/png")));
 	} catch (e) {
-		alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
+		alert(DonaCadena({cat: "No s'ha pogut desar la imatge del grÃ fic.", spa: "No se ha podido guardar la imagen del grÃ¡fico.", eng: "The chart image could not be saved."}));
 	}
 }
 
@@ -2062,7 +2654,7 @@ function createDialogWithSelectWithGroupsCircularChart(node) {
 	parentInfo = node.circularChartParentNodes || {};
 	parentIds = Object.keys(parentInfo);
 	if (toolbar)
-		toolbar.innerHTML = '<button type="button" onclick="addNewSelectGroupInCircularChart(\'' + node.id + '\')">' + DonaCadena({cat: "Afegeix una sèrie nova", spa: "Añadir una serie nueva", eng: "Add new series"}) + "</button>";
+		toolbar.innerHTML = '<button type="button" onclick="addNewSelectGroupInCircularChart(\'' + node.id + '\')">' + DonaCadena({cat: "Afegeix una Sèrie nova", spa: "AÃ±adir una serie nueva", eng: "Add new series"}) + "</button>";
 	cdns = "";
 	for (i = 0; i < groups.length; i++) {
 		parentId = getRadarSeriesParentId(groups[i], parentInfo);
@@ -2090,7 +2682,7 @@ function createDialogWithSelectWithGroupsCircularChart(node) {
 		}
 		cdns += "</select></label></div>";
 
-		cdns += '<div class="DialogCircularChartSeriesRow"><label>' + DonaCadena({cat: "Categories:", spa: "Categorías:", eng: "Categories:"}) + ' <select id="DialogCircularChartAxisXSelect_' + i + '" onchange="updateSelectInformationCircularChart(\'' + i + '\',\'axisX\',\'select\',\'DialogCircularChartAxisXSelect_' + i + '\',\'' + node.id + '\')">';
+		cdns += '<div class="DialogCircularChartSeriesRow"><label>' + DonaCadena({cat: "Categories:", spa: "CategorÃ­as:", eng: "Categories:"}) + ' <select id="DialogCircularChartAxisXSelect_' + i + '" onchange="updateSelectInformationCircularChart(\'' + i + '\',\'axisX\',\'select\',\'DialogCircularChartAxisXSelect_' + i + '\',\'' + node.id + '\')">';
 		for (p = 0; p < attrNames.length; p++)
 			cdns += radarHtmlOption(attrNames[p], attrNames[p] == groups[i].axisX);
 		cdns += "</select></label></div>";
@@ -2100,7 +2692,7 @@ function createDialogWithSelectWithGroupsCircularChart(node) {
 			cdns += radarHtmlOption(attrNames[p], attrNames[p] == groups[i].valueColumn);
 		cdns += "</select></label></div>";
 
-		cdns += '<div class="DialogCircularChartSeriesRow"><label>' + DonaCadena({cat: "Classificació (opcional):", spa: "Clasificación (opcional):", eng: "Classification (optional):"}) + ' <select id="DialogCircularChartClassSelect_' + i + '" onchange="updateSelectInformationCircularChart(\'' + i + '\',\'classificationColumn\',\'select\',\'DialogCircularChartClassSelect_' + i + '\',\'' + node.id + '\')">';
+		cdns += '<div class="DialogCircularChartSeriesRow"><label>' + DonaCadena({cat: "ClassificaciÃ³ (opcional):", spa: "ClasificaciÃ³n (opcional):", eng: "Classification (optional):"}) + ' <select id="DialogCircularChartClassSelect_' + i + '" onchange="updateSelectInformationCircularChart(\'' + i + '\',\'classificationColumn\',\'select\',\'DialogCircularChartClassSelect_' + i + '\',\'' + node.id + '\')">';
 		cdns += '<option value=""' + (!groups[i].classificationColumn ? ' selected="selected"' : "") + "></option>";
 		for (p = 0; p < attrNames.length; p++)
 			cdns += radarHtmlOption(attrNames[p], attrNames[p] == groups[i].classificationColumn);
@@ -2127,7 +2719,7 @@ function addNewSelectGroupInCircularChart(nodeId) {
 	if (!node.circularChartOptions.seriesGroups)
 		node.circularChartOptions.seriesGroups = [];
 	if (node.circularChartOptions.seriesGroups.length >= 20) {
-		alert(DonaCadena({cat: "Massa sèries (20). Suprimiu-ne una abans d'afegir-ne una altra.", spa: "Demasiadas series (20). Elimine una antes de añadir otra.", eng: "Too many series (20). Remove one before adding another."}));
+		alert(DonaCadena({cat: "Massa Sèries (20). Suprimiu-ne una abans d'afegir-ne una altra.", spa: "Demasiadas series (20). Elimine una antes de aÃ±adir otra.", eng: "Too many series (20). Remove one before adding another."}));
 		return;
 	}
 	node.circularChartOptions.seriesGroups.push(createDefaultCircularSeriesGroup(parentIds[0], node.circularChartOptions.seriesGroups));
@@ -2639,7 +3231,7 @@ function DrawCircularChart(event) {
 
 		if (!axisX || !valueColumn) {
 			if (event)
-				alert(DonaCadena({cat: "Seleccioneu les columnes de categories i de valors.", spa: "Seleccione las columnas de categorías y de valores.", eng: "Select the categories and values columns."}));
+				alert(DonaCadena({cat: "Seleccioneu les columnes de categories i de valors.", spa: "Seleccione las columnas de categorÃ­as y de valores.", eng: "Select the categories and values columns."}));
 			return;
 		}
 		parentNode = networkNodes.get(options.nodeSelected);
@@ -2676,7 +3268,7 @@ function DrawCircularChart(event) {
 	} else {
 		if (!seriesGroups.length) {
 			if (event)
-				alert(DonaCadena({cat: "Afegiu almenys una sèrie.", spa: "Añada al menos una serie.", eng: "Add at least one series."}));
+				alert(DonaCadena({cat: "Afegiu almenys una Sèrie.", spa: "AÃ±ada al menos una serie.", eng: "Add at least one series."}));
 			return;
 		}
 		options.seriesGroups = seriesGroups;
@@ -2712,7 +3304,7 @@ function DrawCircularChart(event) {
 
 	if (!labels.length || !seriesData.length) {
 		if (event)
-			alert(DonaCadena({cat: "No s'ha pogut crear el gràfic amb les columnes seleccionades.", spa: "No se ha podido crear el gráfico con las columnas seleccionadas.", eng: "Could not create the chart with the selected columns."}));
+			alert(DonaCadena({cat: "No s'ha pogut crear el grÃ fic amb les columnes seleccionades.", spa: "No se ha podido crear el grÃ¡fico con las columnas seleccionadas.", eng: "Could not create the chart with the selected columns."}));
 		return;
 	}
 
@@ -2901,7 +3493,7 @@ function buildCircularChartExportCanvas(chartCanvas, backgroundMode) {
 		y = legendOffsetY + padTop + n * rowH + 14;
 		ctx.font = "bold 11px sans-serif";
 		ctx.fillStyle = "#444444";
-		ctx.fillText(DonaCadena({cat: "Corones (fora→dins):", spa: "Coronas (fuera→dentro):", eng: "Rings (outer→inner):"}), x0, y);
+		ctx.fillText(DonaCadena({cat: "Corones (foraâ†’dins):", spa: "Coronas (fueraâ†’dentro):", eng: "Rings (outerâ†’inner):"}), x0, y);
 		ctx.font = "11px sans-serif";
 		ctx.fillStyle = "#222222";
 		for (i = 0; i < rings.length; i++) {
@@ -2918,17 +3510,17 @@ function SaveCircularChart(event) {
 		event.preventDefault();
 	canvas = CircularChartInstance && CircularChartInstance.canvas ? CircularChartInstance.canvas : document.getElementById("DialogCircularChartVisualizationCanvas");
 	if (!CircularChartInstance || !canvas) {
-		alert(DonaCadena({cat: "Dibuixeu primer el gràfic circular.", spa: "Dibuje primero el gráfico circular.", eng: "Draw the circular chart first."}));
+		alert(DonaCadena({cat: "Dibuixeu primer el grÃ fic circular.", spa: "Dibuje primero el grÃ¡fico circular.", eng: "Draw the circular chart first."}));
 		return;
 	}
 	useWhite = confirm(DonaCadena({
-		cat: "Voleu fons blanc al PNG?\n\nD'acord = fons blanc\nCancel·la = fons transparent",
-		spa: "¿Quiere fondo blanco en el PNG?\n\nAceptar = fondo blanco\nCancelar = fondo transparente",
+		cat: "Voleu fons blanc al PNG?\n\nD'acord = fons blanc\nCancelÂ·la = fons transparent",
+		spa: "Â¿Quiere fondo blanco en el PNG?\n\nAceptar = fondo blanco\nCancelar = fondo transparente",
 		eng: "White background for the PNG?\n\nOK = white background\nCancel = transparent background"
 	}));
 	function onBlob(blob) {
 		if (!blob) {
-			alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
+			alert(DonaCadena({cat: "No s'ha pogut desar la imatge del grÃ fic.", spa: "No se ha podido guardar la imagen del grÃ¡fico.", eng: "The chart image could not be saved."}));
 			return;
 		}
 		saveCircularChartPngBlob(blob);
@@ -2944,14 +3536,14 @@ function SaveCircularChart(event) {
 				try {
 					onBlob(circularChartPngBlobFromDataUrl(exportCanvas.toDataURL("image/png")));
 				} catch (e) {
-					alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
+					alert(DonaCadena({cat: "No s'ha pogut desar la imatge del grÃ fic.", spa: "No se ha podido guardar la imagen del grÃ¡fico.", eng: "The chart image could not be saved."}));
 				}
 			}, "image/png");
 			return;
 		}
 		onBlob(circularChartPngBlobFromDataUrl(exportCanvas.toDataURL("image/png")));
 	} catch (e) {
-		alert(DonaCadena({cat: "No s'ha pogut desar la imatge del gràfic.", spa: "No se ha podido guardar la imagen del gráfico.", eng: "The chart image could not be saved."}));
+		alert(DonaCadena({cat: "No s'ha pogut desar la imatge del grÃ fic.", spa: "No se ha podido guardar la imagen del grÃ¡fico.", eng: "The chart image could not be saved."}));
 	}
 }
 
@@ -2964,17 +3556,17 @@ function DrawImageViewer(event) {
 		if (node.STAdata) {
 			var urlColumn = document.getElementById("DialogImageViewerURLSelect").value;
 			if (!urlColumn) {
-				alert(DonaCadena({cat: "Seleccioneu una columna que contingui URL d'imatges", spa: "Seleccione una columna que contenga URL de imágenes", eng: "Please, select a column that has urls to images in it"}));
+				alert(DonaCadena({cat: "Seleccioneu una columna que contingui URL d'imatges", spa: "Seleccione una columna que contenga URL de imÃ¡genes", eng: "Please, select a column that has urls to images in it"}));
 				return;
 			}
 			var labelColumn = document.getElementById("DialogImageViewerLabelSelect").value;
 			var size = parseInt(document.getElementById("DialogImageViewerSizeInput").value);
 			if (isNaN(size)) {
-				alert(DonaCadena({cat: "La mida no és un nombre enter. En el seu lloc, s'utilitzarà 200", spa: "El tamaño no es un número entero. En su lugar, se utilizará 200", eng: "Size is not an integer number. Using 200 instead"}));
+				alert(DonaCadena({cat: "La mida no Ã©s un nombre enter. En el seu lloc, s'utilitzarÃ  200", spa: "El tamaÃ±o no es un nÃºmero entero. En su lugar, se utilizarÃ¡ 200", eng: "Size is not an integer number. Using 200 instead"}));
 				size = 200;
 			}
 			if (size < 2 || size > 2000) {
-				alert(DonaCadena({cat: "La mida és fora de l'interval [2,2000]. En el seu lloc, s'utilitzarà 200", spa: "El tamaño está fuera del intervalo [2,2000]. En su lugar, se utilizará 200", eng: "Size is out of the [2,2000] range. Using 200 instead"}));
+				alert(DonaCadena({cat: "La mida Ã©s fora de l'interval [2,2000]. En el seu lloc, s'utilitzarÃ  200", spa: "El tamaÃ±o estÃ¡ fuera del intervalo [2,2000]. En su lugar, se utilizarÃ¡ 200", eng: "Size is out of the [2,2000] range. Using 200 instead"}));
 				size = 200;
 			}
 
