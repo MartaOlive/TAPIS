@@ -54,6 +54,7 @@
 	<script type="text/javascript" src="groupByDlg.js"></script>
 	<script type="text/javascript" src="STAfilter.js"></script>
 	<script type="text/javascript" src="diagrams.js"></script>
+	<script type="text/javascript" src="bar_plot.js"></script>
 	<script type="text/javascript" src="aws.js"></script>
 	<script type="text/javascript" src="tapis_lang.js"></script>
 	<script type="text/javascript" src="tapis.js"></script>
@@ -1926,31 +1927,61 @@
 	</dialog>
 
 	<dialog id="DialogBarPlot">
-		<table border="0"><tr><td>
+		<table border="0"><tr>
+		<td class="DialogBarPlotForm">
 			<span id="DialogBarPlotTitle"></span>
 			<form>
 			<fieldset>
-    				<legend><span data-lang="{&quot;cat&quot;: &quot;Tipus de gràfic:&quot;, &quot;spa&quot;: &quot;Tipo de gráfico:&quot;, &quot;eng&quot;: &quot;Plot type:&quot;}">Plot type:</span></legend>
-				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypeBar" checked="checked" onclick="disableClassificationInBarPlot(false)"></input><span data-lang="{&quot;cat&quot;: &quot;Barres&quot;, &quot;spa&quot;: &quot;Barras&quot;, &quot;eng&quot;: &quot;Bar&quot;}">Bar</span></label>
-				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypePie" onclick="disableClassificationInBarPlot(true)"></input><span data-lang="{&quot;cat&quot;: &quot;Sectors&quot;, &quot;spa&quot;: &quot;Sectores&quot;, &quot;eng&quot;: &quot;Pie&quot;}">Pie</span></label>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Tipus:&quot;, &quot;spa&quot;: &quot;Tipo:&quot;, &quot;eng&quot;: &quot;Type:&quot;}">Type:</span></legend>
+				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypeVertical" checked="checked" onchange="toggleBarPlotType()"></input> <span data-lang="{&quot;cat&quot;: &quot;Verticals&quot;, &quot;spa&quot;: &quot;Verticales&quot;, &quot;eng&quot;: &quot;Vertical&quot;}">Vertical</span></label>
+				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypeHorizontal" onchange="toggleBarPlotType()"></input> <span data-lang="{&quot;cat&quot;: &quot;Horitzontals&quot;, &quot;spa&quot;: &quot;Horizontales&quot;, &quot;eng&quot;: &quot;Horizontal&quot;}">Horizontal</span></label>
+				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypeFloating" onchange="toggleBarPlotType()"></input> <span data-lang="{&quot;cat&quot;: &quot;Flotants&quot;, &quot;spa&quot;: &quot;Flotantes&quot;, &quot;eng&quot;: &quot;Floating&quot;}">Floating</span></label>
+				<label><input type="radio" name="DialogBarPlotType" id="DialogBarPlotTypeStacked" onchange="toggleBarPlotType()"></input> <span data-lang="{&quot;cat&quot;: &quot;Apilades&quot;, &quot;spa&quot;: &quot;Apiladas&quot;, &quot;eng&quot;: &quot;Stacked&quot;}">Stacked</span></label>
+			</fieldset>
+			<fieldset id="DialogBarPlotDataFieldset">
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Dades:&quot;, &quot;spa&quot;: &quot;Datos:&quot;, &quot;eng&quot;: &quot;Data:&quot;}">Data:</span></legend>
+				<div id="DialogBarPlotSeriesDiv"></div>
+				<div id="DialogBarPlotGroupByRow" style="display:none;"><label><input type="checkbox" id="DialogBarPlotGroupByCategory"></input> <span data-lang="{&quot;cat&quot;: &quot;Agrupa per categoria&quot;, &quot;spa&quot;: &quot;Agrupar por categoría&quot;, &quot;eng&quot;: &quot;Group by category&quot;}">Group by category</span></label></div>
 			</fieldset>
 			<fieldset>
-    				<legend><span data-lang="{&quot;cat&quot;: &quot;Eixos:&quot;, &quot;spa&quot;: &quot;Ejes:&quot;, &quot;eng&quot;: &quot;Axes:&quot;}">Axes:</span></legend>
-				<label><span data-lang="{&quot;cat&quot;: &quot;Categories:&quot;, &quot;spa&quot;: &quot;Categorías:&quot;, &quot;eng&quot;: &quot;Categories:&quot;}">Categories:</span>
-					<span id="DialogBarPlotAxisX"></span>
-				</label>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
+				<label><input type="checkbox" id="DialogBarPlotBeginZero" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
 				<br>
-				<label><span data-lang="{&quot;cat&quot;: &quot;Classificació (opcional):&quot;, &quot;spa&quot;: &quot;Clasificación (opcional):&quot;, &quot;eng&quot;: &quot;Classification (optional):&quot;}">Classification (optional):</span>
-					<span id="DialogBarPlotSeries"></span>
+				<label><span data-lang="{&quot;cat&quot;: &quot;Títol:&quot;, &quot;spa&quot;: &quot;Título:&quot;, &quot;eng&quot;: &quot;Title:&quot;}">Title:</span>
+					<input type="text" id="DialogBarPlotTitleInput" onchange="onBarPlotTitleChange()" onblur="onBarPlotTitleChange()"></input>
 				</label>
-				<br>
-				<label><span data-lang="{&quot;cat&quot;: &quot;Valors:&quot;, &quot;spa&quot;: &quot;Valores:&quot;, &quot;eng&quot;: &quot;Values:&quot;}">Values:</span>
-					<span id="DialogBarPlotAxisY"></span>
+				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida del títol:&quot;, &quot;spa&quot;: &quot;Tamaño del título:&quot;, &quot;eng&quot;: &quot;Title size:&quot;}">Title size:</span>
+					<input type="range" id="DialogBarPlotTitleSize" min="10" max="36" value="16" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
+					<span id="DialogBarPlotTitleSizeValue">16</span>
 				</label>
-				<br>
-				<label><span data-lang="{&quot;cat&quot;: &quot;Nom de la variable (opcional):&quot;, &quot;spa&quot;: &quot;Nombre de la variable (opcional):&quot;, &quot;eng&quot;: &quot;Variable name (optional):&quot;}">Variable name (optional):</span>
-					<span id="DialogBarPlotVariable"></span>
+				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>
+					<input type="range" id="DialogBarPlotLabelSize" min="8" max="28" value="12" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
+					<span id="DialogBarPlotLabelSizeValue">12</span>
 				</label>
+			</fieldset>
+			<fieldset id="DialogBarPlotErrorPanel">
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Barres d'error:&quot;, &quot;spa&quot;: &quot;Barras de error:&quot;, &quot;eng&quot;: &quot;Error bars:&quot;}">Error bars:</span></legend>
+				<label class="DialogBarPlotErrorRow"><span data-lang="{&quot;cat&quot;: &quot;Color:&quot;, &quot;spa&quot;: &quot;Color:&quot;, &quot;eng&quot;: &quot;Color:&quot;}">Color:</span>
+					<input type="color" id="DialogBarPlotErrorColor" value="#333333">
+				</label>
+				<label class="DialogBarPlotErrorRow"><span data-lang="{&quot;cat&quot;: &quot;Direcció:&quot;, &quot;spa&quot;: &quot;Dirección:&quot;, &quot;eng&quot;: &quot;Direction:&quot;}">Direction:</span>
+					<select id="DialogBarPlotErrorDir">
+						<option value="both" data-lang="{&quot;cat&quot;: &quot;Ambdues&quot;, &quot;spa&quot;: &quot;Ambas&quot;, &quot;eng&quot;: &quot;Both&quot;}">Both</option>
+						<option value="plus" data-lang="{&quot;cat&quot;: &quot;Només amunt&quot;, &quot;spa&quot;: &quot;Solo arriba&quot;, &quot;eng&quot;: &quot;Plus&quot;}">Plus</option>
+						<option value="minus" data-lang="{&quot;cat&quot;: &quot;Només avall&quot;, &quot;spa&quot;: &quot;Solo abajo&quot;, &quot;eng&quot;: &quot;Minus&quot;}">Minus</option>
+					</select>
+				</label>
+				<div class="DialogBarPlotErrorModeList">
+					<div class="DialogBarPlotErrorModeHeading" data-lang="{&quot;cat&quot;: &quot;Valor de les barres:&quot;, &quot;spa&quot;: &quot;Valor de las barras:&quot;, &quot;eng&quot;: &quot;Bar values:&quot;}">Bar values:</div>
+					<label class="DialogBarPlotErrorModeRow"><input type="radio" name="DialogBarPlotErrorMode" id="DialogBarPlotErrorModeNone" value="none" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Cap&quot;, &quot;spa&quot;: &quot;Ninguna&quot;, &quot;eng&quot;: &quot;None&quot;}">None</span></label>
+					<label class="DialogBarPlotErrorModeRow"><input type="radio" name="DialogBarPlotErrorMode" id="DialogBarPlotErrorModeSd" value="sd"></input> <span data-lang="{&quot;cat&quot;: &quot;Desviació estàndard:&quot;, &quot;spa&quot;: &quot;Desviación estándar:&quot;, &quot;eng&quot;: &quot;Standard deviation:&quot;}">Standard deviation:</span> <span id="DialogBarPlotErrorSd"></span></label>
+					<label class="DialogBarPlotErrorModeRow"><input type="radio" name="DialogBarPlotErrorMode" id="DialogBarPlotErrorModeSe" value="se"></input> <span data-lang="{&quot;cat&quot;: &quot;Error estàndard:&quot;, &quot;spa&quot;: &quot;Error estándar:&quot;, &quot;eng&quot;: &quot;Standard error:&quot;}">Standard error:</span> <span id="DialogBarPlotErrorSe"></span></label>
+					<label class="DialogBarPlotErrorModeRow"><input type="radio" name="DialogBarPlotErrorMode" id="DialogBarPlotErrorModeCi" value="ci"></input> <span data-lang="{&quot;cat&quot;: &quot;Interval de confiança 95% (±5%)&quot;, &quot;spa&quot;: &quot;Intervalo de confianza 95% (±5%)&quot;, &quot;eng&quot;: &quot;95% confidence interval (±5%)&quot;}">95% confidence interval (±5%)</span></label>
+					<label class="DialogBarPlotErrorModeRow"><input type="radio" name="DialogBarPlotErrorMode" id="DialogBarPlotErrorModeCustom" value="custom"></input> <span data-lang="{&quot;cat&quot;: &quot;Personalitzat:&quot;, &quot;spa&quot;: &quot;Personalizado:&quot;, &quot;eng&quot;: &quot;Custom:&quot;}">Custom:</span>
+						<select id="DialogBarPlotErrorCustomKind"><option value="abs">± valor</option><option value="pct">± %</option></select>
+						<input type="number" id="DialogBarPlotErrorCustomVal" step="any" value="1" style="width:5em;">
+					</label>
+				</div>
 			</fieldset>
 			<br>
 			<div class="center">
@@ -1960,8 +1991,18 @@
 			<input type="hidden" id="DialogBarPlotNodeId"></input>
 			</form>
 		</td>
-		<td><div id="DialogBarPlotVisualization" style="width:600px; height:500px;">
-				<canvas id="DialogBarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas></div></td>
+		<td style="vertical-align: top;">
+			<div class="DialogBarPlotVizRow">
+				<div id="DialogBarPlotVisualization">
+					<canvas id="DialogBarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas>
+				</div>
+				<div id="DialogBarPlotLegend" class="DialogBarPlotLegend" aria-label="Legend"></div>
+			</div>
+			<div id="DialogBarPlotColorCard" class="DialogBarPlotColorCard" style="display:none;"></div>
+			<div class="DialogBarPlotSavePng">
+				<button type="button" onClick="SaveBarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
+			</div>
+		</td>
 		</tr></table>
 	</dialog>
 

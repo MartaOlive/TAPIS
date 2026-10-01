@@ -8272,9 +8272,8 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "BarPlot.png") {
 			var parentNodes=GetParentNodes(currentNode);
-			if (parentNodes && parentNodes[0]) {
-				if (parentNodes[0].STAdata)
-					ShowBarPlotDialog(parentNodes, currentNode);
+			if (parentNodes && parentNodes.length) {
+				ShowBarPlotDialog(parentNodes, currentNode);
 				showNodeDialog("DialogBarPlot");
 			}
 		}
@@ -12193,8 +12192,8 @@ function formatLocalDate(date) {
 
 	return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}Z`;
 }
-function disableClassificationInBarPlot(disable){
-	  document.getElementById("DialogBarPlotSeriesSelect").disabled = disable;
+function disableClassificationInBarPlot() {
+	/* legacy no-op: pie chart removed from BarPlot */
 }
 
 function populateDialogQualityMisclassificationMatrix(node){

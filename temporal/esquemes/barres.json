@@ -1,0 +1,563 @@
+{
+	"nodes": [
+		{
+			"id": "1j8jf.trk45k",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"ciutat": "Barcelona",
+					"seguretat": 65,
+					"transport": 82,
+					"oci": 95,
+					"gastronomia": 92,
+					"espais_verds": 70,
+					"cost_vida": 45
+				},
+				{
+					"ciutat": "Madrid",
+					"seguretat": 72,
+					"transport": 88,
+					"oci": 90,
+					"gastronomia": 95,
+					"espais_verds": 68,
+					"cost_vida": 52
+				},
+				{
+					"ciutat": "ValÃ¨ncia",
+					"seguretat": 78,
+					"transport": 76,
+					"oci": 85,
+					"gastronomia": 88,
+					"espais_verds": 86,
+					"cost_vida": 72
+				},
+				{
+					"ciutat": "Sevilla",
+					"seguretat": 74,
+					"transport": 68,
+					"oci": 91,
+					"gastronomia": 94,
+					"espais_verds": 80,
+					"cost_vida": 78
+				},
+				{
+					"ciutat": "Bilbao",
+					"seguretat": 85,
+					"transport": 79,
+					"oci": 82,
+					"gastronomia": 90,
+					"espais_verds": 88,
+					"cost_vida": 58
+				},
+				{
+					"ciutat": "Lisboa",
+					"seguretat": 70,
+					"transport": 75,
+					"oci": 89,
+					"gastronomia": 91,
+					"espais_verds": 83,
+					"cost_vida": 65
+				}
+			],
+			"x": 74,
+			"y": 215
+		},
+		{
+			"id": "4tlmg.pcf3ku",
+			"label": "Gràfic de barres",
+			"image": "BarPlot.png",
+			"shape": "circularImage",
+			"x": -50,
+			"y": 211,
+			"barPlotParentNodes": {
+				"1j8jf.trk45k": {
+					"nodeLabel": "CSV",
+					"attrs": {
+						"ciutat": {
+							"type": "string"
+						},
+						"seguretat": {
+							"type": "integer"
+						},
+						"transport": {
+							"type": "integer"
+						},
+						"oci": {
+							"type": "integer"
+						},
+						"gastronomia": {
+							"type": "integer"
+						},
+						"espais_verds": {
+							"type": "integer"
+						},
+						"cost_vida": {
+							"type": "integer"
+						}
+					},
+					"numericNames": [
+						"seguretat",
+						"transport",
+						"oci",
+						"gastronomia",
+						"espais_verds",
+						"cost_vida"
+					],
+					"nonNumericNames": [
+						"ciutat"
+					]
+				}
+			},
+			"barPlotOptions": {
+				"seriesColors": {},
+				"hiddenSeries": [],
+				"titleFontSize": 16,
+				"labelFontSize": 12,
+				"errorMode": "custom",
+				"errorColor": "#333333",
+				"errorDirection": "plus",
+				"confidencePct": 95,
+				"barType": "vertical",
+				"seriesMode": "all",
+				"title": "",
+				"beginAtZero": true,
+				"customErrorKind": "abs",
+				"customErrorVal": 10,
+				"axisY": "oci",
+				"nodeSelected": "1j8jf.trk45k",
+				"axisX": "ciutat",
+				"series": "",
+				"stackGroupColumn": "",
+				"valueMin": "seguretat",
+				"valueMax": "ciutat",
+				"drawn": true,
+				"valueColumns": [
+					"seguretat",
+					"transport",
+					"oci"
+				]
+			}
+		},
+		{
+			"id": "4h0m6.99u25t",
+			"label": "Aplilades1",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Categoria": "Ciutat1",
+					"Poblacio": 20,
+					"Habitatge": 30,
+					"Oci": 15
+				},
+				{
+					"Categoria": "Ciutat2",
+					"Poblacio": 35,
+					"Habitatge": 20,
+					"Oci": 25
+				},
+				{
+					"Categoria": "Ciutat3",
+					"Poblacio": 15,
+					"Habitatge": 40,
+					"Oci": 10
+				},
+				{
+					"Categoria": "Ciutat4",
+					"Poblacio": 25,
+					"Habitatge": 15,
+					"Oci": 30
+				}
+			],
+			"x": -84,
+			"y": -175
+		},
+		{
+			"id": "fp2u.pepcckq",
+			"label": "Apilades2",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Categoria": "Ciutat1",
+					"Poblacio": 22,
+					"Habitatge": 10,
+					"Oci": 20
+				},
+				{
+					"Categoria": "Ciutat2",
+					"Poblacio": 36,
+					"Habitatge": 50,
+					"Oci": 21
+				},
+				{
+					"Categoria": "Ciutat5",
+					"Poblacio": 19,
+					"Habitatge": 30,
+					"Oci": 15
+				},
+				{
+					"Categoria": "Ciutat6",
+					"Poblacio": 20,
+					"Habitatge": 10,
+					"Oci": 32
+				}
+			],
+			"x": -181,
+			"y": 60
+		},
+		{
+			"id": "s8q9.dfdc8ls",
+			"label": "Gràfic de barres",
+			"image": "BarPlot.png",
+			"shape": "circularImage",
+			"barPlotParentNodes": {
+				"fp2u.pepcckq": {
+					"nodeLabel": "Apilades2",
+					"attrs": {
+						"Categoria": {
+							"type": "string"
+						},
+						"Valor A": {
+							"type": "integer"
+						},
+						"Valor B": {
+							"type": "integer"
+						},
+						"Valor C": {
+							"type": "integer"
+						}
+					},
+					"numericNames": [
+						"Valor A",
+						"Valor B",
+						"Valor C"
+					],
+					"nonNumericNames": [
+						"Categoria"
+					]
+				},
+				"4h0m6.99u25t": {
+					"nodeLabel": "Aplilades1",
+					"attrs": {
+						"Categoria": {
+							"type": "string"
+						},
+						"Valor A": {
+							"type": "integer"
+						},
+						"Valor B": {
+							"type": "integer"
+						},
+						"Valor C": {
+							"type": "integer"
+						}
+					},
+					"numericNames": [
+						"Valor A",
+						"Valor B",
+						"Valor C"
+					],
+					"nonNumericNames": [
+						"Categoria"
+					]
+				}
+			},
+			"barPlotOptions": {
+				"seriesColors": {},
+				"hiddenSeries": [],
+				"titleFontSize": 16,
+				"labelFontSize": 12,
+				"errorMode": "none",
+				"errorColor": "#333333",
+				"errorDirection": "both",
+				"confidencePct": 95,
+				"barType": "stacked",
+				"seriesMode": "oneNode",
+				"title": "",
+				"beginAtZero": true,
+				"customErrorKind": "abs",
+				"customErrorVal": 1,
+				"axisY": "",
+				"nodeSelected": "fp2u.pepcckq",
+				"axisX": "Categoria",
+				"series": "",
+				"stackGroupColumn": "",
+				"valueMin": "Valor A",
+				"valueMax": "Valor B",
+				"drawn": true,
+				"valueColumns": [],
+				"seriesGroups": [
+					{
+						"nodeSelected": "fp2u.pepcckq",
+						"axisX": "Categoria",
+						"axisY": "Valor A",
+						"valueColumns": [
+							"Valor A",
+							"Valor B"
+						],
+						"valueMin": "Valor A",
+						"valueMax": "Valor B",
+						"series": "",
+						"stackGroupColumn": "",
+						"legendText": "Apilades2"
+					},
+					{
+						"nodeSelected": "4h0m6.99u25t",
+						"axisX": "Categoria",
+						"axisY": "Valor A",
+						"valueColumns": [
+							"Valor A"
+						],
+						"valueMin": "Valor A",
+						"valueMax": "Valor B",
+						"series": "",
+						"stackGroupColumn": "",
+						"legendText": "Aplilades1"
+					}
+				],
+				"groupByCategory": false
+			},
+			"x": -151,
+			"y": -65
+		},
+		{
+			"id": "77cdp.4t0atc",
+			"label": "UnaColumna",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"categoria": "A",
+					"valor": 20
+				},
+				{
+					"categoria": "A",
+					"valor": 30
+				},
+				{
+					"categoria": "A",
+					"valor": 15
+				},
+				{
+					"categoria": "B",
+					"valor": 35
+				},
+				{
+					"categoria": "B",
+					"valor": 20
+				},
+				{
+					"categoria": "B",
+					"valor": 25
+				},
+				{
+					"categoria": "C",
+					"valor": 15
+				},
+				{
+					"categoria": "C",
+					"valor": 40
+				},
+				{
+					"categoria": "C",
+					"valor": 10
+				},
+				{
+					"categoria": "D",
+					"valor": 25
+				},
+				{
+					"categoria": "D",
+					"valor": 15
+				},
+				{
+					"categoria": "D",
+					"valor": 30
+				}
+			],
+			"x": 70,
+			"y": 29
+		},
+		{
+			"id": "72r4d.14skh4",
+			"label": "Gràfic de barres",
+			"image": "BarPlot.png",
+			"shape": "circularImage",
+			"x": -15,
+			"y": -26,
+			"barPlotParentNodes": {
+				"77cdp.4t0atc": {
+					"nodeLabel": "UnaColumna",
+					"attrs": {
+						"categoria": {
+							"type": "string"
+						},
+						"valor": {
+							"type": "integer"
+						}
+					},
+					"numericNames": [
+						"valor"
+					],
+					"nonNumericNames": [
+						"categoria"
+					]
+				}
+			},
+			"barPlotOptions": {
+				"seriesColors": {},
+				"hiddenSeries": [],
+				"titleFontSize": 16,
+				"labelFontSize": 12,
+				"errorMode": "none",
+				"errorColor": "#333333",
+				"errorDirection": "both",
+				"confidencePct": 95,
+				"barType": "vertical",
+				"seriesMode": "all",
+				"title": "",
+				"beginAtZero": true,
+				"customErrorKind": "abs",
+				"customErrorVal": 1,
+				"nodeSelected": "77cdp.4t0atc",
+				"axisX": "categoria",
+				"axisY": "valor",
+				"valueColumns": [
+					"valor"
+				],
+				"series": "",
+				"stackGroupColumn": "",
+				"valueMin": "valor",
+				"valueMax": "valor",
+				"drawn": true
+			}
+		},
+		{
+			"id": "2o563.e7dbob",
+			"label": "Agrupa per",
+			"image": "GroupBy.png",
+			"shape": "circularImage",
+			"groupByParams": {
+				"groupByAttr": [
+					"categoria"
+				],
+				"groupByDate": [],
+				"aggregationAttr": {
+					"valor": [
+						"Mean",
+						"StandardDeviation",
+						"MinValue",
+						"MaxValue"
+					]
+				}
+			},
+			"STAdata": [
+				{
+					"categoria": "A",
+					"valor_Mean": 21.666666666666668,
+					"valor_StandardDeviation": 7.637626158259733,
+					"valor_MinValue": 15,
+					"valor_MaxValue": 30
+				},
+				{
+					"categoria": "B",
+					"valor_Mean": 26.666666666666668,
+					"valor_StandardDeviation": 7.637626158259733,
+					"valor_MinValue": 20,
+					"valor_MaxValue": 35
+				},
+				{
+					"categoria": "C",
+					"valor_Mean": 21.666666666666668,
+					"valor_StandardDeviation": 16.072751268321593,
+					"valor_MinValue": 10,
+					"valor_MaxValue": 40
+				},
+				{
+					"categoria": "D",
+					"valor_Mean": 23.333333333333332,
+					"valor_StandardDeviation": 7.637626158259733,
+					"valor_MinValue": 15,
+					"valor_MaxValue": 30
+				}
+			],
+			"STAdataAttributes": {
+				"categoria": {
+					"type": "string"
+				},
+				"valor_Mean": {
+					"type": "integer"
+				},
+				"valor_StandardDeviation": {
+					"type": "integer"
+				},
+				"valor_MinValue": {
+					"type": "integer"
+				},
+				"valor_MaxValue": {
+					"type": "integer"
+				}
+			},
+			"x": 160,
+			"y": -57
+		},
+		{
+			"id": "7gpog.u9q4tf",
+			"label": "Gràfic de barres",
+			"image": "BarPlot.png",
+			"shape": "circularImage",
+			"x": 242,
+			"y": -152
+		}
+	],
+	"edges": [
+		{
+			"from": "1j8jf.trk45k",
+			"to": "7mba6.5jomeh",
+			"arrows": "from"
+		},
+		{
+			"from": "1j8jf.trk45k",
+			"to": "59oce.l5l495",
+			"arrows": "from"
+		},
+		{
+			"from": "1j8jf.trk45k",
+			"to": "4tlmg.pcf3ku",
+			"arrows": "from"
+		},
+		{
+			"from": "fp2u.pepcckq",
+			"to": "s8q9.dfdc8ls",
+			"arrows": "from"
+		},
+		{
+			"from": "4h0m6.99u25t",
+			"to": "s8q9.dfdc8ls",
+			"arrows": "from"
+		},
+		{
+			"from": "77cdp.4t0atc",
+			"to": "72r4d.14skh4",
+			"arrows": "from"
+		},
+		{
+			"from": "77cdp.4t0atc",
+			"to": "2o563.e7dbob",
+			"arrows": "from"
+		},
+		{
+			"from": "2o563.e7dbob",
+			"to": "7gpog.u9q4tf",
+			"arrows": "from"
+		},
+		{
+			"from": "4h0m6.99u25t",
+			"to": "5l3pe.bodob1",
+			"arrows": "from"
+		}
+	]
+}

@@ -224,90 +224,52 @@
                     <img src="BarPlot_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
                     <p><strong>How to Use the Node: </strong></p>
                     <p>
-                        <strong>Bar Plot tool</strong> allows you to create <strong>Bar</strong> and <strong>Pie
-                            charts</strong>.
-                        In this case, you can only select a single dataset to create a chart.
-                        To use this tool, you can work with <strong>any type of data</strong> as long as it contains
-                        <strong>numerical
-                            values</strong>.
+                        The <strong>Bar Plot</strong> tool creates <strong>vertical</strong>, <strong>horizontal</strong>,
+                        <strong>floating</strong> (interval), or <strong>stacked</strong> bar charts from one or more parent tables.
+                        Connect table nodes and <i>double-click</i> to open the dialog, then click <strong>Draw</strong>.
+                        (Pie charts moved to the <a href="#circularChart">Circular Chart</a> tool.)
                     </p>
                     <p>
                         These are the data used in the example.
                     </p>
                     <img src="BarPLot_image1.png" alt="icon" class="toolPage_image">
                     <p>
-                        To display the dialog, <i>double-click</i> the node with the left mouse button. The dialog is
-                        the same for both types of charts. You only need to select the desired type in the
-                        <strong>Plot Type</strong> section. Once the data has been filled in and the
-                        <strong>Draw</strong> button is clicked, the graph will appear at the right.
+                        The <strong>Data</strong> section shows one block per connected parent node. For each node you
+                        choose the <strong>Categories</strong> column and tick the <strong>Values</strong> columns you want
+                        to plot (or pick <strong>Start</strong> and <strong>End</strong> for floating bars). Every ticked
+                        column becomes a series; with several nodes, categories are aligned by name.
                     </p>
-
-
                     <img src="BarPLot_image2.png" alt="icon" class="toolPage_image">
-
-                    <p><strong><u>Bar chart:</u></strong></p>
+                    <p><strong>Categories:</strong> The column used to divide your data into categories. A separate bar
+                        is created for each unique category.</p>
                     <p>
-                        The process for creating a <strong>bar chart</strong> and a <strong>pie chart</strong> is very
-                        similar.
-                        The only differences are the selected <strong>Plot Type</strong> and the optional
-                        <strong>Classification</strong> feature, which can be applied to bar charts but is disabled for
-                        pie charts.
-                    </p>
-                    <p><strong>Categories:</strong> The column used to divide your data into categories. <strong>A
-                            separate bar
-                            will be created for each unique category</strong> found in the selected column.</p>
-                    <p>
-                        <strong>Classification:</strong> Optionally, you can select a column to <strong>divide each
-                            bar</strong> into
-                        stacked <strong>subcategories</strong>.
-                        A <strong>different segment</strong> will be created for each unique value found in the selected
-                        column, making
-                        it easier
-                        to visualize how the total value of each category is distributed.
+                        <strong>Group by category:</strong> For vertical and horizontal bars, repeated categories are
+                        drawn as separate bars by default; tick this option to cluster them (#1, #2, ...) under one label.
                     </p>
                     <p>
-                        <strong>Values:</strong> Select the column that contains the numerical values to be represented
-                        in the chart.
-                        These values determine the height of the bars or the size of the pie chart segments.
+                        <strong>Values (columns):</strong> Numerical columns for bar height/length. With stacked bars,
+                        several ticked columns are stacked within each category. Floating charts use
+                        <strong>Start</strong> and <strong>End</strong> columns instead.
                     </p>
                     <p>
-                        <strong>Variable name:</strong> A label used for the Y-axis, which represents the numerical
-                        values of the dataset.
+                        For vertical and horizontal charts you can add <strong>error bars</strong> (SD, SE, confidence interval, or custom ±).
+                        The legend beside the chart supports show/hide and color changes; use <strong>Save as PNG</strong> to export chart + legend.
                     </p>
-
                     <img src="BarPLot_image3.png" alt="icon" class="toolPage_image">
                     <p>
                         Once you have completed the previous sections, click the <strong>Draw</strong> button to
                         visualize the graph.
                     </p>
                     <img src="BarPLot_image4.png" alt="icon" class="toolPage_image">
-                    <p>
-                        Below is an example using the same values without the <strong>Classification</strong> option.
-                        It can be observed that some information is missing in the labels; however, this should be
-                        corrected in the data as a prior step before using the chart.
-                    </p>
-
                     <img src="BarPLot_image5.png" alt="icon" class="toolPage_image">
-
-                    <p><strong><u>Pie chart:</u></strong></p>
-                    <p>
-                        In the case of the <strong>Pie chart</strong>, subcategories cannot be created as in the bar
-                        chart.
-                        The same values as in the bar chart example have been selected. In this case, the issue with the
-                        labels also remains the same.
-                    </p>
-                    <img src="BarPLot_image6.png" alt="icon" class="toolPage_image">
                     <p>
                         It is possible to use the
                         <a href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#AggregateColumns"
                             target="_blank">Aggregate
                             Column</a> tool
-                        to concatenate categories and create more understandable labels. This is the result.
+                        to concatenate categories and create more understandable labels.
                     </p>
                     <img src="BarPLot_image7.png" alt="icon" class="toolPage_image">
-
-
-
 
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>

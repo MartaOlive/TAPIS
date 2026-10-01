@@ -375,6 +375,259 @@
     resize: vertical;
 }
 
+#DialogBarPlot {
+	max-width: 96vw;
+	max-height: 94vh;
+	overflow: auto;
+	position: relative;
+}
+
+#DialogBarPlot > table {
+	border-spacing: 20px 8px;
+}
+
+#DialogBarPlot .DialogBarPlotForm {
+	vertical-align: top;
+	width: 420px;
+	min-width: 380px;
+	padding: 6px 10px 8px 6px;
+}
+
+#DialogBarPlotTitle {
+	display: block;
+	margin-bottom: 10px;
+}
+
+#DialogBarPlot fieldset {
+	margin: 0 0 14px 0;
+	padding: 12px 16px 16px 16px;
+}
+
+#DialogBarPlot fieldset legend {
+	padding: 0 6px;
+}
+
+#DialogBarPlot fieldset > label {
+	display: inline-block;
+	margin: 4px 16px 8px 0;
+}
+
+#DialogBarPlot #DialogBarPlotTitleInput {
+	width: 220px;
+	margin-left: 8px;
+}
+
+#DialogBarPlot .DialogBarPlotSizeRow {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: 6px;
+	margin: 6px 0;
+	white-space: nowrap;
+}
+
+#DialogBarPlot .DialogBarPlotSizeRow input[type="range"] {
+	width: 120px;
+	flex: 0 0 auto;
+	margin: 0;
+}
+
+#DialogBarPlot #DialogBarPlotTitleSizeValue,
+#DialogBarPlot #DialogBarPlotLabelSizeValue {
+	display: inline-block;
+	min-width: 1.5em;
+	flex: 0 0 auto;
+}
+
+#DialogBarPlot #DialogBarPlotValuesRow,
+#DialogBarPlot #DialogBarPlotFloatMinRow,
+#DialogBarPlot #DialogBarPlotFloatMaxRow,
+#DialogBarPlot #DialogBarPlotGroupByRow {
+	margin: 6px 0 10px 0;
+}
+
+#DialogBarPlot #DialogBarPlotValueColumns {
+	max-height: 160px;
+	overflow: auto;
+	margin: 6px 0 10px 0;
+	padding: 8px 10px;
+	border: 1px solid #ccc;
+}
+
+#DialogBarPlot #DialogBarPlotValueColumns label,
+#DialogBarPlot .DialogBarPlotSeriesValueColumns label {
+	display: block;
+	margin: 3px 0;
+}
+
+#DialogBarPlot .DialogBarPlotSeriesValueColumns {
+	max-height: 140px;
+	overflow: auto;
+	margin: 6px 0 0 0;
+	padding: 8px 10px;
+	border: 1px solid #ccc;
+}
+
+#DialogBarPlot #DialogBarPlotSeriesDiv fieldset {
+	margin: 0 8px 16px 0;
+	padding: 12px 14px 14px 14px;
+}
+
+#DialogBarPlot #DialogBarPlotSeriesDiv .DialogBarPlotSeriesRow {
+	margin: 0 0 10px 0;
+}
+
+#DialogBarPlot #DialogBarPlotSeriesDiv select,
+#DialogBarPlot #DialogBarPlotSeriesDiv input[type="text"] {
+	margin-left: 6px;
+}
+
+#DialogBarPlot #DialogBarPlotSeriesDiv .DialogBarPlotSeriesRemove {
+	margin-top: 6px;
+	background-color: white;
+	border-color: white;
+}
+
+#DialogBarPlot .center button {
+	margin: 0 6px;
+}
+
+#DialogBarPlot .DialogBarPlotVizRow {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+#DialogBarPlot #DialogBarPlotVisualization {
+	width: 560px;
+	height: 520px;
+	flex: 0 0 auto;
+}
+
+#DialogBarPlot .DialogBarPlotLegend {
+	width: 200px;
+	max-height: 520px;
+	overflow: auto;
+	padding: 4px 0 4px 4px;
+	box-sizing: border-box;
+	flex: 0 0 auto;
+}
+
+#DialogBarPlot .DialogBarPlotLegendItem {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0 0 6px 0;
+	font-size: 12px;
+	line-height: 1.2;
+}
+
+#DialogBarPlot .DialogBarPlotLegendItem.is-hidden .DialogBarPlotLegendLabel {
+	opacity: 0.45;
+	text-decoration: line-through;
+}
+
+#DialogBarPlot .DialogBarPlotLegendSwatch {
+	width: 14px;
+	height: 14px;
+	border: 1px solid #666;
+	border-radius: 2px;
+	padding: 0;
+	cursor: pointer;
+	flex: 0 0 auto;
+}
+
+#DialogBarPlot .DialogBarPlotLegendEye {
+	width: 22px;
+	height: 22px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	background: #fff;
+	cursor: pointer;
+	padding: 0;
+	font-size: 12px;
+	line-height: 1;
+	flex: 0 0 auto;
+}
+
+#DialogBarPlot .DialogBarPlotLegendLabel {
+	flex: 1 1 auto;
+	min-width: 0;
+	word-break: break-word;
+}
+
+#DialogBarPlot .DialogBarPlotColorCard {
+	position: absolute;
+	z-index: 40;
+	background: #fff;
+	border: 1px solid #888;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+	padding: 8px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	width: 176px;
+	box-sizing: border-box;
+}
+
+#DialogBarPlot .DialogBarPlotColorCardSwatch {
+	width: 22px;
+	height: 22px;
+	border: 1px solid #666;
+	border-radius: 2px;
+	padding: 0;
+	cursor: pointer;
+}
+
+#DialogBarPlot .DialogBarPlotSavePng {
+	width: 100%;
+	margin-top: 12px;
+	text-align: center;
+}
+
+#DialogBarPlot #DialogBarPlotErrorPanel .DialogBarPlotErrorRow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 12px;
+	margin: 4px 0 10px 0;
+}
+
+#DialogBarPlot #DialogBarPlotErrorPanel .DialogBarPlotErrorRow > label {
+	display: inline-flex;
+	align-items: center;
+	margin: 0;
+	gap: 4px;
+}
+
+#DialogBarPlot #DialogBarPlotErrorColor {
+	width: 2.2em;
+	height: 1.6em;
+	padding: 0;
+	border: 1px solid #888;
+	background: #fff;
+	cursor: pointer;
+}
+
+#DialogBarPlot #DialogBarPlotErrorPanel .DialogBarPlotErrorModeList {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+#DialogBarPlot #DialogBarPlotErrorPanel .DialogBarPlotErrorModeHeading {
+	font-weight: bold;
+	margin: 4px 0 2px 0;
+}
+
+#DialogBarPlot #DialogBarPlotErrorPanel .DialogBarPlotErrorModeRow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 10px;
+	margin: 0;
+}
+
 #DialogRadarPlot {
 	max-width: 96vw;
 	max-height: 94vh;
