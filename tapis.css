@@ -375,6 +375,251 @@
     resize: vertical;
 }
 
+#DialogScatterPlot {
+	max-width: 96vw;
+	max-height: 94vh;
+	overflow: auto;
+	position: relative;
+}
+
+#DialogScatterPlot > table {
+	border-spacing: 20px 8px;
+}
+
+#DialogScatterPlot .DialogScatterPlotForm {
+	vertical-align: top;
+	width: 420px;
+	min-width: 380px;
+	padding: 6px 10px 8px 6px;
+}
+
+#DialogScatterPlotTitle {
+	display: block;
+	margin-bottom: 10px;
+}
+
+#DialogScatterPlot fieldset {
+	margin: 0 0 14px 0;
+	padding: 12px 16px 16px 16px;
+}
+
+#DialogScatterPlot fieldset legend {
+	padding: 0 6px;
+}
+
+#DialogScatterPlot fieldset > label {
+	display: inline-block;
+	margin: 4px 16px 8px 0;
+}
+
+#DialogScatterPlot .DialogScatterPlotOptionsGroup {
+	margin: 10px 0 8px 0;
+	padding: 8px 10px 10px 10px;
+}
+
+#DialogScatterPlot .DialogScatterPlotOptionsGroup > legend {
+	font-weight: 600;
+	padding: 0 4px;
+}
+
+#DialogScatterPlot #DialogScatterPlotAxisTitle,
+#DialogScatterPlot #DialogScatterPlotAxisXLabel,
+#DialogScatterPlot #DialogScatterPlotAxisYLabelLeft,
+#DialogScatterPlot #DialogScatterPlotAxisYLabelRight {
+	width: 180px;
+	margin-left: 8px;
+}
+
+#DialogScatterPlot .DialogScatterPlotSizeRow {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: 6px;
+	margin: 6px 0;
+	white-space: nowrap;
+}
+
+#DialogScatterPlot .DialogScatterPlotSizeRow input[type="range"] {
+	width: 120px;
+	flex: 0 0 auto;
+	margin: 0;
+}
+
+#DialogScatterPlot #DialogScatterPlotInterpolation {
+	margin-left: 6px;
+	max-width: 220px;
+}
+
+#DialogScatterPlot #DialogScatterPlotDiv fieldset {
+	margin: 0 8px 16px 0;
+	padding: 12px 14px 14px 14px;
+}
+
+#DialogScatterPlot #DialogScatterPlotDiv .DialogScatterPlotSeriesRow {
+	margin: 0 0 10px 0;
+}
+
+#DialogScatterPlot #DialogScatterPlotDiv select,
+#DialogScatterPlot #DialogScatterPlotDiv input[type="text"] {
+	margin-left: 6px;
+	max-width: 220px;
+}
+
+#DialogScatterPlot .DialogScatterPlotValueColumns {
+	max-height: 180px;
+	overflow: auto;
+	margin: 6px 0 0 0;
+	padding: 8px 10px;
+	border: 1px solid #ccc;
+}
+
+#DialogScatterPlot .DialogScatterPlotValueRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin: 3px 0;
+}
+
+#DialogScatterPlot .DialogScatterPlotValueRow label {
+	display: block;
+	margin: 0;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+#DialogScatterPlot .DialogScatterPlotValueRow .DialogScatterPlotColumnAxis {
+	margin-left: 0;
+	max-width: 110px;
+	flex: 0 0 auto;
+}
+
+#DialogScatterPlot .center button {
+	margin: 0 6px;
+}
+
+#DialogScatterPlot .DialogScatterPlotVizRow {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+#DialogScatterPlot #DialogScatterPlotVisualizationWrap {
+	width: 560px;
+	height: 520px;
+	flex: 0 0 auto;
+}
+
+#DialogScatterPlot #DialogScatterPlotVisualization {
+	width: 100%;
+	height: 100%;
+}
+
+#DialogScatterPlot .DialogScatterPlotLegend {
+	width: 260px;
+	max-height: 520px;
+	overflow: auto;
+	padding: 4px 0 4px 4px;
+	box-sizing: border-box;
+	flex: 0 0 auto;
+}
+
+#DialogScatterPlot .DialogScatterPlotLegendItem {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin: 0 0 8px 0;
+	font-size: inherit;
+	line-height: 1.2;
+}
+
+#DialogScatterPlot .DialogScatterPlotLegendItem.is-hidden .DialogScatterPlotLegendLabel {
+	opacity: 0.45;
+	text-decoration: line-through;
+}
+
+#DialogScatterPlot .DialogScatterPlotLegendSwatch {
+	width: 14px;
+	height: 14px;
+	border: 1px solid #666;
+	border-radius: 2px;
+	padding: 0;
+	cursor: pointer;
+	flex: 0 0 auto;
+	display: inline-block;
+	box-sizing: border-box;
+}
+
+#DialogScatterPlot .DialogScatterPlotLegendSwatch.is-gradient {
+	cursor: default;
+	pointer-events: none;
+}
+
+#DialogScatterPlot .DialogScatterPlotLegendEye {
+	width: 22px;
+	height: 22px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	background: #fff;
+	cursor: pointer;
+	padding: 0;
+	font-size: 12px;
+	line-height: 1;
+	flex: 0 0 auto;
+}
+
+#DialogScatterPlot .DialogScatterPlotLegendStyle {
+	flex: 0 0 auto;
+	max-width: 130px;
+	font-size: 11px;
+	padding: 1px 2px;
+}
+
+#DialogScatterPlot .DialogScatterPlotLegendLabel {
+	flex: 1 1 100%;
+	min-width: 0;
+	word-break: break-word;
+}
+
+#DialogScatterPlot .DialogScatterPlotColorCard {
+	position: absolute;
+	z-index: 40;
+	background: #fff;
+	border: 1px solid #888;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+	padding: 8px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px;
+	width: 176px;
+	box-sizing: border-box;
+}
+
+#DialogScatterPlot .DialogScatterPlotColorCardSwatch {
+	width: 22px;
+	height: 22px;
+	border: 1px solid #666;
+	border-radius: 2px;
+	padding: 0;
+	cursor: pointer;
+}
+
+#DialogScatterPlot .DialogScatterPlotSavePng {
+	width: 100%;
+	margin-top: 12px;
+	text-align: center;
+}
+
+#DialogScatterPlot .DialogScatterPlotSortHint {
+	display: none;
+	color: #a33;
+	font-style: italic;
+	font-size: 12px;
+	margin: 8px 0 0 0;
+	max-width: 560px;
+}
+
 #DialogBarPlot {
 	max-width: 96vw;
 	max-height: 94vh;
@@ -433,7 +678,9 @@
 }
 
 #DialogBarPlot #DialogBarPlotTitleSizeValue,
-#DialogBarPlot #DialogBarPlotLabelSizeValue {
+#DialogBarPlot #DialogBarPlotLabelSizeValue,
+#DialogBarPlot #DialogBarPlotAxisLabelSizeValue,
+#DialogBarPlot #DialogBarPlotLegendSizeValue {
 	display: inline-block;
 	min-width: 1.5em;
 	flex: 0 0 auto;
@@ -518,7 +765,7 @@
 	align-items: center;
 	gap: 6px;
 	margin: 0 0 6px 0;
-	font-size: 12px;
+	font-size: inherit;
 	line-height: 1.2;
 }
 
@@ -691,7 +938,8 @@
 
 #DialogRadarPlot #DialogRadarPlotTitleSizeValue,
 #DialogRadarPlot #DialogRadarPlotTickSizeValue,
-#DialogRadarPlot #DialogRadarPlotPointLabelSizeValue {
+#DialogRadarPlot #DialogRadarPlotPointLabelSizeValue,
+#DialogRadarPlot #DialogRadarPlotLegendSizeValue {
 	display: inline-block;
 	min-width: 1.5em;
 	flex: 0 0 auto;
@@ -785,7 +1033,7 @@
 	align-items: center;
 	gap: 6px;
 	margin: 0 0 6px 0;
-	font-size: 12px;
+	font-size: inherit;
 	line-height: 1.2;
 }
 
@@ -994,7 +1242,8 @@
 }
 
 #DialogCircularChart #DialogCircularChartTitleSize,
-#DialogCircularChart #DialogCircularChartCenterTextSize {
+#DialogCircularChart #DialogCircularChartCenterTextSize,
+#DialogCircularChart #DialogCircularChartLegendSize {
 	width: 120px;
 	margin: 0 6px;
 	vertical-align: middle;
@@ -1002,7 +1251,8 @@
 
 #DialogCircularChart #DialogCircularChartTitleSizeValue,
 #DialogCircularChart #DialogCircularChartCenterTextSizeValue,
-#DialogCircularChart #DialogCircularChartLabelSizeValue {
+#DialogCircularChart #DialogCircularChartLabelSizeValue,
+#DialogCircularChart #DialogCircularChartLegendSizeValue {
 	display: inline-block;
 	min-width: 1.5em;
 	flex: 0 0 auto;
@@ -1038,7 +1288,7 @@
 	align-items: center;
 	gap: 6px;
 	margin: 0 0 6px 0;
-	font-size: 12px;
+	font-size: inherit;
 	line-height: 1.2;
 }
 

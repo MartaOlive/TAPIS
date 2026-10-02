@@ -54,7 +54,6 @@
 	<script type="text/javascript" src="groupByDlg.js"></script>
 	<script type="text/javascript" src="STAfilter.js"></script>
 	<script type="text/javascript" src="diagrams.js"></script>
-	<script type="text/javascript" src="bar_plot.js"></script>
 	<script type="text/javascript" src="aws.js"></script>
 	<script type="text/javascript" src="tapis_lang.js"></script>
 	<script type="text/javascript" src="tapis.js"></script>
@@ -1880,12 +1879,79 @@
 	</dialog>
 
 	<dialog id="DialogScatterPlot">
-		<table border="0"><tr><td>
+		<table border="0"><tr>
+		<td class="DialogScatterPlotForm">
 			<span id="DialogScatterPlotTitle"></span>
 			<form>
+			<fieldset>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Dades:&quot;, &quot;spa&quot;: &quot;Datos:&quot;, &quot;eng&quot;: &quot;Data:&quot;}">Data:</span></legend>
 				<div id="DialogScatterPlotDiv"></div>
-			<br>
-			<br>
+			</fieldset>
+			<fieldset>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
+				<label><input type="checkbox" id="DialogScatterPlotBeginZero"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
+				<label><input type="checkbox" id="DialogScatterPlotAxisXSort" value="sort" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Ordena els valors per X&quot;, &quot;spa&quot;: &quot;Ordenar los valores por X&quot;, &quot;eng&quot;: &quot;Sort values by X&quot;}">Sort values by X</span></label>
+				<fieldset class="DialogScatterPlotOptionsGroup">
+					<legend><span data-lang="{&quot;cat&quot;: &quot;Títol&quot;, &quot;spa&quot;: &quot;Título&quot;, &quot;eng&quot;: &quot;Title&quot;}">Title</span></legend>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Títol:&quot;, &quot;spa&quot;: &quot;Título:&quot;, &quot;eng&quot;: &quot;Title:&quot;}">Title:</span>
+						<input type="text" id="DialogScatterPlotAxisTitle" onchange="onScatterPlotStyleChange(true)" onblur="onScatterPlotStyleChange(true)"></input>
+					</label>
+					<label class="DialogScatterPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida del títol:&quot;, &quot;spa&quot;: &quot;Tamaño del título:&quot;, &quot;eng&quot;: &quot;Title size:&quot;}">Title size:</span>
+						<input type="range" id="DialogScatterPlotTitleSize" min="10" max="36" value="16" oninput="onScatterPlotStyleChange(true)" onchange="onScatterPlotStyleChange(true)">
+						<span id="DialogScatterPlotTitleSizeValue">16</span>
+					</label>
+				</fieldset>
+				<fieldset class="DialogScatterPlotOptionsGroup">
+					<legend><span data-lang="{&quot;cat&quot;: &quot;Eixos&quot;, &quot;spa&quot;: &quot;Ejes&quot;, &quot;eng&quot;: &quot;Axes&quot;}">Axes</span></legend>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta eix X:&quot;, &quot;spa&quot;: &quot;Etiqueta eje X:&quot;, &quot;eng&quot;: &quot;X axis label:&quot;}">X axis label:</span>
+						<input type="text" id="DialogScatterPlotAxisXLabel"></input>
+					</label>
+					<br>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta Y esquerra:&quot;, &quot;spa&quot;: &quot;Etiqueta Y izquierda:&quot;, &quot;eng&quot;: &quot;Left Y label:&quot;}">Left Y label:</span>
+						<input type="text" id="DialogScatterPlotAxisYLabelLeft"></input>
+					</label>
+					<br>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta Y dreta:&quot;, &quot;spa&quot;: &quot;Etiqueta Y derecha:&quot;, &quot;eng&quot;: &quot;Right Y label:&quot;}">Right Y label:</span>
+						<input type="text" id="DialogScatterPlotAxisYLabelRight"></input>
+					</label>
+					<label class="DialogScatterPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>
+						<input type="range" id="DialogScatterPlotLabelSize" min="8" max="28" value="12" oninput="onScatterPlotStyleChange(true)" onchange="onScatterPlotStyleChange(true)">
+						<span id="DialogScatterPlotLabelSizeValue">12</span>
+					</label>
+					<label class="DialogScatterPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de les etiquetes dels eixos:&quot;, &quot;spa&quot;: &quot;Tamaño de las etiquetas de los ejes:&quot;, &quot;eng&quot;: &quot;Axis label size:&quot;}">Axis label size:</span>
+						<input type="range" id="DialogScatterPlotAxisLabelSize" min="8" max="28" value="12" oninput="onScatterPlotStyleChange(true)" onchange="onScatterPlotStyleChange(true)">
+						<span id="DialogScatterPlotAxisLabelSizeValue">12</span>
+					</label>
+					<label id="DialogScatterPlotIntervalRow"><span data-lang="{&quot;cat&quot;: &quot;Interval de temps:&quot;, &quot;spa&quot;: &quot;Intervalo de tiempo:&quot;, &quot;eng&quot;: &quot;Time interval:&quot;}">Time interval:</span>
+						<select id="DialogScatterPlotAxisXSelectInterval"></select>
+					</label>
+				</fieldset>
+				<fieldset class="DialogScatterPlotOptionsGroup">
+					<legend><span data-lang="{&quot;cat&quot;: &quot;Llegenda&quot;, &quot;spa&quot;: &quot;Leyenda&quot;, &quot;eng&quot;: &quot;Legend&quot;}">Legend</span></legend>
+					<label class="DialogScatterPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de la llegenda:&quot;, &quot;spa&quot;: &quot;Tamaño de la leyenda:&quot;, &quot;eng&quot;: &quot;Legend size:&quot;}">Legend size:</span>
+						<input type="range" id="DialogScatterPlotLegendSize" min="8" max="28" value="12" oninput="onScatterPlotStyleChange(true)" onchange="onScatterPlotStyleChange(true)">
+						<span id="DialogScatterPlotLegendSizeValue">12</span>
+					</label>
+				</fieldset>
+				<fieldset class="DialogScatterPlotOptionsGroup">
+					<legend><span data-lang="{&quot;cat&quot;: &quot;Línies i punts&quot;, &quot;spa&quot;: &quot;Líneas y puntos&quot;, &quot;eng&quot;: &quot;Lines and points&quot;}">Lines and points</span></legend>
+					<label><input type="checkbox" id="DialogScatterPlotSpanGaps"></input> <span data-lang="{&quot;cat&quot;: &quot;Continua pels forats&quot;, &quot;spa&quot;: &quot;Continuar por los huecos&quot;, &quot;eng&quot;: &quot;Span gaps&quot;}">Span gaps</span></label>
+					<label class="DialogScatterPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Interpolació de la línia:&quot;, &quot;spa&quot;: &quot;Interpolación de la línea:&quot;, &quot;eng&quot;: &quot;Line interpolation:&quot;}">Line interpolation:</span>
+						<select id="DialogScatterPlotInterpolation" onchange="onScatterPlotStyleChange(true)">
+							<option value="linear" data-lang="{&quot;cat&quot;: &quot;Recta&quot;, &quot;spa&quot;: &quot;Recta&quot;, &quot;eng&quot;: &quot;Straight&quot;}">Straight</option>
+							<option value="cubic" data-lang="{&quot;cat&quot;: &quot;Cúbica&quot;, &quot;spa&quot;: &quot;Cúbica&quot;, &quot;eng&quot;: &quot;Cubic&quot;}">Cubic</option>
+							<option value="monotone" data-lang="{&quot;cat&quot;: &quot;Monòtona&quot;, &quot;spa&quot;: &quot;Monótona&quot;, &quot;eng&quot;: &quot;Monotone&quot;}">Monotone</option>
+							<option value="before" data-lang="{&quot;cat&quot;: &quot;Esglaonada (abans)&quot;, &quot;spa&quot;: &quot;Escalonada (antes)&quot;, &quot;eng&quot;: &quot;Stepped (before)&quot;}">Stepped (before)</option>
+							<option value="middle" data-lang="{&quot;cat&quot;: &quot;Esglaonada (al mig)&quot;, &quot;spa&quot;: &quot;Escalonada (en medio)&quot;, &quot;eng&quot;: &quot;Stepped (middle)&quot;}">Stepped (middle)</option>
+							<option value="after" data-lang="{&quot;cat&quot;: &quot;Esglaonada (després)&quot;, &quot;spa&quot;: &quot;Escalonada (después)&quot;, &quot;eng&quot;: &quot;Stepped (after)&quot;}">Stepped (after)</option>
+						</select>
+					</label>
+					<label class="DialogScatterPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida del punt:&quot;, &quot;spa&quot;: &quot;Tamaño del punto:&quot;, &quot;eng&quot;: &quot;Point size:&quot;}">Point size:</span>
+						<input type="range" id="DialogScatterPlotPointSize" min="1" max="16" value="2" oninput="onScatterPlotStyleChange(true)" onchange="onScatterPlotStyleChange(true)">
+						<span id="DialogScatterPlotPointSizeValue">2</span>
+					</label>
+				</fieldset>
+			</fieldset>
 			<div class="center">
 				<button value="draw" onClick="UpdateScatterPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
 				<button value="ok" onClick="CloseDialogScatterPlot(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
@@ -1893,37 +1959,20 @@
 			<input type="hidden" id="DialogScatterPlotNodeId"></input>
 			</form>
 		</td>
-		<td style="vertical-align: top;"><div style="width: 100%; overflow-x: auto;"><canvas id="DialogScatterPlotVisualization" style="width:1000px; height:500px;max-height:500px;min-width:700px"></canvas></div> <br>
-		<label style="color:red; size: 10px; font-style:italic ;" id="DialogScatterPlotVisualizationTextNotSorted"> <span data-lang="{&quot;cat&quot;: &quot;Si el vostre gràfic presenta un comportament estrany, proveu d'ordenar les dades per la columna utilitzada a l'eix X.&quot;, &quot;spa&quot;: &quot;Si su gráfico presenta un comportamiento extraño, intente ordenar los datos por la columna utilizada en el eje X.&quot;, &quot;eng&quot;: &quot;If your graph presents a strange behavior, try sorting the data by the column used on the X axis.&quot;}">If your graph presents a strange behavior, try sorting the data by the column used on the X axis.</span> </label>
+		<td style="vertical-align: top;">
+			<div class="DialogScatterPlotVizRow">
+				<div id="DialogScatterPlotVisualizationWrap">
+					<canvas id="DialogScatterPlotVisualization"></canvas>
+				</div>
+				<div id="DialogScatterPlotLegend" class="DialogScatterPlotLegend" aria-label="Legend"></div>
+			</div>
+			<p id="DialogScatterPlotVisualizationTextNotSorted" class="DialogScatterPlotSortHint"><span data-lang="{&quot;cat&quot;: &quot;Si el gràfic es veu estrany, ordena les dades per la columna de l'eix X.&quot;, &quot;spa&quot;: &quot;Si el gráfico se ve extraño, ordena los datos por la columna del eje X.&quot;, &quot;eng&quot;: &quot;If the chart looks odd, sort the data by the X axis column.&quot;}">If the chart looks odd, sort the data by the X axis column.</span></p>
+			<div id="DialogScatterPlotColorCard" class="DialogScatterPlotColorCard" style="display:none;"></div>
+			<div class="DialogScatterPlotSavePng">
+				<button type="button" onClick="SaveScatterPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
+			</div>
 		</td>
-		</tr>
-		<tr>
-			<td></td>
-			<td>
-				<fieldset>
-					<legend>
-						<span data-lang="{&quot;cat&quot;: &quot;Configuració del gràfic&quot;, &quot;spa&quot;: &quot;Configuración del gráfico&quot;, &quot;eng&quot;: &quot;Graphic configuration&quot;}">Graphic configuration</span>
-					</legend>
-					<div style="display:flex; justify-content: center; align-items: center;"><label><span data-lang="{&quot;cat&quot;: &quot;Títol del gràfic:&quot;, &quot;spa&quot;: &quot;Título del gráfico:&quot;, &quot;eng&quot;: &quot;Graphic title:&quot;}">Graphic title:</span></label>
-					<input value="" type="text" id="DialogScatterPlotAxisTitle" style="margin-left: 5px;width: 400px;"></div><br>
-					<div>
-						<fieldset style="width: 45%;  float: left;">
-							<legend><span data-lang="{&quot;cat&quot;: &quot;Eix X&quot;, &quot;spa&quot;: &quot;Eje X&quot;, &quot;eng&quot;: &quot;X axis&quot;}">X axis</span></legend>
-							<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta:&quot;, &quot;spa&quot;: &quot;Etiqueta:&quot;, &quot;eng&quot;: &quot;Label:&quot;}">Label:</span><input value="" type="text" id="DialogScatterPlotAxisXLabel"  style="margin-left: 5px;"></label><br>
-							<label><span data-lang="{&quot;cat&quot;: &quot;Interval de marques de temps de les dades:&quot;, &quot;spa&quot;: &quot;Intervalo de marcas de tiempo de los datos:&quot;, &quot;eng&quot;: &quot;Data time ticks interval:&quot;}">Data time ticks interval:</span> <select id="DialogScatterPlotAxisXSelectInterval" style="margin-left: 5px;margin-top: 5px;" >
-								</select></label><br>
-							<label><input type="checkbox" id="DialogScatterPlotAxisXSort" value="sort" checked /> <span data-lang="{&quot;cat&quot;: &quot;Ordena els valors per X&quot;, &quot;spa&quot;: &quot;Ordenar los valores por X&quot;, &quot;eng&quot;: &quot;Sort values by X&quot;}">Sort values by X</span></label>
-						</fieldset>
-						<fieldset style="width: 45%;  float: right;">
-							<legend><span data-lang="{&quot;cat&quot;: &quot;Eix Y&quot;, &quot;spa&quot;: &quot;Eje Y&quot;, &quot;eng&quot;: &quot;Y axis&quot;}">Y axis</span></legend>
-							<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta esquerra:&quot;, &quot;spa&quot;: &quot;Etiqueta izquierda:&quot;, &quot;eng&quot;: &quot;Left label:&quot;}">Left label:</span> <input value="" type="text" id="DialogScatterPlotAxisYLabelLeft"></label><br>
-							<label style="margin-top: 5px;"><span data-lang="{&quot;cat&quot;: &quot;Etiqueta de la dreta:&quot;, &quot;spa&quot;: &quot;Etiqueta de la derecha:&quot;, &quot;eng&quot;: &quot;Right label:&quot;}">Right label:</span> <input value="" type="text" id="DialogScatterPlotAxisYLabelRight" style="margin-top: 5px;"></label>
-						</fieldset>
-					</div>
-				</fieldset>
-			</td>
-		</tr>
-	</table> 
+		</tr></table>
 	</dialog>
 
 	<dialog id="DialogBarPlot">
@@ -1943,23 +1992,7 @@
 				<div id="DialogBarPlotSeriesDiv"></div>
 				<div id="DialogBarPlotGroupByRow" style="display:none;"><label><input type="checkbox" id="DialogBarPlotGroupByCategory"></input> <span data-lang="{&quot;cat&quot;: &quot;Agrupa per categoria&quot;, &quot;spa&quot;: &quot;Agrupar por categoría&quot;, &quot;eng&quot;: &quot;Group by category&quot;}">Group by category</span></label></div>
 			</fieldset>
-			<fieldset>
-				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
-				<label><input type="checkbox" id="DialogBarPlotBeginZero" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
-				<br>
-				<label><span data-lang="{&quot;cat&quot;: &quot;Títol:&quot;, &quot;spa&quot;: &quot;Título:&quot;, &quot;eng&quot;: &quot;Title:&quot;}">Title:</span>
-					<input type="text" id="DialogBarPlotTitleInput" onchange="onBarPlotTitleChange()" onblur="onBarPlotTitleChange()"></input>
-				</label>
-				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida del títol:&quot;, &quot;spa&quot;: &quot;Tamaño del título:&quot;, &quot;eng&quot;: &quot;Title size:&quot;}">Title size:</span>
-					<input type="range" id="DialogBarPlotTitleSize" min="10" max="36" value="16" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
-					<span id="DialogBarPlotTitleSizeValue">16</span>
-				</label>
-				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>
-					<input type="range" id="DialogBarPlotLabelSize" min="8" max="28" value="12" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
-					<span id="DialogBarPlotLabelSizeValue">12</span>
-				</label>
-			</fieldset>
-			<fieldset id="DialogBarPlotErrorPanel">
+						<fieldset id="DialogBarPlotErrorPanel">
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Barres d'error:&quot;, &quot;spa&quot;: &quot;Barras de error:&quot;, &quot;eng&quot;: &quot;Error bars:&quot;}">Error bars:</span></legend>
 				<label class="DialogBarPlotErrorRow"><span data-lang="{&quot;cat&quot;: &quot;Color:&quot;, &quot;spa&quot;: &quot;Color:&quot;, &quot;eng&quot;: &quot;Color:&quot;}">Color:</span>
 					<input type="color" id="DialogBarPlotErrorColor" value="#333333">
@@ -1983,6 +2016,31 @@
 					</label>
 				</div>
 			</fieldset>
+			<fieldset>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
+				<label><input type="checkbox" id="DialogBarPlotBeginZero" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
+				<br>
+				<label><span data-lang="{&quot;cat&quot;: &quot;Títol:&quot;, &quot;spa&quot;: &quot;Título:&quot;, &quot;eng&quot;: &quot;Title:&quot;}">Title:</span>
+					<input type="text" id="DialogBarPlotTitleInput" onchange="onBarPlotTitleChange()" onblur="onBarPlotTitleChange()"></input>
+				</label>
+				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida del títol:&quot;, &quot;spa&quot;: &quot;Tamaño del título:&quot;, &quot;eng&quot;: &quot;Title size:&quot;}">Title size:</span>
+					<input type="range" id="DialogBarPlotTitleSize" min="10" max="36" value="16" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
+					<span id="DialogBarPlotTitleSizeValue">16</span>
+				</label>
+				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>
+					<input type="range" id="DialogBarPlotLabelSize" min="8" max="28" value="12" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
+					<span id="DialogBarPlotLabelSizeValue">12</span>
+				</label>
+				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de les etiquetes dels eixos:&quot;, &quot;spa&quot;: &quot;Tamaño de las etiquetas de los ejes:&quot;, &quot;eng&quot;: &quot;Axis label size:&quot;}">Axis label size:</span>
+					<input type="range" id="DialogBarPlotAxisLabelSize" min="8" max="28" value="12" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
+					<span id="DialogBarPlotAxisLabelSizeValue">12</span>
+				</label>
+				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de la llegenda:&quot;, &quot;spa&quot;: &quot;Tamaño de la leyenda:&quot;, &quot;eng&quot;: &quot;Legend size:&quot;}">Legend size:</span>
+					<input type="range" id="DialogBarPlotLegendSize" min="8" max="28" value="12" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
+					<span id="DialogBarPlotLegendSizeValue">12</span>
+				</label>
+			</fieldset>
+
 			<br>
 			<div class="center">
 				<button value="draw" onClick="DrawBarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
@@ -2079,9 +2137,13 @@
 					<input type="range" id="DialogRadarPlotTickSize" min="8" max="28" value="11" oninput="onRadarPlotStyleChange(true)" onchange="onRadarPlotStyleChange(true)">
 					<span id="DialogRadarPlotTickSizeValue">11</span>
 				</label>
-				<label class="DialogRadarPlotSizeRow" id="DialogRadarPlotPointLabelSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de les etiquetes:&quot;, &quot;spa&quot;: &quot;Tamaño de las etiquetas:&quot;, &quot;eng&quot;: &quot;Label size:&quot;}">Label size:</span>
+				<label class="DialogRadarPlotSizeRow" id="DialogRadarPlotPointLabelSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de les etiquetes dels eixos:&quot;, &quot;spa&quot;: &quot;Tamaño de las etiquetas de los ejes:&quot;, &quot;eng&quot;: &quot;Axis label size:&quot;}">Axis label size:</span>
 					<input type="range" id="DialogRadarPlotPointLabelSize" min="8" max="28" value="12" oninput="onRadarPlotStyleChange(true)" onchange="onRadarPlotStyleChange(true)">
 					<span id="DialogRadarPlotPointLabelSizeValue">12</span>
+				</label>
+				<label class="DialogRadarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de la llegenda:&quot;, &quot;spa&quot;: &quot;Tamaño de la leyenda:&quot;, &quot;eng&quot;: &quot;Legend size:&quot;}">Legend size:</span>
+					<input type="range" id="DialogRadarPlotLegendSize" min="8" max="28" value="12" oninput="onRadarPlotStyleChange(true)" onchange="onRadarPlotStyleChange(true)">
+					<span id="DialogRadarPlotLegendSizeValue">12</span>
 				</label>
 			</fieldset>
 			<br>
@@ -2160,6 +2222,10 @@
 					<span data-lang="{&quot;cat&quot;: &quot;Mida del text:&quot;, &quot;spa&quot;: &quot;Tamaño del texto:&quot;, &quot;eng&quot;: &quot;Text size:&quot;}">Text size:</span>
 					<input type="range" id="DialogCircularChartCenterTextSize" min="10" max="48" value="16" oninput="onCircularCenterTextStyleChange(true)" onchange="onCircularCenterTextStyleChange(true)">
 					<span id="DialogCircularChartCenterTextSizeValue">16</span>
+				</label>
+				<label class="DialogCircularChartSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de la llegenda:&quot;, &quot;spa&quot;: &quot;Tamaño de la leyenda:&quot;, &quot;eng&quot;: &quot;Legend size:&quot;}">Legend size:</span>
+					<input type="range" id="DialogCircularChartLegendSize" min="8" max="28" value="12" oninput="onCircularLegendStyleChange(true)" onchange="onCircularLegendStyleChange(true)">
+					<span id="DialogCircularChartLegendSizeValue">12</span>
 				</label>
 				<div id="DialogCircularChartLabelStyle" class="DialogCircularChartLabelStyle">
 					<label><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>

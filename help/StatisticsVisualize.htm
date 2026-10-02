@@ -125,33 +125,33 @@
                         you will find the configuration panel that must be completed to select the information required
                         to create the chart.</p>
 
-                    <p>Each <strong>series</strong> represents a dataset that will draw either a line on the chart or a
-                        set of related points. Datasets are expected to be organized by <strong>columns</strong>. If
-                        your data is organized by <strong>rows</strong> instead, you can use the <a
-                            href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#PivotTable"
-                            target="_blank">Pivot
-                            Table</a> tool to <strong>restructure the table</strong> into a suitable format.</p>
+                    <p>The <strong>Data</strong> section shows one block per connected parent node. Each node is a
+                        series. Choose the <strong>X-axis</strong> column and tick the <strong>Y-axis (columns)</strong>
+                        you want to plot. Every ticked column becomes a line or a set of points; with several nodes,
+                        all series share the same chart. Datasets are expected to be organized by
+                        <strong>columns</strong>. If your data is organized by <strong>rows</strong> instead, you can
+                        use the <a href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#PivotTable"
+                            target="_blank">Pivot Table</a> tool to <strong>restructure the table</strong> into a
+                        suitable format.</p>
 
-                    <p>The <strong>Data From selector</strong> allows you to choose which of the connected nodes will
-                        provide the data. Next, select the columns that will be used for the <strong>X-axis</strong> and
-                        <strong>Y-axis</strong>. You must also choose which of the two available <strong>Y-axes</strong>
-                        (<strong>Assign to Y Axis</strong>) will be used for the selected data.
+                    <p>Next to each Y column, a <strong>select</strong> assigns that series to the <strong>left</strong>
+                        or <strong>right</strong> Y-axis (left by default). The regression line option still applies to
+                        the whole node. After drawing, each series in the <strong>legend</strong> has its own
+                        <strong>style</strong> selector grouped as <strong>Line</strong> (solid, dashed, or gradient) or
+                        <strong>Point</strong> (circle, triangle, square, cross, star, diamond). A series is either a
+                        line or dots, not both; different series can use different styles on the same chart.
+                        The gradient line uses a fixed spectrum; its color square cannot be changed.
                     </p>
 
-                    <p>Using the <strong>Style</strong> option, you can choose whether the series will be displayed as a
-                        <strong>line chart</strong> or a <strong>scatter plot</strong>. Points and lines can be combined
-                        within the same chart, and each series can use a different style if required.
-                    </p>
-
-                    <p>The <strong>Color</strong> option allows you to choose the color used to display the data.
+                    <p>The <strong>Color</strong> option allows you to choose the color used to display the data
+                        (except for gradient lines).
                         Clicking the color square will open a color palette where you can simply choose the desired
                         color.
                     </p>
 
-                    <p>You can also assign a <strong>custom name</strong> to the series so that it appears in the chart
-                        <strong>legend</strong>. If no name is provided, the application will use the name of the node
-                        and the selected
-                        column.
+                    <p>You can also assign a <strong>custom name</strong> to the node so that it appears in the chart
+                        <strong>legend</strong>. If no name is provided, the application will use the name of the node.
+                        When several Y columns are ticked, each series is labelled as <strong>legend / column</strong>.
                     </p>
 
                     <p>By enabling the <strong>Show Regression Line</strong> checkbox, a <strong>regression
@@ -160,9 +160,15 @@
                     <p>This is the color picker that expands when you click the color box.</p>
                     <img src="scatterPlot_image5.png" alt="icon" class="toolPage_image">
                     <p><strong>Graphic configuration: </strong>
-                        This section is located in the <strong>lower part of the dialog</strong>. If more series are
-                        added, it will move
-                        further down.
+                        This section is located in the <strong>lower part of the dialog</strong>, below the data blocks
+                        of each connected node.
+                    </p>
+
+                    <p>
+                        <strong>Options</strong> starts with <strong>Begin at zero</strong> and <strong>Sort values by X</strong>,
+                        then groups the rest into <strong>Title</strong>, <strong>Axes</strong> (labels, number size,
+                        axis label size, time interval), <strong>Legend</strong>, and <strong>Lines and points</strong>
+                        (span gaps, line interpolation, point size).
                     </p>
 
                     <p>
@@ -170,6 +176,13 @@
                         You can also name the axes (<strong>labels</strong>) and, in the case of the
                         <strong>X-axis</strong>, choose the <i>time interval</i> used to generate the tick marks, as
                         well as the option to automatically sort the dates by date (Sort values by X).
+                        <strong>Begin at zero</strong> forces both Y-axes to include 0.
+                        <strong>Span gaps</strong> keeps drawing line series across missing Y values instead of breaking the line.
+                        <strong>Line interpolation</strong> chooses how line series connect the points:
+                        straight (default), cubic, monotone, or stepped (before, middle, or after the point).
+                        <strong>Point size</strong> applies to series drawn as dots (chosen per series in the legend).
+                        <strong>Axis label size</strong> changes the font of the X and Y axis titles.
+                        <strong>Legend size</strong> changes the font of the series names beside the chart.
                     </p>
 
                     <p>
@@ -181,11 +194,12 @@
                     </p>
                     <img src="scatterPlot_image3.png" alt="icon" class="toolPage_image">
 
-                    <p>This is an example of how to fill in a <strong>Serie</strong>. After filling it in, you have to
-                        click <strong>Draw button</strong> to display it in the graph.</p>
+                    <p>This is an example of how to fill in a <strong>node series</strong>. After choosing the X column
+                        and ticking the Y columns, click <strong>Draw</strong> to display the graph.</p>
                     <img src="scatterPlot_image4.png" alt="icon" class="toolPage_image">
-                    <p>It is possible to add series to your graph by clicking <strong>Add new series"></strong> above
-                        the series section. In this example, we will draw <i>three different series</i>.</p>
+                    <p>Connect more than one parent node to add series from different tables. Tick several Y columns
+                        on the same node to draw more than one series from that table. In this example, we will draw
+                        <i>three different series</i>.</p>
                     <div class="image-wrapper" onclick="zoomToImage(this)"><img src="scatterPlot_image6.png" alt="icon"
                             class="toolPage_image zoomable"></div>
                     <p>After clicking <strong>Draw</strong>, the graph will be displayed as shown below. You can hide or
@@ -253,7 +267,9 @@
                     </p>
                     <p>
                         For vertical and horizontal charts you can add <strong>error bars</strong> (SD, SE, confidence interval, or custom ±).
-                        The legend beside the chart supports show/hide and color changes; use <strong>Save as PNG</strong> to export chart + legend.
+                        The legend beside the chart supports show/hide and color changes; <strong>Legend size</strong>
+                        changes the font of those names. <strong>Axis label size</strong> changes the font of the
+                        category and value axis titles. Use <strong>Save as PNG</strong> to export chart + legend.
                     </p>
                     <img src="BarPLot_image3.png" alt="icon" class="toolPage_image">
                     <p>
@@ -304,6 +320,7 @@
                     <p>
                         The HTML legend beside the chart has an <strong>eye</strong> button to show/hide
                         a slice or ring, and a <strong>color square</strong> that opens a palette to change its color.
+                        <strong>Legend size</strong> changes the font of those names.
                     </p>
                     <p>
                         For <strong>doughnut</strong> charts you can enter optional <strong>center text</strong>
@@ -365,7 +382,9 @@
                         <strong>Normalize values (0-100)</strong> scales each axis independently so columns with
                         different units or ranges can be compared on the same chart. <strong>Fill area</strong> paints
                         the interior of each polygon. <strong>Begin at zero</strong> forces the radial scale to start
-                        at zero. <strong>Graphic title</strong> is optional.
+                        at zero. <strong>Axis label size</strong> changes the font of the spoke names around the radar.
+                        <strong>Legend size</strong> changes the font of the series names beside the chart.
+                        <strong>Graphic title</strong> is optional.
                     </p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <p> <i>No one yet</i></p>

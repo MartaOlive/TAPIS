@@ -31,11 +31,11 @@
 	The TAPIS can be updated from https://github.com/grumets/tapis.
 
 	Aquest codi JavaScript ha estat idea de Joan MasÃ³ Pau (joan maso at uab cat) 
-	dins del grup del MiraMon. MiraMon Ã©s un projecte del 
+	dins del grup del MiraMon. MiraMon és un projecte del 
 	CREAF que elabora programari de Sistema d'InformaciÃ³ GeogrÃ fica 
 	i de TeledetecciÃ³ per a la visualitzaciÃ³, consulta, ediciÃ³ i anÃ lisi 
 	de mapes rÃ sters i vectorials. Aquest progamari programari inclou
-	aplicacions d'escriptori i tambÃ© servidors i clients per Internet.
+	aplicacions d'escriptori i també servidors i clients per Internet.
 	No tots aquests productes sÃ³n gratuÃ¯ts o de codi obert. 
     
 	En particular, el TAPIS es distribueix sota els termes de la llicÃ¨ncia MIT.
@@ -45,6 +45,543 @@
 
 "use strict"
 var ScatterPlotChart = null;
+var ScatterPlotLastLegend = null;
+
+function ensureScatterPlotStyleState(store) {
+	if (!store)
+		return;
+	if (!store.seriesColors)
+		store.seriesColors = {};
+	if (!store.hiddenSeries)
+		store.hiddenSeries = [];
+	if (typeof store.titleFontSize !== "number")
+		store.titleFontSize = 16;
+	if (typeof store.labelFontSize !== "number")
+		store.labelFontSize = 12;
+	if (typeof store.legendFontSize !== "number")
+		store.legendFontSize = 12;
+	if (typeof store.axisLabelFontSize !== "number")
+		store.axisLabelFontSize = 12;
+	if (!store.lineInterpolation)
+		store.lineInterpolation = "linear";
+	if (!store.seriesStyles)
+		store.seriesStyles = {};
+	if (typeof store.spanGaps !== "boolean")
+		store.spanGaps = false;
+	store.pointRadius = clampScatterPointRadius(store.pointRadius);
+}
+
+function syncScatterPlotStyleControls(store) {
+	var te = document.getElementById("DialogScatterPlotTitleSize");
+	var tv = document.getElementById("DialogScatterPlotTitleSizeValue");
+	var le = document.getElementById("DialogScatterPlotLabelSize");
+	var lv = document.getElementById("DialogScatterPlotLabelSizeValue");
+	var ge = document.getElementById("DialogScatterPlotLegendSize");
+	var gv = document.getElementById("DialogScatterPlotLegendSizeValue");
+	var ae = document.getElementById("DialogScatterPlotAxisLabelSize");
+	var av = document.getElementById("DialogScatterPlotAxisLabelSizeValue");
+	var ie = document.getElementById("DialogScatterPlotInterpolation");
+	var pr = document.getElementById("DialogScatterPlotPointSize");
+	var prv = document.getElementById("DialogScatterPlotPointSizeValue");
+	if (te) te.value = store.titleFontSize || 16;
+	if (tv) tv.textContent = "" + (store.titleFontSize || 16);
+	if (le) le.value = store.labelFontSize || 12;
+	if (lv) lv.textContent = "" + (store.labelFontSize || 12);
+	if (ge) ge.value = store.legendFontSize || 12;
+	if (gv) gv.textContent = "" + (store.legendFontSize || 12);
+	if (ae) ae.value = store.axisLabelFontSize || 12;
+	if (av) av.textContent = "" + (store.axisLabelFontSize || 12);
+	if (ie) ie.value = normalizeScatterLineInterpolation(store.lineInterpolation);
+	if (pr) pr.value = clampScatterPointRadius(store.pointRadius);
+	if (prv) prv.textContent = "" + clampScatterPointRadius(store.pointRadius);
+}
+
+function onScatterPlotStyleChange(redraw) {
+	var node = getNodeDialog("DialogScatterPlot");
+	var ts = parseInt(document.getElementById("DialogScatterPlotTitleSize").value, 10) || 16;
+	var ls = parseInt(document.getElementById("DialogScatterPlotLabelSize").value, 10) || 12;
+	var gs = clampChartFontSize(document.getElementById("DialogScatterPlotLegendSize") ? document.getElementById("DialogScatterPlotLegendSize").value : 12, 8, 28, 12);
+	var asz = clampChartFontSize(document.getElementById("DialogScatterPlotAxisLabelSize") ? document.getElementById("DialogScatterPlotAxisLabelSize").value : 12, 8, 28, 12);
+	var interp = getScatterLineInterpolation();
+	var pradius = getScatterPointRadius();
+	syncScatterPlotStyleControls({ titleFontSize: ts, labelFontSize: ls, legendFontSize: gs, axisLabelFontSize: asz, lineInterpolation: interp, pointRadius: pradius });
+	if (!node || !node.STAattributesToSelect)
+		return;
+	node.STAattributesToSelect.titleFontSize = ts;
+	node.STAattributesToSelect.labelFontSize = ls;
+	node.STAattributesToSelect.legendFontSize = gs;
+	node.STAattributesToSelect.axisLabelFontSize = asz;
+	node.STAattributesToSelect.lineInterpolation = interp;
+	node.STAattributesToSelect.pointRadius = pradius;
+	applyChartLegendFontSize("DialogScatterPlotLegend", gs);
+	node.STAattributesToSelect.title = document.getElementById("DialogScatterPlotAxisTitle").value;
+	networkNodes.update(node);
+	if (redraw && node.STAattributesToSelect.drawn)
+		UpdateScatterPlot();
+}
+
+function scatterPlotEscapeAttr(s) {
+	return ("" + s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+function scatterPlotEscapeJs(s) {
+	return ("" + s).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+function normalizeScatterLineInterpolation(mode) {
+	if (mode == "cubic" || mode == "monotone" || mode == "before" || mode == "middle" || mode == "after")
+		return mode;
+	return "linear";
+}
+
+function getScatterLineInterpolation() {
+	var el = document.getElementById("DialogScatterPlotInterpolation");
+	return normalizeScatterLineInterpolation(el ? el.value : "linear");
+}
+
+function normalizeScatterPointStyle(style) {
+	if (style == "triangle" || style == "rect" || style == "cross" || style == "star" || style == "rectRot")
+		return style;
+	return "circle";
+}
+
+function normalizeScatterSeriesStyle(style) {
+	if (style == "lineDash" || style == "lineGradient" || style == "circle" || style == "triangle" || style == "rect" || style == "cross" || style == "star" || style == "rectRot")
+		return style;
+	return "line";
+}
+
+function isScatterSeriesLineStyle(style) {
+	style = normalizeScatterSeriesStyle(style);
+	return style == "line" || style == "lineDash" || style == "lineGradient";
+}
+
+var ScatterPlotLineGradientStops = [
+	{ offset: 0, color: "#1f77b4" },
+	{ offset: 0.2, color: "#17becf" },
+	{ offset: 0.4, color: "#2ca02c" },
+	{ offset: 0.6, color: "#bcbd22" },
+	{ offset: 0.8, color: "#ff7f0e" },
+	{ offset: 1, color: "#d62728" }
+];
+
+function scatterPlotLineGradientCss() {
+	var parts = [], i;
+	for (i = 0; i < ScatterPlotLineGradientStops.length; i++)
+		parts.push(ScatterPlotLineGradientStops[i].color + " " + Math.round(ScatterPlotLineGradientStops[i].offset * 100) + "%");
+	return "linear-gradient(90deg, " + parts.join(", ") + ")";
+}
+
+function fillScatterPlotLineGradient(ctx, x0, y0, x1, y1) {
+	var g = ctx.createLinearGradient(x0, y0, x1, y1), i;
+	for (i = 0; i < ScatterPlotLineGradientStops.length; i++)
+		g.addColorStop(ScatterPlotLineGradientStops[i].offset, ScatterPlotLineGradientStops[i].color);
+	return g;
+}
+
+function scatterPlotLineGradientBorderColor(context) {
+	var chart = context && context.chart, area = chart && chart.chartArea, ctx = chart && chart.ctx;
+	if (!area || !ctx || area.right <= area.left)
+		return ScatterPlotLineGradientStops[0].color;
+	return fillScatterPlotLineGradient(ctx, area.left, 0, area.right, 0);
+}
+
+function clampScatterPointRadius(n) {
+	n = parseInt(n, 10);
+	if (isNaN(n) || n < 1)
+		n = 2;
+	if (n > 16)
+		n = 16;
+	return n;
+}
+
+function getScatterPointRadius() {
+	var el = document.getElementById("DialogScatterPlotPointSize");
+	return clampScatterPointRadius(el ? el.value : 2);
+}
+
+function getScatterSeriesStyle(store, seriesKey, groupGraphicType) {
+	var style;
+	if (store && store.seriesStyles && store.seriesStyles[seriesKey])
+		return normalizeScatterSeriesStyle(store.seriesStyles[seriesKey]);
+	if (groupGraphicType == "scatter")
+		return normalizeScatterPointStyle(store && store.pointStyle);
+	return "line";
+}
+
+function scatterPlotSeriesStyleOptionsHtml(selected) {
+	var lineOpts = [
+		{ value: "line", label: DonaCadena({cat: "Continua", spa: "Continua", eng: "Solid"}) },
+		{ value: "lineDash", label: DonaCadena({cat: "Discontinua", spa: "Discontinua", eng: "Dashed"}) },
+		{ value: "lineGradient", label: DonaCadena({cat: "Gradient", spa: "Degradado", eng: "Gradient"}) }
+	];
+	var pointOpts = [
+		{ value: "circle", label: DonaCadena({cat: "Cercle", spa: "Círculo", eng: "Circle"}) },
+		{ value: "triangle", label: DonaCadena({cat: "Triangle", spa: "Triángulo", eng: "Triangle"}) },
+		{ value: "rect", label: DonaCadena({cat: "Quadrat", spa: "Cuadrado", eng: "Square"}) },
+		{ value: "cross", label: DonaCadena({cat: "Creu", spa: "Cruz", eng: "Cross"}) },
+		{ value: "star", label: DonaCadena({cat: "Estrella", spa: "Estrella", eng: "Star"}) },
+		{ value: "rectRot", label: DonaCadena({cat: "Rombe", spa: "Rombo", eng: "Diamond"}) }
+	];
+	var i, cdns = "";
+	selected = normalizeScatterSeriesStyle(selected);
+	cdns += '<optgroup label="' + scatterPlotEscapeAttr(DonaCadena({cat: "Línia", spa: "Línea", eng: "Line"})) + '">';
+	for (i = 0; i < lineOpts.length; i++) {
+		cdns += '<option value="' + lineOpts[i].value + '"' + (lineOpts[i].value == selected ? " selected" : "") + ">" +
+			scatterPlotEscapeAttr(lineOpts[i].label) + "</option>";
+	}
+	cdns += "</optgroup>";
+	cdns += '<optgroup label="' + scatterPlotEscapeAttr(DonaCadena({cat: "Punt", spa: "Punto", eng: "Point"})) + '">';
+	for (i = 0; i < pointOpts.length; i++) {
+		cdns += '<option value="' + pointOpts[i].value + '"' + (pointOpts[i].value == selected ? " selected" : "") + ">" +
+			scatterPlotEscapeAttr(pointOpts[i].label) + "</option>";
+	}
+	cdns += "</optgroup>";
+	return cdns;
+}
+
+function applyScatterLineInterpolation(dataset, mode) {
+	mode = normalizeScatterLineInterpolation(mode);
+	dataset.tension = 0;
+	dataset.stepped = false;
+	dataset.cubicInterpolationMode = "default";
+	if (mode == "cubic") {
+		dataset.tension = 0.4;
+	} else if (mode == "monotone") {
+		dataset.tension = 0.4;
+		dataset.cubicInterpolationMode = "monotone";
+	} else if (mode == "before" || mode == "middle" || mode == "after") {
+		dataset.stepped = mode;
+	}
+}
+
+function clampChartFontSize(n, min, max, fallback) {
+	n = parseInt(n, 10);
+	if (isNaN(n))
+		n = fallback;
+	if (n < min)
+		n = min;
+	if (n > max)
+		n = max;
+	return n;
+}
+
+function chartLegendRowHeight(fontSize) {
+	return Math.max(22, clampChartFontSize(fontSize, 8, 28, 12) + 10);
+}
+
+function wrapChartLegendLabel(ctx, text, maxWidth) {
+	var words, lines = [], line = "", i, test, ch, j, piece;
+	text = "" + (text == null ? "" : text);
+	if (!text)
+		return [""];
+	words = text.split(/\s+/);
+	if (words.length == 1 && ctx.measureText(words[0]).width <= maxWidth)
+		return [words[0]];
+	for (i = 0; i < words.length; i++) {
+		piece = words[i];
+		if (ctx.measureText(piece).width > maxWidth) {
+			if (line) {
+				lines.push(line);
+				line = "";
+			}
+			ch = "";
+			for (j = 0; j < piece.length; j++) {
+				test = ch + piece.charAt(j);
+				if (ch && ctx.measureText(test).width > maxWidth) {
+					lines.push(ch);
+					ch = piece.charAt(j);
+				} else
+					ch = test;
+			}
+			line = ch;
+			continue;
+		}
+		test = line ? (line + " " + piece) : piece;
+		if (line && ctx.measureText(test).width > maxWidth) {
+			lines.push(line);
+			line = piece;
+		} else
+			line = test;
+	}
+	if (line)
+		lines.push(line);
+	return lines.length ? lines : [""];
+}
+
+function applyChartLegendFontSize(containerId, size) {
+	var el = document.getElementById(containerId), items, i;
+	size = clampChartFontSize(size, 8, 28, 12);
+	if (!el)
+		return size;
+	el.style.fontSize = size + "px";
+	items = el.querySelectorAll(".DialogScatterPlotLegendItem, .DialogBarPlotLegendItem, .DialogRadarPlotLegendItem, .DialogCircularChartLegendItem, .DialogScatterPlotLegendLabel, .DialogBarPlotLegendLabel, .DialogRadarPlotLegendLabel, .DialogCircularChartLegendLabel, .DialogCircularChartRingItem, .DialogCircularChartRingsTitle");
+	for (i = 0; i < items.length; i++)
+		items[i].style.fontSize = size + "px";
+	return size;
+}
+
+function hideScatterPlotColorCard() {
+	var card = document.getElementById("DialogScatterPlotColorCard");
+	if (card)
+		card.style.display = "none";
+}
+
+function clearScatterPlotChart() {
+	var canvas, existing, legend;
+	if (ScatterPlotChart) {
+		ScatterPlotChart.destroy();
+		ScatterPlotChart = null;
+	}
+	canvas = document.getElementById("DialogScatterPlotVisualization");
+	if (canvas && typeof Chart !== "undefined" && Chart.getChart) {
+		existing = Chart.getChart(canvas);
+		if (existing)
+			existing.destroy();
+	}
+	legend = document.getElementById("DialogScatterPlotLegend");
+	if (legend)
+		legend.innerHTML = "";
+	ScatterPlotLastLegend = null;
+	hideScatterPlotColorCard();
+}
+
+function showEmptyScatterPlotChart() {
+	showEmptyChartPlaceholder("DialogScatterPlotVisualization", {
+		type: "scatter",
+		data: { datasets: [{ data: [] }] },
+		options: {
+			scales: {
+				x: { type: "linear", min: 0, max: 10, title: { display: true, text: "X" } },
+				y: { type: "linear", min: 0, max: 10, title: { display: true, text: "Y" } }
+			}
+		}
+	});
+}
+
+function buildScatterPlotLegendHtml(node, keys, labels, colors, seriesStyleFallbacks) {
+	var container = document.getElementById("DialogScatterPlotLegend");
+	var store, cdns = "", i, hidden, eyeTitle, hiddenFlags = [], style, isSeries, styles = [], isGradient;
+	if (!container)
+		return;
+	store = node.STAattributesToSelect;
+	ensureScatterPlotStyleState(store);
+	seriesStyleFallbacks = seriesStyleFallbacks || {};
+	container.style.fontSize = (store.legendFontSize || 12) + "px";
+	for (i = 0; i < keys.length; i++) {
+		hidden = store.hiddenSeries.indexOf(keys[i]) != -1;
+		hiddenFlags.push(hidden);
+		eyeTitle = hidden ? DonaCadena({cat: "Mostra", spa: "Mostrar", eng: "Show"}) : DonaCadena({cat: "Amaga", spa: "Ocultar", eng: "Hide"});
+		isSeries = ("" + keys[i]).charAt(0) == "s";
+		style = isSeries ? getScatterSeriesStyle(store, keys[i], seriesStyleFallbacks[keys[i]]) : "line";
+		styles.push(style);
+		isGradient = style == "lineGradient";
+		cdns += '<div class="DialogScatterPlotLegendItem' + (hidden ? " is-hidden" : "") + '">';
+		if (isGradient) {
+			cdns += '<span class="DialogScatterPlotLegendSwatch is-gradient" style="background:' +
+				scatterPlotEscapeAttr(scatterPlotLineGradientCss()) + ';" title="' +
+				scatterPlotEscapeAttr(DonaCadena({cat: "Gradient (color fix)", spa: "Degradado (color fijo)", eng: "Gradient (fixed color)"})) +
+				'"></span>';
+		} else {
+			cdns += '<button type="button" class="DialogScatterPlotLegendSwatch" style="background-color:' + scatterPlotEscapeAttr(colors[i]) +
+				';" onclick="onScatterLegendColorClick(\'' + scatterPlotEscapeJs(keys[i]) + '\',event)"></button>';
+		}
+		cdns += '<button type="button" class="DialogScatterPlotLegendEye" title="' + scatterPlotEscapeAttr(eyeTitle) +
+			'" onclick="onScatterLegendEyeClick(\'' + scatterPlotEscapeJs(keys[i]) + '\')">' + (hidden ? "&#10005;" : "&#128065;") + "</button>";
+		if (isSeries) {
+			cdns += '<select class="DialogScatterPlotLegendStyle" title="' +
+				scatterPlotEscapeAttr(DonaCadena({cat: "Estil", spa: "Estilo", eng: "Style"})) +
+				'" onchange="onScatterLegendStyleChange(\'' + scatterPlotEscapeJs(keys[i]) + '\', this.value)">' +
+				scatterPlotSeriesStyleOptionsHtml(style) + "</select>";
+		}
+		cdns += '<span class="DialogScatterPlotLegendLabel" style="font-size:' + (store.legendFontSize || 12) + 'px;">' + scatterPlotEscapeAttr(labels[i]) + "</span></div>";
+	}
+	container.innerHTML = cdns;
+	ScatterPlotLastLegend = { keys: keys.slice(), labels: labels.slice(), colors: colors.slice(), hidden: hiddenFlags, styles: styles };
+}
+
+function onScatterLegendStyleChange(key, value) {
+	var node = getNodeDialog("DialogScatterPlot");
+	if (!node || !node.STAattributesToSelect)
+		return;
+	ensureScatterPlotStyleState(node.STAattributesToSelect);
+	node.STAattributesToSelect.seriesStyles[key] = normalizeScatterSeriesStyle(value);
+	networkNodes.update(node);
+	UpdateScatterPlot();
+}
+
+function onScatterLegendEyeClick(key) {
+	var node = getNodeDialog("DialogScatterPlot"), list, idx;
+	if (!node || !node.STAattributesToSelect)
+		return;
+	ensureScatterPlotStyleState(node.STAattributesToSelect);
+	list = node.STAattributesToSelect.hiddenSeries;
+	idx = list.indexOf(key);
+	if (idx == -1)
+		list.push(key);
+	else
+		list.splice(idx, 1);
+	networkNodes.update(node);
+	UpdateScatterPlot();
+}
+
+function onScatterLegendColorClick(key, evt) {
+	var card = document.getElementById("DialogScatterPlotColorCard");
+	var dialog = document.getElementById("DialogScatterPlot");
+	var cdns = "", i, color, rect, dRect;
+	if (!card || !dialog)
+		return;
+	for (i = 0; i < ColorsForBarPlot.length; i++) {
+		color = ColorsForBarPlot[i];
+		cdns += '<button type="button" class="DialogScatterPlotColorCardSwatch" style="background-color:' + color +
+			';" onclick="applyScatterLegendColor(\'' + scatterPlotEscapeJs(key) + '\',\'' + color + '\')"></button>';
+	}
+	cdns += '<input type="color" onchange="applyScatterLegendColor(\'' + scatterPlotEscapeJs(key) + '\', this.value)">';
+	card.innerHTML = cdns;
+	card.style.display = "flex";
+	rect = evt && evt.target ? evt.target.getBoundingClientRect() : null;
+	dRect = dialog.getBoundingClientRect();
+	if (rect) {
+		card.style.left = Math.max(8, rect.left - dRect.left) + "px";
+		card.style.top = Math.max(8, rect.bottom - dRect.top + 4) + "px";
+	}
+}
+
+function applyScatterLegendColor(key, color) {
+	var node = getNodeDialog("DialogScatterPlot");
+	if (!node || !node.STAattributesToSelect)
+		return;
+	ensureScatterPlotStyleState(node.STAattributesToSelect);
+	node.STAattributesToSelect.seriesColors[key] = color;
+	networkNodes.update(node);
+	hideScatterPlotColorCard();
+	UpdateScatterPlot();
+}
+
+function collectScatterPlotParentInfo(parentNodes) {
+	var info = {}, i, attributesArray, numericArray, allAttributes, allAttributesKeys, c, t;
+	for (i = 0; i < (parentNodes || []).length; i++) {
+		if (!parentNodes[i] || !parentNodes[i].STAdata)
+			continue;
+		attributesArray = [];
+		numericArray = [];
+		allAttributes = parentNodes[i].STAdataAttributes ? parentNodes[i].STAdataAttributes : getDataAttributes(parentNodes[i].STAdata);
+		allAttributesKeys = Object.keys(allAttributes);
+		for (c = 0; c < allAttributesKeys.length; c++) {
+			t = allAttributes[allAttributesKeys[c]].type;
+			if (t == "number" || t == "isodatetime" || t == "integer")
+				attributesArray.push(allAttributesKeys[c]);
+			if (t == "number" || t == "integer")
+				numericArray.push(allAttributesKeys[c]);
+		}
+		info[parentNodes[i].id] = { attr: attributesArray, numericAttr: numericArray, nodeLabel: parentNodes[i].label };
+	}
+	return info;
+}
+
+function scatterPlotDefaultSeriesGroup(parentId, info) {
+	var attr = (info && info.attr) ? info.attr : [];
+	var numeric = (info && info.numericAttr) ? info.numericAttr : [];
+	var x = attr[0] || "";
+	var values = [], vi;
+	for (vi = 0; vi < numeric.length; vi++) {
+		if (numeric[vi] != x)
+			values.push(numeric[vi]);
+	}
+	return {
+		nodeSelected: parentId,
+		X: x,
+		valueColumns: values,
+		columnAxes: {},
+		graphicType: "line",
+		regressionLine: false,
+		legendText: (info && info.nodeLabel) || parentId
+	};
+}
+
+function scatterPlotColumnAxis(group, col) {
+	if (group && group.columnAxes && group.columnAxes[col] == "right")
+		return "right";
+	return "left";
+}
+
+function ensureScatterPlotColumnAxes(g) {
+	if (!g.columnAxes)
+		g.columnAxes = {};
+}
+
+function migrateScatterPlotSeriesGroups(old) {
+	var byNode = {}, i, g, id, cols, c, out = [], ids;
+	if (!old || !old.length)
+		return [];
+	for (i = 0; i < old.length; i++) {
+		g = old[i];
+		if (!g || !g.nodeSelected)
+			continue;
+		id = g.nodeSelected;
+		if (!byNode[id]) {
+			byNode[id] = {
+				nodeSelected: id,
+				X: g.X,
+				valueColumns: [],
+				columnAxes: {},
+				graphicType: g.graphicType || "line",
+				regressionLine: !!g.regressionLine,
+				legendText: g.legendText || ""
+			};
+		}
+		if (g.columnAxes) {
+			for (c in g.columnAxes) {
+				if (Object.prototype.hasOwnProperty.call(g.columnAxes, c) && !byNode[id].columnAxes[c])
+					byNode[id].columnAxes[c] = g.columnAxes[c];
+			}
+		}
+		cols = byNode[id].valueColumns;
+		if (g.valueColumns && g.valueColumns.length) {
+			for (c = 0; c < g.valueColumns.length; c++) {
+				if (g.valueColumns[c] && g.valueColumns[c] != byNode[id].X && cols.indexOf(g.valueColumns[c]) == -1)
+					cols.push(g.valueColumns[c]);
+			}
+		} else if (g.Y && g.Y != byNode[id].X && cols.indexOf(g.Y) == -1)
+			cols.push(g.Y);
+	}
+	ids = Object.keys(byNode);
+	for (i = 0; i < ids.length; i++)
+		out.push(byNode[ids[i]]);
+	return out;
+}
+
+function syncScatterPlotSeriesWithParents(node) {
+	var info, ids, old, groups = [], i, j, g;
+	if (!node.STAattributesToSelect)
+		node.STAattributesToSelect = {};
+	info = node.STAattributesToSelect.parentNodesInformation || {};
+	ids = Object.keys(info);
+	old = migrateScatterPlotSeriesGroups(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot || []);
+	for (i = 0; i < ids.length; i++) {
+		g = null;
+		for (j = 0; j < old.length; j++) {
+			if (old[j] && old[j].nodeSelected == ids[i]) {
+				g = old[j];
+				break;
+			}
+		}
+		if (!g)
+			g = scatterPlotDefaultSeriesGroup(ids[i], info[ids[i]]);
+		else {
+			if (!g.valueColumns || !g.valueColumns.length)
+				g.valueColumns = g.Y && g.Y != g.X ? [g.Y] : [];
+			g.valueColumns = g.valueColumns.filter(function (c) { return c && c != g.X; });
+			ensureScatterPlotColumnAxes(g);
+			if (!g.legendText)
+				g.legendText = (info[ids[i]] && info[ids[i]].nodeLabel) || ids[i];
+			if (!g.graphicType)
+				g.graphicType = "line";
+		}
+		groups.push(g);
+	}
+	node.STAattributesToSelect.dataGroupsSelectedToScatterPlot = groups;
+}
+
 function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.png
 	saveNodeDialog("DialogScatterPlot", node);
 	if ('STAattributesToSelect'in node){
@@ -64,42 +601,19 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 	}
 
 	
-	var noData = true, attributesArray = [], allAttributes, allAttributesKeys, objectWithParentNodesInfo = {};
-
-	for (var i = 0; i < parentNodes.length; i++) {
-		attributesArray = [];
-		if (parentNodes[i].STAdata) {
-			noData = false;
-			allAttributes = parentNodes[i].STAdataAttributes ? parentNodes[i].STAdataAttributes : getDataAttributes(parentNodes[i].STAdata);
-			allAttributesKeys = Object.keys(allAttributes);
-			for (var c = 0; c < allAttributesKeys.length; c++) {
-				if (allAttributes[allAttributesKeys[c]].type == "number" || allAttributes[allAttributesKeys[c]].type == "isodatetime" || allAttributes[allAttributesKeys[c]].type == "integer") {
-					attributesArray.push(allAttributesKeys[c])
-				}
-
-			}
-			objectWithParentNodesInfo[parentNodes[i].id] = { attr: attributesArray, nodeLabel: parentNodes[i].label }
-
-		}
-	}
+	var objectWithParentNodesInfo = collectScatterPlotParentInfo(parentNodes);
+	var noData = !Object.keys(objectWithParentNodesInfo).length;
 	if (!node.STAattributesToSelect){
 		node.STAattributesToSelect = {};
-		node.STAattributesToSelect.parentNodesInformation = objectWithParentNodesInfo;
-		node.STAattributesToSelect.dataGroupsSelectedToScatterPlot =
-		[{ "nodeSelected": parentNodes[0].id, "X": objectWithParentNodesInfo[parentNodes[0].id].attr[0], "Y": objectWithParentNodesInfo[parentNodes[0].id].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "",graphicType: "line"}]
 		node.STAattributesToSelect.sorted= true;
-		networkNodes.update(node);
 	}
+	node.STAattributesToSelect.parentNodesInformation = objectWithParentNodesInfo;
+	syncScatterPlotSeriesWithParents(node);
+	networkNodes.update(node);
 	var options = [["second","Seconds"],["minute","Minutes"],["hour","Hours"],["day","Days"],["week","Weeks"],["month","Month"],["year","Years"]];
-	if (node.STAattributesToSelect.config){
-		if (node.STAattributesToSelect.config.options.scales.x.time){
-			var unitValue = node.STAattributesToSelect.config.options.scales.x.time.unit;
-		} else{
-			var unitValue="minute";
-		}		
-	}else{
-		var unitValue="minute";
-	}	
+	var unitValue="minute";
+	if (node.STAattributesToSelect.config && node.STAattributesToSelect.config.options && node.STAattributesToSelect.config.options.scales && node.STAattributesToSelect.config.options.scales.x && node.STAattributesToSelect.config.options.scales.x.time)
+		unitValue = node.STAattributesToSelect.config.options.scales.x.time.unit || "minute";	
 	var selectInterval = document.getElementById("DialogScatterPlotAxisXSelectInterval");
 	var s ="";
 	for (var i = 0; i < options.length; i++) {
@@ -114,12 +628,12 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 	}
 	selectInterval.innerHTML=s;
 
-	if (node.STAattributesToSelect.config){
-	
-		(Object.keys(node.STAattributesToSelect.config.options.plugins).length!=0)?document.getElementById("DialogScatterPlotAxisTitle").value=node.STAattributesToSelect.config.options.plugins.title.text: document.getElementById("DialogScatterPlotAxisTitle").value="" ;
-		if (node.STAattributesToSelect.config.options.scales.x.title.text)document.getElementById("DialogScatterPlotAxisXLabel").value=node.STAattributesToSelect.config.options.scales.x.title.text;
-		(node.STAattributesToSelect.config.options.scales.yAxisleft)?document.getElementById("DialogScatterPlotAxisYLabelLeft").value=node.STAattributesToSelect.config.options.scales.yAxisleft.title.text:document.getElementById("DialogScatterPlotAxisYLabelLeft").value="";
-		(node.STAattributesToSelect.config.options.scales.yAxisright)?document.getElementById("DialogScatterPlotAxisYLabelRight").value=node.STAattributesToSelect.config.options.scales.yAxisright.title.text:document.getElementById("DialogScatterPlotAxisYLabelRight").value="";
+	if (node.STAattributesToSelect.config && node.STAattributesToSelect.config.options && node.STAattributesToSelect.config.options.scales){
+		var scatterCfg = node.STAattributesToSelect.config.options;
+		document.getElementById("DialogScatterPlotAxisTitle").value = (scatterCfg.plugins && scatterCfg.plugins.title && scatterCfg.plugins.title.text) ? scatterCfg.plugins.title.text : "";
+		document.getElementById("DialogScatterPlotAxisXLabel").value = (scatterCfg.scales.x && scatterCfg.scales.x.title && scatterCfg.scales.x.title.text) ? scatterCfg.scales.x.title.text : "";
+		document.getElementById("DialogScatterPlotAxisYLabelLeft").value = (scatterCfg.scales.yAxisleft && scatterCfg.scales.yAxisleft.title) ? (scatterCfg.scales.yAxisleft.title.text || "") : "";
+		document.getElementById("DialogScatterPlotAxisYLabelRight").value = (scatterCfg.scales.yAxisright && scatterCfg.scales.yAxisright.title) ? (scatterCfg.scales.yAxisright.title.text || "") : "";
 	}else{
 		document.getElementById("DialogScatterPlotAxisTitle").value="";
 		document.getElementById("DialogScatterPlotAxisXLabel").value="";
@@ -130,143 +644,149 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 		
 	if (noData) {
 		document.getElementById("DialogScatterPlotTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
+		document.getElementById("DialogScatterPlotDiv").innerHTML = "";
+		clearScatterPlotChart();
+		showEmptyScatterPlotChart();
 		return;
 	}
 
-	document.getElementById("DialogScatterPlotTitle").innerHTML = DonaCadena({cat: "GrÃ fic de dispersiÃ³", spa: "GrÃ¡fico de dispersiÃ³n", eng: "Scatter Plot"});
+	document.getElementById("DialogScatterPlotTitle").innerHTML = DonaCadena({cat: "Gràfic de dispersió", spa: "Gráfico de dispersión", eng: "Scatter plot"});
+	ensureScatterPlotStyleState(node.STAattributesToSelect);
+	syncScatterPlotStyleControls(node.STAattributesToSelect);
+	document.getElementById("DialogScatterPlotBeginZero").checked = !!node.STAattributesToSelect.beginAtZero;
+	if (document.getElementById("DialogScatterPlotSpanGaps"))
+		document.getElementById("DialogScatterPlotSpanGaps").checked = !!node.STAattributesToSelect.spanGaps;
+	if (document.getElementById("DialogScatterPlotInterpolation"))
+		document.getElementById("DialogScatterPlotInterpolation").value = normalizeScatterLineInterpolation(node.STAattributesToSelect.lineInterpolation);
 	createDialogWithSelectWithGroupsScatterPlot(node);
-	drawScatterPlot(node);
+	clearScatterPlotChart();
+	showEmptyScatterPlotChart();
+	if (node.STAattributesToSelect.drawn)
+		UpdateScatterPlot();
 }
 
 function createDialogWithSelectWithGroupsScatterPlot(node) {
 	var scatterPlotDiv = document.getElementById("DialogScatterPlotDiv");
-	scatterPlotDiv.innerHTML = "";
-	var dialogGroups = node.STAattributesToSelect.dataGroupsSelectedToScatterPlot; //Array
-	var parentNodesInformation = node.STAattributesToSelect.parentNodesInformation;
-	var parentNodesInformationKeys = Object.keys(parentNodesInformation);
-
-	var cdns = `<button onclick="addNewSelectGroupInScatterPlot('${node.id}')">` + DonaCadena({cat: "Afegeix una Sèrie nova", spa: "AÃ±adir una serie nueva", eng: "Add new series"}) + `</button>`
-
-	for (var i = 0; i < dialogGroups.length; i++) { //dialog groups of data
-		cdns += `<fieldset><legend>` + DonaCadenaFmt({cat: "Sèrie {0}", spa: "Serie {0}", eng: "Series {0}"}, (i + 1)) + `</legend><label  style="margin-right: 10px;margin-bottom:20px">` + DonaCadena({cat: "Dades de:", spa: "Datos de:", eng: "Data from:"}) + ` <select style="margin-bottom:10px" id="DialogScatterPlotAxisNodesSelect_${i}" onchange="updateSelectInformationScatterPlot('${i}','nodeSelected','select','DialogScatterPlotAxisNodesSelect_${i}','${node.id}')"></label>`
-
-		for (var u = 0; u < parentNodesInformationKeys.length; u++) {
-			cdns += `<option value="${parentNodesInformationKeys[u]}" ${(dialogGroups[i].nodeSelected == parentNodesInformationKeys[u]) ? "selected=true" : ""} onchange="updateSelectInformationScatterPlot('${i}','nodeSelected','select','DialogScatterPlotAxisNodesSelect_${i}','${node.id}')">${parentNodesInformation[parentNodesInformationKeys[u]].nodeLabel}</option>`
+	var dialogGroups, parentInfo, cdns, i, parentId, info, attr, numeric, c, col, checked, selectedCols, nodeLabel, legend, g, axisSide;
+	if (!scatterPlotDiv)
+		return;
+	dialogGroups = node.STAattributesToSelect.dataGroupsSelectedToScatterPlot || [];
+	parentInfo = node.STAattributesToSelect.parentNodesInformation || {};
+	cdns = "";
+	for (i = 0; i < dialogGroups.length; i++) {
+		g = dialogGroups[i];
+		parentId = g.nodeSelected;
+		info = parentInfo[parentId] || { attr: [], numericAttr: [], nodeLabel: parentId };
+		attr = info.attr || [];
+		numeric = (info.numericAttr || []).slice();
+		nodeLabel = info.nodeLabel || parentId;
+		legend = g.legendText || nodeLabel;
+		g.legendText = legend;
+		if (!g.valueColumns || !g.valueColumns.length)
+			g.valueColumns = g.Y && g.Y != g.X ? [g.Y] : [];
+		ensureScatterPlotColumnAxes(g);
+		selectedCols = g.valueColumns;
+		cdns += '<fieldset><legend>' + scatterPlotEscapeAttr(nodeLabel) + "</legend>";
+		cdns += '<div class="DialogScatterPlotSeriesRow"><label>' + DonaCadena({cat: "Nom a la llegenda:", spa: "Nombre en la leyenda:", eng: "Legend name:"}) +
+			' <input type="text" value="' + scatterPlotEscapeAttr(legend) +
+			'" onchange="updateScatterPlotSeriesField(' + i + ',\'legendText\',this.value,\'' + node.id + '\')"></label></div>';
+		cdns += '<div class="DialogScatterPlotSeriesRow"><label>' + DonaCadena({cat: "Eix X:", spa: "Eje X:", eng: "Axis X:"}) +
+			' <select onchange="updateScatterPlotSeriesField(' + i + ',\'X\',this.value,\'' + node.id + '\')">';
+		for (c = 0; c < attr.length; c++) {
+			col = attr[c];
+			cdns += '<option value="' + scatterPlotEscapeAttr(col) + '"' + (col == g.X ? " selected" : "") + ">" + scatterPlotEscapeAttr(col) + "</option>";
 		}
-		cdns += `</select><br>
-				<label style="margin-right: 10px;margin-bottom:20px">` + DonaCadena({cat: "Eix X:", spa: "Eje X:", eng: "Axis X:"}) + ` <select style="margin-bottom:10px" name="DialogScatterPlotAxisXSelect_${i}" id="DialogScatterPlotAxisXSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','X','select','DialogScatterPlotAxisXSelect_${i}','${node.id}')">`
-
-		for (var e = 0; e < parentNodesInformation[dialogGroups[i].nodeSelected].attr.length; e++) { //Select X
-			cdns += `<option value="${parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]}"`;
-			if (node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].X == parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]) cdns += " selected=true "; //checked option
-			cdns += `>${parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]}</option>`
+		cdns += "</select></label></div>";
+		cdns += '<div class="DialogScatterPlotSeriesRow"><span>' + DonaCadena({cat: "Eix Y (columnes):", spa: "Eje Y (columnas):", eng: "Axis Y (columns):"}) + "</span>";
+		cdns += '<div class="DialogScatterPlotValueColumns">';
+		numeric = numeric.filter(function (name) { return name != g.X; });
+		if (!numeric.length)
+			cdns += "<em>" + DonaCadena({cat: "No s'han trobat columnes numèriques.", spa: "No se han encontrado columnas numéricas.", eng: "No numeric columns found."}) + "</em>";
+		for (c = 0; c < numeric.length; c++) {
+			col = numeric[c];
+			checked = selectedCols.indexOf(col) != -1 ? " checked" : "";
+			axisSide = scatterPlotColumnAxis(g, col);
+			cdns += '<div class="DialogScatterPlotValueRow">';
+			cdns += '<label><input type="checkbox" class="DialogScatterPlotValueCb" data-series="' + i + '" value="' +
+				scatterPlotEscapeAttr(col) + '"' + checked +
+				' onchange="onScatterPlotValueColumnsChange(' + i + ',\'' + node.id + '\')"> ' +
+				scatterPlotEscapeAttr(col) + "</label>";
+			cdns += '<select class="DialogScatterPlotColumnAxis" onchange="onScatterPlotColumnAxisChange(' + i + ',\'' +
+				scatterPlotEscapeJs(col) + '\',this.value,\'' + node.id + '\')">';
+			cdns += '<option value="left"' + (axisSide != "right" ? " selected" : "") + ">" +
+				DonaCadena({cat: "Esquerra", spa: "Izquierda", eng: "Left"}) + "</option>";
+			cdns += '<option value="right"' + (axisSide == "right" ? " selected" : "") + ">" +
+				DonaCadena({cat: "Dreta", spa: "Derecha", eng: "Right"}) + "</option>";
+			cdns += "</select></div>";
 		}
-
-		cdns += `</select></label><br>
-				<label style="margin-right: 10px;margin-bottom:20px">` + DonaCadena({cat: "Eix Y:", spa: "Eje Y:", eng: "Axis Y:"}) + ` <select style="margin-bottom:10px" name="DialogScatterPlotAxisYSelect_${i}" id="DialogScatterPlotAxisYSelect_${i}" style="" onchange="updateSelectInformationScatterPlot('${i}','Y','select','DialogScatterPlotAxisYSelect_${i}','${node.id}')">`
-		for (var e = 0; e < parentNodesInformation[dialogGroups[i].nodeSelected].attr.length; e++) { //Select Y
-			cdns += `<option value="${parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]}"`;
-			if (node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].Y == parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]) cdns += " selected=true "; //checked option
-			cdns += `>${parentNodesInformation[dialogGroups[i].nodeSelected].attr[e]}</option>`
-		}
-
-		cdns += `</label></select><br>
-					<table style="width: 100%;margin-bottom: 10px">
-						<tr>
-							<td>
-								<fieldset><legend>Assign to Y axis</legend>
-								<label><input type='radio' id="DialogScatterPlotAxisYRadioButton_Left_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "left") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Left_${i}','${node.id}')" value="left">
-								Left</label><br>
-								<label><input type='radio' id="DialogScatterPlotAxisYRadioButton_Right_${i}" name="DialogScatterPlotAxisYRadioButton_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].selectedYaxis == "right") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','selectedYaxis','radio','DialogScatterPlotAxisYRadioButton_Right_${i}','${node.id}')" value="right">
-								Right</label>
-								</fieldset>	
-							</td>							
-							<td> 
-								<fieldset><legend>Style</legend>
-								<label><input type="radio" name="DialogCharType_${i}" id="DialogCharTypeLine_${i}"  ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].graphicType == "line") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','graphicType','radio','DialogCharTypeLine_${i}','${node.id}')" value="line">Line</label><br>
-								<label><input type="radio" name="DialogCharType_${i}" id="DialogCharTypeScatter_${i}" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].graphicType == "scatter") ? "checked" : ""} onclick="updateSelectInformationScatterPlot('${i}','graphicType','radio','DialogCharTypeScatter_${i}','${node.id}')" value="scatter">Dots</label>
-								</fieldset>	
-							</td>
-						</tr>
-					</table>
-					<label>Color: <input type="color" id="selectColorScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].color}" style="width:20px; height:22px" onchange="updateSelectInformationScatterPlot('${i}','color','radio','selectColorScatterPlot_${i}','${node.id}')"></label><br>
-					<label>Legend title: <input type="text" id="legendTextScatterPlot_${i}" value="${node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].legendText} " onchange="updateSelectInformationScatterPlot('${i}','legendText','radio','legendTextScatterPlot_${i}','${node.id}')"></label><br>
-					<label><input type="checkbox" id="regressionLineScatterPlot_${i}" value="regressionLine" ${(node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[i].regressionLine) ? "checked" : ""} onchange="updateSelectInformationScatterPlot('${i}','regressionLine','checkbox','regressionLineScatterPlot_${i}','${node.id}')"/> Show regression line</label><br>
-					<button onclick="deleteSelectGroupInScatterPlot('${node.id}', '${i}')"style="background-color:white; border-color:white"><img src="trash.png" alt="Remove" title="Remove"></button>
-					</fieldset>`
+		cdns += "</div></div>";
+		cdns += '<div class="DialogScatterPlotSeriesRow"><label><input type="checkbox"' + (g.regressionLine ? " checked" : "") +
+			' onchange="updateScatterPlotSeriesField(' + i + ',\'regressionLine\',this.checked,\'' + node.id + '\')"> ' +
+			DonaCadena({cat: "Mostra la recta de regressió", spa: "Mostrar la recta de regresión", eng: "Show regression line"}) + "</label></div>";
+		cdns += "</fieldset>";
 	}
 	scatterPlotDiv.innerHTML = cdns;
+}
 
-	if (!node.STAattributesToSelect.config){
-		var config = {
-			type: 'line', // 'bar', 'pie', etc.
-			data: {
-				labels: [], 
-				datasets: [{
-					label: '',
-					data: [], 
-					borderWidth: 2,
-					fill: false
-				}]
-			},
-			options: {
-				responsive: true,
-				scales: {
-					x: {
-						beginAtZero: true
-					},
-					y: {
-						beginAtZero: true
-					}
-				}
-			}
-		}
-		node.STAattributesToSelect.config=config;
-		networkNodes.update(node);
-
+function onScatterPlotValueColumnsChange(idx, nodeId) {
+	var current = networkNodes.get(nodeId), boxes, selected = [], i;
+	if (!current || !current.STAattributesToSelect || !current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[idx])
+		return;
+	boxes = document.querySelectorAll('.DialogScatterPlotValueCb[data-series="' + idx + '"]');
+	for (i = 0; i < boxes.length; i++) {
+		if (boxes[i].checked)
+			selected.push(boxes[i].value);
 	}
-	
+	current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[idx].valueColumns = selected;
+	networkNodes.update(current);
 }
 
-function addNewSelectGroupInScatterPlot(nodeId) { //Add button
-	event.preventDefault();
-	var node = networkNodes.get(nodeId);
-	var dataGroupsSelected = node.STAattributesToSelect;
-	node.STAattributesToSelect.dataGroupsSelectedToScatterPlot.push({ "nodeSelected": Object.keys(dataGroupsSelected.parentNodesInformation)[0], "X": dataGroupsSelected.parentNodesInformation[dataGroupsSelected.dataGroupsSelectedToScatterPlot[0].nodeSelected].attr[0], "Y": dataGroupsSelected.parentNodesInformation[dataGroupsSelected.dataGroupsSelectedToScatterPlot[0].nodeSelected].attr[0], selectedYaxis: "left", color: "#f79646", legendText: "", graphicType:"line" });
-	networkNodes.update(node);
-	createDialogWithSelectWithGroupsScatterPlot(node);
-}
-function deleteSelectGroupInScatterPlot(nodeId, groupToDelete) {
-	event.preventDefault();
-	var node = networkNodes.get(nodeId);
-	node.STAattributesToSelect.dataGroupsSelectedToScatterPlot.splice(parseInt(groupToDelete), 1);
-	networkNodes.update(node);
-	createDialogWithSelectWithGroupsScatterPlot(node);
+function onScatterPlotColumnAxisChange(idx, col, value, nodeId) {
+	var current = networkNodes.get(nodeId), g;
+	if (!current || !current.STAattributesToSelect || !current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[idx])
+		return;
+	g = current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[idx];
+	ensureScatterPlotColumnAxes(g);
+	g.columnAxes[col] = (value == "right") ? "right" : "left";
+	networkNodes.update(current);
 }
 
-function updateSelectInformationScatterPlot(numberDialog, keyToChange, typeOfSelector, elementName, nodeId) {
-	var node = networkNodes.get(nodeId), value;
-	var element = document.getElementById(elementName)
-	if (typeOfSelector == "select")
-		value = element.options[element.selectedIndex].value;
-	else if (typeOfSelector == "checkbox")
-		value = element.checked;
-	else
-		value = element.value;
-
-	node.STAattributesToSelect.dataGroupsSelectedToScatterPlot[numberDialog][keyToChange] = value;
-	networkNodes.update(node);
-	createDialogWithSelectWithGroupsScatterPlot(node);
+function updateScatterPlotSeriesField(idx, key, value, nodeId) {
+	var current = networkNodes.get(nodeId), g, prev, info, numeric, cols, n;
+	if (!current || !current.STAattributesToSelect || !current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[idx])
+		return;
+	g = current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[idx];
+	prev = g[key];
+	if (key == "legendText")
+		value = ("" + value).trim();
+	g[key] = value;
+	if (key == "X" && prev != value) {
+		info = current.STAattributesToSelect.parentNodesInformation || {};
+		numeric = (info[g.nodeSelected] && info[g.nodeSelected].numericAttr) ? info[g.nodeSelected].numericAttr : [];
+		cols = (g.valueColumns || []).slice();
+		n = cols.indexOf(value);
+		if (n != -1)
+			cols.splice(n, 1);
+		if (numeric.indexOf(prev) != -1 && cols.indexOf(prev) == -1)
+			cols.push(prev);
+		g.valueColumns = cols;
+		networkNodes.update(current);
+		createDialogWithSelectWithGroupsScatterPlot(current);
+		return;
+	}
+	networkNodes.update(current);
 }
 
 function drawScatterPlot(node){
-	var chart= Chart.getChart(document.getElementById('DialogScatterPlotVisualization'))
-	if (chart)
+	var canvas = document.getElementById("DialogScatterPlotVisualization");
+	var chart = canvas && Chart.getChart ? Chart.getChart(canvas) : null;
+	if (ScatterPlotChart) {
 		ScatterPlotChart.destroy();
-	ScatterPlotChart = new Chart(document.getElementById('DialogScatterPlotVisualization'), node.STAattributesToSelect.config);
+		ScatterPlotChart = null;
+	} else if (chart)
+		chart.destroy();
+	ScatterPlotChart = new Chart(canvas, node.STAattributesToSelect.config);
 }
-
-/* Bar plot UI/draw lives in bar_plot.js (ShowBarPlotDialog, DrawBarPlot, SaveBarPlot). */
 
 function ShowImageViewerDialog(node, parentNodes) {
 	var data = parentNodes[0].STAdata;
@@ -294,10 +814,29 @@ function UpdateScatterPlot(event) {
 	var node = getNodeDialog("DialogScatterPlot");
 	if (!node)
 		return;
-	var dataGroups = node.STAattributesToSelect.dataGroupsSelectedToScatterPlot; //Options selected
-	var nodeId, node, nodeData, selectedOptions = {}, record, items, minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight, dataRecord;
-	var yAxisTodisplay={left:false, right:false}, axisXType="", currentAttributeType, label, type, pointRadius;
+	var parentNodes = GetParentNodes(node);
+	if (parentNodes && parentNodes.length) {
+		node.STAattributesToSelect.parentNodesInformation = collectScatterPlotParentInfo(parentNodes);
+		syncScatterPlotSeriesWithParents(node);
+	}
+	var dataGroups = node.STAattributesToSelect.dataGroupsSelectedToScatterPlot || [];
+	var nodeId, parentNode, parentAttrs, nodeData, record, items, minx, maxx, minyRight, maxyRight, minyLeft, maxyLeft, leftOrRight, dataRecord, yVal;
+	var yAxisTodisplay={left:false, right:false}, axisXType="", currentAttributeType, label, type, pointRadius, seriesStyle;
 	var data = {datasets:[]};
+	var legendKeys = [], legendLabels = [], legendColors = [], seriesKey, seriesColor, regKey, titleFontSize, labelFontSize, axisLabelFontSize;
+	var e, yc, i, cols, yCol, axisXName, colorIndex = 0, baseLegend, parentInfo, seriesStyleFallbacks = {};
+	ensureScatterPlotStyleState(node.STAattributesToSelect);
+	titleFontSize = parseInt(document.getElementById("DialogScatterPlotTitleSize").value, 10) || node.STAattributesToSelect.titleFontSize || 16;
+	labelFontSize = parseInt(document.getElementById("DialogScatterPlotLabelSize").value, 10) || node.STAattributesToSelect.labelFontSize || 12;
+	node.STAattributesToSelect.titleFontSize = titleFontSize;
+	node.STAattributesToSelect.labelFontSize = labelFontSize;
+	node.STAattributesToSelect.legendFontSize = clampChartFontSize(document.getElementById("DialogScatterPlotLegendSize") ? document.getElementById("DialogScatterPlotLegendSize").value : node.STAattributesToSelect.legendFontSize, 8, 28, 12);
+	axisLabelFontSize = clampChartFontSize(document.getElementById("DialogScatterPlotAxisLabelSize") ? document.getElementById("DialogScatterPlotAxisLabelSize").value : node.STAattributesToSelect.axisLabelFontSize, 8, 28, 12);
+	node.STAattributesToSelect.axisLabelFontSize = axisLabelFontSize;
+	node.STAattributesToSelect.lineInterpolation = getScatterLineInterpolation();
+	node.STAattributesToSelect.pointRadius = getScatterPointRadius();
+	node.STAattributesToSelect.spanGaps = !!(document.getElementById("DialogScatterPlotSpanGaps") && document.getElementById("DialogScatterPlotSpanGaps").checked);
+	parentInfo = node.STAattributesToSelect.parentNodesInformation || {};
 
 	//x axis in sorted?
 	var sortXaxis=(document.getElementById("DialogScatterPlotAxisXSort").checked)?true:false;
@@ -308,99 +847,180 @@ function UpdateScatterPlot(event) {
 		node.STAattributesToSelect.sorted= false;
 		document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display = "inline-block";
 	}
+
+	var seriesList = [];
+	for (e = 0; e < dataGroups.length; e++) {
+		parentNode = networkNodes.get(dataGroups[e].nodeSelected);
+		if (!parentNode || !parentNode.STAdata || !dataGroups[e].X)
+			continue;
+		cols = (dataGroups[e].valueColumns || []).slice();
+		if (!cols.length && dataGroups[e].Y && dataGroups[e].Y != dataGroups[e].X)
+			cols = [dataGroups[e].Y];
+		cols = cols.filter(function (name) { return name && name != dataGroups[e].X; });
+		if (!cols.length)
+			continue;
+		seriesList.push({ group: dataGroups[e], cols: cols, parentNode: parentNode });
+	}
+	if (!seriesList.length) {
+		if (event)
+			alert(DonaCadena({cat: "Seleccioneu eix X i almenys una columna Y.", spa: "Seleccione eje X y al menos una columna Y.", eng: "Select an X axis and at least one Y column."}));
+		return;
+	}
 	
-	for (var e = 0; e < dataGroups.length; e++) {
-		nodeId = dataGroups[e].nodeSelected;
-		selectedOptions.AxisX = dataGroups[e].X;
-		currentAttributeType=networkNodes.get(nodeId).STAdataAttributes[dataGroups[e].X].type;
+	for (e = 0; e < seriesList.length; e++) {
+		nodeId = seriesList[e].group.nodeSelected;
+		axisXName = seriesList[e].group.X;
+		parentNode = seriesList[e].parentNode;
+		parentAttrs = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
+		currentAttributeType = parentAttrs[axisXName] ? parentAttrs[axisXName].type : "number";
 		if (currentAttributeType=="integer")
 			currentAttributeType="number"; //coded as sameAxis
 
 		if (e==0)
 			axisXType=currentAttributeType;
-		else{
-			if (axisXType!=currentAttributeType){ //avoid different types of X axis
-				alert(DonaCadena({cat: "Totes les Sèries de l'eix X han de contenir el mateix tipus de dades", spa: "Todas las series del eje X deben contener el mismo tipo de datos", eng: "All series in X axis has to have same type of data"}));
-				return;
-			}
+		else if (axisXType!=currentAttributeType){ //avoid different types of X axis
+			alert(DonaCadena({cat: "Totes les Sèries de l'eix X han de contenir el mateix tipus de dades", spa: "Todas las series del eje X deben contener el mismo tipo de datos", eng: "All series in X axis has to have same type of data"}));
+			return;
 		}
-		selectedOptions.AxisY = dataGroups[e].Y;
-		nodeData = (sortXaxis) ? SortTableByColumns (deapCopy(networkNodes.get(nodeId).STAdata),[dataGroups[e].X], "asc"): networkNodes.get(nodeId).STAdata;
-		leftOrRight = dataGroups[e].selectedYaxis;
-		items = [];
-		for (var i = 0; i < nodeData.length; i++) {
-			record = nodeData[i];
+		nodeData = (sortXaxis) ? SortTableByColumns (deapCopy(parentNode.STAdata),[axisXName], "asc"): parentNode.STAdata;
+		baseLegend = (seriesList[e].group.legendText || "").trim() ||
+			((parentInfo[nodeId] && parentInfo[nodeId].nodeLabel) || nodeId);
+		cols = seriesList[e].cols;
+		for (yc = 0; yc < cols.length; yc++) {
+			yCol = cols[yc];
+			seriesKey = "s" + nodeId + "_" + yCol;
+			seriesStyleFallbacks[seriesKey] = seriesList[e].group.graphicType || "line";
+			seriesStyle = getScatterSeriesStyle(node.STAattributesToSelect, seriesKey, seriesList[e].group.graphicType);
+			node.STAattributesToSelect.seriesStyles[seriesKey] = seriesStyle;
+			type = isScatterSeriesLineStyle(seriesStyle) ? "line" : "scatter";
+			pointRadius = (type == "line") ? 0 : clampScatterPointRadius(node.STAattributesToSelect.pointRadius);
+			leftOrRight = scatterPlotColumnAxis(seriesList[e].group, yCol);
+			items = [];
+			for (i = 0; i < nodeData.length; i++) {
+				record = nodeData[i];
+				dataRecord = (axisXType=="isodatetime") ? moment( new Date(record[axisXName])).format() : record[axisXName];
+				yVal = record[yCol];
+				if (yVal === "" || yVal === undefined || yVal === null || (typeof yVal == "number" && isNaN(yVal)))
+					yVal = null;
 
-			dataRecord= (axisXType=="isodatetime") ? moment( new Date(record[selectedOptions.AxisX])).format() : dataRecord=record[selectedOptions.AxisX];
-
-			if (i == 0 && e == 0) {
-				minx = maxx = dataRecord;
-				if (leftOrRight == "left") 
-					minyLeft = maxyLeft = record[selectedOptions.AxisY];
-				else 
-					minyRight = maxyRight = record[selectedOptions.AxisY];
-			} else {
-				if (leftOrRight == "left" && minyLeft == undefined) {
-					minyLeft = maxyLeft = record[selectedOptions.AxisY];
-				} else if (leftOrRight == "right" && minyRight == undefined) {
-					minyRight = maxyRight = record[selectedOptions.AxisY];
+				if (dataRecord !== "" && dataRecord !== undefined && dataRecord !== null && !(typeof dataRecord == "number" && isNaN(dataRecord))) {
+					if (minx === undefined || minx > dataRecord)
+						minx = dataRecord;
+					if (maxx === undefined || maxx < dataRecord)
+						maxx = dataRecord;
 				}
-				if (minx > dataRecord)
-					minx = dataRecord;
-				if (maxx < dataRecord)
-					maxx = dataRecord;
-				if (leftOrRight == "left") {
-					if (minyLeft > record[selectedOptions.AxisY])
-						minyLeft = record[selectedOptions.AxisY];
-					if (maxyLeft < record[selectedOptions.AxisY])
-						maxyLeft = record[selectedOptions.AxisY];
-				} else {
-					if (minyRight > record[selectedOptions.AxisY])
-						minyRight = record[selectedOptions.AxisY];
-					if (maxyRight < record[selectedOptions.AxisY])
-						maxyRight = record[selectedOptions.AxisY];
+				if (yVal !== null) {
+					if (leftOrRight == "left") {
+						if (minyLeft === undefined || minyLeft > yVal)
+							minyLeft = yVal;
+						if (maxyLeft === undefined || maxyLeft < yVal)
+							maxyLeft = yVal;
+					} else {
+						if (minyRight === undefined || minyRight > yVal)
+							minyRight = yVal;
+						if (maxyRight === undefined || maxyRight < yVal)
+							maxyRight = yVal;
+					}
 				}
-
+				items.push({ x: dataRecord, y: yVal, group: colorIndex });
 			}
-			
-			items.push({ x: dataRecord, y:record[selectedOptions.AxisY], group: e });
-		}
-		type=dataGroups[e].graphicType;
-		pointRadius=(type=="line") ? 0 : 2;
-		label=(dataGroups[e].legendText=="") ? node.STAattributesToSelect.parentNodesInformation[nodeId].nodeLabel+"_"+dataGroups[e].Y : dataGroups[e].legendText;
-			
-		data.datasets.push(
-			{
-				label: label,
-				backgroundColor: dataGroups[e].color,
-				borderColor: dataGroups[e].color,
-				fill: false,
-				data: items,
-				yAxisID: "yAxis" + dataGroups[e].selectedYaxis,
-				pointRadius: pointRadius,
-				type: type
-			}
-		);
-		yAxisTodisplay[dataGroups[e].selectedYaxis]=true;
+			label = (cols.length == 1) ? baseLegend : (baseLegend + " / " + yCol);
+			seriesColor = node.STAattributesToSelect.seriesColors[seriesKey] || ColorsForBarPlot[colorIndex % ColorsForBarPlot.length];
+			node.STAattributesToSelect.seriesColors[seriesKey] = seriesColor;
+			legendKeys.push(seriesKey);
+			legendLabels.push(label);
+			legendColors.push(seriesColor);
 
-		if (dataGroups[e].regressionLine && nodeData.length>1)
-		{
-			var itemsReg=[];
-			var linReg=linearRegressionFunc(items);
-			itemsReg.push({ x: items[0].x, y: linReg.a*items[0].x+linReg.b, group: e });
-			itemsReg.push({ x: items[nodeData.length-1].x, y: linReg.a*items[nodeData.length-1].x+linReg.b, group: e });
 			data.datasets.push(
 				{
-					label: label+" r="+linReg.r.toFixed(5),
-					backgroundColor: dataGroups[e].color,
-					borderColor: dataGroups[e].color,
+					label: label,
+					backgroundColor: seriesColor,
+					borderColor: (seriesStyle == "lineGradient") ? scatterPlotLineGradientBorderColor : seriesColor,
 					fill: false,
-					data: itemsReg,
-					yAxisID: "yAxis" + dataGroups[e].selectedYaxis,
-					pointRadius: 0,
-					type: "line"
+					data: items,
+					yAxisID: "yAxis" + leftOrRight,
+					pointRadius: pointRadius,
+					pointHoverRadius: pointRadius ? (pointRadius + 2) : 0,
+					pointStyle: (type == "line") ? "circle" : seriesStyle,
+					borderDash: (seriesStyle == "lineDash") ? [6, 4] : [],
+					spanGaps: (type == "line") ? !!node.STAattributesToSelect.spanGaps : false,
+					type: type,
+					hidden: node.STAattributesToSelect.hiddenSeries.indexOf(seriesKey) != -1
 				}
 			);
+			if (type == "line")
+				applyScatterLineInterpolation(data.datasets[data.datasets.length - 1], node.STAattributesToSelect.lineInterpolation);
+			yAxisTodisplay[leftOrRight]=true;
+
+			if (seriesList[e].group.regressionLine && items.length>1)
+			{
+				var itemsReg=[], itemsValid=[], vi, isDateX=(axisXType=="isodatetime"), linReg, xNum, xMinN, xMaxN, iMin=0, iMax=0, yReg0, yReg1;
+				for (vi = 0; vi < items.length; vi++) {
+					if (items[vi].y !== null && items[vi].y !== undefined && !(typeof items[vi].y == "number" && isNaN(items[vi].y)) &&
+						items[vi].x !== null && items[vi].x !== undefined && items[vi].x !== "")
+						itemsValid.push(items[vi]);
+				}
+				if (itemsValid.length > 1) {
+					var regInput = [];
+					for (vi = 0; vi < itemsValid.length; vi++) {
+						xNum = isDateX ? new Date(itemsValid[vi].x).getTime() : Number(itemsValid[vi].x);
+						if (isNaN(xNum) || !isFinite(xNum) || isNaN(Number(itemsValid[vi].y)))
+							continue;
+						regInput.push({ x: isDateX ? itemsValid[vi].x : xNum, y: Number(itemsValid[vi].y), _i: vi, _xn: xNum });
+					}
+					if (regInput.length > 1) {
+					linReg = linearRegressionFunc(regInput, isDateX);
+					xMinN = xMaxN = regInput[0]._xn;
+					iMin = iMax = 0;
+					for (vi = 1; vi < regInput.length; vi++) {
+						xNum = regInput[vi]._xn;
+						if (xNum < xMinN) { xMinN = xNum; iMin = vi; }
+						if (xNum > xMaxN) { xMaxN = xNum; iMax = vi; }
+					}
+					yReg0 = linReg.a * xMinN + linReg.b;
+					yReg1 = linReg.a * xMaxN + linReg.b;
+					if (!isNaN(yReg0) && !isNaN(yReg1) && isFinite(yReg0) && isFinite(yReg1)) {
+						regKey = "r" + nodeId + "_" + yCol;
+						itemsReg.push({ x: itemsValid[regInput[iMin]._i].x, y: yReg0, group: colorIndex });
+						itemsReg.push({ x: itemsValid[regInput[iMax]._i].x, y: yReg1, group: colorIndex });
+						if (leftOrRight == "left") {
+							if (minyLeft === undefined || minyLeft > yReg0) minyLeft = yReg0;
+							if (minyLeft > yReg1) minyLeft = yReg1;
+							if (maxyLeft === undefined || maxyLeft < yReg0) maxyLeft = yReg0;
+							if (maxyLeft < yReg1) maxyLeft = yReg1;
+						} else {
+							if (minyRight === undefined || minyRight > yReg0) minyRight = yReg0;
+							if (minyRight > yReg1) minyRight = yReg1;
+							if (maxyRight === undefined || maxyRight < yReg0) maxyRight = yReg0;
+							if (maxyRight < yReg1) maxyRight = yReg1;
+						}
+						var regColor = node.STAattributesToSelect.seriesColors[regKey] || seriesColor;
+						node.STAattributesToSelect.seriesColors[regKey] = regColor;
+						legendKeys.push(regKey);
+						legendLabels.push(label + " r=" + linReg.r.toFixed(5));
+						legendColors.push(regColor);
+						data.datasets.push(
+							{
+								label: label+" r="+linReg.r.toFixed(5),
+								backgroundColor: regColor,
+								borderColor: regColor,
+								fill: false,
+								data: itemsReg,
+								yAxisID: "yAxis" + leftOrRight,
+								pointRadius: 0,
+								pointHoverRadius: 0,
+								showLine: true,
+								borderWidth: 2,
+								spanGaps: false,
+								type: "line",
+								hidden: node.STAattributesToSelect.hiddenSeries.indexOf(regKey) != -1
+							}
+						);
+					}
+					}
+				}
+			}
+			colorIndex++;
 		}
 	}
 	//Y axis
@@ -415,6 +1035,14 @@ function UpdateScatterPlot(event) {
 	if (finalMinYRight==finalMaxYRight){
 		finalMinYRight++;
 		finalMaxYRight--;
+	}
+	var beginAtZero = !!(document.getElementById("DialogScatterPlotBeginZero") && document.getElementById("DialogScatterPlotBeginZero").checked);
+	node.STAattributesToSelect.beginAtZero = beginAtZero;
+	if (beginAtZero) {
+		if (finalMinYLeft > 0) finalMinYLeft = 0;
+		if (finalMaxYLeft < 0) finalMaxYLeft = 0;
+		if (finalMinYRight > 0) finalMinYRight = 0;
+		if (finalMaxYRight < 0) finalMaxYRight = 0;
 	}
 	
 	//X axis
@@ -433,7 +1061,7 @@ function UpdateScatterPlot(event) {
 	
 	if (axisXType=="isodatetime") {
 		var selectAxisX=document.getElementById("DialogScatterPlotAxisXSelectInterval");
-		var unit=selectAxisX.options[selectAxisX.selectedIndex].value ; //minute, hour, day ...
+		var unit=(selectAxisX && selectAxisX.value) ? selectAxisX.value : "minute"; //second, minute, hour, day ...
 		var date1= new Date(minx).getTime();
 		var date2 =new Date(maxx).getTime();
 		var milisecondsDifference= date2-date1;
@@ -465,7 +1093,7 @@ function UpdateScatterPlot(event) {
 	}
 
 	if (!executable) {
-		alert(DonaCadena({cat: "L'interval de les dades seleccionades Ã©s massa llarg per aplicar-lo al grÃ fic. Filtreu l'interval per fer-lo mÃ©s curt o trieu un interval mÃ©s gran per a l'eix X", spa: "El intervalo de los datos seleccionados es demasiado largo para aplicarlo al grÃ¡fico. Filtre el intervalo para acortarlo o elija un intervalo mayor para el eje X", eng: "The interval of the data selected is too long to apply to the graphic. Filter interval to make it shorter or choose a bigger interval to X axis"}));
+		alert(DonaCadena({cat: "L'interval de les dades seleccionades és massa llarg per aplicar-lo al grÃ fic. Filtreu l'interval per fer-lo més curt o trieu un interval més gran per a l'eix X", spa: "El intervalo de los datos seleccionados es demasiado largo para aplicarlo al grÃ¡fico. Filtre el intervalo para acortarlo o elija un intervalo mayor para el eje X", eng: "The interval of the data selected is too long to apply to the graphic. Filter interval to make it shorter or choose a bigger interval to X axis"}));
 		return;
 	}
 
@@ -491,7 +1119,8 @@ function UpdateScatterPlot(event) {
 			},
 			title: {
 				text: document.getElementById("DialogScatterPlotAxisXLabel").value,
-				display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
+				display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false,
+				font: { size: axisLabelFontSize }
 			},
 			min: minx,
 			max:maxx
@@ -501,7 +1130,8 @@ function UpdateScatterPlot(event) {
 		axisX={type: "linear",
 				title: {
 				text: document.getElementById("DialogScatterPlotAxisXLabel").value,
-				display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false				
+				display: (document.getElementById("DialogScatterPlotAxisXLabel").value != "") ? true : false,
+				font: { size: axisLabelFontSize }
 			},
 			min: minx,
 			max:maxx
@@ -513,10 +1143,15 @@ function UpdateScatterPlot(event) {
 		//type: type, //general diagram. If it have different types it is specified in the datasets
 		data: data,
 		options: {
+			maintainAspectRatio: false,
+			resizeDelay: 100,
 			plugins: {
+				legend: { display: false },
+				labels: { render: function () { return ""; } },
 				title: {
 					text: document.getElementById("DialogScatterPlotAxisTitle").value,
-					display: (document.getElementById("DialogScatterPlotAxisTitle").value != "") ? true : false
+					display: (document.getElementById("DialogScatterPlotAxisTitle").value != "") ? true : false,
+					font: { size: titleFontSize }
 					},
 				zoom: {
 					pan: {
@@ -549,7 +1184,8 @@ function UpdateScatterPlot(event) {
 			position: 'right',
 			title: {
 				display: (axisYLabelRight!="")?true:false,
-				text: axisYLabelRight
+				text: axisYLabelRight,
+				font: { size: axisLabelFontSize }
 			},
 			grid: { //To display lines from left axis only
 				drawOnChartArea: false
@@ -564,7 +1200,8 @@ function UpdateScatterPlot(event) {
 			position: 'left',
 			title: {
 				display: (axisYLabelLeft!="")?true:false,
-				text: axisYLabelLeft
+				text: axisYLabelLeft,
+				font: { size: axisLabelFontSize }
 			},
 			max:finalMaxYLeft,
 			min:finalMinYLeft,
@@ -573,13 +1210,139 @@ function UpdateScatterPlot(event) {
 			//   }
 		}
 	}
+	axisX.ticks = { font: { size: labelFontSize } };
+	if (config.options.scales.yAxisleft)
+		config.options.scales.yAxisleft.ticks = { font: { size: labelFontSize } };
+	if (config.options.scales.yAxisright)
+		config.options.scales.yAxisright.ticks = { font: { size: labelFontSize } };
 	node.STAattributesToSelect.config=config;
+	node.STAattributesToSelect.drawn = true;
 	networkNodes.update(node);
 	drawScatterPlot(node);
+	buildScatterPlotLegendHtml(getNodeDialog("DialogScatterPlot") || node, legendKeys, legendLabels, legendColors, seriesStyleFallbacks);
 }
 	
 function CloseDialogScatterPlot(event) {
 	hideNodeDialog("DialogScatterPlot", event);
+}
+
+function SaveScatterPlot(event) {
+	var canvas, useWhite, legend, gap = 24, legendWidth, minLegendWidth = 260, maxTextWidth = 320, rowH, lineH, padTop = 12, padBottom = 12, swatch = 14, textPad = 8, margin, out, ctx, i, y, x0, n, chartW, chartH, contentH, legendBlockH, legendOffsetY, chartY, tw, legendSize, scatterNode, items, item, li, labelX, maxLabelW, lines;
+	if (event) event.preventDefault();
+	canvas = ScatterPlotChart && ScatterPlotChart.canvas ? ScatterPlotChart.canvas : document.getElementById("DialogScatterPlotVisualization");
+	if (!ScatterPlotChart || !canvas || !(getNodeDialog("DialogScatterPlot") && getNodeDialog("DialogScatterPlot").STAattributesToSelect && getNodeDialog("DialogScatterPlot").STAattributesToSelect.drawn)) {
+		alert(DonaCadena({cat: "Dibuixeu primer el gràfic.", spa: "Dibuje primero el gráfico.", eng: "Draw the chart first."}));
+		return;
+	}
+	useWhite = confirm(DonaCadena({
+		cat: "Voleu fons blanc al PNG?\n\nD'acord = fons blanc\nCancel·la = fons transparent",
+		spa: "¿Quiere fondo blanco en el PNG?\n\nAceptar = fondo blanco\nCancelar = fondo transparente",
+		eng: "White background for the PNG?\n\nOK = white background\nCancel = transparent background"
+	}));
+	scatterNode = getNodeDialog("DialogScatterPlot");
+	legendSize = (scatterNode && scatterNode.STAattributesToSelect && scatterNode.STAattributesToSelect.legendFontSize) ? scatterNode.STAattributesToSelect.legendFontSize : 12;
+	rowH = chartLegendRowHeight(legendSize);
+	lineH = Math.max(legendSize + 4, Math.round(rowH * 0.85));
+	legend = ScatterPlotLastLegend;
+	n = legend && legend.labels ? legend.labels.length : 0;
+	margin = useWhite ? 24 : 0;
+	chartW = canvas.width;
+	chartH = canvas.height;
+
+	out = document.createElement("canvas");
+	ctx = out.getContext("2d");
+	ctx.font = legendSize + "px sans-serif";
+	items = [];
+	maxLabelW = 0;
+	legendBlockH = padTop + padBottom;
+	for (i = 0; i < n; i++) {
+		lines = wrapChartLegendLabel(ctx, legend.labels[i], maxTextWidth);
+		for (li = 0; li < lines.length; li++) {
+			tw = ctx.measureText(lines[li]).width;
+			if (tw > maxLabelW)
+				maxLabelW = tw;
+		}
+		item = {
+			lines: lines,
+			height: Math.max(rowH, lines.length * lineH),
+			hidden: !!(legend.hidden && legend.hidden[i]),
+			color: legend.colors[i] || "#888",
+			gradient: !!(legend.styles && legend.styles[i] == "lineGradient")
+		};
+		items.push(item);
+		legendBlockH += item.height;
+	}
+	if (!n)
+		legendBlockH = padTop + rowH + padBottom;
+	legendWidth = Math.max(minLegendWidth, Math.ceil(swatch + textPad + maxLabelW + 12));
+	contentH = Math.max(chartH, legendBlockH);
+	out.width = margin + chartW + gap + legendWidth + margin;
+	out.height = margin + contentH + margin;
+	ctx = out.getContext("2d");
+	if (useWhite) {
+		ctx.fillStyle = "#fff";
+		ctx.fillRect(0, 0, out.width, out.height);
+	}
+	chartY = margin + Math.max(0, (contentH - chartH) / 2);
+	ctx.drawImage(canvas, margin, chartY);
+	x0 = margin + chartW + gap;
+	labelX = x0 + swatch + textPad;
+	legendOffsetY = margin + Math.max(0, (contentH - legendBlockH) / 2);
+	ctx.font = legendSize + "px sans-serif";
+	ctx.textBaseline = "middle";
+	y = legendOffsetY + padTop;
+	for (i = 0; i < items.length; i++) {
+		item = items[i];
+		ctx.globalAlpha = item.hidden ? 0.4 : 1;
+		if (item.gradient)
+			ctx.fillStyle = fillScatterPlotLineGradient(ctx, x0, 0, x0 + swatch, 0);
+		else
+			ctx.fillStyle = item.color;
+		ctx.fillRect(x0, y + item.height / 2 - swatch / 2, swatch, swatch);
+		ctx.strokeStyle = "#666";
+		ctx.strokeRect(x0 + 0.5, y + item.height / 2 - swatch / 2 + 0.5, swatch - 1, swatch - 1);
+		ctx.fillStyle = "#222";
+		for (li = 0; li < item.lines.length; li++) {
+			var lineY = y + (item.height - item.lines.length * lineH) / 2 + (li + 0.5) * lineH;
+			ctx.fillText(item.lines[li], labelX, lineY);
+			if (item.hidden) {
+				tw = ctx.measureText(item.lines[li]).width;
+				ctx.beginPath();
+				ctx.moveTo(labelX, lineY);
+				ctx.lineTo(labelX + tw, lineY);
+				ctx.strokeStyle = "#222";
+				ctx.stroke();
+			}
+		}
+		ctx.globalAlpha = 1;
+		y += item.height;
+	}
+	function onBlob(blob) {
+		if (!blob) {
+			alert(DonaCadena({cat: "No s'ha pogut desar la imatge.", spa: "No se ha podido guardar la imagen.", eng: "Could not save the image."}));
+			return;
+		}
+		if (window.showSaveFilePicker) {
+			window.showSaveFilePicker({ suggestedName: "scatter-plot.png", types: [{ description: "PNG", accept: { "image/png": [".png"] } }] })
+				.then(function (h) { return h.createWritable(); })
+				.then(function (w) { return w.write(blob).then(function () { return w.close(); }); })
+				.catch(function () {
+					var a = document.createElement("a");
+					a.href = URL.createObjectURL(blob);
+					a.download = "scatter-plot.png";
+					a.click();
+				});
+		} else {
+			var a = document.createElement("a");
+			a.href = URL.createObjectURL(blob);
+			a.download = "scatter-plot.png";
+			a.click();
+		}
+	}
+	if (out.toBlob)
+		out.toBlob(onBlob, "image/png");
+	else
+		onBlob(radarPlotPngBlobFromDataUrl(out.toDataURL("image/png")));
 }
 
 const ColorsForBarPlot = ["#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c", "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5", "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f", "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"];
@@ -820,7 +1583,7 @@ function populateRadarPlotAxesList(dataAttributes, selectedAxes) {
 	var numericNames = getNumericAttributeNames(dataAttributes);
 	var cdns = [];
 	if (!numericNames.length) {
-		document.getElementById("DialogRadarPlotAxesList").innerHTML = "<em>" + DonaCadena({cat: "No s'han trobat columnes numÃ¨riques.", spa: "No se han encontrado columnas numÃ©ricas.", eng: "No numeric columns found."}) + "</em>";
+		document.getElementById("DialogRadarPlotAxesList").innerHTML = "<em>" + DonaCadena({cat: "No s'han trobat columnes numÃ¨riques.", spa: "No se han encontrado columnas numéricas.", eng: "No numeric columns found."}) + "</em>";
 		return;
 	}
 	if (!selectedAxes)
@@ -1341,6 +2104,8 @@ function ensureRadarPlotStyleState(options) {
 		options.tickFontSize = 11;
 	if (typeof options.pointLabelFontSize !== "number" || isNaN(options.pointLabelFontSize))
 		options.pointLabelFontSize = 12;
+	if (typeof options.legendFontSize !== "number" || isNaN(options.legendFontSize))
+		options.legendFontSize = 12;
 	if (typeof options.skipMissing !== "boolean")
 		options.skipMissing = true;
 }
@@ -1598,6 +2363,11 @@ function getRadarPointLabelFontSize() {
 	return clampRadarFontSize(el ? el.value : 12, 8, 28, 12);
 }
 
+function getRadarLegendFontSize() {
+	var el = document.getElementById("DialogRadarPlotLegendSize");
+	return clampRadarFontSize(el ? el.value : 12, 8, 28, 12);
+}
+
 function syncRadarPlotStyleControls(options) {
 	var titleEl = document.getElementById("DialogRadarPlotTitleSize");
 	var titleVal = document.getElementById("DialogRadarPlotTitleSizeValue");
@@ -1605,6 +2375,8 @@ function syncRadarPlotStyleControls(options) {
 	var tickVal = document.getElementById("DialogRadarPlotTickSizeValue");
 	var pointEl = document.getElementById("DialogRadarPlotPointLabelSize");
 	var pointVal = document.getElementById("DialogRadarPlotPointLabelSizeValue");
+	var legendEl = document.getElementById("DialogRadarPlotLegendSize");
+	var legendVal = document.getElementById("DialogRadarPlotLegendSizeValue");
 	if (!options)
 		options = {};
 	if (titleEl)
@@ -1619,6 +2391,10 @@ function syncRadarPlotStyleControls(options) {
 		pointEl.value = options.pointLabelFontSize || 12;
 	if (pointVal)
 		pointVal.textContent = "" + (options.pointLabelFontSize || 12);
+	if (legendEl)
+		legendEl.value = options.legendFontSize || 12;
+	if (legendVal)
+		legendVal.textContent = "" + (options.legendFontSize || 12);
 }
 
 function onRadarPlotStyleChange(redraw) {
@@ -1626,7 +2402,8 @@ function onRadarPlotStyleChange(redraw) {
 	var titleSize = getRadarTitleFontSize();
 	var tickSize = getRadarTickFontSize();
 	var pointSize = getRadarPointLabelFontSize();
-	syncRadarPlotStyleControls({ titleFontSize: titleSize, tickFontSize: tickSize, pointLabelFontSize: pointSize });
+	var legendSize = getRadarLegendFontSize();
+	syncRadarPlotStyleControls({ titleFontSize: titleSize, tickFontSize: tickSize, pointLabelFontSize: pointSize, legendFontSize: legendSize });
 	if (node) {
 		if (!node.radarPlotOptions)
 			node.radarPlotOptions = {};
@@ -1634,6 +2411,8 @@ function onRadarPlotStyleChange(redraw) {
 		node.radarPlotOptions.titleFontSize = titleSize;
 		node.radarPlotOptions.tickFontSize = tickSize;
 		node.radarPlotOptions.pointLabelFontSize = pointSize;
+		node.radarPlotOptions.legendFontSize = legendSize;
+		applyChartLegendFontSize("DialogRadarPlotLegend", legendSize);
 		networkNodes.update(node);
 	}
 	if (redraw && node && node.radarPlotOptions && node.radarPlotOptions.drawn)
@@ -1663,6 +2442,7 @@ function buildRadarPlotLegendHtml(node, mode, itemKeys, itemLabels, itemColors) 
 		node.radarPlotOptions = {};
 	ensureRadarPlotStyleState(node.radarPlotOptions);
 	options = node.radarPlotOptions;
+	container.style.fontSize = (options.legendFontSize || 12) + "px";
 	cdns = "";
 	for (i = 0; i < itemKeys.length; i++) {
 		key = itemKeys[i];
@@ -1680,7 +2460,7 @@ function buildRadarPlotLegendHtml(node, mode, itemKeys, itemLabels, itemColors) 
 		cdns += '<button type="button" class="DialogRadarPlotLegendEye" title="' + radarPlotEscapeAttr(eyeTitle) +
 			'" onclick="onRadarLegendEyeClick(\'' + radarPlotEscapeJs(mode) + '\',\'' + radarPlotEscapeJs(key) + '\')">' +
 			(hidden ? "&#10005;" : "&#128065;") + "</button>";
-		cdns += '<span class="DialogRadarPlotLegendLabel">' + radarPlotEscapeAttr(label) + "</span>";
+		cdns += '<span class="DialogRadarPlotLegendLabel" style="font-size:' + (options.legendFontSize || 12) + 'px;">' + radarPlotEscapeAttr(label) + "</span>";
 		cdns += "</div>";
 	}
 	container.innerHTML = cdns;
@@ -1790,6 +2570,7 @@ function DrawRadarPlot(event) {
 	options.titleFontSize = titleFontSize;
 	options.tickFontSize = tickFontSize;
 	options.pointLabelFontSize = pointLabelFontSize;
+	options.legendFontSize = getRadarLegendFontSize();
 	options.seriesMode = seriesAll ? "all" : "series";
 	options.seriesAll = seriesAll;
 	options.seriesGroups = seriesGroups;
@@ -1831,7 +2612,7 @@ function DrawRadarPlot(event) {
 		options.seriesLabel = seriesLabel;
 		if (axes.length < (polar ? 3 : 3)) {
 			if (event)
-				alert(DonaCadena({cat: "Seleccioneu almenys tres columnes numÃ¨riques.", spa: "Seleccione al menos tres columnas numÃ©ricas.", eng: "Select at least three numeric columns."}));
+				alert(DonaCadena({cat: "Seleccioneu almenys tres columnes numÃ¨riques.", spa: "Seleccione al menos tres columnas numéricas.", eng: "Select at least three numeric columns."}));
 			return;
 		}
 		labels = axes;
@@ -1926,7 +2707,7 @@ function DrawRadarPlot(event) {
 				labels.push(("" + labelsFull[i]).length > 35 ? ("" + labelsFull[i]).substring(0, 32) + "..." : labelsFull[i]);
 			if (labels.length < 3) {
 				if (event)
-					alert(DonaCadenaFmt({cat: "Un grÃ fic de radar necessita almenys tres categories. La columna seleccionada tÃ© {0} valors Ãºnics.", spa: "Un grÃ¡fico de radar necesita al menos tres categorÃ­as. La columna seleccionada tiene {0} valores Ãºnicos.", eng: "A radar chart needs at least three categories. The selected column has {0} unique values."}, labels.length));
+					alert(DonaCadenaFmt({cat: "Un grÃ fic de radar necessita almenys tres categories. La columna seleccionada té {0} valors Ãºnics.", spa: "Un grÃ¡fico de radar necesita al menos tres categorÃ­as. La columna seleccionada tiene {0} valores Ãºnicos.", eng: "A radar chart needs at least three categories. The selected column has {0} unique values."}, labels.length));
 				return;
 			}
 			valueColumns = limitRadarSeriesList(getRadarAutomaticValueColumns(selectedParents, axisX), maxSeries, event);
@@ -1953,7 +2734,7 @@ function DrawRadarPlot(event) {
 			}
 			if (labels.length < 3) {
 				if (event)
-					alert(DonaCadenaFmt({cat: "Un grÃ fic de radar necessita almenys tres categories. La columna seleccionada tÃ© {0} valors Ãºnics.", spa: "Un grÃ¡fico de radar necesita al menos tres categorÃ­as. La columna seleccionada tiene {0} valores Ãºnicos.", eng: "A radar chart needs at least three categories. The selected column has {0} unique values."}, labels.length));
+					alert(DonaCadenaFmt({cat: "Un grÃ fic de radar necessita almenys tres categories. La columna seleccionada té {0} valors Ãºnics.", spa: "Un grÃ¡fico de radar necesita al menos tres categorÃ­as. La columna seleccionada tiene {0} valores Ãºnicos.", eng: "A radar chart needs at least three categories. The selected column has {0} unique values."}, labels.length));
 				return;
 			}
 			for (g = 0; g < seriesGroups.length; g++) {
@@ -2115,7 +2896,9 @@ function buildRadarPlotExportCanvas(chartCanvas, backgroundMode) {
 	var legend = RadarPlotLastLegend;
 	var gap = 24;
 	var legendWidth = 220;
-	var rowH = 22;
+	var radarNode = getNodeDialog("DialogRadarPlot");
+	var legendSize = (radarNode && radarNode.radarPlotOptions && radarNode.radarPlotOptions.legendFontSize) ? radarNode.radarPlotOptions.legendFontSize : 12;
+	var rowH = chartLegendRowHeight(legendSize);
 	var padTop = 12;
 	var swatch = 14;
 	var margin = (backgroundMode == "transparent") ? 0 : 24;
@@ -2143,7 +2926,7 @@ function buildRadarPlotExportCanvas(chartCanvas, backgroundMode) {
 		return out;
 	x0 = margin + chartW + gap;
 	legendOffsetY = margin + Math.max(0, (contentH - legendBlockH) / 2);
-	ctx.font = "12px sans-serif";
+	ctx.font = legendSize + "px sans-serif";
 	ctx.textBaseline = "middle";
 	for (i = 0; i < n; i++) {
 		y = legendOffsetY + padTop + i * rowH + rowH / 2;
@@ -2645,6 +3428,8 @@ function ensureCircularChartStyleState(options) {
 		options.titleFontSize = 16;
 	if (typeof options.centerTextFontSize !== "number" || isNaN(options.centerTextFontSize))
 		options.centerTextFontSize = 16;
+	if (typeof options.legendFontSize !== "number" || isNaN(options.legendFontSize))
+		options.legendFontSize = 12;
 }
 
 function clampCircularFontSize(n, min, max, fallback) {
@@ -2678,6 +3463,11 @@ function getCircularLabelFontColor() {
 	return (el && el.value) ? el.value : "#ffffff";
 }
 
+function getCircularLegendFontSize() {
+	var el = document.getElementById("DialogCircularChartLegendSize");
+	return clampCircularFontSize(el ? el.value : 12, 8, 28, 12);
+}
+
 function syncCircularLabelStyleControls(options) {
 	var sizeEl = document.getElementById("DialogCircularChartLabelSize");
 	var sizeVal = document.getElementById("DialogCircularChartLabelSizeValue");
@@ -2686,7 +3476,9 @@ function syncCircularLabelStyleControls(options) {
 	var titleSizeVal = document.getElementById("DialogCircularChartTitleSizeValue");
 	var centerSizeEl = document.getElementById("DialogCircularChartCenterTextSize");
 	var centerSizeVal = document.getElementById("DialogCircularChartCenterTextSizeValue");
-	var size, titleSize, centerSize;
+	var legendSizeEl = document.getElementById("DialogCircularChartLegendSize");
+	var legendSizeVal = document.getElementById("DialogCircularChartLegendSizeValue");
+	var size, titleSize, centerSize, legendSize;
 	if (!options)
 		options = {};
 	size = (typeof options.labelFontSize === "number" && !isNaN(options.labelFontSize)) ? options.labelFontSize : 11;
@@ -2706,6 +3498,11 @@ function syncCircularLabelStyleControls(options) {
 		centerSizeEl.value = centerSize;
 	if (centerSizeVal)
 		centerSizeVal.textContent = "" + centerSize;
+	legendSize = (typeof options.legendFontSize === "number" && !isNaN(options.legendFontSize)) ? options.legendFontSize : 12;
+	if (legendSizeEl)
+		legendSizeEl.value = legendSize;
+	if (legendSizeVal)
+		legendSizeVal.textContent = "" + legendSize;
 }
 
 function onCircularLabelStyleChange(redraw) {
@@ -2756,6 +3553,24 @@ function onCircularCenterTextStyleChange(redraw) {
 		ensureCircularChartStyleState(node.circularChartOptions);
 		node.circularChartOptions.centerTextFontSize = size;
 		networkNodes.update(node);
+	}
+	if (redraw && node && node.circularChartOptions && node.circularChartOptions.drawn)
+		DrawCircularChart();
+}
+
+function onCircularLegendStyleChange(redraw) {
+	var node = getNodeDialog("DialogCircularChart");
+	var size = getCircularLegendFontSize();
+	var sizeVal = document.getElementById("DialogCircularChartLegendSizeValue");
+	if (sizeVal)
+		sizeVal.textContent = "" + size;
+	if (node) {
+		if (!node.circularChartOptions)
+			node.circularChartOptions = {};
+		ensureCircularChartStyleState(node.circularChartOptions);
+		node.circularChartOptions.legendFontSize = size;
+		networkNodes.update(node);
+		applyChartLegendFontSize("DialogCircularChartLegend", size);
 	}
 	if (redraw && node && node.circularChartOptions && node.circularChartOptions.drawn)
 		DrawCircularChart();
@@ -2833,6 +3648,7 @@ function buildCircularChartLegendHtml(node, mode, itemKeys, itemLabels, itemColo
 		node.circularChartOptions = {};
 	ensureCircularChartStyleState(node.circularChartOptions);
 	options = node.circularChartOptions;
+	container.style.fontSize = (options.legendFontSize || 12) + "px";
 	cdns = "";
 	for (i = 0; i < itemKeys.length; i++) {
 		key = itemKeys[i];
@@ -2850,7 +3666,7 @@ function buildCircularChartLegendHtml(node, mode, itemKeys, itemLabels, itemColo
 		cdns += '<button type="button" class="DialogCircularChartLegendEye" title="' + circularChartEscapeAttr(eyeTitle) +
 			'" onclick="onCircularLegendEyeClick(\'' + circularChartEscapeJs(mode) + '\',\'' + circularChartEscapeJs(key) + '\')">' +
 			(hidden ? "&#10005;" : "&#128065;") + "</button>";
-		cdns += '<span class="DialogCircularChartLegendLabel">' + circularChartEscapeAttr(label) + "</span>";
+		cdns += '<span class="DialogCircularChartLegendLabel" style="font-size:' + (options.legendFontSize || 12) + 'px;">' + circularChartEscapeAttr(label) + "</span>";
 		cdns += "</div>";
 	}
 	if (ringNames && ringNames.length > 1) {
@@ -3034,6 +3850,7 @@ function DrawCircularChart(event) {
 	options.labelFontColor = getCircularLabelFontColor();
 	options.titleFontSize = getCircularTitleFontSize();
 	options.centerTextFontSize = getCircularCenterTextFontSize();
+	options.legendFontSize = getCircularLegendFontSize();
 	syncCircularLabelStyleControls(options);
 
 	if (seriesAll) {
@@ -3255,7 +4072,9 @@ function buildCircularChartExportCanvas(chartCanvas, backgroundMode) {
 	var legend = CircularChartLastLegend;
 	var gap = 24;
 	var legendWidth = 220;
-	var rowH = 22;
+	var circularNode = getNodeDialog("DialogCircularChart");
+	var legendSize = (circularNode && circularNode.circularChartOptions && circularNode.circularChartOptions.legendFontSize) ? circularNode.circularChartOptions.legendFontSize : 12;
+	var rowH = chartLegendRowHeight(legendSize);
 	var padTop = 12;
 	var swatch = 14;
 	var margin = (backgroundMode == "transparent") ? 0 : 24;
@@ -3285,7 +4104,7 @@ function buildCircularChartExportCanvas(chartCanvas, backgroundMode) {
 		return out;
 	x0 = margin + chartW + gap;
 	legendOffsetY = margin + Math.max(0, (contentH - legendBlockH) / 2);
-	ctx.font = "12px sans-serif";
+	ctx.font = legendSize + "px sans-serif";
 	ctx.textBaseline = "middle";
 	for (i = 0; i < n; i++) {
 		y = legendOffsetY + padTop + i * rowH + rowH / 2;
@@ -3382,11 +4201,11 @@ function DrawImageViewer(event) {
 			var labelColumn = document.getElementById("DialogImageViewerLabelSelect").value;
 			var size = parseInt(document.getElementById("DialogImageViewerSizeInput").value);
 			if (isNaN(size)) {
-				alert(DonaCadena({cat: "La mida no Ã©s un nombre enter. En el seu lloc, s'utilitzarÃ  200", spa: "El tamaÃ±o no es un nÃºmero entero. En su lugar, se utilizarÃ¡ 200", eng: "Size is not an integer number. Using 200 instead"}));
+				alert(DonaCadena({cat: "La mida no és un nombre enter. En el seu lloc, s'utilitzarÃ  200", spa: "El tamaÃ±o no es un nÃºmero entero. En su lugar, se utilizarÃ¡ 200", eng: "Size is not an integer number. Using 200 instead"}));
 				size = 200;
 			}
 			if (size < 2 || size > 2000) {
-				alert(DonaCadena({cat: "La mida Ã©s fora de l'interval [2,2000]. En el seu lloc, s'utilitzarÃ  200", spa: "El tamaÃ±o estÃ¡ fuera del intervalo [2,2000]. En su lugar, se utilizarÃ¡ 200", eng: "Size is out of the [2,2000] range. Using 200 instead"}));
+				alert(DonaCadena({cat: "La mida és fora de l'interval [2,2000]. En el seu lloc, s'utilitzarÃ  200", spa: "El tamaÃ±o estÃ¡ fuera del intervalo [2,2000]. En su lugar, se utilizarÃ¡ 200", eng: "Size is out of the [2,2000] range. Using 200 instead"}));
 				size = 200;
 			}
 
@@ -3416,4 +4235,1415 @@ function DrawImageViewer(event) {
 
 function CloseDialogImageViewer(event) {
 	hideNodeDialog("DialogImageViewer", event);
+}
+
+/* ============================================================
+   Bar plot (vertical / horizontal / floating / stacked) + error whiskers
+   ============================================================ */
+var BarPlotGraph2d = null;
+var BarPlotLastLegend = null;
+
+var barPlotErrorBarsPlugin = {
+	id: "barPlotErrorBars",
+	afterDatasetsDraw: function (chart) {
+		var ctx = chart.ctx, meta, i, j, pt, yMin, yMax, x, y, half = 4, horiz, ds;
+		var errOpts = (chart.options && chart.options.barPlotError) || {};
+		var color = errOpts.color || "#333333";
+		var dir = errOpts.direction || "both";
+		var drawPlus = dir == "both" || dir == "plus";
+		var drawMinus = dir == "both" || dir == "minus";
+		for (i = 0; i < chart.data.datasets.length; i++) {
+			ds = chart.data.datasets[i];
+			if (!ds || !ds._errorMin || !ds._errorMax || ds.hidden)
+				continue;
+			meta = chart.getDatasetMeta(i);
+			if (!meta || !meta.data)
+				continue;
+			horiz = chart.options.indexAxis == "y";
+			ctx.save();
+			ctx.strokeStyle = color;
+			ctx.lineWidth = 1.5;
+			for (j = 0; j < meta.data.length; j++) {
+				pt = meta.data[j];
+				if (!pt || ds._errorMin[j] == null || ds._errorMax[j] == null || isNaN(ds._errorMin[j]) || isNaN(ds._errorMax[j]))
+					continue;
+				if (horiz) {
+					y = pt.y;
+					x = pt.x;
+					yMin = chart.scales.x.getPixelForValue(ds._errorMin[j]);
+					yMax = chart.scales.x.getPixelForValue(ds._errorMax[j]);
+					ctx.beginPath();
+					if (drawMinus) {
+						ctx.moveTo(x, y);
+						ctx.lineTo(yMin, y);
+						ctx.moveTo(yMin, y - half);
+						ctx.lineTo(yMin, y + half);
+					}
+					if (drawPlus) {
+						ctx.moveTo(x, y);
+						ctx.lineTo(yMax, y);
+						ctx.moveTo(yMax, y - half);
+						ctx.lineTo(yMax, y + half);
+					}
+					ctx.stroke();
+				} else {
+					x = pt.x;
+					y = pt.y;
+					yMin = chart.scales.y.getPixelForValue(ds._errorMin[j]);
+					yMax = chart.scales.y.getPixelForValue(ds._errorMax[j]);
+					ctx.beginPath();
+					if (drawMinus) {
+						ctx.moveTo(x, y);
+						ctx.lineTo(x, yMin);
+						ctx.moveTo(x - half, yMin);
+						ctx.lineTo(x + half, yMin);
+					}
+					if (drawPlus) {
+						ctx.moveTo(x, y);
+						ctx.lineTo(x, yMax);
+						ctx.moveTo(x - half, yMax);
+						ctx.lineTo(x + half, yMax);
+					}
+					ctx.stroke();
+				}
+			}
+			ctx.restore();
+		}
+	}
+};
+
+function getBarPlotType() {
+	if (document.getElementById("DialogBarPlotTypeHorizontal") && document.getElementById("DialogBarPlotTypeHorizontal").checked)
+		return "horizontal";
+	if (document.getElementById("DialogBarPlotTypeFloating") && document.getElementById("DialogBarPlotTypeFloating").checked)
+		return "floating";
+	if (document.getElementById("DialogBarPlotTypeStacked") && document.getElementById("DialogBarPlotTypeStacked").checked)
+		return "stacked";
+	return "vertical";
+}
+
+function collectBarPlotUnionAttrs(parentInfo) {
+	var union = {}, ids = Object.keys(parentInfo || {}), i, a, attrs;
+	for (i = 0; i < ids.length; i++) {
+		attrs = parentInfo[ids[i]].attrs || {};
+		for (a in attrs) {
+			if (Object.prototype.hasOwnProperty.call(attrs, a))
+				union[a] = attrs[a];
+		}
+	}
+	return union;
+}
+
+function collectBarPlotParentInfo(parentNodes) {
+	var info = {}, i, p, attrs;
+	for (i = 0; i < (parentNodes || []).length; i++) {
+		p = parentNodes[i];
+		if (!p || !p.STAdata || !p.STAdata.length)
+			continue;
+		attrs = p.STAdataAttributes ? p.STAdataAttributes : getDataAttributes(p.STAdata);
+		info[p.id] = { nodeLabel: p.label, attrs: attrs, numericNames: getNumericAttributeNames(attrs), nonNumericNames: getNonNumericAttributeNames(attrs) };
+	}
+	return info;
+}
+
+function ensureBarPlotStyleState(options) {
+	if (!options)
+		return;
+	if (!options.seriesColors)
+		options.seriesColors = {};
+	if (!options.hiddenSeries)
+		options.hiddenSeries = [];
+	if (typeof options.titleFontSize !== "number")
+		options.titleFontSize = 16;
+	if (typeof options.labelFontSize !== "number")
+		options.labelFontSize = 12;
+	if (typeof options.legendFontSize !== "number")
+		options.legendFontSize = 12;
+	if (typeof options.axisLabelFontSize !== "number")
+		options.axisLabelFontSize = 12;
+	if (!options.errorMode)
+		options.errorMode = "none";
+	if (!options.errorColor)
+		options.errorColor = "#333333";
+	if (!options.errorDirection)
+		options.errorDirection = "both";
+	options.confidencePct = 95;
+}
+
+function populateBarPlotErrorColumnSelects(attrs, options) {
+	PopulateSelectSaveLayerDialog("DialogBarPlotErrorSd", attrs, options.errorColumnSd || "");
+	PopulateSelectSaveLayerDialog("DialogBarPlotErrorSe", attrs, options.errorColumnSe || "");
+}
+
+function toggleBarPlotType() {
+	var node = getNodeDialog("DialogBarPlot");
+	applyBarPlotTypeDisplay();
+	if (node) {
+		if (!node.barPlotOptions)
+			node.barPlotOptions = {};
+		node.barPlotOptions.barType = getBarPlotType();
+		networkNodes.update(node);
+		syncBarPlotSeriesWithParents(node);
+		createDialogWithSelectWithGroupsBarPlot(node);
+	}
+	if (!BarPlotGraph2d)
+		showEmptyBarPlotChart();
+}
+
+function applyBarPlotTypeDisplay() {
+	var t = getBarPlotType();
+	var vh = (t == "vertical" || t == "horizontal");
+	var groupBy = document.getElementById("DialogBarPlotGroupByRow");
+	var errPanel = document.getElementById("DialogBarPlotErrorPanel");
+	if (groupBy)
+		groupBy.style.display = vh ? "block" : "none";
+	if (errPanel)
+		errPanel.style.display = vh ? "" : "none";
+}
+
+function getBarPlotErrorMode() {
+	if (document.getElementById("DialogBarPlotErrorModeSd") && document.getElementById("DialogBarPlotErrorModeSd").checked)
+		return "sd";
+	if (document.getElementById("DialogBarPlotErrorModeSe") && document.getElementById("DialogBarPlotErrorModeSe").checked)
+		return "se";
+	if (document.getElementById("DialogBarPlotErrorModeCi") && document.getElementById("DialogBarPlotErrorModeCi").checked)
+		return "ci";
+	if (document.getElementById("DialogBarPlotErrorModeCustom") && document.getElementById("DialogBarPlotErrorModeCustom").checked)
+		return "custom";
+	return "none";
+}
+
+function getBarPlotErrorDirection() {
+	var el = document.getElementById("DialogBarPlotErrorDir");
+	if (!el) return "both";
+	if (el.value == "plus" || el.value == "minus")
+		return el.value;
+	return "both";
+}
+
+function setBarPlotErrorMode(mode) {
+	var map = {
+		none: "DialogBarPlotErrorModeNone",
+		sd: "DialogBarPlotErrorModeSd",
+		se: "DialogBarPlotErrorModeSe",
+		ci: "DialogBarPlotErrorModeCi",
+		custom: "DialogBarPlotErrorModeCustom"
+	};
+	var id = map[mode] || map.none, el = document.getElementById(id);
+	if (el) el.checked = true;
+}
+
+function setBarPlotErrorDirection(dir) {
+	var el = document.getElementById("DialogBarPlotErrorDir");
+	if (el)
+		el.value = (dir == "plus" || dir == "minus") ? dir : "both";
+}
+
+function syncBarPlotStyleControls(options) {
+	var te = document.getElementById("DialogBarPlotTitleSize");
+	var tv = document.getElementById("DialogBarPlotTitleSizeValue");
+	var le = document.getElementById("DialogBarPlotLabelSize");
+	var lv = document.getElementById("DialogBarPlotLabelSizeValue");
+	var ge = document.getElementById("DialogBarPlotLegendSize");
+	var gv = document.getElementById("DialogBarPlotLegendSizeValue");
+	var ae = document.getElementById("DialogBarPlotAxisLabelSize");
+	var av = document.getElementById("DialogBarPlotAxisLabelSizeValue");
+	if (te) te.value = options.titleFontSize || 16;
+	if (tv) tv.textContent = "" + (options.titleFontSize || 16);
+	if (le) le.value = options.labelFontSize || 12;
+	if (lv) lv.textContent = "" + (options.labelFontSize || 12);
+	if (ge) ge.value = options.legendFontSize || 12;
+	if (gv) gv.textContent = "" + (options.legendFontSize || 12);
+	if (ae) ae.value = options.axisLabelFontSize || 12;
+	if (av) av.textContent = "" + (options.axisLabelFontSize || 12);
+}
+
+function onBarPlotStyleChange(redraw) {
+	var node = getNodeDialog("DialogBarPlot");
+	var ts = parseInt(document.getElementById("DialogBarPlotTitleSize").value, 10) || 16;
+	var ls = parseInt(document.getElementById("DialogBarPlotLabelSize").value, 10) || 12;
+	var gs = clampChartFontSize(document.getElementById("DialogBarPlotLegendSize") ? document.getElementById("DialogBarPlotLegendSize").value : 12, 8, 28, 12);
+	var asz = clampChartFontSize(document.getElementById("DialogBarPlotAxisLabelSize") ? document.getElementById("DialogBarPlotAxisLabelSize").value : 12, 8, 28, 12);
+	syncBarPlotStyleControls({ titleFontSize: ts, labelFontSize: ls, legendFontSize: gs, axisLabelFontSize: asz });
+	if (node) {
+		if (!node.barPlotOptions) node.barPlotOptions = {};
+		node.barPlotOptions.titleFontSize = ts;
+		node.barPlotOptions.labelFontSize = ls;
+		node.barPlotOptions.legendFontSize = gs;
+		node.barPlotOptions.axisLabelFontSize = asz;
+		applyChartLegendFontSize("DialogBarPlotLegend", gs);
+		networkNodes.update(node);
+		if (redraw && node.barPlotOptions.drawn)
+			DrawBarPlot();
+	}
+}
+
+function onBarPlotTitleChange() {
+	var node = getNodeDialog("DialogBarPlot");
+	var el = document.getElementById("DialogBarPlotTitleInput");
+	if (!node) return;
+	if (!node.barPlotOptions) node.barPlotOptions = {};
+	node.barPlotOptions.title = el ? el.value : "";
+	networkNodes.update(node);
+	if (node.barPlotOptions.drawn)
+		DrawBarPlot();
+}
+
+function barPlotDefaultSeriesGroup(parentId, info) {
+	var attrs = info && info.attrs ? info.attrs : {};
+	var num = getNumericAttributeNames(attrs);
+	var guess = guessRadarSeriesLabel(attrs) || Object.keys(attrs)[0] || "";
+	var values = [];
+	var vi;
+	for (vi = 0; vi < num.length; vi++) {
+		if (num[vi] != guess)
+			values.push(num[vi]);
+	}
+	return {
+		nodeSelected: parentId,
+		axisX: guess,
+		axisY: values[0] || "",
+		valueColumns: values,
+		valueMin: num[0] || "",
+		valueMax: num[Math.min(1, Math.max(0, num.length - 1))] || num[0] || "",
+		legendText: (info && info.nodeLabel) || parentId
+	};
+}
+
+/** One series per parent node: keep existing selections, add new parents, drop missing ones. */
+function syncBarPlotSeriesWithParents(node) {
+	var info = node.barPlotParentNodes || {}, ids = Object.keys(info), old, groups = [], i, g, j;
+	if (!node.barPlotOptions) node.barPlotOptions = {};
+	old = node.barPlotOptions.seriesGroups || [];
+	for (i = 0; i < ids.length; i++) {
+		g = null;
+		for (j = 0; j < old.length; j++) {
+			if (old[j] && old[j].nodeSelected == ids[i]) {
+				g = old[j];
+				break;
+			}
+		}
+		if (!g)
+			g = barPlotDefaultSeriesGroup(ids[i], info[ids[i]]);
+		else {
+			if (!g.valueColumns || !g.valueColumns.length)
+				g.valueColumns = g.axisY ? [g.axisY] : [];
+			if (!g.legendText)
+				g.legendText = info[ids[i]].nodeLabel || ids[i];
+		}
+		groups.push(g);
+	}
+	node.barPlotOptions.seriesGroups = groups;
+}
+
+function ensureBarPlotManualSeries(node) {
+	syncBarPlotSeriesWithParents(node);
+}
+
+function createDialogWithSelectWithGroupsBarPlot(node) {
+	var container = document.getElementById("DialogBarPlotSeriesDiv");
+	var groups, parentInfo, cdns, i, parentId, attrs, t, legend, num, c, col, checked, selectedCols, nodeLabel;
+	if (!container) return;
+	groups = node.barPlotOptions.seriesGroups || [];
+	parentInfo = node.barPlotParentNodes || {};
+	t = getBarPlotType();
+	cdns = "";
+	for (i = 0; i < groups.length; i++) {
+		parentId = groups[i].nodeSelected;
+		attrs = parentInfo[parentId] ? parentInfo[parentId].attrs : {};
+		nodeLabel = parentInfo[parentId] ? (parentInfo[parentId].nodeLabel || parentId) : parentId;
+		legend = groups[i].legendText || nodeLabel;
+		groups[i].legendText = legend;
+		if (!groups[i].valueColumns || !groups[i].valueColumns.length)
+			groups[i].valueColumns = groups[i].axisY && groups[i].axisY != groups[i].axisX ? [groups[i].axisY] : [];
+		selectedCols = groups[i].valueColumns;
+		cdns += '<fieldset><legend>' + ("" + nodeLabel).replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</legend>";
+		cdns += '<div class="DialogBarPlotSeriesRow"><label>' + DonaCadena({cat: "Nom a la llegenda:", spa: "Nombre en la leyenda:", eng: "Legend name:"}) +
+			' <input type="text" value="' + (("" + legend).replace(/&/g, "&amp;").replace(/"/g, "&quot;")) +
+			'" onchange="updateBarPlotSeriesField(' + i + ',\'legendText\',this.value,\'' + node.id + '\')"></label></div>';
+		cdns += barPlotSeriesSelectRow(i, "axisX", DonaCadena({cat: "Categories:", spa: "Categorías:", eng: "Categories:"}), attrs, groups[i].axisX, node.id);
+		if (t == "floating") {
+			cdns += barPlotSeriesSelectRow(i, "valueMin", DonaCadena({cat: "Inici:", spa: "Inicio:", eng: "Start:"}), attrs, groups[i].valueMin, node.id);
+			cdns += barPlotSeriesSelectRow(i, "valueMax", DonaCadena({cat: "Fi:", spa: "Fin:", eng: "End:"}), attrs, groups[i].valueMax, node.id);
+		} else {
+			num = getNumericAttributeNames(attrs);
+			cdns += '<div class="DialogBarPlotSeriesRow"><span>' + DonaCadena({cat: "Valors (columnes):", spa: "Valores (columnas):", eng: "Values (columns):"}) + "</span>";
+			cdns += '<div class="DialogBarPlotValueColumns DialogBarPlotSeriesValueColumns">';
+			num = num.filter(function (name) { return name != groups[i].axisX; });
+			if (!num.length)
+				cdns += "<em>" + DonaCadena({cat: "No s'han trobat columnes numèriques.", spa: "No se han encontrado columnas numéricas.", eng: "No numeric columns found."}) + "</em>";
+			for (c = 0; c < num.length; c++) {
+				col = num[c];
+				checked = selectedCols.indexOf(col) != -1 ? " checked" : "";
+				cdns += '<label><input type="checkbox" class="DialogBarPlotSeriesValueCb" data-series="' + i + '" value="' +
+					("" + col).replace(/"/g, "&quot;") + '"' + checked +
+					' onchange="onBarPlotSeriesValueColumnsChange(' + i + ',\'' + node.id + '\')"> ' +
+					("" + col).replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</label>";
+			}
+			cdns += "</div></div>";
+		}
+		cdns += "</fieldset>";
+	}
+	container.innerHTML = cdns;
+}
+
+function onBarPlotSeriesValueColumnsChange(idx, nodeId) {
+	var node = networkNodes.get(nodeId), boxes, selected = [], i;
+	if (!node || !node.barPlotOptions || !node.barPlotOptions.seriesGroups[idx]) return;
+	boxes = document.querySelectorAll('.DialogBarPlotSeriesValueCb[data-series="' + idx + '"]');
+	for (i = 0; i < boxes.length; i++) {
+		if (boxes[i].checked)
+			selected.push(boxes[i].value);
+	}
+	node.barPlotOptions.seriesGroups[idx].valueColumns = selected;
+	if (selected.length)
+		node.barPlotOptions.seriesGroups[idx].axisY = selected[0];
+	networkNodes.update(node);
+}
+
+function barPlotSeriesSelectRow(i, key, label, attrs, selected, nodeId, allowEmpty) {
+	var names = Object.keys(attrs || {}), p, cdns;
+	cdns = '<div class="DialogBarPlotSeriesRow"><label>' + label + ' <select onchange="updateBarPlotSeriesField(' + i + ',\'' + key + '\',this.value,\'' + nodeId + '\')">';
+	if (allowEmpty)
+		cdns += '<option value=""' + (!selected ? " selected" : "") + "></option>";
+	for (p = 0; p < names.length; p++)
+		cdns += '<option value="' + names[p].replace(/"/g, "&quot;") + '"' + (names[p] == selected ? " selected" : "") + ">" + names[p].replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</option>";
+	cdns += "</select></label></div>";
+	return cdns;
+}
+
+function updateBarPlotSeriesField(idx, key, value, nodeId) {
+	var node = networkNodes.get(nodeId), g, prev, info, attrs, num, cols, n;
+	if (!node || !node.barPlotOptions || !node.barPlotOptions.seriesGroups[idx]) return;
+	g = node.barPlotOptions.seriesGroups[idx];
+	prev = g[key];
+	g[key] = value;
+	if (key == "axisX" && prev != value) {
+		info = node.barPlotParentNodes || {};
+		attrs = info[g.nodeSelected] ? info[g.nodeSelected].attrs || {} : {};
+		num = getNumericAttributeNames(attrs);
+		cols = (g.valueColumns || []).slice();
+		n = cols.indexOf(value);
+		if (n != -1)
+			cols.splice(n, 1);
+		/* The column that stops being the category becomes a value again. */
+		if (num.indexOf(prev) != -1 && cols.indexOf(prev) == -1)
+			cols.push(prev);
+		g.valueColumns = cols;
+		g.axisY = cols[0] || "";
+		if (g.valueMin == value)
+			g.valueMin = cols[0] || "";
+		if (g.valueMax == value)
+			g.valueMax = cols[1] || cols[0] || "";
+		networkNodes.update(node);
+		createDialogWithSelectWithGroupsBarPlot(node);
+		return;
+	}
+	networkNodes.update(node);
+}
+
+function barPlotNormZ(ciPct) {
+	var p = (ciPct || 95) / 100;
+	if (p >= 0.999) return 3.291;
+	if (p >= 0.99) return 2.576;
+	if (p >= 0.98) return 2.326;
+	if (p >= 0.95) return 1.96;
+	if (p >= 0.90) return 1.645;
+	if (p >= 0.80) return 1.282;
+	return 1.96;
+}
+
+function barPlotParseNum(v) {
+	var n = parseFloat(v);
+	return isNaN(n) ? null : n;
+}
+
+function barPlotShortLabel(l) {
+	var s = "" + (l == null ? "" : l);
+	return s.length > 35 ? s.substring(0, 32) + "..." : s;
+}
+
+/** Vertical / horizontal: unique categories on axis; each record = a clustered column (#1, #2, …), not summed. */
+function barPlotBuildClusteredByCategory(data, axisX, valueCols, options) {
+	var labelsFull = [], byCat = {}, i, rec, cat, c, col, k, sk, n, maxN = 0, seriesKeys = [], values = {}, errMap = {}, vy, err, rowRec;
+	for (i = 0; i < (data || []).length; i++) {
+		rec = data[i];
+		cat = rec[axisX];
+		if (labelsFull.indexOf(cat) == -1) {
+			labelsFull.push(cat);
+			byCat[cat] = [];
+		}
+		if (!byCat[cat])
+			byCat[cat] = [];
+		byCat[cat].push(rec);
+		if (byCat[cat].length > maxN)
+			maxN = byCat[cat].length;
+	}
+	if (maxN < 1)
+		maxN = 1;
+	for (k = 1; k <= maxN; k++) {
+		for (c = 0; c < (valueCols || []).length; c++) {
+			col = valueCols[c];
+			sk = (valueCols.length == 1) ? ("#" + k) : (col + " #" + k);
+			seriesKeys.push(sk);
+			values[sk] = { "": {} };
+			for (i = 0; i < labelsFull.length; i++) {
+				cat = labelsFull[i];
+				n = byCat[cat] || [];
+				rowRec = (k - 1 < n.length) ? n[k - 1] : null;
+				vy = rowRec ? barPlotParseNum(rowRec[col]) : null;
+				values[sk][""][cat] = (vy == null) ? 0 : vy;
+				if (rowRec && options && options.errorMode && options.errorMode != "none") {
+					options.axisY = col;
+					err = barPlotErrorForRow(rowRec, options, vy);
+					if (err)
+						errMap[sk + "\t" + cat] = err;
+				}
+			}
+		}
+	}
+	return { mode: "cat", labelsFull: labelsFull, seriesKeys: seriesKeys, stackKeys: [""], values: values, errMap: errMap };
+}
+
+/** Vertical / horizontal with group-by-category sum (used for multi-node series alignment). */
+function barPlotBuildGrouped(data, axisX, valueCols, options) {
+	var labelsFull = [], seriesKeys = (valueCols || []).slice(), values = {}, errMap = {}, i, rec, cat, c, col, vy, err;
+	for (c = 0; c < seriesKeys.length; c++)
+		values[seriesKeys[c]] = { "": {} };
+	for (i = 0; i < (data || []).length; i++) {
+		rec = data[i];
+		cat = rec[axisX];
+		if (labelsFull.indexOf(cat) == -1)
+			labelsFull.push(cat);
+		for (c = 0; c < seriesKeys.length; c++) {
+			col = seriesKeys[c];
+			vy = barPlotParseNum(rec[col]);
+			if (vy == null) continue;
+			if (values[col][""][cat] == null)
+				values[col][""][cat] = 0;
+			values[col][""][cat] += vy;
+			if (options && options.errorMode && options.errorMode != "none") {
+				options.axisY = col;
+				err = barPlotErrorForRow(rec, options, vy);
+				if (err && !errMap[col + "\t" + cat])
+					errMap[col + "\t" + cat] = err;
+			}
+		}
+	}
+	/* For CI/custom, recompute from summed value so whiskers match the bar */
+	if (options && (options.errorMode == "ci" || options.errorMode == "custom")) {
+		errMap = {};
+		for (c = 0; c < seriesKeys.length; c++) {
+			col = seriesKeys[c];
+			options.axisY = col;
+			for (i = 0; i < labelsFull.length; i++) {
+				cat = labelsFull[i];
+				vy = values[col][""][cat];
+				if (vy == null) continue;
+				err = barPlotErrorForRow({}, options, vy);
+				if (err)
+					errMap[col + "\t" + cat] = err;
+			}
+		}
+	}
+	return { mode: "cat", labelsFull: labelsFull, seriesKeys: seriesKeys, stackKeys: [""], values: values, errMap: errMap };
+}
+
+/** Vertical / horizontal / floating: one category slot per record (labels may repeat). */
+function barPlotBuildPerRow(data, axisX, valueCols, floating, valueMinCol, valueMaxCol, options) {
+	var labelsFull = [], seriesKeys = [], rowValues = {}, errMap = {}, i, rec, c, col, vy, vmin, vmax, err;
+	if (floating) {
+		seriesKeys = [""];
+		rowValues[""] = [];
+	} else {
+		for (c = 0; c < valueCols.length; c++) {
+			col = valueCols[c];
+			seriesKeys.push(col);
+			rowValues[col] = [];
+		}
+	}
+	for (i = 0; i < (data || []).length; i++) {
+		rec = data[i];
+		labelsFull.push(rec[axisX]);
+		if (floating) {
+			vmin = barPlotParseNum(rec[valueMinCol]);
+			vmax = barPlotParseNum(rec[valueMaxCol]);
+			rowValues[""].push((vmin != null && vmax != null) ? { min: vmin, max: vmax } : null);
+		} else {
+			for (c = 0; c < valueCols.length; c++) {
+				col = valueCols[c];
+				vy = barPlotParseNum(rec[col]);
+				rowValues[col].push(vy == null ? 0 : vy);
+				if (options && options.errorMode && options.errorMode != "none") {
+					options.axisY = col;
+					err = barPlotErrorForRow(rec, options, vy);
+					if (err)
+						errMap[col + "\t" + i] = err;
+				}
+			}
+		}
+	}
+	return { mode: "row", labelsFull: labelsFull, seriesKeys: seriesKeys, rowValues: rowValues, errMap: errMap };
+}
+
+/** Stacked wide: unique categories; each value column is a stack fragment (sums if category repeats). */
+function barPlotBuildStackedWide(data, axisX, valueCols) {
+	var labelsFull = [], seriesKeys = (valueCols || []).slice(), values = {}, i, rec, cat, c, col, vy;
+	for (c = 0; c < seriesKeys.length; c++)
+		values[seriesKeys[c]] = { "": {} };
+	for (i = 0; i < (data || []).length; i++) {
+		rec = data[i];
+		cat = rec[axisX];
+		if (labelsFull.indexOf(cat) == -1)
+			labelsFull.push(cat);
+		for (c = 0; c < seriesKeys.length; c++) {
+			col = seriesKeys[c];
+			vy = barPlotParseNum(rec[col]);
+			if (vy == null) continue;
+			if (values[col][""][cat] == null)
+				values[col][""][cat] = 0;
+			values[col][""][cat] += vy;
+		}
+	}
+	return { mode: "cat", labelsFull: labelsFull, seriesKeys: seriesKeys, stackKeys: [""], values: values, errMap: {} };
+}
+
+/** Stacked long: one value column; each row of a repeated category becomes stack fragment #1, #2, ... */
+function barPlotBuildStackedLong(data, axisX, valueCol) {
+	var labelsFull = [], byCat = {}, i, rec, cat, vy, maxN = 0, seriesKeys = [], values = {}, k, sk, n;
+	for (i = 0; i < (data || []).length; i++) {
+		rec = data[i];
+		cat = rec[axisX];
+		vy = barPlotParseNum(rec[valueCol]);
+		if (labelsFull.indexOf(cat) == -1) {
+			labelsFull.push(cat);
+			byCat[cat] = [];
+		}
+		if (!byCat[cat])
+			byCat[cat] = [];
+		if (vy != null)
+			byCat[cat].push(vy);
+		if (byCat[cat].length > maxN)
+			maxN = byCat[cat].length;
+	}
+	if (maxN < 1)
+		maxN = 1;
+	for (k = 1; k <= maxN; k++) {
+		sk = "#" + k;
+		seriesKeys.push(sk);
+		values[sk] = { "": {} };
+		for (i = 0; i < labelsFull.length; i++) {
+			cat = labelsFull[i];
+			n = byCat[cat] || [];
+			values[sk][""][cat] = (k - 1 < n.length) ? n[k - 1] : 0;
+		}
+	}
+	return { mode: "cat", labelsFull: labelsFull, seriesKeys: seriesKeys, stackKeys: [""], values: values, errMap: {} };
+}
+
+function barPlotRowFloatingHasInterval(pack) {
+	var arr, i, cell;
+	if (!pack || !pack.rowValues || !pack.rowValues[""])
+		return false;
+	arr = pack.rowValues[""];
+	for (i = 0; i < arr.length; i++) {
+		cell = arr[i];
+		if (cell && cell.min != null && cell.max != null && cell.min !== cell.max)
+			return true;
+	}
+	return false;
+}
+
+function barPlotApplyErrorAxisExtent(scales, datasets, horiz, beginAtZero, errorDirection) {
+	var i, j, ds, v, minV = null, maxV = null, axis;
+	var usePlus = !errorDirection || errorDirection == "both" || errorDirection == "plus";
+	var useMinus = !errorDirection || errorDirection == "both" || errorDirection == "minus";
+	for (i = 0; i < (datasets || []).length; i++) {
+		ds = datasets[i];
+		if (!ds || ds.hidden) continue;
+		for (j = 0; j < (ds.data || []).length; j++) {
+			v = ds.data[j];
+			if (v == null || typeof v === "object") continue;
+			if (minV == null || v < minV) minV = v;
+			if (maxV == null || v > maxV) maxV = v;
+			if (useMinus && ds._errorMin && ds._errorMin[j] != null && !isNaN(ds._errorMin[j])) {
+				if (minV == null || ds._errorMin[j] < minV) minV = ds._errorMin[j];
+			}
+			if (usePlus && ds._errorMax && ds._errorMax[j] != null && !isNaN(ds._errorMax[j])) {
+				if (maxV == null || ds._errorMax[j] > maxV) maxV = ds._errorMax[j];
+			}
+		}
+	}
+	if (minV == null || maxV == null)
+		return;
+	if (beginAtZero) {
+		if (minV > 0) minV = 0;
+		if (maxV < 0) maxV = 0;
+	}
+	axis = horiz ? scales.x : scales.y;
+	axis.min = minV;
+	axis.max = maxV;
+}
+
+function barPlotAggregateRows(data, axisX, axisY, seriesCol, stackCol, valueMinCol, valueMaxCol, floating) {
+	/* returns { labelsFull, seriesKeys, stackKeys, values[series][stack][cat]=sum, errors raw maps } */
+	var labelsFull = [], seriesKeys = [""], stackKeys = [""], values = {}, i, rec, cat, ser, stk, key, vy, vmin, vmax;
+	values[""] = {};
+	values[""][""] = {};
+	if (!data) return { labelsFull: labelsFull, seriesKeys: seriesKeys, stackKeys: stackKeys, values: values };
+	for (i = 0; i < data.length; i++) {
+		rec = data[i];
+		cat = rec[axisX];
+		if (labelsFull.indexOf(cat) == -1)
+			labelsFull.push(cat);
+		ser = seriesCol ? ("" + (rec[seriesCol] == null ? "" : rec[seriesCol])) : "";
+		stk = stackCol ? ("" + (rec[stackCol] == null ? "" : rec[stackCol])) : "";
+		if (seriesKeys.indexOf(ser) == -1) {
+			seriesKeys.push(ser);
+			values[ser] = {};
+		}
+		if (!values[ser])
+			values[ser] = {};
+		if (stackKeys.indexOf(stk) == -1)
+			stackKeys.push(stk);
+		if (!values[ser][stk])
+			values[ser][stk] = {};
+		if (floating) {
+			vmin = barPlotParseNum(rec[valueMinCol]);
+			vmax = barPlotParseNum(rec[valueMaxCol]);
+			if (vmin == null || vmax == null) continue;
+			if (!values[ser][stk][cat])
+				values[ser][stk][cat] = { min: vmin, max: vmax, n: 1 };
+			else {
+				values[ser][stk][cat].min = Math.min(values[ser][stk][cat].min, vmin);
+				values[ser][stk][cat].max = Math.max(values[ser][stk][cat].max, vmax);
+				values[ser][stk][cat].n++;
+			}
+		} else {
+			vy = barPlotParseNum(rec[axisY]);
+			if (vy == null) continue;
+			if (values[ser][stk][cat] == null)
+				values[ser][stk][cat] = 0;
+			values[ser][stk][cat] += vy;
+		}
+	}
+	if (seriesKeys.length > 1 && seriesKeys[0] === "")
+		seriesKeys.shift();
+	if (stackKeys.length > 1 && stackKeys[0] === "")
+		stackKeys.shift();
+	return { labelsFull: labelsFull, seriesKeys: seriesKeys, stackKeys: stackKeys, values: values };
+}
+
+function barPlotFloatingHasDistinctInterval(merged) {
+	var s, sk, cat, cell, ser, stk;
+	if (!merged || !merged.values) return false;
+	for (s = 0; s < (merged.seriesKeys || []).length; s++) {
+		ser = merged.seriesKeys[s];
+		if (!merged.values[ser]) continue;
+		for (sk = 0; sk < (merged.stackKeys || []).length; sk++) {
+			stk = merged.stackKeys[sk];
+			if (!merged.values[ser][stk]) continue;
+			for (cat in merged.values[ser][stk]) {
+				if (!Object.prototype.hasOwnProperty.call(merged.values[ser][stk], cat)) continue;
+				cell = merged.values[ser][stk][cat];
+				if (cell && cell.min != null && cell.max != null && cell.min !== cell.max)
+					return true;
+			}
+		}
+	}
+	return false;
+}
+
+function barPlotErrorForRow(rec, options, y) {
+	var mode = options.errorMode || "none", e = null, custom;
+	if (mode == "none" || y == null || isNaN(y))
+		return null;
+	if (mode == "sd") {
+		e = barPlotParseNum(rec[options.errorColumnSd]);
+		return e == null ? null : { min: y - e, max: y + e };
+	}
+	if (mode == "se") {
+		e = barPlotParseNum(rec[options.errorColumnSe]);
+		return e == null ? null : { min: y - e, max: y + e };
+	}
+	if (mode == "ci") {
+		/* 95% CI shown as ±5% of the bar value */
+		e = Math.abs(y) * 0.05;
+		return { min: y - e, max: y + e };
+	}
+	if (mode == "custom") {
+		custom = parseFloat(options.customErrorVal);
+		if (isNaN(custom)) return null;
+		if (options.customErrorKind == "pct")
+			e = Math.abs(y) * (custom / 100);
+		else
+			e = custom;
+		return { min: y - e, max: y + e };
+	}
+	return null;
+}
+
+function barPlotAggregateErrors(data, axisX, seriesCol, options) {
+	/* For cooked tables: take first non-null error per category+series (after GroupBy one row per group) */
+	var map = {}, i, rec, cat, ser, y, err, key;
+	if (!data || options.errorMode == "none") return map;
+	for (i = 0; i < data.length; i++) {
+		rec = data[i];
+		cat = rec[axisX];
+		ser = seriesCol ? ("" + (rec[seriesCol] == null ? "" : rec[seriesCol])) : "";
+		y = barPlotParseNum(rec[options.axisY]);
+		err = barPlotErrorForRow(rec, options, y);
+		key = ser + "\t" + cat;
+		if (err && !map[key])
+			map[key] = err;
+	}
+	return map;
+}
+
+function clearBarPlotChart() {
+	var legend, canvas, existing;
+	if (BarPlotGraph2d) {
+		BarPlotGraph2d.destroy();
+		BarPlotGraph2d = null;
+	}
+	canvas = document.getElementById("DialogBarPlotVisualizationCanvas");
+	if (canvas && typeof Chart !== "undefined" && Chart.getChart) {
+		existing = Chart.getChart(canvas);
+		if (existing) existing.destroy();
+	}
+	legend = document.getElementById("DialogBarPlotLegend");
+	if (legend) legend.innerHTML = "";
+	BarPlotLastLegend = null;
+	hideBarPlotColorCard();
+}
+
+function showEmptyBarPlotChart() {
+	var horiz = getBarPlotType() == "horizontal";
+	var valueAxis = { min: 0, max: 10, ticks: { stepSize: 2 }, grid: { display: true } };
+	var catAxis = { grid: { display: false } };
+	showEmptyChartPlaceholder("DialogBarPlotVisualizationCanvas", {
+		type: "bar",
+		data: { labels: ["", "", "", ""], datasets: [{ data: [] }] },
+		options: {
+			indexAxis: horiz ? "y" : "x",
+			scales: horiz ? { x: valueAxis, y: catAxis } : { x: catAxis, y: valueAxis }
+		}
+	});
+}
+
+function hideBarPlotColorCard() {
+	var card = document.getElementById("DialogBarPlotColorCard");
+	if (card) card.style.display = "none";
+}
+
+function barPlotEscapeAttr(s) {
+	return ("" + s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+function barPlotEscapeJs(s) {
+	return ("" + s).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
+function buildBarPlotLegendHtml(node, keys, labels, colors) {
+	var container = document.getElementById("DialogBarPlotLegend");
+	var options, cdns = "", i, hidden, eyeTitle, hiddenFlags = [];
+	if (!container) return;
+	ensureBarPlotStyleState(node.barPlotOptions);
+	options = node.barPlotOptions;
+	container.style.fontSize = (options.legendFontSize || 12) + "px";
+	for (i = 0; i < keys.length; i++) {
+		hidden = options.hiddenSeries.indexOf(keys[i]) != -1;
+		hiddenFlags.push(hidden);
+		eyeTitle = hidden ? DonaCadena({cat: "Mostra", spa: "Mostrar", eng: "Show"}) : DonaCadena({cat: "Amaga", spa: "Ocultar", eng: "Hide"});
+		cdns += '<div class="DialogBarPlotLegendItem' + (hidden ? " is-hidden" : "") + '">';
+		cdns += '<button type="button" class="DialogBarPlotLegendSwatch" style="background-color:' + barPlotEscapeAttr(colors[i]) +
+			';" onclick="onBarLegendColorClick(\'' + barPlotEscapeJs(keys[i]) + '\',event)"></button>';
+		cdns += '<button type="button" class="DialogBarPlotLegendEye" title="' + barPlotEscapeAttr(eyeTitle) +
+			'" onclick="onBarLegendEyeClick(\'' + barPlotEscapeJs(keys[i]) + '\')">' + (hidden ? "&#10005;" : "&#128065;") + "</button>";
+		cdns += '<span class="DialogBarPlotLegendLabel" style="font-size:' + (options.legendFontSize || 12) + 'px;">' + barPlotEscapeAttr(labels[i]) + "</span></div>";
+	}
+	container.innerHTML = cdns;
+	BarPlotLastLegend = { keys: keys.slice(), labels: labels.slice(), colors: colors.slice(), hidden: hiddenFlags };
+}
+
+function onBarLegendEyeClick(key) {
+	var node = getNodeDialog("DialogBarPlot"), list, idx;
+	if (!node) return;
+	ensureBarPlotStyleState(node.barPlotOptions);
+	list = node.barPlotOptions.hiddenSeries;
+	idx = list.indexOf(key);
+	if (idx == -1) list.push(key); else list.splice(idx, 1);
+	networkNodes.update(node);
+	DrawBarPlot();
+}
+
+function onBarLegendColorClick(key, evt) {
+	var card = document.getElementById("DialogBarPlotColorCard");
+	var dialog = document.getElementById("DialogBarPlot");
+	var cdns = "", i, color, rect, dRect;
+	if (!card || !dialog) return;
+	for (i = 0; i < ColorsForBarPlot.length; i++) {
+		color = ColorsForBarPlot[i];
+		cdns += '<button type="button" class="DialogBarPlotColorCardSwatch" style="background-color:' + color +
+			';" onclick="applyBarLegendColor(\'' + barPlotEscapeJs(key) + '\',\'' + color + '\')"></button>';
+	}
+	cdns += '<input type="color" onchange="applyBarLegendColor(\'' + barPlotEscapeJs(key) + '\', this.value)">';
+	card.innerHTML = cdns;
+	card.style.display = "flex";
+	rect = evt && evt.target ? evt.target.getBoundingClientRect() : null;
+	dRect = dialog.getBoundingClientRect();
+	if (rect) {
+		card.style.left = Math.max(8, rect.left - dRect.left) + "px";
+		card.style.top = Math.max(8, rect.bottom - dRect.top + 4) + "px";
+	}
+}
+
+function applyBarLegendColor(key, color) {
+	var node = getNodeDialog("DialogBarPlot");
+	if (!node) return;
+	ensureBarPlotStyleState(node.barPlotOptions);
+	node.barPlotOptions.seriesColors[key] = color;
+	networkNodes.update(node);
+	hideBarPlotColorCard();
+	DrawBarPlot();
+}
+
+function ShowBarPlotDialog(parentNodes, node) {
+	var parentInfo, parentIds, options, barType;
+	saveNodeDialog("DialogBarPlot", node);
+	parentInfo = collectBarPlotParentInfo(parentNodes);
+	node.barPlotParentNodes = parentInfo;
+	parentIds = Object.keys(parentInfo);
+	networkNodes.update(node);
+	if (!parentIds.length) {
+		document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
+		document.getElementById("DialogBarPlotSeriesDiv").innerHTML = "";
+		clearBarPlotChart();
+		showEmptyBarPlotChart();
+		return;
+	}
+	document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "Gràfic de barres", spa: "Gráfico de barras", eng: "Bar chart"});
+	if (!node.barPlotOptions) node.barPlotOptions = {};
+	options = node.barPlotOptions;
+	ensureBarPlotStyleState(options);
+	barType = options.barType || "vertical";
+	document.getElementById("DialogBarPlotTypeVertical").checked = barType == "vertical";
+	document.getElementById("DialogBarPlotTypeHorizontal").checked = barType == "horizontal";
+	document.getElementById("DialogBarPlotTypeFloating").checked = barType == "floating";
+	document.getElementById("DialogBarPlotTypeStacked").checked = barType == "stacked";
+	document.getElementById("DialogBarPlotBeginZero").checked = options.beginAtZero === false ? false : true;
+	document.getElementById("DialogBarPlotTitleInput").value = options.title || "";
+	if (document.getElementById("DialogBarPlotGroupByCategory"))
+		document.getElementById("DialogBarPlotGroupByCategory").checked = !!options.groupByCategory;
+	setBarPlotErrorMode(options.errorMode || "none");
+	setBarPlotErrorDirection(options.errorDirection || "both");
+	document.getElementById("DialogBarPlotErrorColor").value = options.errorColor || "#333333";
+	document.getElementById("DialogBarPlotErrorCustomKind").value = options.customErrorKind || "abs";
+	document.getElementById("DialogBarPlotErrorCustomVal").value = options.customErrorVal != null ? options.customErrorVal : 1;
+	syncBarPlotStyleControls(options);
+	populateBarPlotErrorColumnSelects(collectBarPlotUnionAttrs(parentInfo), options);
+	applyBarPlotTypeDisplay();
+	syncBarPlotSeriesWithParents(node);
+	createDialogWithSelectWithGroupsBarPlot(node);
+	networkNodes.update(node);
+	clearBarPlotChart();
+	showEmptyBarPlotChart();
+	if (options.drawn)
+		DrawBarPlot();
+}
+
+
+function barPlotMergeLocalIntoMerged(merged, labelsFull, errMap, localAgg, keyNamePrefix, singleValueCol) {
+	var s, sk, cat, ser, err, tab, outKey;
+	for (s = 0; s < localAgg.labelsFull.length; s++) {
+		if (labelsFull.indexOf(localAgg.labelsFull[s]) == -1)
+			labelsFull.push(localAgg.labelsFull[s]);
+	}
+	if (localAgg.mode == "cat" || localAgg.values) {
+		for (s = 0; s < (localAgg.seriesKeys || []).length; s++) {
+			ser = localAgg.seriesKeys[s];
+			outKey = keyNamePrefix;
+			if (localAgg.seriesKeys.length > 1 || (singleValueCol && ser && ser !== singleValueCol))
+				outKey = keyNamePrefix + (ser ? " / " + ser : "");
+			else if (!outKey)
+				outKey = ser || "Values";
+			if (merged.seriesKeys.indexOf(outKey) == -1)
+				merged.seriesKeys.push(outKey);
+			if (!merged.values[outKey]) merged.values[outKey] = {};
+			for (sk = 0; sk < (localAgg.stackKeys || [""]).length; sk++) {
+				if (merged.stackKeys.indexOf(localAgg.stackKeys[sk]) == -1)
+					merged.stackKeys.push(localAgg.stackKeys[sk]);
+				if (!localAgg.values[ser] || !localAgg.values[ser][localAgg.stackKeys[sk]])
+					continue;
+				if (!merged.values[outKey][localAgg.stackKeys[sk]])
+					merged.values[outKey][localAgg.stackKeys[sk]] = {};
+				for (cat in localAgg.values[ser][localAgg.stackKeys[sk]]) {
+					if (!Object.prototype.hasOwnProperty.call(localAgg.values[ser][localAgg.stackKeys[sk]], cat)) continue;
+					merged.values[outKey][localAgg.stackKeys[sk]][cat] = localAgg.values[ser][localAgg.stackKeys[sk]][cat];
+				}
+			}
+		}
+		if (localAgg.errMap) {
+			for (cat in localAgg.errMap) {
+				if (!Object.prototype.hasOwnProperty.call(localAgg.errMap, cat)) continue;
+				err = localAgg.errMap[cat];
+				tab = cat.indexOf("\t");
+				if (tab != -1) {
+					ser = cat.substring(0, tab);
+					outKey = keyNamePrefix;
+					if (localAgg.seriesKeys && localAgg.seriesKeys.length > 1)
+						outKey = keyNamePrefix + (ser ? " / " + ser : "");
+					errMap[outKey + "\t" + cat.substring(tab + 1)] = err;
+				} else
+					errMap[keyNamePrefix + "\t" + cat] = err;
+			}
+		}
+	}
+}
+
+function DrawBarPlot(event) {
+	if (event) event.preventDefault();
+	var node = getNodeDialog("DialogBarPlot");
+	if (!node) return;
+	var parentNodes = GetParentNodes(node);
+	if (!parentNodes || !parentNodes.length) return;
+	var options, barType, title, beginAtZero, titleFontSize, labelFontSize, axisLabelFontSize;
+	var parentNode, data, axisX, axisY, valueMin, valueMax;
+	var agg, labels, labelsFull, datasets = [], legendKeys = [], legendLabels = [], legendColors = [];
+	var s, sk, g, cat, color, keyName, row, errMap, err, floating, stacked, horiz, scales, plugins, chartOpts;
+	var seriesGroups, gIdx, localAgg, merged, ser, stk, cell, vy, eMin, eMax;
+	var chartPack = null, valueCols, active, act, c, valueAxisTitle;
+
+	if (!node.barPlotOptions) node.barPlotOptions = {};
+	options = node.barPlotOptions;
+	ensureBarPlotStyleState(options);
+	node.barPlotParentNodes = collectBarPlotParentInfo(parentNodes);
+	syncBarPlotSeriesWithParents(node);
+
+	barType = getBarPlotType();
+	floating = barType == "floating";
+	stacked = barType == "stacked";
+	horiz = barType == "horizontal";
+	title = document.getElementById("DialogBarPlotTitleInput").value || "";
+	beginAtZero = document.getElementById("DialogBarPlotBeginZero").checked;
+	titleFontSize = parseInt(document.getElementById("DialogBarPlotTitleSize").value, 10) || 16;
+	labelFontSize = parseInt(document.getElementById("DialogBarPlotLabelSize").value, 10) || 12;
+
+	options.barType = barType;
+	options.title = title;
+	options.beginAtZero = beginAtZero;
+	options.titleFontSize = titleFontSize;
+	options.labelFontSize = labelFontSize;
+	options.legendFontSize = clampChartFontSize(document.getElementById("DialogBarPlotLegendSize") ? document.getElementById("DialogBarPlotLegendSize").value : options.legendFontSize, 8, 28, 12);
+	options.axisLabelFontSize = clampChartFontSize(document.getElementById("DialogBarPlotAxisLabelSize") ? document.getElementById("DialogBarPlotAxisLabelSize").value : options.axisLabelFontSize, 8, 28, 12);
+	axisLabelFontSize = options.axisLabelFontSize;
+	options.groupByCategory = document.getElementById("DialogBarPlotGroupByCategory") ? document.getElementById("DialogBarPlotGroupByCategory").checked : false;
+	options.errorMode = getBarPlotErrorMode();
+	options.errorDirection = getBarPlotErrorDirection();
+	options.errorColor = document.getElementById("DialogBarPlotErrorColor") ? document.getElementById("DialogBarPlotErrorColor").value : "#333333";
+	options.confidencePct = 95;
+	options.customErrorKind = document.getElementById("DialogBarPlotErrorCustomKind") ? document.getElementById("DialogBarPlotErrorCustomKind").value : "abs";
+	options.customErrorVal = document.getElementById("DialogBarPlotErrorCustomVal") ? parseFloat(document.getElementById("DialogBarPlotErrorCustomVal").value) : 1;
+	if (options.errorMode == "sd" && document.getElementById("DialogBarPlotErrorSdSelect"))
+		options.errorColumnSd = document.getElementById("DialogBarPlotErrorSdSelect").value;
+	if (options.errorMode == "se" && document.getElementById("DialogBarPlotErrorSeSelect"))
+		options.errorColumnSe = document.getElementById("DialogBarPlotErrorSeSelect").value;
+
+	labelsFull = [];
+	merged = { values: {}, seriesKeys: [], stackKeys: [""] };
+	errMap = {};
+
+	/* Collect the series (one per parent node) that have a complete selection */
+	seriesGroups = options.seriesGroups || [];
+	active = [];
+	for (gIdx = 0; gIdx < seriesGroups.length; gIdx++) {
+		parentNode = networkNodes.get(seriesGroups[gIdx].nodeSelected);
+		if (!parentNode || !parentNode.STAdata) continue;
+		axisX = seriesGroups[gIdx].axisX;
+		valueCols = (seriesGroups[gIdx].valueColumns || []).slice();
+		if (!valueCols.length && seriesGroups[gIdx].axisY && seriesGroups[gIdx].axisY != axisX)
+			valueCols = [seriesGroups[gIdx].axisY];
+		valueCols = valueCols.filter(function (name) { return name != axisX; });
+		valueMin = seriesGroups[gIdx].valueMin;
+		valueMax = seriesGroups[gIdx].valueMax;
+		if (!axisX || (floating ? (!valueMin || !valueMax) : !valueCols.length)) continue;
+		if (floating && valueMin == valueMax) {
+			alert(DonaCadena({
+				cat: "Les barres flotants necessiten dues columnes diferents (inici i fi).",
+				spa: "Las barras flotantes necesitan dos columnas distintas (inicio y fin).",
+				eng: "Floating bars need two different columns (start and end)."
+			}));
+			return;
+		}
+		active.push({
+			data: parentNode.STAdata,
+			axisX: axisX,
+			valueCols: valueCols,
+			valueMin: valueMin,
+			valueMax: valueMax,
+			legend: seriesGroups[gIdx].legendText ||
+				((node.barPlotParentNodes[seriesGroups[gIdx].nodeSelected] || {}).nodeLabel) ||
+				("S" + (gIdx + 1))
+		});
+	}
+	if (!active.length) {
+		if (event) alert(DonaCadena({cat: "Seleccioneu categories i valors.", spa: "Seleccione categorías y valores.", eng: "Select categories and values."}));
+		return;
+	}
+
+	if (active.length == 1) {
+		/* Single node: per-row semantics (repeated categories stay separate) */
+		act = active[0];
+		data = act.data;
+		axisX = act.axisX;
+		valueCols = act.valueCols;
+		valueMin = act.valueMin;
+		valueMax = act.valueMax;
+		if (floating) {
+			chartPack = barPlotBuildPerRow(data, axisX, [], true, valueMin, valueMax, options);
+			if (!barPlotRowFloatingHasInterval(chartPack)) {
+				alert(DonaCadena({
+					cat: "Les barres flotants necessiten dos valors diferents (inici ≠ fi) a les dades.",
+					spa: "Las barras flotantes necesitan dos valores distintos (inicio ≠ fin) en los datos.",
+					eng: "Floating bars need two different values (start ≠ end) in the data."
+				}));
+				return;
+			}
+		} else if (stacked) {
+			if (valueCols.length > 1)
+				chartPack = barPlotBuildStackedWide(data, axisX, valueCols);
+			else
+				chartPack = barPlotBuildStackedLong(data, axisX, valueCols[0]);
+		} else if (options.groupByCategory) {
+			chartPack = barPlotBuildClusteredByCategory(data, axisX, valueCols, options);
+		} else {
+			chartPack = barPlotBuildPerRow(data, axisX, valueCols, false, "", "", options);
+		}
+		labelsFull = chartPack.labelsFull;
+		errMap = chartPack.errMap || {};
+		if (chartPack.mode == "cat") {
+			merged = { values: chartPack.values, seriesKeys: chartPack.seriesKeys, stackKeys: chartPack.stackKeys || [""] };
+			agg = merged;
+		}
+	} else {
+		/* Several nodes: align by category and merge */
+		for (gIdx = 0; gIdx < active.length; gIdx++) {
+			act = active[gIdx];
+			data = act.data;
+			axisX = act.axisX;
+			valueCols = act.valueCols;
+			axisY = valueCols.length ? valueCols[0] : "";
+			keyName = act.legend;
+			if (floating) {
+				localAgg = barPlotAggregateRows(data, axisX, axisY, "", "", act.valueMin, act.valueMax, true);
+				localAgg.mode = "cat";
+				barPlotMergeLocalIntoMerged(merged, labelsFull, errMap, localAgg, keyName, "");
+			} else if (stacked) {
+				if (valueCols.length > 1)
+					localAgg = barPlotBuildStackedWide(data, axisX, valueCols);
+				else
+					localAgg = barPlotBuildGrouped(data, axisX, valueCols, options);
+				barPlotMergeLocalIntoMerged(merged, labelsFull, errMap, localAgg, keyName, valueCols.length == 1 ? valueCols[0] : null);
+			} else if (options.groupByCategory) {
+				localAgg = barPlotBuildClusteredByCategory(data, axisX, valueCols, options);
+				barPlotMergeLocalIntoMerged(merged, labelsFull, errMap, localAgg, keyName, valueCols.length == 1 ? valueCols[0] : null);
+			} else {
+				localAgg = barPlotBuildGrouped(data, axisX, valueCols, options);
+				barPlotMergeLocalIntoMerged(merged, labelsFull, errMap, localAgg, keyName, valueCols.length == 1 ? valueCols[0] : null);
+			}
+		}
+		if (!merged.seriesKeys.length) {
+			if (event) alert(DonaCadena({cat: "No s'ha pogut crear el gràfic.", spa: "No se ha podido crear el gráfico.", eng: "Could not create the chart."}));
+			return;
+		}
+		agg = merged;
+		chartPack = { mode: "cat" };
+	}
+
+	/* Axis titles / legend fallbacks from the active selections */
+	options.axisX = active[0].axisX;
+	if (floating) {
+		options.valueColumns = [];
+		options.axisY = active.length == 1 ? active[0].legend : "";
+		valueAxisTitle = active[0].valueMin + " - " + active[0].valueMax;
+	} else {
+		valueCols = [];
+		for (gIdx = 0; gIdx < active.length; gIdx++) {
+			for (c = 0; c < active[gIdx].valueCols.length; c++) {
+				if (valueCols.indexOf(active[gIdx].valueCols[c]) == -1)
+					valueCols.push(active[gIdx].valueCols[c]);
+			}
+		}
+		options.valueColumns = valueCols;
+		options.axisY = valueCols.length == 1 ? valueCols[0] : "";
+		valueAxisTitle = valueCols.join(", ");
+	}
+
+	if (!labelsFull.length) {
+		if (event) alert(DonaCadena({cat: "No s'ha pogut crear el gràfic.", spa: "No se ha podido crear el gráfico.", eng: "Could not create the chart."}));
+		return;
+	}
+
+	labels = labelsFull.map(barPlotShortLabel);
+
+	if (chartPack && chartPack.mode == "row") {
+		for (s = 0; s < chartPack.seriesKeys.length; s++) {
+			ser = chartPack.seriesKeys[s];
+			keyName = ser || options.axisY || "Values";
+			color = options.seriesColors[keyName] || ColorsForBarPlot[legendKeys.length % ColorsForBarPlot.length];
+			row = [];
+			eMin = [];
+			eMax = [];
+			for (g = 0; g < chartPack.labelsFull.length; g++) {
+				if (floating) {
+					cell = chartPack.rowValues[ser][g];
+					row.push(cell ? [cell.min, cell.max] : null);
+				} else {
+					vy = chartPack.rowValues[ser][g];
+					if (vy == null) vy = 0;
+					row.push(vy);
+					err = chartPack.errMap[ser + "\t" + g];
+					if (err) {
+						eMin.push(err.min);
+						eMax.push(err.max);
+					} else {
+						eMin.push(null);
+						eMax.push(null);
+					}
+				}
+			}
+			datasets.push({
+				label: keyName,
+				data: row,
+				backgroundColor: color,
+				borderColor: color,
+				borderWidth: 1,
+				hidden: options.hiddenSeries.indexOf(keyName) != -1,
+				_errorMin: floating ? null : eMin,
+				_errorMax: floating ? null : eMax,
+				categoryPercentage: 0.85,
+				barPercentage: 0.9
+			});
+			legendKeys.push(keyName);
+			legendLabels.push(keyName);
+			legendColors.push(color);
+		}
+	} else {
+		if (agg)
+			merged.seriesKeys = agg.seriesKeys;
+		if (!merged.seriesKeys.length)
+			merged.seriesKeys = [""];
+		if (!merged.stackKeys.length)
+			merged.stackKeys = [""];
+
+		if (floating && !barPlotFloatingHasDistinctInterval(merged)) {
+			alert(DonaCadena({
+				cat: "Les barres flotants necessiten dos valors diferents (inici ≠ fi) a les dades.",
+				spa: "Las barras flotantes necesitan dos valores distintos (inicio ≠ fin) en los datos.",
+				eng: "Floating bars need two different values (start ≠ end) in the data."
+			}));
+			return;
+		}
+
+		for (s = 0; s < merged.seriesKeys.length; s++) {
+			for (sk = 0; sk < merged.stackKeys.length; sk++) {
+				ser = merged.seriesKeys[s];
+				stk = merged.stackKeys[sk];
+				if (!merged.values[ser] || !merged.values[ser][stk])
+					continue;
+				keyName = ser + (stk ? " [" + stk + "]" : "");
+				if (!keyName) keyName = options.axisY || "Values";
+				color = options.seriesColors[keyName] || ColorsForBarPlot[legendKeys.length % ColorsForBarPlot.length];
+				row = [];
+				eMin = [];
+				eMax = [];
+				for (g = 0; g < labelsFull.length; g++) {
+					cat = labelsFull[g];
+					if (floating) {
+						cell = merged.values[ser][stk][cat];
+						row.push(cell ? [cell.min, cell.max] : null);
+					} else {
+						vy = merged.values[ser][stk][cat];
+						if (vy == null) vy = 0;
+						row.push(vy);
+						err = errMap[(ser || "") + "\t" + cat];
+						if (err) {
+							eMin.push(err.min);
+							eMax.push(err.max);
+						} else {
+							eMin.push(null);
+							eMax.push(null);
+						}
+					}
+				}
+				datasets.push({
+					label: keyName,
+					data: row,
+					backgroundColor: color,
+					borderColor: color,
+					borderWidth: 1,
+					stack: stacked ? (stk || "stack") : undefined,
+					hidden: options.hiddenSeries.indexOf(keyName) != -1,
+					_errorMin: floating ? null : eMin,
+					_errorMax: floating ? null : eMax,
+					categoryPercentage: 0.85,
+					barPercentage: 0.9
+				});
+				legendKeys.push(keyName);
+				legendLabels.push(keyName);
+				legendColors.push(color);
+			}
+		}
+	}
+
+	scales = {
+		x: {
+			stacked: stacked,
+			beginAtZero: horiz ? beginAtZero : false,
+			title: { display: true, text: horiz ? valueAxisTitle : (options.axisX || ""), font: { size: axisLabelFontSize } },
+			ticks: { autoSkip: horiz, font: { size: labelFontSize } },
+			grid: { display: horiz }
+		},
+		y: {
+			stacked: stacked,
+			beginAtZero: horiz ? false : beginAtZero,
+			title: { display: true, text: horiz ? (options.axisX || "") : valueAxisTitle, font: { size: axisLabelFontSize } },
+			ticks: { autoSkip: !horiz, font: { size: labelFontSize } },
+			grid: { display: !horiz }
+		}
+	};
+	/* Room past the tallest bar so the value label is not clipped. */
+	if (horiz)
+		scales.x.grace = "14%";
+	else
+		scales.y.grace = "14%";
+	if (!floating && !stacked && options.errorMode != "none")
+		barPlotApplyErrorAxisExtent(scales, datasets, horiz, beginAtZero, options.errorDirection);
+
+	plugins = {
+		title: { display: !!title, text: title, font: { size: titleFontSize } },
+		legend: { display: false },
+		labels: {
+			render: floating ? function () { return ""; } : "value",
+			precision: 0,
+			showZero: false,
+			fontSize: labelFontSize,
+			fontColor: "#333",
+			position: "default",
+			overlap: true
+		}
+	};
+	chartOpts = {
+		indexAxis: horiz ? "y" : "x",
+		maintainAspectRatio: false,
+		resizeDelay: 100,
+		scales: scales,
+		plugins: plugins,
+		barPlotError: {
+			color: options.errorColor || "#333333",
+			direction: options.errorDirection || "both"
+		}
+	};
+
+	clearBarPlotChart();
+	BarPlotGraph2d = new Chart(document.getElementById("DialogBarPlotVisualizationCanvas"), {
+		type: "bar",
+		data: { labels: labels, datasets: datasets },
+		options: chartOpts,
+		plugins: (options.errorMode != "none" && !floating && !stacked) ? [barPlotErrorBarsPlugin] : []
+	});
+	buildBarPlotLegendHtml(node, legendKeys, legendLabels, legendColors);
+	options.drawn = true;
+	networkNodes.update(node);
+}
+
+function CloseDialogBarPlot(event) {
+	hideNodeDialog("DialogBarPlot", event);
+}
+
+function SaveBarPlot(event) {
+	var canvas, exportCanvas, useWhite, legend, gap = 24, legendWidth = 220, rowH, padTop = 12, swatch = 14, margin, out, ctx, i, y, x0, n, chartW, chartH, contentH, legendBlockH, legendOffsetY, chartY, tw, legendSize, barNode;
+	if (event) event.preventDefault();
+	canvas = BarPlotGraph2d && BarPlotGraph2d.canvas ? BarPlotGraph2d.canvas : document.getElementById("DialogBarPlotVisualizationCanvas");
+	if (!BarPlotGraph2d || !canvas) {
+		alert(DonaCadena({cat: "Dibuixeu primer el gràfic.", spa: "Dibuje primero el gráfico.", eng: "Draw the chart first."}));
+		return;
+	}
+	useWhite = confirm(DonaCadena({
+		cat: "Voleu fons blanc al PNG?\n\nD'acord = fons blanc\nCancel·la = fons transparent",
+		spa: "¿Quiere fondo blanco en el PNG?\n\nAceptar = fondo blanco\nCancelar = fondo transparente",
+		eng: "White background for the PNG?\n\nOK = white background\nCancel = transparent background"
+	}));
+	barNode = getNodeDialog("DialogBarPlot");
+	legendSize = (barNode && barNode.barPlotOptions && barNode.barPlotOptions.legendFontSize) ? barNode.barPlotOptions.legendFontSize : 12;
+	rowH = chartLegendRowHeight(legendSize);
+	legend = BarPlotLastLegend;
+	n = legend && legend.labels ? legend.labels.length : 0;
+	margin = useWhite ? 24 : 0;
+	chartW = canvas.width;
+	chartH = canvas.height;
+	legendBlockH = padTop + Math.max(n, 1) * rowH + 12;
+	contentH = Math.max(chartH, legendBlockH);
+	out = document.createElement("canvas");
+	out.width = margin + chartW + gap + legendWidth + margin;
+	out.height = margin + contentH + margin;
+	ctx = out.getContext("2d");
+	if (useWhite) {
+		ctx.fillStyle = "#fff";
+		ctx.fillRect(0, 0, out.width, out.height);
+	}
+	chartY = margin + Math.max(0, (contentH - chartH) / 2);
+	ctx.drawImage(canvas, margin, chartY);
+	x0 = margin + chartW + gap;
+	legendOffsetY = margin + Math.max(0, (contentH - legendBlockH) / 2);
+	ctx.font = legendSize + "px sans-serif";
+	ctx.textBaseline = "middle";
+	for (i = 0; i < n; i++) {
+		y = legendOffsetY + padTop + i * rowH + rowH / 2;
+		ctx.globalAlpha = legend.hidden[i] ? 0.4 : 1;
+		ctx.fillStyle = legend.colors[i] || "#888";
+		ctx.fillRect(x0, y - swatch / 2, swatch, swatch);
+		ctx.strokeStyle = "#666";
+		ctx.strokeRect(x0 + 0.5, y - swatch / 2 + 0.5, swatch - 1, swatch - 1);
+		ctx.fillStyle = "#222";
+		ctx.fillText("" + legend.labels[i], x0 + swatch + 8, y);
+		if (legend.hidden[i]) {
+			tw = ctx.measureText("" + legend.labels[i]).width;
+			ctx.beginPath();
+			ctx.moveTo(x0 + swatch + 8, y);
+			ctx.lineTo(x0 + swatch + 8 + tw, y);
+			ctx.strokeStyle = "#222";
+			ctx.stroke();
+		}
+		ctx.globalAlpha = 1;
+	}
+	function onBlob(blob) {
+		if (!blob) {
+			alert(DonaCadena({cat: "No s'ha pogut desar la imatge.", spa: "No se ha podido guardar la imagen.", eng: "Could not save the image."}));
+			return;
+		}
+		if (window.showSaveFilePicker) {
+			window.showSaveFilePicker({ suggestedName: "bar-chart.png", types: [{ description: "PNG", accept: { "image/png": [".png"] } }] })
+				.then(function (h) { return h.createWritable(); })
+				.then(function (w) { return w.write(blob).then(function () { return w.close(); }); })
+				.catch(function () {
+					var a = document.createElement("a");
+					a.href = URL.createObjectURL(blob);
+					a.download = "bar-chart.png";
+					a.click();
+				});
+		} else {
+			var a = document.createElement("a");
+			a.href = URL.createObjectURL(blob);
+			a.download = "bar-chart.png";
+			a.click();
+		}
+	}
+	if (out.toBlob)
+		out.toBlob(onBlob, "image/png");
+	else
+		onBlob(radarPlotPngBlobFromDataUrl(out.toDataURL("image/png")));
+}
+
+function disableClassificationInBarPlot() {
+	/* legacy no-op: pie removed */
 }
