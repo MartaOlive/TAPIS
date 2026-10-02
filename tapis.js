@@ -7874,6 +7874,7 @@ function ShowRadarPlotDialog(parentNodes, node) {
 	if (!parentIds.length) {
 		document.getElementById("DialogRadarPlotTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		clearRadarPlotChart();
+		showEmptyRadarPlotChart();
 		return;
 	}
 	document.getElementById("DialogRadarPlotTitle").innerHTML = DonaCadena({cat: "Gràfics polars", spa: "Gráficos polares", eng: "Polar charts"});
@@ -7929,6 +7930,7 @@ function ShowRadarPlotDialog(parentNodes, node) {
 	}
 
 	clearRadarPlotChart();
+	showEmptyRadarPlotChart();
 	if (hasSavedOptions && radarPlotHasDrawableOptions(options)) {
 		if (layout == "wide") {
 			if (getSelectedRadarPlotAxes().length >= 3)
@@ -7948,6 +7950,7 @@ function ShowCircularChartDialog(parentNodes, node) {
 	if (!parentIds.length) {
 		document.getElementById("DialogCircularChartTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		clearCircularChart();
+		showEmptyCircularChart();
 		return;
 	}
 	document.getElementById("DialogCircularChartTitle").innerHTML = DonaCadena({cat: "Gràfic circular", spa: "Gráfico circular", eng: "Circular chart"});
@@ -7986,6 +7989,7 @@ function ShowCircularChartDialog(parentNodes, node) {
 	}
 
 	clearCircularChart();
+	showEmptyCircularChart();
 	if (hasSavedOptions)
 		DrawCircularChart();
 }

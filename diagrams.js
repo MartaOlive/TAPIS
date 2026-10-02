@@ -713,6 +713,8 @@ function toggleRadarPlotType() {
 		populateRadarPolarItemSelect(node);
 	} else if (!isRadarPlotSeriesModeAll())
 		createDialogWithSelectWithGroupsRadarPlot(node);
+	if (!RadarPlotChart)
+		showEmptyRadarPlotChart();
 }
 
 function populateRadarPlotAllNodeSelect(parentInfo, selectedId) {
@@ -1520,6 +1522,42 @@ function clearRadarPlotChart() {
 	hideRadarColorCard();
 }
 
+/** Placeholder chart (axes/grid without data) so the visualization area is not left blank.
+ * It is not kept in the dialog's chart variable, so "Save as PNG" still asks to draw first. */
+function showEmptyChartPlaceholder(canvasId, config) {
+	var canvas = document.getElementById(canvasId), existing;
+	if (!canvas || typeof Chart === "undefined")
+		return;
+	if (Chart.getChart) {
+		existing = Chart.getChart(canvas);
+		if (existing)
+			existing.destroy();
+	}
+	if (!config.options) config.options = {};
+	config.options.maintainAspectRatio = false;
+	config.options.animation = false;
+	if (!config.options.plugins) config.options.plugins = {};
+	config.options.plugins.legend = { display: false };
+	config.options.plugins.tooltip = { enabled: false };
+	config.options.plugins.labels = { render: function () { return ""; } };
+	config.options.events = [];
+	new Chart(canvas, config);
+}
+
+function showEmptyRadarPlotChart() {
+	var polar = isRadarPlotPolar(), labels = ["", "", "", "", ""];
+	showEmptyChartPlaceholder("DialogRadarPlotVisualizationCanvas", {
+		type: polar ? "polarArea" : "radar",
+		data: {
+			labels: labels,
+			datasets: [{ data: polar ? [0, 0, 0, 0, 0] : [], backgroundColor: "rgba(0,0,0,0)", borderWidth: 0 }]
+		},
+		options: {
+			scales: { r: { min: 0, max: 10, ticks: { display: false, stepSize: 2 }, pointLabels: { display: !polar } } }
+		}
+	});
+}
+
 function radarPlotEscapeAttr(s) {
 	return ("" + s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 }
@@ -2223,6 +2261,16 @@ function clearCircularChart() {
 	hideCircularColorCard();
 }
 
+function showEmptyCircularChart() {
+	showEmptyChartPlaceholder("DialogCircularChartVisualizationCanvas", {
+		type: isCircularChartDoughnut() ? "doughnut" : "pie",
+		data: {
+			labels: [""],
+			datasets: [{ data: [1], backgroundColor: ["#eeeeee"], borderColor: "#d0d0d0", borderWidth: 1 }]
+		}
+	});
+}
+
 function circularChartTruncateLabel(value) {
 	var s = "" + value;
 	if (s.length > 35)
@@ -2258,6 +2306,8 @@ function applyCircularChartTypeDisplay() {
 
 function toggleCircularChartType() {
 	applyCircularChartTypeDisplay();
+	if (!CircularChartInstance)
+		showEmptyCircularChart();
 }
 
 function applyCircularChartSeriesModeDisplay(seriesMode) {

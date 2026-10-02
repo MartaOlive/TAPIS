@@ -141,6 +141,8 @@ function toggleBarPlotType() {
 		syncBarPlotSeriesWithParents(node);
 		createDialogWithSelectWithGroupsBarPlot(node);
 	}
+	if (!BarPlotGraph2d)
+		showEmptyBarPlotChart();
 }
 
 function applyBarPlotTypeDisplay() {
@@ -757,6 +759,20 @@ function clearBarPlotChart() {
 	hideBarPlotColorCard();
 }
 
+function showEmptyBarPlotChart() {
+	var horiz = getBarPlotType() == "horizontal";
+	var valueAxis = { min: 0, max: 10, ticks: { stepSize: 2 }, grid: { display: true } };
+	var catAxis = { grid: { display: false } };
+	showEmptyChartPlaceholder("DialogBarPlotVisualizationCanvas", {
+		type: "bar",
+		data: { labels: ["", "", "", ""], datasets: [{ data: [] }] },
+		options: {
+			indexAxis: horiz ? "y" : "x",
+			scales: horiz ? { x: valueAxis, y: catAxis } : { x: catAxis, y: valueAxis }
+		}
+	});
+}
+
 function hideBarPlotColorCard() {
 	var card = document.getElementById("DialogBarPlotColorCard");
 	if (card) card.style.display = "none";
@@ -843,6 +859,7 @@ function ShowBarPlotDialog(parentNodes, node) {
 		document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		document.getElementById("DialogBarPlotSeriesDiv").innerHTML = "";
 		clearBarPlotChart();
+		showEmptyBarPlotChart();
 		return;
 	}
 	document.getElementById("DialogBarPlotTitle").innerHTML = DonaCadena({cat: "Gràfic de barres", spa: "Gráfico de barras", eng: "Bar chart"});
@@ -870,6 +887,7 @@ function ShowBarPlotDialog(parentNodes, node) {
 	createDialogWithSelectWithGroupsBarPlot(node);
 	networkNodes.update(node);
 	clearBarPlotChart();
+	showEmptyBarPlotChart();
 	if (options.drawn)
 		DrawBarPlot();
 }
@@ -1231,6 +1249,11 @@ function DrawBarPlot(event) {
 			grid: { display: !horiz }
 		}
 	};
+	/* Room past the tallest bar so the value label is not clipped. */
+	if (horiz)
+		scales.x.grace = "14%";
+	else
+		scales.y.grace = "14%";
 	if (!floating && !stacked && options.errorMode != "none")
 		barPlotApplyErrorAxisExtent(scales, datasets, horiz, beginAtZero, options.errorDirection);
 
