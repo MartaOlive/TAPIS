@@ -203,6 +203,8 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
+	if (node.image=="me.png" && parentNode.image=="Parties.png") return null;
+	if (node.image=="me.png" && parentNode.image!="Parties.png") return "me tool only can goes after Parties tool";
 	if (node.image=="qualityResultsViewer.png" && (parentNode.image!="uncertainty.png" && parentNode.image!="completness.png" && parentNode.image!="misclassificationMatrix.png" && parentNode.image!="logicalConsistency.png" && parentNode.image!="formatConsistency.png" && parentNode.image!="temporalQuality.png" && parentNode.image!="thematicQuality.png" && parentNode.image!="positionalQuality.png" )) return "Quality Results Viewer can only be connected to a quality node";
 	if (!STAEntitiesArray.includes(removeFileExtension(parentNode.image)) && !STAOperationsArray.includes(removeFileExtension(parentNode.image)) && parentNode.image != "sta.png" && parentNode.image != "ogcAPICols.png" && parentNode.image != "ogcAPIItems.png" && (STAEntitiesArray.includes(removeFileExtension(node.image)) || node.image == "ObsLayer.png"||STAOperationsArray.includes(removeFileExtension(node.image)))) {
 		return "It is not possible to link an STAnode after no STA node" //Falta afegir OGCApi Collection xq utilitza el filter i mirar si algo més
@@ -8794,6 +8796,22 @@ function networkDoubleClick(params) {
 			}
 			showNodeDialog("DialogDataQualityResult");
 		}
+		else if (currentNode.image == "me.png") {
+			var parentNodes=GetParentNodes(currentNode);
+			currentNode.STAURL=parentNodes[0].STAURL;
+			saveNodeDialog("DialogMe", currentNode);
+
+
+			showNodeDialog("DialogMe");
+			
+			// if (!parentNodes || !parentNodes.length) {
+			// 	populateDialogdataQualityResultEmpty();
+			// } else {
+			// 	if (parentNodes[0].STAQualityNodeResults) currentNode.STAQualityNodeResults=parentNodes[0].STAQualityNodeResults;
+			// 	populateDialogdataQualityResult(parentNodes[0], currentNode);
+			// }
+			// 
+		}
 	}
 }
 
@@ -12400,7 +12418,17 @@ function populateDialogdataQualityResult(parentNode, node){
 	}
 }
 
+function okButtonMyParty(event){
+	event.preventDefault(); 
+	var node= getNodeDialog("DialogMe");
+	hideNodeDialog("DialogMe");
+	var url= node.STAURL+"?$filter=authId eq me()"
+	LoadJSONNodeSTAData(node, false, url );
+	node.STAURL=url;
+	updateQueryAndTableArea(currentNode);
 
+
+}
 
 //function giveMeNetworkInformation(event) {
 //			hideNodeDialog("DialogContextMenu", event);

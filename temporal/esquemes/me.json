@@ -1,0 +1,289 @@
+{
+	"nodes": [
+		{
+			"id": "39ch3.202m8e",
+			"label": "STA plus",
+			"image": "sta.png",
+			"shape": "circularImage",
+			"STAURL": "http://192.168.2.1:8080/FROST-Server/v1.1",
+			"STAdata": [
+				{
+					"name": "Agreements",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Agreements"
+				},
+				{
+					"name": "Campaigns",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Campaigns"
+				},
+				{
+					"name": "Cells",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Cells"
+				},
+				{
+					"name": "Datastreams",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Datastreams"
+				},
+				{
+					"name": "FeaturesOfInterest",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/FeaturesOfInterest"
+				},
+				{
+					"name": "HistoricalLocations",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/HistoricalLocations"
+				},
+				{
+					"name": "Licenses",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Licenses"
+				},
+				{
+					"name": "Locations",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Locations"
+				},
+				{
+					"name": "MultiDatastreams",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/MultiDatastreams"
+				},
+				{
+					"name": "Observations",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Observations"
+				},
+				{
+					"name": "ObservationGroups",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/ObservationGroups"
+				},
+				{
+					"name": "ObservedProperties",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/ObservedProperties"
+				},
+				{
+					"name": "Parties",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties"
+				},
+				{
+					"name": "PartyActivities",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/PartyActivities"
+				},
+				{
+					"name": "PartyLocations",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/PartyLocations"
+				},
+				{
+					"name": "Relations",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Relations"
+				},
+				{
+					"name": "ReleaseProfiles",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/ReleaseProfiles"
+				},
+				{
+					"name": "Sensors",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Sensors"
+				},
+				{
+					"name": "Things",
+					"url": "http://192.168.2.1:8080/FROST-Server/v1.1/Things"
+				}
+			],
+			"x": -49,
+			"y": -75
+		},
+		{
+			"id": "h15s.74du138",
+			"label": "Parties",
+			"image": "Parties.png",
+			"shape": "circularImage",
+			"STAURL": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties",
+			"STAEntityName": "Parties",
+			"STAdata": [
+				{
+					"@iot.selfLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('1966aafe-f3b9-4d1a-b28c-780cb25e276d')",
+					"@iot.id": "1966aafe-f3b9-4d1a-b28c-780cb25e276d",
+					"description": "Acting user of the STAplus SCK QGIS plugin",
+					"role": "individual",
+					"displayName": "LJS",
+					"Agreements@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('1966aafe-f3b9-4d1a-b28c-780cb25e276d')/Agreements",
+					"Campaigns@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('1966aafe-f3b9-4d1a-b28c-780cb25e276d')/Campaigns",
+					"Datastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('1966aafe-f3b9-4d1a-b28c-780cb25e276d')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('1966aafe-f3b9-4d1a-b28c-780cb25e276d')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('1966aafe-f3b9-4d1a-b28c-780cb25e276d')/ObservationGroups",
+					"PartyActivities@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('1966aafe-f3b9-4d1a-b28c-780cb25e276d')/PartyActivities",
+					"PartyLocations@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('1966aafe-f3b9-4d1a-b28c-780cb25e276d')/PartyLocations",
+					"ReleaseProfiles@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('1966aafe-f3b9-4d1a-b28c-780cb25e276d')/ReleaseProfiles",
+					"Things@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('1966aafe-f3b9-4d1a-b28c-780cb25e276d')/Things"
+				},
+				{
+					"@iot.selfLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('c11a4b73-6e0d-4bd0-afae-3cd47653cd70')",
+					"@iot.id": "c11a4b73-6e0d-4bd0-afae-3cd47653cd70",
+					"description": "Acting user of the STAplus SCK QGIS plugin",
+					"authId": "c1a70fe6-06a5-39f6-8098-9e585c4ce55f",
+					"role": "individual",
+					"displayName": "Marta",
+					"Agreements@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('c11a4b73-6e0d-4bd0-afae-3cd47653cd70')/Agreements",
+					"Campaigns@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('c11a4b73-6e0d-4bd0-afae-3cd47653cd70')/Campaigns",
+					"Datastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('c11a4b73-6e0d-4bd0-afae-3cd47653cd70')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('c11a4b73-6e0d-4bd0-afae-3cd47653cd70')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('c11a4b73-6e0d-4bd0-afae-3cd47653cd70')/ObservationGroups",
+					"PartyActivities@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('c11a4b73-6e0d-4bd0-afae-3cd47653cd70')/PartyActivities",
+					"PartyLocations@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('c11a4b73-6e0d-4bd0-afae-3cd47653cd70')/PartyLocations",
+					"ReleaseProfiles@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('c11a4b73-6e0d-4bd0-afae-3cd47653cd70')/ReleaseProfiles",
+					"Things@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('c11a4b73-6e0d-4bd0-afae-3cd47653cd70')/Things"
+				},
+				{
+					"@iot.selfLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('207563d8-fbef-4cee-bdde-c2936a2e1463')",
+					"@iot.id": "207563d8-fbef-4cee-bdde-c2936a2e1463",
+					"description": "Acting user of the STAplus SCK QGIS plugin",
+					"role": "individual",
+					"displayName": "AGR",
+					"Agreements@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('207563d8-fbef-4cee-bdde-c2936a2e1463')/Agreements",
+					"Campaigns@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('207563d8-fbef-4cee-bdde-c2936a2e1463')/Campaigns",
+					"Datastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('207563d8-fbef-4cee-bdde-c2936a2e1463')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('207563d8-fbef-4cee-bdde-c2936a2e1463')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('207563d8-fbef-4cee-bdde-c2936a2e1463')/ObservationGroups",
+					"PartyActivities@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('207563d8-fbef-4cee-bdde-c2936a2e1463')/PartyActivities",
+					"PartyLocations@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('207563d8-fbef-4cee-bdde-c2936a2e1463')/PartyLocations",
+					"ReleaseProfiles@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('207563d8-fbef-4cee-bdde-c2936a2e1463')/ReleaseProfiles",
+					"Things@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('207563d8-fbef-4cee-bdde-c2936a2e1463')/Things"
+				},
+				{
+					"@iot.selfLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('fae05305-add0-481d-8cdf-75b3bf660bc2')",
+					"@iot.id": "fae05305-add0-481d-8cdf-75b3bf660bc2",
+					"description": "Acting user of the STAplus SCK QGIS plugin",
+					"role": "individual",
+					"displayName": "Riku Tokashiki",
+					"Agreements@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('fae05305-add0-481d-8cdf-75b3bf660bc2')/Agreements",
+					"Campaigns@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('fae05305-add0-481d-8cdf-75b3bf660bc2')/Campaigns",
+					"Datastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('fae05305-add0-481d-8cdf-75b3bf660bc2')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('fae05305-add0-481d-8cdf-75b3bf660bc2')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('fae05305-add0-481d-8cdf-75b3bf660bc2')/ObservationGroups",
+					"PartyActivities@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('fae05305-add0-481d-8cdf-75b3bf660bc2')/PartyActivities",
+					"PartyLocations@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('fae05305-add0-481d-8cdf-75b3bf660bc2')/PartyLocations",
+					"ReleaseProfiles@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('fae05305-add0-481d-8cdf-75b3bf660bc2')/ReleaseProfiles",
+					"Things@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('fae05305-add0-481d-8cdf-75b3bf660bc2')/Things"
+				},
+				{
+					"@iot.selfLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('032d924f-5d5c-4e23-b76f-ee9f7796a1c9')",
+					"@iot.id": "032d924f-5d5c-4e23-b76f-ee9f7796a1c9",
+					"description": "Acting user of the STAplus SCK QGIS plugin",
+					"role": "individual",
+					"displayName": "Jr",
+					"Agreements@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('032d924f-5d5c-4e23-b76f-ee9f7796a1c9')/Agreements",
+					"Campaigns@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('032d924f-5d5c-4e23-b76f-ee9f7796a1c9')/Campaigns",
+					"Datastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('032d924f-5d5c-4e23-b76f-ee9f7796a1c9')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('032d924f-5d5c-4e23-b76f-ee9f7796a1c9')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('032d924f-5d5c-4e23-b76f-ee9f7796a1c9')/ObservationGroups",
+					"PartyActivities@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('032d924f-5d5c-4e23-b76f-ee9f7796a1c9')/PartyActivities",
+					"PartyLocations@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('032d924f-5d5c-4e23-b76f-ee9f7796a1c9')/PartyLocations",
+					"ReleaseProfiles@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('032d924f-5d5c-4e23-b76f-ee9f7796a1c9')/ReleaseProfiles",
+					"Things@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('032d924f-5d5c-4e23-b76f-ee9f7796a1c9')/Things"
+				},
+				{
+					"@iot.selfLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('9d38ed64-896b-4aaf-8fc3-f2593be5aabe')",
+					"@iot.id": "9d38ed64-896b-4aaf-8fc3-f2593be5aabe",
+					"description": "Acting user of the STAplus SCK QGIS plugin",
+					"role": "individual",
+					"displayName": "Qgis_new_zp",
+					"Agreements@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('9d38ed64-896b-4aaf-8fc3-f2593be5aabe')/Agreements",
+					"Campaigns@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('9d38ed64-896b-4aaf-8fc3-f2593be5aabe')/Campaigns",
+					"Datastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('9d38ed64-896b-4aaf-8fc3-f2593be5aabe')/Datastreams",
+					"MultiDatastreams@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('9d38ed64-896b-4aaf-8fc3-f2593be5aabe')/MultiDatastreams",
+					"ObservationGroups@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('9d38ed64-896b-4aaf-8fc3-f2593be5aabe')/ObservationGroups",
+					"PartyActivities@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('9d38ed64-896b-4aaf-8fc3-f2593be5aabe')/PartyActivities",
+					"PartyLocations@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('9d38ed64-896b-4aaf-8fc3-f2593be5aabe')/PartyLocations",
+					"ReleaseProfiles@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('9d38ed64-896b-4aaf-8fc3-f2593be5aabe')/ReleaseProfiles",
+					"Things@iot.navigationLink": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties('9d38ed64-896b-4aaf-8fc3-f2593be5aabe')/Things"
+				}
+			],
+			"STAdataAttributes": {
+				"@iot.selfLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/@iot.selfLink"
+				},
+				"@iot.id": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/@iot.id"
+				},
+				"description": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/description"
+				},
+				"role": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/role"
+				},
+				"displayName": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/displayName"
+				},
+				"Agreements@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/Agreements@iot.navigationLink"
+				},
+				"Campaigns@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/Campaigns@iot.navigationLink"
+				},
+				"Datastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/Datastreams@iot.navigationLink"
+				},
+				"MultiDatastreams@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/MultiDatastreams@iot.navigationLink"
+				},
+				"ObservationGroups@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/ObservationGroups@iot.navigationLink"
+				},
+				"PartyActivities@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/PartyActivities@iot.navigationLink"
+				},
+				"PartyLocations@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/PartyLocations@iot.navigationLink"
+				},
+				"ReleaseProfiles@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/ReleaseProfiles@iot.navigationLink"
+				},
+				"Things@iot.navigationLink": {
+					"type": "anyURI",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/Things@iot.navigationLink"
+				},
+				"authId": {
+					"type": "string",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Party/authId"
+				}
+			},
+			"x": 32,
+			"y": 2
+		},
+		{
+			"id": "2f5un.5mgpi9",
+			"label": "El meu Party",
+			"image": "me.png",
+			"shape": "circularImage",
+			"x": 22,
+			"y": 124,
+			"STAURL": "http://192.168.2.1:8080/FROST-Server/v1.1/Parties",
+			"STAdata": null
+		}
+	],
+	"edges": [
+		{
+			"from": "39ch3.202m8e",
+			"to": "7ggi3.nv2bv2",
+			"arrows": "from"
+		},
+		{
+			"from": "39ch3.202m8e",
+			"to": "h15s.74du138",
+			"arrows": "from"
+		},
+		{
+			"from": "h15s.74du138",
+			"to": "2f5un.5mgpi9",
+			"arrows": "from"
+		}
+	]
+}

@@ -3188,16 +3188,21 @@
 		</form>
 	</dialog>
 
-
-
-	 
-
-
-
+	<dialog id="DialogMe" onClose='hideNodeDialog("DialogMe", event)'>
+		<form>
+			<div>Ask for my parti information  </div>
+			<br>
+			<input type="hidden" id="DialogMeNodeId">
+			<div class="center">
+				<button type="button" value="ok" onClick="okButtonMyParty(event)"><span data-lang="{&quot;cat&quot;: &quot;D'acord&quot;, &quot;spa&quot;: &quot;Aceptar&quot;, &quot;eng&quot;: &quot;Ok&quot;}">Ok</span></button>
+				<button value="cancel" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Cancel·la&quot;, &quot;spa&quot;: &quot;Cancelar&quot;, &quot;eng&quot;: &quot;Cancel&quot;}">Cancel</span></button>
+			</div>
+		</form>
+	</dialog>
 
 	<dialog id="DialogDataQualityResult" onClose='hideNodeDialog("DialogDataQualityResult", event)'>
 		<form>
-			<div id="dataQualityResult_info"> </div>
+			<div id="dataQualityResult_info"></div>
 			<br>
 			<div class="center"> <button value="cancel" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button></div>
 		</form>
