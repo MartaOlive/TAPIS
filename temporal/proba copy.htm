@@ -1,0 +1,484 @@
+
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PMSCAN — Registre de dades</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:950px;margin:25px auto;padding:20px;background:#f4f6f9;color:#17202a}
+section{background:white;border:1px solid #ddd;border-radius:10px;padding:16px;margin:15px 0}
+button,select,input{padding:10px;margin:4px;font-size:15px}
+button{cursor:pointer}
+.primary{background:#1769aa;color:white;border:0;border-radius:5px}
+.danger{background:#b42318;color:white;border:0;border-radius:5px}
+pre{background:#111;color:#00ff00;padding:15px;min-height:220px;white-space:pre-wrap;overflow-wrap:anywhere;overflow:auto}
+</style>
+</head>
+<body>
+
+<h1>PMSCAN — Registre de dades</h1>
+
+<section>
+<h2>1. Connexió</h2>
+<button id="connect" class="primary">Connectar Bluetooth</button>
+<button id="disconnect">Desconnectar</button>
+<p>Estat: <strong id="status">Desconnectat</strong></p>
+<label>Prefix Bluetooth: <input id="prefix" value="PMScan"></label>
+</section>
+
+<section>
+<h2>2. Interval de mesura</h2>
+<select id="interval">
+<option value="5">1 segon</option>
+<option value="4" selected>5 segons</option>
+<option value="3">10 segons</option>
+<option value="2">30 segons</option>
+<option value="1">1 minut</option>
+<option value="0">5 minuts</option>
+</select>
+<button id="apply" class="primary">Aplicar interval</button>
+<button id="read">Llegir interval</button>
+<p id="intervalStatus">Interval sense verificar.</p>
+</section>
+
+<section>
+<h2>3. Registre</h2>
+<button id="start" class="primary" disabled>Iniciar registre</button>
+<button id="stop" class="danger" disabled>Aturar registre</button>
+<button id="csv">Descarregar CSV</button>
+<button id="clear">Esborrar dades locals</button>
+<p>Estat: <strong id="recordStatus">Aturat</strong></p>
+<p>Mesures registrades: <strong id="count">0</strong></p>
+<p>Última mesura: <span id="last">—</span></p>
+<p>Bateria: <span id="battery">—</span></p>
+<p>Notificacions RT: <span id="rtCount">0</span></p>
+<p>Notificacions IM: <span id="imCount">0</span></p>
+<p><strong>Important:</strong> només es desen les mesures rebudes per Bluetooth mentre el registre local està actiu. No activa l'enregistrament autònom del sensor.</p>
+</section>
+
+<section>
+<h2>4. Diagnòstic Bluetooth</h2>
+<button id="inspect">Inspeccionar servei i canals</button>
+<button id="clearLog">Netejar pantalla</button>
+<pre id="log"></pre>
+</section>
+
+<script>
+"use strict";
+
+const UUID = {
+    service:"f3641900-00b0-4240-ba50-05ca45bf8abc",
+    rt:"f3641901-00b0-4240-ba50-05ca45bf8abc",
+    im:"f3641902-00b0-4240-ba50-05ca45bf8abc",
+    battery:"f3641904-00b0-4240-ba50-05ca45bf8abc",
+    time:"f3641906-00b0-4240-ba50-05ca45bf8abc",
+    interval:"f3641907-00b0-4240-ba50-05ca45bf8abc"
+};
+
+const EPOCH_2000 = 946684800;
+const $ = id => document.getElementById(id);
+
+let device=null, server=null, service=null;
+let rtChar=null, imChar=null, batteryChar=null, intervalChar=null;
+let connected=false, recording=false, records=[];
+let battery=null, rtCount=0, imCount=0;
+
+function log(message){
+    $("log").textContent+=message;
+    $("log").scrollTop=$("log").scrollHeight;
+}
+
+function hexDump(value){
+    return Array.from(new Uint8Array(
+        value.buffer,value.byteOffset,value.byteLength
+    )).map(b=>b.toString(16).padStart(2,"0")).join(" ");
+}
+
+function updateUI(){
+    $("count").textContent=records.length;
+    $("rtCount").textContent=rtCount;
+    $("imCount").textContent=imCount;
+    $("recordStatus").textContent=recording?"ENREGISTRANT":"Aturat";
+    $("start").disabled=!connected||recording;
+    $("stop").disabled=!recording;
+}
+
+function parsePayload(value){
+    const b=new Uint8Array(value.buffer,value.byteOffset,value.byteLength);
+
+    if(b.length<18){
+        log("Payload massa curt: "+b.length+" bytes\n");
+        return null;
+    }
+
+    const ts2000=((b[3]<<24)|(b[2]<<16)|(b[1]<<8)|b[0])>>>0;
+
+    return {
+        sensor_time:new Date((ts2000+EPOCH_2000)*1000).toISOString(),
+        received_time:new Date().toISOString(),
+        pm10_count:((b[7]<<8)|b[6])*1000,
+        pm1:((b[9]<<8)|b[8])/10,
+        pm25:((b[11]<<8)|b[10])/10,
+        pm10:((b[13]<<8)|b[12])/10,
+        temperature:((b[15]<<8)|b[14])/10,
+        humidity:((b[17]<<8)|b[16])/10,
+        battery:battery
+    };
+}
+
+function measurement(event,source){
+    const value=event.target.value;
+
+    log("\nDADA REBUDA ["+source+"]\n");
+    log("Longitud: "+value.byteLength+" bytes\n");
+    log("HEX: "+hexDump(value)+"\n");
+
+    if(source==="RT")rtCount++;
+    if(source==="IM")imCount++;
+
+    const data=parsePayload(value);
+
+    if(data){
+        $("last").textContent=data.sensor_time;
+        log(
+            "PM1: "+data.pm1+" µg/m³\n"+
+            "PM2.5: "+data.pm25+" µg/m³\n"+
+            "PM10: "+data.pm10+" µg/m³\n"+
+            "Temperatura: "+data.temperature+" °C\n"+
+            "Humitat: "+data.humidity+" %\n"
+        );
+
+        if(recording){
+            records.push({...data,source});
+            log("Mesura desada. Total: "+records.length+"\n");
+        }
+    }
+
+    updateUI();
+}
+
+function onRT(event){measurement(event,"RT");}
+function onIM(event){measurement(event,"IM");}
+
+function onBattery(event){
+    const v=event.target.value;
+    if(!v.byteLength)return;
+    battery=v.getUint8(0);
+    $("battery").textContent=battery+"%";
+    log("Bateria: "+battery+"%\n");
+}
+
+async function enableChannel(uuid,handler,label){
+    const ch=await service.getCharacteristic(uuid);
+    const p=ch.properties;
+
+    log("\nCanal "+label+": "+ch.uuid+"\n");
+    log("notify="+p.notify+", indicate="+p.indicate+"\n");
+
+    if(!p.notify&&!p.indicate){
+        log("El canal no admet notify ni indicate.\n");
+        return null;
+    }
+
+    ch.addEventListener("characteristicvaluechanged",handler);
+
+    try{
+        await ch.startNotifications();
+        log("Subscripció activada: "+label+"\n");
+        return ch;
+    }catch(error){
+        ch.removeEventListener("characteristicvaluechanged",handler);
+        log("Error activant "+label+": "+error.message+"\n");
+        return null;
+    }
+}
+
+async function syncTime(){
+    const ch=await service.getCharacteristic(UUID.time);
+    const value=await ch.readValue();
+
+    if(value.byteLength<4)throw new Error("Resposta horària massa curta.");
+
+    if(value.getUint32(0,true)!==0){
+        log("Hora del sensor ja sincronitzada.\n");
+        return;
+    }
+
+    const t=Math.floor(Date.now()/1000-EPOCH_2000);
+    const bytes=new Uint8Array([
+        t&255,(t>>>8)&255,(t>>>16)&255,(t>>>24)&255
+    ]);
+
+    await ch.writeValueWithResponse(bytes);
+    log("Hora sincronitzada.\n");
+}
+
+async function readInterval(){
+    if(!connected||!intervalChar)throw new Error("Connecta primer el sensor.");
+
+    const value=await intervalChar.readValue();
+    const code=value.getUint8(0);
+    const labels={5:"1 segon",4:"5 segons",3:"10 segons",2:"30 segons",1:"1 minut",0:"5 minuts"};
+
+    $("intervalStatus").textContent="Codi "+code+": "+(labels[code]||"desconegut");
+    log("Interval llegit del sensor: "+code+"\n");
+    return code;
+}
+
+async function applyInterval(){
+    if(!connected||!intervalChar)throw new Error("Connecta primer el sensor.");
+
+    const wanted=Number($("interval").value);
+    await intervalChar.writeValueWithResponse(new Uint8Array([wanted]));
+    log("Interval escrit: codi "+wanted+"\n");
+
+    const actual=await readInterval();
+    if(actual!==wanted)throw new Error("L'interval llegit no coincideix.");
+
+    log("Interval verificat correctament.\n");
+}
+
+async function inspectCharacteristics(){
+    if(!connected||!service)throw new Error("Connecta primer el sensor.");
+
+    log("\n=== INSPECCIÓ DE CARACTERÍSTIQUES ===\n");
+
+    const chars=await service.getCharacteristics();
+
+    for(const ch of chars){
+        const p=ch.properties;
+        log("\nUUID: "+ch.uuid+"\n");
+        log("read="+p.read+"\n");
+        log("write="+p.write+"\n");
+        log("writeWithoutResponse="+p.writeWithoutResponse+"\n");
+        log("notify="+p.notify+"\n");
+        log("indicate="+p.indicate+"\n");
+
+        if(p.read){
+            try{
+                const value=await ch.readValue();
+                log("Lectura HEX: "+hexDump(value)+"\n");
+            }catch(error){
+                log("Error de lectura: "+error.message+"\n");
+            }
+        }
+    }
+
+    log("\n=== FINAL INSPECCIÓ ===\n");
+}
+
+async function connect(){
+    if(!navigator.bluetooth){
+        throw new Error("Utilitza Chrome o Edge amb HTTPS o localhost.");
+    }
+
+    if(connected)await disconnect();
+
+    const prefix=$("prefix").value.trim();
+
+    const options={
+        filters:prefix?[{namePrefix:prefix}]:[{services:[UUID.service]}],
+        optionalServices:[UUID.service,"battery_service","device_information","generic_access"]
+    };
+
+    log("Cercant PMSCAN...\n");
+    device=await navigator.bluetooth.requestDevice(options);
+    device.addEventListener("gattserverdisconnected",onDisconnected);
+
+    server=await device.gatt.connect();
+    log("Connexió GATT establerta.\n");
+
+    service=await server.getPrimaryService(UUID.service);
+    log("Servei PMSCAN trobat.\n");
+
+    connected=true;
+    $("status").textContent="Connectat: "+(device.name||"PMSCAN");
+    updateUI();
+
+    try{
+        batteryChar=await service.getCharacteristic(UUID.battery);
+        batteryChar.addEventListener("characteristicvaluechanged",onBattery);
+
+        const initial=await batteryChar.readValue();
+        if(initial.byteLength){
+            battery=initial.getUint8(0);
+            $("battery").textContent=battery+"%";
+        }
+
+        if(batteryChar.properties.notify||batteryChar.properties.indicate){
+            await batteryChar.startNotifications();
+            log("Subscripció de bateria activada.\n");
+        }
+    }catch(error){
+        log("Avís de bateria: "+error.message+"\n");
+    }
+
+    rtChar=await enableChannel(UUID.rt,onRT,"RT");
+
+    try{
+        imChar=await enableChannel(UUID.im,onIM,"IM");
+    }catch(error){
+        imChar=null;
+        log("Canal IM no disponible: "+error.message+"\n");
+    }
+
+    intervalChar=await service.getCharacteristic(UUID.interval);
+
+    try{
+        await syncTime();
+    }catch(error){
+        log("Avís d'hora: "+error.message+"\n");
+    }
+
+    await readInterval();
+
+    log("\nConnexió completada.\n");
+    log("Esperant dades RT/IM.\n");
+}
+
+function onDisconnected(){
+    connected=false;
+    recording=false;
+    $("status").textContent="Desconnectat";
+    rtChar=imChar=batteryChar=intervalChar=null;
+    updateUI();
+    log("Bluetooth desconnectat.\n");
+}
+
+async function disconnect(){
+    recording=false;
+
+    for(const [ch,handler] of [
+        [rtChar,onRT],[imChar,onIM],[batteryChar,onBattery]
+    ]){
+        if(!ch)continue;
+        try{
+            ch.removeEventListener("characteristicvaluechanged",handler);
+            await ch.stopNotifications();
+        }catch(error){
+            log("Avís aturant canal: "+error.message+"\n");
+        }
+    }
+
+    if(device?.gatt?.connected)device.gatt.disconnect();
+
+    connected=false;
+    device=null;
+    server=null;
+    service=null;
+    rtChar=imChar=batteryChar=intervalChar=null;
+    $("status").textContent="Desconnectat";
+    updateUI();
+    log("Desconnectat. Les mesures locals es mantenen a la pàgina.\n");
+}
+
+function csvCell(value){
+    if(value===null||value===undefined)return "";
+    return '"'+String(value).replace(/"/g,'""')+'"';
+}
+
+function downloadCSV(){
+    if(!records.length){
+        alert("No hi ha mesures enregistrades.");
+        return;
+    }
+
+    const columns=[
+        "sensor_time","received_time","source","pm1","pm25",
+        "pm10","pm10_count","temperature","humidity","battery"
+    ];
+
+    const csv=[
+        columns.join(","),
+        ...records.map(row=>columns.map(key=>csvCell(row[key])).join(","))
+    ].join("\r\n");
+
+    const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+
+    a.href=url;
+    a.download="pmscan_"+new Date().toISOString().replace(/[:.]/g,"-")+".csv";
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+
+    log("CSV exportat amb "+records.length+" mesures.\n");
+}
+
+$("connect").addEventListener("click",async()=>{
+    try{
+        await connect();
+    }catch(error){
+        log("ERROR connexió: "+error.message+"\n");
+        $("status").textContent="Error de connexió";
+    }
+});
+
+$("disconnect").addEventListener("click",disconnect);
+
+$("apply").addEventListener("click",async()=>{
+    try{
+        await applyInterval();
+    }catch(error){
+        log("ERROR interval: "+error.message+"\n");
+        alert(error.message);
+    }
+});
+
+$("read").addEventListener("click",async()=>{
+    try{
+        await readInterval();
+    }catch(error){
+        log("ERROR llegint interval: "+error.message+"\n");
+    }
+});
+
+$("inspect").addEventListener("click",async()=>{
+    try{
+        await inspectCharacteristics();
+    }catch(error){
+        log("ERROR inspecció: "+error.message+"\n");
+    }
+});
+
+$("start").addEventListener("click",()=>{
+    if(!connected){
+        alert("Connecta el sensor primer.");
+        return;
+    }
+
+    recording=true;
+    log("\n=== INICI REGISTRE LOCAL ===\n");
+    log("Esperant mesures RT/IM...\n");
+    updateUI();
+});
+
+$("stop").addEventListener("click",()=>{
+    recording=false;
+    log("=== FINAL REGISTRE LOCAL ===\n");
+    updateUI();
+});
+
+$("csv").addEventListener("click",downloadCSV);
+
+$("clear").addEventListener("click",()=>{
+    if(confirm("Vols esborrar totes les mesures locals?")){
+        records=[];
+        updateUI();
+        log("Registre local esborrat.\n");
+    }
+});
+
+$("clearLog").addEventListener("click",()=>{
+    $("log").textContent="";
+});
+
+updateUI();
+log("Llest. Connecta el PMSCAN per començar.\n");
+</script>
+</body>
+</html>

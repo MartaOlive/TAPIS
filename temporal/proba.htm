@@ -1,263 +1,326 @@
-<html>
 
+<!DOCTYPE html>
+<html lang="ca">
 <head>
-	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-	<meta content="utf-8" http-equiv="encoding">
-	<title>Graph2d | Basic Example</title>
-
-	<script type="text/javascript" src="../Chart.min.js"></script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-	<script type="text/javascript" src="../data_tables.js"></script>
-
-
-
-
-
-
-	<!-- <script src="../vis-timeline-graph2d.min.js"></script>
-	<script src="../vis-network.min.js"></script> -->
-	<style type="text/css">
-		body,
-		html {
-			font-family: sans-serif;
-		}
-	</style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Citizen SD Reader</title>
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 16px;
+    background: #f4f6f8;
+    color: #17202a;
+  }
+  h1 { font-size: 26px; }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 14px 0;
+    box-shadow: 0 2px 8px #0000000c;
+  }
+  button, input {
+    font: inherit;
+    padding: 10px;
+    border-radius: 7px;
+    margin: 4px 2px;
+  }
+  button {
+    border: 0;
+    background: #176b55;
+    color: white;
+    cursor: pointer;
+  }
+  button:disabled { opacity: .5; cursor: wait; }
+  input { border: 1px solid #bbb; max-width: 95%; }
+  #status { font-weight: 600; }
+  #terminal {
+    background: #101820;
+    color: #b8f7c5;
+    padding: 14px;
+    border-radius: 8px;
+    min-height: 180px;
+    max-height: 400px;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 13px monospace;
+  }
+  .hint { color: #586575; font-size: 14px; }
+</style>
+</head>
 <body>
-	<p><strong>Setting Up the Node: </strong></p>
-                    <img src="Party_image0.png" alt="icon" class="toolPage_image" style="width: 450px;">
-                    <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>Party</strong> tool allows you to create a new <strong>Party</strong> entity in the
-                        connected STA service. To create a Party, the Party tool only needs to be linked to the STA
-                        service, as it does not depend on any other entity. As with the other tools, you must also be
-                        <a href="https://www.tapis.grumets.cat/tapis/help/navBarButtons.htm#login">logged in</a> to
-                        TAPIS.
-                    </p>
-                    <p>In this case, you can only <strong>create</strong> an entity; <strong>editing</strong> or
-                        <strong>deleting</strong> it is <strong>not supported</strong>.
-                    </p>
-                    <h4><u>Attributes of the entity</u></h4>
-                    <ul>
-                        <li><strong>name</strong> (<em>CharacterString</em>): A property provides a label for the Sensor
-                            entity, commonly a descriptive name.</li>
-                        <li><strong>description</strong> (<em>CharacterString</em>): A property provides a description
-                            of the Sensor entity.</li>
-                        <li><strong>encodingType</strong> (<em>CharacterString</em>): The encoding type of the metadata
-                            describing the Sensor.</li>
-                        <li><strong>metadata</strong> (<em>Any</em>): The metadata describing the Sensor, encoded
-                            according to the specified encoding type.</li>
-                        <li><strong>properties</strong> (<em>JSON Object [0..1]</em>): A JSON object containing
-                            additional information about the Sensor.</li>
-                    </ul>
-                    <p><strong>Create</strong></p>
-                    <p>To create a new <strong>Party</strong>, you must be logged in to TAPIS. When you log in, the
-                        system generates a code that is used as the <strong>authorId</strong> associated with that
-                        login.</p>
-                    <p>To open the dialog, <i>double-click</i> with the left mouse button. Two fields will be filled in
-                        automatically: the <strong>authorId</strong>, which is the code generated during the TAPIS login
-                        and cannot be modified, and the <strong>role</strong>, which can be modified but is mandatory.
-                        “Complete the remaining fields
-                    </p>
-                    <img src="Party_image1.png" alt="icon" class="toolPage_image">
 
-                    <p>This is the data for the example. Once you have finished, click <strong>Create</strong>. </p>
-                    <img src="Party_image2.png" alt="icon" class="toolPage_image">
-                    <p>If the entity has been created successfully, a text similar to this will appear on the right. You
-                        can view the entity you have just created by clicking on the text following <strong>Available
-                            at:</strong></p>
-                    <p><i>If the entity you are trying to create already exists, it will not be created again. However,
-                            the
-                            displayed text will be the same.</i></p>
-                    <img src="Party_image3.png" alt="icon" class="toolPage_image">
-                    <p>This is the result that opens in a new page when you click the link following <strong>Available
-                            at:</strong>.</p>
-                    <img src="Party_image4.png" alt="icon" class="toolPage_image">
-                    <p>If you want to see how the STA service has been updated with the new information, link the
-                        corresponding entity tool in its plural form (<strong>Parties</strong>).</p>
-                    <img src="Party_image5.png" alt="icon" class="toolPage_image">
-                    <p>Here is the result showing the loaded data.</p>
-                    <img src="Party_image6.png" alt="icon" class="toolPage_image">
-                    <p></p>
-                    <p><strong>Edit</strong></p>
-                    <p>Not suported</p>
-                    <p><strong>Delete</strong></p>
-                    <p>Not suported</p>
-</body>
+<h1>Smart Citizen SD Reader</h1>
+<p>Lectura de la targeta SD del Smart Citizen Kit 2.1 per USB.</p>
+
+<div class="card">
+  <h2>1. Connexió</h2>
+  <button id="connect">Connectar sensor USB</button>
+  <button id="disconnect" disabled>Desconnectar</button>
+  <p id="status">Sensor desconnectat</p>
+  <p class="hint">
+    Utilitza Chrome o Edge en un ordinador i un cable USB
+    que permeti transferir dades.
+  </p>
+</div>
+
+<div class="card">
+  <h2>2. Fitxers de la SD</h2>
+  <button id="list" disabled>Llistar fitxers</button>
+  <button id="all" disabled>Llegir tots els CSV</button>
+  <p class="hint">
+    L'ordre per llegir tots els CSV pot retornar moltíssimes dades.
+  </p>
+</div>
+
+<div class="card">
+  <h2>3. Llegir un fitxer</h2>
+  <label for="filename">Nom exacte del fitxer:</label><br>
+  <input id="filename" value="26-10-15.CSV"
+         placeholder="26-10-15.CSV">
+  <br>
+  <button id="read" disabled>Llegir fitxer</button>
+  <button id="download" disabled>Descarregar resultat CSV</button>
+</div>
+
+<div class="card">
+  <h2>4. Consola del sensor</h2>
+  <button id="clear">Netejar pantalla</button>
+  <pre id="terminal">Connecta el sensor per començar.</pre>
+</div>
+
 <script>
-	const confusionMatrix = { //classified -> References
+(() => {
+  const $ = id => document.getElementById(id);
 
-		"Pinus sylvestris": {
-			"Pinus sylvestris": 12,
-			"Pinus nigra": 2,
-			"Quercus ilex": 1,
-			"Fagus sylvatica": 1
-		},
-		"Pinus nigra": {
-			"Pinus sylvestris": 3,
-			"Pinus nigra": 13,
-			"Quercus ilex": 2,
-			"Fagus sylvatica": 1
-		},
-		"Quercus ilex": {
-			"Pinus sylvestris": 1,
-			"Pinus nigra": 1,
-			"Quercus ilex": 14,
-			"Fagus sylvatica": 2
-		},
-		"Fagus sylvatica": {
-			"Pinus nigra": 2,
-			"Quercus ilex": 3,
-			"Fagus sylvatica": 22
-		}
-	};
+  let port = null;
+  let reader = null;
+  let writer = null;
+  let readTask = null;
+  let buffer = "";
+  let commandOutput = "";
+  let busy = false;
+  let lastDataAt = 0;
+  let lastCommand = "";
+  let resultText = "";
 
+  const terminal = $("terminal");
 
+  function showStatus(text) {
+    $("status").textContent = text;
+  }
 
+  function show(text) {
+    terminal.textContent += text;
+    // Limita la mida de la consola visual.
+    if (terminal.textContent.length > 150000) {
+      terminal.textContent =
+        terminal.textContent.slice(-100000);
+    }
+    terminal.scrollTop = terminal.scrollHeight;
+  }
 
-	var confusionmatrixResult = {
-		totalSamples: 80,
-		totalsClassified: { //files _> Tenint en compte la primera key 
-			"Pinus sylvestris": 16,
-			"Pinus nigra": 19,
-			"Quercus ilex": 18,
-			"Fagus sylvatica": 27
+  function setConnected(connected) {
+    $("connect").disabled = connected;
+    $("disconnect").disabled = !connected;
+    $("list").disabled = !connected || busy;
+    $("all").disabled = !connected || busy;
+    $("read").disabled = !connected || busy;
+  }
 
-		},
-		totalReference: { //columnes --> mirat al reves 
-			"Pinus sylvestris": 16,
-			"Pinus nigra": 18,
-			"Quercus ilex": 20,
-			"Fagus sylvatica": 26
-		},
-		wellclassified: { //diagonal, mateix.
-			"Pinus sylvestris": 16,
-			"Pinus nigra": 18,
-			"Quercus ilex": 20,
-			"Fagus sylvatica": 26
-		},
-		numberOfWellClassified: wellclassified["Pinus sylvestris"] + wellclassified["Pinus nigra"] + wellclassified["Quercus ilex"] + wellclassified["Fagus sylvatica"],
-		overallAccuracy: numberOfWellClassified / totalSamples,
-		overallError: 1 - overallAccuracy,
-		ProducerAccuracy: {// metrica per classes, no te global
-			"Pinus sylvestris": wellclassified["Pinus sylvestris"] / totalReference["Pinus sylvestris"],
-			"Pinus nigra": wellclassified["Pinus nigra"] / totalReference["Pinus nigra"],
-			"Quercus ilex": wellclassified["Quercus ilex"] / totalReference["Quercus ilex"],
-			"Fagus sylvatica": wellclassified["Fagus sylvatica"] / totalReference["Fagus sylvatica"]
-		},
-		UserAccuracy: {// metrica per classes, no te global
-			"Pinus sylvestris": wellclassified["Pinus sylvestris"] / totalsclassified["Pinus sylvestris"],
-			"Pinus nigra": wellclassified["Pinus nigra"] / totalsclassified["Pinus nigra"],
-			"Quercus ilex": wellclassified["Quercus ilex"] / totalsclassified["Quercus ilex"],
-			"Fagus sylvatica": wellclassified["Fagus sylvatica"] / totalsclassified["Fagus sylvatica"]
-		},
-		omissionError: OmissionError = {
-			"Pinus sylvestris": 1 - ProducerAccuracy["Pinus sylvestris"],
-			"Pinus nigra": 1 - ProducerAccuracy["Pinus nigra"],
-			"Quercus ilex": 1 - ProducerAccuracy["Quercus ilex"],
-			"Fagus sylvatica": 1 - ProducerAccuracy["Fagus sylvatica"]
-		},
-		commissionError: {
-			"Pinus sylvestris": 1 - UserAccuracy["Pinus sylvestris"],
-			"Pinus nigra": 1 - UserAccuracy["Pinus nigra"],
-			"Quercus ilex": 1 - UserAccuracy["Quercus ilex"],
-			"Fagus sylvatica": 1 - UserAccuracy["Fagus sylvatica"]
-		},
+  function setBusy(value) {
+    busy = value;
+    setConnected(!!port);
+  }
 
-		indexKappa: {
-			ObservedAgreement: (wellclassified["Pinus sylvestris"] + wellclassified["Pinus nigra"] + wellclassified["Quercus ilex"] + wellclassified["Fagus sylvatica"]) / totalSamples, //total de ben classificats/total
-			multiplicationsTotals: totalsclassified["Pinus sylvestris"] * totalReference["Pinus sylvestris"] +
-				totalsclassified["Pinus nigra"] * totalReference["Pinus nigra"] +
-				totalsclassified["Quercus ilex"] * totalReference["Quercus ilex"] +
-				totalsclassified["Fagus sylvatica"] * totalReference["Fagus sylvatica"],
-			expectedAgreement: multiplicationsTotals / (totalSamples * totalSamples),
+  async function connect() {
+    if (!("serial" in navigator)) {
+      alert("Aquest navegador no admet Web Serial. Prova Chrome o Edge.");
+      return;
+    }
 
-			resultindexKappa: (ObservedAgreement - expectedAgreemen) / (1 - expectedAgreemen)
-		}
+    try {
+      port = await navigator.serial.requestPort();
+      await port.open({ baudRate: 115200 });
 
+      const decoder = new TextDecoderStream();
+      const closed = port.readable.pipeTo(decoder.writable);
+      reader = decoder.readable.getReader();
 
-	}
+      writer = port.writable.getWriter();
 
+      buffer = "";
+      commandOutput = "";
+      showStatus("Connectat. Esperant la consola del kit...");
+      show("\n--- Connexió USB oberta ---\n");
+      setConnected(true);
 
-	var resultat = {
-		"totalSamples": 80,
-		"totalClassified": {
-			"Pinus sylvestris": 16,
-			"Pinus nigra": 19,
-			"Quercus ilex": 18,
-			"Fagus sylvatica": 27
-		},
-		"totalReference": {
-			"Pinus sylvestris": 16,
-			"Pinus nigra": 18,
-			"Quercus ilex": 20,
-			"Fagus sylvatica": 26
-		},
-		"wellClassified": {
-			"Pinus sylvestris": 12,
-			"Pinus nigra": 13,
-			"Quercus ilex": 14,
-			"Fagus sylvatica": 22
-		},
-		"numberOfWellClassified": 61,
-		"producerAccuracy": {
-			"Pinus sylvestris": 0.75,
-			"Pinus nigra": 0.7222222222222222,
-			"Quercus ilex": 0.7,
-			"Fagus sylvatica": 0.8461538461538461
-		},
-		"userAccuracy": {
-			"Pinus sylvestris": 0.75,
-			"Pinus nigra": 0.6842105263157895,
-			"Quercus ilex": 0.7777777777777778,
-			"Fagus sylvatica": 0.8148148148148148
-		},
-		"omissionError": {
-			"Pinus sylvestris": 0.25,
-			"Pinus nigra": 0.2777777777777778,
-			"Quercus ilex": 0.30000000000000004,
-			"Fagus sylvatica": 0.15384615384615385
-		},
-		"comissionError": {
-			"Pinus sylvestris": 0.25,
-			"Pinus nigra": 0.3157894736842105,
-			"Quercus ilex": 0.2222222222222222,
-			"Fagus sylvatica": 0.18518518518518523
-		},
-		"overallAccuracy": 0.7625,
-		"overallError": 0.23750000000000004,
-		"indexKappa": {
-			"observedAgreement": 0.7625,
-			"expectedAgreement": 0.259375,
-			"result": 0.6793248945147679
-		}
-	}
+      readTask = readLoop();
 
-	"values": [
-      {
-        "rows": [
-          "Pinus sylvestris",
-          "Pinus nigra",
-          "Quercus ilex",
-          "Fagus sylvatica"
-        ],
-
-        "columns": [
-          "Pinus sylvestris",
-          "Pinus nigra",
-          "Quercus ilex",
-          "Fagus sylvatica"
-        ],
-
-        "matrix": [
-          [12,2,1,1],
-          [1,13,2,2],
-          [2,1,14,3],
-          [1,3,0,22]
-        ]
+      // No enviem cap ordre que pugui modificar o esborrar dades.
+      showStatus("USB connectat. Ja pots consultar la SD.");
+    } catch (err) {
+      showStatus("Error de connexió: " + err.message);
+      if (port) {
+        try { await port.close(); } catch (_) {}
       }
-    ]
-	
-</script>
+      port = null;
+      setConnected(false);
+    }
+  }
 
+  async function readLoop() {
+    try {
+      while (reader) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        if (!value) continue;
+
+        buffer += value;
+        commandOutput += value;
+        lastDataAt = Date.now();
+        show(value);
+      }
+    } catch (err) {
+      show("\nError de lectura: " + err.message + "\n");
+    }
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function sendCommand(command, timeout = 10000) {
+    if (!port || !writer || busy) return;
+
+    setBusy(true);
+    lastCommand = command;
+    commandOutput = "";
+    lastDataAt = Date.now();
+
+    try {
+      show("\n\n> " + command + "\n");
+      showStatus("Executant: " + command);
+
+      await writer.write(
+        new TextEncoder().encode(command + "\r")
+      );
+
+      const start = Date.now();
+      let sawData = false;
+
+      while (Date.now() - start < timeout) {
+        await sleep(200);
+
+        if (commandOutput.length > 0) sawData = true;
+
+        // Espera que la consola deixi de transmetre.
+        // Per ordres llargues, el temps màxim és ampliable.
+        if (
+          sawData &&
+          Date.now() - lastDataAt > 1200 &&
+          commandOutput.includes("SCK")
+        ) {
+          break;
+        }
+      }
+
+      resultText = cleanOutput(commandOutput);
+      $("download").disabled = !resultText.trim();
+
+      if (Date.now() - start >= timeout) {
+        show("\n[Temps d'espera esgotat; el resultat pot ser parcial]\n");
+      }
+
+      showStatus("Ordre acabada. Revisa la consola.");
+    } catch (err) {
+      show("\nError: " + err.message + "\n");
+      showStatus("Error enviant l'ordre.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function cleanOutput(text) {
+    // Elimina la línia de l'ordre si el firmware la repeteix.
+    let lines = text.replace(/\r/g, "").split("\n");
+    lines = lines.filter(line =>
+      !line.trim().startsWith("SCK > file -")
+    );
+    return lines.join("\n").trim();
+  }
+
+  $("connect").addEventListener("click", connect);
+
+  $("disconnect").addEventListener("click", async () => {
+    try {
+      if (reader) {
+        await reader.cancel();
+        reader.releaseLock();
+        reader = null;
+      }
+      if (writer) {
+        writer.releaseLock();
+        writer = null;
+      }
+      if (port) await port.close();
+    } catch (err) {
+      show("\nAvís en desconnectar: " + err.message + "\n");
+    }
+    port = null;
+    setConnected(false);
+    showStatus("Sensor desconnectat.");
+  });
+
+  $("list").addEventListener("click", () =>
+    sendCommand("file -ls")
+  );
+
+  $("read").addEventListener("click", () => {
+    const name = $("filename").value.trim();
+
+    // Només acceptem noms senzills de fitxer.
+    if (!/^[a-zA-Z0-9_.-]+$/.test(name)) {
+      alert("Escriu un nom de fitxer vàlid, sense espais.");
+      return;
+    }
+
+    sendCommand("file -less " + name, 30000);
+  });
+
+  $("all").addEventListener("click", () => {
+    if (!confirm(
+      "Llegir tots els CSV pot generar moltes dades. Continuar?"
+    )) return;
+
+    sendCommand("file -allcsv", 120000);
+  });
+
+  $("download").addEventListener("click", () => {
+    if (!resultText.trim()) return;
+
+    const blob = new Blob(
+      ["\uFEFF" + resultText + "\n"],
+      { type: "text/csv;charset=utf-8" }
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "smartcitizen-export.csv";
+    a.click();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
+  $("clear").addEventListener("click", () => {
+    terminal.textContent = "";
+  });
+})();
+</script>
+</body>
 </html>

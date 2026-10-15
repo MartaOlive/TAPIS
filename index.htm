@@ -60,6 +60,9 @@
 	<script type="text/javascript" src="t_nodes.js"></script>
 	<script type="text/javascript" src="autocompleteMultiCreate.js"></script>
 	<script type="text/javascript" src="data_quality.js"></script>
+	<script type="text/javascript" src="connectASensor.js"></script>
+	<script type="text/javascript" src="staEntityBuilder.js"></script>
+	<script type="text/javascript" src="staPublisher.js"></script>
 
 	<link rel="stylesheet" href="tapis.css">
 	<link rel="stylesheet" href="vis.network.css">
@@ -3190,7 +3193,7 @@
 
 	<dialog id="DialogMe" onClose='hideNodeDialog("DialogMe", event)'>
 		<form>
-			<div>Ask for my parti information  </div>
+			<div>Ask for my party information  </div>
 			<br>
 			<input type="hidden" id="DialogMeNodeId">
 			<div class="center">
@@ -3199,6 +3202,131 @@
 			</div>
 		</form>
 	</dialog>
+
+<dialog id="DialogConnectASensor" onClose='hideNodeDialog("DialogConnectASensor", event)'>
+
+    <form onsubmit="event.preventDefault(); return false;">
+		<div class="DialogConnectASensorIntervalRow">
+			<label for="DialogConnectASensorInterval">
+				<span data-lang="{&quot;cat&quot;: &quot;Interval de lectura:&quot;, &quot;spa&quot;: &quot;Intervalo de lectura:&quot;, &quot;eng&quot;: &quot;Reading interval:&quot;}">Reading interval:</span>
+			</label>
+			<select id="DialogConnectASensorInterval" class="DialogConnectASensorInterval" onchange="onConnectASensorIntervalChange(event)">
+				<option value="5">1 s</option>
+				<option value="4">5 s</option>
+				<option value="3">10 s</option>
+				<option value="2">30 s</option>
+				<option value="1" selected>1 min</option>
+				<option value="0">5 min</option>
+			</select>
+		</div>
+		<div class="DialogConnectASensorBtnRow">
+			<button type="button" id="DialogConnectASensorConnectUsb" class="DialogConnectASensorAction" onclick="ConnectASensorConnectUsb(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Connecta per USB&quot;, &quot;spa&quot;: &quot;Conectar por USB&quot;, &quot;eng&quot;: &quot;Connect via USB&quot;}">Connect via USB</span>
+			</button>
+			<button type="button" id="DialogConnectASensorConnectBle" class="DialogConnectASensorAction" onclick="ConnectASensorConnectBluetooth(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Connecta per Bluetooth&quot;, &quot;spa&quot;: &quot;Conectar por Bluetooth&quot;, &quot;eng&quot;: &quot;Connect via Bluetooth&quot;}">Connect via Bluetooth</span>
+			</button>
+			<button type="button" id="DialogConnectASensorDisconnect" class="DialogConnectASensorAction" onclick="disconnectSensor()" disabled>
+				<span data-lang="{&quot;cat&quot;: &quot;Desconnecta el teu sensor&quot;, &quot;spa&quot;: &quot;Desconecta tu sensor&quot;, &quot;eng&quot;: &quot;Disconnect your sensor&quot;}">Disconnect your sensor</span>
+			</button>
+		</div>
+		<div class="DialogConnectASensorBtnRow">
+			<button type="button" id="DialogConnectASensorStop" class="DialogConnectASensorAction" onclick="stopConnectASensorCollecting(event)" disabled>
+				<span data-lang="{&quot;cat&quot;: &quot;Atura la recollida de dades&quot;, &quot;spa&quot;: &quot;Detener la recogida de datos&quot;, &quot;eng&quot;: &quot;Stop collecting data&quot;}">Stop collecting data</span>
+			</button>
+			<button type="button" id="DialogConnectASensorResume" class="DialogConnectASensorAction" onclick="resumeConnectASensorCollecting(event)" disabled>
+				<span data-lang="{&quot;cat&quot;: &quot;Reprèn la recollida&quot;, &quot;spa&quot;: &quot;Reanudar la recogida&quot;, &quot;eng&quot;: &quot;Resume collecting&quot;}">Resume collecting</span>
+			</button>
+		</div>
+		<div class="DialogConnectASensorBtnRow">
+			<button type="button" id="DialogConnectASensorInfoBtn" class="DialogConnectASensorAction" onclick="showConnectASensorDeviceInfo(event)" disabled>
+				<span data-lang="{&quot;cat&quot;: &quot;Informació del sensor&quot;, &quot;spa&quot;: &quot;Información del sensor&quot;, &quot;eng&quot;: &quot;Sensor information&quot;}">Sensor information</span>
+			</button>
+			<button type="button" id="DialogConnectASensorClearData" class="DialogConnectASensorAction" onclick="clearConnectASensorData(event)" disabled>
+				<span data-lang="{&quot;cat&quot;: &quot;Esborra les dades&quot;, &quot;spa&quot;: &quot;Borrar los datos&quot;, &quot;eng&quot;: &quot;Clear data&quot;}">Clear data</span>
+			</button>
+		</div>
+
+		<div class="DialogConnectASensorTableSection">
+			<strong><span data-lang="{&quot;cat&quot;: &quot;Dades recollides&quot;, &quot;spa&quot;: &quot;Datos recogidos&quot;, &quot;eng&quot;: &quot;Collected data&quot;}">Collected data</span></strong>
+			<div id="DialogConnectASensorTable" class="DialogConnectASensorTable"></div>
+		</div>
+
+		<br>
+        <input type="hidden" id="DialogConnectASensorNodeId">
+        <div class="center">
+            <button type="button" onclick="closeConnectASensorDialog(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span>
+            </button>
+        </div>
+    </form>
+</dialog>
+
+<dialog id="DialogConnectASensorInfo">
+	<form method="dialog">
+		<strong><span data-lang="{&quot;cat&quot;: &quot;Informació del sensor&quot;, &quot;spa&quot;: &quot;Información del sensor&quot;, &quot;eng&quot;: &quot;Sensor information&quot;}">Sensor information</span></strong>
+		<div id="resultsFromSensor"></div>
+		<div class="center">
+			<button value="cancel">
+				<span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span>
+			</button>
+		</div>
+	</form>
+</dialog>
+
+<dialog id="DialogSTAEntityBuilder" onClose='sebOnBuilderDialogClose(event)'>
+	<form onsubmit="event.preventDefault(); return false;">
+		<strong><span data-lang="{&quot;cat&quot;: &quot;Constructor d'entitats STA&quot;, &quot;spa&quot;: &quot;Constructor de entidades STA&quot;, &quot;eng&quot;: &quot;STA Entity Builder&quot;}">STA Entity Builder</span></strong>
+		<p class="sebHint"><span data-lang="{&quot;cat&quot;: &quot;Configura entitats i observacions. No publica al servidor; useu el Publicador STA.&quot;, &quot;spa&quot;: &quot;Configura entidades y observaciones. No publica en el servidor; use el Publicador STA.&quot;, &quot;eng&quot;: &quot;Configure entities and observations. Does not publish to the server; use STA Publisher.&quot;}">Configure entities and observations. Does not publish to the server; use STA Publisher.</span></p>
+		<div class="DialogSTAEntityBuilderStaUrlRow">
+			<label><span data-lang="{&quot;cat&quot;: &quot;URL del servei STA:&quot;, &quot;spa&quot;: &quot;URL del servicio STA:&quot;, &quot;eng&quot;: &quot;STA service URL:&quot;}">STA service URL:</span>
+				<span id="DialogSTAEntityBuilderStaUrlText" class="DialogSTAEntityBuilderStaUrlText"></span>
+			</label>
+			<button type="button" class="DialogConnectASensorAction" onclick="prepareSTAEntityBuilderPackage(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Valida i prepara&quot;, &quot;spa&quot;: &quot;Validar y preparar&quot;, &quot;eng&quot;: &quot;Validate and prepare&quot;}">Validate and prepare</span>
+			</button>
+			<span id="DialogSTAEntityBuilderValidateMark" class="DialogSTAEntityBuilderValidateMark" aria-live="polite"></span>
+		</div>
+		<div id="DialogSTAEntityBuilderBody" class="DialogSTAEntityBuilderBody"></div>
+		<div class="DialogSTAEntityBuilderActions">
+			<button type="button" class="DialogConnectASensorAction" onclick="saveSTAEntityBuilderConfig(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Desa la configuració&quot;, &quot;spa&quot;: &quot;Guardar la configuración&quot;, &quot;eng&quot;: &quot;Save configuration&quot;}">Save configuration</span>
+			</button>
+			<button type="button" class="DialogConnectASensorAction" onclick="document.getElementById('DialogSTAEntityBuilderLoadFile').click()">
+				<span data-lang="{&quot;cat&quot;: &quot;Carrega la configuració&quot;, &quot;spa&quot;: &quot;Cargar la configuración&quot;, &quot;eng&quot;: &quot;Load configuration&quot;}">Load configuration</span>
+			</button>
+			<input type="file" id="DialogSTAEntityBuilderLoadFile" accept=".json,application/json" hidden onchange="loadSTAEntityBuilderConfig(event)">
+		</div>
+		<input type="hidden" id="DialogSTAEntityBuilderNodeId">
+		<div class="center">
+			<button type="button" onclick="closeSTAEntityBuilderDialog(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span>
+			</button>
+		</div>
+	</form>
+</dialog>
+
+<dialog id="DialogSTAPublisher" onClose='hideNodeDialog("DialogSTAPublisher", event)'>
+	<form onsubmit="event.preventDefault(); return false;">
+		<strong><span data-lang="{&quot;cat&quot;: &quot;Publicador STA&quot;, &quot;spa&quot;: &quot;Publicador STA&quot;, &quot;eng&quot;: &quot;STA Publisher&quot;}">STA Publisher</span></strong>
+		<div id="DialogSTAPublisherSummary" class="DialogSTAPublisherSummary"></div>
+		<div id="DialogSTAPublisherStatus" class="spaStatus"></div>
+		<pre id="DialogSTAPublisherLog" class="DialogSTAPublisherLog"></pre>
+		<div class="DialogSTAEntityBuilderActions">
+			<button type="button" class="DialogConnectASensorAction" onclick="publishSTAEntityPackage(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Publica a STA&quot;, &quot;spa&quot;: &quot;Publicar a STA&quot;, &quot;eng&quot;: &quot;Publish to STA&quot;}">Publish to STA</span>
+			</button>
+		</div>
+		<input type="hidden" id="DialogSTAPublisherNodeId">
+		<div class="center">
+			<button type="button" onclick="closeSTAPublisherDialog(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span>
+			</button>
+		</div>
+	</form>
+</dialog>
+
+
 
 	<dialog id="DialogDataQualityResult" onClose='hideNodeDialog("DialogDataQualityResult", event)'>
 		<form>

@@ -1,0 +1,6 @@
+time,temperature.result,temperature.unit,temperature.datastream_id,temperature.sensor_id,temperature.observedProperty_id,temperature.observation_id,temperature.featureOfInterest_id,humidity.result,humidity.unit,humidity.datastream_id,humidity.sensor_id,humidity.observedProperty_id,humidity.observation_id,humidity.featureOfInterest_id
+2026-10-15T10:00:00Z,24.6,°C,DS-T01,S-01,OP-T,O-001,FOI-01,63,%,DS-H01,S-02,OP-H,O-002,FOI-01
+2026-10-15T10:05:00Z,24.8,°C,DS-T01,S-01,OP-T,O-003,FOI-01,64,%,DS-H01,S-02,OP-H,O-004,FOI-01
+2026-10-15T10:10:00Z,25.1,°C,DS-T01,S-01,OP-T,O-005,FOI-01,62,%,DS-H01,S-02,OP-H,O-006,FOI-01
+2026-10-15T10:15:00Z,25.3,°C,DS-T01,S-01,OP-T,O-007,FOI-01,61,%,DS-H01,S-02,OP-H,O-008,FOI-01
+2026-10-15T10:20:00Z,25.0,°C,DS-T01,S-01,OP-T,O-009,FOI-01,60,%,DS-H01,S-02,OP-H,O-010,FOI-01

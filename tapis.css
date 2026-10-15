@@ -1745,3 +1745,284 @@
 	line-height: 1;
 }
 
+#DialogConnectASensor {
+	max-width: min(72em, 96vw);
+	max-height: 92vh;
+}
+
+#DialogConnectASensor .DialogConnectASensorIntervalRow {
+	margin: 0 0 12px 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+#DialogConnectASensor .DialogConnectASensorInterval {
+	padding: 2px 6px;
+}
+
+#DialogConnectASensor .DialogConnectASensorBtnRow {
+	margin: 0 0 8px 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+#DialogConnectASensor .DialogConnectASensorAction {
+	margin: 0;
+}
+
+#DialogConnectASensor .center button {
+	margin: 12px 10px 0 0;
+}
+
+#DialogConnectASensor .DialogConnectASensorTableSection {
+	margin: 8px 0 0 0;
+	text-align: left;
+	clear: both;
+}
+
+#DialogConnectASensor .DialogConnectASensorTable {
+	max-height: 40vh;
+	overflow: auto;
+	border: 1px solid #ccc;
+	padding: 4px;
+	background: #fff;
+}
+
+#DialogSTAEntityBuilder,
+#DialogSTAPublisher {
+	max-width: min(72em, 96vw);
+	max-height: 92vh;
+}
+
+#DialogSTAEntityBuilder .DialogSTAEntityBuilderBody {
+	max-height: 58vh;
+	overflow: auto;
+	text-align: left;
+	margin: 8px 0;
+}
+
+#DialogSTAEntityBuilder .DialogSTAEntityBuilderActions,
+#DialogSTAPublisher .DialogSTAEntityBuilderActions {
+	margin: 8px 0;
+	text-align: left;
+}
+
+#DialogSTAEntityBuilder .DialogSTAEntityBuilderStaUrlRow {
+	margin: 4px 0 8px 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	text-align: left;
+}
+
+#DialogSTAEntityBuilder .DialogSTAEntityBuilderStaUrlText {
+	overflow-wrap: anywhere;
+	font-family: Consolas, "Courier New", monospace;
+	font-size: 0.9em;
+}
+
+#DialogSTAEntityBuilder .DialogSTAEntityBuilderValidateMark {
+	font-size: 1.35em;
+	font-weight: 700;
+	line-height: 1;
+	min-width: 1.2em;
+}
+
+#DialogSTAEntityBuilder .DialogSTAEntityBuilderValidateMark.ok {
+	color: #1a7f37;
+}
+
+#DialogSTAEntityBuilder .DialogSTAEntityBuilderValidateMark.fail {
+	color: #c62828;
+}
+
+#DialogSTAEntityBuilder .sebIdRow .sebVal {
+	background: #e0e0e0;
+}
+
+#DialogSTAEntityBuilder .sebPartyFixed input,
+#DialogSTAEntityBuilder .sebPartyFixed select {
+	background: #e0e0e0 !important;
+	color: #555;
+	pointer-events: none;
+}
+
+#DialogSTAEntityBuilder .sebPartyFixed .sebSearchBtn {
+	display: none;
+}
+
+#DialogSTAEntityBuilder .sebGeoBtn {
+	margin: 4px 0 8px 0;
+}
+
+#DialogSTAEntityBuilder .sebMeasSection {
+	margin: 0 0 12px 0;
+}
+
+#DialogSTAEntityBuilder .sebMeasSection .sebEnt {
+	margin: 6px 0 10px 10px;
+	padding-left: 8px;
+	border-left: 3px solid #ccc;
+}
+
+#DialogSTAEntityBuilder .sebMeasEntTitle {
+	font-weight: 600;
+	margin: 4px 0;
+}
+
+#DialogSTAEntityBuilder .sebPartyMsg {
+	margin: 6px 0;
+}
+
+#DialogSTAEntityBuilder .sebPartyMsg.sebPartyNeedLogin {
+	color: #c62828;
+	font-weight: 600;
+}
+
+#DialogSTAEntityBuilder [hidden] {
+	display: none !important;
+}
+
+#DialogSTAEntityBuilder .sebRequired {
+	font-weight: 600;
+}
+
+#DialogSTAEntityBuilder .sebRow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px 8px;
+	margin: 4px 0;
+}
+
+#DialogSTAEntityBuilder .sebRow .sebLbl {
+	flex: 0 0 15em;
+	overflow-wrap: anywhere;
+}
+
+#DialogSTAEntityBuilder .sebRow .sebVal {
+	flex: 1 1 18em;
+	min-width: 10em;
+}
+
+#DialogSTAEntityBuilder .sebLocked .sebRow:not(.sebIdRow) input,
+#DialogSTAEntityBuilder .sebLocked .sebRow:not(.sebIdRow) select {
+	background: #eee;
+	color: #555;
+}
+
+#DialogSTAEntityBuilder .sebSearchMsg.sebNotFound {
+	color: #c62828;
+	font-style: italic;
+}
+
+#DialogSTAEntityBuilder .sebSearchMsg.sebSearchErr {
+	color: #b26a00;
+}
+
+#DialogSTAEntityBuilder .sebSearchMsg.sebSearchOk {
+	color: #1a7f37;
+}
+
+#DialogSTAEntityBuilder .sebSearchMsg.sebSearchInfo {
+	color: #555;
+}
+
+#DialogSTAEntityBuilder .sebReqNote {
+	font-weight: normal;
+	color: #666;
+}
+
+#DialogSTAEntityBuilder .sebMeasBlock {
+	margin: 6px 0;
+}
+
+#DialogSTAEntityBuilder .sebIncludeRow {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 14px;
+}
+
+#DialogSTAEntityBuilder .sebHint,
+#DialogSTAPublisher .sebHint {
+	font-size: 0.9em;
+	color: #444;
+}
+
+#DialogSTAEntityBuilder .sebStatus.sebOk,
+#DialogSTAPublisher .spaStatus.spaOk {
+	color: #1a7f37;
+	margin: 8px 0;
+}
+
+#DialogSTAEntityBuilder .sebStatus.sebError,
+#DialogSTAPublisher .spaStatus.spaError {
+	color: #c62828;
+	margin: 8px 0;
+}
+
+#DialogSTAEntityBuilder fieldset {
+	margin: 0 0 12px 0;
+}
+
+#DialogSTAEntityBuilder label {
+	display: block;
+	margin: 4px 0;
+}
+
+#DialogSTAEntityBuilder input[type="text"],
+#DialogSTAEntityBuilder textarea,
+#DialogSTAEntityBuilder select {
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+#DialogSTAEntityBuilder .sebDsBlock {
+	margin: 8px 0 4px 12px;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherSummary {
+	text-align: left;
+	margin: 8px 0;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherLog {
+	max-height: 28vh;
+	overflow: auto;
+	text-align: left;
+	background: #f7f7f7;
+	border: 1px solid #ccc;
+	padding: 8px;
+	font-size: 0.85em;
+}
+
+#DialogConnectASensorInfo .center button {
+	margin: 12px 10px 0 0;
+}
+
+#DialogConnectASensorInfo .DialogConnectASensorInfo {
+	margin: 12px 0;
+	max-height: 360px;
+	overflow: auto;
+}
+
+#DialogConnectASensorInfo .DialogConnectASensorInfo dl {
+	margin: 8px 0 0 0;
+}
+
+#DialogConnectASensorInfo .DialogConnectASensorInfo dt {
+	font-weight: 600;
+	margin-top: 6px;
+}
+
+#DialogConnectASensorInfo .DialogConnectASensorInfo dd {
+	margin: 2px 0 0 12px;
+}
+
+
+

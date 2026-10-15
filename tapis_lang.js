@@ -228,6 +228,8 @@ function CanviaIdiomaTapis(idioma)
 	applyDialogI18n();
 	if (typeof RefreshClarificationPanel == "function")
 		RefreshClarificationPanel();
+	if (typeof refreshAllConnectASensorNodeLabels == "function")
+		refreshAllConnectASensorNodeLabels();
 	if (typeof PlaceButtonsSTAEntities == "function")
 		PlaceButtonsSTAEntities();
 	if (typeof PopulateContextMenu == "function")

@@ -203,6 +203,24 @@ function getConnectionSTAEntity(parentNode, node) {
 
 //Return null if there is no reason (and there is a "fit").
 function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
+	if (node.image=="connectASensor.png") {
+		if (parentNode.image!="sta.png")
+			return DonaCadena({cat: "Connecteu aquesta eina directament a un node de servei STA.", spa: "Conecte esta herramienta directamente a un nodo de servicio STA.", eng: "Connect this tool directly to an STA Service node."});
+		if (!parentNode.STAURL)
+			return DonaCadena({cat: "El node de servei STA no té URL. Obriu-lo i indiqueu l'URL del servei STA abans de connectar-hi Connect a sensor.", spa: "El nodo de servicio STA no tiene URL. Ábralo e indique la URL del servicio STA antes de conectar Connect a sensor.", eng: "The STA Service node has no URL. Open it and set the STA service URL before connecting Connect a sensor."});
+		return null;
+	}
+	if (node.image=="staEntityBuilder.png") {
+		if (!(parentNode.STAdata || parentNode.image === "connectASensor.png" || parentNode.image === "ImportCSV.png" || parentNode.image === "ImportJSON.png" || parentNode.image === "ImportGeoJSON.png" || parentNode.image === "Table.png" || (typeof TableOperationsArray !== "undefined" && TableOperationsArray.indexOf(removeFileExtension(parentNode.image)) !== -1)))
+			return DonaCadena({cat: "Connecteu el Constructor d'entitats STA a un node amb taula de dades (p. ex. Connecta un sensor o una importació).", spa: "Conecte el Constructor de entidades STA a un nodo con tabla de datos (p. ej. Conecta un sensor o una importación).", eng: "Connect the STA Entity Builder to a node that has a data table (e.g. Connect a sensor or an import)."});
+		return null;
+	}
+	if (node.image=="staPublisher.png") {
+		if (parentNode.image!="staEntityBuilder.png")
+			return DonaCadena({cat: "Connecteu el Publicador STA directament al Constructor d'entitats STA.", spa: "Conecte el Publicador STA directamente al Constructor de entidades STA.", eng: "Connect the STA Publisher directly to the STA Entity Builder."});
+		return null;
+	}
+	
 	if (node.image=="me.png" && parentNode.image=="Parties.png") return null;
 	if (node.image=="me.png" && parentNode.image!="Parties.png") return "me tool only can goes after Parties tool";
 	if (node.image=="qualityResultsViewer.png" && (parentNode.image!="uncertainty.png" && parentNode.image!="completness.png" && parentNode.image!="misclassificationMatrix.png" && parentNode.image!="logicalConsistency.png" && parentNode.image!="formatConsistency.png" && parentNode.image!="temporalQuality.png" && parentNode.image!="thematicQuality.png" && parentNode.image!="positionalQuality.png" )) return "Quality Results Viewer can only be connected to a quality node";
@@ -2722,16 +2740,22 @@ function GetParentNodes(node) {
 	return null;
 }
 
+function getUploadObservationsDataNode(node) {
+	if (node && node.image == "connectASensor.png")
+		return node;
+	return GetFirstParentNode(node);
+}
+
 function ShowUploadObservationsSelects(node) {
-	var parentNode = GetFirstParentNode(node)
-	if (parentNode) {
-		var data = parentNode.STAdata;
-		var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
+	var dataNode = getUploadObservationsDataNode(node);
+	if (dataNode && dataNode.STAdata) {
+		var data = dataNode.STAdata;
+		var dataAttributes = dataNode.STAdataAttributes ? dataNode.STAdataAttributes : getDataAttributes(data);
+		var timeGuess = (node && node.image == "connectASensor.png") ? "timestamp" : "phenomenonTime";
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsPlace", dataAttributes, "place");
-		//PopulateSelectSaveLayerDialog("DialogUploadObservationsGeometry", dataAttributes, "feature");
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsLongitude", dataAttributes, "long");
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsLatitude", dataAttributes, "lat");
-		PopulateSelectSaveLayerDialog("DialogUploadObservationsTime", dataAttributes, "phenomenonTime");
+		PopulateSelectSaveLayerDialog("DialogUploadObservationsTime", dataAttributes, timeGuess);
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsSensorName", dataAttributes, "sensor_id");
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsSensorType", dataAttributes, "sensor_type");
 	}
@@ -3301,14 +3325,15 @@ async function GetFeatureOfInterestId(url, place, longitude, latitude) {
 async function GetObservationId(url, datastreamId, FoIId, time, result) {
 	var d=new Date(time);
 	var t=d.toISOString();
-
-	return await GetObjectId(url, "Observations", {
+	var obj = {
 		"result": result,
 		"resultTime": t,
 		"phenomenonTime": t,
-		"FeatureOfInterest": { "@iot.id": FoIId },
 		"Datastream": { "@iot.id": datastreamId }
-	});
+	};
+	if (FoIId || FoIId === 0)
+		obj.FeatureOfInterest = { "@iot.id": FoIId };
+	return await GetObjectId(url, "Observations", obj);
 }
 
 async function UploadObservationsSTA(url, data, dataAttributes, selectedOptions) {
@@ -3375,15 +3400,14 @@ async function UploadObservationsSTA(url, data, dataAttributes, selectedOptions)
 
 function UploadObservationsSTAURL(event) {
 	hideNodeDialog("DialogUploadObservations", event);
-	var parentNode=GetFirstParentNode(currentNode);
-	if (parentNode) {
+	if (dataNode && dataNode.STAdata) {
 		var url=document.getElementById("DialogSTAUploadURLInput").value;
 		if (url.charAt(url.length - 1) == '/')
 			url = url.slice(0, -1);  //remove last character
 		showInfoMessage({cat: "S'ha iniciat la pujada d'Observations a STA...", spa: "Se ha iniciado la carga de Observations en STA...", eng: "Upload observations in STA started..."});
 		UploadObservationsSTA(url,
-			parentNode.STAdata,
-			parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata),
+			dataNode.STAdata,
+			dataNode.STAdataAttributes ? dataNode.STAdataAttributes : getDataAttributes(dataNode.STAdata),
 			GetSelectedOptionsUploadObservations()).then(
 				function(value) { showInfoMessage({cat: "S'ha completat la pujada d'Observations a STA.", spa: "Se ha completado la carga de Observations en STA.", eng: "Upload observations in STA completed."}); },
 				function(error) { showInfoMessage({cat: "Error en pujar Observations a STA. <br>nom: {0} missatge: {1} a: {2} text: {3}", spa: "Error al cargar Observations en STA. <br>nombre: {0} mensaje: {1} en: {2} texto: {3}", eng: "Error uploading Observations to STA. <br>name: {0} message: {1} at: {2} text: {3}"}, error.name, error.message, error.at, error.text);
@@ -6228,7 +6252,8 @@ function getDataAttributesGeoJSONSchema(jsonschema){
 }
 
 //Has the string s a ISO data in the position i? It does not 
-function fragmentStartsWithISODate(s, i) { //regex equivalent: pattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(Z)?(\.000)?(\+00:00)?$/;
+function fragmentStartsWithISODate(s, i) { // YYYY-MM-DDTHH:mm:ss[.sss][Z|±HH:MM]
+	var p, f;
 	if (s.charAt(i+0) >= '0' && s.charAt(i+0) <= '9' &&
 		s.charAt(i+1) >= '0' && s.charAt(i+1) <= '9' &&
 		s.charAt(i+2) >= '0' && s.charAt(i+2) <= '9' &&
@@ -6247,23 +6272,29 @@ function fragmentStartsWithISODate(s, i) { //regex equivalent: pattern = /^\d{4}
 		s.charAt(i+15) >= '0' && s.charAt(i+15) <= '9' &&
 		s.charAt(i+16) == ':' &&
 		s.charAt(i+17) >= '0' && s.charAt(i+17) <= '5' &&
-		s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9'){ 
-		
-			if (s.charAt(i+19) == 'Z') 	return 20; //2025-01-31T14:21:37Z
-			else if (s.charAt(i+19)=="."&& //2025-01-31T14:21:37.000
-			 s.charAt(i+20) >= '0' && s.charAt(i+20) <= '9' &&
-			 s.charAt(i+21) >= '0' && s.charAt(i+21) <= '9' &&
-			 s.charAt(i+22) >= '0' && s.charAt(i+22) <= '9' 
-			) return 23
-			else if (s.charAt(i+19) == '+'&&   //2025-01-31T14:21:37+00:00
-			s.charAt(i+20) >= '0' && s.charAt(i+20) <= '9' &&
-			s.charAt(i+21) == ':' &&
-			s.charAt(i+22) >= '0' && s.charAt(i+22) <= '9' &&
-			s.charAt(i+23) >= '0' && s.charAt(i+23) <= '9' &&
-			s.charAt(i+24) >= '0' && s.charAt(i+24) <= '9'
-			) return 25;
-		return 19; //2025-01-31T14:21:37
-	}
+		s.charAt(i+18) >= '0' && s.charAt(i+18) <= '9'){
+			p = i + 19;
+			if (s.charAt(p) == ".") {
+				p++;
+				f = 0;
+				while (f < 3 && s.charAt(p) >= '0' && s.charAt(p) <= '9') {
+					p++;
+					f++;
+				}
+				if (f == 0)
+					p = i + 19;
+			}
+			if (s.charAt(p) == 'Z')
+				return p + 1 - i;
+			if ((s.charAt(p) == '+' || s.charAt(p) == '-') &&
+				s.charAt(p+1) >= '0' && s.charAt(p+1) <= '9' &&
+				s.charAt(p+2) >= '0' && s.charAt(p+2) <= '9' &&
+				s.charAt(p+3) == ':' &&
+				s.charAt(p+4) >= '0' && s.charAt(p+4) <= '9' &&
+				s.charAt(p+5) >= '0' && s.charAt(p+5) <= '9')
+				return p + 6 - i;
+			return p - i;
+		}
 	return 0;
 }
 
@@ -7799,6 +7830,51 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 					
 		return true;
 	}
+	if (nodeTo.image == "connectASensor.png") {
+		if (nodeFrom && nodeFrom.STAURL)
+			nodeTo.STAURL = nodeFrom.STAURL;
+		if (nodeFrom && nodeFrom.STAsecurity && typeof deapCopy === "function")
+			nodeTo.STAsecurity = deapCopy(nodeFrom.STAsecurity);
+		networkNodes.update(nodeTo);
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		return true;
+	}
+	if (nodeTo.image == "staEntityBuilder.png") {
+		if (nodeFrom && nodeFrom.STAdata && typeof deapCopy === "function") {
+			nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
+			nodeTo.STAdataAttributes = nodeFrom.STAdataAttributes ? deapCopy(nodeFrom.STAdataAttributes) : (typeof getDataAttributes === "function" ? getDataAttributes(nodeTo.STAdata) : null);
+		}
+		if (nodeFrom && nodeFrom.connectASensorMeta && typeof deapCopy === "function")
+			nodeTo.connectASensorMeta = deapCopy(nodeFrom.connectASensorMeta);
+		if (nodeFrom && nodeFrom.STAURL)
+			nodeTo.STAURL = nodeFrom.STAURL;
+		else {
+			var casParents = GetParentNodes(nodeFrom);
+			if (casParents && casParents[0] && casParents[0].STAURL)
+				nodeTo.STAURL = casParents[0].STAURL;
+		}
+		if (nodeFrom && nodeFrom.STAsecurity && typeof deapCopy === "function")
+			nodeTo.STAsecurity = deapCopy(nodeFrom.STAsecurity);
+		networkNodes.update(nodeTo);
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		return true;
+	}
+	if (nodeTo.image == "staPublisher.png") {
+		if (nodeFrom && nodeFrom.staEntityPackage && typeof deapCopy === "function")
+			nodeTo.staEntityPackage = deapCopy(nodeFrom.staEntityPackage);
+		if (nodeFrom && nodeFrom.staEntityConfig && typeof deapCopy === "function")
+			nodeTo.staEntityConfig = deapCopy(nodeFrom.staEntityConfig);
+		if (nodeFrom && nodeFrom.STAURL)
+			nodeTo.STAURL = nodeFrom.STAURL;
+		if (nodeFrom && nodeFrom.STAsecurity && typeof deapCopy === "function")
+			nodeTo.STAsecurity = deapCopy(nodeFrom.STAsecurity);
+		networkNodes.update(nodeTo);
+		if (addEdge)
+			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		return true;
+	}
 	return false;
 }
 
@@ -7848,9 +7924,13 @@ var networkOptions = {
 				if (data.from == data.to)
 					showInfoMessage({cat: "No es permet la connexió amb el mateix node.", spa: "No se permite la conexión con el mismo nodo.", eng: "Connection to the same node is not allowed."});
 				else {
+					var started = StartCircularImage(networkNodes.get(data.from), networkNodes.get(data.to), false, true, true);
+					if (started === null) {
+						connectionInProcess = false;
+						return;
+					}
 					networkEdges.add([{ from: data.to, to: data.from, arrows: "from"}]);
 					showInfoMessage({cat: "Connectat.", spa: "Conectado.", eng: "Connected."});
-					StartCircularImage(networkNodes.get(data.from), networkNodes.get(data.to), false, true, true);
 				}
 				connectionInProcess = false;
 			}
@@ -8801,16 +8881,31 @@ function networkDoubleClick(params) {
 			currentNode.STAURL=parentNodes[0].STAURL;
 			saveNodeDialog("DialogMe", currentNode);
 
-
 			showNodeDialog("DialogMe");
-			
-			// if (!parentNodes || !parentNodes.length) {
-			// 	populateDialogdataQualityResultEmpty();
-			// } else {
-			// 	if (parentNodes[0].STAQualityNodeResults) currentNode.STAQualityNodeResults=parentNodes[0].STAQualityNodeResults;
-			// 	populateDialogdataQualityResult(parentNodes[0], currentNode);
-			// }
-			// 
+		}
+		else if (currentNode.image == "connectASensor.png") {
+			var parentNodes=GetParentNodes(currentNode);
+			if (parentNodes && parentNodes[0] && parentNodes[0].STAURL)
+				currentNode.STAURL=parentNodes[0].STAURL;
+			saveNodeDialog("DialogConnectASensor", currentNode);
+			showNodeDialog("DialogConnectASensor");
+			updateConnectASensorConnectionButtons();
+			if (typeof syncConnectASensorMeta === "function")
+				syncConnectASensorMeta(currentNode);
+			if (typeof ShowConnectASensorTableInDialog === "function")
+				ShowConnectASensorTableInDialog(currentNode);
+		}
+		else if (currentNode.image == "staEntityBuilder.png") {
+			saveNodeDialog("DialogSTAEntityBuilder", currentNode);
+			showNodeDialog("DialogSTAEntityBuilder");
+			if (typeof openSTAEntityBuilderDialog === "function")
+				openSTAEntityBuilderDialog(currentNode);
+		}
+		else if (currentNode.image == "staPublisher.png") {
+			saveNodeDialog("DialogSTAPublisher", currentNode);
+			showNodeDialog("DialogSTAPublisher");
+			if (typeof openSTAPublisherDialog === "function")
+				openSTAPublisherDialog(currentNode);
 		}
 	}
 }

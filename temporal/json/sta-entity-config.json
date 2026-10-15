@@ -1,0 +1,1788 @@
+{
+  "version": 1,
+  "mode": "connectASensor",
+  "exportedAt": "2026-10-15T14:40:19.131Z",
+  "STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+  "staEntityConfig": {
+    "version": 2,
+    "mode": "connectASensor",
+    "selected": {
+      "Parties": true,
+      "Licenses": true,
+      "Things": true,
+      "Locations": true,
+      "HistoricalLocations": false,
+      "Sensors": true,
+      "ObservedProperties": true,
+      "FeaturesOfInterest": true,
+      "Campaigns": false,
+      "ObservationGroups": false,
+      "Datastreams": true,
+      "MultiDatastreams": false,
+      "Cells": false,
+      "Relations": false,
+      "Observations": true
+    },
+    "entities": {
+      "Parties": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "authId": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "role": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "displayName": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": true
+      },
+      "Licenses": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "CC BY 4.0",
+            "column": ""
+          },
+          "definition": {
+            "source": "manual",
+            "value": "https://creativecommons.org/licenses/by/4.0/",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "Creative Commons Attribution 4.0 International",
+            "column": ""
+          },
+          "logo": {
+            "source": "manual",
+            "value": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png",
+            "column": ""
+          },
+          "attributionText": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Things": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "Smartcitizen Kit 2.1",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "Smart Citizen Kit",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Locations": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "encodingType": {
+            "source": "manual",
+            "value": "application/geo+json",
+            "column": ""
+          },
+          "longitude": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "latitude": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "HistoricalLocations": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "time": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Sensors": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "Smartcitizen Kit 2.1",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "Smart Citizen Kit",
+            "column": ""
+          },
+          "encodingType": {
+            "source": "manual",
+            "value": "application/json",
+            "column": ""
+          },
+          "metadata": {
+            "source": "manual",
+            "value": "{\"usbVendorId\":\"2341\",\"usbProductId\":\"804D\",\"portName\":\"Smartcitizen Kit 2.1\",\"usbId\":\"2341:804D\",\"hardwareVersion\":\"2.1\",\"samHardwareId\":\"D867247B5055344E312E3120FF0F2B35\",\"samVersion\":\"0.9.8-511b5aa\",\"samBuildDate\":\"2023-10-16T19:05:24Z\",\"macAddress\":\"BE:FF:4D:06:8B:37\",\"espVersion\":\"not synced\",\"espBuildDate\":\"not synced\",\"sensors\":\"version\\nSCK > config\\nPublish interval (s): 180\\nReading interval (s): 60\\nSanity reset (every 24 hours) is: on\\nSCK > sensor\\nDisabled\\n----------\\nPM board Dallas Temperature\\nDirect Dallas Temperature\\nExt Temperature\\nExt Humidity\\nExt SHT35 Temperature\\nExt SHT35 Humidity\\nTemperature BME680\\nHumidity BME680\\nBattery voltage\\nSDcard present\\nNoise dBC\\nNoise dBZ\\nNoise FFT\\nAltitude\\nPressure internal temperature\\nVOC Gas CCS811\\neCO2 Gas CCS811\\nGases Board 1A\\nGases Board 1W\\nGases Board 2A\\nGases Board 2W\\nGases Board 3A\\nGases Board 3W\\nGases Board Temperature\\nGases Board Humidity\\nGroove ADC\\nINA219 Bus voltage\\nINA219 Shunt voltage\\nINA219 Current\\nINA219 Load voltage\\nDS18B20 Water temperature\\nAtlas Temperature\\nAtlas PH\\nAtlas Conductivity\\nAtlas Total Dissolved Solids\\nAtlas Salinity\\nAtlas Specific gravity\\nAtlas Dissolved Oxygen\\nAtlas DO Saturation\\nAtlas Redox potential\\nSoil Moisture Raw\\nSoil Moisture Percent\\nSoil Temperature\\nSoil Light\\nExt Range Light\\nExt Range Distance\\nBarometric pressure BME680\\nVOC Gas BME680\\nGPS Fix Quality\\nGPS Latitude\\nGPS Longitude\\nGPS Altitude\\nGPS Speed\\nGPS Horizontal Dilution of Position\\nGPS Tracked Satellites\\nADS1x15 ADC 0x48 Ch0\\nADS1x15 ADC 0x48 Ch1\\nADS1x15 ADC 0x48 Ch2\\nADS1x15 ADC 0x48 Ch3\\nADS1x15 ADC 0x49 Ch0\\nADS1x15 ADC 0x49 Ch1\\nADS1x15 ADC 0x49 Ch2\\nADS1x15 ADC 0x49 Ch3\\nADS1x15 ADC 0x4A Ch0\\nADS1x15 ADC 0x4A Ch1\\nADS1x15 ADC 0x4A Ch2\\nADS1x15 ADC 0x4A Ch3\\nADS1x15 ADC 0x4B Ch0\\nADS1x15 ADC 0x4B Ch1\\nADS1x15 ADC 0x4B Ch2\\nADS1x15 ADC 0x4B Ch3\\nSCD30 CO2\\nSCD30 Temperature\\nSCD30 Humidity\\nExt PM_A 1.0\\nExt PM_A 2.5\\nExt PM_A 10.0\\nExt PN_A 0.3\\nExt PN_A 0.5\\nExt PN_A 1.0\\nExt PN_A 2.5\\nExt PN_A 5.0\\nExt PN_A 10.0\\nExt PM_B 1.0\\nExt PM_B 2.5\\nExt PM_B 10.0\\nExt PN_B 0.3\\nExt PN_B 0.5\\nExt PN_B 1.0\\nExt PN_B 2.5\\nExt PN_B 5.0\\nExt PN_B 10.0\\nPN 0.3\\nPN 0.5\\nPN 1.0\\nPN 2.5\\nPN 5.0\\nPN 10.0\\nGroove OLED\\nEnabled\\n----------\\nTemperature -> every 1 int (60 sec)\\nHumidity -> every 1 int (60 sec)\\nBattery -> every 1 int (60 sec)\\nLight -> every 1 int (60 sec)\\nNoise dBA -> every 1 int (60 sec)\\nBarometric pressure -> every 1 int (60 sec)\\nPM 1.0 -> every 5 int (300 sec)\\nPM 2.5 -> every 5 int (300 sec)\\nPM 10.0 -> every 5 int (300 sec)\\nSCK > netinfo\",\"mode\":\"sdcard\",\"connectionType\":\"USB\",\"readingInterval\":\"60 s\"}",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "ObservedProperties": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "definition": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "FeaturesOfInterest": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "encodingType": {
+            "source": "manual",
+            "value": "application/geo+json",
+            "column": ""
+          },
+          "longitude": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "latitude": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Campaigns": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "classification": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "termsOfUse": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "privacyPolicy": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "creationTime": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "url": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "startTime": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "endTime": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "ObservationGroups": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "purpose": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "creationTime": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "endTime": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "termsOfUsed": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "privacyPolicy": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "dataQuality": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Datastreams": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "observationType": {
+            "source": "manual",
+            "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+            "column": ""
+          },
+          "unitOfMeasurement.name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "unitOfMeasurement.symbol": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "unitOfMeasurement.definition": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "MultiDatastreams": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "observationType": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "unitOfMeasurements": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "multiObservationDataType": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Cells": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "system": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "resolution": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Relations": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "role": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "externalObject": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Observations": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "phenomenonTime": {
+            "source": "column",
+            "value": "",
+            "column": "timestamp"
+          },
+          "resultTime": {
+            "source": "column",
+            "value": "",
+            "column": "timestamp"
+          }
+        },
+        "locked": false
+      }
+    },
+    "measurements": [
+      {
+        "key": "temperature",
+        "include": true,
+        "ObservedProperties": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Air temperature",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/property/OGC/0/Temperature",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Air temperature",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Sensors": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Smartcitizen Kit 2.1",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Smart Citizen Kit",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/json",
+              "column": ""
+            },
+            "metadata": {
+              "source": "manual",
+              "value": "{\"usbVendorId\":\"2341\",\"usbProductId\":\"804D\",\"portName\":\"Smartcitizen Kit 2.1\",\"usbId\":\"2341:804D\",\"hardwareVersion\":\"2.1\",\"samHardwareId\":\"D867247B5055344E312E3120FF0F2B35\",\"samVersion\":\"0.9.8-511b5aa\",\"samBuildDate\":\"2023-10-16T19:05:24Z\",\"macAddress\":\"BE:FF:4D:06:8B:37\",\"espVersion\":\"not synced\",\"espBuildDate\":\"not synced\",\"sensors\":\"version\\nSCK > config\\nPublish interval (s): 180\\nReading interval (s): 60\\nSanity reset (every 24 hours) is: on\\nSCK > sensor\\nDisabled\\n----------\\nPM board Dallas Temperature\\nDirect Dallas Temperature\\nExt Temperature\\nExt Humidity\\nExt SHT35 Temperature\\nExt SHT35 Humidity\\nTemperature BME680\\nHumidity BME680\\nBattery voltage\\nSDcard present\\nNoise dBC\\nNoise dBZ\\nNoise FFT\\nAltitude\\nPressure internal temperature\\nVOC Gas CCS811\\neCO2 Gas CCS811\\nGases Board 1A\\nGases Board 1W\\nGases Board 2A\\nGases Board 2W\\nGases Board 3A\\nGases Board 3W\\nGases Board Temperature\\nGases Board Humidity\\nGroove ADC\\nINA219 Bus voltage\\nINA219 Shunt voltage\\nINA219 Current\\nINA219 Load voltage\\nDS18B20 Water temperature\\nAtlas Temperature\\nAtlas PH\\nAtlas Conductivity\\nAtlas Total Dissolved Solids\\nAtlas Salinity\\nAtlas Specific gravity\\nAtlas Dissolved Oxygen\\nAtlas DO Saturation\\nAtlas Redox potential\\nSoil Moisture Raw\\nSoil Moisture Percent\\nSoil Temperature\\nSoil Light\\nExt Range Light\\nExt Range Distance\\nBarometric pressure BME680\\nVOC Gas BME680\\nGPS Fix Quality\\nGPS Latitude\\nGPS Longitude\\nGPS Altitude\\nGPS Speed\\nGPS Horizontal Dilution of Position\\nGPS Tracked Satellites\\nADS1x15 ADC 0x48 Ch0\\nADS1x15 ADC 0x48 Ch1\\nADS1x15 ADC 0x48 Ch2\\nADS1x15 ADC 0x48 Ch3\\nADS1x15 ADC 0x49 Ch0\\nADS1x15 ADC 0x49 Ch1\\nADS1x15 ADC 0x49 Ch2\\nADS1x15 ADC 0x49 Ch3\\nADS1x15 ADC 0x4A Ch0\\nADS1x15 ADC 0x4A Ch1\\nADS1x15 ADC 0x4A Ch2\\nADS1x15 ADC 0x4A Ch3\\nADS1x15 ADC 0x4B Ch0\\nADS1x15 ADC 0x4B Ch1\\nADS1x15 ADC 0x4B Ch2\\nADS1x15 ADC 0x4B Ch3\\nSCD30 CO2\\nSCD30 Temperature\\nSCD30 Humidity\\nExt PM_A 1.0\\nExt PM_A 2.5\\nExt PM_A 10.0\\nExt PN_A 0.3\\nExt PN_A 0.5\\nExt PN_A 1.0\\nExt PN_A 2.5\\nExt PN_A 5.0\\nExt PN_A 10.0\\nExt PM_B 1.0\\nExt PM_B 2.5\\nExt PM_B 10.0\\nExt PN_B 0.3\\nExt PN_B 0.5\\nExt PN_B 1.0\\nExt PN_B 2.5\\nExt PN_B 5.0\\nExt PN_B 10.0\\nPN 0.3\\nPN 0.5\\nPN 1.0\\nPN 2.5\\nPN 5.0\\nPN 10.0\\nGroove OLED\\nEnabled\\n----------\\nTemperature -> every 1 int (60 sec)\\nHumidity -> every 1 int (60 sec)\\nBattery -> every 1 int (60 sec)\\nLight -> every 1 int (60 sec)\\nNoise dBA -> every 1 int (60 sec)\\nBarometric pressure -> every 1 int (60 sec)\\nPM 1.0 -> every 5 int (300 sec)\\nPM 2.5 -> every 5 int (300 sec)\\nPM 10.0 -> every 5 int (300 sec)\\nSCK > netinfo\",\"mode\":\"sdcard\",\"connectionType\":\"USB\",\"readingInterval\":\"60 s\"}",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "FeaturesOfInterest": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "longitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "latitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Datastreams": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Air temperature",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Air temperature",
+              "column": ""
+            },
+            "observationType": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+              "column": ""
+            },
+            "unitOfMeasurement.name": {
+              "source": "manual",
+              "value": "degree Celsius",
+              "column": ""
+            },
+            "unitOfMeasurement.symbol": {
+              "source": "manual",
+              "value": "°C",
+              "column": ""
+            },
+            "unitOfMeasurement.definition": {
+              "source": "manual",
+              "value": "http://www.qudt.org/vocab/unit/DEG_C",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        }
+      },
+      {
+        "key": "humidity",
+        "include": true,
+        "ObservedProperties": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Relative humidity",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/property/OGC/0/RelativeHumidity",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Relative humidity",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Sensors": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Smartcitizen Kit 2.1",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Smart Citizen Kit",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/json",
+              "column": ""
+            },
+            "metadata": {
+              "source": "manual",
+              "value": "{\"usbVendorId\":\"2341\",\"usbProductId\":\"804D\",\"portName\":\"Smartcitizen Kit 2.1\",\"usbId\":\"2341:804D\",\"hardwareVersion\":\"2.1\",\"samHardwareId\":\"D867247B5055344E312E3120FF0F2B35\",\"samVersion\":\"0.9.8-511b5aa\",\"samBuildDate\":\"2023-10-16T19:05:24Z\",\"macAddress\":\"BE:FF:4D:06:8B:37\",\"espVersion\":\"not synced\",\"espBuildDate\":\"not synced\",\"sensors\":\"version\\nSCK > config\\nPublish interval (s): 180\\nReading interval (s): 60\\nSanity reset (every 24 hours) is: on\\nSCK > sensor\\nDisabled\\n----------\\nPM board Dallas Temperature\\nDirect Dallas Temperature\\nExt Temperature\\nExt Humidity\\nExt SHT35 Temperature\\nExt SHT35 Humidity\\nTemperature BME680\\nHumidity BME680\\nBattery voltage\\nSDcard present\\nNoise dBC\\nNoise dBZ\\nNoise FFT\\nAltitude\\nPressure internal temperature\\nVOC Gas CCS811\\neCO2 Gas CCS811\\nGases Board 1A\\nGases Board 1W\\nGases Board 2A\\nGases Board 2W\\nGases Board 3A\\nGases Board 3W\\nGases Board Temperature\\nGases Board Humidity\\nGroove ADC\\nINA219 Bus voltage\\nINA219 Shunt voltage\\nINA219 Current\\nINA219 Load voltage\\nDS18B20 Water temperature\\nAtlas Temperature\\nAtlas PH\\nAtlas Conductivity\\nAtlas Total Dissolved Solids\\nAtlas Salinity\\nAtlas Specific gravity\\nAtlas Dissolved Oxygen\\nAtlas DO Saturation\\nAtlas Redox potential\\nSoil Moisture Raw\\nSoil Moisture Percent\\nSoil Temperature\\nSoil Light\\nExt Range Light\\nExt Range Distance\\nBarometric pressure BME680\\nVOC Gas BME680\\nGPS Fix Quality\\nGPS Latitude\\nGPS Longitude\\nGPS Altitude\\nGPS Speed\\nGPS Horizontal Dilution of Position\\nGPS Tracked Satellites\\nADS1x15 ADC 0x48 Ch0\\nADS1x15 ADC 0x48 Ch1\\nADS1x15 ADC 0x48 Ch2\\nADS1x15 ADC 0x48 Ch3\\nADS1x15 ADC 0x49 Ch0\\nADS1x15 ADC 0x49 Ch1\\nADS1x15 ADC 0x49 Ch2\\nADS1x15 ADC 0x49 Ch3\\nADS1x15 ADC 0x4A Ch0\\nADS1x15 ADC 0x4A Ch1\\nADS1x15 ADC 0x4A Ch2\\nADS1x15 ADC 0x4A Ch3\\nADS1x15 ADC 0x4B Ch0\\nADS1x15 ADC 0x4B Ch1\\nADS1x15 ADC 0x4B Ch2\\nADS1x15 ADC 0x4B Ch3\\nSCD30 CO2\\nSCD30 Temperature\\nSCD30 Humidity\\nExt PM_A 1.0\\nExt PM_A 2.5\\nExt PM_A 10.0\\nExt PN_A 0.3\\nExt PN_A 0.5\\nExt PN_A 1.0\\nExt PN_A 2.5\\nExt PN_A 5.0\\nExt PN_A 10.0\\nExt PM_B 1.0\\nExt PM_B 2.5\\nExt PM_B 10.0\\nExt PN_B 0.3\\nExt PN_B 0.5\\nExt PN_B 1.0\\nExt PN_B 2.5\\nExt PN_B 5.0\\nExt PN_B 10.0\\nPN 0.3\\nPN 0.5\\nPN 1.0\\nPN 2.5\\nPN 5.0\\nPN 10.0\\nGroove OLED\\nEnabled\\n----------\\nTemperature -> every 1 int (60 sec)\\nHumidity -> every 1 int (60 sec)\\nBattery -> every 1 int (60 sec)\\nLight -> every 1 int (60 sec)\\nNoise dBA -> every 1 int (60 sec)\\nBarometric pressure -> every 1 int (60 sec)\\nPM 1.0 -> every 5 int (300 sec)\\nPM 2.5 -> every 5 int (300 sec)\\nPM 10.0 -> every 5 int (300 sec)\\nSCK > netinfo\",\"mode\":\"sdcard\",\"connectionType\":\"USB\",\"readingInterval\":\"60 s\"}",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "FeaturesOfInterest": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "longitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "latitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Datastreams": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Relative humidity",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Relative humidity",
+              "column": ""
+            },
+            "observationType": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+              "column": ""
+            },
+            "unitOfMeasurement.name": {
+              "source": "manual",
+              "value": "percent",
+              "column": ""
+            },
+            "unitOfMeasurement.symbol": {
+              "source": "manual",
+              "value": "%",
+              "column": ""
+            },
+            "unitOfMeasurement.definition": {
+              "source": "manual",
+              "value": "http://www.qudt.org/vocab/unit/PERCENT",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        }
+      },
+      {
+        "key": "light",
+        "include": true,
+        "ObservedProperties": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Ambient light",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/property/OGC/0/Illuminance",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Ambient light",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Sensors": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Smartcitizen Kit 2.1",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Smart Citizen Kit",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/json",
+              "column": ""
+            },
+            "metadata": {
+              "source": "manual",
+              "value": "{\"usbVendorId\":\"2341\",\"usbProductId\":\"804D\",\"portName\":\"Smartcitizen Kit 2.1\",\"usbId\":\"2341:804D\",\"hardwareVersion\":\"2.1\",\"samHardwareId\":\"D867247B5055344E312E3120FF0F2B35\",\"samVersion\":\"0.9.8-511b5aa\",\"samBuildDate\":\"2023-10-16T19:05:24Z\",\"macAddress\":\"BE:FF:4D:06:8B:37\",\"espVersion\":\"not synced\",\"espBuildDate\":\"not synced\",\"sensors\":\"version\\nSCK > config\\nPublish interval (s): 180\\nReading interval (s): 60\\nSanity reset (every 24 hours) is: on\\nSCK > sensor\\nDisabled\\n----------\\nPM board Dallas Temperature\\nDirect Dallas Temperature\\nExt Temperature\\nExt Humidity\\nExt SHT35 Temperature\\nExt SHT35 Humidity\\nTemperature BME680\\nHumidity BME680\\nBattery voltage\\nSDcard present\\nNoise dBC\\nNoise dBZ\\nNoise FFT\\nAltitude\\nPressure internal temperature\\nVOC Gas CCS811\\neCO2 Gas CCS811\\nGases Board 1A\\nGases Board 1W\\nGases Board 2A\\nGases Board 2W\\nGases Board 3A\\nGases Board 3W\\nGases Board Temperature\\nGases Board Humidity\\nGroove ADC\\nINA219 Bus voltage\\nINA219 Shunt voltage\\nINA219 Current\\nINA219 Load voltage\\nDS18B20 Water temperature\\nAtlas Temperature\\nAtlas PH\\nAtlas Conductivity\\nAtlas Total Dissolved Solids\\nAtlas Salinity\\nAtlas Specific gravity\\nAtlas Dissolved Oxygen\\nAtlas DO Saturation\\nAtlas Redox potential\\nSoil Moisture Raw\\nSoil Moisture Percent\\nSoil Temperature\\nSoil Light\\nExt Range Light\\nExt Range Distance\\nBarometric pressure BME680\\nVOC Gas BME680\\nGPS Fix Quality\\nGPS Latitude\\nGPS Longitude\\nGPS Altitude\\nGPS Speed\\nGPS Horizontal Dilution of Position\\nGPS Tracked Satellites\\nADS1x15 ADC 0x48 Ch0\\nADS1x15 ADC 0x48 Ch1\\nADS1x15 ADC 0x48 Ch2\\nADS1x15 ADC 0x48 Ch3\\nADS1x15 ADC 0x49 Ch0\\nADS1x15 ADC 0x49 Ch1\\nADS1x15 ADC 0x49 Ch2\\nADS1x15 ADC 0x49 Ch3\\nADS1x15 ADC 0x4A Ch0\\nADS1x15 ADC 0x4A Ch1\\nADS1x15 ADC 0x4A Ch2\\nADS1x15 ADC 0x4A Ch3\\nADS1x15 ADC 0x4B Ch0\\nADS1x15 ADC 0x4B Ch1\\nADS1x15 ADC 0x4B Ch2\\nADS1x15 ADC 0x4B Ch3\\nSCD30 CO2\\nSCD30 Temperature\\nSCD30 Humidity\\nExt PM_A 1.0\\nExt PM_A 2.5\\nExt PM_A 10.0\\nExt PN_A 0.3\\nExt PN_A 0.5\\nExt PN_A 1.0\\nExt PN_A 2.5\\nExt PN_A 5.0\\nExt PN_A 10.0\\nExt PM_B 1.0\\nExt PM_B 2.5\\nExt PM_B 10.0\\nExt PN_B 0.3\\nExt PN_B 0.5\\nExt PN_B 1.0\\nExt PN_B 2.5\\nExt PN_B 5.0\\nExt PN_B 10.0\\nPN 0.3\\nPN 0.5\\nPN 1.0\\nPN 2.5\\nPN 5.0\\nPN 10.0\\nGroove OLED\\nEnabled\\n----------\\nTemperature -> every 1 int (60 sec)\\nHumidity -> every 1 int (60 sec)\\nBattery -> every 1 int (60 sec)\\nLight -> every 1 int (60 sec)\\nNoise dBA -> every 1 int (60 sec)\\nBarometric pressure -> every 1 int (60 sec)\\nPM 1.0 -> every 5 int (300 sec)\\nPM 2.5 -> every 5 int (300 sec)\\nPM 10.0 -> every 5 int (300 sec)\\nSCK > netinfo\",\"mode\":\"sdcard\",\"connectionType\":\"USB\",\"readingInterval\":\"60 s\"}",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "FeaturesOfInterest": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "longitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "latitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Datastreams": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Ambient light",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Ambient light",
+              "column": ""
+            },
+            "observationType": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+              "column": ""
+            },
+            "unitOfMeasurement.name": {
+              "source": "manual",
+              "value": "lux",
+              "column": ""
+            },
+            "unitOfMeasurement.symbol": {
+              "source": "manual",
+              "value": "lx",
+              "column": ""
+            },
+            "unitOfMeasurement.definition": {
+              "source": "manual",
+              "value": "http://www.qudt.org/vocab/unit/LUX",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        }
+      },
+      {
+        "key": "noiseDBA",
+        "include": true,
+        "ObservedProperties": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Ambient noise level",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/property/OGC/0/SoundPressureLevel",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Ambient noise level",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Sensors": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Smartcitizen Kit 2.1",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Smart Citizen Kit",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/json",
+              "column": ""
+            },
+            "metadata": {
+              "source": "manual",
+              "value": "{\"usbVendorId\":\"2341\",\"usbProductId\":\"804D\",\"portName\":\"Smartcitizen Kit 2.1\",\"usbId\":\"2341:804D\",\"hardwareVersion\":\"2.1\",\"samHardwareId\":\"D867247B5055344E312E3120FF0F2B35\",\"samVersion\":\"0.9.8-511b5aa\",\"samBuildDate\":\"2023-10-16T19:05:24Z\",\"macAddress\":\"BE:FF:4D:06:8B:37\",\"espVersion\":\"not synced\",\"espBuildDate\":\"not synced\",\"sensors\":\"version\\nSCK > config\\nPublish interval (s): 180\\nReading interval (s): 60\\nSanity reset (every 24 hours) is: on\\nSCK > sensor\\nDisabled\\n----------\\nPM board Dallas Temperature\\nDirect Dallas Temperature\\nExt Temperature\\nExt Humidity\\nExt SHT35 Temperature\\nExt SHT35 Humidity\\nTemperature BME680\\nHumidity BME680\\nBattery voltage\\nSDcard present\\nNoise dBC\\nNoise dBZ\\nNoise FFT\\nAltitude\\nPressure internal temperature\\nVOC Gas CCS811\\neCO2 Gas CCS811\\nGases Board 1A\\nGases Board 1W\\nGases Board 2A\\nGases Board 2W\\nGases Board 3A\\nGases Board 3W\\nGases Board Temperature\\nGases Board Humidity\\nGroove ADC\\nINA219 Bus voltage\\nINA219 Shunt voltage\\nINA219 Current\\nINA219 Load voltage\\nDS18B20 Water temperature\\nAtlas Temperature\\nAtlas PH\\nAtlas Conductivity\\nAtlas Total Dissolved Solids\\nAtlas Salinity\\nAtlas Specific gravity\\nAtlas Dissolved Oxygen\\nAtlas DO Saturation\\nAtlas Redox potential\\nSoil Moisture Raw\\nSoil Moisture Percent\\nSoil Temperature\\nSoil Light\\nExt Range Light\\nExt Range Distance\\nBarometric pressure BME680\\nVOC Gas BME680\\nGPS Fix Quality\\nGPS Latitude\\nGPS Longitude\\nGPS Altitude\\nGPS Speed\\nGPS Horizontal Dilution of Position\\nGPS Tracked Satellites\\nADS1x15 ADC 0x48 Ch0\\nADS1x15 ADC 0x48 Ch1\\nADS1x15 ADC 0x48 Ch2\\nADS1x15 ADC 0x48 Ch3\\nADS1x15 ADC 0x49 Ch0\\nADS1x15 ADC 0x49 Ch1\\nADS1x15 ADC 0x49 Ch2\\nADS1x15 ADC 0x49 Ch3\\nADS1x15 ADC 0x4A Ch0\\nADS1x15 ADC 0x4A Ch1\\nADS1x15 ADC 0x4A Ch2\\nADS1x15 ADC 0x4A Ch3\\nADS1x15 ADC 0x4B Ch0\\nADS1x15 ADC 0x4B Ch1\\nADS1x15 ADC 0x4B Ch2\\nADS1x15 ADC 0x4B Ch3\\nSCD30 CO2\\nSCD30 Temperature\\nSCD30 Humidity\\nExt PM_A 1.0\\nExt PM_A 2.5\\nExt PM_A 10.0\\nExt PN_A 0.3\\nExt PN_A 0.5\\nExt PN_A 1.0\\nExt PN_A 2.5\\nExt PN_A 5.0\\nExt PN_A 10.0\\nExt PM_B 1.0\\nExt PM_B 2.5\\nExt PM_B 10.0\\nExt PN_B 0.3\\nExt PN_B 0.5\\nExt PN_B 1.0\\nExt PN_B 2.5\\nExt PN_B 5.0\\nExt PN_B 10.0\\nPN 0.3\\nPN 0.5\\nPN 1.0\\nPN 2.5\\nPN 5.0\\nPN 10.0\\nGroove OLED\\nEnabled\\n----------\\nTemperature -> every 1 int (60 sec)\\nHumidity -> every 1 int (60 sec)\\nBattery -> every 1 int (60 sec)\\nLight -> every 1 int (60 sec)\\nNoise dBA -> every 1 int (60 sec)\\nBarometric pressure -> every 1 int (60 sec)\\nPM 1.0 -> every 5 int (300 sec)\\nPM 2.5 -> every 5 int (300 sec)\\nPM 10.0 -> every 5 int (300 sec)\\nSCK > netinfo\",\"mode\":\"sdcard\",\"connectionType\":\"USB\",\"readingInterval\":\"60 s\"}",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "FeaturesOfInterest": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "longitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "latitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Datastreams": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Ambient noise level",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Ambient noise level",
+              "column": ""
+            },
+            "observationType": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+              "column": ""
+            },
+            "unitOfMeasurement.name": {
+              "source": "manual",
+              "value": "A-weighted decibel",
+              "column": ""
+            },
+            "unitOfMeasurement.symbol": {
+              "source": "manual",
+              "value": "dBA",
+              "column": ""
+            },
+            "unitOfMeasurement.definition": {
+              "source": "manual",
+              "value": "http://www.qudt.org/vocab/unit/DecibelA",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        }
+      },
+      {
+        "key": "barometricPressure",
+        "include": true,
+        "ObservedProperties": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Barometric pressure",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/property/OGC/0/AtmosphericPressure",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Barometric pressure",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Sensors": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Smartcitizen Kit 2.1",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Smart Citizen Kit",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/json",
+              "column": ""
+            },
+            "metadata": {
+              "source": "manual",
+              "value": "{\"usbVendorId\":\"2341\",\"usbProductId\":\"804D\",\"portName\":\"Smartcitizen Kit 2.1\",\"usbId\":\"2341:804D\",\"hardwareVersion\":\"2.1\",\"samHardwareId\":\"D867247B5055344E312E3120FF0F2B35\",\"samVersion\":\"0.9.8-511b5aa\",\"samBuildDate\":\"2023-10-16T19:05:24Z\",\"macAddress\":\"BE:FF:4D:06:8B:37\",\"espVersion\":\"not synced\",\"espBuildDate\":\"not synced\",\"sensors\":\"version\\nSCK > config\\nPublish interval (s): 180\\nReading interval (s): 60\\nSanity reset (every 24 hours) is: on\\nSCK > sensor\\nDisabled\\n----------\\nPM board Dallas Temperature\\nDirect Dallas Temperature\\nExt Temperature\\nExt Humidity\\nExt SHT35 Temperature\\nExt SHT35 Humidity\\nTemperature BME680\\nHumidity BME680\\nBattery voltage\\nSDcard present\\nNoise dBC\\nNoise dBZ\\nNoise FFT\\nAltitude\\nPressure internal temperature\\nVOC Gas CCS811\\neCO2 Gas CCS811\\nGases Board 1A\\nGases Board 1W\\nGases Board 2A\\nGases Board 2W\\nGases Board 3A\\nGases Board 3W\\nGases Board Temperature\\nGases Board Humidity\\nGroove ADC\\nINA219 Bus voltage\\nINA219 Shunt voltage\\nINA219 Current\\nINA219 Load voltage\\nDS18B20 Water temperature\\nAtlas Temperature\\nAtlas PH\\nAtlas Conductivity\\nAtlas Total Dissolved Solids\\nAtlas Salinity\\nAtlas Specific gravity\\nAtlas Dissolved Oxygen\\nAtlas DO Saturation\\nAtlas Redox potential\\nSoil Moisture Raw\\nSoil Moisture Percent\\nSoil Temperature\\nSoil Light\\nExt Range Light\\nExt Range Distance\\nBarometric pressure BME680\\nVOC Gas BME680\\nGPS Fix Quality\\nGPS Latitude\\nGPS Longitude\\nGPS Altitude\\nGPS Speed\\nGPS Horizontal Dilution of Position\\nGPS Tracked Satellites\\nADS1x15 ADC 0x48 Ch0\\nADS1x15 ADC 0x48 Ch1\\nADS1x15 ADC 0x48 Ch2\\nADS1x15 ADC 0x48 Ch3\\nADS1x15 ADC 0x49 Ch0\\nADS1x15 ADC 0x49 Ch1\\nADS1x15 ADC 0x49 Ch2\\nADS1x15 ADC 0x49 Ch3\\nADS1x15 ADC 0x4A Ch0\\nADS1x15 ADC 0x4A Ch1\\nADS1x15 ADC 0x4A Ch2\\nADS1x15 ADC 0x4A Ch3\\nADS1x15 ADC 0x4B Ch0\\nADS1x15 ADC 0x4B Ch1\\nADS1x15 ADC 0x4B Ch2\\nADS1x15 ADC 0x4B Ch3\\nSCD30 CO2\\nSCD30 Temperature\\nSCD30 Humidity\\nExt PM_A 1.0\\nExt PM_A 2.5\\nExt PM_A 10.0\\nExt PN_A 0.3\\nExt PN_A 0.5\\nExt PN_A 1.0\\nExt PN_A 2.5\\nExt PN_A 5.0\\nExt PN_A 10.0\\nExt PM_B 1.0\\nExt PM_B 2.5\\nExt PM_B 10.0\\nExt PN_B 0.3\\nExt PN_B 0.5\\nExt PN_B 1.0\\nExt PN_B 2.5\\nExt PN_B 5.0\\nExt PN_B 10.0\\nPN 0.3\\nPN 0.5\\nPN 1.0\\nPN 2.5\\nPN 5.0\\nPN 10.0\\nGroove OLED\\nEnabled\\n----------\\nTemperature -> every 1 int (60 sec)\\nHumidity -> every 1 int (60 sec)\\nBattery -> every 1 int (60 sec)\\nLight -> every 1 int (60 sec)\\nNoise dBA -> every 1 int (60 sec)\\nBarometric pressure -> every 1 int (60 sec)\\nPM 1.0 -> every 5 int (300 sec)\\nPM 2.5 -> every 5 int (300 sec)\\nPM 10.0 -> every 5 int (300 sec)\\nSCK > netinfo\",\"mode\":\"sdcard\",\"connectionType\":\"USB\",\"readingInterval\":\"60 s\"}",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "FeaturesOfInterest": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "longitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "latitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Datastreams": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Barometric pressure",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Barometric pressure",
+              "column": ""
+            },
+            "observationType": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+              "column": ""
+            },
+            "unitOfMeasurement.name": {
+              "source": "manual",
+              "value": "pascal",
+              "column": ""
+            },
+            "unitOfMeasurement.symbol": {
+              "source": "manual",
+              "value": "Pa",
+              "column": ""
+            },
+            "unitOfMeasurement.definition": {
+              "source": "manual",
+              "value": "http://www.qudt.org/vocab/unit/PA",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        }
+      },
+      {
+        "key": "pm1",
+        "include": true,
+        "ObservedProperties": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Particulate matter PM1.0",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/property/OGC/0/PM1",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Particulate matter PM1.0",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Sensors": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Smartcitizen Kit 2.1",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Smart Citizen Kit",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/json",
+              "column": ""
+            },
+            "metadata": {
+              "source": "manual",
+              "value": "{\"usbVendorId\":\"2341\",\"usbProductId\":\"804D\",\"portName\":\"Smartcitizen Kit 2.1\",\"usbId\":\"2341:804D\",\"hardwareVersion\":\"2.1\",\"samHardwareId\":\"D867247B5055344E312E3120FF0F2B35\",\"samVersion\":\"0.9.8-511b5aa\",\"samBuildDate\":\"2023-10-16T19:05:24Z\",\"macAddress\":\"BE:FF:4D:06:8B:37\",\"espVersion\":\"not synced\",\"espBuildDate\":\"not synced\",\"sensors\":\"version\\nSCK > config\\nPublish interval (s): 180\\nReading interval (s): 60\\nSanity reset (every 24 hours) is: on\\nSCK > sensor\\nDisabled\\n----------\\nPM board Dallas Temperature\\nDirect Dallas Temperature\\nExt Temperature\\nExt Humidity\\nExt SHT35 Temperature\\nExt SHT35 Humidity\\nTemperature BME680\\nHumidity BME680\\nBattery voltage\\nSDcard present\\nNoise dBC\\nNoise dBZ\\nNoise FFT\\nAltitude\\nPressure internal temperature\\nVOC Gas CCS811\\neCO2 Gas CCS811\\nGases Board 1A\\nGases Board 1W\\nGases Board 2A\\nGases Board 2W\\nGases Board 3A\\nGases Board 3W\\nGases Board Temperature\\nGases Board Humidity\\nGroove ADC\\nINA219 Bus voltage\\nINA219 Shunt voltage\\nINA219 Current\\nINA219 Load voltage\\nDS18B20 Water temperature\\nAtlas Temperature\\nAtlas PH\\nAtlas Conductivity\\nAtlas Total Dissolved Solids\\nAtlas Salinity\\nAtlas Specific gravity\\nAtlas Dissolved Oxygen\\nAtlas DO Saturation\\nAtlas Redox potential\\nSoil Moisture Raw\\nSoil Moisture Percent\\nSoil Temperature\\nSoil Light\\nExt Range Light\\nExt Range Distance\\nBarometric pressure BME680\\nVOC Gas BME680\\nGPS Fix Quality\\nGPS Latitude\\nGPS Longitude\\nGPS Altitude\\nGPS Speed\\nGPS Horizontal Dilution of Position\\nGPS Tracked Satellites\\nADS1x15 ADC 0x48 Ch0\\nADS1x15 ADC 0x48 Ch1\\nADS1x15 ADC 0x48 Ch2\\nADS1x15 ADC 0x48 Ch3\\nADS1x15 ADC 0x49 Ch0\\nADS1x15 ADC 0x49 Ch1\\nADS1x15 ADC 0x49 Ch2\\nADS1x15 ADC 0x49 Ch3\\nADS1x15 ADC 0x4A Ch0\\nADS1x15 ADC 0x4A Ch1\\nADS1x15 ADC 0x4A Ch2\\nADS1x15 ADC 0x4A Ch3\\nADS1x15 ADC 0x4B Ch0\\nADS1x15 ADC 0x4B Ch1\\nADS1x15 ADC 0x4B Ch2\\nADS1x15 ADC 0x4B Ch3\\nSCD30 CO2\\nSCD30 Temperature\\nSCD30 Humidity\\nExt PM_A 1.0\\nExt PM_A 2.5\\nExt PM_A 10.0\\nExt PN_A 0.3\\nExt PN_A 0.5\\nExt PN_A 1.0\\nExt PN_A 2.5\\nExt PN_A 5.0\\nExt PN_A 10.0\\nExt PM_B 1.0\\nExt PM_B 2.5\\nExt PM_B 10.0\\nExt PN_B 0.3\\nExt PN_B 0.5\\nExt PN_B 1.0\\nExt PN_B 2.5\\nExt PN_B 5.0\\nExt PN_B 10.0\\nPN 0.3\\nPN 0.5\\nPN 1.0\\nPN 2.5\\nPN 5.0\\nPN 10.0\\nGroove OLED\\nEnabled\\n----------\\nTemperature -> every 1 int (60 sec)\\nHumidity -> every 1 int (60 sec)\\nBattery -> every 1 int (60 sec)\\nLight -> every 1 int (60 sec)\\nNoise dBA -> every 1 int (60 sec)\\nBarometric pressure -> every 1 int (60 sec)\\nPM 1.0 -> every 5 int (300 sec)\\nPM 2.5 -> every 5 int (300 sec)\\nPM 10.0 -> every 5 int (300 sec)\\nSCK > netinfo\",\"mode\":\"sdcard\",\"connectionType\":\"USB\",\"readingInterval\":\"60 s\"}",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "FeaturesOfInterest": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "longitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "latitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Datastreams": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Particulate matter PM1.0",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Particulate matter PM1.0",
+              "column": ""
+            },
+            "observationType": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+              "column": ""
+            },
+            "unitOfMeasurement.name": {
+              "source": "manual",
+              "value": "microgram per cubic metre",
+              "column": ""
+            },
+            "unitOfMeasurement.symbol": {
+              "source": "manual",
+              "value": "µg/m³",
+              "column": ""
+            },
+            "unitOfMeasurement.definition": {
+              "source": "manual",
+              "value": "http://www.qudt.org/vocab/unit/MicroGM-PER-M3",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        }
+      },
+      {
+        "key": "pm25",
+        "include": true,
+        "ObservedProperties": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Particulate matter PM2.5",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/property/OGC/0/PM2.5",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Particulate matter PM2.5",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Sensors": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Smartcitizen Kit 2.1",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Smart Citizen Kit",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/json",
+              "column": ""
+            },
+            "metadata": {
+              "source": "manual",
+              "value": "{\"usbVendorId\":\"2341\",\"usbProductId\":\"804D\",\"portName\":\"Smartcitizen Kit 2.1\",\"usbId\":\"2341:804D\",\"hardwareVersion\":\"2.1\",\"samHardwareId\":\"D867247B5055344E312E3120FF0F2B35\",\"samVersion\":\"0.9.8-511b5aa\",\"samBuildDate\":\"2023-10-16T19:05:24Z\",\"macAddress\":\"BE:FF:4D:06:8B:37\",\"espVersion\":\"not synced\",\"espBuildDate\":\"not synced\",\"sensors\":\"version\\nSCK > config\\nPublish interval (s): 180\\nReading interval (s): 60\\nSanity reset (every 24 hours) is: on\\nSCK > sensor\\nDisabled\\n----------\\nPM board Dallas Temperature\\nDirect Dallas Temperature\\nExt Temperature\\nExt Humidity\\nExt SHT35 Temperature\\nExt SHT35 Humidity\\nTemperature BME680\\nHumidity BME680\\nBattery voltage\\nSDcard present\\nNoise dBC\\nNoise dBZ\\nNoise FFT\\nAltitude\\nPressure internal temperature\\nVOC Gas CCS811\\neCO2 Gas CCS811\\nGases Board 1A\\nGases Board 1W\\nGases Board 2A\\nGases Board 2W\\nGases Board 3A\\nGases Board 3W\\nGases Board Temperature\\nGases Board Humidity\\nGroove ADC\\nINA219 Bus voltage\\nINA219 Shunt voltage\\nINA219 Current\\nINA219 Load voltage\\nDS18B20 Water temperature\\nAtlas Temperature\\nAtlas PH\\nAtlas Conductivity\\nAtlas Total Dissolved Solids\\nAtlas Salinity\\nAtlas Specific gravity\\nAtlas Dissolved Oxygen\\nAtlas DO Saturation\\nAtlas Redox potential\\nSoil Moisture Raw\\nSoil Moisture Percent\\nSoil Temperature\\nSoil Light\\nExt Range Light\\nExt Range Distance\\nBarometric pressure BME680\\nVOC Gas BME680\\nGPS Fix Quality\\nGPS Latitude\\nGPS Longitude\\nGPS Altitude\\nGPS Speed\\nGPS Horizontal Dilution of Position\\nGPS Tracked Satellites\\nADS1x15 ADC 0x48 Ch0\\nADS1x15 ADC 0x48 Ch1\\nADS1x15 ADC 0x48 Ch2\\nADS1x15 ADC 0x48 Ch3\\nADS1x15 ADC 0x49 Ch0\\nADS1x15 ADC 0x49 Ch1\\nADS1x15 ADC 0x49 Ch2\\nADS1x15 ADC 0x49 Ch3\\nADS1x15 ADC 0x4A Ch0\\nADS1x15 ADC 0x4A Ch1\\nADS1x15 ADC 0x4A Ch2\\nADS1x15 ADC 0x4A Ch3\\nADS1x15 ADC 0x4B Ch0\\nADS1x15 ADC 0x4B Ch1\\nADS1x15 ADC 0x4B Ch2\\nADS1x15 ADC 0x4B Ch3\\nSCD30 CO2\\nSCD30 Temperature\\nSCD30 Humidity\\nExt PM_A 1.0\\nExt PM_A 2.5\\nExt PM_A 10.0\\nExt PN_A 0.3\\nExt PN_A 0.5\\nExt PN_A 1.0\\nExt PN_A 2.5\\nExt PN_A 5.0\\nExt PN_A 10.0\\nExt PM_B 1.0\\nExt PM_B 2.5\\nExt PM_B 10.0\\nExt PN_B 0.3\\nExt PN_B 0.5\\nExt PN_B 1.0\\nExt PN_B 2.5\\nExt PN_B 5.0\\nExt PN_B 10.0\\nPN 0.3\\nPN 0.5\\nPN 1.0\\nPN 2.5\\nPN 5.0\\nPN 10.0\\nGroove OLED\\nEnabled\\n----------\\nTemperature -> every 1 int (60 sec)\\nHumidity -> every 1 int (60 sec)\\nBattery -> every 1 int (60 sec)\\nLight -> every 1 int (60 sec)\\nNoise dBA -> every 1 int (60 sec)\\nBarometric pressure -> every 1 int (60 sec)\\nPM 1.0 -> every 5 int (300 sec)\\nPM 2.5 -> every 5 int (300 sec)\\nPM 10.0 -> every 5 int (300 sec)\\nSCK > netinfo\",\"mode\":\"sdcard\",\"connectionType\":\"USB\",\"readingInterval\":\"60 s\"}",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "FeaturesOfInterest": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "longitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "latitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Datastreams": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Particulate matter PM2.5",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Particulate matter PM2.5",
+              "column": ""
+            },
+            "observationType": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+              "column": ""
+            },
+            "unitOfMeasurement.name": {
+              "source": "manual",
+              "value": "microgram per cubic metre",
+              "column": ""
+            },
+            "unitOfMeasurement.symbol": {
+              "source": "manual",
+              "value": "µg/m³",
+              "column": ""
+            },
+            "unitOfMeasurement.definition": {
+              "source": "manual",
+              "value": "http://www.qudt.org/vocab/unit/MicroGM-PER-M3",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        }
+      },
+      {
+        "key": "pm10",
+        "include": true,
+        "ObservedProperties": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Particulate matter PM10",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/property/OGC/0/PM10",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Particulate matter PM10",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Sensors": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Smartcitizen Kit 2.1",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Smart Citizen Kit",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/json",
+              "column": ""
+            },
+            "metadata": {
+              "source": "manual",
+              "value": "{\"usbVendorId\":\"2341\",\"usbProductId\":\"804D\",\"portName\":\"Smartcitizen Kit 2.1\",\"usbId\":\"2341:804D\",\"hardwareVersion\":\"2.1\",\"samHardwareId\":\"D867247B5055344E312E3120FF0F2B35\",\"samVersion\":\"0.9.8-511b5aa\",\"samBuildDate\":\"2023-10-16T19:05:24Z\",\"macAddress\":\"BE:FF:4D:06:8B:37\",\"espVersion\":\"not synced\",\"espBuildDate\":\"not synced\",\"sensors\":\"version\\nSCK > config\\nPublish interval (s): 180\\nReading interval (s): 60\\nSanity reset (every 24 hours) is: on\\nSCK > sensor\\nDisabled\\n----------\\nPM board Dallas Temperature\\nDirect Dallas Temperature\\nExt Temperature\\nExt Humidity\\nExt SHT35 Temperature\\nExt SHT35 Humidity\\nTemperature BME680\\nHumidity BME680\\nBattery voltage\\nSDcard present\\nNoise dBC\\nNoise dBZ\\nNoise FFT\\nAltitude\\nPressure internal temperature\\nVOC Gas CCS811\\neCO2 Gas CCS811\\nGases Board 1A\\nGases Board 1W\\nGases Board 2A\\nGases Board 2W\\nGases Board 3A\\nGases Board 3W\\nGases Board Temperature\\nGases Board Humidity\\nGroove ADC\\nINA219 Bus voltage\\nINA219 Shunt voltage\\nINA219 Current\\nINA219 Load voltage\\nDS18B20 Water temperature\\nAtlas Temperature\\nAtlas PH\\nAtlas Conductivity\\nAtlas Total Dissolved Solids\\nAtlas Salinity\\nAtlas Specific gravity\\nAtlas Dissolved Oxygen\\nAtlas DO Saturation\\nAtlas Redox potential\\nSoil Moisture Raw\\nSoil Moisture Percent\\nSoil Temperature\\nSoil Light\\nExt Range Light\\nExt Range Distance\\nBarometric pressure BME680\\nVOC Gas BME680\\nGPS Fix Quality\\nGPS Latitude\\nGPS Longitude\\nGPS Altitude\\nGPS Speed\\nGPS Horizontal Dilution of Position\\nGPS Tracked Satellites\\nADS1x15 ADC 0x48 Ch0\\nADS1x15 ADC 0x48 Ch1\\nADS1x15 ADC 0x48 Ch2\\nADS1x15 ADC 0x48 Ch3\\nADS1x15 ADC 0x49 Ch0\\nADS1x15 ADC 0x49 Ch1\\nADS1x15 ADC 0x49 Ch2\\nADS1x15 ADC 0x49 Ch3\\nADS1x15 ADC 0x4A Ch0\\nADS1x15 ADC 0x4A Ch1\\nADS1x15 ADC 0x4A Ch2\\nADS1x15 ADC 0x4A Ch3\\nADS1x15 ADC 0x4B Ch0\\nADS1x15 ADC 0x4B Ch1\\nADS1x15 ADC 0x4B Ch2\\nADS1x15 ADC 0x4B Ch3\\nSCD30 CO2\\nSCD30 Temperature\\nSCD30 Humidity\\nExt PM_A 1.0\\nExt PM_A 2.5\\nExt PM_A 10.0\\nExt PN_A 0.3\\nExt PN_A 0.5\\nExt PN_A 1.0\\nExt PN_A 2.5\\nExt PN_A 5.0\\nExt PN_A 10.0\\nExt PM_B 1.0\\nExt PM_B 2.5\\nExt PM_B 10.0\\nExt PN_B 0.3\\nExt PN_B 0.5\\nExt PN_B 1.0\\nExt PN_B 2.5\\nExt PN_B 5.0\\nExt PN_B 10.0\\nPN 0.3\\nPN 0.5\\nPN 1.0\\nPN 2.5\\nPN 5.0\\nPN 10.0\\nGroove OLED\\nEnabled\\n----------\\nTemperature -> every 1 int (60 sec)\\nHumidity -> every 1 int (60 sec)\\nBattery -> every 1 int (60 sec)\\nLight -> every 1 int (60 sec)\\nNoise dBA -> every 1 int (60 sec)\\nBarometric pressure -> every 1 int (60 sec)\\nPM 1.0 -> every 5 int (300 sec)\\nPM 2.5 -> every 5 int (300 sec)\\nPM 10.0 -> every 5 int (300 sec)\\nSCK > netinfo\",\"mode\":\"sdcard\",\"connectionType\":\"USB\",\"readingInterval\":\"60 s\"}",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "FeaturesOfInterest": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "longitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "latitude": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Datastreams": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Particulate matter PM10",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Particulate matter PM10",
+              "column": ""
+            },
+            "observationType": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+              "column": ""
+            },
+            "unitOfMeasurement.name": {
+              "source": "manual",
+              "value": "microgram per cubic metre",
+              "column": ""
+            },
+            "unitOfMeasurement.symbol": {
+              "source": "manual",
+              "value": "µg/m³",
+              "column": ""
+            },
+            "unitOfMeasurement.definition": {
+              "source": "manual",
+              "value": "http://www.qudt.org/vocab/unit/MicroGM-PER-M3",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        }
+      }
+    ]
+  }
+}
