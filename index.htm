@@ -61,6 +61,7 @@
 	<script type="text/javascript" src="autocompleteMultiCreate.js"></script>
 	<script type="text/javascript" src="data_quality.js"></script>
 	<script type="text/javascript" src="connectASensor.js"></script>
+	<script type="text/javascript" src="readSDFromSensor.js"></script>
 	<script type="text/javascript" src="staEntityBuilder.js"></script>
 	<script type="text/javascript" src="staPublisher.js"></script>
 
@@ -3268,6 +3269,45 @@
 		<div id="resultsFromSensor"></div>
 		<div class="center">
 			<button value="cancel">
+				<span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span>
+			</button>
+		</div>
+	</form>
+</dialog>
+
+<dialog id="DialogReadSDFromSensor" onClose='ReadSDFromSensorOnDialogClose(event)'>
+	<form onsubmit="event.preventDefault(); return false;">
+		<strong><span data-lang="{&quot;cat&quot;: &quot;Llegeix la SD del sensor&quot;, &quot;spa&quot;: &quot;Lee la SD del sensor&quot;, &quot;eng&quot;: &quot;Read SD from sensor&quot;}">Read SD from sensor</span></strong>
+		<p class="rsdHint"><span data-lang="{&quot;cat&quot;: &quot;Connecta el sensor per USB. Es llisten els CSV de la SD; Obre'n un per veure'l i desar-lo o usar-lo a TAPIS.&quot;, &quot;spa&quot;: &quot;Conecta el sensor por USB. Se listan los CSV de la SD; abre uno para verlo y guardarlo o usarlo en TAPIS.&quot;, &quot;eng&quot;: &quot;Connect the sensor via USB. SD CSVs are listed; open one to preview, save, or use in TAPIS.&quot;}">Connect the sensor via USB. SD CSVs are listed; open one to preview, save, or use in TAPIS.</span></p>
+		<div class="DialogReadSDFromSensorBtnRow">
+			<button type="button" id="DialogReadSDFromSensorConnect" class="DialogReadSDFromSensorAction" onclick="ReadSDFromSensorConnect(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Connecta per USB&quot;, &quot;spa&quot;: &quot;Conectar por USB&quot;, &quot;eng&quot;: &quot;Connect via USB&quot;}">Connect via USB</span>
+			</button>
+			<button type="button" id="DialogReadSDFromSensorDisconnect" class="DialogReadSDFromSensorAction" onclick="ReadSDFromSensorDisconnect(false)" disabled>
+				<span data-lang="{&quot;cat&quot;: &quot;Desconnecta&quot;, &quot;spa&quot;: &quot;Desconectar&quot;, &quot;eng&quot;: &quot;Disconnect&quot;}">Disconnect</span>
+			</button>
+		</div>
+		<div id="DialogReadSDFromSensorStatus" class="rsdStatus"></div>
+		<div class="DialogReadSDFromSensorSection">
+			<strong><span data-lang="{&quot;cat&quot;: &quot;Fitxers a la SD&quot;, &quot;spa&quot;: &quot;Archivos en la SD&quot;, &quot;eng&quot;: &quot;Files on the SD&quot;}">Files on the SD</span></strong>
+			<div id="DialogReadSDFromSensorFileList" class="DialogReadSDFromSensorFileList"></div>
+		</div>
+		<div class="DialogReadSDFromSensorSection">
+			<strong id="DialogReadSDFromSensorTableTitle"><span data-lang="{&quot;cat&quot;: &quot;Contingut del CSV&quot;, &quot;spa&quot;: &quot;Contenido del CSV&quot;, &quot;eng&quot;: &quot;CSV content&quot;}">CSV content</span></strong>
+			<div class="DialogReadSDFromSensorBtnRow">
+				<button type="button" id="DialogReadSDFromSensorSaveCsv" class="DialogReadSDFromSensorAction" onclick="ReadSDFromSensorSaveAsCsv(event)" disabled>
+					<span data-lang="{&quot;cat&quot;: &quot;Desa com a CSV&quot;, &quot;spa&quot;: &quot;Guardar como CSV&quot;, &quot;eng&quot;: &quot;Save as CSV&quot;}">Save as CSV</span>
+				</button>
+				<button type="button" id="DialogReadSDFromSensorUseInTapis" class="DialogReadSDFromSensorAction" onclick="ReadSDFromSensorSelectForTapis(event)" disabled>
+					<span data-lang="{&quot;cat&quot;: &quot;Selecciona per usar a TAPIS&quot;, &quot;spa&quot;: &quot;Seleccionar para usar en TAPIS&quot;, &quot;eng&quot;: &quot;Select to use in TAPIS&quot;}">Select to use in TAPIS</span>
+				</button>
+			</div>
+			<div id="DialogReadSDFromSensorTable" class="DialogReadSDFromSensorTable"></div>
+		</div>
+		<br>
+		<input type="hidden" id="DialogReadSDFromSensorNodeId">
+		<div class="center">
+			<button type="button" onclick="closeReadSDFromSensorDialog(event)">
 				<span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span>
 			</button>
 		</div>

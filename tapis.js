@@ -210,8 +210,11 @@ function reasonNodeDoesNotFitWithPrevious(node, parentNode) {
 			return DonaCadena({cat: "El node de servei STA no té URL. Obriu-lo i indiqueu l'URL del servei STA abans de connectar-hi Connect a sensor.", spa: "El nodo de servicio STA no tiene URL. Ábralo e indique la URL del servicio STA antes de conectar Connect a sensor.", eng: "The STA Service node has no URL. Open it and set the STA service URL before connecting Connect a sensor."});
 		return null;
 	}
+	if (node.image=="readSDFromSensor.png") {
+		return DonaCadena({cat: "Llegeix SD del sensor és un node inicial: no cal connectar-lo a un altre node.", spa: "Lee SD del sensor es un nodo inicial: no hay que conectarlo a otro nodo.", eng: "Read SD from sensor is a start node: it should not be connected from another node."});
+	}
 	if (node.image=="staEntityBuilder.png") {
-		if (!(parentNode.STAdata || parentNode.image === "connectASensor.png" || parentNode.image === "ImportCSV.png" || parentNode.image === "ImportJSON.png" || parentNode.image === "ImportGeoJSON.png" || parentNode.image === "Table.png" || (typeof TableOperationsArray !== "undefined" && TableOperationsArray.indexOf(removeFileExtension(parentNode.image)) !== -1)))
+		if (!(parentNode.STAdata || parentNode.image === "connectASensor.png" || parentNode.image === "readSDFromSensor.png" || parentNode.image === "ImportCSV.png" || parentNode.image === "ImportJSON.png" || parentNode.image === "ImportGeoJSON.png" || parentNode.image === "Table.png" || (typeof TableOperationsArray !== "undefined" && TableOperationsArray.indexOf(removeFileExtension(parentNode.image)) !== -1)))
 			return DonaCadena({cat: "Connecteu el Constructor d'entitats STA a un node amb taula de dades (p. ex. Connecta un sensor o una importació).", spa: "Conecte el Constructor de entidades STA a un nodo con tabla de datos (p. ej. Conecta un sensor o una importación).", eng: "Connect the STA Entity Builder to a node that has a data table (e.g. Connect a sensor or an import)."});
 		return null;
 	}
@@ -2741,7 +2744,7 @@ function GetParentNodes(node) {
 }
 
 function getUploadObservationsDataNode(node) {
-	if (node && node.image == "connectASensor.png")
+	if (node && (node.image == "connectASensor.png" || node.image == "readSDFromSensor.png"))
 		return node;
 	return GetFirstParentNode(node);
 }
@@ -8894,6 +8897,12 @@ function networkDoubleClick(params) {
 				syncConnectASensorMeta(currentNode);
 			if (typeof ShowConnectASensorTableInDialog === "function")
 				ShowConnectASensorTableInDialog(currentNode);
+		}
+		else if (currentNode.image == "readSDFromSensor.png") {
+			saveNodeDialog("DialogReadSDFromSensor", currentNode);
+			showNodeDialog("DialogReadSDFromSensor");
+			if (typeof openReadSDFromSensorDialog === "function")
+				openReadSDFromSensorDialog(currentNode);
 		}
 		else if (currentNode.image == "staEntityBuilder.png") {
 			saveNodeDialog("DialogSTAEntityBuilder", currentNode);

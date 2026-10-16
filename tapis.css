@@ -1792,6 +1792,105 @@
 	background: #fff;
 }
 
+#DialogReadSDFromSensor {
+	max-width: min(64em, 96vw);
+	max-height: 92vh;
+}
+
+#DialogReadSDFromSensor .rsdHint {
+	margin: 6px 0 12px 0;
+	font-size: 0.95em;
+}
+
+#DialogReadSDFromSensor .DialogReadSDFromSensorBtnRow {
+	margin: 0 0 8px 0;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+#DialogReadSDFromSensor .DialogReadSDFromSensorAction {
+	margin: 0;
+}
+
+#DialogReadSDFromSensor .rsdStatus {
+	margin: 4px 0 8px 0;
+	min-height: 1.2em;
+}
+
+#DialogReadSDFromSensor .rsdStatus.rsdError {
+	color: #a40000;
+}
+
+#DialogReadSDFromSensor .DialogReadSDFromSensorSection {
+	margin: 10px 0 0 0;
+	text-align: left;
+}
+
+#DialogReadSDFromSensor .DialogReadSDFromSensorFileList {
+	max-height: 18vh;
+	overflow: auto;
+	border: 1px solid #ccc;
+	padding: 4px 8px;
+	background: #fff;
+	margin-top: 4px;
+}
+
+#DialogReadSDFromSensor .rsdFileList {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#DialogReadSDFromSensor .rsdFileList li {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 3px 0;
+	border-bottom: 1px solid #eee;
+}
+
+#DialogReadSDFromSensor .rsdFileList li:last-child {
+	border-bottom: none;
+}
+
+#DialogReadSDFromSensor .rsdFileName {
+	font-family: Consolas, "Courier New", monospace;
+	font-size: 13px;
+}
+
+#DialogReadSDFromSensor .rsdCachedMark {
+	color: #2a7a3a;
+	font-size: 10px;
+	vertical-align: middle;
+}
+
+#DialogReadSDFromSensor .rsdFileActions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	flex-shrink: 0;
+}
+
+#DialogReadSDFromSensor .rsdDeleteBtn {
+	color: #8a1f1f;
+}
+
+#DialogReadSDFromSensor .DialogReadSDFromSensorTable {
+	max-height: 36vh;
+	overflow: auto;
+	border: 1px solid #ccc;
+	padding: 4px;
+	background: #fff;
+	margin-top: 4px;
+}
+
+#DialogReadSDFromSensor .center button {
+	margin: 12px 10px 0 0;
+}
+
 #DialogSTAEntityBuilder,
 #DialogSTAPublisher {
 	max-width: min(72em, 96vw);
