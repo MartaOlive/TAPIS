@@ -19,8 +19,9 @@
 var SEB_ORDER = ["Parties", "Licenses", "Things", "Locations", "HistoricalLocations", "Sensors", "ObservedProperties",
 	"FeaturesOfInterest", "Campaigns", "ObservationGroups", "Datastreams", "MultiDatastreams", "Cells", "Relations", "Observations"];
 var SEB_DEFAULT_SELECTED = ["Parties", "Things", "Sensors", "Licenses", "Locations", "FeaturesOfInterest", "ObservedProperties", "Datastreams", "Observations"];
-/* In connectASensor mode these are nested under each measurement (Temperature, …) */
-var SEB_PER_MEAS = ["ObservedProperties", "Sensors", "FeaturesOfInterest", "Datastreams"];
+/* In connectASensor mode these are nested under each measurement (Temperature, …).
+   FeaturesOfInterest is shared (same place/site for all measurements), like Locations. */
+var SEB_PER_MEAS = ["ObservedProperties", "Sensors", "Datastreams"];
 /* Entities that must exist in the package when the key entity is used */
 var SEB_DEPS = {
 	Observations: ["Datastreams"],
@@ -391,7 +392,6 @@ function sebNewMeasurement(key, parent, ctx) {
 	var obsName = attr.description || spec.name || key;
 	var desc = attr.description || spec.description || key;
 	var sensorDefaults = sebEntityDefaults("Sensors", ctx);
-	var foiDefaults = sebEntityDefaults("FeaturesOfInterest", ctx);
 	return {
 		key: key,
 		include: true,
@@ -406,7 +406,6 @@ function sebNewMeasurement(key, parent, ctx) {
 			encodingType: sensorDefaults.encodingType || "application/json",
 			metadata: sensorDefaults.metadata || ""
 		}),
-		FeaturesOfInterest: sebNewEntity("FeaturesOfInterest", ctx.mode, foiDefaults),
 		Datastreams: sebNewEntity("Datastreams", ctx.mode, {
 			name: obsName,
 			description: desc,
@@ -424,9 +423,9 @@ function sebCloneEntityCfg(ent) {
 	return JSON.parse(JSON.stringify(ent));
 }
 
-/* Older configs only had Datastreams/ObservedProperties per measurement; fill Sensors/FoI */
+/* Older configs: fill Sensors per measurement; migrate FoI to shared (one place for all). */
 function sebEnsureMeasurementEntities(cfg, parent) {
-	var ctx, sharedSensor, sharedFoi;
+	var ctx, sharedSensor, sharedFoi, i, m;
 	if (!cfg || cfg.mode !== "connectASensor" || !cfg.measurements)
 		return;
 	ctx = {
@@ -441,21 +440,53 @@ function sebEnsureMeasurementEntities(cfg, parent) {
 		if (parent.connectASensorMeta.sensorInfo)
 			ctx.metaStr = JSON.stringify(parent.connectASensorMeta.sensorInfo);
 	}
-	sharedSensor = cfg.entities && cfg.entities.Sensors;
-	sharedFoi = cfg.entities && cfg.entities.FeaturesOfInterest;
-	cfg.measurements.forEach(function (m, idx) {
+	if (!cfg.entities)
+		cfg.entities = {};
+	sharedSensor = cfg.entities.Sensors;
+	sharedFoi = cfg.entities.FeaturesOfInterest;
+	/* Promote first per-measurement FoI into the shared entity if shared is empty */
+	if (!sharedFoi || !sebEntityHasAnyValue(sharedFoi)) {
+		for (i = 0; i < cfg.measurements.length; i++) {
+			if (cfg.measurements[i].FeaturesOfInterest) {
+				cfg.entities.FeaturesOfInterest = sebCloneEntityCfg(cfg.measurements[i].FeaturesOfInterest);
+				sharedFoi = cfg.entities.FeaturesOfInterest;
+				break;
+			}
+		}
+	}
+	if (!cfg.entities.FeaturesOfInterest)
+		cfg.entities.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", cfg.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
+	cfg.measurements.forEach(function (meas, idx) {
+		m = meas;
 		if (!m.ObservedProperties || !m.Datastreams) {
 			var neu = sebNewMeasurement(m.key, parent, ctx);
 			m.ObservedProperties = m.ObservedProperties || neu.ObservedProperties;
 			m.Datastreams = m.Datastreams || neu.Datastreams;
 			m.Sensors = m.Sensors || neu.Sensors;
-			m.FeaturesOfInterest = m.FeaturesOfInterest || neu.FeaturesOfInterest;
 		}
 		if (!m.Sensors)
 			m.Sensors = idx === 0 && sharedSensor ? sebCloneEntityCfg(sharedSensor) : sebNewEntity("Sensors", cfg.mode, sebEntityDefaults("Sensors", ctx));
-		if (!m.FeaturesOfInterest)
-			m.FeaturesOfInterest = idx === 0 && sharedFoi ? sebCloneEntityCfg(sharedFoi) : sebNewEntity("FeaturesOfInterest", cfg.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
+		/* FoI is shared only — drop obsolete per-measurement copies */
+		delete m.FeaturesOfInterest;
 	});
+}
+
+function sebEntityHasAnyValue(ent) {
+	var k, src;
+	if (!ent)
+		return false;
+	if (ent.id && sebSrcIsSet(ent.id))
+		return true;
+	if (!ent.props)
+		return false;
+	for (k in ent.props) {
+		if (!Object.prototype.hasOwnProperty.call(ent.props, k))
+			continue;
+		src = ent.props[k];
+		if (sebSrcIsSet(src))
+			return true;
+	}
+	return false;
 }
 
 /* Candidate records from the nearest STA entity ancestors that have a table (by entity type) */
@@ -561,7 +592,7 @@ function sebSyncMeasurements(cfg, parent) {
 
 function sebEnsureConfig(node, force) {
 	var parent = getSTAEntityBuilderParent(node);
-	var preferCas = !!(parent && (parent.image === "connectASensor.png" || parent.connectASensorMeta));
+	var preferCas = !!(parent && (parent.image === "connectASensor.png" || parent.image === "readSDFromSensor.png" || parent.connectASensorMeta));
 	if (!force && node.staEntityConfig && node.staEntityConfig.version === 2) {
 		sebEnsureMeasurementEntities(node.staEntityConfig, parent);
 		if (node.staEntityConfig.mode === "connectASensor" && node.staEntityConfig.selected)
@@ -904,7 +935,7 @@ function renderSTAEntityBuilderForm(node) {
 		html.push("</fieldset>");
 	});
 
-	/* Measurement sections: Temperature → ObservedProperty, Sensor, FoI, Datastream */
+	/* Measurement sections: Temperature → ObservedProperty, Sensor, Datastream (FoI is shared above) */
 	if (isCas) {
 		cfg.measurements.forEach(function (m) {
 			html.push("<fieldset class=\"sebSection sebMeasSection\" data-section-meas=\"" + sebEsc(m.key) + "\" data-meas=\"" +
@@ -1054,14 +1085,6 @@ function sebBindAutoSave(el) {
 	});
 }
 
-function sebSetValidateMark(ok) {
-	var mark = document.getElementById("DialogSTAEntityBuilderValidateMark");
-	if (!mark)
-		return;
-	mark.className = "DialogSTAEntityBuilderValidateMark" + (ok === true ? " ok" : (ok === false ? " fail" : ""));
-	mark.textContent = ok === true ? "✓" : (ok === false ? "✕" : "");
-}
-
 /* Locks every Party control (ID included): Party comes from login and must not be edited */
 function sebLockPartyEntity(entEl) {
 	var rows, i, row, inp, sels, j, btn, cand;
@@ -1103,11 +1126,13 @@ function sebApplyPartyRecord(partyEnt, rec) {
 	sebLockPartyEntity(partyEnt);
 }
 
-async function sebFetchPartyByAuthId(/* authId unused: always use me() */) {
-	var url, response, value;
-	if (!sebCtx.staUrl)
+async function sebFetchPartyByAuthId(authId) {
+	var url, response, value, safeAuth;
+	if (!sebCtx.staUrl || !authId)
 		return null;
-	url = sebCtx.staUrl + "/Parties?$filter=" + encodeURIComponent("authId eq me()");
+	/* OData string literal: escape embedded single quotes */
+	safeAuth = String(authId).replace(/'/g, "''");
+	url = sebCtx.staUrl + "/Parties?$filter=" + encodeURIComponent("authId eq '" + safeAuth + "'");
 	try {
 		response = await HTTPJSONData(url, null, "GET", null, null);
 	} catch (err) {
@@ -1444,10 +1469,9 @@ function sebCollectConfigFromForm(node) {
 		}
 	}
 	node.staEntityConfig = cfg;
-	if (parent && parent.STAdata && typeof deapCopy === "function") {
+	/* Source from parent only — do not wipe STAdata created by "Crea la taula" */
+	if (parent && parent.STAdata && typeof deapCopy === "function")
 		node.STAdataSource = deapCopy(parent.STAdata);
-		node.STAdataAttributes = parent.STAdataAttributes ? deapCopy(parent.STAdataAttributes) : null;
-	}
 	if (typeof networkNodes !== "undefined")
 		networkNodes.update(node);
 	return cfg;
@@ -1712,14 +1736,22 @@ function openSTAEntityBuilderDialog(node) {
 	if (!node)
 		return;
 	parent = getSTAEntityBuilderParent(node);
+	/*
+		Keep previous STAdata (from "Crea la taula") so the user can reopen,
+		tweak entities and recreate. Only refresh STAdataSource from the parent.
+	*/
 	if (parent && parent.STAdata && typeof deapCopy === "function") {
 		node.STAdataSource = deapCopy(parent.STAdata);
-		if (parent.STAdataAttributes)
-			node.STAdataAttributes = deapCopy(parent.STAdataAttributes);
 		if (parent.connectASensorMeta)
 			node.connectASensorMeta = deapCopy(parent.connectASensorMeta);
 		if (parent.STAURL)
 			node.STAURL = parent.STAURL;
+		/* Seed table from parent only the first time (no created table yet) */
+		if ((!node.STAdata || !node.STAdata.length) && !node.staEntityPackage) {
+			node.STAdata = deapCopy(parent.STAdata);
+			if (parent.STAdataAttributes)
+				node.STAdataAttributes = deapCopy(parent.STAdataAttributes);
+		}
 	}
 	sebInitCtx(node, parent);
 	if (!node.STAURL && sebCtx.staUrl)
@@ -1729,14 +1761,7 @@ function openSTAEntityBuilderDialog(node) {
 	/* Fill empty props from parent attribute definitions (does not overwrite set values) */
 	sebApplyAttributeDefinitionsToConfig(cfg, parent, true);
 	sebShowStaUrl();
-	sebSetValidateMark(node.staEntityPackage && node.staEntityPackage.validation
-		? !!node.staEntityPackage.validation.ok : null);
 	renderSTAEntityBuilderForm(node);
-	if (node.staEntityPackage && node.staEntityPackage.validation)
-		sebSetStatus(node.staEntityPackage.validation.ok
-			? DonaCadenaFmt({cat: "Paquet preparat ({0} observacions previstes).", spa: "Paquete preparado ({0} observaciones previstas).", eng: "Package prepared ({0} planned observations)."}, node.staEntityPackage.observationPreviewCount || 0)
-			: node.staEntityPackage.validation.errors.join("; "),
-			!node.staEntityPackage.validation.ok);
 }
 
 var SEB_EXPORT_FILE_VERSION = 1;
@@ -1841,13 +1866,14 @@ function loadSTAEntityBuilderConfig(event) {
 	reader.readAsText(file);
 }
 
-function prepareSTAEntityBuilderPackage(event) {
-	var node = getSTAEntityBuilderNodeSafe();
+/*
+	Collect form → build package → assign node.STAdata / attributes / staEntityPackage.
+	Returns { ok, built, node } or null if no node.
+*/
+function sebCommitPackageToNode(node) {
 	var parent, cfg, built;
-	if (event)
-		event.preventDefault();
 	if (!node)
-		return;
+		return null;
 	parent = getSTAEntityBuilderParent(node);
 	cfg = sebCollectConfigFromForm(node);
 	built = sebBuildPackage(cfg, parent, sebCtx.staUrl);
@@ -1861,20 +1887,49 @@ function prepareSTAEntityBuilderPackage(event) {
 		measurementKey: { type: "string", description: "Measurement column key" },
 		datastreamRole: { type: "string", description: "Target Datastream role in package" }
 	};
+	console.log("STA Entity Builder — STAdata (create table)", node.STAdata);
+	console.log("STA Entity Builder — STAdataAttributes", node.STAdataAttributes);
+	console.log("STA Entity Builder — staEntityPackage", node.staEntityPackage);
 	if (typeof networkNodes !== "undefined")
 		networkNodes.update(node);
-	sebSetValidateMark(!!built.package.validation.ok);
-	if (built.package.validation.ok) {
-		sebSetStatus(DonaCadenaFmt({
-			cat: "Paquet vàlid: {0} observacions previstes. Connecteu STA Publisher per publicar.",
-			spa: "Paquete válido: {0} observaciones previstas. Conecte STA Publisher para publicar.",
-			eng: "Valid package: {0} planned observations. Connect STA Publisher to publish."
-		}, built.preview.length), false);
-		if (typeof updateQueryAndTableArea === "function")
-			updateQueryAndTableArea(node);
-	} else {
-		sebSetStatus(built.package.validation.errors.join("; "), true);
+	return {
+		ok: !!(built.package && built.package.validation && built.package.validation.ok),
+		built: built,
+		node: node
+	};
+}
+
+function sebRefreshBuilderTableUi(node) {
+	if (!node)
+		return;
+	if (typeof network !== "undefined" && network.selectNodes)
+		network.selectNodes([node.id]);
+	if (typeof updateQueryAndTableArea === "function")
+		updateQueryAndTableArea(node);
+	if (typeof ShowQueryNode === "function")
+		ShowQueryNode(node);
+	if (typeof ShowTableNode === "function")
+		ShowTableNode(node);
+}
+
+function okSTAEntityBuilderCreateTable(event) {
+	var result;
+	if (event)
+		event.preventDefault();
+	result = sebCommitPackageToNode(getSTAEntityBuilderNodeSafe());
+	if (!result)
+		return;
+	if (!result.ok) {
+		sebSetStatus(result.built.package.validation.errors.join("; "), true);
+		return;
 	}
+	sebSetStatus(DonaCadenaFmt({
+		cat: "Taula creada: {0} files a STAdata.",
+		spa: "Tabla creada: {0} filas en STAdata.",
+		eng: "Table created: {0} rows in STAdata."
+	}, result.built.preview.length), false);
+	closeSTAEntityBuilderDialog(event);
+	sebRefreshBuilderTableUi(result.node);
 }
 
 function sebOnBuilderDialogClose(event) {

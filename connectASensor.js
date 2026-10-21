@@ -137,6 +137,30 @@ var monitoringRunning = false;
 var monitoringWaitTimeout = null;
 var monitoringWaitResolve = null;
 
+/* Configuració USB SCK (panell DialogConnectASensorUsbConfig) */
+var usbConfigBusy = false;
+var usbReadIntSec = null;
+var usbPubIntSec = null;
+var usbKitMode = null;
+var usbClockEpochMs = null;
+var usbClockSyncedAt = null;
+var usbClockTimer = null;
+var usbSensorRows = [];
+var lastConnectASensorSaveAt = null;
+var forceImmediateConnectASensorRead = false;
+var USB_INTERVAL_MIN = 30;
+var USB_INTERVAL_MAX = 3600;
+var USB_SENSOR_GROUPS = [
+	{ id: "temperature", label: {cat: "Temperatura", spa: "Temperatura", eng: "Temperature"}, match: [/^Temperature$/i], cmd: "Temperature" },
+	{ id: "humidity", label: {cat: "Humitat", spa: "Humedad", eng: "Humidity"}, match: [/^Humidity$/i], cmd: "Humidity" },
+	{ id: "noise", label: {cat: "Soroll", spa: "Ruido", eng: "Noise"}, match: [/^Noise dBA$/i], cmd: "Noise" },
+	{ id: "light", label: {cat: "Llum", spa: "Luz", eng: "Light"}, match: [/^Light$/i], cmd: "Light" },
+	{ id: "pressure", label: {cat: "Pressió", spa: "Presión", eng: "Pressure"}, match: [/^Barometric pressure$/i], cmd: "Barometric pressure" },
+	{ id: "gases", label: {cat: "Gasos (VOC + eCO2)", spa: "Gases (VOC + eCO2)", eng: "Gases (VOC + eCO2)"}, match: [/^VOC Gas CCS811$/i, /^eCO2 Gas CCS811$/i], cmd: "VOC Gas CCS811" },
+	{ id: "pm", label: {cat: "PM (1.0 / 2.5 / 10.0)", spa: "PM (1.0 / 2.5 / 10.0)", eng: "PM (1.0 / 2.5 / 10.0)"}, match: [/^PM 1\.0$/i, /^PM 2\.5$/i, /^PM 10\.0$/i], cmd: "PM" },
+	{ id: "battery", label: {cat: "Bateria", spa: "Batería", eng: "Battery"}, match: [/^Battery$/i, /^Battery\b/i], cmd: "Battery" }
+];
+
 function getConnectASensorNodeSafe() {
 	if (typeof getNodeDialog !== "function")
 		return null;
@@ -167,8 +191,11 @@ function getConnectASensorIntervalCode() {
 }
 
 function getConnectASensorIntervalSeconds() {
-	var code = getConnectASensorIntervalCode();
-	var sec = CONNECT_A_SENSOR_INTERVAL_SEC_BY_CODE[String(code)];
+	var code, sec;
+	if (connectionMode === "usb" && usbReadIntSec != null && isFinite(usbReadIntSec) && usbReadIntSec > 0)
+		return usbReadIntSec;
+	code = getConnectASensorIntervalCode();
+	sec = CONNECT_A_SENSOR_INTERVAL_SEC_BY_CODE[String(code)];
 	return sec != null ? sec : 60;
 }
 
@@ -213,16 +240,45 @@ function interruptConnectASensorWait() {
 	}
 }
 
-function waitConnectASensorInterval() {
-	var sec = getConnectASensorIntervalSeconds();
+/*
+	Espera fins a un instant absolut (inici de cicle + Mesura/readint).
+	Així l'interval del kit marca el ritme de files a la taula:
+	si les lectures triguen menys que l'interval, s'espera la resta;
+	si triguen més, el cicle següent comença de seguida.
+*/
+function waitConnectASensorUntil(deadlineMs) {
+	var remainingMs;
+	if (forceImmediateConnectASensorRead) {
+		forceImmediateConnectASensorRead = false;
+		return Promise.resolve();
+	}
+	remainingMs = (deadlineMs != null && isFinite(deadlineMs)) ? (deadlineMs - Date.now()) : 0;
+	if (!isFinite(remainingMs) || remainingMs < 50)
+		return Promise.resolve();
 	return new Promise(function (resolve) {
 		monitoringWaitResolve = resolve;
 		monitoringWaitTimeout = setTimeout(function () {
 			monitoringWaitTimeout = null;
 			monitoringWaitResolve = null;
 			resolve();
-		}, sec * 1000);
+		}, remainingMs);
 	});
+}
+
+function waitConnectASensorInterval() {
+	var sec = getConnectASensorIntervalSeconds();
+	var base = lastConnectASensorSaveAt != null ? lastConnectASensorSaveAt : Date.now();
+	return waitConnectASensorUntil(base + sec * 1000);
+}
+
+async function stopConnectASensorMonitoringLoop() {
+	var n = 0;
+	collectingData = false;
+	interruptConnectASensorWait();
+	while (monitoringRunning && n < 150) {
+		await casSleep(100);
+		n++;
+	}
 }
 
 function isConnectASensorBleLive() {
@@ -406,7 +462,13 @@ function syncConnectASensorMeta(node) {
 		pmEveryNIntervals: 5,
 		pmIntervalSec: getConnectASensorIntervalSeconds() * 5,
 		measurementKeys: keys,
-		collecting: !!collectingData
+		collecting: !!collectingData,
+		usbMode: usbKitMode,
+		usbReadIntSec: usbReadIntSec,
+		usbPubIntSec: usbPubIntSec,
+		usbSensors: usbSensorRows.map(function (r) {
+			return { id: r.id, enabled: !!r.enabled, intervalSec: r.intervalSec, names: r.names.slice() };
+		})
 	};
 	node.STAdataAttributes = buildConnectASensorDataAttributes(node.STAdata || []);
 	if (typeof networkNodes !== "undefined" && networkNodes.update)
@@ -421,6 +483,7 @@ function updateConnectASensorConnectionButtons() {
 	var stopBtn = document.getElementById("DialogConnectASensorStop");
 	var resumeBtn = document.getElementById("DialogConnectASensorResume");
 	var clearBtn = document.getElementById("DialogConnectASensorClearData");
+	var intervalRow = document.querySelector("#DialogConnectASensor .DialogConnectASensorIntervalRow");
 	var connected = isConnectASensorConnected();
 	if (clearBtn)
 		clearBtn.disabled = !connectASensorHasCollectedData();
@@ -436,6 +499,9 @@ function updateConnectASensorConnectionButtons() {
 		stopBtn.disabled = !connected || !collectingData;
 	if (resumeBtn)
 		resumeBtn.disabled = !connected || collectingData;
+	if (intervalRow)
+		intervalRow.hidden = connectionMode === "usb";
+	updateConnectASensorUsbConfigVisibility();
 }
 
 function showConnectASensorDeviceInfo(event) {
@@ -487,7 +553,10 @@ function resetConnectASensorSessionState() {
 	monitoringInterval = 0;
 	collectingData = false;
 	lastPmscanSavedTimestamp = null;
+	lastConnectASensorSaveAt = null;
+	forceImmediateConnectASensorRead = false;
 	interruptConnectASensorWait();
+	ConnectASensorResetUsbConfigState();
 }
 
 async function ConnectASensorConnectUsb(event) {
@@ -530,6 +599,16 @@ async function ConnectASensorConnectUsb(event) {
 		renderConnectASensorInfo();
 		syncConnectASensorMeta(getConnectASensorNodeSafe());
 		ShowConnectASensorTableInDialog(getConnectASensorNodeSafe());
+		updateConnectASensorConnectionButtons();
+
+		try {
+			await ConnectASensorLoadUsbConfig();
+		} catch (cfgErr) {
+			showInfoMessage(
+				{cat: "No s'ha pogut carregar la configuració USB: {0}", spa: "No se ha podido cargar la configuración USB: {0}", eng: "Could not load USB configuration: {0}"},
+				cfgErr && cfgErr.message ? cfgErr.message : String(cfgErr)
+			);
+		}
 
 		collectingData = true;
 		startMonitoring();
@@ -1233,7 +1312,8 @@ function finishPromptWait() {
 	}
 }
 
-async function sendCommandUntilPrompt(command) {
+async function sendCommandUntilPrompt(command, timeoutMs) {
+	var waitMs = (timeoutMs && timeoutMs > 0) ? timeoutMs : 20000;
 	waitingForPrompt = true;
 	promptLines = [];
 	var promise = new Promise(function (resolve) {
@@ -1244,7 +1324,7 @@ async function sendCommandUntilPrompt(command) {
 			promptResolve = null;
 			resolve(promptLines.join("\n"));
 			promptLines = [];
-		}, 20000);
+		}, waitMs);
 	});
 	await writer.write(new TextEncoder().encode(command + "\r\n"));
 	return await promise;
@@ -1448,6 +1528,830 @@ async function getSensorInfo() {
 	renderConnectASensorInfo();
 }
 
+function updateConnectASensorUsbConfigVisibility() {
+	var panel = document.getElementById("DialogConnectASensorUsbConfig");
+	var show = connectionMode === "usb" && !!port;
+	if (!panel)
+		return;
+	panel.hidden = !show;
+	if (!show)
+		ConnectASensorStopUsbClockTick();
+}
+
+function ConnectASensorResetUsbConfigState() {
+	var host = document.getElementById("casUsbSensorList");
+	usbReadIntSec = null;
+	usbPubIntSec = null;
+	usbKitMode = null;
+	usbSensorRows = [];
+	ConnectASensorStopUsbClockTick();
+	usbClockEpochMs = null;
+	usbClockSyncedAt = null;
+	fillUsbConfigModeUi(null);
+	fillUsbConfigIntervalsUi(null, null);
+	setUsbCalCurrentUi("temp", null);
+	setUsbCalCurrentUi("hum", null);
+	setUsbBatteryUi("—");
+	if (host)
+		host.innerHTML = "";
+	var clockEl = document.getElementById("casUsbClockDisplay");
+	if (clockEl)
+		clockEl.textContent = "—";
+	updateConnectASensorUsbConfigVisibility();
+}
+
+function ConnectASensorStopUsbClockTick() {
+	if (usbClockTimer) {
+		clearInterval(usbClockTimer);
+		usbClockTimer = null;
+	}
+}
+
+function ConnectASensorStartUsbClockTick() {
+	ConnectASensorStopUsbClockTick();
+	ConnectASensorTickUsbClock();
+	usbClockTimer = setInterval(ConnectASensorTickUsbClock, 1000);
+}
+
+function ConnectASensorTickUsbClock() {
+	var el = document.getElementById("casUsbClockDisplay");
+	var nowMs, d;
+	if (!el)
+		return;
+	if (usbClockEpochMs == null || usbClockSyncedAt == null) {
+		el.textContent = "—";
+		return;
+	}
+	nowMs = usbClockEpochMs + (Date.now() - usbClockSyncedAt);
+	d = new Date(nowMs);
+	el.textContent = d.toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC");
+}
+
+async function withUsbSerialExclusive(fn) {
+	var wasCollecting = collectingData;
+	var n = 0;
+	if (usbConfigBusy)
+		throw new Error(DonaCadena({cat: "Ja s'està configurant el kit.", spa: "Ya se está configurando el kit.", eng: "Kit configuration already in progress."}));
+	usbConfigBusy = true;
+	collectingData = false;
+	interruptConnectASensorWait();
+	while ((waitingFor || waitingForPrompt || monitoringRunning) && n < 120) {
+		await casSleep(100);
+		n++;
+	}
+	try {
+		return await fn();
+	} finally {
+		usbConfigBusy = false;
+		if (wasCollecting && connectionMode === "usb" && port) {
+			collectingData = true;
+			updateConnectASensorConnectionButtons();
+			if (!monitoringRunning)
+				startMonitoring();
+		} else {
+			updateConnectASensorConnectionButtons();
+		}
+	}
+}
+
+function parseUsbConfigText(text) {
+	var out = { mode: null, readint: null, pubint: null };
+	var lines, i, line, m;
+	if (!text)
+		return out;
+	lines = String(text).split(/\r?\n/);
+	for (i = 0; i < lines.length; i++) {
+		line = lines[i].trim();
+		if (/^Mode\s*:/i.test(line)) {
+			m = line.match(/Mode\s*:\s*(\S+)/i);
+			if (m)
+				out.mode = m[1].toLowerCase();
+		} else if (/Reading interval/i.test(line)) {
+			m = line.match(/:\s*(\d+)/);
+			if (m)
+				out.readint = Number(m[1]);
+		} else if (/Publish interval/i.test(line)) {
+			m = line.match(/:\s*(\d+)/);
+			if (m)
+				out.pubint = Number(m[1]);
+		}
+	}
+	return out;
+}
+
+function parseUsbSensorList(text) {
+	var sensors = [];
+	var lines, i, line, section = null, m, name, intervalSec;
+	if (!text)
+		return sensors;
+	lines = String(text).split(/\r?\n/);
+	for (i = 0; i < lines.length; i++) {
+		line = lines[i].trim();
+		if (!line || line === "SCK >" || /^-+$/.test(line))
+			continue;
+		if (/^Disabled\b/i.test(line)) {
+			section = "disabled";
+			continue;
+		}
+		if (/^Enabled\b/i.test(line)) {
+			section = "enabled";
+			continue;
+		}
+		if (!section)
+			continue;
+		m = line.match(/^(.+?)\s*\((\d+)\s*sec(?:onds?)?\)\s*$/i);
+		if (m) {
+			name = m[1].trim();
+			intervalSec = Number(m[2]);
+		} else {
+			name = line.replace(/\s*\(\d+\s*sec(?:onds?)?\)\s*$/i, "").trim();
+			intervalSec = null;
+			m = line.match(/\((\d+)\s*sec(?:onds?)?\)/i);
+			if (m)
+				intervalSec = Number(m[1]);
+		}
+		if (!name || /^(Disabled|Enabled)$/i.test(name))
+			continue;
+		sensors.push({
+			name: name,
+			enabled: section === "enabled",
+			intervalSec: isFinite(intervalSec) ? intervalSec : null
+		});
+	}
+	return sensors;
+}
+
+function parseUsbTimeText(text) {
+	var lines, i, line, m, epoch, iso;
+	if (!text)
+		return null;
+	lines = String(text).split(/\r?\n/);
+	for (i = 0; i < lines.length; i++) {
+		line = lines[i].trim();
+		if (!line || line === "SCK >")
+			continue;
+		m = line.match(/\b(\d{9,12})\b/);
+		if (m) {
+			epoch = Number(m[1]);
+			if (isFinite(epoch) && epoch > 1000000000)
+				return { epochSec: epoch, epochMs: epoch * 1000 };
+		}
+		m = line.match(/(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2})/);
+		if (m) {
+			iso = m[1].replace(" ", "T");
+			if (!/[zZ]|[+-]\d{2}/.test(iso))
+				iso += "Z";
+			epoch = Date.parse(iso);
+			if (isFinite(epoch))
+				return { epochSec: Math.floor(epoch / 1000), epochMs: epoch };
+		}
+	}
+	return null;
+}
+
+function parseUsbCalOffset(text) {
+	var m;
+	if (!text)
+		return null;
+	m = String(text).match(/offset\s*:\s*([-+]?\d*\.?\d+)/i);
+	if (m)
+		return Number(m[1]);
+	m = String(text).match(/Set default offset\s*:\s*([-+]?\d*\.?\d+)/i);
+	if (m)
+		return Number(m[1]);
+	return null;
+}
+
+function parseUsbBatteryPercent(text) {
+	var lines, i, line, m;
+	if (!text)
+		return null;
+	lines = String(text).split(/\r?\n/);
+	for (i = 0; i < lines.length; i++) {
+		line = lines[i].trim();
+		if (!line || line === "SCK >" || /^read\b/i.test(line) || /^power\b/i.test(line))
+			continue;
+		m = line.match(/(\d{1,3})\s*%/);
+		if (m)
+			return Number(m[1]);
+		if (/battery/i.test(line)) {
+			m = line.match(/:\s*([-+]?\d*\.?\d+)/);
+			if (m) {
+				var n = Number(m[1]);
+				if (isFinite(n) && n >= 0 && n <= 100)
+					return Math.round(n);
+			}
+		}
+	}
+	m = String(text).match(/(\d{1,3})\s*%/);
+	return m ? Number(m[1]) : null;
+}
+
+function formatUsbBatteryPercent(pct) {
+	if (pct == null || !isFinite(pct))
+		return "—";
+	return Math.round(pct) + "%";
+}
+
+function findUsbSensorGroup(sensorName) {
+	var g, j;
+	for (g = 0; g < USB_SENSOR_GROUPS.length; g++) {
+		for (j = 0; j < USB_SENSOR_GROUPS[g].match.length; j++) {
+			if (USB_SENSOR_GROUPS[g].match[j].test(sensorName))
+				return USB_SENSOR_GROUPS[g];
+		}
+	}
+	return null;
+}
+
+function buildUsbSensorUiRows(sensors) {
+	var byGroup = {}, rows = [], i, s, grp, key;
+	/*
+		Només els grups urbans coneguts (Temperature, Humidity, …).
+		La secció Disabled del firmware és el catàleg sencer (Atlas, etc.):
+		no el mostrem — només sensors que encaixen amb USB_SENSOR_GROUPS.
+	*/
+	for (i = 0; i < sensors.length; i++) {
+		s = sensors[i];
+		grp = findUsbSensorGroup(s.name);
+		if (!grp)
+			continue;
+		if (!byGroup[grp.id]) {
+			byGroup[grp.id] = {
+				id: grp.id,
+				label: grp.label,
+				cmd: grp.cmd,
+				names: [],
+				enabled: false,
+				intervalSec: null
+			};
+		}
+		byGroup[grp.id].names.push(s.name);
+		if (s.enabled)
+			byGroup[grp.id].enabled = true;
+		if (s.intervalSec != null && byGroup[grp.id].intervalSec == null)
+			byGroup[grp.id].intervalSec = s.intervalSec;
+	}
+	for (i = 0; i < USB_SENSOR_GROUPS.length; i++) {
+		key = USB_SENSOR_GROUPS[i].id;
+		if (byGroup[key])
+			rows.push(byGroup[key]);
+	}
+	return rows;
+}
+
+function fillUsbConfigModeUi(mode) {
+	var sd = document.getElementById("casUsbModeSdcard");
+	var net = document.getElementById("casUsbModeNetwork");
+	var pub = document.getElementById("casUsbPubInt");
+	usbKitMode = mode || null;
+	if (sd)
+		sd.checked = mode === "sdcard";
+	if (net)
+		net.checked = mode === "network";
+	if (pub)
+		pub.disabled = mode === "sdcard";
+}
+
+function ConnectASensorOnUsbModeRadioChange(event) {
+	var net = document.getElementById("casUsbModeNetwork");
+	var pub = document.getElementById("casUsbPubInt");
+	var selectedNetwork = !!(net && net.checked);
+	if (event)
+		event.preventDefault();
+	if (pub)
+		pub.disabled = !selectedNetwork;
+}
+
+function fillUsbConfigIntervalsUi(readint, pubint) {
+	var readEl = document.getElementById("casUsbReadInt");
+	var pubEl = document.getElementById("casUsbPubInt");
+	usbReadIntSec = (readint != null && isFinite(readint)) ? readint : null;
+	usbPubIntSec = (pubint != null && isFinite(pubint)) ? pubint : null;
+	if (readEl)
+		readEl.value = usbReadIntSec != null ? String(usbReadIntSec) : "";
+	if (pubEl)
+		pubEl.value = usbPubIntSec != null ? String(usbPubIntSec) : "";
+}
+
+function renderUsbSensorListUi() {
+	var host = document.getElementById("casUsbSensorList");
+	var i, row, html, label, intervalVal, safeId;
+	if (!host)
+		return;
+	if (!usbSensorRows.length) {
+		host.innerHTML = "<p class=\"casUsbHint\">" +
+			DonaCadena({
+				cat: "No s'han pogut carregar els sensors del kit.",
+				spa: "No se han podido cargar los sensores del kit.",
+				eng: "Could not load kit sensors."
+			}) +
+			"</p>" +
+			"<button type=\"button\" class=\"DialogConnectASensorAction\" onclick=\"ConnectASensorReloadUsbSensors(event)\">" +
+			"<span data-lang=\"{&quot;cat&quot;:&quot;Torna a carregar sensors&quot;,&quot;spa&quot;:&quot;Volver a cargar sensores&quot;,&quot;eng&quot;:&quot;Reload sensors&quot;}\">Reload sensors</span>" +
+			"</button>";
+		if (typeof applyDialogI18n === "function")
+			applyDialogI18n();
+		return;
+	}
+	html = "";
+	for (i = 0; i < usbSensorRows.length; i++) {
+		row = usbSensorRows[i];
+		label = DonaCadena(row.label);
+		safeId = String(row.id).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+		intervalVal = row.intervalSec != null ? String(row.intervalSec) : "";
+		html += "<div class=\"casUsbSensorRow\" data-cas-group=\"" + String(row.id).replace(/"/g, "&quot;") + "\">" +
+			"<span class=\"casUsbSensorName\">" + label.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</span>" +
+			"<label class=\"casUsbSwitch\" title=\"" + label.replace(/"/g, "&quot;") + "\">" +
+			"<input type=\"checkbox\" " + (row.enabled ? "checked " : "") +
+			"onchange=\"ConnectASensorToggleUsbSensor(event, '" + safeId + "')\">" +
+			"<span class=\"casUsbSwitchSlider\"></span></label>" +
+			"<label><span data-lang=\"{&quot;cat&quot;:&quot;Interval (s)&quot;,&quot;spa&quot;:&quot;Intervalo (s)&quot;,&quot;eng&quot;:&quot;Interval (s)&quot;}\">Interval (s)</span> " +
+			"<input type=\"number\" class=\"casUsbSensorInterval\" min=\"30\" max=\"3600\" step=\"1\" value=\"" + intervalVal + "\" " +
+			"onchange=\"ConnectASensorApplyUsbSensorInterval(event, '" + safeId + "')\"></label>" +
+			"</div>";
+	}
+	host.innerHTML = html;
+	if (typeof applyDialogI18n === "function")
+		applyDialogI18n();
+}
+
+function setUsbCalCurrentUi(kind, value) {
+	var el = document.getElementById(kind === "hum" ? "casUsbHumCalCurrent" : "casUsbTempCalCurrent");
+	if (!el)
+		return;
+	el.textContent = (value != null && isFinite(value)) ? String(value) : "—";
+}
+
+function setUsbBatteryUi(pctOrText) {
+	var b = document.getElementById("casUsbBatteryInfo");
+	if (!b)
+		return;
+	if (typeof pctOrText === "number")
+		b.textContent = formatUsbBatteryPercent(pctOrText);
+	else
+		b.textContent = pctOrText || "—";
+}
+
+async function loadUsbBatteryPercentExclusive() {
+	var text, pct;
+	try {
+		text = await sendCommandUntilPrompt("read Battery");
+		pct = parseUsbBatteryPercent(text);
+		if (pct != null)
+			return pct;
+	} catch (err) {}
+	try {
+		text = await sendCommandUntilPrompt("power -info");
+		pct = parseUsbBatteryPercent(text);
+		if (pct != null)
+			return pct;
+	} catch (err) {}
+	return null;
+}
+
+function applyUsbTimeToUi(parsed) {
+	var input = document.getElementById("casUsbClockInput");
+	var local;
+	if (!parsed)
+		return;
+	usbClockEpochMs = parsed.epochMs;
+	usbClockSyncedAt = Date.now();
+	ConnectASensorStartUsbClockTick();
+	if (input) {
+		local = new Date(parsed.epochMs);
+		input.value = formatDatetimeLocalValue(local);
+	}
+}
+
+function formatDatetimeLocalValue(d) {
+	var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+	if (!(d instanceof Date) || isNaN(d.getTime()))
+		return "";
+	return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) +
+		"T" + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+}
+
+function clampUsbInterval(sec) {
+	if (!isFinite(sec))
+		return null;
+	sec = Math.round(sec);
+	if (sec < USB_INTERVAL_MIN)
+		sec = USB_INTERVAL_MIN;
+	if (sec > USB_INTERVAL_MAX)
+		sec = USB_INTERVAL_MAX;
+	return sec;
+}
+
+function resolveUsbIntervalPair(readRaw, pubRaw) {
+	var readVal = readRaw === "" || readRaw == null ? null : Number(readRaw);
+	var pubVal = pubRaw === "" || pubRaw == null ? null : Number(pubRaw);
+	if ((readVal == null || !isFinite(readVal)) && (pubVal == null || !isFinite(pubVal)))
+		return null;
+	if (readVal == null || !isFinite(readVal))
+		readVal = pubVal;
+	if (pubVal == null || !isFinite(pubVal))
+		pubVal = readVal;
+	return {
+		readint: clampUsbInterval(readVal),
+		pubint: clampUsbInterval(pubVal)
+	};
+}
+
+async function ConnectASensorLoadUsbConfig() {
+	if (connectionMode !== "usb" || !port || !writer)
+		return;
+	await withUsbSerialExclusive(async function () {
+		var cfgText, sensorText, timeText, tempCal, humCal;
+		var cfg, sensors, timeParsed, tempOff, humOff;
+		try {
+			await sendCommandUntilPrompt("shell -on");
+		} catch (err) {}
+		try {
+			cfgText = await sendCommandUntilPrompt("config");
+			cfg = parseUsbConfigText(cfgText);
+			fillUsbConfigModeUi(cfg.mode);
+			fillUsbConfigIntervalsUi(cfg.readint, cfg.pubint);
+			if (cfg.mode)
+				sensorInfo.mode = cfg.mode;
+			if (cfg.readint != null)
+				sensorInfo.readingInterval = formatConnectASensorIntervalLabel(cfg.readint);
+			if (cfg.pubint != null)
+				sensorInfo.publishInterval = formatConnectASensorIntervalLabel(cfg.pubint);
+		} catch (err) {}
+		try {
+			sensorText = await sendCommandUntilPrompt("sensor");
+			sensors = parseUsbSensorList(sensorText);
+			usbSensorRows = buildUsbSensorUiRows(sensors);
+			renderUsbSensorListUi();
+		} catch (err) {
+			usbSensorRows = [];
+			renderUsbSensorListUi();
+		}
+		try {
+			timeText = await sendCommandUntilPrompt("time");
+			timeParsed = parseUsbTimeText(timeText);
+			applyUsbTimeToUi(timeParsed);
+		} catch (err) {}
+		try {
+			tempCal = await sendCommandUntilPrompt("control temp cal");
+			tempOff = parseUsbCalOffset(tempCal);
+			setUsbCalCurrentUi("temp", tempOff);
+		} catch (err) {
+			setUsbCalCurrentUi("temp", null);
+		}
+		try {
+			humCal = await sendCommandUntilPrompt("control hum cal");
+			humOff = parseUsbCalOffset(humCal);
+			setUsbCalCurrentUi("hum", humOff);
+		} catch (err) {
+			setUsbCalCurrentUi("hum", null);
+		}
+		try {
+			setUsbBatteryUi(await loadUsbBatteryPercentExclusive());
+		} catch (err) {
+			setUsbBatteryUi("—");
+		}
+		updateConnectASensorUsbConfigVisibility();
+		renderConnectASensorInfo();
+		syncConnectASensorMeta(getConnectASensorNodeSafe());
+	});
+}
+
+async function ConnectASensorApplyUsbMode(event) {
+	var mode, sd, net;
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	sd = document.getElementById("casUsbModeSdcard");
+	net = document.getElementById("casUsbModeNetwork");
+	mode = (net && net.checked) ? "network" : "sdcard";
+	try {
+		await withUsbSerialExclusive(async function () {
+			await sendCommandUntilPrompt("config -mode " + mode);
+			fillUsbConfigModeUi(mode);
+			sensorInfo.mode = mode;
+		});
+		showInfoMessage({
+			cat: "Mode canviat a {0}.",
+			spa: "Modo cambiado a {0}.",
+			eng: "Mode changed to {0}."
+		}, mode);
+		renderConnectASensorInfo();
+		syncConnectASensorMeta(getConnectASensorNodeSafe());
+	} catch (err) {
+		showInfoMessage(
+			{cat: "Error canviant el mode: {0}", spa: "Error al cambiar el modo: {0}", eng: "Error changing mode: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
+async function ConnectASensorApplyUsbIntervals(event) {
+	var readEl, pubEl, pair, rawRead, rawPub, clampedWarn, resumeCollecting;
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	readEl = document.getElementById("casUsbReadInt");
+	pubEl = document.getElementById("casUsbPubInt");
+	rawRead = readEl && readEl.value !== "" ? Number(readEl.value) : null;
+	rawPub = pubEl && pubEl.value !== "" ? Number(pubEl.value) : null;
+	pair = resolveUsbIntervalPair(readEl ? readEl.value : "", pubEl ? pubEl.value : "");
+	if (!pair) {
+		showInfoMessage({cat: "Indiqueu almenys un interval vàlid.", spa: "Indique al menos un intervalo válido.", eng: "Enter at least one valid interval."});
+		return;
+	}
+	clampedWarn = (isFinite(rawRead) && rawRead < USB_INTERVAL_MIN) || (isFinite(rawPub) && rawPub < USB_INTERVAL_MIN);
+	resumeCollecting = collectingData || monitoringRunning;
+	try {
+		/* Atura el bucle, aplica al kit i reinicia amb el nou ritme de taula */
+		await stopConnectASensorMonitoringLoop();
+		await withUsbSerialExclusive(async function () {
+			await sendCommandUntilPrompt("config -readint " + pair.readint);
+			if (usbKitMode !== "sdcard")
+				await sendCommandUntilPrompt("config -pubint " + pair.pubint);
+			fillUsbConfigIntervalsUi(pair.readint, pair.pubint);
+			sensorInfo.readingInterval = formatConnectASensorIntervalLabel(pair.readint);
+			sensorInfo.publishInterval = formatConnectASensorIntervalLabel(pair.pubint);
+		});
+		lastConnectASensorSaveAt = null;
+		forceImmediateConnectASensorRead = false;
+		if (resumeCollecting && connectionMode === "usb" && port) {
+			collectingData = true;
+			if (!monitoringRunning)
+				startMonitoring();
+		}
+		if (clampedWarn) {
+			showInfoMessage({
+				cat: "Intervals aplicats (mesura cada {0} s a la taula). Mínim firmware 30 s. Recollida reiniciada.",
+				spa: "Intervalos aplicados (medida cada {0} s en la tabla). Mínimo firmware 30 s. Recogida reiniciada.",
+				eng: "Intervals applied (reading every {0} s in the table). Firmware min 30 s. Collection restarted."
+			}, pair.readint);
+		} else {
+			showInfoMessage({
+				cat: "Intervals aplicats: la taula es refresca cada {0} s (com el kit).",
+				spa: "Intervalos aplicados: la tabla se refresca cada {0} s (como el kit).",
+				eng: "Intervals applied: the table refreshes every {0} s (same as the kit)."
+			}, pair.readint);
+		}
+		renderConnectASensorInfo();
+		syncConnectASensorMeta(getConnectASensorNodeSafe());
+	} catch (err) {
+		if (resumeCollecting && connectionMode === "usb" && port && !monitoringRunning) {
+			collectingData = true;
+			startMonitoring();
+		}
+		showInfoMessage(
+			{cat: "Error aplicant intervals: {0}", spa: "Error al aplicar intervalos: {0}", eng: "Error applying intervals: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
+async function ConnectASensorReloadUsbSensors(event) {
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	try {
+		await withUsbSerialExclusive(async function () {
+			var sensorText = await sendCommandUntilPrompt("sensor");
+			var sensors = parseUsbSensorList(sensorText);
+			usbSensorRows = buildUsbSensorUiRows(sensors);
+			renderUsbSensorListUi();
+			syncConnectASensorMeta(getConnectASensorNodeSafe());
+		});
+		if (!usbSensorRows.length) {
+			showInfoMessage({
+				cat: "Encara no hi ha sensors a la llista.",
+				spa: "Todavía no hay sensores en la lista.",
+				eng: "Still no sensors in the list."
+			});
+		}
+	} catch (err) {
+		showInfoMessage(
+			{cat: "Error carregant sensors: {0}", spa: "Error al cargar sensores: {0}", eng: "Error loading sensors: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
+function getUsbSensorRowById(groupId) {
+	var i;
+	for (i = 0; i < usbSensorRows.length; i++) {
+		if (usbSensorRows[i].id === groupId)
+			return usbSensorRows[i];
+	}
+	return null;
+}
+
+async function ConnectASensorToggleUsbSensor(event, groupId) {
+	var row, enable, names, i, cmd;
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	row = getUsbSensorRowById(groupId);
+	if (!row)
+		return;
+	enable = !!(event && event.target && event.target.checked);
+	names = row.names && row.names.length ? row.names : [row.cmd];
+	try {
+		await withUsbSerialExclusive(async function () {
+			for (i = 0; i < names.length; i++) {
+				cmd = "sensor " + names[i] + (enable ? " -enable" : " -disable");
+				await sendCommandUntilPrompt(cmd);
+			}
+			row.enabled = enable;
+		});
+	} catch (err) {
+		if (event && event.target)
+			event.target.checked = !enable;
+		showInfoMessage(
+			{cat: "Error canviant el sensor: {0}", spa: "Error al cambiar el sensor: {0}", eng: "Error changing sensor: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
+async function ConnectASensorApplyUsbSensorInterval(event, groupId) {
+	var row, val, names, i;
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	row = getUsbSensorRowById(groupId);
+	if (!row || !event || !event.target)
+		return;
+	val = clampUsbInterval(Number(event.target.value));
+	if (val == null) {
+		showInfoMessage({cat: "Interval de sensor no vàlid.", spa: "Intervalo de sensor no válido.", eng: "Invalid sensor interval."});
+		return;
+	}
+	names = row.names && row.names.length ? row.names : [row.cmd];
+	try {
+		await withUsbSerialExclusive(async function () {
+			for (i = 0; i < names.length; i++) {
+				await sendCommandUntilPrompt("sensor " + names[i] + " -interval " + val);
+			}
+			row.intervalSec = val;
+			event.target.value = String(val);
+		});
+	} catch (err) {
+		showInfoMessage(
+			{cat: "Error canviant l'interval del sensor: {0}", spa: "Error al cambiar el intervalo del sensor: {0}", eng: "Error changing sensor interval: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
+async function ConnectASensorApplyUsbTime(event) {
+	var input, d, epoch;
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	input = document.getElementById("casUsbClockInput");
+	if (!input || !input.value) {
+		showInfoMessage({cat: "Indiqueu data i hora.", spa: "Indique fecha y hora.", eng: "Enter date and time."});
+		return;
+	}
+	d = new Date(input.value);
+	if (isNaN(d.getTime())) {
+		showInfoMessage({cat: "Data/hora no vàlida.", spa: "Fecha/hora no válida.", eng: "Invalid date/time."});
+		return;
+	}
+	epoch = Math.floor(d.getTime() / 1000);
+	try {
+		await withUsbSerialExclusive(async function () {
+			var timeText, parsed;
+			await sendCommandUntilPrompt("time " + epoch);
+			timeText = await sendCommandUntilPrompt("time");
+			parsed = parseUsbTimeText(timeText) || { epochSec: epoch, epochMs: epoch * 1000 };
+			applyUsbTimeToUi(parsed);
+		});
+		showInfoMessage({cat: "Hora del kit actualitzada.", spa: "Hora del kit actualizada.", eng: "Kit time updated."});
+	} catch (err) {
+		showInfoMessage(
+			{cat: "Error definint l'hora: {0}", spa: "Error al definir la hora: {0}", eng: "Error setting time: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
+async function ConnectASensorSyncUsbTime(event) {
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	try {
+		await withUsbSerialExclusive(async function () {
+			var timeText, parsed;
+			await sendCommandUntilPrompt("time -sync");
+			timeText = await sendCommandUntilPrompt("time");
+			parsed = parseUsbTimeText(timeText);
+			applyUsbTimeToUi(parsed);
+		});
+		showInfoMessage({cat: "Hora sincronitzada (NTP).", spa: "Hora sincronizada (NTP).", eng: "Time synced (NTP)."});
+	} catch (err) {
+		showInfoMessage(
+			{cat: "Error sincronitzant l'hora: {0}", spa: "Error al sincronizar la hora: {0}", eng: "Error syncing time: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
+async function ConnectASensorRefreshUsbTime(event) {
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	try {
+		await withUsbSerialExclusive(async function () {
+			var timeText = await sendCommandUntilPrompt("time");
+			applyUsbTimeToUi(parseUsbTimeText(timeText));
+		});
+	} catch (err) {
+		showInfoMessage(
+			{cat: "Error consultant l'hora: {0}", spa: "Error al consultar la hora: {0}", eng: "Error querying time: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
+async function ConnectASensorApplyUsbCal(event, kind) {
+	var input, delta, cmdKind;
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	cmdKind = kind === "hum" ? "hum" : "temp";
+	input = document.getElementById(cmdKind === "hum" ? "casUsbHumCalDelta" : "casUsbTempCalDelta");
+	delta = input ? Number(input.value) : NaN;
+	if (!isFinite(delta)) {
+		showInfoMessage({cat: "Indiqueu un offset numèric.", spa: "Indique un offset numérico.", eng: "Enter a numeric offset."});
+		return;
+	}
+	try {
+		await withUsbSerialExclusive(async function () {
+			var resp, off;
+			await sendCommandUntilPrompt("control " + cmdKind + " cal " + delta);
+			resp = await sendCommandUntilPrompt("control " + cmdKind + " cal");
+			off = parseUsbCalOffset(resp);
+			setUsbCalCurrentUi(cmdKind, off);
+		});
+		showInfoMessage({cat: "Calibratge aplicat.", spa: "Calibración aplicada.", eng: "Calibration applied."});
+	} catch (err) {
+		showInfoMessage(
+			{cat: "Error aplicant calibratge: {0}", spa: "Error al aplicar calibración: {0}", eng: "Error applying calibration: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
+async function ConnectASensorClearUsbCal(event, kind) {
+	var cmdKind;
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	cmdKind = kind === "hum" ? "hum" : "temp";
+	try {
+		await withUsbSerialExclusive(async function () {
+			var resp, off;
+			await sendCommandUntilPrompt("control " + cmdKind + " cal clear");
+			resp = await sendCommandUntilPrompt("control " + cmdKind + " cal");
+			off = parseUsbCalOffset(resp);
+			setUsbCalCurrentUi(cmdKind, off);
+		});
+		showInfoMessage({cat: "Calibratge restablert.", spa: "Calibración restablecida.", eng: "Calibration reset."});
+	} catch (err) {
+		showInfoMessage(
+			{cat: "Error restablint calibratge: {0}", spa: "Error al restablecer calibración: {0}", eng: "Error resetting calibration: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
+async function ConnectASensorRefreshUsbStatus(event) {
+	if (event)
+		event.preventDefault();
+	if (connectionMode !== "usb" || !port)
+		return;
+	try {
+		await withUsbSerialExclusive(async function () {
+			setUsbBatteryUi(await loadUsbBatteryPercentExclusive());
+		});
+	} catch (err) {
+		showInfoMessage(
+			{cat: "Error actualitzant la bateria: {0}", spa: "Error al actualizar la batería: {0}", eng: "Error refreshing battery: {0}"},
+			err && err.message ? err.message : String(err)
+		);
+	}
+}
+
 function getConnectASensorDisplayName() {
 	var ver, name;
 	if (sensorInfo && sensorInfo.sensorType === "pmscan") {
@@ -1598,6 +2502,7 @@ function saveSensorRecord(measuredAt) {
 	}
 
 	sensorRecords.push(record);
+	lastConnectASensorSaveAt = Date.now();
 	updateConnectASensorNodeTable(record);
 }
 
@@ -1730,6 +2635,8 @@ async function startMonitoring() {
 
 	try {
 		while (shouldCollectConnectASensor()) {
+			var cycleStart = Date.now();
+			var cycleDeadline = cycleStart + getConnectASensorIntervalSeconds() * 1000;
 
 			await readTemperature();
 			if (!shouldCollectConnectASensor())
@@ -1786,7 +2693,8 @@ async function startMonitoring() {
 			if (!shouldCollectConnectASensor())
 				break;
 
-			await waitConnectASensorInterval();
+			/* Ritme = Mesura del kit: proper cicle a cycleStart + readint */
+			await waitConnectASensorUntil(cycleDeadline);
 		}
 	} finally {
 		monitoringRunning = false;
@@ -1976,6 +2884,7 @@ async function disconnectSensor(quiet) {
 
 		responseBuffer = "";
 		connectionMode = null;
+		ConnectASensorResetUsbConfigState();
 		clearConnectASensorInfoPanel();
 
 		if (!quiet)
@@ -1985,6 +2894,7 @@ async function disconnectSensor(quiet) {
 	} catch (error) {
 
 		connectionMode = null;
+		ConnectASensorResetUsbConfigState();
 		if (!quiet) {
 			showInfoMessage(
 				{cat: "Error: {0}", spa: "Error: {0}", eng: "Error: {0}"},

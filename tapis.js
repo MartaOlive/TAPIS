@@ -448,7 +448,19 @@ function ChangeToHTTPS(question) {
 	return response;
 }
 
+/* hello.js OAuth popup: redirect_uri is full TAPIS; hash carries tokens before onLoad */
+function isHelloOAuthRedirectPopup() {
+	if (!window.opener)
+		return false;
+	var h = location.hash || "";
+	return h.indexOf("access_token") !== -1 || h.indexOf("id_token") !== -1 ||
+		h.indexOf("error=") !== -1 || h.indexOf("error_description") !== -1;
+}
+
 function StartSTAPage() {
+	/* OAuth popup must not boot full TAPIS (re-decodes toolbar icons; posts to opener) */
+	if (isHelloOAuthRedirectPopup())
+		return;
 
 	ChangeToHTTPS(true);
 
@@ -554,7 +566,7 @@ function textOperationButton(parentDivId, prefixDivId, operation, name, descript
 		s+="onmouseover='showHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\", \"" + 
 			"<b>" + EscapeForHelpTooltip(label) + "</b><hr>" + EscapeForHelpTooltip(helpText) + "<hr>" + (typeText ? EscapeForHelpTooltip(typeText) + "<br>" : "") + (options?.startNode ? "<i>" + EscapeForHelpTooltip(startNodeLabel) + "</i><br>" : "") + (options?.leafNode ? "<i>" + EscapeForHelpTooltip(leafNodeLabel) + "</i><br>" : "") + 
 			"\")' onmousemove='moveHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\")' onmouseout='hideHelpToolTip(event, \"" + (prefixDivId ? prefixDivId : "") +"\")' "
-	return s + "class='generalButton' onclick='addCircularImage(" + (parentDivId ? "event" : "null") + ", "+ (parentDivId ? ("\""+parentDivId+"\"") : "null") +", \"" + EscapeForJsHtmlAttr(nameStr) + "\", \"" + operation + ".png\");'><img src='" + operation + ".png' height='20' valign='middle'> " + label + "</button> ";
+	return s + "class='generalButton' onclick='addCircularImage(" + (parentDivId ? "event" : "null") + ", "+ (parentDivId ? ("\""+parentDivId+"\"") : "null") +", \"" + EscapeForJsHtmlAttr(nameStr) + "\", \"" + operation + ".png\");'><span class='generalButtonInner'><img src='" + operation + ".png' height='20' valign='middle'><span>" + label + "</span></span></button> ";
 }
 
 async function InitSTAPage() {
@@ -572,7 +584,8 @@ async function InitSTAPage() {
 	PlaceButtonsSTAEntities();
 	PopulateContextMenu();
 	window.addEventListener("message", MessageSTAPage);
-	if (window.opener)
+	/* Only advertise as GeoJSON listener; never from OAuth hello redirect popup */
+	if (window.opener && !isHelloOAuthRedirectPopup())
 		window.opener.postMessage(JSON.stringify({msg: "Tapis is listening"}), "*");
 	await AnalyzeQueryParams();
 }
@@ -2051,6 +2064,33 @@ function parseJwt(token) {
 
 var loginInit=false;
 
+/* Chrome: OAuth popup can abort toolbar image decode; reassign same relative src */
+function refreshToolbarImages() {
+	var imgs = document.querySelectorAll(".tdGeneralButtons img, #TapisLangFlags img");
+	for (var i = 0; i < imgs.length; i++) {
+		var img = imgs[i];
+		if (!img)
+			continue;
+		var src = img.getAttribute("src");
+		if (!src)
+			continue;
+		img.removeAttribute("src");
+		img.setAttribute("src", src);
+	}
+}
+
+/* Chrome paint: toolbar after auth (harmless; secondary to refreshToolbarImages) */
+function forceToolbarChromeRepaint() {
+	var tb = document.querySelector(".tdGeneralButtons");
+	if (!tb)
+		return;
+	void tb.offsetHeight;
+	tb.style.transform = "translateZ(0)";
+	requestAnimationFrame(function () {
+		tb.style.transform = "";
+	});
+}
+
 function OpenLogin(event) {
 
 	if (false==ChangeToHTTPS(true))
@@ -2058,25 +2098,30 @@ function OpenLogin(event) {
 
 	if (!loginInit) {
 		hello.init({"authenix": "662eb5eb-e706-40a4-baf8-51016fec5a05"}, {redirect_uri: ((location.pathname.charAt(location.pathname.length-1)=='/') ? location.pathname.substring(0, location.pathname.length-1) : location.pathname)});
-		loginInit=false;
+		loginInit=true;
 	}
 
 	hello("authenix").login({redirect_uri: location.pathname, lang: getLang(), scope: "openid profile idp citiobs.secd.eu%23read citiobs.secd.eu%23create citiobs.secd.eu%23update citiobs.secd.eu%23delete", display: "popup"}).then(
 		function(success) {
 			document.getElementById("buttonOpenLogin").style.display="none";
-			document.getElementById("buttonOpenLogout").style.display="inline-block";
+			document.getElementById("buttonOpenLogout").style.display="";
 			var jwt_elems=parseJwt(success.authResponse.id_token)
 			CriptoName=jwt_elems.sub;
 			DisplayName=jwt_elems.preferred_username ? jwt_elems.preferred_username : ""
 			if (!CriptoName)
-				CriptoName=="Anonymous"
-			document.getElementById("UserInfoText").innerHTML=DisplayName +" at "+ jwt_elems.idp_name;
+				CriptoName="Anonymous"
+			/* textContent: never parse username/IdP as HTML (breaks toolbar icons) */
+			document.getElementById("UserInfoText").textContent=DisplayName +" at "+ (jwt_elems.idp_name || "");
+			refreshToolbarImages();
+			forceToolbarChromeRepaint();
 		},
 		function(e) 
 		{
 			alert(DonaCadenaFmt({cat: "Error en l'inici de la sessió: {0}", spa: "Error al iniciar sesión: {0}", eng: "Signin error: {0}"}, e.error.message));
-			document.getElementById("UserInfoText").innerHTML="";
+			document.getElementById("UserInfoText").textContent="";
 			CriptoName=null;
+			refreshToolbarImages();
+			forceToolbarChromeRepaint();
 		}
 	);
 }
@@ -2084,15 +2129,19 @@ function OpenLogin(event) {
 function OpenLogout(event) {
 	hello("authenix").logout({force:true}).then(
 		function(success) {
-			document.getElementById("buttonOpenLogin").style.display="inline-block";
+			document.getElementById("buttonOpenLogin").style.display="";
 			document.getElementById("buttonOpenLogout").style.display="none";
 			alert(DonaCadenaFmt({cat: "S'ha tancat la sessió a {0}.", spa: "Se ha cerrado la sesión en {0}.", eng: "Signed out from {0}."}, "authenix"));
-			document.getElementById("UserInfoText").innerHTML="";
+			document.getElementById("UserInfoText").textContent="";
 			CriptoName=null;
+			refreshToolbarImages();
+			forceToolbarChromeRepaint();
 		}, function(e) {
 			alert(DonaCadenaFmt({cat: "Error en tancar la sessió: {0}", spa: "Error al cerrar sesión: {0}", eng: "Signed out error: {0}"}, e.error.message));
-			document.getElementById("UserInfoText").innerHTML="";
+			document.getElementById("UserInfoText").textContent="";
 			CriptoName=null;
+			refreshToolbarImages();
+			forceToolbarChromeRepaint();
 		});
 }
 
@@ -2754,7 +2803,7 @@ function ShowUploadObservationsSelects(node) {
 	if (dataNode && dataNode.STAdata) {
 		var data = dataNode.STAdata;
 		var dataAttributes = dataNode.STAdataAttributes ? dataNode.STAdataAttributes : getDataAttributes(data);
-		var timeGuess = (node && node.image == "connectASensor.png") ? "timestamp" : "phenomenonTime";
+		var timeGuess = (dataNode && (dataNode.image == "connectASensor.png" || dataNode.image == "readSDFromSensor.png" || dataNode.connectASensorMeta)) ? "timestamp" : "phenomenonTime";
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsPlace", dataAttributes, "place");
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsLongitude", dataAttributes, "long");
 		PopulateSelectSaveLayerDialog("DialogUploadObservationsLatitude", dataAttributes, "lat");
@@ -3223,6 +3272,9 @@ function AddKeysToFilter(url, obj, prefix) {
 }
 
 async function GetObjectId(url, objsName, obj){
+	/* Already known id — skip $filter and POST */
+	if (obj && obj["@iot.id"] !== undefined && obj["@iot.id"] !== null && String(obj["@iot.id"]).trim() !== "")
+		return obj["@iot.id"];
 	if (objsName=="Parties")
 		var response=await HTTPJSONData(url+"/"+objsName+ "?$filter=authId eq '" + obj.authId + "'");
 	else if (objsName=="MultiDatastreams"){
@@ -6766,7 +6818,15 @@ function AddCircularImageInterpretingURL(url, mediatype, security) {
 }
 
 function MessageSTAPage(event) {
-	
+	/* Ignore OAuth-popup handshake (not GeoJSON); hello uses opener callback, not this */
+	if (typeof event.data === "string") {
+		try {
+			var peek = JSON.parse(event.data);
+			if (peek && peek.msg === "Tapis is listening")
+				return;
+		} catch (eIgnore) { /* non-JSON: fall through */ }
+	}
+
 	if (factsAsset?.walletURL)
 	{
 		var locationURL=transformStringIntoLocation(factsAsset.walletURL)
@@ -7845,8 +7905,12 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 	}
 	if (nodeTo.image == "staEntityBuilder.png") {
 		if (nodeFrom && nodeFrom.STAdata && typeof deapCopy === "function") {
-			nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
-			nodeTo.STAdataAttributes = nodeFrom.STAdataAttributes ? deapCopy(nodeFrom.STAdataAttributes) : (typeof getDataAttributes === "function" ? getDataAttributes(nodeTo.STAdata) : null);
+			nodeTo.STAdataSource = deapCopy(nodeFrom.STAdata);
+			/* Keep a table already created by Entity Builder; only seed from parent if empty */
+			if ((!nodeTo.STAdata || !nodeTo.STAdata.length) && !nodeTo.staEntityPackage) {
+				nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
+				nodeTo.STAdataAttributes = nodeFrom.STAdataAttributes ? deapCopy(nodeFrom.STAdataAttributes) : (typeof getDataAttributes === "function" ? getDataAttributes(nodeTo.STAdata) : null);
+			}
 		}
 		if (nodeFrom && nodeFrom.connectASensorMeta && typeof deapCopy === "function")
 			nodeTo.connectASensorMeta = deapCopy(nodeFrom.connectASensorMeta);

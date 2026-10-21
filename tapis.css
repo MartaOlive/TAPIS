@@ -267,11 +267,9 @@
     height: 60px;
     padding: 4px;
 
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 3px;
+    /* Chrome-safe: avoid flex on <button> (LayoutButton + nested <img> paint bug) */
+    display: inline-block;
+    overflow: visible;
 
     background: #ffffff;
     border: 1px solid #d5d5d5;
@@ -292,16 +290,47 @@
     transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
 }
 
-.generalButton img {
-    width: auto;
-    height: 40px;
+.generalButtonInner {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    width: 100%;
+    height: 100%;
 }
 
-.generalButton span {
+.generalButton img {
+	width: auto;
+	height: 40px;
+	flex-shrink: 0;
+	display: block;
+}
+
+.generalButtonInner > span {
     font-size: 11px;
     line-height: 11px;
     color: #333;
     white-space: nowrap;
+}
+
+/* Outside .tdGeneralButtons flex so login text growth cannot reflow toolbar icons */
+.tdUserInfoText {
+    white-space: nowrap;
+    padding-right: 8px;
+    vertical-align: middle;
+}
+
+#UserInfoText {
+    display: inline-block;
+    max-width: 14em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    line-height: 1.2;
+    color: #333;
+    vertical-align: middle;
 }
 
 .generalButton:hover {
@@ -322,10 +351,15 @@
 .tdGeneralButtons {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: flex-end;
     gap: 6px;
     flex-wrap: wrap;
+}
+
+.tdGeneralButtons > .generalButton,
+.tdGeneralButtons > .TapisLangFlags {
+    flex-shrink: 0;
 }
 
 .contextMenuGeneralButtons {
@@ -352,6 +386,7 @@
 
 .TapisLangFlag img {
     display: block;
+    flex-shrink: 0;
     width: 24px;
     height: 16px;
     border: 1px solid rgba(0, 0, 0, 0.25);
@@ -1792,6 +1827,134 @@
 	background: #fff;
 }
 
+#DialogConnectASensor .DialogConnectASensorUsbConfig {
+	margin: 12px 0 8px 0;
+	padding: 10px 12px;
+	border: 1px solid #ccc;
+	background: #fafafa;
+	text-align: left;
+	max-height: 42vh;
+	overflow: auto;
+}
+
+#DialogConnectASensor .casUsbSectionTitle {
+	display: block;
+	margin: 0 0 8px 0;
+}
+
+#DialogConnectASensor .casUsbSection {
+	margin: 0 0 12px 0;
+	padding: 0 0 8px 0;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+#DialogConnectASensor .casUsbSection:last-child {
+	border-bottom: none;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+#DialogConnectASensor .casUsbSection > strong {
+	display: block;
+	margin: 0 0 6px 0;
+}
+
+#DialogConnectASensor .casUsbModeRow,
+#DialogConnectASensor .casUsbIntervalsRow,
+#DialogConnectASensor .casUsbClockRow,
+#DialogConnectASensor .casUsbCalRow,
+#DialogConnectASensor .casUsbStatusRow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin: 0 0 4px 0;
+}
+
+#DialogConnectASensor .casUsbHint {
+	margin: 4px 0 0 0;
+	font-size: 0.9em;
+	color: #555;
+}
+
+#DialogConnectASensor .casUsbIntervalsRow input[type="number"],
+#DialogConnectASensor .casUsbCalRow input[type="number"],
+#DialogConnectASensor .casUsbSensorInterval {
+	width: 5.5em;
+	padding: 2px 4px;
+}
+
+#DialogConnectASensor .casUsbClockDisplay {
+	font-variant-numeric: tabular-nums;
+	font-family: Consolas, "Courier New", monospace;
+	min-width: 11em;
+}
+
+#DialogConnectASensor .casUsbSensorList {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+#DialogConnectASensor .casUsbSensorRow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+#DialogConnectASensor .casUsbSensorName {
+	min-width: 9em;
+}
+
+#DialogConnectASensor .casUsbSwitch {
+	position: relative;
+	display: inline-block;
+	width: 2.4em;
+	height: 1.3em;
+	vertical-align: middle;
+}
+
+#DialogConnectASensor .casUsbSwitch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+#DialogConnectASensor .casUsbSwitchSlider {
+	position: absolute;
+	cursor: pointer;
+	inset: 0;
+	background: #bbb;
+	border-radius: 1.3em;
+	transition: background 0.15s;
+}
+
+#DialogConnectASensor .casUsbSwitchSlider::before {
+	content: "";
+	position: absolute;
+	height: 1em;
+	width: 1em;
+	left: 0.15em;
+	bottom: 0.15em;
+	background: #fff;
+	border-radius: 50%;
+	transition: transform 0.15s;
+}
+
+#DialogConnectASensor .casUsbSwitch input:checked + .casUsbSwitchSlider {
+	background: #5a5a5a;
+}
+
+#DialogConnectASensor .casUsbSwitch input:checked + .casUsbSwitchSlider::before {
+	transform: translateX(1.1em);
+}
+
+#DialogConnectASensor .casUsbSwitch input:disabled + .casUsbSwitchSlider {
+	opacity: 0.5;
+	cursor: default;
+}
+
 #DialogReadSDFromSensor {
 	max-width: min(64em, 96vw);
 	max-height: 92vh;
@@ -1895,6 +2058,19 @@
 #DialogSTAPublisher {
 	max-width: min(72em, 96vw);
 	max-height: 92vh;
+	box-sizing: border-box;
+}
+
+/* Keep dialog width fixed so wide preview tables scroll inside, not expand/clip the dialog */
+#DialogSTAPublisher {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#DialogSTAPublisher > form {
+	max-width: 100%;
+	min-width: 0;
+	box-sizing: border-box;
 }
 
 #DialogSTAEntityBuilder .DialogSTAEntityBuilderBody {
@@ -1923,21 +2099,6 @@
 	overflow-wrap: anywhere;
 	font-family: Consolas, "Courier New", monospace;
 	font-size: 0.9em;
-}
-
-#DialogSTAEntityBuilder .DialogSTAEntityBuilderValidateMark {
-	font-size: 1.35em;
-	font-weight: 700;
-	line-height: 1;
-	min-width: 1.2em;
-}
-
-#DialogSTAEntityBuilder .DialogSTAEntityBuilderValidateMark.ok {
-	color: #1a7f37;
-}
-
-#DialogSTAEntityBuilder .DialogSTAEntityBuilderValidateMark.fail {
-	color: #c62828;
 }
 
 #DialogSTAEntityBuilder .sebIdRow .sebVal {
@@ -2090,13 +2251,223 @@
 	margin: 8px 0;
 }
 
+#DialogSTAPublisher .spaSummaryCard {
+	background: #f5f5f3;
+	border: 1px solid #ccc;
+	padding: 8px 10px;
+	font-size: 0.9em;
+	color: #333;
+}
+
+#DialogSTAPublisher .spaSummaryEmpty {
+	margin: 0;
+	color: #555;
+}
+
+#DialogSTAPublisher .spaSummaryRow {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 4px 10px;
+	margin: 0 0 6px 0;
+	align-items: baseline;
+}
+
+#DialogSTAPublisher .spaSummaryRow:last-child {
+	margin-bottom: 0;
+}
+
+#DialogSTAPublisher .spaSummaryLbl {
+	font-weight: 600;
+	color: #444;
+	flex: 0 0 auto;
+}
+
+#DialogSTAPublisher .spaSummaryLbl::after {
+	content: ":";
+}
+
+#DialogSTAPublisher .spaSummaryVal {
+	color: #222;
+	overflow-wrap: anywhere;
+	min-width: 0;
+	flex: 1 1 12em;
+}
+
+#DialogSTAPublisher .spaSummaryMeta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px 16px;
+	margin: 0 0 6px 0;
+}
+
+#DialogSTAPublisher .spaSummaryMetaItem .spaSummaryVal {
+	flex: none;
+	font-variant-numeric: tabular-nums;
+}
+
+#DialogSTAPublisher .spaSummaryPending {
+	margin: 0 0 6px 0;
+	color: #8a5a00;
+}
+
+#DialogSTAPublisher .spaSummaryUrl .spaSummaryLink {
+	color: #333;
+	text-decoration: underline;
+	overflow-wrap: anywhere;
+	word-break: break-word;
+	font-family: Consolas, "Courier New", monospace;
+	font-size: 0.95em;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherCounts {
+	text-align: left;
+	margin: 4px 0 8px 0;
+	font-size: 0.9em;
+	color: #333;
+}
+
+#DialogSTAPublisher .spaCountRow {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+#DialogSTAPublisher .spaCountChip {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 4px;
+	background: #EEEEEB;
+	border: 1px solid #ccc;
+	padding: 2px 8px;
+	white-space: nowrap;
+	font-size: 0.9em;
+}
+
+#DialogSTAPublisher .spaCountChip .spaCountLbl {
+	color: #555;
+}
+
+#DialogSTAPublisher .spaCountChip .spaCountN {
+	font-weight: 600;
+	color: #222;
+	font-variant-numeric: tabular-nums;
+}
+
 #DialogSTAPublisher .DialogSTAPublisherLog {
-	max-height: 28vh;
+	max-height: 16vh;
 	overflow: auto;
 	text-align: left;
 	background: #f7f7f7;
 	border: 1px solid #ccc;
 	padding: 8px;
+	font-size: 0.85em;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview {
+	max-height: 36vh;
+	/* Vertical scroll for sections; horizontal scroll lives on .spaPreviewTableWrap */
+	overflow-x: hidden;
+	overflow-y: auto;
+	text-align: left;
+	margin: 8px 0;
+	padding: 4px 0;
+	border-top: 1px solid #ddd;
+	max-width: 100%;
+	min-width: 0;
+	box-sizing: border-box;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview .spaPreviewSection {
+	margin: 0 0 12px 0;
+	max-width: 100%;
+	min-width: 0;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview .spaPreviewSection h4 {
+	margin: 0 0 4px 0;
+	font-size: 0.95em;
+	font-weight: 600;
+	color: #333;
+}
+
+/* Dedicated horizontal scroller per table (parent must not use overflow-x:auto or width expands) */
+#DialogSTAPublisher .spaPreviewTableWrap {
+	display: block;
+	width: 100%;
+	max-width: 100%;
+	min-width: 0;
+	overflow-x: auto;
+	overflow-y: visible;
+	margin: 0 0 6px 0;
+	-webkit-overflow-scrolling: touch;
+	box-sizing: border-box;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview table.spaPreviewTable,
+#DialogSTAPublisher .DialogSTAPublisherPreview table.tablesmall {
+	width: max-content;
+	min-width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 0.85em;
+	margin: 0;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview .spaPreviewTable th,
+#DialogSTAPublisher .DialogSTAPublisherPreview .spaPreviewTable td {
+	border: 1px solid #ccc;
+	padding: 2px 6px;
+	vertical-align: top;
+	text-align: left;
+	/* Prefer wrapping long values; avoid crushing short cells into vertical letter stacks */
+	white-space: normal;
+	overflow-wrap: break-word;
+	word-break: normal;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview .spaPreviewTable th {
+	background: #DCDCCA;
+	font-weight: 600;
+	color: #333;
+	white-space: nowrap;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview .spaPreviewTable tr:nth-child(even) {
+	background-color: #DCDCCA;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview .spaPreviewTable tr:nth-child(odd) {
+	background-color: #EEEEEB;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview .spaPreviewTable thead tr {
+	background-color: #DCDCCA;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview td.spaCellShort,
+#DialogSTAPublisher .DialogSTAPublisherPreview th.spaCellShort {
+	white-space: nowrap;
+	min-width: 3.5em;
+	max-width: none;
+	width: max-content;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview td.spaCellWrap {
+	min-width: 10em;
+	max-width: 28em;
+	overflow-wrap: break-word;
+	word-break: normal;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview td.spaIotId {
+	font-family: Consolas, "Courier New", monospace;
+	white-space: nowrap;
+	min-width: 4em;
+}
+
+#DialogSTAPublisher .DialogSTAPublisherPreview .spaObsSummary {
+	margin: 0 0 4px 0;
+	color: #444;
 	font-size: 0.85em;
 }
 

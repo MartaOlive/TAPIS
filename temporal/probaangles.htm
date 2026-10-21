@@ -1,0 +1,327 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart Citizen SD Reader</title>
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 16px;
+    background: #f4f6f8;
+    color: #17202a;
+  }
+  h1 { font-size: 26px; }
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin: 14px 0;
+    box-shadow: 0 2px 8px #0000000c;
+  }
+  button, input {
+    font: inherit;
+    padding: 10px;
+    border-radius: 7px;
+    margin: 4px 2px;
+  }
+  button {
+    border: 0;
+    background: #176b55;
+    color: white;
+    cursor: pointer;
+  }
+  button:disabled { opacity: .5; cursor: wait; }
+  input { border: 1px solid #bbb; max-width: 95%; }
+  #status { font-weight: 600; }
+  #terminal {
+    background: #101820;
+    color: #b8f7c5;
+    padding: 14px;
+    border-radius: 8px;
+    min-height: 180px;
+    max-height: 400px;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font: 13px monospace;
+  }
+  .hint { color: #586575; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<h1>Smart Citizen SD Reader</h1>
+<p>Read the Smart Citizen Kit 2.1 SD card via USB.</p>
+
+<div class="card">
+  <h2>1. Connection</h2>
+  <button id="connect">Connect USB sensor</button>
+  <button id="disconnect" disabled>Disconnect</button>
+  <p id="status">Sensor disconnected</p>
+  <p class="hint">
+    Use Chrome or Edge on a computer and a USB cable
+    that supports data transfer.
+  </p>
+</div>
+
+<div class="card">
+  <h2>2. SD card files</h2>
+  <button id="list" disabled>List files</button>
+  <button id="all" disabled>Read all CSV files</button>
+  <p class="hint">
+    The command to read all CSV files may return a very large amount of data.
+  </p>
+</div>
+
+<div class="card">
+  <h2>3. Read a file</h2>
+  <label for="filename">Exact file name:</label><br>
+  <input id="filename" value="26-10-15.CSV"
+         placeholder="26-10-15.CSV">
+  <br>
+  <button id="read" disabled>Read file</button>
+  <button id="download" disabled>Download CSV result</button>
+</div>
+
+<div class="card">
+  <h2>4. Sensor console</h2>
+  <button id="clear">Clear screen</button>
+  <pre id="terminal">Connect the sensor to begin.</pre>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+
+  let port = null;
+  let reader = null;
+  let writer = null;
+  let readTask = null;
+  let buffer = "";
+  let commandOutput = "";
+  let busy = false;
+  let lastDataAt = 0;
+  let lastCommand = "";
+  let resultText = "";
+
+  const terminal = $("terminal");
+
+  function showStatus(text) {
+    $("status").textContent = text;
+  }
+
+  function show(text) {
+    terminal.textContent += text;
+    // Limit the size of the visual console.
+    if (terminal.textContent.length > 150000) {
+      terminal.textContent =
+        terminal.textContent.slice(-100000);
+    }
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+
+  function setConnected(connected) {
+    $("connect").disabled = connected;
+    $("disconnect").disabled = !connected;
+    $("list").disabled = !connected || busy;
+    $("all").disabled = !connected || busy;
+    $("read").disabled = !connected || busy;
+  }
+
+  function setBusy(value) {
+    busy = value;
+    setConnected(!!port);
+  }
+
+  async function connect() {
+    if (!("serial" in navigator)) {
+      alert("This browser does not support Web Serial. Try Chrome or Edge.");
+      return;
+    }
+
+    try {
+      port = await navigator.serial.requestPort();
+      await port.open({ baudRate: 115200 });
+
+      const decoder = new TextDecoderStream();
+      const closed = port.readable.pipeTo(decoder.writable);
+      reader = decoder.readable.getReader();
+
+      writer = port.writable.getWriter();
+
+      buffer = "";
+      commandOutput = "";
+      showStatus("Connected. Waiting for the kit console...");
+      show("\n--- USB connection opened ---\n");
+      setConnected(true);
+
+      readTask = readLoop();
+
+      // Do not send any command that could modify or delete data.
+      showStatus("USB connected. You can now access the SD card.");
+    } catch (err) {
+      showStatus("Connection error: " + err.message);
+      if (port) {
+        try { await port.close(); } catch (_) {}
+      }
+      port = null;
+      setConnected(false);
+    }
+  }
+
+  async function readLoop() {
+    try {
+      while (reader) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        if (!value) continue;
+
+        buffer += value;
+        commandOutput += value;
+        lastDataAt = Date.now();
+        show(value);
+      }
+    } catch (err) {
+      show("\nRead error: " + err.message + "\n");
+    }
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function sendCommand(command, timeout = 10000) {
+    if (!port || !writer || busy) return;
+
+    setBusy(true);
+    lastCommand = command;
+    commandOutput = "";
+    lastDataAt = Date.now();
+
+    try {
+      show("\n\n> " + command + "\n");
+      showStatus("Running: " + command);
+
+      await writer.write(
+        new TextEncoder().encode(command + "\r")
+      );
+
+      const start = Date.now();
+      let sawData = false;
+
+      while (Date.now() - start < timeout) {
+        await sleep(200);
+
+        if (commandOutput.length > 0) sawData = true;
+
+        // Wait until the console stops transmitting.
+        // For long commands, the maximum timeout can be extended.
+        if (
+          sawData &&
+          Date.now() - lastDataAt > 1200 &&
+          commandOutput.includes("SCK")
+        ) {
+          break;
+        }
+      }
+
+      resultText = cleanOutput(commandOutput);
+      $("download").disabled = !resultText.trim();
+
+      if (Date.now() - start >= timeout) {
+        show("\n[Timeout reached; the result may be partial]\n");
+      }
+
+      showStatus("Command completed. Check the console.");
+    } catch (err) {
+      show("\nError: " + err.message + "\n");
+      showStatus("Error sending the command.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function cleanOutput(text) {
+    // Remove the command line if the firmware echoes it.
+    let lines = text.replace(/\r/g, "").split("\n");
+    lines = lines.filter(line =>
+      !line.trim().startsWith("SCK > file -")
+    );
+    return lines.join("\n").trim();
+  }
+
+  $("connect").addEventListener("click", connect);
+
+  $("disconnect").addEventListener("click", async () => {
+    try {
+      if (reader) {
+        await reader.cancel();
+        reader.releaseLock();
+        reader = null;
+      }
+      if (writer) {
+        writer.releaseLock();
+        writer = null;
+      }
+      if (port) await port.close();
+    } catch (err) {
+      show("\nWarning while disconnecting: " + err.message + "\n");
+    }
+    port = null;
+    setConnected(false);
+    showStatus("Sensor disconnected.");
+  });
+
+  $("list").addEventListener("click", () =>
+    sendCommand("file -ls")
+  );
+
+  $("read").addEventListener("click", () => {
+    const name = $("filename").value.trim();
+
+    // Only simple file names are accepted.
+    if (!/^[a-zA-Z0-9_.-]+$/.test(name)) {
+      alert("Enter a valid file name without spaces.");
+      return;
+    }
+
+    sendCommand("file -less " + name, 30000);
+  });
+
+  $("all").addEventListener("click", () => {
+    if (!confirm(
+      "Reading all CSV files may generate a large amount of data. Continue?"
+    )) return;
+
+    sendCommand("file -allcsv", 120000);
+  });
+
+  $("download").addEventListener("click", () => {
+    if (!resultText.trim()) return;
+
+    const blob = new Blob(
+      ["\uFEFF" + resultText + "\n"],
+      { type: "text/csv;charset=utf-8" }
+    );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "smartcitizen-export.csv";
+    a.click();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
+  $("clear").addEventListener("click", () => {
+    terminal.textContent = "";
+  });
+})();
+</script>
+</body>
+</html>
+

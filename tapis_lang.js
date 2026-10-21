@@ -184,6 +184,23 @@ function updateTapisLangFlags()
 	}
 }
 
+function applyDialogI18nText(el, text)
+{
+	var span, j, child;
+	/* Never wipe containers that hold <img> or other elements (toolbar / flags / rename). */
+	if (el.children && el.children.length) {
+		for (j = 0; j < el.children.length; j++) {
+			child = el.children[j];
+			if (child.tagName === "SPAN" && (!child.children || !child.children.length)) {
+				child.textContent = text;
+				return;
+			}
+		}
+		return;
+	}
+	el.textContent = text;
+}
+
 function applyDialogI18n()
 {
 	/* data-lang holds either a language code on flag buttons (cat|spa|eng)
@@ -195,6 +212,7 @@ function applyDialogI18n()
 		if (!raw)
 			continue;
 		raw = raw.trim();
+		/* Flag buttons: data-lang="cat"|"spa"|"eng" — never touch their <img> */
 		if (raw.charAt(0) != "{")
 			continue;
 		var obj;
@@ -210,7 +228,7 @@ function applyDialogI18n()
 		if (attr)
 			el.setAttribute(attr, text);
 		else
-			el.textContent = text;
+			applyDialogI18nText(el, text);
 	}
 	if (typeof ApplyTapisDialogI18nExtra == "function")
 		ApplyTapisDialogI18nExtra();

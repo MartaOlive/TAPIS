@@ -96,28 +96,30 @@
 					</tr>
 				</table>				
 			</td>
-			<td align="right" valign="top" class="tdGeneralButtons">
+			<td align="right" valign="middle" class="tdUserInfoText">
 				<span id="UserInfoText"></span>
+			</td>
+			<td align="right" valign="top" class="tdGeneralButtons">
 				<span id="TapisLangFlags" class="TapisLangFlags" title="Language">
-					<button type="button" class="TapisLangFlag generalButton" data-lang="cat" onclick="CanviaIdiomaTapis('cat')" title="Català"><img src="flag_cat.png" alt="Català" width="24" height="16"></button>
-					<button type="button" class="TapisLangFlag generalButton" data-lang="spa" onclick="CanviaIdiomaTapis('spa')" title="Español"><img src="flag_spa.png" alt="Español" width="24" height="16"></button>
-					<button type="button" class="TapisLangFlag generalButton" data-lang="eng" onclick="CanviaIdiomaTapis('eng')" title="English"><img src="flag_eng.png" alt="English" width="24" height="16"></button>
+					<button type="button" class="TapisLangFlag generalButton" data-lang="cat" onclick="CanviaIdiomaTapis('cat')" title="Català"><span class="generalButtonInner"><img src="flag_cat.png" alt="Català" width="24" height="16"></span></button>
+					<button type="button" class="TapisLangFlag generalButton" data-lang="spa" onclick="CanviaIdiomaTapis('spa')" title="Español"><span class="generalButtonInner"><img src="flag_spa.png" alt="Español" width="24" height="16"></span></button>
+					<button type="button" class="TapisLangFlag generalButton" data-lang="eng" onclick="CanviaIdiomaTapis('eng')" title="English"><span class="generalButtonInner"><img src="flag_eng.png" alt="English" width="24" height="16"></span></button>
 				</span>
-				<button id="buttonReloadSTA" class="generalButton" onclick="reloadSTA(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Torna a carregar tot l\u0027esquema per actualitzar les dades", spa: "Vuelva a cargar todo el esquema para actualizar los datos", eng: "Reload all schema to upload the data"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="reload.png" alt="Reload"><span data-lang="{&quot;cat&quot;: &quot;Actualitza&quot;, &quot;spa&quot;: &quot;Actualizar&quot;, &quot;eng&quot;: &quot;Refresh&quot;}">Refresh</span></button>
-				<label class="generalButton" for="openNetworkFileName" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Obre un esquema JSON de Tapis amb nodes i dades", spa: "Abrir un esquema JSON de Tapis con nodos y datos", eng: "Open a JSON Tapis schema with nodes and data"})))' onmousemove='moveHelpToolTip(event, "")'onmouseout='hideHelpToolTip(event, "")'><img src="OpenNetwork.png" alt="Open">  <span data-lang="{&quot;cat&quot;: &quot;Obre...&quot;, &quot;spa&quot;: &quot;Abrir...&quot;, &quot;eng&quot;: &quot;Open...&quot;}">Open...</span> </label><input id="openNetworkFileName" type="file" hidden accept=".json"onchange="openFileNetwork(event)">
-	   			<button class="generalButton" onclick='document.getElementById("DialogOpenURLNetwork").showModal();' onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Obre un esquema JSON de Tapis amb nodes i dades des d\u0027un lloc web o des dels exemples d\u0027ajuda", spa: "Abrir un esquema JSON de Tapis con nodos y datos desde un sitio web o desde los ejemplos de ayuda", eng: "Open a JSON Tapis schema with nodes and data from a website or from Help examples"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="OpenURLNetwork.png" alt="Open URL"><span data-lang="{&quot;cat&quot;: &quot;Obre URL...&quot;, &quot;spa&quot;: &quot;Abrir URL...&quot;, &quot;eng&quot;: &quot;Open URL...&quot;}">Open URL...</span></button>
-				<button class="generalButton" onclick="saveNetwork(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Desa l\u0027esquema de Tapis amb nodes i dades com a JSON per poder-lo obrir més tard", spa: "Guarde el esquema de Tapis con nodos y datos como JSON para poder abrirlo más tarde", eng: "Save your Tapis schema with nodes and data as a JSON to be able to open it later"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="SaveNetwork.png" alt="Save"><span data-lang="{&quot;cat&quot;: &quot;Desa com a...&quot;, &quot;spa&quot;: &quot;Guardar como...&quot;, &quot;eng&quot;: &quot;Save as...&quot;}">Save as...</span></button>
-				<button id="buttonOpenLogin" class="generalButton" onclick="OpenLogin(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Inicieu la sessió per poder accedir a certs llocs", spa: "Inicie sesión para poder acceder a ciertos lugares", eng: "Login to be able to have access to certain places"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="login.png" alt="Login"><span data-lang="{&quot;cat&quot;: &quot;Inicia la sessió&quot;, &quot;spa&quot;: &quot;Iniciar sesión&quot;, &quot;eng&quot;: &quot;Login&quot;}">Login</span></button>
-				<button id="buttonOpenLogout" class="generalButton" onclick="OpenLogout(event);" style="display:none;" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Tanqueu la sessió", spa: "Cierre su sesión", eng: "Close your session"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="login.png" alt="Logout"><span data-lang="{&quot;cat&quot;: &quot;Tanca la sessió&quot;, &quot;spa&quot;: &quot;Cerrar sesión&quot;, &quot;eng&quot;: &quot;Logout&quot;}">Logout</span></button>
-				<button class="generalButton" onclick="OpenConfiguration(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Modifiqueu la configuració de visualització", spa: "Modificar la configuración de visualización", eng: "Modify display configuration"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="config.png" alt="Configuration"><span data-lang="{&quot;cat&quot;: &quot;Configuració&quot;, &quot;spa&quot;: &quot;Configuración&quot;, &quot;eng&quot;: &quot;Configuration&quot;}">Configuration</span></button>
-				<button class="generalButton" onclick="OpenHelp(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Explicacions de com usar TAPIS: Eines", spa: "Explicaciones de cómo usar TAPIS: Herramientas", eng: "Explanations of how to use TAPIS: Tools"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="help.png" alt="Help"><span data-lang="{&quot;cat&quot;: &quot;Ajuda&quot;, &quot;spa&quot;: &quot;Ayuda&quot;, &quot;eng&quot;: &quot;Help&quot;}">Help</span></button>
-				<button class="generalButton" onclick="OpenRecipes(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Explicacions de com usar TAPIS i exemples", spa: "Explicaciones de cómo usar TAPIS y ejemplos", eng: "Explanations of how to use TAPIS and Examples"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><img src="documentation.png" alt="Recipes"><span data-lang="{&quot;cat&quot;: &quot;Receptes&quot;, &quot;spa&quot;: &quot;Recetas&quot;, &quot;eng&quot;: &quot;Recipes&quot;}">Recipes</span></button>
+				<button id="buttonReloadSTA" class="generalButton" onclick="reloadSTA(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Torna a carregar tot l\u0027esquema per actualitzar les dades", spa: "Vuelva a cargar todo el esquema para actualizar los datos", eng: "Reload all schema to upload the data"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><span class="generalButtonInner"><img src="reload.png" alt="Reload"><span data-lang="{&quot;cat&quot;: &quot;Actualitza&quot;, &quot;spa&quot;: &quot;Actualizar&quot;, &quot;eng&quot;: &quot;Refresh&quot;}">Refresh</span></span></button>
+				<label class="generalButton" for="openNetworkFileName" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Obre un esquema JSON de Tapis amb nodes i dades", spa: "Abrir un esquema JSON de Tapis con nodos y datos", eng: "Open a JSON Tapis schema with nodes and data"})))' onmousemove='moveHelpToolTip(event, "")'onmouseout='hideHelpToolTip(event, "")'><span class="generalButtonInner"><img src="OpenNetwork.png" alt="Open"><span data-lang="{&quot;cat&quot;: &quot;Obre...&quot;, &quot;spa&quot;: &quot;Abrir...&quot;, &quot;eng&quot;: &quot;Open...&quot;}">Open...</span></span></label><input id="openNetworkFileName" type="file" hidden accept=".json"onchange="openFileNetwork(event)">
+	   			<button class="generalButton" onclick='document.getElementById("DialogOpenURLNetwork").showModal();' onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Obre un esquema JSON de Tapis amb nodes i dades des d\u0027un lloc web o des dels exemples d\u0027ajuda", spa: "Abrir un esquema JSON de Tapis con nodos y datos desde un sitio web o desde los ejemplos de ayuda", eng: "Open a JSON Tapis schema with nodes and data from a website or from Help examples"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><span class="generalButtonInner"><img src="OpenURLNetwork.png" alt="Open URL"><span data-lang="{&quot;cat&quot;: &quot;Obre URL...&quot;, &quot;spa&quot;: &quot;Abrir URL...&quot;, &quot;eng&quot;: &quot;Open URL...&quot;}">Open URL...</span></span></button>
+				<button class="generalButton" onclick="saveNetwork(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Desa l\u0027esquema de Tapis amb nodes i dades com a JSON per poder-lo obrir més tard", spa: "Guarde el esquema de Tapis con nodos y datos como JSON para poder abrirlo más tarde", eng: "Save your Tapis schema with nodes and data as a JSON to be able to open it later"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><span class="generalButtonInner"><img src="SaveNetwork.png" alt="Save"><span data-lang="{&quot;cat&quot;: &quot;Desa com a...&quot;, &quot;spa&quot;: &quot;Guardar como...&quot;, &quot;eng&quot;: &quot;Save as...&quot;}">Save as...</span></span></button>
+				<button id="buttonOpenLogin" class="generalButton" onclick="OpenLogin(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Inicieu la sessió per poder accedir a certs llocs", spa: "Inicie sesión para poder acceder a ciertos lugares", eng: "Login to be able to have access to certain places"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><span class="generalButtonInner"><img src="login.png" alt="Login"><span data-lang="{&quot;cat&quot;: &quot;Inicia la sessió&quot;, &quot;spa&quot;: &quot;Iniciar sesión&quot;, &quot;eng&quot;: &quot;Login&quot;}">Login</span></span></button>
+				<button id="buttonOpenLogout" class="generalButton" onclick="OpenLogout(event);" style="display:none;" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Tanqueu la sessió", spa: "Cierre su sesión", eng: "Close your session"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><span class="generalButtonInner"><img src="login.png" alt="Logout"><span data-lang="{&quot;cat&quot;: &quot;Tanca la sessió&quot;, &quot;spa&quot;: &quot;Cerrar sesión&quot;, &quot;eng&quot;: &quot;Logout&quot;}">Logout</span></span></button>
+				<button class="generalButton" onclick="OpenConfiguration(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Modifiqueu la configuració de visualització", spa: "Modificar la configuración de visualización", eng: "Modify display configuration"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><span class="generalButtonInner"><img src="config.png" alt="Configuration"><span data-lang="{&quot;cat&quot;: &quot;Configuració&quot;, &quot;spa&quot;: &quot;Configuración&quot;, &quot;eng&quot;: &quot;Configuration&quot;}">Configuration</span></span></button>
+				<button class="generalButton" onclick="OpenHelp(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Explicacions de com usar TAPIS: Eines", spa: "Explicaciones de cómo usar TAPIS: Herramientas", eng: "Explanations of how to use TAPIS: Tools"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><span class="generalButtonInner"><img src="help.png" alt="Help"><span data-lang="{&quot;cat&quot;: &quot;Ajuda&quot;, &quot;spa&quot;: &quot;Ayuda&quot;, &quot;eng&quot;: &quot;Help&quot;}">Help</span></span></button>
+				<button class="generalButton" onclick="OpenRecipes(event);" onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Explicacions de com usar TAPIS i exemples", spa: "Explicaciones de cómo usar TAPIS y ejemplos", eng: "Explanations of how to use TAPIS and Examples"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event, "")'><span class="generalButtonInner"><img src="documentation.png" alt="Recipes"><span data-lang="{&quot;cat&quot;: &quot;Receptes&quot;, &quot;spa&quot;: &quot;Recetas&quot;, &quot;eng&quot;: &quot;Recipes&quot;}">Recipes</span></span></button>
 			</td>
 		</tr>
 	</table>
 
 	<span id="ButtonsSTAEntities" class="tdGeneralButtons mainPageGeneralButtons"></span>
-	<button  class="generalButton" onclick='addEdge();'  onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Connecta dos nodes.<hr> Feu clic al node final i deixeu-lo anar sobre el node anterior", spa: "Conectar dos nodos.<hr> Haga clic en el nodo final y su\u00e9ltelo sobre el nodo anterior", eng: "Connect two nodes.<hr> Click on the end node and drop it on the previous node"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="connect.png" height="20" valign="middle"><span data-lang="{&quot;cat&quot;: &quot;Connecta dos nodes&quot;, &quot;spa&quot;: &quot;Conectar dos nodos&quot;, &quot;eng&quot;: &quot;Connect two nodes&quot;}">Connect two nodes</span></button><br>
+	<button  class="generalButton" onclick='addEdge();'  onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Connecta dos nodes.<hr> Feu clic al node final i deixeu-lo anar sobre el node anterior", spa: "Conectar dos nodos.<hr> Haga clic en el nodo final y su\u00e9ltelo sobre el nodo anterior", eng: "Connect two nodes.<hr> Click on the end node and drop it on the previous node"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><span class="generalButtonInner"><img src="connect.png" height="20" valign="middle"><span data-lang="{&quot;cat&quot;: &quot;Connecta dos nodes&quot;, &quot;spa&quot;: &quot;Conectar dos nodos&quot;, &quot;eng&quot;: &quot;Connect two nodes&quot;}">Connect two nodes</span></span></button><br>
 
 	<div>
 		<div id="mynetwork" style="float: left; width: 59.4%; height: 400px;"></div>
@@ -1338,8 +1340,8 @@
 					<div class="TitleButtonsContextMenu"><span data-lang="{&quot;cat&quot;: &quot;Operacions de node&quot;, &quot;spa&quot;: &quot;Operaciones de nodo&quot;, &quot;eng&quot;: &quot;Node operations&quot;}">Node operations</span></div>
 					<div class="ButtonsButtonsContextMenu" >
 					<div class="tdGeneralButtons contextMenuGeneralButtons ">
-						<button class="generalButton" onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Elimina un node i qualsevol connexió amb nodes anteriors", spa: "Elimina un nodo y cualquier conexión con nodos anteriores", eng: "Remove a node and any connection to previous nodes"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="remove.png" height="20" valign="middle"><span data-lang="{&quot;cat&quot;: &quot;Suprimeix&quot;, &quot;spa&quot;: &quot;Eliminar&quot;, &quot;eng&quot;: &quot;Remove&quot;}">Remove</span></button>
-						<button class="generalButton" onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Reanomena el node.<hr> Podeu canviar el text per defecte per fer-lo més explicatiu. <small>No canvieu el nom dels nodes &quote;One Value&quote; ni &quote;Count&quote;.</small>", spa: "Renombra el nodo.<hr> Puede cambiar el texto por defecto para hacerlo más explicativo. <small>No renombre los nodos &quote;One Value&quote; ni &quote;Count&quote;.</small>", eng: "Renames the node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.</small>"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><img src="rename.png" height="20" valign="middle"><span data-lang="{&quot;cat&quot;: &quot;Reanomena&quot;, &quot;spa&quot;: &quot;Renombrar&quot;, &quot;eng&quot;: &quot;Rename&quot;}">Rename</span></button>
+						<button class="generalButton" onclick='removeCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Elimina un node i qualsevol connexió amb nodes anteriors", spa: "Elimina un nodo y cualquier conexión con nodos anteriores", eng: "Remove a node and any connection to previous nodes"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><span class="generalButtonInner"><img src="remove.png" height="20" valign="middle"><span data-lang="{&quot;cat&quot;: &quot;Suprimeix&quot;, &quot;spa&quot;: &quot;Eliminar&quot;, &quot;eng&quot;: &quot;Remove&quot;}">Remove</span></span></button>
+						<button class="generalButton" onclick='renameCircularImage(event, "DialogContextMenu")'onmouseover='showHelpToolTip(event, "", EscapeForHelpTooltip(DonaCadena({cat: "Reanomena el node.<hr> Podeu canviar el text per defecte per fer-lo més explicatiu. <small>No canvieu el nom dels nodes &quote;One Value&quote; ni &quote;Count&quote;.</small>", spa: "Renombra el nodo.<hr> Puede cambiar el texto por defecto para hacerlo más explicativo. <small>No renombre los nodos &quote;One Value&quote; ni &quote;Count&quote;.</small>", eng: "Renames the node.<hr> You can change the text by default to make it more explainatory. <small>Do not rename &quote;One Value&quote; or &quote;Count&quote; nodes.</small>"})))' onmousemove='moveHelpToolTip(event, "")' onmouseout='hideHelpToolTip(event,"" )'><span class="generalButtonInner"><img src="rename.png" height="20" valign="middle"><span data-lang="{&quot;cat&quot;: &quot;Reanomena&quot;, &quot;spa&quot;: &quot;Renombrar&quot;, &quot;eng&quot;: &quot;Rename&quot;}">Rename</span></span></button>
 					</div></div>
 				</div>
 
@@ -3248,6 +3250,93 @@
 			</button>
 		</div>
 
+		<div id="DialogConnectASensorUsbConfig" class="DialogConnectASensorUsbConfig" hidden>
+			<strong class="casUsbSectionTitle"><span data-lang="{&quot;cat&quot;: &quot;Configuració USB (SCK)&quot;, &quot;spa&quot;: &quot;Configuración USB (SCK)&quot;, &quot;eng&quot;: &quot;USB configuration (SCK)&quot;}">USB configuration (SCK)</span></strong>
+
+			<section class="casUsbSection" aria-labelledby="casUsbModeTitle">
+				<strong id="casUsbModeTitle"><span data-lang="{&quot;cat&quot;: &quot;Mode&quot;, &quot;spa&quot;: &quot;Modo&quot;, &quot;eng&quot;: &quot;Mode&quot;}">Mode</span></strong>
+				<div class="casUsbModeRow">
+					<label><input type="radio" name="casUsbMode" id="casUsbModeSdcard" value="sdcard" onchange="ConnectASensorOnUsbModeRadioChange(event)"> <span data-lang="{&quot;cat&quot;: &quot;Targeta SD (rosa)&quot;, &quot;spa&quot;: &quot;Tarjeta SD (rosa)&quot;, &quot;eng&quot;: &quot;SD card (pink)&quot;}">SD card (pink)</span></label>
+					<label><input type="radio" name="casUsbMode" id="casUsbModeNetwork" value="network" onchange="ConnectASensorOnUsbModeRadioChange(event)"> <span data-lang="{&quot;cat&quot;: &quot;Xarxa Wi‑Fi (blava)&quot;, &quot;spa&quot;: &quot;Red Wi‑Fi (azul)&quot;, &quot;eng&quot;: &quot;Wi‑Fi network (blue)&quot;}">Wi‑Fi network (blue)</span></label>
+					<button type="button" class="DialogConnectASensorAction" onclick="ConnectASensorApplyUsbMode(event)">
+						<span data-lang="{&quot;cat&quot;: &quot;Aplica mode&quot;, &quot;spa&quot;: &quot;Aplicar modo&quot;, &quot;eng&quot;: &quot;Apply mode&quot;}">Apply mode</span>
+					</button>
+				</div>
+			</section>
+
+			<section class="casUsbSection" aria-labelledby="casUsbIntervalsTitle">
+				<strong id="casUsbIntervalsTitle"><span data-lang="{&quot;cat&quot;: &quot;Intervals&quot;, &quot;spa&quot;: &quot;Intervalos&quot;, &quot;eng&quot;: &quot;Intervals&quot;}">Intervals</span></strong>
+				<div class="casUsbIntervalsRow">
+					<label for="casUsbReadInt"><span data-lang="{&quot;cat&quot;: &quot;Mesura (s)&quot;, &quot;spa&quot;: &quot;Medida (s)&quot;, &quot;eng&quot;: &quot;Reading (s)&quot;}">Reading (s)</span></label>
+					<input type="number" id="casUsbReadInt" min="30" max="3600" step="1">
+					<label for="casUsbPubInt"><span data-lang="{&quot;cat&quot;: &quot;Publicació (s)&quot;, &quot;spa&quot;: &quot;Publicación (s)&quot;, &quot;eng&quot;: &quot;Publish (s)&quot;}">Publish (s)</span></label>
+					<input type="number" id="casUsbPubInt" min="30" max="3600" step="1">
+					<button type="button" class="DialogConnectASensorAction" onclick="ConnectASensorApplyUsbIntervals(event)">
+						<span data-lang="{&quot;cat&quot;: &quot;Aplica intervals&quot;, &quot;spa&quot;: &quot;Aplicar intervalos&quot;, &quot;eng&quot;: &quot;Apply intervals&quot;}">Apply intervals</span>
+					</button>
+				</div>
+				<p class="casUsbHint"><span data-lang="{&quot;cat&quot;: &quot;Mesura = cada quant es refresca la taula (mateix ritme que el kit). Cal Aplica; es reinicia la recollida. Mín. 30 s. Publicació només mode xarxa, no la taula.&quot;, &quot;spa&quot;: &quot;Medida = cada cuánto se refresca la tabla (mismo ritmo que el kit). Hay que Aplicar; se reinicia la recogida. Mín. 30 s. Publicación solo modo red, no la tabla.&quot;, &quot;eng&quot;: &quot;Reading = how often the table refreshes (same pace as the kit). Press Apply; collection restarts. Min 30 s. Publish is network-only, not the table.&quot;}">Reading = how often the table refreshes (same pace as the kit). Press Apply; collection restarts. Min 30 s. Publish is network-only, not the table.</span></p>
+			</section>
+
+			<section class="casUsbSection" aria-labelledby="casUsbSensorsTitle">
+				<strong id="casUsbSensorsTitle"><span data-lang="{&quot;cat&quot;: &quot;Sensors&quot;, &quot;spa&quot;: &quot;Sensores&quot;, &quot;eng&quot;: &quot;Sensors&quot;}">Sensors</span></strong>
+				<div id="casUsbSensorList" class="casUsbSensorList"></div>
+			</section>
+
+			<section class="casUsbSection" aria-labelledby="casUsbClockTitle">
+				<strong id="casUsbClockTitle"><span data-lang="{&quot;cat&quot;: &quot;Hora interna del kit&quot;, &quot;spa&quot;: &quot;Hora interna del kit&quot;, &quot;eng&quot;: &quot;Kit internal clock&quot;}">Kit internal clock</span></strong>
+				<p class="casUsbHint"><span data-lang="{&quot;cat&quot;: &quot;Serveix per als timestamps a la SD i per sincronitzar amb NTP.&quot;, &quot;spa&quot;: &quot;Sirve para los timestamps en la SD y para sincronizar con NTP.&quot;, &quot;eng&quot;: &quot;Used for SD timestamps and NTP sync.&quot;}">Used for SD timestamps and NTP sync.</span></p>
+				<div class="casUsbClockRow">
+					<span id="casUsbClockDisplay" class="casUsbClockDisplay">—</span>
+					<input type="datetime-local" id="casUsbClockInput" step="1">
+					<button type="button" class="DialogConnectASensorAction" onclick="ConnectASensorApplyUsbTime(event)">
+						<span data-lang="{&quot;cat&quot;: &quot;Defineix&quot;, &quot;spa&quot;: &quot;Definir&quot;, &quot;eng&quot;: &quot;Set&quot;}">Set</span>
+					</button>
+					<button type="button" class="DialogConnectASensorAction" onclick="ConnectASensorSyncUsbTime(event)">
+						<span data-lang="{&quot;cat&quot;: &quot;Sincronitza NTP&quot;, &quot;spa&quot;: &quot;Sincronizar NTP&quot;, &quot;eng&quot;: &quot;Sync NTP&quot;}">Sync NTP</span>
+					</button>
+					<button type="button" class="DialogConnectASensorAction" onclick="ConnectASensorRefreshUsbTime(event)">
+						<span data-lang="{&quot;cat&quot;: &quot;Consulta&quot;, &quot;spa&quot;: &quot;Consultar&quot;, &quot;eng&quot;: &quot;Query&quot;}">Query</span>
+					</button>
+				</div>
+			</section>
+
+			<section class="casUsbSection" aria-labelledby="casUsbCalTitle">
+				<strong id="casUsbCalTitle"><span data-lang="{&quot;cat&quot;: &quot;Calibratge temp / hum&quot;, &quot;spa&quot;: &quot;Calibración temp / hum&quot;, &quot;eng&quot;: &quot;Temp / hum calibration&quot;}">Temp / hum calibration</span></strong>
+				<p class="casUsbHint"><span data-lang="{&quot;cat&quot;: &quot;L'offset s'afegeix a l'actual (firmware ≥ 0.9.11).&quot;, &quot;spa&quot;: &quot;El offset se añade al actual (firmware ≥ 0.9.11).&quot;, &quot;eng&quot;: &quot;The offset is added to the current one (firmware ≥ 0.9.11).&quot;}">The offset is added to the current one (firmware ≥ 0.9.11).</span></p>
+				<div class="casUsbCalRow">
+					<label><span data-lang="{&quot;cat&quot;: &quot;Temp actual&quot;, &quot;spa&quot;: &quot;Temp actual&quot;, &quot;eng&quot;: &quot;Temp current&quot;}">Temp current</span>: <span id="casUsbTempCalCurrent">—</span></label>
+					<input type="number" id="casUsbTempCalDelta" step="0.01" placeholder="Δ">
+					<button type="button" class="DialogConnectASensorAction" onclick="ConnectASensorApplyUsbCal(event, 'temp')">
+						<span data-lang="{&quot;cat&quot;: &quot;Aplica&quot;, &quot;spa&quot;: &quot;Aplicar&quot;, &quot;eng&quot;: &quot;Apply&quot;}">Apply</span>
+					</button>
+					<button type="button" class="DialogConnectASensorAction" onclick="ConnectASensorClearUsbCal(event, 'temp')">
+						<span data-lang="{&quot;cat&quot;: &quot;Restableix&quot;, &quot;spa&quot;: &quot;Restablecer&quot;, &quot;eng&quot;: &quot;Reset&quot;}">Reset</span>
+					</button>
+				</div>
+				<div class="casUsbCalRow">
+					<label><span data-lang="{&quot;cat&quot;: &quot;Hum actual&quot;, &quot;spa&quot;: &quot;Hum actual&quot;, &quot;eng&quot;: &quot;Hum current&quot;}">Hum current</span>: <span id="casUsbHumCalCurrent">—</span></label>
+					<input type="number" id="casUsbHumCalDelta" step="0.01" placeholder="Δ">
+					<button type="button" class="DialogConnectASensorAction" onclick="ConnectASensorApplyUsbCal(event, 'hum')">
+						<span data-lang="{&quot;cat&quot;: &quot;Aplica&quot;, &quot;spa&quot;: &quot;Aplicar&quot;, &quot;eng&quot;: &quot;Apply&quot;}">Apply</span>
+					</button>
+					<button type="button" class="DialogConnectASensorAction" onclick="ConnectASensorClearUsbCal(event, 'hum')">
+						<span data-lang="{&quot;cat&quot;: &quot;Restableix&quot;, &quot;spa&quot;: &quot;Restablecer&quot;, &quot;eng&quot;: &quot;Reset&quot;}">Reset</span>
+					</button>
+				</div>
+			</section>
+
+			<section class="casUsbSection" aria-labelledby="casUsbStatusTitle">
+				<strong id="casUsbStatusTitle"><span data-lang="{&quot;cat&quot;: &quot;Bateria&quot;, &quot;spa&quot;: &quot;Batería&quot;, &quot;eng&quot;: &quot;Battery&quot;}">Battery</span></strong>
+				<div class="casUsbStatusRow">
+					<div><span data-lang="{&quot;cat&quot;: &quot;Bateria&quot;, &quot;spa&quot;: &quot;Batería&quot;, &quot;eng&quot;: &quot;Battery&quot;}">Battery</span>: <span id="casUsbBatteryInfo">—</span></div>
+					<button type="button" class="DialogConnectASensorAction" onclick="ConnectASensorRefreshUsbStatus(event)">
+						<span data-lang="{&quot;cat&quot;: &quot;Actualitza&quot;, &quot;spa&quot;: &quot;Actualizar&quot;, &quot;eng&quot;: &quot;Refresh&quot;}">Refresh</span>
+					</button>
+				</div>
+			</section>
+		</div>
+
 		<div class="DialogConnectASensorTableSection">
 			<strong><span data-lang="{&quot;cat&quot;: &quot;Dades recollides&quot;, &quot;spa&quot;: &quot;Datos recogidos&quot;, &quot;eng&quot;: &quot;Collected data&quot;}">Collected data</span></strong>
 			<div id="DialogConnectASensorTable" class="DialogConnectASensorTable"></div>
@@ -3286,6 +3375,9 @@
 			<button type="button" id="DialogReadSDFromSensorDisconnect" class="DialogReadSDFromSensorAction" onclick="ReadSDFromSensorDisconnect(false)" disabled>
 				<span data-lang="{&quot;cat&quot;: &quot;Desconnecta&quot;, &quot;spa&quot;: &quot;Desconectar&quot;, &quot;eng&quot;: &quot;Disconnect&quot;}">Disconnect</span>
 			</button>
+			<button type="button" id="DialogReadSDFromSensorInfoBtn" class="DialogReadSDFromSensorAction" onclick="showReadSDSensorInfo(event)" disabled>
+				<span data-lang="{&quot;cat&quot;: &quot;Informació del sensor&quot;, &quot;spa&quot;: &quot;Información del sensor&quot;, &quot;eng&quot;: &quot;Sensor information&quot;}">Sensor information</span>
+			</button>
 		</div>
 		<div id="DialogReadSDFromSensorStatus" class="rsdStatus"></div>
 		<div class="DialogReadSDFromSensorSection">
@@ -3322,10 +3414,6 @@
 			<label><span data-lang="{&quot;cat&quot;: &quot;URL del servei STA:&quot;, &quot;spa&quot;: &quot;URL del servicio STA:&quot;, &quot;eng&quot;: &quot;STA service URL:&quot;}">STA service URL:</span>
 				<span id="DialogSTAEntityBuilderStaUrlText" class="DialogSTAEntityBuilderStaUrlText"></span>
 			</label>
-			<button type="button" class="DialogConnectASensorAction" onclick="prepareSTAEntityBuilderPackage(event)">
-				<span data-lang="{&quot;cat&quot;: &quot;Valida i prepara&quot;, &quot;spa&quot;: &quot;Validar y preparar&quot;, &quot;eng&quot;: &quot;Validate and prepare&quot;}">Validate and prepare</span>
-			</button>
-			<span id="DialogSTAEntityBuilderValidateMark" class="DialogSTAEntityBuilderValidateMark" aria-live="polite"></span>
 		</div>
 		<div id="DialogSTAEntityBuilderBody" class="DialogSTAEntityBuilderBody"></div>
 		<div class="DialogSTAEntityBuilderActions">
@@ -3339,6 +3427,9 @@
 		</div>
 		<input type="hidden" id="DialogSTAEntityBuilderNodeId">
 		<div class="center">
+			<button type="button" onclick="okSTAEntityBuilderCreateTable(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Crea la taula&quot;, &quot;spa&quot;: &quot;Crear la tabla&quot;, &quot;eng&quot;: &quot;Create table&quot;}">Create table</span>
+			</button>
 			<button type="button" onclick="closeSTAEntityBuilderDialog(event)">
 				<span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span>
 			</button>
@@ -3350,11 +3441,22 @@
 	<form onsubmit="event.preventDefault(); return false;">
 		<strong><span data-lang="{&quot;cat&quot;: &quot;Publicador STA&quot;, &quot;spa&quot;: &quot;Publicador STA&quot;, &quot;eng&quot;: &quot;STA Publisher&quot;}">STA Publisher</span></strong>
 		<div id="DialogSTAPublisherSummary" class="DialogSTAPublisherSummary"></div>
+		<div id="DialogSTAPublisherCounts" class="DialogSTAPublisherCounts"></div>
 		<div id="DialogSTAPublisherStatus" class="spaStatus"></div>
 		<pre id="DialogSTAPublisherLog" class="DialogSTAPublisherLog"></pre>
+		<div id="DialogSTAPublisherPreview" class="DialogSTAPublisherPreview"></div>
 		<div class="DialogSTAEntityBuilderActions">
 			<button type="button" class="DialogConnectASensorAction" onclick="publishSTAEntityPackage(event)">
 				<span data-lang="{&quot;cat&quot;: &quot;Publica a STA&quot;, &quot;spa&quot;: &quot;Publicar a STA&quot;, &quot;eng&quot;: &quot;Publish to STA&quot;}">Publish to STA</span>
+			</button>
+			<button type="button" class="DialogConnectASensorAction" onclick="retrySTAPublisherPending(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Reintenta pendents&quot;, &quot;spa&quot;: &quot;Reintentar pendientes&quot;, &quot;eng&quot;: &quot;Retry pending&quot;}">Retry pending</span>
+			</button>
+			<button type="button" class="DialogConnectASensorAction" onclick="spaDownloadPlanJSON(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Desa JSON&quot;, &quot;spa&quot;: &quot;Guardar JSON&quot;, &quot;eng&quot;: &quot;Save JSON&quot;}">Save JSON</span>
+			</button>
+			<button type="button" class="DialogConnectASensorAction" onclick="spaDownloadPlanPNG(event)">
+				<span data-lang="{&quot;cat&quot;: &quot;Desa PNG&quot;, &quot;spa&quot;: &quot;Guardar PNG&quot;, &quot;eng&quot;: &quot;Save PNG&quot;}">Save PNG</span>
 			</button>
 		</div>
 		<input type="hidden" id="DialogSTAPublisherNodeId">

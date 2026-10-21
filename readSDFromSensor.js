@@ -16,6 +16,24 @@ var rsdCommandOutput = "";
 var rsdBusy = false;
 var rsdLastDataAt = 0;
 var rsdConnected = false;
+/* Sensor identity gathered over USB (same shape as ConnectASensor sensorInfo). */
+var rsdSensorInfo = {};
+
+/*
+	SD CSV headers → ConnectASensorObsProps / timestamp keys so Entity Builder
+	can reuse connectASensor mode without a separate code path.
+*/
+var RSD_CSV_COLUMN_MAP = {
+	TIME: "timestamp",
+	TEMP: "temperature",
+	HUM: "humidity",
+	LIGHT: "light",
+	NOISE_A: "noiseDBA",
+	MPL_PRESS: "barometricPressure",
+	PMS_PM_1: "pm1",
+	PMS_PM_25: "pm25",
+	PMS_PM_10: "pm10"
+};
 
 function getReadSDFromSensorNodeSafe() {
 	if (typeof getNodeDialog !== "function")
@@ -48,8 +66,294 @@ function rsdResetNodeData(node) {
 	delete node.STAdata;
 	delete node.STAdataAttributes;
 	delete node.readSDFromSensorMeta;
+	delete node.connectASensorMeta;
+	delete node.readSDDisplayName;
 	if (typeof networkNodes !== "undefined")
 		networkNodes.update(node);
+}
+
+function rsdIsEmptyCsvValue(v) {
+	if (v === null || v === undefined)
+		return true;
+	if (typeof v === "string") {
+		var s = v.trim();
+		return !s || /^null$/i.test(s) || s === "-";
+	}
+	return false;
+}
+
+function rsdMapCsvColumnName(raw) {
+	var key = String(raw || "").trim();
+	var upper = key.toUpperCase();
+	if (RSD_CSV_COLUMN_MAP[upper])
+		return RSD_CSV_COLUMN_MAP[upper];
+	if (RSD_CSV_COLUMN_MAP[key])
+		return RSD_CSV_COLUMN_MAP[key];
+	return key;
+}
+
+/* Map raw SD rows to ConnectASensor-compatible flat records. */
+function rsdMapRowsToConnectASensorShape(rows, displayName) {
+	var out = [], i, rec, mapped, key, dest, v;
+	if (!rows || !rows.length)
+		return out;
+	for (i = 0; i < rows.length; i++) {
+		rec = rows[i];
+		if (!rec)
+			continue;
+		mapped = {};
+		for (key in rec) {
+			if (!Object.prototype.hasOwnProperty.call(rec, key))
+				continue;
+			v = rec[key];
+			if (rsdIsEmptyCsvValue(v))
+				continue;
+			dest = rsdMapCsvColumnName(key);
+			mapped[dest] = v;
+		}
+		if (displayName && !mapped.sensor_id)
+			mapped.sensor_id = displayName;
+		if (Object.keys(mapped).length)
+			out.push(mapped);
+	}
+	return out;
+}
+
+function rsdMeasurementKeysFromData(data) {
+	var keys = [], key, i, rec, props;
+	props = (typeof ConnectASensorObsProps !== "undefined") ? ConnectASensorObsProps : null;
+	if (!props || !data)
+		return keys;
+	for (i = 0; i < data.length; i++) {
+		rec = data[i];
+		if (!rec)
+			continue;
+		for (key in props) {
+			if (!Object.prototype.hasOwnProperty.call(props, key))
+				continue;
+			if (rec[key] !== null && rec[key] !== undefined && rec[key] !== "" && keys.indexOf(key) === -1)
+				keys.push(key);
+		}
+	}
+	return keys;
+}
+
+function rsdGetDisplayName(info) {
+	var ver, name;
+	info = info || rsdSensorInfo || {};
+	ver = info.hardwareVersion ? String(info.hardwareVersion).trim() : "";
+	if (ver) {
+		if (/smartcitizen/i.test(ver) || /^pmscan$/i.test(ver))
+			return ver;
+		return "Smartcitizen Kit " + ver;
+	}
+	if (info.portName)
+		return String(info.portName).trim();
+	if (info.hostname)
+		return String(info.hostname).trim();
+	if (info.usbId === "2341:804D")
+		return "Smartcitizen Kit 2.1";
+	return "";
+}
+
+function rsdDefaultNodeLabel() {
+	if (typeof STAOperations !== "undefined" && STAOperations.readSDFromSensor && STAOperations.readSDFromSensor.description)
+		return DonaCadena(STAOperations.readSDFromSensor.description);
+	return DonaCadena({
+		cat: "Llegeix SD del sensor",
+		spa: "Lee SD del sensor",
+		eng: "Read SD from sensor"
+	});
+}
+
+function rsdUpdateNodeLabel(node, name) {
+	var label;
+	if (!node)
+		return;
+	if (name) {
+		node.readSDDisplayName = name;
+		label = DonaCadenaFmt({
+			cat: "SD: {0}",
+			spa: "SD: {0}",
+			eng: "SD: {0}"
+		}, name);
+	} else {
+		delete node.readSDDisplayName;
+		label = rsdDefaultNodeLabel();
+	}
+	node.label = label;
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+}
+
+function rsdMergeSensorInfoFromText(target, text) {
+	var lines, i, line, colon, key, value, mapped, extra = [];
+	if (!target || !text)
+		return;
+	lines = String(text).split("\n");
+	for (i = 0; i < lines.length; i++) {
+		line = lines[i].trim();
+		if (!line || line === "SCK >")
+			continue;
+		colon = line.indexOf(":");
+		if (colon < 1) {
+			extra.push(line);
+			continue;
+		}
+		key = line.substring(0, colon).trim();
+		value = line.substring(colon + 1).trim();
+		mapped = (typeof mapSensorInfoKey === "function") ? mapSensorInfoKey(key) : false;
+		if (mapped === null)
+			continue;
+		if (mapped)
+			target[mapped] = value;
+		else
+			extra.push(line);
+	}
+	if (extra.length)
+		target.sensors = (target.sensors ? target.sensors + "\n" : "") + extra.join("\n");
+}
+
+function rsdApplySerialPortIdentity(serialPort, target) {
+	var ident, key;
+	if (!target)
+		return;
+	if (typeof readSerialPortIdentity === "function")
+		ident = readSerialPortIdentity(serialPort);
+	else
+		ident = {};
+	for (key in ident) {
+		if (Object.prototype.hasOwnProperty.call(ident, key) && ident[key])
+			target[key] = ident[key];
+	}
+}
+
+async function rsdFetchSensorInfo() {
+	var info = {}, commands, i, text;
+	rsdApplySerialPortIdentity(rsdPort, info);
+	info.connectionType = "USB";
+	info.mode = info.mode || "sdcard";
+	commands = ["version", "config", "sensor", "netinfo"];
+	for (i = 0; i < commands.length; i++) {
+		try {
+			text = await rsdSendCommand(commands[i], 12000);
+			rsdMergeSensorInfoFromText(info, text);
+		} catch (err) {}
+	}
+	rsdSensorInfo = info;
+	return info;
+}
+
+function rsdHasSensorInfo() {
+	var key;
+	for (key in rsdSensorInfo) {
+		if (Object.prototype.hasOwnProperty.call(rsdSensorInfo, key) && rsdSensorInfo[key])
+			return true;
+	}
+	return false;
+}
+
+function rsdFieldLabel(key) {
+	if (typeof sensorInfoFieldLabel === "function")
+		return sensorInfoFieldLabel(key);
+	return key;
+}
+
+function rsdEffectiveSensorInfo() {
+	var node, info;
+	if (rsdHasSensorInfo())
+		return rsdSensorInfo;
+	node = getReadSDFromSensorNodeSafe();
+	info = node && node.connectASensorMeta && node.connectASensorMeta.sensorInfo;
+	return info || {};
+}
+
+function renderReadSDSensorInfo() {
+	var el = document.getElementById("resultsFromSensor");
+	var info = rsdEffectiveSensorInfo();
+	var order = [
+		"connectionType", "portName", "usbId", "hostname",
+		"hardwareVersion", "firmwareVersion", "samHardwareId", "samVersion", "samBuildDate",
+		"espVersion", "espBuildDate", "macAddress", "mode", "battery", "charging",
+		"publishInterval", "readingInterval", "intervalCode", "ipAddress", "sensors"
+	];
+	var i, key, html, found = false;
+	if (!el)
+		return;
+	html = "<div class=\"DialogConnectASensorInfo\"><dl>";
+	for (i = 0; i < order.length; i++) {
+		key = order[i];
+		if (!info[key])
+			continue;
+		found = true;
+		html += "<dt>" + rsdFieldLabel(key) + "</dt><dd>" +
+			String(info[key]).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/\n/g, "<br>") +
+			"</dd>";
+	}
+	html += "</dl></div>";
+	if (!found)
+		html = "<p>" + DonaCadena({
+			cat: "Encara no hi ha informació del sensor.",
+			spa: "Todavía no hay información del sensor.",
+			eng: "No sensor information yet."
+		}) + "</p>";
+	el.innerHTML = html;
+}
+
+function showReadSDSensorInfo(event) {
+	var dlg;
+	if (event)
+		event.preventDefault();
+	renderReadSDSensorInfo();
+	dlg = document.getElementById("DialogConnectASensorInfo");
+	if (dlg && !dlg.open)
+		dlg.showModal();
+}
+
+/*
+	Attach connectASensorMeta (same shape as ConnectASensor) so STA Entity Builder
+	can prefill Sensors / Things / measurements from this SD lineage.
+*/
+function syncReadSDConnectASensorMeta(node, fileName) {
+	var keys, displayName, infoCopy;
+	if (!node)
+		return;
+	keys = rsdMeasurementKeysFromData(node.STAdata);
+	displayName = rsdGetDisplayName(rsdSensorInfo) || node.readSDDisplayName || "";
+	try {
+		infoCopy = rsdSensorInfo ? JSON.parse(JSON.stringify(rsdSensorInfo)) : {};
+	} catch (err) {
+		infoCopy = {};
+	}
+	if (!infoCopy.connectionType)
+		infoCopy.connectionType = "USB";
+	if (!infoCopy.mode)
+		infoCopy.mode = "sdcard";
+	node.connectASensorMeta = {
+		sensorInfo: infoCopy,
+		connectionMode: "usb",
+		displayName: displayName,
+		intervalCode: null,
+		intervalSec: null,
+		pmEveryNIntervals: null,
+		pmIntervalSec: null,
+		measurementKeys: keys,
+		collecting: false,
+		usbMode: "sdcard",
+		usbReadIntSec: null,
+		usbPubIntSec: null,
+		usbSensors: [],
+		source: "readSDFromSensor",
+		fileName: fileName || ""
+	};
+	node.readSDFromSensorMeta = {
+		source: "usb-sd",
+		fileName: fileName || "",
+		rowCount: node.STAdata ? node.STAdata.length : 0,
+		loadedAt: new Date().toISOString(),
+		measurementKeys: keys.slice(),
+		displayName: displayName
+	};
 }
 
 function rsdGetCacheKey(fileName) {
@@ -95,6 +399,7 @@ function rsdUpdateButtons() {
 	var state = rsdEnsureState(node);
 	var connectBtn = document.getElementById("DialogReadSDFromSensorConnect");
 	var disconnectBtn = document.getElementById("DialogReadSDFromSensorDisconnect");
+	var infoBtn = document.getElementById("DialogReadSDFromSensorInfoBtn");
 	var saveBtn = document.getElementById("DialogReadSDFromSensorSaveCsv");
 	var useBtn = document.getElementById("DialogReadSDFromSensorUseInTapis");
 	var connected = !!rsdPort && rsdConnected;
@@ -105,6 +410,8 @@ function rsdUpdateButtons() {
 		connectBtn.disabled = connected || rsdBusy;
 	if (disconnectBtn)
 		disconnectBtn.disabled = !connected;
+	if (infoBtn)
+		infoBtn.disabled = !rsdHasSensorInfo() && !(node && node.connectASensorMeta && node.connectASensorMeta.sensorInfo);
 	if (saveBtn)
 		saveBtn.disabled = !hasPreview;
 	if (useBtn)
@@ -404,6 +711,7 @@ async function ReadSDFromSensorConnect(event) {
 		if (rsdPort)
 			await ReadSDFromSensorDisconnect(true);
 		/* New connection = new sensor session: wipe this node's previous SD data. */
+		rsdSensorInfo = {};
 		rsdResetNodeData(node);
 		rsdShowFileList([]);
 		rsdShowPreviewFromNode(node);
@@ -418,12 +726,25 @@ async function ReadSDFromSensorConnect(event) {
 		rsdConnected = true;
 		rsdReadTask = rsdReadLoop();
 		rsdSetStatus(DonaCadena({
+			cat: "USB connectat. Obtenint informació del sensor…",
+			spa: "USB conectado. Obteniendo información del sensor…",
+			eng: "USB connected. Fetching sensor information…"
+		}), false);
+		rsdUpdateButtons();
+		await rsdSleep(600);
+		await rsdFetchSensorInfo();
+		if (node) {
+			rsdUpdateNodeLabel(node, rsdGetDisplayName(rsdSensorInfo));
+			/* Persist identity early so Entity Builder works even before Select. */
+			syncReadSDConnectASensorMeta(node, "");
+			if (typeof networkNodes !== "undefined")
+				networkNodes.update(node);
+		}
+		rsdSetStatus(DonaCadena({
 			cat: "USB connectat. Obtenint la llista de fitxers…",
 			spa: "USB conectado. Obteniendo la lista de archivos…",
 			eng: "USB connected. Fetching the file list…"
 		}), false);
-		rsdUpdateButtons();
-		await rsdSleep(600);
 		await ReadSDFromSensorRefreshFileList();
 	} catch (err) {
 		rsdSetStatus(DonaCadenaFmt({
@@ -675,7 +996,7 @@ function ReadSDFromSensorSaveAsCsv(event) {
 function ReadSDFromSensorSelectForTapis(event) {
 	var node = getReadSDFromSensorNodeSafe();
 	var state = rsdEnsureState(node);
-	var cached;
+	var cached, mapped, displayName, attrs;
 	if (event)
 		event.preventDefault();
 	if (!node) {
@@ -695,14 +1016,31 @@ function ReadSDFromSensorSelectForTapis(event) {
 		}), true);
 		return;
 	}
-	node.STAdata = cached.data;
-	node.STAdataAttributes = cached.attributes || (typeof getDataAttributes === "function" ? getDataAttributes(cached.data) : {});
-	node.readSDFromSensorMeta = {
-		source: "usb-sd",
-		fileName: state.openedFileName || "",
-		rowCount: cached.data.length,
-		loadedAt: new Date().toISOString()
-	};
+	if (!rsdHasSensorInfo() && node.connectASensorMeta && node.connectASensorMeta.sensorInfo) {
+		try {
+			rsdSensorInfo = JSON.parse(JSON.stringify(node.connectASensorMeta.sensorInfo)) || {};
+		} catch (err) {}
+	}
+	displayName = rsdGetDisplayName(rsdSensorInfo) || node.readSDDisplayName ||
+		(node.connectASensorMeta && node.connectASensorMeta.displayName) || "";
+	/* Map SD headers (TEMP, HUM, …) → ConnectASensor keys (temperature, …). */
+	mapped = rsdMapRowsToConnectASensorShape(cached.data, displayName);
+	if (!mapped.length) {
+		rsdSetStatus(DonaCadena({
+			cat: "No hi ha files amb dades vàlides després del mapeig.",
+			spa: "No hay filas con datos válidos tras el mapeo.",
+			eng: "No rows with valid data after mapping."
+		}), true);
+		return;
+	}
+	node.STAdata = mapped;
+	attrs = (typeof buildConnectASensorDataAttributes === "function")
+		? buildConnectASensorDataAttributes(mapped)
+		: (typeof getDataAttributes === "function" ? getDataAttributes(mapped) : {});
+	node.STAdataAttributes = attrs;
+	syncReadSDConnectASensorMeta(node, state.openedFileName || "");
+	if (displayName)
+		rsdUpdateNodeLabel(node, displayName);
 	if (typeof networkNodes !== "undefined")
 		networkNodes.update(node);
 	if (typeof updateQueryAndTableArea === "function")
@@ -713,17 +1051,24 @@ function ReadSDFromSensorSelectForTapis(event) {
 		cat: "Seleccionat per a TAPIS: {0} files de {1}.",
 		spa: "Seleccionado para TAPIS: {0} filas de {1}.",
 		eng: "Selected for TAPIS: {0} rows from {1}."
-	}, cached.data.length, state.openedFileName || ""), false);
+	}, mapped.length, state.openedFileName || ""), false);
 	closeReadSDFromSensorDialog(event);
 }
 
 function openReadSDFromSensorDialog(node) {
-	var state;
+	var state, metaInfo;
 	if (!node)
 		node = getReadSDFromSensorNodeSafe();
 	if (!node)
 		return;
 	state = rsdEnsureState(node);
+	/* Restore sensorInfo from node meta when reopening without a live USB session. */
+	if (!rsdHasSensorInfo() && node.connectASensorMeta && node.connectASensorMeta.sensorInfo) {
+		try {
+			metaInfo = JSON.parse(JSON.stringify(node.connectASensorMeta.sensorInfo));
+			rsdSensorInfo = metaInfo || {};
+		} catch (err) {}
+	}
 	rsdShowFileList(state.fileList.slice());
 	rsdShowPreviewFromNode(node);
 	rsdUpdateButtons();
