@@ -1459,6 +1459,12 @@ function applyRadarPlotTypeDisplay() {
 	}
 	if (allNodeWrap)
 		allNodeWrap.style.display = (polar || seriesAll) ? "" : "none";
+	/* Value labels inside chart only apply to polar (chartjs-plugin-labels) */
+	(function () {
+		var node = getNodeDialog("DialogRadarPlot");
+		var opts = (node && node.radarPlotOptions) ? node.radarPlotOptions : {};
+		syncRadarPlotStyleControls(opts);
+	})();
 }
 
 function toggleRadarPlotType() {
@@ -2102,6 +2108,10 @@ function ensureRadarPlotStyleState(options) {
 		options.titleFontSize = 16;
 	if (typeof options.tickFontSize !== "number" || isNaN(options.tickFontSize))
 		options.tickFontSize = 11;
+	if (typeof options.valueLabelFontSize !== "number" || isNaN(options.valueLabelFontSize))
+		options.valueLabelFontSize = options.tickFontSize || 11;
+	if (typeof options.showValueLabels !== "boolean")
+		options.showValueLabels = true;
 	if (typeof options.pointLabelFontSize !== "number" || isNaN(options.pointLabelFontSize))
 		options.pointLabelFontSize = 12;
 	if (typeof options.legendFontSize !== "number" || isNaN(options.legendFontSize))
@@ -2368,6 +2378,16 @@ function getRadarLegendFontSize() {
 	return clampRadarFontSize(el ? el.value : 12, 8, 28, 12);
 }
 
+function getRadarValueLabelFontSize() {
+	var el = document.getElementById("DialogRadarPlotValueLabelSize");
+	return clampRadarFontSize(el ? el.value : 11, 8, 28, 11);
+}
+
+function getRadarShowValueLabels() {
+	var el = document.getElementById("DialogRadarPlotShowValueLabels");
+	return !(el && !el.checked);
+}
+
 function syncRadarPlotStyleControls(options) {
 	var titleEl = document.getElementById("DialogRadarPlotTitleSize");
 	var titleVal = document.getElementById("DialogRadarPlotTitleSizeValue");
@@ -2377,6 +2397,13 @@ function syncRadarPlotStyleControls(options) {
 	var pointVal = document.getElementById("DialogRadarPlotPointLabelSizeValue");
 	var legendEl = document.getElementById("DialogRadarPlotLegendSize");
 	var legendVal = document.getElementById("DialogRadarPlotLegendSizeValue");
+	var valueEl = document.getElementById("DialogRadarPlotValueLabelSize");
+	var valueVal = document.getElementById("DialogRadarPlotValueLabelSizeValue");
+	var showEl = document.getElementById("DialogRadarPlotShowValueLabels");
+	var showLabel = document.getElementById("DialogRadarPlotShowValueLabelsLabel");
+	var valueRow = document.getElementById("DialogRadarPlotValueLabelSizeRow");
+	var showVal = (typeof options.showValueLabels === "boolean") ? options.showValueLabels : true;
+	var polar = !!(document.getElementById("DialogRadarPlotTypePolar") && document.getElementById("DialogRadarPlotTypePolar").checked);
 	if (!options)
 		options = {};
 	if (titleEl)
@@ -2395,6 +2422,16 @@ function syncRadarPlotStyleControls(options) {
 		legendEl.value = options.legendFontSize || 12;
 	if (legendVal)
 		legendVal.textContent = "" + (options.legendFontSize || 12);
+	if (valueEl)
+		valueEl.value = options.valueLabelFontSize || options.tickFontSize || 11;
+	if (valueVal)
+		valueVal.textContent = "" + (options.valueLabelFontSize || options.tickFontSize || 11);
+	if (showEl)
+		showEl.checked = showVal;
+	if (showLabel)
+		showLabel.style.display = polar ? "" : "none";
+	if (valueRow)
+		valueRow.style.display = (polar && showVal) ? "" : "none";
 }
 
 function onRadarPlotStyleChange(redraw) {
@@ -2403,7 +2440,9 @@ function onRadarPlotStyleChange(redraw) {
 	var tickSize = getRadarTickFontSize();
 	var pointSize = getRadarPointLabelFontSize();
 	var legendSize = getRadarLegendFontSize();
-	syncRadarPlotStyleControls({ titleFontSize: titleSize, tickFontSize: tickSize, pointLabelFontSize: pointSize, legendFontSize: legendSize });
+	var valueSize = getRadarValueLabelFontSize();
+	var showVal = getRadarShowValueLabels();
+	syncRadarPlotStyleControls({ titleFontSize: titleSize, tickFontSize: tickSize, pointLabelFontSize: pointSize, legendFontSize: legendSize, valueLabelFontSize: valueSize, showValueLabels: showVal });
 	if (node) {
 		if (!node.radarPlotOptions)
 			node.radarPlotOptions = {};
@@ -2412,6 +2451,8 @@ function onRadarPlotStyleChange(redraw) {
 		node.radarPlotOptions.tickFontSize = tickSize;
 		node.radarPlotOptions.pointLabelFontSize = pointSize;
 		node.radarPlotOptions.legendFontSize = legendSize;
+		node.radarPlotOptions.valueLabelFontSize = valueSize;
+		node.radarPlotOptions.showValueLabels = showVal;
 		applyChartLegendFontSize("DialogRadarPlotLegend", legendSize);
 		networkNodes.update(node);
 	}
@@ -2571,6 +2612,8 @@ function DrawRadarPlot(event) {
 	options.tickFontSize = tickFontSize;
 	options.pointLabelFontSize = pointLabelFontSize;
 	options.legendFontSize = getRadarLegendFontSize();
+	options.valueLabelFontSize = getRadarValueLabelFontSize();
+	options.showValueLabels = getRadarShowValueLabels();
 	options.seriesMode = seriesAll ? "all" : "series";
 	options.seriesAll = seriesAll;
 	options.seriesGroups = seriesGroups;
@@ -2801,10 +2844,10 @@ function DrawRadarPlot(event) {
 			title: { display: title != "", text: title, font: { size: titleFontSize } },
 			legend: { display: false },
 			labels: {
-				render: "value",
+				render: (options.showValueLabels === false) ? function () { return ""; } : "value",
 				precision: 0,
 				showZero: false,
-				fontSize: tickFontSize,
+				fontSize: (typeof options.valueLabelFontSize === "number") ? options.valueLabelFontSize : tickFontSize,
 				fontColor: "#333333",
 				arc: true,
 				position: "default",
@@ -3422,6 +3465,8 @@ function ensureCircularChartStyleState(options) {
 		options.hiddenRings = [];
 	if (typeof options.labelFontSize !== "number" || isNaN(options.labelFontSize))
 		options.labelFontSize = 11;
+	if (typeof options.showValueLabels !== "boolean")
+		options.showValueLabels = true;
 	if (!options.labelFontColor)
 		options.labelFontColor = "#ffffff";
 	if (typeof options.titleFontSize !== "number" || isNaN(options.titleFontSize))
@@ -3468,6 +3513,11 @@ function getCircularLegendFontSize() {
 	return clampCircularFontSize(el ? el.value : 12, 8, 28, 12);
 }
 
+function getCircularShowValueLabels() {
+	var el = document.getElementById("DialogCircularChartShowValueLabels");
+	return !(el && !el.checked);
+}
+
 function syncCircularLabelStyleControls(options) {
 	var sizeEl = document.getElementById("DialogCircularChartLabelSize");
 	var sizeVal = document.getElementById("DialogCircularChartLabelSizeValue");
@@ -3478,12 +3528,16 @@ function syncCircularLabelStyleControls(options) {
 	var centerSizeVal = document.getElementById("DialogCircularChartCenterTextSizeValue");
 	var legendSizeEl = document.getElementById("DialogCircularChartLegendSize");
 	var legendSizeVal = document.getElementById("DialogCircularChartLegendSizeValue");
-	var size, titleSize, centerSize, legendSize;
+	var showEl = document.getElementById("DialogCircularChartShowValueLabels");
+	var sizeRow = document.getElementById("DialogCircularChartLabelSizeRow");
+	var colorRow = document.getElementById("DialogCircularChartLabelColorRow");
+	var size, titleSize, centerSize, legendSize, showVal;
 	if (!options)
 		options = {};
 	size = (typeof options.labelFontSize === "number" && !isNaN(options.labelFontSize)) ? options.labelFontSize : 11;
 	titleSize = (typeof options.titleFontSize === "number" && !isNaN(options.titleFontSize)) ? options.titleFontSize : 16;
 	centerSize = (typeof options.centerTextFontSize === "number" && !isNaN(options.centerTextFontSize)) ? options.centerTextFontSize : 16;
+	showVal = (typeof options.showValueLabels === "boolean") ? options.showValueLabels : true;
 	if (sizeEl)
 		sizeEl.value = size;
 	if (sizeVal)
@@ -3503,12 +3557,19 @@ function syncCircularLabelStyleControls(options) {
 		legendSizeEl.value = legendSize;
 	if (legendSizeVal)
 		legendSizeVal.textContent = "" + legendSize;
+	if (showEl)
+		showEl.checked = showVal;
+	if (sizeRow)
+		sizeRow.style.display = showVal ? "" : "none";
+	if (colorRow)
+		colorRow.style.display = showVal ? "" : "none";
 }
 
 function onCircularLabelStyleChange(redraw) {
 	var node = getNodeDialog("DialogCircularChart");
 	var size = getCircularLabelFontSize();
 	var color = getCircularLabelFontColor();
+	var showVal = getCircularShowValueLabels();
 	var sizeVal = document.getElementById("DialogCircularChartLabelSizeValue");
 	if (sizeVal)
 		sizeVal.textContent = "" + size;
@@ -3518,8 +3579,11 @@ function onCircularLabelStyleChange(redraw) {
 		ensureCircularChartStyleState(node.circularChartOptions);
 		node.circularChartOptions.labelFontSize = size;
 		node.circularChartOptions.labelFontColor = color;
+		node.circularChartOptions.showValueLabels = showVal;
+		syncCircularLabelStyleControls(node.circularChartOptions);
 		networkNodes.update(node);
-	}
+	} else
+		syncCircularLabelStyleControls({ labelFontSize: size, labelFontColor: color, showValueLabels: showVal });
 	if (redraw && node && node.circularChartOptions && node.circularChartOptions.drawn)
 		DrawCircularChart();
 }
@@ -3848,6 +3912,7 @@ function DrawCircularChart(event) {
 	options.centerText = centerText;
 	options.labelFontSize = getCircularLabelFontSize();
 	options.labelFontColor = getCircularLabelFontColor();
+	options.showValueLabels = getCircularShowValueLabels();
 	options.titleFontSize = getCircularTitleFontSize();
 	options.centerTextFontSize = getCircularCenterTextFontSize();
 	options.legendFontSize = getCircularLegendFontSize();
@@ -3966,7 +4031,7 @@ function DrawCircularChart(event) {
 	}
 
 	labelsPlugin = {
-		render: "value",
+		render: (options.showValueLabels === false) ? function () { return ""; } : "value",
 		precision: 0,
 		showZero: false,
 		fontSize: options.labelFontSize,
@@ -4357,6 +4422,10 @@ function ensureBarPlotStyleState(options) {
 		options.titleFontSize = 16;
 	if (typeof options.labelFontSize !== "number")
 		options.labelFontSize = 12;
+	if (typeof options.valueLabelFontSize !== "number")
+		options.valueLabelFontSize = (typeof options.labelFontSize === "number") ? options.labelFontSize : 12;
+	if (typeof options.showValueLabels !== "boolean")
+		options.showValueLabels = true;
 	if (typeof options.legendFontSize !== "number")
 		options.legendFontSize = 12;
 	if (typeof options.axisLabelFontSize !== "number")
@@ -4448,6 +4517,11 @@ function syncBarPlotStyleControls(options) {
 	var gv = document.getElementById("DialogBarPlotLegendSizeValue");
 	var ae = document.getElementById("DialogBarPlotAxisLabelSize");
 	var av = document.getElementById("DialogBarPlotAxisLabelSizeValue");
+	var ve = document.getElementById("DialogBarPlotValueLabelSize");
+	var vv = document.getElementById("DialogBarPlotValueLabelSizeValue");
+	var showEl = document.getElementById("DialogBarPlotShowValueLabels");
+	var valueRow = document.getElementById("DialogBarPlotValueLabelSizeRow");
+	var showVal = (typeof options.showValueLabels === "boolean") ? options.showValueLabels : true;
 	if (te) te.value = options.titleFontSize || 16;
 	if (tv) tv.textContent = "" + (options.titleFontSize || 16);
 	if (le) le.value = options.labelFontSize || 12;
@@ -4456,6 +4530,10 @@ function syncBarPlotStyleControls(options) {
 	if (gv) gv.textContent = "" + (options.legendFontSize || 12);
 	if (ae) ae.value = options.axisLabelFontSize || 12;
 	if (av) av.textContent = "" + (options.axisLabelFontSize || 12);
+	if (ve) ve.value = options.valueLabelFontSize || options.labelFontSize || 12;
+	if (vv) vv.textContent = "" + (options.valueLabelFontSize || options.labelFontSize || 12);
+	if (showEl) showEl.checked = showVal;
+	if (valueRow) valueRow.style.display = showVal ? "" : "none";
 }
 
 function onBarPlotStyleChange(redraw) {
@@ -4464,13 +4542,17 @@ function onBarPlotStyleChange(redraw) {
 	var ls = parseInt(document.getElementById("DialogBarPlotLabelSize").value, 10) || 12;
 	var gs = clampChartFontSize(document.getElementById("DialogBarPlotLegendSize") ? document.getElementById("DialogBarPlotLegendSize").value : 12, 8, 28, 12);
 	var asz = clampChartFontSize(document.getElementById("DialogBarPlotAxisLabelSize") ? document.getElementById("DialogBarPlotAxisLabelSize").value : 12, 8, 28, 12);
-	syncBarPlotStyleControls({ titleFontSize: ts, labelFontSize: ls, legendFontSize: gs, axisLabelFontSize: asz });
+	var vs = clampChartFontSize(document.getElementById("DialogBarPlotValueLabelSize") ? document.getElementById("DialogBarPlotValueLabelSize").value : ls, 8, 28, 12);
+	var showVal = !(document.getElementById("DialogBarPlotShowValueLabels") && !document.getElementById("DialogBarPlotShowValueLabels").checked);
+	syncBarPlotStyleControls({ titleFontSize: ts, labelFontSize: ls, legendFontSize: gs, axisLabelFontSize: asz, valueLabelFontSize: vs, showValueLabels: showVal });
 	if (node) {
 		if (!node.barPlotOptions) node.barPlotOptions = {};
 		node.barPlotOptions.titleFontSize = ts;
 		node.barPlotOptions.labelFontSize = ls;
 		node.barPlotOptions.legendFontSize = gs;
 		node.barPlotOptions.axisLabelFontSize = asz;
+		node.barPlotOptions.valueLabelFontSize = vs;
+		node.barPlotOptions.showValueLabels = showVal;
 		applyChartLegendFontSize("DialogBarPlotLegend", gs);
 		networkNodes.update(node);
 		if (redraw && node.barPlotOptions.drawn)
@@ -5206,7 +5288,7 @@ function DrawBarPlot(event) {
 	if (!node) return;
 	var parentNodes = GetParentNodes(node);
 	if (!parentNodes || !parentNodes.length) return;
-	var options, barType, title, beginAtZero, titleFontSize, labelFontSize, axisLabelFontSize;
+	var options, barType, title, beginAtZero, titleFontSize, labelFontSize, axisLabelFontSize, valueLabelFontSize, showValueLabels;
 	var parentNode, data, axisX, axisY, valueMin, valueMax;
 	var agg, labels, labelsFull, datasets = [], legendKeys = [], legendLabels = [], legendColors = [];
 	var s, sk, g, cat, color, keyName, row, errMap, err, floating, stacked, horiz, scales, plugins, chartOpts;
@@ -5227,12 +5309,16 @@ function DrawBarPlot(event) {
 	beginAtZero = document.getElementById("DialogBarPlotBeginZero").checked;
 	titleFontSize = parseInt(document.getElementById("DialogBarPlotTitleSize").value, 10) || 16;
 	labelFontSize = parseInt(document.getElementById("DialogBarPlotLabelSize").value, 10) || 12;
+	valueLabelFontSize = clampChartFontSize(document.getElementById("DialogBarPlotValueLabelSize") ? document.getElementById("DialogBarPlotValueLabelSize").value : labelFontSize, 8, 28, 12);
+	showValueLabels = !(document.getElementById("DialogBarPlotShowValueLabels") && !document.getElementById("DialogBarPlotShowValueLabels").checked);
 
 	options.barType = barType;
 	options.title = title;
 	options.beginAtZero = beginAtZero;
 	options.titleFontSize = titleFontSize;
 	options.labelFontSize = labelFontSize;
+	options.valueLabelFontSize = valueLabelFontSize;
+	options.showValueLabels = showValueLabels;
 	options.legendFontSize = clampChartFontSize(document.getElementById("DialogBarPlotLegendSize") ? document.getElementById("DialogBarPlotLegendSize").value : options.legendFontSize, 8, 28, 12);
 	options.axisLabelFontSize = clampChartFontSize(document.getElementById("DialogBarPlotAxisLabelSize") ? document.getElementById("DialogBarPlotAxisLabelSize").value : options.axisLabelFontSize, 8, 28, 12);
 	axisLabelFontSize = options.axisLabelFontSize;
@@ -5523,10 +5609,10 @@ function DrawBarPlot(event) {
 		title: { display: !!title, text: title, font: { size: titleFontSize } },
 		legend: { display: false },
 		labels: {
-			render: floating ? function () { return ""; } : "value",
+			render: (floating || !showValueLabels) ? function () { return ""; } : "value",
 			precision: 0,
 			showZero: false,
-			fontSize: labelFontSize,
+			fontSize: valueLabelFontSize,
 			fontColor: "#333",
 			position: "default",
 			overlap: true

@@ -7,9 +7,19 @@
 	Config (node.staEntityConfig, version 2):
 	{
 		version: 2, mode: "connectASensor"|"dataFromTable",
-		selected: { <EntityPlural>: true|false, ... },       // checkboxes "Entities in workflow"
-		entities: { <EntityPlural>: { id: <src>, props: { <name>: <src> }, locked: bool } },
-		measurements: [ { key, include, Datastreams: <entity>, ObservedProperties: <entity> } ]   // connectASensor only
+		selected: { <EntityPlural>: true|false, ... },       // CAS: workflow checkboxes; free: derived from groups + Parties
+		entities: { <EntityPlural>: { id: <src>, props: { <name>: <src> }, locked: bool } }, // shared (Party always)
+		measurements: [ {                                    // CAS: sensor columns; free: observation groups
+			key, include, label,                             // free: group name → id_<slug> for Relations
+			resultColumn?,                                   // Observation.result column (free mode)
+			selected?: { <EntityPlural>: true|false },       // free: per-group entity checkboxes
+			Datastreams, ObservedProperties, Sensors?, …
+		} ],
+		relationStub: {                                      // free mode; Relations per source row
+			enabled, role, description,
+			subjectGroupKey, objectGroupKey,                 // dropdowns by group name
+			idColumns: [ "id_<labelA>", "id_<labelB>", … ]
+		}
 	}
 	<src> = { source: "manual"|"column", value: "", column: "" }   (both kept so switching does not lose the other)
 
@@ -19,9 +29,15 @@
 var SEB_ORDER = ["Parties", "Licenses", "Things", "Locations", "HistoricalLocations", "Sensors", "ObservedProperties",
 	"FeaturesOfInterest", "Campaigns", "ObservationGroups", "Datastreams", "MultiDatastreams", "Cells", "Relations", "Observations"];
 var SEB_DEFAULT_SELECTED = ["Parties", "Things", "Sensors", "Licenses", "Locations", "FeaturesOfInterest", "ObservedProperties", "Datastreams", "Observations"];
-/* In connectASensor mode these are nested under each measurement (Temperature, …).
-   FeaturesOfInterest is shared (same place/site for all measurements), like Locations. */
-var SEB_PER_MEAS = ["ObservedProperties", "Sensors", "Datastreams"];
+/* ConnectASensor: nested under each measurement column (Temperature, …). Leave CAS as this list. */
+var SEB_PER_MEAS = ["ObservedProperties", "Sensors", "FeaturesOfInterest", "Datastreams"];
+var SEB_SCOPE_SHARED = "shared";
+var SEB_SCOPE_GROUP = "perGroup";
+/* Free mode: entity checkboxes inside each observation group (Party is always shared — never here). */
+var SEB_GROUP_CHECKABLE = ["Licenses", "Things", "Locations", "HistoricalLocations", "Sensors", "ObservedProperties",
+	"FeaturesOfInterest", "Campaigns", "ObservationGroups", "Datastreams", "MultiDatastreams", "Cells", "Observations"];
+/* Kept for migration of older configs that had scope radios */
+var SEB_SCOPEABLE = SEB_GROUP_CHECKABLE.slice();
 /* Entities that must exist in the package when the key entity is used */
 var SEB_DEPS = {
 	Observations: ["Datastreams"],
@@ -118,6 +134,205 @@ function sebEffectiveSet(selected) {
 			add(k);
 	}
 	return eff;
+}
+
+function sebDefaultScope(mode) {
+	var scope = {}, i, p;
+	for (i = 0; i < SEB_SCOPEABLE.length; i++) {
+		p = SEB_SCOPEABLE[i];
+		scope[p] = (mode === "connectASensor" && SEB_PER_MEAS.indexOf(p) !== -1)
+			? SEB_SCOPE_GROUP
+			: SEB_SCOPE_SHARED;
+	}
+	return scope;
+}
+
+/* Default per-group entity checkboxes (dataFromTable). Observations always on by default. */
+function sebDefaultGroupSelected() {
+	var sel = {}, i, p;
+	for (i = 0; i < SEB_GROUP_CHECKABLE.length; i++) {
+		p = SEB_GROUP_CHECKABLE[i];
+		sel[p] = SEB_PER_MEAS.indexOf(p) !== -1 || p === "Things" || p === "Observations";
+	}
+	return sel;
+}
+
+function sebEnsureGroupSelected(m) {
+	var i, p;
+	if (!m)
+		return;
+	if (!m.selected || typeof m.selected !== "object")
+		m.selected = sebDefaultGroupSelected();
+	for (i = 0; i < SEB_GROUP_CHECKABLE.length; i++) {
+		p = SEB_GROUP_CHECKABLE[i];
+		if (typeof m.selected[p] !== "boolean")
+			m.selected[p] = SEB_PER_MEAS.indexOf(p) !== -1 || p === "Things" || p === "Observations";
+	}
+}
+
+function sebGroupSelectedList(m) {
+	var out = [], i, p;
+	sebEnsureGroupSelected(m);
+	for (i = 0; i < SEB_GROUP_CHECKABLE.length; i++) {
+		p = SEB_GROUP_CHECKABLE[i];
+		if (m.selected[p])
+			out.push(p);
+	}
+	return out;
+}
+
+function sebNewRelationStub() {
+	return {
+		enabled: false,
+		role: "",
+		description: "",
+		subjectGroupKey: "",
+		objectGroupKey: "",
+		idColumns: []
+	};
+}
+
+/* Sanitize user etiqueta → safe slug for id_<slug> column names. */
+function sebSlugLabel(label, fallback) {
+	var s = String(label == null ? "" : label).trim().toLowerCase();
+	s = s.replace(/[àáâãäå]/gi, "a").replace(/[èéêë]/gi, "e").replace(/[ìíîï]/gi, "i")
+		.replace(/[òóôõö]/gi, "o").replace(/[ùúûü]/gi, "u").replace(/[ñ]/gi, "n")
+		.replace(/[ç]/gi, "c").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+	if (!s)
+		s = String(fallback == null ? "grup" : fallback).replace(/[^a-zA-Z0-9]+/g, "_").toLowerCase() || "grup";
+	return s;
+}
+
+function sebIdColumnForGroup(m) {
+	return "id_" + sebSlugLabel(m && m.label, m && m.key);
+}
+
+function sebGroupDisplayLabel(m) {
+	if (m && m.label && String(m.label).trim())
+		return String(m.label).trim();
+	return sebMeasLabel(m);
+}
+
+function sebEnsureGroupLabels(cfg) {
+	var i, m, used = {}, slug, base, n;
+	if (!cfg || !cfg.measurements)
+		return;
+	for (i = 0; i < cfg.measurements.length; i++) {
+		m = cfg.measurements[i];
+		if (!m.label || !String(m.label).trim())
+			m.label = m.key || ("grup" + (i + 1));
+		slug = sebSlugLabel(m.label, m.key);
+		base = slug;
+		n = 2;
+		while (used[slug]) {
+			slug = base + "_" + n;
+			n++;
+		}
+		used[slug] = true;
+		m._idColumn = "id_" + slug;
+	}
+}
+
+function sebRefreshRelationIdColumns(cfg) {
+	var cols = [], included, i, m;
+	/* Do NOT call sebEnsureScope here — it calls this function (stack overflow). */
+	if (!cfg)
+		return;
+	if (!cfg.relationStub || typeof cfg.relationStub !== "object")
+		cfg.relationStub = sebNewRelationStub();
+	sebEnsureGroupLabels(cfg);
+	included = (cfg.measurements || []).filter(function (g) { return g.include; });
+	for (i = 0; i < included.length; i++) {
+		m = included[i];
+		cols.push(m._idColumn || sebIdColumnForGroup(m));
+	}
+	cfg.relationStub.idColumns = cols;
+	if (cfg.relationStub.subjectGroupKey) {
+		if (!included.some(function (g) { return g.key === cfg.relationStub.subjectGroupKey; }))
+			cfg.relationStub.subjectGroupKey = included[0] ? included[0].key : "";
+	}
+	if (cfg.relationStub.objectGroupKey) {
+		if (!included.some(function (g) { return g.key === cfg.relationStub.objectGroupKey; }))
+			cfg.relationStub.objectGroupKey = included[1] ? included[1].key : (included[0] ? included[0].key : "");
+	}
+	if (cfg.relationStub.enabled && included.length >= 2) {
+		if (!cfg.relationStub.subjectGroupKey)
+			cfg.relationStub.subjectGroupKey = included[0].key;
+		if (!cfg.relationStub.objectGroupKey || cfg.relationStub.objectGroupKey === cfg.relationStub.subjectGroupKey)
+			cfg.relationStub.objectGroupKey = included[1].key;
+	}
+}
+
+/* Migrate older configs: invent scope from SEB_PER_MEAS when missing. */
+function sebEnsureScope(cfg) {
+	var i, p, def;
+	if (!cfg)
+		return;
+	if (!cfg.scope || typeof cfg.scope !== "object")
+		cfg.scope = sebDefaultScope(cfg.mode || "dataFromTable");
+	def = sebDefaultScope(cfg.mode || "dataFromTable");
+	for (i = 0; i < SEB_SCOPEABLE.length; i++) {
+		p = SEB_SCOPEABLE[i];
+		if (cfg.scope[p] !== SEB_SCOPE_SHARED && cfg.scope[p] !== SEB_SCOPE_GROUP)
+			cfg.scope[p] = def[p];
+	}
+	if (!cfg.relationStub || typeof cfg.relationStub !== "object")
+		cfg.relationStub = sebNewRelationStub();
+	/* migrate old subjectFrom/objectFrom field names */
+	if (cfg.relationStub.subjectFrom && !cfg.relationStub.subjectGroupKey)
+		cfg.relationStub.subjectGroupKey = cfg.relationStub.subjectFrom;
+	if (cfg.relationStub.objectFrom && !cfg.relationStub.objectGroupKey)
+		cfg.relationStub.objectGroupKey = cfg.relationStub.objectFrom;
+	sebEnsureGroupLabels(cfg);
+	sebRefreshRelationIdColumns(cfg);
+}
+
+function sebIsPerGroup(cfg, plural) {
+	var i, m;
+	if (!cfg || !plural || plural === "Parties")
+		return false;
+	if (cfg.mode === "connectASensor")
+		return SEB_PER_MEAS.indexOf(plural) !== -1;
+	/* Free mode: per-group if any included group has that entity checkbox on */
+	for (i = 0; i < (cfg.measurements || []).length; i++) {
+		m = cfg.measurements[i];
+		if (!m.include)
+			continue;
+		sebEnsureGroupSelected(m);
+		if (m.selected[plural])
+			return true;
+	}
+	return false;
+}
+
+/* CAS: fixed SEB_PER_MEAS. Free: union of checked entities across included groups. */
+function sebPerGroupList(cfg) {
+	var out = [], seen = {}, i, j, m, list, p;
+	if (!cfg)
+		return out;
+	if (cfg.mode === "connectASensor")
+		return SEB_PER_MEAS.slice();
+	for (i = 0; i < (cfg.measurements || []).length; i++) {
+		m = cfg.measurements[i];
+		if (!m.include)
+			continue;
+		list = sebGroupSelectedList(m);
+		for (j = 0; j < list.length; j++) {
+			p = list[j];
+			if (!seen[p]) {
+				seen[p] = true;
+				out.push(p);
+			}
+		}
+	}
+	return out;
+}
+
+function sebCandidateGroupColumns(cols) {
+	var skip = { timestamp: 1, phenomenonTime: 1, resultTime: 1, sensor_id: 1, "@iot.id": 1 };
+	return (cols || []).filter(function (c) {
+		return !skip[c];
+	});
 }
 
 function getSTAEntityBuilderNodeSafe() {
@@ -373,7 +588,7 @@ function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty) {
 			continue;
 		slot = maps[plural];
 		cfg.selected[plural] = true;
-		if (cfg.mode === "connectASensor" && SEB_PER_MEAS.indexOf(plural) !== -1 && cfg.measurements) {
+		if (sebIsPerGroup(cfg, plural) && cfg.measurements) {
 			for (i = 0; i < cfg.measurements.length; i++) {
 				m = cfg.measurements[i];
 				if (m[plural])
@@ -385,36 +600,82 @@ function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty) {
 	}
 }
 
-function sebNewMeasurement(key, parent, ctx) {
+function sebNewMeasurement(key, parent, ctx, perGroup) {
 	var attrs = (parent && parent.STAdataAttributes) || {};
 	var attr = attrs[key] || {};
 	var spec = (typeof ConnectASensorObsProps !== "undefined" && ConnectASensorObsProps[key]) || {};
 	var obsName = attr.description || spec.name || key;
 	var desc = attr.description || spec.description || key;
 	var sensorDefaults = sebEntityDefaults("Sensors", ctx);
-	return {
+	var m = {
 		key: key,
 		include: true,
-		ObservedProperties: sebNewEntity("ObservedProperties", ctx.mode, {
-			name: obsName,
-			description: desc,
-			definition: attr.definition || spec.definition || ""
-		}),
-		Sensors: sebNewEntity("Sensors", ctx.mode, {
+		label: obsName || key,
+		resultColumn: key,
+		selected: sebDefaultGroupSelected()
+	};
+	var group = perGroup && perGroup.length ? perGroup : SEB_PER_MEAS.slice();
+	group.forEach(function (plural) {
+		if (plural === "ObservedProperties") {
+			m.ObservedProperties = sebNewEntity("ObservedProperties", ctx.mode, {
+				name: obsName,
+				description: desc,
+				definition: attr.definition || spec.definition || ""
+			});
+		} else if (plural === "Sensors") {
+			m.Sensors = sebNewEntity("Sensors", ctx.mode, {
+				name: sensorDefaults.name || obsName,
+				description: sensorDefaults.description || desc,
+				encodingType: sensorDefaults.encodingType || "application/json",
+				metadata: sensorDefaults.metadata || ""
+			});
+		} else if (plural === "FeaturesOfInterest") {
+			m.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", ctx.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
+		} else if (plural === "Datastreams") {
+			m.Datastreams = sebNewEntity("Datastreams", ctx.mode, {
+				name: obsName,
+				description: desc,
+				observationType: SEB_OBS_TYPE,
+				"unitOfMeasurement.name": attr.UoM || spec.UoM || "",
+				"unitOfMeasurement.symbol": attr.UoMSymbol || spec.UoMSymbol || "",
+				"unitOfMeasurement.definition": attr.UoMDefinition || spec.UoMDefinition || ""
+			});
+		} else {
+			m[plural] = sebNewEntity(plural, ctx.mode, sebEntityDefaults(plural, ctx));
+		}
+	});
+	/* Always seed OP/DS/Sensors/FoI for CAS + free defaults */
+	if (!m.ObservedProperties) {
+		m.ObservedProperties = sebNewEntity("ObservedProperties", ctx.mode, {
+			name: obsName, description: desc, definition: attr.definition || spec.definition || ""
+		});
+	}
+	if (!m.Sensors) {
+		m.Sensors = sebNewEntity("Sensors", ctx.mode, {
 			name: sensorDefaults.name || obsName,
 			description: sensorDefaults.description || desc,
 			encodingType: sensorDefaults.encodingType || "application/json",
 			metadata: sensorDefaults.metadata || ""
-		}),
-		Datastreams: sebNewEntity("Datastreams", ctx.mode, {
-			name: obsName,
-			description: desc,
-			observationType: SEB_OBS_TYPE,
+		});
+	}
+	if (!m.FeaturesOfInterest)
+		m.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", ctx.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
+	if (!m.Datastreams) {
+		m.Datastreams = sebNewEntity("Datastreams", ctx.mode, {
+			name: obsName, description: desc, observationType: SEB_OBS_TYPE,
 			"unitOfMeasurement.name": attr.UoM || spec.UoM || "",
 			"unitOfMeasurement.symbol": attr.UoMSymbol || spec.UoMSymbol || "",
 			"unitOfMeasurement.definition": attr.UoMDefinition || spec.UoMDefinition || ""
-		})
-	};
+		});
+	}
+	if (!m.Observations && ctx.mode !== "connectASensor") {
+		m.Observations = sebNewEntity("Observations", ctx.mode, {}, {
+			phenomenonTime: ctx.timeCol || "",
+			resultTime: ctx.timeCol || "",
+			result: m.resultColumn || key
+		});
+	}
+	return m;
 }
 
 function sebCloneEntityCfg(ent) {
@@ -423,14 +684,15 @@ function sebCloneEntityCfg(ent) {
 	return JSON.parse(JSON.stringify(ent));
 }
 
-/* Older configs: fill Sensors per measurement; migrate FoI to shared (one place for all). */
+/* Ensure per-group entity slots exist on each measurement; keep shared copies on cfg.entities. */
 function sebEnsureMeasurementEntities(cfg, parent) {
-	var ctx, sharedSensor, sharedFoi, i, m;
-	if (!cfg || cfg.mode !== "connectASensor" || !cfg.measurements)
+	var ctx, sharedSensor, sharedFoi, i, m, perGroup, plural, neu;
+	if (!cfg || !cfg.measurements)
 		return;
+	sebEnsureScope(cfg);
 	ctx = {
 		mode: cfg.mode,
-		isCas: true,
+		isCas: cfg.mode === "connectASensor",
 		name: "Sensor",
 		desc: "Sensor",
 		metaStr: ""
@@ -458,16 +720,44 @@ function sebEnsureMeasurementEntities(cfg, parent) {
 		cfg.entities.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", cfg.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
 	cfg.measurements.forEach(function (meas, idx) {
 		m = meas;
+		if (cfg.mode !== "connectASensor")
+			sebEnsureGroupSelected(m);
+		perGroup = cfg.mode === "connectASensor" ? SEB_PER_MEAS.slice() : sebGroupSelectedList(m);
 		if (!m.ObservedProperties || !m.Datastreams) {
-			var neu = sebNewMeasurement(m.key, parent, ctx);
+			neu = sebNewMeasurement(m.key, parent, ctx, perGroup);
 			m.ObservedProperties = m.ObservedProperties || neu.ObservedProperties;
 			m.Datastreams = m.Datastreams || neu.Datastreams;
 			m.Sensors = m.Sensors || neu.Sensors;
+			m.FeaturesOfInterest = m.FeaturesOfInterest || neu.FeaturesOfInterest;
 		}
 		if (!m.Sensors)
 			m.Sensors = idx === 0 && sharedSensor ? sebCloneEntityCfg(sharedSensor) : sebNewEntity("Sensors", cfg.mode, sebEntityDefaults("Sensors", ctx));
-		/* FoI is shared only — drop obsolete per-measurement copies */
-		delete m.FeaturesOfInterest;
+		if (!m.FeaturesOfInterest)
+			m.FeaturesOfInterest = idx === 0 && sharedFoi ? sebCloneEntityCfg(sharedFoi) : sebNewEntity("FeaturesOfInterest", cfg.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
+		if (cfg.mode !== "connectASensor" && !m.Observations) {
+			m.Observations = sebNewEntity("Observations", cfg.mode, {}, {
+				phenomenonTime: "",
+				resultTime: "",
+				result: m.resultColumn || ""
+			});
+		}
+		for (i = 0; i < perGroup.length; i++) {
+			plural = perGroup[i];
+			if (!m[plural]) {
+				if (plural === "Sensors" && idx === 0 && sharedSensor)
+					m[plural] = sebCloneEntityCfg(sharedSensor);
+				else if (plural === "FeaturesOfInterest" && idx === 0 && sharedFoi)
+					m[plural] = sebCloneEntityCfg(sharedFoi);
+				else if (plural === "Observations")
+					m[plural] = sebNewEntity("Observations", cfg.mode, {}, {
+						phenomenonTime: "", resultTime: "", result: m.resultColumn || ""
+					});
+				else if (cfg.entities[plural] && idx === 0)
+					m[plural] = sebCloneEntityCfg(cfg.entities[plural]);
+				else
+					m[plural] = sebNewEntity(plural, cfg.mode, sebEntityDefaults(plural, ctx));
+			}
+		}
 	});
 }
 
@@ -538,8 +828,17 @@ function sebDefaultConfig(parent, mode) {
 		timeCol: isCas ? "timestamp" : timeCol,
 		valueCol: valueCols[0] || ""
 	};
-	var cfg = { version: 2, mode: mode, selected: {}, entities: {}, measurements: [] };
+	var cfg = {
+		version: 2,
+		mode: mode,
+		selected: {},
+		scope: sebDefaultScope(mode),
+		entities: {},
+		measurements: [],
+		relationStub: sebNewRelationStub()
+	};
 	var cands = sebCandidatesFromParent(parent);
+	var perGroup = sebPerGroupList(cfg);
 
 	sebEntityOrder().forEach(function (plural) {
 		var ent, recs;
@@ -555,7 +854,7 @@ function sebDefaultConfig(parent, mode) {
 	if (isCas) {
 		cfg.selected.Observations = true;
 		sebMeasurementKeysFromParent(parent).forEach(function (key) {
-			cfg.measurements.push(sebNewMeasurement(key, parent, ctx));
+			cfg.measurements.push(sebNewMeasurement(key, parent, ctx, perGroup));
 		});
 	}
 	/* Columns whose STAdataAttributes.definition is .../Entity/property → bind as column source */
@@ -563,37 +862,180 @@ function sebDefaultConfig(parent, mode) {
 	return cfg;
 }
 
-function sebSyncMeasurements(cfg, parent) {
-	var keys, ctx, meta, info, isPmscan;
-	if (cfg.mode !== "connectASensor")
-		return;
-	keys = sebMeasurementKeysFromParent(parent);
-	meta = (parent && parent.connectASensorMeta) || {};
-	info = meta.sensorInfo || {};
-	isPmscan = info.sensorType === "pmscan";
-	ctx = {
+function sebMeasCtxFromParent(cfg, parent) {
+	var meta = (parent && parent.connectASensorMeta) || {};
+	var info = meta.sensorInfo || {};
+	var isPmscan = info.sensorType === "pmscan";
+	return {
 		mode: cfg.mode,
-		isCas: true,
+		isCas: cfg.mode === "connectASensor",
 		name: meta.displayName || info.bleName || "Sensor",
 		desc: isPmscan ? "PMSCAN / Polluscan (TERA)" : "Smart Citizen Kit",
 		metaStr: Object.keys(info).length ? JSON.stringify(info) :
 			(isPmscan ? "https://skmove.io/tera/pmscan/webapp/" : "https://docs.smartcitizen.me/")
 	};
+}
+
+function sebSyncMeasurements(cfg, parent) {
+	var keys, ctx, perGroup;
+	if (!cfg)
+		return;
+	sebEnsureScope(cfg);
+	if (cfg.mode === "connectASensor")
+		keys = sebMeasurementKeysFromParent(parent);
+	else {
+		/* dataFromTable: keep user-chosen groups already in cfg.measurements */
+		keys = (cfg.measurements || []).filter(function (m) { return m.include; }).map(function (m) { return m.key; });
+		if (!keys.length)
+			return;
+	}
+	ctx = sebMeasCtxFromParent(cfg, parent);
+	perGroup = sebPerGroupList(cfg);
+	if (!cfg.measurements)
+		cfg.measurements = [];
 	keys.forEach(function (key) {
 		var i;
 		for (i = 0; i < cfg.measurements.length; i++) {
 			if (cfg.measurements[i].key === key)
 				return;
 		}
-		cfg.measurements.push(sebNewMeasurement(key, parent, ctx));
+		cfg.measurements.push(sebNewMeasurement(key, parent, ctx, perGroup));
 	});
 	sebEnsureMeasurementEntities(cfg, parent);
+}
+
+/* Add / toggle a column as a repeating group (dataFromTable freer mode). */
+function sebSetMeasurementInclude(cfg, parent, key, include) {
+	var i, ctx, perGroup, found = null;
+	if (!cfg || !key)
+		return;
+	sebEnsureScope(cfg);
+	if (!cfg.measurements)
+		cfg.measurements = [];
+	for (i = 0; i < cfg.measurements.length; i++) {
+		if (cfg.measurements[i].key === key) {
+			found = cfg.measurements[i];
+			break;
+		}
+	}
+	if (found) {
+		found.include = !!include;
+		sebRefreshRelationIdColumns(cfg);
+		return;
+	}
+	if (!include)
+		return;
+	ctx = sebMeasCtxFromParent(cfg, parent);
+	perGroup = sebPerGroupList(cfg);
+	cfg.measurements.push(sebNewMeasurement(key, parent, ctx, perGroup));
+	sebEnsureMeasurementEntities(cfg, parent);
+	sebRefreshRelationIdColumns(cfg);
+}
+
+var sebGroupKeySeq = 1;
+
+function sebNewFreeGroupKey() {
+	return "grup_" + (Date.now().toString(36)) + "_" + (sebGroupKeySeq++);
+}
+
+function sebAddUserGroup(cfg, parent, label) {
+	var ctx, perGroup, key, m;
+	if (!cfg)
+		return null;
+	sebEnsureScope(cfg);
+	if (!cfg.measurements)
+		cfg.measurements = [];
+	ctx = sebMeasCtxFromParent(cfg, parent);
+	perGroup = sebPerGroupList(cfg);
+	key = sebNewFreeGroupKey();
+	m = sebNewMeasurement(key, parent, ctx, perGroup);
+	m.label = label && String(label).trim() ? String(label).trim() : ("grup" + (cfg.measurements.length + 1));
+	m.resultColumn = "";
+	m.include = true;
+	cfg.measurements.push(m);
+	sebEnsureMeasurementEntities(cfg, parent);
+	sebRefreshRelationIdColumns(cfg);
+	return m;
+}
+
+function sebRemoveUserGroup(cfg, key) {
+	var i;
+	if (!cfg || !cfg.measurements || !key)
+		return;
+	for (i = cfg.measurements.length - 1; i >= 0; i--) {
+		if (cfg.measurements[i].key === key)
+			cfg.measurements.splice(i, 1);
+	}
+	sebRefreshRelationIdColumns(cfg);
+}
+
+function sebOnAddGroup(event) {
+	var node = getSTAEntityBuilderNodeSafe();
+	var parent, cfg;
+	if (event)
+		event.preventDefault();
+	if (!node)
+		return;
+	cfg = sebCollectConfigFromForm(node);
+	parent = getSTAEntityBuilderParent(node);
+	sebAddUserGroup(cfg, parent, "");
+	node.staEntityConfig = cfg;
+	if (typeof networkNodes !== "undefined")
+		networkNodes.update(node);
+	renderSTAEntityBuilderForm(node);
+}
+
+function sebOnRemoveGroup(btn) {
+	var node = getSTAEntityBuilderNodeSafe();
+	var key, cfg;
+	if (!node || !btn)
+		return;
+	key = btn.getAttribute("data-meas");
+	cfg = sebCollectConfigFromForm(node);
+	sebRemoveUserGroup(cfg, key);
+	node.staEntityConfig = cfg;
+	if (typeof networkNodes !== "undefined")
+		networkNodes.update(node);
+	renderSTAEntityBuilderForm(node);
+}
+
+function sebOnScopeChange(radio) {
+	var node = getSTAEntityBuilderNodeSafe();
+	var plural, cfg, parent;
+	if (!node || !radio)
+		return;
+	plural = radio.getAttribute("data-ent");
+	cfg = sebCollectConfigFromForm(node);
+	sebEnsureScope(cfg);
+	if (plural && (radio.value === SEB_SCOPE_SHARED || radio.value === SEB_SCOPE_GROUP))
+		cfg.scope[plural] = radio.value;
+	parent = getSTAEntityBuilderParent(node);
+	sebEnsureMeasurementEntities(cfg, parent);
+	node.staEntityConfig = cfg;
+	if (typeof networkNodes !== "undefined")
+		networkNodes.update(node);
+	renderSTAEntityBuilderForm(node);
+}
+
+function sebOnGroupLabelInput(inp) {
+	var card, preview, slug;
+	if (!inp)
+		return;
+	card = inp.closest(".sebGroupCard");
+	if (!card)
+		return;
+	preview = card.querySelector(".sebIdColPreview");
+	slug = sebSlugLabel(inp.value, card.getAttribute("data-meas"));
+	if (preview)
+		preview.textContent = "id_" + slug;
+	sebScheduleAutoSave();
 }
 
 function sebEnsureConfig(node, force) {
 	var parent = getSTAEntityBuilderParent(node);
 	var preferCas = !!(parent && (parent.image === "connectASensor.png" || parent.image === "readSDFromSensor.png" || parent.connectASensorMeta));
 	if (!force && node.staEntityConfig && node.staEntityConfig.version === 2) {
+		sebEnsureScope(node.staEntityConfig);
 		sebEnsureMeasurementEntities(node.staEntityConfig, parent);
 		if (node.staEntityConfig.mode === "connectASensor" && node.staEntityConfig.selected)
 			node.staEntityConfig.selected.Observations = true;
@@ -855,11 +1297,120 @@ function sebShowStaUrl() {
 /* ---------- render ---------- */
 
 function sebMeasLabel(m) {
+	if (!m)
+		return "";
+	if (m.label && String(m.label).trim())
+		return String(m.label).trim();
 	var n = m.ObservedProperties && m.ObservedProperties.props && m.ObservedProperties.props.name
 		? m.ObservedProperties.props.name.value : "";
 	if (!n && m.Datastreams && m.Datastreams.props && m.Datastreams.props.name)
 		n = m.Datastreams.props.name.value;
 	return n || m.key;
+}
+
+/* Free-mode observation group card: name + entity checkboxes (like workflow, but per group). */
+function sebGroupCardHtml(m, cols, cfg) {
+	var idCol = m._idColumn || sebIdColumnForGroup(m);
+	var html = [];
+	var i, c, groupEnts;
+	sebEnsureGroupSelected(m);
+	groupEnts = sebGroupSelectedList(m);
+	html.push("<div class=\"sebGroupCard sebSection sebMeasSection\" data-section-meas=\"", sebEsc(m.key),
+		"\" data-meas=\"", sebEsc(m.key), "\">");
+	html.push("<div class=\"sebGroupCardHead\">");
+	html.push("<label class=\"sebGroupInc\"><input type=\"checkbox\" class=\"sebMeasInc\" data-meas=\"",
+		sebEsc(m.key), "\" onchange=\"sebOnIncludeChange()\"", (m.include ? " checked" : ""), "> ",
+		DonaCadena({cat: "Inclou", spa: "Incluir", eng: "Include"}), "</label>");
+	html.push("<label class=\"sebGroupLabelWrap\"><span class=\"sebLbl\">",
+		DonaCadena({cat: "Nom del grup", spa: "Nombre del grupo", eng: "Group name"}),
+		"</span> <input type=\"text\" class=\"sebGroupLabel\" data-meas=\"", sebEsc(m.key),
+		"\" value=\"", sebEsc(m.label || m.key),
+		"\" oninput=\"sebOnGroupLabelInput(this)\" placeholder=\"foto, identificacio…\"></label>");
+	html.push("<span class=\"sebIdColHint\">",
+		DonaCadena({cat: "Columna id:", spa: "Columna id:", eng: "Id column:"}),
+		" <code class=\"sebIdColPreview\">", sebEsc(idCol), "</code></span>");
+	html.push("<button type=\"button\" class=\"DialogConnectASensorAction sebGroupRemove\" data-meas=\"",
+		sebEsc(m.key), "\" onclick=\"sebOnRemoveGroup(this)\">",
+		DonaCadena({cat: "Elimina grup", spa: "Eliminar grupo", eng: "Remove group"}),
+		"</button>");
+	html.push("</div>");
+	html.push("<div class=\"sebGroupEntChecks\"><span class=\"sebLbl\">",
+		DonaCadena({cat: "Entitats d'aquest grup", spa: "Entidades de este grupo", eng: "Entities in this group"}),
+		"</span><div class=\"sebIncludeRow\">");
+	for (i = 0; i < SEB_GROUP_CHECKABLE.length; i++) {
+		c = SEB_GROUP_CHECKABLE[i];
+		html.push("<label><input type=\"checkbox\" class=\"sebGroupEntInc\" data-meas=\"", sebEsc(m.key),
+			"\" data-ent=\"", sebEsc(c), "\" onchange=\"sebOnGroupEntityChange(this)\"",
+			(m.selected[c] ? " checked" : ""), "> ", sebEsc(c), "</label>");
+	}
+	html.push("</div></div>");
+	html.push("<div class=\"sebGroupEnts\">");
+	for (i = 0; i < groupEnts.length; i++) {
+		c = groupEnts[i];
+		if (!m[c])
+			continue;
+		/* Same fieldset+legend look as shared entities outside the group */
+		html.push("<fieldset class=\"sebSection sebMeasEntWrap\" data-meas-ent=\"", c, "\"><legend>",
+			sebEsc(c), "</legend>",
+			sebEntityBlockHtml(c, m[c], m.key, cols, null, cfg.mode, false),
+			"</fieldset>");
+	}
+	html.push("</div></div>");
+	return html.join("");
+}
+
+function sebRelationPanelHtml(cfg) {
+	var stub = cfg.relationStub || sebNewRelationStub();
+	var included = (cfg.measurements || []).filter(function (g) { return g.include; });
+	var html = [];
+	var i, m, opt;
+	sebRefreshRelationIdColumns(cfg);
+	html.push("<section class=\"sebPanel sebRelationPanel\" aria-labelledby=\"sebRelTitle\">");
+	html.push("<strong id=\"sebRelTitle\" class=\"sebPanelTitle\">",
+		DonaCadena({cat: "Relation (per fila)", spa: "Relation (por fila)", eng: "Relation (per row)"}),
+		"</strong>");
+	html.push("<p class=\"sebHint\">",
+		DonaCadena({
+			cat: "Trieu el grup subject i el grup object pel nom. Es crearan columnes id_&lt;nom&gt; per fila (es omplen quan hi hagi @iot.id d'Observations). Publicació al servidor: TODO.",
+			spa: "Elija el grupo subject y el grupo object por nombre. Se crearán columnas id_&lt;nombre&gt; por fila (se rellenan con @iot.id de Observations). Publicación en servidor: TODO.",
+			eng: "Pick subject and object groups by name. Per-row id_&lt;name&gt; columns are filled with Observation @iot.id later. Server publish: TODO."
+		}), "</p>");
+	html.push("<label class=\"sebRelEnable\"><input type=\"checkbox\" class=\"sebRelEnableCb\" id=\"sebRelEnable\"",
+		(stub.enabled ? " checked" : ""), " onchange=\"sebOnIncludeChange()\"> ",
+		DonaCadena({
+			cat: "Prepara Relation per fila",
+			spa: "Preparar Relation por fila",
+			eng: "Prepare per-row Relation"
+		}), "</label>");
+	html.push("<div class=\"sebRow\"><span class=\"sebLbl\">role</span>",
+		"<input type=\"text\" class=\"sebRelRole\" id=\"sebRelRole\" value=\"", sebEsc(stub.role || ""),
+		"\" placeholder=\"https://…/role/…\"></div>");
+	html.push("<div class=\"sebRow\"><span class=\"sebLbl\">Subject</span>",
+		"<select class=\"sebRelSubject\" id=\"sebRelSubject\">");
+	html.push("<option value=\"\">—</option>");
+	for (i = 0; i < included.length; i++) {
+		m = included[i];
+		opt = (stub.subjectGroupKey === m.key) ? " selected" : "";
+		html.push("<option value=\"", sebEsc(m.key), "\"", opt, ">",
+			sebEsc(sebGroupDisplayLabel(m)), "</option>");
+	}
+	html.push("</select></div>");
+	html.push("<div class=\"sebRow\"><span class=\"sebLbl\">Object</span>",
+		"<select class=\"sebRelObject\" id=\"sebRelObject\">");
+	html.push("<option value=\"\">—</option>");
+	for (i = 0; i < included.length; i++) {
+		m = included[i];
+		opt = (stub.objectGroupKey === m.key) ? " selected" : "";
+		html.push("<option value=\"", sebEsc(m.key), "\"", opt, ">",
+			sebEsc(sebGroupDisplayLabel(m)), "</option>");
+	}
+	html.push("</select></div>");
+	html.push("<div class=\"sebRow\"><span class=\"sebLbl\">",
+		DonaCadena({cat: "Descripció", spa: "Descripción", eng: "Description"}),
+		"</span><input type=\"text\" class=\"sebRelDesc\" id=\"sebRelDesc\" value=\"",
+		sebEsc(stub.description || ""), "\"></div>");
+	html.push("</section>");
+	return html.join("");
 }
 
 function renderSTAEntityBuilderForm(node) {
@@ -871,9 +1422,14 @@ function renderSTAEntityBuilderForm(node) {
 	var perMeasSet = {};
 	if (!el)
 		return;
-	SEB_PER_MEAS.forEach(function (p) { perMeasSet[p] = true; });
+	sebEnsureScope(cfg);
+	sebEnsureGroupLabels(cfg);
+	if (!isCas)
+		sebRefreshRelationIdColumns(cfg);
 	rows = parent && parent.STAdata ? parent.STAdata.length : 0;
+	SEB_PER_MEAS.forEach(function (p) { perMeasSet[p] = true; });
 
+	/* —— Mode —— */
 	html.push("<div class=\"sebModeRow\"><label>",
 		DonaCadena({cat: "Mode d'entrada:", spa: "Modo de entrada:", eng: "Input mode:"}),
 		" <select id=\"sebMode\" onchange=\"sebOnModeChange(event)\">",
@@ -884,70 +1440,112 @@ function renderSTAEntityBuilderForm(node) {
 		DonaCadenaFmt({cat: "Files d'entrada: {0}", spa: "Filas de entrada: {0}", eng: "Input rows: {0}"}, rows),
 		"</span></div>");
 
-	html.push("<fieldset><legend>",
-		DonaCadena({cat: "Entitats al flux", spa: "Entidades en el flujo", eng: "Entities in workflow"}),
-		"</legend><div class=\"sebIncludeRow\">");
-	order.forEach(function (plural) {
-		html.push("<label><input type=\"checkbox\" class=\"sebInc\" data-ent=\"" + plural + "\" onchange=\"sebOnIncludeChange()\"" +
-			(cfg.selected[plural] ? " checked" : "") +
-			(isCas && plural === "Observations" ? " disabled" : "") +
-			"> " + plural + "</label>");
-	});
-	html.push("</div></fieldset>");
-
 	if (isCas) {
+		/* ========== ConnectASensor: keep previous layout ========== */
+		html.push("<fieldset><legend>",
+			DonaCadena({cat: "Entitats al flux", spa: "Entidades en el flujo", eng: "Entities in workflow"}),
+			"</legend><div class=\"sebIncludeRow\">");
+		order.forEach(function (plural) {
+			html.push("<label><input type=\"checkbox\" class=\"sebInc\" data-ent=\"", plural,
+				"\" onchange=\"sebOnIncludeChange()\"",
+				(cfg.selected[plural] ? " checked" : ""),
+				(plural === "Observations" || plural === "Parties" ? " disabled" : ""),
+				"> ", plural, "</label>");
+		});
+		html.push("</div></fieldset>");
+
 		html.push("<fieldset><legend>",
 			DonaCadena({cat: "Columnes de mesura", spa: "Columnas de medida", eng: "Measurement columns"}),
 			"</legend><div class=\"sebIncludeRow\">");
-		cfg.measurements.forEach(function (m) {
-			html.push("<label><input type=\"checkbox\" class=\"sebMeasInc\" data-meas=\"" + sebEsc(m.key) + "\" onchange=\"sebOnIncludeChange()\"" +
-				(m.include ? " checked" : "") + "> " + sebEsc(sebMeasLabel(m)) +
-				" <code>" + sebEsc(m.key) + "</code></label>");
+		(cfg.measurements || []).forEach(function (m) {
+			html.push("<label><input type=\"checkbox\" class=\"sebMeasInc\" data-meas=\"", sebEsc(m.key),
+				"\" onchange=\"sebOnIncludeChange()\"", (m.include ? " checked" : ""), "> ",
+				sebEsc(sebMeasLabel(m)), " <code>", sebEsc(m.key), "</code></label>");
 		});
-		if (!cfg.measurements.length)
+		if (!(cfg.measurements || []).length)
 			html.push("<span class=\"sebHint\">",
 				DonaCadena({cat: "No s'han detectat columnes de mesura.", spa: "No se han detectado columnas de medida.", eng: "No measurement columns detected."}),
 				"</span>");
 		html.push("</div></fieldset>");
-	}
 
-	/* Shared entity sections (in CAS mode, per-measurement ones are nested under each measurement) */
-	order.forEach(function (plural) {
-		if (isCas && perMeasSet[plural])
-			return;
-		html.push("<fieldset class=\"sebSection\" data-section=\"" + plural + "\" hidden><legend>" + plural +
-			" <small class=\"sebReqNote\" hidden>" +
-			DonaCadena({cat: "(requerit per altres entitats)", spa: "(requerido por otras entidades)", eng: "(required by other entities)"}) +
-			"</small></legend>");
-		if (plural === "Parties")
-			html.push("<p id=\"sebPartyMsg\" class=\"sebPartyMsg sebHint\"></p>");
-		if (isCas && plural === "Observations") {
-			html.push("<p class=\"sebHint sebObsSensorNote\">",
-				DonaCadena({
-					cat: "Les observacions es deriven de les dades recollides amb el sensor (cada valor de mesura × cada registre). No cal mapar columnes aquí.",
-					spa: "Las observaciones se derivan de los datos recogidos con el sensor (cada valor de medida × cada registro). No hace falta mapear columnas aquí.",
-					eng: "Observations are derived from data collected with the sensor (each measurement value × each record). No column mapping is needed here."
-				}),
-				"</p>");
-		} else {
-			html.push(sebEntityBlockHtml(plural, cfg.entities[plural], null, cols, sebCtx.cands[plural], cfg.mode, false));
-		}
-		html.push("</fieldset>");
-	});
-
-	/* Measurement sections: Temperature → ObservedProperty, Sensor, Datastream (FoI is shared above) */
-	if (isCas) {
-		cfg.measurements.forEach(function (m) {
-			html.push("<fieldset class=\"sebSection sebMeasSection\" data-section-meas=\"" + sebEsc(m.key) + "\" data-meas=\"" +
-				sebEsc(m.key) + "\" hidden><legend>" + sebEsc(sebMeasLabel(m)) +
-				" <code>" + sebEsc(m.key) + "</code></legend>");
-			SEB_PER_MEAS.forEach(function (plural) {
-				html.push("<div class=\"sebMeasEntWrap\" data-meas-ent=\"" + plural + "\" hidden>",
-					sebEntityBlockHtml(plural, m[plural], m.key, cols, null, cfg.mode, true),
-					"</div>");
-			});
+		order.forEach(function (plural) {
+			if (perMeasSet[plural])
+				return;
+			html.push("<fieldset class=\"sebSection\" data-section=\"", plural, "\" hidden><legend>", plural,
+				" <small class=\"sebReqNote\" hidden>",
+				DonaCadena({cat: "(requerit per altres entitats)", spa: "(requerido por otras entidades)", eng: "(required by other entities)"}),
+				"</small></legend>");
+			if (plural === "Parties")
+				html.push("<p id=\"sebPartyMsg\" class=\"sebPartyMsg sebHint\"></p>");
+			if (plural === "Observations") {
+				html.push("<p class=\"sebHint sebObsSensorNote\">",
+					DonaCadena({
+						cat: "Les observacions es deriven de les dades recollides amb el sensor (cada valor de mesura × cada registre). No cal mapar columnes aquí.",
+						spa: "Las observaciones se derivan de los datos recogidos con el sensor (cada valor de medida × cada registro). No hace falta mapear columnas aquí.",
+						eng: "Observations are derived from data collected with the sensor (each measurement value × each record). No column mapping is needed here."
+					}), "</p>");
+			} else if (cfg.entities[plural]) {
+				html.push(sebEntityBlockHtml(plural, cfg.entities[plural], null, cols, sebCtx.cands[plural], cfg.mode, false));
+			}
 			html.push("</fieldset>");
 		});
+
+		(cfg.measurements || []).forEach(function (m) {
+			html.push("<fieldset class=\"sebSection sebMeasSection\" data-section-meas=\"", sebEsc(m.key),
+				"\" data-meas=\"", sebEsc(m.key), "\" hidden><legend>", sebEsc(sebMeasLabel(m)),
+				" <code>", sebEsc(m.key), "</code></legend>");
+			html.push("<div class=\"sebGroupEnts\">");
+			SEB_PER_MEAS.forEach(function (plural) {
+				if (!m[plural])
+					return;
+				/* Same fieldset+legend look as shared entities / free-mode groups */
+				html.push("<fieldset class=\"sebSection sebMeasEntWrap\" data-meas-ent=\"", plural,
+					"\" hidden><legend>", sebEsc(plural), "</legend>",
+					sebEntityBlockHtml(plural, m[plural], m.key, cols, null, cfg.mode, false),
+					"</fieldset>");
+			});
+			html.push("</div></fieldset>");
+		});
+	} else {
+		/* ========== DataFromTable: freer groups ========== */
+		html.push("<p class=\"sebHint\">",
+			DonaCadena({
+				cat: "El Party és sempre compartit (login). Creeu grups; dins de cada grup marqueu les entitats (incloent Observations) i ompliu-ne les propietats a mà o amb columna.",
+				spa: "El Party es siempre compartido (login). Cree grupos; dentro de cada grupo marque las entidades (incluyendo Observations) y rellene propiedades a mano o con columna.",
+				eng: "Party is always shared (login). Create groups; inside each group tick entities (including Observations) and fill properties manually or from a column."
+			}), "</p>");
+
+		/* Shared Party only at top level */
+		html.push("<fieldset class=\"sebSection\" data-section=\"Parties\"><legend>Parties</legend>");
+		html.push("<p id=\"sebPartyMsg\" class=\"sebPartyMsg sebHint\"></p>");
+		if (cfg.entities.Parties)
+			html.push(sebEntityBlockHtml("Parties", cfg.entities.Parties, null, cols, sebCtx.cands.Parties, cfg.mode, false));
+		html.push("</fieldset>");
+
+		html.push("<section class=\"sebPanel sebGroupsPanel\"><strong class=\"sebPanelTitle\">",
+			DonaCadena({cat: "Grups d'observacions", spa: "Grupos de observaciones", eng: "Observation groups"}),
+			"</strong>");
+		html.push("<div class=\"sebGroupActions\"><button type=\"button\" class=\"DialogConnectASensorAction\" onclick=\"sebOnAddGroup(event)\">",
+			DonaCadena({
+				cat: "Crea un nou grup d'observacions",
+				spa: "Crear un nuevo grupo de observaciones",
+				eng: "Create new observations group"
+			}), "</button></div>");
+		html.push("<div class=\"sebGroupList\">");
+		(cfg.measurements || []).forEach(function (m) {
+			html.push(sebGroupCardHtml(m, cols, cfg));
+		});
+		if (!(cfg.measurements || []).length) {
+			html.push("<p class=\"sebHint\">",
+				DonaCadena({
+					cat: "Encara no hi ha grups. Creeu-ne un (p. ex. fotos, identificació).",
+					spa: "Aún no hay grupos. Cree uno (p. ej. fotos, identificación).",
+					eng: "No groups yet. Create one (e.g. photos, identification)."
+				}), "</p>");
+		}
+		html.push("</div></section>");
+
+		html.push(sebRelationPanelHtml(cfg));
 	}
 
 	html.push("<div id=\"DialogSTAEntityBuilderStatus\" class=\"sebStatus\"></div>");
@@ -956,7 +1554,6 @@ function renderSTAEntityBuilderForm(node) {
 	ids = el.querySelectorAll(".sebIdRow");
 	for (i = 0; i < ids.length; i++)
 		sebUpdateIdUi(ids[i]);
-	/* Party is always fixed (login); lock UI before the async lookup finishes */
 	(function () {
 		var partyEnt = el.querySelector(".sebEnt[data-ent=\"Parties\"]");
 		var partyInc = el.querySelector(".sebInc[data-ent=\"Parties\"]");
@@ -972,13 +1569,13 @@ function renderSTAEntityBuilderForm(node) {
 				eng: "Party is required and comes from login; it cannot be turned off."
 			});
 		}
-		if (isCas && obsInc) {
+		if (obsInc) {
 			obsInc.checked = true;
 			obsInc.disabled = true;
 			obsInc.title = DonaCadena({
-				cat: "Les observacions es deriven de les dades del sensor.",
-				spa: "Las observaciones se derivan de los datos del sensor.",
-				eng: "Observations are derived from the sensor data."
+				cat: "Les observacions es deriven de les dades / grups.",
+				spa: "Las observaciones se derivan de los datos / grupos.",
+				eng: "Observations are derived from data / groups."
 			});
 		}
 	})();
@@ -987,40 +1584,92 @@ function renderSTAEntityBuilderForm(node) {
 	sebLoadPartyFromLogin(node);
 }
 
+function sebOnQuickColToggle(cb) {
+	var node = getSTAEntityBuilderNodeSafe();
+	var col, cfg, parent, found, m;
+	if (!node || !cb)
+		return;
+	col = cb.getAttribute("data-col");
+	cfg = sebCollectConfigFromForm(node);
+	parent = getSTAEntityBuilderParent(node);
+	if (cb.checked) {
+		found = (cfg.measurements || []).some(function (g) { return g.key === col || g.resultColumn === col; });
+		if (!found) {
+			m = sebAddUserGroup(cfg, parent, col);
+			if (m) {
+				m.key = col;
+				m.resultColumn = col;
+				m.label = col;
+			}
+		} else
+			sebSetMeasurementInclude(cfg, parent, col, true);
+	} else {
+		sebRemoveUserGroup(cfg, col);
+		/* also remove groups whose resultColumn matches */
+		(cfg.measurements || []).slice().forEach(function (g) {
+			if (g.resultColumn === col && g.key !== col)
+				sebRemoveUserGroup(cfg, g.key);
+		});
+	}
+	node.staEntityConfig = cfg;
+	if (typeof networkNodes !== "undefined")
+		networkNodes.update(node);
+	renderSTAEntityBuilderForm(node);
+}
+
 function sebReadSelectedFromForm() {
-	var el = sebBody(), sel = {}, incs, i, modeEl;
+	var el = sebBody(), sel = {}, incs, i, modeEl, gincs, isCas;
 	if (!el)
 		return sel;
+	modeEl = document.getElementById("sebMode");
+	isCas = !modeEl || modeEl.value === "connectASensor";
 	incs = el.querySelectorAll(".sebInc");
 	for (i = 0; i < incs.length; i++)
 		sel[incs[i].getAttribute("data-ent")] = incs[i].checked;
-	/* Party is always required for registration */
+	/* Party is always required and shared */
 	sel.Parties = true;
-	modeEl = document.getElementById("sebMode");
-	/* Sensor mode: Observations stay in the workflow (derived from sensor data) */
-	if (modeEl && modeEl.value === "connectASensor")
+	if (isCas) {
 		sel.Observations = true;
+	} else {
+		/* Free mode: derive workflow from per-group entity checkboxes */
+		sel.Observations = true;
+		gincs = el.querySelectorAll(".sebGroupEntInc");
+		for (i = 0; i < gincs.length; i++) {
+			if (gincs[i].checked)
+				sel[gincs[i].getAttribute("data-ent")] = true;
+		}
+		if (el.querySelector("#sebRelEnable") && el.querySelector("#sebRelEnable").checked)
+			sel.Relations = true;
+	}
 	return sel;
 }
 
 /* Shows/hides sections and measurement blocks without redrawing the form */
 function sebRefreshVisibility() {
 	var el = sebBody(), sel, eff, secs, i, p, note, measChecked = {}, mincs, blocks, m, wraps, j, anyMeasEnt, plural;
-	var perMeasNeeded = false;
+	var modeEl, isCas, perMeasNeeded = false, gEnt;
 	if (!el)
 		return;
+	modeEl = document.getElementById("sebMode");
+	isCas = !modeEl || modeEl.value === "connectASensor";
 	sel = sebReadSelectedFromForm();
 	eff = sebEffectiveSet(sel);
-	SEB_PER_MEAS.forEach(function (pl) {
-		if (eff[pl])
-			perMeasNeeded = true;
-	});
+	if (isCas) {
+		SEB_PER_MEAS.forEach(function (pl) {
+			if (eff[pl])
+				perMeasNeeded = true;
+		});
+	}
 	secs = el.querySelectorAll(".sebSection");
 	for (i = 0; i < secs.length; i++) {
 		p = secs[i].getAttribute("data-section");
 		m = secs[i].getAttribute("data-section-meas");
-		if (m !== null) {
-			/* measurement section: visible if any per-meas entity is effective and measurement included */
+		if (m !== null)
+			continue;
+		if (!p)
+			continue;
+		if (!isCas && p === "Parties") {
+			secs[i].hidden = false;
 			continue;
 		}
 		secs[i].hidden = !eff[p];
@@ -1031,9 +1680,20 @@ function sebRefreshVisibility() {
 	mincs = el.querySelectorAll(".sebMeasInc");
 	for (i = 0; i < mincs.length; i++)
 		measChecked[mincs[i].getAttribute("data-meas")] = mincs[i].checked;
-	blocks = el.querySelectorAll(".sebMeasSection");
+	blocks = el.querySelectorAll(".sebGroupCard, .sebMeasSection");
 	for (i = 0; i < blocks.length; i++) {
 		m = blocks[i].getAttribute("data-meas");
+		if (blocks[i].classList.contains("sebGroupCard")) {
+			blocks[i].style.opacity = measChecked[m] === false ? "0.55" : "";
+			wraps = blocks[i].querySelectorAll(".sebMeasEntWrap");
+			for (j = 0; j < wraps.length; j++) {
+				plural = wraps[j].getAttribute("data-meas-ent");
+				gEnt = blocks[i].querySelector(".sebGroupEntInc[data-ent=\"" + plural + "\"]");
+				wraps[j].hidden = !(gEnt && gEnt.checked);
+			}
+			continue;
+		}
+		/* CAS measurement sections */
 		blocks[i].hidden = !perMeasNeeded || measChecked[m] === false;
 		wraps = blocks[i].querySelectorAll(".sebMeasEntWrap");
 		anyMeasEnt = false;
@@ -1046,6 +1706,31 @@ function sebRefreshVisibility() {
 		if (!anyMeasEnt)
 			blocks[i].hidden = true;
 	}
+}
+
+function sebOnGroupEntityChange(cb) {
+	var node = getSTAEntityBuilderNodeSafe();
+	var cfg, parent, key, plural, j, found;
+	if (!node || !cb)
+		return;
+	key = cb.getAttribute("data-meas");
+	plural = cb.getAttribute("data-ent");
+	cfg = sebCollectConfigFromForm(node);
+	parent = getSTAEntityBuilderParent(node);
+	found = null;
+	for (j = 0; j < (cfg.measurements || []).length; j++) {
+		if (cfg.measurements[j].key === key)
+			found = cfg.measurements[j];
+	}
+	if (found) {
+		sebEnsureGroupSelected(found);
+		found.selected[plural] = !!cb.checked;
+	}
+	sebEnsureMeasurementEntities(cfg, parent);
+	node.staEntityConfig = cfg;
+	if (typeof networkNodes !== "undefined")
+		networkNodes.update(node);
+	renderSTAEntityBuilderForm(node);
 }
 
 function sebOnIncludeChange() {
@@ -1428,11 +2113,14 @@ function sebCollectConfigFromForm(node) {
 	var cfg = sebEnsureConfig(node, false);
 	var parent = getSTAEntityBuilderParent(node);
 	var el = sebBody(), ents, mincs, i, j, k, entEl, plural, meas, target, rows, prop, found, sel;
-	if (el && el.querySelector(".sebEnt")) {
+	var labels, resCols, stub;
+	sebEnsureScope(cfg);
+	if (el) {
 		cfg.mode = sebVal("sebMode") || cfg.mode;
 		sel = sebReadSelectedFromForm();
 		for (k in sel)
 			cfg.selected[k] = sel[k];
+		/* Group include + labels + result columns + per-group entity checkboxes */
 		mincs = el.querySelectorAll(".sebMeasInc");
 		for (i = 0; i < mincs.length; i++) {
 			for (j = 0; j < cfg.measurements.length; j++) {
@@ -1440,6 +2128,39 @@ function sebCollectConfigFromForm(node) {
 					cfg.measurements[j].include = mincs[i].checked;
 			}
 		}
+		labels = el.querySelectorAll(".sebGroupLabel");
+		for (i = 0; i < labels.length; i++) {
+			for (j = 0; j < cfg.measurements.length; j++) {
+				if (cfg.measurements[j].key === labels[i].getAttribute("data-meas"))
+					cfg.measurements[j].label = labels[i].value;
+			}
+		}
+		mincs = el.querySelectorAll(".sebGroupEntInc");
+		for (i = 0; i < mincs.length; i++) {
+			for (j = 0; j < cfg.measurements.length; j++) {
+				if (cfg.measurements[j].key === mincs[i].getAttribute("data-meas")) {
+					sebEnsureGroupSelected(cfg.measurements[j]);
+					cfg.measurements[j].selected[mincs[i].getAttribute("data-ent")] = mincs[i].checked;
+				}
+			}
+		}
+		/* Relation stub (free mode) */
+		stub = cfg.relationStub || sebNewRelationStub();
+		if (el.querySelector("#sebRelEnable")) {
+			stub.enabled = !!el.querySelector("#sebRelEnable").checked;
+			if (el.querySelector("#sebRelRole"))
+				stub.role = el.querySelector("#sebRelRole").value;
+			if (el.querySelector("#sebRelDesc"))
+				stub.description = el.querySelector("#sebRelDesc").value;
+			if (el.querySelector("#sebRelSubject"))
+				stub.subjectGroupKey = el.querySelector("#sebRelSubject").value;
+			if (el.querySelector("#sebRelObject"))
+				stub.objectGroupKey = el.querySelector("#sebRelObject").value;
+			cfg.relationStub = stub;
+			cfg.selected.Relations = !!stub.enabled;
+			sebRefreshRelationIdColumns(cfg);
+		}
+		/* Entity property rows */
 		ents = el.querySelectorAll(".sebEnt");
 		for (i = 0; i < ents.length; i++) {
 			entEl = ents[i];
@@ -1468,6 +2189,17 @@ function sebCollectConfigFromForm(node) {
 			}
 		}
 	}
+	/* Free mode: keep cfg.selected aligned with Parties + union of group entity checks */
+	if (cfg.mode === "dataFromTable") {
+		cfg.selected.Parties = true;
+		cfg.selected.Observations = true;
+		SEB_GROUP_CHECKABLE.forEach(function (pl) {
+			cfg.selected[pl] = (cfg.measurements || []).some(function (gm) {
+				return gm.include && gm.selected && gm.selected[pl];
+			});
+		});
+	}
+	cfg.selected.Parties = true;
 	node.staEntityConfig = cfg;
 	/* Source from parent only — do not wipe STAdata created by "Crea la taula" */
 	if (parent && parent.STAdata && typeof deapCopy === "function")
@@ -1510,23 +2242,31 @@ function sebValidateEntity(plural, ent, label, mode, errors) {
 
 function sebValidateConfig(cfg, parent) {
 	var errors = [], eff = sebEffectiveSet(cfg.selected), isCas = cfg.mode === "connectASensor", included;
+	sebEnsureScope(cfg);
+	included = (cfg.measurements || []).filter(function (m) {
+		return m.include;
+	});
 	if (!parent || !parent.STAdata || !parent.STAdata.length)
 		errors.push("No input table data.");
-	if (isCas) {
-		included = cfg.measurements.filter(function (m) {
-			return m.include;
-		});
-		if ((eff.Datastreams || eff.ObservedProperties || eff.Observations) && !included.length)
-			errors.push("Select at least one measurement column.");
-	}
+	if ((eff.Datastreams || eff.ObservedProperties || eff.Observations) && !included.length &&
+			(isCas || cfg.mode === "dataFromTable"))
+		errors.push(isCas ? "Select at least one measurement." : "Create/include at least one observation group.");
 	sebEntityOrder().forEach(function (plural) {
 		if (!eff[plural])
 			return;
+		if (plural === "Relations")
+			return; /* stub — no full entity validation yet */
 		if (isCas && plural === "Observations")
-			return; /* derived from sensor measurements; no property form to validate */
+			return; /* CAS: derived from sensor measurements */
 		if (isCas && SEB_PER_MEAS.indexOf(plural) !== -1) {
 			included.forEach(function (m) {
-				sebValidateEntity(plural, m[plural], plural + " (" + m.key + ")", cfg.mode, errors);
+				sebValidateEntity(plural, m[plural], plural + " (" + (m.label || m.key) + ")", cfg.mode, errors);
+			});
+		} else if (!isCas && plural !== "Parties") {
+			included.forEach(function (m) {
+				sebEnsureGroupSelected(m);
+				if (m.selected[plural])
+					sebValidateEntity(plural, m[plural], plural + " (" + (m.label || m.key) + ")", cfg.mode, errors);
 			});
 		} else
 			sebValidateEntity(plural, cfg.entities[plural], plural, cfg.mode, errors);
@@ -1580,21 +2320,68 @@ function sebApplyManualPropsToRow(row, ent, prefix) {
 		row[(prefix ? prefix + "." : "") + "@iot.id"] = ent.id.value;
 }
 
-function sebObsRowAttributes() {
-	return {
+function sebObsRowAttributes(cfg) {
+	var attrs = {
 		phenomenonTime: { type: "isodatetime", description: "phenomenonTime", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime" },
 		resultTime: { type: "isodatetime", description: "resultTime" },
 		result: { type: "number", description: "Observation result", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/result" },
-		measurementKey: { type: "string", description: "Measurement column key" },
+		measurementKey: { type: "string", description: "Group key" },
+		groupLabel: { type: "string", description: "Group label (etiqueta)" },
 		datastreamRole: { type: "string", description: "Target Datastream role in package" },
 		_sourceIndex: { type: "integer", description: "Index of the wide source row" }
 	};
+	var i, col, included;
+	if (cfg) {
+		sebRefreshRelationIdColumns(cfg);
+		included = (cfg.measurements || []).filter(function (m) { return m.include; });
+		for (i = 0; i < included.length; i++) {
+			col = included[i]._idColumn || sebIdColumnForGroup(included[i]);
+			attrs[col] = {
+				type: "string",
+				description: "Placeholder Observation @iot.id for group \"" + (included[i].label || included[i].key) + "\" (filled after publish)",
+				definition: "http://www.opengis.net/def/docs/15-078r6/Observation/id"
+			};
+		}
+	}
+	return attrs;
+}
+
+/* Apply empty placeholder id_<label> columns onto a long-table row (same source row → same placeholders). */
+function sebApplyRelationIdPlaceholders(row, cfg, sourceRecIndex) {
+	var included, i, col;
+	if (!cfg || !row)
+		return;
+	sebRefreshRelationIdColumns(cfg);
+	included = (cfg.measurements || []).filter(function (m) { return m.include; });
+	for (i = 0; i < included.length; i++) {
+		col = included[i]._idColumn || sebIdColumnForGroup(included[i]);
+		/* Placeholder: empty until Observations exist; keep column present for Relation wiring */
+		if (row[col] === undefined)
+			row[col] = "";
+	}
+	if (cfg.relationStub && cfg.relationStub.enabled) {
+		row._relationSubjectCol = "";
+		row._relationObjectCol = "";
+		included.forEach(function (g) {
+			col = g._idColumn || sebIdColumnForGroup(g);
+			if (g.key === cfg.relationStub.subjectGroupKey)
+				row._relationSubjectCol = col;
+			if (g.key === cfg.relationStub.objectGroupKey)
+				row._relationObjectCol = col;
+		});
+	}
 }
 
 function sebBuildPackage(cfg, parent, staUrl) {
 	var errors = sebValidateConfig(cfg, parent);
 	var eff = sebEffectiveSet(cfg.selected), isCas = cfg.mode === "connectASensor";
 	var pkg, bindings = [], preview = [], r, j, rec, obsEnt, included = [], b, row, pt, rt, resVal, m;
+	var useGroups;
+	sebEnsureScope(cfg);
+	included = (cfg.measurements || []).filter(function (m) {
+		return m.include;
+	});
+	useGroups = included.length > 0;
 	pkg = {
 		version: 2,
 		mode: cfg.mode,
@@ -1602,42 +2389,87 @@ function sebBuildPackage(cfg, parent, staUrl) {
 		observationTable: "long",
 		entities: {},
 		observations: { id: null, existingId: null, phenomenonTime: null, resultTime: null, bindings: [] },
+		relationStub: cfg.relationStub ? (typeof deapCopy === "function" ? deapCopy(cfg.relationStub) : JSON.parse(JSON.stringify(cfg.relationStub))) : null,
 		validation: { ok: errors.length === 0, errors: errors },
 		sourceRowCount: parent && parent.STAdata ? parent.STAdata.length : 0
 	};
-	if (isCas)
-		included = cfg.measurements.filter(function (m) {
-			return m.include;
-		});
 
 	sebEntityOrder().forEach(function (plural) {
-		if (!eff[plural] || plural === "Observations")
+		var list;
+		if (!eff[plural] || plural === "Relations")
 			return;
-		if (isCas && SEB_PER_MEAS.indexOf(plural) !== -1) {
-			pkg.entities[plural] = included.map(function (m) {
-				return sebPackEntity(plural, m[plural], cfg.mode, plural + ":" + m.key, m.key);
+		/* CAS Observations are not packed as reusable entities — derived in long table */
+		if (isCas && plural === "Observations")
+			return;
+		if (plural === "Parties" && cfg.entities[plural]) {
+			pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
+			return;
+		}
+		if (isCas && SEB_PER_MEAS.indexOf(plural) !== -1 && useGroups) {
+			pkg.entities[plural] = included.map(function (gm) {
+				return sebPackEntity(plural, gm[plural], cfg.mode, plural + ":" + gm.key, gm.key);
 			});
-		} else
+		} else if (!isCas && useGroups) {
+			list = included.filter(function (gm) {
+				sebEnsureGroupSelected(gm);
+				return !!gm.selected[plural] && gm[plural];
+			}).map(function (gm) {
+				return sebPackEntity(plural, gm[plural], cfg.mode, plural + ":" + gm.key, gm.key);
+			});
+			if (list.length)
+				pkg.entities[plural] = list;
+			else if (cfg.entities[plural] && plural !== "Observations")
+				pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
+		} else if (cfg.entities[plural])
 			pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
 	});
 
 	/*
-	 * Observations:
-	 * - connectASensor: always in workflow; derived from included measurements + timestamp
-	 * - dataFromTable: form mapping when Observations is selected
+	 * Observation bindings / long table:
+	 * - CAS: derived from measurement columns × rows
+	 * - free: from each group's Observations entity mapping (manual / column)
 	 */
-	if (isCas && (eff.Observations || included.length)) {
+	if (useGroups && isCas) {
 		pkg.observations.phenomenonTime = { source: "column", column: "phenomenonTime" };
 		pkg.observations.resultTime = { source: "column", column: "resultTime" };
-		included.forEach(function (m) {
+		included.forEach(function (gm) {
 			bindings.push({
-				measurementKey: m.key,
+				measurementKey: gm.key,
+				groupLabel: gm.label || gm.key,
+				idColumn: gm._idColumn || sebIdColumnForGroup(gm),
 				result: { source: "column", column: "result" },
-				datastreamRole: "Datastreams:" + m.key
+				datastreamRole: "Datastreams:" + gm.key
 			});
 		});
 		pkg.observations.bindings = bindings;
-	} else if (eff.Observations) {
+	} else if (useGroups && !isCas) {
+		pkg.observations.phenomenonTime = { source: "column", column: "phenomenonTime" };
+		pkg.observations.resultTime = { source: "column", column: "resultTime" };
+		included.forEach(function (gm) {
+			sebEnsureGroupSelected(gm);
+			if (!gm.selected.Observations || !gm.Observations)
+				return;
+			b = sebPackId(gm.Observations);
+			bindings.push({
+				measurementKey: gm.key,
+				groupLabel: gm.label || gm.key,
+				idColumn: gm._idColumn || sebIdColumnForGroup(gm),
+				id: b.id,
+				existingId: b.existingId,
+				result: gm.Observations.props && gm.Observations.props.result
+					? sebPackSrc(gm.Observations.props.result, "string")
+					: { source: "column", column: "result" },
+				phenomenonTime: gm.Observations.props && gm.Observations.props.phenomenonTime
+					? sebPackSrc(gm.Observations.props.phenomenonTime, "string")
+					: null,
+				resultTime: gm.Observations.props && gm.Observations.props.resultTime
+					? sebPackSrc(gm.Observations.props.resultTime, "string")
+					: null,
+				datastreamRole: "Datastreams:" + gm.key
+			});
+		});
+		pkg.observations.bindings = bindings;
+	} else if (eff.Observations && cfg.entities.Observations) {
 		obsEnt = cfg.entities.Observations;
 		b = sebPackId(obsEnt);
 		pkg.observations.id = b.id;
@@ -1652,45 +2484,70 @@ function sebBuildPackage(cfg, parent, staUrl) {
 		pkg.observations.bindings = bindings;
 	}
 
-	/* Materialize long table: 1 row = 1 observation (+ manual constants) */
-	if (parent && parent.STAdata && (isCas ? included.length : bindings.length)) {
+	/* Materialize long table: 1 row = 1 observation (+ manual constants + id_<label> placeholders) */
+	if (parent && parent.STAdata && (useGroups ? included.length : bindings.length)) {
 		for (r = 0; r < parent.STAdata.length; r++) {
 			rec = parent.STAdata[r];
 			if (!rec)
 				continue;
-			if (isCas) {
+			if (useGroups) {
 				for (j = 0; j < included.length; j++) {
 					m = included[j];
-					resVal = rec[m.key];
-					if (sebIsEmpty(resVal))
-						continue;
-					pt = rec.timestamp;
-					rt = pt;
+					if (isCas) {
+						resVal = rec[m.key];
+						if (sebIsEmpty(resVal))
+							continue;
+						pt = rec.timestamp || rec.phenomenonTime;
+						rt = pt;
+					} else {
+						sebEnsureGroupSelected(m);
+						if (!m.selected.Observations || !m.Observations)
+							continue;
+						obsEnt = m.Observations;
+						resVal = sebResolveSrc(obsEnt.props.result, rec);
+						if (sebIsEmpty(resVal))
+							continue;
+						pt = sebResolveSrc(obsEnt.props.phenomenonTime, rec);
+						rt = obsEnt.props.resultTime ? sebResolveSrc(obsEnt.props.resultTime, rec) : undefined;
+						if (rt === undefined || rt === null || rt === "")
+							rt = pt;
+					}
 					row = {
 						phenomenonTime: pt,
 						resultTime: rt,
 						result: resVal,
 						measurementKey: m.key,
+						groupLabel: m.label || m.key,
 						datastreamRole: "Datastreams:" + m.key,
 						_sourceIndex: r
 					};
-					/* Shared entity manuals (Things, Locations, …) */
+					if (!isCas)
+						sebApplyRelationIdPlaceholders(row, cfg, r);
+					/* Shared entity manuals (Party always; others only if not on this group) */
 					sebEntityOrder().forEach(function (pl) {
-						if (SEB_PER_MEAS.indexOf(pl) !== -1 || pl === "Observations")
+						if (pl === "Observations" || pl === "Relations")
 							return;
+						if (isCas && SEB_PER_MEAS.indexOf(pl) !== -1)
+							return;
+						if (!isCas) {
+							sebEnsureGroupSelected(m);
+							if (m.selected[pl])
+								return;
+						}
 						if (!eff[pl] || !cfg.entities[pl])
 							return;
 						sebApplyManualPropsToRow(row, cfg.entities[pl], pl);
 					});
-					/* Per-measurement entity manuals */
-					SEB_PER_MEAS.forEach(function (pl) {
-						if (!eff[pl] || !m[pl])
+					/* Per-group entity manuals (skip Observations — already on row) */
+					(isCas ? SEB_PER_MEAS : sebGroupSelectedList(m)).forEach(function (pl) {
+						if (!m[pl] || pl === "Observations")
 							return;
 						sebApplyManualPropsToRow(row, m[pl], m.key + "." + pl);
 					});
 					preview.push(row);
 				}
 			} else {
+				obsEnt = cfg.entities.Observations;
 				resVal = sebResolveSrc(obsEnt.props.result, rec);
 				if (sebIsEmpty(resVal))
 					continue;
@@ -1703,11 +2560,13 @@ function sebBuildPackage(cfg, parent, staUrl) {
 					resultTime: rt,
 					result: resVal,
 					measurementKey: "",
+					groupLabel: "",
 					datastreamRole: "Datastreams",
 					_sourceIndex: r
 				};
+				sebApplyRelationIdPlaceholders(row, cfg, r);
 				sebEntityOrder().forEach(function (pl) {
-					if (pl === "Observations" || !eff[pl] || !cfg.entities[pl])
+					if (pl === "Observations" || pl === "Relations" || !eff[pl] || !cfg.entities[pl])
 						return;
 					sebApplyManualPropsToRow(row, cfg.entities[pl], pl);
 				});
@@ -1716,7 +2575,7 @@ function sebBuildPackage(cfg, parent, staUrl) {
 		}
 	}
 	pkg.observationPreviewCount = preview.length;
-	return { package: pkg, preview: preview, attributes: sebObsRowAttributes() };
+	return { package: pkg, preview: preview, attributes: sebObsRowAttributes(cfg) };
 }
 
 /* ---------- dialog ---------- */

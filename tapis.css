@@ -2080,6 +2080,165 @@
 	margin: 8px 0;
 }
 
+#DialogSTAEntityBuilder .sebPanel {
+	margin: 0 0 12px 0;
+	padding: 10px 12px;
+	border: 1px solid #ccc;
+	background: #fafafa;
+	text-align: left;
+}
+
+#DialogSTAEntityBuilder .sebPanelTitle {
+	display: block;
+	margin: 0 0 8px 0;
+}
+
+#DialogSTAEntityBuilder .sebScopeList {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+#DialogSTAEntityBuilder .sebScopeRow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 14px;
+	padding: 4px 0;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+#DialogSTAEntityBuilder .sebScopeRow:last-child {
+	border-bottom: none;
+}
+
+#DialogSTAEntityBuilder .sebScopeEnt {
+	min-width: 11em;
+	font-weight: 600;
+}
+
+#DialogSTAEntityBuilder .sebScopeOpt {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin: 0;
+	font-weight: normal;
+}
+
+#DialogSTAEntityBuilder .sebGroupActions {
+	margin: 0 0 8px 0;
+}
+
+#DialogSTAEntityBuilder .sebGroupList {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+#DialogSTAEntityBuilder .sebGroupCard {
+	margin: 0;
+	padding: 8px 10px;
+	border: 1px solid #ccc;
+	background: #fff;
+	border-left: 3px solid #888;
+}
+
+#DialogSTAEntityBuilder .sebGroupCardHead {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 12px;
+	margin: 0 0 6px 0;
+}
+
+#DialogSTAEntityBuilder .sebGroupLabelWrap {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin: 0;
+}
+
+#DialogSTAEntityBuilder .sebGroupLabel {
+	min-width: 8em;
+	max-width: 14em;
+	padding: 2px 4px;
+}
+
+#DialogSTAEntityBuilder .sebIdColHint {
+	font-size: 0.9em;
+	color: #444;
+}
+
+#DialogSTAEntityBuilder .sebIdColPreview,
+#DialogSTAEntityBuilder .sebIdColChip {
+	font-family: Consolas, "Courier New", monospace;
+	font-size: 0.95em;
+	background: #eee;
+	padding: 1px 5px;
+	border: 1px solid #ccc;
+}
+
+#DialogSTAEntityBuilder .sebIdColChip {
+	display: inline-block;
+	margin: 2px 4px 2px 0;
+}
+
+#DialogSTAEntityBuilder .sebRelIdCols {
+	margin: 6px 0 8px 0;
+}
+
+#DialogSTAEntityBuilder .sebRelationPanel {
+	border-left: 3px solid #666;
+}
+
+#DialogSTAEntityBuilder .sebRelEnable {
+	display: block;
+	margin: 0 0 8px 0;
+	font-weight: 600;
+}
+
+#DialogSTAEntityBuilder .sebQuickCols {
+	margin: 0 0 8px 0;
+}
+
+#DialogSTAEntityBuilder .sebGroupEntChecks {
+	margin: 8px 0;
+	text-align: left;
+}
+
+#DialogSTAEntityBuilder .sebGroupEntChecks > .sebLbl {
+	display: block;
+	margin-bottom: 4px;
+	font-weight: 600;
+}
+
+#DialogSTAEntityBuilder .sebGroupEnts {
+	margin-top: 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* Nested entity blocks (CAS measurements + free groups): same look as shared fieldsets */
+#DialogSTAEntityBuilder .sebGroupEnts > .sebMeasEntWrap.sebSection {
+	margin: 0;
+	padding: 8px 10px;
+	border: 1px solid #ccc;
+	background: #fafafa;
+	text-align: left;
+}
+
+#DialogSTAEntityBuilder .sebGroupEnts > .sebMeasEntWrap.sebSection > legend {
+	font-weight: 600;
+	padding: 0 4px;
+}
+
+#DialogSTAEntityBuilder .sebGroupEnts .sebEnt {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
 #DialogSTAEntityBuilder .DialogSTAEntityBuilderActions,
 #DialogSTAPublisher .DialogSTAEntityBuilderActions {
 	margin: 8px 0;
@@ -2122,12 +2281,14 @@
 
 #DialogSTAEntityBuilder .sebMeasSection {
 	margin: 0 0 12px 0;
+	padding: 8px 10px;
+	border: 1px solid #bbb;
+	background: #fff;
 }
 
-#DialogSTAEntityBuilder .sebMeasSection .sebEnt {
-	margin: 6px 0 10px 10px;
-	padding-left: 8px;
-	border-left: 3px solid #ccc;
+#DialogSTAEntityBuilder .sebMeasSection > legend {
+	font-weight: 600;
+	padding: 0 4px;
 }
 
 #DialogSTAEntityBuilder .sebMeasEntTitle {

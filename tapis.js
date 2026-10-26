@@ -2103,8 +2103,9 @@ function OpenLogin(event) {
 
 	hello("authenix").login({redirect_uri: location.pathname, lang: getLang(), scope: "openid profile idp citiobs.secd.eu%23read citiobs.secd.eu%23create citiobs.secd.eu%23update citiobs.secd.eu%23delete", display: "popup"}).then(
 		function(success) {
+			/* Show/hide via none + clear inline display (CSS .generalButton); never inline-block */
 			document.getElementById("buttonOpenLogin").style.display="none";
-			document.getElementById("buttonOpenLogout").style.display="";
+			document.getElementById("buttonOpenLogout").style.removeProperty("display");
 			var jwt_elems=parseJwt(success.authResponse.id_token)
 			CriptoName=jwt_elems.sub;
 			DisplayName=jwt_elems.preferred_username ? jwt_elems.preferred_username : ""
@@ -2129,7 +2130,7 @@ function OpenLogin(event) {
 function OpenLogout(event) {
 	hello("authenix").logout({force:true}).then(
 		function(success) {
-			document.getElementById("buttonOpenLogin").style.display="";
+			document.getElementById("buttonOpenLogin").style.removeProperty("display");
 			document.getElementById("buttonOpenLogout").style.display="none";
 			alert(DonaCadenaFmt({cat: "S'ha tancat la sessió a {0}.", spa: "Se ha cerrado la sesión en {0}.", eng: "Signed out from {0}."}, "authenix"));
 			document.getElementById("UserInfoText").textContent="";

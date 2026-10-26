@@ -1920,7 +1920,7 @@
 					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta Y dreta:&quot;, &quot;spa&quot;: &quot;Etiqueta Y derecha:&quot;, &quot;eng&quot;: &quot;Right Y label:&quot;}">Right Y label:</span>
 						<input type="text" id="DialogScatterPlotAxisYLabelRight"></input>
 					</label>
-					<label class="DialogScatterPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>
+					<label class="DialogScatterPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números dels eixos:&quot;, &quot;spa&quot;: &quot;Tamaño de los números de los ejes:&quot;, &quot;eng&quot;: &quot;Axis number size:&quot;}">Axis number size:</span>
 						<input type="range" id="DialogScatterPlotLabelSize" min="8" max="28" value="12" oninput="onScatterPlotStyleChange(true)" onchange="onScatterPlotStyleChange(true)">
 						<span id="DialogScatterPlotLabelSizeValue">12</span>
 					</label>
@@ -2033,7 +2033,7 @@
 					<input type="range" id="DialogBarPlotTitleSize" min="10" max="36" value="16" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
 					<span id="DialogBarPlotTitleSizeValue">16</span>
 				</label>
-				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>
+				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números dels eixos:&quot;, &quot;spa&quot;: &quot;Tamaño de los números de los ejes:&quot;, &quot;eng&quot;: &quot;Axis number size:&quot;}">Axis number size:</span>
 					<input type="range" id="DialogBarPlotLabelSize" min="8" max="28" value="12" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
 					<span id="DialogBarPlotLabelSizeValue">12</span>
 				</label>
@@ -2044,6 +2044,11 @@
 				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de la llegenda:&quot;, &quot;spa&quot;: &quot;Tamaño de la leyenda:&quot;, &quot;eng&quot;: &quot;Legend size:&quot;}">Legend size:</span>
 					<input type="range" id="DialogBarPlotLegendSize" min="8" max="28" value="12" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
 					<span id="DialogBarPlotLegendSizeValue">12</span>
+				</label>
+				<label><input type="checkbox" id="DialogBarPlotShowValueLabels" checked="checked" onchange="onBarPlotStyleChange(true)"> <span data-lang="{&quot;cat&quot;: &quot;Mostra els números dins del gràfic&quot;, &quot;spa&quot;: &quot;Mostrar los números dentro del gráfico&quot;, &quot;eng&quot;: &quot;Show numbers inside the chart&quot;}">Show numbers inside the chart</span></label>
+				<label class="DialogBarPlotSizeRow" id="DialogBarPlotValueLabelSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números del gràfic:&quot;, &quot;spa&quot;: &quot;Tamaño de los números del gráfico:&quot;, &quot;eng&quot;: &quot;Chart number size:&quot;}">Chart number size:</span>
+					<input type="range" id="DialogBarPlotValueLabelSize" min="8" max="28" value="12" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
+					<span id="DialogBarPlotValueLabelSizeValue">12</span>
 				</label>
 			</fieldset>
 
@@ -2139,7 +2144,7 @@
 					<input type="range" id="DialogRadarPlotTitleSize" min="10" max="36" value="16" oninput="onRadarPlotStyleChange(true)" onchange="onRadarPlotStyleChange(true)">
 					<span id="DialogRadarPlotTitleSizeValue">16</span>
 				</label>
-				<label class="DialogRadarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>
+				<label class="DialogRadarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números dels eixos:&quot;, &quot;spa&quot;: &quot;Tamaño de los números de los ejes:&quot;, &quot;eng&quot;: &quot;Axis number size:&quot;}">Axis number size:</span>
 					<input type="range" id="DialogRadarPlotTickSize" min="8" max="28" value="11" oninput="onRadarPlotStyleChange(true)" onchange="onRadarPlotStyleChange(true)">
 					<span id="DialogRadarPlotTickSizeValue">11</span>
 				</label>
@@ -2150,6 +2155,11 @@
 				<label class="DialogRadarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida de la llegenda:&quot;, &quot;spa&quot;: &quot;Tamaño de la leyenda:&quot;, &quot;eng&quot;: &quot;Legend size:&quot;}">Legend size:</span>
 					<input type="range" id="DialogRadarPlotLegendSize" min="8" max="28" value="12" oninput="onRadarPlotStyleChange(true)" onchange="onRadarPlotStyleChange(true)">
 					<span id="DialogRadarPlotLegendSizeValue">12</span>
+				</label>
+				<label id="DialogRadarPlotShowValueLabelsLabel"><input type="checkbox" id="DialogRadarPlotShowValueLabels" checked="checked" onchange="onRadarPlotStyleChange(true)"> <span data-lang="{&quot;cat&quot;: &quot;Mostra els números dins del gràfic&quot;, &quot;spa&quot;: &quot;Mostrar los números dentro del gráfico&quot;, &quot;eng&quot;: &quot;Show numbers inside the chart&quot;}">Show numbers inside the chart</span></label>
+				<label class="DialogRadarPlotSizeRow" id="DialogRadarPlotValueLabelSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números del gràfic:&quot;, &quot;spa&quot;: &quot;Tamaño de los números del gráfico:&quot;, &quot;eng&quot;: &quot;Chart number size:&quot;}">Chart number size:</span>
+					<input type="range" id="DialogRadarPlotValueLabelSize" min="8" max="28" value="11" oninput="onRadarPlotStyleChange(true)" onchange="onRadarPlotStyleChange(true)">
+					<span id="DialogRadarPlotValueLabelSizeValue">11</span>
 				</label>
 			</fieldset>
 			<br>
@@ -2234,11 +2244,12 @@
 					<span id="DialogCircularChartLegendSizeValue">12</span>
 				</label>
 				<div id="DialogCircularChartLabelStyle" class="DialogCircularChartLabelStyle">
-					<label><span data-lang="{&quot;cat&quot;: &quot;Mida dels números:&quot;, &quot;spa&quot;: &quot;Tamaño de los números:&quot;, &quot;eng&quot;: &quot;Number size:&quot;}">Number size:</span>
+					<label><input type="checkbox" id="DialogCircularChartShowValueLabels" checked="checked" onchange="onCircularLabelStyleChange(true)"> <span data-lang="{&quot;cat&quot;: &quot;Mostra els números dins del gràfic&quot;, &quot;spa&quot;: &quot;Mostrar los números dentro del gráfico&quot;, &quot;eng&quot;: &quot;Show numbers inside the chart&quot;}">Show numbers inside the chart</span></label>
+					<label id="DialogCircularChartLabelSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números del gràfic:&quot;, &quot;spa&quot;: &quot;Tamaño de los números del gráfico:&quot;, &quot;eng&quot;: &quot;Chart number size:&quot;}">Chart number size:</span>
 						<input type="range" id="DialogCircularChartLabelSize" min="8" max="28" value="11" oninput="onCircularLabelStyleChange(true)" onchange="onCircularLabelStyleChange(true)">
 						<span id="DialogCircularChartLabelSizeValue">11</span>
 					</label>
-					<label><span data-lang="{&quot;cat&quot;: &quot;Color dels números:&quot;, &quot;spa&quot;: &quot;Color de los números:&quot;, &quot;eng&quot;: &quot;Number color:&quot;}">Number color:</span>
+					<label id="DialogCircularChartLabelColorRow"><span data-lang="{&quot;cat&quot;: &quot;Color dels números del gràfic:&quot;, &quot;spa&quot;: &quot;Color de los números del gráfico:&quot;, &quot;eng&quot;: &quot;Chart number color:&quot;}">Chart number color:</span>
 						<input type="color" id="DialogCircularChartLabelColor" value="#ffffff" onchange="onCircularLabelStyleChange(true)">
 					</label>
 				</div>
@@ -3409,7 +3420,7 @@
 <dialog id="DialogSTAEntityBuilder" onClose='sebOnBuilderDialogClose(event)'>
 	<form onsubmit="event.preventDefault(); return false;">
 		<strong><span data-lang="{&quot;cat&quot;: &quot;Constructor d'entitats STA&quot;, &quot;spa&quot;: &quot;Constructor de entidades STA&quot;, &quot;eng&quot;: &quot;STA Entity Builder&quot;}">STA Entity Builder</span></strong>
-		<p class="sebHint"><span data-lang="{&quot;cat&quot;: &quot;Configura entitats i observacions. No publica al servidor; useu el Publicador STA.&quot;, &quot;spa&quot;: &quot;Configura entidades y observaciones. No publica en el servidor; use el Publicador STA.&quot;, &quot;eng&quot;: &quot;Configure entities and observations. Does not publish to the server; use STA Publisher.&quot;}">Configure entities and observations. Does not publish to the server; use STA Publisher.</span></p>
+		<p class="sebHint"><span data-lang="{&quot;cat&quot;: &quot;Configura entitats i observacions amb grups etiquetats (compartit vs. varia). Les Relations es preparen per fila via columnes id_&lt;etiqueta&gt;. No publica al servidor; useu el Publicador STA.&quot;, &quot;spa&quot;: &quot;Configura entidades y observaciones con grupos etiquetados (compartido vs. varía). Las Relations se preparan por fila vía columnas id_&lt;etiqueta&gt;. No publica en el servidor; use el Publicador STA.&quot;, &quot;eng&quot;: &quot;Configure entities and observations with labelled groups (shared vs. varies). Relations are prepared per row via id_&lt;label&gt; columns. Does not publish; use STA Publisher.&quot;}">Configure entities and observations with labelled groups (shared vs. varies). Relations are prepared per row via id_&lt;label&gt; columns. Does not publish; use STA Publisher.</span></p>
 		<div class="DialogSTAEntityBuilderStaUrlRow">
 			<label><span data-lang="{&quot;cat&quot;: &quot;URL del servei STA:&quot;, &quot;spa&quot;: &quot;URL del servicio STA:&quot;, &quot;eng&quot;: &quot;STA service URL:&quot;}">STA service URL:</span>
 				<span id="DialogSTAEntityBuilderStaUrlText" class="DialogSTAEntityBuilderStaUrlText"></span>
