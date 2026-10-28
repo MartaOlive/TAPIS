@@ -470,22 +470,32 @@ function spaNormalizeBatch(pkg, obsRows, sourceData) {
 			: (o || {});
 		foiEnt = spaFindRelated(pkg, "FeaturesOfInterest", o.measurementKey || undefined);
 		dsEnt = spaFindRelated(pkg, "Datastreams", o.measurementKey || undefined);
-		observations.push({
-			index: i,
-			phenomenonTime: o.phenomenonTime,
-			resultTime: o.resultTime != null ? o.resultTime : o.phenomenonTime,
-			result: o.result,
-			measurementKey: o.measurementKey || "",
-			groupLabel: o.groupLabel || spaGroupLabelFromPkg(pkg, o.measurementKey) || "",
-			datastreamRole: o.datastreamRole || ("Datastreams:" + (o.measurementKey || "")),
-			foiRole: foiEnt ? foiEnt.role : "FeaturesOfInterest",
-			datastreamKey: dsEnt ? spaEntityStableKey("Datastreams", dsEnt, rec, pkg) : null,
-			foiKey: foiEnt ? spaEntityStableKey("FeaturesOfInterest", foiEnt, rec, pkg) : null,
-			_sourceIndex: o._sourceIndex,
-			status: "pending",
-			observationId: null,
-			error: null
-		});
+		/* Preserve id columns from long table so spaObsIdFromTable can reuse them */
+		(function () {
+			var col = spaObsIdColumn(pkg, o.measurementKey), row = {
+				index: i,
+				phenomenonTime: o.phenomenonTime,
+				resultTime: o.resultTime != null ? o.resultTime : o.phenomenonTime,
+				result: o.result,
+				measurementKey: o.measurementKey || "",
+				groupLabel: o.groupLabel || spaGroupLabelFromPkg(pkg, o.measurementKey) || "",
+				datastreamRole: o.datastreamRole || ("Datastreams:" + (o.measurementKey || "")),
+				foiRole: foiEnt ? foiEnt.role : "FeaturesOfInterest",
+				datastreamKey: dsEnt ? spaEntityStableKey("Datastreams", dsEnt, rec, pkg) : null,
+				foiKey: foiEnt ? spaEntityStableKey("FeaturesOfInterest", foiEnt, rec, pkg) : null,
+				_sourceIndex: o._sourceIndex,
+				status: "pending",
+				observationId: null,
+				error: null
+			};
+			if (col && o[col] !== undefined)
+				row[col] = o[col];
+			if (o["@iot.id"] !== undefined)
+				row["@iot.id"] = o["@iot.id"];
+			if (o.observationId !== undefined)
+				row.observationId = o.observationId;
+			observations.push(row);
+		})();
 	}
 
 	nEnt = 0;
@@ -716,7 +726,7 @@ async function spaFinishLicenseResolve(ctx, item, id, body, patch, logSuffix) {
 	Licenses: lookup-by-definition/name first (create often forbidden on STA services).
 */
 async function spaResolveUniqueEntity(ctx, item) {
-	var plural = item.plural, cached, id, body, patch, response, found, status, hint;
+	var plural = item.plural, cached, id, body, patch, response, found, status, hint, got;
 
 	item.status = "checking";
 	/* Already confirmed on this item — no network */
@@ -821,7 +831,25 @@ async function spaResolveUniqueEntity(ctx, item) {
 	}
 
 	try {
-		id = await GetObjectId(ctx.url, plural, body);
+		/* MultiDatastreams need special ObservedProperties filter — keep GetObjectId */
+		if (plural === "MultiDatastreams") {
+			id = await GetObjectId(ctx.url, plural, body);
+			if (spaIsEmpty(id)) {
+				item.status = "error";
+				item.error = "Could not get or create " + item.singular + (body.name ? " " + body.name : "") + ".";
+				spaAppendLog("ERROR " + item.error);
+				return null;
+			}
+			item.id = id;
+			item.status = "done";
+			spaRegistrySet(ctx.cache, item.key, id);
+			spaUpdatePreviewEntityId(item.key, id);
+			spaAppendLog(item.singular + (body.name ? " " + body.name : "") + " @" + id);
+			return id;
+		}
+		/* Filter by all characteristics; POST only if missing. Table @iot.id already handled above. */
+		got = await spaGetOrCreate(ctx.url, plural, body);
+		id = got && got.id;
 	} catch (err) {
 		item.status = "error";
 		item.error = err && err.message ? err.message : String(err);
@@ -840,7 +868,8 @@ async function spaResolveUniqueEntity(ctx, item) {
 	item.status = "done";
 	spaRegistrySet(ctx.cache, item.key, id);
 	spaUpdatePreviewEntityId(item.key, id);
-	spaAppendLog(item.singular + (body.name ? " " + body.name : "") + " @" + id);
+	spaAppendLog(item.singular + (body.name ? " " + body.name : "") +
+		(got && got.existing ? " existing @" : " created @") + id);
 	return id;
 }
 
@@ -930,8 +959,114 @@ function spaBatchHasPlural(entities, plural) {
 	return false;
 }
 
+function spaObsIdColumn(pkg, measurementKey) {
+	var bindings = pkg && pkg.observations && pkg.observations.bindings, i, b;
+	if (!bindings)
+		return null;
+	for (i = 0; i < bindings.length; i++) {
+		b = bindings[i];
+		if (!b || !b.idColumn)
+			continue;
+		if (measurementKey === undefined || measurementKey === "" || b.measurementKey === measurementKey)
+			return b.idColumn;
+	}
+	return null;
+}
+
+/*
+	Id already present on the observation table / row → reuse, no STA lookup.
+	Checks observationId, @iot.id, and the group's id_<label> column.
+*/
+function spaObsIdFromTable(o, pkg) {
+	var col, id;
+	if (!o)
+		return null;
+	if (!spaIsEmpty(o.observationId) && o.observationId !== "(previous)")
+		return spaNormalizeId(o.observationId);
+	if (!spaIsEmpty(o["@iot.id"]))
+		return spaNormalizeId(o["@iot.id"]);
+	col = spaObsIdColumn(pkg, o.measurementKey);
+	if (col && !spaIsEmpty(o[col]))
+		return spaNormalizeId(o[col]);
+	return null;
+}
+
+function spaWriteObsIdToRow(o, pkg, id) {
+	var col;
+	if (!o || spaIsEmpty(id))
+		return;
+	o.observationId = id;
+	o["@iot.id"] = id;
+	col = spaObsIdColumn(pkg, o.measurementKey);
+	if (col)
+		o[col] = id;
+}
+
+/*
+	Lookup by $filter on all body properties (AddKeysToFilter), then POST if missing.
+	If body already has @iot.id → return it without any request.
+*/
+async function spaFilterFindId(url, plural, body) {
+	var filter, response, data, id;
+	if (!url || !plural || !body)
+		return null;
+	if (!spaIsEmpty(body["@iot.id"]))
+		return spaNormalizeId(body["@iot.id"]);
+	if (typeof AddKeysToFilter !== "function")
+		return null;
+	filter = AddKeysToFilter("", body);
+	if (!filter)
+		return null;
+	response = await HTTPJSONData(url + "/" + plural + "?$top=1&$filter=" + encodeURIComponent(filter));
+	if (!(response && response.ok && response.obj))
+		return null;
+	data = response.obj;
+	if (data.value && data.value.length) {
+		id = data.value[0]["@iot.id"];
+		return spaIsEmpty(id) ? null : id;
+	}
+	return null;
+}
+
+async function spaPostEntity(url, plural, body) {
+	var response, id, loc;
+	response = await HTTPJSONData(url + "/" + plural, ["Location"], "POST", body);
+	if (response && response.ok) {
+		loc = response.responseHeaders && (response.responseHeaders.Location || response.responseHeaders.location);
+		if (typeof ExtractIdFromURL === "function" && !spaIsEmpty(loc))
+			id = ExtractIdFromURL(loc);
+		if (spaIsEmpty(id) && response.obj && response.obj["@iot.id"] != null)
+			id = response.obj["@iot.id"];
+		return id;
+	}
+	throw {
+		name: "STA",
+		message: (response && response.status ? ("HTTP " + response.status) : (plural + " POST failed")) +
+			(response && response.obj && response.obj.message ? (": " + response.obj.message) : "")
+	};
+}
+
+/* Returns { id, existing, fromTable }. existing=true → no POST. */
+async function spaGetOrCreate(url, plural, body) {
+	var id;
+	if (!body)
+		return { id: null, existing: false, fromTable: false };
+	if (!spaIsEmpty(body["@iot.id"]))
+		return { id: spaNormalizeId(body["@iot.id"]), existing: true, fromTable: true };
+	try {
+		id = await spaFilterFindId(url, plural, body);
+	} catch (err) {
+		spaAppendLog("WARN " + plural + " filter: " + (err && err.message ? err.message : String(err)));
+		id = null;
+	}
+	if (!spaIsEmpty(id))
+		return { id: id, existing: true, fromTable: false };
+	id = await spaPostEntity(url, plural, body);
+	return { id: id, existing: false, fromTable: false };
+}
+
 async function spaCreateObservations(ctx) {
-	var nOk = 0, nFail = 0, results = [], i, o, ds, foi, dsId, foiId, body, obsId, pt, rt;
+	var nOk = 0, nFail = 0, results = [], i, o, ds, foi, dsId, foiId, body, obsId, pt, rt, got, fromTable;
 	var requireFoi = spaBatchHasPlural(ctx.entities, "FeaturesOfInterest");
 
 	for (i = 0; i < ctx.observations.length; i++) {
@@ -939,6 +1074,18 @@ async function spaCreateObservations(ctx) {
 		/* Skip already-ok from a prior run (retry); do not re-POST */
 		if (o.status === "done")
 			continue;
+
+		/* Id already on the table → reuse, no filter / POST */
+		fromTable = spaObsIdFromTable(o, ctx.pkg);
+		if (!spaIsEmpty(fromTable)) {
+			o.status = "done";
+			spaWriteObsIdToRow(o, ctx.pkg, fromTable);
+			spaUpdatePreviewObservationId(o.index, fromTable);
+			nOk++;
+			spaAppendLog("Observation[" + o.index + "] reuse @" + fromTable + " (from table)");
+			continue;
+		}
+
 		/* Prefer per-row keys (expand-by-row); fall back to role / measurementKey */
 		ds = (o.datastreamKey && ctx.entities[o.datastreamKey]) ||
 			spaFindEntityByRole(ctx.entities, o.datastreamRole) ||
@@ -976,7 +1123,8 @@ async function spaCreateObservations(ctx) {
 			};
 			if (!spaIsEmpty(foiId))
 				body.FeatureOfInterest = { "@iot.id": foiId };
-			obsId = await GetObjectId(ctx.url, "Observations", body);
+			got = await spaGetOrCreate(ctx.url, "Observations", body);
+			obsId = got && got.id;
 			if (spaIsEmpty(obsId)) {
 				o.status = "error";
 				o.error = "Observation create returned no id.";
@@ -985,10 +1133,12 @@ async function spaCreateObservations(ctx) {
 				continue;
 			}
 			o.status = "done";
-			o.observationId = obsId;
+			spaWriteObsIdToRow(o, ctx.pkg, obsId);
 			o.datastreamId = dsId;
 			spaUpdatePreviewObservationId(o.index, obsId);
 			nOk++;
+			spaAppendLog("Observation[" + o.index + "] " + (got.existing ? "existing" : "created") +
+				" @" + obsId);
 			results.push({
 				phenomenonTime: pt,
 				result: o.result,
@@ -1006,24 +1156,26 @@ async function spaCreateObservations(ctx) {
 	return { nOk: nOk, nFail: nFail, results: results };
 }
 
-/* POST Relation (STAplus). Direct POST — $filter on Subject/Object is unreliable.
-   Must request Location (same as GetObjectId): many STA services return 201 with empty body. */
-async function spaPostRelation(url, body) {
-	var response, id, loc;
-	response = await HTTPJSONData(url + "/Relations", ["Location"], "POST", body);
-	if (response && response.ok) {
-		loc = response.responseHeaders && (response.responseHeaders.Location || response.responseHeaders.location);
-		if (typeof ExtractIdFromURL === "function" && !spaIsEmpty(loc))
-			id = ExtractIdFromURL(loc);
-		if (spaIsEmpty(id) && response.obj && response.obj["@iot.id"] != null)
-			id = response.obj["@iot.id"];
-		return id;
+/* Lookup Relation by role + Subject + Object (+ description). */
+async function spaLookupRelation(url, role, sid, oid, description) {
+	var filter, response, id;
+	if (spaIsEmpty(role) || spaIsEmpty(sid) || spaIsEmpty(oid))
+		return null;
+	filter = "role eq '" + spaODataStr(role) + "' and Subject/@iot.id eq " +
+		getQueryIdODataFromId(sid) + " and Object/@iot.id eq " + getQueryIdODataFromId(oid);
+	if (!spaIsEmpty(description))
+		filter += " and description eq '" + spaODataStr(description) + "'";
+	response = await HTTPJSONData(url + "/Relations?$top=1&$filter=" + encodeURIComponent(filter));
+	if (response && response.ok && response.obj && response.obj.value && response.obj.value.length) {
+		id = response.obj.value[0]["@iot.id"];
+		return spaIsEmpty(id) ? null : id;
 	}
-	throw {
-		name: "STA",
-		message: (response && response.status ? ("HTTP " + response.status) : "Relation POST failed") +
-			(response && response.obj && response.obj.message ? (": " + response.obj.message) : "")
-	};
+	return null;
+}
+
+/* POST Relation (STAplus). Must request Location (same as GetObjectId). */
+async function spaPostRelation(url, body) {
+	return await spaPostEntity(url, "Relations", body);
 }
 
 function spaFindOgIdForGroup(ctx, groupKey) {
@@ -1169,6 +1321,14 @@ async function spaCreateRelations(ctx) {
 		r = ctx.relations[i];
 		if (r.status === "done")
 			continue;
+		/* Id already on the plan / table → reuse, no filter / POST */
+		if (!spaIsEmpty(r.relationId) && r.relationId !== "(previous)") {
+			r.status = "done";
+			spaUpdatePreviewRelationId(r.index, r.relationId);
+			nOk++;
+			spaAppendLog("Relation[" + r.index + "] reuse @" + r.relationId + " (from table)");
+			continue;
+		}
 		if (targetKind === "ObservationGroups") {
 			sid = spaFindOgIdForGroup(ctx, r.subjectGroupKey);
 			oid = spaFindOgIdForGroup(ctx, r.objectGroupKey);
@@ -1199,6 +1359,7 @@ async function spaCreateRelations(ctx) {
 			spaAppendLog("Relation[" + r.index + "] SKIP: " + r.error);
 			continue;
 		}
+
 		r.status = "creating";
 		try {
 			body = {
@@ -1211,6 +1372,26 @@ async function spaCreateRelations(ctx) {
 			if (includeOgOnPost && ogIds.length) {
 				body.ObservationGroups = ogIds.map(function (id) { return { "@iot.id": id }; });
 			}
+
+			/* Prefer existing Relation on the service (filter by characteristics) */
+			try {
+				relId = await spaLookupRelation(ctx.url, r.role, sid, oid, r.description);
+			} catch (lookupErr) {
+				spaAppendLog("WARN Relation[" + r.index + "] filter: " +
+					(lookupErr && lookupErr.message ? lookupErr.message : String(lookupErr)));
+				relId = null;
+			}
+			if (!spaIsEmpty(relId)) {
+				r.status = "done";
+				r.relationId = relId;
+				r.targetKind = targetKind;
+				spaUpdatePreviewRelationId(r.index, relId);
+				nOk++;
+				spaAppendLog("Relation[" + r.index + "] existing @" + relId +
+					" (" + targetKind + " Subject " + sid + " → Object " + oid + ")");
+				continue;
+			}
+
 			relId = await spaPostRelation(ctx.url, body);
 			if (spaIsEmpty(relId)) {
 				r.status = "error";
@@ -1224,7 +1405,8 @@ async function spaCreateRelations(ctx) {
 			r.targetKind = targetKind;
 			spaUpdatePreviewRelationId(r.index, relId);
 			nOk++;
-			spaAppendLog("Relation[" + r.index + "] @" + relId + " (" + targetKind + " Subject " + sid + " → Object " + oid + ")");
+			spaAppendLog("Relation[" + r.index + "] created @" + relId +
+				" (" + targetKind + " Subject " + sid + " → Object " + oid + ")");
 		} catch (err) {
 			r.status = "error";
 			r.error = err && err.message ? err.message : String(err);
@@ -1902,8 +2084,235 @@ function spaTriggerPngDownload(blobOrDataUrl, isDataUrl) {
 	}), false);
 }
 
+/* —— PNG plan export: real tables, all columns, wrap (no clipping) —— */
+
+function spaPngWrapLines(ctx, text, maxWidth) {
+	var s = String(text == null ? "" : text), words, lines = [], line = "", i, test, rest;
+	if (!s)
+		return [""];
+	/* Prefer wrapping on spaces; fall back to hard wrap for long tokens / JSON */
+	words = s.split(/(\s+)/);
+	for (i = 0; i < words.length; i++) {
+		test = line + words[i];
+		if (line && ctx.measureText(test).width > maxWidth) {
+			lines.push(line);
+			line = words[i].replace(/^\s+/, "");
+			while (line && ctx.measureText(line).width > maxWidth) {
+				rest = "";
+				while (line.length > 1 && ctx.measureText(line).width > maxWidth) {
+					rest = line.slice(-1) + rest;
+					line = line.slice(0, -1);
+				}
+				if (line)
+					lines.push(line);
+				line = rest;
+			}
+		} else
+			line = test;
+	}
+	if (line !== "")
+		lines.push(line);
+	if (!lines.length)
+		lines.push("");
+	return lines;
+}
+
+function spaPngLayoutTable(ctx, headers, rows, opts) {
+	var font = (opts && opts.font) || "11px Segoe UI, Arial, sans-serif";
+	var headerFont = (opts && opts.headerFont) || "bold 11px Segoe UI, Arial, sans-serif";
+	var padX = (opts && opts.padX != null) ? opts.padX : 6;
+	var padY = (opts && opts.padY != null) ? opts.padY : 4;
+	var lineH = (opts && opts.lineH != null) ? opts.lineH : 14;
+	var minCol = (opts && opts.minCol != null) ? opts.minCol : 48;
+	/* No max width: columns grow to fit full cell text (long URLs, JSON, …). */
+	var maxCol = (opts && opts.maxCol != null) ? opts.maxCol : Infinity;
+	var colWidths = [], i, j, w, cell, lines, rowLines = [], headerLines = [], h, totalW, totalH, cw;
+
+	ctx.font = headerFont;
+	for (i = 0; i < headers.length; i++) {
+		w = Math.ceil(ctx.measureText(String(headers[i] == null ? "" : headers[i])).width) + padX * 2;
+		colWidths[i] = Math.max(minCol, w);
+	}
+	ctx.font = font;
+	for (i = 0; i < rows.length; i++) {
+		for (j = 0; j < headers.length; j++) {
+			cell = rows[i][j] == null ? "" : String(rows[i][j]);
+			w = Math.ceil(ctx.measureText(cell).width) + padX * 2;
+			if (w > colWidths[j])
+				colWidths[j] = w;
+		}
+	}
+	if (isFinite(maxCol)) {
+		for (i = 0; i < colWidths.length; i++)
+			colWidths[i] = Math.min(maxCol, colWidths[i]);
+	}
+
+	/* Single-line cells when unrestricted; wrap only if a maxCol was set */
+	ctx.font = headerFont;
+	for (i = 0; i < headers.length; i++) {
+		cw = colWidths[i] - padX * 2;
+		if (isFinite(maxCol) && ctx.measureText(String(headers[i] == null ? "" : headers[i])).width > cw)
+			headerLines[i] = spaPngWrapLines(ctx, headers[i], cw);
+		else
+			headerLines[i] = [String(headers[i] == null ? "" : headers[i])];
+	}
+	h = 0;
+	for (i = 0; i < headerLines.length; i++)
+		h = Math.max(h, headerLines[i].length);
+	headerLines._rowH = Math.max(lineH, h * lineH) + padY * 2;
+
+	ctx.font = font;
+	for (i = 0; i < rows.length; i++) {
+		rowLines[i] = [];
+		h = 1;
+		for (j = 0; j < headers.length; j++) {
+			cell = rows[i][j] == null ? "" : String(rows[i][j]);
+			cw = colWidths[j] - padX * 2;
+			if (isFinite(maxCol) && ctx.measureText(cell).width > cw)
+				lines = spaPngWrapLines(ctx, cell, cw);
+			else
+				lines = [cell];
+			rowLines[i][j] = lines;
+			h = Math.max(h, lines.length);
+		}
+		rowLines[i]._rowH = Math.max(lineH, h * lineH) + padY * 2;
+	}
+
+	totalW = 0;
+	for (i = 0; i < colWidths.length; i++)
+		totalW += colWidths[i];
+	totalH = headerLines._rowH;
+	for (i = 0; i < rowLines.length; i++)
+		totalH += rowLines[i]._rowH;
+
+	return {
+		headers: headers,
+		rows: rows,
+		colWidths: colWidths,
+		headerLines: headerLines,
+		rowLines: rowLines,
+		width: totalW,
+		height: totalH,
+		padX: padX,
+		padY: padY,
+		lineH: lineH,
+		font: font,
+		headerFont: headerFont
+	};
+}
+
+function spaPngDrawTable(ctx, x, y, layout) {
+	var xi, yi, i, j, lines, li, rowH;
+	if (!layout || !layout.headers || !layout.headers.length)
+		return y;
+
+	/* Header */
+	rowH = layout.headerLines._rowH;
+	xi = x;
+	for (j = 0; j < layout.colWidths.length; j++) {
+		ctx.fillStyle = "#e8eef5";
+		ctx.fillRect(xi, y, layout.colWidths[j], rowH);
+		ctx.strokeStyle = "#9aa7b5";
+		ctx.strokeRect(xi + 0.5, y + 0.5, layout.colWidths[j] - 1, rowH - 1);
+		ctx.fillStyle = "#1a1a1a";
+		ctx.font = layout.headerFont;
+		lines = layout.headerLines[j];
+		for (li = 0; li < lines.length; li++)
+			ctx.fillText(lines[li], xi + layout.padX, y + layout.padY + (li + 1) * layout.lineH - 3);
+		xi += layout.colWidths[j];
+	}
+	yi = y + rowH;
+
+	/* Body */
+	ctx.font = layout.font;
+	for (i = 0; i < layout.rowLines.length; i++) {
+		rowH = layout.rowLines[i]._rowH;
+		xi = x;
+		for (j = 0; j < layout.colWidths.length; j++) {
+			ctx.fillStyle = (i % 2) ? "#f7f9fb" : "#ffffff";
+			ctx.fillRect(xi, yi, layout.colWidths[j], rowH);
+			ctx.strokeStyle = "#c5ced6";
+			ctx.strokeRect(xi + 0.5, yi + 0.5, layout.colWidths[j] - 1, rowH - 1);
+			ctx.fillStyle = "#222222";
+			lines = layout.rowLines[i][j] || [""];
+			for (li = 0; li < lines.length; li++)
+				ctx.fillText(lines[li], xi + layout.padX, yi + layout.padY + (li + 1) * layout.lineH - 3);
+			xi += layout.colWidths[j];
+		}
+		yi += rowH;
+	}
+	return yi;
+}
+
+function spaPngBuildEntityTable(batch, section) {
+	var items = section.items, cols = spaCollectBodyColumns(items), headers, rows = [], i, j, item, body;
+	headers = cols.slice();
+	headers.push("@iot.id");
+	for (i = 0; i < items.length; i++) {
+		item = items[i];
+		body = item._previewBody || spaBuildBody(item.plural, item.ent, item.rec);
+		item._previewBody = body;
+		rows.push(cols.map(function (c) { return spaFormatPreviewCell(body[c]); }).concat([
+			item.id != null ? String(item.id) : ""
+		]));
+	}
+	return { title: section.plural + " (" + items.length + ")", headers: headers, rows: rows };
+}
+
+function spaPngBuildObsTables(batch) {
+	var groups = spaGroupObservations(batch.observations), out = [], gi, g, si2, o, rows;
+	out.push({
+		title: "Observations (" + ((batch.observations && batch.observations.length) || 0) + ")",
+		headers: null,
+		rows: null
+	});
+	for (gi = 0; gi < groups.length; gi++) {
+		g = groups[gi];
+		rows = [];
+		for (si2 = 0; si2 < g.rows.length; si2++) {
+			o = g.rows[si2];
+			rows.push([
+				String(o.index),
+				o.phenomenonTime != null ? String(o.phenomenonTime) : "",
+				o.result != null ? String(o.result) : "",
+				o.observationId != null && o.observationId !== "(previous)" ? String(o.observationId) : ""
+			]);
+		}
+		out.push({
+			title: spaObsGroupDisplayLabel(g, gi) + " (" + g.count + ")",
+			headers: ["#", "phenomenonTime", "result", "@iot.id"],
+			rows: rows
+		});
+	}
+	return out;
+}
+
+function spaPngBuildRelationTable(batch) {
+	var rows = [], i, r;
+	if (!batch.relations || !batch.relations.length)
+		return null;
+	for (i = 0; i < batch.relations.length; i++) {
+		r = batch.relations[i];
+		rows.push([
+			String(r.index),
+			r.role || "",
+			(r.subjectLabel || "Subject") + " #" + r.subjectObsIndex,
+			(r.objectLabel || "Object") + " #" + r.objectObsIndex,
+			r.description || "",
+			r.relationId != null ? String(r.relationId) : ""
+		]);
+	}
+	return {
+		title: "Relations (" + batch.relations.length + ")",
+		headers: ["#", "role", "Subject", "Object", "description", "@iot.id"],
+		rows: rows
+	};
+}
+
 function spaDownloadPlanPNG(event) {
-	var node = getSTAPublisherNodeSafe(), batch, canvas, ctx, y, pad, lineH, maxW, sections, si, items, cols, ci, ii, item, body, groups, gi, g, row, text, counts;
+	var node = getSTAPublisherNodeSafe(), batch, canvas, ctx, y, pad, sections, si, counts;
+	var blocks = [], bi, block, layout, layouts = [], maxTableW = 0, totalH, titleH = 22, gap = 14;
+	var measureCtx, i, text;
 	if (event)
 		event.preventDefault();
 	if (!node) {
@@ -1929,99 +2338,72 @@ function spaDownloadPlanPNG(event) {
 			eng: "Generating PNG…"
 		}), false);
 
-		pad = 16;
-		lineH = 16;
-		maxW = 1100;
+		pad = 20;
 		sections = spaEntitiesByPlural(batch);
-		groups = spaGroupObservations(batch.observations);
-		counts = spaCountByPlural(batch);
+		counts = spaCountByPlural(batch, batch._pkg);
 
-		/* Measure height */
-		y = pad + lineH * 3;
-		for (si = 0; si < sections.length; si++) {
-			items = sections[si].items;
-			cols = spaCollectBodyColumns(items);
-			y += lineH * 2; /* title + header */
-			y += items.length * lineH;
-			y += lineH;
+		for (si = 0; si < sections.length; si++)
+			blocks.push(spaPngBuildEntityTable(batch, sections[si]));
+		blocks = blocks.concat(spaPngBuildObsTables(batch));
+		block = spaPngBuildRelationTable(batch);
+		if (block)
+			blocks.push(block);
+
+		measureCtx = document.createElement("canvas").getContext("2d");
+		text = counts.map(function (c) { return c.plural + ": " + c.n; }).join("  ·  ");
+		for (bi = 0; bi < blocks.length; bi++) {
+			block = blocks[bi];
+			if (block.headers && block.rows) {
+				layout = spaPngLayoutTable(measureCtx, block.headers, block.rows, null);
+				layouts[bi] = layout;
+				maxTableW = Math.max(maxTableW, layout.width);
+			} else
+				layouts[bi] = null;
 		}
-		y += lineH * 2;
-		y += groups.length * lineH;
-		y += pad;
-
 		canvas = document.createElement("canvas");
-		canvas.width = maxW;
-		canvas.height = Math.max(y, 120);
+		canvas.width = Math.max(640, Math.ceil(maxTableW + pad * 2));
+		measureCtx.font = "12px Segoe UI, Arial, sans-serif";
+		totalH = pad + titleH;
+		totalH += spaPngWrapLines(measureCtx, text, canvas.width - pad * 2).length * 16 + 6;
+		for (bi = 0; bi < blocks.length; bi++) {
+			totalH += titleH;
+			if (layouts[bi])
+				totalH += layouts[bi].height + gap;
+			else
+				totalH += gap;
+		}
+		totalH += pad;
+		canvas.height = Math.max(160, Math.ceil(totalH));
 		ctx = canvas.getContext("2d");
 		ctx.fillStyle = "#ffffff";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
-		ctx.fillStyle = "#222222";
-		ctx.font = "bold 14px Segoe UI, Arial, sans-serif";
-		y = pad + 14;
-		ctx.fillText("STA Publisher plan", pad, y);
-		y += lineH;
+
+		y = pad;
+		ctx.fillStyle = "#111111";
+		ctx.font = "bold 16px Segoe UI, Arial, sans-serif";
+		ctx.fillText("STA Publisher plan", pad, y + 14);
+		y += titleH;
 		ctx.font = "12px Segoe UI, Arial, sans-serif";
 		ctx.fillStyle = "#444444";
-		text = counts.map(function (c) { return c.plural + ":" + c.n; }).join(" · ");
-		ctx.fillText(text, pad, y);
-		y += lineH + 4;
-
-		function drawClipped(str, x, yy, maxWidth) {
-			var s = String(str == null ? "" : str), w;
-			if (!s)
-				return;
-			w = ctx.measureText(s).width;
-			if (w <= maxWidth) {
-				ctx.fillText(s, x, yy);
-				return;
+		(function () {
+			var lines = spaPngWrapLines(ctx, text, canvas.width - pad * 2), li;
+			for (li = 0; li < lines.length; li++) {
+				ctx.fillText(lines[li], pad, y + 12);
+				y += 16;
 			}
-			while (s.length > 1 && ctx.measureText(s + "…").width > maxWidth)
-				s = s.slice(0, -1);
-			ctx.fillText(s + "…", x, yy);
-		}
+		})();
+		y += 6;
 
-		for (si = 0; si < sections.length; si++) {
-			items = sections[si].items;
-			cols = spaCollectBodyColumns(items);
-			ctx.fillStyle = "#222222";
-			ctx.font = "bold 12px Segoe UI, Arial, sans-serif";
-			y += lineH;
-			ctx.fillText(sections[si].plural + " (" + items.length + ")", pad, y);
-			y += lineH;
-			ctx.font = "11px Consolas, Courier New, monospace";
-			ctx.fillStyle = "#555555";
-			row = cols.slice(0, 5).concat(["@iot.id"]);
-			text = row.join(" | ");
-			drawClipped(text, pad, y, maxW - pad * 2);
-			y += lineH;
-			ctx.fillStyle = "#333333";
-			for (ii = 0; ii < items.length; ii++) {
-				item = items[ii];
-				body = item._previewBody || spaBuildBody(item.plural, item.ent, item.rec);
-				item._previewBody = body;
-				row = [];
-				for (ci = 0; ci < Math.min(cols.length, 5); ci++)
-					row.push(spaFormatPreviewCell(body[cols[ci]]));
-				row.push(item.id != null ? String(item.id) : "");
-				drawClipped(row.join(" | "), pad, y, maxW - pad * 2);
-				y += lineH;
-				if (y > canvas.height - pad)
-					break;
-			}
-			y += 4;
-		}
-
-		ctx.fillStyle = "#222222";
-		ctx.font = "bold 12px Segoe UI, Arial, sans-serif";
-		y += lineH;
-		ctx.fillText("Observations (" + ((batch.observations && batch.observations.length) || 0) + ") — summary", pad, y);
-		y += lineH;
-		ctx.font = "11px Segoe UI, Arial, sans-serif";
-		ctx.fillStyle = "#333333";
-		for (gi = 0; gi < groups.length; gi++) {
-			g = groups[gi];
-			drawClipped(spaObsGroupDisplayLabel(g, gi) + ": " + g.count, pad, y, maxW - pad * 2);
-			y += lineH;
+		for (bi = 0; bi < blocks.length; bi++) {
+			block = blocks[bi];
+			ctx.fillStyle = "#111111";
+			ctx.font = "bold 13px Segoe UI, Arial, sans-serif";
+			ctx.fillText(block.title, pad, y + 14);
+			y += titleH;
+			if (layouts[bi])
+				y = spaPngDrawTable(ctx, pad, y, layouts[bi]) + gap;
+			else
+				y += 4;
 		}
 
 		if (canvas.toBlob) {

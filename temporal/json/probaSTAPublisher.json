@@ -1,0 +1,782 @@
+{
+	"meta": {
+		"exportedAt": "2026-10-28T15:36:18.877Z",
+		"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+		"mode": "dataFromTable",
+		"fingerprint": "v2\nnr6\nmdataFromTable\nnest:campaignFirst|relationFirst\nrel:grup_mvqurkp6_1>grup_mvs2ju9e_1|Identification|Observations\nParties:Parties:\nLicenses:Licenses:grup_mvqurkp6_1:grup_mvqurkp6_1\nThings:Things:grup_mvqurkp6_1:grup_mvqurkp6_1\nThings:Things:grup_mvs2ju9e_1:grup_mvs2ju9e_1\nLocations:Locations:grup_mvqurkp6_1:grup_mvqurkp6_1\nLocations:Locations:grup_mvs2ju9e_1:grup_mvs2ju9e_1\nSensors:Sensors:grup_mvqurkp6_1:grup_mvqurkp6_1\nSensors:Sensors:grup_mvs2ju9e_1:grup_mvs2ju9e_1\nObservedProperties:ObservedProperties:grup_mvqurkp6_1:grup_mvqurkp6_1\nObservedProperties:ObservedProperties:grup_mvs2ju9e_1:grup_mvs2ju9e_1\nFeaturesOfInterest:FeaturesOfInterest:grup_mvqurkp6_1:grup_mvqurkp6_1\nFeaturesOfInterest:FeaturesOfInterest:grup_mvs2ju9e_1:grup_mvs2ju9e_1\nDatastreams:Datastreams:grup_mvqurkp6_1:grup_mvqurkp6_1\nDatastreams:Datastreams:grup_mvs2ju9e_1:grup_mvs2ju9e_1\nnObs:38\nfirst:grup_mvqurkp6_1|2024-07-12T17:30:00Z|https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/20240712_1930_C1/20240712_1930_C1_01.JPG\nlast:grup_mvs2ju9e_1|2024-07-04T04:12:00Z|https://www.gbif.org/species/7193910",
+		"entityCount": 20,
+		"observationCount": 38
+	},
+	"entitiesByPlural": {
+		"Parties": [
+			{
+				"key": "Parties|c1a70fe6-06a5-39f6-8098-9e585c4ce55f",
+				"role": "Parties",
+				"status": "done",
+				"body": {
+					"authId": "c1a70fe6-06a5-39f6-8098-9e585c4ce55f",
+					"displayName": "TestUser"
+				},
+				"@iot.id": "c1a70fe6-06a5-39f6-8098-9e585c4ce55f"
+			}
+		],
+		"Licenses": [
+			{
+				"key": "Licenses:grup_mvqurkp6_1",
+				"role": "Licenses:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "CC BY 3.0",
+					"definition": "https://creativecommons.org/licenses/by/3.0/deed.en",
+					"description": "My CC_BY",
+					"logo": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png",
+					"attributionText": "contributed by Secure Dimensions"
+				},
+				"@iot.id": "1a708638-1584-4e8a-aec6-8d1bb16315f8"
+			}
+		],
+		"Sensors": [
+			{
+				"key": "Sensors|CameraTrap_01",
+				"role": "Sensors:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "CameraTrap_01",
+					"description": "Motion-activated wildlife camera used to capture images of animals in their natural habitat.",
+					"encodingType": "application/json",
+					"metadata": "{ \"manufacturer\": \"Browning Trail Cameras\", \"model\": \"Strike Force Pro DCL\", \"sensorType\": \"Motion-activated wildlife camera\", \"imageResolution\": \"26 MP\", \"videoResolution\": \"1920 x 1080 (Full HD)\", \"dayNightCapture\": true, \"infraredIllumination\": true, \"motionDetectionRange\": \"100 ft\", \"triggerSpeed\": \"0.15 seconds\", \"application\": \"Wildlife monitoring and biodiversity observation\" }"
+				},
+				"@iot.id": 2737
+			},
+			{
+				"key": "Sensors|CameraTrap_02",
+				"role": "Sensors:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "CameraTrap_02",
+					"description": "Motion-activated wildlife camera used to capture images of animals in their natural habitat.",
+					"encodingType": "application/json",
+					"metadata": "{ \"manufacturer\": \"Browning Trail Cameras\", \"model\": \"Strike Force Pro DCL\", \"sensorType\": \"Motion-activated wildlife camera\", \"imageResolution\": \"26 MP\", \"videoResolution\": \"1920 x 1080 (Full HD)\", \"dayNightCapture\": true, \"infraredIllumination\": true, \"motionDetectionRange\": \"100 ft\", \"triggerSpeed\": \"0.15 seconds\", \"application\": \"Wildlife monitoring and biodiversity observation\" }"
+				},
+				"@iot.id": 2738
+			},
+			{
+				"key": "Sensors|CameraTrap_03",
+				"role": "Sensors:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "CameraTrap_03",
+					"description": "Motion-activated wildlife camera used to capture images of animals in their natural habitat.",
+					"encodingType": "application/json",
+					"metadata": "{ \"manufacturer\": \"Browning Trail Cameras\", \"model\": \"Strike Force Pro DCL\", \"sensorType\": \"Motion-activated wildlife camera\", \"imageResolution\": \"26 MP\", \"videoResolution\": \"1920 x 1080 (Full HD)\", \"dayNightCapture\": true, \"infraredIllumination\": true, \"motionDetectionRange\": \"100 ft\", \"triggerSpeed\": \"0.15 seconds\", \"application\": \"Wildlife monitoring and biodiversity observation\" }"
+				},
+				"@iot.id": 2739
+			},
+			{
+				"key": "Sensors|WildlifeIdentifier_01",
+				"role": "Sensors:grup_mvs2ju9e_1",
+				"measurementKey": "grup_mvs2ju9e_1",
+				"status": "done",
+				"body": {
+					"name": "WildlifeIdentifier_01",
+					"description": "Person responsible for identifying and validating wildlife species from camera trap images, including the review and verification of species observations.",
+					"encodingType": "application/json",
+					"metadata": "{\"identifier\":\"WildlifeIdentifier_01\",\"type\":\"Human observer\",\"role\":\"Wildlife species identifier\",\"responsibilities\":[\"Species identification\",\"Image review\",\"Identification validation\"],\"identificationMethod\":\"Visual identification from camera trap images\"}"
+				},
+				"@iot.id": 2740
+			}
+		],
+		"ObservedProperties": [
+			{
+				"key": "ObservedProperties:grup_mvqurkp6_1",
+				"role": "ObservedProperties:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "WildlifeImage",
+					"definition": "Wildlife image captured by a camera trap and stored at a URL",
+					"description": "Digital photograph captured by a camera trap to document wildlife presence and behaviour. The image is stored externally and referenced through a URL"
+				},
+				"@iot.id": 2406
+			},
+			{
+				"key": "ObservedProperties:grup_mvs2ju9e_1",
+				"role": "ObservedProperties:grup_mvs2ju9e_1",
+				"measurementKey": "grup_mvs2ju9e_1",
+				"status": "done",
+				"body": {
+					"name": "SpeciesIdentification",
+					"definition": "Wildlife image captured by a camera trap and stored at a URL",
+					"description": "Person responsible for identifying and validating wildlife species from camera trap images, including the review and verification of species observations."
+				},
+				"@iot.id": 2407
+			}
+		],
+		"Locations": [
+			{
+				"key": "Locations|1.81129,41.60534",
+				"role": "Locations:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "Sant Jeroni",
+					"description": "Observation point near Sant Jeroni",
+					"encodingType": "application/geo+json",
+					"properties": {
+						"mountain": "Montserrat",
+						"habitat": "Rocky mountain",
+						"altitudeMeters": 1236,
+						"locationType": "Wildlife monitoring site"
+					},
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							1.81129,
+							41.60534
+						]
+					}
+				},
+				"@iot.id": 2674
+			},
+			{
+				"key": "Locations|1.8097,41.5927",
+				"role": "Locations:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "Ermita de Sant Joan",
+					"description": "Observation point near Ermita de Sant Joan",
+					"encodingType": "application/geo+json",
+					"properties": {
+						"mountain": "Montserrat",
+						"habitat": "Mediterranean rocky mountain",
+						"locationType": "Wildlife monitoring site",
+						"nearbyLandmark": "Ermita de Sant Joan"
+					},
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							1.8097,
+							41.5927
+						]
+					}
+				},
+				"@iot.id": 2675
+			},
+			{
+				"key": "Locations|1.813,41.592",
+				"role": "Locations:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "Ermita de Santa Magdalena",
+					"description": "Observation point near Ermita de Santa Magdalena",
+					"encodingType": "application/geo+json",
+					"properties": {
+						"mountain": "Montserrat",
+						"habitat": "Rocky Mediterranean mountain",
+						"locationType": "Wildlife monitoring site",
+						"nearbyLandmark": "Ermita de Santa Magdalena"
+					},
+					"location": {
+						"type": "Point",
+						"coordinates": [
+							1.813,
+							41.592
+						]
+					}
+				},
+				"@iot.id": 2676
+			}
+		],
+		"FeaturesOfInterest": [
+			{
+				"key": "FeaturesOfInterest|1.81129,41.60534",
+				"role": "FeaturesOfInterest:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "Sant Jeroni",
+					"description": "Observation point near Sant Jeroni",
+					"encodingType": "application/geo+json",
+					"properties": {
+						"mountain": "Montserrat",
+						"habitat": "Rocky mountain",
+						"altitudeMeters": 1236,
+						"locationType": "Wildlife monitoring site"
+					},
+					"feature": {
+						"type": "Point",
+						"coordinates": [
+							1.81129,
+							41.60534
+						]
+					}
+				},
+				"@iot.id": 1094
+			},
+			{
+				"key": "FeaturesOfInterest|1.8097,41.5927",
+				"role": "FeaturesOfInterest:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "Ermita de Sant Joan",
+					"description": "Observation point near Ermita de Sant Joan",
+					"encodingType": "application/geo+json",
+					"properties": {
+						"mountain": "Montserrat",
+						"habitat": "Mediterranean rocky mountain",
+						"locationType": "Wildlife monitoring site",
+						"nearbyLandmark": "Ermita de Sant Joan"
+					},
+					"feature": {
+						"type": "Point",
+						"coordinates": [
+							1.8097,
+							41.5927
+						]
+					}
+				},
+				"@iot.id": 1095
+			},
+			{
+				"key": "FeaturesOfInterest|1.813,41.592",
+				"role": "FeaturesOfInterest:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "Ermita de Santa Magdalena",
+					"description": "Observation point near Ermita de Santa Magdalena",
+					"encodingType": "application/geo+json",
+					"properties": {
+						"mountain": "Montserrat",
+						"habitat": "Rocky Mediterranean mountain",
+						"locationType": "Wildlife monitoring site",
+						"nearbyLandmark": "Ermita de Santa Magdalena"
+					},
+					"feature": {
+						"type": "Point",
+						"coordinates": [
+							1.813,
+							41.592
+						]
+					}
+				},
+				"@iot.id": 1096
+			}
+		],
+		"Things": [
+			{
+				"key": "Things|CameraTrap_01",
+				"role": "Things:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "CameraTrap_01",
+					"description": "Motion-activated camera trap used for wildlife monitoring.",
+					"properties": {
+						"deviceType": "Camera trap",
+						"manufacturer": "Browning Trail Cameras",
+						"model": "Strike Force Pro DCL",
+						"modelNumber": "BTC-5DCL",
+						"imageResolutionMP": 26,
+						"videoResolution": "1920x1080",
+						"triggerSpeedSeconds": 0.15,
+						"motionDetectionRangeMeters": 30.48,
+						"infraredNightVision": true,
+						"fieldOfViewDegrees": 54,
+						"storageType": "SDXC",
+						"maxStorageCapacityGB": 512,
+						"powerSource": "6 AA batteries",
+						"purpose": "Wildlife monitoring",
+						"status": "Active"
+					}
+				},
+				"@iot.id": 183
+			},
+			{
+				"key": "Things|CameraTrap_02",
+				"role": "Things:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "CameraTrap_02",
+					"description": "Motion-activated camera trap used for wildlife monitoring.",
+					"properties": {
+						"deviceType": "Camera trap",
+						"manufacturer": "Browning Trail Cameras",
+						"model": "Strike Force Pro DCL",
+						"modelNumber": "BTC-5DCL",
+						"imageResolutionMP": 26,
+						"videoResolution": "1920x1080",
+						"triggerSpeedSeconds": 0.15,
+						"motionDetectionRangeMeters": 30.48,
+						"infraredNightVision": true,
+						"fieldOfViewDegrees": 54,
+						"storageType": "SDXC",
+						"maxStorageCapacityGB": 512,
+						"powerSource": "6 AA batteries",
+						"purpose": "Wildlife monitoring",
+						"status": "Active"
+					}
+				},
+				"@iot.id": 184
+			},
+			{
+				"key": "Things|CameraTrap_03",
+				"role": "Things:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "CameraTrap_03",
+					"description": "Motion-activated camera trap used for wildlife monitoring.",
+					"properties": {
+						"deviceType": "Camera trap",
+						"manufacturer": "Browning Trail Cameras",
+						"model": "Strike Force Pro DCL",
+						"modelNumber": "BTC-5DCL",
+						"imageResolutionMP": 26,
+						"videoResolution": "1920x1080",
+						"triggerSpeedSeconds": 0.15,
+						"motionDetectionRangeMeters": 30.48,
+						"infraredNightVision": true,
+						"fieldOfViewDegrees": 54,
+						"storageType": "SDXC",
+						"maxStorageCapacityGB": 512,
+						"powerSource": "6 AA batteries",
+						"purpose": "Wildlife monitoring",
+						"status": "Active"
+					}
+				},
+				"@iot.id": 185
+			},
+			{
+				"key": "Things|WildlifeIdentifier_01",
+				"role": "Things:grup_mvs2ju9e_1",
+				"measurementKey": "grup_mvs2ju9e_1",
+				"status": "done",
+				"body": {
+					"name": "WildlifeIdentifier_01",
+					"description": "Human observer responsible for identifying and validating wildlife species from camera trap images.",
+					"properties": {
+						"deviceType": "Camera trap",
+						"manufacturer": "Browning Trail Cameras",
+						"model": "Strike Force Pro DCL",
+						"modelNumber": "BTC-5DCL",
+						"imageResolutionMP": 26,
+						"videoResolution": "1920x1080",
+						"triggerSpeedSeconds": 0.15,
+						"motionDetectionRangeMeters": 30.48,
+						"infraredNightVision": true,
+						"fieldOfViewDegrees": 54,
+						"storageType": "SDXC",
+						"maxStorageCapacityGB": 512,
+						"powerSource": "6 AA batteries",
+						"purpose": "Wildlife monitoring",
+						"status": "Active"
+					}
+				},
+				"@iot.id": 186
+			}
+		],
+		"Datastreams": [
+			{
+				"key": "Datastreams:grup_mvqurkp6_1",
+				"role": "Datastreams:grup_mvqurkp6_1",
+				"measurementKey": "grup_mvqurkp6_1",
+				"status": "done",
+				"body": {
+					"name": "Camera trap photograph",
+					"description": "Photographs captured automatically by motion-activated camera traps for wildlife monitoring, species detection and documentation of animal behaviour in natural habitats.",
+					"observationType": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+					"unitOfMeasurement": {
+						"name": "image",
+						"symbol": "img",
+						"definition": "Digital image"
+					},
+					"properties": {
+						"captureMethod": "camera_trap",
+						"automation": "motion-activated",
+						"mediaType": "image/jpeg",
+						"storageType": "URL",
+						"purpose": "Wildlife monitoring"
+					}
+				},
+				"@iot.id": 2640
+			},
+			{
+				"key": "Datastreams:grup_mvs2ju9e_1",
+				"role": "Datastreams:grup_mvs2ju9e_1",
+				"measurementKey": "grup_mvs2ju9e_1",
+				"status": "done",
+				"body": {
+					"name": "Taxon identification",
+					"description": "Taxonomic identification of wildlife species based on the visual analysis of camera trap images or field photographs by a human observer",
+					"observationType": "\"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CategoryObservation\"",
+					"unitOfMeasurement": {
+						"name": "-",
+						"symbol": "-",
+						"definition": "-"
+					},
+					"properties": {
+						"identificationMethod": "Human visual identification",
+						"purpose": "Wildlife monitoring",
+						"validationStatus": "Validated",
+						"inputDataType": "Photograph"
+					}
+				},
+				"@iot.id": 2641
+			}
+		]
+	},
+	"observations": [
+		{
+			"index": 0,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-12T17:30:00Z",
+			"resultTime": "2024-07-12T17:30:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/20240712_1930_C1/20240712_1930_C1_01.JPG",
+			"status": "done",
+			"@iot.id": 5828892
+		},
+		{
+			"index": 1,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-12T17:30:00Z",
+			"resultTime": "2024-07-12T17:30:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828893
+		},
+		{
+			"index": 2,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-12T17:30:00Z",
+			"resultTime": "2024-07-12T17:30:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/20240712_1930_C1/20240712_1930_C1_02.JPG",
+			"status": "done",
+			"@iot.id": 5828894
+		},
+		{
+			"index": 3,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-12T17:30:00Z",
+			"resultTime": "2024-07-12T17:30:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828893
+		},
+		{
+			"index": 4,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-12T17:30:00Z",
+			"resultTime": "2024-07-12T17:30:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/20240712_1930_C1/20240712_1930_C1_03.JPG",
+			"status": "done",
+			"@iot.id": 5828895
+		},
+		{
+			"index": 5,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-12T17:30:00Z",
+			"resultTime": "2024-07-12T17:30:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828893
+		},
+		{
+			"index": 6,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-12T17:30:00Z",
+			"resultTime": "2024-07-12T17:30:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/20240712_1930_C1/20240712_1930_C1_04.JPG",
+			"status": "done",
+			"@iot.id": 5828896
+		},
+		{
+			"index": 7,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-12T17:30:00Z",
+			"resultTime": "2024-07-12T17:30:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828893
+		},
+		{
+			"index": 8,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-01T17:31:00Z",
+			"resultTime": "2024-07-01T17:31:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/01072024_1931_C2/01072024_1931_C2_01.JPG",
+			"status": "done",
+			"@iot.id": 5828897
+		},
+		{
+			"index": 9,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-01T17:31:00Z",
+			"resultTime": "2024-07-01T17:31:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828898
+		},
+		{
+			"index": 10,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-01T17:31:00Z",
+			"resultTime": "2024-07-01T17:31:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/01072024_1931_C2/01072024_1931_C2_02.JPG",
+			"status": "done",
+			"@iot.id": 5828899
+		},
+		{
+			"index": 11,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-01T17:31:00Z",
+			"resultTime": "2024-07-01T17:31:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828898
+		},
+		{
+			"index": 12,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-01T17:31:00Z",
+			"resultTime": "2024-07-01T17:31:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/01072024_1931_C2/01072024_1931_C2_03.JPG",
+			"status": "done",
+			"@iot.id": 5828900
+		},
+		{
+			"index": 13,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-01T17:31:00Z",
+			"resultTime": "2024-07-01T17:31:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828898
+		},
+		{
+			"index": 14,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-01T17:31:00Z",
+			"resultTime": "2024-07-01T17:31:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/01072024_1931_C2/01072024_1931_C2_04.JPG",
+			"status": "done",
+			"@iot.id": 5828901
+		},
+		{
+			"index": 15,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-01T17:31:00Z",
+			"resultTime": "2024-07-01T17:31:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828898
+		},
+		{
+			"index": 16,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-06-23T06:10:00Z",
+			"resultTime": "2024-06-23T06:10:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/23062024_0810_C3/23062024_0810_C3_01.JPG",
+			"status": "done",
+			"@iot.id": 5828902
+		},
+		{
+			"index": 17,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-06-23T06:10:00Z",
+			"resultTime": "2024-06-23T06:10:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828903
+		},
+		{
+			"index": 18,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-06-23T11:38:00Z",
+			"resultTime": "2024-06-23T11:38:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/23062024_1338_C3/23062024_1338_C3_01.JPG",
+			"status": "done",
+			"@iot.id": 5828904
+		},
+		{
+			"index": 19,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-06-23T11:38:00Z",
+			"resultTime": "2024-06-23T11:38:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828905
+		},
+		{
+			"index": 20,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-06-23T11:38:00Z",
+			"resultTime": "2024-06-23T11:38:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/23062024_1338_C3/23062024_1338_C3_02.JPG",
+			"status": "done",
+			"@iot.id": 5828906
+		},
+		{
+			"index": 21,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-06-23T11:38:00Z",
+			"resultTime": "2024-06-23T11:38:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828905
+		},
+		{
+			"index": 22,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-02T13:53:00Z",
+			"resultTime": "2024-07-02T13:53:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/02072024_1553_C3/02072024_1553_C3_01.JPG",
+			"status": "done",
+			"@iot.id": 5828907
+		},
+		{
+			"index": 23,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-02T13:53:00Z",
+			"resultTime": "2024-07-02T13:53:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828908
+		},
+		{
+			"index": 24,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-02T13:53:00Z",
+			"resultTime": "2024-07-02T13:53:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/02072024_1553_C3/02072024_1553_C3_02.JPG",
+			"status": "done",
+			"@iot.id": 5828909
+		},
+		{
+			"index": 25,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-02T13:53:00Z",
+			"resultTime": "2024-07-02T13:53:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828908
+		},
+		{
+			"index": 26,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-02T13:53:00Z",
+			"resultTime": "2024-07-02T13:53:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/02072024_1553_C3/02072024_1553_C3_03.JPG",
+			"status": "done",
+			"@iot.id": 5828910
+		},
+		{
+			"index": 27,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-02T13:53:00Z",
+			"resultTime": "2024-07-02T13:53:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828908
+		},
+		{
+			"index": 28,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-02T13:53:00Z",
+			"resultTime": "2024-07-02T13:53:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/02072024_1553_C3/02072024_1553_C3_04.JPG",
+			"status": "done",
+			"@iot.id": 5828911
+		},
+		{
+			"index": 29,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-02T13:53:00Z",
+			"resultTime": "2024-07-02T13:53:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828908
+		},
+		{
+			"index": 30,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-02T13:54:00Z",
+			"resultTime": "2024-07-02T13:54:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/02072024_1554_C3/02072024_1554_C3_01.JPG",
+			"status": "done",
+			"@iot.id": 5828912
+		},
+		{
+			"index": 31,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-02T13:54:00Z",
+			"resultTime": "2024-07-02T13:54:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828913
+		},
+		{
+			"index": 32,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-02T13:54:00Z",
+			"resultTime": "2024-07-02T13:54:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/02072024_1554_C3/02072024_1554_C3_02.JPG",
+			"status": "done",
+			"@iot.id": 5828914
+		},
+		{
+			"index": 33,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-02T13:54:00Z",
+			"resultTime": "2024-07-02T13:54:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828913
+		},
+		{
+			"index": 34,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-04T04:12:00Z",
+			"resultTime": "2024-07-04T04:12:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/04072024_0612_C3/04072024_0612_C3_01.JPG",
+			"status": "done",
+			"@iot.id": 5828915
+		},
+		{
+			"index": 35,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-04T04:12:00Z",
+			"resultTime": "2024-07-04T04:12:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828916
+		},
+		{
+			"index": 36,
+			"measurementKey": "grup_mvqurkp6_1",
+			"phenomenonTime": "2024-07-04T04:12:00Z",
+			"resultTime": "2024-07-04T04:12:00Z",
+			"result": "https://www.infoambiental.grumets.cat/AD4GD_CameraTrap/04072024_0612_C3/04072024_0612_C3_02.JPG",
+			"status": "done",
+			"@iot.id": 5828917
+		},
+		{
+			"index": 37,
+			"measurementKey": "grup_mvs2ju9e_1",
+			"phenomenonTime": "2024-07-04T04:12:00Z",
+			"resultTime": "2024-07-04T04:12:00Z",
+			"result": "https://www.gbif.org/species/7193910",
+			"status": "done",
+			"@iot.id": 5828916
+		}
+	],
+	"pending": null
+}
