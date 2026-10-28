@@ -1530,7 +1530,9 @@ async function getSensorInfo() {
 
 function updateConnectASensorUsbConfigVisibility() {
 	var panel = document.getElementById("DialogConnectASensorUsbConfig");
-	var show = connectionMode === "usb" && !!port;
+	/* TODO: reactivar panell USB config (mode / intervals / hora / cal / bateria) */
+	var show = false; /* temporal: amagar perquè es vegin les dades com abans */
+	/* var show = connectionMode === "usb" && !!port; */
 	if (!panel)
 		return;
 	panel.hidden = !show;

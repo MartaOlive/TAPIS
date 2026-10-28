@@ -7,23 +7,57 @@
 	→ create Observations → store pending failures for retry.
 */
 
-/* Creation order (dependencies first). */
-var SPA_ORDER = ["Parties", "Licenses", "Sensors", "ObservedProperties", "Locations", "Things", "FeaturesOfInterest",
-	"Campaigns", "ObservationGroups", "HistoricalLocations", "Datastreams", "MultiDatastreams", "Cells", "Relations"];
-/* [body key, related entity plural, many, optional?]
+/*
+	Creation order (dependencies first).
+	Campaigns / ObservationGroups order can swap via pkg.nesting.campaignObservationGroup.
+	Observations and Relations are created after unique entities (separate pipeline steps).
+*/
+var SPA_ORDER = ["Parties", "Licenses", "Sensors", "ObservedProperties", "Locations", "FeaturesOfInterest",
+	"Things", "Datastreams", "MultiDatastreams", "HistoricalLocations", "Cells", "Campaigns", "ObservationGroups"];
+/* [body key, related entity plural, many, optional?, attachAll?]
    optional=true: related entity in batch may be missing/failed without blocking create;
    spaAttachRelations still links it when id is ready.
-   License is optional for Datastreams/MultiDatastreams/Campaigns/ObservationGroups. */
+   attachAll=true: link every ready entity of that plural (e.g. Campaign→Datastreams).
+   License is optional for Datastreams/MultiDatastreams/Campaigns/ObservationGroups.
+   Location on Thing is optional. Observation requires Datastream (+ FoI when FoIs exist). */
 var SPA_RELATIONS = {
-	Things: [["Party", "Parties", false], ["Locations", "Locations", true]],
+	Things: [["Party", "Parties", false], ["Locations", "Locations", true, true]],
 	Datastreams: [["Party", "Parties", false], ["Sensor", "Sensors", false], ["Thing", "Things", false],
 		["ObservedProperty", "ObservedProperties", false], ["License", "Licenses", false, true]],
 	MultiDatastreams: [["Party", "Parties", false], ["Sensor", "Sensors", false], ["Thing", "Things", false],
 		["ObservedProperties", "ObservedProperties", true], ["License", "Licenses", false, true]],
-	Campaigns: [["Party", "Parties", false], ["License", "Licenses", false, true]],
-	ObservationGroups: [["Party", "Parties", false], ["License", "Licenses", false, true]],
+	Campaigns: [["Party", "Parties", false], ["License", "Licenses", false, true],
+		["Datastreams", "Datastreams", true, true, true],
+		["ObservationGroups", "ObservationGroups", true, true, true]],
+	ObservationGroups: [["Party", "Parties", false], ["License", "Licenses", false, true],
+		["Campaigns", "Campaigns", true, true, true]],
 	HistoricalLocations: [["Thing", "Things", false], ["Locations", "Locations", true]]
 };
+
+function spaGetNesting(pkg) {
+	var n = (pkg && pkg.nesting && typeof pkg.nesting === "object") ? pkg.nesting : {};
+	return {
+		campaignObservationGroup: n.campaignObservationGroup === "observationGroupFirst"
+			? "observationGroupFirst" : "campaignFirst",
+		relationObservationGroup: n.relationObservationGroup === "observationGroupFirst"
+			? "observationGroupFirst" : "relationFirst"
+	};
+}
+
+/* Entity resolve order — Campaigns/ObservationGroups swap per nesting. */
+function spaEffectiveEntityOrder(pkg) {
+	var base = ["Parties", "Licenses", "Sensors", "ObservedProperties", "Locations", "FeaturesOfInterest",
+		"Things", "Datastreams", "MultiDatastreams", "HistoricalLocations", "Cells"];
+	var nest = spaGetNesting(pkg);
+	if (nest.campaignObservationGroup === "observationGroupFirst")
+		return base.concat(["ObservationGroups", "Campaigns"]);
+	return base.concat(["Campaigns", "ObservationGroups"]);
+}
+
+/* Display / preview order including Observations + Relations after entities. */
+function spaPublishDisplayOrder(pkg) {
+	return spaEffectiveEntityOrder(pkg).concat(["Observations", "Relations"]);
+}
 
 function spaEsc(s) {
 	return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
@@ -127,8 +161,34 @@ function spaIsLoggedIn() {
 	}
 }
 
+/* Normalize location/feature to GeoJSON Point { type:"Point", coordinates:[lon,lat] }. */
+function spaParseGeoPoint(v) {
+	var geom, t;
+	if (v === undefined || v === null || v === "")
+		return null;
+	if (typeof v === "string") {
+		t = v.trim();
+		if ((t.charAt(0) === "{" && t.charAt(t.length - 1) === "}") || (t.charAt(0) === "[" && t.charAt(t.length - 1) === "]")) {
+			try {
+				v = JSON.parse(t);
+			} catch (e) {
+				return null;
+			}
+		} else
+			return null;
+	}
+	if (typeof v !== "object")
+		return null;
+	geom = v;
+	if (geom.type === "Feature" && geom.geometry)
+		geom = geom.geometry;
+	if (geom.type === "Point" && geom.coordinates && geom.coordinates.length >= 2)
+		return { type: "Point", coordinates: [Number(geom.coordinates[0]), Number(geom.coordinates[1])] };
+	return null;
+}
+
 function spaBuildBody(plural, ent, rec) {
-	var body = {}, props = ent.properties || {}, name, v, lon, lat, sub;
+	var body = {}, props = ent.properties || {}, name, v, lon, lat, sub, geoName, point;
 	for (name in props) {
 		if (!Object.prototype.hasOwnProperty.call(props, name))
 			continue;
@@ -143,17 +203,24 @@ function spaBuildBody(plural, ent, rec) {
 			lon = Number(v);
 		else if (name === "latitude")
 			lat = Number(v);
-		else
+		else if (name === "location" || name === "feature") {
+			point = spaParseGeoPoint(v);
+			body[name] = point || v;
+		} else
 			body[name] = v;
 	}
 	if (plural === "Locations" || plural === "FeaturesOfInterest") {
 		if (!body.encodingType)
 			body.encodingType = "application/geo+json";
-		if (lon !== undefined || lat !== undefined) {
-			if (plural === "Locations")
-				body.location = { type: "Point", coordinates: [lon, lat] };
-			else
-				body.feature = { type: "Feature", geometry: { type: "Point", coordinates: [lon, lat] } };
+		geoName = plural === "Locations" ? "location" : "feature";
+		/* Prefer explicit location/feature; else legacy lon/lat → Point for both */
+		if (!spaParseGeoPoint(body[geoName]) && (lon !== undefined || lat !== undefined) &&
+				isFinite(lon) && isFinite(lat)) {
+			body[geoName] = { type: "Point", coordinates: [lon, lat] };
+		} else if (body[geoName]) {
+			point = spaParseGeoPoint(body[geoName]);
+			if (point)
+				body[geoName] = point;
 		}
 	}
 	return body;
@@ -180,14 +247,33 @@ function spaPropVal(ent, propName, rec) {
 	return spaResolveSrc(ent.properties[propName], rec);
 }
 
-/* Stable identity key for dedupe (not body JSON). Prefer distinctive roles (e.g. Datastreams:temp). */
-function spaEntityStableKey(plural, ent, rec) {
-	var def, name, lon, lat, auth, uom, role;
+/*
+	Plurals that expand over source rows (unique by content).
+	Others stay 1-per-template (role / measurementKey).
+*/
+/* Datastreams / OP stay 1-per-group (template), not per Thing/row */
+var SPA_EXPAND_BY_ROW = {
+	Locations: true,
+	FeaturesOfInterest: true,
+	Things: true,
+	Sensors: true
+};
+
+function spaExpandByRow(plural) {
+	return !!(SPA_EXPAND_BY_ROW[plural]);
+}
+
+/* Stable identity key for dedupe (not body JSON). */
+function spaEntityStableKey(plural, ent, rec, pkg) {
+	var def, name, lon, lat, auth, uom, role, point;
 	if (!ent)
 		return plural + "|unknown";
 	role = ent.role ? String(ent.role) : "";
-	/* Distinctive role from Builder (plural:measurementKey) — use as cache key */
-	if (role && role !== plural && role.indexOf(":") !== -1)
+	/*
+		Role short-circuit only for non-expand plurals (OP, License, …).
+		Expand-by-row must key by content so 3 cameras / 3 places become 3 entities.
+	*/
+	if (!spaExpandByRow(plural) && role && role !== plural && role.indexOf(":") !== -1)
 		return role;
 	switch (plural) {
 		case "Parties":
@@ -201,26 +287,40 @@ function spaEntityStableKey(plural, ent, rec) {
 			return "ObservedProperties|" + (def != null ? def : (ent.measurementKey || spaPropVal(ent, "name", rec) || "op"));
 		case "Sensors":
 			name = spaPropVal(ent, "name", rec);
-			return "Sensors|" + (ent.measurementKey || name || role || "sensor");
+			return "Sensors|" + (name != null && String(name) !== "" ? name : (role || "sensor"));
 		case "Things":
 			name = spaPropVal(ent, "name", rec);
-			return "Things|" + (name != null ? name : "thing");
+			return "Things|" + (name != null && String(name) !== "" ? name : "thing");
 		case "Locations":
 		case "FeaturesOfInterest":
 			lon = spaPropVal(ent, "longitude", rec);
 			lat = spaPropVal(ent, "latitude", rec);
+			if (lon == null || lat == null || !isFinite(Number(lon)) || !isFinite(Number(lat))) {
+				point = spaParseGeoPoint(spaPropVal(ent, plural === "Locations" ? "location" : "feature", rec));
+				if (point && point.coordinates) {
+					lon = point.coordinates[0];
+					lat = point.coordinates[1];
+				}
+			}
 			if (lon != null && lat != null && isFinite(Number(lon)) && isFinite(Number(lat)))
 				return plural + "|" + Number(lon) + "," + Number(lat);
 			name = spaPropVal(ent, "name", rec);
-			return plural + "|" + (name != null ? name : "place");
+			return plural + "|" + (name != null && String(name) !== "" ? name : "place");
 		case "Datastreams":
+			/* One Datastream per observation group (template), not per Thing/row */
 			if (ent.measurementKey)
 				return "Datastreams:" + ent.measurementKey;
+			if (role && role !== plural && role.indexOf(":") !== -1)
+				return role;
 			uom = spaPropVal(ent, "unitOfMeasurement.definition", rec);
 			name = spaPropVal(ent, "name", rec);
 			return "Datastreams|" + (name || "ds") + (uom != null ? "|" + uom : "");
 		default:
-			return plural + "|" + (ent.measurementKey || spaPropVal(ent, "name", rec) || role || "x");
+			if (role && role !== plural && role.indexOf(":") !== -1)
+				return role;
+			uom = spaPropVal(ent, "unitOfMeasurement.definition", rec);
+			name = spaPropVal(ent, "name", rec);
+			return plural + "|" + (ent.measurementKey || name || role || "x") + (uom != null ? "|" + uom : "");
 	}
 }
 
@@ -246,12 +346,66 @@ function spaSampleRecForEntity(ent, obsRows, sourceData) {
 	return row || {};
 }
 
+/* Source rows to expand a template over (group-filtered when measurementKey set). */
+function spaCollectSourceRecs(ent, plural, obsRows, sourceData) {
+	var out = [], seenIdx = {}, i, row, idx;
+	if (!spaExpandByRow(plural)) {
+		out.push(spaSampleRecForEntity(ent, obsRows, sourceData) || {});
+		return out;
+	}
+	if (!sourceData || !sourceData.length) {
+		out.push(spaSampleRecForEntity(ent, obsRows, sourceData) || {});
+		return out;
+	}
+	for (i = 0; i < (obsRows || []).length; i++) {
+		row = obsRows[i];
+		if (!row)
+			continue;
+		if (ent.measurementKey != null && ent.measurementKey !== "" && row.measurementKey !== ent.measurementKey)
+			continue;
+		idx = row._sourceIndex;
+		if (idx == null || seenIdx[idx])
+			continue;
+		seenIdx[idx] = true;
+		if (sourceData[idx])
+			out.push(sourceData[idx]);
+	}
+	if (out.length)
+		return out;
+	for (i = 0; i < sourceData.length; i++) {
+		if (sourceData[i])
+			out.push(sourceData[i]);
+	}
+	if (!out.length)
+		out.push({});
+	return out;
+}
+
+function spaAddEntityInstance(entities, plural, ent, rec, pkg) {
+	var key = spaEntityStableKey(plural, ent, rec, pkg);
+	if (entities[key])
+		return entities[key];
+	entities[key] = {
+		key: key,
+		plural: plural,
+		singular: ent.singular || (typeof STAEntities !== "undefined" && STAEntities[plural] ? STAEntities[plural].singular : plural),
+		role: ent.role || plural,
+		measurementKey: ent.measurementKey,
+		ent: ent,
+		rec: rec,
+		status: "pending",
+		id: null,
+		error: null
+	};
+	return entities[key];
+}
+
 /*
 	Normalize long STAdata + package → unique entities + observation list.
+	Expand-by-row templates yield one instance per distinct content key.
 */
 function spaNormalizeBatch(pkg, obsRows, sourceData) {
-	var entities = {}, observations = [], plural, arr, i, ent, key, rec, o, foiEnt;
-	var nEnt = 0;
+	var entities = {}, observations = [], plural, arr, i, j, ent, key, rec, o, foiEnt, dsEnt, recs, nEnt;
 
 	if (!pkg)
 		return { entities: {}, observations: [], entityCount: 0 };
@@ -259,62 +413,74 @@ function spaNormalizeBatch(pkg, obsRows, sourceData) {
 	for (plural in (pkg.entities || {})) {
 		if (!Object.prototype.hasOwnProperty.call(pkg.entities, plural))
 			continue;
+		/* Long-table Observations only — ignore legacy packed Observation entities */
+		if (plural === "Observations")
+			continue;
 		arr = pkg.entities[plural] || [];
 		for (i = 0; i < arr.length; i++) {
 			ent = arr[i];
 			if (!ent)
 				continue;
-			rec = spaSampleRecForEntity(ent, obsRows, sourceData);
-			key = spaEntityStableKey(plural, ent, rec);
-			if (entities[key])
-				continue;
-			entities[key] = {
-				key: key,
-				plural: plural,
-				singular: ent.singular || (typeof STAEntities !== "undefined" && STAEntities[plural] ? STAEntities[plural].singular : plural),
-				role: ent.role || plural,
-				measurementKey: ent.measurementKey,
-				ent: ent,
-				rec: rec,
-				status: "pending",
-				id: null,
-				error: null
-			};
-			nEnt++;
+			recs = spaCollectSourceRecs(ent, plural, obsRows, sourceData);
+			for (j = 0; j < recs.length; j++)
+				spaAddEntityInstance(entities, plural, ent, recs[j], pkg);
 		}
 	}
 
-	/* Ensure Party entry */
-	key = "Parties|" + (typeof CriptoName !== "undefined" ? CriptoName : "party");
-	if (!entities[key]) {
+	/* Ensure a single Party (login). Do not add a second if the package already has one. */
+	(function () {
+		var hasParty = false, k2, keep = null, auth;
+		for (k2 in entities) {
+			if (!Object.prototype.hasOwnProperty.call(entities, k2))
+				continue;
+			if (entities[k2].plural !== "Parties")
+				continue;
+			hasParty = true;
+			if (!keep)
+				keep = k2;
+			else {
+				/* Collapse duplicates — keep the first, drop the rest */
+				delete entities[k2];
+			}
+		}
+		if (hasParty)
+			return;
+		auth = typeof CriptoName !== "undefined" ? CriptoName : "party";
+		key = "Parties|" + auth;
 		entities[key] = {
 			key: key,
 			plural: "Parties",
 			singular: "Party",
 			role: "Parties",
 			measurementKey: undefined,
-			ent: { plural: "Parties", singular: "Party", role: "Parties", properties: { authId: { source: "manual", value: typeof CriptoName !== "undefined" ? CriptoName : "" } } },
+			ent: { plural: "Parties", singular: "Party", role: "Parties", properties: { authId: { source: "manual", value: auth === "party" ? "" : auth } } },
 			rec: {},
 			status: "pending",
 			id: null,
 			error: null
 		};
-		nEnt++;
-	}
+	})();
 
 	for (i = 0; i < (obsRows || []).length; i++) {
 		o = obsRows[i];
 		if (!o)
 			continue;
+		rec = (sourceData && o._sourceIndex != null && sourceData[o._sourceIndex])
+			? sourceData[o._sourceIndex]
+			: (o || {});
 		foiEnt = spaFindRelated(pkg, "FeaturesOfInterest", o.measurementKey || undefined);
+		dsEnt = spaFindRelated(pkg, "Datastreams", o.measurementKey || undefined);
 		observations.push({
 			index: i,
 			phenomenonTime: o.phenomenonTime,
 			resultTime: o.resultTime != null ? o.resultTime : o.phenomenonTime,
 			result: o.result,
 			measurementKey: o.measurementKey || "",
+			groupLabel: o.groupLabel || spaGroupLabelFromPkg(pkg, o.measurementKey) || "",
 			datastreamRole: o.datastreamRole || ("Datastreams:" + (o.measurementKey || "")),
 			foiRole: foiEnt ? foiEnt.role : "FeaturesOfInterest",
+			datastreamKey: dsEnt ? spaEntityStableKey("Datastreams", dsEnt, rec, pkg) : null,
+			foiKey: foiEnt ? spaEntityStableKey("FeaturesOfInterest", foiEnt, rec, pkg) : null,
 			_sourceIndex: o._sourceIndex,
 			status: "pending",
 			observationId: null,
@@ -322,7 +488,69 @@ function spaNormalizeBatch(pkg, obsRows, sourceData) {
 		});
 	}
 
-	return { entities: entities, observations: observations, entityCount: nEnt };
+	nEnt = 0;
+	for (key in entities) {
+		if (Object.prototype.hasOwnProperty.call(entities, key))
+			nEnt++;
+	}
+	return {
+		entities: entities,
+		observations: observations,
+		relations: spaBuildRelationPlans(pkg, observations),
+		entityCount: nEnt,
+		pkg: pkg
+	};
+}
+
+/*
+	One Relation per source row: Subject = obs of subjectGroup, Object = obs of objectGroup.
+	Created after Observations have @iot.id.
+*/
+function spaBuildRelationPlans(pkg, observations) {
+	var stub = pkg && pkg.relationStub, plans = [], bySrc = {}, i, o, idx, pair, sk, ok, labelSubj, labelObj;
+	if (!stub || !stub.enabled)
+		return plans;
+	sk = stub.subjectGroupKey;
+	ok = stub.objectGroupKey;
+	if (!sk || !ok || sk === ok)
+		return plans;
+	labelSubj = spaGroupLabelFromPkg(pkg, sk) || sk;
+	labelObj = spaGroupLabelFromPkg(pkg, ok) || ok;
+	for (i = 0; i < (observations || []).length; i++) {
+		o = observations[i];
+		if (!o || o._sourceIndex == null)
+			continue;
+		idx = o._sourceIndex;
+		if (!bySrc[idx])
+			bySrc[idx] = {};
+		if (o.measurementKey === sk)
+			bySrc[idx].subject = o;
+		if (o.measurementKey === ok)
+			bySrc[idx].object = o;
+	}
+	for (idx in bySrc) {
+		if (!Object.prototype.hasOwnProperty.call(bySrc, idx))
+			continue;
+		pair = bySrc[idx];
+		if (!pair.subject || !pair.object)
+			continue;
+		plans.push({
+			index: plans.length,
+			sourceIndex: Number(idx),
+			role: stub.role || "",
+			description: stub.description || "",
+			subjectObsIndex: pair.subject.index,
+			objectObsIndex: pair.object.index,
+			subjectGroupKey: sk,
+			objectGroupKey: ok,
+			subjectLabel: spaIsSyntheticGroupKey(labelSubj) ? "" : labelSubj,
+			objectLabel: spaIsSyntheticGroupKey(labelObj) ? "" : labelObj,
+			status: "pending",
+			relationId: null,
+			error: null
+		});
+	}
+	return plans;
 }
 
 function spaRegistryGet(cache, key) {
@@ -362,8 +590,48 @@ function spaFindEntityByPlural(entities, plural, measurementKey) {
 	return shared;
 }
 
-function spaAttachRelations(body, plural, item, entities, partyId) {
-	var rels = SPA_RELATIONS[plural] || [], i, rel, related, relId;
+/*
+	Related instance for the same source row as item (expand-by-row),
+	falling back to first match by measurementKey.
+*/
+function spaFindRelatedForItem(entities, relatedPlural, item, pkg) {
+	var template, key;
+	if (!entities || !item)
+		return null;
+	if (pkg) {
+		template = spaFindRelated(pkg, relatedPlural, item.measurementKey);
+		if (template) {
+			key = spaEntityStableKey(relatedPlural, template, item.rec, pkg);
+			if (entities[key])
+				return entities[key];
+		}
+	}
+	return spaFindEntityByPlural(entities, relatedPlural, item.measurementKey);
+}
+
+/* All ready entities of relatedPlural (optionally same measurementKey). */
+function spaFindAllRelatedForItem(entities, relatedPlural, item, pkg, attachAll) {
+	var out = [], k, e, one;
+	if (!entities)
+		return out;
+	if (attachAll) {
+		for (k in entities) {
+			if (!Object.prototype.hasOwnProperty.call(entities, k))
+				continue;
+			e = entities[k];
+			if (e.plural === relatedPlural && spaEntityReady(e))
+				out.push(e);
+		}
+		return out;
+	}
+	one = spaFindRelatedForItem(entities, relatedPlural, item, pkg);
+	if (one && spaEntityReady(one))
+		out.push(one);
+	return out;
+}
+
+function spaAttachRelations(body, plural, item, entities, partyId, pkg) {
+	var rels = SPA_RELATIONS[plural] || [], i, rel, related, list, relId, j, refs;
 	for (i = 0; i < rels.length; i++) {
 		rel = rels[i];
 		if (rel[1] === "Parties") {
@@ -372,11 +640,21 @@ function spaAttachRelations(body, plural, item, entities, partyId) {
 				body[rel[0]] = { "@iot.id": relId };
 			continue;
 		}
-		related = spaFindEntityByPlural(entities, rel[1], item.measurementKey);
+		if (rel[2]) {
+			/* many: attachAll → every ready entity of that plural; else one match */
+			list = spaFindAllRelatedForItem(entities, rel[1], item, pkg, !!rel[4]);
+			if (!list.length)
+				continue;
+			refs = [];
+			for (j = 0; j < list.length; j++)
+				refs.push({ "@iot.id": list[j].id });
+			body[rel[0]] = refs;
+			continue;
+		}
+		related = spaFindRelatedForItem(entities, rel[1], item, pkg);
 		if (!related || spaIsEmpty(related.id))
 			continue;
-		relId = related.id;
-		body[rel[0]] = rel[2] ? [{ "@iot.id": relId }] : { "@iot.id": relId };
+		body[rel[0]] = { "@iot.id": related.id };
 	}
 	return body;
 }
@@ -494,7 +772,7 @@ async function spaResolveUniqueEntity(ctx, item) {
 
 	item.status = "creating";
 	body = spaBuildBody(plural, item.ent, item.rec);
-	spaAttachRelations(body, plural, item, ctx.entities, ctx.partyId);
+	spaAttachRelations(body, plural, item, ctx.entities, ctx.partyId, ctx.pkg);
 
 	if (plural === "Licenses") {
 		/* logo often breaks $filter / create; set via PATCH after id is known.
@@ -570,7 +848,7 @@ function spaEntityReady(item) {
 	return item && item.status === "done" && !spaIsEmpty(item.id);
 }
 
-function spaCanResolveEntity(item, entities, partyId) {
+function spaCanResolveEntity(item, entities, partyId, pkg) {
 	var rels = SPA_RELATIONS[item.plural] || [], i, rel, related, optional;
 	for (i = 0; i < rels.length; i++) {
 		rel = rels[i];
@@ -580,7 +858,7 @@ function spaCanResolveEntity(item, entities, partyId) {
 				return false;
 			continue;
 		}
-		related = spaFindEntityByPlural(entities, rel[1], item.measurementKey);
+		related = spaFindRelatedForItem(entities, rel[1], item, pkg);
 		if (!related)
 			continue;
 		/* Optional: never block; attach only when ready */
@@ -594,7 +872,8 @@ function spaCanResolveEntity(item, entities, partyId) {
 }
 
 async function spaResolveAllEntities(ctx) {
-	var oi, plural, list, i, item, progressed, guard = 0, pendingDeps;
+	var oi, plural, i, item, progressed, guard = 0, pendingDeps;
+	var order = spaEffectiveEntityOrder(ctx.pkg);
 
 	/* Parties first */
 	for (i in ctx.entities) {
@@ -607,8 +886,8 @@ async function spaResolveAllEntities(ctx) {
 	while (guard++ < 500) {
 		progressed = false;
 		pendingDeps = false;
-		for (oi = 0; oi < SPA_ORDER.length; oi++) {
-			plural = SPA_ORDER[oi];
+		for (oi = 0; oi < order.length; oi++) {
+			plural = order[oi];
 			if (plural === "Parties")
 				continue;
 			for (i in ctx.entities) {
@@ -617,7 +896,7 @@ async function spaResolveAllEntities(ctx) {
 				item = ctx.entities[i];
 				if (item.plural !== plural || item.status !== "pending")
 					continue;
-				if (!spaCanResolveEntity(item, ctx.entities, ctx.partyId)) {
+				if (!spaCanResolveEntity(item, ctx.entities, ctx.partyId, ctx.pkg)) {
 					pendingDeps = true;
 					continue;
 				}
@@ -642,17 +921,30 @@ async function spaResolveAllEntities(ctx) {
 	}
 }
 
+function spaBatchHasPlural(entities, plural) {
+	var k;
+	for (k in entities) {
+		if (Object.prototype.hasOwnProperty.call(entities, k) && entities[k].plural === plural)
+			return true;
+	}
+	return false;
+}
+
 async function spaCreateObservations(ctx) {
 	var nOk = 0, nFail = 0, results = [], i, o, ds, foi, dsId, foiId, body, obsId, pt, rt;
+	var requireFoi = spaBatchHasPlural(ctx.entities, "FeaturesOfInterest");
 
 	for (i = 0; i < ctx.observations.length; i++) {
 		o = ctx.observations[i];
 		/* Skip already-ok from a prior run (retry); do not re-POST */
 		if (o.status === "done")
 			continue;
-		ds = spaFindEntityByRole(ctx.entities, o.datastreamRole) ||
+		/* Prefer per-row keys (expand-by-row); fall back to role / measurementKey */
+		ds = (o.datastreamKey && ctx.entities[o.datastreamKey]) ||
+			spaFindEntityByRole(ctx.entities, o.datastreamRole) ||
 			spaFindEntityByPlural(ctx.entities, "Datastreams", o.measurementKey || undefined);
-		foi = spaFindEntityByRole(ctx.entities, o.foiRole) ||
+		foi = (o.foiKey && ctx.entities[o.foiKey]) ||
+			spaFindEntityByRole(ctx.entities, o.foiRole) ||
 			spaFindEntityByPlural(ctx.entities, "FeaturesOfInterest", o.measurementKey || undefined);
 		dsId = ds && spaEntityReady(ds) ? ds.id : null;
 		foiId = foi && spaEntityReady(foi) ? foi.id : null;
@@ -662,6 +954,13 @@ async function spaCreateObservations(ctx) {
 		if (spaIsEmpty(dsId) || spaIsEmpty(pt) || o.result === undefined || o.result === null || o.result === "") {
 			o.status = "error";
 			o.error = spaIsEmpty(dsId) ? "Datastream not resolved." : "Missing phenomenonTime/result.";
+			nFail++;
+			spaAppendLog("Observation[" + o.index + "] SKIP: " + o.error);
+			continue;
+		}
+		if (requireFoi && spaIsEmpty(foiId)) {
+			o.status = "error";
+			o.error = "FeatureOfInterest not resolved.";
 			nFail++;
 			spaAppendLog("Observation[" + o.index + "] SKIP: " + o.error);
 			continue;
@@ -707,8 +1006,237 @@ async function spaCreateObservations(ctx) {
 	return { nOk: nOk, nFail: nFail, results: results };
 }
 
+/* POST Relation (STAplus). Direct POST — $filter on Subject/Object is unreliable.
+   Must request Location (same as GetObjectId): many STA services return 201 with empty body. */
+async function spaPostRelation(url, body) {
+	var response, id, loc;
+	response = await HTTPJSONData(url + "/Relations", ["Location"], "POST", body);
+	if (response && response.ok) {
+		loc = response.responseHeaders && (response.responseHeaders.Location || response.responseHeaders.location);
+		if (typeof ExtractIdFromURL === "function" && !spaIsEmpty(loc))
+			id = ExtractIdFromURL(loc);
+		if (spaIsEmpty(id) && response.obj && response.obj["@iot.id"] != null)
+			id = response.obj["@iot.id"];
+		return id;
+	}
+	throw {
+		name: "STA",
+		message: (response && response.status ? ("HTTP " + response.status) : "Relation POST failed") +
+			(response && response.obj && response.obj.message ? (": " + response.obj.message) : "")
+	};
+}
+
+function spaFindOgIdForGroup(ctx, groupKey) {
+	var k, e;
+	if (!ctx || !ctx.entities)
+		return null;
+	for (k in ctx.entities) {
+		if (!Object.prototype.hasOwnProperty.call(ctx.entities, k))
+			continue;
+		e = ctx.entities[k];
+		if (e.plural !== "ObservationGroups" || !spaEntityReady(e))
+			continue;
+		if (!groupKey || e.measurementKey === groupKey || e.role === ("ObservationGroups:" + groupKey))
+			return e.id;
+	}
+	/* Shared OG (no measurementKey): first ready */
+	for (k in ctx.entities) {
+		if (!Object.prototype.hasOwnProperty.call(ctx.entities, k))
+			continue;
+		e = ctx.entities[k];
+		if (e.plural === "ObservationGroups" && spaEntityReady(e))
+			return e.id;
+	}
+	return null;
+}
+
+function spaCollectReadyOgIds(ctx) {
+	var ids = [], k, e;
+	for (k in ctx.entities) {
+		if (!Object.prototype.hasOwnProperty.call(ctx.entities, k))
+			continue;
+		e = ctx.entities[k];
+		if (e.plural === "ObservationGroups" && spaEntityReady(e))
+			ids.push(e.id);
+	}
+	return ids;
+}
+
+async function spaPatchEntityNav(url, plural, id, navName, idRefs) {
+	var body = {}, response;
+	if (spaIsEmpty(id) || !idRefs || !idRefs.length)
+		return false;
+	body[navName] = idRefs.map(function (rid) { return { "@iot.id": rid }; });
+	response = await HTTPJSONData(url + "/" + plural + getParentesisODataFromId(id), null, "PATCH", body);
+	return !!(response && response.ok);
+}
+
+/*
+	After Observations exist: attach them to ObservationGroups (by measurementKey when possible).
+*/
+async function spaLinkObservationsToGroups(ctx) {
+	var byMk = {}, i, o, k, e, refs, n = 0, mk;
+
+	for (i = 0; i < (ctx.observations || []).length; i++) {
+		o = ctx.observations[i];
+		if (o.status !== "done" || spaIsEmpty(o.observationId) || o.observationId === "(previous)")
+			continue;
+		mk = o.measurementKey || "";
+		if (!byMk[mk])
+			byMk[mk] = [];
+		byMk[mk].push(o.observationId);
+	}
+	for (k in ctx.entities) {
+		if (!Object.prototype.hasOwnProperty.call(ctx.entities, k))
+			continue;
+		e = ctx.entities[k];
+		if (e.plural !== "ObservationGroups" || !spaEntityReady(e))
+			continue;
+		refs = [];
+		if (e.measurementKey && byMk[e.measurementKey])
+			refs = byMk[e.measurementKey].slice();
+		else {
+			/* Shared OG: all observations */
+			for (mk in byMk) {
+				if (Object.prototype.hasOwnProperty.call(byMk, mk))
+					refs = refs.concat(byMk[mk]);
+			}
+		}
+		if (!refs.length)
+			continue;
+		try {
+			if (await spaPatchEntityNav(ctx.url, "ObservationGroups", e.id, "Observations", refs)) {
+				n++;
+				spaAppendLog("ObservationGroup @" + e.id + ": linked " + refs.length + " Observation(s)");
+			} else
+				spaAppendLog("WARN ObservationGroup @" + e.id + ": could not link Observations");
+		} catch (err) {
+			spaAppendLog("WARN ObservationGroup @" + e.id + ": " + (err && err.message ? err.message : String(err)));
+		}
+	}
+	return n;
+}
+
+/*
+	After Relations: link Relation↔ObservationGroup per nesting.relationObservationGroup.
+	relationFirst → PATCH OG with Relations; observationGroupFirst → already on Relation POST.
+*/
+async function spaLinkRelationsToGroups(ctx) {
+	var nest = spaGetNesting(ctx.pkg), relIds = [], i, r, k, e, n = 0;
+	if (nest.relationObservationGroup !== "relationFirst")
+		return 0;
+	if (!spaBatchHasPlural(ctx.entities, "ObservationGroups"))
+		return 0;
+	for (i = 0; i < (ctx.relations || []).length; i++) {
+		r = ctx.relations[i];
+		if (r.status === "done" && !spaIsEmpty(r.relationId))
+			relIds.push(r.relationId);
+	}
+	if (!relIds.length)
+		return 0;
+	for (k in ctx.entities) {
+		if (!Object.prototype.hasOwnProperty.call(ctx.entities, k))
+			continue;
+		e = ctx.entities[k];
+		if (e.plural !== "ObservationGroups" || !spaEntityReady(e))
+			continue;
+		try {
+			if (await spaPatchEntityNav(ctx.url, "ObservationGroups", e.id, "Relations", relIds)) {
+				n++;
+				spaAppendLog("ObservationGroup @" + e.id + ": linked " + relIds.length + " Relation(s)");
+			} else
+				spaAppendLog("WARN ObservationGroup @" + e.id + ": could not link Relations");
+		} catch (err) {
+			spaAppendLog("WARN ObservationGroup @" + e.id + ": " + (err && err.message ? err.message : String(err)));
+		}
+	}
+	return n;
+}
+
+async function spaCreateRelations(ctx) {
+	var nOk = 0, nFail = 0, i, r, subj, obj, body, relId, sid, oid;
+	var stub = (ctx.pkg && ctx.pkg.relationStub) || {};
+	var targetKind = stub.targetKind === "ObservationGroups" ? "ObservationGroups" : "Observations";
+	var nest = spaGetNesting(ctx.pkg);
+	var ogIds, includeOgOnPost;
+
+	includeOgOnPost = targetKind === "Observations" &&
+		spaBatchHasPlural(ctx.entities, "ObservationGroups") &&
+		nest.relationObservationGroup === "observationGroupFirst";
+	ogIds = includeOgOnPost ? spaCollectReadyOgIds(ctx) : [];
+
+	for (i = 0; i < (ctx.relations || []).length; i++) {
+		r = ctx.relations[i];
+		if (r.status === "done")
+			continue;
+		if (targetKind === "ObservationGroups") {
+			sid = spaFindOgIdForGroup(ctx, r.subjectGroupKey);
+			oid = spaFindOgIdForGroup(ctx, r.objectGroupKey);
+			if (spaIsEmpty(sid) || spaIsEmpty(oid)) {
+				r.status = "error";
+				r.error = "Subject/Object ObservationGroup ids missing.";
+				nFail++;
+				spaAppendLog("Relation[" + r.index + "] SKIP: " + r.error);
+				continue;
+			}
+		} else {
+			subj = ctx.observations[r.subjectObsIndex];
+			obj = ctx.observations[r.objectObsIndex];
+			sid = subj && subj.status === "done" ? subj.observationId : null;
+			oid = obj && obj.status === "done" ? obj.observationId : null;
+			if (spaIsEmpty(sid) || sid === "(previous)" || spaIsEmpty(oid) || oid === "(previous)") {
+				r.status = "error";
+				r.error = "Subject/Object Observation ids missing.";
+				nFail++;
+				spaAppendLog("Relation[" + r.index + "] SKIP: " + r.error);
+				continue;
+			}
+		}
+		if (spaIsEmpty(r.role)) {
+			r.status = "error";
+			r.error = "Relation role (URI) is required.";
+			nFail++;
+			spaAppendLog("Relation[" + r.index + "] SKIP: " + r.error);
+			continue;
+		}
+		r.status = "creating";
+		try {
+			body = {
+				role: r.role,
+				Subject: { "@iot.id": sid },
+				Object: { "@iot.id": oid }
+			};
+			if (!spaIsEmpty(r.description))
+				body.description = r.description;
+			if (includeOgOnPost && ogIds.length) {
+				body.ObservationGroups = ogIds.map(function (id) { return { "@iot.id": id }; });
+			}
+			relId = await spaPostRelation(ctx.url, body);
+			if (spaIsEmpty(relId)) {
+				r.status = "error";
+				r.error = "Relation create returned no id.";
+				nFail++;
+				spaAppendLog("Relation[" + r.index + "] ERROR: " + r.error);
+				continue;
+			}
+			r.status = "done";
+			r.relationId = relId;
+			r.targetKind = targetKind;
+			spaUpdatePreviewRelationId(r.index, relId);
+			nOk++;
+			spaAppendLog("Relation[" + r.index + "] @" + relId + " (" + targetKind + " Subject " + sid + " → Object " + oid + ")");
+		} catch (err) {
+			r.status = "error";
+			r.error = err && err.message ? err.message : String(err);
+			nFail++;
+			spaAppendLog("Relation[" + r.index + "] ERROR: " + r.error);
+		}
+	}
+	return { nOk: nOk, nFail: nFail };
+}
+
 function spaBuildPending(ctx) {
-	var pending = { entities: [], observations: [], updatedAt: new Date().toISOString() }, k, item, o;
+	var pending = { entities: [], observations: [], relations: [], updatedAt: new Date().toISOString() }, k, item, o, r;
 	for (k in ctx.entities) {
 		if (!Object.prototype.hasOwnProperty.call(ctx.entities, k))
 			continue;
@@ -737,21 +1265,49 @@ function spaBuildPending(ctx) {
 				measurementKey: o.measurementKey,
 				datastreamRole: o.datastreamRole,
 				foiRole: o.foiRole,
+				datastreamKey: o.datastreamKey,
+				foiKey: o.foiKey,
 				_sourceIndex: o._sourceIndex,
 				status: o.status,
 				error: o.error
 			});
 		}
 	}
+	for (k = 0; k < (ctx.relations || []).length; k++) {
+		r = ctx.relations[k];
+		if (r.status === "error" || r.status === "pending") {
+			pending.relations.push({
+				index: r.index,
+				sourceIndex: r.sourceIndex,
+				role: r.role,
+				description: r.description,
+				subjectObsIndex: r.subjectObsIndex,
+				objectObsIndex: r.objectObsIndex,
+				subjectGroupKey: r.subjectGroupKey,
+				objectGroupKey: r.objectGroupKey,
+				status: r.status,
+				error: r.error
+			});
+		}
+	}
 	return pending;
 }
 
+/* Bump when normalize/expand rules change so cached preview batches invalidate */
+var SPA_NORMALIZE_REV = 6;
+
 function spaComputeBatchFingerprint(pkg, obsRows) {
-	var parts = [], plural, arr, i, o;
+	var parts = [], plural, arr, i, o, nest;
 	if (!pkg)
 		return "";
 	parts.push("v" + (pkg.version || ""));
+	parts.push("nr" + SPA_NORMALIZE_REV);
 	parts.push("m" + (pkg.mode || ""));
+	nest = spaGetNesting(pkg);
+	parts.push("nest:" + nest.campaignObservationGroup + "|" + nest.relationObservationGroup);
+	if (pkg.relationStub && pkg.relationStub.enabled)
+		parts.push("rel:" + (pkg.relationStub.subjectGroupKey || "") + ">" + (pkg.relationStub.objectGroupKey || "") +
+			"|" + (pkg.relationStub.role || "") + "|" + (pkg.relationStub.targetKind || "Observations"));
 	for (plural in (pkg.entities || {})) {
 		if (!Object.prototype.hasOwnProperty.call(pkg.entities, plural))
 			continue;
@@ -806,10 +1362,11 @@ function spaDomIdFromKey(prefix, key) {
 	return prefix + String(key).replace(/[^a-zA-Z0-9_-]/g, "_");
 }
 
-function spaCountByPlural(batch) {
-	var counts = {}, k, item, oi, order = SPA_ORDER.slice(), out = [];
+function spaCountByPlural(batch, pkg) {
+	var counts = {}, k, item, oi, order, out = [];
 	if (!batch || !batch.entities)
 		return out;
+	order = spaPublishDisplayOrder(pkg || (batch && batch._pkg) || null);
 	for (k in batch.entities) {
 		if (!Object.prototype.hasOwnProperty.call(batch.entities, k))
 			continue;
@@ -817,6 +1374,15 @@ function spaCountByPlural(batch) {
 		counts[item.plural] = (counts[item.plural] || 0) + 1;
 	}
 	for (oi = 0; oi < order.length; oi++) {
+		if (order[oi] === "Observations") {
+			out.push({ plural: "Observations", n: (batch.observations && batch.observations.length) || 0 });
+			continue;
+		}
+		if (order[oi] === "Relations") {
+			if (batch.relations && batch.relations.length)
+				out.push({ plural: "Relations", n: batch.relations.length });
+			continue;
+		}
 		if (counts[order[oi]])
 			out.push({ plural: order[oi], n: counts[order[oi]] });
 	}
@@ -826,11 +1392,10 @@ function spaCountByPlural(batch) {
 		if (order.indexOf(k) === -1)
 			out.push({ plural: k, n: counts[k] });
 	}
-	out.push({ plural: "Observations", n: (batch.observations && batch.observations.length) || 0 });
 	return out;
 }
 
-function spaRenderCounts(batch) {
+function spaRenderCounts(batch, pkg) {
 	var el = document.getElementById("DialogSTAPublisherCounts"), html = "", list, i;
 	if (!el)
 		return;
@@ -838,7 +1403,7 @@ function spaRenderCounts(batch) {
 		el.innerHTML = "";
 		return;
 	}
-	list = spaCountByPlural(batch);
+	list = spaCountByPlural(batch, pkg || batch._pkg);
 	html = "<div class=\"spaCountRow\" role=\"list\">";
 	for (i = 0; i < list.length; i++) {
 		html += "<span class=\"spaCountChip\" role=\"listitem\"><span class=\"spaCountLbl\">" +
@@ -848,42 +1413,96 @@ function spaRenderCounts(batch) {
 	el.innerHTML = html;
 }
 
+/* Human-readable group title; keep measurementKey internal only */
+function spaGroupLabelFromPkg(pkg, measurementKey) {
+	var bindings, i, b, arr, plural;
+	if (!pkg || measurementKey == null || measurementKey === "")
+		return "";
+	bindings = pkg.observations && pkg.observations.bindings;
+	if (bindings) {
+		for (i = 0; i < bindings.length; i++) {
+			b = bindings[i];
+			if (b && b.measurementKey === measurementKey && b.groupLabel)
+				return String(b.groupLabel);
+		}
+	}
+	for (plural in (pkg.entities || {})) {
+		if (!Object.prototype.hasOwnProperty.call(pkg.entities, plural))
+			continue;
+		arr = pkg.entities[plural] || [];
+		for (i = 0; i < arr.length; i++) {
+			if (arr[i] && arr[i].measurementKey === measurementKey && arr[i].groupLabel)
+				return String(arr[i].groupLabel);
+		}
+	}
+	return "";
+}
+
+function spaIsSyntheticGroupKey(s) {
+	return !!s && /^grup_[a-z0-9]+_\d+$/i.test(String(s));
+}
+
+function spaObsGroupDisplayLabel(g, index) {
+	var label;
+	if (!g)
+		return "";
+	label = g.groupLabel || g.label;
+	if (label && String(label).trim() !== "" && !spaIsSyntheticGroupKey(label))
+		return String(label).trim();
+	/* Never show synthetic keys (grup_…) — use etiqueta or "Grup N" */
+	if (typeof index === "number" && index >= 0)
+		return DonaCadena({cat: "Grup", spa: "Grupo", eng: "Group"}) + " " + (index + 1);
+	if (g.measurementKey && !spaIsSyntheticGroupKey(g.measurementKey))
+		return String(g.measurementKey);
+	return DonaCadena({cat: "Grup", spa: "Grupo", eng: "Group"});
+}
+
 function spaGroupObservations(observations) {
 	var groups = {}, order = [], i, o, mk;
 	for (i = 0; i < (observations || []).length; i++) {
 		o = observations[i];
 		mk = o.measurementKey || "(none)";
 		if (!groups[mk]) {
-			groups[mk] = { measurementKey: mk, count: 0, rows: [] };
+			groups[mk] = {
+				measurementKey: mk,
+				groupLabel: o.groupLabel || "",
+				count: 0,
+				rows: []
+			};
 			order.push(mk);
 		}
+		if (!groups[mk].groupLabel && o.groupLabel)
+			groups[mk].groupLabel = o.groupLabel;
 		groups[mk].count++;
 		groups[mk].rows.push(o);
 	}
 	return order.map(function (mk) { return groups[mk]; });
 }
 
-function spaEntitiesByPlural(batch) {
-	var byPlural = {}, k, item, oi, plural, list = [];
+function spaEntitiesByPlural(batch, pkg) {
+	var byPlural = {}, k, item, oi, plural, list = [], order;
 	if (!batch || !batch.entities)
 		return list;
+	order = spaEffectiveEntityOrder(pkg || batch._pkg || null);
 	for (k in batch.entities) {
 		if (!Object.prototype.hasOwnProperty.call(batch.entities, k))
 			continue;
 		item = batch.entities[k];
+		if (item.plural === "Observations")
+			continue;
 		if (!byPlural[item.plural])
 			byPlural[item.plural] = [];
 		byPlural[item.plural].push(item);
 	}
-	for (oi = 0; oi < SPA_ORDER.length; oi++) {
-		plural = SPA_ORDER[oi];
+	for (oi = 0; oi < order.length; oi++) {
+		plural = order[oi];
 		if (byPlural[plural] && byPlural[plural].length)
 			list.push({ plural: plural, items: byPlural[plural] });
 	}
 	for (plural in byPlural) {
 		if (!Object.prototype.hasOwnProperty.call(byPlural, plural))
 			continue;
-		if (SPA_ORDER.indexOf(plural) === -1 && byPlural[plural].length)
+		if (order.indexOf(plural) === -1 && byPlural[plural].length)
 			list.push({ plural: plural, items: byPlural[plural] });
 	}
 	return list;
@@ -964,7 +1583,7 @@ function spaRenderPreview(batch) {
 	html += "<h4>Observations (" + ((batch.observations && batch.observations.length) || 0) + ")</h4>";
 	for (gi = 0; gi < groups.length; gi++) {
 		g = groups[gi];
-		html += "<p class=\"spaObsSummary\">" + spaEsc(g.measurementKey) + ": " + g.count + "</p>";
+		html += "<p class=\"spaObsSummary\">" + spaEsc(spaObsGroupDisplayLabel(g, gi)) + ": " + g.count + "</p>";
 		if (!g.rows.length)
 			continue;
 		html += "<div class=\"spaPreviewTableWrap\"><table class=\"tablesmall spaPreviewTable\"><thead><tr>";
@@ -984,6 +1603,33 @@ function spaRenderPreview(batch) {
 		html += "</tbody></table></div>";
 	}
 	html += "</div>";
+
+	/* Relations (after Observations — need their ids at publish time) */
+	if (batch.relations && batch.relations.length) {
+		html += "<div class=\"spaPreviewSection\" data-spa-plural=\"Relations\">";
+		html += "<h4>Relations (" + batch.relations.length + ")</h4>";
+		html += "<div class=\"spaPreviewTableWrap\"><table class=\"tablesmall spaPreviewTable\"><thead><tr>";
+		html += "<th class=\"spaCellShort\">#</th>";
+		html += "<th class=\"spaCellShort\">role</th>";
+		html += "<th class=\"spaCellShort\">Subject</th>";
+		html += "<th class=\"spaCellShort\">Object</th>";
+		html += "<th class=\"spaCellShort\">description</th>";
+		html += "<th class=\"spaCellShort\">@iot.id</th></tr></thead><tbody>";
+		for (si2 = 0; si2 < batch.relations.length; si2++) {
+			o = batch.relations[si2];
+			html += "<tr data-spa-rel-index=\"" + o.index + "\">";
+			html += "<td class=\"spaCellShort\">" + o.index + "</td>";
+			html += "<td class=\"spaCellShort\">" + spaEsc(o.role || "") + "</td>";
+			html += "<td class=\"spaCellShort\">" + spaEsc((o.subjectLabel || "Subject") + " #" + o.subjectObsIndex) + "</td>";
+			html += "<td class=\"spaCellShort\">" + spaEsc((o.objectLabel || "Object") + " #" + o.objectObsIndex) + "</td>";
+			html += "<td class=\"" + spaPreviewCellClass("description", o.description) + "\">" + spaEsc(o.description || "") + "</td>";
+			html += "<td class=\"spaIotId spaCellShort\" id=\"" + spaEsc(spaDomIdFromKey("spaRelId_", o.index)) + "\">" +
+				spaEsc(o.relationId != null ? o.relationId : "") + "</td>";
+			html += "</tr>";
+		}
+		html += "</tbody></table></div></div>";
+	}
+
 	el.innerHTML = html;
 }
 
@@ -1002,25 +1648,36 @@ function spaUpdatePreviewObservationId(index, id) {
 		cell.textContent = spaIsEmpty(id) || id === "(previous)" ? "" : String(id);
 }
 
+function spaUpdatePreviewRelationId(index, id) {
+	var cell = document.getElementById(spaDomIdFromKey("spaRelId_", index));
+	if (cell)
+		cell.textContent = spaIsEmpty(id) ? "" : String(id);
+}
+
 function spaPreparePublishBatch(node, pkg, obsRows, sourceData, retryOnly) {
-	var fp = spaComputeBatchFingerprint(pkg, obsRows), batch, k, item, o, pendKeys, pendObs;
+	var fp = spaComputeBatchFingerprint(pkg, obsRows), batch, k, item, o, r, pendKeys, pendObs, pendRel;
 
 	if (node.staPublishBatch && node.staPublishBatch.fingerprint === fp &&
 			node.staPublishBatch.entities && node.staPublishBatch.observations) {
 		batch = node.staPublishBatch;
+		if (!batch.relations)
+			batch.relations = spaBuildRelationPlans(pkg, batch.observations);
 	} else {
 		batch = spaNormalizeBatch(pkg, obsRows, sourceData);
 		batch.fingerprint = fp;
 		node.staPublishBatch = batch;
 	}
+	batch._pkg = pkg;
 
 	spaApplyCacheToBatch(batch, node.staPublishCache);
 
 	if (retryOnly && node.staPublishPending) {
 		pendKeys = {};
 		pendObs = {};
+		pendRel = {};
 		(node.staPublishPending.entities || []).forEach(function (e) { pendKeys[e.key] = true; });
 		(node.staPublishPending.observations || []).forEach(function (e) { pendObs[e.index] = true; });
+		(node.staPublishPending.relations || []).forEach(function (e) { pendRel[e.index] = true; });
 		for (k in batch.entities) {
 			if (!Object.prototype.hasOwnProperty.call(batch.entities, k))
 				continue;
@@ -1046,6 +1703,16 @@ function spaPreparePublishBatch(node, pkg, obsRows, sourceData, retryOnly) {
 				o.observationId = o.observationId || "(previous)";
 			}
 		}
+		for (k = 0; k < (batch.relations || []).length; k++) {
+			r = batch.relations[k];
+			if (pendRel[r.index]) {
+				r.status = "pending";
+				r.error = null;
+				r.relationId = null;
+			} else if (r.status !== "done") {
+				r.status = "done";
+			}
+		}
 	} else {
 		/* Full publish: keep confirmed IDs; re-queue the rest */
 		for (k in batch.entities) {
@@ -1065,6 +1732,14 @@ function spaPreparePublishBatch(node, pkg, obsRows, sourceData, retryOnly) {
 			o.status = "pending";
 			o.error = null;
 			o.observationId = null;
+		}
+		for (k = 0; k < (batch.relations || []).length; k++) {
+			r = batch.relations[k];
+			if (r.status === "done" && !spaIsEmpty(r.relationId))
+				continue;
+			r.status = "pending";
+			r.error = null;
+			r.relationId = null;
 		}
 	}
 	return batch;
@@ -1108,8 +1783,9 @@ function spaAnalyzeAndRenderPreview(node) {
 		batch.fingerprint = fp;
 		node.staPublishBatch = batch;
 	}
+	batch._pkg = pkg;
 	spaApplyCacheToBatch(batch, node.staPublishCache);
-	spaRenderCounts(batch);
+	spaRenderCounts(batch, pkg);
 	spaRenderPreview(batch);
 	console.log("STA Publisher — preview batch", batch);
 	return batch;
@@ -1344,7 +2020,7 @@ function spaDownloadPlanPNG(event) {
 		ctx.fillStyle = "#333333";
 		for (gi = 0; gi < groups.length; gi++) {
 			g = groups[gi];
-			drawClipped(g.measurementKey + ": " + g.count, pad, y, maxW - pad * 2);
+			drawClipped(spaObsGroupDisplayLabel(g, gi) + ": " + g.count, pad, y, maxW - pad * 2);
 			y += lineH;
 		}
 
@@ -1407,7 +2083,7 @@ function spaCollectSourceData(node, parent) {
 
 function spaUpdateSummary(node, pkg) {
 	var summary = document.getElementById("DialogSTAPublisherSummary");
-	var pending, nPendE = 0, nPendO = 0, url, ents, nObs, html;
+	var pending, nPendE = 0, nPendO = 0, nPendR = 0, url, ents, nObs, html;
 	if (!summary)
 		return;
 	if (!pkg) {
@@ -1422,6 +2098,7 @@ function spaUpdateSummary(node, pkg) {
 	if (pending) {
 		nPendE = (pending.entities && pending.entities.length) || 0;
 		nPendO = (pending.observations && pending.observations.length) || 0;
+		nPendR = (pending.relations && pending.relations.length) || 0;
 	}
 	url = spaServiceUrl(node.STAURL || pkg.STAURL || "");
 	ents = Object.keys(pkg.entities || {});
@@ -1441,15 +2118,15 @@ function spaUpdateSummary(node, pkg) {
 		cat: "Observacions previstes", spa: "Observaciones previstas", eng: "Planned observations"
 	}) + "</span> <span class=\"spaSummaryVal\">" + nObs + "</span></span>";
 	html += "</div>";
-	if (nPendE > 0 || nPendO > 0) {
+	if (nPendE > 0 || nPendO > 0 || nPendR > 0) {
 		html += "<div class=\"spaSummaryPending\"><span class=\"spaSummaryLbl\">" + DonaCadena({
 			cat: "Pendents", spa: "Pendientes", eng: "Pending"
 		}) + "</span> <span class=\"spaSummaryVal\">" +
 			DonaCadenaFmt({
-				cat: "{0} entitats, {1} observacions",
-				spa: "{0} entidades, {1} observaciones",
-				eng: "{0} entities, {1} observations"
-			}, nPendE, nPendO) + "</span></div>";
+				cat: "{0} entitats, {1} observacions, {2} relations",
+				spa: "{0} entidades, {1} observaciones, {2} relations",
+				eng: "{0} entities, {1} observations, {2} relations"
+			}, nPendE, nPendO, nPendR) + "</span></div>";
 	}
 	html += "<div class=\"spaSummaryRow spaSummaryUrl\"><span class=\"spaSummaryLbl\">" + DonaCadena({
 		cat: "URL STA", spa: "URL STA", eng: "STA URL"
@@ -1510,7 +2187,7 @@ function closeSTAPublisherDialog(event) {
 }
 
 async function spaRunPublishPipeline(node, options) {
-	var parent, pkg, url, sourceData, obsRows, batch, ctx, obsResult, pending;
+	var parent, pkg, url, sourceData, obsRows, batch, ctx, obsResult, relResult, pending;
 	var retryOnly = options && options.retryOnly;
 	var k, item;
 
@@ -1553,6 +2230,7 @@ async function spaRunPublishPipeline(node, options) {
 		pkg: pkg,
 		entities: batch.entities,
 		observations: batch.observations,
+		relations: batch.relations || [],
 		cache: (node.staPublishCache && typeof node.staPublishCache === "object") ? node.staPublishCache : {},
 		partyId: null
 	};
@@ -1569,15 +2247,21 @@ async function spaRunPublishPipeline(node, options) {
 		spaAppendLog("Retry pending only.");
 
 	spaAppendLog("STA URL: " + url);
-	spaAppendLog("Unique entities: " + batch.entityCount + ", observations: " + batch.observations.length);
+	spaAppendLog("Publish order: " + spaPublishDisplayOrder(pkg).join(" → "));
+	spaAppendLog("Unique entities: " + batch.entityCount + ", observations: " + batch.observations.length +
+		", relations: " + ((batch.relations && batch.relations.length) || 0));
 
 	await spaResolveAllEntities(ctx);
 	obsResult = await spaCreateObservations(ctx);
+	await spaLinkObservationsToGroups(ctx);
+	relResult = await spaCreateRelations(ctx);
+	await spaLinkRelationsToGroups(ctx);
 
 	pending = spaBuildPending(ctx);
 	node.staPublishCache = ctx.cache;
 	node.staPublishBatch = batch;
-	node.staPublishPending = (pending.entities.length || pending.observations.length) ? pending : null;
+	node.staPublishPending = (pending.entities.length || pending.observations.length ||
+		(pending.relations && pending.relations.length)) ? pending : null;
 	/* Collect successful observations from the live batch (includes prior done + this run) */
 	node.staPublishOkObservations = [];
 	for (k = 0; k < batch.observations.length; k++) {
@@ -1601,11 +2285,14 @@ async function spaRunPublishPipeline(node, options) {
 		measurementKey: { type: "string" }
 	};
 	node.staPublishResult = {
-		ok: obsResult.nFail === 0 && !pending.entities.length && !pending.observations.length,
+		ok: obsResult.nFail === 0 && relResult.nFail === 0 && !pending.entities.length &&
+			!pending.observations.length && !(pending.relations && pending.relations.length),
 		createdObservations: node.STAdata.length,
-		failed: obsResult.nFail,
+		createdRelations: relResult.nOk,
+		failed: obsResult.nFail + relResult.nFail,
 		pendingEntities: pending.entities.length,
-		pendingObservations: pending.observations.length
+		pendingObservations: pending.observations.length,
+		pendingRelations: (pending.relations && pending.relations.length) || 0
 	};
 	console.log("STA Publisher — result", node.staPublishResult);
 	console.log("STA Publisher — STAdata", node.STAdata);
@@ -1613,8 +2300,14 @@ async function spaRunPublishPipeline(node, options) {
 	if (typeof networkNodes !== "undefined")
 		networkNodes.update(node);
 	spaUpdateSummary(node, pkg);
-	spaRenderCounts(batch);
-	return obsResult;
+	spaRenderCounts(batch, pkg);
+	spaRenderPreview(batch);
+	return {
+		nOk: obsResult.nOk,
+		nFail: obsResult.nFail + relResult.nFail,
+		nRelOk: relResult.nOk,
+		nRelFail: relResult.nFail
+	};
 }
 
 async function publishSTAEntityPackage(event) {
@@ -1630,12 +2323,13 @@ async function publishSTAEntityPackage(event) {
 	spaSetStatus(DonaCadena({cat: "Publicant…", spa: "Publicando…", eng: "Publishing…"}), false);
 	try {
 		result = await spaRunPublishPipeline(node, { retryOnly: false });
-		spaAppendLog("Done. Observations created: " + result.nOk + ", failed: " + result.nFail);
+		spaAppendLog("Done. Observations: " + result.nOk + ", Relations: " + (result.nRelOk || 0) +
+			", failed: " + result.nFail);
 		spaSetStatus(DonaCadenaFmt({
-			cat: "Publicació finalitzada: {0} Observations, {1} errors.",
-			spa: "Publicación finalizada: {0} Observations, {1} errores.",
-			eng: "Publish finished: {0} Observations, {1} failures."
-		}, result.nOk, result.nFail), result.nFail > 0);
+			cat: "Publicació finalitzada: {0} Observations, {1} Relations, {2} errors.",
+			spa: "Publicación finalizada: {0} Observations, {1} Relations, {2} errores.",
+			eng: "Publish finished: {0} Observations, {1} Relations, {2} failures."
+		}, result.nOk, result.nRelOk || 0, result.nFail), result.nFail > 0);
 		if (typeof updateQueryAndTableArea === "function")
 			updateQueryAndTableArea(node);
 	} catch (error) {
@@ -1657,7 +2351,8 @@ async function retrySTAPublisherPending(event) {
 		return;
 	if (!node.staPublishPending ||
 			((!node.staPublishPending.entities || !node.staPublishPending.entities.length) &&
-			 (!node.staPublishPending.observations || !node.staPublishPending.observations.length))) {
+			 (!node.staPublishPending.observations || !node.staPublishPending.observations.length) &&
+			 (!node.staPublishPending.relations || !node.staPublishPending.relations.length))) {
 		spaSetStatus(DonaCadena({
 			cat: "No hi ha operacions pendents.",
 			spa: "No hay operaciones pendientes.",
@@ -1669,12 +2364,13 @@ async function retrySTAPublisherPending(event) {
 	spaAppendLog("--- Retry pending ---");
 	try {
 		result = await spaRunPublishPipeline(node, { retryOnly: true });
-		spaAppendLog("Retry done. Observations ok: " + result.nOk + ", failed: " + result.nFail);
+		spaAppendLog("Retry done. Observations: " + result.nOk + ", Relations: " + (result.nRelOk || 0) +
+			", failed: " + result.nFail);
 		spaSetStatus(DonaCadenaFmt({
-			cat: "Reintent finalitzat: {0} Observations, {1} errors.",
-			spa: "Reintento finalizado: {0} Observations, {1} errores.",
-			eng: "Retry finished: {0} Observations, {1} failures."
-		}, result.nOk, result.nFail), result.nFail > 0);
+			cat: "Reintent finalitzat: {0} Observations, {1} Relations, {2} errors.",
+			spa: "Reintento finalizado: {0} Observations, {1} Relations, {2} errores.",
+			eng: "Retry finished: {0} Observations, {1} Relations, {2} failures."
+		}, result.nOk, result.nRelOk || 0, result.nFail), result.nFail > 0);
 		if (typeof updateQueryAndTableArea === "function")
 			updateQueryAndTableArea(node);
 	} catch (error) {

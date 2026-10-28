@@ -1,0 +1,1156 @@
+{
+  "version": 1,
+  "mode": "dataFromTable",
+  "exportedAt": "2026-10-28T15:02:06.751Z",
+  "STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+  "staEntityConfig": {
+    "version": 2,
+    "mode": "dataFromTable",
+    "selected": {
+      "Parties": true,
+      "Licenses": true,
+      "Things": true,
+      "Locations": true,
+      "HistoricalLocations": false,
+      "Sensors": true,
+      "ObservedProperties": true,
+      "FeaturesOfInterest": true,
+      "Campaigns": false,
+      "ObservationGroups": false,
+      "Datastreams": true,
+      "MultiDatastreams": false,
+      "Cells": false,
+      "Relations": true,
+      "Observations": true
+    },
+    "scope": {
+      "Licenses": "shared",
+      "Things": "shared",
+      "Locations": "shared",
+      "HistoricalLocations": "shared",
+      "Sensors": "shared",
+      "ObservedProperties": "shared",
+      "FeaturesOfInterest": "shared",
+      "Campaigns": "shared",
+      "ObservationGroups": "shared",
+      "Datastreams": "shared",
+      "MultiDatastreams": "shared",
+      "Cells": "shared",
+      "Observations": "shared"
+    },
+    "entities": {
+      "Parties": {
+        "id": {
+          "source": "manual",
+          "value": "c1a70fe6-06a5-39f6-8098-9e585c4ce55f",
+          "column": ""
+        },
+        "props": {
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "authId": {
+            "source": "manual",
+            "value": "c1a70fe6-06a5-39f6-8098-9e585c4ce55f",
+            "column": ""
+          },
+          "role": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "displayName": {
+            "source": "manual",
+            "value": "TestUser",
+            "column": ""
+          }
+        },
+        "locked": true
+      },
+      "Licenses": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "CC BY 4.0",
+            "column": ""
+          },
+          "definition": {
+            "source": "manual",
+            "value": "https://creativecommons.org/licenses/by/4.0/",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "Creative Commons Attribution 4.0 International",
+            "column": ""
+          },
+          "logo": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "attributionText": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Things": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Locations": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "column",
+            "value": "",
+            "column": "Location.description"
+          },
+          "encodingType": {
+            "source": "manual",
+            "value": "application/geo+json",
+            "column": ""
+          },
+          "properties": {
+            "source": "column",
+            "value": "",
+            "column": "location.properties"
+          },
+          "location": {
+            "source": "column",
+            "value": "",
+            "column": "Location.location"
+          }
+        },
+        "locked": false
+      },
+      "HistoricalLocations": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "time": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Sensors": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "encodingType": {
+            "source": "manual",
+            "value": "application/json",
+            "column": ""
+          },
+          "metadata": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "ObservedProperties": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "definition": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "FeaturesOfInterest": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "encodingType": {
+            "source": "manual",
+            "value": "application/geo+json",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "feature": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Campaigns": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "classification": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "termsOfUse": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "privacyPolicy": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "creationTime": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "url": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "startTime": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "endTime": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "ObservationGroups": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "purpose": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "creationTime": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "endTime": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "termsOfUsed": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "privacyPolicy": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "dataQuality": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Datastreams": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "observationType": {
+            "source": "manual",
+            "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+            "column": ""
+          },
+          "unitOfMeasurement.name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "unitOfMeasurement.symbol": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "unitOfMeasurement.definition": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "MultiDatastreams": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "name": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "observationType": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "unitOfMeasurements": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "multiObservationDataType": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Cells": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "system": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "resolution": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Relations": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "role": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "description": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "externalObject": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "properties": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          }
+        },
+        "locked": false
+      },
+      "Observations": {
+        "id": {
+          "source": "manual",
+          "value": "",
+          "column": ""
+        },
+        "props": {
+          "phenomenonTime": {
+            "source": "column",
+            "value": "",
+            "column": "phenomenonTime"
+          },
+          "resultTime": {
+            "source": "column",
+            "value": "",
+            "column": "phenomenonTime"
+          },
+          "result": {
+            "source": "column",
+            "value": "",
+            "column": "resultFoto"
+          }
+        },
+        "locked": false
+      }
+    },
+    "measurements": [
+      {
+        "key": "grup_mvqurkp6_1",
+        "include": true,
+        "label": "Photography",
+        "resultColumn": "",
+        "selected": {
+          "Licenses": true,
+          "Things": true,
+          "Locations": true,
+          "HistoricalLocations": false,
+          "Sensors": true,
+          "ObservedProperties": true,
+          "FeaturesOfInterest": true,
+          "Campaigns": false,
+          "ObservationGroups": false,
+          "Datastreams": true,
+          "MultiDatastreams": false,
+          "Cells": false,
+          "Observations": true
+        },
+        "ObservedProperties": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "WildlifeImage",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "Wildlife image captured by a camera trap and stored at a URL",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Digital photograph captured by a camera trap to document wildlife presence and behaviour. The image is stored externally and referenced through a URL",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Sensors": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "column",
+              "value": "grup_mvqurkp6_1",
+              "column": "Foto_Sensor.name"
+            },
+            "description": {
+              "source": "manual",
+              "value": "Motion-activated wildlife camera used to capture images of animals in their natural habitat.",
+              "column": ""
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/json",
+              "column": ""
+            },
+            "metadata": {
+              "source": "manual",
+              "value": "{ \"manufacturer\": \"Browning Trail Cameras\", \"model\": \"Strike Force Pro DCL\", \"sensorType\": \"Motion-activated wildlife camera\", \"imageResolution\": \"26 MP\", \"videoResolution\": \"1920 x 1080 (Full HD)\", \"dayNightCapture\": true, \"infraredIllumination\": true, \"motionDetectionRange\": \"100 ft\", \"triggerSpeed\": \"0.15 seconds\", \"application\": \"Wildlife monitoring and biodiversity observation\" }",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "FeaturesOfInterest": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "column",
+              "value": "",
+              "column": "Location.name"
+            },
+            "description": {
+              "source": "column",
+              "value": "",
+              "column": "Location.description"
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "properties": {
+              "source": "column",
+              "value": "",
+              "column": "location.properties"
+            },
+            "feature": {
+              "source": "column",
+              "value": "",
+              "column": "Location.location"
+            }
+          },
+          "locked": false
+        },
+        "Datastreams": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "Camera trap photograph",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "Photographs captured automatically by motion-activated camera traps for wildlife monitoring, species detection and documentation of animal behaviour in natural habitats.",
+              "column": ""
+            },
+            "observationType": {
+              "source": "manual",
+              "value": "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+              "column": ""
+            },
+            "unitOfMeasurement.name": {
+              "source": "manual",
+              "value": "image",
+              "column": "Person_Datastream_unitOfMEasurement"
+            },
+            "unitOfMeasurement.symbol": {
+              "source": "manual",
+              "value": "img",
+              "column": ""
+            },
+            "unitOfMeasurement.definition": {
+              "source": "manual",
+              "value": "Digital image",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "{\"captureMethod\":\"camera_trap\",\"automation\":\"motion-activated\",\"mediaType\":\"image/jpeg\",\"storageType\":\"URL\",\"purpose\":\"Wildlife monitoring\"}",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Observations": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "phenomenonTime": {
+              "source": "column",
+              "value": "",
+              "column": "phenomenonTime"
+            },
+            "resultTime": {
+              "source": "column",
+              "value": "",
+              "column": "phenomenonTime"
+            },
+            "result": {
+              "source": "column",
+              "value": "",
+              "column": "resultFoto"
+            }
+          },
+          "locked": false
+        },
+        "_idColumn": "id_photography",
+        "Things": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "column",
+              "value": "",
+              "column": "Foto_Thing.name"
+            },
+            "description": {
+              "source": "manual",
+              "value": "Motion-activated camera trap used for wildlife monitoring.",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "{\"deviceType\":\"Camera trap\",\"manufacturer\":\"Browning Trail Cameras\",\"model\":\"Strike Force Pro DCL\",\"modelNumber\":\"BTC-5DCL\",\"imageResolutionMP\":26,\"videoResolution\":\"1920x1080\",\"triggerSpeedSeconds\":0.15,\"motionDetectionRangeMeters\":30.48,\"infraredNightVision\":true,\"fieldOfViewDegrees\":54,\"storageType\":\"SDXC\",\"maxStorageCapacityGB\":512,\"powerSource\":\"6 AA batteries\",\"purpose\":\"Wildlife monitoring\",\"status\":\"Active\"}",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Licenses": {
+          "id": {
+            "source": "manual",
+            "value": "1a708638-1584-4e8a-aec6-8d1bb16315f8",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "CC BY 3.0",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "https://creativecommons.org/licenses/by/3.0/deed.en",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "My CC_BY",
+              "column": ""
+            },
+            "logo": {
+              "source": "manual",
+              "value": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png",
+              "column": ""
+            },
+            "attributionText": {
+              "source": "manual",
+              "value": "contributed by Secure Dimensions",
+              "column": ""
+            }
+          },
+          "locked": true
+        },
+        "Locations": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "column",
+              "value": "",
+              "column": "Location.name"
+            },
+            "description": {
+              "source": "column",
+              "value": "",
+              "column": "Location.description"
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "properties": {
+              "source": "column",
+              "value": "",
+              "column": "location.properties"
+            },
+            "location": {
+              "source": "column",
+              "value": "",
+              "column": "Location.location"
+            }
+          },
+          "locked": false
+        }
+      },
+      {
+        "key": "grup_mvs2ju9e_1",
+        "include": true,
+        "label": "Identification",
+        "resultColumn": "",
+        "selected": {
+          "Licenses": true,
+          "Things": true,
+          "Locations": true,
+          "HistoricalLocations": false,
+          "Sensors": true,
+          "ObservedProperties": true,
+          "FeaturesOfInterest": true,
+          "Campaigns": false,
+          "ObservationGroups": false,
+          "Datastreams": true,
+          "MultiDatastreams": false,
+          "Cells": false,
+          "Observations": true
+        },
+        "Licenses": {
+          "id": {
+            "source": "manual",
+            "value": "1a708638-1584-4e8a-aec6-8d1bb16315f8",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "CC BY 3.0",
+              "column": ""
+            },
+            "definition": {
+              "source": "manual",
+              "value": "https://creativecommons.org/licenses/by/3.0/deed.en",
+              "column": ""
+            },
+            "description": {
+              "source": "manual",
+              "value": "My CC_BY",
+              "column": ""
+            },
+            "logo": {
+              "source": "manual",
+              "value": "https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png",
+              "column": ""
+            },
+            "attributionText": {
+              "source": "manual",
+              "value": "contributed by Secure Dimensions",
+              "column": ""
+            }
+          },
+          "locked": true
+        },
+        "Things": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "manual",
+              "value": "WildlifeIdentifier_01",
+              "column": ""
+            },
+            "description": {
+              "source": "column",
+              "value": "",
+              "column": "Person_Thing_description"
+            },
+            "properties": {
+              "source": "column",
+              "value": "",
+              "column": "Foto_Thing_properties"
+            }
+          },
+          "locked": false
+        },
+        "Sensors": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "column",
+              "value": "grup_mvs2ju9e_1",
+              "column": "Person_Sensor_name"
+            },
+            "description": {
+              "source": "column",
+              "value": "grup_mvs2ju9e_1",
+              "column": "Person_Sensor_description"
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/json",
+              "column": ""
+            },
+            "metadata": {
+              "source": "column",
+              "value": "",
+              "column": "Person_Sensor_metadata"
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "ObservedProperties": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "column",
+              "value": "grup_mvs2ju9e_1",
+              "column": "Person_ObservedProperty_name"
+            },
+            "definition": {
+              "source": "column",
+              "value": "",
+              "column": "Foto_ObservedProperty_definition"
+            },
+            "description": {
+              "source": "column",
+              "value": "grup_mvs2ju9e_1",
+              "column": "Person_Sensor_description"
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "FeaturesOfInterest": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "column",
+              "value": "",
+              "column": "Location.name"
+            },
+            "description": {
+              "source": "column",
+              "value": "",
+              "column": "Location.description"
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "feature": {
+              "source": "column",
+              "value": "",
+              "column": "Location.location"
+            },
+            "properties": {
+              "source": "manual",
+              "value": "",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Datastreams": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "column",
+              "value": "grup_mvs2ju9e_1",
+              "column": "Person_Datastream_name"
+            },
+            "description": {
+              "source": "column",
+              "value": "grup_mvs2ju9e_1",
+              "column": "Person_Datastream_description"
+            },
+            "observationType": {
+              "source": "manual",
+              "value": "\"http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CategoryObservation\"",
+              "column": ""
+            },
+            "unitOfMeasurement.name": {
+              "source": "manual",
+              "value": "-",
+              "column": ""
+            },
+            "unitOfMeasurement.symbol": {
+              "source": "manual",
+              "value": "-",
+              "column": ""
+            },
+            "unitOfMeasurement.definition": {
+              "source": "manual",
+              "value": "-",
+              "column": ""
+            },
+            "properties": {
+              "source": "manual",
+              "value": "{\"identificationMethod\":\"Human visual identification\",\"purpose\":\"Wildlife monitoring\",\"validationStatus\":\"Validated\",\"inputDataType\":\"Photograph\"}",
+              "column": ""
+            }
+          },
+          "locked": false
+        },
+        "Observations": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "phenomenonTime": {
+              "source": "column",
+              "value": "",
+              "column": "phenomenonTime"
+            },
+            "resultTime": {
+              "source": "column",
+              "value": "",
+              "column": "phenomenonTime"
+            },
+            "result": {
+              "source": "column",
+              "value": "",
+              "column": "ResultSP"
+            }
+          },
+          "locked": false
+        },
+        "_idColumn": "id_identification",
+        "Locations": {
+          "id": {
+            "source": "manual",
+            "value": "",
+            "column": ""
+          },
+          "props": {
+            "name": {
+              "source": "column",
+              "value": "",
+              "column": "Location.name"
+            },
+            "description": {
+              "source": "column",
+              "value": "",
+              "column": "Location.description"
+            },
+            "encodingType": {
+              "source": "manual",
+              "value": "application/geo+json",
+              "column": ""
+            },
+            "location": {
+              "source": "column",
+              "value": "",
+              "column": "Location.location"
+            },
+            "properties": {
+              "source": "column",
+              "value": "",
+              "column": "location.properties"
+            }
+          },
+          "locked": false
+        }
+      }
+    ],
+    "relationStub": {
+      "enabled": true,
+      "role": "Identification",
+      "description": "Photographgy and its identification",
+      "subjectGroupKey": "grup_mvqurkp6_1",
+      "objectGroupKey": "grup_mvs2ju9e_1",
+      "idColumns": [
+        "id_photography",
+        "id_identification"
+      ],
+      "targetKind": "Observations"
+    },
+    "nesting": {
+      "campaignObservationGroup": "campaignFirst",
+      "relationObservationGroup": "relationFirst"
+    }
+  }
+}

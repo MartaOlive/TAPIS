@@ -111,14 +111,72 @@ function sebPropList(plural, mode) {
 			});
 			continue;
 		}
-		if ((plural === "Locations" && name === "location") || (plural === "FeaturesOfInterest" && name === "feature")) {
-			out.push({ name: "longitude", required: true, dataType: "number" });
-			out.push({ name: "latitude", required: true, dataType: "number" });
-			continue;
-		}
+		/* location / feature stay as one GeoJSON Point property (not split into lon/lat) */
 		out.push({ name: name, required: sebPropRequired(plural, name), dataType: p.dataType });
 	}
 	return out;
+}
+
+/* GeoJSON Point string for Location.location / FeatureOfInterest.feature */
+function sebGeoJsonPointString(lon, lat) {
+	return JSON.stringify({ type: "Point", coordinates: [Number(lon), Number(lat)] });
+}
+
+function sebGeoPropName(plural) {
+	if (plural === "Locations")
+		return "location";
+	if (plural === "FeaturesOfInterest")
+		return "feature";
+	return null;
+}
+
+/* Migrate legacy longitude/latitude props on an entity cfg → location/feature Point */
+function sebMigrateEntityGeoProps(plural, ent) {
+	var geoName, lonSrc, latSrc, lon, lat;
+	if (!ent || !ent.props)
+		return;
+	geoName = sebGeoPropName(plural);
+	if (!geoName)
+		return;
+	lonSrc = ent.props.longitude;
+	latSrc = ent.props.latitude;
+	if (!lonSrc && !latSrc)
+		return;
+	if (!ent.props[geoName] || !sebSrcIsSet(ent.props[geoName])) {
+		lon = lonSrc && lonSrc.source !== "column" ? lonSrc.value : "";
+		lat = latSrc && latSrc.source !== "column" ? latSrc.value : "";
+		if (lon !== "" && lat !== "" && isFinite(Number(lon)) && isFinite(Number(lat)))
+			ent.props[geoName] = sebSrcObj("manual", sebGeoJsonPointString(lon, lat), "");
+		else if (!ent.props[geoName])
+			ent.props[geoName] = sebSrcObj("manual", "", "");
+	}
+	delete ent.props.longitude;
+	delete ent.props.latitude;
+}
+
+function sebMigrateConfigGeoProps(cfg) {
+	var i, m, p;
+	if (!cfg)
+		return;
+	if (cfg.entities) {
+		["Locations", "FeaturesOfInterest"].forEach(function (plural) {
+			if (cfg.entities[plural])
+				sebMigrateEntityGeoProps(plural, cfg.entities[plural]);
+		});
+	}
+	for (i = 0; i < (cfg.measurements || []).length; i++) {
+		m = cfg.measurements[i];
+		if (!m)
+			continue;
+		for (p = 0; p < SEB_GROUP_CHECKABLE.length; p++) {
+			if (m[SEB_GROUP_CHECKABLE[p]])
+				sebMigrateEntityGeoProps(SEB_GROUP_CHECKABLE[p], m[SEB_GROUP_CHECKABLE[p]]);
+		}
+		["Locations", "FeaturesOfInterest"].forEach(function (plural) {
+			if (m[plural])
+				sebMigrateEntityGeoProps(plural, m[plural]);
+		});
+	}
 }
 
 function sebEffectiveSet(selected) {
@@ -188,8 +246,42 @@ function sebNewRelationStub() {
 		description: "",
 		subjectGroupKey: "",
 		objectGroupKey: "",
-		idColumns: []
+		idColumns: [],
+		targetKind: "Observations" /* Observations | ObservationGroups */
 	};
+}
+
+/* Nesting choices for Campaign↔ObservationGroup and Relation↔ObservationGroup cycles. */
+function sebNewNesting() {
+	return {
+		campaignObservationGroup: "campaignFirst", /* campaignFirst | observationGroupFirst */
+		relationObservationGroup: "relationFirst"  /* relationFirst | observationGroupFirst */
+	};
+}
+
+function sebEnsureNesting(cfg) {
+	if (!cfg)
+		return;
+	if (!cfg.nesting || typeof cfg.nesting !== "object")
+		cfg.nesting = sebNewNesting();
+	if (cfg.nesting.campaignObservationGroup !== "observationGroupFirst")
+		cfg.nesting.campaignObservationGroup = "campaignFirst";
+	if (cfg.nesting.relationObservationGroup !== "observationGroupFirst")
+		cfg.nesting.relationObservationGroup = "relationFirst";
+}
+
+function sebHasEntitySelected(cfg, plural) {
+	var i, m;
+	if (!cfg)
+		return false;
+	if (cfg.selected && cfg.selected[plural])
+		return true;
+	for (i = 0; i < (cfg.measurements || []).length; i++) {
+		m = cfg.measurements[i];
+		if (m && m.include && m.selected && m.selected[plural])
+			return true;
+	}
+	return false;
 }
 
 /* Sanitize user etiqueta → safe slug for id_<slug> column names. */
@@ -278,11 +370,14 @@ function sebEnsureScope(cfg) {
 	}
 	if (!cfg.relationStub || typeof cfg.relationStub !== "object")
 		cfg.relationStub = sebNewRelationStub();
+	if (!cfg.relationStub.targetKind)
+		cfg.relationStub.targetKind = "Observations";
 	/* migrate old subjectFrom/objectFrom field names */
 	if (cfg.relationStub.subjectFrom && !cfg.relationStub.subjectGroupKey)
 		cfg.relationStub.subjectGroupKey = cfg.relationStub.subjectFrom;
 	if (cfg.relationStub.objectFrom && !cfg.relationStub.objectGroupKey)
 		cfg.relationStub.objectGroupKey = cfg.relationStub.objectFrom;
+	sebEnsureNesting(cfg);
 	sebEnsureGroupLabels(cfg);
 	sebRefreshRelationIdColumns(cfg);
 }
@@ -345,21 +440,229 @@ function getSTAEntityBuilderNodeSafe() {
 	}
 }
 
-function getSTAEntityBuilderParent(node) {
-	var parents;
+/* Direct parents that can act as data sources for the Builder */
+function getSTAEntityBuilderParents(node) {
+	var parents, out = [], i, p;
 	if (!node || typeof GetParentNodes !== "function")
+		return out;
+	parents = GetParentNodes(node) || [];
+	for (i = 0; i < parents.length; i++) {
+		p = parents[i];
+		if (!p)
+			continue;
+		if (p.STAdata && p.STAdata.length)
+			out.push(p);
+		else if (p.image === "connectASensor.png" || p.image === "readSDFromSensor.png" ||
+				p.image === "ImportCSV.png" || p.image === "ImportJSON.png" || p.image === "ImportGeoJSON.png" ||
+				p.image === "Table.png")
+			out.push(p);
+	}
+	if (!out.length && parents.length)
+		return parents.slice();
+	return out;
+}
+
+function sebParentDataLen(p) {
+	return p && p.STAdata ? p.STAdata.length : 0;
+}
+
+/* Primary parent = most rows (tie → first). Drives observation rows / STAdataSource. */
+function getSTAEntityBuilderParent(node) {
+	var parents = getSTAEntityBuilderParents(node), best, i;
+	if (!parents.length)
 		return null;
-	parents = GetParentNodes(node);
-	return parents && parents[0] ? parents[0] : null;
+	best = parents[0];
+	for (i = 1; i < parents.length; i++) {
+		if (sebParentDataLen(parents[i]) > sebParentDataLen(best))
+			best = parents[i];
+	}
+	return best;
+}
+
+function sebSourcePrefix(parent) {
+	var plural, img;
+	if (!parent)
+		return "src";
+	if (parent.STAURL && typeof getSTAURLLastEntity === "function" && typeof getSTAEntityPlural === "function") {
+		plural = getSTAEntityPlural(getSTAURLLastEntity(parent.STAURL), false);
+		if (plural)
+			return plural;
+	}
+	img = parent.image ? String(parent.image).replace(/\.png$/i, "") : "";
+	if (img && typeof STAEntities !== "undefined" && STAEntities[img])
+		return img;
+	if (parent.label)
+		return String(parent.label);
+	return "src" + (parent.id != null ? parent.id : "");
+}
+
+/* Visible node label for column optgroups (prefer canvas label). */
+function sebNodeLabel(parent) {
+	var s, img;
+	if (!parent)
+		return DonaCadena({cat: "Font", spa: "Fuente", eng: "Source"});
+	if (parent.label != null && String(parent.label).trim() !== "")
+		return String(parent.label).trim();
+	s = sebSourcePrefix(parent);
+	if (s && s.indexOf("src") !== 0)
+		return s;
+	img = parent.image ? String(parent.image).replace(/\.png$/i, "") : "";
+	return img || ("node " + (parent.id != null ? parent.id : ""));
+}
+
+/*
+	Build unified column list from primary (multi-row) + lateral (1-row) parents.
+	colMap[exposedName] = { parent, field, lateral }
+	colGroups = [{ label, columns: [{ value, text }] }] for optgroup dropdowns
+*/
+function sebBuildColumnSources(node) {
+	var parents = getSTAEntityBuilderParents(node);
+	var primary = getSTAEntityBuilderParent(node);
+	var laterals = [], colMap = {}, cols = [], colGroups = [], used = {}, i, p, raw, j, field, qname, needPrefix, group;
+	function pushGroup(parentNode, isLateral) {
+		raw = sebColumnNames(parentNode && parentNode.STAdata, parentNode && parentNode.STAdataAttributes);
+		if (!raw.length)
+			return;
+		needPrefix = false;
+		if (isLateral) {
+			for (j = 0; j < raw.length; j++) {
+				if (used[raw[j]]) {
+					needPrefix = true;
+					break;
+				}
+			}
+		}
+		group = { label: sebNodeLabel(parentNode), columns: [] };
+		for (j = 0; j < raw.length; j++) {
+			field = raw[j];
+			if (isLateral) {
+				qname = needPrefix || used[field] ? (sebSourcePrefix(parentNode) + "." + field) : field;
+				if (used[qname])
+					qname = sebSourcePrefix(parentNode) + "." + field;
+				if (used[qname])
+					qname = sebSourcePrefix(parentNode) + "_" + (parentNode.id != null ? parentNode.id : i) + "." + field;
+			} else
+				qname = field;
+			cols.push(qname);
+			used[qname] = true;
+			colMap[qname] = { parent: parentNode, field: field, lateral: !!isLateral };
+			group.columns.push({ value: qname, text: field });
+		}
+		colGroups.push(group);
+	}
+	for (i = 0; i < parents.length; i++) {
+		if (parents[i] !== primary)
+			laterals.push(parents[i]);
+	}
+	if (primary)
+		pushGroup(primary, false);
+	for (i = 0; i < laterals.length; i++)
+		pushGroup(laterals[i], true);
+	return {
+		primary: primary,
+		laterals: laterals,
+		cols: cols,
+		colGroups: colGroups,
+		colMap: colMap,
+		data: (primary && primary.STAdata) || []
+	};
+}
+
+function sebExposedColumnName(sources, parent, field) {
+	var k, e;
+	if (!sources || !sources.colMap)
+		return field;
+	for (k in sources.colMap) {
+		if (!Object.prototype.hasOwnProperty.call(sources.colMap, k))
+			continue;
+		e = sources.colMap[k];
+		if (e.parent === parent && e.field === field)
+			return k;
+	}
+	return field;
+}
+
+function sebIsRealDataColumn(name, sourcesOrParent) {
+	var cols;
+	if (!name)
+		return false;
+	if (sourcesOrParent && sourcesOrParent.colMap)
+		return !!sourcesOrParent.colMap[name];
+	if (sourcesOrParent && sourcesOrParent.cols)
+		return sourcesOrParent.cols.indexOf(name) !== -1;
+	if (sourcesOrParent && (sourcesOrParent.STAdata || sourcesOrParent.STAdataAttributes)) {
+		cols = sebColumnNames(sourcesOrParent.STAdata, sourcesOrParent.STAdataAttributes);
+		return cols.indexOf(name) !== -1;
+	}
+	if (typeof sebCtx !== "undefined" && sebCtx) {
+		if (sebCtx.colMap && sebCtx.colMap[name])
+			return true;
+		if (sebCtx.cols && sebCtx.cols.indexOf(name) !== -1)
+			return true;
+	}
+	return false;
+}
+
+/* Copy lateral (1-row) fields onto a primary row under exposed column names */
+function sebEnrichRecWithLaterals(rec, sources) {
+	var out, k, e, side;
+	if (typeof deapCopy === "function")
+		out = deapCopy(rec || {});
+	else {
+		out = {};
+		if (rec) {
+			for (k in rec) {
+				if (Object.prototype.hasOwnProperty.call(rec, k))
+					out[k] = rec[k];
+			}
+		}
+	}
+	if (!sources || !sources.colMap)
+		return out;
+	for (k in sources.colMap) {
+		if (!Object.prototype.hasOwnProperty.call(sources.colMap, k))
+			continue;
+		e = sources.colMap[k];
+		if (!e.lateral || !e.parent)
+			continue;
+		side = e.parent.STAdata && e.parent.STAdata[0];
+		if (!side)
+			continue;
+		out[k] = side[e.field];
+	}
+	return out;
+}
+
+function sebEnrichDataWithLaterals(data, sources) {
+	var i, out = [];
+	if (!data)
+		return out;
+	for (i = 0; i < data.length; i++)
+		out.push(sebEnrichRecWithLaterals(data[i], sources));
+	return out;
 }
 
 /* STA URL of the node or of the first ancestor that has one, reduced to the service root */
 function sebFindStaUrl(node) {
-	var n = node, i;
-	for (i = 0; n && i < 30; i++) {
+	var queue = [], seen = {}, n, parents, i, hops = 0;
+	if (node && node.STAURL)
+		return node.STAURL;
+	if (typeof GetParentNodes !== "function")
+		return "";
+	parents = GetParentNodes(node) || [];
+	for (i = 0; i < parents.length; i++)
+		queue.push(parents[i]);
+	while (queue.length && hops < 60) {
+		n = queue.shift();
+		hops++;
+		if (!n || seen[n.id])
+			continue;
+		seen[n.id] = true;
 		if (n.STAURL)
 			return n.STAURL;
-		n = getSTAEntityBuilderParent(n);
+		parents = GetParentNodes(n) || [];
+		for (i = 0; i < parents.length; i++)
+			queue.push(parents[i]);
 	}
 	return "";
 }
@@ -429,6 +732,15 @@ function sebSrcIsSet(s) {
 	return !!s && (s.source === "column" ? !!s.column : !sebIsEmpty(s.value));
 }
 
+/* Like sebSrcIsSet, but column sources pointing at non-real columns (e.g. grup_…) count as empty */
+function sebSrcIsMeaningfullySet(s) {
+	if (!sebSrcIsSet(s))
+		return false;
+	if (s.source === "column" && !sebIsRealDataColumn(s.column))
+		return false;
+	return true;
+}
+
 function sebPackSrc(s, dataType) {
 	var o;
 	if (!sebSrcIsSet(s))
@@ -440,9 +752,41 @@ function sebPackSrc(s, dataType) {
 }
 
 function sebResolveSrc(src, rec) {
+	var entry, side;
 	if (!src)
 		return undefined;
-	return src.source === "column" ? (rec ? rec[src.column] : undefined) : src.value;
+	if (src.source !== "column")
+		return src.value;
+	entry = (typeof sebCtx !== "undefined" && sebCtx && sebCtx.colMap) ? sebCtx.colMap[src.column] : null;
+	if (entry && entry.lateral) {
+		side = entry.parent && entry.parent.STAdata && entry.parent.STAdata[0];
+		return side ? side[entry.field] : undefined;
+	}
+	if (entry && !entry.lateral)
+		return rec ? rec[entry.field] : undefined;
+	/* Enriched rows already carry exposed lateral names */
+	return rec ? rec[src.column] : undefined;
+}
+
+/* Keep Observations.result in sync with measurement.resultColumn (never leave grup_ keys). */
+function sebSyncGroupResultColumn(m, parentOrSources) {
+	var col, probe = parentOrSources;
+	if (!m)
+		return;
+	col = m.resultColumn || "";
+	if (!m.Observations)
+		return;
+	if (!m.Observations.props)
+		m.Observations.props = {};
+	if (!probe && typeof sebCtx !== "undefined")
+		probe = sebCtx;
+	if (col && sebIsRealDataColumn(col, probe))
+		m.Observations.props.result = sebSrcObj("column", "", col);
+	else if (m.Observations.props.result && m.Observations.props.result.source === "column" &&
+			!sebIsRealDataColumn(m.Observations.props.result.column, probe))
+		m.Observations.props.result = sebSrcObj("manual", "", "");
+	else if (!sebSrcIsSet(m.Observations.props.result))
+		m.Observations.props.result = sebSrcObj("manual", "", "");
 }
 
 function sebNewEntity(plural, mode, defaults, columnDefaults) {
@@ -528,9 +872,10 @@ function sebParseStaAttributeDefinition(definition) {
  * From parent.STAdataAttributes[].definition, build maps:
  *   maps[plural].props[propName] = columnName
  *   maps[plural].idColumn = columnName  (for @iot.id)
+ * Optional sources remaps raw field names to exposed names (Things.name, …).
  */
-function sebColumnMapsFromParentAttributes(parent) {
-	var attrs = parent && parent.STAdataAttributes, maps = {}, col, def, parsed, slot;
+function sebColumnMapsFromParentAttributes(parent, sources) {
+	var attrs = parent && parent.STAdataAttributes, maps = {}, col, def, parsed, slot, exposed;
 	if (!attrs)
 		return maps;
 	for (col in attrs) {
@@ -540,12 +885,45 @@ function sebColumnMapsFromParentAttributes(parent) {
 		parsed = sebParseStaAttributeDefinition(def);
 		if (!parsed)
 			continue;
+		exposed = sources ? sebExposedColumnName(sources, parent, col) : col;
 		slot = maps[parsed.plural] || (maps[parsed.plural] = { props: {}, idColumn: null });
 		if (parsed.propName === "@iot.id")
-			slot.idColumn = col;
+			slot.idColumn = exposed;
 		else
-			slot.props[parsed.propName] = col;
+			slot.props[parsed.propName] = exposed;
 	}
+	return maps;
+}
+
+function sebMergeColumnMaps(into, from) {
+	var plural, prop;
+	for (plural in from) {
+		if (!Object.prototype.hasOwnProperty.call(from, plural))
+			continue;
+		if (!into[plural])
+			into[plural] = { props: {}, idColumn: null };
+		if (from[plural].idColumn && !into[plural].idColumn)
+			into[plural].idColumn = from[plural].idColumn;
+		for (prop in from[plural].props) {
+			if (!Object.prototype.hasOwnProperty.call(from[plural].props, prop))
+				continue;
+			if (!into[plural].props[prop])
+				into[plural].props[prop] = from[plural].props[prop];
+		}
+	}
+	return into;
+}
+
+function sebColumnMapsFromSources(sources) {
+	var maps = {}, parents = [], i;
+	if (!sources)
+		return maps;
+	if (sources.primary)
+		parents.push(sources.primary);
+	for (i = 0; i < (sources.laterals || []).length; i++)
+		parents.push(sources.laterals[i]);
+	for (i = 0; i < parents.length; i++)
+		sebMergeColumnMaps(maps, sebColumnMapsFromParentAttributes(parents[i], sources));
 	return maps;
 }
 
@@ -556,7 +934,7 @@ function sebApplyColumnMapToEntity(ent, plural, slot, mode, onlyEmpty) {
 	if (ent.locked)
 		return;
 	if (slot.idColumn) {
-		if (!onlyEmpty || !sebSrcIsSet(ent.id))
+		if (!onlyEmpty || !sebSrcIsMeaningfullySet(ent.id))
 			ent.id = sebSrcObj("column", "", slot.idColumn);
 	}
 	known = {};
@@ -571,18 +949,23 @@ function sebApplyColumnMapToEntity(ent, plural, slot, mode, onlyEmpty) {
 		col = slot.props[propName];
 		if (!ent.props[propName])
 			ent.props[propName] = sebSrcObj("manual", "", "");
-		if (onlyEmpty && sebSrcIsSet(ent.props[propName]))
+		if (onlyEmpty && sebSrcIsMeaningfullySet(ent.props[propName]))
 			continue;
 		ent.props[propName] = sebSrcObj("column", "", col);
 	}
 }
 
 /* Auto-wire parent attribute definitions → entity property column sources */
-function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty) {
+function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty, sources) {
 	var maps, plural, slot, i, m;
-	if (!cfg || !parent)
+	if (!cfg)
 		return;
-	maps = sebColumnMapsFromParentAttributes(parent);
+	if (sources)
+		maps = sebColumnMapsFromSources(sources);
+	else if (parent)
+		maps = sebColumnMapsFromParentAttributes(parent);
+	else
+		return;
 	for (plural in maps) {
 		if (!Object.prototype.hasOwnProperty.call(maps, plural))
 			continue;
@@ -602,16 +985,18 @@ function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty) {
 
 function sebNewMeasurement(key, parent, ctx, perGroup) {
 	var attrs = (parent && parent.STAdataAttributes) || {};
-	var attr = attrs[key] || {};
+	var realKey = sebIsRealDataColumn(key, parent) ? key : "";
+	var attr = (realKey && attrs[realKey]) || attrs[key] || {};
 	var spec = (typeof ConnectASensorObsProps !== "undefined" && ConnectASensorObsProps[key]) || {};
-	var obsName = attr.description || spec.name || key;
-	var desc = attr.description || spec.description || key;
+	var obsName = attr.description || spec.name || (realKey || key);
+	var desc = attr.description || spec.description || (realKey || key);
 	var sensorDefaults = sebEntityDefaults("Sensors", ctx);
+	var obsColDefaults;
 	var m = {
 		key: key,
 		include: true,
 		label: obsName || key,
-		resultColumn: key,
+		resultColumn: realKey,
 		selected: sebDefaultGroupSelected()
 	};
 	var group = perGroup && perGroup.length ? perGroup : SEB_PER_MEAS.slice();
@@ -669,11 +1054,13 @@ function sebNewMeasurement(key, parent, ctx, perGroup) {
 		});
 	}
 	if (!m.Observations && ctx.mode !== "connectASensor") {
-		m.Observations = sebNewEntity("Observations", ctx.mode, {}, {
+		obsColDefaults = {
 			phenomenonTime: ctx.timeCol || "",
-			resultTime: ctx.timeCol || "",
-			result: m.resultColumn || key
-		});
+			resultTime: ctx.timeCol || ""
+		};
+		if (m.resultColumn)
+			obsColDefaults.result = m.resultColumn;
+		m.Observations = sebNewEntity("Observations", ctx.mode, {}, obsColDefaults);
 	}
 	return m;
 }
@@ -735,11 +1122,10 @@ function sebEnsureMeasurementEntities(cfg, parent) {
 		if (!m.FeaturesOfInterest)
 			m.FeaturesOfInterest = idx === 0 && sharedFoi ? sebCloneEntityCfg(sharedFoi) : sebNewEntity("FeaturesOfInterest", cfg.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
 		if (cfg.mode !== "connectASensor" && !m.Observations) {
-			m.Observations = sebNewEntity("Observations", cfg.mode, {}, {
-				phenomenonTime: "",
-				resultTime: "",
-				result: m.resultColumn || ""
-			});
+			neu = { phenomenonTime: "", resultTime: "" };
+			if (m.resultColumn && sebIsRealDataColumn(m.resultColumn, parent))
+				neu.result = m.resultColumn;
+			m.Observations = sebNewEntity("Observations", cfg.mode, {}, neu);
 		}
 		for (i = 0; i < perGroup.length; i++) {
 			plural = perGroup[i];
@@ -748,16 +1134,18 @@ function sebEnsureMeasurementEntities(cfg, parent) {
 					m[plural] = sebCloneEntityCfg(sharedSensor);
 				else if (plural === "FeaturesOfInterest" && idx === 0 && sharedFoi)
 					m[plural] = sebCloneEntityCfg(sharedFoi);
-				else if (plural === "Observations")
-					m[plural] = sebNewEntity("Observations", cfg.mode, {}, {
-						phenomenonTime: "", resultTime: "", result: m.resultColumn || ""
-					});
-				else if (cfg.entities[plural] && idx === 0)
+				else if (plural === "Observations") {
+					neu = { phenomenonTime: "", resultTime: "" };
+					if (m.resultColumn && sebIsRealDataColumn(m.resultColumn, parent))
+						neu.result = m.resultColumn;
+					m[plural] = sebNewEntity("Observations", cfg.mode, {}, neu);
+				} else if (cfg.entities[plural] && idx === 0)
 					m[plural] = sebCloneEntityCfg(cfg.entities[plural]);
 				else
 					m[plural] = sebNewEntity(plural, cfg.mode, sebEntityDefaults(plural, ctx));
 			}
 		}
+		sebSyncGroupResultColumn(m, parent);
 	});
 }
 
@@ -779,45 +1167,74 @@ function sebEntityHasAnyValue(ent) {
 	return false;
 }
 
+/* Collect STA entity candidates from one node into map (first wins per plural) */
+function sebCollectCandidatesFromNode(n, map) {
+	var plural, recs, seen, j, rec, id;
+	if (!n || !n.STAdata || !n.STAdata.length || !n.STAURL)
+		return;
+	if (typeof getSTAURLLastEntity !== "function" || typeof getSTAEntityPlural !== "function")
+		return;
+	plural = getSTAEntityPlural(getSTAURLLastEntity(n.STAURL), false);
+	if (!STAEntities[plural] || map[plural])
+		return;
+	recs = [];
+	seen = {};
+	for (j = 0; j < n.STAdata.length; j++) {
+		rec = n.STAdata[j];
+		id = rec ? rec["@iot.id"] : undefined;
+		if (sebIsEmpty(id) || seen[id])
+			continue;
+		seen[id] = true;
+		recs.push(rec);
+	}
+	if (recs.length)
+		map[plural] = recs;
+}
+
 /* Candidate records from the nearest STA entity ancestors that have a table (by entity type) */
 function sebCandidatesFromParent(parent) {
-	var map = {}, n = parent, i, plural, recs, seen, j, rec, id;
+	var map = {}, n = parent, i;
 	for (i = 0; n && i < 30; i++) {
-		if (n.STAdata && n.STAdata.length && n.STAURL && typeof getSTAURLLastEntity === "function" &&
-				typeof getSTAEntityPlural === "function") {
-			plural = getSTAEntityPlural(getSTAURLLastEntity(n.STAURL), false);
-			if (STAEntities[plural] && !map[plural]) {
-				recs = [];
-				seen = {};
-				for (j = 0; j < n.STAdata.length; j++) {
-					rec = n.STAdata[j];
-					id = rec ? rec["@iot.id"] : undefined;
-					if (sebIsEmpty(id) || seen[id])
-						continue;
-					seen[id] = true;
-					recs.push(rec);
-				}
-				if (recs.length)
-					map[plural] = recs;
-			}
-		}
-		n = getSTAEntityBuilderParent(n);
+		sebCollectCandidatesFromNode(n, map);
+		n = typeof GetParentNodes === "function" ? (GetParentNodes(n) || [])[0] : null;
 	}
 	return map;
 }
 
-function sebDefaultConfig(parent, mode) {
+/* Candidates from all direct parents (and their ancestors); first wins per plural */
+function sebCandidatesFromAllParents(node) {
+	var map = {}, parents = getSTAEntityBuilderParents(node), i, n, hops, seen;
+	for (i = 0; i < parents.length; i++) {
+		n = parents[i];
+		hops = 0;
+		seen = {};
+		while (n && hops < 30) {
+			if (n.id != null && seen[n.id])
+				break;
+			if (n.id != null)
+				seen[n.id] = true;
+			sebCollectCandidatesFromNode(n, map);
+			n = typeof GetParentNodes === "function" ? (GetParentNodes(n) || [])[0] : null;
+			hops++;
+		}
+	}
+	return map;
+}
+
+function sebDefaultConfig(parent, mode, node) {
 	var isCas = mode === "connectASensor";
 	var meta = (parent && parent.connectASensorMeta) || {};
 	var info = meta.sensorInfo || {};
-	var cols = sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
+	var sources = node ? sebBuildColumnSources(node) : null;
+	var cols = sources && sources.cols.length ? sources.cols :
+		sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
 	var isPmscan = info.sensorType === "pmscan";
 	var metaStr = Object.keys(info).length ? JSON.stringify(info) :
 		(isPmscan ? "https://skmove.io/tera/pmscan/webapp/" : "https://docs.smartcitizen.me/");
 	var timeCol = cols.indexOf("timestamp") !== -1 ? "timestamp" :
 		(cols.indexOf("phenomenonTime") !== -1 ? "phenomenonTime" : (cols[0] || ""));
 	var valueCols = cols.filter(function (c) {
-		return c !== timeCol && c !== "sensor_id" && c !== "@iot.id";
+		return c !== timeCol && c !== "sensor_id" && c !== "@iot.id" && c.indexOf(".") === -1;
 	});
 	var ctx = {
 		mode: mode,
@@ -835,9 +1252,10 @@ function sebDefaultConfig(parent, mode) {
 		scope: sebDefaultScope(mode),
 		entities: {},
 		measurements: [],
-		relationStub: sebNewRelationStub()
+		relationStub: sebNewRelationStub(),
+		nesting: sebNewNesting()
 	};
-	var cands = sebCandidatesFromParent(parent);
+	var cands = node ? sebCandidatesFromAllParents(node) : sebCandidatesFromParent(parent);
 	var perGroup = sebPerGroupList(cfg);
 
 	sebEntityOrder().forEach(function (plural) {
@@ -858,7 +1276,7 @@ function sebDefaultConfig(parent, mode) {
 		});
 	}
 	/* Columns whose STAdataAttributes.definition is .../Entity/property → bind as column source */
-	sebApplyAttributeDefinitionsToConfig(cfg, parent, false);
+	sebApplyAttributeDefinitionsToConfig(cfg, parent, false, sources);
 	return cfg;
 }
 
@@ -952,6 +1370,7 @@ function sebAddUserGroup(cfg, parent, label) {
 	m.label = label && String(label).trim() ? String(label).trim() : ("grup" + (cfg.measurements.length + 1));
 	m.resultColumn = "";
 	m.include = true;
+	sebSyncGroupResultColumn(m, parent);
 	cfg.measurements.push(m);
 	sebEnsureMeasurementEntities(cfg, parent);
 	sebRefreshRelationIdColumns(cfg);
@@ -1036,12 +1455,14 @@ function sebEnsureConfig(node, force) {
 	var preferCas = !!(parent && (parent.image === "connectASensor.png" || parent.image === "readSDFromSensor.png" || parent.connectASensorMeta));
 	if (!force && node.staEntityConfig && node.staEntityConfig.version === 2) {
 		sebEnsureScope(node.staEntityConfig);
+		sebMigrateConfigGeoProps(node.staEntityConfig);
 		sebEnsureMeasurementEntities(node.staEntityConfig, parent);
 		if (node.staEntityConfig.mode === "connectASensor" && node.staEntityConfig.selected)
 			node.staEntityConfig.selected.Observations = true;
 		return node.staEntityConfig;
 	}
-	node.staEntityConfig = sebDefaultConfig(parent, preferCas ? "connectASensor" : "dataFromTable");
+	node.staEntityConfig = sebDefaultConfig(parent, preferCas ? "connectASensor" : "dataFromTable", node);
+	sebMigrateConfigGeoProps(node.staEntityConfig);
 	return node.staEntityConfig;
 }
 
@@ -1065,12 +1486,27 @@ function sebPropValueFromRecord(name, rec) {
 	if (name.indexOf("unitOfMeasurement.") === 0) {
 		v = sebParseMaybeJson(rec.unitOfMeasurement);
 		v = v && typeof v === "object" ? v[name.substring(name.indexOf(".") + 1)] : undefined;
+	} else if (name === "location" || name === "feature") {
+		v = rec[name];
+		if (v === null || v === undefined) {
+			/* legacy wide tables with separate lon/lat columns */
+			if (rec.longitude != null && rec.latitude != null && isFinite(Number(rec.longitude)) && isFinite(Number(rec.latitude)))
+				return sebGeoJsonPointString(rec.longitude, rec.latitude);
+			return "";
+		}
+		geom = sebParseMaybeJson(v);
+		if (geom && geom.type === "Feature" && geom.geometry)
+			geom = geom.geometry;
+		if (geom && geom.type === "Point" && geom.coordinates)
+			return JSON.stringify({ type: "Point", coordinates: geom.coordinates });
+		return typeof v === "object" ? JSON.stringify(v) : String(v);
 	} else if (name === "longitude" || name === "latitude") {
+		/* legacy only */
 		geom = sebParseMaybeJson(rec.location !== undefined ? rec.location : rec.feature);
 		if (geom && geom.geometry)
 			geom = geom.geometry;
 		coords = geom && geom.coordinates;
-		v = coords ? coords[name === "longitude" ? 0 : 1] : undefined;
+		v = coords ? coords[name === "longitude" ? 0 : 1] : rec[name];
 	} else
 		v = rec[name];
 	if (v === null || v === undefined)
@@ -1097,9 +1533,37 @@ function sebBody() {
 	return document.getElementById("DialogSTAEntityBuilderBody");
 }
 
+/* Column <select> options grouped by source node label (optgroup). */
 function sebColumnOptionsHtml(columns, selected) {
-	var html = "<option value=\"\">—</option>", i;
-	for (i = 0; i < columns.length; i++) {
+	var html = "<option value=\"\">—</option>", i, g, j, col, groups, seen = {};
+	groups = (typeof sebCtx !== "undefined" && sebCtx && sebCtx.colGroups && sebCtx.colGroups.length)
+		? sebCtx.colGroups : null;
+	if (groups) {
+		for (i = 0; i < groups.length; i++) {
+			g = groups[i];
+			if (!g || !g.columns || !g.columns.length)
+				continue;
+			html += "<optgroup label=\"" + sebEsc(g.label) + "\">";
+			for (j = 0; j < g.columns.length; j++) {
+				col = g.columns[j];
+				seen[col.value] = true;
+				html += "<option value=\"" + sebEsc(col.value) + "\"" +
+					(col.value === selected ? " selected" : "") + ">" + sebEsc(col.text || col.value) + "</option>";
+			}
+			html += "</optgroup>";
+		}
+		/* Any leftover names not in groups (e.g. legacy) */
+		if (columns) {
+			for (i = 0; i < columns.length; i++) {
+				if (seen[columns[i]])
+					continue;
+				html += "<option value=\"" + sebEsc(columns[i]) + "\"" +
+					(columns[i] === selected ? " selected" : "") + ">" + sebEsc(columns[i]) + "</option>";
+			}
+		}
+		return html;
+	}
+	for (i = 0; i < (columns || []).length; i++) {
 		html += "<option value=\"" + sebEsc(columns[i]) + "\"" +
 			(columns[i] === selected ? " selected" : "") + ">" + sebEsc(columns[i]) + "</option>";
 	}
@@ -1230,11 +1694,12 @@ function sebSetPropRowValue(entEl, propName, value) {
 
 function sebUseGeolocation(btn) {
 	var entEl = btn.closest(".sebEnt");
+	var plural = entEl ? entEl.getAttribute("data-ent") : "";
+	var geoName = sebGeoPropName(plural) || "location";
 	function apply(lon, lat) {
 		if (!entEl)
 			return;
-		sebSetPropRowValue(entEl, "longitude", lon);
-		sebSetPropRowValue(entEl, "latitude", lat);
+		sebSetPropRowValue(entEl, geoName, sebGeoJsonPointString(lon, lat));
 		sebScheduleAutoSave();
 	}
 	if (typeof PreviousGPSPoint !== "undefined" && PreviousGPSPoint && PreviousGPSPoint.long != null && PreviousGPSPoint.lat != null) {
@@ -1257,10 +1722,29 @@ function sebUseGeolocation(btn) {
 }
 
 function sebInitCtx(node, parent) {
+	var sources = sebBuildColumnSources(node);
+	if (!sources.primary && parent)
+		sources.primary = parent;
+	if ((!sources.data || !sources.data.length) && parent && parent.STAdata)
+		sources.data = parent.STAdata;
+	if (!sources.cols.length && parent) {
+		sources.cols = sebColumnNames(parent.STAdata, parent.STAdataAttributes);
+		if (!sources.colGroups || !sources.colGroups.length) {
+			sources.colGroups = [{
+				label: sebNodeLabel(parent),
+				columns: sources.cols.map(function (c) { return { value: c, text: c }; })
+			}];
+		}
+	}
 	sebCtx = {
-		cols: sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes),
-		data: (parent && parent.STAdata) || [],
-		cands: sebCandidatesFromParent(parent),
+		sources: sources,
+		primary: sources.primary || parent,
+		laterals: sources.laterals || [],
+		cols: sources.cols,
+		colGroups: sources.colGroups || [],
+		colMap: sources.colMap || {},
+		data: sources.data || [],
+		cands: sebCandidatesFromAllParents(node),
 		distinct: {},
 		staUrl: sebServiceRoot(sebFindStaUrl(node))
 	};
@@ -1359,21 +1843,77 @@ function sebGroupCardHtml(m, cols, cfg) {
 	return html.join("");
 }
 
+function sebNestingPanelHtml(cfg) {
+	var nest, html = [], showCampOg, showRelOg, stub;
+	sebEnsureNesting(cfg);
+	nest = cfg.nesting;
+	stub = cfg.relationStub || sebNewRelationStub();
+	showCampOg = sebHasEntitySelected(cfg, "Campaigns") && sebHasEntitySelected(cfg, "ObservationGroups");
+	showRelOg = !!stub.enabled && sebHasEntitySelected(cfg, "ObservationGroups");
+	/* Always emit; visibility toggled in sebRefreshVisibility when selection changes. */
+	html.push("<section class=\"sebPanel sebNestingPanel\" aria-labelledby=\"sebNestTitle\"",
+		(!showCampOg && !showRelOg ? " hidden" : ""), ">");
+	html.push("<strong id=\"sebNestTitle\" class=\"sebPanelTitle\">",
+		DonaCadena({cat: "Ordre / niuatge", spa: "Orden / anidación", eng: "Order / nesting"}),
+		"</strong>");
+	html.push("<fieldset class=\"sebNestField\" id=\"sebNestCampOgField\"",
+		(showCampOg ? "" : " hidden"), "><legend>",
+		DonaCadena({
+			cat: "Campaign ↔ ObservationGroup — qui es crea primer?",
+			spa: "Campaign ↔ ObservationGroup — ¿quién se crea primero?",
+			eng: "Campaign ↔ ObservationGroup — which is created first?"
+		}), "</legend>");
+	html.push("<label><input type=\"radio\" name=\"sebNestCampOg\" value=\"campaignFirst\"",
+		(nest.campaignObservationGroup === "campaignFirst" ? " checked" : ""),
+		" onchange=\"sebOnIncludeChange()\"> Campaign → ObservationGroup</label> ");
+	html.push("<label><input type=\"radio\" name=\"sebNestCampOg\" value=\"observationGroupFirst\"",
+		(nest.campaignObservationGroup === "observationGroupFirst" ? " checked" : ""),
+		" onchange=\"sebOnIncludeChange()\"> ObservationGroup → Campaign</label>");
+	html.push("</fieldset>");
+	html.push("<fieldset class=\"sebNestField\" id=\"sebNestRelOgField\"",
+		(showRelOg ? "" : " hidden"), "><legend>",
+		DonaCadena({
+			cat: "Relation ↔ ObservationGroup — qui va dins de què?",
+			spa: "Relation ↔ ObservationGroup — ¿quién va dentro de qué?",
+			eng: "Relation ↔ ObservationGroup — who nests in whom?"
+		}), "</legend>");
+	html.push("<label><input type=\"radio\" name=\"sebNestRelOg\" value=\"relationFirst\"",
+		(nest.relationObservationGroup === "relationFirst" ? " checked" : ""),
+		" onchange=\"sebOnIncludeChange()\"> ",
+		DonaCadena({
+			cat: "Relation primer; després dins de l'ObservationGroup",
+			spa: "Relation primero; luego dentro del ObservationGroup",
+			eng: "Relation first; then inside ObservationGroup"
+		}), "</label> ");
+	html.push("<label><input type=\"radio\" name=\"sebNestRelOg\" value=\"observationGroupFirst\"",
+		(nest.relationObservationGroup === "observationGroupFirst" ? " checked" : ""),
+		" onchange=\"sebOnIncludeChange()\"> ",
+		DonaCadena({
+			cat: "ObservationGroup primer; Relation hi enllaça",
+			spa: "ObservationGroup primero; Relation enlaza",
+			eng: "ObservationGroup first; Relation links to it"
+		}), "</label>");
+	html.push("</fieldset>");
+	html.push("</section>");
+	return html.join("");
+}
+
 function sebRelationPanelHtml(cfg) {
 	var stub = cfg.relationStub || sebNewRelationStub();
 	var included = (cfg.measurements || []).filter(function (g) { return g.include; });
 	var html = [];
-	var i, m, opt;
+	var i, m, opt, tk;
 	sebRefreshRelationIdColumns(cfg);
+	tk = stub.targetKind === "ObservationGroups" ? "ObservationGroups" : "Observations";
 	html.push("<section class=\"sebPanel sebRelationPanel\" aria-labelledby=\"sebRelTitle\">");
 	html.push("<strong id=\"sebRelTitle\" class=\"sebPanelTitle\">",
 		DonaCadena({cat: "Relation (per fila)", spa: "Relation (por fila)", eng: "Relation (per row)"}),
 		"</strong>");
 	html.push("<p class=\"sebHint\">",
 		DonaCadena({
-			cat: "Trieu el grup subject i el grup object pel nom. Es crearan columnes id_&lt;nom&gt; per fila (es omplen quan hi hagi @iot.id d'Observations). Publicació al servidor: TODO.",
-			spa: "Elija el grupo subject y el grupo object por nombre. Se crearán columnas id_&lt;nombre&gt; por fila (se rellenan con @iot.id de Observations). Publicación en servidor: TODO.",
-			eng: "Pick subject and object groups by name. Per-row id_&lt;name&gt; columns are filled with Observation @iot.id later. Server publish: TODO."
+			cat: "Trieu el grup subject i el grup object. El Publicador STA crearà una Relation per fila quan hi hagi els @iot.id.",
+			spa: "Elija el grupo subject y el grupo object. El Publicador STA creará una Relation por fila cuando haya los @iot.id.",
+			eng: "Pick the subject and object groups. The STA Publisher will create one Relation per row once @iot.id values exist."
 		}), "</p>");
 	html.push("<label class=\"sebRelEnable\"><input type=\"checkbox\" class=\"sebRelEnableCb\" id=\"sebRelEnable\"",
 		(stub.enabled ? " checked" : ""), " onchange=\"sebOnIncludeChange()\"> ",
@@ -1382,6 +1922,16 @@ function sebRelationPanelHtml(cfg) {
 			spa: "Preparar Relation por fila",
 			eng: "Prepare per-row Relation"
 		}), "</label>");
+	html.push("<div class=\"sebRow\"><span class=\"sebLbl\">",
+		DonaCadena({
+			cat: "Subject/Object són",
+			spa: "Subject/Object son",
+			eng: "Subject/Object are"
+		}), "</span>",
+		"<select class=\"sebRelTargetKind\" id=\"sebRelTargetKind\" onchange=\"sebOnIncludeChange()\">",
+		"<option value=\"Observations\"", (tk === "Observations" ? " selected" : ""), ">Observations</option>",
+		"<option value=\"ObservationGroups\"", (tk === "ObservationGroups" ? " selected" : ""), ">ObservationGroups</option>",
+		"</select></div>");
 	html.push("<div class=\"sebRow\"><span class=\"sebLbl\">role</span>",
 		"<input type=\"text\" class=\"sebRelRole\" id=\"sebRelRole\" value=\"", sebEsc(stub.role || ""),
 		"\" placeholder=\"https://…/role/…\"></div>");
@@ -1506,6 +2056,7 @@ function renderSTAEntityBuilderForm(node) {
 			});
 			html.push("</div></fieldset>");
 		});
+		html.push(sebNestingPanelHtml(cfg));
 	} else {
 		/* ========== DataFromTable: freer groups ========== */
 		html.push("<p class=\"sebHint\">",
@@ -1546,6 +2097,7 @@ function renderSTAEntityBuilderForm(node) {
 		html.push("</div></section>");
 
 		html.push(sebRelationPanelHtml(cfg));
+		html.push(sebNestingPanelHtml(cfg));
 	}
 
 	html.push("<div id=\"DialogSTAEntityBuilderStatus\" class=\"sebStatus\"></div>");
@@ -1600,6 +2152,7 @@ function sebOnQuickColToggle(cb) {
 				m.key = col;
 				m.resultColumn = col;
 				m.label = col;
+				sebSyncGroupResultColumn(m, parent);
 			}
 		} else
 			sebSetMeasurementInclude(cfg, parent, col, true);
@@ -1706,6 +2259,20 @@ function sebRefreshVisibility() {
 		if (!anyMeasEnt)
 			blocks[i].hidden = true;
 	}
+	/* Nesting panel: show Campaign↔OG / Relation↔OG questions when both sides are selected */
+	(function () {
+		var nestPanel = el.querySelector(".sebNestingPanel");
+		var nestCamp = el.querySelector("#sebNestCampOgField");
+		var nestRel = el.querySelector("#sebNestRelOgField");
+		var showCampOg = !!(sel.Campaigns && sel.ObservationGroups);
+		var showRelOg = !!(sel.Relations && sel.ObservationGroups);
+		if (nestCamp)
+			nestCamp.hidden = !showCampOg;
+		if (nestRel)
+			nestRel.hidden = !showRelOg;
+		if (nestPanel)
+			nestPanel.hidden = !showCampOg && !showRelOg;
+	})();
 }
 
 function sebOnGroupEntityChange(cb) {
@@ -2113,7 +2680,7 @@ function sebCollectConfigFromForm(node) {
 	var cfg = sebEnsureConfig(node, false);
 	var parent = getSTAEntityBuilderParent(node);
 	var el = sebBody(), ents, mincs, i, j, k, entEl, plural, meas, target, rows, prop, found, sel;
-	var labels, resCols, stub;
+	var labels, resCols, stub, sources;
 	sebEnsureScope(cfg);
 	if (el) {
 		cfg.mode = sebVal("sebMode") || cfg.mode;
@@ -2156,10 +2723,23 @@ function sebCollectConfigFromForm(node) {
 				stub.subjectGroupKey = el.querySelector("#sebRelSubject").value;
 			if (el.querySelector("#sebRelObject"))
 				stub.objectGroupKey = el.querySelector("#sebRelObject").value;
+			if (el.querySelector("#sebRelTargetKind"))
+				stub.targetKind = el.querySelector("#sebRelTargetKind").value === "ObservationGroups"
+					? "ObservationGroups" : "Observations";
 			cfg.relationStub = stub;
 			cfg.selected.Relations = !!stub.enabled;
 			sebRefreshRelationIdColumns(cfg);
 		}
+		/* Nesting (Campaign↔OG / Relation↔OG) */
+		sebEnsureNesting(cfg);
+		if (el.querySelector("input[name=\"sebNestCampOg\"]:checked"))
+			cfg.nesting.campaignObservationGroup =
+				el.querySelector("input[name=\"sebNestCampOg\"]:checked").value === "observationGroupFirst"
+					? "observationGroupFirst" : "campaignFirst";
+		if (el.querySelector("input[name=\"sebNestRelOg\"]:checked"))
+			cfg.nesting.relationObservationGroup =
+				el.querySelector("input[name=\"sebNestRelOg\"]:checked").value === "observationGroupFirst"
+					? "observationGroupFirst" : "relationFirst";
 		/* Entity property rows */
 		ents = el.querySelectorAll(".sebEnt");
 		for (i = 0; i < ents.length; i++) {
@@ -2201,9 +2781,11 @@ function sebCollectConfigFromForm(node) {
 	}
 	cfg.selected.Parties = true;
 	node.staEntityConfig = cfg;
-	/* Source from parent only — do not wipe STAdata created by "Crea la taula" */
-	if (parent && parent.STAdata && typeof deapCopy === "function")
-		node.STAdataSource = deapCopy(parent.STAdata);
+	/* Source from primary parent (+ lateral columns denormalized) — do not wipe STAdata from "Crea la taula" */
+	if (parent && parent.STAdata && typeof deapCopy === "function") {
+		sources = (typeof sebCtx !== "undefined" && sebCtx && sebCtx.sources) ? sebCtx.sources : sebBuildColumnSources(node);
+		node.STAdataSource = sebEnrichDataWithLaterals(parent.STAdata, sources);
+	}
 	if (typeof networkNodes !== "undefined")
 		networkNodes.update(node);
 	return cfg;
@@ -2219,7 +2801,7 @@ function sebOnModeChange(event) {
 	mode = sebVal("sebMode");
 	prevSel = sebReadSelectedFromForm();
 	parent = getSTAEntityBuilderParent(node);
-	node.staEntityConfig = sebDefaultConfig(parent, mode);
+	node.staEntityConfig = sebDefaultConfig(parent, mode, node);
 	for (k in prevSel)
 		node.staEntityConfig.selected[k] = prevSel[k];
 	renderSTAEntityBuilderForm(node);
@@ -2376,12 +2958,14 @@ function sebBuildPackage(cfg, parent, staUrl) {
 	var errors = sebValidateConfig(cfg, parent);
 	var eff = sebEffectiveSet(cfg.selected), isCas = cfg.mode === "connectASensor";
 	var pkg, bindings = [], preview = [], r, j, rec, obsEnt, included = [], b, row, pt, rt, resVal, m;
-	var useGroups;
+	var useGroups, sources;
 	sebEnsureScope(cfg);
+	sources = (typeof sebCtx !== "undefined" && sebCtx && sebCtx.sources) ? sebCtx.sources : null;
 	included = (cfg.measurements || []).filter(function (m) {
 		return m.include;
 	});
 	useGroups = included.length > 0;
+	sebEnsureNesting(cfg);
 	pkg = {
 		version: 2,
 		mode: cfg.mode,
@@ -2390,6 +2974,7 @@ function sebBuildPackage(cfg, parent, staUrl) {
 		entities: {},
 		observations: { id: null, existingId: null, phenomenonTime: null, resultTime: null, bindings: [] },
 		relationStub: cfg.relationStub ? (typeof deapCopy === "function" ? deapCopy(cfg.relationStub) : JSON.parse(JSON.stringify(cfg.relationStub))) : null,
+		nesting: typeof deapCopy === "function" ? deapCopy(cfg.nesting) : JSON.parse(JSON.stringify(cfg.nesting)),
 		validation: { ok: errors.length === 0, errors: errors },
 		sourceRowCount: parent && parent.STAdata ? parent.STAdata.length : 0
 	};
@@ -2398,8 +2983,8 @@ function sebBuildPackage(cfg, parent, staUrl) {
 		var list;
 		if (!eff[plural] || plural === "Relations")
 			return;
-		/* CAS Observations are not packed as reusable entities — derived in long table */
-		if (isCas && plural === "Observations")
+		/* Observations only live in the long table — never pack as reusable entities */
+		if (plural === "Observations")
 			return;
 		if (plural === "Parties" && cfg.entities[plural]) {
 			pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
@@ -2487,7 +3072,7 @@ function sebBuildPackage(cfg, parent, staUrl) {
 	/* Materialize long table: 1 row = 1 observation (+ manual constants + id_<label> placeholders) */
 	if (parent && parent.STAdata && (useGroups ? included.length : bindings.length)) {
 		for (r = 0; r < parent.STAdata.length; r++) {
-			rec = parent.STAdata[r];
+			rec = sebEnrichRecWithLaterals(parent.STAdata[r], sources);
 			if (!rec)
 				continue;
 			if (useGroups) {
@@ -2589,18 +3174,20 @@ function sebSetStatus(msg, isError) {
 }
 
 function openSTAEntityBuilderDialog(node) {
-	var parent, cfg;
+	var parent, cfg, sources, i, m;
 	if (!node)
 		node = getSTAEntityBuilderNodeSafe();
 	if (!node)
 		return;
 	parent = getSTAEntityBuilderParent(node);
+	sources = sebBuildColumnSources(node);
 	/*
 		Keep previous STAdata (from "Crea la taula") so the user can reopen,
-		tweak entities and recreate. Only refresh STAdataSource from the parent.
+		tweak entities and recreate. Only refresh STAdataSource from the primary parent
+		(+ denormalized lateral columns).
 	*/
 	if (parent && parent.STAdata && typeof deapCopy === "function") {
-		node.STAdataSource = deapCopy(parent.STAdata);
+		node.STAdataSource = sebEnrichDataWithLaterals(parent.STAdata, sources);
 		if (parent.connectASensorMeta)
 			node.connectASensorMeta = deapCopy(parent.connectASensorMeta);
 		if (parent.STAURL)
@@ -2617,8 +3204,15 @@ function openSTAEntityBuilderDialog(node) {
 		node.STAURL = sebCtx.staUrl;
 	cfg = sebEnsureConfig(node, !node.staEntityConfig);
 	sebSyncMeasurements(cfg, parent);
-	/* Fill empty props from parent attribute definitions (does not overwrite set values) */
-	sebApplyAttributeDefinitionsToConfig(cfg, parent, true);
+	/* Clear leftover grup_ column bindings before meaning fill */
+	for (i = 0; i < (cfg.measurements || []).length; i++) {
+		m = cfg.measurements[i];
+		if (m && m.resultColumn && !sebIsRealDataColumn(m.resultColumn, sources))
+			m.resultColumn = "";
+		sebSyncGroupResultColumn(m, sources);
+	}
+	/* Fill empty props from all sources' attribute definitions (does not overwrite set values) */
+	sebApplyAttributeDefinitionsToConfig(cfg, parent, true, sources);
 	sebShowStaUrl();
 	renderSTAEntityBuilderForm(node);
 }
@@ -2730,15 +3324,17 @@ function loadSTAEntityBuilderConfig(event) {
 	Returns { ok, built, node } or null if no node.
 */
 function sebCommitPackageToNode(node) {
-	var parent, cfg, built;
+	var parent, cfg, built, sources;
 	if (!node)
 		return null;
 	parent = getSTAEntityBuilderParent(node);
 	cfg = sebCollectConfigFromForm(node);
 	built = sebBuildPackage(cfg, parent, sebCtx.staUrl);
 	node.staEntityPackage = built.package;
-	if (parent && parent.STAdata && typeof deapCopy === "function")
-		node.STAdataSource = deapCopy(parent.STAdata);
+	if (parent && parent.STAdata && typeof deapCopy === "function") {
+		sources = (sebCtx && sebCtx.sources) ? sebCtx.sources : sebBuildColumnSources(node);
+		node.STAdataSource = sebEnrichDataWithLaterals(parent.STAdata, sources);
+	}
 	node.STAdata = built.preview;
 	node.STAdataAttributes = built.attributes || {
 		phenomenonTime: { type: "isodatetime", description: "phenomenonTime", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime" },

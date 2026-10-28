@@ -7905,28 +7905,45 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		return true;
 	}
 	if (nodeTo.image == "staEntityBuilder.png") {
-		if (nodeFrom && nodeFrom.STAdata && typeof deapCopy === "function") {
-			nodeTo.STAdataSource = deapCopy(nodeFrom.STAdata);
-			/* Keep a table already created by Entity Builder; only seed from parent if empty */
-			if ((!nodeTo.STAdata || !nodeTo.STAdata.length) && !nodeTo.staEntityPackage) {
-				nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
-				nodeTo.STAdataAttributes = nodeFrom.STAdataAttributes ? deapCopy(nodeFrom.STAdataAttributes) : (typeof getDataAttributes === "function" ? getDataAttributes(nodeTo.STAdata) : null);
-			}
-		}
-		if (nodeFrom && nodeFrom.connectASensorMeta && typeof deapCopy === "function")
-			nodeTo.connectASensorMeta = deapCopy(nodeFrom.connectASensorMeta);
-		if (nodeFrom && nodeFrom.STAURL)
-			nodeTo.STAURL = nodeFrom.STAURL;
-		else {
-			var casParents = GetParentNodes(nodeFrom);
-			if (casParents && casParents[0] && casParents[0].STAURL)
-				nodeTo.STAURL = casParents[0].STAURL;
-		}
-		if (nodeFrom && nodeFrom.STAsecurity && typeof deapCopy === "function")
-			nodeTo.STAsecurity = deapCopy(nodeFrom.STAsecurity);
-		networkNodes.update(nodeTo);
+		/* Multiple parents allowed: primary = most rows; laterals contribute columns in the Builder UI */
 		if (addEdge)
 			networkEdges.add([{ from: nodeFrom.id, to: nodeTo.id, arrows: "from" }]);
+		(function () {
+			var primary = (typeof getSTAEntityBuilderParent === "function") ? getSTAEntityBuilderParent(nodeTo) : nodeFrom;
+			var sources = (typeof sebBuildColumnSources === "function") ? sebBuildColumnSources(nodeTo) : null;
+			if (primary && primary.STAdata && typeof deapCopy === "function") {
+				nodeTo.STAdataSource = (typeof sebEnrichDataWithLaterals === "function" && sources)
+					? sebEnrichDataWithLaterals(primary.STAdata, sources)
+					: deapCopy(primary.STAdata);
+				/* Keep a table already created by Entity Builder; only seed from primary if empty */
+				if ((!nodeTo.STAdata || !nodeTo.STAdata.length) && !nodeTo.staEntityPackage) {
+					nodeTo.STAdata = deapCopy(primary.STAdata);
+					nodeTo.STAdataAttributes = primary.STAdataAttributes ? deapCopy(primary.STAdataAttributes) : (typeof getDataAttributes === "function" ? getDataAttributes(nodeTo.STAdata) : null);
+				}
+			} else if (nodeFrom && nodeFrom.STAdata && typeof deapCopy === "function") {
+				nodeTo.STAdataSource = deapCopy(nodeFrom.STAdata);
+				if ((!nodeTo.STAdata || !nodeTo.STAdata.length) && !nodeTo.staEntityPackage) {
+					nodeTo.STAdata = deapCopy(nodeFrom.STAdata);
+					nodeTo.STAdataAttributes = nodeFrom.STAdataAttributes ? deapCopy(nodeFrom.STAdataAttributes) : (typeof getDataAttributes === "function" ? getDataAttributes(nodeTo.STAdata) : null);
+				}
+			}
+			if (primary && primary.connectASensorMeta && typeof deapCopy === "function")
+				nodeTo.connectASensorMeta = deapCopy(primary.connectASensorMeta);
+			else if (nodeFrom && nodeFrom.connectASensorMeta && typeof deapCopy === "function")
+				nodeTo.connectASensorMeta = deapCopy(nodeFrom.connectASensorMeta);
+			if (primary && primary.STAURL)
+				nodeTo.STAURL = primary.STAURL;
+			else if (nodeFrom && nodeFrom.STAURL)
+				nodeTo.STAURL = nodeFrom.STAURL;
+			else {
+				var casParents = GetParentNodes(nodeFrom);
+				if (casParents && casParents[0] && casParents[0].STAURL)
+					nodeTo.STAURL = casParents[0].STAURL;
+			}
+			if ((primary && primary.STAsecurity || nodeFrom && nodeFrom.STAsecurity) && typeof deapCopy === "function")
+				nodeTo.STAsecurity = deapCopy((primary && primary.STAsecurity) || nodeFrom.STAsecurity);
+		})();
+		networkNodes.update(nodeTo);
 		return true;
 	}
 	if (nodeTo.image == "staPublisher.png") {
