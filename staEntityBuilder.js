@@ -599,6 +599,10 @@ function sebExposedColumnName(sources, parent, field) {
 	return field;
 }
 
+function sebIsSuperObservationResultColumn(name) {
+	return !!(name && /\.Observations\.result$/.test(String(name)));
+}
+
 function sebIsRealDataColumn(name, sourcesOrParent) {
 	var cols;
 	if (!name)
@@ -617,6 +621,13 @@ function sebIsRealDataColumn(name, sourcesOrParent) {
 		if (sebCtx.cols && sebCtx.cols.indexOf(name) !== -1)
 			return true;
 	}
+	/*
+		Super-table Observation.result columns (Group.Observations.result) are always
+		treated as real when the probe has not been built yet — avoids wiping bindings
+		during ensureMeasurementEntities before sebInitCtx.
+	*/
+	if (sebIsSuperObservationResultColumn(name))
+		return true;
 	return false;
 }
 
@@ -787,7 +798,7 @@ function sebResolveSrc(src, rec) {
 
 /* Keep Observations.result in sync with measurement.resultColumn (never leave grup_ keys). */
 function sebSyncGroupResultColumn(m, parentOrSources) {
-	var col, probe = parentOrSources;
+	var col, probe = parentOrSources, existing;
 	if (!m)
 		return;
 	col = m.resultColumn || "";
@@ -797,12 +808,22 @@ function sebSyncGroupResultColumn(m, parentOrSources) {
 		m.Observations.props = {};
 	if (!probe && typeof sebCtx !== "undefined")
 		probe = sebCtx;
+	existing = m.Observations.props.result;
+	/* Prefer an already-bound Group.Observations.result column */
+	if (existing && existing.source === "column" && sebIsSuperObservationResultColumn(existing.column)) {
+		m.resultColumn = existing.column;
+		return;
+	}
+	if (sebIsSuperObservationResultColumn(col)) {
+		m.Observations.props.result = sebSrcObj("column", "", col);
+		return;
+	}
 	if (col && sebIsRealDataColumn(col, probe))
 		m.Observations.props.result = sebSrcObj("column", "", col);
-	else if (m.Observations.props.result && m.Observations.props.result.source === "column" &&
-			!sebIsRealDataColumn(m.Observations.props.result.column, probe))
+	else if (existing && existing.source === "column" &&
+			!sebIsRealDataColumn(existing.column, probe))
 		m.Observations.props.result = sebSrcObj("manual", "", "");
-	else if (!sebSrcIsSet(m.Observations.props.result))
+	else if (!sebSrcIsSet(existing))
 		m.Observations.props.result = sebSrcObj("manual", "", "");
 }
 
@@ -1000,6 +1021,261 @@ function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty, sources) {
 	}
 }
 
+/* —— Auto-load from super-table column names: Entity.property | Group.Entity.property —— */
+
+function sebPluralSet() {
+	var set = {}, i, order = sebEntityOrder();
+	for (i = 0; i < order.length; i++)
+		set[order[i]] = true;
+	if (typeof STAEntities !== "undefined") {
+		for (i in STAEntities) {
+			if (Object.prototype.hasOwnProperty.call(STAEntities, i))
+				set[i] = true;
+		}
+	}
+	return set;
+}
+
+function sebNormalizeSuperPropName(propName) {
+	if (propName === "id" || propName === "@iot.id")
+		return "@iot.id";
+	return propName;
+}
+
+/*
+	Parse "Things.name" or "Photography.Observations.result"
+	→ { groupPrefix|null, plural, propName } or null.
+*/
+function sebParseSuperColumnName(colName) {
+	var parts, plurals, propName;
+	if (colName == null || colName === "")
+		return null;
+	colName = String(colName);
+	if (colName.charAt(0) === "_" || colName === "@iot.id")
+		return null;
+	parts = colName.split(".");
+	if (parts.length < 2)
+		return null;
+	plurals = sebPluralSet();
+	/* Group.Entity.property… (first segment is not an entity plural) */
+	if (parts.length >= 3 && !plurals[parts[0]] && plurals[parts[1]]) {
+		propName = sebNormalizeSuperPropName(parts.slice(2).join("."));
+		if (!propName)
+			return null;
+		return { groupPrefix: parts[0], plural: parts[1], propName: propName, column: colName };
+	}
+	/* Entity.property… */
+	if (plurals[parts[0]]) {
+		propName = sebNormalizeSuperPropName(parts.slice(1).join("."));
+		if (!propName)
+			return null;
+		return { groupPrefix: null, plural: parts[0], propName: propName, column: colName };
+	}
+	return null;
+}
+
+function sebIsKnownSuperProp(plural, propName, mode) {
+	var list, i;
+	if (propName === "@iot.id")
+		return true;
+	list = sebPropList(plural, mode || "dataFromTable");
+	for (i = 0; i < list.length; i++) {
+		if (list[i].name === propName)
+			return true;
+	}
+	return false;
+}
+
+function sebHasSuperColumns(cols) {
+	var i;
+	if (!cols || !cols.length)
+		return false;
+	for (i = 0; i < cols.length; i++) {
+		if (sebParseSuperColumnName(cols[i]))
+			return true;
+	}
+	return false;
+}
+
+/*
+	Build { shared: { plural: slot }, groups: { prefix: { plural: slot } }, hasAny }.
+	slot = { props: { propName: column }, idColumn }.
+*/
+function sebColumnMapsFromSuperColumnNames(cols, mode) {
+	var out = { shared: {}, groups: {}, hasAny: false }, i, parsed, bucket, slot;
+	if (!cols)
+		return out;
+	for (i = 0; i < cols.length; i++) {
+		parsed = sebParseSuperColumnName(cols[i]);
+		if (!parsed || !sebIsKnownSuperProp(parsed.plural, parsed.propName, mode))
+			continue;
+		out.hasAny = true;
+		if (parsed.groupPrefix) {
+			if (!out.groups[parsed.groupPrefix])
+				out.groups[parsed.groupPrefix] = {};
+			bucket = out.groups[parsed.groupPrefix];
+		} else
+			bucket = out.shared;
+		slot = bucket[parsed.plural] || (bucket[parsed.plural] = { props: {}, idColumn: null });
+		if (parsed.propName === "@iot.id")
+			slot.idColumn = parsed.column;
+		else
+			slot.props[parsed.propName] = parsed.column;
+	}
+	return out;
+}
+
+function sebFindGroupByPrefix(cfg, prefix) {
+	var i, m;
+	if (!cfg || !cfg.measurements || !prefix)
+		return null;
+	for (i = 0; i < cfg.measurements.length; i++) {
+		m = cfg.measurements[i];
+		if (!m)
+			continue;
+		if (m._columnPrefix === prefix || sebGroupColumnPrefix(m) === prefix ||
+				(m.label && String(m.label).trim() === prefix))
+			return m;
+	}
+	return null;
+}
+
+function sebFindOrCreateGroupByPrefix(cfg, parent, prefix) {
+	var m, ctx, perGroup;
+	m = sebFindGroupByPrefix(cfg, prefix);
+	if (m) {
+		m.include = true;
+		if (!m.label || !String(m.label).trim())
+			m.label = prefix;
+		return m;
+	}
+	ctx = sebMeasCtxFromParent(cfg, parent);
+	perGroup = sebPerGroupList(cfg);
+	m = sebNewMeasurement(sebNewFreeGroupKey(), parent, ctx, perGroup);
+	m.label = prefix;
+	m.resultColumn = "";
+	m.include = true;
+	m._columnPrefix = prefix;
+	/*
+		Clear bogus default column bindings (e.g. phenomenonTime → Parties.displayName)
+		so super-table apply can set Group.Observations.* cleanly.
+	*/
+	if (m.Observations && m.Observations.props) {
+		["result", "phenomenonTime", "resultTime"].forEach(function (prop) {
+			if (m.Observations.props[prop])
+				m.Observations.props[prop] = sebSrcObj("manual", "", "");
+		});
+	}
+	if (!cfg.measurements)
+		cfg.measurements = [];
+	cfg.measurements.push(m);
+	return m;
+}
+
+/*
+	Auto-wire config from super-table column names on the parent/sources.
+	Creates observation groups from Group.* prefixes when needed.
+	Returns true if any column was applied.
+*/
+function sebApplySuperColumnsToConfig(cfg, parent, sources, onlyEmpty) {
+	var cols, maps, plural, slot, prefix, groupMaps, m, ctx;
+	if (!cfg)
+		return false;
+	cols = (sources && sources.cols && sources.cols.length) ? sources.cols :
+		sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
+	maps = sebColumnMapsFromSuperColumnNames(cols, cfg.mode);
+	if (!maps.hasAny)
+		return false;
+
+	/* Prefer free mode when loading a super-table (groups by etiqueta) */
+	if (cfg.mode === "connectASensor") {
+		cfg.mode = "dataFromTable";
+		cfg.scope = sebDefaultScope("dataFromTable");
+	}
+
+	for (plural in maps.shared) {
+		if (!Object.prototype.hasOwnProperty.call(maps.shared, plural))
+			continue;
+		slot = maps.shared[plural];
+		cfg.selected[plural] = true;
+		if (plural === "Observations") {
+			/* Shared Observations without group — rare; bind on cfg.entities if present */
+			if (!cfg.entities.Observations)
+				cfg.entities.Observations = sebNewEntity("Observations", cfg.mode, {}, {});
+			sebApplyColumnMapToEntity(cfg.entities.Observations, plural, slot, cfg.mode, onlyEmpty);
+		} else if (cfg.entities[plural]) {
+			sebApplyColumnMapToEntity(cfg.entities[plural], plural, slot, cfg.mode, onlyEmpty);
+		}
+	}
+
+	for (prefix in maps.groups) {
+		if (!Object.prototype.hasOwnProperty.call(maps.groups, prefix))
+			continue;
+		groupMaps = maps.groups[prefix];
+		m = sebFindOrCreateGroupByPrefix(cfg, parent, prefix);
+		sebEnsureGroupSelected(m);
+		ctx = sebMeasCtxFromParent(cfg, parent);
+		for (plural in groupMaps) {
+			if (!Object.prototype.hasOwnProperty.call(groupMaps, plural))
+				continue;
+			slot = groupMaps[plural];
+			cfg.selected[plural] = true;
+			m.selected[plural] = true;
+			if (!m[plural]) {
+				if (plural === "Observations")
+					m[plural] = sebNewEntity("Observations", cfg.mode, {}, {});
+				else
+					m[plural] = sebNewEntity(plural, cfg.mode, sebEntityDefaults(plural, ctx));
+			}
+			sebApplyColumnMapToEntity(m[plural], plural, slot, cfg.mode, onlyEmpty);
+			/* Hint resultColumn from Observations.result binding for UI */
+			if (plural === "Observations" && slot.props && slot.props.result) {
+				m.resultColumn = slot.props.result;
+				/* Force-bind result even if onlyEmpty skipped a stale manual/empty value */
+				if (m.Observations && m.Observations.props &&
+						(!onlyEmpty || !sebSrcIsMeaningfullySet(m.Observations.props.result) ||
+							(m.Observations.props.result.source === "column" &&
+								m.Observations.props.result.column !== slot.props.result)))
+					m.Observations.props.result = sebSrcObj("column", "", slot.props.result);
+			}
+			if (plural === "Observations" && slot.props) {
+				["phenomenonTime", "resultTime"].forEach(function (prop) {
+					if (!slot.props[prop] || !m.Observations || !m.Observations.props)
+						return;
+					if (!onlyEmpty || !sebSrcIsMeaningfullySet(m.Observations.props[prop]) ||
+							(m.Observations.props[prop].source === "column" &&
+								!/\.Observations\.(phenomenonTime|resultTime)$/.test(String(m.Observations.props[prop].column || ""))))
+						m.Observations.props[prop] = sebSrcObj("column", "", slot.props[prop]);
+				});
+			}
+		}
+	}
+
+	sebEnsureMeasurementEntities(cfg, parent, sources);
+	/* Re-assert Observation result bindings after ensure/sync */
+	for (prefix in maps.groups) {
+		if (!Object.prototype.hasOwnProperty.call(maps.groups, prefix))
+			continue;
+		groupMaps = maps.groups[prefix];
+		m = sebFindGroupByPrefix(cfg, prefix);
+		if (!m || !groupMaps.Observations || !groupMaps.Observations.props)
+			continue;
+		slot = groupMaps.Observations;
+		if (slot.props.result && m.Observations && m.Observations.props) {
+			m.resultColumn = slot.props.result;
+			m.Observations.props.result = sebSrcObj("column", "", slot.props.result);
+		}
+		["phenomenonTime", "resultTime"].forEach(function (prop) {
+			if (slot.props[prop] && m.Observations && m.Observations.props)
+				m.Observations.props[prop] = sebSrcObj("column", "", slot.props[prop]);
+		});
+		sebSyncGroupResultColumn(m, sources || parent);
+	}
+	sebEnsureGroupLabels(cfg);
+	sebRefreshRelationIdColumns(cfg);
+	return true;
+}
+
 function sebNewMeasurement(key, parent, ctx, perGroup) {
 	var attrs = (parent && parent.STAdataAttributes) || {};
 	var realKey = sebIsRealDataColumn(key, parent) ? key : "";
@@ -1089,10 +1365,11 @@ function sebCloneEntityCfg(ent) {
 }
 
 /* Ensure per-group entity slots exist on each measurement; keep shared copies on cfg.entities. */
-function sebEnsureMeasurementEntities(cfg, parent) {
-	var ctx, sharedSensor, sharedFoi, i, m, perGroup, plural, neu;
+function sebEnsureMeasurementEntities(cfg, parent, sources) {
+	var ctx, sharedSensor, sharedFoi, i, m, perGroup, plural, neu, probe;
 	if (!cfg || !cfg.measurements)
 		return;
+	probe = sources || parent;
 	sebEnsureScope(cfg);
 	ctx = {
 		mode: cfg.mode,
@@ -1140,7 +1417,7 @@ function sebEnsureMeasurementEntities(cfg, parent) {
 			m.FeaturesOfInterest = idx === 0 && sharedFoi ? sebCloneEntityCfg(sharedFoi) : sebNewEntity("FeaturesOfInterest", cfg.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
 		if (cfg.mode !== "connectASensor" && !m.Observations) {
 			neu = { phenomenonTime: "", resultTime: "" };
-			if (m.resultColumn && sebIsRealDataColumn(m.resultColumn, parent))
+			if (m.resultColumn && sebIsRealDataColumn(m.resultColumn, probe))
 				neu.result = m.resultColumn;
 			m.Observations = sebNewEntity("Observations", cfg.mode, {}, neu);
 		}
@@ -1153,7 +1430,7 @@ function sebEnsureMeasurementEntities(cfg, parent) {
 					m[plural] = sebCloneEntityCfg(sharedFoi);
 				else if (plural === "Observations") {
 					neu = { phenomenonTime: "", resultTime: "" };
-					if (m.resultColumn && sebIsRealDataColumn(m.resultColumn, parent))
+					if (m.resultColumn && sebIsRealDataColumn(m.resultColumn, probe))
 						neu.result = m.resultColumn;
 					m[plural] = sebNewEntity("Observations", cfg.mode, {}, neu);
 				} else if (cfg.entities[plural] && idx === 0)
@@ -1162,7 +1439,7 @@ function sebEnsureMeasurementEntities(cfg, parent) {
 					m[plural] = sebNewEntity(plural, cfg.mode, sebEntityDefaults(plural, ctx));
 			}
 		}
-		sebSyncGroupResultColumn(m, parent);
+		sebSyncGroupResultColumn(m, probe);
 	});
 }
 
@@ -1239,21 +1516,27 @@ function sebCandidatesFromAllParents(node) {
 }
 
 function sebDefaultConfig(parent, mode, node) {
-	var isCas = mode === "connectASensor";
-	var meta = (parent && parent.connectASensorMeta) || {};
-	var info = meta.sensorInfo || {};
 	var sources = node ? sebBuildColumnSources(node) : null;
 	var cols = sources && sources.cols.length ? sources.cols :
 		sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
-	var isPmscan = info.sensorType === "pmscan";
-	var metaStr = Object.keys(info).length ? JSON.stringify(info) :
+	var hasSuper = sebHasSuperColumns(cols);
+	var isCas, meta, info, isPmscan, metaStr, timeCol, valueCols, ctx, cfg, cands, perGroup;
+	/* Super-table input → free mode (groups by etiqueta), not ConnectASensor */
+	if (hasSuper)
+		mode = "dataFromTable";
+	isCas = mode === "connectASensor";
+	meta = (parent && parent.connectASensorMeta) || {};
+	info = meta.sensorInfo || {};
+	isPmscan = info.sensorType === "pmscan";
+	metaStr = Object.keys(info).length ? JSON.stringify(info) :
 		(isPmscan ? "https://skmove.io/tera/pmscan/webapp/" : "https://docs.smartcitizen.me/");
-	var timeCol = cols.indexOf("timestamp") !== -1 ? "timestamp" :
-		(cols.indexOf("phenomenonTime") !== -1 ? "phenomenonTime" : (cols[0] || ""));
-	var valueCols = cols.filter(function (c) {
+	timeCol = cols.indexOf("timestamp") !== -1 ? "timestamp" :
+		(cols.indexOf("phenomenonTime") !== -1 ? "phenomenonTime" :
+			(cols.indexOf("Observations.phenomenonTime") !== -1 ? "Observations.phenomenonTime" : (cols[0] || "")));
+	valueCols = cols.filter(function (c) {
 		return c !== timeCol && c !== "sensor_id" && c !== "@iot.id" && c.indexOf(".") === -1;
 	});
-	var ctx = {
+	ctx = {
 		mode: mode,
 		isCas: isCas,
 		name: meta.displayName || info.bleName || "Sensor",
@@ -1262,7 +1545,7 @@ function sebDefaultConfig(parent, mode, node) {
 		timeCol: isCas ? "timestamp" : timeCol,
 		valueCol: valueCols[0] || ""
 	};
-	var cfg = {
+	cfg = {
 		version: 2,
 		mode: mode,
 		selected: {},
@@ -1272,8 +1555,8 @@ function sebDefaultConfig(parent, mode, node) {
 		relationStub: sebNewRelationStub(),
 		nesting: sebNewNesting()
 	};
-	var cands = node ? sebCandidatesFromAllParents(node) : sebCandidatesFromParent(parent);
-	var perGroup = sebPerGroupList(cfg);
+	cands = node ? sebCandidatesFromAllParents(node) : sebCandidatesFromParent(parent);
+	perGroup = sebPerGroupList(cfg);
 
 	sebEntityOrder().forEach(function (plural) {
 		var ent, recs;
@@ -1294,6 +1577,8 @@ function sebDefaultConfig(parent, mode, node) {
 	}
 	/* Columns whose STAdataAttributes.definition is .../Entity/property → bind as column source */
 	sebApplyAttributeDefinitionsToConfig(cfg, parent, false, sources);
+	/* Super-table column names Entity.property / Group.Entity.property → bind + create groups */
+	sebApplySuperColumnsToConfig(cfg, parent, sources, false);
 	return cfg;
 }
 
@@ -1469,15 +1754,28 @@ function sebOnGroupLabelInput(inp) {
 
 function sebEnsureConfig(node, force) {
 	var parent = getSTAEntityBuilderParent(node);
-	var preferCas = !!(parent && (parent.image === "connectASensor.png" || parent.image === "readSDFromSensor.png" || parent.connectASensorMeta));
+	var sources, cols, preferCas;
+	preferCas = !!(parent && (parent.image === "connectASensor.png" || parent.image === "readSDFromSensor.png" || parent.connectASensorMeta));
 	if (!force && node.staEntityConfig && node.staEntityConfig.version === 2) {
 		sebEnsureScope(node.staEntityConfig);
 		sebMigrateConfigGeoProps(node.staEntityConfig);
-		sebEnsureMeasurementEntities(node.staEntityConfig, parent);
+		sources = node ? sebBuildColumnSources(node) : null;
+		sebEnsureMeasurementEntities(node.staEntityConfig, parent, sources);
 		if (node.staEntityConfig.mode === "connectASensor" && node.staEntityConfig.selected)
 			node.staEntityConfig.selected.Observations = true;
+		/* Fill empty bindings from super-table columns if parent looks like one */
+		cols = sources && sources.cols ? sources.cols :
+			sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
+		if (sebHasSuperColumns(cols))
+			sebApplySuperColumnsToConfig(node.staEntityConfig, parent, sources, true);
 		return node.staEntityConfig;
 	}
+	/* Prefer free mode when parent is already a super-table */
+	sources = node ? sebBuildColumnSources(node) : null;
+	cols = sources && sources.cols ? sources.cols :
+		sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
+	if (sebHasSuperColumns(cols))
+		preferCas = false;
 	node.staEntityConfig = sebDefaultConfig(parent, preferCas ? "connectASensor" : "dataFromTable", node);
 	sebMigrateConfigGeoProps(node.staEntityConfig);
 	return node.staEntityConfig;
@@ -3300,7 +3598,8 @@ function openSTAEntityBuilderDialog(node) {
 	/* Clear leftover grup_ column bindings before meaning fill */
 	for (i = 0; i < (cfg.measurements || []).length; i++) {
 		m = cfg.measurements[i];
-		if (m && m.resultColumn && !sebIsRealDataColumn(m.resultColumn, sources))
+		if (m && m.resultColumn && !sebIsRealDataColumn(m.resultColumn, sources) &&
+				!sebIsSuperObservationResultColumn(m.resultColumn))
 			m.resultColumn = "";
 		sebSyncGroupResultColumn(m, sources);
 	}

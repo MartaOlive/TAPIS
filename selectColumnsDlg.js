@@ -85,18 +85,21 @@ function ShowTableSelectColumnsDialogSelect(div_id, parentNode, node, selected, 
 	var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 	const dataAttributesArray = Object.keys(dataAttributes);
 
-	var cdns=[];
+	var cdns=[], colName, isChecked, hasAggr;
 	cdns.push('<table>');
 	for (var a = 0; a < dataAttributesArray.length; a++){
-		var s=selected && selected[dataAttributesArray[a]] ? getAttributesAndAgrregationsJSONAsText(selected[dataAttributesArray[a]]) : "";
-		cdns.push("<tr><td><input type='checkbox' ", 
-			(selected && Array.isArray(selected) && selected.indexOf(dataAttributesArray[a])!=-1 ? "checked='checked'" : "")
-			, " value='",
-			(selected && selected[dataAttributesArray[a]] ? JSON.stringify(selected[dataAttributesArray[a]]) : "")
-			,"' id='", div_id, "_", a, "' name='", div_id, "_", a, "'", (fevent ? " onchange='"+ fevent +"'": ""), " /> <label id='", div_id, "_label_", a, "' for='", div_id, "_", a, "'>", 
-			(selected && !Array.isArray(selected) && !selected[dataAttributesArray[a]] ? "<span style='color: grey'>" : ""),
-			getHTMLCharacterAttributeType(dataAttributes[dataAttributesArray[a]].type), " ", dataAttributesArray[a], (s=='' ? '' : ', ' + s),
-			(selected && !Array.isArray(selected) && !selected[dataAttributesArray[a]] ? "</span>" : ""),
+		colName = dataAttributesArray[a];
+		hasAggr = !!(selected && !Array.isArray(selected) && selected[colName]);
+		isChecked = !!(selected && ((Array.isArray(selected) && selected.indexOf(colName) !== -1) || hasAggr));
+		var s = hasAggr ? getAttributesAndAgrregationsJSONAsText(selected[colName]) : "";
+		cdns.push("<tr><td><input type='checkbox' ",
+			(isChecked ? "checked='checked'" : ""),
+			" value='",
+			(hasAggr ? JSON.stringify(selected[colName]) : ""),
+			"' id='", div_id, "_", a, "' name='", div_id, "_", a, "'", (fevent ? " onchange='"+ fevent +"'": ""), " /> <label id='", div_id, "_label_", a, "' for='", div_id, "_", a, "'>",
+			(selected && !Array.isArray(selected) && !selected[colName] ? "<span style='color: grey'>" : ""),
+			getHTMLCharacterAttributeType(dataAttributes[colName].type), " ", colName, (s=='' ? '' : ', ' + s),
+			(selected && !Array.isArray(selected) && !selected[colName] ? "</span>" : ""),
 			"</label></td></tr>");
 	}
 	cdns.push('</table>');

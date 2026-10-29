@@ -4411,6 +4411,8 @@ function collectBarPlotParentInfo(parentNodes) {
 	return info;
 }
 
+var BAR_PLOT_UNIFORM_COLOR_KEY = "__barUniform__";
+
 function ensureBarPlotStyleState(options) {
 	if (!options)
 		return;
@@ -4436,7 +4438,120 @@ function ensureBarPlotStyleState(options) {
 		options.errorColor = "#333333";
 	if (!options.errorDirection)
 		options.errorDirection = "both";
+	if (options.barColorMode !== "perCategory" && options.barColorMode !== "same")
+		options.barColorMode = "same";
 	options.confidencePct = 95;
+}
+
+function getBarPlotColorMode() {
+	if (document.getElementById("DialogBarPlotColorModePerCategory") &&
+			document.getElementById("DialogBarPlotColorModePerCategory").checked)
+		return "perCategory";
+	return "same";
+}
+
+function setBarPlotColorMode(mode) {
+	var sameEl = document.getElementById("DialogBarPlotColorModeSame");
+	var perEl = document.getElementById("DialogBarPlotColorModePerCategory");
+	if (!sameEl || !perEl)
+		return;
+	if (mode === "perCategory") {
+		perEl.checked = true;
+		sameEl.checked = false;
+	} else {
+		sameEl.checked = true;
+		perEl.checked = false;
+	}
+}
+
+function onBarPlotColorModeChange() {
+	var node = getNodeDialog("DialogBarPlot");
+	if (!node)
+		return;
+	if (!node.barPlotOptions)
+		node.barPlotOptions = {};
+	ensureBarPlotStyleState(node.barPlotOptions);
+	node.barPlotOptions.barColorMode = getBarPlotColorMode();
+	networkNodes.update(node);
+	if (node.barPlotOptions.drawn)
+		DrawBarPlot();
+}
+
+function barPlotResolveStoredColor(options, key, index) {
+	if (options.seriesColors && options.seriesColors[key])
+		return options.seriesColors[key];
+	return ColorsForBarPlot[index % ColorsForBarPlot.length];
+}
+
+/*
+	Color fill for V/H/floating:
+	- same → one shared color (legend: single swatch)
+	- perCategory → one color per category label (legend: one swatch each)
+	Stacked keeps classic per-series colors (colorMode ignored).
+*/
+function barPlotDatasetPaint(options, stacked, keyName, labelsFull, seriesIndex, legendKeys, legendLabels, legendColors) {
+	var mode, color, colors, i, cat, paint = {}, legendKey, already;
+	mode = stacked ? "series" : (options.barColorMode === "perCategory" ? "perCategory" : "same");
+	if (mode === "same") {
+		color = barPlotResolveStoredColor(options, BAR_PLOT_UNIFORM_COLOR_KEY, 0);
+		options.seriesColors[BAR_PLOT_UNIFORM_COLOR_KEY] = color;
+		paint.backgroundColor = color;
+		paint.borderColor = color;
+		paint.hidden = options.hiddenSeries.indexOf(BAR_PLOT_UNIFORM_COLOR_KEY) !== -1;
+		if (legendKeys.indexOf(BAR_PLOT_UNIFORM_COLOR_KEY) === -1) {
+			legendKeys.push(BAR_PLOT_UNIFORM_COLOR_KEY);
+			legendLabels.push(DonaCadena({
+				cat: "Color de les barres",
+				spa: "Color de las barras",
+				eng: "Bar color"
+			}));
+			legendColors.push(color);
+		}
+		return paint;
+	}
+	if (mode === "perCategory") {
+		colors = [];
+		for (i = 0; i < labelsFull.length; i++) {
+			cat = labelsFull[i];
+			legendKey = "cat:" + cat;
+			color = barPlotResolveStoredColor(options, legendKey, i);
+			options.seriesColors[legendKey] = color;
+			colors.push(options.hiddenSeries.indexOf(legendKey) !== -1 ? "rgba(0,0,0,0)" : color);
+			already = legendKeys.indexOf(legendKey) !== -1;
+			if (!already) {
+				legendKeys.push(legendKey);
+				legendLabels.push(barPlotShortLabel(cat));
+				legendColors.push(color);
+			}
+		}
+		paint.backgroundColor = colors;
+		paint.borderColor = colors;
+		paint.hidden = false;
+		return paint;
+	}
+	/* series (stacked / fallback) */
+	color = barPlotResolveStoredColor(options, keyName, seriesIndex);
+	options.seriesColors[keyName] = color;
+	paint.backgroundColor = color;
+	paint.borderColor = color;
+	paint.hidden = options.hiddenSeries.indexOf(keyName) !== -1;
+	legendKeys.push(keyName);
+	legendLabels.push(keyName);
+	legendColors.push(color);
+	return paint;
+}
+
+function barPlotNullHiddenCategoryValues(row, labelsFull, options) {
+	var i, legendKey, out;
+	if (options.barColorMode !== "perCategory" || !row)
+		return row;
+	out = row.slice();
+	for (i = 0; i < labelsFull.length; i++) {
+		legendKey = "cat:" + labelsFull[i];
+		if (options.hiddenSeries.indexOf(legendKey) !== -1)
+			out[i] = null;
+	}
+	return out;
 }
 
 function populateBarPlotErrorColumnSelects(attrs, options) {
@@ -4462,12 +4577,16 @@ function toggleBarPlotType() {
 function applyBarPlotTypeDisplay() {
 	var t = getBarPlotType();
 	var vh = (t == "vertical" || t == "horizontal");
+	var colorModes = (t == "vertical" || t == "horizontal" || t == "floating");
 	var groupBy = document.getElementById("DialogBarPlotGroupByRow");
 	var errPanel = document.getElementById("DialogBarPlotErrorPanel");
+	var colorRow = document.getElementById("DialogBarPlotColorModeRow");
 	if (groupBy)
 		groupBy.style.display = vh ? "block" : "none";
 	if (errPanel)
 		errPanel.style.display = vh ? "" : "none";
+	if (colorRow)
+		colorRow.style.display = colorModes ? "" : "none";
 }
 
 function getBarPlotErrorMode() {
@@ -5216,6 +5335,7 @@ function ShowBarPlotDialog(parentNodes, node) {
 	document.getElementById("DialogBarPlotTitleInput").value = options.title || "";
 	if (document.getElementById("DialogBarPlotGroupByCategory"))
 		document.getElementById("DialogBarPlotGroupByCategory").checked = !!options.groupByCategory;
+	setBarPlotColorMode(options.barColorMode || "same");
 	setBarPlotErrorMode(options.errorMode || "none");
 	setBarPlotErrorDirection(options.errorDirection || "both");
 	document.getElementById("DialogBarPlotErrorColor").value = options.errorColor || "#333333";
@@ -5293,7 +5413,7 @@ function DrawBarPlot(event) {
 	var agg, labels, labelsFull, datasets = [], legendKeys = [], legendLabels = [], legendColors = [];
 	var s, sk, g, cat, color, keyName, row, errMap, err, floating, stacked, horiz, scales, plugins, chartOpts;
 	var seriesGroups, gIdx, localAgg, merged, ser, stk, cell, vy, eMin, eMax;
-	var chartPack = null, valueCols, active, act, c, valueAxisTitle;
+	var chartPack = null, valueCols, active, act, c, valueAxisTitle, paint;
 
 	if (!node.barPlotOptions) node.barPlotOptions = {};
 	options = node.barPlotOptions;
@@ -5323,6 +5443,8 @@ function DrawBarPlot(event) {
 	options.axisLabelFontSize = clampChartFontSize(document.getElementById("DialogBarPlotAxisLabelSize") ? document.getElementById("DialogBarPlotAxisLabelSize").value : options.axisLabelFontSize, 8, 28, 12);
 	axisLabelFontSize = options.axisLabelFontSize;
 	options.groupByCategory = document.getElementById("DialogBarPlotGroupByCategory") ? document.getElementById("DialogBarPlotGroupByCategory").checked : false;
+	if (!stacked)
+		options.barColorMode = getBarPlotColorMode();
 	options.errorMode = getBarPlotErrorMode();
 	options.errorDirection = getBarPlotErrorDirection();
 	options.errorColor = document.getElementById("DialogBarPlotErrorColor") ? document.getElementById("DialogBarPlotErrorColor").value : "#333333";
@@ -5475,7 +5597,6 @@ function DrawBarPlot(event) {
 		for (s = 0; s < chartPack.seriesKeys.length; s++) {
 			ser = chartPack.seriesKeys[s];
 			keyName = ser || options.axisY || "Values";
-			color = options.seriesColors[keyName] || ColorsForBarPlot[legendKeys.length % ColorsForBarPlot.length];
 			row = [];
 			eMin = [];
 			eMax = [];
@@ -5497,21 +5618,20 @@ function DrawBarPlot(event) {
 					}
 				}
 			}
+			row = barPlotNullHiddenCategoryValues(row, chartPack.labelsFull, options);
+			paint = barPlotDatasetPaint(options, stacked, keyName, chartPack.labelsFull, legendKeys.length, legendKeys, legendLabels, legendColors);
 			datasets.push({
 				label: keyName,
 				data: row,
-				backgroundColor: color,
-				borderColor: color,
+				backgroundColor: paint.backgroundColor,
+				borderColor: paint.borderColor,
 				borderWidth: 1,
-				hidden: options.hiddenSeries.indexOf(keyName) != -1,
+				hidden: paint.hidden,
 				_errorMin: floating ? null : eMin,
 				_errorMax: floating ? null : eMax,
 				categoryPercentage: 0.85,
 				barPercentage: 0.9
 			});
-			legendKeys.push(keyName);
-			legendLabels.push(keyName);
-			legendColors.push(color);
 		}
 	} else {
 		if (agg)
@@ -5538,7 +5658,6 @@ function DrawBarPlot(event) {
 					continue;
 				keyName = ser + (stk ? " [" + stk + "]" : "");
 				if (!keyName) keyName = options.axisY || "Values";
-				color = options.seriesColors[keyName] || ColorsForBarPlot[legendKeys.length % ColorsForBarPlot.length];
 				row = [];
 				eMin = [];
 				eMax = [];
@@ -5561,22 +5680,21 @@ function DrawBarPlot(event) {
 						}
 					}
 				}
+				row = barPlotNullHiddenCategoryValues(row, labelsFull, options);
+				paint = barPlotDatasetPaint(options, stacked, keyName, labelsFull, legendKeys.length, legendKeys, legendLabels, legendColors);
 				datasets.push({
 					label: keyName,
 					data: row,
-					backgroundColor: color,
-					borderColor: color,
+					backgroundColor: paint.backgroundColor,
+					borderColor: paint.borderColor,
 					borderWidth: 1,
 					stack: stacked ? (stk || "stack") : undefined,
-					hidden: options.hiddenSeries.indexOf(keyName) != -1,
+					hidden: paint.hidden,
 					_errorMin: floating ? null : eMin,
 					_errorMax: floating ? null : eMax,
 					categoryPercentage: 0.85,
 					barPercentage: 0.9
 				});
-				legendKeys.push(keyName);
-				legendLabels.push(keyName);
-				legendColors.push(color);
 			}
 		}
 	}

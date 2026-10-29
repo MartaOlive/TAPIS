@@ -157,13 +157,51 @@
 		}
 
 
+		/* Columns to tick in "GroupBy:" — includes the date column stored in groupByDate[1]. */
+		function groupByColumnsForDialog(params) {
+			var cols, dateCol;
+			if (!params)
+				return null;
+			cols = (params.groupByAttr && params.groupByAttr.length) ? params.groupByAttr.slice() : [];
+			dateCol = params.groupByDate && params.groupByDate.length > 1 ? params.groupByDate[1] : "";
+			if (dateCol && cols.indexOf(dateCol) === -1)
+				cols.push(dateCol);
+			return cols.length ? cols : null;
+		}
+
+		/* Like charts / FilterRowsTable: restore only if already applied for this parent; else blank. */
+		function groupByParamsForDialog(parentNode, node) {
+			var params = node.groupByParams, parentId;
+			if (!params)
+				return null;
+			parentId = parentNode && parentNode.id != null ? parentNode.id : null;
+			if (params.sourceParentId != null && parentId != null && params.sourceParentId !== parentId) {
+				delete node.groupByParams;
+				node.STAdata = null;
+				node.STAdataAttributes = null;
+				if (typeof networkNodes !== "undefined")
+					networkNodes.update(node);
+				return null;
+			}
+			return params;
+		}
+
 		function ShowGroupByDialog(parentNode, node) {
+			var params, groupCols, aggr, dateRounding, el;
 			saveNodeDialog("DialogGroupBy", node);
-			ShowTableSelectColumnsDialogSelect("GroupBySelects", parentNode, node, node.groupByParams && node.groupByParams.groupByAttr ? node.groupByParams.groupByAttr : null, null);
-			ShowTableSelectColumnsDialogSelect("GroupByAttributesAggr", parentNode, node, node.groupByParams && node.groupByParams.aggregationAttr ? node.groupByParams.aggregationAttr : null, "CheckSelectedAggrGroupBy(event, \""+node.id+"\")");
-			ShowTableAttributesAndAgrregationsDialog("GroupByAttributesAggr", parentNode, node);
+			params = groupByParamsForDialog(parentNode, node);
+			groupCols = groupByColumnsForDialog(params);
+			aggr = params && params.aggregationAttr ? params.aggregationAttr : null;
+			ShowTableSelectColumnsDialogSelect("GroupBySelects", parentNode, node, groupCols, null);
+			ShowTableSelectColumnsDialogSelect("GroupByAttributesAggr", parentNode, node, aggr, "CheckSelectedAggrGroupBy(event, \""+node.id+"\")");
 			showCheckRadioOptions("DialogGroupByDateTimeOptionsHTML", "DialogGroupByDateTime", GroupByDateTimeOptions, 1, "DialogGroupByDateTimeOption");
 			showCheckRadioOptions("DialogGroupByAggregationOptionsHTML", "DialogGroupByAggr", AggregationsOptions, 3, null, "AddSelectedOptionsToAggrGroupBy(event, '"+node.id+"')");
+			dateRounding = params && params.groupByDate && params.groupByDate.length ? params.groupByDate[0] : "";
+			if (dateRounding) {
+				el = document.getElementById("DialogGroupByDateTime" + dateRounding);
+				if (el)
+					el.checked = true;
+			}
 			CheckSelectedAggrGroupBy(null, node.id);
 			return;
 		}
@@ -210,6 +248,9 @@
 			else if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==1) node.groupByParams.groupByDate.push(...dateTypeAttr);
 			else if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==0) alert(DonaCadena({cat: "Per aplicar l'arrodoniment de dates, cal seleccionar un atribut de tipus data", spa: "Para aplicar el redondeo de fechas, debe seleccionar un atributo de tipo fecha", eng: "To apply date rounding one date type attribute is has to be selected"}));
 
+			if (parentNode && parentNode.id != null)
+				node.groupByParams.sourceParentId = parentNode.id;
+
 			var dataCurrentAttributes={};
 			node.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, node.groupByParams);
 			node.STAdataAttributes=dataCurrentAttributes;
@@ -219,13 +260,19 @@
 		}
 		function UpdateGroupBy(node) {
 			var parentNode=GetFirstParentNode(node);
-			var data = parentNode.STAdata ? parentNode.STAdata : node.STAdata;
+			var data, dataAttributes, dataCurrentAttributes, params;
+			if (!parentNode)
+				return;
+			params = groupByParamsForDialog(parentNode, node);
+			if (!params)
+				return;
+			data = parentNode.STAdata ? parentNode.STAdata : node.STAdata;
 			if (!data || !data.length) {
 				return;
 			}
-			var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
-			var dataCurrentAttributes={};
-			node.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, node.groupByParams);
+			dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
+			dataCurrentAttributes={};
+			node.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, params);
 			node.STAdataAttributes=dataCurrentAttributes;
 			networkNodes.update(node);
 		}

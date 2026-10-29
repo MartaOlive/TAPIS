@@ -697,6 +697,22 @@
 	margin-left: 8px;
 }
 
+#DialogBarPlot .DialogBarPlotColorModeRow {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 4px;
+	margin: 8px 0 4px;
+}
+
+#DialogBarPlot .DialogBarPlotColorModeTitle {
+	margin-bottom: 2px;
+}
+
+#DialogBarPlot .DialogBarPlotColorModeOption {
+	display: block;
+}
+
 #DialogBarPlot .DialogBarPlotSizeRow {
 	display: flex;
 	flex-wrap: nowrap;

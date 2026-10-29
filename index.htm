@@ -2025,6 +2025,11 @@
 			<fieldset>
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
 				<label><input type="checkbox" id="DialogBarPlotBeginZero" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
+				<div id="DialogBarPlotColorModeRow" class="DialogBarPlotColorModeRow">
+					<div class="DialogBarPlotColorModeTitle" data-lang="{&quot;cat&quot;: &quot;Colors de les barres:&quot;, &quot;spa&quot;: &quot;Colores de las barras:&quot;, &quot;eng&quot;: &quot;Bar colors:&quot;}">Bar colors:</div>
+					<label class="DialogBarPlotColorModeOption"><input type="radio" name="DialogBarPlotColorMode" id="DialogBarPlotColorModeSame" value="same" checked="checked" onchange="onBarPlotColorModeChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Totes del mateix color&quot;, &quot;spa&quot;: &quot;Todas del mismo color&quot;, &quot;eng&quot;: &quot;All the same color&quot;}">All the same color</span></label>
+					<label class="DialogBarPlotColorModeOption"><input type="radio" name="DialogBarPlotColorMode" id="DialogBarPlotColorModePerCategory" value="perCategory" onchange="onBarPlotColorModeChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Un color per categoria&quot;, &quot;spa&quot;: &quot;Un color por categoría&quot;, &quot;eng&quot;: &quot;One color per category&quot;}">One color per category</span></label>
+				</div>
 				<br>
 				<label><span data-lang="{&quot;cat&quot;: &quot;Títol:&quot;, &quot;spa&quot;: &quot;Título:&quot;, &quot;eng&quot;: &quot;Title:&quot;}">Title:</span>
 					<input type="text" id="DialogBarPlotTitleInput" onchange="onBarPlotTitleChange()" onblur="onBarPlotTitleChange()"></input>
