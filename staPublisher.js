@@ -974,8 +974,8 @@ function spaObsIdColumn(pkg, measurementKey) {
 }
 
 /*
-	Id already present on the observation table / row → reuse, no STA lookup.
-	Checks observationId, @iot.id, and the group's id_<label> column.
+	Id already present on the observation / wide-table column → reuse, no STA lookup.
+	Checks observationId, @iot.id, and the group's Observations.@iot.id column.
 */
 function spaObsIdFromTable(o, pkg) {
 	var col, id;
@@ -991,8 +991,8 @@ function spaObsIdFromTable(o, pkg) {
 	return null;
 }
 
-function spaWriteObsIdToRow(o, pkg, id) {
-	var col;
+function spaWriteObsIdToRow(o, pkg, id, sourceData) {
+	var col, wideRow;
 	if (!o || spaIsEmpty(id))
 		return;
 	o.observationId = id;
@@ -1000,6 +1000,11 @@ function spaWriteObsIdToRow(o, pkg, id) {
 	col = spaObsIdColumn(pkg, o.measurementKey);
 	if (col)
 		o[col] = id;
+	/* Mirror onto wide super-table row so Relations / republish see the id */
+	if (col && sourceData && o._sourceIndex != null && sourceData[o._sourceIndex]) {
+		wideRow = sourceData[o._sourceIndex];
+		wideRow[col] = id;
+	}
 }
 
 /*
@@ -1079,7 +1084,7 @@ async function spaCreateObservations(ctx) {
 		fromTable = spaObsIdFromTable(o, ctx.pkg);
 		if (!spaIsEmpty(fromTable)) {
 			o.status = "done";
-			spaWriteObsIdToRow(o, ctx.pkg, fromTable);
+			spaWriteObsIdToRow(o, ctx.pkg, fromTable, ctx.sourceData);
 			spaUpdatePreviewObservationId(o.index, fromTable);
 			nOk++;
 			spaAppendLog("Observation[" + o.index + "] reuse @" + fromTable + " (from table)");
@@ -1133,7 +1138,7 @@ async function spaCreateObservations(ctx) {
 				continue;
 			}
 			o.status = "done";
-			spaWriteObsIdToRow(o, ctx.pkg, obsId);
+			spaWriteObsIdToRow(o, ctx.pkg, obsId, ctx.sourceData);
 			o.datastreamId = dsId;
 			spaUpdatePreviewObservationId(o.index, obsId);
 			nOk++;
@@ -1476,7 +1481,7 @@ function spaBuildPending(ctx) {
 }
 
 /* Bump when normalize/expand rules change so cached preview batches invalidate */
-var SPA_NORMALIZE_REV = 6;
+var SPA_NORMALIZE_REV = 7;
 
 function spaComputeBatchFingerprint(pkg, obsRows) {
 	var parts = [], plural, arr, i, o, nest;
@@ -2438,7 +2443,265 @@ function spaDownloadPlanPNG(event) {
 	}
 }
 
+/* Resolve a packed binding src {source,column|value} against a wide row. */
+function spaResolveBindingSrc(src, row) {
+	if (!src)
+		return undefined;
+	if (src.source === "column")
+		return row ? row[src.column] : undefined;
+	return src.value;
+}
+
+/*
+	Melt wide super-table → internal observation list (1 obs per group with result).
+	Wide columns: [Group.]Observations.result / phenomenonTime / @iot.id
+*/
+function spaMeltWideObsRows(wideData, pkg) {
+	var bindings = (pkg && pkg.observations && pkg.observations.bindings) || [];
+	var out = [], r, i, row, b, res, pt, rt, idCol, idVal, o;
+	if (!wideData || !wideData.length || !bindings.length)
+		return out;
+	for (r = 0; r < wideData.length; r++) {
+		row = wideData[r];
+		if (!row)
+			continue;
+		for (i = 0; i < bindings.length; i++) {
+			b = bindings[i];
+			if (!b)
+				continue;
+			res = spaResolveBindingSrc(b.result, row);
+			if (spaIsEmpty(res))
+				continue;
+			pt = spaResolveBindingSrc(b.phenomenonTime, row);
+			rt = spaResolveBindingSrc(b.resultTime, row);
+			if (spaIsEmpty(pt) && pkg.observations)
+				pt = spaResolveBindingSrc(pkg.observations.phenomenonTime, row);
+			if (spaIsEmpty(rt))
+				rt = pt;
+			idCol = b.idColumn || null;
+			idVal = idCol && !spaIsEmpty(row[idCol]) ? row[idCol] : null;
+			o = {
+				phenomenonTime: pt,
+				resultTime: rt,
+				result: res,
+				measurementKey: b.measurementKey || "",
+				groupLabel: b.groupLabel || "",
+				datastreamRole: b.datastreamRole || ("Datastreams:" + (b.measurementKey || "")),
+				_sourceIndex: row._sourceIndex != null ? row._sourceIndex : r,
+				observationId: idVal,
+				"@iot.id": idVal
+			};
+			if (idCol)
+				o[idCol] = idVal != null ? idVal : "";
+			out.push(o);
+		}
+	}
+	return out;
+}
+
+function spaLooksLikeWideTable(data, pkg) {
+	var b, col;
+	if (!data || !data.length || !data[0] || !pkg)
+		return false;
+	b = pkg.observations && pkg.observations.bindings && pkg.observations.bindings[0];
+	if (b && b.result && b.result.column) {
+		col = b.result.column;
+		return data[0][col] !== undefined || data[0]._sourceIndex !== undefined;
+	}
+	/* Heuristic: published obs list has measurementKey + result, not Entity.property cols */
+	return data[0]._sourceIndex !== undefined && data[0].datastreamRole === undefined;
+}
+
+function spaWideTableFromNode(node, parent, pkg) {
+	var p = pkg || (node && node.staEntityPackage) || (parent && parent.staEntityPackage);
+	if (!p || p.observationTable !== "wide")
+		return null;
+	/* Prefer STAdataSource: after publish, STAdata may be the created-observations list */
+	if (node && node.STAdataSource && node.STAdataSource.length && spaLooksLikeWideTable(node.STAdataSource, p))
+		return node.STAdataSource;
+	if (parent && parent.STAdataSource && parent.STAdataSource.length && spaLooksLikeWideTable(parent.STAdataSource, p))
+		return parent.STAdataSource;
+	if (node && node.STAdata && node.STAdata.length && spaLooksLikeWideTable(node.STAdata, p))
+		return node.STAdata;
+	if (parent && parent.STAdata && parent.STAdata.length && spaLooksLikeWideTable(parent.STAdata, p))
+		return parent.STAdata;
+	return null;
+}
+
+/* Copy Observation @iot.id columns from published wide rows onto another wide table (Builder parent). */
+function spaSyncWideObsIds(destWide, srcWide, pkg) {
+	var bindings = (pkg && pkg.observations && pkg.observations.bindings) || [];
+	var r, i, col, n, name;
+	if (!destWide || !srcWide)
+		return;
+	n = Math.min(destWide.length, srcWide.length);
+	for (r = 0; r < n; r++) {
+		if (!destWide[r] || !srcWide[r])
+			continue;
+		for (i = 0; i < bindings.length; i++) {
+			col = bindings[i] && bindings[i].idColumn;
+			if (col && srcWide[r][col] !== undefined && srcWide[r][col] !== "")
+				destWide[r][col] = srcWide[r][col];
+		}
+		/* Also sync any Entity.@iot.id / Group.Entity.@iot.id columns */
+		for (name in srcWide[r]) {
+			if (!Object.prototype.hasOwnProperty.call(srcWide[r], name))
+				continue;
+			if (name.indexOf(".@iot.id") === -1 && name !== "@iot.id")
+				continue;
+			if (srcWide[r][name] !== undefined && srcWide[r][name] !== "")
+				destWide[r][name] = srcWide[r][name];
+		}
+	}
+}
+
+function spaGroupPrefixForEntity(item, pkg) {
+	var bindings, i, b;
+	if (!item || item.measurementKey == null || item.measurementKey === "")
+		return null;
+	bindings = (pkg && pkg.observations && pkg.observations.bindings) || [];
+	for (i = 0; i < bindings.length; i++) {
+		b = bindings[i];
+		if (b && b.measurementKey === item.measurementKey)
+			return b.groupPrefix || b.groupLabel || null;
+	}
+	return null;
+}
+
+function spaEntityIdColumn(item, pkg) {
+	var prefix, plural;
+	if (!item)
+		return null;
+	plural = item.plural;
+	prefix = spaGroupPrefixForEntity(item, pkg);
+	return (prefix ? prefix + "." : "") + plural + ".@iot.id";
+}
+
+/*
+	Write resolved entity @iot.id values onto the wide super-table columns
+	(Things.@iot.id, Photography.Sensors.@iot.id, …).
+*/
+function spaWriteEntityIdsToWide(sourceData, entities, pkg) {
+	var k, item, col, r, row, matched;
+	if (!sourceData || !entities)
+		return;
+	for (k in entities) {
+		if (!Object.prototype.hasOwnProperty.call(entities, k))
+			continue;
+		item = entities[k];
+		if (!item || item.status !== "done" || spaIsEmpty(item.id))
+			continue;
+		col = spaEntityIdColumn(item, pkg);
+		if (!col)
+			continue;
+		/* Expand-by-row: write only onto the matching source row */
+		if (spaExpandByRow(item.plural) && item.rec) {
+			matched = false;
+			for (r = 0; r < sourceData.length; r++) {
+				row = sourceData[r];
+				if (!row)
+					continue;
+				if (row === item.rec ||
+						(item.rec._sourceIndex != null && row._sourceIndex === item.rec._sourceIndex) ||
+						(row._sourceIndex != null && item.rec === sourceData[row._sourceIndex])) {
+					row[col] = item.id;
+					matched = true;
+					break;
+				}
+			}
+			if (!matched && item.rec._sourceIndex != null && sourceData[item.rec._sourceIndex])
+				sourceData[item.rec._sourceIndex][col] = item.id;
+			continue;
+		}
+		/* Shared / per-group template: same id on every wide row */
+		for (r = 0; r < sourceData.length; r++) {
+			row = sourceData[r];
+			if (row)
+				row[col] = item.id;
+		}
+	}
+}
+
+/* Write Relation @iot.id onto wide rows (Relations.@iot.id). */
+function spaWriteRelationIdsToWide(sourceData, relations, pkg) {
+	var i, r, row, col = "Relations.@iot.id";
+	if (!sourceData || !relations || !relations.length)
+		return;
+	for (i = 0; i < relations.length; i++) {
+		r = relations[i];
+		if (!r || r.status !== "done" || spaIsEmpty(r.relationId))
+			continue;
+		if (r.sourceIndex == null)
+			continue;
+		row = sourceData[r.sourceIndex];
+		if (row)
+			row[col] = r.relationId;
+	}
+}
+
+/* Attributes for the published wide result table (Builder attrs + id columns). */
+function spaWideResultAttributes(pkg, wideData, baseAttrs) {
+	var attrs = {}, name, r, bindings, i, col, plural;
+	if (baseAttrs && typeof baseAttrs === "object") {
+		for (name in baseAttrs) {
+			if (Object.prototype.hasOwnProperty.call(baseAttrs, name))
+				attrs[name] = baseAttrs[name];
+		}
+	}
+	if (wideData && wideData.length) {
+		for (r = 0; r < wideData.length; r++) {
+			if (!wideData[r])
+				continue;
+			for (name in wideData[r]) {
+				if (!Object.prototype.hasOwnProperty.call(wideData[r], name) || attrs[name])
+					continue;
+				attrs[name] = {
+					type: (name.indexOf("Time") !== -1 ? "isodatetime" : "string"),
+					description: name
+				};
+			}
+			break; /* schema from first row + any id cols added later */
+		}
+		for (r = 0; r < wideData.length; r++) {
+			if (!wideData[r])
+				continue;
+			for (name in wideData[r]) {
+				if (!Object.prototype.hasOwnProperty.call(wideData[r], name) || attrs[name])
+					continue;
+				attrs[name] = { type: "string", description: name };
+			}
+		}
+	}
+	bindings = (pkg && pkg.observations && pkg.observations.bindings) || [];
+	for (i = 0; i < bindings.length; i++) {
+		col = bindings[i] && bindings[i].idColumn;
+		if (col && !attrs[col])
+			attrs[col] = { type: "string", description: col, definition: "http://www.opengis.net/def/docs/15-078r6/Observation/id" };
+	}
+	if (!attrs["Relations.@iot.id"] && pkg && pkg.relationStub && pkg.relationStub.enabled)
+		attrs["Relations.@iot.id"] = { type: "string", description: "Relations.@iot.id" };
+	/* Ensure @iot.id attribute entries for packed entities */
+	for (plural in (pkg && pkg.entities) || {}) {
+		if (!Object.prototype.hasOwnProperty.call(pkg.entities, plural))
+			continue;
+		col = plural + ".@iot.id";
+		if (!attrs[col])
+			attrs[col] = { type: "string", description: col };
+	}
+	return attrs;
+}
+
 function spaCollectObsRows(node, parent, pkg) {
+	var wide, melted;
+	/* Wide super-table from Builder → melt to observations */
+	if (pkg && pkg.observationTable === "wide") {
+		wide = spaWideTableFromNode(node, parent, pkg);
+		if (!wide)
+			return null;
+		melted = spaMeltWideObsRows(wide, pkg);
+		return melted.length ? melted : null;
+	}
+	/* Legacy long table */
 	if (pkg && pkg.observationTable === "long" && node.STAdata && node.STAdata.length &&
 			node.STAdata[0] && (node.STAdata[0].measurementKey !== undefined || node.STAdata[0].datastreamRole))
 		return node.STAdata;
@@ -2446,12 +2709,32 @@ function spaCollectObsRows(node, parent, pkg) {
 			parent.STAdata.length && parent.STAdata[0] &&
 			(parent.STAdata[0].datastreamRole || parent.STAdata[0].measurementKey !== undefined))
 		return parent.STAdata;
+	/* Fallback: treat node/parent STAdata as wide if package says wide was omitted but columns look wide */
+	if (pkg && (!pkg.observationTable || pkg.observationTable === "wide")) {
+		wide = spaWideTableFromNode(node, parent, pkg) || (node && node.STAdata) || (parent && parent.STAdata);
+		if (wide && wide.length && pkg.observations && pkg.observations.bindings && pkg.observations.bindings.length) {
+			melted = spaMeltWideObsRows(wide, pkg);
+			if (melted.length)
+				return melted;
+		}
+	}
 	return null;
 }
 
 function spaCollectSourceData(node, parent) {
-	var gp;
-	if (node.STAdataSource)
+	var gp, pkg = (node && node.staEntityPackage) || (parent && parent.staEntityPackage);
+	/* Wide package: the super-table itself is the entity source */
+	if (pkg && pkg.observationTable === "wide") {
+		if (node && node.STAdataSource && node.STAdataSource.length)
+			return node.STAdataSource;
+		if (node && node.STAdata && node.STAdata.length)
+			return node.STAdata;
+		if (parent && parent.STAdataSource && parent.STAdataSource.length)
+			return parent.STAdataSource;
+		if (parent && parent.STAdata && parent.STAdata.length)
+			return parent.STAdata;
+	}
+	if (node && node.STAdataSource)
 		return node.STAdataSource;
 	if (parent && parent.STAdataSource)
 		return parent.STAdataSource;
@@ -2535,17 +2818,24 @@ function openSTAPublisherDialog(node) {
 			node.staEntityPackage = deapCopy(parent.staEntityPackage);
 		if (parent.staEntityConfig && typeof deapCopy === "function")
 			node.staEntityConfig = deapCopy(parent.staEntityConfig);
-		if (parent.STAdataSource && typeof deapCopy === "function")
-			node.STAdataSource = deapCopy(parent.STAdataSource);
-		else if (parent.image === "staEntityBuilder.png") {
-			var gp = typeof getSTAEntityBuilderParent === "function" ? getSTAEntityBuilderParent(parent) : null;
-			if (gp && gp.STAdata && typeof deapCopy === "function")
-				node.STAdataSource = deapCopy(gp.STAdata);
-		}
-		/* Long table from Builder "Crea la taula" */
-		if (parent.STAdata && typeof deapCopy === "function" &&
-				parent.staEntityPackage && parent.staEntityPackage.observationTable === "long")
+		/* Super-table (wide) or legacy long table from Builder "Crea la taula" */
+		if (parent.STAdata && typeof deapCopy === "function" && parent.staEntityPackage &&
+				(parent.staEntityPackage.observationTable === "wide" ||
+					parent.staEntityPackage.observationTable === "long")) {
 			node.STAdata = deapCopy(parent.STAdata);
+			/* Wide: same reference so Observation @iot.id writes update the table */
+			if (parent.staEntityPackage.observationTable === "wide")
+				node.STAdataSource = node.STAdata;
+		}
+		if (!node.STAdataSource) {
+			if (parent.STAdataSource && typeof deapCopy === "function")
+				node.STAdataSource = deapCopy(parent.STAdataSource);
+			else if (parent.image === "staEntityBuilder.png") {
+				var gp = typeof getSTAEntityBuilderParent === "function" ? getSTAEntityBuilderParent(parent) : null;
+				if (gp && gp.STAdata && typeof deapCopy === "function")
+					node.STAdataSource = deapCopy(gp.STAdata);
+			}
+		}
 		if (parent.STAURL)
 			node.STAURL = parent.STAURL;
 		if (parent.STAsecurity && typeof deapCopy === "function")
@@ -2613,6 +2903,7 @@ async function spaRunPublishPipeline(node, options) {
 		entities: batch.entities,
 		observations: batch.observations,
 		relations: batch.relations || [],
+		sourceData: sourceData,
 		cache: (node.staPublishCache && typeof node.staPublishCache === "object") ? node.staPublishCache : {},
 		partyId: null
 	};
@@ -2658,18 +2949,44 @@ async function spaRunPublishPipeline(node, options) {
 			});
 		}
 	}
-	node.STAdata = node.staPublishOkObservations.slice();
-	node.STAdataAttributes = {
-		phenomenonTime: { type: "isodatetime" },
-		result: { type: "number" },
-		datastreamId: { type: "string" },
-		observationId: { type: "string" },
-		measurementKey: { type: "string" }
-	};
+	/*
+		Wide package: result STAdata = same super-table as Builder, with Entity/Observation/Relation @iot.id filled.
+		Legacy long: keep published observations list.
+	*/
+	if (pkg.observationTable === "wide" && ctx.sourceData) {
+		spaWriteEntityIdsToWide(ctx.sourceData, ctx.entities, pkg);
+		spaWriteRelationIdsToWide(ctx.sourceData, ctx.relations, pkg);
+		node.STAdataSource = ctx.sourceData;
+		node.STAdata = typeof deapCopy === "function" ? deapCopy(ctx.sourceData) : ctx.sourceData.slice();
+		node.STAdataAttributes = spaWideResultAttributes(pkg, node.STAdata,
+			(parent && parent.STAdataAttributes) || node.STAdataAttributes || null);
+		if (parent && parent.STAdata && spaLooksLikeWideTable(parent.STAdata, pkg)) {
+			spaSyncWideObsIds(parent.STAdata, ctx.sourceData, pkg);
+			parent.STAdataSource = parent.STAdata;
+			if (parent.STAdataAttributes && node.STAdataAttributes) {
+				/* merge new id attribute keys onto parent */
+				for (k in node.STAdataAttributes) {
+					if (Object.prototype.hasOwnProperty.call(node.STAdataAttributes, k) && !parent.STAdataAttributes[k])
+						parent.STAdataAttributes[k] = node.STAdataAttributes[k];
+				}
+			}
+			if (typeof networkNodes !== "undefined")
+				networkNodes.update(parent);
+		}
+	} else {
+		node.STAdata = node.staPublishOkObservations.slice();
+		node.STAdataAttributes = {
+			phenomenonTime: { type: "isodatetime" },
+			result: { type: "number" },
+			datastreamId: { type: "string" },
+			observationId: { type: "string" },
+			measurementKey: { type: "string" }
+		};
+	}
 	node.staPublishResult = {
 		ok: obsResult.nFail === 0 && relResult.nFail === 0 && !pending.entities.length &&
 			!pending.observations.length && !(pending.relations && pending.relations.length),
-		createdObservations: node.STAdata.length,
+		createdObservations: node.staPublishOkObservations.length,
 		createdRelations: relResult.nOk,
 		failed: obsResult.nFail + relResult.nFail,
 		pendingEntities: pending.entities.length,

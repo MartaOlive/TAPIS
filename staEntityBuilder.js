@@ -18,7 +18,7 @@
 		relationStub: {                                      // free mode; Relations per source row
 			enabled, role, description,
 			subjectGroupKey, objectGroupKey,                 // dropdowns by group name
-			idColumns: [ "id_<labelA>", "id_<labelB>", … ]
+			idColumns: [ "Group.Observations.@iot.id", … ]
 		}
 	}
 	<src> = { source: "manual"|"column", value: "", column: "" }   (both kept so switching does not lose the other)
@@ -295,33 +295,50 @@ function sebSlugLabel(label, fallback) {
 	return s;
 }
 
-function sebIdColumnForGroup(m) {
-	return "id_" + sebSlugLabel(m && m.label, m && m.key);
-}
-
 function sebGroupDisplayLabel(m) {
 	if (m && m.label && String(m.label).trim())
 		return String(m.label).trim();
 	return sebMeasLabel(m);
 }
 
+/* Column prefix for per-group props on the wide super-table (group etiqueta). */
+function sebGroupColumnPrefix(m) {
+	var label = sebGroupDisplayLabel(m);
+	return label || (m && m.key) || "group";
+}
+
+/* Super-table column: [Group.]Plural.property  e.g. Things.name, Photography.Observations.result */
+function sebSuperColumn(plural, prop, groupPrefix) {
+	var base = String(plural) + "." + String(prop);
+	if (groupPrefix != null && groupPrefix !== "")
+		return String(groupPrefix) + "." + base;
+	return base;
+}
+
+function sebIdColumnForGroup(m) {
+	return sebSuperColumn("Observations", "@iot.id", sebGroupColumnPrefix(m));
+}
+
 function sebEnsureGroupLabels(cfg) {
-	var i, m, used = {}, slug, base, n;
+	var i, m, used = {}, slug, base, n, prefix;
 	if (!cfg || !cfg.measurements)
 		return;
 	for (i = 0; i < cfg.measurements.length; i++) {
 		m = cfg.measurements[i];
 		if (!m.label || !String(m.label).trim())
 			m.label = m.key || ("grup" + (i + 1));
-		slug = sebSlugLabel(m.label, m.key);
-		base = slug;
+		/* Keep unique display prefixes if two groups share the same label */
+		prefix = sebGroupColumnPrefix(m);
+		slug = prefix;
+		base = prefix;
 		n = 2;
 		while (used[slug]) {
 			slug = base + "_" + n;
 			n++;
 		}
 		used[slug] = true;
-		m._idColumn = "id_" + slug;
+		m._columnPrefix = slug;
+		m._idColumn = sebSuperColumn("Observations", "@iot.id", slug);
 	}
 }
 
@@ -2884,82 +2901,114 @@ function sebPackEntity(plural, ent, mode, role, measurementKey) {
 	return out;
 }
 
-/* Copy manual (constant) property values from an entity config onto an observation row */
-function sebApplyManualPropsToRow(row, ent, prefix) {
-	var name, src, key;
-	if (!ent || !ent.props)
-		return;
-	for (name in ent.props) {
-		if (!Object.prototype.hasOwnProperty.call(ent.props, name))
-			continue;
-		src = ent.props[name];
-		if (!src || src.source !== "manual" || sebIsEmpty(src.value))
-			continue;
-		key = prefix ? prefix + "." + name : name;
-		row[key] = src.value;
+function sebAttrDefinition(plural, prop) {
+	var singular = (typeof STAEntities !== "undefined" && STAEntities[plural] && STAEntities[plural].singular)
+		? STAEntities[plural].singular
+		: String(plural).replace(/s$/, "");
+	var propPath = (prop === "@iot.id") ? "id" : String(prop).replace(/\./g, "/");
+	return SEB_DEF_DOCS_PREFIX + singular + "/" + propPath;
+}
+
+function sebAttrTypeForProp(plural, prop, mode) {
+	var list, i;
+	if (prop === "@iot.id")
+		return "string";
+	if (prop === "phenomenonTime" || prop === "resultTime")
+		return "isodatetime";
+	list = sebPropList(plural, mode || "dataFromTable");
+	for (i = 0; i < list.length; i++) {
+		if (list[i].name === prop)
+			return list[i].dataType === "JSON" ? "json" : (list[i].dataType === "number" ? "number" : "string");
 	}
-	if (ent.id && ent.id.source === "manual" && !sebIsEmpty(ent.id.value))
-		row[(prefix ? prefix + "." : "") + "@iot.id"] = ent.id.value;
+	return "string";
+}
+
+/* Resolve all configured entity props (+ @iot.id) onto a wide-row column Entity.property / Group.Entity.property */
+function sebApplyEntityToWideRow(row, plural, ent, rec, groupPrefix, attrs, mode) {
+	var name, src, col, val;
+	if (!row || !ent)
+		return;
+	if (ent.props) {
+		for (name in ent.props) {
+			if (!Object.prototype.hasOwnProperty.call(ent.props, name))
+				continue;
+			src = ent.props[name];
+			if (!sebSrcIsSet(src))
+				continue;
+			val = sebResolveSrc(src, rec);
+			if (val === undefined)
+				continue;
+			col = sebSuperColumn(plural, name, groupPrefix);
+			row[col] = val;
+			if (attrs && !attrs[col]) {
+				attrs[col] = {
+					type: sebAttrTypeForProp(plural, name, mode),
+					description: (groupPrefix ? groupPrefix + " / " : "") + plural + "." + name,
+					definition: sebAttrDefinition(plural, name)
+				};
+			}
+		}
+	}
+	if (ent.id && sebSrcIsSet(ent.id)) {
+		val = sebResolveSrc(ent.id, rec);
+		if (!sebIsEmpty(val)) {
+			col = sebSuperColumn(plural, "@iot.id", groupPrefix);
+			row[col] = val;
+			if (attrs && !attrs[col]) {
+				attrs[col] = {
+					type: "string",
+					description: (groupPrefix ? groupPrefix + " / " : "") + plural + ".@iot.id",
+					definition: sebAttrDefinition(plural, "@iot.id")
+				};
+			}
+		}
+	}
+}
+
+function sebEnsureWideAttr(attrs, col, plural, prop, groupPrefix, mode) {
+	if (!attrs || !col || attrs[col])
+		return;
+	attrs[col] = {
+		type: sebAttrTypeForProp(plural, prop, mode),
+		description: (groupPrefix ? groupPrefix + " / " : "") + plural + "." + prop,
+		definition: sebAttrDefinition(plural, prop)
+	};
+}
+
+/* Rewrite packed entity sources to point at wide super-table columns. */
+function sebRewritePackedEntityToWide(ent, plural, groupPrefix) {
+	var name, col;
+	if (!ent)
+		return;
+	if (ent.properties) {
+		for (name in ent.properties) {
+			if (!Object.prototype.hasOwnProperty.call(ent.properties, name))
+				continue;
+			col = sebSuperColumn(plural, name, groupPrefix);
+			ent.properties[name] = { source: "column", column: col };
+		}
+	}
+	col = sebSuperColumn(plural, "@iot.id", groupPrefix);
+	if (ent.id || ent.existingId != null) {
+		/* Keep existingId if already known; still map id column for lookups when empty */
+		ent.id = { source: "column", column: col };
+	}
 }
 
 function sebObsRowAttributes(cfg) {
-	var attrs = {
-		phenomenonTime: { type: "isodatetime", description: "phenomenonTime", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime" },
-		resultTime: { type: "isodatetime", description: "resultTime" },
-		result: { type: "number", description: "Observation result", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/result" },
-		measurementKey: { type: "string", description: "Group key" },
-		groupLabel: { type: "string", description: "Group label (etiqueta)" },
-		datastreamRole: { type: "string", description: "Target Datastream role in package" },
-		_sourceIndex: { type: "integer", description: "Index of the wide source row" }
+	/* Built during wide materialization; this is only a fallback stub. */
+	return {
+		_sourceIndex: { type: "integer", description: "Index of the source / wide row" }
 	};
-	var i, col, included;
-	if (cfg) {
-		sebRefreshRelationIdColumns(cfg);
-		included = (cfg.measurements || []).filter(function (m) { return m.include; });
-		for (i = 0; i < included.length; i++) {
-			col = included[i]._idColumn || sebIdColumnForGroup(included[i]);
-			attrs[col] = {
-				type: "string",
-				description: "Placeholder Observation @iot.id for group \"" + (included[i].label || included[i].key) + "\" (filled after publish)",
-				definition: "http://www.opengis.net/def/docs/15-078r6/Observation/id"
-			};
-		}
-	}
-	return attrs;
-}
-
-/* Apply empty placeholder id_<label> columns onto a long-table row (same source row → same placeholders). */
-function sebApplyRelationIdPlaceholders(row, cfg, sourceRecIndex) {
-	var included, i, col;
-	if (!cfg || !row)
-		return;
-	sebRefreshRelationIdColumns(cfg);
-	included = (cfg.measurements || []).filter(function (m) { return m.include; });
-	for (i = 0; i < included.length; i++) {
-		col = included[i]._idColumn || sebIdColumnForGroup(included[i]);
-		/* Placeholder: empty until Observations exist; keep column present for Relation wiring */
-		if (row[col] === undefined)
-			row[col] = "";
-	}
-	if (cfg.relationStub && cfg.relationStub.enabled) {
-		row._relationSubjectCol = "";
-		row._relationObjectCol = "";
-		included.forEach(function (g) {
-			col = g._idColumn || sebIdColumnForGroup(g);
-			if (g.key === cfg.relationStub.subjectGroupKey)
-				row._relationSubjectCol = col;
-			if (g.key === cfg.relationStub.objectGroupKey)
-				row._relationObjectCol = col;
-		});
-	}
 }
 
 function sebBuildPackage(cfg, parent, staUrl) {
 	var errors = sebValidateConfig(cfg, parent);
 	var eff = sebEffectiveSet(cfg.selected), isCas = cfg.mode === "connectASensor";
-	var pkg, bindings = [], preview = [], r, j, rec, obsEnt, included = [], b, row, pt, rt, resVal, m;
-	var useGroups, sources;
+	var pkg, bindings = [], preview = [], r, j, rec, obsEnt, included = [], row, pt, rt, resVal, m;
+	var useGroups, sources, attrs = {}, nObs = 0, gPrefix, col, pl, list, packed, gi;
 	sebEnsureScope(cfg);
+	sebEnsureGroupLabels(cfg);
 	sources = (typeof sebCtx !== "undefined" && sebCtx && sebCtx.sources) ? sebCtx.sources : null;
 	included = (cfg.measurements || []).filter(function (m) {
 		return m.include;
@@ -2970,7 +3019,7 @@ function sebBuildPackage(cfg, parent, staUrl) {
 		version: 2,
 		mode: cfg.mode,
 		STAURL: staUrl || "",
-		observationTable: "long",
+		observationTable: "wide",
 		entities: {},
 		observations: { id: null, existingId: null, phenomenonTime: null, resultTime: null, bindings: [] },
 		relationStub: cfg.relationStub ? (typeof deapCopy === "function" ? deapCopy(cfg.relationStub) : JSON.parse(JSON.stringify(cfg.relationStub))) : null,
@@ -2978,13 +3027,11 @@ function sebBuildPackage(cfg, parent, staUrl) {
 		validation: { ok: errors.length === 0, errors: errors },
 		sourceRowCount: parent && parent.STAdata ? parent.STAdata.length : 0
 	};
+	attrs._sourceIndex = { type: "integer", description: "Index of the source / wide row" };
 
+	/* Pack entities (templates); sources rewritten to wide columns below */
 	sebEntityOrder().forEach(function (plural) {
-		var list;
-		if (!eff[plural] || plural === "Relations")
-			return;
-		/* Observations only live in the long table — never pack as reusable entities */
-		if (plural === "Observations")
+		if (!eff[plural] || plural === "Relations" || plural === "Observations")
 			return;
 		if (plural === "Parties" && cfg.entities[plural]) {
 			pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
@@ -3003,164 +3050,210 @@ function sebBuildPackage(cfg, parent, staUrl) {
 			});
 			if (list.length)
 				pkg.entities[plural] = list;
-			else if (cfg.entities[plural] && plural !== "Observations")
+			else if (cfg.entities[plural])
 				pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
 		} else if (cfg.entities[plural])
 			pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
 	});
 
-	/*
-	 * Observation bindings / long table:
-	 * - CAS: derived from measurement columns × rows
-	 * - free: from each group's Observations entity mapping (manual / column)
-	 */
+	/* Observation bindings → wide columns Group.Observations.* */
 	if (useGroups && isCas) {
-		pkg.observations.phenomenonTime = { source: "column", column: "phenomenonTime" };
-		pkg.observations.resultTime = { source: "column", column: "resultTime" };
 		included.forEach(function (gm) {
+			gPrefix = gm._columnPrefix || sebGroupColumnPrefix(gm);
 			bindings.push({
 				measurementKey: gm.key,
 				groupLabel: gm.label || gm.key,
-				idColumn: gm._idColumn || sebIdColumnForGroup(gm),
-				result: { source: "column", column: "result" },
+				groupPrefix: gPrefix,
+				idColumn: sebSuperColumn("Observations", "@iot.id", gPrefix),
+				result: { source: "column", column: sebSuperColumn("Observations", "result", gPrefix) },
+				phenomenonTime: { source: "column", column: sebSuperColumn("Observations", "phenomenonTime", gPrefix) },
+				resultTime: { source: "column", column: sebSuperColumn("Observations", "resultTime", gPrefix) },
 				datastreamRole: "Datastreams:" + gm.key
 			});
 		});
 		pkg.observations.bindings = bindings;
 	} else if (useGroups && !isCas) {
-		pkg.observations.phenomenonTime = { source: "column", column: "phenomenonTime" };
-		pkg.observations.resultTime = { source: "column", column: "resultTime" };
 		included.forEach(function (gm) {
 			sebEnsureGroupSelected(gm);
 			if (!gm.selected.Observations || !gm.Observations)
 				return;
-			b = sebPackId(gm.Observations);
+			gPrefix = gm._columnPrefix || sebGroupColumnPrefix(gm);
 			bindings.push({
 				measurementKey: gm.key,
 				groupLabel: gm.label || gm.key,
-				idColumn: gm._idColumn || sebIdColumnForGroup(gm),
-				id: b.id,
-				existingId: b.existingId,
-				result: gm.Observations.props && gm.Observations.props.result
-					? sebPackSrc(gm.Observations.props.result, "string")
-					: { source: "column", column: "result" },
-				phenomenonTime: gm.Observations.props && gm.Observations.props.phenomenonTime
-					? sebPackSrc(gm.Observations.props.phenomenonTime, "string")
-					: null,
-				resultTime: gm.Observations.props && gm.Observations.props.resultTime
-					? sebPackSrc(gm.Observations.props.resultTime, "string")
-					: null,
+				groupPrefix: gPrefix,
+				idColumn: sebSuperColumn("Observations", "@iot.id", gPrefix),
+				result: { source: "column", column: sebSuperColumn("Observations", "result", gPrefix) },
+				phenomenonTime: { source: "column", column: sebSuperColumn("Observations", "phenomenonTime", gPrefix) },
+				resultTime: { source: "column", column: sebSuperColumn("Observations", "resultTime", gPrefix) },
 				datastreamRole: "Datastreams:" + gm.key
 			});
 		});
 		pkg.observations.bindings = bindings;
 	} else if (eff.Observations && cfg.entities.Observations) {
-		obsEnt = cfg.entities.Observations;
-		b = sebPackId(obsEnt);
-		pkg.observations.id = b.id;
-		pkg.observations.existingId = b.existingId;
-		pkg.observations.phenomenonTime = { source: "column", column: "phenomenonTime" };
-		pkg.observations.resultTime = { source: "column", column: "resultTime" };
 		bindings.push({
-			result: { source: "column", column: "result" },
-			datastreamRole: "Datastreams",
-			measurementKey: undefined
+			measurementKey: undefined,
+			groupLabel: "",
+			groupPrefix: "",
+			idColumn: sebSuperColumn("Observations", "@iot.id", null),
+			result: { source: "column", column: sebSuperColumn("Observations", "result", null) },
+			phenomenonTime: { source: "column", column: sebSuperColumn("Observations", "phenomenonTime", null) },
+			resultTime: { source: "column", column: sebSuperColumn("Observations", "resultTime", null) },
+			datastreamRole: "Datastreams"
 		});
 		pkg.observations.bindings = bindings;
 	}
 
-	/* Materialize long table: 1 row = 1 observation (+ manual constants + id_<label> placeholders) */
+	/* Sync relationStub idColumns to wide Observation @iot.id columns */
+	if (pkg.relationStub) {
+		sebRefreshRelationIdColumns(cfg);
+		pkg.relationStub.idColumns = (cfg.relationStub && cfg.relationStub.idColumns)
+			? cfg.relationStub.idColumns.slice()
+			: included.map(function (gm) { return gm._idColumn || sebIdColumnForGroup(gm); });
+		pkg.relationStub.subjectGroupKey = cfg.relationStub ? cfg.relationStub.subjectGroupKey : "";
+		pkg.relationStub.objectGroupKey = cfg.relationStub ? cfg.relationStub.objectGroupKey : "";
+	}
+
+	/*
+	 * Materialize wide super-table: 1 row = 1 source record.
+	 * Columns = [Group.]Entity.property (resolved values).
+	 */
 	if (parent && parent.STAdata && (useGroups ? included.length : bindings.length)) {
 		for (r = 0; r < parent.STAdata.length; r++) {
 			rec = sebEnrichRecWithLaterals(parent.STAdata[r], sources);
 			if (!rec)
 				continue;
+			row = { _sourceIndex: r };
+
+			/* Shared entities (Party always; CAS non-per-meas; free: only Parties at top) */
+			sebEntityOrder().forEach(function (plural) {
+				if (plural === "Observations" || plural === "Relations")
+					return;
+				if (!eff[plural] || !cfg.entities[plural])
+					return;
+				if (isCas && SEB_PER_MEAS.indexOf(plural) !== -1)
+					return;
+				if (!isCas && plural !== "Parties")
+					return;
+				sebApplyEntityToWideRow(row, plural, cfg.entities[plural], rec, null, attrs, cfg.mode);
+			});
+
 			if (useGroups) {
 				for (j = 0; j < included.length; j++) {
 					m = included[j];
+					gPrefix = m._columnPrefix || sebGroupColumnPrefix(m);
+					sebEnsureGroupSelected(m);
+
+					/* Per-group entities (not Observations) */
+					(isCas ? SEB_PER_MEAS : sebGroupSelectedList(m)).forEach(function (plural) {
+						if (plural === "Observations" || !m[plural])
+							return;
+						if (!isCas && !m.selected[plural])
+							return;
+						sebApplyEntityToWideRow(row, plural, m[plural], rec, gPrefix, attrs, cfg.mode);
+					});
+
+					/* Observation columns for this group */
 					if (isCas) {
 						resVal = rec[m.key];
-						if (sebIsEmpty(resVal))
-							continue;
 						pt = rec.timestamp || rec.phenomenonTime;
 						rt = pt;
-					} else {
-						sebEnsureGroupSelected(m);
-						if (!m.selected.Observations || !m.Observations)
-							continue;
+					} else if (m.selected.Observations && m.Observations) {
 						obsEnt = m.Observations;
-						resVal = sebResolveSrc(obsEnt.props.result, rec);
-						if (sebIsEmpty(resVal))
-							continue;
-						pt = sebResolveSrc(obsEnt.props.phenomenonTime, rec);
-						rt = obsEnt.props.resultTime ? sebResolveSrc(obsEnt.props.resultTime, rec) : undefined;
+						resVal = sebResolveSrc(obsEnt.props && obsEnt.props.result, rec);
+						pt = sebResolveSrc(obsEnt.props && obsEnt.props.phenomenonTime, rec);
+						rt = obsEnt.props && obsEnt.props.resultTime
+							? sebResolveSrc(obsEnt.props.resultTime, rec) : undefined;
 						if (rt === undefined || rt === null || rt === "")
 							rt = pt;
+					} else {
+						resVal = undefined;
+						pt = undefined;
+						rt = undefined;
 					}
-					row = {
-						phenomenonTime: pt,
-						resultTime: rt,
-						result: resVal,
-						measurementKey: m.key,
-						groupLabel: m.label || m.key,
-						datastreamRole: "Datastreams:" + m.key,
-						_sourceIndex: r
-					};
-					if (!isCas)
-						sebApplyRelationIdPlaceholders(row, cfg, r);
-					/* Shared entity manuals (Party always; others only if not on this group) */
-					sebEntityOrder().forEach(function (pl) {
-						if (pl === "Observations" || pl === "Relations")
-							return;
-						if (isCas && SEB_PER_MEAS.indexOf(pl) !== -1)
-							return;
-						if (!isCas) {
-							sebEnsureGroupSelected(m);
-							if (m.selected[pl])
-								return;
-						}
-						if (!eff[pl] || !cfg.entities[pl])
-							return;
-						sebApplyManualPropsToRow(row, cfg.entities[pl], pl);
-					});
-					/* Per-group entity manuals (skip Observations — already on row) */
-					(isCas ? SEB_PER_MEAS : sebGroupSelectedList(m)).forEach(function (pl) {
-						if (!m[pl] || pl === "Observations")
-							return;
-						sebApplyManualPropsToRow(row, m[pl], m.key + "." + pl);
-					});
-					preview.push(row);
+
+					col = sebSuperColumn("Observations", "result", gPrefix);
+					row[col] = sebIsEmpty(resVal) ? "" : resVal;
+					sebEnsureWideAttr(attrs, col, "Observations", "result", gPrefix, cfg.mode);
+					col = sebSuperColumn("Observations", "phenomenonTime", gPrefix);
+					row[col] = pt != null ? pt : "";
+					sebEnsureWideAttr(attrs, col, "Observations", "phenomenonTime", gPrefix, cfg.mode);
+					col = sebSuperColumn("Observations", "resultTime", gPrefix);
+					row[col] = rt != null ? rt : "";
+					sebEnsureWideAttr(attrs, col, "Observations", "resultTime", gPrefix, cfg.mode);
+					col = sebSuperColumn("Observations", "@iot.id", gPrefix);
+					if (row[col] === undefined)
+						row[col] = "";
+					sebEnsureWideAttr(attrs, col, "Observations", "@iot.id", gPrefix, cfg.mode);
+
+					if (!sebIsEmpty(resVal))
+						nObs++;
 				}
 			} else {
 				obsEnt = cfg.entities.Observations;
-				resVal = sebResolveSrc(obsEnt.props.result, rec);
-				if (sebIsEmpty(resVal))
-					continue;
-				pt = sebResolveSrc(obsEnt.props.phenomenonTime, rec);
-				rt = obsEnt.props.resultTime ? sebResolveSrc(obsEnt.props.resultTime, rec) : undefined;
+				resVal = sebResolveSrc(obsEnt.props && obsEnt.props.result, rec);
+				pt = sebResolveSrc(obsEnt.props && obsEnt.props.phenomenonTime, rec);
+				rt = obsEnt.props && obsEnt.props.resultTime
+					? sebResolveSrc(obsEnt.props.resultTime, rec) : undefined;
 				if (rt === undefined || rt === null || rt === "")
 					rt = pt;
-				row = {
-					phenomenonTime: pt,
-					resultTime: rt,
-					result: resVal,
-					measurementKey: "",
-					groupLabel: "",
-					datastreamRole: "Datastreams",
-					_sourceIndex: r
-				};
-				sebApplyRelationIdPlaceholders(row, cfg, r);
-				sebEntityOrder().forEach(function (pl) {
-					if (pl === "Observations" || pl === "Relations" || !eff[pl] || !cfg.entities[pl])
-						return;
-					sebApplyManualPropsToRow(row, cfg.entities[pl], pl);
-				});
-				preview.push(row);
+				col = sebSuperColumn("Observations", "result", null);
+				row[col] = sebIsEmpty(resVal) ? "" : resVal;
+				sebEnsureWideAttr(attrs, col, "Observations", "result", null, cfg.mode);
+				col = sebSuperColumn("Observations", "phenomenonTime", null);
+				row[col] = pt != null ? pt : "";
+				sebEnsureWideAttr(attrs, col, "Observations", "phenomenonTime", null, cfg.mode);
+				col = sebSuperColumn("Observations", "resultTime", null);
+				row[col] = rt != null ? rt : "";
+				sebEnsureWideAttr(attrs, col, "Observations", "resultTime", null, cfg.mode);
+				col = sebSuperColumn("Observations", "@iot.id", null);
+				if (row[col] === undefined)
+					row[col] = "";
+				sebEnsureWideAttr(attrs, col, "Observations", "@iot.id", null, cfg.mode);
+				if (!sebIsEmpty(resVal))
+					nObs++;
 			}
+
+			if (pkg.relationStub && pkg.relationStub.enabled) {
+				row._relationSubjectCol = "";
+				row._relationObjectCol = "";
+				included.forEach(function (g) {
+					col = g._idColumn || sebIdColumnForGroup(g);
+					if (g.key === pkg.relationStub.subjectGroupKey)
+						row._relationSubjectCol = col;
+					if (g.key === pkg.relationStub.objectGroupKey)
+						row._relationObjectCol = col;
+				});
+			}
+
+			preview.push(row);
 		}
 	}
-	pkg.observationPreviewCount = preview.length;
-	return { package: pkg, preview: preview, attributes: sebObsRowAttributes(cfg) };
+
+	/* Point package entity/obs sources at wide columns so Publisher uses the super-table */
+	for (pl in pkg.entities) {
+		if (!Object.prototype.hasOwnProperty.call(pkg.entities, pl))
+			continue;
+		list = pkg.entities[pl] || [];
+		for (gi = 0; gi < list.length; gi++) {
+			packed = list[gi];
+			if (!packed)
+				continue;
+			gPrefix = null;
+			if (packed.measurementKey != null && packed.measurementKey !== "") {
+				for (j = 0; j < included.length; j++) {
+					if (included[j].key === packed.measurementKey) {
+						gPrefix = included[j]._columnPrefix || sebGroupColumnPrefix(included[j]);
+						break;
+					}
+				}
+			}
+			sebRewritePackedEntityToWide(packed, pl, gPrefix);
+		}
+	}
+
+	pkg.observationPreviewCount = nObs;
+	return { package: pkg, preview: preview, attributes: attrs };
 }
 
 /* ---------- dialog ---------- */
@@ -3324,24 +3417,17 @@ function loadSTAEntityBuilderConfig(event) {
 	Returns { ok, built, node } or null if no node.
 */
 function sebCommitPackageToNode(node) {
-	var parent, cfg, built, sources;
+	var parent, cfg, built;
 	if (!node)
 		return null;
 	parent = getSTAEntityBuilderParent(node);
 	cfg = sebCollectConfigFromForm(node);
 	built = sebBuildPackage(cfg, parent, sebCtx.staUrl);
 	node.staEntityPackage = built.package;
-	if (parent && parent.STAdata && typeof deapCopy === "function") {
-		sources = (sebCtx && sebCtx.sources) ? sebCtx.sources : sebBuildColumnSources(node);
-		node.STAdataSource = sebEnrichDataWithLaterals(parent.STAdata, sources);
-	}
+	/* Same array: Publisher writes Observation @iot.id back onto the visible super-table */
 	node.STAdata = built.preview;
-	node.STAdataAttributes = built.attributes || {
-		phenomenonTime: { type: "isodatetime", description: "phenomenonTime", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime" },
-		result: { type: "number", description: "Observation result", definition: "http://www.opengis.net/def/docs/15-078r6/Observation/result" },
-		measurementKey: { type: "string", description: "Measurement column key" },
-		datastreamRole: { type: "string", description: "Target Datastream role in package" }
-	};
+	node.STAdataSource = built.preview;
+	node.STAdataAttributes = built.attributes || { _sourceIndex: { type: "integer" } };
 	console.log("STA Entity Builder — STAdata (create table)", node.STAdata);
 	console.log("STA Entity Builder — STAdataAttributes", node.STAdataAttributes);
 	console.log("STA Entity Builder — staEntityPackage", node.staEntityPackage);
