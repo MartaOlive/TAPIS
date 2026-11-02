@@ -248,6 +248,8 @@ function CanviaIdiomaTapis(idioma)
 		RefreshClarificationPanel();
 	if (typeof refreshAllConnectASensorNodeLabels == "function")
 		refreshAllConnectASensorNodeLabels();
+	if (typeof refreshStaEntityBuilderPublisherNodeLabels == "function")
+		refreshStaEntityBuilderPublisherNodeLabels();
 	if (typeof PlaceButtonsSTAEntities == "function")
 		PlaceButtonsSTAEntities();
 	if (typeof PopulateContextMenu == "function")

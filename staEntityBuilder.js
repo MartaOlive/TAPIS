@@ -2465,20 +2465,11 @@ function sebSourceSelectHtml(source, disabled, onchange) {
 
 function sebPropRowHtml(p, src, cols, locked) {
 	var isCol = src.source === "column";
-	var isGeo = p.name === "location" || p.name === "feature";
-	var val = src && src.value != null ? String(src.value) : "";
-	var hideVal, hideCol;
-	/* Geo: mostra el Point a l'input; si ve de columna location, omple previsualització */
-	if (isGeo && !val && isCol && (src.column === "location" || src.column === "feature"))
-		val = sebSampleLocationFromParent(typeof sebCtx !== "undefined" && sebCtx ? sebCtx.primary : null);
-	hideVal = isCol && !isGeo;
-	hideCol = !isCol;
 	return "<div class=\"sebRow\" data-prop=\"" + sebEsc(p.name) + "\">" +
 		"<span class=\"sebLbl" + (p.required ? " sebRequired" : "") + "\">" + sebEsc(p.name) + (p.required ? "*" : "") + "</span>" +
 		sebSourceSelectHtml(src.source, locked, "sebOnSrcChange(this)") +
-		"<input type=\"text\" class=\"sebVal\" value=\"" + sebEsc(val) + "\"" +
-		(locked || (isCol && isGeo) ? " readonly" : "") + (hideVal ? " hidden" : "") + ">" +
-		"<select class=\"sebCol\"" + (locked ? " disabled" : "") + (hideCol ? " hidden" : "") + ">" +
+		"<input type=\"text\" class=\"sebVal\" value=\"" + sebEsc(src.value) + "\"" + (locked ? " readonly" : "") + (isCol ? " hidden" : "") + ">" +
+		"<select class=\"sebCol\"" + (locked ? " disabled" : "") + (isCol ? "" : " hidden") + ">" +
 		sebColumnOptionsHtml(cols, src.column) + "</select></div>";
 }
 

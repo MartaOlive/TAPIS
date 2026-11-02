@@ -2066,7 +2066,7 @@ var loginInit=false;
 
 /* Chrome: OAuth popup can abort toolbar image decode; reassign same relative src */
 function refreshToolbarImages() {
-	var imgs = document.querySelectorAll(".tdGeneralButtons img, #TapisLangFlags img");
+	var imgs = document.querySelectorAll(".tdGeneralButtons img, #TapisLangFlags img, button.generalButton img, label.generalButton img");
 	for (var i = 0; i < imgs.length; i++) {
 		var img = imgs[i];
 		if (!img)
@@ -9186,6 +9186,55 @@ function renameCircularImage(event, dialog) {
 	if (startingNodeContextId) {
 		renameNode(startingNodeContextId);
 		startingNodeContextId = null;
+	}
+}
+
+/* True if label equals any language variant of a {cat,spa,eng} description. */
+function isStaToolTranslatedLabel(label, descriptionObj) {
+	var langs, i;
+	if (!label || !descriptionObj || typeof descriptionObj !== "object")
+		return false;
+	langs = ["cat", "spa", "eng"];
+	for (i = 0; i < langs.length; i++) {
+		if (descriptionObj[langs[i]] != null && String(label) === String(descriptionObj[langs[i]]))
+			return true;
+	}
+	return false;
+}
+
+/*
+	After language change: update canvas labels for Entity Builder / Publisher
+	(Connect a sensor already has refreshAllConnectASensorNodeLabels).
+	Does not overwrite a user-renamed label.
+*/
+function refreshStaEntityBuilderPublisherNodeLabels() {
+	var nodes, i, node, key, desc, label;
+	if (typeof networkNodes === "undefined" || !networkNodes.get)
+		return;
+	if (typeof STAOperations === "undefined")
+		return;
+	nodes = networkNodes.get();
+	for (i = 0; i < nodes.length; i++) {
+		node = nodes[i];
+		if (!node || !node.image)
+			continue;
+		if (node.image === "staEntityBuilder.png")
+			key = "staEntityBuilder";
+		else if (node.image === "staPublisher.png")
+			key = "staPublisher";
+		else
+			continue;
+		desc = STAOperations[key] && STAOperations[key].description;
+		if (!desc)
+			continue;
+		label = DonaCadena(desc);
+		if (node.label === label)
+			continue;
+		if (node.label && !isStaToolTranslatedLabel(node.label, desc))
+			continue;
+		node.label = label;
+		if (networkNodes.update)
+			networkNodes.update(node);
 	}
 }
 
