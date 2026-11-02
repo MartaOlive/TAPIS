@@ -1,7 +1,7 @@
 ﻿"use strict"
 
 /*
-	STA Publisher â€” publishes staEntityPackage (v2) + long STAdata from STA Entity Builder.
+	STA Publisher — publishes staEntityPackage (v2) + long STAdata from STA Entity Builder.
 
 	Pipeline: normalize/dedupe unique entities â†’ resolve/create sequentially (GetObjectId)
 	â†’ create Observations â†’ store pending failures for retry.
@@ -44,7 +44,7 @@ function spaGetNesting(pkg) {
 	};
 }
 
-/* Entity resolve order â€” Campaigns/ObservationGroups swap per nesting. */
+/* Entity resolve order — Campaigns/ObservationGroups swap per nesting. */
 function spaEffectiveEntityOrder(pkg) {
 	var base = ["Parties", "Licenses", "Sensors", "ObservedProperties", "Locations", "FeaturesOfInterest",
 		"Things", "Datastreams", "MultiDatastreams", "HistoricalLocations", "Cells"];
@@ -92,8 +92,8 @@ function spaIsEmpty(v) {
 
 /*
 	Parse super-table column names (same rules as Entity Builder):
-	  Entity.property           â€” first segment is STA plural
-	  Group.Entity.property     â€” word.word.word(+): first â‰  plural, second = plural
+	  Entity.property           — first segment is STA plural
+	  Group.Entity.property     — word.word.word(+): first ≠ plural, second = plural
 */
 function spaParseSuperColumnName(colName) {
 	if (typeof sebParseSuperColumnName === "function")
@@ -103,7 +103,7 @@ function spaParseSuperColumnName(colName) {
 
 /*
 	Wide-table column lookup.
-	When groupPrefixHint is set, prefer Hint.Entity.property FIRST â€” otherwise a binding
+	When groupPrefixHint is set, prefer Hint.Entity.property FIRST — otherwise a binding
 	still named for another group would win and hide this group's values.
 */
 function spaLookupRecColumn(rec, column, groupPrefixHint) {
@@ -186,7 +186,7 @@ function spaGroupPrefixFromEnt(ent, pkg) {
 			return b.groupPrefix || b.groupLabel || null;
 	}
 	role = ent.role ? String(ent.role) : "";
-	/* role "ObservedProperties:Temperature" â€” last resort if key equals label */
+	/* role "ObservedProperties:Temperature" — last resort if key equals label */
 	if (role.indexOf(":") !== -1) {
 		b = role.substring(role.indexOf(":") + 1);
 		if (b)
@@ -391,7 +391,7 @@ function spaEntityStableKey(plural, ent, rec, pkg) {
 			def = spaPropVal(ent, "definition", rec, pkg);
 			return "Licenses|" + (def != null ? def : spaPropVal(ent, "name", rec, pkg) || "license");
 		case "ObservedProperties":
-			/* definition and/or name â€” must not collapse distinct OPs from different groups */
+			/* definition and/or name — must not collapse distinct OPs from different groups */
 			def = spaPropVal(ent, "definition", rec, pkg);
 			name = spaPropVal(ent, "name", rec, pkg);
 			if ((def != null && String(def) !== "") || (name != null && String(name) !== ""))
@@ -421,7 +421,7 @@ function spaEntityStableKey(plural, ent, rec, pkg) {
 			name = spaPropVal(ent, "name", rec, pkg);
 			if (name != null && String(name).trim() !== "")
 				return plural + "|" + String(name).trim();
-			/* No coords and no name â€” skip (do not collapse everything to "|place") */
+			/* No coords and no name — skip (do not collapse everything to "|place") */
 			return null;
 		case "Datastreams":
 		case "MultiDatastreams":
@@ -517,7 +517,7 @@ function spaRowHasEntitySignal(ent, rec, pkg) {
 	if (spaResolveId(ent, rec, pkg) != null)
 		return true;
 	plural = ent.plural;
-	/* Locations / FoI: need real geo or name â€” encodingType alone must not create "|place" */
+	/* Locations / FoI: need real geo or name — encodingType alone must not create "|place" */
 	if (plural === "Locations" || plural === "FeaturesOfInterest") {
 		if (spaPropVal(ent, "name", rec, pkg) !== undefined)
 			return true;
@@ -603,7 +603,7 @@ function spaCountPluralInEntities(entities, plural) {
 /*
 	Locations / FoI: read every wide-table cell *.Locations.location|name (and bare
 	Locations.*) per row. Does not depend on package bindings pointing at the right
-	group â€” that was collapsing many distinct sites within one group to a single entity.
+	group — that was collapsing many distinct sites within one group to a single entity.
 */
 function spaScanGeoEntitiesFromWide(entities, plural, baseEnt, pkg, sourceData, keyAliases) {
 	var geoProp = plural === "Locations" ? "location" : "feature";
@@ -679,7 +679,7 @@ function spaScanEntityTemplate(entities, plural, ent, pkg, obsRows, sourceData, 
 	if (!ent.plural)
 		ent.plural = plural;
 	if (plural === "Locations" || plural === "FeaturesOfInterest") {
-		/* Run once per plural â€” every group template would otherwise re-scan */
+		/* Run once per plural — every group template would otherwise re-scan */
 		if (!keyAliases._geoDone)
 			keyAliases._geoDone = {};
 		if (!keyAliases._geoDone[plural]) {
@@ -712,8 +712,8 @@ function spaScanEntityTemplate(entities, plural, ent, pkg, obsRows, sourceData, 
 
 /*
 	Normalize wide STAdata + package â†’ unique entities + observation list.
-	Pass 1: shared / general entities (Entity.property) â€” distinct values.
-	Pass 2: per group, entity by entity (Group.Entity.property) â€” distinct values;
+	Pass 1: shared / general entities (Entity.property) — distinct values.
+	Pass 2: per group, entity by entity (Group.Entity.property) — distinct values;
 	        same content across groups â†’ one create (global key map).
 */
 function spaNormalizeBatch(pkg, obsRows, sourceData) {
@@ -754,11 +754,11 @@ function spaNormalizeBatch(pkg, obsRows, sourceData) {
 		keyAliases._geoDone[geoPlural] = true;
 	});
 
-	/* Pass 1 â€” generals / shared */
+	/* Pass 1 — generals / shared */
 	for (i = 0; i < sharedList.length; i++)
 		spaScanEntityTemplate(entities, sharedList[i].plural, sharedList[i].ent, pkg, obsRows, sourceData, keyAliases);
 
-	/* Pass 2 â€” each group template; global dedupe by content key */
+	/* Pass 2 — each group template; global dedupe by content key */
 	for (i = 0; i < groupList.length; i++)
 		spaScanEntityTemplate(entities, groupList[i].plural, groupList[i].ent, pkg, obsRows, sourceData, keyAliases);
 
@@ -1075,7 +1075,7 @@ async function spaResolveUniqueEntity(ctx, item) {
 	var plural = item.plural, cached, id, body, patch, response, found, status, hint, got;
 
 	item.status = "checking";
-	/* Already confirmed on this item â€” no network */
+	/* Already confirmed on this item — no network */
 	if (!spaIsEmpty(item.id)) {
 		item.status = "done";
 		spaRegistrySet(ctx.cache, item.key, item.id);
@@ -1132,14 +1132,14 @@ async function spaResolveUniqueEntity(ctx, item) {
 
 	if (plural === "Licenses") {
 		/* logo often breaks $filter / create; set via PATCH after id is known.
-		   Keep attributionText on create â€” STA+ commonly requires it. */
+		   Keep attributionText on create — STA+ commonly requires it. */
 		patch = {};
 		if (body.logo !== undefined) {
 			patch.logo = body.logo;
 			delete body.logo;
 		}
 
-		/* 1) Query existing License (definition, then name) â€” prefer reuse over POST */
+		/* 1) Query existing License (definition, then name) — prefer reuse over POST */
 		try {
 			found = await spaLookupLicense(ctx.url, body.definition, body.name);
 		} catch (err) {
@@ -1150,7 +1150,7 @@ async function spaResolveUniqueEntity(ctx, item) {
 			return await spaFinishLicenseResolve(ctx, item, found.id, body, patch,
 				" (existing, matched by " + found.match + ")");
 
-		/* 2) No match â€” try create (may be forbidden on this service) */
+		/* 2) No match — try create (may be forbidden on this service) */
 		response = await HTTPJSONData(ctx.url + "/Licenses", ["Location"], "POST", body);
 		if (response && response.ok) {
 			id = typeof ExtractIdFromURL === "function"
@@ -1177,7 +1177,7 @@ async function spaResolveUniqueEntity(ctx, item) {
 	}
 
 	try {
-		/* MultiDatastreams need special ObservedProperties filter â€” keep GetObjectId */
+		/* MultiDatastreams need special ObservedProperties filter — keep GetObjectId */
 		if (plural === "MultiDatastreams") {
 			id = await GetObjectId(ctx.url, plural, body);
 			if (spaIsEmpty(id)) {
@@ -1982,7 +1982,7 @@ function spaObsGroupDisplayLabel(g, index) {
 	label = g.groupLabel || g.label;
 	if (label && String(label).trim() !== "" && !spaIsSyntheticGroupKey(label))
 		return String(label).trim();
-	/* Never show synthetic keys (grup_â€¦) â€” use etiqueta or "Grup N" */
+	/* Never show synthetic keys (grup_…) — use etiqueta or "Grup N" */
 	if (typeof index === "number" && index >= 0)
 		return DonaCadena({cat: "Grup", spa: "Grupo", eng: "Group"}) + " " + (index + 1);
 	if (g.measurementKey && !spaIsSyntheticGroupKey(g.measurementKey))
@@ -2051,7 +2051,7 @@ function spaCollectBodyColumns(items, pkg) {
 				cols[name] = true;
 		}
 	}
-	/* measurementKey stays on batch items for publish matching â€” not shown in preview columns */
+	/* measurementKey stays on batch items for publish matching — not shown in preview columns */
 	delete cols.measurementKey;
 	for (i = 0; i < prefer.length; i++) {
 		if (cols[prefer[i]]) {
@@ -2137,7 +2137,7 @@ function spaRenderPreview(batch) {
 	}
 	html += "</div>";
 
-	/* Relations (after Observations â€” need their ids at publish time) */
+	/* Relations (after Observations — need their ids at publish time) */
 	if (batch.relations && batch.relations.length) {
 		html += "<div class=\"spaPreviewSection\" data-spa-plural=\"Relations\">";
 		html += "<h4>Relations (" + batch.relations.length + ")</h4>";
@@ -2299,9 +2299,9 @@ function spaAnalyzeAndRenderPreview(node) {
 			countsEl.textContent = "";
 		if (previewEl) {
 			previewEl.innerHTML = "<p>" + DonaCadena({
-				cat: "No hi ha taula d'observacions. Useu Â«Crea la taulaÂ» al Constructor.",
-				spa: "No hay tabla de observaciones. Use Â«Crear la tablaÂ» en el Constructor.",
-				eng: "No observation table. Use Â«Create tableÂ» in the Builder."
+				cat: "No hi ha taula d'observacions. Useu «Crea la taula» al Constructor.",
+				spa: "No hay tabla de observaciones. Use «Crear la tabla» en el Constructor.",
+				eng: "No observation table. Use «Create table» in the Builder."
 			}) + "</p>";
 		}
 		node.staPublishBatch = null;
@@ -2320,7 +2320,7 @@ function spaAnalyzeAndRenderPreview(node) {
 	spaApplyCacheToBatch(batch, node.staPublishCache);
 	spaRenderCounts(batch, pkg);
 	spaRenderPreview(batch);
-	console.log("STA Publisher â€” preview batch", batch);
+	console.log("STA Publisher — preview batch", batch);
 	return batch;
 }
 
@@ -2435,7 +2435,7 @@ function spaTriggerPngDownload(blobOrDataUrl, isDataUrl) {
 	}), false);
 }
 
-/* â€”â€” PNG plan export: real tables, all columns, wrap (no clipping) â€”â€” */
+/* —— PNG plan export: real tables, all columns, wrap (no clipping) —— */
 
 function spaPngWrapLines(ctx, text, maxWidth) {
 	var s = String(text == null ? "" : text), words, lines = [], line = "", i, test, rest;
@@ -2475,7 +2475,7 @@ function spaPngLayoutTable(ctx, headers, rows, opts) {
 	var padY = (opts && opts.padY != null) ? opts.padY : 4;
 	var lineH = (opts && opts.lineH != null) ? opts.lineH : 14;
 	var minCol = (opts && opts.minCol != null) ? opts.minCol : 48;
-	/* No max width: columns grow to fit full cell text (long URLs, JSON, â€¦). */
+	/* No max width: columns grow to fit full cell text (long URLs, JSON, …). */
 	var maxCol = (opts && opts.maxCol != null) ? opts.maxCol : Infinity;
 	var colWidths = [], i, j, w, cell, lines, rowLines = [], headerLines = [], h, totalW, totalH, cw;
 
@@ -2684,9 +2684,9 @@ function spaDownloadPlanPNG(event) {
 		}
 
 		spaSetStatus(DonaCadena({
-			cat: "Generant PNGâ€¦",
-			spa: "Generando PNGâ€¦",
-			eng: "Generating PNGâ€¦"
+			cat: "Generant PNG…",
+			spa: "Generando PNG…",
+			eng: "Generating PNG…"
 		}), false);
 
 		pad = 20;
@@ -2701,7 +2701,7 @@ function spaDownloadPlanPNG(event) {
 			blocks.push(block);
 
 		measureCtx = document.createElement("canvas").getContext("2d");
-		text = counts.map(function (c) { return c.plural + ": " + c.n; }).join("  Â·  ");
+		text = counts.map(function (c) { return c.plural + ": " + c.n; }).join("  ·  ");
 		for (bi = 0; bi < blocks.length; bi++) {
 			block = blocks[bi];
 			if (block.headers && block.rows) {
@@ -2849,7 +2849,7 @@ function spaLooksLikeWideTable(data, pkg) {
 	var b, col, name, parsed, n = 0;
 	if (!data || !data.length || !data[0] || !pkg)
 		return false;
-	/* Melted observation rows must never be treated as the wide super-table â€”
+	/* Melted observation rows must never be treated as the wide super-table —
 	   otherwise Locations/FoI columns are missing and many sites collapse to 0/1. */
 	if (data[0].measurementKey !== undefined || data[0].datastreamRole !== undefined)
 		return false;
@@ -3111,7 +3111,7 @@ function spaCollectSourceData(node, parent) {
 		wide = spaWideTableFromNode(node, parent, pkg);
 		if (wide && wide.length)
 			return wide;
-		/* Do not fall back to melted STAdata â€” it has no Group.Locations.* columns */
+		/* Do not fall back to melted STAdata — it has no Group.Locations.* columns */
 		if (node && node.STAdataSource && node.STAdataSource.length && spaLooksLikeWideTable(node.STAdataSource, pkg))
 			return node.STAdataSource;
 		if (parent && parent.STAdataSource && parent.STAdataSource.length && spaLooksLikeWideTable(parent.STAdataSource, pkg))
@@ -3187,7 +3187,7 @@ function spaUpdateSummary(node, pkg) {
 		html += "<a class=\"spaSummaryVal spaSummaryLink\" href=\"" + spaEsc(url) +
 			"\" target=\"_blank\" rel=\"noopener noreferrer\">" + spaEsc(url) + "</a>";
 	} else {
-		html += "<span class=\"spaSummaryVal\">â€”</span>";
+		html += "<span class=\"spaSummaryVal\">—</span>";
 	}
 	html += "</div></div>";
 	summary.innerHTML = html;
@@ -3234,7 +3234,7 @@ function openSTAPublisherDialog(node) {
 	logEl = document.getElementById("DialogSTAPublisherLog");
 	if (logEl)
 		logEl.textContent = "";
-	/* Local analyze only â€” no GetObjectId on open */
+	/* Local analyze only — no GetObjectId on open */
 	spaAnalyzeAndRenderPreview(node);
 }
 
@@ -3256,14 +3256,14 @@ async function spaRunPublishPipeline(node, options) {
 		throw { name: "STA", message: DonaCadena({cat: "No hi ha paquet per publicar.", spa: "No hay paquete para publicar.", eng: "No package to publish."}) };
 	if (pkg.version !== 2)
 		throw { name: "STA", message: DonaCadena({
-			cat: "El paquet Ã©s d'una versiÃ³ antiga. Torneu a crear la taula al Constructor.",
-			spa: "El paquete es de una versiÃ³n antigua. Vuelva a crear la tabla en el Constructor.",
+			cat: "El paquet és d'una versió antiga. Torneu a crear la taula al Constructor.",
+			spa: "El paquete es de una versión antigua. Vuelva a crear la tabla en el Constructor.",
 			eng: "The package is from an older version. Create the table again in the Builder."
 		}) };
 	if (!spaIsLoggedIn()) {
 		if (typeof OpenLogin === "function")
 			OpenLogin();
-		throw { name: "STA", message: DonaCadena({cat: "Cal iniciar sessiÃ³.", spa: "Hay que iniciar sesiÃ³n.", eng: "Please log in."}) };
+		throw { name: "STA", message: DonaCadena({cat: "Cal iniciar sessió.", spa: "Hay que iniciar sesión.", eng: "Please log in."}) };
 	}
 	url = spaServiceUrl(node.STAURL || (parent && parent.STAURL) || pkg.STAURL);
 	if (!url)
@@ -3273,14 +3273,14 @@ async function spaRunPublishPipeline(node, options) {
 	obsRows = spaCollectObsRows(node, parent, pkg);
 	if (!obsRows || !obsRows.length)
 		throw { name: "STA", message: DonaCadena({
-			cat: "No hi ha taula d'observacions. Useu Â«Crea la taulaÂ» al Constructor.",
-			spa: "No hay tabla de observaciones. Use Â«Crear la tablaÂ» en el Constructor.",
-			eng: "No observation table. Use Â«Create tableÂ» in the Builder."
+			cat: "No hi ha taula d'observacions. Useu «Crea la taula» al Constructor.",
+			spa: "No hay tabla de observaciones. Use «Crear la tabla» en el Constructor.",
+			eng: "No observation table. Use «Create table» in the Builder."
 		}) };
 
 	/* Reuse preview batch when fingerprint still matches */
 	batch = spaPreparePublishBatch(node, pkg, obsRows, sourceData, retryOnly);
-	console.log("STA Publisher â€” publish batch", batch);
+	console.log("STA Publisher — publish batch", batch);
 	spaRenderCounts(batch);
 	spaRenderPreview(batch);
 
@@ -3380,9 +3380,9 @@ async function spaRunPublishPipeline(node, options) {
 		pendingObservations: pending.observations.length,
 		pendingRelations: (pending.relations && pending.relations.length) || 0
 	};
-	console.log("STA Publisher â€” result", node.staPublishResult);
-	console.log("STA Publisher â€” STAdata", node.STAdata);
-	console.log("STA Publisher â€” pending", node.staPublishPending);
+	console.log("STA Publisher — result", node.staPublishResult);
+	console.log("STA Publisher — STAdata", node.STAdata);
+	console.log("STA Publisher — pending", node.staPublishPending);
 	if (typeof networkNodes !== "undefined")
 		networkNodes.update(node);
 	spaUpdateSummary(node, pkg);
@@ -3412,8 +3412,8 @@ async function publishSTAEntityPackage(event) {
 		spaAppendLog("Done. Observations: " + result.nOk + ", Relations: " + (result.nRelOk || 0) +
 			", failed: " + result.nFail);
 		spaSetStatus(DonaCadenaFmt({
-			cat: "PublicaciÃ³ finalitzada: {0} Observations, {1} Relations, {2} errors.",
-			spa: "PublicaciÃ³n finalizada: {0} Observations, {1} Relations, {2} errores.",
+			cat: "Publicació finalitzada: {0} Observations, {1} Relations, {2} errors.",
+			spa: "Publicación finalizada: {0} Observations, {1} Relations, {2} errores.",
 			eng: "Publish finished: {0} Observations, {1} Relations, {2} failures."
 		}, result.nOk, result.nRelOk || 0, result.nFail), result.nFail > 0);
 		if (typeof updateQueryAndTableArea === "function")
@@ -3421,8 +3421,8 @@ async function publishSTAEntityPackage(event) {
 	} catch (error) {
 		spaAppendLog("ERROR: " + (error && error.message ? error.message : String(error)));
 		spaSetStatus(DonaCadenaFmt({
-			cat: "Error de publicaciÃ³: {0}",
-			spa: "Error de publicaciÃ³n: {0}",
+			cat: "Error de Publicació: {0}",
+			spa: "Error de Publicación: {0}",
 			eng: "Publish error: {0}"
 		}, error && error.message ? error.message : String(error)), true);
 	}
@@ -3446,7 +3446,7 @@ async function retrySTAPublisherPending(event) {
 		}), true);
 		return;
 	}
-	spaSetStatus(DonaCadena({cat: "Reintentant pendentsâ€¦", spa: "Reintentando pendientesâ€¦", eng: "Retrying pendingâ€¦"}), false);
+	spaSetStatus(DonaCadena({cat: "Reintentant pendents…", spa: "Reintentando pendientes…", eng: "Retrying pending…"}), false);
 	spaAppendLog("--- Retry pending ---");
 	try {
 		result = await spaRunPublishPipeline(node, { retryOnly: true });
