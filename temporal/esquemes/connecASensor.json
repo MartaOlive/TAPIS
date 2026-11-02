@@ -64,15 +64,15 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": -166,
-			"y": 79
+			"x": -191,
+			"y": 78
 		},
 		{
 			"id": "33hab.dhmcb9",
 			"label": "Connected to Smartcitizen Kit 2.1",
 			"image": "connectASensor.png",
 			"shape": "circularImage",
-			"x": -186,
+			"x": -213,
 			"y": 210,
 			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
 			"connectASensorMeta": {
@@ -2070,8 +2070,8 @@
 					}
 				]
 			},
-			"x": -189,
-			"y": 343,
+			"x": -217,
+			"y": 345,
 			"staEntityPackage": {
 				"version": 2,
 				"mode": "connectASensor",
@@ -2965,8 +2965,8 @@
 			"image": "connectASensor.png",
 			"shape": "circularImage",
 			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
-			"x": -148,
-			"y": -45,
+			"x": -153,
+			"y": -43,
 			"connectASensorMeta": {
 				"sensorInfo": {
 					"usbVendorId": "2341",
@@ -5185,8 +5185,8 @@
 					"type": "object"
 				}
 			},
-			"x": -465,
-			"y": 174
+			"x": -491,
+			"y": 171
 		},
 		{
 			"id": "25673.otmgfpg",
@@ -9112,8 +9112,8 @@
 					"staEntityConfig/measurements/Datastreams_7/locked": false
 				}
 			],
-			"x": -444,
-			"y": 46
+			"x": -468,
+			"y": 44
 		},
 		{
 			"id": "5p024.oup81d",
@@ -13039,8 +13039,8 @@
 					"staEntityConfig/measurements/Datastreams_7/locked": false
 				}
 			],
-			"x": -430,
-			"y": -81
+			"x": -446,
+			"y": -83
 		},
 		{
 			"id": "4gaq1.fj2i2f",
@@ -13258,8 +13258,8 @@
 					"location.properties": "{\"mountain\":\"Montserrat\",\"habitat\":\"Rocky Mediterranean mountain\",\"locationType\":\"Wildlife monitoring site\",\"nearbyLandmark\":\"Ermita de Santa Magdalena\"}"
 				}
 			],
-			"x": -263,
-			"y": -313
+			"x": -255,
+			"y": -295
 		},
 		{
 			"id": "7spoh.urql4t",
@@ -15299,8 +15299,8 @@
 					]
 				}
 			},
-			"x": -126,
-			"y": -307,
+			"x": -117,
+			"y": -287,
 			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1"
 		},
 		{
@@ -15641,7 +15641,7 @@
 					"UoMDefinition": ""
 				}
 			},
-			"x": -391,
+			"x": -381,
 			"y": -326
 		},
 		{
@@ -18334,8 +18334,8 @@
 					"pm10.Datastreams.unitOfMeasurement.definition": "http://www.qudt.org/vocab/unit/MicroGM-PER-M3"
 				}
 			],
-			"x": -170,
-			"y": 471
+			"x": -198,
+			"y": 474
 		},
 		{
 			"id": "6podk.tobpbk",
@@ -88284,8 +88284,8 @@
 				]
 			},
 			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
-			"x": 28,
-			"y": 124,
+			"x": 5,
+			"y": 122,
 			"staEntityPackage": {
 				"version": 2,
 				"mode": "connectASensor",
@@ -89243,8 +89243,8 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": 74,
-			"y": 251
+			"x": 32,
+			"y": 252
 		},
 		{
 			"id": "4ne1q.j5u7hv",
@@ -89838,8 +89838,8 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/License/ObservationGroups@iot.navigationLink"
 				}
 			},
-			"x": 115,
-			"y": 375
+			"x": 62,
+			"y": 380
 		},
 		{
 			"id": "2otdp.c5vs52g",
@@ -90057,8 +90057,8 @@
 					"location.properties": "{\"mountain\":\"Montserrat\",\"habitat\":\"Rocky Mediterranean mountain\",\"locationType\":\"Wildlife monitoring site\",\"nearbyLandmark\":\"Ermita de Santa Magdalena\"}"
 				}
 			],
-			"x": 389,
-			"y": 309
+			"x": 345,
+			"y": 365
 		},
 		{
 			"id": "8avm5.ss35qc",
@@ -90350,8 +90350,8 @@
 					"UoMDefinition": ""
 				}
 			},
-			"x": 373,
-			"y": 180
+			"x": 287,
+			"y": 247
 		},
 		{
 			"id": "getm.5kuvkm4",
@@ -93626,8 +93626,8 @@
 				}
 			},
 			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
-			"x": 341,
-			"y": 44,
+			"x": 249,
+			"y": 110,
 			"staEntityPackage": {
 				"version": 2,
 				"mode": "dataFromTable",
@@ -94181,8 +94181,8 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": 205,
-			"y": 14
+			"x": 159,
+			"y": 4
 		},
 		{
 			"id": "26cql.dotnc",
@@ -94222,8 +94222,8 @@
 					"locATION_Location_encodingType ": "application/geo+json"
 				}
 			],
-			"x": 444,
-			"y": -45
+			"x": 368,
+			"y": 55
 		},
 		{
 			"id": "2pce5.i8lupt",
@@ -94263,8 +94263,8 @@
 					"locATION_Location_encodingType ": "application/geo+json"
 				}
 			],
-			"x": -82,
-			"y": -179
+			"x": -51,
+			"y": -172
 		},
 		{
 			"id": "8eiu.d1p56bq",
@@ -94330,8 +94330,8 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": -64,
-			"y": -428
+			"x": -59,
+			"y": -408
 		},
 		{
 			"id": "3sobi.vr6mmo",
@@ -94925,8 +94925,8 @@
 					"definition": "http://www.opengis.net/def/docs/15-078r6/License/ObservationGroups@iot.navigationLink"
 				}
 			},
-			"x": 93,
-			"y": -48
+			"x": 76,
+			"y": -91
 		},
 		{
 			"id": "2tndj.5tui07",
@@ -95400,8 +95400,8 @@
 					"Wind.Observations.resultTime": "2026-10-25T16:00:00Z"
 				}
 			],
-			"x": 267,
-			"y": -184
+			"x": 198,
+			"y": -234
 		},
 		{
 			"id": "4hrg4.5oe61t",
@@ -95467,8 +95467,8 @@
 					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
 				}
 			],
-			"x": 276,
-			"y": -407
+			"x": 220,
+			"y": -490
 		},
 		{
 			"id": "87122.l64s3m",
@@ -100973,8 +100973,479 @@
 				"sourceRowCount": 14,
 				"observationPreviewCount": 42
 			},
-			"x": 205,
-			"y": -292
+			"x": 210,
+			"y": -362
+		},
+		{
+			"id": "3d8e.8t95qhk",
+			"label": "STA plus",
+			"image": "sta.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+			"STAdata": [
+				{
+					"name": "Campaigns",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Campaigns"
+				},
+				{
+					"name": "Datastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Datastreams"
+				},
+				{
+					"name": "FeaturesOfInterest",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/FeaturesOfInterest"
+				},
+				{
+					"name": "HistoricalLocations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/HistoricalLocations"
+				},
+				{
+					"name": "Licenses",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Licenses"
+				},
+				{
+					"name": "Locations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Locations"
+				},
+				{
+					"name": "MultiDatastreams",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/MultiDatastreams"
+				},
+				{
+					"name": "Observations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations"
+				},
+				{
+					"name": "ObservationGroups",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservationGroups"
+				},
+				{
+					"name": "ObservedProperties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/ObservedProperties"
+				},
+				{
+					"name": "Parties",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Parties"
+				},
+				{
+					"name": "Relations",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Relations"
+				},
+				{
+					"name": "Sensors",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Sensors"
+				},
+				{
+					"name": "Things",
+					"url": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Things"
+				}
+			],
+			"x": 528,
+			"y": -20
+		},
+		{
+			"id": "2lhjf.nkhn7v",
+			"label": "Connectat a Smartcitizen Kit 2.1",
+			"image": "connectASensor.png",
+			"shape": "circularImage",
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+			"connectASensorMeta": {
+				"sensorInfo": {
+					"usbVendorId": "2341",
+					"usbProductId": "804D",
+					"portName": "Smartcitizen Kit 2.1",
+					"usbId": "2341:804D",
+					"hardwareVersion": "2.1",
+					"samHardwareId": "DA0C97D95055344E312E3120FF0E2244",
+					"samVersion": "0.9.11-49b152f-master-sck21_air",
+					"samBuildDate": "2025-09-25T21:40:51Z",
+					"espVersion": "0.9.9-49b152f-master",
+					"espBuildDate": "2025-09-25T21:41:37Z",
+					"sensors": "version\nSCK > config\nPublish interval (s): 180\nReading interval (s): 60\nSanity reset (every 24 hours) is: on\nSCK > sensor\nDisabled\n----------\nExt SHT31 Temperature\nExt SHT31 Humidity\nExt SHT35 Temperature\nExt SHT35 Humidity\nBattery voltage\nNoise dBC\nNoise dBZ\nNoise FFT\nMPL Altitude\nMPL internal temperature\nGPS Fix Quality\nGPS Latitude\nGPS Longitude\nGPS Altitude\nGPS Speed\nGPS Horizontal Dilution of Position\nGPS Tracked Satellites\nADS1x15 ADC 0x48 Ch0\nADS1x15 ADC 0x48 Ch1\nADS1x15 ADC 0x48 Ch2\nADS1x15 ADC 0x48 Ch3\nADS1x15 ADC 0x49 Ch0\nADS1x15 ADC 0x49 Ch1\nADS1x15 ADC 0x49 Ch2\nADS1x15 ADC 0x49 Ch3\nADS1x15 ADC 0x4A Ch0\nADS1x15 ADC 0x4A Ch1\nADS1x15 ADC 0x4A Ch2\nADS1x15 ADC 0x4A Ch3\nADS1x15 ADC 0x4B Ch0\nADS1x15 ADC 0x4B Ch1\nADS1x15 ADC 0x4B Ch2\nADS1x15 ADC 0x4B Ch3\nSCD30 CO2\nSCD30 Temperature\nSCD30 Humidity\nSFA30 Temperature\nSFA30 Humidity\nSFA30 Formaldehyde\nExt PM_A 1.0\nExt PM_A 2.5\nExt PM_A 10.0\nExt PN_A 0.3\nExt PN_A 0.5\nExt PN_A 1.0\nExt PN_A 2.5\nExt PN_A 5.0\nExt PN_A 10.0\nExt PM_B 1.0\nExt PM_B 2.5\nExt PM_B 10.0\nExt PN_B 0.3\nExt PN_B 0.5\nExt PN_B 1.0\nExt PN_B 2.5\nExt PN_B 5.0\nExt PN_B 10.0\nEnabled\n----------\nTemperature -> every 1 int (60 sec)\nHumidity -> every 1 int (60 sec)\nBattery -> every 1 int (60 sec)\nSD card -> every 1 int (60 sec)\nWiFi RSSI -> every 3 int (180 sec)\nLight -> every 1 int (60 sec)\nNoise dBA -> every 1 int (60 sec)\nMPL Barometric pressure -> every 1 int (60 sec)\nCCS811 VOC Gas -> every 1 int (60 sec)\nCCS811 eCO2 Gas -> every 1 int (60 sec)\nPMS PM 1.0 -> every 5 int (300 sec)\nPMS PM 2.5 -> every 5 int (300 sec)\nPMS PM 10.0 -> every 5 int (300 sec)\nPMS PN 0.3 -> every 5 int (300 sec)\nPMS PN 0.5 -> every 5 int (300 sec)\nPMS PN 1.0 -> every 5 int (300 sec)\nPMS PN 2.5 -> every 5 int (300 sec)\nPMS PN 5.0 -> every 5 int (300 sec)\nPMS PN 10.0 -> every 5 int (300 sec)\nSCK > netinfo\nESP finished booting\nSCK > ERROR: Time not synced and wifi is not configured!!!",
+					"mode": "sdcard",
+					"connectionType": "USB",
+					"readingInterval": "1 min",
+					"intervalCode": "1",
+					"publishInterval": "3 min"
+				},
+				"connectionMode": "usb",
+				"displayName": "Smartcitizen Kit 2.1",
+				"intervalCode": 1,
+				"intervalSec": 60,
+				"pmEveryNIntervals": 5,
+				"pmIntervalSec": 300,
+				"measurementKeys": [
+					"temperature",
+					"humidity",
+					"light",
+					"noiseDBA",
+					"barometricPressure",
+					"pm1",
+					"pm25",
+					"pm10"
+				],
+				"collecting": true,
+				"usbMode": "sdcard",
+				"usbReadIntSec": 60,
+				"usbPubIntSec": 180,
+				"usbSensors": [
+					{
+						"id": "battery",
+						"enabled": true,
+						"intervalSec": 60,
+						"names": [
+							"Battery voltage",
+							"Battery -> every 1 int"
+						]
+					}
+				]
+			},
+			"STAdataAttributes": {
+				"timestamp": {
+					"type": "isodatetime",
+					"description": "Measurement timestamp",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime"
+				},
+				"sensor_id": {
+					"type": "string",
+					"description": "Sensor / device identifier"
+				},
+				"temperature": {
+					"type": "number",
+					"description": "Air temperature",
+					"definition": "http://www.opengis.net/def/property/OGC/0/Temperature",
+					"UoM": "degree Celsius",
+					"UoMSymbol": "°C",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/DEG_C"
+				},
+				"humidity": {
+					"type": "number",
+					"description": "Relative humidity",
+					"definition": "http://www.opengis.net/def/property/OGC/0/RelativeHumidity",
+					"UoM": "percent",
+					"UoMSymbol": "%",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/PERCENT"
+				},
+				"light": {
+					"type": "integer",
+					"description": "Ambient light",
+					"definition": "http://www.opengis.net/def/property/OGC/0/Illuminance",
+					"UoM": "lux",
+					"UoMSymbol": "lx",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/LUX"
+				},
+				"noiseDBA": {
+					"type": "number",
+					"description": "Ambient noise level",
+					"definition": "http://www.opengis.net/def/property/OGC/0/SoundPressureLevel",
+					"UoM": "A-weighted decibel",
+					"UoMSymbol": "dBA",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/DecibelA"
+				},
+				"barometricPressure": {
+					"type": "number",
+					"description": "Barometric pressure",
+					"definition": "http://www.opengis.net/def/property/OGC/0/AtmosphericPressure",
+					"UoM": "pascal",
+					"UoMSymbol": "Pa",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/PA"
+				},
+				"pm1": {
+					"type": "integer",
+					"description": "Particulate matter PM1.0",
+					"definition": "http://www.opengis.net/def/property/OGC/0/PM1",
+					"UoM": "microgram per cubic metre",
+					"UoMSymbol": "µg/m³",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/MicroGM-PER-M3"
+				},
+				"pm25": {
+					"type": "integer",
+					"description": "Particulate matter PM2.5",
+					"definition": "http://www.opengis.net/def/property/OGC/0/PM2.5",
+					"UoM": "microgram per cubic metre",
+					"UoMSymbol": "µg/m³",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/MicroGM-PER-M3"
+				},
+				"pm10": {
+					"type": "integer",
+					"description": "Particulate matter PM10",
+					"definition": "http://www.opengis.net/def/property/OGC/0/PM10",
+					"UoM": "microgram per cubic metre",
+					"UoMSymbol": "µg/m³",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/MicroGM-PER-M3"
+				},
+				"location": {
+					"type": "json",
+					"description": "Device geolocation (GeoJSON Point)",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/location"
+				}
+			},
+			"STAdata": [
+				{
+					"timestamp": "2026-11-02T13:46:18.272Z",
+					"sensor_id": "Smartcitizen Kit 2.1",
+					"temperature": 20.49,
+					"humidity": 60.93,
+					"light": 32,
+					"noiseDBA": 33.38,
+					"barometricPressure": 100.33,
+					"pm1": 0,
+					"pm25": 5,
+					"pm10": 5,
+					"location": "{\"type\":\"Point\",\"coordinates\":[2.1102496203757735,41.50091194147003]}"
+				},
+				{
+					"timestamp": "2026-11-02T13:47:16.829Z",
+					"sensor_id": "Smartcitizen Kit 2.1",
+					"temperature": 20.75,
+					"humidity": 59.06,
+					"light": 19,
+					"noiseDBA": 41.76,
+					"barometricPressure": 100.34,
+					"pm1": 0,
+					"pm25": 5,
+					"pm10": 5,
+					"location": "{\"type\":\"Point\",\"coordinates\":[2.110230903222879,41.50109774074311]}"
+				},
+				{
+					"timestamp": "2026-11-02T13:48:16.840Z",
+					"sensor_id": "Smartcitizen Kit 2.1",
+					"temperature": 21.12,
+					"humidity": 57.67,
+					"light": 24,
+					"noiseDBA": 46.37,
+					"barometricPressure": 100.36,
+					"pm1": 0,
+					"pm25": 5,
+					"pm10": 5,
+					"location": "{\"type\":\"Point\",\"coordinates\":[2.1101716375012334,41.5010751107543]}"
+				}
+			],
+			"connectASensorDisplayName": "Smartcitizen Kit 2.1",
+			"x": 515,
+			"y": -148
+		},
+		{
+			"id": "2ctgs.fhulqc",
+			"label": "Constructor d'entitats STA",
+			"image": "staEntityBuilder.png",
+			"shape": "circularImage",
+			"STAdataSource": [
+				{
+					"timestamp": "2026-11-02T13:46:18.272Z",
+					"sensor_id": "Smartcitizen Kit 2.1",
+					"temperature": 20.49,
+					"humidity": 60.93,
+					"light": 32,
+					"noiseDBA": 33.38,
+					"barometricPressure": 100.33,
+					"pm1": 0,
+					"pm25": 5,
+					"pm10": 5,
+					"location": "{\"type\":\"Point\",\"coordinates\":[2.1102496203757735,41.50091194147003]}"
+				},
+				{
+					"timestamp": "2026-11-02T13:47:16.829Z",
+					"sensor_id": "Smartcitizen Kit 2.1",
+					"temperature": 20.75,
+					"humidity": 59.06,
+					"light": 19,
+					"noiseDBA": 41.76,
+					"barometricPressure": 100.34,
+					"pm1": 0,
+					"pm25": 5,
+					"pm10": 5,
+					"location": "{\"type\":\"Point\",\"coordinates\":[2.110230903222879,41.50109774074311]}"
+				},
+				{
+					"timestamp": "2026-11-02T13:48:16.840Z",
+					"sensor_id": "Smartcitizen Kit 2.1",
+					"temperature": 21.12,
+					"humidity": 57.67,
+					"light": 24,
+					"noiseDBA": 46.37,
+					"barometricPressure": 100.36,
+					"pm1": 0,
+					"pm25": 5,
+					"pm10": 5,
+					"location": "{\"type\":\"Point\",\"coordinates\":[2.1101716375012334,41.5010751107543]}"
+				}
+			],
+			"STAdata": [
+				{
+					"timestamp": "2026-11-02T13:46:18.272Z",
+					"sensor_id": "Smartcitizen Kit 2.1",
+					"temperature": 20.49,
+					"humidity": 60.93,
+					"light": 32,
+					"noiseDBA": 33.38,
+					"barometricPressure": 100.33,
+					"pm1": 0,
+					"pm25": 5,
+					"pm10": 5,
+					"location": "{\"type\":\"Point\",\"coordinates\":[2.1102496203757735,41.50091194147003]}"
+				},
+				{
+					"timestamp": "2026-11-02T13:47:16.829Z",
+					"sensor_id": "Smartcitizen Kit 2.1",
+					"temperature": 20.75,
+					"humidity": 59.06,
+					"light": 19,
+					"noiseDBA": 41.76,
+					"barometricPressure": 100.34,
+					"pm1": 0,
+					"pm25": 5,
+					"pm10": 5,
+					"location": "{\"type\":\"Point\",\"coordinates\":[2.110230903222879,41.50109774074311]}"
+				},
+				{
+					"timestamp": "2026-11-02T13:48:16.840Z",
+					"sensor_id": "Smartcitizen Kit 2.1",
+					"temperature": 21.12,
+					"humidity": 57.67,
+					"light": 24,
+					"noiseDBA": 46.37,
+					"barometricPressure": 100.36,
+					"pm1": 0,
+					"pm25": 5,
+					"pm10": 5,
+					"location": "{\"type\":\"Point\",\"coordinates\":[2.1101716375012334,41.5010751107543]}"
+				}
+			],
+			"STAdataAttributes": {
+				"timestamp": {
+					"type": "isodatetime",
+					"description": "Measurement timestamp",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Observation/phenomenonTime"
+				},
+				"sensor_id": {
+					"type": "string",
+					"description": "Sensor / device identifier"
+				},
+				"temperature": {
+					"type": "number",
+					"description": "Air temperature",
+					"definition": "http://www.opengis.net/def/property/OGC/0/Temperature",
+					"UoM": "degree Celsius",
+					"UoMSymbol": "°C",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/DEG_C"
+				},
+				"humidity": {
+					"type": "number",
+					"description": "Relative humidity",
+					"definition": "http://www.opengis.net/def/property/OGC/0/RelativeHumidity",
+					"UoM": "percent",
+					"UoMSymbol": "%",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/PERCENT"
+				},
+				"light": {
+					"type": "integer",
+					"description": "Ambient light",
+					"definition": "http://www.opengis.net/def/property/OGC/0/Illuminance",
+					"UoM": "lux",
+					"UoMSymbol": "lx",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/LUX"
+				},
+				"noiseDBA": {
+					"type": "number",
+					"description": "Ambient noise level",
+					"definition": "http://www.opengis.net/def/property/OGC/0/SoundPressureLevel",
+					"UoM": "A-weighted decibel",
+					"UoMSymbol": "dBA",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/DecibelA"
+				},
+				"barometricPressure": {
+					"type": "number",
+					"description": "Barometric pressure",
+					"definition": "http://www.opengis.net/def/property/OGC/0/AtmosphericPressure",
+					"UoM": "pascal",
+					"UoMSymbol": "Pa",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/PA"
+				},
+				"pm1": {
+					"type": "integer",
+					"description": "Particulate matter PM1.0",
+					"definition": "http://www.opengis.net/def/property/OGC/0/PM1",
+					"UoM": "microgram per cubic metre",
+					"UoMSymbol": "µg/m³",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/MicroGM-PER-M3"
+				},
+				"pm25": {
+					"type": "integer",
+					"description": "Particulate matter PM2.5",
+					"definition": "http://www.opengis.net/def/property/OGC/0/PM2.5",
+					"UoM": "microgram per cubic metre",
+					"UoMSymbol": "µg/m³",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/MicroGM-PER-M3"
+				},
+				"pm10": {
+					"type": "integer",
+					"description": "Particulate matter PM10",
+					"definition": "http://www.opengis.net/def/property/OGC/0/PM10",
+					"UoM": "microgram per cubic metre",
+					"UoMSymbol": "µg/m³",
+					"UoMDefinition": "http://www.qudt.org/vocab/unit/MicroGM-PER-M3"
+				},
+				"location": {
+					"type": "json",
+					"description": "Device geolocation (GeoJSON Point)",
+					"definition": "http://www.opengis.net/def/docs/15-078r6/Location/location"
+				}
+			},
+			"connectASensorMeta": {
+				"sensorInfo": {
+					"usbVendorId": "2341",
+					"usbProductId": "804D",
+					"portName": "Smartcitizen Kit 2.1",
+					"usbId": "2341:804D",
+					"hardwareVersion": "2.1",
+					"samHardwareId": "DA0C97D95055344E312E3120FF0E2244",
+					"samVersion": "0.9.11-49b152f-master-sck21_air",
+					"samBuildDate": "2025-09-25T21:40:51Z",
+					"espVersion": "0.9.9-49b152f-master",
+					"espBuildDate": "2025-09-25T21:41:37Z",
+					"sensors": "version\nSCK > config\nPublish interval (s): 180\nReading interval (s): 60\nSanity reset (every 24 hours) is: on\nSCK > sensor\nDisabled\n----------\nExt SHT31 Temperature\nExt SHT31 Humidity\nExt SHT35 Temperature\nExt SHT35 Humidity\nBattery voltage\nNoise dBC\nNoise dBZ\nNoise FFT\nMPL Altitude\nMPL internal temperature\nGPS Fix Quality\nGPS Latitude\nGPS Longitude\nGPS Altitude\nGPS Speed\nGPS Horizontal Dilution of Position\nGPS Tracked Satellites\nADS1x15 ADC 0x48 Ch0\nADS1x15 ADC 0x48 Ch1\nADS1x15 ADC 0x48 Ch2\nADS1x15 ADC 0x48 Ch3\nADS1x15 ADC 0x49 Ch0\nADS1x15 ADC 0x49 Ch1\nADS1x15 ADC 0x49 Ch2\nADS1x15 ADC 0x49 Ch3\nADS1x15 ADC 0x4A Ch0\nADS1x15 ADC 0x4A Ch1\nADS1x15 ADC 0x4A Ch2\nADS1x15 ADC 0x4A Ch3\nADS1x15 ADC 0x4B Ch0\nADS1x15 ADC 0x4B Ch1\nADS1x15 ADC 0x4B Ch2\nADS1x15 ADC 0x4B Ch3\nSCD30 CO2\nSCD30 Temperature\nSCD30 Humidity\nSFA30 Temperature\nSFA30 Humidity\nSFA30 Formaldehyde\nExt PM_A 1.0\nExt PM_A 2.5\nExt PM_A 10.0\nExt PN_A 0.3\nExt PN_A 0.5\nExt PN_A 1.0\nExt PN_A 2.5\nExt PN_A 5.0\nExt PN_A 10.0\nExt PM_B 1.0\nExt PM_B 2.5\nExt PM_B 10.0\nExt PN_B 0.3\nExt PN_B 0.5\nExt PN_B 1.0\nExt PN_B 2.5\nExt PN_B 5.0\nExt PN_B 10.0\nEnabled\n----------\nTemperature -> every 1 int (60 sec)\nHumidity -> every 1 int (60 sec)\nBattery -> every 1 int (60 sec)\nSD card -> every 1 int (60 sec)\nWiFi RSSI -> every 3 int (180 sec)\nLight -> every 1 int (60 sec)\nNoise dBA -> every 1 int (60 sec)\nMPL Barometric pressure -> every 1 int (60 sec)\nCCS811 VOC Gas -> every 1 int (60 sec)\nCCS811 eCO2 Gas -> every 1 int (60 sec)\nPMS PM 1.0 -> every 5 int (300 sec)\nPMS PM 2.5 -> every 5 int (300 sec)\nPMS PM 10.0 -> every 5 int (300 sec)\nPMS PN 0.3 -> every 5 int (300 sec)\nPMS PN 0.5 -> every 5 int (300 sec)\nPMS PN 1.0 -> every 5 int (300 sec)\nPMS PN 2.5 -> every 5 int (300 sec)\nPMS PN 5.0 -> every 5 int (300 sec)\nPMS PN 10.0 -> every 5 int (300 sec)\nSCK > netinfo\nESP finished booting\nSCK > ERROR: Time not synced and wifi is not configured!!!",
+					"mode": "sdcard",
+					"connectionType": "USB",
+					"readingInterval": "1 min",
+					"intervalCode": "1",
+					"publishInterval": "3 min"
+				},
+				"connectionMode": "usb",
+				"displayName": "Smartcitizen Kit 2.1",
+				"intervalCode": 1,
+				"intervalSec": 60,
+				"pmEveryNIntervals": 5,
+				"pmIntervalSec": 300,
+				"measurementKeys": [
+					"temperature",
+					"humidity",
+					"light",
+					"noiseDBA",
+					"barometricPressure",
+					"pm1",
+					"pm25",
+					"pm10"
+				],
+				"collecting": true,
+				"usbMode": "sdcard",
+				"usbReadIntSec": 60,
+				"usbPubIntSec": 180,
+				"usbSensors": [
+					{
+						"id": "battery",
+						"enabled": true,
+						"intervalSec": 60,
+						"names": [
+							"Battery voltage",
+							"Battery -> every 1 int"
+						]
+					}
+				]
+			},
+			"STAURL": "https://citiobs.demo.secure-dimensions.de/staplustest/v1.1",
+			"x": 562,
+			"y": -268
 		}
 	],
 	"edges": [
@@ -101136,6 +101607,16 @@
 		{
 			"from": "87122.l64s3m",
 			"to": "2rlu8.vtqob1g",
+			"arrows": "from"
+		},
+		{
+			"from": "3d8e.8t95qhk",
+			"to": "2lhjf.nkhn7v",
+			"arrows": "from"
+		},
+		{
+			"from": "2lhjf.nkhn7v",
+			"to": "2ctgs.fhulqc",
 			"arrows": "from"
 		}
 	]

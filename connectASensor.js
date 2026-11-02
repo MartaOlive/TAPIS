@@ -326,7 +326,7 @@ var ConnectASensorObsProps = {
 	temperature: {
 		name: "Temperature",
 		description: "Air temperature",
-		definition: "http://www.opengis.net/def/property/OGC/0/Temperature",
+		definition: "https://qudt.org/vocab/quantitykind/Temperature",
 		UoM: "degree Celsius",
 		UoMSymbol: "°C",
 		UoMDefinition: "http://www.qudt.org/vocab/unit/DEG_C"
@@ -334,7 +334,7 @@ var ConnectASensorObsProps = {
 	humidity: {
 		name: "Humidity",
 		description: "Relative humidity",
-		definition: "http://www.opengis.net/def/property/OGC/0/RelativeHumidity",
+		definition: "https://qudt.org/vocab/quantitykind/RelativeHumidity",
 		UoM: "percent",
 		UoMSymbol: "%",
 		UoMDefinition: "http://www.qudt.org/vocab/unit/PERCENT"
@@ -342,7 +342,7 @@ var ConnectASensorObsProps = {
 	light: {
 		name: "Light",
 		description: "Ambient light",
-		definition: "http://www.opengis.net/def/property/OGC/0/Illuminance",
+		definition: "https://qudt.org/vocab/quantitykind/LuminousExposure",
 		UoM: "lux",
 		UoMSymbol: "lx",
 		UoMDefinition: "http://www.qudt.org/vocab/unit/LUX"
@@ -350,15 +350,15 @@ var ConnectASensorObsProps = {
 	noiseDBA: {
 		name: "Noise dBA",
 		description: "Ambient noise level",
-		definition: "http://www.opengis.net/def/property/OGC/0/SoundPressureLevel",
+		definition: "https://qudt.org/vocab/unit/DeciB_A",
 		UoM: "A-weighted decibel",
 		UoMSymbol: "dBA",
-		UoMDefinition: "http://www.qudt.org/vocab/unit/DecibelA"
+		UoMDefinition: "https://qudt.org/vocab/unit/DeciB_A"
 	},
 	barometricPressure: {
 		name: "Barometric pressure",
 		description: "Barometric pressure",
-		definition: "http://www.opengis.net/def/property/OGC/0/AtmosphericPressure",
+		definition: "https://qudt.org/vocab/quantitykind/AtmosphericPressure",
 		UoM: "pascal",
 		UoMSymbol: "Pa",
 		UoMDefinition: "http://www.qudt.org/vocab/unit/PA"
@@ -382,7 +382,7 @@ var ConnectASensorObsProps = {
 	pm1: {
 		name: "PM 1.0",
 		description: "Particulate matter PM1.0",
-		definition: "http://www.opengis.net/def/property/OGC/0/PM1",
+		definition: "https://www.iqair.com/newsroom/pm1",
 		UoM: "microgram per cubic metre",
 		UoMSymbol: "µg/m³",
 		UoMDefinition: "http://www.qudt.org/vocab/unit/MicroGM-PER-M3"
@@ -390,7 +390,7 @@ var ConnectASensorObsProps = {
 	pm25: {
 		name: "PM 2.5",
 		description: "Particulate matter PM2.5",
-		definition: "http://www.opengis.net/def/property/OGC/0/PM2.5",
+		definition: "https://www.eea.europa.eu/en/analysis/publications/air-quality-status-report-2026/particulate-matter-pm2.5",
 		UoM: "microgram per cubic metre",
 		UoMSymbol: "µg/m³",
 		UoMDefinition: "http://www.qudt.org/vocab/unit/MicroGM-PER-M3"
@@ -398,7 +398,7 @@ var ConnectASensorObsProps = {
 	pm10: {
 		name: "PM 10.0",
 		description: "Particulate matter PM10",
-		definition: "http://www.opengis.net/def/property/OGC/0/PM10",
+		definition: "https://www.iqair.com/newsroom/pm10",
 		UoM: "microgram per cubic metre",
 		UoMSymbol: "µg/m³",
 		UoMDefinition: "http://www.qudt.org/vocab/unit/MicroGM-PER-M3"
@@ -449,7 +449,7 @@ function startConnectASensorGeolocation() {
 
 function buildConnectASensorDataAttributes(data) {
 	var attrs = (typeof getDataAttributes === "function") ? getDataAttributes(data || []) : {};
-	var key, spec, hasLoc, di;
+	var key, spec;
 	attrs.timestamp = attrs.timestamp || {};
 	attrs.timestamp.type = "isodatetime";
 	attrs.timestamp.description = "Measurement timestamp";
@@ -457,19 +457,11 @@ function buildConnectASensorDataAttributes(data) {
 	attrs.sensor_id = attrs.sensor_id || {};
 	attrs.sensor_id.type = "string";
 	attrs.sensor_id.description = "Sensor / device identifier";
-	hasLoc = !!(attrs.location);
-	if (!hasLoc && data) {
-		for (di = 0; di < data.length; di++) {
-			if (data[di] && data[di].location)
-				{ hasLoc = true; break; }
-		}
-	}
-	if (hasLoc || lastCasGeoLocation) {
-		attrs.location = attrs.location || {};
-		attrs.location.type = "json";
-		attrs.location.description = "Device geolocation (GeoJSON Point)";
-		attrs.location.definition = "http://www.opengis.net/def/docs/15-078r6/Location/location";
-	}
+	/* Sempre exposar location (GeoJSON Point) perquè l'Entity Builder la pugui enllaçar */
+	attrs.location = attrs.location || {};
+	attrs.location.type = "json";
+	attrs.location.description = "Device geolocation (GeoJSON Point)";
+	attrs.location.definition = "http://www.opengis.net/def/docs/15-078r6/Location/location";
 	for (key in ConnectASensorObsProps) {
 		if (!Object.prototype.hasOwnProperty.call(ConnectASensorObsProps, key))
 			continue;

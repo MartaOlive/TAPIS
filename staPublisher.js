@@ -3406,7 +3406,7 @@ async function publishSTAEntityPackage(event) {
 	logEl = document.getElementById("DialogSTAPublisherLog");
 	if (logEl)
 		logEl.textContent = "";
-	spaSetStatus(DonaCadena({cat: "Publicantâ€¦", spa: "Publicandoâ€¦", eng: "Publishingâ€¦"}), false);
+	spaSetStatus(DonaCadena({cat: "Publicant", spa: "Publicando", eng: "Publishing"}), false);
 	try {
 		result = await spaRunPublishPipeline(node, { retryOnly: false });
 		spaAppendLog("Done. Observations: " + result.nOk + ", Relations: " + (result.nRelOk || 0) +

@@ -2395,6 +2395,17 @@
 	color: #444;
 }
 
+#DialogSTAEntityBuilder .sebCasShareBlock {
+	margin: 0 0 12px 0;
+}
+
+#DialogSTAEntityBuilder .sebCasShareLine {
+	display: block;
+	margin: 8px 0 6px 0;
+	font-weight: 600;
+	cursor: pointer;
+}
+
 #DialogSTAEntityBuilder .sebStatus.sebOk,
 #DialogSTAPublisher .spaStatus.spaOk {
 	color: #1a7f37;

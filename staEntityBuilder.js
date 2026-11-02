@@ -29,8 +29,11 @@
 var SEB_ORDER = ["Parties", "Licenses", "Things", "Locations", "HistoricalLocations", "Sensors", "ObservedProperties",
 	"FeaturesOfInterest", "Campaigns", "ObservationGroups", "Datastreams", "MultiDatastreams", "Cells", "Relations", "Observations"];
 var SEB_DEFAULT_SELECTED = ["Parties", "Things", "Sensors", "Licenses", "Locations", "FeaturesOfInterest", "ObservedProperties", "Datastreams", "Observations"];
-/* ConnectASensor: nested under each measurement column (Temperature, …). Leave CAS as this list. */
+/* ConnectASensor: nested under each measurement column (Temperature, …). Base list; Location/FoI may move to general via share flags. */
 var SEB_PER_MEAS = ["ObservedProperties", "Sensors", "FeaturesOfInterest", "Datastreams"];
+/* CAS defaults: Location shared (general); FoI per group until user ticks “mateixa FoI”. */
+var SEB_CAS_SHARE_LOCATION_DEFAULT = true;
+var SEB_CAS_SHARE_FOI_DEFAULT = false;
 var SEB_SCOPE_SHARED = "shared";
 var SEB_SCOPE_GROUP = "perGroup";
 /*
@@ -410,12 +413,34 @@ function sebEnsureScope(cfg) {
 	sebRefreshRelationIdColumns(cfg);
 }
 
+/* CAS: which entities sit under each measurement group (respects share Location / FoI flags). */
+function sebEnsureCasShareFlags(cfg) {
+	if (!cfg || cfg.mode !== "connectASensor")
+		return;
+	if (cfg.shareLocationAcrossGroups === undefined || cfg.shareLocationAcrossGroups === null)
+		cfg.shareLocationAcrossGroups = SEB_CAS_SHARE_LOCATION_DEFAULT;
+	if (cfg.shareFoiAcrossGroups === undefined || cfg.shareFoiAcrossGroups === null)
+		cfg.shareFoiAcrossGroups = SEB_CAS_SHARE_FOI_DEFAULT;
+}
+
+function sebCasPerMeasList(cfg) {
+	var out;
+	sebEnsureCasShareFlags(cfg);
+	out = ["ObservedProperties", "Sensors"];
+	if (!(cfg && cfg.shareFoiAcrossGroups))
+		out.push("FeaturesOfInterest");
+	if (!(cfg && cfg.shareLocationAcrossGroups))
+		out.push("Locations");
+	out.push("Datastreams");
+	return out;
+}
+
 function sebIsPerGroup(cfg, plural) {
 	var i, m;
 	if (!cfg || !plural)
 		return false;
 	if (cfg.mode === "connectASensor")
-		return SEB_PER_MEAS.indexOf(plural) !== -1;
+		return sebCasPerMeasList(cfg).indexOf(plural) !== -1;
 	/* Free mode: per-group if any included group has that entity checkbox on */
 	for (i = 0; i < (cfg.measurements || []).length; i++) {
 		m = cfg.measurements[i];
@@ -549,13 +574,13 @@ function sebSyncGeneralGroupExclusivity(cfg) {
 	}
 }
 
-/* CAS: fixed SEB_PER_MEAS. Free: union of checked entities across included groups. */
+/* CAS: sebCasPerMeasList (share flags). Free: union of checked entities across included groups. */
 function sebPerGroupList(cfg) {
 	var out = [], seen = {}, i, j, m, list, p;
 	if (!cfg)
 		return out;
 	if (cfg.mode === "connectASensor")
-		return SEB_PER_MEAS.slice();
+		return sebCasPerMeasList(cfg);
 	for (i = 0; i < (cfg.measurements || []).length; i++) {
 		m = cfg.measurements[i];
 		if (!m.include)
@@ -1051,12 +1076,10 @@ function sebEntityDefaults(plural, ctx) {
 }
 
 function sebEntityColumnDefaults(plural, ctx) {
-	if (ctx && ctx.isCas) {
-		if (plural === "Locations")
-			return { location: "location" };
-		if (plural === "FeaturesOfInterest")
-			return { feature: "location" };
-	}
+	/*
+		CAS geo: no forçar column aquí — sebApplyCasGeoColumnToConfig omple
+		location/feature amb el GeoJSON a l'input (manual) o columna si encara no n'hi ha.
+	*/
 	if (plural !== "Observations")
 		return {};
 	var d = { phenomenonTime: ctx.timeCol, resultTime: ctx.timeCol };
@@ -1184,9 +1207,116 @@ function sebApplyColumnMapToEntity(ent, plural, slot, mode, onlyEmpty) {
 	}
 }
 
+/*
+	ConnectASensor: columna "location" (GeoJSON Point) → Locations.location i
+	FeaturesOfInterest.feature (mateix format STA).
+*/
+function sebParentHasLocationColumn(parent, sources) {
+	var cols, data, attrs, i;
+	cols = (sources && sources.cols && sources.cols.length) ? sources.cols :
+		sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
+	if (cols && cols.indexOf("location") !== -1)
+		return true;
+	attrs = parent && parent.STAdataAttributes;
+	if (attrs && attrs.location)
+		return true;
+	data = parent && parent.STAdata;
+	if (data) {
+		for (i = 0; i < data.length; i++) {
+			if (data[i] && data[i].location)
+				return true;
+		}
+	}
+	return false;
+}
+
+/* Últim GeoJSON Point no buit de la columna location del sensor */
+function sebSampleLocationFromParent(parent) {
+	var data, i, s;
+	data = parent && parent.STAdata;
+	if ((!data || !data.length) && typeof sebCtx !== "undefined" && sebCtx && sebCtx.data)
+		data = sebCtx.data;
+	if (!data || !data.length)
+		return "";
+	for (i = data.length - 1; i >= 0; i--) {
+		if (!data[i] || data[i].location == null || data[i].location === "")
+			continue;
+		s = sebPropValueFromRecord("location", data[i]);
+		if (s)
+			return s;
+	}
+	return "";
+}
+
+/*
+	Omple Locations.location / FoI.feature:
+	- Si hi ha un Point a les dades del sensor → manual amb el GeoJSON (es veu a l'input)
+	- Si no → columna "location" (per quan arribin lectures)
+*/
+function sebBindEntityGeoFromLocationColumn(ent, plural, onlyEmpty, parent) {
+	var geoName = sebGeoPropName(plural);
+	var sample, cur;
+	if (!ent || !geoName)
+		return;
+	if (!ent.props)
+		ent.props = {};
+	cur = ent.props[geoName];
+	sample = sebSampleLocationFromParent(parent);
+	/* Respectar un manual ja editat; actualitzar si era column→location o buit */
+	if (onlyEmpty && sebSrcIsMeaningfullySet(cur)) {
+		if (!(cur.source === "column" && cur.column === "location" && sample))
+			return;
+	}
+	if (sample)
+		ent.props[geoName] = sebSrcObj("manual", sample, "");
+	else
+		ent.props[geoName] = sebSrcObj("column", "", "location");
+}
+
+function sebApplyCasGeoColumnToConfig(cfg, parent, sources, onlyEmpty) {
+	var i, m;
+	function ensureGeoEncoding(ent) {
+		if (!ent || !ent.props)
+			return;
+		if (!sebSrcIsMeaningfullySet(ent.props.encodingType))
+			ent.props.encodingType = sebSrcObj("manual", "application/geo+json", "");
+	}
+	if (!cfg || cfg.mode !== "connectASensor")
+		return;
+	if (!sebParentHasLocationColumn(parent, sources))
+		return;
+	cfg.selected.Locations = true;
+	cfg.selected.FeaturesOfInterest = true;
+	if (cfg.entities && cfg.entities.Locations)
+		sebBindEntityGeoFromLocationColumn(cfg.entities.Locations, "Locations", onlyEmpty, parent);
+	if (cfg.entities && cfg.entities.FeaturesOfInterest)
+		sebBindEntityGeoFromLocationColumn(cfg.entities.FeaturesOfInterest, "FeaturesOfInterest", onlyEmpty, parent);
+	for (i = 0; i < (cfg.measurements || []).length; i++) {
+		m = cfg.measurements[i];
+		if (!m)
+			continue;
+		if (m.Locations)
+			sebBindEntityGeoFromLocationColumn(m.Locations, "Locations", onlyEmpty, parent);
+		if (m.FeaturesOfInterest)
+			sebBindEntityGeoFromLocationColumn(m.FeaturesOfInterest, "FeaturesOfInterest", onlyEmpty, parent);
+	}
+	/* encodingType geo+json quan enllacem geometria des de columna */
+	if (cfg.entities) {
+		ensureGeoEncoding(cfg.entities.Locations);
+		ensureGeoEncoding(cfg.entities.FeaturesOfInterest);
+	}
+	for (i = 0; i < (cfg.measurements || []).length; i++) {
+		m = cfg.measurements[i];
+		if (!m)
+			continue;
+		ensureGeoEncoding(m.Locations);
+		ensureGeoEncoding(m.FeaturesOfInterest);
+	}
+}
+
 /* Auto-wire parent attribute definitions → entity property column sources */
 function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty, sources) {
-	var maps, plural, slot, i, m;
+	var maps, plural, slot, i, m, locCol;
 	if (!cfg)
 		return;
 	if (sources)
@@ -1195,6 +1325,27 @@ function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty, sources) {
 		maps = sebColumnMapsFromParentAttributes(parent);
 	else
 		return;
+	/*
+		CAS: la mateixa columna location alimenta Locations.location i
+		FeaturesOfInterest.feature (definició STA només apunta a Location/location).
+	*/
+	if (cfg.mode === "connectASensor") {
+		locCol = null;
+		if (maps.Locations && maps.Locations.props && maps.Locations.props.location)
+			locCol = maps.Locations.props.location;
+		else if (sebParentHasLocationColumn(parent, sources))
+			locCol = "location";
+		if (locCol) {
+			if (!maps.Locations)
+				maps.Locations = { props: {}, idColumn: null };
+			if (!maps.Locations.props.location)
+				maps.Locations.props.location = locCol;
+			if (!maps.FeaturesOfInterest)
+				maps.FeaturesOfInterest = { props: {}, idColumn: null };
+			if (!maps.FeaturesOfInterest.props.feature)
+				maps.FeaturesOfInterest.props.feature = locCol;
+		}
+	}
 	for (plural in maps) {
 		if (!Object.prototype.hasOwnProperty.call(maps, plural))
 			continue;
@@ -1210,6 +1361,8 @@ function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty, sources) {
 			sebApplyColumnMapToEntity(cfg.entities[plural], plural, slot, cfg.mode, onlyEmpty);
 		}
 	}
+	if (cfg.mode === "connectASensor")
+		sebApplyCasGeoColumnToConfig(cfg, parent, sources, onlyEmpty);
 }
 
 /* —— Auto-load from super-table column names: Entity.property | Group.Entity.property —— */
@@ -1521,6 +1674,34 @@ function sebApplySuperColumnsToConfig(cfg, parent, sources, onlyEmpty) {
 	return true;
 }
 
+function sebObsPropDefinitionForKey(key, attr) {
+	var spec = (typeof ConnectASensorObsProps !== "undefined" && ConnectASensorObsProps[key]) || null;
+	if (spec && spec.definition)
+		return spec.definition;
+	return (attr && attr.definition) || "";
+}
+
+/* Força ObservedProperties.definition des del catàleg CAS (corregeix configs amb URLs OGC antigues). */
+function sebRefreshCasObservedPropertyDefinitions(cfg) {
+	var i, m, def, ent;
+	if (!cfg || cfg.mode !== "connectASensor" || !cfg.measurements)
+		return;
+	for (i = 0; i < cfg.measurements.length; i++) {
+		m = cfg.measurements[i];
+		if (!m || !m.key)
+			continue;
+		def = sebObsPropDefinitionForKey(m.key, null);
+		if (!def)
+			continue;
+		ent = m.ObservedProperties;
+		if (!ent)
+			continue;
+		if (!ent.props)
+			ent.props = {};
+		ent.props.definition = sebSrcObj("manual", def, "");
+	}
+}
+
 function sebNewMeasurement(key, parent, ctx, perGroup) {
 	var attrs = (parent && parent.STAdataAttributes) || {};
 	var realKey = sebIsRealDataColumn(key, parent) ? key : "";
@@ -1528,6 +1709,7 @@ function sebNewMeasurement(key, parent, ctx, perGroup) {
 	var spec = (typeof ConnectASensorObsProps !== "undefined" && ConnectASensorObsProps[key]) || {};
 	var obsName = attr.description || spec.name || (realKey || key);
 	var desc = attr.description || spec.description || (realKey || key);
+	var opDef = sebObsPropDefinitionForKey(key, attr);
 	var sensorDefaults = sebEntityDefaults("Sensors", ctx);
 	var obsColDefaults;
 	var m = {
@@ -1543,7 +1725,7 @@ function sebNewMeasurement(key, parent, ctx, perGroup) {
 			m.ObservedProperties = sebNewEntity("ObservedProperties", ctx.mode, {
 				name: obsName,
 				description: desc,
-				definition: attr.definition || spec.definition || ""
+				definition: opDef
 			});
 		} else if (plural === "Sensors") {
 			m.Sensors = sebNewEntity("Sensors", ctx.mode, {
@@ -1565,13 +1747,14 @@ function sebNewMeasurement(key, parent, ctx, perGroup) {
 				"unitOfMeasurement.definition": attr.UoMDefinition || spec.UoMDefinition || ""
 			});
 		} else {
-			m[plural] = sebNewEntity(plural, ctx.mode, sebEntityDefaults(plural, ctx));
+			m[plural] = sebNewEntity(plural, ctx.mode,
+				sebEntityDefaults(plural, ctx), sebEntityColumnDefaults(plural, ctx));
 		}
 	});
-	/* Always seed OP/DS/Sensors/FoI for CAS + free defaults */
+	/* Always seed OP/DS/Sensors (+ FoI/Locations only if in this group's entity list) */
 	if (!m.ObservedProperties) {
 		m.ObservedProperties = sebNewEntity("ObservedProperties", ctx.mode, {
-			name: obsName, description: desc, definition: attr.definition || spec.definition || ""
+			name: obsName, description: desc, definition: opDef
 		});
 	}
 	if (!m.Sensors) {
@@ -1582,9 +1765,13 @@ function sebNewMeasurement(key, parent, ctx, perGroup) {
 			metadata: sensorDefaults.metadata || ""
 		});
 	}
-	if (!m.FeaturesOfInterest) {
+	if (group.indexOf("FeaturesOfInterest") !== -1 && !m.FeaturesOfInterest) {
 		m.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", ctx.mode,
 			sebEntityDefaults("FeaturesOfInterest", ctx), sebEntityColumnDefaults("FeaturesOfInterest", ctx));
+	}
+	if (group.indexOf("Locations") !== -1 && !m.Locations) {
+		m.Locations = sebNewEntity("Locations", ctx.mode,
+			sebEntityDefaults("Locations", ctx), sebEntityColumnDefaults("Locations", ctx));
 	}
 	if (!m.Datastreams) {
 		m.Datastreams = sebNewEntity("Datastreams", ctx.mode, {
@@ -1612,13 +1799,110 @@ function sebCloneEntityCfg(ent) {
 	return JSON.parse(JSON.stringify(ent));
 }
 
+/*
+	CAS share flags: move Locations / FeaturesOfInterest between general (cfg.entities)
+	and per-measurement groups. Checked → general + strip from groups.
+*/
+function sebApplyCasSharedEntities(cfg, parent) {
+	var ctx, i, m, sample, sharedLoc, sharedFoi;
+	if (!cfg || cfg.mode !== "connectASensor")
+		return;
+	sebEnsureCasShareFlags(cfg);
+	if (!cfg.entities)
+		cfg.entities = {};
+	if (!cfg.selected)
+		cfg.selected = {};
+	ctx = sebMeasCtxFromParent(cfg, parent);
+
+	/* —— Locations —— */
+	if (cfg.shareLocationAcrossGroups) {
+		cfg.selected.Locations = true;
+		if (!cfg.entities.Locations || !sebEntityHasAnyValue(cfg.entities.Locations)) {
+			sample = null;
+			for (i = 0; i < (cfg.measurements || []).length; i++) {
+				if (cfg.measurements[i] && cfg.measurements[i].Locations) {
+					sample = cfg.measurements[i].Locations;
+					break;
+				}
+			}
+			cfg.entities.Locations = sample
+				? sebCloneEntityCfg(sample)
+				: sebNewEntity("Locations", cfg.mode, sebEntityDefaults("Locations", ctx),
+					sebEntityColumnDefaults("Locations", ctx));
+		}
+		for (i = 0; i < (cfg.measurements || []).length; i++) {
+			m = cfg.measurements[i];
+			if (m)
+				delete m.Locations;
+		}
+	} else {
+		sharedLoc = cfg.entities.Locations;
+		for (i = 0; i < (cfg.measurements || []).length; i++) {
+			m = cfg.measurements[i];
+			if (!m)
+				continue;
+			if (!m.Locations) {
+				m.Locations = sharedLoc && i === 0
+					? sebCloneEntityCfg(sharedLoc)
+					: (sharedLoc
+						? sebCloneEntityCfg(sharedLoc)
+						: sebNewEntity("Locations", cfg.mode, sebEntityDefaults("Locations", ctx),
+							sebEntityColumnDefaults("Locations", ctx)));
+			}
+		}
+	}
+
+	/* —— FeaturesOfInterest —— */
+	if (cfg.shareFoiAcrossGroups) {
+		cfg.selected.FeaturesOfInterest = true;
+		if (!cfg.entities.FeaturesOfInterest || !sebEntityHasAnyValue(cfg.entities.FeaturesOfInterest)) {
+			sample = null;
+			for (i = 0; i < (cfg.measurements || []).length; i++) {
+				if (cfg.measurements[i] && cfg.measurements[i].FeaturesOfInterest) {
+					sample = cfg.measurements[i].FeaturesOfInterest;
+					break;
+				}
+			}
+			cfg.entities.FeaturesOfInterest = sample
+				? sebCloneEntityCfg(sample)
+				: sebNewEntity("FeaturesOfInterest", cfg.mode,
+					sebEntityDefaults("FeaturesOfInterest", ctx),
+					sebEntityColumnDefaults("FeaturesOfInterest", ctx));
+		}
+		for (i = 0; i < (cfg.measurements || []).length; i++) {
+			m = cfg.measurements[i];
+			if (m)
+				delete m.FeaturesOfInterest;
+		}
+	} else {
+		sharedFoi = cfg.entities.FeaturesOfInterest;
+		for (i = 0; i < (cfg.measurements || []).length; i++) {
+			m = cfg.measurements[i];
+			if (!m)
+				continue;
+			if (!m.FeaturesOfInterest) {
+				m.FeaturesOfInterest = sharedFoi
+					? sebCloneEntityCfg(sharedFoi)
+					: sebNewEntity("FeaturesOfInterest", cfg.mode,
+						sebEntityDefaults("FeaturesOfInterest", ctx),
+						sebEntityColumnDefaults("FeaturesOfInterest", ctx));
+			}
+		}
+	}
+
+	if (parent)
+		sebApplyCasGeoColumnToConfig(cfg, parent, null, true);
+}
+
 /* Ensure per-group entity slots exist on each measurement; keep shared copies on cfg.entities. */
 function sebEnsureMeasurementEntities(cfg, parent, sources) {
-	var ctx, sharedSensor, sharedFoi, i, m, perGroup, plural, neu, probe;
+	var ctx, sharedSensor, sharedFoi, sharedLoc, i, m, perGroup, plural, neu, probe;
 	if (!cfg || !cfg.measurements)
 		return;
 	probe = sources || parent;
 	sebEnsureScope(cfg);
+	if (cfg.mode === "connectASensor")
+		sebEnsureCasShareFlags(cfg);
 	ctx = {
 		mode: cfg.mode,
 		isCas: cfg.mode === "connectASensor",
@@ -1635,6 +1919,7 @@ function sebEnsureMeasurementEntities(cfg, parent, sources) {
 		cfg.entities = {};
 	sharedSensor = cfg.entities.Sensors;
 	sharedFoi = cfg.entities.FeaturesOfInterest;
+	sharedLoc = cfg.entities.Locations;
 	/* Promote first per-measurement FoI into the shared entity if shared is empty */
 	if (!sharedFoi || !sebEntityHasAnyValue(sharedFoi)) {
 		for (i = 0; i < cfg.measurements.length; i++) {
@@ -1648,22 +1933,26 @@ function sebEnsureMeasurementEntities(cfg, parent, sources) {
 	if (!cfg.entities.FeaturesOfInterest) {
 		cfg.entities.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", cfg.mode,
 			sebEntityDefaults("FeaturesOfInterest", ctx), sebEntityColumnDefaults("FeaturesOfInterest", ctx));
+		sharedFoi = cfg.entities.FeaturesOfInterest;
 	}
 	cfg.measurements.forEach(function (meas, idx) {
 		m = meas;
 		if (cfg.mode !== "connectASensor")
 			sebEnsureGroupSelected(m);
-		perGroup = cfg.mode === "connectASensor" ? SEB_PER_MEAS.slice() : sebGroupSelectedList(m);
+		perGroup = cfg.mode === "connectASensor" ? sebCasPerMeasList(cfg) : sebGroupSelectedList(m);
 		if (!m.ObservedProperties || !m.Datastreams) {
 			neu = sebNewMeasurement(m.key, parent, ctx, perGroup);
 			m.ObservedProperties = m.ObservedProperties || neu.ObservedProperties;
 			m.Datastreams = m.Datastreams || neu.Datastreams;
 			m.Sensors = m.Sensors || neu.Sensors;
-			m.FeaturesOfInterest = m.FeaturesOfInterest || neu.FeaturesOfInterest;
+			if (perGroup.indexOf("FeaturesOfInterest") !== -1)
+				m.FeaturesOfInterest = m.FeaturesOfInterest || neu.FeaturesOfInterest;
+			if (perGroup.indexOf("Locations") !== -1)
+				m.Locations = m.Locations || neu.Locations;
 		}
 		if (!m.Sensors)
 			m.Sensors = idx === 0 && sharedSensor ? sebCloneEntityCfg(sharedSensor) : sebNewEntity("Sensors", cfg.mode, sebEntityDefaults("Sensors", ctx));
-		if (!m.FeaturesOfInterest) {
+		if (perGroup.indexOf("FeaturesOfInterest") !== -1 && !m.FeaturesOfInterest) {
 			m.FeaturesOfInterest = idx === 0 && sharedFoi
 				? sebCloneEntityCfg(sharedFoi)
 				: sebNewEntity("FeaturesOfInterest", cfg.mode,
@@ -1680,8 +1969,10 @@ function sebEnsureMeasurementEntities(cfg, parent, sources) {
 			if (!m[plural]) {
 				if (plural === "Sensors" && idx === 0 && sharedSensor)
 					m[plural] = sebCloneEntityCfg(sharedSensor);
-				else if (plural === "FeaturesOfInterest" && idx === 0 && sharedFoi)
+				else if (plural === "FeaturesOfInterest" && sharedFoi)
 					m[plural] = sebCloneEntityCfg(sharedFoi);
+				else if (plural === "Locations" && sharedLoc)
+					m[plural] = sebCloneEntityCfg(sharedLoc);
 				else if (plural === "Observations") {
 					neu = { phenomenonTime: "", resultTime: "" };
 					if (m.resultColumn && sebIsRealDataColumn(m.resultColumn, probe))
@@ -1690,11 +1981,14 @@ function sebEnsureMeasurementEntities(cfg, parent, sources) {
 				} else if (cfg.entities[plural] && idx === 0)
 					m[plural] = sebCloneEntityCfg(cfg.entities[plural]);
 				else
-					m[plural] = sebNewEntity(plural, cfg.mode, sebEntityDefaults(plural, ctx));
+					m[plural] = sebNewEntity(plural, cfg.mode,
+						sebEntityDefaults(plural, ctx), sebEntityColumnDefaults(plural, ctx));
 			}
 		}
 		sebSyncGroupResultColumn(m, probe);
 	});
+	if (cfg.mode === "connectASensor")
+		sebApplyCasSharedEntities(cfg, parent);
 }
 
 function sebEntityHasAnyValue(ent) {
@@ -1809,6 +2103,10 @@ function sebDefaultConfig(parent, mode, node) {
 		relationStub: sebNewRelationStub(),
 		nesting: sebNewNesting()
 	};
+	if (isCas) {
+		cfg.shareLocationAcrossGroups = SEB_CAS_SHARE_LOCATION_DEFAULT;
+		cfg.shareFoiAcrossGroups = SEB_CAS_SHARE_FOI_DEFAULT;
+	}
 	cands = node ? sebCandidatesFromAllParents(node) : sebCandidatesFromParent(parent);
 	perGroup = sebPerGroupList(cfg);
 
@@ -1828,11 +2126,14 @@ function sebDefaultConfig(parent, mode, node) {
 		sebMeasurementKeysFromParent(parent).forEach(function (key) {
 			cfg.measurements.push(sebNewMeasurement(key, parent, ctx, perGroup));
 		});
+		sebApplyCasSharedEntities(cfg, parent);
 	}
 	/* Columns whose STAdataAttributes.definition is .../Entity/property → bind as column source */
 	sebApplyAttributeDefinitionsToConfig(cfg, parent, false, sources);
 	/* Super-table column names Entity.property / Group.Entity.property → bind + create groups */
 	sebApplySuperColumnsToConfig(cfg, parent, sources, false);
+	if (isCas)
+		sebApplyCasGeoColumnToConfig(cfg, parent, sources, false);
 	return cfg;
 }
 
@@ -2022,6 +2323,13 @@ function sebEnsureConfig(node, force) {
 			sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
 		if (sebHasSuperColumns(cols))
 			sebApplySuperColumnsToConfig(node.staEntityConfig, parent, sources, true);
+		/* CAS: share flags + geo + OP definitions */
+		if (node.staEntityConfig.mode === "connectASensor") {
+			sebEnsureCasShareFlags(node.staEntityConfig);
+			sebApplyCasSharedEntities(node.staEntityConfig, parent);
+			sebApplyCasGeoColumnToConfig(node.staEntityConfig, parent, sources, true);
+			sebRefreshCasObservedPropertyDefinitions(node.staEntityConfig);
+		}
 		return node.staEntityConfig;
 	}
 	/* Prefer free mode when parent is already a super-table */
@@ -2157,11 +2465,20 @@ function sebSourceSelectHtml(source, disabled, onchange) {
 
 function sebPropRowHtml(p, src, cols, locked) {
 	var isCol = src.source === "column";
+	var isGeo = p.name === "location" || p.name === "feature";
+	var val = src && src.value != null ? String(src.value) : "";
+	var hideVal, hideCol;
+	/* Geo: mostra el Point a l'input; si ve de columna location, omple previsualització */
+	if (isGeo && !val && isCol && (src.column === "location" || src.column === "feature"))
+		val = sebSampleLocationFromParent(typeof sebCtx !== "undefined" && sebCtx ? sebCtx.primary : null);
+	hideVal = isCol && !isGeo;
+	hideCol = !isCol;
 	return "<div class=\"sebRow\" data-prop=\"" + sebEsc(p.name) + "\">" +
 		"<span class=\"sebLbl" + (p.required ? " sebRequired" : "") + "\">" + sebEsc(p.name) + (p.required ? "*" : "") + "</span>" +
 		sebSourceSelectHtml(src.source, locked, "sebOnSrcChange(this)") +
-		"<input type=\"text\" class=\"sebVal\" value=\"" + sebEsc(src.value) + "\"" + (locked ? " readonly" : "") + (isCol ? " hidden" : "") + ">" +
-		"<select class=\"sebCol\"" + (locked ? " disabled" : "") + (isCol ? "" : " hidden") + ">" +
+		"<input type=\"text\" class=\"sebVal\" value=\"" + sebEsc(val) + "\"" +
+		(locked || (isCol && isGeo) ? " readonly" : "") + (hideVal ? " hidden" : "") + ">" +
+		"<select class=\"sebCol\"" + (locked ? " disabled" : "") + (hideCol ? " hidden" : "") + ">" +
 		sebColumnOptionsHtml(cols, src.column) + "</select></div>";
 }
 
@@ -2574,7 +2891,9 @@ function renderSTAEntityBuilderForm(node) {
 	if (!isCas)
 		sebRefreshRelationIdColumns(cfg);
 	rows = parent && parent.STAdata ? parent.STAdata.length : 0;
-	SEB_PER_MEAS.forEach(function (p) { perMeasSet[p] = true; });
+	if (isCas)
+		sebEnsureCasShareFlags(cfg);
+	(isCas ? sebCasPerMeasList(cfg) : SEB_PER_MEAS).forEach(function (p) { perMeasSet[p] = true; });
 
 	/* —— Mode —— */
 	html.push("<div class=\"sebModeRow\"><label>",
@@ -2618,6 +2937,9 @@ function renderSTAEntityBuilderForm(node) {
 		order.forEach(function (plural) {
 			if (perMeasSet[plural])
 				return;
+			/* Locations / FoI: seccions pròpies de compartició (sota Observations), no aquí */
+			if (plural === "Locations" || plural === "FeaturesOfInterest")
+				return;
 			html.push("<fieldset class=\"sebSection\" data-section=\"", plural, "\" hidden><legend>", plural,
 				" <small class=\"sebReqNote\" hidden>",
 				DonaCadena({cat: "(requerit per altres entitats)", spa: "(requerido por otras entidades)", eng: "(required by other entities)"}),
@@ -2635,6 +2957,11 @@ function renderSTAEntityBuilderForm(node) {
 				html.push(sebEntityBlockHtml(plural, cfg.entities[plural], null, cols, sebCtx.cands[plural], cfg.mode, false));
 			}
 			html.push("</fieldset>");
+			/* Just després d'Observations: panells Loc / FoI (com entitats; es despleguen si són comunes) */
+			if (plural === "Observations") {
+				html.push(sebCasShareEntitySectionHtml("Locations", cfg, cols));
+				html.push(sebCasShareEntitySectionHtml("FeaturesOfInterest", cfg, cols));
+			}
 		});
 
 		(cfg.measurements || []).forEach(function (m) {
@@ -2642,7 +2969,7 @@ function renderSTAEntityBuilderForm(node) {
 				"\" data-meas=\"", sebEsc(m.key), "\" hidden><legend>", sebEsc(sebMeasLabel(m)),
 				" <code>", sebEsc(m.key), "</code></legend>");
 			html.push("<div class=\"sebGroupEnts\">");
-			SEB_PER_MEAS.forEach(function (plural) {
+			sebCasPerMeasList(cfg).forEach(function (plural) {
 				if (!m[plural])
 					return;
 				/* Same fieldset+legend look as shared entities / free-mode groups */
@@ -2861,10 +3188,15 @@ function sebRefreshVisibility() {
 	sel = sebReadSelectedFromForm();
 	eff = sebEffectiveSet(sel);
 	if (isCas) {
-		SEB_PER_MEAS.forEach(function (pl) {
-			if (eff[pl])
-				perMeasNeeded = true;
-		});
+		(function () {
+			var node = getSTAEntityBuilderNodeSafe();
+			var cfgVis = node && node.staEntityConfig ? node.staEntityConfig : null;
+			var casList = cfgVis && cfgVis.mode === "connectASensor" ? sebCasPerMeasList(cfgVis) : SEB_PER_MEAS;
+			casList.forEach(function (pl) {
+				if (eff[pl])
+					perMeasNeeded = true;
+			});
+		})();
 	}
 	secs = el.querySelectorAll(".sebSection");
 	for (i = 0; i < secs.length; i++) {
@@ -2894,6 +3226,13 @@ function sebRefreshVisibility() {
 		if (note)
 			note.hidden = !(eff[p] && !sel[p]);
 	}
+	/* CAS: blocs checkbox Loc/FoI sota Observations */
+	(function () {
+		var blocks = el.querySelectorAll(".sebCasShareBlock");
+		var bi, showShare = !!eff.Observations;
+		for (bi = 0; bi < blocks.length; bi++)
+			blocks[bi].hidden = !showShare;
+	})();
 	mincs = el.querySelectorAll(".sebMeasInc");
 	for (i = 0; i < mincs.length; i++)
 		measChecked[mincs[i].getAttribute("data-meas")] = mincs[i].checked;
@@ -3020,6 +3359,70 @@ function sebOnIncludeChange() {
 			sebSyncGeneralGroupExclusivity(cfg);
 	}
 	sebScheduleAutoSave();
+}
+
+/*
+	CAS: sota Observations —
+	1) línia del checkbox de compartició
+	2) fieldset d'entitat (legend = Locations / FeaturesOfInterest) només si és comú
+*/
+function sebCasShareEntitySectionHtml(plural, cfg, cols) {
+	var shared, cbId, label, ent, html;
+	sebEnsureCasShareFlags(cfg);
+	shared = plural === "Locations" ? !!cfg.shareLocationAcrossGroups : !!cfg.shareFoiAcrossGroups;
+	cbId = plural === "Locations" ? "sebShareLocation" : "sebShareFoi";
+	label = plural === "Locations"
+		? DonaCadena({
+			cat: "Utilitzar la mateixa Location per a tots els grups",
+			spa: "Usar la misma Location para todos los grupos",
+			eng: "Use the same Location for all groups"
+		})
+		: DonaCadena({
+			cat: "Utilitzar la mateixa FeatureOfInterest per a tots els grups",
+			spa: "Usar la misma FeatureOfInterest para todos los grupos",
+			eng: "Use the same FeatureOfInterest for all groups"
+		});
+	ent = cfg.entities && cfg.entities[plural];
+	if (shared && !ent) {
+		ent = sebNewEntity(plural, cfg.mode, sebEntityDefaults(plural, { mode: cfg.mode, isCas: true }),
+			sebEntityColumnDefaults(plural, { mode: cfg.mode, isCas: true }));
+		cfg.entities[plural] = ent;
+	}
+	html = "<div class=\"sebCasShareBlock\" data-cas-share=\"" + plural + "\">" +
+		"<label class=\"sebCasShareLine\"><input type=\"checkbox\" id=\"" + cbId +
+		"\" onchange=\"sebOnCasShareChange()\"" + (shared ? " checked" : "") + "> " +
+		sebEsc(label) + "</label>";
+	if (shared && ent) {
+		html += "<fieldset class=\"sebSection\" data-section=\"" + plural + "\">" +
+			"<legend>" + sebEsc(plural) + "</legend>" +
+			sebEntityBlockHtml(plural, ent, null, cols,
+				(typeof sebCtx !== "undefined" && sebCtx && sebCtx.cands) ? sebCtx.cands[plural] : null,
+				cfg.mode, false) +
+			"</fieldset>";
+	}
+	html += "</div>";
+	return html;
+}
+
+function sebOnCasShareChange() {
+	var node = getSTAEntityBuilderNodeSafe();
+	var cfg, parent, locEl, foiEl;
+	if (!node)
+		return;
+	cfg = sebCollectConfigFromForm(node);
+	parent = getSTAEntityBuilderParent(node);
+	locEl = document.getElementById("sebShareLocation");
+	foiEl = document.getElementById("sebShareFoi");
+	if (locEl)
+		cfg.shareLocationAcrossGroups = !!locEl.checked;
+	if (foiEl)
+		cfg.shareFoiAcrossGroups = !!foiEl.checked;
+	sebApplyCasSharedEntities(cfg, parent);
+	sebEnsureMeasurementEntities(cfg, parent);
+	node.staEntityConfig = cfg;
+	if (typeof networkNodes !== "undefined")
+		networkNodes.update(node);
+	renderSTAEntityBuilderForm(node);
 }
 
 function sebScheduleAutoSave() {
@@ -3410,6 +3813,14 @@ function sebCollectConfigFromForm(node) {
 		sel = sebReadSelectedFromForm();
 		for (k in sel)
 			cfg.selected[k] = sel[k];
+		/* CAS: share Location / FoI across measurement groups */
+		if (cfg.mode === "connectASensor") {
+			sebEnsureCasShareFlags(cfg);
+			if (el.querySelector("#sebShareLocation"))
+				cfg.shareLocationAcrossGroups = !!el.querySelector("#sebShareLocation").checked;
+			if (el.querySelector("#sebShareFoi"))
+				cfg.shareFoiAcrossGroups = !!el.querySelector("#sebShareFoi").checked;
+		}
 		/* Group include + labels + result columns + per-group entity checkboxes */
 		mincs = el.querySelectorAll(".sebMeasInc");
 		for (i = 0; i < mincs.length; i++) {
@@ -3564,7 +3975,7 @@ function sebValidateConfig(cfg, parent) {
 			return; /* stub — no full entity validation yet */
 		if (isCas && plural === "Observations")
 			return; /* CAS: derived from sensor measurements */
-		if (isCas && SEB_PER_MEAS.indexOf(plural) !== -1) {
+		if (isCas && sebCasPerMeasList(cfg).indexOf(plural) !== -1) {
 			included.forEach(function (m) {
 				sebValidateEntity(plural, m[plural], plural + " (" + (m.label || m.key) + ")", cfg.mode, errors);
 			});
@@ -3769,7 +4180,7 @@ function sebBuildPackage(cfg, parent, staUrl) {
 			pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
 			return;
 		}
-		if (isCas && SEB_PER_MEAS.indexOf(plural) !== -1 && useGroups) {
+		if (isCas && sebCasPerMeasList(cfg).indexOf(plural) !== -1 && useGroups) {
 			pkg.entities[plural] = included.map(function (gm) {
 				return sebPackEntity(plural, gm[plural], cfg.mode, plural + ":" + gm.key, gm.key);
 			});
@@ -3881,7 +4292,7 @@ function sebBuildPackage(cfg, parent, staUrl) {
 					return;
 				if (!eff[plural] || !cfg.entities[plural])
 					return;
-				if (isCas && SEB_PER_MEAS.indexOf(plural) !== -1)
+				if (isCas && sebCasPerMeasList(cfg).indexOf(plural) !== -1)
 					return;
 				if (!isCas && !sebIsSharedSelected(cfg, plural))
 					return;
@@ -3895,7 +4306,7 @@ function sebBuildPackage(cfg, parent, staUrl) {
 					sebEnsureGroupSelected(m);
 
 					/* Per-group entities (not Observations) → Group.Entity.property columns */
-					(isCas ? SEB_PER_MEAS : sebGroupSelectedList(m)).forEach(function (plural) {
+					(isCas ? sebCasPerMeasList(cfg) : sebGroupSelectedList(m)).forEach(function (plural) {
 						if (plural === "Observations" || !m[plural])
 							return;
 						if (!isCas && !m.selected[plural])
@@ -4090,6 +4501,12 @@ function openSTAEntityBuilderDialog(node) {
 	}
 	/* Fill empty props from all sources' attribute definitions (does not overwrite set values) */
 	sebApplyAttributeDefinitionsToConfig(cfg, parent, true, sources);
+	/* Després dels attribute maps: tornar a forçar definitions CAS (evita URLs OGC antigues en configs guardades) */
+	if (cfg.mode === "connectASensor") {
+		if (parent && typeof buildConnectASensorDataAttributes === "function")
+			parent.STAdataAttributes = buildConnectASensorDataAttributes(parent.STAdata || []);
+		sebRefreshCasObservedPropertyDefinitions(cfg);
+	}
 	sebShowStaUrl();
 	renderSTAEntityBuilderForm(node);
 }
