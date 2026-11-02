@@ -1,10 +1,10 @@
-"use strict"
+﻿"use strict"
 
 /*
-	STA Publisher — publishes staEntityPackage (v2) + long STAdata from STA Entity Builder.
+	STA Publisher â€” publishes staEntityPackage (v2) + long STAdata from STA Entity Builder.
 
-	Pipeline: normalize/dedupe unique entities → resolve/create sequentially (GetObjectId)
-	→ create Observations → store pending failures for retry.
+	Pipeline: normalize/dedupe unique entities â†’ resolve/create sequentially (GetObjectId)
+	â†’ create Observations â†’ store pending failures for retry.
 */
 
 /*
@@ -17,7 +17,7 @@ var SPA_ORDER = ["Parties", "Licenses", "Sensors", "ObservedProperties", "Locati
 /* [body key, related entity plural, many, optional?, attachAll?]
    optional=true: related entity in batch may be missing/failed without blocking create;
    spaAttachRelations still links it when id is ready.
-   attachAll=true: link every ready entity of that plural (e.g. Campaign→Datastreams).
+   attachAll=true: link every ready entity of that plural (e.g. Campaignâ†’Datastreams).
    License is optional for Datastreams/MultiDatastreams/Campaigns/ObservationGroups.
    Location on Thing is optional. Observation requires Datastream (+ FoI when FoIs exist). */
 var SPA_RELATIONS = {
@@ -44,7 +44,7 @@ function spaGetNesting(pkg) {
 	};
 }
 
-/* Entity resolve order — Campaigns/ObservationGroups swap per nesting. */
+/* Entity resolve order â€” Campaigns/ObservationGroups swap per nesting. */
 function spaEffectiveEntityOrder(pkg) {
 	var base = ["Parties", "Licenses", "Sensors", "ObservedProperties", "Locations", "FeaturesOfInterest",
 		"Things", "Datastreams", "MultiDatastreams", "HistoricalLocations", "Cells"];
@@ -82,14 +82,71 @@ function getSTAPublisherParent(node) {
 }
 
 function spaIsEmpty(v) {
-	return v === null || v === undefined || String(v).trim() === "";
+	if (v === null || v === undefined)
+		return true;
+	/* GeoJSON / arrays / objects are never "empty" via String(obj) */
+	if (typeof v === "object")
+		return false;
+	return String(v).trim() === "";
 }
 
-function spaResolveSrc(src, rec) {
+/*
+	Parse super-table column names (same rules as Entity Builder):
+	  Entity.property           â€” first segment is STA plural
+	  Group.Entity.property     â€” word.word.word(+): first â‰  plural, second = plural
+*/
+function spaParseSuperColumnName(colName) {
+	if (typeof sebParseSuperColumnName === "function")
+		return sebParseSuperColumnName(colName);
+	return null;
+}
+
+/*
+	Wide-table column lookup.
+	When groupPrefixHint is set, prefer Hint.Entity.property FIRST â€” otherwise a binding
+	still named for another group would win and hide this group's values.
+*/
+function spaLookupRecColumn(rec, column, groupPrefixHint) {
+	var v, name, parsed, other, bare, hinted;
+	if (!rec || column == null || column === "")
+		return undefined;
+	parsed = spaParseSuperColumnName(column);
+	if (groupPrefixHint && parsed) {
+		hinted = String(groupPrefixHint) + "." + parsed.plural + "." + parsed.propName;
+		v = rec[hinted];
+		if (!spaIsEmpty(v))
+			return v;
+	}
+	v = rec[column];
+	if (!spaIsEmpty(v))
+		return v;
+	if (!parsed)
+		return undefined;
+	if (parsed.groupPrefix) {
+		/* Wrong/missing group cell â†’ bare Entity.property only (no other groups) */
+		bare = parsed.plural + "." + parsed.propName;
+		v = rec[bare];
+		return spaIsEmpty(v) ? undefined : v;
+	}
+	if (groupPrefixHint)
+		return undefined;
+	/* General Entity.property, no hint â†’ any Group.Entity.property on the row */
+	for (name in rec) {
+		if (!Object.prototype.hasOwnProperty.call(rec, name) || name === column)
+			continue;
+		other = spaParseSuperColumnName(name);
+		if (other && other.plural === parsed.plural && other.propName === parsed.propName &&
+				!spaIsEmpty(rec[name]))
+			return rec[name];
+	}
+	return undefined;
+}
+
+function spaResolveSrc(src, rec, groupPrefixHint) {
 	var v, t;
 	if (!src)
 		return undefined;
-	v = src.source === "column" ? (rec ? rec[src.column] : undefined) : src.value;
+	v = src.source === "column" ? spaLookupRecColumn(rec, src.column, groupPrefixHint) : src.value;
 	if (spaIsEmpty(v))
 		return undefined;
 	if (typeof v === "string" && src.dataType === "JSON") {
@@ -113,12 +170,38 @@ function spaNormalizeId(v) {
 	return /^-?\d+$/.test(s) && String(Number(s)) === s ? Number(s) : s;
 }
 
-function spaResolveId(ent, rec) {
-	var id;
+function spaGroupPrefixFromEnt(ent, pkg) {
+	var mk, bindings, i, b, role;
 	if (!ent)
 		return null;
+	if (ent.groupPrefix)
+		return String(ent.groupPrefix);
+	mk = ent.measurementKey;
+	if (mk == null || mk === "")
+		return null;
+	bindings = (pkg && pkg.observations && pkg.observations.bindings) || [];
+	for (i = 0; i < bindings.length; i++) {
+		b = bindings[i];
+		if (b && b.measurementKey === mk)
+			return b.groupPrefix || b.groupLabel || null;
+	}
+	role = ent.role ? String(ent.role) : "";
+	/* role "ObservedProperties:Temperature" â€” last resort if key equals label */
+	if (role.indexOf(":") !== -1) {
+		b = role.substring(role.indexOf(":") + 1);
+		if (b)
+			return b;
+	}
+	return null;
+}
+
+function spaResolveId(ent, rec, pkg) {
+	var id, hint;
+	if (!ent)
+		return null;
+	hint = spaGroupPrefixFromEnt(ent, pkg);
 	if (ent.id) {
-		id = spaNormalizeId(spaResolveSrc(ent.id, rec));
+		id = spaNormalizeId(spaResolveSrc(ent.id, rec, hint));
 		if (!spaIsEmpty(id))
 			return id;
 	}
@@ -163,22 +246,47 @@ function spaIsLoggedIn() {
 
 /* Normalize location/feature to GeoJSON Point { type:"Point", coordinates:[lon,lat] }. */
 function spaParseGeoPoint(v) {
-	var geom, t;
+	var geom, t, m, lon, lat;
 	if (v === undefined || v === null || v === "")
 		return null;
 	if (typeof v === "string") {
 		t = v.trim();
+		/* CSV sometimes keeps doubled quotes: {""type"":""Point"",...} */
+		if (t.indexOf("\"\"") !== -1)
+			t = t.replace(/""/g, "\"");
 		if ((t.charAt(0) === "{" && t.charAt(t.length - 1) === "}") || (t.charAt(0) === "[" && t.charAt(t.length - 1) === "]")) {
 			try {
 				v = JSON.parse(t);
 			} catch (e) {
+				/* Lenient: coordinates:[lon,lat] even if type keys lost quotes */
+				m = /coordinates\s*:\s*\[\s*([+-]?\d+(\.\d+)?([eE][+-]?\d+)?)\s*,\s*([+-]?\d+(\.\d+)?([eE][+-]?\d+)?)\s*\]/.exec(t);
+				if (m) {
+					lon = Number(m[1]);
+					lat = Number(m[4]);
+					if (isFinite(lon) && isFinite(lat))
+						return { type: "Point", coordinates: [lon, lat] };
+				}
 				return null;
 			}
+		} else if (/^[+-]?\d+(\.\d+)?\s*,\s*[+-]?\d+(\.\d+)?$/.test(t)) {
+			m = t.split(/\s*,\s*/);
+			lon = Number(m[0]);
+			lat = Number(m[1]);
+			if (isFinite(lon) && isFinite(lat))
+				return { type: "Point", coordinates: [lon, lat] };
+			return null;
 		} else
 			return null;
 	}
 	if (typeof v !== "object")
 		return null;
+	if (Object.prototype.toString.call(v) === "[object Array]" && v.length >= 2) {
+		lon = Number(v[0]);
+		lat = Number(v[1]);
+		if (isFinite(lon) && isFinite(lat))
+			return { type: "Point", coordinates: [lon, lat] };
+		return null;
+	}
 	geom = v;
 	if (geom.type === "Feature" && geom.geometry)
 		geom = geom.geometry;
@@ -187,12 +295,13 @@ function spaParseGeoPoint(v) {
 	return null;
 }
 
-function spaBuildBody(plural, ent, rec) {
+function spaBuildBody(plural, ent, rec, pkg) {
 	var body = {}, props = ent.properties || {}, name, v, lon, lat, sub, geoName, point;
+	var hint = spaGroupPrefixFromEnt(ent, pkg);
 	for (name in props) {
 		if (!Object.prototype.hasOwnProperty.call(props, name))
 			continue;
-		v = spaResolveSrc(props[name], rec);
+		v = spaResolveSrc(props[name], rec, hint);
 		if (v === undefined)
 			continue;
 		if (name.indexOf("unitOfMeasurement.") === 0) {
@@ -213,7 +322,7 @@ function spaBuildBody(plural, ent, rec) {
 		if (!body.encodingType)
 			body.encodingType = "application/geo+json";
 		geoName = plural === "Locations" ? "location" : "feature";
-		/* Prefer explicit location/feature; else legacy lon/lat → Point for both */
+		/* Prefer explicit location/feature; else legacy lon/lat â†’ Point for both */
 		if (!spaParseGeoPoint(body[geoName]) && (lon !== undefined || lat !== undefined) &&
 				isFinite(lon) && isFinite(lat)) {
 			body[geoName] = { type: "Point", coordinates: [lon, lat] };
@@ -241,62 +350,67 @@ function spaFindRelated(pkg, plural, measurementKey) {
 	return arr[0];
 }
 
-function spaPropVal(ent, propName, rec) {
+function spaPropVal(ent, propName, rec, pkg) {
+	var hint;
 	if (!ent || !ent.properties || !ent.properties[propName])
 		return undefined;
-	return spaResolveSrc(ent.properties[propName], rec);
+	hint = spaGroupPrefixFromEnt(ent, pkg);
+	return spaResolveSrc(ent.properties[propName], rec, hint);
 }
 
 /*
-	Plurals that expand over source rows (unique by content).
-	Others stay 1-per-template (role / measurementKey).
+	Row-scoped plurals: @iot.id is written back onto matching wide rows.
+	Others get the same id on every row (shared / constant-per-group content).
 */
-/* Datastreams / OP stay 1-per-group (template), not per Thing/row */
-var SPA_EXPAND_BY_ROW = {
+var SPA_ROW_SCOPED_ID_WRITE = {
 	Locations: true,
 	FeaturesOfInterest: true,
 	Things: true,
 	Sensors: true
 };
 
-function spaExpandByRow(plural) {
-	return !!(SPA_EXPAND_BY_ROW[plural]);
+function spaRowScopedIdWrite(plural) {
+	return !!(SPA_ROW_SCOPED_ID_WRITE[plural]);
 }
 
-/* Stable identity key for dedupe (not body JSON). */
+/* Stable identity key for dedupe (content, never role alone). */
 function spaEntityStableKey(plural, ent, rec, pkg) {
-	var def, name, lon, lat, auth, uom, role, point;
+	var def, name, lon, lat, auth, uom, role, point, id;
 	if (!ent)
 		return plural + "|unknown";
 	role = ent.role ? String(ent.role) : "";
-	/*
-		Role short-circuit only for non-expand plurals (OP, License, …).
-		Expand-by-row must key by content so 3 cameras / 3 places become 3 entities.
-	*/
-	if (!spaExpandByRow(plural) && role && role !== plural && role.indexOf(":") !== -1)
-		return role;
+	id = spaResolveId(ent, rec, pkg);
+	/* Any entity with @iot.id â†’ reuse that id; other properties are irrelevant */
+	if (id != null)
+		return plural + "|id|" + id;
 	switch (plural) {
 		case "Parties":
-			auth = spaPropVal(ent, "authId", rec);
+			auth = spaPropVal(ent, "authId", rec, pkg);
 			return "Parties|" + (auth != null ? auth : (typeof CriptoName !== "undefined" ? CriptoName : "party"));
 		case "Licenses":
-			def = spaPropVal(ent, "definition", rec);
-			return "Licenses|" + (def != null ? def : spaPropVal(ent, "name", rec) || "license");
+			def = spaPropVal(ent, "definition", rec, pkg);
+			return "Licenses|" + (def != null ? def : spaPropVal(ent, "name", rec, pkg) || "license");
 		case "ObservedProperties":
-			def = spaPropVal(ent, "definition", rec);
-			return "ObservedProperties|" + (def != null ? def : (ent.measurementKey || spaPropVal(ent, "name", rec) || "op"));
+			/* definition and/or name â€” must not collapse distinct OPs from different groups */
+			def = spaPropVal(ent, "definition", rec, pkg);
+			name = spaPropVal(ent, "name", rec, pkg);
+			if ((def != null && String(def) !== "") || (name != null && String(name) !== ""))
+				return "ObservedProperties|" + (def != null ? def : "") + "|" + (name != null ? name : "");
+			if (ent.measurementKey)
+				return "ObservedProperties:" + ent.measurementKey;
+			return "ObservedProperties|op";
 		case "Sensors":
-			name = spaPropVal(ent, "name", rec);
+			name = spaPropVal(ent, "name", rec, pkg);
 			return "Sensors|" + (name != null && String(name) !== "" ? name : (role || "sensor"));
 		case "Things":
-			name = spaPropVal(ent, "name", rec);
+			name = spaPropVal(ent, "name", rec, pkg);
 			return "Things|" + (name != null && String(name) !== "" ? name : "thing");
 		case "Locations":
 		case "FeaturesOfInterest":
-			lon = spaPropVal(ent, "longitude", rec);
-			lat = spaPropVal(ent, "latitude", rec);
+			lon = spaPropVal(ent, "longitude", rec, pkg);
+			lat = spaPropVal(ent, "latitude", rec, pkg);
 			if (lon == null || lat == null || !isFinite(Number(lon)) || !isFinite(Number(lat))) {
-				point = spaParseGeoPoint(spaPropVal(ent, plural === "Locations" ? "location" : "feature", rec));
+				point = spaParseGeoPoint(spaPropVal(ent, plural === "Locations" ? "location" : "feature", rec, pkg));
 				if (point && point.coordinates) {
 					lon = point.coordinates[0];
 					lat = point.coordinates[1];
@@ -304,87 +418,75 @@ function spaEntityStableKey(plural, ent, rec, pkg) {
 			}
 			if (lon != null && lat != null && isFinite(Number(lon)) && isFinite(Number(lat)))
 				return plural + "|" + Number(lon) + "," + Number(lat);
-			name = spaPropVal(ent, "name", rec);
-			return plural + "|" + (name != null && String(name) !== "" ? name : "place");
+			name = spaPropVal(ent, "name", rec, pkg);
+			if (name != null && String(name).trim() !== "")
+				return plural + "|" + String(name).trim();
+			/* No coords and no name â€” skip (do not collapse everything to "|place") */
+			return null;
 		case "Datastreams":
-			/* One Datastream per observation group (template), not per Thing/row */
+		case "MultiDatastreams":
+			/* Content key so identical DS across groups collapse; fallback measurementKey if empty */
+			uom = spaPropVal(ent, "unitOfMeasurement.definition", rec, pkg);
+			name = spaPropVal(ent, "name", rec, pkg);
+			if ((name != null && String(name) !== "") || uom != null)
+				return plural + "|" + (name || "ds") + (uom != null ? "|" + uom : "");
 			if (ent.measurementKey)
-				return "Datastreams:" + ent.measurementKey;
+				return plural + ":" + ent.measurementKey;
 			if (role && role !== plural && role.indexOf(":") !== -1)
 				return role;
-			uom = spaPropVal(ent, "unitOfMeasurement.definition", rec);
-			name = spaPropVal(ent, "name", rec);
-			return "Datastreams|" + (name || "ds") + (uom != null ? "|" + uom : "");
+			return plural + "|" + (role || "x");
 		default:
-			if (role && role !== plural && role.indexOf(":") !== -1)
-				return role;
-			uom = spaPropVal(ent, "unitOfMeasurement.definition", rec);
-			name = spaPropVal(ent, "name", rec);
-			return plural + "|" + (ent.measurementKey || name || role || "x") + (uom != null ? "|" + uom : "");
+			uom = spaPropVal(ent, "unitOfMeasurement.definition", rec, pkg);
+			name = spaPropVal(ent, "name", rec, pkg);
+			if ((name != null && String(name) !== "") || uom != null)
+				return plural + "|" + (name || "x") + (uom != null ? "|" + uom : "");
+			if (ent.measurementKey)
+				return plural + ":" + ent.measurementKey;
+			return plural + "|" + (role || "x");
 	}
 }
 
-function spaSampleRecForEntity(ent, obsRows, sourceData) {
-	var i, row, idx;
-	if (!obsRows || !obsRows.length)
-		return (sourceData && sourceData[0]) || {};
-	if (ent.measurementKey) {
-		for (i = 0; i < obsRows.length; i++) {
-			row = obsRows[i];
-			if (row && row.measurementKey === ent.measurementKey) {
-				idx = row._sourceIndex;
-				if (sourceData && idx != null && sourceData[idx])
-					return sourceData[idx];
-				return row;
-			}
-		}
-	}
-	row = obsRows[0];
-	idx = row && row._sourceIndex;
-	if (sourceData && idx != null && sourceData[idx])
-		return sourceData[idx];
-	return row || {};
-}
-
-/* Source rows to expand a template over (group-filtered when measurementKey set). */
+/* All wide-table rows to scan for distinct entity values. */
 function spaCollectSourceRecs(ent, plural, obsRows, sourceData) {
-	var out = [], seenIdx = {}, i, row, idx;
-	if (!spaExpandByRow(plural)) {
-		out.push(spaSampleRecForEntity(ent, obsRows, sourceData) || {});
-		return out;
+	var out = [], i;
+	if (sourceData && sourceData.length) {
+		for (i = 0; i < sourceData.length; i++) {
+			if (sourceData[i])
+				out.push(sourceData[i]);
+		}
+		if (out.length)
+			return out;
 	}
-	if (!sourceData || !sourceData.length) {
-		out.push(spaSampleRecForEntity(ent, obsRows, sourceData) || {});
-		return out;
+	if (obsRows && obsRows.length && sourceData) {
+		for (i = 0; i < obsRows.length; i++) {
+			if (obsRows[i] && obsRows[i]._sourceIndex != null && sourceData[obsRows[i]._sourceIndex])
+				out.push(sourceData[obsRows[i]._sourceIndex]);
+		}
+		if (out.length)
+			return out;
 	}
-	for (i = 0; i < (obsRows || []).length; i++) {
-		row = obsRows[i];
-		if (!row)
-			continue;
-		if (ent.measurementKey != null && ent.measurementKey !== "" && row.measurementKey !== ent.measurementKey)
-			continue;
-		idx = row._sourceIndex;
-		if (idx == null || seenIdx[idx])
-			continue;
-		seenIdx[idx] = true;
-		if (sourceData[idx])
-			out.push(sourceData[idx]);
-	}
-	if (out.length)
-		return out;
-	for (i = 0; i < sourceData.length; i++) {
-		if (sourceData[i])
-			out.push(sourceData[i]);
-	}
-	if (!out.length)
-		out.push({});
+	out.push({});
 	return out;
 }
 
-function spaAddEntityInstance(entities, plural, ent, rec, pkg) {
-	var key = spaEntityStableKey(plural, ent, rec, pkg);
-	if (entities[key])
-		return entities[key];
+/*
+	Add one unique entity by content key. If already present (same content from
+	another group), reuse it and record measurementKey â†’ key alias for linking.
+*/
+function spaAddEntityInstance(entities, plural, ent, rec, pkg, keyAliases) {
+	var key = spaEntityStableKey(plural, ent, rec, pkg), item, mk, resolvedId;
+	if (key == null || key === "")
+		return null;
+	mk = ent && ent.measurementKey;
+	resolvedId = spaResolveId(ent, rec, pkg);
+	if (entities[key]) {
+		item = entities[key];
+		if (spaIsEmpty(item.id) && !spaIsEmpty(resolvedId))
+			item.id = resolvedId;
+		if (keyAliases && mk != null && mk !== "")
+			keyAliases[plural + ":" + mk] = key;
+		return item;
+	}
 	entities[key] = {
 		key: key,
 		plural: plural,
@@ -394,18 +496,229 @@ function spaAddEntityInstance(entities, plural, ent, rec, pkg) {
 		ent: ent,
 		rec: rec,
 		status: "pending",
-		id: null,
+		/* Prefill known @iot.id so Publisher preview shows it before publish */
+		id: spaIsEmpty(resolvedId) ? null : resolvedId,
 		error: null
 	};
+	if (keyAliases && mk != null && mk !== "")
+		keyAliases[plural + ":" + mk] = key;
 	return entities[key];
 }
 
+function spaIsSharedPackageEntity(ent) {
+	return !ent || ent.measurementKey == null || ent.measurementKey === "";
+}
+
+/* True if the row resolves any id or property for this template (skip blank rows). */
+function spaRowHasEntitySignal(ent, rec, pkg) {
+	var name, plural, point;
+	if (!ent)
+		return false;
+	if (spaResolveId(ent, rec, pkg) != null)
+		return true;
+	plural = ent.plural;
+	/* Locations / FoI: need real geo or name â€” encodingType alone must not create "|place" */
+	if (plural === "Locations" || plural === "FeaturesOfInterest") {
+		if (spaPropVal(ent, "name", rec, pkg) !== undefined)
+			return true;
+		if (spaPropVal(ent, "longitude", rec, pkg) !== undefined && spaPropVal(ent, "latitude", rec, pkg) !== undefined)
+			return true;
+		point = spaParseGeoPoint(spaPropVal(ent, plural === "Locations" ? "location" : "feature", rec, pkg));
+		return !!(point && point.coordinates);
+	}
+	if (!ent.properties)
+		return false;
+	for (name in ent.properties) {
+		if (!Object.prototype.hasOwnProperty.call(ent.properties, name))
+			continue;
+		if (spaPropVal(ent, name, rec, pkg) !== undefined)
+			return true;
+	}
+	return false;
+}
+
+/* Shallow copy of package entity with groupPrefix for Group.Entity.property resolve. */
+function spaEntWithPrefix(ent, prefix) {
+	var c, k;
+	if (!ent)
+		return ent;
+	if (prefix == null || prefix === "")
+		return ent;
+	if (ent.groupPrefix && String(ent.groupPrefix) === String(prefix))
+		return ent;
+	c = {};
+	for (k in ent) {
+		if (Object.prototype.hasOwnProperty.call(ent, k))
+			c[k] = ent[k];
+	}
+	c.groupPrefix = String(prefix);
+	return c;
+}
+
+/* Group prefixes present on wide rows for a given plural (any Group.Entity.* columns). */
+function spaGroupPrefixesInData(sourceData, plural) {
+	var seen = {}, out = [], i, name, parsed, row;
+	for (i = 0; i < (sourceData || []).length; i++) {
+		row = sourceData[i];
+		if (!row)
+			continue;
+		for (name in row) {
+			if (!Object.prototype.hasOwnProperty.call(row, name))
+				continue;
+			parsed = spaParseSuperColumnName(name);
+			if (parsed && parsed.plural === plural && parsed.groupPrefix)
+				seen[parsed.groupPrefix] = true;
+		}
+	}
+	for (name in seen) {
+		if (Object.prototype.hasOwnProperty.call(seen, name))
+			out.push(name);
+	}
+	return out;
+}
+
+/* measurementKey whose observation binding uses this groupPrefix (etiqueta). */
+function spaMeasurementKeyForPrefix(pkg, prefix) {
+	var bindings, i, b;
+	if (!prefix || !pkg)
+		return undefined;
+	bindings = (pkg.observations && pkg.observations.bindings) || [];
+	for (i = 0; i < bindings.length; i++) {
+		b = bindings[i];
+		if (b && (b.groupPrefix === prefix || b.groupLabel === prefix))
+			return b.measurementKey;
+	}
+	return undefined;
+}
+
+function spaCountPluralInEntities(entities, plural) {
+	var n = 0, k;
+	for (k in entities) {
+		if (Object.prototype.hasOwnProperty.call(entities, k) && entities[k].plural === plural)
+			n++;
+	}
+	return n;
+}
+
 /*
-	Normalize long STAdata + package → unique entities + observation list.
-	Expand-by-row templates yield one instance per distinct content key.
+	Locations / FoI: read every wide-table cell *.Locations.location|name (and bare
+	Locations.*) per row. Does not depend on package bindings pointing at the right
+	group â€” that was collapsing many distinct sites within one group to a single entity.
+*/
+function spaScanGeoEntitiesFromWide(entities, plural, baseEnt, pkg, sourceData, keyAliases) {
+	var geoProp = plural === "Locations" ? "location" : "feature";
+	var prefixes = spaGroupPrefixesInData(sourceData, plural);
+	var i, pi, row, name, parsed, g, geoCol, nameCol, idCol, useEnt, props, hasBare = false;
+	for (i = 0; i < (sourceData || []).length; i++) {
+		row = sourceData[i];
+		if (!row)
+			continue;
+		for (name in row) {
+			if (!Object.prototype.hasOwnProperty.call(row, name))
+				continue;
+			parsed = spaParseSuperColumnName(name);
+			if (parsed && parsed.plural === plural && !parsed.groupPrefix) {
+				hasBare = true;
+				break;
+			}
+		}
+		if (hasBare)
+			break;
+	}
+	if (hasBare)
+		prefixes = prefixes.concat([null]);
+	if (!prefixes.length)
+		prefixes = [null];
+	for (i = 0; i < (sourceData || []).length; i++) {
+		row = sourceData[i];
+		if (!row)
+			continue;
+		for (pi = 0; pi < prefixes.length; pi++) {
+			g = prefixes[pi];
+			geoCol = (g ? g + "." : "") + plural + "." + geoProp;
+			nameCol = (g ? g + "." : "") + plural + ".name";
+			idCol = (g ? g + "." : "") + plural + ".@iot.id";
+			if (spaIsEmpty(row[geoCol]) && spaIsEmpty(row[nameCol]) && spaIsEmpty(row[idCol]))
+				continue;
+			props = {};
+			if (!spaIsEmpty(row[geoCol]))
+				props[geoProp] = { source: "column", column: geoCol };
+			if (!spaIsEmpty(row[nameCol]))
+				props.name = { source: "column", column: nameCol };
+			["description", "encodingType", "properties"].forEach(function (pName) {
+				var c = (g ? g + "." : "") + plural + "." + pName;
+				if (!spaIsEmpty(row[c]))
+					props[pName] = { source: "column", column: c };
+			});
+			useEnt = {
+				plural: plural,
+				singular: (baseEnt && baseEnt.singular) ||
+					(typeof STAEntities !== "undefined" && STAEntities[plural] ? STAEntities[plural].singular : plural),
+				role: (baseEnt && baseEnt.role) || plural,
+				measurementKey: spaMeasurementKeyForPrefix(pkg, g) ||
+					(baseEnt && baseEnt.measurementKey),
+				groupPrefix: g || undefined,
+				properties: props
+			};
+			if (!spaIsEmpty(row[idCol]))
+				useEnt.id = { source: "column", column: idCol };
+			spaAddEntityInstance(entities, plural, useEnt, row, pkg, keyAliases);
+		}
+	}
+}
+
+/*
+	Scan all wide rows for distinct values of this template.
+	Locations / FoI: direct column discovery per row (many sites inside one group).
+	Other plurals: walk every Group.* prefix + template hint.
+*/
+function spaScanEntityTemplate(entities, plural, ent, pkg, obsRows, sourceData, keyAliases) {
+	var recs, j, p, prefixes, hint, useEnt, hi;
+	if (!ent)
+		return;
+	if (!ent.plural)
+		ent.plural = plural;
+	if (plural === "Locations" || plural === "FeaturesOfInterest") {
+		/* Run once per plural â€” every group template would otherwise re-scan */
+		if (!keyAliases._geoDone)
+			keyAliases._geoDone = {};
+		if (!keyAliases._geoDone[plural]) {
+			spaScanGeoEntitiesFromWide(entities, plural, ent, pkg, sourceData, keyAliases);
+			keyAliases._geoDone[plural] = true;
+		}
+		if (spaCountPluralInEntities(entities, plural) > 0)
+			return;
+		/* Fall through to template scan if wide columns were not found */
+	}
+	recs = spaCollectSourceRecs(ent, plural, obsRows, sourceData);
+	hint = spaGroupPrefixFromEnt(ent, pkg);
+	prefixes = spaGroupPrefixesInData(sourceData, plural);
+	if (hint) {
+		hi = String(hint);
+		if (prefixes.indexOf(hi) === -1)
+			prefixes.push(hi);
+	}
+	if (!prefixes.length)
+		prefixes = [null];
+	for (j = 0; j < recs.length; j++) {
+		for (p = 0; p < prefixes.length; p++) {
+			useEnt = spaEntWithPrefix(ent, prefixes[p]);
+			if (!spaRowHasEntitySignal(useEnt, recs[j], pkg))
+				continue;
+			spaAddEntityInstance(entities, plural, useEnt, recs[j], pkg, keyAliases);
+		}
+	}
+}
+
+/*
+	Normalize wide STAdata + package â†’ unique entities + observation list.
+	Pass 1: shared / general entities (Entity.property) â€” distinct values.
+	Pass 2: per group, entity by entity (Group.Entity.property) â€” distinct values;
+	        same content across groups â†’ one create (global key map).
 */
 function spaNormalizeBatch(pkg, obsRows, sourceData) {
-	var entities = {}, observations = [], plural, arr, i, j, ent, key, rec, o, foiEnt, dsEnt, recs, nEnt;
+	var entities = {}, observations = [], keyAliases = {}, plural, arr, i, ent, key, rec, o, foiEnt, dsEnt, nEnt;
+	var sharedList = [], groupList = [], geoBase;
 
 	if (!pkg)
 		return { entities: {}, observations: [], entityCount: 0 };
@@ -413,7 +726,6 @@ function spaNormalizeBatch(pkg, obsRows, sourceData) {
 	for (plural in (pkg.entities || {})) {
 		if (!Object.prototype.hasOwnProperty.call(pkg.entities, plural))
 			continue;
-		/* Long-table Observations only — ignore legacy packed Observation entities */
 		if (plural === "Observations")
 			continue;
 		arr = pkg.entities[plural] || [];
@@ -421,11 +733,34 @@ function spaNormalizeBatch(pkg, obsRows, sourceData) {
 			ent = arr[i];
 			if (!ent)
 				continue;
-			recs = spaCollectSourceRecs(ent, plural, obsRows, sourceData);
-			for (j = 0; j < recs.length; j++)
-				spaAddEntityInstance(entities, plural, ent, recs[j], pkg);
+			if (spaIsSharedPackageEntity(ent))
+				sharedList.push({ plural: plural, ent: ent });
+			else
+				groupList.push({ plural: plural, ent: ent });
 		}
 	}
+
+	/*
+		Locations / FoI first from the wide table: every Group.Entity.location|name
+		(and bare Entity.*) cell, every row. Distinct values inside one group stay
+		distinct; identical content across groups still collapses to one create.
+	*/
+	keyAliases._geoDone = {};
+	["Locations", "FeaturesOfInterest"].forEach(function (geoPlural) {
+		geoBase = spaFindRelated(pkg, geoPlural) ||
+			(pkg.entities && pkg.entities[geoPlural] && pkg.entities[geoPlural][0]) ||
+			{ plural: geoPlural, role: geoPlural, properties: {} };
+		spaScanGeoEntitiesFromWide(entities, geoPlural, geoBase, pkg, sourceData, keyAliases);
+		keyAliases._geoDone[geoPlural] = true;
+	});
+
+	/* Pass 1 â€” generals / shared */
+	for (i = 0; i < sharedList.length; i++)
+		spaScanEntityTemplate(entities, sharedList[i].plural, sharedList[i].ent, pkg, obsRows, sourceData, keyAliases);
+
+	/* Pass 2 â€” each group template; global dedupe by content key */
+	for (i = 0; i < groupList.length; i++)
+		spaScanEntityTemplate(entities, groupList[i].plural, groupList[i].ent, pkg, obsRows, sourceData, keyAliases);
 
 	/* Ensure a single Party (login). Do not add a second if the package already has one. */
 	(function () {
@@ -438,10 +773,8 @@ function spaNormalizeBatch(pkg, obsRows, sourceData) {
 			hasParty = true;
 			if (!keep)
 				keep = k2;
-			else {
-				/* Collapse duplicates — keep the first, drop the rest */
+			else
 				delete entities[k2];
-			}
 		}
 		if (hasParty)
 			return;
@@ -470,9 +803,21 @@ function spaNormalizeBatch(pkg, obsRows, sourceData) {
 			: (o || {});
 		foiEnt = spaFindRelated(pkg, "FeaturesOfInterest", o.measurementKey || undefined);
 		dsEnt = spaFindRelated(pkg, "Datastreams", o.measurementKey || undefined);
-		/* Preserve id columns from long table so spaObsIdFromTable can reuse them */
 		(function () {
-			var col = spaObsIdColumn(pkg, o.measurementKey), row = {
+			var col = spaObsIdColumn(pkg, o.measurementKey), dsKey = null, foiKey = null, aliasKey, row;
+			if (dsEnt) {
+				dsKey = spaEntityStableKey("Datastreams", dsEnt, rec, pkg);
+				aliasKey = "Datastreams:" + (o.measurementKey || "");
+				if (keyAliases[aliasKey])
+					dsKey = keyAliases[aliasKey];
+			}
+			if (foiEnt) {
+				foiKey = spaEntityStableKey("FeaturesOfInterest", foiEnt, rec, pkg);
+				aliasKey = "FeaturesOfInterest:" + (o.measurementKey || "");
+				if (keyAliases[aliasKey])
+					foiKey = keyAliases[aliasKey];
+			}
+			row = {
 				index: i,
 				phenomenonTime: o.phenomenonTime,
 				resultTime: o.resultTime != null ? o.resultTime : o.phenomenonTime,
@@ -481,8 +826,8 @@ function spaNormalizeBatch(pkg, obsRows, sourceData) {
 				groupLabel: o.groupLabel || spaGroupLabelFromPkg(pkg, o.measurementKey) || "",
 				datastreamRole: o.datastreamRole || ("Datastreams:" + (o.measurementKey || "")),
 				foiRole: foiEnt ? foiEnt.role : "FeaturesOfInterest",
-				datastreamKey: dsEnt ? spaEntityStableKey("Datastreams", dsEnt, rec, pkg) : null,
-				foiKey: foiEnt ? spaEntityStableKey("FeaturesOfInterest", foiEnt, rec, pkg) : null,
+				datastreamKey: dsKey,
+				foiKey: foiKey,
 				_sourceIndex: o._sourceIndex,
 				status: "pending",
 				observationId: null,
@@ -508,6 +853,7 @@ function spaNormalizeBatch(pkg, obsRows, sourceData) {
 		observations: observations,
 		relations: spaBuildRelationPlans(pkg, observations),
 		entityCount: nEnt,
+		keyAliases: keyAliases,
 		pkg: pkg
 	};
 }
@@ -651,7 +997,7 @@ function spaAttachRelations(body, plural, item, entities, partyId, pkg) {
 			continue;
 		}
 		if (rel[2]) {
-			/* many: attachAll → every ready entity of that plural; else one match */
+			/* many: attachAll â†’ every ready entity of that plural; else one match */
 			list = spaFindAllRelatedForItem(entities, rel[1], item, pkg, !!rel[4]);
 			if (!list.length)
 				continue;
@@ -722,14 +1068,14 @@ async function spaFinishLicenseResolve(ctx, item, id, body, patch, logSuffix) {
 }
 
 /*
-	Resolve one unique entity: cache → reuse id → GetObjectId/GetPartyId.
+	Resolve one unique entity: cache â†’ reuse id â†’ GetObjectId/GetPartyId.
 	Licenses: lookup-by-definition/name first (create often forbidden on STA services).
 */
 async function spaResolveUniqueEntity(ctx, item) {
 	var plural = item.plural, cached, id, body, patch, response, found, status, hint, got;
 
 	item.status = "checking";
-	/* Already confirmed on this item — no network */
+	/* Already confirmed on this item â€” no network */
 	if (!spaIsEmpty(item.id)) {
 		item.status = "done";
 		spaRegistrySet(ctx.cache, item.key, item.id);
@@ -751,7 +1097,7 @@ async function spaResolveUniqueEntity(ctx, item) {
 		return item.id;
 	}
 
-	id = spaResolveId(item.ent, item.rec);
+	id = spaResolveId(item.ent, item.rec, ctx.pkg);
 	if (!spaIsEmpty(id)) {
 		item.id = id;
 		item.status = "done";
@@ -781,19 +1127,19 @@ async function spaResolveUniqueEntity(ctx, item) {
 	}
 
 	item.status = "creating";
-	body = spaBuildBody(plural, item.ent, item.rec);
+	body = spaBuildBody(plural, item.ent, item.rec, ctx.pkg);
 	spaAttachRelations(body, plural, item, ctx.entities, ctx.partyId, ctx.pkg);
 
 	if (plural === "Licenses") {
 		/* logo often breaks $filter / create; set via PATCH after id is known.
-		   Keep attributionText on create — STA+ commonly requires it. */
+		   Keep attributionText on create â€” STA+ commonly requires it. */
 		patch = {};
 		if (body.logo !== undefined) {
 			patch.logo = body.logo;
 			delete body.logo;
 		}
 
-		/* 1) Query existing License (definition, then name) — prefer reuse over POST */
+		/* 1) Query existing License (definition, then name) â€” prefer reuse over POST */
 		try {
 			found = await spaLookupLicense(ctx.url, body.definition, body.name);
 		} catch (err) {
@@ -804,7 +1150,7 @@ async function spaResolveUniqueEntity(ctx, item) {
 			return await spaFinishLicenseResolve(ctx, item, found.id, body, patch,
 				" (existing, matched by " + found.match + ")");
 
-		/* 2) No match — try create (may be forbidden on this service) */
+		/* 2) No match â€” try create (may be forbidden on this service) */
 		response = await HTTPJSONData(ctx.url + "/Licenses", ["Location"], "POST", body);
 		if (response && response.ok) {
 			id = typeof ExtractIdFromURL === "function"
@@ -831,7 +1177,7 @@ async function spaResolveUniqueEntity(ctx, item) {
 	}
 
 	try {
-		/* MultiDatastreams need special ObservedProperties filter — keep GetObjectId */
+		/* MultiDatastreams need special ObservedProperties filter â€” keep GetObjectId */
 		if (plural === "MultiDatastreams") {
 			id = await GetObjectId(ctx.url, plural, body);
 			if (spaIsEmpty(id)) {
@@ -893,7 +1239,7 @@ function spaCanResolveEntity(item, entities, partyId, pkg) {
 		/* Optional: never block; attach only when ready */
 		if (optional)
 			continue;
-		/* Required: if present in batch but not done → block */
+		/* Required: if present in batch but not done â†’ block */
 		if (!spaEntityReady(related))
 			return false;
 	}
@@ -974,7 +1320,7 @@ function spaObsIdColumn(pkg, measurementKey) {
 }
 
 /*
-	Id already present on the observation / wide-table column → reuse, no STA lookup.
+	Id already present on the observation / wide-table column â†’ reuse, no STA lookup.
 	Checks observationId, @iot.id, and the group's Observations.@iot.id column.
 */
 function spaObsIdFromTable(o, pkg) {
@@ -1009,7 +1355,7 @@ function spaWriteObsIdToRow(o, pkg, id, sourceData) {
 
 /*
 	Lookup by $filter on all body properties (AddKeysToFilter), then POST if missing.
-	If body already has @iot.id → return it without any request.
+	If body already has @iot.id â†’ return it without any request.
 */
 async function spaFilterFindId(url, plural, body) {
 	var filter, response, data, id;
@@ -1051,7 +1397,7 @@ async function spaPostEntity(url, plural, body) {
 	};
 }
 
-/* Returns { id, existing, fromTable }. existing=true → no POST. */
+/* Returns { id, existing, fromTable }. existing=true â†’ no POST. */
 async function spaGetOrCreate(url, plural, body) {
 	var id;
 	if (!body)
@@ -1080,7 +1426,7 @@ async function spaCreateObservations(ctx) {
 		if (o.status === "done")
 			continue;
 
-		/* Id already on the table → reuse, no filter / POST */
+		/* Id already on the table â†’ reuse, no filter / POST */
 		fromTable = spaObsIdFromTable(o, ctx.pkg);
 		if (!spaIsEmpty(fromTable)) {
 			o.status = "done";
@@ -1275,8 +1621,8 @@ async function spaLinkObservationsToGroups(ctx) {
 }
 
 /*
-	After Relations: link Relation↔ObservationGroup per nesting.relationObservationGroup.
-	relationFirst → PATCH OG with Relations; observationGroupFirst → already on Relation POST.
+	After Relations: link Relationâ†”ObservationGroup per nesting.relationObservationGroup.
+	relationFirst â†’ PATCH OG with Relations; observationGroupFirst â†’ already on Relation POST.
 */
 async function spaLinkRelationsToGroups(ctx) {
 	var nest = spaGetNesting(ctx.pkg), relIds = [], i, r, k, e, n = 0;
@@ -1326,7 +1672,7 @@ async function spaCreateRelations(ctx) {
 		r = ctx.relations[i];
 		if (r.status === "done")
 			continue;
-		/* Id already on the plan / table → reuse, no filter / POST */
+		/* Id already on the plan / table â†’ reuse, no filter / POST */
 		if (!spaIsEmpty(r.relationId) && r.relationId !== "(previous)") {
 			r.status = "done";
 			spaUpdatePreviewRelationId(r.index, r.relationId);
@@ -1393,7 +1739,7 @@ async function spaCreateRelations(ctx) {
 				spaUpdatePreviewRelationId(r.index, relId);
 				nOk++;
 				spaAppendLog("Relation[" + r.index + "] existing @" + relId +
-					" (" + targetKind + " Subject " + sid + " → Object " + oid + ")");
+					" (" + targetKind + " Subject " + sid + " â†’ Object " + oid + ")");
 				continue;
 			}
 
@@ -1411,7 +1757,7 @@ async function spaCreateRelations(ctx) {
 			spaUpdatePreviewRelationId(r.index, relId);
 			nOk++;
 			spaAppendLog("Relation[" + r.index + "] created @" + relId +
-				" (" + targetKind + " Subject " + sid + " → Object " + oid + ")");
+				" (" + targetKind + " Subject " + sid + " â†’ Object " + oid + ")");
 		} catch (err) {
 			r.status = "error";
 			r.error = err && err.message ? err.message : String(err);
@@ -1481,7 +1827,7 @@ function spaBuildPending(ctx) {
 }
 
 /* Bump when normalize/expand rules change so cached preview batches invalidate */
-var SPA_NORMALIZE_REV = 7;
+var SPA_NORMALIZE_REV = 17;
 
 function spaComputeBatchFingerprint(pkg, obsRows) {
 	var parts = [], plural, arr, i, o, nest;
@@ -1636,7 +1982,7 @@ function spaObsGroupDisplayLabel(g, index) {
 	label = g.groupLabel || g.label;
 	if (label && String(label).trim() !== "" && !spaIsSyntheticGroupKey(label))
 		return String(label).trim();
-	/* Never show synthetic keys (grup_…) — use etiqueta or "Grup N" */
+	/* Never show synthetic keys (grup_â€¦) â€” use etiqueta or "Grup N" */
 	if (typeof index === "number" && index >= 0)
 		return DonaCadena({cat: "Grup", spa: "Grupo", eng: "Group"}) + " " + (index + 1);
 	if (g.measurementKey && !spaIsSyntheticGroupKey(g.measurementKey))
@@ -1695,17 +2041,17 @@ function spaEntitiesByPlural(batch, pkg) {
 	return list;
 }
 
-function spaCollectBodyColumns(items) {
+function spaCollectBodyColumns(items, pkg) {
 	var cols = {}, ordered = [], i, body, name, prefer = ["name", "description", "definition", "authId", "encodingType", "metadata"];
 	for (i = 0; i < items.length; i++) {
-		body = items[i]._previewBody || spaBuildBody(items[i].plural, items[i].ent, items[i].rec);
+		body = items[i]._previewBody || spaBuildBody(items[i].plural, items[i].ent, items[i].rec, pkg);
 		items[i]._previewBody = body;
 		for (name in body) {
 			if (Object.prototype.hasOwnProperty.call(body, name))
 				cols[name] = true;
 		}
 	}
-	/* measurementKey stays on batch items for publish matching — not shown in preview columns */
+	/* measurementKey stays on batch items for publish matching â€” not shown in preview columns */
 	delete cols.measurementKey;
 	for (i = 0; i < prefer.length; i++) {
 		if (cols[prefer[i]]) {
@@ -1741,7 +2087,7 @@ function spaRenderPreview(batch) {
 	sections = spaEntitiesByPlural(batch);
 	for (si = 0; si < sections.length; si++) {
 		items = sections[si].items;
-		cols = spaCollectBodyColumns(items);
+		cols = spaCollectBodyColumns(items, batch._pkg);
 		html += "<div class=\"spaPreviewSection\" data-spa-plural=\"" + spaEsc(sections[si].plural) + "\">";
 		html += "<h4>" + spaEsc(sections[si].plural) + " (" + items.length + ")</h4>";
 		html += "<div class=\"spaPreviewTableWrap\"><table class=\"tablesmall spaPreviewTable\"><thead><tr>";
@@ -1750,7 +2096,7 @@ function spaRenderPreview(batch) {
 		html += "<th class=\"spaCellShort\">@iot.id</th></tr></thead><tbody>";
 		for (ii = 0; ii < items.length; ii++) {
 			item = items[ii];
-			body = item._previewBody || spaBuildBody(item.plural, item.ent, item.rec);
+			body = item._previewBody || spaBuildBody(item.plural, item.ent, item.rec, batch._pkg);
 			item._previewBody = body;
 			html += "<tr data-spa-entity-key=\"" + spaEsc(item.key) + "\">";
 			for (ci = 0; ci < cols.length; ci++) {
@@ -1791,7 +2137,7 @@ function spaRenderPreview(batch) {
 	}
 	html += "</div>";
 
-	/* Relations (after Observations — need their ids at publish time) */
+	/* Relations (after Observations â€” need their ids at publish time) */
 	if (batch.relations && batch.relations.length) {
 		html += "<div class=\"spaPreviewSection\" data-spa-plural=\"Relations\">";
 		html += "<h4>Relations (" + batch.relations.length + ")</h4>";
@@ -1953,9 +2299,9 @@ function spaAnalyzeAndRenderPreview(node) {
 			countsEl.textContent = "";
 		if (previewEl) {
 			previewEl.innerHTML = "<p>" + DonaCadena({
-				cat: "No hi ha taula d'observacions. Useu «Crea la taula» al Constructor.",
-				spa: "No hay tabla de observaciones. Use «Crear la tabla» en el Constructor.",
-				eng: "No observation table. Use «Create table» in the Builder."
+				cat: "No hi ha taula d'observacions. Useu Â«Crea la taulaÂ» al Constructor.",
+				spa: "No hay tabla de observaciones. Use Â«Crear la tablaÂ» en el Constructor.",
+				eng: "No observation table. Use Â«Create tableÂ» in the Builder."
 			}) + "</p>";
 		}
 		node.staPublishBatch = null;
@@ -1974,7 +2320,7 @@ function spaAnalyzeAndRenderPreview(node) {
 	spaApplyCacheToBatch(batch, node.staPublishCache);
 	spaRenderCounts(batch, pkg);
 	spaRenderPreview(batch);
-	console.log("STA Publisher — preview batch", batch);
+	console.log("STA Publisher â€” preview batch", batch);
 	return batch;
 }
 
@@ -1988,7 +2334,7 @@ function spaBuildPlanExportObject(node) {
 		entitiesByPlural[sections[si].plural] = [];
 		for (ii = 0; ii < items.length; ii++) {
 			item = items[ii];
-			body = item._previewBody || spaBuildBody(item.plural, item.ent, item.rec);
+			body = item._previewBody || spaBuildBody(item.plural, item.ent, item.rec, batch._pkg);
 			item._previewBody = body;
 			entitiesByPlural[sections[si].plural].push({
 				key: item.key,
@@ -2089,7 +2435,7 @@ function spaTriggerPngDownload(blobOrDataUrl, isDataUrl) {
 	}), false);
 }
 
-/* —— PNG plan export: real tables, all columns, wrap (no clipping) —— */
+/* â€”â€” PNG plan export: real tables, all columns, wrap (no clipping) â€”â€” */
 
 function spaPngWrapLines(ctx, text, maxWidth) {
 	var s = String(text == null ? "" : text), words, lines = [], line = "", i, test, rest;
@@ -2129,7 +2475,7 @@ function spaPngLayoutTable(ctx, headers, rows, opts) {
 	var padY = (opts && opts.padY != null) ? opts.padY : 4;
 	var lineH = (opts && opts.lineH != null) ? opts.lineH : 14;
 	var minCol = (opts && opts.minCol != null) ? opts.minCol : 48;
-	/* No max width: columns grow to fit full cell text (long URLs, JSON, …). */
+	/* No max width: columns grow to fit full cell text (long URLs, JSON, â€¦). */
 	var maxCol = (opts && opts.maxCol != null) ? opts.maxCol : Infinity;
 	var colWidths = [], i, j, w, cell, lines, rowLines = [], headerLines = [], h, totalW, totalH, cw;
 
@@ -2250,12 +2596,12 @@ function spaPngDrawTable(ctx, x, y, layout) {
 }
 
 function spaPngBuildEntityTable(batch, section) {
-	var items = section.items, cols = spaCollectBodyColumns(items), headers, rows = [], i, j, item, body;
+	var items = section.items, cols = spaCollectBodyColumns(items, batch && batch._pkg), headers, rows = [], i, j, item, body;
 	headers = cols.slice();
 	headers.push("@iot.id");
 	for (i = 0; i < items.length; i++) {
 		item = items[i];
-		body = item._previewBody || spaBuildBody(item.plural, item.ent, item.rec);
+		body = item._previewBody || spaBuildBody(item.plural, item.ent, item.rec, batch && batch._pkg);
 		item._previewBody = body;
 		rows.push(cols.map(function (c) { return spaFormatPreviewCell(body[c]); }).concat([
 			item.id != null ? String(item.id) : ""
@@ -2338,9 +2684,9 @@ function spaDownloadPlanPNG(event) {
 		}
 
 		spaSetStatus(DonaCadena({
-			cat: "Generant PNG…",
-			spa: "Generando PNG…",
-			eng: "Generating PNG…"
+			cat: "Generant PNGâ€¦",
+			spa: "Generando PNGâ€¦",
+			eng: "Generating PNGâ€¦"
 		}), false);
 
 		pad = 20;
@@ -2355,7 +2701,7 @@ function spaDownloadPlanPNG(event) {
 			blocks.push(block);
 
 		measureCtx = document.createElement("canvas").getContext("2d");
-		text = counts.map(function (c) { return c.plural + ": " + c.n; }).join("  ·  ");
+		text = counts.map(function (c) { return c.plural + ": " + c.n; }).join("  Â·  ");
 		for (bi = 0; bi < blocks.length; bi++) {
 			block = blocks[bi];
 			if (block.headers && block.rows) {
@@ -2453,7 +2799,7 @@ function spaResolveBindingSrc(src, row) {
 }
 
 /*
-	Melt wide super-table → internal observation list (1 obs per group with result).
+	Melt wide super-table â†’ internal observation list (1 obs per group with result).
 	Wide columns: [Group.]Observations.result / phenomenonTime / @iot.id
 */
 function spaMeltWideObsRows(wideData, pkg) {
@@ -2500,16 +2846,30 @@ function spaMeltWideObsRows(wideData, pkg) {
 }
 
 function spaLooksLikeWideTable(data, pkg) {
-	var b, col;
+	var b, col, name, parsed, n = 0;
 	if (!data || !data.length || !data[0] || !pkg)
+		return false;
+	/* Melted observation rows must never be treated as the wide super-table â€”
+	   otherwise Locations/FoI columns are missing and many sites collapse to 0/1. */
+	if (data[0].measurementKey !== undefined || data[0].datastreamRole !== undefined)
 		return false;
 	b = pkg.observations && pkg.observations.bindings && pkg.observations.bindings[0];
 	if (b && b.result && b.result.column) {
 		col = b.result.column;
-		return data[0][col] !== undefined || data[0]._sourceIndex !== undefined;
+		if (data[0][col] !== undefined)
+			return true;
 	}
-	/* Heuristic: published obs list has measurementKey + result, not Entity.property cols */
-	return data[0]._sourceIndex !== undefined && data[0].datastreamRole === undefined;
+	for (name in data[0]) {
+		if (!Object.prototype.hasOwnProperty.call(data[0], name))
+			continue;
+		parsed = spaParseSuperColumnName(name);
+		if (parsed) {
+			n++;
+			if (n >= 2)
+				return true;
+		}
+	}
+	return false;
 }
 
 function spaWideTableFromNode(node, parent, pkg) {
@@ -2578,11 +2938,12 @@ function spaEntityIdColumn(item, pkg) {
 }
 
 /*
-	Write resolved entity @iot.id values onto the wide super-table columns
-	(Things.@iot.id, Photography.Sensors.@iot.id, …).
+	Write resolved entity @iot.id onto wide columns Entity.@iot.id /
+	Group.Entity.@iot.id. For content reused across groups, write onto every
+	template column whose row content matches this entity key.
 */
 function spaWriteEntityIdsToWide(sourceData, entities, pkg) {
-	var k, item, col, r, row, matched;
+	var k, item, r, row, templates, ti, tmpl, col, key;
 	if (!sourceData || !entities)
 		return;
 	for (k in entities) {
@@ -2591,33 +2952,55 @@ function spaWriteEntityIdsToWide(sourceData, entities, pkg) {
 		item = entities[k];
 		if (!item || item.status !== "done" || spaIsEmpty(item.id))
 			continue;
-		col = spaEntityIdColumn(item, pkg);
-		if (!col)
+		templates = (pkg && pkg.entities && pkg.entities[item.plural]) || [];
+		if (!templates.length) {
+			col = spaEntityIdColumn(item, pkg);
+			if (!col)
+				continue;
+			for (r = 0; r < sourceData.length; r++) {
+				if (sourceData[r])
+					sourceData[r][col] = item.id;
+			}
 			continue;
-		/* Expand-by-row: write only onto the matching source row */
-		if (spaExpandByRow(item.plural) && item.rec) {
-			matched = false;
+		}
+		for (ti = 0; ti < templates.length; ti++) {
+			tmpl = templates[ti];
+			if (!tmpl)
+				continue;
+			col = (function () {
+				var prefix = null, bindings, bi, b;
+				if (tmpl.measurementKey != null && tmpl.measurementKey !== "") {
+					bindings = (pkg && pkg.observations && pkg.observations.bindings) || [];
+					for (bi = 0; bi < bindings.length; bi++) {
+						b = bindings[bi];
+						if (b && b.measurementKey === tmpl.measurementKey) {
+							prefix = b.groupPrefix || b.groupLabel || null;
+							break;
+						}
+					}
+				}
+				return (prefix ? prefix + "." : "") + item.plural + ".@iot.id";
+			})();
 			for (r = 0; r < sourceData.length; r++) {
 				row = sourceData[r];
 				if (!row)
 					continue;
-				if (row === item.rec ||
-						(item.rec._sourceIndex != null && row._sourceIndex === item.rec._sourceIndex) ||
-						(row._sourceIndex != null && item.rec === sourceData[row._sourceIndex])) {
+				key = spaEntityStableKey(item.plural, tmpl, row, pkg);
+				if (key !== item.key)
+					continue;
+				if (spaRowScopedIdWrite(item.plural))
 					row[col] = item.id;
-					matched = true;
-					break;
+				else {
+					row[col] = item.id;
 				}
 			}
-			if (!matched && item.rec._sourceIndex != null && sourceData[item.rec._sourceIndex])
-				sourceData[item.rec._sourceIndex][col] = item.id;
-			continue;
-		}
-		/* Shared / per-group template: same id on every wide row */
-		for (r = 0; r < sourceData.length; r++) {
-			row = sourceData[r];
-			if (row)
-				row[col] = item.id;
+			if (!spaRowScopedIdWrite(item.plural)) {
+				/* Constant content: ensure every row gets the id on this template column */
+				for (r = 0; r < sourceData.length; r++) {
+					if (sourceData[r] && sourceData[r][col] === undefined)
+						sourceData[r][col] = item.id;
+				}
+			}
 		}
 	}
 }
@@ -2693,7 +3076,7 @@ function spaWideResultAttributes(pkg, wideData, baseAttrs) {
 
 function spaCollectObsRows(node, parent, pkg) {
 	var wide, melted;
-	/* Wide super-table from Builder → melt to observations */
+	/* Wide super-table from Builder â†’ melt to observations */
 	if (pkg && pkg.observationTable === "wide") {
 		wide = spaWideTableFromNode(node, parent, pkg);
 		if (!wide)
@@ -2722,21 +3105,25 @@ function spaCollectObsRows(node, parent, pkg) {
 }
 
 function spaCollectSourceData(node, parent) {
-	var gp, pkg = (node && node.staEntityPackage) || (parent && parent.staEntityPackage);
-	/* Wide package: the super-table itself is the entity source */
+	var gp, wide, pkg = (node && node.staEntityPackage) || (parent && parent.staEntityPackage);
+	/* Wide package: prefer the super-table that matches package columns (same as melt) */
 	if (pkg && pkg.observationTable === "wide") {
-		if (node && node.STAdataSource && node.STAdataSource.length)
+		wide = spaWideTableFromNode(node, parent, pkg);
+		if (wide && wide.length)
+			return wide;
+		/* Do not fall back to melted STAdata â€” it has no Group.Locations.* columns */
+		if (node && node.STAdataSource && node.STAdataSource.length && spaLooksLikeWideTable(node.STAdataSource, pkg))
 			return node.STAdataSource;
-		if (node && node.STAdata && node.STAdata.length)
-			return node.STAdata;
-		if (parent && parent.STAdataSource && parent.STAdataSource.length)
+		if (parent && parent.STAdataSource && parent.STAdataSource.length && spaLooksLikeWideTable(parent.STAdataSource, pkg))
 			return parent.STAdataSource;
-		if (parent && parent.STAdata && parent.STAdata.length)
+		if (parent && parent.STAdata && parent.STAdata.length && spaLooksLikeWideTable(parent.STAdata, pkg))
 			return parent.STAdata;
+		if (node && node.STAdata && node.STAdata.length && spaLooksLikeWideTable(node.STAdata, pkg))
+			return node.STAdata;
 	}
-	if (node && node.STAdataSource)
+	if (node && node.STAdataSource && (!pkg || spaLooksLikeWideTable(node.STAdataSource, pkg) || pkg.observationTable !== "wide"))
 		return node.STAdataSource;
-	if (parent && parent.STAdataSource)
+	if (parent && parent.STAdataSource && (!pkg || spaLooksLikeWideTable(parent.STAdataSource, pkg) || pkg.observationTable !== "wide"))
 		return parent.STAdataSource;
 	if (parent && parent.image === "staEntityBuilder.png" && typeof getSTAEntityBuilderParent === "function") {
 		gp = getSTAEntityBuilderParent(parent);
@@ -2800,7 +3187,7 @@ function spaUpdateSummary(node, pkg) {
 		html += "<a class=\"spaSummaryVal spaSummaryLink\" href=\"" + spaEsc(url) +
 			"\" target=\"_blank\" rel=\"noopener noreferrer\">" + spaEsc(url) + "</a>";
 	} else {
-		html += "<span class=\"spaSummaryVal\">—</span>";
+		html += "<span class=\"spaSummaryVal\">â€”</span>";
 	}
 	html += "</div></div>";
 	summary.innerHTML = html;
@@ -2847,7 +3234,7 @@ function openSTAPublisherDialog(node) {
 	logEl = document.getElementById("DialogSTAPublisherLog");
 	if (logEl)
 		logEl.textContent = "";
-	/* Local analyze only — no GetObjectId on open */
+	/* Local analyze only â€” no GetObjectId on open */
 	spaAnalyzeAndRenderPreview(node);
 }
 
@@ -2869,14 +3256,14 @@ async function spaRunPublishPipeline(node, options) {
 		throw { name: "STA", message: DonaCadena({cat: "No hi ha paquet per publicar.", spa: "No hay paquete para publicar.", eng: "No package to publish."}) };
 	if (pkg.version !== 2)
 		throw { name: "STA", message: DonaCadena({
-			cat: "El paquet és d'una versió antiga. Torneu a crear la taula al Constructor.",
-			spa: "El paquete es de una versión antigua. Vuelva a crear la tabla en el Constructor.",
+			cat: "El paquet Ã©s d'una versiÃ³ antiga. Torneu a crear la taula al Constructor.",
+			spa: "El paquete es de una versiÃ³n antigua. Vuelva a crear la tabla en el Constructor.",
 			eng: "The package is from an older version. Create the table again in the Builder."
 		}) };
 	if (!spaIsLoggedIn()) {
 		if (typeof OpenLogin === "function")
 			OpenLogin();
-		throw { name: "STA", message: DonaCadena({cat: "Cal iniciar sessió.", spa: "Hay que iniciar sesión.", eng: "Please log in."}) };
+		throw { name: "STA", message: DonaCadena({cat: "Cal iniciar sessiÃ³.", spa: "Hay que iniciar sesiÃ³n.", eng: "Please log in."}) };
 	}
 	url = spaServiceUrl(node.STAURL || (parent && parent.STAURL) || pkg.STAURL);
 	if (!url)
@@ -2886,14 +3273,14 @@ async function spaRunPublishPipeline(node, options) {
 	obsRows = spaCollectObsRows(node, parent, pkg);
 	if (!obsRows || !obsRows.length)
 		throw { name: "STA", message: DonaCadena({
-			cat: "No hi ha taula d'observacions. Useu «Crea la taula» al Constructor.",
-			spa: "No hay tabla de observaciones. Use «Crear la tabla» en el Constructor.",
-			eng: "No observation table. Use «Create table» in the Builder."
+			cat: "No hi ha taula d'observacions. Useu Â«Crea la taulaÂ» al Constructor.",
+			spa: "No hay tabla de observaciones. Use Â«Crear la tablaÂ» en el Constructor.",
+			eng: "No observation table. Use Â«Create tableÂ» in the Builder."
 		}) };
 
 	/* Reuse preview batch when fingerprint still matches */
 	batch = spaPreparePublishBatch(node, pkg, obsRows, sourceData, retryOnly);
-	console.log("STA Publisher — publish batch", batch);
+	console.log("STA Publisher â€” publish batch", batch);
 	spaRenderCounts(batch);
 	spaRenderPreview(batch);
 
@@ -2920,7 +3307,7 @@ async function spaRunPublishPipeline(node, options) {
 		spaAppendLog("Retry pending only.");
 
 	spaAppendLog("STA URL: " + url);
-	spaAppendLog("Publish order: " + spaPublishDisplayOrder(pkg).join(" → "));
+	spaAppendLog("Publish order: " + spaPublishDisplayOrder(pkg).join(" â†’ "));
 	spaAppendLog("Unique entities: " + batch.entityCount + ", observations: " + batch.observations.length +
 		", relations: " + ((batch.relations && batch.relations.length) || 0));
 
@@ -2993,9 +3380,9 @@ async function spaRunPublishPipeline(node, options) {
 		pendingObservations: pending.observations.length,
 		pendingRelations: (pending.relations && pending.relations.length) || 0
 	};
-	console.log("STA Publisher — result", node.staPublishResult);
-	console.log("STA Publisher — STAdata", node.STAdata);
-	console.log("STA Publisher — pending", node.staPublishPending);
+	console.log("STA Publisher â€” result", node.staPublishResult);
+	console.log("STA Publisher â€” STAdata", node.STAdata);
+	console.log("STA Publisher â€” pending", node.staPublishPending);
 	if (typeof networkNodes !== "undefined")
 		networkNodes.update(node);
 	spaUpdateSummary(node, pkg);
@@ -3019,14 +3406,14 @@ async function publishSTAEntityPackage(event) {
 	logEl = document.getElementById("DialogSTAPublisherLog");
 	if (logEl)
 		logEl.textContent = "";
-	spaSetStatus(DonaCadena({cat: "Publicant…", spa: "Publicando…", eng: "Publishing…"}), false);
+	spaSetStatus(DonaCadena({cat: "Publicantâ€¦", spa: "Publicandoâ€¦", eng: "Publishingâ€¦"}), false);
 	try {
 		result = await spaRunPublishPipeline(node, { retryOnly: false });
 		spaAppendLog("Done. Observations: " + result.nOk + ", Relations: " + (result.nRelOk || 0) +
 			", failed: " + result.nFail);
 		spaSetStatus(DonaCadenaFmt({
-			cat: "Publicació finalitzada: {0} Observations, {1} Relations, {2} errors.",
-			spa: "Publicación finalizada: {0} Observations, {1} Relations, {2} errores.",
+			cat: "PublicaciÃ³ finalitzada: {0} Observations, {1} Relations, {2} errors.",
+			spa: "PublicaciÃ³n finalizada: {0} Observations, {1} Relations, {2} errores.",
 			eng: "Publish finished: {0} Observations, {1} Relations, {2} failures."
 		}, result.nOk, result.nRelOk || 0, result.nFail), result.nFail > 0);
 		if (typeof updateQueryAndTableArea === "function")
@@ -3034,8 +3421,8 @@ async function publishSTAEntityPackage(event) {
 	} catch (error) {
 		spaAppendLog("ERROR: " + (error && error.message ? error.message : String(error)));
 		spaSetStatus(DonaCadenaFmt({
-			cat: "Error de publicació: {0}",
-			spa: "Error de publicación: {0}",
+			cat: "Error de publicaciÃ³: {0}",
+			spa: "Error de publicaciÃ³n: {0}",
 			eng: "Publish error: {0}"
 		}, error && error.message ? error.message : String(error)), true);
 	}
@@ -3059,7 +3446,7 @@ async function retrySTAPublisherPending(event) {
 		}), true);
 		return;
 	}
-	spaSetStatus(DonaCadena({cat: "Reintentant pendents…", spa: "Reintentando pendientes…", eng: "Retrying pending…"}), false);
+	spaSetStatus(DonaCadena({cat: "Reintentant pendentsâ€¦", spa: "Reintentando pendientesâ€¦", eng: "Retrying pendingâ€¦"}), false);
 	spaAppendLog("--- Retry pending ---");
 	try {
 		result = await spaRunPublishPipeline(node, { retryOnly: true });

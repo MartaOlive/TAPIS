@@ -2385,6 +2385,10 @@
 	gap: 8px 14px;
 }
 
+#DialogSTAEntityBuilder .sebEntUnavailable {
+	opacity: 0.55;
+}
+
 #DialogSTAEntityBuilder .sebHint,
 #DialogSTAPublisher .sebHint {
 	font-size: 0.9em;

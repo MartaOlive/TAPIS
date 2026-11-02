@@ -7,7 +7,7 @@
 	Config (node.staEntityConfig, version 2):
 	{
 		version: 2, mode: "connectASensor"|"dataFromTable",
-		selected: { <EntityPlural>: true|false, ... },       // CAS: workflow checkboxes; free: derived from groups + Parties
+		selected: { <EntityPlural>: true|false, ... },       // CAS: workflow checkboxes; free: general ∪ groups
 		entities: { <EntityPlural>: { id: <src>, props: { <name>: <src> }, locked: bool } }, // shared (Party always)
 		measurements: [ {                                    // CAS: sensor columns; free: observation groups
 			key, include, label,                             // free: group name → id_<slug> for Relations
@@ -33,9 +33,13 @@ var SEB_DEFAULT_SELECTED = ["Parties", "Things", "Sensors", "Licenses", "Locatio
 var SEB_PER_MEAS = ["ObservedProperties", "Sensors", "FeaturesOfInterest", "Datastreams"];
 var SEB_SCOPE_SHARED = "shared";
 var SEB_SCOPE_GROUP = "perGroup";
-/* Free mode: entity checkboxes inside each observation group (Party is always shared — never here). */
-var SEB_GROUP_CHECKABLE = ["Licenses", "Things", "Locations", "HistoricalLocations", "Sensors", "ObservedProperties",
-	"FeaturesOfInterest", "Campaigns", "ObservationGroups", "Datastreams", "MultiDatastreams", "Cells", "Observations"];
+/*
+	Free mode: any entity can sit at general OR inside a group (mutual exclusivity).
+	Relations stays out — it has its own panel / relationStub.
+*/
+var SEB_GROUP_CHECKABLE = ["Parties", "Licenses", "Things", "Locations", "HistoricalLocations", "Sensors",
+	"ObservedProperties", "FeaturesOfInterest", "Campaigns", "ObservationGroups", "Datastreams",
+	"MultiDatastreams", "Cells", "Observations"];
 /* Kept for migration of older configs that had scope radios */
 var SEB_SCOPEABLE = SEB_GROUP_CHECKABLE.slice();
 /* Entities that must exist in the package when the key entity is used */
@@ -394,6 +398,13 @@ function sebEnsureScope(cfg) {
 		cfg.relationStub.subjectGroupKey = cfg.relationStub.subjectFrom;
 	if (cfg.relationStub.objectFrom && !cfg.relationStub.objectGroupKey)
 		cfg.relationStub.objectGroupKey = cfg.relationStub.objectFrom;
+	/* Keep general Relations checkbox ↔ stub.enabled in sync */
+	if (!cfg.selected)
+		cfg.selected = {};
+	if (cfg.relationStub.enabled)
+		cfg.selected.Relations = true;
+	else if (cfg.selected.Relations)
+		cfg.relationStub.enabled = true;
 	sebEnsureNesting(cfg);
 	sebEnsureGroupLabels(cfg);
 	sebRefreshRelationIdColumns(cfg);
@@ -401,7 +412,7 @@ function sebEnsureScope(cfg) {
 
 function sebIsPerGroup(cfg, plural) {
 	var i, m;
-	if (!cfg || !plural || plural === "Parties")
+	if (!cfg || !plural)
 		return false;
 	if (cfg.mode === "connectASensor")
 		return SEB_PER_MEAS.indexOf(plural) !== -1;
@@ -415,6 +426,127 @@ function sebIsPerGroup(cfg, plural) {
 			return true;
 	}
 	return false;
+}
+
+/* Free mode: entity is configured at the shared (general) level, not inside groups. */
+function sebIsSharedSelected(cfg, plural) {
+	if (!cfg || !plural)
+		return false;
+	/* Login Party is always general */
+	if (plural === "Parties")
+		return !!(cfg.selected && cfg.selected.Parties);
+	if (!cfg.selected || !cfg.selected[plural])
+		return false;
+	return !sebIsPerGroup(cfg, plural);
+}
+
+/* Keep login Party selected at general and present in cfg.entities. */
+function sebEnsureLoginParty(cfg, parent) {
+	if (!cfg)
+		return;
+	if (!cfg.selected)
+		cfg.selected = {};
+	cfg.selected.Parties = true;
+	sebClearEntityFromAllGroups(cfg, "Parties");
+	if (!cfg.entities)
+		cfg.entities = {};
+	if (!cfg.entities.Parties) {
+		cfg.entities.Parties = sebNewEntity("Parties", cfg.mode || "dataFromTable",
+			sebEntityDefaults("Parties", sebMeasCtxFromParent(cfg, parent)));
+	}
+}
+
+/* Clear an entity from every group's selected map (when moving it to general). */
+function sebClearEntityFromAllGroups(cfg, plural) {
+	var i, m;
+	if (!cfg || !plural || !cfg.measurements)
+		return;
+	for (i = 0; i < cfg.measurements.length; i++) {
+		m = cfg.measurements[i];
+		if (!m)
+			continue;
+		sebEnsureGroupSelected(m);
+		m.selected[plural] = false;
+	}
+}
+
+/*
+	DOM sync: general ↔ group exclusivity.
+	- Entity in any group → general checkbox unchecked + disabled
+	- Entity checked at general → group checkboxes unchecked + disabled
+	(Any entity including Parties may be general or per-group.)
+*/
+function sebSyncGeneralGroupExclusivity(cfg) {
+	var el = sebBody(), incs, gincs, i, plural, inGroup, shared, cb, lab;
+	if (!el || !cfg || cfg.mode === "connectASensor")
+		return;
+	sebEnsureLoginParty(cfg, null);
+	incs = el.querySelectorAll(".sebInc");
+	for (i = 0; i < incs.length; i++) {
+		cb = incs[i];
+		plural = cb.getAttribute("data-ent");
+		if (!plural)
+			continue;
+		if (plural === "Parties") {
+			cb.checked = true;
+			cb.disabled = true;
+			cb.title = DonaCadena({
+				cat: "El Party és obligatori i ve del login; no es pot desactivar.",
+				spa: "El Party es obligatorio y viene del login; no se puede desactivar.",
+				eng: "Party is required and comes from login; it cannot be turned off."
+			});
+			continue;
+		}
+		inGroup = sebIsPerGroup(cfg, plural);
+		if (inGroup) {
+			cb.checked = false;
+			cb.disabled = true;
+			cb.title = DonaCadena({
+				cat: "Aquesta entitat està marcada als grups; desmarqueu-la dels grups per usar-la al general.",
+				spa: "Esta entidad está marcada en los grupos; desmárquela de los grupos para usarla en el general.",
+				eng: "This entity is ticked in groups; untick it in groups to use it at the general level."
+			});
+		} else {
+			cb.disabled = false;
+			cb.title = "";
+			cb.checked = !!(cfg.selected && cfg.selected[plural]);
+		}
+	}
+	gincs = el.querySelectorAll(".sebGroupEntInc");
+	for (i = 0; i < gincs.length; i++) {
+		cb = gincs[i];
+		plural = cb.getAttribute("data-ent");
+		if (!plural)
+			continue;
+		/* Login Party never goes inside groups */
+		if (plural === "Parties") {
+			cb.checked = false;
+			cb.disabled = true;
+			lab = cb.closest("label");
+			if (lab)
+				lab.classList.add("sebEntUnavailable");
+			continue;
+		}
+		shared = sebIsSharedSelected(cfg, plural);
+		if (shared) {
+			cb.checked = false;
+			cb.disabled = true;
+			cb.title = DonaCadena({
+				cat: "Aquesta entitat és al general; desmarqueu-la del general per usar-la als grups.",
+				spa: "Esta entidad está en el general; desmárquela del general para usarla en los grupos.",
+				eng: "This entity is at the general level; untick it there to use it in groups."
+			});
+			lab = cb.closest("label");
+			if (lab)
+				lab.classList.add("sebEntUnavailable");
+		} else {
+			cb.disabled = false;
+			cb.title = "";
+			lab = cb.closest("label");
+			if (lab)
+				lab.classList.remove("sebEntUnavailable");
+		}
+	}
 }
 
 /* CAS: fixed SEB_PER_MEAS. Free: union of checked entities across included groups. */
@@ -483,15 +615,40 @@ function sebParentDataLen(p) {
 	return p && p.STAdata ? p.STAdata.length : 0;
 }
 
-/* Primary parent = most rows (tie → first). Drives observation rows / STAdataSource. */
+/*
+	Score a parent as materialize / primary source.
+	A wide super-table (Entity.property / Group.Entity.property columns) always
+	beats a longer table without those columns — otherwise multi-row entity data
+	becomes a "lateral" and every row collapses to STAdata[0].
+*/
+function sebParentMaterializeScore(p) {
+	var cols, i, nSuper = 0, n;
+	if (!p)
+		return -1;
+	n = sebParentDataLen(p);
+	cols = sebColumnNames(p.STAdata, p.STAdataAttributes);
+	for (i = 0; i < cols.length; i++) {
+		if (sebParseSuperColumnName(cols[i]))
+			nSuper++;
+	}
+	if (nSuper > 0)
+		return 1000000 + nSuper * 1000 + n;
+	return n;
+}
+
+/* Primary parent = best materialize score (super-table first, else most rows). */
 function getSTAEntityBuilderParent(node) {
-	var parents = getSTAEntityBuilderParents(node), best, i;
+	var parents = getSTAEntityBuilderParents(node), best, i, score, bestScore;
 	if (!parents.length)
 		return null;
 	best = parents[0];
+	bestScore = sebParentMaterializeScore(best);
 	for (i = 1; i < parents.length; i++) {
-		if (sebParentDataLen(parents[i]) > sebParentDataLen(best))
+		score = sebParentMaterializeScore(parents[i]);
+		if (score > bestScore) {
+			bestScore = score;
 			best = parents[i];
+		}
 	}
 	return best;
 }
@@ -631,8 +788,27 @@ function sebIsRealDataColumn(name, sourcesOrParent) {
 	return false;
 }
 
-/* Copy lateral (1-row) fields onto a primary row under exposed column names */
-function sebEnrichRecWithLaterals(rec, sources) {
+/* Pick lateral row: same index when multi-row; else the single row (constants). */
+function sebLateralSideRow(parent, rowIndex) {
+	var data;
+	if (!parent)
+		return null;
+	data = parent.STAdata;
+	if (!data || !data.length)
+		return null;
+	if (rowIndex != null && rowIndex >= 0 && rowIndex < data.length)
+		return data[rowIndex];
+	if (data.length === 1)
+		return data[0];
+	return null;
+}
+
+/*
+	Copy lateral fields onto a primary row under exposed column names.
+	Multi-row laterals align by rowIndex (not STAdata[0]) so distinct Locations /
+	FoI / results are preserved. True 1-row laterals still broadcast to every row.
+*/
+function sebEnrichRecWithLaterals(rec, sources, rowIndex) {
 	var out, k, e, side;
 	if (typeof deapCopy === "function")
 		out = deapCopy(rec || {});
@@ -653,7 +829,7 @@ function sebEnrichRecWithLaterals(rec, sources) {
 		e = sources.colMap[k];
 		if (!e.lateral || !e.parent)
 			continue;
-		side = e.parent.STAdata && e.parent.STAdata[0];
+		side = sebLateralSideRow(e.parent, rowIndex);
 		if (!side)
 			continue;
 		out[k] = side[e.field];
@@ -666,7 +842,7 @@ function sebEnrichDataWithLaterals(data, sources) {
 	if (!data)
 		return out;
 	for (i = 0; i < data.length; i++)
-		out.push(sebEnrichRecWithLaterals(data[i], sources));
+		out.push(sebEnrichRecWithLaterals(data[i], sources, i));
 	return out;
 }
 
@@ -785,14 +961,23 @@ function sebResolveSrc(src, rec) {
 		return undefined;
 	if (src.source !== "column")
 		return src.value;
+	/*
+		Current row first (primary cell or already-enriched lateral). Never fall
+		back to lateral STAdata[0] when the row already carries the value — that
+		was collapsing every Location / observation to the first source record.
+	*/
+	if (rec && Object.prototype.hasOwnProperty.call(rec, src.column) && rec[src.column] !== undefined)
+		return rec[src.column];
 	entry = (typeof sebCtx !== "undefined" && sebCtx && sebCtx.colMap) ? sebCtx.colMap[src.column] : null;
-	if (entry && entry.lateral) {
-		side = entry.parent && entry.parent.STAdata && entry.parent.STAdata[0];
-		return side ? side[entry.field] : undefined;
-	}
 	if (entry && !entry.lateral)
 		return rec ? rec[entry.field] : undefined;
-	/* Enriched rows already carry exposed lateral names */
+	if (entry && entry.lateral) {
+		if (rec && Object.prototype.hasOwnProperty.call(rec, src.column))
+			return rec[src.column];
+		/* 1-row lateral = constant broadcast; multi-row must come via enrichment */
+		side = sebLateralSideRow(entry.parent, null);
+		return side ? side[entry.field] : undefined;
+	}
 	return rec ? rec[src.column] : undefined;
 }
 
@@ -866,6 +1051,12 @@ function sebEntityDefaults(plural, ctx) {
 }
 
 function sebEntityColumnDefaults(plural, ctx) {
+	if (ctx && ctx.isCas) {
+		if (plural === "Locations")
+			return { location: "location" };
+		if (plural === "FeaturesOfInterest")
+			return { feature: "location" };
+	}
 	if (plural !== "Observations")
 		return {};
 	var d = { phenomenonTime: ctx.timeCol, resultTime: ctx.timeCol };
@@ -1043,8 +1234,14 @@ function sebNormalizeSuperPropName(propName) {
 }
 
 /*
-	Parse "Things.name" or "Photography.Observations.result"
-	→ { groupPrefix|null, plural, propName } or null.
+	Super-table column names:
+	  Entity.property                     → 2+ segments, first is STA plural
+	  Group.Entity.property               → 3+ segments, first is NOT a plural, second is
+	Examples:
+	  Things.name
+	  Temperature.Locations.location
+	  Humidity.Datastreams.unitOfMeasurement.name
+	→ { groupPrefix|null, plural, propName, column } or null.
 */
 function sebParseSuperColumnName(colName) {
 	var parts, plurals, propName;
@@ -1057,14 +1254,14 @@ function sebParseSuperColumnName(colName) {
 	if (parts.length < 2)
 		return null;
 	plurals = sebPluralSet();
-	/* Group.Entity.property… (first segment is not an entity plural) */
+	/* Group.Entity.property… — word.word.word(+): first ≠ plural, second = plural */
 	if (parts.length >= 3 && !plurals[parts[0]] && plurals[parts[1]]) {
 		propName = sebNormalizeSuperPropName(parts.slice(2).join("."));
 		if (!propName)
 			return null;
 		return { groupPrefix: parts[0], plural: parts[1], propName: propName, column: colName };
 	}
-	/* Entity.property… */
+	/* Entity.property… — first segment is the STA plural */
 	if (plurals[parts[0]]) {
 		propName = sebNormalizeSuperPropName(parts.slice(1).join("."));
 		if (!propName)
@@ -1172,9 +1369,40 @@ function sebFindOrCreateGroupByPrefix(cfg, parent, prefix) {
 	return m;
 }
 
+/* True if any Group.Entity.property column exists for this plural. */
+function sebPluralHasGroupColumns(maps, plural) {
+	var prefix;
+	if (!maps || !maps.groups || !plural)
+		return false;
+	for (prefix in maps.groups) {
+		if (!Object.prototype.hasOwnProperty.call(maps.groups, prefix))
+			continue;
+		if (maps.groups[prefix][plural])
+			return true;
+	}
+	return false;
+}
+
+function sebEnsureCfgEntity(cfg, plural, parent) {
+	var ctx;
+	if (!cfg)
+		return null;
+	if (!cfg.entities)
+		cfg.entities = {};
+	if (cfg.entities[plural])
+		return cfg.entities[plural];
+	ctx = sebMeasCtxFromParent(cfg, parent);
+	if (plural === "Observations")
+		cfg.entities[plural] = sebNewEntity("Observations", cfg.mode, {}, {});
+	else
+		cfg.entities[plural] = sebNewEntity(plural, cfg.mode, sebEntityDefaults(plural, ctx));
+	return cfg.entities[plural];
+}
+
 /*
 	Auto-wire config from super-table column names on the parent/sources.
-	Creates observation groups from Group.* prefixes when needed.
+	  Entity.property           → general (shared), outside groups — when no Group.* for that plural
+	  Group.Entity.property     → observation group with that prefix
 	Returns true if any column was applied.
 */
 function sebApplySuperColumnsToConfig(cfg, parent, sources, onlyEmpty) {
@@ -1193,19 +1421,24 @@ function sebApplySuperColumnsToConfig(cfg, parent, sources, onlyEmpty) {
 		cfg.scope = sebDefaultScope("dataFromTable");
 	}
 
+	/*
+		Entity.property (no group prefix): common / ungrouped data → general.
+		Only when this plural has no Group.Entity.property columns; otherwise groups own it.
+	*/
 	for (plural in maps.shared) {
 		if (!Object.prototype.hasOwnProperty.call(maps.shared, plural))
 			continue;
 		slot = maps.shared[plural];
-		cfg.selected[plural] = true;
-		if (plural === "Observations") {
-			/* Shared Observations without group — rare; bind on cfg.entities if present */
-			if (!cfg.entities.Observations)
-				cfg.entities.Observations = sebNewEntity("Observations", cfg.mode, {}, {});
-			sebApplyColumnMapToEntity(cfg.entities.Observations, plural, slot, cfg.mode, onlyEmpty);
-		} else if (cfg.entities[plural]) {
+		if (sebPluralHasGroupColumns(maps, plural)) {
+			/* Also have Group.Entity.* — keep bindings on cfg.entities as fallback, groups win UI */
+			sebEnsureCfgEntity(cfg, plural, parent);
 			sebApplyColumnMapToEntity(cfg.entities[plural], plural, slot, cfg.mode, onlyEmpty);
+			continue;
 		}
+		sebClearEntityFromAllGroups(cfg, plural);
+		cfg.selected[plural] = true;
+		sebEnsureCfgEntity(cfg, plural, parent);
+		sebApplyColumnMapToEntity(cfg.entities[plural], plural, slot, cfg.mode, onlyEmpty);
 	}
 
 	for (prefix in maps.groups) {
@@ -1271,6 +1504,18 @@ function sebApplySuperColumnsToConfig(cfg, parent, sources, onlyEmpty) {
 		});
 		sebSyncGroupResultColumn(m, sources || parent);
 	}
+	/*
+		Groups may have been created after the shared pass — keep Entity.property-only
+		plurals at general (unchecked in every group).
+	*/
+	for (plural in maps.shared) {
+		if (!Object.prototype.hasOwnProperty.call(maps.shared, plural))
+			continue;
+		if (!sebPluralHasGroupColumns(maps, plural)) {
+			sebClearEntityFromAllGroups(cfg, plural);
+			cfg.selected[plural] = true;
+		}
+	}
 	sebEnsureGroupLabels(cfg);
 	sebRefreshRelationIdColumns(cfg);
 	return true;
@@ -1308,7 +1553,8 @@ function sebNewMeasurement(key, parent, ctx, perGroup) {
 				metadata: sensorDefaults.metadata || ""
 			});
 		} else if (plural === "FeaturesOfInterest") {
-			m.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", ctx.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
+			m.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", ctx.mode,
+				sebEntityDefaults("FeaturesOfInterest", ctx), sebEntityColumnDefaults("FeaturesOfInterest", ctx));
 		} else if (plural === "Datastreams") {
 			m.Datastreams = sebNewEntity("Datastreams", ctx.mode, {
 				name: obsName,
@@ -1336,8 +1582,10 @@ function sebNewMeasurement(key, parent, ctx, perGroup) {
 			metadata: sensorDefaults.metadata || ""
 		});
 	}
-	if (!m.FeaturesOfInterest)
-		m.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", ctx.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
+	if (!m.FeaturesOfInterest) {
+		m.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", ctx.mode,
+			sebEntityDefaults("FeaturesOfInterest", ctx), sebEntityColumnDefaults("FeaturesOfInterest", ctx));
+	}
 	if (!m.Datastreams) {
 		m.Datastreams = sebNewEntity("Datastreams", ctx.mode, {
 			name: obsName, description: desc, observationType: SEB_OBS_TYPE,
@@ -1397,8 +1645,10 @@ function sebEnsureMeasurementEntities(cfg, parent, sources) {
 			}
 		}
 	}
-	if (!cfg.entities.FeaturesOfInterest)
-		cfg.entities.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", cfg.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
+	if (!cfg.entities.FeaturesOfInterest) {
+		cfg.entities.FeaturesOfInterest = sebNewEntity("FeaturesOfInterest", cfg.mode,
+			sebEntityDefaults("FeaturesOfInterest", ctx), sebEntityColumnDefaults("FeaturesOfInterest", ctx));
+	}
 	cfg.measurements.forEach(function (meas, idx) {
 		m = meas;
 		if (cfg.mode !== "connectASensor")
@@ -1413,8 +1663,12 @@ function sebEnsureMeasurementEntities(cfg, parent, sources) {
 		}
 		if (!m.Sensors)
 			m.Sensors = idx === 0 && sharedSensor ? sebCloneEntityCfg(sharedSensor) : sebNewEntity("Sensors", cfg.mode, sebEntityDefaults("Sensors", ctx));
-		if (!m.FeaturesOfInterest)
-			m.FeaturesOfInterest = idx === 0 && sharedFoi ? sebCloneEntityCfg(sharedFoi) : sebNewEntity("FeaturesOfInterest", cfg.mode, sebEntityDefaults("FeaturesOfInterest", ctx));
+		if (!m.FeaturesOfInterest) {
+			m.FeaturesOfInterest = idx === 0 && sharedFoi
+				? sebCloneEntityCfg(sharedFoi)
+				: sebNewEntity("FeaturesOfInterest", cfg.mode,
+					sebEntityDefaults("FeaturesOfInterest", ctx), sebEntityColumnDefaults("FeaturesOfInterest", ctx));
+		}
 		if (cfg.mode !== "connectASensor" && !m.Observations) {
 			neu = { phenomenonTime: "", resultTime: "" };
 			if (m.resultColumn && sebIsRealDataColumn(m.resultColumn, probe))
@@ -1534,7 +1788,7 @@ function sebDefaultConfig(parent, mode, node) {
 		(cols.indexOf("phenomenonTime") !== -1 ? "phenomenonTime" :
 			(cols.indexOf("Observations.phenomenonTime") !== -1 ? "Observations.phenomenonTime" : (cols[0] || "")));
 	valueCols = cols.filter(function (c) {
-		return c !== timeCol && c !== "sensor_id" && c !== "@iot.id" && c.indexOf(".") === -1;
+		return c !== timeCol && c !== "sensor_id" && c !== "location" && c !== "@iot.id" && c.indexOf(".") === -1;
 	});
 	ctx = {
 		mode: mode,
@@ -1829,6 +2083,14 @@ function sebPropValueFromRecord(name, rec) {
 	return typeof v === "object" ? JSON.stringify(v) : String(v);
 }
 
+function sebEntityReusesById(ent) {
+	return !!(ent && ent.id && sebSrcIsSet(ent.id));
+}
+
+/*
+	Show STA record in the form (id + properties, read-only). Publish still
+	reuses by @iot.id only — packed properties are omitted when id is set.
+*/
 function sebApplyRecordToEntityCfg(plural, ent, rec, mode) {
 	ent.id = sebSrcObj("manual", rec["@iot.id"], "");
 	sebPropList(plural, mode).forEach(function (p) {
@@ -1949,15 +2211,16 @@ function sebIdRowHtml(plural, ent, cols, cands) {
 }
 
 function sebEntityBlockHtml(plural, ent, meas, cols, cands, mode, showTitle) {
-	var partyFixed = plural === "Parties";
-	var locked = !!(ent.locked || partyFixed);
-	var html = "<div class=\"sebEnt" + (locked ? " sebLocked" : "") + (partyFixed ? " sebPartyFixed" : "") +
+	/* Login Party helper only at general (shared); per-group Parties use normal fields */
+	var partyLogin = plural === "Parties" && (meas === null || meas === undefined);
+	var locked = !!(ent.locked || partyLogin);
+	var html = "<div class=\"sebEnt" + (locked ? " sebLocked" : "") + (partyLogin ? " sebPartyFixed" : "") +
 		"\" data-ent=\"" + plural + "\"" +
-		(meas !== null ? " data-meas=\"" + sebEsc(meas) + "\"" : "") +
-		(partyFixed ? " data-party-fixed=\"1\"" : "") + ">";
+		(meas !== null && meas !== undefined ? " data-meas=\"" + sebEsc(meas) + "\"" : "") +
+		(partyLogin ? " data-party-fixed=\"1\"" : "") + ">";
 	if (showTitle)
 		html += "<div class=\"sebMeasEntTitle\">" + sebEsc(plural) + "</div>";
-	if (partyFixed) {
+	if (partyLogin) {
 		html += sebPartyIdRowHtml(ent);
 		sebPropList(plural, mode).forEach(function (p) {
 			html += sebPartyPropRowHtml(p, ent.props[p.name] || sebSrcObj("manual", "", ""));
@@ -2138,6 +2401,25 @@ function sebGroupCardHtml(m, cols, cfg) {
 		"</span><div class=\"sebIncludeRow\">");
 	for (i = 0; i < SEB_GROUP_CHECKABLE.length; i++) {
 		c = SEB_GROUP_CHECKABLE[i];
+		/* Login Party stays at general only */
+		if (c === "Parties" || sebIsSharedSelected(cfg, c)) {
+			html.push("<label class=\"sebEntUnavailable\"><input type=\"checkbox\" class=\"sebGroupEntInc\" data-meas=\"",
+				sebEsc(m.key), "\" data-ent=\"", sebEsc(c),
+				"\" onchange=\"sebOnGroupEntityChange(this)\" disabled title=\"",
+				sebEsc(c === "Parties"
+					? DonaCadena({
+						cat: "El Party ve del login i només és al general.",
+						spa: "El Party viene del login y solo está en el general.",
+						eng: "Party comes from login and is only at the general level."
+					})
+					: DonaCadena({
+						cat: "Aquesta entitat és al general; desmarqueu-la del general per usar-la als grups.",
+						spa: "Esta entidad está en el general; desmárquela del general para usarla en los grupos.",
+						eng: "This entity is at the general level; untick it there to use it in groups."
+					})),
+				"\"> ", sebEsc(c), "</label>");
+			continue;
+		}
 		html.push("<label><input type=\"checkbox\" class=\"sebGroupEntInc\" data-meas=\"", sebEsc(m.key),
 			"\" data-ent=\"", sebEsc(c), "\" onchange=\"sebOnGroupEntityChange(this)\"",
 			(m.selected[c] ? " checked" : ""), "> ", sebEsc(c), "</label>");
@@ -2146,7 +2428,7 @@ function sebGroupCardHtml(m, cols, cfg) {
 	html.push("<div class=\"sebGroupEnts\">");
 	for (i = 0; i < groupEnts.length; i++) {
 		c = groupEnts[i];
-		if (!m[c])
+		if (!m[c] || sebIsSharedSelected(cfg, c))
 			continue;
 		/* Same fieldset+legend look as shared entities outside the group */
 		html.push("<fieldset class=\"sebSection sebMeasEntWrap\" data-meas-ent=\"", c, "\"><legend>",
@@ -2217,12 +2499,17 @@ function sebRelationPanelHtml(cfg) {
 	var stub = cfg.relationStub || sebNewRelationStub();
 	var included = (cfg.measurements || []).filter(function (g) { return g.include; });
 	var html = [];
-	var i, m, opt, tk;
+	var i, m, opt, tk, show;
+	/* Master switch is the general "Relations" checkbox — keep stub.enabled in sync */
+	show = !!(cfg.selected && cfg.selected.Relations) || !!stub.enabled;
+	if (show)
+		stub.enabled = true;
 	sebRefreshRelationIdColumns(cfg);
 	tk = stub.targetKind === "ObservationGroups" ? "ObservationGroups" : "Observations";
-	html.push("<section class=\"sebPanel sebRelationPanel\" aria-labelledby=\"sebRelTitle\">");
+	html.push("<section class=\"sebPanel sebRelationPanel sebSection\" data-section=\"Relations\"",
+		(show ? "" : " hidden"), " aria-labelledby=\"sebRelTitle\">");
 	html.push("<strong id=\"sebRelTitle\" class=\"sebPanelTitle\">",
-		DonaCadena({cat: "Relation (per fila)", spa: "Relation (por fila)", eng: "Relation (per row)"}),
+		DonaCadena({cat: "Relations", spa: "Relations", eng: "Relations"}),
 		"</strong>");
 	html.push("<p class=\"sebHint\">",
 		DonaCadena({
@@ -2230,13 +2517,6 @@ function sebRelationPanelHtml(cfg) {
 			spa: "Elija el grupo subject y el grupo object. El Publicador STA creará una Relation por fila cuando haya los @iot.id.",
 			eng: "Pick the subject and object groups. The STA Publisher will create one Relation per row once @iot.id values exist."
 		}), "</p>");
-	html.push("<label class=\"sebRelEnable\"><input type=\"checkbox\" class=\"sebRelEnableCb\" id=\"sebRelEnable\"",
-		(stub.enabled ? " checked" : ""), " onchange=\"sebOnIncludeChange()\"> ",
-		DonaCadena({
-			cat: "Prepara Relation per fila",
-			spa: "Preparar Relation por fila",
-			eng: "Prepare per-row Relation"
-		}), "</label>");
 	html.push("<div class=\"sebRow\"><span class=\"sebLbl\">",
 		DonaCadena({
 			cat: "Subject/Object són",
@@ -2289,6 +2569,8 @@ function renderSTAEntityBuilderForm(node) {
 		return;
 	sebEnsureScope(cfg);
 	sebEnsureGroupLabels(cfg);
+	/* Login Party always visible at general (never dropped from the form) */
+	sebEnsureLoginParty(cfg, parent);
 	if (!isCas)
 		sebRefreshRelationIdColumns(cfg);
 	rows = parent && parent.STAdata ? parent.STAdata.length : 0;
@@ -2373,29 +2655,80 @@ function renderSTAEntityBuilderForm(node) {
 		});
 		html.push(sebNestingPanelHtml(cfg));
 	} else {
-		/* ========== DataFromTable: freer groups ========== */
+		/* ========== DataFromTable: common entities first, then entity groups ========== */
 		html.push("<p class=\"sebHint\">",
 			DonaCadena({
-				cat: "El Party és sempre compartit (login). Creeu grups; dins de cada grup marqueu les entitats (incloent Observations) i ompliu-ne les propietats a mà o amb columna.",
-				spa: "El Party es siempre compartido (login). Cree grupos; dentro de cada grupo marque las entidades (incluyendo Observations) y rellene propiedades a mano o con columna.",
-				eng: "Party is always shared (login). Create groups; inside each group tick entities (including Observations) and fill properties manually or from a column."
+				cat: "Primer les entitats comunes (compartides); després els grups d'entitats. No marqueu la mateixa entitat als dos llocs.",
+				spa: "Primero las entidades comunes (compartidas); después los grupos de entidades. No marque la misma entidad en ambos sitios.",
+				eng: "Common (shared) entities first; then entity groups. Do not tick the same entity in both places."
 			}), "</p>");
 
-		/* Shared Party only at top level */
-		html.push("<fieldset class=\"sebSection\" data-section=\"Parties\"><legend>Parties</legend>");
-		html.push("<p id=\"sebPartyMsg\" class=\"sebPartyMsg sebHint\"></p>");
-		if (cfg.entities.Parties)
-			html.push(sebEntityBlockHtml("Parties", cfg.entities.Parties, null, cols, sebCtx.cands.Parties, cfg.mode, false));
-		html.push("</fieldset>");
+		/* —— Common / shared entities (top) —— */
+		html.push("<section class=\"sebPanel sebCommonPanel\"><strong class=\"sebPanelTitle\">",
+			DonaCadena({cat: "Entitats comunes", spa: "Entidades comunes", eng: "Common entities"}),
+			"</strong>");
+		html.push("<div class=\"sebIncludeRow\">");
+		order.forEach(function (plural) {
+			var inGroup = sebIsPerGroup(cfg, plural);
+			var isParty = plural === "Parties";
+			var checked = isParty || !!(cfg.selected[plural] && !inGroup);
+			var disabled = isParty || inGroup;
+			html.push("<label", (disabled ? " class=\"sebEntUnavailable\"" : ""),
+				"><input type=\"checkbox\" class=\"sebInc\" data-ent=\"", plural,
+				"\" onchange=\"sebOnGeneralEntityChange(this)\"",
+				(checked ? " checked" : ""),
+				(disabled ? " disabled" : ""),
+				(isParty ? " title=\"" + sebEsc(DonaCadena({
+					cat: "El Party és obligatori i ve del login.",
+					spa: "El Party es obligatorio y viene del login.",
+					eng: "Party is required and comes from login."
+				})) + "\"" : ""),
+				(inGroup && !isParty ? " title=\"" + sebEsc(DonaCadena({
+					cat: "Aquesta entitat està marcada als grups; desmarqueu-la dels grups per usar-la a les comunes.",
+					spa: "Esta entidad está marcada en los grupos; desmárquela de los grupos para usarla en las comunes.",
+					eng: "This entity is ticked in groups; untick it in groups to use it in common entities."
+				})) + "\"" : ""),
+				"> ", plural, "</label>");
+		});
+		html.push("</div>");
+
+		/* Party always first among common property forms, then the rest */
+		(function () {
+			var commonOrder = ["Parties"].concat(order.filter(function (p) {
+				return p !== "Parties" && p !== "Relations";
+			}));
+			var pi, plural;
+			for (pi = 0; pi < commonOrder.length; pi++) {
+				plural = commonOrder[pi];
+				if (plural !== "Parties" && !sebIsSharedSelected(cfg, plural))
+					continue;
+				if (!cfg.entities[plural]) {
+					if (plural === "Parties")
+						sebEnsureLoginParty(cfg, parent);
+					else if (plural === "Observations")
+						cfg.entities[plural] = sebNewEntity("Observations", cfg.mode, {}, {});
+					else
+						continue;
+				}
+				if (!cfg.entities[plural])
+					continue;
+				html.push("<fieldset class=\"sebSection\" data-section=\"", plural, "\"><legend>", plural, "</legend>");
+				if (plural === "Parties")
+					html.push("<p id=\"sebPartyMsg\" class=\"sebPartyMsg sebHint\"></p>");
+				html.push(sebEntityBlockHtml(plural, cfg.entities[plural], null, cols, sebCtx.cands[plural], cfg.mode, false));
+				html.push("</fieldset>");
+			}
+		})();
+		html.push("</section>");
 
 		html.push("<section class=\"sebPanel sebGroupsPanel\"><strong class=\"sebPanelTitle\">",
-			DonaCadena({cat: "Grups d'observacions", spa: "Grupos de observaciones", eng: "Observation groups"}),
+			DonaCadena({cat: "Grups d'entitats", spa: "Grupos de entidades", eng: "Entity groups"}),
 			"</strong>");
 		html.push("<div class=\"sebGroupActions\"><button type=\"button\" class=\"DialogConnectASensorAction\" onclick=\"sebOnAddGroup(event)\">",
 			DonaCadena({
-				cat: "Crea un nou grup d'observacions",
-				spa: "Crear un nuevo grupo de observaciones",
-				eng: "Create new observations group"
+				cat: "Crea un nou grup d'entitats",
+				spa: "Crear un nuevo grupo de entidades",
+				eng: "Create new entity group"
 			}), "</button></div>");
 		html.push("<div class=\"sebGroupList\">");
 		(cfg.measurements || []).forEach(function (m) {
@@ -2404,9 +2737,9 @@ function renderSTAEntityBuilderForm(node) {
 		if (!(cfg.measurements || []).length) {
 			html.push("<p class=\"sebHint\">",
 				DonaCadena({
-					cat: "Encara no hi ha grups. Creeu-ne un (p. ex. fotos, identificació).",
-					spa: "Aún no hay grupos. Cree uno (p. ej. fotos, identificación).",
-					eng: "No groups yet. Create one (e.g. photos, identification)."
+					cat: "Encara no hi ha grups d'entitats. Creeu-ne un (p. ex. Temperature, Humidity).",
+					spa: "Aún no hay grupos de entidades. Cree uno (p. ej. Temperature, Humidity).",
+					eng: "No entity groups yet. Create one (e.g. Temperature, Humidity)."
 				}), "</p>");
 		}
 		html.push("</div></section>");
@@ -2436,7 +2769,8 @@ function renderSTAEntityBuilderForm(node) {
 				eng: "Party is required and comes from login; it cannot be turned off."
 			});
 		}
-		if (obsInc) {
+		/* CAS: Observations always on; free mode uses general↔group exclusivity instead */
+		if (isCas && obsInc) {
 			obsInc.checked = true;
 			obsInc.disabled = true;
 			obsInc.title = DonaCadena({
@@ -2447,6 +2781,8 @@ function renderSTAEntityBuilderForm(node) {
 		}
 	})();
 	sebRefreshVisibility();
+	if (!isCas)
+		sebSyncGeneralGroupExclusivity(cfg);
 	sebBindAutoSave(el);
 	sebLoadPartyFromLogin(node);
 }
@@ -2486,28 +2822,30 @@ function sebOnQuickColToggle(cb) {
 }
 
 function sebReadSelectedFromForm() {
-	var el = sebBody(), sel = {}, incs, i, modeEl, gincs, isCas;
+	var el = sebBody(), sel = {}, incs, i, modeEl, gincs, isCas, plural;
 	if (!el)
 		return sel;
 	modeEl = document.getElementById("sebMode");
 	isCas = !modeEl || modeEl.value === "connectASensor";
 	incs = el.querySelectorAll(".sebInc");
-	for (i = 0; i < incs.length; i++)
-		sel[incs[i].getAttribute("data-ent")] = incs[i].checked;
-	/* Party is always required and shared */
-	sel.Parties = true;
+	for (i = 0; i < incs.length; i++) {
+		/* Disabled general boxes (entity in groups) count as unchecked at general */
+		plural = incs[i].getAttribute("data-ent");
+		sel[plural] = !incs[i].disabled && incs[i].checked;
+	}
 	if (isCas) {
 		sel.Observations = true;
+		sel.Parties = true;
 	} else {
-		/* Free mode: derive workflow from per-group entity checkboxes */
-		sel.Observations = true;
+		/* Free mode: union of general checkboxes + per-group entity checkboxes */
 		gincs = el.querySelectorAll(".sebGroupEntInc");
 		for (i = 0; i < gincs.length; i++) {
-			if (gincs[i].checked)
+			if (!gincs[i].disabled && gincs[i].checked)
 				sel[gincs[i].getAttribute("data-ent")] = true;
 		}
-		if (el.querySelector("#sebRelEnable") && el.querySelector("#sebRelEnable").checked)
-			sel.Relations = true;
+		/* Party from login is always on (general) */
+		sel.Parties = true;
+		/* Relations is driven only by the general checkbox (panel has no separate enable) */
 	}
 	return sel;
 }
@@ -2536,8 +2874,19 @@ function sebRefreshVisibility() {
 			continue;
 		if (!p)
 			continue;
-		if (!isCas && p === "Parties") {
-			secs[i].hidden = false;
+		if (!isCas) {
+			/* Free mode: show shared sections when general checkbox is on.
+			   Party stays disabled+checked — still show its section. */
+			(function () {
+				var gInc = el.querySelector(".sebInc[data-ent=\"" + p + "\"]");
+				var showShared = p === "Parties"
+					? !!(gInc && gInc.checked)
+					: !!(gInc && gInc.checked && !gInc.disabled);
+				secs[i].hidden = !showShared;
+				note = secs[i].querySelector(".sebReqNote");
+				if (note)
+					note.hidden = true;
+			})();
 			continue;
 		}
 		secs[i].hidden = !eff[p];
@@ -2606,7 +2955,53 @@ function sebOnGroupEntityChange(cb) {
 	}
 	if (found) {
 		sebEnsureGroupSelected(found);
-		found.selected[plural] = !!cb.checked;
+		/* Login Party stays at general — do not move it into groups */
+		if (plural === "Parties") {
+			cb.checked = false;
+			found.selected.Parties = false;
+		} else
+			found.selected[plural] = !!cb.checked;
+	}
+	/* Moving into groups: keep overall selected; exclusivity hides general form */
+	if (cb.checked && plural && plural !== "Parties")
+		cfg.selected[plural] = true;
+	sebEnsureMeasurementEntities(cfg, parent);
+	node.staEntityConfig = cfg;
+	if (typeof networkNodes !== "undefined")
+		networkNodes.update(node);
+	renderSTAEntityBuilderForm(node);
+}
+
+/* Free mode: tick/untick an entity at the general (shared) level */
+function sebOnGeneralEntityChange(cb) {
+	var node = getSTAEntityBuilderNodeSafe();
+	var cfg, parent, plural;
+	if (!node || !cb)
+		return;
+	plural = cb.getAttribute("data-ent");
+	if (!plural)
+		return;
+	/* Party from login cannot be turned off */
+	if (plural === "Parties") {
+		cb.checked = true;
+		return;
+	}
+	cfg = sebCollectConfigFromForm(node);
+	parent = getSTAEntityBuilderParent(node);
+	if (cb.checked) {
+		/* Move to general: remove from every group */
+		sebClearEntityFromAllGroups(cfg, plural);
+		cfg.selected[plural] = true;
+		if (!cfg.entities[plural]) {
+			cfg.entities[plural] = sebNewEntity(plural, cfg.mode,
+				sebEntityDefaults(plural, sebMeasCtxFromParent(cfg, parent)));
+		}
+		if (plural === "Relations" && cfg.relationStub)
+			cfg.relationStub.enabled = true;
+	} else {
+		cfg.selected[plural] = sebIsPerGroup(cfg, plural);
+		if (plural === "Relations" && cfg.relationStub && !cfg.selected.Relations)
+			cfg.relationStub.enabled = false;
 	}
 	sebEnsureMeasurementEntities(cfg, parent);
 	node.staEntityConfig = cfg;
@@ -2616,7 +3011,14 @@ function sebOnGroupEntityChange(cb) {
 }
 
 function sebOnIncludeChange() {
+	var node = getSTAEntityBuilderNodeSafe();
+	var cfg;
 	sebRefreshVisibility();
+	if (node) {
+		cfg = node.staEntityConfig;
+		if (cfg && cfg.mode !== "connectASensor")
+			sebSyncGeneralGroupExclusivity(cfg);
+	}
 	sebScheduleAutoSave();
 }
 
@@ -2799,6 +3201,7 @@ function sebSetEntLocked(entEl, locked) {
 	}
 }
 
+/* Load STA record into the form for display (read-only). Publish ignores these props if @iot.id is set. */
 function sebFillEntFromRecord(entEl, rec) {
 	var rows = entEl.querySelectorAll(".sebRow"), i, row, srcEl, valEl;
 	for (i = 0; i < rows.length; i++) {
@@ -2880,7 +3283,8 @@ function sebOnSrcChange(sel) {
 	if (!row)
 		return;
 	entEl = sel.closest(".sebEnt");
-	if (entEl && (entEl.getAttribute("data-party-fixed") === "1" || entEl.getAttribute("data-ent") === "Parties")) {
+	/* Only the general login Party is fixed — per-group Parties are editable */
+	if (entEl && entEl.getAttribute("data-party-fixed") === "1") {
 		sebLockPartyEntity(entEl);
 		return;
 	}
@@ -2895,8 +3299,8 @@ function sebOnIdChange(el) {
 	var row = el.closest(".sebIdRow"), entEl = el.closest(".sebEnt"), cand;
 	if (!row || !entEl)
 		return;
-	/* Party from login is never editable */
-	if (entEl.getAttribute("data-party-fixed") === "1" || entEl.getAttribute("data-ent") === "Parties") {
+	/* Party from login (general) is never editable */
+	if (entEl.getAttribute("data-party-fixed") === "1") {
 		sebLockPartyEntity(entEl);
 		return;
 	}
@@ -2965,7 +3369,11 @@ async function sebSearchEntity(btn) {
 	sebUpdateIdUi(row);
 	if (response && response.ok && response.obj) {
 		sebFillEntFromRecord(entEl, response.obj);
-		sebSetSearchMsg(row, "sebSearchOk", DonaCadena({cat: "Trobat. Camps carregats (només lectura).", spa: "Encontrado. Campos cargados (solo lectura).", eng: "Found. Fields loaded (read-only)."}));
+		sebSetSearchMsg(row, "sebSearchOk", DonaCadena({
+			cat: "Trobat. Camps mostrats (només lectura); en publicar es reutilitza el @iot.id.",
+			spa: "Encontrado. Campos mostrados (solo lectura); al publicar se reutiliza el @iot.id.",
+			eng: "Found. Fields shown (read-only); publish reuses @iot.id."
+		}));
 	} else if (response && response.ok === false && response.status === 404) {
 		sebSetSearchMsg(row, "sebNotFound", DonaCadena({cat: "Aquest ID no existeix al servei STA connectat.", spa: "Este ID no existe en el servicio STA conectado.", eng: "This ID does not exist in the connected STA service."}));
 	} else {
@@ -3026,25 +3434,24 @@ function sebCollectConfigFromForm(node) {
 				}
 			}
 		}
-		/* Relation stub (free mode) */
+		/* Relation stub (free mode): master = general Relations checkbox */
 		stub = cfg.relationStub || sebNewRelationStub();
-		if (el.querySelector("#sebRelEnable")) {
-			stub.enabled = !!el.querySelector("#sebRelEnable").checked;
-			if (el.querySelector("#sebRelRole"))
-				stub.role = el.querySelector("#sebRelRole").value;
-			if (el.querySelector("#sebRelDesc"))
-				stub.description = el.querySelector("#sebRelDesc").value;
-			if (el.querySelector("#sebRelSubject"))
-				stub.subjectGroupKey = el.querySelector("#sebRelSubject").value;
-			if (el.querySelector("#sebRelObject"))
-				stub.objectGroupKey = el.querySelector("#sebRelObject").value;
-			if (el.querySelector("#sebRelTargetKind"))
-				stub.targetKind = el.querySelector("#sebRelTargetKind").value === "ObservationGroups"
-					? "ObservationGroups" : "Observations";
-			cfg.relationStub = stub;
-			cfg.selected.Relations = !!stub.enabled;
+		stub.enabled = !!(sel && sel.Relations);
+		cfg.selected.Relations = stub.enabled;
+		if (el.querySelector("#sebRelRole"))
+			stub.role = el.querySelector("#sebRelRole").value;
+		if (el.querySelector("#sebRelDesc"))
+			stub.description = el.querySelector("#sebRelDesc").value;
+		if (el.querySelector("#sebRelSubject"))
+			stub.subjectGroupKey = el.querySelector("#sebRelSubject").value;
+		if (el.querySelector("#sebRelObject"))
+			stub.objectGroupKey = el.querySelector("#sebRelObject").value;
+		if (el.querySelector("#sebRelTargetKind"))
+			stub.targetKind = el.querySelector("#sebRelTargetKind").value === "ObservationGroups"
+				? "ObservationGroups" : "Observations";
+		cfg.relationStub = stub;
+		if (stub.enabled)
 			sebRefreshRelationIdColumns(cfg);
-		}
 		/* Nesting (Campaign↔OG / Relation↔OG) */
 		sebEnsureNesting(cfg);
 		if (el.querySelector("input[name=\"sebNestCampOg\"]:checked"))
@@ -3084,17 +3491,21 @@ function sebCollectConfigFromForm(node) {
 			}
 		}
 	}
-	/* Free mode: keep cfg.selected aligned with Parties + union of group entity checks */
+	/* Free mode: selected = general checkboxes ∪ group checkboxes */
 	if (cfg.mode === "dataFromTable") {
-		cfg.selected.Parties = true;
-		cfg.selected.Observations = true;
-		SEB_GROUP_CHECKABLE.forEach(function (pl) {
-			cfg.selected[pl] = (cfg.measurements || []).some(function (gm) {
-				return gm.include && gm.selected && gm.selected[pl];
-			});
+		sebEntityOrder().forEach(function (pl) {
+			cfg.selected[pl] = !!(sel && sel[pl]);
 		});
-	}
-	cfg.selected.Parties = true;
+		sebEnsureLoginParty(cfg, parent);
+		if (cfg.selected.Relations) {
+			if (!cfg.relationStub)
+				cfg.relationStub = sebNewRelationStub();
+			cfg.relationStub.enabled = true;
+		} else if (cfg.relationStub) {
+			cfg.relationStub.enabled = false;
+		}
+	} else
+		cfg.selected.Parties = true;
 	node.staEntityConfig = cfg;
 	/* Source from primary parent (+ lateral columns denormalized) — do not wipe STAdata from "Crea la taula" */
 	if (parent && parent.STAdata && typeof deapCopy === "function") {
@@ -3125,12 +3536,10 @@ function sebOnModeChange(event) {
 /* ---------- validation / package ---------- */
 
 function sebValidateEntity(plural, ent, label, mode, errors) {
-	var id;
 	if (!ent || plural === "Parties")
 		return;
-	id = ent.id;
-	if (id && ((id.source === "manual" && !sebIsEmpty(id.value)) || (id.source === "column" && id.column)))
-		return;   // reused by ID: properties are not needed
+	if (sebEntityReusesById(ent))
+		return;   // reused by @iot.id: other properties are not needed
 	sebPropList(plural, mode).forEach(function (p) {
 		if (p.required && !sebSrcIsSet(ent.props[p.name]))
 			errors.push(label + ": " + p.name + " is required.");
@@ -3147,7 +3556,7 @@ function sebValidateConfig(cfg, parent) {
 		errors.push("No input table data.");
 	if ((eff.Datastreams || eff.ObservedProperties || eff.Observations) && !included.length &&
 			(isCas || cfg.mode === "dataFromTable"))
-		errors.push(isCas ? "Select at least one measurement." : "Create/include at least one observation group.");
+		errors.push(isCas ? "Select at least one measurement." : "Create/include at least one entity group.");
 	sebEntityOrder().forEach(function (plural) {
 		if (!eff[plural])
 			return;
@@ -3159,7 +3568,7 @@ function sebValidateConfig(cfg, parent) {
 			included.forEach(function (m) {
 				sebValidateEntity(plural, m[plural], plural + " (" + (m.label || m.key) + ")", cfg.mode, errors);
 			});
-		} else if (!isCas && plural !== "Parties") {
+		} else if (!isCas && sebIsPerGroup(cfg, plural)) {
 			included.forEach(function (m) {
 				sebEnsureGroupSelected(m);
 				if (m.selected[plural])
@@ -3182,10 +3591,14 @@ function sebPackId(ent) {
 
 function sebPackEntity(plural, ent, mode, role, measurementKey) {
 	var out = sebPackId(ent), props = {}, dataTypes = {};
+	/*
+		Always pack properties for Publisher preview / display.
+		When @iot.id is set, publish still reuses the id only (properties are not POSTed).
+	*/
 	sebPropList(plural, mode).forEach(function (p) {
 		dataTypes[p.name] = p.dataType;
 	});
-	Object.keys(ent.props).forEach(function (name) {
+	Object.keys(ent.props || {}).forEach(function (name) {
 		var s = sebPackSrc(ent.props[name], dataTypes[name]);
 		if (s)
 			props[name] = s;
@@ -3221,11 +3634,36 @@ function sebAttrTypeForProp(plural, prop, mode) {
 	return "string";
 }
 
-/* Resolve all configured entity props (+ @iot.id) onto a wide-row column Entity.property / Group.Entity.property */
+/*
+	Resolve configured entity props (+ @iot.id) onto canonical wide columns:
+	  Entity.property           when groupPrefix is null (general)
+	  Group.Entity.property     when groupPrefix is set
+	Source bindings may still read from parent Group.Entity.property / Entity.property;
+	the write target is always sebSuperColumn (never keep a mismatched prefix).
+*/
 function sebApplyEntityToWideRow(row, plural, ent, rec, groupPrefix, attrs, mode) {
 	var name, src, col, val;
 	if (!row || !ent)
 		return;
+	/*
+		Always write id + properties onto the wide table for display (Party, search
+		results, etc.). Publish still reuses @iot.id only when present — it does not
+		POST these property cells.
+	*/
+	if (ent.id && sebSrcIsSet(ent.id)) {
+		val = sebResolveSrc(ent.id, rec);
+		if (!sebIsEmpty(val)) {
+			col = sebSuperColumn(plural, "@iot.id", groupPrefix);
+			row[col] = val;
+			if (attrs && !attrs[col]) {
+				attrs[col] = {
+					type: "string",
+					description: (groupPrefix ? groupPrefix + " / " : "") + plural + ".@iot.id",
+					definition: sebAttrDefinition(plural, "@iot.id")
+				};
+			}
+		}
+	}
 	if (ent.props) {
 		for (name in ent.props) {
 			if (!Object.prototype.hasOwnProperty.call(ent.props, name))
@@ -3237,26 +3675,13 @@ function sebApplyEntityToWideRow(row, plural, ent, rec, groupPrefix, attrs, mode
 			if (val === undefined)
 				continue;
 			col = sebSuperColumn(plural, name, groupPrefix);
+			/* Form wins: write resolved manual/column value onto the wide cell */
 			row[col] = val;
 			if (attrs && !attrs[col]) {
 				attrs[col] = {
 					type: sebAttrTypeForProp(plural, name, mode),
 					description: (groupPrefix ? groupPrefix + " / " : "") + plural + "." + name,
 					definition: sebAttrDefinition(plural, name)
-				};
-			}
-		}
-	}
-	if (ent.id && sebSrcIsSet(ent.id)) {
-		val = sebResolveSrc(ent.id, rec);
-		if (!sebIsEmpty(val)) {
-			col = sebSuperColumn(plural, "@iot.id", groupPrefix);
-			row[col] = val;
-			if (attrs && !attrs[col]) {
-				attrs[col] = {
-					type: "string",
-					description: (groupPrefix ? groupPrefix + " / " : "") + plural + ".@iot.id",
-					definition: sebAttrDefinition(plural, "@iot.id")
 				};
 			}
 		}
@@ -3273,22 +3698,30 @@ function sebEnsureWideAttr(attrs, col, plural, prop, groupPrefix, mode) {
 	};
 }
 
-/* Rewrite packed entity sources to point at wide super-table columns. */
+/*
+	Rewrite packed entity sources to canonical wide columns:
+	Entity.property (shared) or Group.Entity.property (per-group).
+	Id + properties always point at the wide table for display; publish reuses
+	@iot.id when set and does not POST property values for that entity.
+*/
 function sebRewritePackedEntityToWide(ent, plural, groupPrefix) {
-	var name, col;
+	var name, col, src, dt;
 	if (!ent)
 		return;
 	if (ent.properties) {
 		for (name in ent.properties) {
 			if (!Object.prototype.hasOwnProperty.call(ent.properties, name))
 				continue;
+			src = ent.properties[name];
+			dt = src && src.dataType;
 			col = sebSuperColumn(plural, name, groupPrefix);
 			ent.properties[name] = { source: "column", column: col };
+			if (dt)
+				ent.properties[name].dataType = dt;
 		}
 	}
-	col = sebSuperColumn(plural, "@iot.id", groupPrefix);
 	if (ent.id || ent.existingId != null) {
-		/* Keep existingId if already known; still map id column for lookups when empty */
+		col = sebSuperColumn(plural, "@iot.id", groupPrefix);
 		ent.id = { source: "column", column: col };
 	}
 }
@@ -3331,7 +3764,8 @@ function sebBuildPackage(cfg, parent, staUrl) {
 	sebEntityOrder().forEach(function (plural) {
 		if (!eff[plural] || plural === "Relations" || plural === "Observations")
 			return;
-		if (plural === "Parties" && cfg.entities[plural]) {
+		/* CAS: Parties always shared; per-meas list per group */
+		if (isCas && plural === "Parties" && cfg.entities[plural]) {
 			pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
 			return;
 		}
@@ -3339,6 +3773,8 @@ function sebBuildPackage(cfg, parent, staUrl) {
 			pkg.entities[plural] = included.map(function (gm) {
 				return sebPackEntity(plural, gm[plural], cfg.mode, plural + ":" + gm.key, gm.key);
 			});
+		} else if (!isCas && sebIsSharedSelected(cfg, plural) && cfg.entities[plural]) {
+			pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
 		} else if (!isCas && useGroups) {
 			list = included.filter(function (gm) {
 				sebEnsureGroupSelected(gm);
@@ -3348,7 +3784,8 @@ function sebBuildPackage(cfg, parent, staUrl) {
 			});
 			if (list.length)
 				pkg.entities[plural] = list;
-			else if (cfg.entities[plural])
+			/* No silent fallback to cfg.entities unless it is actually shared-selected */
+			else if (sebIsSharedSelected(cfg, plural) && cfg.entities[plural])
 				pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
 		} else if (cfg.entities[plural])
 			pkg.entities[plural] = [sebPackEntity(plural, cfg.entities[plural], cfg.mode, plural)];
@@ -3387,6 +3824,19 @@ function sebBuildPackage(cfg, parent, staUrl) {
 				datastreamRole: "Datastreams:" + gm.key
 			});
 		});
+		/* Observations only at general (shared) while other entities may still use groups */
+		if (!bindings.length && sebIsSharedSelected(cfg, "Observations") && cfg.entities.Observations) {
+			bindings.push({
+				measurementKey: undefined,
+				groupLabel: "",
+				groupPrefix: "",
+				idColumn: sebSuperColumn("Observations", "@iot.id", null),
+				result: { source: "column", column: sebSuperColumn("Observations", "result", null) },
+				phenomenonTime: { source: "column", column: sebSuperColumn("Observations", "phenomenonTime", null) },
+				resultTime: { source: "column", column: sebSuperColumn("Observations", "resultTime", null) },
+				datastreamRole: "Datastreams"
+			});
+		}
 		pkg.observations.bindings = bindings;
 	} else if (eff.Observations && cfg.entities.Observations) {
 		bindings.push({
@@ -3418,12 +3868,14 @@ function sebBuildPackage(cfg, parent, staUrl) {
 	 */
 	if (parent && parent.STAdata && (useGroups ? included.length : bindings.length)) {
 		for (r = 0; r < parent.STAdata.length; r++) {
-			rec = sebEnrichRecWithLaterals(parent.STAdata[r], sources);
+			/* Pass row index so multi-row laterals align (not STAdata[0] for every row) */
+			rec = sebEnrichRecWithLaterals(parent.STAdata[r], sources, r);
 			if (!rec)
 				continue;
+			/* Build wide row only from form bindings (as if no prior super-table). */
 			row = { _sourceIndex: r };
 
-			/* Shared entities (Party always; CAS non-per-meas; free: only Parties at top) */
+			/* Shared entities (Party always; CAS non-per-meas; free: general-selected only) */
 			sebEntityOrder().forEach(function (plural) {
 				if (plural === "Observations" || plural === "Relations")
 					return;
@@ -3431,7 +3883,7 @@ function sebBuildPackage(cfg, parent, staUrl) {
 					return;
 				if (isCas && SEB_PER_MEAS.indexOf(plural) !== -1)
 					return;
-				if (!isCas && plural !== "Parties")
+				if (!isCas && !sebIsSharedSelected(cfg, plural))
 					return;
 				sebApplyEntityToWideRow(row, plural, cfg.entities[plural], rec, null, attrs, cfg.mode);
 			});
@@ -3442,7 +3894,7 @@ function sebBuildPackage(cfg, parent, staUrl) {
 					gPrefix = m._columnPrefix || sebGroupColumnPrefix(m);
 					sebEnsureGroupSelected(m);
 
-					/* Per-group entities (not Observations) */
+					/* Per-group entities (not Observations) → Group.Entity.property columns */
 					(isCas ? SEB_PER_MEAS : sebGroupSelectedList(m)).forEach(function (plural) {
 						if (plural === "Observations" || !m[plural])
 							return;
@@ -3470,20 +3922,46 @@ function sebBuildPackage(cfg, parent, staUrl) {
 						rt = undefined;
 					}
 
-					col = sebSuperColumn("Observations", "result", gPrefix);
+					if (isCas || (m.selected && m.selected.Observations)) {
+						col = sebSuperColumn("Observations", "result", gPrefix);
+						row[col] = sebIsEmpty(resVal) ? "" : resVal;
+						sebEnsureWideAttr(attrs, col, "Observations", "result", gPrefix, cfg.mode);
+						col = sebSuperColumn("Observations", "phenomenonTime", gPrefix);
+						row[col] = pt != null ? pt : "";
+						sebEnsureWideAttr(attrs, col, "Observations", "phenomenonTime", gPrefix, cfg.mode);
+						col = sebSuperColumn("Observations", "resultTime", gPrefix);
+						row[col] = rt != null ? rt : "";
+						sebEnsureWideAttr(attrs, col, "Observations", "resultTime", gPrefix, cfg.mode);
+						col = sebSuperColumn("Observations", "@iot.id", gPrefix);
+						if (row[col] === undefined)
+							row[col] = "";
+						sebEnsureWideAttr(attrs, col, "Observations", "@iot.id", gPrefix, cfg.mode);
+						if (!sebIsEmpty(resVal))
+							nObs++;
+					}
+				}
+				/* Free mode: Observations at general (shared) level */
+				if (!isCas && sebIsSharedSelected(cfg, "Observations") && cfg.entities.Observations) {
+					obsEnt = cfg.entities.Observations;
+					resVal = sebResolveSrc(obsEnt.props && obsEnt.props.result, rec);
+					pt = sebResolveSrc(obsEnt.props && obsEnt.props.phenomenonTime, rec);
+					rt = obsEnt.props && obsEnt.props.resultTime
+						? sebResolveSrc(obsEnt.props.resultTime, rec) : undefined;
+					if (rt === undefined || rt === null || rt === "")
+						rt = pt;
+					col = sebSuperColumn("Observations", "result", null);
 					row[col] = sebIsEmpty(resVal) ? "" : resVal;
-					sebEnsureWideAttr(attrs, col, "Observations", "result", gPrefix, cfg.mode);
-					col = sebSuperColumn("Observations", "phenomenonTime", gPrefix);
+					sebEnsureWideAttr(attrs, col, "Observations", "result", null, cfg.mode);
+					col = sebSuperColumn("Observations", "phenomenonTime", null);
 					row[col] = pt != null ? pt : "";
-					sebEnsureWideAttr(attrs, col, "Observations", "phenomenonTime", gPrefix, cfg.mode);
-					col = sebSuperColumn("Observations", "resultTime", gPrefix);
+					sebEnsureWideAttr(attrs, col, "Observations", "phenomenonTime", null, cfg.mode);
+					col = sebSuperColumn("Observations", "resultTime", null);
 					row[col] = rt != null ? rt : "";
-					sebEnsureWideAttr(attrs, col, "Observations", "resultTime", gPrefix, cfg.mode);
-					col = sebSuperColumn("Observations", "@iot.id", gPrefix);
+					sebEnsureWideAttr(attrs, col, "Observations", "resultTime", null, cfg.mode);
+					col = sebSuperColumn("Observations", "@iot.id", null);
 					if (row[col] === undefined)
 						row[col] = "";
-					sebEnsureWideAttr(attrs, col, "Observations", "@iot.id", gPrefix, cfg.mode);
-
+					sebEnsureWideAttr(attrs, col, "Observations", "@iot.id", null, cfg.mode);
 					if (!sebIsEmpty(resVal))
 						nObs++;
 				}
@@ -3545,7 +4023,14 @@ function sebBuildPackage(cfg, parent, staUrl) {
 						break;
 					}
 				}
+				/* Fallback: measurementKey may already be the etiqueta / column prefix */
+				if (!gPrefix)
+					gPrefix = String(packed.measurementKey);
 			}
+			if (gPrefix)
+				packed.groupPrefix = gPrefix;
+			else
+				delete packed.groupPrefix;
 			sebRewritePackedEntityToWide(packed, pl, gPrefix);
 		}
 	}

@@ -47,6 +47,10 @@ var sensorInfo = {};
 var lastPmValues = null;
 var ConnectASensorPmKeys = ["pm1", "pm25", "pm10"];
 
+/* Geolocalització del dispositiu → columna location (GeoJSON Point, com Locations.location) */
+var lastCasGeoLocation = null;
+var casGeoWatchId = null;
+
 // Històric de lectures
 var sensorRecords = [];
 
@@ -312,6 +316,7 @@ function resumeConnectASensorCollecting(event) {
 	if (!isConnectASensorConnected())
 		return;
 	collectingData = true;
+	startConnectASensorGeolocation();
 	updateConnectASensorConnectionButtons();
 	if (connectionMode === "usb" && !monitoringRunning)
 		startMonitoring();
@@ -400,9 +405,51 @@ var ConnectASensorObsProps = {
 	}
 };
 
+function casGeoJsonPointString(lon, lat) {
+	return JSON.stringify({ type: "Point", coordinates: [Number(lon), Number(lat)] });
+}
+
+function stopConnectASensorGeolocation() {
+	if (casGeoWatchId != null && navigator.geolocation) {
+		try {
+			navigator.geolocation.clearWatch(casGeoWatchId);
+		} catch (e) {}
+	}
+	casGeoWatchId = null;
+}
+
+function applyConnectASensorGeolocation(pos) {
+	if (pos && pos.coords)
+		lastCasGeoLocation = casGeoJsonPointString(pos.coords.longitude, pos.coords.latitude);
+}
+
+function startConnectASensorGeolocation() {
+	if (!navigator.geolocation)
+		return;
+	/* Sempre refresca la posició (útil just després del clic USB/BLE) */
+	try {
+		navigator.geolocation.getCurrentPosition(
+			applyConnectASensorGeolocation,
+			function () {},
+			{ enableHighAccuracy: true, maximumAge: 60000, timeout: 15000 }
+		);
+	} catch (e) {}
+	if (casGeoWatchId != null)
+		return;
+	try {
+		casGeoWatchId = navigator.geolocation.watchPosition(
+			applyConnectASensorGeolocation,
+			function () {},
+			{ enableHighAccuracy: true, maximumAge: 30000, timeout: 15000 }
+		);
+	} catch (e) {
+		casGeoWatchId = null;
+	}
+}
+
 function buildConnectASensorDataAttributes(data) {
 	var attrs = (typeof getDataAttributes === "function") ? getDataAttributes(data || []) : {};
-	var key, spec;
+	var key, spec, hasLoc, di;
 	attrs.timestamp = attrs.timestamp || {};
 	attrs.timestamp.type = "isodatetime";
 	attrs.timestamp.description = "Measurement timestamp";
@@ -410,6 +457,19 @@ function buildConnectASensorDataAttributes(data) {
 	attrs.sensor_id = attrs.sensor_id || {};
 	attrs.sensor_id.type = "string";
 	attrs.sensor_id.description = "Sensor / device identifier";
+	hasLoc = !!(attrs.location);
+	if (!hasLoc && data) {
+		for (di = 0; di < data.length; di++) {
+			if (data[di] && data[di].location)
+				{ hasLoc = true; break; }
+		}
+	}
+	if (hasLoc || lastCasGeoLocation) {
+		attrs.location = attrs.location || {};
+		attrs.location.type = "json";
+		attrs.location.description = "Device geolocation (GeoJSON Point)";
+		attrs.location.definition = "http://www.opengis.net/def/docs/15-078r6/Location/location";
+	}
 	for (key in ConnectASensorObsProps) {
 		if (!Object.prototype.hasOwnProperty.call(ConnectASensorObsProps, key))
 			continue;
@@ -565,6 +625,9 @@ async function ConnectASensorConnectUsb(event) {
 	if (event)
 		event.preventDefault();
 
+	/* GPS amb el gest del clic (abans dels await) */
+	startConnectASensorGeolocation();
+
 	try {
 		if (!navigator.serial)
 			throw new Error(DonaCadena({cat: "Aquest navegador no admet Web Serial.", spa: "Este navegador no admite Web Serial.", eng: "This browser does not support Web Serial."}));
@@ -717,6 +780,7 @@ function onBleDisconnected() {
 	if (connectionMode === "ble") {
 		collectingData = false;
 		interruptConnectASensorWait();
+		stopConnectASensorGeolocation();
 		connectionMode = null;
 		showInfoMessage({cat: "Bluetooth desconnectat pel dispositiu.", spa: "Bluetooth desconectado por el dispositivo.", eng: "Bluetooth disconnected by the device."});
 		updateConnectASensorConnectionButtons();
@@ -887,6 +951,9 @@ async function ConnectASensorConnectBluetooth(event) {
 	if (event)
 		event.preventDefault();
 
+	/* GPS amb el gest del clic (abans dels await) — mateixa columna location que USB */
+	startConnectASensorGeolocation();
+
 	try {
 		if (!navigator.bluetooth)
 			throw new Error(DonaCadena({
@@ -931,6 +998,7 @@ async function ConnectASensorConnectBluetooth(event) {
 
 		/* Activa recollida abans de les notificacions per no perdre la 1a mesura */
 		collectingData = true;
+		startConnectASensorGeolocation();
 		await setupPmscan(bleServer);
 
 		showInfoMessage({
@@ -2503,6 +2571,10 @@ function saveSensorRecord(measuredAt) {
 		}
 	}
 
+	/* Mateix format que Locations.location / FeaturesOfInterest.feature */
+	if (lastCasGeoLocation)
+		record.location = lastCasGeoLocation;
+
 	sensorRecords.push(record);
 	lastConnectASensorSaveAt = Date.now();
 	updateConnectASensorNodeTable(record);
@@ -2633,6 +2705,7 @@ async function startMonitoring() {
 		return;
 	monitoringRunning = true;
 	collectingData = true;
+	startConnectASensorGeolocation();
 	updateConnectASensorConnectionButtons();
 
 	try {
@@ -2840,6 +2913,7 @@ async function disconnectSensor(quiet) {
 		waitingFor = null;
 		collectingData = false;
 		interruptConnectASensorWait();
+		stopConnectASensorGeolocation();
 		if (casTableRefreshTimer) {
 			clearTimeout(casTableRefreshTimer);
 			casTableRefreshTimer = null;
