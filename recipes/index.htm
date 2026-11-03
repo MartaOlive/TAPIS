@@ -117,6 +117,14 @@
     <a class="recipeTitle" href="#recipe12">Recipe 12: Determining data quality of a sequence of observations from a Geopackage equivalent to a STA</a>
 		</div>
 
+		<div class="recipeCard">
+			<a class="recipeTitle" href="#recipe13">Recipe 13: Uploading tabular or sensor data to an STA service with the Entity Builder and Publisher</a>
+			<div class="recipeChildren">
+				<a href="#recipe13_01">Cooking method 1: From CSV to STAplus</a>
+				<a href="#recipe13_02">Cooking method 2: From sensor data to STAplus</a>
+			</div>
+		</div>
+
 	</div>
 
 	
@@ -1906,6 +1914,266 @@
 
 		</div>
 	</div>
+	<br><br><br>
+	<br>
+	<hr width="30%">
+	<div class="toolPage_main">
+		<div class="toolPage_main_text">
+			<a id="recipe13"></a>
+			<h3 class="toolPage_title">Recipe 13: Uploading tabular or sensor data to an STA service with the Entity Builder and Publisher</h3>
+			<p>
+				This recipe shows how to upload tabular data (for example CSV files) or data read from a sensor
+				to an STA / STAplus service in an agile way. We use the <strong>STA Entity Builder</strong> to
+				assemble the corresponding entities in the STAplus schema, and the <strong>STA Publisher</strong>
+				to upload them to the service.
+			</p>
+			<p>
+				The STA Entity Builder can fill entity property fields automatically when the attribute (column)
+				names follow this naming scheme: <code>Entity.property</code>
+				(for example <code>Location.name</code>).
+				When you want to upload different observations that belong to different sets of entities
+				(different Datastreams, Sensors, ObservedProperties, …), you organise them into what we call
+				<strong>groups</strong>. Columns can then be named
+				<code>Group.Entity.property</code>
+				(for example <code>Photography.Sensor.name</code>) so that they also load automatically.
+			</p>
+			<p>
+				With groups you can still have entities that are <strong>shared by all observations</strong>
+				(for example the Party). In a setup similar to cooking method 2—one sensor that produces several
+				measures—you can also share the Thing across those measures.
+			</p>
+
+			<a id="recipe13_01"></a>
+			<h4>Cooking method 1: From CSV to STAplus</h4>
+			<p>
+				This method shows how to go from CSV tables to a STAplus service. In this example we use
+				<strong>two CSV files</strong>: one for the <strong>shared entities</strong> (values that do not
+				change per observation), and another for the <strong>observation-dependent</strong> data
+				(values that vary with each observation / group).
+				Below, both CSV nodes are already loaded in the graph
+				(<strong>SharedData</strong> and <strong>PhotoAndIdentification</strong>):
+				<br>
+				<img src="recipe13_1_DataCSV.png" width="200" class="center" alt="Two CSV nodes loaded">
+			</p>
+			<p>
+				The shared-entity table (below) has one row of group-level Sensors and related properties,
+				such as <code>Photography.Sensor.*</code> and <code>Identification.Sensor.*</code>:
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_2_DataShared.png" alt="Shared entity CSV columns" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				The observation-dependent table (below) has several rows with phenomenon time,
+				<code>Photography.Observation.result</code>, <code>Identification.Observation.result</code>,
+				Locations, Things, and so on:
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_3_DataDifferent.png" alt="Observation-dependent CSV" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				From these two tables we connect both into the <strong>STA Entity Builder</strong>
+				and also to an <strong>STA service</strong> node, as shown below.
+				Connecting an STA service here is required so that the <strong>Party</strong> can be loaded
+				(it is filled automatically when you are already logged in):
+				<br>
+				<img src="recipe13_5_STAService.png" width="500" class="center" alt="STA Entity Builder linked to CSVs and STA service">
+			</p>
+			<p>
+				If you need to leave the dialog (for example to log in, or to inspect another node), the dialog
+				<strong>keeps the values and selections you already entered</strong> when you open it again.
+			</p>
+			<p>
+				Double-click the STA Entity Builder node to open its dialog:
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_6_Builder1.png" alt="Entity Builder dialog" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				Fields in this dialog may already be filled when the CSV columns are named correctly
+				(<code>Entity.property</code> or <code>Group.Entity.property</code>).
+				You can also complete them manually by typing a value, or by selecting an existing column from the
+				data (that is what the automatic binder does: it assigns which column belongs to each property).
+			</p>
+			<p>
+				If you want to reuse an entity that already exists on the service, enter its
+				<code>@iot.id</code> and press <strong>Search</strong> to check that it exists on that STA service
+				and, to load the current property values of that entity into the form.
+				Those loaded values are <strong>informative</strong> for the form; publishing will reuse the
+				existing id when it is set.
+				Below is an example of loading an entity that already exists:
+				<br>
+				<img src="recipe13_7_Manual.png" width="700" class="center" alt="Existing entity loaded by id">
+			</p>
+			<p>
+				As mentioned above, some entities are <strong>shared</strong> across all observations
+				(in this example <strong>License</strong> and <strong>Party</strong>).
+				Others belong to a <strong>group</strong>: they are shared within that group, but not between groups.
+				In the <strong>entities workflow</strong> you can select or deselect the checkboxes to add or remove
+				entities from the configuration.
+				Below you can see the entities of the <strong>Photography</strong> group:
+				<br>
+				<img src="recipe13_8_GrupEntities.png" width="900" class="center" alt="Photography group entities">
+			</p>
+			<p>
+				Below is the beginning of another group (Identification):
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_9_GrupEntities2.png" alt="Another entity group" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				In this dialog you can store the filled schema for reuse with
+				<strong>Save configuration</strong>, and restore a previously saved one with
+				<strong>Load configuration</strong>.
+			</p>
+			<p>
+				When everything is complete, press <strong>Create table</strong>.
+				If it seems that “nothing happens”, look at the status line at the bottom of the dialog:
+				missing required fields are reported there in red so you know what still needs to be completed.
+			</p>
+			<p>
+				After a successful Create table, TAPIS builds a <strong>super-table</strong> with all data
+				organised by entity properties, as shown below.
+				Empty cells on a given row are normal when a property does not apply to that observation:
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_10_TableCreatedCSV.png" alt="Created super-table" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				With the data organised by entities, you can use the <strong>STA Publisher</strong>:
+				<br>
+				<img src="recipe13_11_STApublisher.png" width="500" class="center" alt="STA Publisher node">
+			</p>
+			<p>
+				The Publisher dialog (below) shows a summary of all entities that will be created.
+				The preview tables also include an <code>@iot.id</code> column at the end; it is filled in
+				automatically as entities are uploaded to the service, so you can later see which id each row
+				refers to:
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_12_STApublisher2.png" alt="STA Publisher dialog" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				Press <strong>Publish to STA</strong> to run the successive requests automatically.
+				At the top of the dialog you can follow which entities are being created; errors are shown
+				there as well:
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_13_STApublisher3.png" alt="Publisher progress and errors" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				If some entities failed because of a temporary service problem, press
+				<strong>Retry pending</strong> to try creating only those that are still pending.
+				When you are finished, you can keep a copy of what you uploaded with
+				<strong>Save JSON</strong> or as an image with <strong>Save PNG</strong>.
+			</p>
+
+			<a id="recipe13_02"></a>
+			<h4>Cooking method 2: From sensor data to STAplus</h4>
+			<p>
+				With this method we take data stored on the SD card of a <strong>Smart Citizen</strong> sensor
+				and publish it to STAplus. We use <strong>Read SD from sensor</strong> to obtain the data,
+				the <strong>STA Entity Builder</strong> to prepare the entities, and the
+				<strong>STA Publisher</strong> to upload them.
+			</p>
+			<p>
+				Double-click the Read SD from sensor tool (below) to open its dialog:
+				<br>
+				<img src="recipe13_14_SD.png" width="200" class="center" alt="Read SD from sensor node">
+				<br>
+				<img src="recipe13_15_SDDialog.png" width="700" class="center" alt="Read SD from sensor dialog">
+			</p>
+			<p>
+				With this tool you can connect a Smart Citizen sensor over a USB cable
+				(<strong>Connect via USB</strong>) and explore which files are stored on its SD card.
+				Select the sensor that appears and wait until the file list is loaded:
+				<br>
+				<img src="recipe13_16_SDDialog2.png" width="700" class="center" alt="SD files loaded">
+			</p>
+			<p>
+				Once the files are listed you can open and preview them below (<strong>Open</strong>)
+				or remove them (<strong>Delete</strong>). Pressing Open shows the data table underneath:
+				<br>
+				<img src="recipe13_17_SDDialog3.png" width="800" class="center" alt="Opened SD CSV table">
+			</p>
+			<p>
+				When the data is loaded you can save it (<strong>Save as CSV</strong>) or use it in TAPIS,
+				which is what we want here: press <strong>Select to use in TAPIS</strong> and leave the dialog.
+				The usual table area at the bottom of TAPIS then shows the loaded data.
+			</p>
+			<p>
+				To use the <strong>STA Entity Builder</strong>, select the tool and connect the STAplus service
+				you want to publish to:
+				<br>
+				<img src="recipe13_18_SBuilderSensor.png" width="500" class="center" alt="Entity Builder with sensor data and STA">
+			</p>
+			<p>
+				When you open the dialog (below), it looks similar to the one used with CSV input.
+				The difference is that it already has groups prepared for the measures it expects
+				(temperature, relative humidity, atmospheric pressure, …) plus the shared entities.
+				You can hide or remove groups you do not need. Switch mode, if you want, with
+				<strong>Input mode</strong> at the top of the dialog:
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_19_BuilderSensor2.png" alt="Entity Builder dialog for sensor data" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				In the <strong>entities workflow</strong> you can select or deselect the checkboxes to add or
+				remove entities. Here you can also choose whether <strong>Location</strong> and
+				<strong>FeatureOfInterest</strong> are shared by all measures or set separately in each group
+				(the same option exists in the other input mode; in cooking method 1 the CSV columns already
+				filled those cases):
+				<br>
+				<img src="recipe13_20_BuilderSensor3.png" width="800" class="center" alt="Shared Location and FeatureOfInterest options">
+			</p>
+			<p>
+				Below are examples of two groups:
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_21_BuilderSensor3.png" alt="First sensor entity group" class="toolPage_image zoomable">
+				</div>
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_22_BuilderSensor4.png" alt="Second sensor entity group" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				When you have completed and adjusted what you need, press <strong>Create table</strong> to continue.
+				To publish the data, as before, use the <strong>STA Publisher</strong>:
+				<br>
+				<img src="recipe13_23_PublisherSensor.png" width="500" class="center" alt="STA Publisher with sensor pipeline">
+			</p>
+			<p>
+				Double-click it to open the dialog, completed as shown below:
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_24_PublisherSensor2.png" alt="STA Publisher dialog for sensor data" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				Press <strong>Publish to STA</strong> to start publishing. As before, the top of the dialog
+				reports the creation status. If it shows <em>existing at</em> and an id, an identical entity
+				already exists on the service and will be reused instead of creating a new one
+				(to force a new entity you would need to change something so that it is no longer identical):
+				<br>
+				<div class="image-wrapper" onclick="zoomToImage(this)">
+					<img src="recipe13_25_PublisherSensor3.png" alt="Publisher status existing at id" class="toolPage_image zoomable">
+				</div>
+			</p>
+			<p>
+				As before, as ids are obtained they are filled into the tables. If you want to keep the result,
+				you can save it as <strong>Save JSON</strong> or as an image with <strong>Save PNG</strong>.
+			</p>
+		</div>
+	</div>
+	<script type="text/javascript" src="../help/help.js"></script>
 </body>
 
 </html>

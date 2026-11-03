@@ -314,9 +314,29 @@ function sebGroupColumnPrefix(m) {
 	return label || (m && m.key) || "group";
 }
 
-/* Super-table column: [Group.]Plural.property  e.g. Things.name, Photography.Observations.result */
+/* Plural cfg key → STA singular (STAEntities[p].singular). */
+function sebPluralToSingular(plural) {
+	var ents, list, i, sing;
+	ents = typeof sebSTAEntitiesRef === "function" ? sebSTAEntitiesRef() : null;
+	if (ents && ents[plural] && ents[plural].singular)
+		return ents[plural].singular;
+	/* Fallback: invert sebSingularToPlural */
+	list = typeof sebSingularEntityList === "function" ? sebSingularEntityList() : [];
+	for (i = 0; i < list.length; i++) {
+		sing = list[i];
+		if (typeof sebSingularToPlural === "function" && sebSingularToPlural(sing) === plural)
+			return sing;
+	}
+	return plural;
+}
+
+/*
+	Super-table column: [Group.]Entity.property using SINGULAR entity token
+	(matches CSV / OGC style). Input still accepts plural via sebParseSuperColumnName.
+	e.g. Thing.name, Photography.Observation.result
+*/
 function sebSuperColumn(plural, prop, groupPrefix) {
-	var base = String(plural) + "." + String(prop);
+	var base = String(sebPluralToSingular(plural)) + "." + String(prop);
 	if (groupPrefix != null && groupPrefix !== "")
 		return String(groupPrefix) + "." + base;
 	return base;
@@ -640,28 +660,49 @@ function sebParentDataLen(p) {
 	return p && p.STAdata ? p.STAdata.length : 0;
 }
 
+/* Count super-columns that belong to Observations (Observation(s).*). */
+function sebParentObservationColCount(p) {
+	var cols, i, n = 0, parsed;
+	if (!p)
+		return 0;
+	cols = sebColumnNames(p.STAdata, p.STAdataAttributes);
+	for (i = 0; i < cols.length; i++) {
+		parsed = sebParseSuperColumnName(cols[i]);
+		if (parsed && parsed.plural === "Observations")
+			n++;
+	}
+	return n;
+}
+
 /*
 	Score a parent as materialize / primary source.
-	A wide super-table (Entity.property / Group.Entity.property columns) always
-	beats a longer table without those columns — otherwise multi-row entity data
-	becomes a "lateral" and every row collapses to STAdata[0].
+	Cardinality of "Crea la taula" follows the max observation source when present:
+	- Observation(s).* columns → top tier (row count dominates)
+	- Other Entity.property super-columns → next tier (row count over column count)
+	- Plain tables → raw row count
 */
 function sebParentMaterializeScore(p) {
-	var cols, i, nSuper = 0, n;
+	var cols, i, nSuper = 0, nObs = 0, n, parsed;
 	if (!p)
 		return -1;
 	n = sebParentDataLen(p);
 	cols = sebColumnNames(p.STAdata, p.STAdataAttributes);
 	for (i = 0; i < cols.length; i++) {
-		if (sebParseSuperColumnName(cols[i]))
-			nSuper++;
+		parsed = sebParseSuperColumnName(cols[i]);
+		if (!parsed)
+			continue;
+		nSuper++;
+		if (parsed.plural === "Observations")
+			nObs++;
 	}
+	if (nObs > 0)
+		return 2000000000 + n * 10000 + nObs;
 	if (nSuper > 0)
-		return 1000000 + nSuper * 1000 + n;
+		return 1000000 + n * 10000 + nSuper;
 	return n;
 }
 
-/* Primary parent = best materialize score (super-table first, else most rows). */
+/* Primary parent = best materialize score (observations first, else super-table, else most rows). */
 function getSTAEntityBuilderParent(node) {
 	var parents = getSTAEntityBuilderParents(node), best, i, score, bestScore;
 	if (!parents.length)
@@ -676,6 +717,112 @@ function getSTAEntityBuilderParent(node) {
 		}
 	}
 	return best;
+}
+
+/* Parent that hosts an exposed column name via sources.colMap (or null). */
+function sebColMapParent(sources, colName) {
+	var entry, alts, i;
+	if (!sources || !sources.colMap || !colName)
+		return null;
+	alts = typeof sebAlternateSuperColumnNames === "function"
+		? sebAlternateSuperColumnNames(colName)
+		: [colName];
+	for (i = 0; i < alts.length; i++) {
+		entry = sources.colMap[alts[i]];
+		if (entry && entry.parent)
+			return entry.parent;
+	}
+	entry = sources.colMap[colName];
+	return entry && entry.parent ? entry.parent : null;
+}
+
+/*
+	Collect parents that supply observation result / time bindings from cfg.
+	Used when Observation.* is bound to a plain column (no Observation. in the header).
+*/
+function sebObservationHostParentsFromCfg(cfg, sources) {
+	var hosts = [], seen = {}, push, takeSrc, m, i, obsEnt, props, propNames, pi;
+
+	push = function (p) {
+		if (!p || seen[p.id])
+			return;
+		seen[p.id] = true;
+		hosts.push(p);
+	};
+	takeSrc = function (src) {
+		if (!src || src.source !== "column" || !src.column)
+			return;
+		push(sebColMapParent(sources, src.column));
+	};
+	if (!cfg)
+		return hosts;
+
+	propNames = ["result", "phenomenonTime", "resultTime"];
+	if (cfg.measurements) {
+		for (i = 0; i < cfg.measurements.length; i++) {
+			m = cfg.measurements[i];
+			if (!m || !m.include)
+				continue;
+			if (m.resultColumn)
+				push(sebColMapParent(sources, m.resultColumn));
+			obsEnt = m.Observations;
+			props = obsEnt && obsEnt.props;
+			if (!props)
+				continue;
+			for (pi = 0; pi < propNames.length; pi++)
+				takeSrc(props[propNames[pi]]);
+		}
+	}
+	obsEnt = cfg.entities && cfg.entities.Observations;
+	props = obsEnt && obsEnt.props;
+	if (props) {
+		for (pi = 0; pi < propNames.length; pi++)
+			takeSrc(props[propNames[pi]]);
+	}
+	return hosts;
+}
+
+/*
+	Pick materialize base parent: among observation hosts (column names or cfg
+	bindings), the longest table. Fallback = getSTAEntityBuilderParent / sources.primary.
+*/
+function sebPickMaterializeParent(node, sources, cfg) {
+	var parents = getSTAEntityBuilderParents(node), best = null, bestN = -1, i, p, n;
+	var hosts, anyObs = false;
+
+	if (!parents.length)
+		return null;
+
+	for (i = 0; i < parents.length; i++) {
+		p = parents[i];
+		if (sebParentObservationColCount(p) > 0) {
+			anyObs = true;
+			n = sebParentDataLen(p);
+			if (n > bestN) {
+				bestN = n;
+				best = p;
+			}
+		}
+	}
+
+	hosts = sebObservationHostParentsFromCfg(cfg, sources);
+	for (i = 0; i < hosts.length; i++) {
+		p = hosts[i];
+		if (!p)
+			continue;
+		anyObs = true;
+		n = sebParentDataLen(p);
+		if (n > bestN) {
+			bestN = n;
+			best = p;
+		}
+	}
+
+	if (anyObs && best)
+		return best;
+	if (sources && sources.primary)
+		return sources.primary;
+	return getSTAEntityBuilderParent(node);
 }
 
 function sebSourcePrefix(parent) {
@@ -710,14 +857,26 @@ function sebNodeLabel(parent) {
 }
 
 /*
-	Build unified column list from primary (multi-row) + lateral (1-row) parents.
+	Build unified column list from primary (multi-row) + lateral parents.
 	colMap[exposedName] = { parent, field, lateral }
 	colGroups = [{ label, columns: [{ value, text }] }] for optgroup dropdowns
+	forcedPrimary: optional parent to use as materialize base (obs-driven pick).
 */
-function sebBuildColumnSources(node) {
+function sebBuildColumnSources(node, forcedPrimary) {
 	var parents = getSTAEntityBuilderParents(node);
-	var primary = getSTAEntityBuilderParent(node);
-	var laterals = [], colMap = {}, cols = [], colGroups = [], used = {}, i, p, raw, j, field, qname, needPrefix, group;
+	var primary = forcedPrimary || getSTAEntityBuilderParent(node);
+	var laterals = [], colMap = {}, cols = [], colGroups = [], used = {}, i, p, raw, j, field, qname, needPrefix, group, found;
+	if (forcedPrimary) {
+		found = false;
+		for (i = 0; i < parents.length; i++) {
+			if (parents[i] === forcedPrimary) {
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+			primary = getSTAEntityBuilderParent(node);
+	}
 	function pushGroup(parentNode, isLateral) {
 		raw = sebColumnNames(parentNode && parentNode.STAdata, parentNode && parentNode.STAdataAttributes);
 		if (!raw.length)
@@ -782,29 +941,99 @@ function sebExposedColumnName(sources, parent, field) {
 }
 
 function sebIsSuperObservationResultColumn(name) {
-	return !!(name && /\.Observations\.result$/.test(String(name)));
+	/* Group.Observation(s).result — singular or plural entity token */
+	return !!(name && /\.Observations?\.result$/.test(String(name)));
+}
+
+/* True for Group.Observation(s).phenomenonTime|resultTime (singular or plural). */
+function sebIsSuperObservationTimeColumn(name) {
+	return !!(name && /\.Observations?\.(phenomenonTime|resultTime)$/.test(String(name)));
+}
+
+/*
+	Alternate spellings of a super-column (Entity singular ↔ plural).
+	Photography.Thing.name ↔ Photography.Things.name; Location.name ↔ Locations.name.
+*/
+function sebAlternateSuperColumnNames(name) {
+	var parsed, plural, singular, prop, g, out = [], a, b;
+	if (!name)
+		return out;
+	out.push(String(name));
+	parsed = sebParseSuperColumnName(name);
+	if (!parsed)
+		return out;
+	plural = parsed.plural;
+	singular = sebPluralToSingular(plural);
+	prop = parsed.propName;
+	g = parsed.groupPrefix;
+	a = (g ? g + "." : "") + plural + "." + prop;
+	b = (g ? g + "." : "") + singular + "." + prop;
+	if (out.indexOf(a) === -1)
+		out.push(a);
+	if (out.indexOf(b) === -1)
+		out.push(b);
+	return out;
+}
+
+/* Prefer a column name that exists in sources/cols among singular/plural variants. */
+function sebPickExistingSuperColumn(name, sourcesOrParent) {
+	var alts = sebAlternateSuperColumnNames(name), i, n, cols;
+	for (i = 0; i < alts.length; i++) {
+		n = alts[i];
+		if (sourcesOrParent && sourcesOrParent.colMap && sourcesOrParent.colMap[n])
+			return n;
+		if (sourcesOrParent && sourcesOrParent.cols && sourcesOrParent.cols.indexOf(n) !== -1)
+			return n;
+	}
+	if (sourcesOrParent && (sourcesOrParent.STAdata || sourcesOrParent.STAdataAttributes)) {
+		cols = sebColumnNames(sourcesOrParent.STAdata, sourcesOrParent.STAdataAttributes);
+		for (i = 0; i < alts.length; i++) {
+			if (cols.indexOf(alts[i]) !== -1)
+				return alts[i];
+		}
+	}
+	if (typeof sebCtx !== "undefined" && sebCtx) {
+		for (i = 0; i < alts.length; i++) {
+			n = alts[i];
+			if (sebCtx.colMap && sebCtx.colMap[n])
+				return n;
+			if (sebCtx.cols && sebCtx.cols.indexOf(n) !== -1)
+				return n;
+		}
+	}
+	return name;
 }
 
 function sebIsRealDataColumn(name, sourcesOrParent) {
-	var cols;
+	var alts, i, n, cols;
 	if (!name)
 		return false;
-	if (sourcesOrParent && sourcesOrParent.colMap)
-		return !!sourcesOrParent.colMap[name];
-	if (sourcesOrParent && sourcesOrParent.cols)
-		return sourcesOrParent.cols.indexOf(name) !== -1;
+	alts = sebAlternateSuperColumnNames(name);
+	for (i = 0; i < alts.length; i++) {
+		n = alts[i];
+		if (sourcesOrParent && sourcesOrParent.colMap && sourcesOrParent.colMap[n])
+			return true;
+		if (sourcesOrParent && sourcesOrParent.cols && sourcesOrParent.cols.indexOf(n) !== -1)
+			return true;
+	}
 	if (sourcesOrParent && (sourcesOrParent.STAdata || sourcesOrParent.STAdataAttributes)) {
 		cols = sebColumnNames(sourcesOrParent.STAdata, sourcesOrParent.STAdataAttributes);
-		return cols.indexOf(name) !== -1;
+		for (i = 0; i < alts.length; i++) {
+			if (cols.indexOf(alts[i]) !== -1)
+				return true;
+		}
 	}
 	if (typeof sebCtx !== "undefined" && sebCtx) {
-		if (sebCtx.colMap && sebCtx.colMap[name])
-			return true;
-		if (sebCtx.cols && sebCtx.cols.indexOf(name) !== -1)
-			return true;
+		for (i = 0; i < alts.length; i++) {
+			n = alts[i];
+			if (sebCtx.colMap && sebCtx.colMap[n])
+				return true;
+			if (sebCtx.cols && sebCtx.cols.indexOf(n) !== -1)
+				return true;
+		}
 	}
 	/*
-		Super-table Observation.result columns (Group.Observations.result) are always
+		Super-table Observation.result columns (Group.Observation(s).result) are always
 		treated as real when the probe has not been built yet — avoids wiping bindings
 		during ensureMeasurementEntities before sebInitCtx.
 	*/
@@ -981,7 +1210,7 @@ function sebPackSrc(s, dataType) {
 }
 
 function sebResolveSrc(src, rec) {
-	var entry, side;
+	var entry, side, alts, i, col;
 	if (!src)
 		return undefined;
 	if (src.source !== "column")
@@ -990,20 +1219,30 @@ function sebResolveSrc(src, rec) {
 		Current row first (primary cell or already-enriched lateral). Never fall
 		back to lateral STAdata[0] when the row already carries the value — that
 		was collapsing every Location / observation to the first source record.
+		Also try Thing↔Things / Observation↔Observations spellings.
 	*/
-	if (rec && Object.prototype.hasOwnProperty.call(rec, src.column) && rec[src.column] !== undefined)
-		return rec[src.column];
-	entry = (typeof sebCtx !== "undefined" && sebCtx && sebCtx.colMap) ? sebCtx.colMap[src.column] : null;
-	if (entry && !entry.lateral)
-		return rec ? rec[entry.field] : undefined;
-	if (entry && entry.lateral) {
-		if (rec && Object.prototype.hasOwnProperty.call(rec, src.column))
-			return rec[src.column];
+	alts = sebAlternateSuperColumnNames(src.column);
+	if (rec) {
+		for (i = 0; i < alts.length; i++) {
+			col = alts[i];
+			if (Object.prototype.hasOwnProperty.call(rec, col) && rec[col] !== undefined)
+				return rec[col];
+		}
+	}
+	for (i = 0; i < alts.length; i++) {
+		col = alts[i];
+		entry = (typeof sebCtx !== "undefined" && sebCtx && sebCtx.colMap) ? sebCtx.colMap[col] : null;
+		if (!entry)
+			continue;
+		if (!entry.lateral)
+			return rec ? rec[entry.field] : undefined;
+		if (rec && Object.prototype.hasOwnProperty.call(rec, col))
+			return rec[col];
 		/* 1-row lateral = constant broadcast; multi-row must come via enrichment */
 		side = sebLateralSideRow(entry.parent, null);
 		return side ? side[entry.field] : undefined;
 	}
-	return rec ? rec[src.column] : undefined;
+	return rec && src.column ? rec[src.column] : undefined;
 }
 
 /* Keep Observations.result in sync with measurement.resultColumn (never leave grup_ keys). */
@@ -1126,6 +1365,91 @@ function sebParseStaAttributeDefinition(definition) {
  *   maps[plural].idColumn = columnName  (for @iot.id)
  * Optional sources remaps raw field names to exposed names (Things.name, …).
  */
+function sebConflictKey(groupPrefix, plural, propName) {
+	if (groupPrefix)
+		return String(groupPrefix) + "." + plural + "." + propName;
+	return plural + "." + propName;
+}
+
+function sebRecordConflict(conflicts, groupPrefix, plural, propName, columns) {
+	var key, entry, i, c;
+	if (!conflicts || !plural || !propName)
+		return;
+	key = sebConflictKey(groupPrefix, plural, propName);
+	entry = conflicts[key];
+	if (!entry) {
+		entry = conflicts[key] = {
+			groupPrefix: groupPrefix || null,
+			plural: plural,
+			propName: propName,
+			columns: []
+		};
+	}
+	if (!columns)
+		return;
+	for (i = 0; i < columns.length; i++) {
+		c = columns[i];
+		if (c && entry.columns.indexOf(c) === -1)
+			entry.columns.push(c);
+	}
+}
+
+function sebMergeConflictDict(into, from) {
+	var k, e;
+	if (!into || !from)
+		return into;
+	for (k in from) {
+		if (!Object.prototype.hasOwnProperty.call(from, k))
+			continue;
+		e = from[k];
+		if (!e)
+			continue;
+		sebRecordConflict(into, e.groupPrefix, e.plural, e.propName, e.columns);
+	}
+	return into;
+}
+
+/* Merge a property column into slot; different sources → conflict (no binding). */
+function sebMergePropBinding(slot, propName, column, conflicts, groupPrefix, plural) {
+	var prev, key;
+	if (!slot || !propName || !column)
+		return;
+	key = sebConflictKey(groupPrefix, plural, propName);
+	if (conflicts && conflicts[key]) {
+		sebRecordConflict(conflicts, groupPrefix, plural, propName, [column]);
+		return;
+	}
+	prev = slot.props[propName];
+	if (!prev) {
+		slot.props[propName] = column;
+		return;
+	}
+	if (prev === column)
+		return;
+	delete slot.props[propName];
+	sebRecordConflict(conflicts, groupPrefix, plural, propName, [prev, column]);
+}
+
+function sebMergeIdBinding(slot, column, conflicts, groupPrefix, plural) {
+	var prev, propName = "@iot.id", key;
+	if (!slot || !column)
+		return;
+	key = sebConflictKey(groupPrefix, plural, propName);
+	if (conflicts && conflicts[key]) {
+		sebRecordConflict(conflicts, groupPrefix, plural, propName, [column]);
+		return;
+	}
+	prev = slot.idColumn;
+	if (!prev) {
+		slot.idColumn = column;
+		return;
+	}
+	if (prev === column)
+		return;
+	slot.idColumn = null;
+	sebRecordConflict(conflicts, groupPrefix, plural, propName, [prev, column]);
+}
+
 function sebColumnMapsFromParentAttributes(parent, sources) {
 	var attrs = parent && parent.STAdataAttributes, maps = {}, col, def, parsed, slot, exposed;
 	if (!attrs)
@@ -1147,27 +1471,27 @@ function sebColumnMapsFromParentAttributes(parent, sources) {
 	return maps;
 }
 
-function sebMergeColumnMaps(into, from) {
-	var plural, prop;
+function sebMergeColumnMaps(into, from, conflicts, groupPrefix) {
+	var plural, prop, slot;
 	for (plural in from) {
-		if (!Object.prototype.hasOwnProperty.call(from, plural))
+		if (!Object.prototype.hasOwnProperty.call(from, plural) || plural.charAt(0) === "_")
 			continue;
 		if (!into[plural])
 			into[plural] = { props: {}, idColumn: null };
-		if (from[plural].idColumn && !into[plural].idColumn)
-			into[plural].idColumn = from[plural].idColumn;
+		slot = into[plural];
+		if (from[plural].idColumn)
+			sebMergeIdBinding(slot, from[plural].idColumn, conflicts, groupPrefix || null, plural);
 		for (prop in from[plural].props) {
 			if (!Object.prototype.hasOwnProperty.call(from[plural].props, prop))
 				continue;
-			if (!into[plural].props[prop])
-				into[plural].props[prop] = from[plural].props[prop];
+			sebMergePropBinding(slot, prop, from[plural].props[prop], conflicts, groupPrefix || null, plural);
 		}
 	}
 	return into;
 }
 
 function sebColumnMapsFromSources(sources) {
-	var maps = {}, parents = [], i;
+	var maps = {}, conflicts = {}, parents = [], i;
 	if (!sources)
 		return maps;
 	if (sources.primary)
@@ -1175,8 +1499,99 @@ function sebColumnMapsFromSources(sources) {
 	for (i = 0; i < (sources.laterals || []).length; i++)
 		parents.push(sources.laterals[i]);
 	for (i = 0; i < parents.length; i++)
-		sebMergeColumnMaps(maps, sebColumnMapsFromParentAttributes(parents[i], sources));
+		sebMergeColumnMaps(maps, sebColumnMapsFromParentAttributes(parents[i], sources), conflicts, null);
+	maps._conflicts = conflicts;
 	return maps;
+}
+
+function sebSourcesParentList(sources) {
+	var parents = [], i;
+	if (!sources)
+		return parents;
+	if (sources.primary)
+		parents.push(sources.primary);
+	for (i = 0; i < (sources.laterals || []).length; i++)
+		parents.push(sources.laterals[i]);
+	return parents;
+}
+
+function sebSourcesHaveSuperColumns(sources) {
+	var parents = sebSourcesParentList(sources), i, raw;
+	for (i = 0; i < parents.length; i++) {
+		raw = sebColumnNames(parents[i] && parents[i].STAdata, parents[i] && parents[i].STAdataAttributes);
+		if (sebHasSuperColumns(raw))
+			return true;
+	}
+	return false;
+}
+
+/*
+	Rebuild conflict map from attribute defs + super-columns across all parents.
+	Stored on cfg._columnConflicts and sebCtx.columnConflicts for the form UI.
+*/
+function sebRefreshColumnConflicts(cfg, parent, sources) {
+	var conflicts = {}, maps, superMaps, cols;
+	if (sources && (sources.primary || (sources.laterals && sources.laterals.length))) {
+		maps = sebColumnMapsFromSources(sources);
+		sebMergeConflictDict(conflicts, maps && maps._conflicts);
+		superMaps = sebColumnMapsFromSourcesSuperColumns(sources, cfg && cfg.mode);
+		sebMergeConflictDict(conflicts, superMaps && superMaps.conflicts);
+	} else {
+		if (parent) {
+			maps = sebColumnMapsFromParentAttributes(parent, sources);
+			/* single parent: no cross-table conflicts from attributes */
+		}
+		cols = (sources && sources.cols && sources.cols.length) ? sources.cols :
+			sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
+		superMaps = sebColumnMapsFromSuperColumnNames(cols, cfg && cfg.mode);
+		sebMergeConflictDict(conflicts, superMaps && superMaps.conflicts);
+	}
+	if (cfg)
+		cfg._columnConflicts = conflicts;
+	if (typeof sebCtx !== "undefined" && sebCtx)
+		sebCtx.columnConflicts = conflicts;
+	return conflicts;
+}
+
+function sebHasColumnConflict(plural, propName, groupPrefix) {
+	var conflicts = (typeof sebCtx !== "undefined" && sebCtx && sebCtx.columnConflicts) || {};
+	var key = sebConflictKey(null, plural, propName);
+	if (conflicts[key])
+		return true;
+	if (groupPrefix && conflicts[sebConflictKey(groupPrefix, plural, propName)])
+		return true;
+	return false;
+}
+
+function sebDupWarnHtml(plural, propName, groupPrefix) {
+	if (!sebHasColumnConflict(plural, propName, groupPrefix))
+		return "";
+	return "<span class=\"sebDupWarn\">" + DonaCadena({
+		cat: "Atribut duplicat entre taules, tria'n un",
+		spa: "Atributo duplicado entre tablas, elige uno",
+		eng: "Duplicate attribute across tables, pick one"
+	}) + "</span>";
+}
+
+function sebMeasGroupPrefixFromKey(measKey) {
+	var ms, i, m, prefix;
+	if (!measKey || typeof sebCtx === "undefined" || !sebCtx || !sebCtx.cfg || !sebCtx.cfg.measurements)
+		return null;
+	ms = sebCtx.cfg.measurements;
+	for (i = 0; i < ms.length; i++) {
+		m = ms[i];
+		if (!m || m.key !== measKey)
+			continue;
+		if (m._columnPrefix)
+			return m._columnPrefix;
+		prefix = sebGroupColumnPrefix(m);
+		if (prefix)
+			return prefix;
+		if (m.label && String(m.label).trim())
+			return String(m.label).trim();
+		return null;
+	}
+	return null;
 }
 
 function sebApplyColumnMapToEntity(ent, plural, slot, mode, onlyEmpty) {
@@ -1347,7 +1762,7 @@ function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty, sources) {
 		}
 	}
 	for (plural in maps) {
-		if (!Object.prototype.hasOwnProperty.call(maps, plural))
+		if (!Object.prototype.hasOwnProperty.call(maps, plural) || plural.charAt(0) === "_")
 			continue;
 		slot = maps[plural];
 		cfg.selected[plural] = true;
@@ -1367,17 +1782,100 @@ function sebApplyAttributeDefinitionsToConfig(cfg, parent, onlyEmpty, sources) {
 
 /* —— Auto-load from super-table column names: Entity.property | Group.Entity.property —— */
 
-function sebPluralSet() {
-	var set = {}, i, order = sebEntityOrder();
-	for (i = 0; i < order.length; i++)
-		set[order[i]] = true;
-	if (typeof STAEntities !== "undefined") {
-		for (i in STAEntities) {
-			if (Object.prototype.hasOwnProperty.call(STAEntities, i))
-				set[i] = true;
+/* Safe ref to STAEntities (const in t_nodes.js; also mirrored on window). */
+function sebSTAEntitiesRef() {
+	try {
+		if (typeof STAEntities !== "undefined" && STAEntities)
+			return STAEntities;
+	} catch (err) { /* ignore */ }
+	try {
+		if (typeof window !== "undefined" && window.STAEntities)
+			return window.STAEntities;
+	} catch (err2) { /* ignore */ }
+	return null;
+}
+
+/*
+	Llista de noms en SINGULAR agafats de STAEntities[p].singular (t_nodes.js).
+	Ex.: ["Thing", "Location", "Sensor", "Observation", …]
+*/
+function sebSingularEntityList() {
+	var list = [], ents = sebSTAEntitiesRef(), p, sing, i;
+	if (ents) {
+		for (p in ents) {
+			if (!Object.prototype.hasOwnProperty.call(ents, p) || !ents[p])
+				continue;
+			sing = ents[p].singular;
+			if (!sing)
+				continue;
+			sing = String(sing);
+			if (list.indexOf(sing) === -1)
+				list.push(sing);
+		}
+		return list;
+	}
+	/* Fallback si STAEntities encara no és visible */
+	return ["Campaign", "Cell", "Datastream", "FeatureOfInterest", "HistoricalLocation",
+		"License", "Location", "MultiDatastream", "ObservationGroup", "Observation",
+		"ObservedProperty", "Party", "Relation", "Sensor", "Thing"];
+}
+
+/* Singular → plural cfg key (mira la llista de singulars + claus de STAEntities). */
+function sebSingularToPlural(singular) {
+	var ents = sebSTAEntitiesRef(), p, fallback, i;
+	if (!singular)
+		return null;
+	singular = String(singular);
+	if (ents) {
+		for (p in ents) {
+			if (Object.prototype.hasOwnProperty.call(ents, p) && ents[p] &&
+					ents[p].singular === singular)
+				return p;
 		}
 	}
+	fallback = {
+		Campaign: "Campaigns", Cell: "Cells", Datastream: "Datastreams",
+		FeatureOfInterest: "FeaturesOfInterest", HistoricalLocation: "HistoricalLocations",
+		License: "Licenses", Location: "Locations", MultiDatastream: "MultiDatastreams",
+		ObservationGroup: "ObservationGroups", Observation: "Observations",
+		ObservedProperty: "ObservedProperties", Party: "Parties", Relation: "Relations",
+		Sensor: "Sensors", Thing: "Things"
+	};
+	return fallback[singular] || null;
+}
+
+function sebPluralSet() {
+	var set = {}, ents = sebSTAEntitiesRef(), p, order, i;
+	ents = ents || {};
+	for (p in ents) {
+		if (Object.prototype.hasOwnProperty.call(ents, p))
+			set[p] = true;
+	}
+	order = sebEntityOrder();
+	for (i = 0; i < order.length; i++)
+		set[order[i]] = true;
 	return set;
+}
+
+/*
+	Token d'entitat (singular o plural) → clau plural del cfg.
+	1) Si és plural (Things) → Things
+	2) Si és a la llista de singulars (Thing) → Things via STAEntities.singular
+*/
+function sebEntityTokenToPlural(name) {
+	var plurals, singulars;
+	if (!name)
+		return null;
+	name = String(name).replace(/^\ufeff/, "").trim();
+	if (!name)
+		return null;
+	plurals = sebPluralSet();
+	if (plurals[name])
+		return name;
+	singulars = sebSingularEntityList();
+	if (singulars.indexOf(name) !== -1)
+		return sebSingularToPlural(name);
+	return null;
 }
 
 function sebNormalizeSuperPropName(propName) {
@@ -1387,39 +1885,42 @@ function sebNormalizeSuperPropName(propName) {
 }
 
 /*
-	Super-table column names:
-	  Entity.property                     → 2+ segments, first is STA plural
-	  Group.Entity.property               → 3+ segments, first is NOT a plural, second is
+	Super-table column names (entity token = plural OR singular):
+	  Entity.property                     → 2+ segments, first is STA entity
+	  Group.Entity.property               → 3+ segments, first is NOT an entity, second is
 	Examples:
-	  Things.name
-	  Temperature.Locations.location
+	  Things.name / Thing.name
+	  Temperature.Locations.location / Photography.Thing.name
 	  Humidity.Datastreams.unitOfMeasurement.name
 	→ { groupPrefix|null, plural, propName, column } or null.
 */
 function sebParseSuperColumnName(colName) {
-	var parts, plurals, propName;
+	var parts, propName, firstPlural, secondPlural, i;
 	if (colName == null || colName === "")
 		return null;
-	colName = String(colName);
+	colName = String(colName).replace(/^\ufeff/, "").trim();
 	if (colName.charAt(0) === "_" || colName === "@iot.id")
 		return null;
 	parts = colName.split(".");
 	if (parts.length < 2)
 		return null;
-	plurals = sebPluralSet();
-	/* Group.Entity.property… — word.word.word(+): first ≠ plural, second = plural */
-	if (parts.length >= 3 && !plurals[parts[0]] && plurals[parts[1]]) {
+	for (i = 0; i < parts.length; i++)
+		parts[i] = String(parts[i]).replace(/^\ufeff/, "").trim();
+	firstPlural = sebEntityTokenToPlural(parts[0]);
+	secondPlural = parts.length >= 3 ? sebEntityTokenToPlural(parts[1]) : null;
+	/* Group.Entity.property… — first ≠ entity, second = entity (singular or plural) */
+	if (parts.length >= 3 && !firstPlural && secondPlural) {
 		propName = sebNormalizeSuperPropName(parts.slice(2).join("."));
 		if (!propName)
 			return null;
-		return { groupPrefix: parts[0], plural: parts[1], propName: propName, column: colName };
+		return { groupPrefix: parts[0], plural: secondPlural, propName: propName, column: colName };
 	}
-	/* Entity.property… — first segment is the STA plural */
-	if (plurals[parts[0]]) {
+	/* Entity.property… — first segment is STA entity (singular or plural) */
+	if (firstPlural) {
 		propName = sebNormalizeSuperPropName(parts.slice(1).join("."));
 		if (!propName)
 			return null;
-		return { groupPrefix: null, plural: parts[0], propName: propName, column: colName };
+		return { groupPrefix: null, plural: firstPlural, propName: propName, column: colName };
 	}
 	return null;
 }
@@ -1448,11 +1949,12 @@ function sebHasSuperColumns(cols) {
 }
 
 /*
-	Build { shared: { plural: slot }, groups: { prefix: { plural: slot } }, hasAny }.
+	Build { shared: { plural: slot }, groups: { prefix: { plural: slot } }, hasAny, conflicts }.
 	slot = { props: { propName: column }, idColumn }.
+	Duplicate Entity.property / Group.Entity.property → conflicts, no binding.
 */
 function sebColumnMapsFromSuperColumnNames(cols, mode) {
-	var out = { shared: {}, groups: {}, hasAny: false }, i, parsed, bucket, slot;
+	var out = { shared: {}, groups: {}, hasAny: false, conflicts: {} }, i, parsed, bucket, slot;
 	if (!cols)
 		return out;
 	for (i = 0; i < cols.length; i++) {
@@ -1468,11 +1970,124 @@ function sebColumnMapsFromSuperColumnNames(cols, mode) {
 			bucket = out.shared;
 		slot = bucket[parsed.plural] || (bucket[parsed.plural] = { props: {}, idColumn: null });
 		if (parsed.propName === "@iot.id")
-			slot.idColumn = parsed.column;
+			sebMergeIdBinding(slot, parsed.column, out.conflicts, parsed.groupPrefix, parsed.plural);
 		else
-			slot.props[parsed.propName] = parsed.column;
+			sebMergePropBinding(slot, parsed.propName, parsed.column, out.conflicts, parsed.groupPrefix, parsed.plural);
 	}
 	return out;
+}
+
+/*
+	Like sebColumnMapsFromSuperColumnNames but scans each parent with raw field names,
+	then remaps to exposed column names. Avoids treating lateral prefixes as groups.
+*/
+function sebColumnMapsFromSourcesSuperColumns(sources, mode) {
+	var out = { shared: {}, groups: {}, hasAny: false, conflicts: {} };
+	var parents = sebSourcesParentList(sources), i, j, p, raw, parsed, exposed, bucket, slot;
+	for (i = 0; i < parents.length; i++) {
+		p = parents[i];
+		raw = sebColumnNames(p && p.STAdata, p && p.STAdataAttributes);
+		for (j = 0; j < raw.length; j++) {
+			parsed = sebParseSuperColumnName(raw[j]);
+			if (!parsed || !sebIsKnownSuperProp(parsed.plural, parsed.propName, mode))
+				continue;
+			out.hasAny = true;
+			exposed = sebExposedColumnName(sources, p, raw[j]);
+			/* Keep the spelling that exists on the table (Thing vs Things, …) */
+			exposed = sebPickExistingSuperColumn(exposed, sources) || exposed;
+			if (parsed.groupPrefix) {
+				if (!out.groups[parsed.groupPrefix])
+					out.groups[parsed.groupPrefix] = {};
+				bucket = out.groups[parsed.groupPrefix];
+			} else
+				bucket = out.shared;
+			slot = bucket[parsed.plural] || (bucket[parsed.plural] = { props: {}, idColumn: null });
+			if (parsed.propName === "@iot.id")
+				sebMergeIdBinding(slot, exposed, out.conflicts, parsed.groupPrefix, parsed.plural);
+			else
+				sebMergePropBinding(slot, parsed.propName, exposed, out.conflicts, parsed.groupPrefix, parsed.plural);
+		}
+	}
+	return out;
+}
+
+/* Merge one super-column map into another (shared + groups + conflicts). */
+function sebMergeSuperColumnMaps(into, from) {
+	var plural, prefix, prop, slot, fromSlot, bucket;
+	if (!into || !from)
+		return into;
+	if (from.hasAny)
+		into.hasAny = true;
+	sebMergeConflictDict(into.conflicts || (into.conflicts = {}), from.conflicts);
+	for (plural in from.shared || {}) {
+		if (!Object.prototype.hasOwnProperty.call(from.shared, plural))
+			continue;
+		fromSlot = from.shared[plural];
+		slot = into.shared[plural] || (into.shared[plural] = { props: {}, idColumn: null });
+		if (fromSlot.idColumn)
+			sebMergeIdBinding(slot, fromSlot.idColumn, into.conflicts, null, plural);
+		for (prop in fromSlot.props || {}) {
+			if (!Object.prototype.hasOwnProperty.call(fromSlot.props, prop))
+				continue;
+			sebMergePropBinding(slot, prop, fromSlot.props[prop], into.conflicts, null, plural);
+		}
+	}
+	for (prefix in from.groups || {}) {
+		if (!Object.prototype.hasOwnProperty.call(from.groups, prefix))
+			continue;
+		if (!into.groups[prefix])
+			into.groups[prefix] = {};
+		bucket = into.groups[prefix];
+		for (plural in from.groups[prefix]) {
+			if (!Object.prototype.hasOwnProperty.call(from.groups[prefix], plural))
+				continue;
+			fromSlot = from.groups[prefix][plural];
+			slot = bucket[plural] || (bucket[plural] = { props: {}, idColumn: null });
+			if (fromSlot.idColumn)
+				sebMergeIdBinding(slot, fromSlot.idColumn, into.conflicts, prefix, plural);
+			for (prop in fromSlot.props || {}) {
+				if (!Object.prototype.hasOwnProperty.call(fromSlot.props, prop))
+					continue;
+				sebMergePropBinding(slot, prop, fromSlot.props[prop], into.conflicts, prefix, plural);
+			}
+		}
+	}
+	return into;
+}
+
+/* Ensure group has entity instance; return it. */
+function sebEnsureGroupEntity(cfg, m, plural, parent) {
+	var ctx;
+	if (!m || !plural)
+		return null;
+	sebEnsureGroupSelected(m);
+	if (m[plural])
+		return m[plural];
+	ctx = sebMeasCtxFromParent(cfg, parent);
+	if (plural === "Observations")
+		m[plural] = sebNewEntity("Observations", cfg.mode, {}, {});
+	else
+		m[plural] = sebNewEntity(plural, cfg.mode, sebEntityDefaults(plural, ctx));
+	return m[plural];
+}
+
+/*
+	Copy shared Entity.property into every included group's entity.
+	onlyEmpty=true keeps Group.Entity.property bindings already set.
+*/
+function sebApplySharedSlotToAllGroups(cfg, parent, plural, slot, onlyEmpty) {
+	var i, m;
+	if (!cfg || !plural || !slot)
+		return;
+	cfg.selected[plural] = true;
+	for (i = 0; i < (cfg.measurements || []).length; i++) {
+		m = cfg.measurements[i];
+		if (!m || m.include === false)
+			continue;
+		sebEnsureGroupEntity(cfg, m, plural, parent);
+		m.selected[plural] = true;
+		sebApplyColumnMapToEntity(m[plural], plural, slot, cfg.mode, onlyEmpty);
+	}
 }
 
 function sebFindGroupByPrefix(cfg, prefix) {
@@ -1559,12 +2174,21 @@ function sebEnsureCfgEntity(cfg, plural, parent) {
 	Returns true if any column was applied.
 */
 function sebApplySuperColumnsToConfig(cfg, parent, sources, onlyEmpty) {
-	var cols, maps, plural, slot, prefix, groupMaps, m, ctx;
+	var cols, maps, flat, plural, slot, prefix, groupMaps, m, ctx;
 	if (!cfg)
 		return false;
 	cols = (sources && sources.cols && sources.cols.length) ? sources.cols :
 		sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
-	maps = sebColumnMapsFromSuperColumnNames(cols, cfg.mode);
+	/*
+		Build maps from every parent (raw names) AND from the flat exposed col list,
+		then merge — so Location.name on one node + Photography.Location.* on another
+		are both seen.
+	*/
+	maps = { shared: {}, groups: {}, hasAny: false, conflicts: {} };
+	if (sources && (sources.primary || (sources.laterals && sources.laterals.length)))
+		sebMergeSuperColumnMaps(maps, sebColumnMapsFromSourcesSuperColumns(sources, cfg.mode));
+	flat = sebColumnMapsFromSuperColumnNames(cols, cfg.mode);
+	sebMergeSuperColumnMaps(maps, flat);
 	if (!maps.hasAny)
 		return false;
 
@@ -1574,26 +2198,7 @@ function sebApplySuperColumnsToConfig(cfg, parent, sources, onlyEmpty) {
 		cfg.scope = sebDefaultScope("dataFromTable");
 	}
 
-	/*
-		Entity.property (no group prefix): common / ungrouped data → general.
-		Only when this plural has no Group.Entity.property columns; otherwise groups own it.
-	*/
-	for (plural in maps.shared) {
-		if (!Object.prototype.hasOwnProperty.call(maps.shared, plural))
-			continue;
-		slot = maps.shared[plural];
-		if (sebPluralHasGroupColumns(maps, plural)) {
-			/* Also have Group.Entity.* — keep bindings on cfg.entities as fallback, groups win UI */
-			sebEnsureCfgEntity(cfg, plural, parent);
-			sebApplyColumnMapToEntity(cfg.entities[plural], plural, slot, cfg.mode, onlyEmpty);
-			continue;
-		}
-		sebClearEntityFromAllGroups(cfg, plural);
-		cfg.selected[plural] = true;
-		sebEnsureCfgEntity(cfg, plural, parent);
-		sebApplyColumnMapToEntity(cfg.entities[plural], plural, slot, cfg.mode, onlyEmpty);
-	}
-
+	/* 1) Create groups + bind Group.Entity.property first */
 	for (prefix in maps.groups) {
 		if (!Object.prototype.hasOwnProperty.call(maps.groups, prefix))
 			continue;
@@ -1614,10 +2219,8 @@ function sebApplySuperColumnsToConfig(cfg, parent, sources, onlyEmpty) {
 					m[plural] = sebNewEntity(plural, cfg.mode, sebEntityDefaults(plural, ctx));
 			}
 			sebApplyColumnMapToEntity(m[plural], plural, slot, cfg.mode, onlyEmpty);
-			/* Hint resultColumn from Observations.result binding for UI */
 			if (plural === "Observations" && slot.props && slot.props.result) {
 				m.resultColumn = slot.props.result;
-				/* Force-bind result even if onlyEmpty skipped a stale manual/empty value */
 				if (m.Observations && m.Observations.props &&
 						(!onlyEmpty || !sebSrcIsMeaningfullySet(m.Observations.props.result) ||
 							(m.Observations.props.result.source === "column" &&
@@ -1630,7 +2233,7 @@ function sebApplySuperColumnsToConfig(cfg, parent, sources, onlyEmpty) {
 						return;
 					if (!onlyEmpty || !sebSrcIsMeaningfullySet(m.Observations.props[prop]) ||
 							(m.Observations.props[prop].source === "column" &&
-								!/\.Observations\.(phenomenonTime|resultTime)$/.test(String(m.Observations.props[prop].column || ""))))
+								!sebIsSuperObservationTimeColumn(m.Observations.props[prop].column)))
 						m.Observations.props[prop] = sebSrcObj("column", "", slot.props[prop]);
 				});
 			}
@@ -1638,29 +2241,59 @@ function sebApplySuperColumnsToConfig(cfg, parent, sources, onlyEmpty) {
 	}
 
 	sebEnsureMeasurementEntities(cfg, parent, sources);
-	/* Re-assert Observation result bindings after ensure/sync */
+
+	/*
+		2) Shared Entity.property (Location.name, …):
+		   - no Group.* for that plural → general only
+		   - with Group.* → general + every included group (fills name/location left
+		     empty by Photography.Location.encodingType-only columns)
+	*/
+	for (plural in maps.shared) {
+		if (!Object.prototype.hasOwnProperty.call(maps.shared, plural))
+			continue;
+		slot = maps.shared[plural];
+		sebEnsureCfgEntity(cfg, plural, parent);
+		cfg.selected[plural] = true;
+		if (sebPluralHasGroupColumns(maps, plural)) {
+			sebApplyColumnMapToEntity(cfg.entities[plural], plural, slot, cfg.mode, onlyEmpty);
+			/* Fill empty props on all groups; Group.* already set wins via onlyEmpty */
+			sebApplySharedSlotToAllGroups(cfg, parent, plural, slot, true);
+		} else {
+			sebClearEntityFromAllGroups(cfg, plural);
+			sebApplyColumnMapToEntity(cfg.entities[plural], plural, slot, cfg.mode, onlyEmpty);
+		}
+	}
+
+	/* 3) Re-assert Group.Entity.property so they win over shared fills */
 	for (prefix in maps.groups) {
 		if (!Object.prototype.hasOwnProperty.call(maps.groups, prefix))
 			continue;
 		groupMaps = maps.groups[prefix];
 		m = sebFindGroupByPrefix(cfg, prefix);
-		if (!m || !groupMaps.Observations || !groupMaps.Observations.props)
+		if (!m)
 			continue;
-		slot = groupMaps.Observations;
-		if (slot.props.result && m.Observations && m.Observations.props) {
-			m.resultColumn = slot.props.result;
-			m.Observations.props.result = sebSrcObj("column", "", slot.props.result);
+		for (plural in groupMaps) {
+			if (!Object.prototype.hasOwnProperty.call(groupMaps, plural))
+				continue;
+			slot = groupMaps[plural];
+			sebEnsureGroupEntity(cfg, m, plural, parent);
+			m.selected[plural] = true;
+			cfg.selected[plural] = true;
+			sebApplyColumnMapToEntity(m[plural], plural, slot, cfg.mode, onlyEmpty);
+			if (plural === "Observations" && slot.props) {
+				if (slot.props.result && m.Observations && m.Observations.props) {
+					m.resultColumn = slot.props.result;
+					m.Observations.props.result = sebSrcObj("column", "", slot.props.result);
+				}
+				["phenomenonTime", "resultTime"].forEach(function (prop) {
+					if (slot.props[prop] && m.Observations && m.Observations.props)
+						m.Observations.props[prop] = sebSrcObj("column", "", slot.props[prop]);
+				});
+				sebSyncGroupResultColumn(m, sources || parent);
+			}
 		}
-		["phenomenonTime", "resultTime"].forEach(function (prop) {
-			if (slot.props[prop] && m.Observations && m.Observations.props)
-				m.Observations.props[prop] = sebSrcObj("column", "", slot.props[prop]);
-		});
-		sebSyncGroupResultColumn(m, sources || parent);
 	}
-	/*
-		Groups may have been created after the shared pass — keep Entity.property-only
-		plurals at general (unchecked in every group).
-	*/
+
 	for (plural in maps.shared) {
 		if (!Object.prototype.hasOwnProperty.call(maps.shared, plural))
 			continue;
@@ -2067,7 +2700,7 @@ function sebDefaultConfig(parent, mode, node) {
 	var sources = node ? sebBuildColumnSources(node) : null;
 	var cols = sources && sources.cols.length ? sources.cols :
 		sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
-	var hasSuper = sebHasSuperColumns(cols);
+	var hasSuper = (sources && sebSourcesHaveSuperColumns(sources)) || sebHasSuperColumns(cols);
 	var isCas, meta, info, isPmscan, metaStr, timeCol, valueCols, ctx, cfg, cands, perGroup;
 	/* Super-table input → free mode (groups by etiqueta), not ConnectASensor */
 	if (hasSuper)
@@ -2321,8 +2954,11 @@ function sebEnsureConfig(node, force) {
 		/* Fill empty bindings from super-table columns if parent looks like one */
 		cols = sources && sources.cols ? sources.cols :
 			sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
-		if (sebHasSuperColumns(cols))
-			sebApplySuperColumnsToConfig(node.staEntityConfig, parent, sources, true);
+		if ((sources && sebSourcesHaveSuperColumns(sources)) || sebHasSuperColumns(cols)) {
+			/* No groups yet (e.g. singular headers never matched) → force bind; else only fill empties */
+			sebApplySuperColumnsToConfig(node.staEntityConfig, parent, sources,
+				!!(node.staEntityConfig.measurements && node.staEntityConfig.measurements.length));
+		}
 		/* CAS: share flags + geo + OP definitions */
 		if (node.staEntityConfig.mode === "connectASensor") {
 			sebEnsureCasShareFlags(node.staEntityConfig);
@@ -2336,7 +2972,7 @@ function sebEnsureConfig(node, force) {
 	sources = node ? sebBuildColumnSources(node) : null;
 	cols = sources && sources.cols ? sources.cols :
 		sebColumnNames(parent && parent.STAdata, parent && parent.STAdataAttributes);
-	if (sebHasSuperColumns(cols))
+	if ((sources && sebSourcesHaveSuperColumns(sources)) || sebHasSuperColumns(cols))
 		preferCas = false;
 	node.staEntityConfig = sebDefaultConfig(parent, preferCas ? "connectASensor" : "dataFromTable", node);
 	sebMigrateConfigGeoProps(node.staEntityConfig);
@@ -2463,14 +3099,15 @@ function sebSourceSelectHtml(source, disabled, onchange) {
 		DonaCadena({cat: "Columna", spa: "Columna", eng: "Column"}) + "</option></select>";
 }
 
-function sebPropRowHtml(p, src, cols, locked) {
+function sebPropRowHtml(p, src, cols, locked, plural, groupPrefix) {
 	var isCol = src.source === "column";
 	return "<div class=\"sebRow\" data-prop=\"" + sebEsc(p.name) + "\">" +
 		"<span class=\"sebLbl" + (p.required ? " sebRequired" : "") + "\">" + sebEsc(p.name) + (p.required ? "*" : "") + "</span>" +
 		sebSourceSelectHtml(src.source, locked, "sebOnSrcChange(this)") +
 		"<input type=\"text\" class=\"sebVal\" value=\"" + sebEsc(src.value) + "\"" + (locked ? " readonly" : "") + (isCol ? " hidden" : "") + ">" +
 		"<select class=\"sebCol\"" + (locked ? " disabled" : "") + (isCol ? "" : " hidden") + ">" +
-		sebColumnOptionsHtml(cols, src.column) + "</select></div>";
+		sebColumnOptionsHtml(cols, src.column) + "</select>" +
+		sebDupWarnHtml(plural, p.name, groupPrefix) + "</div>";
 }
 
 /* Party: only label + read-only value (no Manual/Column selects) */
@@ -2496,7 +3133,7 @@ function sebCandidateLabel(rec) {
 	return label;
 }
 
-function sebIdRowHtml(plural, ent, cols, cands) {
+function sebIdRowHtml(plural, ent, cols, cands, groupPrefix) {
 	var s = ent.id, isCol = s.source === "column", html, i, sel;
 	html = "<div class=\"sebRow sebIdRow\" data-prop=\"@iot.id\"><span class=\"sebLbl\">@iot.id</span>";
 	if (cands && cands.length > 1) {
@@ -2514,7 +3151,8 @@ function sebIdRowHtml(plural, ent, cols, cands) {
 		"<select class=\"sebIdPick\" onchange=\"sebOnIdChange(this)\" hidden></select>" +
 		"<button type=\"button\" class=\"sebSearchBtn\" onclick=\"sebSearchEntity(this)\" disabled" + (isCol ? " hidden" : "") + ">" +
 		DonaCadena({cat: "Cerca", spa: "Buscar", eng: "Search"}) + "</button>" +
-		"<span class=\"sebSearchMsg\"" + (isCol ? " hidden" : "") + "></span></div>";
+		"<span class=\"sebSearchMsg\"" + (isCol ? " hidden" : "") + "></span>" +
+		sebDupWarnHtml(plural, "@iot.id", groupPrefix) + "</div>";
 	return html;
 }
 
@@ -2522,6 +3160,7 @@ function sebEntityBlockHtml(plural, ent, meas, cols, cands, mode, showTitle) {
 	/* Login Party helper only at general (shared); per-group Parties use normal fields */
 	var partyLogin = plural === "Parties" && (meas === null || meas === undefined);
 	var locked = !!(ent.locked || partyLogin);
+	var groupPrefix = (meas !== null && meas !== undefined) ? sebMeasGroupPrefixFromKey(meas) : null;
 	var html = "<div class=\"sebEnt" + (locked ? " sebLocked" : "") + (partyLogin ? " sebPartyFixed" : "") +
 		"\" data-ent=\"" + plural + "\"" +
 		(meas !== null && meas !== undefined ? " data-meas=\"" + sebEsc(meas) + "\"" : "") +
@@ -2534,9 +3173,9 @@ function sebEntityBlockHtml(plural, ent, meas, cols, cands, mode, showTitle) {
 			html += sebPartyPropRowHtml(p, ent.props[p.name] || sebSrcObj("manual", "", ""));
 		});
 	} else {
-		html += sebIdRowHtml(plural, ent, cols, cands);
+		html += sebIdRowHtml(plural, ent, cols, cands, groupPrefix);
 		sebPropList(plural, mode).forEach(function (p) {
-			html += sebPropRowHtml(p, ent.props[p.name] || sebSrcObj("manual", "", ""), cols, locked);
+			html += sebPropRowHtml(p, ent.props[p.name] || sebSrcObj("manual", "", ""), cols, locked, plural, groupPrefix);
 		});
 	}
 	if (plural === "Locations" || plural === "FeaturesOfInterest") {
@@ -2632,7 +3271,9 @@ function sebInitCtx(node, parent) {
 		data: sources.data || [],
 		cands: sebCandidatesFromAllParents(node),
 		distinct: {},
-		staUrl: sebServiceRoot(sebFindStaUrl(node))
+		staUrl: sebServiceRoot(sebFindStaUrl(node)),
+		columnConflicts: (node && node.staEntityConfig && node.staEntityConfig._columnConflicts) || {},
+		cfg: (node && node.staEntityConfig) || null
 	};
 }
 
@@ -2875,6 +3516,8 @@ function renderSTAEntityBuilderForm(node) {
 	var perMeasSet = {};
 	if (!el)
 		return;
+	sebCtx.cfg = cfg;
+	sebRefreshColumnConflicts(cfg, parent, sebCtx.sources || sebBuildColumnSources(node));
 	sebEnsureScope(cfg);
 	sebEnsureGroupLabels(cfg);
 	/* Login Party always visible at general (never dropped from the form) */
@@ -4049,21 +4692,20 @@ function sebApplyEntityToWideRow(row, plural, ent, rec, groupPrefix, attrs, mode
 		return;
 	/*
 		Always write id + properties onto the wide table for display (Party, search
-		results, etc.). Publish still reuses @iot.id only when present — it does not
-		POST these property cells.
+		results, etc.). Empty cells are OK — full schema on every observation row.
+		Publish still reuses @iot.id only when present — it does not POST these
+		property cells.
 	*/
 	if (ent.id && sebSrcIsSet(ent.id)) {
 		val = sebResolveSrc(ent.id, rec);
-		if (!sebIsEmpty(val)) {
-			col = sebSuperColumn(plural, "@iot.id", groupPrefix);
-			row[col] = val;
-			if (attrs && !attrs[col]) {
-				attrs[col] = {
-					type: "string",
-					description: (groupPrefix ? groupPrefix + " / " : "") + plural + ".@iot.id",
-					definition: sebAttrDefinition(plural, "@iot.id")
-				};
-			}
+		col = sebSuperColumn(plural, "@iot.id", groupPrefix);
+		row[col] = sebIsEmpty(val) ? "" : val;
+		if (attrs && !attrs[col]) {
+			attrs[col] = {
+				type: "string",
+				description: (groupPrefix ? groupPrefix + " / " : "") + plural + ".@iot.id",
+				definition: sebAttrDefinition(plural, "@iot.id")
+			};
 		}
 	}
 	if (ent.props) {
@@ -4074,11 +4716,9 @@ function sebApplyEntityToWideRow(row, plural, ent, rec, groupPrefix, attrs, mode
 			if (!sebSrcIsSet(src))
 				continue;
 			val = sebResolveSrc(src, rec);
-			if (val === undefined)
-				continue;
 			col = sebSuperColumn(plural, name, groupPrefix);
-			/* Form wins: write resolved manual/column value onto the wide cell */
-			row[col] = val;
+			/* Form wins; absent value → empty cell (still part of the schema) */
+			row[col] = (val === undefined || val === null) ? "" : val;
 			if (attrs && !attrs[col]) {
 				attrs[col] = {
 					type: sebAttrTypeForProp(plural, name, mode),
@@ -4265,15 +4905,16 @@ function sebBuildPackage(cfg, parent, staUrl) {
 	}
 
 	/*
-	 * Materialize wide super-table: 1 row = 1 source record.
-	 * Columns = [Group.]Entity.property (resolved values).
+	 * Materialize wide super-table: 1 row = 1 observation slot (primary =
+	 * longest observation host). Full entity schema on every row; empty
+	 * cells are normal. nObs counts non-empty results only (preview metric).
 	 */
 	if (parent && parent.STAdata && (useGroups ? included.length : bindings.length)) {
 		for (r = 0; r < parent.STAdata.length; r++) {
 			/* Pass row index so multi-row laterals align (not STAdata[0] for every row) */
 			rec = sebEnrichRecWithLaterals(parent.STAdata[r], sources, r);
 			if (!rec)
-				continue;
+				rec = {};
 			/* Build wide row only from form bindings (as if no prior super-table). */
 			row = { _sourceIndex: r };
 
@@ -4490,6 +5131,14 @@ function openSTAEntityBuilderDialog(node) {
 			m.resultColumn = "";
 		sebSyncGroupResultColumn(m, sources);
 	}
+	/*
+		Always re-apply Entity.property / Group.Entity.property from all parent
+		nodes so shared Location.name fills group Locations left empty by
+		Photography.Location.encodingType, etc. onlyEmpty=true keeps user picks.
+	*/
+	if ((sources && sebSourcesHaveSuperColumns(sources)) ||
+			sebHasSuperColumns(sources && sources.cols))
+		sebApplySuperColumnsToConfig(cfg, parent, sources, true);
 	/* Fill empty props from all sources' attribute definitions (does not overwrite set values) */
 	sebApplyAttributeDefinitionsToConfig(cfg, parent, true, sources);
 	/* Després dels attribute maps: tornar a forçar definitions CAS (evita URLs OGC antigues en configs guardades) */
@@ -4609,12 +5258,26 @@ function loadSTAEntityBuilderConfig(event) {
 	Returns { ok, built, node } or null if no node.
 */
 function sebCommitPackageToNode(node) {
-	var parent, cfg, built;
+	var parent, cfg, built, sources, picked;
 	if (!node)
 		return null;
-	parent = getSTAEntityBuilderParent(node);
+	/* Sources first (for cfg→colMap host lookup), then obs-driven primary */
+	sources = sebBuildColumnSources(node);
 	cfg = sebCollectConfigFromForm(node);
-	built = sebBuildPackage(cfg, parent, sebCtx.staUrl);
+	picked = sebPickMaterializeParent(node, sources, cfg);
+	if (picked && sources && picked !== sources.primary)
+		sources = sebBuildColumnSources(node, picked);
+	parent = (sources && sources.primary) || picked || getSTAEntityBuilderParent(node);
+	if (typeof sebCtx !== "undefined" && sebCtx && sources) {
+		sebCtx.sources = sources;
+		sebCtx.primary = sources.primary || parent;
+		sebCtx.laterals = sources.laterals || [];
+		sebCtx.cols = sources.cols || [];
+		sebCtx.colGroups = sources.colGroups || [];
+		sebCtx.colMap = sources.colMap || {};
+		sebCtx.data = sources.data || (parent && parent.STAdata) || [];
+	}
+	built = sebBuildPackage(cfg, parent, sebCtx && sebCtx.staUrl);
 	node.staEntityPackage = built.package;
 	/* Same array: Publisher writes Observation @iot.id back onto the visible super-table */
 	node.STAdata = built.preview;

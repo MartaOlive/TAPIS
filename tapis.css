@@ -2070,15 +2070,19 @@
 	margin: 12px 10px 0 0;
 }
 
-#DialogSTAEntityBuilder,
-#DialogSTAPublisher {
+#DialogSTAEntityBuilder {
 	max-width: min(72em, 96vw);
 	max-height: 92vh;
 	box-sizing: border-box;
 }
 
-/* Keep dialog width fixed so wide preview tables scroll inside, not expand/clip the dialog */
+/* Wider dialog so the payload preview table is readable */
 #DialogSTAPublisher {
+	width: min(110em, 98vw);
+	max-width: min(110em, 98vw);
+	min-width: min(56em, 96vw);
+	max-height: 94vh;
+	box-sizing: border-box;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -2347,6 +2351,14 @@
 	min-width: 10em;
 }
 
+#DialogSTAEntityBuilder .sebDupWarn {
+	flex: 1 0 100%;
+	margin: 0 0 0 15em;
+	color: #c62828;
+	font-size: 0.85em;
+	line-height: 1.2;
+}
+
 #DialogSTAEntityBuilder .sebLocked .sebRow:not(.sebIdRow) input,
 #DialogSTAEntityBuilder .sebLocked .sebRow:not(.sebIdRow) select {
 	background: #eee;
@@ -2556,7 +2568,7 @@
 }
 
 #DialogSTAPublisher .DialogSTAPublisherPreview {
-	max-height: 36vh;
+	max-height: 52vh;
 	/* Vertical scroll for sections; horizontal scroll lives on .spaPreviewTableWrap */
 	overflow-x: hidden;
 	overflow-y: auto;

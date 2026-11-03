@@ -2445,6 +2445,12 @@ function connectASensorConnectedLabel(name) {
 }
 
 function connectASensorDefaultLabel() {
+	if (typeof ServicesAndAPIs !== "undefined" && ServicesAndAPIs.connectASensor) {
+		if (ServicesAndAPIs.connectASensor.description)
+			return DonaCadena(ServicesAndAPIs.connectASensor.description);
+		if (ServicesAndAPIs.connectASensor.name)
+			return DonaCadena(ServicesAndAPIs.connectASensor.name);
+	}
 	if (typeof STAOperations !== "undefined" && STAOperations.connectASensor && STAOperations.connectASensor.description)
 		return DonaCadena(STAOperations.connectASensor.description);
 	return "Connect a sensor";

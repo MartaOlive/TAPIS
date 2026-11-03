@@ -157,6 +157,12 @@ function rsdGetDisplayName(info) {
 }
 
 function rsdDefaultNodeLabel() {
+	if (typeof ServicesAndAPIs !== "undefined" && ServicesAndAPIs.readSDFromSensor) {
+		if (ServicesAndAPIs.readSDFromSensor.description)
+			return DonaCadena(ServicesAndAPIs.readSDFromSensor.description);
+		if (ServicesAndAPIs.readSDFromSensor.name)
+			return DonaCadena(ServicesAndAPIs.readSDFromSensor.name);
+	}
 	if (typeof STAOperations !== "undefined" && STAOperations.readSDFromSensor && STAOperations.readSDFromSensor.description)
 		return DonaCadena(STAOperations.readSDFromSensor.description);
 	return DonaCadena({
