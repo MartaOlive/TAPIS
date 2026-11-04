@@ -41,25 +41,43 @@ var TapisIdiomaStorageKey = "TapisIdioma";
 
 function DonaCadena(a)
 {
-	if (a == null || !ParamCtrl || ParamCtrl.idioma == null)
+	var idioma;
+	if (a == null)
+		return a;
+	/* Plain string / number — not a multilanguage object */
+	if (typeof a !== "object")
 		return a;
 
-	if (a.cat && ParamCtrl.idioma == "cat")
-		return a.cat;
-	if (a.spa && ParamCtrl.idioma == "spa")
-		return a.spa;
-	if (a.eng && ParamCtrl.idioma == "eng")
-		return a.eng;
-	if (a.fre && ParamCtrl.idioma == "fre")
-		return a.fre;
-	if (a.cze && ParamCtrl.idioma == "cze")
-		return a.cze;
-	if (a.ger && ParamCtrl.idioma == "ger")
-		return a.ger;
-	if (a.eng)   //Si no hi ha l'idioma solicitat faig que xerri en angles
-		return a.eng;
+	idioma = (ParamCtrl && ParamCtrl.idioma) ? ParamCtrl.idioma : null;
 
-	if (a.cat == null && a.spa == null && a.eng == null && a.fre == null && a.cze == null && a.ger == null)  //Cas de cadena no multiidioma
+	if (idioma == "cat" && a.cat)
+		return a.cat;
+	if (idioma == "spa" && a.spa)
+		return a.spa;
+	if (idioma == "eng" && a.eng)
+		return a.eng;
+	if (idioma == "fre" && a.fre)
+		return a.fre;
+	if (idioma == "cze" && a.cze)
+		return a.cze;
+	if (idioma == "ger" && a.ger)
+		return a.ger;
+	/* Fallback: never return the raw object (avoids "[object Object]" in UI) */
+	if (a.eng)
+		return a.eng;
+	if (a.cat)
+		return a.cat;
+	if (a.spa)
+		return a.spa;
+	if (a.fre)
+		return a.fre;
+	if (a.cze)
+		return a.cze;
+	if (a.ger)
+		return a.ger;
+
+	/* Not a multilanguage record — leave as-is (caller may stringify) */
+	if (a.cat == null && a.spa == null && a.eng == null && a.fre == null && a.cze == null && a.ger == null)
 		return a;
 	return null;
 }

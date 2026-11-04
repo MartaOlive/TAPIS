@@ -1560,13 +1560,13 @@
 
 	<dialog id="DialogImportGPKG" onClose='hideNodeDialog("DialogImportGPKG", event)'>
 		<form>
-			<span data-lang="{&quot;cat&quot;: &quot;Importa Geopackage&quot;, &quot;spa&quot;: &quot;Importar Geopackage&quot;, &quot;eng&quot;: &quot;Import Geopackage&quot;}">Import Geopackage</span>
+			<span data-lang="{&quot;cat&quot;: &quot;Importa SQLite i GPKG&quot;, &quot;spa&quot;: &quot;Importar SQLite y GPKG&quot;, &quot;eng&quot;: &quot;Import SQLite and GPKG&quot;}">Import SQLite and GPKG</span>
 			<br>
 			
 			<fieldset>
-				<legend><span data-lang="{&quot;cat&quot;: &quot;Font Geopackage&quot;, &quot;spa&quot;: &quot;Fuente Geopackage&quot;, &quot;eng&quot;: &quot;Geopackage source&quot;}">Geopackage source</span></legend>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Font SQLite / GPKG&quot;, &quot;spa&quot;: &quot;Fuente SQLite / GPKG&quot;, &quot;eng&quot;: &quot;SQLite / GPKG source&quot;}">SQLite / GPKG source</span></legend>
 				<label><input type="radio" id="DialogImportGPKGSourceFile" name="DialogImportGPKGSource" value="file" checked="checked" onClick='SelectImportFileSource(event, "GPKG")'>
-				<span data-lang="{&quot;cat&quot;: &quot;Fitxer local:&quot;, &quot;spa&quot;: &quot;Archivo local:&quot;, &quot;eng&quot;: &quot;Local file:&quot;}">Local file:</span> <input type="file" accept=".gpkg" id="DialogImportGPKGSourceFileText" onChange="ReadFileImportGPKG(event)"></input></label><br>
+				<span data-lang="{&quot;cat&quot;: &quot;Fitxer local:&quot;, &quot;spa&quot;: &quot;Archivo local:&quot;, &quot;eng&quot;: &quot;Local file:&quot;}">Local file:</span> <input type="file" accept=".gpkg,.sqlite,.db,.sqlite3" id="DialogImportGPKGSourceFileText" onChange="ReadFileImportGPKG(event)"></input></label><br>
 				<label><input type="radio" id="DialogImportGPKGSourceURL" name="DialogImportGPKGSource" value="url" onClick='SelectImportFileSource(event, "GPKG")'>
 				<span data-lang="{&quot;cat&quot;: &quot;URL:&quot;, &quot;spa&quot;: &quot;URL:&quot;, &quot;eng&quot;: &quot;URL:&quot;}">URL:</span> <input type="text" size="70" id="DialogImportGPKGSourceURLInput" disabled="disabled"></input> <button type="button" id="DialogImportGPKGSourceURLButton" onClick="ReadURLImportGPKG(event)" disabled="disabled"><span data-lang="{&quot;cat&quot;: &quot;Carrega&quot;, &quot;spa&quot;: &quot;Cargar&quot;, &quot;eng&quot;: &quot;Load&quot;}">Load</span></button></label><br>
 			</fieldset>

@@ -57,7 +57,7 @@ const ServicesAndAPIs = {
 	edcAsset: { name: "DataSpace asset", description: "DataSpace asset", help: "Prepares an Eclipse Data Connector (EDC) Asset." },
 	ImportCSV: { name: "CSV", description: "CSV", startNode: true, help: "Imports data from a CSV file and returns a table." },
 	ImportDBF: { name: "DBF", description: "DBF", startNode: true, help: "Imports data from a DBASE III+, IV or a extended DBF file and returns a table." },
-	ImportGPKG: { name: "GeoPackage", description: "GeoPackage", startNode: true, help: "Imports a GeoPackage Database into a list of of tables." },
+	ImportGPKG: { name: {cat: "SQLite i GPKG", spa: "SQLite y GPKG", eng: "SQLite and GPKG"}, description: {cat: "SQLite i GPKG", spa: "SQLite y GPKG", eng: "SQLite and GPKG"}, startNode: true, help: {cat: "Importa una base de dades SQLite o GeoPackage i retorna la llista de taules.", spa: "Importa una base de datos SQLite o GeoPackage y devuelve la lista de tablas.", eng: "Imports a SQLite or GeoPackage database into a list of tables."} },
 	ImportGPKGTable: { name: "GeoPackageTable", description: "GeoPack Table", help: "Imports a table in a GeoPackage database." },
 	ImportJSONLD: { name: "JSON-LD", description: "JSON-LD", startNode: true, help: "Imports data from a JSON-LD file and returns a table." },
 	ImportJSON: { name: "JSON", description: "JSON", startNode: true, help: "Imports data from a JSON file and returns a table." },

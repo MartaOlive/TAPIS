@@ -1,5 +1,102 @@
 "use strict"
 
+/*
+	Resolve multilanguage {cat,spa,eng} labels for help pages.
+	Help is written in English: always prefer .eng (avoids "[object Object]").
+*/
+function helpLabel(a) {
+	var s;
+	if (a == null)
+		return "";
+	if (typeof a !== "object")
+		return String(a);
+	s = a.eng || a.cat || a.spa || "";
+	if (typeof s === "object")
+		s = s.eng || s.cat || s.spa || "";
+	return (s == null || typeof s === "object") ? "" : String(s);
+}
+
+/* Short English caption for a tool entry (prefer name, then description). */
+function helpToolTitle(entry) {
+	if (!entry)
+		return "";
+	return helpLabel(entry.name) || helpLabel(entry.description) || "";
+}
+
+/*
+	Flatten all multilanguage name/description/help fields to English strings
+	so every help UI path shows text (never "[object Object]").
+*/
+function helpFlattenI18nTools() {
+	var groups, g, i, key, entry, fields, f;
+	groups = [];
+	if (typeof ServicesAndAPIs !== "undefined")
+		groups.push(ServicesAndAPIs);
+	if (typeof STAOperations !== "undefined")
+		groups.push(STAOperations);
+	if (typeof STASpecialQueries !== "undefined")
+		groups.push(STASpecialQueries);
+	if (typeof TableOperations !== "undefined")
+		groups.push(TableOperations);
+	if (typeof tableStatisticsVisualize !== "undefined")
+		groups.push(tableStatisticsVisualize);
+	if (typeof dataQuality !== "undefined")
+		groups.push(dataQuality);
+	fields = ["name", "description", "help"];
+	for (g = 0; g < groups.length; g++) {
+		if (!groups[g])
+			continue;
+		for (key in groups[g]) {
+			if (!Object.prototype.hasOwnProperty.call(groups[g], key))
+				continue;
+			entry = groups[g][key];
+			if (!entry || typeof entry !== "object")
+				continue;
+			for (f = 0; f < fields.length; f++) {
+				i = fields[f];
+				if (entry[i] != null && typeof entry[i] === "object")
+					entry[i] = helpLabel(entry[i]);
+			}
+		}
+	}
+	if (typeof ServicesAndAPIsType !== "undefined") {
+		if (ServicesAndAPIsType.singular && typeof ServicesAndAPIsType.singular === "object")
+			ServicesAndAPIsType.singular = helpLabel(ServicesAndAPIsType.singular);
+		if (ServicesAndAPIsType.plural && typeof ServicesAndAPIsType.plural === "object")
+			ServicesAndAPIsType.plural = helpLabel(ServicesAndAPIsType.plural);
+	}
+	if (typeof STAOperationsType !== "undefined") {
+		if (STAOperationsType.singular && typeof STAOperationsType.singular === "object")
+			STAOperationsType.singular = helpLabel(STAOperationsType.singular);
+		if (STAOperationsType.plural && typeof STAOperationsType.plural === "object")
+			STAOperationsType.plural = helpLabel(STAOperationsType.plural);
+	}
+	if (typeof TableOperationsType !== "undefined") {
+		if (TableOperationsType.singular && typeof TableOperationsType.singular === "object")
+			TableOperationsType.singular = helpLabel(TableOperationsType.singular);
+		if (TableOperationsType.plural && typeof TableOperationsType.plural === "object")
+			TableOperationsType.plural = helpLabel(TableOperationsType.plural);
+	}
+	if (typeof STASpecialQueriesType !== "undefined") {
+		if (STASpecialQueriesType.singular && typeof STASpecialQueriesType.singular === "object")
+			STASpecialQueriesType.singular = helpLabel(STASpecialQueriesType.singular);
+		if (STASpecialQueriesType.plural && typeof STASpecialQueriesType.plural === "object")
+			STASpecialQueriesType.plural = helpLabel(STASpecialQueriesType.plural);
+	}
+	if (typeof tableStatisticsVisualizeType !== "undefined") {
+		if (tableStatisticsVisualizeType.singular && typeof tableStatisticsVisualizeType.singular === "object")
+			tableStatisticsVisualizeType.singular = helpLabel(tableStatisticsVisualizeType.singular);
+		if (tableStatisticsVisualizeType.plural && typeof tableStatisticsVisualizeType.plural === "object")
+			tableStatisticsVisualizeType.plural = helpLabel(tableStatisticsVisualizeType.plural);
+	}
+	if (typeof dataQualityType !== "undefined") {
+		if (dataQualityType.singular && typeof dataQualityType.singular === "object")
+			dataQualityType.singular = helpLabel(dataQualityType.singular);
+		if (dataQualityType.plural && typeof dataQualityType.plural === "object")
+			dataQualityType.plural = helpLabel(dataQualityType.plural);
+	}
+}
+
 /* 
    This file is part of TAPIS. TAPIS is a web page and a Javascript code 
    that builds queries and explore the STAplus content, saves it as CSV or 
@@ -86,6 +183,7 @@ const headerNavBar = `<div onclick="openTapisPage()">
        </div>`
 function StartDocumentationPage() {
     var c = "";
+    helpFlattenI18nTools();
     //howTAPISWorks
     c = `<h2 class="toolBoxParentTitle">How TAPIS Works</h2>`;
     c += `<a href="https://www.tapis.grumets.cat/tapis/help/HowTapisWorks.htm" class="link_a"><div class="toolBox tapisTool">
@@ -152,7 +250,7 @@ function createInputTools() {
     for (var i = 0; i < ServicesAndAPIsArray.length; i++) {
         c += `<a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#${ServicesAndAPIsArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${ServicesAndAPIsArray[i]}.png" alt="Imatge" style="height:60px">
-       <div class="toolBoxText">${ServicesAndAPIs[ServicesAndAPIsArray[i]].description}</div>
+       <div class="toolBoxText">${helpToolTitle(ServicesAndAPIs[ServicesAndAPIsArray[i]])}</div>
        </div></a>`
     }
     return c;
@@ -183,7 +281,7 @@ function createSTAOperations() {
     for (var i = 0; i < STAOperationsArray.length; i++) {
         c += `<a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#${STAOperationsArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${STAOperationsArray[i]}.png" alt="Imatge" style="height:60px">
-       <div class="toolBoxText">${STAOperations[STAOperationsArray[i]].description}</div>
+       <div class="toolBoxText">${helpToolTitle(STAOperations[STAOperationsArray[i]])}</div>
        </div></a>`
     }
     return c;
@@ -193,7 +291,7 @@ function createComplexOperations() {
     for (var i = 0; i < STASpecialQueriesArray.length; i++) {
         c += ` <a href="https://www.tapis.grumets.cat/tapis/help/complexqueries.htm#${STASpecialQueriesArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${STASpecialQueriesArray[i]}.png" alt="Imatge" style="height:60px">
-       <div class="toolBoxText">${STASpecialQueries[STASpecialQueriesArray[i]].description}</div>
+       <div class="toolBoxText">${helpToolTitle(STASpecialQueries[STASpecialQueriesArray[i]])}</div>
        </div>`
     }
     return c;
@@ -203,7 +301,7 @@ function createTableOperations() {
     for (var i = 0; i < TableOperationsArray.length; i++) {
         c += `<a href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#${TableOperationsArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${TableOperationsArray[i]}.png" alt="Imatge" style="height:60px">
-       <div class="toolBoxText">${TableOperations[TableOperationsArray[i]].description}</div>
+       <div class="toolBoxText">${helpToolTitle(TableOperations[TableOperationsArray[i]])}</div>
        </div></a>`
     }
     return c;
@@ -213,7 +311,7 @@ function createStatisticsVisualize() {
     for (var i = 0; i < tableStatisticsVisualizeArray.length; i++) {
         c += `<a href="https://www.tapis.grumets.cat/tapis/help/statisticsvisualize.htm#${tableStatisticsVisualizeArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${tableStatisticsVisualizeArray[i]}.png" alt="Imatge" style="height:60px">
-       <div class="toolBoxText">${tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description}</div>
+       <div class="toolBoxText">${helpToolTitle(tableStatisticsVisualize[tableStatisticsVisualizeArray[i]])}</div>
        </div></a>`
     }
     return c;
@@ -223,7 +321,7 @@ function createDataQuality() {
     for (var i = 0; i < dataQualityArray.length; i++) {
         c += `<a href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#${dataQualityArray[i]}" class="link_a"><div style="" class="toolBox">
        <img src="../${dataQualityArray[i]}.png" alt="Imatge" style="height:60px">
-       <div class="toolBoxText">${dataQuality[dataQualityArray[i]].description}</div>
+       <div class="toolBoxText">${helpToolTitle(dataQuality[dataQualityArray[i]])}</div>
        </div></a>`
     }
     return c;
@@ -292,6 +390,7 @@ function addPanzoneWitSTASchema() {
     document.getElementById('imageSTAZoomMultiDatastream').addEventListener('wheel', panzoomMulti.zoomWithWheel);
 }
 function openToolPage(place) {
+    helpFlattenI18nTools();
     document.getElementById("toolPage_header_" + place).innerHTML = headerNavBar;
     createNavBar();
     switch (place) {
@@ -343,7 +442,7 @@ function createNavBar() {
     //Services And Apis
     c = `<div class="dropdown"><a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm" class="link_a"><div>Input tools</div></a><div class="dropdown-content">`
     for (var i = 0; i < ServicesAndAPIsArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#${ServicesAndAPIsArray[i]}">${ServicesAndAPIs[ServicesAndAPIsArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/inputtools.htm#${ServicesAndAPIsArray[i]}">${helpToolTitle(ServicesAndAPIs[ServicesAndAPIsArray[i]])}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_servicesAndApis").innerHTML = c;
@@ -364,35 +463,35 @@ function createNavBar() {
     //STA operations 
     c = `<div class="dropdown blue"><a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm" class="link_a"><div>STA tools </div></a><div class="dropdown-content">`
     for (var i = 0; i < STAOperationsArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#${STAOperationsArray[i]}">${STAOperations[STAOperationsArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/staoperations.htm#${STAOperationsArray[i]}">${helpToolTitle(STAOperations[STAOperationsArray[i]])}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_STAOperations").innerHTML = c;
     //ComplexQuerys
     c = `<div class="dropdown blue"> <a href="https://www.tapis.grumets.cat/tapis/help/complexqueries.htm" class="link_a"><div>Complex queries</div></a><div class="dropdown-content">`
     for (var i = 0; i < STASpecialQueriesArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/help/complexqueries.htm#${STASpecialQueriesArray[i]}">${STASpecialQueries[STASpecialQueriesArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/complexqueries.htm#${STASpecialQueriesArray[i]}">${helpToolTitle(STASpecialQueries[STASpecialQueriesArray[i]])}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_STASpecialQueries").innerHTML = c;
     //TableOperations
     c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/help/TableOperations.htm" class="link_a"><div>Table tools</div></a><div class="dropdown-content">`
     for (var i = 0; i < TableOperationsArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/help/TableOperations.htm#${TableOperationsArray[i]}">${TableOperations[TableOperationsArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/TableOperations.htm#${TableOperationsArray[i]}">${helpToolTitle(TableOperations[TableOperationsArray[i]])}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_TableOperations").innerHTML = c;
     //Table Statistics visualize
     c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/help/statisticsvisualize.htm" class="link_a"><div>Statistics and visualization</div></a><div class="dropdown-content">`
     for (var i = 0; i < tableStatisticsVisualizeArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/help/statisticsvisualize.htm#${tableStatisticsVisualizeArray[i]}">${tableStatisticsVisualize[tableStatisticsVisualizeArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/statisticsvisualize.htm#${tableStatisticsVisualizeArray[i]}">${helpToolTitle(tableStatisticsVisualize[tableStatisticsVisualizeArray[i]])}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_tableStatisticsVisualize").innerHTML = c;
     //Data quality
     c = `<div class="dropdown"> <a href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm" class="link_a"><div>Data quality</div></a><div class="dropdown-content">`
     for (var i = 0; i < dataQualityArray.length; i++) {
-        c += `<a href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#${dataQualityArray[i]}">${dataQuality[dataQualityArray[i]].description}</a>`
+        c += `<a href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#${dataQualityArray[i]}">${helpToolTitle(dataQuality[dataQualityArray[i]])}</a>`
     }
     c += `</div></div></div>`
     document.getElementById("navBar_dataQuality").innerHTML = c;

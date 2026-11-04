@@ -556,8 +556,14 @@ function textOperationButton(parentDivId, prefixDivId, operation, name, descript
 	var helpText = help ? DonaCadena(help) : null;
 	var typeText = type ? DonaCadena(type) : null;
 	var nameStr = name ? DonaCadena(name) : "";
-	if (nameStr == null)
+	if (nameStr == null || typeof nameStr === "object")
 		nameStr = "";
+	if (desc != null && typeof desc === "object")
+		desc = null;
+	if (helpText != null && typeof helpText === "object")
+		helpText = null;
+	if (typeText != null && typeof typeText === "object")
+		typeText = null;
 	var label = desc ? desc : nameStr;
 	var startNodeLabel = DonaCadena({cat: "Node inicial", spa: "Nodo inicial", eng: "Start node"});
 	var leafNodeLabel = DonaCadena({cat: "Node final", spa: "Nodo final", eng: "Leaf node"});
