@@ -1,0 +1,982 @@
+{
+	"nodes": [
+		{
+			"id": "42pvr.l79nbg",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": null,
+			"STAdataAttributes": {
+				"id": {
+					"type": "integer"
+				},
+				"time": {
+					"type": "isodatetime"
+				},
+				"lon": {
+					"type": "number"
+				},
+				"lat": {
+					"type": "number"
+				},
+				"temperature": {
+					"type": "number"
+				},
+				"groupIndex": {
+					"type": "integer"
+				}
+			},
+			"x": 33,
+			"y": -149
+		},
+		{
+			"id": "6k9bg.i4i1p8",
+			"label": "Uncertainty",
+			"image": "uncertainty.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"timeMean": "2024-01-11T11:00:16Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.266667,
+					"temperatureUncertainty": 0.1404,
+					"lonMean": 11.88534,
+					"latMean": 47.659665,
+					"PositionUncertainty": 0.6586
+				},
+				{
+					"timeMean": "2024-01-11T11:00:45Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.35,
+					"temperatureUncertainty": 0.3339,
+					"lonMean": 11.88541,
+					"latMean": 47.659671,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:01:13Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.566667,
+					"temperatureUncertainty": 0.1697,
+					"lonMean": 11.88545667,
+					"latMean": 47.65967567,
+					"PositionUncertainty": 2.493
+				},
+				{
+					"timeMean": "2024-01-11T11:01:47Z",
+					"timeUncertainty": 8.03,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 4,
+					"temperatureMean": 5.325,
+					"temperatureUncertainty": 0.1496,
+					"lonMean": 11.8855425,
+					"latMean": 47.65968425,
+					"PositionUncertainty": 1.46
+				},
+				{
+					"timeMean": "2024-01-11T11:02:20Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.25,
+					"temperatureUncertainty": 0.2385,
+					"lonMean": 11.88559,
+					"latMean": 47.659689,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:02:48Z",
+					"timeUncertainty": 8.49,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.4,
+					"temperatureUncertainty": 0.1785,
+					"lonMean": 11.88563333,
+					"latMean": 47.65969333,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:03:15Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.5,
+					"temperatureUncertainty": 0.09539,
+					"lonMean": 11.885675,
+					"latMean": 47.6596975,
+					"PositionUncertainty": 0.4657
+				},
+				{
+					"timeMean": "2024-01-11T11:03:46Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.3,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88571667,
+					"latMean": 47.65970167,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:04:18Z",
+					"timeUncertainty": 5.15,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.4,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88576667,
+					"latMean": 47.65970667,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:04:45Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.35,
+					"temperatureUncertainty": 0.3339,
+					"lonMean": 11.88581,
+					"latMean": 47.659711,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:05:15Z",
+					"timeUncertainty": 6.75,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.3,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88585,
+					"latMean": 47.659715,
+					"PositionUncertainty": 1.317
+				}
+			],
+			"STAdataAttributes": {
+				"timeMean": {
+					"type": "isodatetime"
+				},
+				"timeUncertainty": {
+					"type": "number"
+				},
+				"TemporalUncertaintyUnit": {
+					"type": "string"
+				},
+				"groupCount": {
+					"type": "integer"
+				},
+				"temperatureMean": {
+					"type": "number"
+				},
+				"temperatureUncertainty": {
+					"type": "number"
+				},
+				"lonMean": {
+					"type": "number"
+				},
+				"latMean": {
+					"type": "number"
+				},
+				"PositionUncertainty": {
+					"type": "number"
+				}
+			},
+			"x": 67,
+			"y": -31
+		},
+		{
+			"id": "98m2f.nko7ao",
+			"label": "Temporal quality",
+			"image": "temporalQuality.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"timeMean": "2024-01-11T11:00:16Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.266667,
+					"temperatureUncertainty": 0.1404,
+					"lonMean": 11.88534,
+					"latMean": 47.659665,
+					"PositionUncertainty": 0.6586
+				},
+				{
+					"timeMean": "2024-01-11T11:00:45Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.35,
+					"temperatureUncertainty": 0.3339,
+					"lonMean": 11.88541,
+					"latMean": 47.659671,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:01:13Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.566667,
+					"temperatureUncertainty": 0.1697,
+					"lonMean": 11.88545667,
+					"latMean": 47.65967567,
+					"PositionUncertainty": 2.493
+				},
+				{
+					"timeMean": "2024-01-11T11:01:47Z",
+					"timeUncertainty": 8.03,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 4,
+					"temperatureMean": 5.325,
+					"temperatureUncertainty": 0.1496,
+					"lonMean": 11.8855425,
+					"latMean": 47.65968425,
+					"PositionUncertainty": 1.46
+				},
+				{
+					"timeMean": "2024-01-11T11:02:20Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.25,
+					"temperatureUncertainty": 0.2385,
+					"lonMean": 11.88559,
+					"latMean": 47.659689,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:02:48Z",
+					"timeUncertainty": 8.49,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.4,
+					"temperatureUncertainty": 0.1785,
+					"lonMean": 11.88563333,
+					"latMean": 47.65969333,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:03:15Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.5,
+					"temperatureUncertainty": 0.09539,
+					"lonMean": 11.885675,
+					"latMean": 47.6596975,
+					"PositionUncertainty": 0.4657
+				},
+				{
+					"timeMean": "2024-01-11T11:03:46Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.3,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88571667,
+					"latMean": 47.65970167,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:04:18Z",
+					"timeUncertainty": 5.15,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.4,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88576667,
+					"latMean": 47.65970667,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:04:45Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.35,
+					"temperatureUncertainty": 0.3339,
+					"lonMean": 11.88581,
+					"latMean": 47.659711,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:05:15Z",
+					"timeUncertainty": 6.75,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.3,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88585,
+					"latMean": 47.659715,
+					"PositionUncertainty": 1.317
+				}
+			],
+			"STAdataAttributes": {
+				"timeMean": {
+					"type": "isodatetime"
+				},
+				"timeUncertainty": {
+					"type": "number"
+				},
+				"TemporalUncertaintyUnit": {
+					"type": "string"
+				},
+				"groupCount": {
+					"type": "integer"
+				},
+				"temperatureMean": {
+					"type": "number"
+				},
+				"temperatureUncertainty": {
+					"type": "number"
+				},
+				"lonMean": {
+					"type": "number"
+				},
+				"latMean": {
+					"type": "number"
+				},
+				"PositionUncertainty": {
+					"type": "number"
+				}
+			},
+			"STAmetadata": {
+				"dataQualityInfos": [
+					{
+						"reports": [
+							{
+								"type": "DQ_TemporalAccuracy",
+								"measureIdentification": {
+									"code": "MeanAbsoluteError",
+									"domains": [
+										{
+											"name": "DifferentialErrors1D",
+											"params": [
+												{
+													"name": "Temporal uncertanty column",
+													"value": "timeUncertainty"
+												},
+												{
+													"name": "Probability",
+													"value": "0.5"
+												}
+											]
+										}
+									]
+								},
+								"results": [
+									{
+										"type": "DQ_QuantitativeResult",
+										"errorStatistic": {
+											"metric": {
+												"name": "MeanAbsolute"
+											}
+										},
+										"valueType": "number",
+										"values": [
+											6.232727272727272
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			"STAQualityNodeResults": {
+				"accuracy": {
+					"accuracyValue": 6.232727272727272
+				},
+				"validity": {},
+				"resolution": {},
+				"consistency": {},
+				"dataLength": 11,
+				"attributesSelected": "timeUncertainty"
+			},
+			"x": 34,
+			"y": 87
+		},
+		{
+			"id": "1sd6e.hpno0u",
+			"label": "Positional quality",
+			"image": "positionalQuality.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"timeMean": "2024-01-11T11:00:16Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.266667,
+					"temperatureUncertainty": 0.1404,
+					"lonMean": 11.88534,
+					"latMean": 47.659665,
+					"PositionUncertainty": 0.6586
+				},
+				{
+					"timeMean": "2024-01-11T11:00:45Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.35,
+					"temperatureUncertainty": 0.3339,
+					"lonMean": 11.88541,
+					"latMean": 47.659671,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:01:13Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.566667,
+					"temperatureUncertainty": 0.1697,
+					"lonMean": 11.88545667,
+					"latMean": 47.65967567,
+					"PositionUncertainty": 2.493
+				},
+				{
+					"timeMean": "2024-01-11T11:01:47Z",
+					"timeUncertainty": 8.03,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 4,
+					"temperatureMean": 5.325,
+					"temperatureUncertainty": 0.1496,
+					"lonMean": 11.8855425,
+					"latMean": 47.65968425,
+					"PositionUncertainty": 1.46
+				},
+				{
+					"timeMean": "2024-01-11T11:02:20Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.25,
+					"temperatureUncertainty": 0.2385,
+					"lonMean": 11.88559,
+					"latMean": 47.659689,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:02:48Z",
+					"timeUncertainty": 8.49,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.4,
+					"temperatureUncertainty": 0.1785,
+					"lonMean": 11.88563333,
+					"latMean": 47.65969333,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:03:15Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.5,
+					"temperatureUncertainty": 0.09539,
+					"lonMean": 11.885675,
+					"latMean": 47.6596975,
+					"PositionUncertainty": 0.4657
+				},
+				{
+					"timeMean": "2024-01-11T11:03:46Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.3,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88571667,
+					"latMean": 47.65970167,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:04:18Z",
+					"timeUncertainty": 5.15,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.4,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88576667,
+					"latMean": 47.65970667,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:04:45Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.35,
+					"temperatureUncertainty": 0.3339,
+					"lonMean": 11.88581,
+					"latMean": 47.659711,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:05:15Z",
+					"timeUncertainty": 6.75,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.3,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88585,
+					"latMean": 47.659715,
+					"PositionUncertainty": 1.317
+				}
+			],
+			"STAdataAttributes": {
+				"timeMean": {
+					"type": "isodatetime"
+				},
+				"timeUncertainty": {
+					"type": "number"
+				},
+				"TemporalUncertaintyUnit": {
+					"type": "string"
+				},
+				"groupCount": {
+					"type": "integer"
+				},
+				"temperatureMean": {
+					"type": "number"
+				},
+				"temperatureUncertainty": {
+					"type": "number"
+				},
+				"lonMean": {
+					"type": "number"
+				},
+				"latMean": {
+					"type": "number"
+				},
+				"PositionUncertainty": {
+					"type": "number"
+				}
+			},
+			"STAmetadata": {
+				"dataQualityInfos": [
+					{
+						"reports": [
+							{
+								"type": "DQ_TemporalAccuracy",
+								"measureIdentification": {
+									"code": "MeanAbsoluteError",
+									"domains": [
+										{
+											"name": "DifferentialErrors1D",
+											"params": [
+												{
+													"name": "Temporal uncertanty column",
+													"value": "timeUncertainty"
+												},
+												{
+													"name": "Probability",
+													"value": "0.5"
+												}
+											]
+										}
+									]
+								},
+								"results": [
+									{
+										"type": "DQ_QuantitativeResult",
+										"errorStatistic": {
+											"metric": {
+												"name": "MeanAbsolute"
+											}
+										},
+										"valueType": "number",
+										"values": [
+											6.232727272727272
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						"reports": [
+							{
+								"type": "DQ_AbsoluteExternalPositionalAccuracy",
+								"measureIdentification": {
+									"code": "MeanAbsoluteError",
+									"domains": [
+										{
+											"name": "DifferentialErrors2D",
+											"params": [
+												{
+													"name": "Positional uncertanty column",
+													"value": "PositionUncertainty"
+												},
+												{
+													"name": "Probability",
+													"value": "0.5"
+												}
+											]
+										}
+									]
+								},
+								"results": [
+									{
+										"type": "DQ_QuantitativeResult",
+										"errorStatistic": {
+											"metric": {
+												"name": "MeanAbsolute2D"
+											}
+										},
+										"valueType": "number",
+										"values": [
+											1.1096818181818182
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			"STAQualityNodeResults": {
+				"accuracy": {
+					"accuracyMethod": "uncertantlyColumn",
+					"accuracyValue": 1.1096818181818182
+				},
+				"validity": {},
+				"dataLength": 11,
+				"attributeSelectedLong": "lonMean",
+				"attributeSelectedLat": "latMean",
+				"attributeSelectedUncertantly": "PositionUncertainty"
+			},
+			"x": -85,
+			"y": 71
+		},
+		{
+			"id": "7ldt.q9q1tbn",
+			"label": "Thematic quality",
+			"image": "thematicQuality.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"timeMean": "2024-01-11T11:00:16Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.266667,
+					"temperatureUncertainty": 0.1404,
+					"lonMean": 11.88534,
+					"latMean": 47.659665,
+					"PositionUncertainty": 0.6586
+				},
+				{
+					"timeMean": "2024-01-11T11:00:45Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.35,
+					"temperatureUncertainty": 0.3339,
+					"lonMean": 11.88541,
+					"latMean": 47.659671,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:01:13Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.566667,
+					"temperatureUncertainty": 0.1697,
+					"lonMean": 11.88545667,
+					"latMean": 47.65967567,
+					"PositionUncertainty": 2.493
+				},
+				{
+					"timeMean": "2024-01-11T11:01:47Z",
+					"timeUncertainty": 8.03,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 4,
+					"temperatureMean": 5.325,
+					"temperatureUncertainty": 0.1496,
+					"lonMean": 11.8855425,
+					"latMean": 47.65968425,
+					"PositionUncertainty": 1.46
+				},
+				{
+					"timeMean": "2024-01-11T11:02:20Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.25,
+					"temperatureUncertainty": 0.2385,
+					"lonMean": 11.88559,
+					"latMean": 47.659689,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:02:48Z",
+					"timeUncertainty": 8.49,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.4,
+					"temperatureUncertainty": 0.1785,
+					"lonMean": 11.88563333,
+					"latMean": 47.65969333,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:03:15Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.5,
+					"temperatureUncertainty": 0.09539,
+					"lonMean": 11.885675,
+					"latMean": 47.6596975,
+					"PositionUncertainty": 0.4657
+				},
+				{
+					"timeMean": "2024-01-11T11:03:46Z",
+					"timeUncertainty": 7.02,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.3,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88571667,
+					"latMean": 47.65970167,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:04:18Z",
+					"timeUncertainty": 5.15,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.4,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88576667,
+					"latMean": 47.65970667,
+					"PositionUncertainty": 1.006
+				},
+				{
+					"timeMean": "2024-01-11T11:04:45Z",
+					"timeUncertainty": 4.77,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 2,
+					"temperatureMean": 5.35,
+					"temperatureUncertainty": 0.3339,
+					"lonMean": 11.88581,
+					"latMean": 47.659711,
+					"PositionUncertainty": 0.9314
+				},
+				{
+					"timeMean": "2024-01-11T11:05:15Z",
+					"timeUncertainty": 6.75,
+					"TemporalUncertaintyUnit": "seconds",
+					"groupCount": 3,
+					"temperatureMean": 5.3,
+					"temperatureUncertainty": 0.1349,
+					"lonMean": 11.88585,
+					"latMean": 47.659715,
+					"PositionUncertainty": 1.317
+				}
+			],
+			"STAdataAttributes": {
+				"timeMean": {
+					"type": "isodatetime"
+				},
+				"timeUncertainty": {
+					"type": "number"
+				},
+				"TemporalUncertaintyUnit": {
+					"type": "string"
+				},
+				"groupCount": {
+					"type": "integer"
+				},
+				"temperatureMean": {
+					"type": "number"
+				},
+				"temperatureUncertainty": {
+					"type": "number"
+				},
+				"lonMean": {
+					"type": "number"
+				},
+				"latMean": {
+					"type": "number"
+				},
+				"PositionUncertainty": {
+					"type": "number"
+				}
+			},
+			"STAmetadata": {
+				"dataQualityInfos": [
+					{
+						"reports": [
+							{
+								"type": "DQ_TemporalAccuracy",
+								"measureIdentification": {
+									"code": "MeanAbsoluteError",
+									"domains": [
+										{
+											"name": "DifferentialErrors1D",
+											"params": [
+												{
+													"name": "Temporal uncertanty column",
+													"value": "timeUncertainty"
+												},
+												{
+													"name": "Probability",
+													"value": "0.5"
+												}
+											]
+										}
+									]
+								},
+								"results": [
+									{
+										"type": "DQ_QuantitativeResult",
+										"errorStatistic": {
+											"metric": {
+												"name": "MeanAbsolute"
+											}
+										},
+										"valueType": "number",
+										"values": [
+											6.232727272727272
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						"reports": [
+							{
+								"type": "DQ_AbsoluteExternalPositionalAccuracy",
+								"measureIdentification": {
+									"code": "MeanAbsoluteError",
+									"domains": [
+										{
+											"name": "DifferentialErrors2D",
+											"params": [
+												{
+													"name": "Positional uncertanty column",
+													"value": "PositionUncertainty"
+												},
+												{
+													"name": "Probability",
+													"value": "0.5"
+												}
+											]
+										}
+									]
+								},
+								"results": [
+									{
+										"type": "DQ_QuantitativeResult",
+										"errorStatistic": {
+											"metric": {
+												"name": "MeanAbsolute2D"
+											}
+										},
+										"valueType": "number",
+										"values": [
+											1.1096818181818182
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						"reports": [
+							{
+								"type": "DQ_QuantitativeAttributeAccuracy",
+								"measureIdentification": {
+									"code": "MeanAbsoluteError",
+									"domains": [
+										{
+											"name": "DifferentialErrors1D",
+											"params": [
+												{
+													"name": "Thematic uncertanty column",
+													"value": "timeUncertainty"
+												},
+												{
+													"name": "Probability",
+													"value": "0.5"
+												}
+											]
+										}
+									]
+								},
+								"results": [
+									{
+										"type": "DQ_QuantitativeResult",
+										"errorStatistic": {
+											"metric": {
+												"name": "MeanAbsolute"
+											}
+										},
+										"valueType": "number",
+										"values": [
+											6.232727272727272
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			"STAQualityNodeResults": {
+				"accuracy": {
+					"uncertantyColumnValue": "timeUncertainty",
+					"accuracyValue": 6.232727272727272
+				},
+				"validity": {},
+				"dataLength": 11,
+				"inputWayValue": "accuracyStaDev",
+				"thematicAttributeSelected": "timeUncertainty"
+			},
+			"x": -123,
+			"y": -48
+		}
+	],
+	"edges": [
+		{
+			"from": "42pvr.l79nbg",
+			"to": "6k9bg.i4i1p8",
+			"arrows": "from"
+		},
+		{
+			"from": "6k9bg.i4i1p8",
+			"to": "2rk0e.vd9hqt",
+			"arrows": "from"
+		},
+		{
+			"from": "2rk0e.vd9hqt",
+			"to": "8m930.eikte4",
+			"arrows": "from"
+		},
+		{
+			"from": "6k9bg.i4i1p8",
+			"to": "98m2f.nko7ao",
+			"arrows": "from"
+		},
+		{
+			"from": "98m2f.nko7ao",
+			"to": "1sd6e.hpno0u",
+			"arrows": "from"
+		},
+		{
+			"from": "1sd6e.hpno0u",
+			"to": "7ldt.q9q1tbn",
+			"arrows": "from"
+		}
+	]
+}

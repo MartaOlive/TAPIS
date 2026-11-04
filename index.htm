@@ -1424,10 +1424,10 @@
 			<br>
 			<fieldset>
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Font del significat&quot;, &quot;spa&quot;: &quot;Fuente del significado&quot;, &quot;eng&quot;: &quot;Meaning source&quot;}">Meaning source</span></legend>
-				<label><input type="radio" id="DialogImportMeaningCSVSourceNone" name="DialogImportMeaningCSVSource" value="none"> <span data-lang="{&quot;cat&quot;: &quot;Cap&quot;, &quot;spa&quot;: &quot;Ninguno&quot;, &quot;eng&quot;: &quot;None&quot;}">None</span></input></label><br>
-				<label><input type="radio" id="DialogImportMeaningCSVSourceFile" name="DialogImportMeaningCSVSource" value="file" checked="checked"
+				<label><input type="radio" id="DialogImportMeaningCSVSourceNone" name="DialogImportMeaningCSVSource" value="none" checked="checked" onClick='SelectImportMeaningFileSource(event, "CSV");'> <span data-lang="{&quot;cat&quot;: &quot;Cap&quot;, &quot;spa&quot;: &quot;Ninguno&quot;, &quot;eng&quot;: &quot;None&quot;}">None</span></input></label><br>
+				<label><input type="radio" id="DialogImportMeaningCSVSourceFile" name="DialogImportMeaningCSVSource" value="file"
  onClick='SelectImportMeaningFileSource(event, "CSV");'>
-				<span data-lang="{&quot;cat&quot;: &quot;Fitxer CSVW local:&quot;, &quot;spa&quot;: &quot;Archivo CSVW local:&quot;, &quot;eng&quot;: &quot;Local CSVW file:&quot;}">Local CSVW file:</span> <input type="file" id="DialogImportMeaningCSVSourceFileText" accept=".csvw,.json" onChange="ReadFileImportCSVW(event)"></input></label><br>
+				<span data-lang="{&quot;cat&quot;: &quot;Fitxer CSVW local:&quot;, &quot;spa&quot;: &quot;Archivo CSVW local:&quot;, &quot;eng&quot;: &quot;Local CSVW file:&quot;}">Local CSVW file:</span> <input type="file" id="DialogImportMeaningCSVSourceFileText" accept=".csvw,.json" disabled="disabled" onChange="ReadFileImportCSVW(event)"></input></label><br>
 
 				<label><input type="radio" id="DialogImportMeaningCSVSourceURL" name="DialogImportMeaningCSVSource" value="url" onClick='SelectImportMeaningFileSource(event, "CSV");'>
 				<span data-lang="{&quot;cat&quot;: &quot;URL del CSVW:&quot;, &quot;spa&quot;: &quot;URL del CSVW:&quot;, &quot;eng&quot;: &quot;CSVW URL:&quot;}">CSVW URL:</span> <input type="text" size="70" id="DialogImportMeaningCSVSourceURLInput" disabled="disabled"></input> <button type="button" id="DialogImportMeaningCSVSourceURLButton" onClick="ReadURLImportCSVW(event)" disabled="disabled"><span data-lang="{&quot;cat&quot;: &quot;Carrega&quot;, &quot;spa&quot;: &quot;Cargar&quot;, &quot;eng&quot;: &quot;Load&quot;}">Load</span></button></label><br>
@@ -2029,7 +2029,8 @@
 				<div id="DialogBarPlotColorModeRow" class="DialogBarPlotColorModeRow">
 					<div class="DialogBarPlotColorModeTitle" data-lang="{&quot;cat&quot;: &quot;Colors de les barres:&quot;, &quot;spa&quot;: &quot;Colores de las barras:&quot;, &quot;eng&quot;: &quot;Bar colors:&quot;}">Bar colors:</div>
 					<label class="DialogBarPlotColorModeOption"><input type="radio" name="DialogBarPlotColorMode" id="DialogBarPlotColorModeSame" value="same" checked="checked" onchange="onBarPlotColorModeChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Totes del mateix color&quot;, &quot;spa&quot;: &quot;Todas del mismo color&quot;, &quot;eng&quot;: &quot;All the same color&quot;}">All the same color</span></label>
-					<label class="DialogBarPlotColorModeOption"><input type="radio" name="DialogBarPlotColorMode" id="DialogBarPlotColorModePerCategory" value="perCategory" onchange="onBarPlotColorModeChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Un color per categoria&quot;, &quot;spa&quot;: &quot;Un color por categoría&quot;, &quot;eng&quot;: &quot;One color per category&quot;}">One color per category</span></label>
+					<label class="DialogBarPlotColorModeOption"><input type="radio" name="DialogBarPlotColorMode" id="DialogBarPlotColorModePerSeries" value="perSeries" onchange="onBarPlotColorModeChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Un color per sèrie (columna de valors)&quot;, &quot;spa&quot;: &quot;Un color por serie (columna de valores)&quot;, &quot;eng&quot;: &quot;One color per series (value column)&quot;}">One color per series (value column)</span></label>
+					<label class="DialogBarPlotColorModeOption"><input type="radio" name="DialogBarPlotColorMode" id="DialogBarPlotColorModePerCategory" value="perCategory" onchange="onBarPlotColorModeChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Un color per categoria (eix)&quot;, &quot;spa&quot;: &quot;Un color por categoría (eje)&quot;, &quot;eng&quot;: &quot;One color per category (axis)&quot;}">One color per category (axis)</span></label>
 				</div>
 				<br>
 				<label><span data-lang="{&quot;cat&quot;: &quot;Títol:&quot;, &quot;spa&quot;: &quot;Título:&quot;, &quot;eng&quot;: &quot;Title:&quot;}">Title:</span>
@@ -2039,6 +2040,19 @@
 					<input type="range" id="DialogBarPlotTitleSize" min="10" max="36" value="16" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
 					<span id="DialogBarPlotTitleSizeValue">16</span>
 				</label>
+				<div id="DialogBarPlotAxisLabels">
+					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta eix X:&quot;, &quot;spa&quot;: &quot;Etiqueta eje X:&quot;, &quot;eng&quot;: &quot;X axis label:&quot;}">X axis label:</span>
+						<input type="text" id="DialogBarPlotAxisXLabel"></input>
+					</label>
+					<br>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta Y esquerra:&quot;, &quot;spa&quot;: &quot;Etiqueta Y izquierda:&quot;, &quot;eng&quot;: &quot;Left Y label:&quot;}">Left Y label:</span>
+						<input type="text" id="DialogBarPlotAxisYLabelLeft"></input>
+					</label>
+					<br>
+					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta Y dreta:&quot;, &quot;spa&quot;: &quot;Etiqueta Y derecha:&quot;, &quot;eng&quot;: &quot;Right Y label:&quot;}">Right Y label:</span>
+						<input type="text" id="DialogBarPlotAxisYLabelRight"></input>
+					</label>
+				</div>
 				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números dels eixos:&quot;, &quot;spa&quot;: &quot;Tamaño de los números de los ejes:&quot;, &quot;eng&quot;: &quot;Axis number size:&quot;}">Axis number size:</span>
 					<input type="range" id="DialogBarPlotLabelSize" min="8" max="28" value="12" oninput="onBarPlotStyleChange(true)" onchange="onBarPlotStyleChange(true)">
 					<span id="DialogBarPlotLabelSizeValue">12</span>

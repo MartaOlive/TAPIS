@@ -8295,6 +8295,7 @@ function networkDoubleClick(params) {
 						
 						if (record.schemaURL)
 						{
+							document.getElementById("DialogImportMeaningCSVSourceNone").checked=false;
 							document.getElementById("DialogImportMeaningCSVSourceFile").checked=false;
 							document.getElementById("DialogImportMeaningCSVSourceURL").checked=true;
 							document.getElementById("DialogImportMeaningCSVSourceAuto").checked=false;
@@ -11365,6 +11366,7 @@ function okButtonDataQualityTemporalQuality(event){
 			var attributeSelectedUncertantly= selectUncertantly.options[selectUncertantly.selectedIndex].value;
 			//if (node.STAdataAttributes[attributeSelectedUncertantly].type == "number" || node.STAdataAttributes[attributeSelectedUncertantly].type== "integer") {
 				STAQualityNodeResults.accuracy=accuracyFromUncertaintyInTemporal(data, metadata, attributeSelectedUncertantly)
+				STAQualityNodeResults.accuracy.uncertaintyColumnValue = attributeSelectedUncertantly;
 				//valid=true;
 			//} else {
 				// valid=false;
@@ -11411,13 +11413,15 @@ function okButtonDataQualityTemporalQuality(event){
 	updateQueryAndTableArea(node);
 }
 function populateDialogdataQualityResultTemporalQuality(node){
-
-	
 	if (node.STAQualityNodeResults){
 		var STAQualityNodeResults=node.STAQualityNodeResults;
-		if (Object.keys(STAQualityNodeResults.validity).length !== 0 ||Object.keys(STAQualityNodeResults.resolution).length !== 0 ||Object.keys(STAQualityNodeResults.consistency).length !== 0) {
+		var html = "";
+		var hasRateTable = Object.keys(STAQualityNodeResults.validity).length !== 0 ||
+			Object.keys(STAQualityNodeResults.resolution).length !== 0 ||
+			Object.keys(STAQualityNodeResults.consistency).length !== 0;
 
-		var  html = ` <table class="tablesmall">
+		if (hasRateTable) {
+			html = ` <table class="tablesmall">
 				<thead>
 					<tr>
 						<th></th><th>Column</th><th>Total records</th><th>True records</th> <th>Rate</th>
@@ -11425,24 +11429,25 @@ function populateDialogdataQualityResultTemporalQuality(node){
 				</thead>
 				<tbody>
 		`;
-
+			if(Object.keys(STAQualityNodeResults.validity).length!=0){
+				html+= `<tr><td>Temporal validity</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.validity.trueTemporalValidiy}</td><td>${STAQualityNodeResults.validity.temporalValidityRate}</td></tr>`
+			}
+			if(Object.keys(STAQualityNodeResults.resolution).length!=0){
+				html+= `<tr><td>Temporal resolution</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.resolution.trueTemporalResolution}</td><td>${STAQualityNodeResults.resolution.temporalResolutionRate}</td></tr>`
+			}
+			if(Object.keys(STAQualityNodeResults.consistency).length!=0){
+				html+= `<tr><td>Temporal consistency</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.consistency.trueTemporalConsistency}</td><td>${STAQualityNodeResults.consistency.temporalConsistencyRate}</td></tr>`
+			}
+			html+=`</tbody></table> <br>`;
 		}
-		if(Object.keys(STAQualityNodeResults.validity).length!=0){
-			html+= `<tr><td>Temporal validity</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.validity.trueTemporalValidiy}</td><td>${STAQualityNodeResults.validity.temporalValidityRate}</td></tr>`
-		}
-		if(Object.keys(STAQualityNodeResults.resolution).length!=0){
-			html+= `<tr><td>Temporal resolution</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.resolution.trueTemporalResolution}</td><td>${STAQualityNodeResults.resolution.temporalResolutionRate}</td></tr>`
-		}
-		if(Object.keys(STAQualityNodeResults.consistency).length!=0){
-			html+= `<tr><td>Temporal consistency</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.consistency.trueTemporalConsistency}</td><td>${STAQualityNodeResults.consistency.temporalConsistencyRate}</td></tr>`
-		}
-		html+=`</tbody></table> <br>`;
 		if(Object.keys(STAQualityNodeResults.accuracy).length!=0){
-			html+= `<table class="tablesmall">
+			var accuracyColumn = STAQualityNodeResults.accuracy.uncertaintyColumnValue || STAQualityNodeResults.attributesSelected || "";
+			html+= `<div><b>Temporal accuracy</b><br>
+			<table class="tablesmall">
 			<thead > 
-			<th></th><th>Column</th><th>Total records</th><th>Accuracy value</th></tr></thead><tbody>
-			<tr><td>Temporal validity</td><td>${STAQualityNodeResults.attributesSelected}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.accuracy.accuracyValue}</td></tr>`
-		
+			<tr><th></th><th>Column</th><th>Total records</th><th>Accuracy value</th></tr></thead><tbody>
+			<tr><td>Temporal accuracy</td><td>${accuracyColumn}</td><td>${STAQualityNodeResults.dataLength}</td><td>${STAQualityNodeResults.accuracy.accuracyValue}</td></tr>
+			</tbody></table></div>`
 		}
 		document.getElementById("dataQualityResult_info").innerHTML= html
 
@@ -11704,8 +11709,8 @@ function okButtonDataQualityThematicQuality(event) {
 			var uncertantyColumn = document.getElementById("DialogQualityThematicQuality_select_uncertantyColumn");
 			var uncertantyColumnValue = uncertantyColumn.options[uncertantyColumn.selectedIndex].value;
 			var globalAccuracyValue = accuracyFromUncertaintyThematicQuality(dataToEvaluate, metadata, uncertantyColumnValue);
-			STAQualityNodeResults.accuracy.uncertantyColumnValue=uncertantyColumnValue;
 			STAQualityNodeResults.accuracy={...STAQualityNodeResults.accuracy,...globalAccuracyValue};
+			STAQualityNodeResults.accuracy.uncertaintyColumnValue = uncertantyColumnValue;
 			valid1=true;
 		}
 		if(document.getElementById("ThematicQuality_checkbox_ThematicAccuracy_values").checked){

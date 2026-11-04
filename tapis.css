@@ -540,8 +540,8 @@
 }
 
 #DialogScatterPlot #DialogScatterPlotVisualizationWrap {
-	width: 560px;
-	height: 520px;
+	width: min(72vw, 980px);
+	height: min(78vh, 720px);
 	flex: 0 0 auto;
 }
 
@@ -552,7 +552,7 @@
 
 #DialogScatterPlot .DialogScatterPlotLegend {
 	width: 260px;
-	max-height: 520px;
+	max-height: min(78vh, 720px);
 	overflow: auto;
 	padding: 4px 0 4px 4px;
 	box-sizing: border-box;
@@ -766,6 +766,35 @@
 	border: 1px solid #ccc;
 }
 
+#DialogBarPlot .DialogBarPlotValueRow {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin: 3px 0;
+}
+
+#DialogBarPlot .DialogBarPlotValueRow label {
+	display: block;
+	margin: 0;
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+#DialogBarPlot .DialogBarPlotValueRow .DialogBarPlotColumnAxis {
+	margin-left: 0;
+	max-width: 110px;
+	flex: 0 0 auto;
+}
+
+#DialogBarPlot #DialogBarPlotAxisLabels {
+	margin: 6px 0 10px 0;
+}
+
+#DialogBarPlot #DialogBarPlotAxisLabels input[type="text"] {
+	width: min(100%, 220px);
+}
+
 #DialogBarPlot #DialogBarPlotSeriesDiv fieldset {
 	margin: 0 8px 16px 0;
 	padding: 12px 14px 14px 14px;
@@ -797,14 +826,14 @@
 }
 
 #DialogBarPlot #DialogBarPlotVisualization {
-	width: 560px;
-	height: 520px;
+	width: min(72vw, 980px);
+	height: min(78vh, 720px);
 	flex: 0 0 auto;
 }
 
 #DialogBarPlot .DialogBarPlotLegend {
-	width: 200px;
-	max-height: 520px;
+	width: 220px;
+	max-height: min(78vh, 720px);
 	overflow: auto;
 	padding: 4px 0 4px 4px;
 	box-sizing: border-box;
@@ -1065,14 +1094,14 @@
 }
 
 #DialogRadarPlot #DialogRadarPlotVisualization {
-	width: 560px;
-	height: 520px;
+	width: min(72vw, 980px);
+	height: min(78vh, 720px);
 	flex: 0 0 auto;
 }
 
 #DialogRadarPlot .DialogRadarPlotLegend {
-	width: 200px;
-	max-height: 520px;
+	width: 220px;
+	max-height: min(78vh, 720px);
 	overflow: auto;
 	padding: 4px 0 4px 4px;
 	box-sizing: border-box;
@@ -1244,8 +1273,8 @@
 }
 
 #DialogCircularChart #DialogCircularChartVisualization {
-	width: 560px;
-	height: 520px;
+	width: min(72vw, 980px);
+	height: min(78vh, 720px);
 	flex: 0 0 auto;
 }
 
@@ -1256,8 +1285,8 @@
 }
 
 #DialogCircularChart .DialogCircularChartLegend {
-	width: 200px;
-	max-height: 520px;
+	width: 220px;
+	max-height: min(78vh, 720px);
 	overflow: auto;
 	padding: 4px 0 4px 4px;
 	box-sizing: border-box;

@@ -1235,15 +1235,31 @@ function FilterSTAOnDrop(event) {
 	FilterSTAUpdatePreview();
 }
 
+/** OData Date / DateTimeOffset / period literals must not be quoted in STA $filter. */
+function FilterSTAIsODataDateLiteral(s) {
+	var datePart = "\\d{4}-\\d{2}-\\d{2}";
+	var timePart = "(T\\d{2}:\\d{2}(:\\d{2}(\\.\\d{1,9})?)?(Z|[+-]\\d{2}:\\d{2})?)?";
+	var one = datePart + timePart;
+	return new RegExp("^" + one + "(/" + one + ")?$", "i").test(s);
+}
+
 function FilterSTAQuoteOData(value) {
 	if (value === null || typeof value === "undefined")
 		return "";
 	var s = String(value).trim();
 	if (!s)
 		return "";
+	/* Allow typing dates with quotes; STA rejects quoted date literals. */
+	if ((s.charAt(0) === "'" && s.charAt(s.length - 1) === "'") ||
+			(s.charAt(0) === '"' && s.charAt(s.length - 1) === '"'))
+		s = s.substring(1, s.length - 1).replace(/''/g, "'").trim();
+	if (!s)
+		return "";
 	if (/^(true|false)$/i.test(s))
 		return s.toLowerCase();
 	if (/^-?\d+(\.\d+)?([eE][+-]?\d+)?$/.test(s))
+		return s;
+	if (FilterSTAIsODataDateLiteral(s))
 		return s;
 	return "'" + s.replace(/'/g, "''") + "'";
 }
@@ -1702,6 +1718,8 @@ function FilterSTAApplyFilterToNode(node) {
 	if (typeof networkNodes !== "undefined" && networkNodes.update)
 		networkNodes.update(node);
 	FinalizeSelectedSelectExpands(node, previousSTAURL, {cat: "S'estan filtrant les dades STA amb els criteris seleccionats... ", spa: "Filtrando los datos STA con los criterios seleccionados... ", eng: "Filtering STA by selected criteria... "});
+	if (typeof network !== "undefined" && network.selectNodes)
+		network.selectNodes([node.id]);
 	if (typeof updateQueryAndTableArea === "function")
 		updateQueryAndTableArea(node);
 }

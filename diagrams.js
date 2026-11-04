@@ -4311,7 +4311,7 @@ var BarPlotLastLegend = null;
 var barPlotErrorBarsPlugin = {
 	id: "barPlotErrorBars",
 	afterDatasetsDraw: function (chart) {
-		var ctx = chart.ctx, meta, i, j, pt, yMin, yMax, x, y, half = 4, horiz, ds;
+		var ctx = chart.ctx, meta, i, j, pt, yMin, yMax, x, y, half = 4, horiz, ds, valueScale;
 		var errOpts = (chart.options && chart.options.barPlotError) || {};
 		var color = errOpts.color || "#333333";
 		var dir = errOpts.direction || "both";
@@ -4335,8 +4335,10 @@ var barPlotErrorBarsPlugin = {
 				if (horiz) {
 					y = pt.y;
 					x = pt.x;
-					yMin = chart.scales.x.getPixelForValue(ds._errorMin[j]);
-					yMax = chart.scales.x.getPixelForValue(ds._errorMax[j]);
+					valueScale = chart.scales[ds.xAxisID || "x"];
+					if (!valueScale) continue;
+					yMin = valueScale.getPixelForValue(ds._errorMin[j]);
+					yMax = valueScale.getPixelForValue(ds._errorMax[j]);
 					ctx.beginPath();
 					if (drawMinus) {
 						ctx.moveTo(x, y);
@@ -4354,8 +4356,10 @@ var barPlotErrorBarsPlugin = {
 				} else {
 					x = pt.x;
 					y = pt.y;
-					yMin = chart.scales.y.getPixelForValue(ds._errorMin[j]);
-					yMax = chart.scales.y.getPixelForValue(ds._errorMax[j]);
+					valueScale = chart.scales[ds.yAxisID || "y"];
+					if (!valueScale) continue;
+					yMin = valueScale.getPixelForValue(ds._errorMin[j]);
+					yMax = valueScale.getPixelForValue(ds._errorMax[j]);
 					ctx.beginPath();
 					if (drawMinus) {
 						ctx.moveTo(x, y);
@@ -4438,7 +4442,8 @@ function ensureBarPlotStyleState(options) {
 		options.errorColor = "#333333";
 	if (!options.errorDirection)
 		options.errorDirection = "both";
-	if (options.barColorMode !== "perCategory" && options.barColorMode !== "same")
+	if (options.barColorMode !== "perCategory" && options.barColorMode !== "perSeries" &&
+			options.barColorMode !== "same")
 		options.barColorMode = "same";
 	options.confidencePct = 95;
 }
@@ -4447,21 +4452,28 @@ function getBarPlotColorMode() {
 	if (document.getElementById("DialogBarPlotColorModePerCategory") &&
 			document.getElementById("DialogBarPlotColorModePerCategory").checked)
 		return "perCategory";
+	if (document.getElementById("DialogBarPlotColorModePerSeries") &&
+			document.getElementById("DialogBarPlotColorModePerSeries").checked)
+		return "perSeries";
 	return "same";
 }
 
 function setBarPlotColorMode(mode) {
 	var sameEl = document.getElementById("DialogBarPlotColorModeSame");
+	var seriesEl = document.getElementById("DialogBarPlotColorModePerSeries");
 	var perEl = document.getElementById("DialogBarPlotColorModePerCategory");
 	if (!sameEl || !perEl)
 		return;
-	if (mode === "perCategory") {
+	sameEl.checked = false;
+	if (seriesEl)
+		seriesEl.checked = false;
+	perEl.checked = false;
+	if (mode === "perCategory")
 		perEl.checked = true;
-		sameEl.checked = false;
-	} else {
+	else if (mode === "perSeries" && seriesEl)
+		seriesEl.checked = true;
+	else
 		sameEl.checked = true;
-		perEl.checked = false;
-	}
 }
 
 function onBarPlotColorModeChange() {
@@ -4486,12 +4498,18 @@ function barPlotResolveStoredColor(options, key, index) {
 /*
 	Color fill for V/H/floating:
 	- same → one shared color (legend: single swatch)
-	- perCategory → one color per category label (legend: one swatch each)
-	Stacked keeps classic per-series colors (colorMode ignored).
+	- perSeries → one color per value-column / series (legend: one swatch each)
+	- perCategory → one color per category label on the axis (legend: one swatch each)
+	Stacked always uses per-series colors (colorMode ignored).
 */
 function barPlotDatasetPaint(options, stacked, keyName, labelsFull, seriesIndex, legendKeys, legendLabels, legendColors) {
 	var mode, color, colors, i, cat, paint = {}, legendKey, already;
-	mode = stacked ? "series" : (options.barColorMode === "perCategory" ? "perCategory" : "same");
+	if (stacked || options.barColorMode === "perSeries")
+		mode = "series";
+	else if (options.barColorMode === "perCategory")
+		mode = "perCategory";
+	else
+		mode = "same";
 	if (mode === "same") {
 		color = barPlotResolveStoredColor(options, BAR_PLOT_UNIFORM_COLOR_KEY, 0);
 		options.seriesColors[BAR_PLOT_UNIFORM_COLOR_KEY] = color;
@@ -4705,10 +4723,58 @@ function barPlotDefaultSeriesGroup(parentId, info) {
 		axisX: guess,
 		axisY: values[0] || "",
 		valueColumns: values,
+		columnAxes: {},
 		valueMin: num[0] || "",
 		valueMax: num[Math.min(1, Math.max(0, num.length - 1))] || num[0] || "",
 		legendText: (info && info.nodeLabel) || parentId
 	};
+}
+
+function ensureBarPlotColumnAxes(g) {
+	if (!g.columnAxes)
+		g.columnAxes = {};
+}
+
+function barPlotColumnAxis(group, col) {
+	if (group && group.columnAxes && group.columnAxes[col] == "right")
+		return "right";
+	return "left";
+}
+
+function onBarPlotColumnAxisChange(idx, col, value, nodeId) {
+	var node = networkNodes.get(nodeId), g;
+	if (!node || !node.barPlotOptions || !node.barPlotOptions.seriesGroups[idx])
+		return;
+	g = node.barPlotOptions.seriesGroups[idx];
+	ensureBarPlotColumnAxes(g);
+	g.columnAxes[col] = (value == "right") ? "right" : "left";
+	networkNodes.update(node);
+}
+
+/** Resolve left/right value-axis side for a rendered series key. */
+function barPlotSeriesAxisSide(keyName, activeGroups) {
+	var g, i, col, axes, cols, legend;
+	for (g = 0; g < (activeGroups || []).length; g++) {
+		axes = activeGroups[g].columnAxes || {};
+		cols = activeGroups[g].valueCols || [];
+		legend = activeGroups[g].legend || "";
+		if (axes[keyName] == "right")
+			return "right";
+		if (axes[keyName] == "left")
+			return "left";
+		for (i = 0; i < cols.length; i++) {
+			col = cols[i];
+			if (keyName === col)
+				return axes[col] == "right" ? "right" : "left";
+			if (keyName.indexOf(col + " #") === 0)
+				return axes[col] == "right" ? "right" : "left";
+			if (legend && cols.length == 1 && keyName === legend)
+				return axes[col] == "right" ? "right" : "left";
+			if (legend && keyName === legend + " / " + col)
+				return axes[col] == "right" ? "right" : "left";
+		}
+	}
+	return "left";
 }
 
 /** One series per parent node: keep existing selections, add new parents, drop missing ones. */
@@ -4731,6 +4797,7 @@ function syncBarPlotSeriesWithParents(node) {
 				g.valueColumns = g.axisY ? [g.axisY] : [];
 			if (!g.legendText)
 				g.legendText = info[ids[i]].nodeLabel || ids[i];
+			ensureBarPlotColumnAxes(g);
 		}
 		groups.push(g);
 	}
@@ -4743,11 +4810,12 @@ function ensureBarPlotManualSeries(node) {
 
 function createDialogWithSelectWithGroupsBarPlot(node) {
 	var container = document.getElementById("DialogBarPlotSeriesDiv");
-	var groups, parentInfo, cdns, i, parentId, attrs, t, legend, num, c, col, checked, selectedCols, nodeLabel;
+	var groups, parentInfo, cdns, i, parentId, attrs, t, legend, num, c, col, checked, selectedCols, nodeLabel, axisSide, showAxisSide;
 	if (!container) return;
 	groups = node.barPlotOptions.seriesGroups || [];
 	parentInfo = node.barPlotParentNodes || {};
 	t = getBarPlotType();
+	showAxisSide = (t == "vertical" || t == "horizontal");
 	cdns = "";
 	for (i = 0; i < groups.length; i++) {
 		parentId = groups[i].nodeSelected;
@@ -4755,6 +4823,7 @@ function createDialogWithSelectWithGroupsBarPlot(node) {
 		nodeLabel = parentInfo[parentId] ? (parentInfo[parentId].nodeLabel || parentId) : parentId;
 		legend = groups[i].legendText || nodeLabel;
 		groups[i].legendText = legend;
+		ensureBarPlotColumnAxes(groups[i]);
 		if (!groups[i].valueColumns || !groups[i].valueColumns.length)
 			groups[i].valueColumns = groups[i].axisY && groups[i].axisY != groups[i].axisX ? [groups[i].axisY] : [];
 		selectedCols = groups[i].valueColumns;
@@ -4776,10 +4845,22 @@ function createDialogWithSelectWithGroupsBarPlot(node) {
 			for (c = 0; c < num.length; c++) {
 				col = num[c];
 				checked = selectedCols.indexOf(col) != -1 ? " checked" : "";
+				axisSide = barPlotColumnAxis(groups[i], col);
+				if (showAxisSide)
+					cdns += '<div class="DialogBarPlotValueRow">';
 				cdns += '<label><input type="checkbox" class="DialogBarPlotSeriesValueCb" data-series="' + i + '" value="' +
 					("" + col).replace(/"/g, "&quot;") + '"' + checked +
 					' onchange="onBarPlotSeriesValueColumnsChange(' + i + ',\'' + node.id + '\')"> ' +
 					("" + col).replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</label>";
+				if (showAxisSide) {
+					cdns += '<select class="DialogBarPlotColumnAxis" onchange="onBarPlotColumnAxisChange(' + i + ',\'' +
+						barPlotEscapeJs(col) + '\',this.value,\'' + node.id + '\')">';
+					cdns += '<option value="left"' + (axisSide != "right" ? " selected" : "") + ">" +
+						DonaCadena({cat: "Esquerra", spa: "Izquierda", eng: "Left"}) + "</option>";
+					cdns += '<option value="right"' + (axisSide == "right" ? " selected" : "") + ">" +
+						DonaCadena({cat: "Dreta", spa: "Derecha", eng: "Right"}) + "</option>";
+					cdns += "</select></div>";
+				}
 			}
 			cdns += "</div></div>";
 		}
@@ -5056,34 +5137,45 @@ function barPlotRowFloatingHasInterval(pack) {
 }
 
 function barPlotApplyErrorAxisExtent(scales, datasets, horiz, beginAtZero, errorDirection) {
-	var i, j, ds, v, minV = null, maxV = null, axis;
+	var i, j, ds, v, axis, scaleId, byAxis = {}, entry, minV, maxV;
 	var usePlus = !errorDirection || errorDirection == "both" || errorDirection == "plus";
 	var useMinus = !errorDirection || errorDirection == "both" || errorDirection == "minus";
 	for (i = 0; i < (datasets || []).length; i++) {
 		ds = datasets[i];
 		if (!ds || ds.hidden) continue;
+		scaleId = horiz ? (ds.xAxisID || "x") : (ds.yAxisID || "y");
+		if (!byAxis[scaleId])
+			byAxis[scaleId] = { minV: null, maxV: null };
+		entry = byAxis[scaleId];
 		for (j = 0; j < (ds.data || []).length; j++) {
 			v = ds.data[j];
 			if (v == null || typeof v === "object") continue;
-			if (minV == null || v < minV) minV = v;
-			if (maxV == null || v > maxV) maxV = v;
+			if (entry.minV == null || v < entry.minV) entry.minV = v;
+			if (entry.maxV == null || v > entry.maxV) entry.maxV = v;
 			if (useMinus && ds._errorMin && ds._errorMin[j] != null && !isNaN(ds._errorMin[j])) {
-				if (minV == null || ds._errorMin[j] < minV) minV = ds._errorMin[j];
+				if (entry.minV == null || ds._errorMin[j] < entry.minV) entry.minV = ds._errorMin[j];
 			}
 			if (usePlus && ds._errorMax && ds._errorMax[j] != null && !isNaN(ds._errorMax[j])) {
-				if (maxV == null || ds._errorMax[j] > maxV) maxV = ds._errorMax[j];
+				if (entry.maxV == null || ds._errorMax[j] > entry.maxV) entry.maxV = ds._errorMax[j];
 			}
 		}
 	}
-	if (minV == null || maxV == null)
-		return;
-	if (beginAtZero) {
-		if (minV > 0) minV = 0;
-		if (maxV < 0) maxV = 0;
+	for (scaleId in byAxis) {
+		if (!Object.prototype.hasOwnProperty.call(byAxis, scaleId)) continue;
+		entry = byAxis[scaleId];
+		minV = entry.minV;
+		maxV = entry.maxV;
+		if (minV == null || maxV == null)
+			continue;
+		if (beginAtZero) {
+			if (minV > 0) minV = 0;
+			if (maxV < 0) maxV = 0;
+		}
+		axis = scales[scaleId];
+		if (!axis) continue;
+		axis.min = minV;
+		axis.max = maxV;
 	}
-	axis = horiz ? scales.x : scales.y;
-	axis.min = minV;
-	axis.max = maxV;
 }
 
 function barPlotAggregateRows(data, axisX, axisY, seriesCol, stackCol, valueMinCol, valueMaxCol, floating) {
@@ -5333,6 +5425,12 @@ function ShowBarPlotDialog(parentNodes, node) {
 	document.getElementById("DialogBarPlotTypeStacked").checked = barType == "stacked";
 	document.getElementById("DialogBarPlotBeginZero").checked = options.beginAtZero === false ? false : true;
 	document.getElementById("DialogBarPlotTitleInput").value = options.title || "";
+	if (document.getElementById("DialogBarPlotAxisXLabel"))
+		document.getElementById("DialogBarPlotAxisXLabel").value = options.axisXLabel || "";
+	if (document.getElementById("DialogBarPlotAxisYLabelLeft"))
+		document.getElementById("DialogBarPlotAxisYLabelLeft").value = options.axisYLabelLeft || "";
+	if (document.getElementById("DialogBarPlotAxisYLabelRight"))
+		document.getElementById("DialogBarPlotAxisYLabelRight").value = options.axisYLabelRight || "";
 	if (document.getElementById("DialogBarPlotGroupByCategory"))
 		document.getElementById("DialogBarPlotGroupByCategory").checked = !!options.groupByCategory;
 	setBarPlotColorMode(options.barColorMode || "same");
@@ -5414,6 +5512,7 @@ function DrawBarPlot(event) {
 	var s, sk, g, cat, color, keyName, row, errMap, err, floating, stacked, horiz, scales, plugins, chartOpts;
 	var seriesGroups, gIdx, localAgg, merged, ser, stk, cell, vy, eMin, eMax;
 	var chartPack = null, valueCols, active, act, c, valueAxisTitle, paint;
+	var axisSide, useDualAxes, sideLeft, sideRight, leftTitle, rightTitle, catTitle, leftCols, rightCols, valueScaleLeft, valueScaleRight, catScale, dsAxisId;
 
 	if (!node.barPlotOptions) node.barPlotOptions = {};
 	options = node.barPlotOptions;
@@ -5443,6 +5542,9 @@ function DrawBarPlot(event) {
 	options.axisLabelFontSize = clampChartFontSize(document.getElementById("DialogBarPlotAxisLabelSize") ? document.getElementById("DialogBarPlotAxisLabelSize").value : options.axisLabelFontSize, 8, 28, 12);
 	axisLabelFontSize = options.axisLabelFontSize;
 	options.groupByCategory = document.getElementById("DialogBarPlotGroupByCategory") ? document.getElementById("DialogBarPlotGroupByCategory").checked : false;
+	options.axisXLabel = document.getElementById("DialogBarPlotAxisXLabel") ? document.getElementById("DialogBarPlotAxisXLabel").value : "";
+	options.axisYLabelLeft = document.getElementById("DialogBarPlotAxisYLabelLeft") ? document.getElementById("DialogBarPlotAxisYLabelLeft").value : "";
+	options.axisYLabelRight = document.getElementById("DialogBarPlotAxisYLabelRight") ? document.getElementById("DialogBarPlotAxisYLabelRight").value : "";
 	if (!stacked)
 		options.barColorMode = getBarPlotColorMode();
 	options.errorMode = getBarPlotErrorMode();
@@ -5482,12 +5584,14 @@ function DrawBarPlot(event) {
 			}));
 			return;
 		}
+		ensureBarPlotColumnAxes(seriesGroups[gIdx]);
 		active.push({
 			data: parentNode.STAdata,
 			axisX: axisX,
 			valueCols: valueCols,
 			valueMin: valueMin,
 			valueMax: valueMax,
+			columnAxes: seriesGroups[gIdx].columnAxes || {},
 			legend: seriesGroups[gIdx].legendText ||
 				((node.barPlotParentNodes[seriesGroups[gIdx].nodeSelected] || {}).nodeLabel) ||
 				("S" + (gIdx + 1))
@@ -5620,6 +5724,7 @@ function DrawBarPlot(event) {
 			}
 			row = barPlotNullHiddenCategoryValues(row, chartPack.labelsFull, options);
 			paint = barPlotDatasetPaint(options, stacked, keyName, chartPack.labelsFull, legendKeys.length, legendKeys, legendLabels, legendColors);
+			axisSide = (floating || stacked) ? "left" : barPlotSeriesAxisSide(keyName, active);
 			datasets.push({
 				label: keyName,
 				data: row,
@@ -5629,6 +5734,7 @@ function DrawBarPlot(event) {
 				hidden: paint.hidden,
 				_errorMin: floating ? null : eMin,
 				_errorMax: floating ? null : eMax,
+				_axisSide: axisSide,
 				categoryPercentage: 0.85,
 				barPercentage: 0.9
 			});
@@ -5682,6 +5788,7 @@ function DrawBarPlot(event) {
 				}
 				row = barPlotNullHiddenCategoryValues(row, labelsFull, options);
 				paint = barPlotDatasetPaint(options, stacked, keyName, labelsFull, legendKeys.length, legendKeys, legendLabels, legendColors);
+				axisSide = (floating || stacked) ? "left" : barPlotSeriesAxisSide(keyName, active);
 				datasets.push({
 					label: keyName,
 					data: row,
@@ -5692,6 +5799,7 @@ function DrawBarPlot(event) {
 					hidden: paint.hidden,
 					_errorMin: floating ? null : eMin,
 					_errorMax: floating ? null : eMax,
+					_axisSide: axisSide,
 					categoryPercentage: 0.85,
 					barPercentage: 0.9
 				});
@@ -5699,27 +5807,92 @@ function DrawBarPlot(event) {
 		}
 	}
 
-	scales = {
-		x: {
-			stacked: stacked,
-			beginAtZero: horiz ? beginAtZero : false,
-			title: { display: true, text: horiz ? valueAxisTitle : (options.axisX || ""), font: { size: axisLabelFontSize } },
-			ticks: { autoSkip: horiz, font: { size: labelFontSize } },
-			grid: { display: horiz }
-		},
-		y: {
-			stacked: stacked,
-			beginAtZero: horiz ? false : beginAtZero,
-			title: { display: true, text: horiz ? (options.axisX || "") : valueAxisTitle, font: { size: axisLabelFontSize } },
-			ticks: { autoSkip: !horiz, font: { size: labelFontSize } },
-			grid: { display: !horiz }
+	sideLeft = false;
+	sideRight = false;
+	leftCols = [];
+	rightCols = [];
+	for (s = 0; s < datasets.length; s++) {
+		axisSide = datasets[s]._axisSide || "left";
+		if (axisSide == "right") {
+			sideRight = true;
+			if (datasets[s].label && rightCols.indexOf(datasets[s].label) == -1)
+				rightCols.push(datasets[s].label);
+		} else {
+			sideLeft = true;
+			if (datasets[s].label && leftCols.indexOf(datasets[s].label) == -1)
+				leftCols.push(datasets[s].label);
 		}
-	};
-	/* Room past the tallest bar so the value label is not clipped. */
-	if (horiz)
-		scales.x.grace = "14%";
-	else
-		scales.y.grace = "14%";
+	}
+	useDualAxes = !floating && !stacked && sideLeft && sideRight;
+	leftTitle = (options.axisYLabelLeft || "").trim() || (useDualAxes ? leftCols.join(", ") : valueAxisTitle);
+	rightTitle = (options.axisYLabelRight || "").trim() || (useDualAxes ? rightCols.join(", ") : valueAxisTitle);
+	catTitle = (options.axisXLabel || "").trim() || (options.axisX || "");
+	if (!useDualAxes) {
+		if ((options.axisYLabelLeft || "").trim())
+			valueAxisTitle = (options.axisYLabelLeft || "").trim();
+		else if ((options.axisYLabelRight || "").trim() && sideRight && !sideLeft)
+			valueAxisTitle = (options.axisYLabelRight || "").trim();
+	}
+
+	if (useDualAxes) {
+		for (s = 0; s < datasets.length; s++) {
+			dsAxisId = (datasets[s]._axisSide == "right") ? "right" : "left";
+			if (horiz)
+				datasets[s].xAxisID = "xAxis" + dsAxisId;
+			else
+				datasets[s].yAxisID = "yAxis" + dsAxisId;
+		}
+		catScale = {
+			stacked: stacked,
+			title: { display: !!catTitle, text: catTitle, font: { size: axisLabelFontSize } },
+			ticks: { autoSkip: false, font: { size: labelFontSize } },
+			grid: { display: false }
+		};
+		valueScaleLeft = {
+			stacked: false,
+			position: horiz ? "bottom" : "left",
+			beginAtZero: beginAtZero,
+			title: { display: !!leftTitle, text: leftTitle, font: { size: axisLabelFontSize } },
+			ticks: { autoSkip: true, font: { size: labelFontSize } },
+			grid: { display: true },
+			grace: "14%"
+		};
+		valueScaleRight = {
+			stacked: false,
+			position: horiz ? "top" : "right",
+			beginAtZero: beginAtZero,
+			title: { display: !!rightTitle, text: rightTitle, font: { size: axisLabelFontSize } },
+			ticks: { autoSkip: true, font: { size: labelFontSize } },
+			grid: { drawOnChartArea: false },
+			grace: "14%"
+		};
+		if (horiz)
+			scales = { y: catScale, xAxisleft: valueScaleLeft, xAxisright: valueScaleRight };
+		else
+			scales = { x: catScale, yAxisleft: valueScaleLeft, yAxisright: valueScaleRight };
+	} else {
+		scales = {
+			x: {
+				stacked: stacked,
+				beginAtZero: horiz ? beginAtZero : false,
+				title: { display: !!(horiz ? valueAxisTitle : catTitle), text: horiz ? valueAxisTitle : catTitle, font: { size: axisLabelFontSize } },
+				ticks: { autoSkip: horiz, font: { size: labelFontSize } },
+				grid: { display: horiz }
+			},
+			y: {
+				stacked: stacked,
+				beginAtZero: horiz ? false : beginAtZero,
+				title: { display: !!(horiz ? catTitle : valueAxisTitle), text: horiz ? catTitle : valueAxisTitle, font: { size: axisLabelFontSize } },
+				ticks: { autoSkip: !horiz, font: { size: labelFontSize } },
+				grid: { display: !horiz }
+			}
+		};
+		/* Room past the tallest bar so the value label is not clipped. */
+		if (horiz)
+			scales.x.grace = "14%";
+		else
+			scales.y.grace = "14%";
+	}
 	if (!floating && !stacked && options.errorMode != "none")
 		barPlotApplyErrorAxisExtent(scales, datasets, horiz, beginAtZero, options.errorDirection);
 
