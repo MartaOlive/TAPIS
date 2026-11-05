@@ -4266,12 +4266,80 @@ function FilterTableAsString(value) {
 
 function FilterTableAsDate(value) {
 	if (value instanceof Date)
-		return value;
-	var s = FilterTableAsString(value);
-	if (s && s.charAt(s.length - 1) === "Z")
-		s = s.slice(0, -1);
+		return isNaN(value.getTime()) ? null : value;
+	var s = FilterTableAsString(value).trim();
+	if (!s)
+		return null;
+	/* Pad partial ISO forms accepted by itIsADate() so Date can parse them. */
+	if (/^\d{4}$/.test(s))
+		s = s + "-01-01T00:00:00";
+	else if (/^\d{4}-\d{2}$/.test(s))
+		s = s + "-01T00:00:00";
+	else if (/^\d{4}-\d{2}-\d{2}$/.test(s))
+		s = s + "T00:00:00";
+	else if (/^\d{4}-\d{2}-\d{2}T\d{2}$/.test(s))
+		s = s + ":00:00";
+	else if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(s))
+		s = s + ":00";
 	var d = new Date(s);
 	return isNaN(d.getTime()) ? null : d;
+}
+
+/** Uses statistics.js itIsADate() (same date definition). Supports nested property paths. */
+function FilterTableColumnIsDate(data, property) {
+	var samples, i, v;
+	if (!data || !data.length || !property || typeof itIsADate !== "function")
+		return false;
+	if (property.indexOf("/") === -1)
+		return itIsADate(data, property);
+	samples = [];
+	for (i = 0; i < data.length; i++) {
+		v = FilterTableGetRecordValue(data[i], property);
+		if (v === null || typeof v === "undefined" || v === "")
+			return false;
+		samples.push({ _: v });
+	}
+	return samples.length ? itIsADate(samples, "_") : false;
+}
+
+function FilterTableCollectDateProperties(tree, data) {
+	var map = {}, children, i, child;
+	if (!tree || !data || !data.length)
+		return map;
+	if (tree.type === "condition") {
+		if (tree.property && FilterTableColumnIsDate(data, tree.property))
+			map[tree.property] = true;
+		return map;
+	}
+	children = tree.children || [];
+	for (i = 0; i < children.length; i++) {
+		child = FilterTableCollectDateProperties(children[i], data);
+		Object.keys(child).forEach(function (k) { map[k] = true; });
+	}
+	return map;
+}
+
+var FilterTableDateProperties = null;
+
+function FilterTableCompareDates(leftDate, rightDate, op) {
+	var lt, rt;
+	if (!leftDate || !rightDate)
+		return false;
+	lt = leftDate.getTime();
+	rt = rightDate.getTime();
+	if (op === "eq")
+		return lt === rt;
+	if (op === "ne")
+		return lt !== rt;
+	if (op === "ge")
+		return lt >= rt;
+	if (op === "gt")
+		return lt > rt;
+	if (op === "le")
+		return lt <= rt;
+	if (op === "lt")
+		return lt < rt;
+	return false;
 }
 
 function FilterTableIsConditionComplete(cond) {
@@ -4306,9 +4374,29 @@ function FilterTableConditionMatches(cond, record) {
 	var val = (cond.value || "").trim();
 	var a = (cond.valueA || "").trim();
 	var b = (cond.valueB || "").trim();
-	var left, right, lo, hi, d;
+	var left, right, lo, hi, d, asDate;
 	if (!op || !cond.property)
 		return false;
+	asDate = !!(FilterTableDateProperties && FilterTableDateProperties[cond.property]);
+	if (asDate && (op === "eq" || op === "ne" || op === "ge" || op === "gt" || op === "le" || op === "lt")) {
+		left = FilterTableAsDate(cell);
+		right = FilterTableAsDate(val);
+		return FilterTableCompareDates(left, right, op);
+	}
+	if (asDate && (op === "interval_cc" || op === "interval_oc" || op === "interval_co" || op === "interval_oo")) {
+		left = FilterTableAsDate(cell);
+		lo = FilterTableAsDate(a);
+		hi = FilterTableAsDate(b);
+		if (!left || !lo || !hi)
+			return false;
+		if (op === "interval_cc")
+			return left.getTime() >= lo.getTime() && left.getTime() <= hi.getTime();
+		if (op === "interval_oc")
+			return left.getTime() > lo.getTime() && left.getTime() <= hi.getTime();
+		if (op === "interval_co")
+			return left.getTime() >= lo.getTime() && left.getTime() < hi.getTime();
+		return left.getTime() > lo.getTime() && left.getTime() < hi.getTime();
+	}
 	if (op === "eq")
 		return FilterTableAsString(cell) == val || FilterTableAsNumber(cell) == FilterTableAsNumber(val);
 	if (op === "ne")
@@ -4413,9 +4501,14 @@ function FilterTableApplyFilterToNode(node) {
 		node.STAFilterTreeTable = tree;
 		node.STAFilterExpr = buildTableFilterFromFilterTableTree(tree);
 		filtered = [];
-		for (i = 0; i < source.length; i++) {
-			if (FilterTableTreeMatches(tree, source[i]))
-				filtered.push(source[i]);
+		FilterTableDateProperties = FilterTableCollectDateProperties(tree, source);
+		try {
+			for (i = 0; i < source.length; i++) {
+				if (FilterTableTreeMatches(tree, source[i]))
+					filtered.push(source[i]);
+			}
+		} finally {
+			FilterTableDateProperties = null;
 		}
 		node.STAdata = filtered;
 	}
