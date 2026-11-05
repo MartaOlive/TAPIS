@@ -754,53 +754,135 @@ function GetSelectRangeSTA(event) {
 
 ////////////// SortBy (orderBy)
 
+var SortByTablesDialogColumns = [];
+var SortByTablesDialogCriteria = [];
+
 function ShowTableSelectSortByDialog(parentNode, node) {
 
 	saveNodeDialog("DialogSelectSortBy", node);
 
 	var data = parentNode.STAdata;
+	var singlePanel = document.getElementById("DialogSelectSortBySinglePanel");
+	var criteriaPanel = document.getElementById("DialogSelectSortByCriteriaPanel");
 
 	if (!data || !data.length) {
+		if (singlePanel) singlePanel.style.display = "";
+		if (criteriaPanel) criteriaPanel.style.display = "none";
 		document.getElementById("DialogSelectSortByRadioButtons").innerHTML = DonaCadena({cat: "No hi ha dades per mostrar.", spa: "No hay datos que mostrar.", eng: "No data to show."});
 		return;
 	}
 
 	var dataAttributesArray;
 	if (node.image == "SortBySTA.png"){ //STA
+		if (singlePanel) singlePanel.style.display = "";
+		if (criteriaPanel) criteriaPanel.style.display = "none";
 		dataAttributesArray=ShowPropagateNodeSelectedSelectExpands(node, parentNode)
 		var selectedExpands=GetSTASelectExpandNextOrigin(node.STASelectedExpands, node.STASelectExpandNextOrigin);
-	}else{ //tables
-
-		node.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) :  getDataAttributes(data);
-		dataAttributesArray= Object.keys(node.STAdataAttributes);
-		networkNodes.update(node);
-	}
-	var s = "";
-	var first=true;
-	for (var a = 0; a < dataAttributesArray.length; a++)
-	{
-		if (node.image == "SortBySTA.png"){
+		var s = "";
+		var first=true;
+		for (var a = 0; a < dataAttributesArray.length; a++)
+		{
 			if (dataAttributesArray[a].endsWith("@iot.navigationLink") || dataAttributesArray[a].charAt(0)=='@')
 				continue;
 			s += "<label><input type='radio'" + (selectedExpands && selectedExpands.orderBy ? 
-					(selectedExpands.orderBy.attribute=dataAttributesArray[a] ? 'checked="checked"' : '') : 
+					(selectedExpands.orderBy.attribute==dataAttributesArray[a] ? 'checked="checked"' : '') : 
 					(first ? 'checked="checked"' : '')) + " id='SelectSortByEntity_" + a + "' name='SelectSortByEntity'/> " + dataAttributesArray[a] + "</label><br>";
 			first=false;
-		}else{
-			s += "<label><input type='radio'" + 
-					(first ? 'checked="checked"' : '') + " id='SelectSortByEntity_" + a + "' name='SelectSortByEntity'/> " + dataAttributesArray[a] + "</label><br>";
-			first=false;
+		}
+		document.getElementById("DialogSelectSortByRadioButtons").innerHTML = s;
+		if (selectedExpands && selectedExpands.orderBy && selectedExpands.orderBy.desc) {
+			document.getElementById("SelectSortByDesc").checked=true;
+			document.getElementById("SelectSortByAsc").checked=false;
+		} else {
+			document.getElementById("SelectSortByDesc").checked=false;
+			document.getElementById("SelectSortByAsc").checked=true;
+		}
+	}else{ //tables — multi-criteria
+		if (singlePanel) singlePanel.style.display = "none";
+		if (criteriaPanel) criteriaPanel.style.display = "";
+		node.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) :  getDataAttributes(data);
+		dataAttributesArray= Object.keys(node.STAdataAttributes);
+		networkNodes.update(node);
+		SortByTablesDialogColumns = dataAttributesArray.slice();
+		SortByTablesDialogCriteria = SortByTablesNormalizeCriteria(node.STASortByCriteria, SortByTablesDialogColumns);
+		SortByTablesRenderCriteria();
+	}
+}
+
+function SortByTablesNormalizeCriteria(criteria, columns) {
+	var out = [], i, c, attr;
+	if (!columns || !columns.length)
+		return [{attribute: "", desc: false}];
+	if (criteria && criteria.length) {
+		for (i = 0; i < criteria.length; i++) {
+			c = criteria[i];
+			attr = c && c.attribute;
+			if (attr && columns.indexOf(attr) !== -1)
+				out.push({attribute: attr, desc: !!c.desc});
 		}
 	}
+	if (!out.length)
+		out.push({attribute: columns[0], desc: false});
+	return out;
+}
 
-	document.getElementById("DialogSelectSortByRadioButtons").innerHTML = s;
-	if (selectedExpands && selectedExpands.orderBy && selectedExpands.orderBy.desc) {
-		document.getElementById("SelectSortByDesc").checked=true;
-		document.getElementById("SelectSortByAsc").checked=false;
-	} else {
-		document.getElementById("SelectSortByDesc").checked=false;
-		document.getElementById("SelectSortByAsc").checked=true;
+function SortByTablesSyncCriteriaFromUI() {
+	var i, colEl, dirEl;
+	for (i = 0; i < SortByTablesDialogCriteria.length; i++) {
+		colEl = document.getElementById("SortByCriterionCol_" + i);
+		dirEl = document.getElementById("SortByCriterionDir_" + i);
+		if (colEl)
+			SortByTablesDialogCriteria[i].attribute = colEl.value;
+		if (dirEl)
+			SortByTablesDialogCriteria[i].desc = (dirEl.value === "desc");
 	}
+}
+
+function SortByTablesBuildCriterionRowHTML(i, crit) {
+	var s, a, col, esc;
+	s = "<div class='SortByCriterionRow' style='margin-bottom:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap'>";
+	s += "<select id='SortByCriterionCol_" + i + "'>";
+	for (a = 0; a < SortByTablesDialogColumns.length; a++) {
+		col = SortByTablesDialogColumns[a];
+		esc = String(col).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+		s += "<option value=\"" + esc + "\"" + (crit.attribute === col ? " selected" : "") + ">" + esc + "</option>";
+	}
+	s += "</select>";
+	s += "<select id='SortByCriterionDir_" + i + "'>";
+	s += "<option value='asc'" + (!crit.desc ? " selected" : "") + ">" + DonaCadena({cat: "ascendent", spa: "ascendente", eng: "ascending"}) + "</option>";
+	s += "<option value='desc'" + (crit.desc ? " selected" : "") + ">" + DonaCadena({cat: "descendent", spa: "descendente", eng: "descending"}) + "</option>";
+	s += "</select>";
+	if (SortByTablesDialogCriteria.length > 1)
+		s += "<button type='button' onclick='SortByTablesRemoveCriterion(" + i + ")'>" + DonaCadena({cat: "Treu", spa: "Quitar", eng: "Remove"}) + "</button>";
+	s += "</div>";
+	return s;
+}
+
+function SortByTablesRenderCriteria() {
+	var list = document.getElementById("DialogSelectSortByCriteriaList"), s = "", i;
+	if (!list)
+		return;
+	for (i = 0; i < SortByTablesDialogCriteria.length; i++)
+		s += SortByTablesBuildCriterionRowHTML(i, SortByTablesDialogCriteria[i]);
+	list.innerHTML = s;
+}
+
+function SortByTablesAddCriterion(event) {
+	if (event) {
+		event.preventDefault();
+		event.stopPropagation();
+	}
+	SortByTablesSyncCriteriaFromUI();
+	SortByTablesDialogCriteria.push({attribute: SortByTablesDialogColumns[0] || "", desc: false});
+	SortByTablesRenderCriteria();
+}
+
+function SortByTablesRemoveCriterion(i) {
+	SortByTablesSyncCriteriaFromUI();
+	if (SortByTablesDialogCriteria.length <= 1)
+		return;
+	SortByTablesDialogCriteria.splice(i, 1);
+	SortByTablesRenderCriteria();
 }
 
 function GetSelectSortBy(event) {
@@ -850,23 +932,27 @@ function GetSelectSortBySTA(parentNode, node){
 }
 
 function GetSelectSortBySTables(parentNode, node){
-	if (document.getElementById("DialogSelectSortByHTML").style.display != "none"){
-		var dataAttributesArray= Object.keys(node.STAdataAttributes);
-		var attributeSelected, AscOrDesc="asc";
-		for (var a = 0; a < dataAttributesArray.length; a++){
-
-			if (document.getElementById("SelectSortByEntity_" + a).checked) {
-				attributeSelected=dataAttributesArray[a];
-				break;
-			}
-		}
-		if (document.getElementById("SelectSortByDesc") && document.getElementById("SelectSortByDesc").checked)
-			AscOrDesc="desc";	
-
-		var newData= SortTableByColumns(deapCopy(parentNode.STAdata), [attributeSelected], AscOrDesc);
-		node.STAdata=newData;
-		networkNodes.update(node);
+	var criteriaPanel = document.getElementById("DialogSelectSortByCriteriaPanel");
+	if (criteriaPanel && criteriaPanel.style.display == "none")
+		return;
+	SortByTablesSyncCriteriaFromUI();
+	var columns = [], dirs = [], i, c;
+	for (i = 0; i < SortByTablesDialogCriteria.length; i++) {
+		c = SortByTablesDialogCriteria[i];
+		if (!c || !c.attribute)
+			continue;
+		columns.push(c.attribute);
+		dirs.push(c.desc ? "desc" : "asc");
 	}
+	if (!columns.length)
+		return;
+	node.STASortByCriteria = SortByTablesDialogCriteria.map(function (crit) {
+		return {attribute: crit.attribute, desc: !!crit.desc};
+	});
+	node.STAdata = SortTableByColumns(deapCopy(parentNode.STAdata), columns, dirs);
+	networkNodes.update(node);
+	if (typeof UpdateChildenTable === "function")
+		UpdateChildenTable(node);
 }
 
 ////////////// Merge expands circle

@@ -468,14 +468,31 @@ function JoinTablesData(dataLeft, dataRight, dataLeftAttributesNull, dataRightAt
 }
 
 
+/** Output column name for date rounding: Year / Month / Day / Hour / Minute / Second. */
+function groupByDateOutputColumnName(groupByParams) {
+	if (!groupByParams || !groupByParams.groupByDate || !groupByParams.groupByDate.length)
+		return "";
+	return groupByParams.groupByDate[0];
+}
+
+/** Source date column in the parent table (groupByDate = [rounding, sourceColumn]). */
+function groupByDateSourceColumnName(groupByParams) {
+	if (!groupByParams || !groupByParams.groupByDate || groupByParams.groupByDate.length < 2)
+		return "";
+	return groupByParams.groupByDate[1];
+}
+
 function GroupRecordsData(dataSorted, i_ini, i_end, dataAttributesArray, groupByParams) {
 	var record={}, recordSorted=dataSorted[i_ini], aggrFuncName, valuesString=null, values=null, r, countDefined=-1, dataAttributeName;
+	var dateOutCol = groupByDateOutputColumnName(groupByParams);
 	//Populate groupByAttr
-	//if (date) groupByParams.groupByAttr.push(groupByParams.groupByDate[1]) //Add date attribute
 	for (var j=0; j<dataAttributesArray.length; j++) {
 		if (groupByParams.groupByAttr.indexOf(dataAttributesArray[j])!=-1)
 			record[dataAttributesArray[j]]=recordSorted[dataAttributesArray[j]];
 	}
+	/* Rounded date group key: column named after the rounding (Year, Month, …). */
+	if (dateOutCol && Object.prototype.hasOwnProperty.call(recordSorted, dateOutCol))
+		record[dateOutCol] = recordSorted[dateOutCol];
 	
 	for (var j=0; j<dataAttributesArray.length; j++) {
 		dataAttributeName=dataAttributesArray[j];
@@ -582,9 +599,13 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 			dataCurrentAttributes[dataAttributesArray[j]]=deapCopy(dataAttributes[dataAttributesArray[j]]);  //list of attributes to groupBy 
 	}
 
-	if (groupByParams.groupByDate.length!=0){
-		dataCurrentAttributes[groupByParams.groupByDate[1]]=deapCopy(dataAttributes[groupByParams.groupByDate[1]]); //Date attribute
-		var x;
+	var dateSrcCol = groupByDateSourceColumnName(groupByParams);
+	var dateOutCol = groupByDateOutputColumnName(groupByParams);
+	var x, dateRaw;
+	if (groupByParams.groupByDate.length!=0 && dateSrcCol && dateOutCol){
+		dataCurrentAttributes[dateOutCol]=deapCopy(dataAttributes[dateSrcCol] || { type: "isodatetime" });
+		if (dataCurrentAttributes[dateOutCol])
+			dataCurrentAttributes[dateOutCol].type = "isodatetime";
 		switch (groupByParams.groupByDate[0].toLowerCase()){
 			case "year": 
 				x=4;
@@ -600,6 +621,9 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 			break;
 			case "minute": 
 				x=16;
+			break;
+			case "second":
+				x=19;
 			break;
 		}
 	}
@@ -627,17 +651,22 @@ function GroupByTableData(data, dataAttributesNull, dataCurrentAttributes, group
 			}
 			if (groupByParams.aggregationAttr[dataAttributesArray[j]])
 				recordSorted[dataAttributesArray[j]]=record[dataAttributesArray[j]];
-
-			if (groupByParams.groupByDate.length && groupByParams.groupByDate[1]) //Column for date
-				recordSorted[groupByParams.groupByDate[1]]=record[groupByParams.groupByDate[1]].substr(0,x); //part of the date to group
-
+		}
+		if (dateSrcCol && dateOutCol) {
+			dateRaw = record[dateSrcCol];
+			if (dateRaw == null || dateRaw === "")
+				recordSorted[dateOutCol] = dateRaw;
+			else {
+				dateRaw = String(dateRaw);
+				recordSorted[dateOutCol] = (typeof x === "number") ? dateRaw.substr(0, x) : dateRaw;
+			}
 		}
 		recordSorted["$$order$$"]=i;
 		dataSorted.push(recordSorted);
 	}
 
 	//Sort the data by groupByAttr 
-	var arrayToSort= groupByParams.groupByDate.length ? groupByParams.groupByAttr.concat(groupByParams.groupByDate[1]) : groupByParams.groupByAttr;
+	var arrayToSort= (dateOutCol) ? groupByParams.groupByAttr.concat(dateOutCol) : groupByParams.groupByAttr;
 	var sortRecords=function (a, b) {  
 		for (var j=0; j<arrayToSort.length; j++) {
 			
@@ -1149,35 +1178,32 @@ function sortValuesNumbersOrText(arrayValues) {
 'columnsSelected' is a list of column names
 'AscOrDesc' can be "asc" or "desc" and applies for all columns (what is questionable and might change in the future.
 */
-function SortTableByColumns(data, columnsSelected, AscOrDesc) { 
-	var column;	
-	if (AscOrDesc && AscOrDesc == "asc") {
-			data.sort(function (a, b) {
-				for (var i=0;i<columnsSelected.length;i++){
-					column= columnsSelected[i];
-					if (a[column] > b[column]) {
-						return 1;
-					}
-					if (a[column] < b[column]) {
-						return -1;
-					}
-				}
-				return 0;
-			})
-		} else {
-			data.sort(function (a, b) {
-				for (var i=0;i<columnsSelected.length;i++){
-					column= columnsSelected[i];
-					if (a[column] < b[column]) {
-						return 1;
-					}
-					if (a[column] > b[column]) {
-						return -1;
-					}
-				}
-				return 0;
-			})
+// AscOrDesc: "asc"|"desc", or an array of "asc"|"desc" (one per column).
+function SortTableByColumns(data, columnsSelected, AscOrDesc) {
+	var dirs, i, column, mul, va, vb;
+	if (!data || !columnsSelected || !columnsSelected.length)
+		return data;
+	dirs = [];
+	if (Array.isArray(AscOrDesc)) {
+		for (i = 0; i < columnsSelected.length; i++)
+			dirs.push(AscOrDesc[i] === "desc" ? "desc" : "asc");
+	} else {
+		for (i = 0; i < columnsSelected.length; i++)
+			dirs.push(AscOrDesc === "desc" ? "desc" : "asc");
+	}
+	data.sort(function (a, b) {
+		for (i = 0; i < columnsSelected.length; i++) {
+			column = columnsSelected[i];
+			mul = (dirs[i] === "desc") ? -1 : 1;
+			va = a[column];
+			vb = b[column];
+			if (va > vb)
+				return mul;
+			if (va < vb)
+				return -mul;
 		}
+		return 0;
+	});
 	return data;
 }
 

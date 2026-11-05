@@ -4723,6 +4723,7 @@ function barPlotDefaultSeriesGroup(parentId, info) {
 		axisX: guess,
 		axisY: values[0] || "",
 		valueColumns: values,
+		seriesBy: "",
 		columnAxes: {},
 		valueMin: num[0] || "",
 		valueMax: num[Math.min(1, Math.max(0, num.length - 1))] || num[0] || "",
@@ -4836,6 +4837,8 @@ function createDialogWithSelectWithGroupsBarPlot(node) {
 			cdns += barPlotSeriesSelectRow(i, "valueMin", DonaCadena({cat: "Inici:", spa: "Inicio:", eng: "Start:"}), attrs, groups[i].valueMin, node.id);
 			cdns += barPlotSeriesSelectRow(i, "valueMax", DonaCadena({cat: "Fi:", spa: "Fin:", eng: "End:"}), attrs, groups[i].valueMax, node.id);
 		} else {
+			if (t == "vertical" || t == "horizontal" || t == "stacked")
+				cdns += barPlotSeriesSelectRow(i, "seriesBy", DonaCadena({cat: "Sèries (color):", spa: "Series (color):", eng: "Series (color):"}), attrs, groups[i].seriesBy || "", node.id, true);
 			num = getNumericAttributeNames(attrs);
 			cdns += '<div class="DialogBarPlotSeriesRow"><span>' + DonaCadena({cat: "Valors (columnes):", spa: "Valores (columnas):", eng: "Values (columns):"}) + "</span>";
 			cdns += '<div class="DialogBarPlotValueColumns DialogBarPlotSeriesValueColumns">';
@@ -4917,10 +4920,14 @@ function updateBarPlotSeriesField(idx, key, value, nodeId) {
 			g.valueMin = cols[0] || "";
 		if (g.valueMax == value)
 			g.valueMax = cols[1] || cols[0] || "";
+		if (g.seriesBy == value)
+			g.seriesBy = "";
 		networkNodes.update(node);
 		createDialogWithSelectWithGroupsBarPlot(node);
 		return;
 	}
+	if (key == "seriesBy" && value && value == g.axisX)
+		g.seriesBy = "";
 	networkNodes.update(node);
 }
 
@@ -4943,6 +4950,49 @@ function barPlotParseNum(v) {
 function barPlotShortLabel(l) {
 	var s = "" + (l == null ? "" : l);
 	return s.length > 35 ? s.substring(0, 32) + "..." : s;
+}
+
+/**
+ * Categories on the axis + one dataset per distinct value of seriesCol (color/legend).
+ * E.g. Categories=Station, Series=Month → groups of bars per station, colored by month.
+ */
+function barPlotBuildByCategoryAndSeries(data, axisX, seriesCol, valueCols, options) {
+	var labelsFull = [], seriesKeys = [], values = {}, errMap = {}, i, rec, cat, ser, c, col, sk, vy, err, key;
+	valueCols = valueCols || [];
+	for (i = 0; i < (data || []).length; i++) {
+		rec = data[i];
+		cat = rec[axisX];
+		ser = rec[seriesCol];
+		if (ser === undefined || ser === null)
+			ser = "";
+		ser = "" + ser;
+		if (labelsFull.indexOf(cat) == -1)
+			labelsFull.push(cat);
+		for (c = 0; c < valueCols.length; c++) {
+			col = valueCols[c];
+			sk = (valueCols.length == 1) ? ser : (ser + " / " + col);
+			if (seriesKeys.indexOf(sk) == -1)
+				seriesKeys.push(sk);
+			if (!values[sk])
+				values[sk] = { "": {} };
+			vy = barPlotParseNum(rec[col]);
+			if (vy == null)
+				continue;
+			if (values[sk][""][cat] == null)
+				values[sk][""][cat] = 0;
+			values[sk][""][cat] += vy;
+			if (options && options.errorMode && options.errorMode != "none") {
+				options.axisY = col;
+				err = barPlotErrorForRow(rec, options, vy);
+				key = sk + "\t" + cat;
+				if (err && !errMap[key])
+					errMap[key] = err;
+			}
+		}
+	}
+	if (!seriesKeys.length)
+		seriesKeys = [""];
+	return { mode: "cat", labelsFull: labelsFull, seriesKeys: seriesKeys, stackKeys: [""], values: values, errMap: errMap };
 }
 
 /** Vertical / horizontal: unique categories on axis; each record = a clustered column (#1, #2, …), not summed. */
@@ -5591,6 +5641,7 @@ function DrawBarPlot(event) {
 			valueCols: valueCols,
 			valueMin: valueMin,
 			valueMax: valueMax,
+			seriesBy: (seriesGroups[gIdx].seriesBy && seriesGroups[gIdx].seriesBy != axisX) ? seriesGroups[gIdx].seriesBy : "",
 			columnAxes: seriesGroups[gIdx].columnAxes || {},
 			legend: seriesGroups[gIdx].legendText ||
 				((node.barPlotParentNodes[seriesGroups[gIdx].nodeSelected] || {}).nodeLabel) ||
@@ -5620,6 +5671,12 @@ function DrawBarPlot(event) {
 				}));
 				return;
 			}
+		} else if (act.seriesBy) {
+			if (options.barColorMode == "same")
+				options.barColorMode = "perSeries";
+			chartPack = barPlotBuildByCategoryAndSeries(data, axisX, act.seriesBy, valueCols, options);
+			if (stacked)
+				chartPack.stackKeys = chartPack.stackKeys || [""];
 		} else if (stacked) {
 			if (valueCols.length > 1)
 				chartPack = barPlotBuildStackedWide(data, axisX, valueCols);
@@ -5649,6 +5706,11 @@ function DrawBarPlot(event) {
 				localAgg = barPlotAggregateRows(data, axisX, axisY, "", "", act.valueMin, act.valueMax, true);
 				localAgg.mode = "cat";
 				barPlotMergeLocalIntoMerged(merged, labelsFull, errMap, localAgg, keyName, "");
+			} else if (act.seriesBy) {
+				if (options.barColorMode == "same")
+					options.barColorMode = "perSeries";
+				localAgg = barPlotBuildByCategoryAndSeries(data, axisX, act.seriesBy, valueCols, options);
+				barPlotMergeLocalIntoMerged(merged, labelsFull, errMap, localAgg, keyName, null);
 			} else if (stacked) {
 				if (valueCols.length > 1)
 					localAgg = barPlotBuildStackedWide(data, axisX, valueCols);

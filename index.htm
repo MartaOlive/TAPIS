@@ -480,7 +480,7 @@
 			</fieldset>
 			<br>
 			<fieldset>
-				<legend><span data-lang="{&quot;cat&quot;: &quot;Arrodoniment de la data per agrupar:&quot;, &quot;spa&quot;: &quot;Redondeo de la fecha para agrupar:&quot;, &quot;eng&quot;: &quot;GroupBy date rounding:&quot;}">GroupBy date rounding:</span></legend>
+				<legend><label><input type="checkbox" id="DialogGroupByDateRoundingEnable" onchange="onGroupByDateRoundingEnableChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Arrodoniment de la data per agrupar:&quot;, &quot;spa&quot;: &quot;Redondeo de la fecha para agrupar:&quot;, &quot;eng&quot;: &quot;GroupBy date rounding:&quot;}">GroupBy date rounding:</span></label></legend>
 				<span id="DialogGroupByDateTimeOptionsHTML">
 				</span>
 			</fieldset>
@@ -1100,14 +1100,21 @@
 
 	<dialog id="DialogSelectSortBy" onClose='hideNodeDialog("DialogSelectSortBy", event)'>
 		<form>
-			<fieldset id="DialogSelectSortByHTML">
-				<legend><span data-lang="{&quot;cat&quot;: &quot;Seleccioneu els criteris d'ordenació:&quot;, &quot;spa&quot;: &quot;Seleccione los criterios de ordenación:&quot;, &quot;eng&quot;: &quot;Select the criteria for sorting:&quot;}">Select the criteria for sorting:</span></legend>
-				<span id="DialogSelectSortByRadioButtons">
-				</span>
+			<div id="DialogSelectSortBySinglePanel">
+				<fieldset id="DialogSelectSortByHTML">
+					<legend><span data-lang="{&quot;cat&quot;: &quot;Seleccioneu els criteris d'ordenació:&quot;, &quot;spa&quot;: &quot;Seleccione los criterios de ordenación:&quot;, &quot;eng&quot;: &quot;Select the criteria for sorting:&quot;}">Select the criteria for sorting:</span></legend>
+					<span id="DialogSelectSortByRadioButtons">
+					</span>
+				</fieldset>
+				<br>
+				<label><input type="radio" id="SelectSortByAsc" name="SelectSortByArcDesc" checked /><span data-lang="{&quot;cat&quot;: &quot;ascendent&quot;, &quot;spa&quot;: &quot;ascendente&quot;, &quot;eng&quot;: &quot;ascending&quot;}">ascending</span></label>
+				<label><input type="radio" id="SelectSortByDesc" name="SelectSortByArcDesc" /><span data-lang="{&quot;cat&quot;: &quot;descendent&quot;, &quot;spa&quot;: &quot;descendente&quot;, &quot;eng&quot;: &quot;descending&quot;}">descending</span></label>
+			</div>
+			<fieldset id="DialogSelectSortByCriteriaPanel" style="display:none">
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Criteris d'ordenació:&quot;, &quot;spa&quot;: &quot;Criterios de ordenación:&quot;, &quot;eng&quot;: &quot;Sorting criteria:&quot;}">Sorting criteria:</span></legend>
+				<div id="DialogSelectSortByCriteriaList"></div>
+				<button type="button" onclick="SortByTablesAddCriterion(event)"><span data-lang="{&quot;cat&quot;: &quot;Afegeix un criteri&quot;, &quot;spa&quot;: &quot;Añadir un criterio&quot;, &quot;eng&quot;: &quot;Add criterion&quot;}">Add criterion</span></button>
 			</fieldset>
-			<br>
-			<label><input type="radio" id="SelectSortByAsc" name="SelectSortByArcDesc" checked /><span data-lang="{&quot;cat&quot;: &quot;ascendent&quot;, &quot;spa&quot;: &quot;ascendente&quot;, &quot;eng&quot;: &quot;ascending&quot;}">ascending</span></label>
-			<label><input type="radio" id="SelectSortByDesc" name="SelectSortByArcDesc" /><span data-lang="{&quot;cat&quot;: &quot;descendent&quot;, &quot;spa&quot;: &quot;descendente&quot;, &quot;eng&quot;: &quot;descending&quot;}">descending</span></label>
 			<div class="center">
 				<button value="default" onClick="GetSelectSortBy(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;D'acord&quot;, &quot;spa&quot;: &quot;Aceptar&quot;, &quot;eng&quot;: &quot;OK&quot;}">OK</span></button>
 				<button value="cancel" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Cancel·la&quot;, &quot;spa&quot;: &quot;Cancelar&quot;, &quot;eng&quot;: &quot;Cancel&quot;}">Cancel</span></button>

@@ -186,8 +186,19 @@
 			return params;
 		}
 
+		function onGroupByDateRoundingEnableChange() {
+			var enableEl = document.getElementById("DialogGroupByDateRoundingEnable");
+			var enabled = !!(enableEl && enableEl.checked);
+			var i, el;
+			for (i = 0; i < GroupByDateTimeOptions.length; i++) {
+				el = document.getElementById("DialogGroupByDateTime" + GroupByDateTimeOptions[i].name);
+				if (el)
+					el.disabled = !enabled;
+			}
+		}
+
 		function ShowGroupByDialog(parentNode, node) {
-			var params, groupCols, aggr, dateRounding, el;
+			var params, groupCols, aggr, dateRounding, el, enableEl;
 			saveNodeDialog("DialogGroupBy", node);
 			params = groupByParamsForDialog(parentNode, node);
 			groupCols = groupByColumnsForDialog(params);
@@ -196,14 +207,27 @@
 			ShowTableSelectColumnsDialogSelect("GroupByAttributesAggr", parentNode, node, aggr, "CheckSelectedAggrGroupBy(event, \""+node.id+"\")");
 			showCheckRadioOptions("DialogGroupByDateTimeOptionsHTML", "DialogGroupByDateTime", GroupByDateTimeOptions, 1, "DialogGroupByDateTimeOption");
 			showCheckRadioOptions("DialogGroupByAggregationOptionsHTML", "DialogGroupByAggr", AggregationsOptions, 3, null, "AddSelectedOptionsToAggrGroupBy(event, '"+node.id+"')");
+			enableEl = document.getElementById("DialogGroupByDateRoundingEnable");
 			dateRounding = params && params.groupByDate && params.groupByDate.length ? params.groupByDate[0] : "";
+			if (enableEl)
+				enableEl.checked = !!dateRounding;
 			if (dateRounding) {
 				el = document.getElementById("DialogGroupByDateTime" + dateRounding);
 				if (el)
 					el.checked = true;
 			}
+			onGroupByDateRoundingEnableChange();
 			CheckSelectedAggrGroupBy(null, node.id);
 			return;
+		}
+
+		/** Date column for GroupBy: declared isodatetime or detected via statistics.js itIsADate(). */
+		function groupByIsDateColumn(data, dataAttributes, columnName) {
+			if (dataAttributes && dataAttributes[columnName] && dataAttributes[columnName].type == "isodatetime")
+				return true;
+			if (typeof itIsADate === "function" && data && data.length)
+				return itIsADate(data, columnName);
+			return false;
 		}
 
 		function GetGroupBy(event) {
@@ -220,13 +244,15 @@
 			}
 			var dataAttributes = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(data);
 			const dataAttributesArray = Object.keys(dataAttributes);
-			var dateTypeAttr=[], s;
+			var dateTypeAttr=[], s, d;
 
 			for (var a = 0; a < dataAttributesArray.length; a++) {
-				if (document.getElementById("GroupBySelects_" + a).checked) { //groupBy				
-					if(dataAttributes[dataAttributesArray[a]]["type"]=="isodatetime"){
+				if (document.getElementById("GroupBySelects_" + a).checked) { //groupBy
+					if (groupByIsDateColumn(data, dataAttributes, dataAttributesArray[a])) {
 						dateTypeAttr.push(dataAttributesArray[a]);
-					} else{
+						if (dataAttributes[dataAttributesArray[a]] && dataAttributes[dataAttributesArray[a]].type != "isodatetime")
+							dataAttributes[dataAttributesArray[a]].type = "isodatetime";
+					} else {
 						node.groupByParams.groupByAttr.push(dataAttributesArray[a]);
 					}
 				}
@@ -236,17 +262,35 @@
 				
 			}
 
-			for (var i = 0; i < GroupByDateTimeOptions.length; i++) { //radioButtons (time period to groupBy)
-				if (document.getElementById("DialogGroupByDateTime" + GroupByDateTimeOptions[i].name).checked) {
-					node.groupByParams.groupByDate.push(GroupByDateTimeOptions[i].name);
-					break;
+			var roundingEnabled = !!(document.getElementById("DialogGroupByDateRoundingEnable") &&
+				document.getElementById("DialogGroupByDateRoundingEnable").checked);
+			if (roundingEnabled) {
+				for (var i = 0; i < GroupByDateTimeOptions.length; i++) { // radio: rounding unit
+					if (document.getElementById("DialogGroupByDateTime" + GroupByDateTimeOptions[i].name).checked) {
+						node.groupByParams.groupByDate.push(GroupByDateTimeOptions[i].name);
+						break;
+					}
+				}
+				if (!node.groupByParams.groupByDate.length) {
+					alert(DonaCadena({cat: "Seleccioneu la unitat d'arrodoniment de la data (any, mes, dia…).", spa: "Seleccione la unidad de redondeo de la fecha (año, mes, día…).", eng: "Select the date rounding unit (year, month, day…)."}));
+					return;
 				}
 			}
 
-
-			if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length>1) alert(DonaCadena({cat: "Per aplicar l'arrodoniment de dates, només es permet seleccionar un atribut de tipus data", spa: "Para aplicar el redondeo de fechas, solo se permite seleccionar un atributo de tipo fecha", eng: "To apply date rounding only one date type attribute is allowed to be selected"}));
-			else if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==1) node.groupByParams.groupByDate.push(...dateTypeAttr);
-			else if (node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==0) alert(DonaCadena({cat: "Per aplicar l'arrodoniment de dates, cal seleccionar un atribut de tipus data", spa: "Para aplicar el redondeo de fechas, debe seleccionar un atributo de tipo fecha", eng: "To apply date rounding one date type attribute is has to be selected"}));
+			if (roundingEnabled && node.groupByParams.groupByDate.length==1 && dateTypeAttr.length>1) {
+				alert(DonaCadena({cat: "Per aplicar l'arrodoniment de dates, només es permet seleccionar un atribut de tipus data", spa: "Para aplicar el redondeo de fechas, solo se permite seleccionar un atributo de tipo fecha", eng: "To apply date rounding only one date type attribute is allowed to be selected"}));
+				return;
+			} else if (roundingEnabled && node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==1) {
+				node.groupByParams.groupByDate.push(...dateTypeAttr);
+			} else if (roundingEnabled && node.groupByParams.groupByDate.length==1 && dateTypeAttr.length==0) {
+				alert(DonaCadena({cat: "Per aplicar l'arrodoniment de dates, cal seleccionar un atribut de tipus data", spa: "Para aplicar el redondeo de fechas, debe seleccionar un atributo de tipo fecha", eng: "To apply date rounding one date type attribute is has to be selected"}));
+				return;
+			} else {
+				/* No date rounding: still group by date columns as normal keys. */
+				for (d = 0; d < dateTypeAttr.length; d++)
+					node.groupByParams.groupByAttr.push(dateTypeAttr[d]);
+				node.groupByParams.groupByDate = [];
+			}
 
 			if (parentNode && parentNode.id != null)
 				node.groupByParams.sourceParentId = parentNode.id;
