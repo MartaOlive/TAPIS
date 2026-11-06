@@ -20,15 +20,6 @@ Com completar una eina amb esborrany
 Input tools (inputtools.htm)
 ----------------------------
 
-	ogcAPICols	OAPI Collections
-		Estat:	FET
-		Tenim:	text + OGCAPICollections_image0, OAPIcollections_image1-3 (taula amb zoom)
-		Falta:	—
-
-	ogcAPIItems	OAPI items
-		Estat:	FET
-		Tenim:	text + OAPIItems_image1-7 (taules amb zoom)
-		Falta:	opcional: treure diàleg duplicat (image4 vs image7); recipes buides
 
 	csw	OGC CSW
 		Estat:	Esborrany comentat (no visible)
@@ -36,14 +27,14 @@ Input tools (inputtools.htm)
 		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
 
 	s3Service	S3 Service
-		Estat:	Esborrany comentat (no visible)
-		Tenim:	DRAFT HELP comentat; refs imatge al draft: s3Service_image0.png
-		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+		Estat:	FET
+		Tenim:	S3Service_image0-2 + s3Service_image3 (taula buckets de recipe08, amb zoom); Recipe 8
+		Falta:	—
 
 	s3Bucket	S3 Bucket
-		Estat:	Esborrany comentat (no visible)
-		Tenim:	DRAFT HELP comentat; refs imatge al draft: s3Bucket_image0.png
-		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+		Estat:	FET
+		Tenim:	image0 (nodeArrange), image1 (select row recipe08), image2 (diàleg), image3 (filesTable zoom); Recipe 8
+		Falta:	—
 
 	edc	DataSpace cat.
 		Estat:	Esborrany comentat (no visible)

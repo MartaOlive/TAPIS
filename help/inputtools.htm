@@ -239,17 +239,38 @@
                     <h2 class="toolPage_title"><img src="../s3Service.png" alt="icon s3Service"
                             class="toolPage_title_icon">S3 Service
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="s3Service_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>Setting Up the Node: </strong><img src="S3Service_image0.png"
+                            alt="S3 Service icon in TAPIS" class="toolPage_image"></p>
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>S3 Service</strong> tool connects to an Amazon S3 compatible endpoint (for example MinIO) and returns a table with the <strong>list of buckets</strong>.</p>
-                    <p>Double-click the dialog: enter the service <strong>Landing page URL</strong>, <strong>Access Key</strong> and <strong>Secret Key</strong> (HTTPS required). Confirm to load the buckets table. Continue with <strong>S3 Bucket</strong> to list objects inside a bucket.</p>
+                    <p>The <strong>S3 Service</strong> tool connects to an <strong>Amazon S3 compatible</strong>
+                        endpoint (for example MinIO) and returns a table with the <strong>list of buckets</strong>. It
+                        is a <strong>start node</strong>. HTTPS is required.</p>
+                    <p>Double-click the tool to open it. The form below will be displayed (title <i>S3 Service</i>).
+                        You can pick a <strong>Suggested service</strong> (for example AD4GD MinIO); TAPIS fills the
+                        URL and credentials automatically.</p>
+                    <img src="S3Service_image1.png" alt="S3 Service dialog with suggested services"
+                        class="toolPage_image">
+                    <p>Or fill the fields yourself:</p>
+                    <ul>
+                        <li><strong>Landing page URL</strong> — the S3 / MinIO endpoint</li>
+                        <li><strong>Access Key</strong> and <strong>Secret Key</strong></li>
+                        <li><strong>S3 Service</strong> — usually <code>s3</code></li>
+                    </ul>
+                    <img src="S3Service_image2.png" alt="S3 Service dialog filled from suggested service"
+                        class="toolPage_image">
+                    <p>Click <strong>OK</strong> to load the data. A successful result is a table of buckets (for
+                        example <strong>name</strong>, <strong>creationDate</strong>, and <strong>href</strong>).</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="s3Service_image3.png"
+                            alt="Table of S3 buckets" class="toolPage_image zoomable" style="width: 80%;"></div>
+                    <p>From there, select a bucket row and continue with <strong>S3 Bucket</strong> to list the objects
+                        inside that bucket.</p>
+                    <img src="s3Bucket_image1.png" alt="Select a bucket row then continue with S3 Bucket"
+                        class="toolPage_image">
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
-
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe08" target="_blank">Recipe 8:
-                                Connecting
-                                to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
+                                Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
                     </ul>
 
                 </div>
@@ -261,16 +282,32 @@
                         Bucket
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
-                    <img src="s3Bucket_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <img src="s3Bucket_image0.png" alt="S3 Service, Select Row and S3 Bucket nodes"
+                        class="toolPage_image">
+                    <p>Typical workflow: start from an <strong>S3 Service</strong> node, <strong>select one bucket
+                            row</strong>, then connect <strong>S3 Bucket</strong>. Credentials from the parent can be
+                        reused.</p>
+
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>S3 Bucket</strong> tool lists the <strong>files/objects</strong> available in one bucket (root and subfolders) as a table.</p>
-                    <p>Connect it after <strong>S3 Service</strong> with a bucket selected (credentials can be reused), or fill URL and keys in the dialog. The resulting table often includes hrefs that import tools (CSV, GeoJSON, …) can use.</p>
+                    <p>The <strong>S3 Bucket</strong> tool lists the <strong>files/objects</strong> available in one
+                        bucket (root and subfolders) as a table.</p>
+                    <p>Double-click the tool if you need to review or edit the connection. The dialog (title <i>S3
+                            Bucket</i>) shows the bucket URL and credentials (often already filled from the parent
+                        node). You can also enter them manually or use a suggested service.</p>
+                    <img src="s3Bucket_image2.png" alt="S3 Bucket dialog with bucket URL and credentials"
+                        class="toolPage_image">
+                    <p>Click <strong>OK</strong> to load the objects. A successful result is a table with columns such
+                        as <strong>href</strong>, <strong>lastModified</strong>, <strong>size</strong>,
+                        <strong>ownerName</strong> and <strong>storageClass</strong>. Those hrefs can feed import tools
+                        (CSV, GeoJSON, …).</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="s3Bucket_image3.png"
+                            alt="Table of objects in an S3 bucket" class="toolPage_image zoomable"
+                            style="width: 80%;"></div>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
-
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe08" target="_blank">Recipe 8:
-                                Connecting
-                                to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
+                                Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
                     </ul>
 
                 </div>
