@@ -91,23 +91,76 @@
                     </ul>
                 </div>
             </div>
-            <!-- Completeness help (commented out for now)
             <div class="toolPage_main" id="completness">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../completness.png" alt="icon completness"
                             class="toolPage_title_icon">Completeness
                     </h2>
-                    <p><strong>Completeness</strong> runs optional checks (numbers only, no pass/fail). You can enable
-                        one, two or all three, and each check can use a <strong>different column</strong>.</p>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="completness_image0.png" alt="Table connected to Completeness" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>
+                        The <strong>Completeness</strong> tool runs optional quality checks on a table
+                        (<strong>numbers only</strong>, no pass/fail). You can enable <strong>one, two or all three</strong>
+                        checks, and each check can use a <strong>different column</strong>.
+                        Connect it to any table node and <i>double left-click</i> to open the dialog.
+                    </p>
+                    <p>This is the sample data used in the example:</p>
+                    <img src="completness_image1.png" alt="Sample table for Completeness" class="toolPage_image">
+                    <p>The dialog has three independent blocks:</p>
+                    <img src="completness_image2.png" alt="Completeness dialog" class="toolPage_image">
                     <ul>
-                        <li><strong>Omission</strong>: empty or missing values in a column (empty records, omission rate,
-                            completeness rate, total records).</li>
-                        <li><strong>Commission (duplicates)</strong>: duplicated records in a column.</li>
-                        <li><strong>Commission excess</strong>: extra duplicates beyond an allowed duplicate count
-                            (0 = none allowed). Excess = max(0, duplicated - allowed); excess rate is versus total records.</li>
+                        <li><strong>Omission</strong>: counts empty or missing values in a column
+                            (empty records, omission rate, completeness rate, total records).
+                            Optionally <strong>flag the bad records</strong> with a true/false column.</li>
+                        <li><strong>Commission (duplicates)</strong>: counts duplicated values in a column.
+                            You can treat uppercase and lowercase as identical, and optionally
+                            <strong>flag the bad records</strong>.</li>
+                        <li><strong>Commission excess</strong>: compares the number of records with an
+                            <strong>expected records</strong> value.
+                            Excess = max(0, total − expected); the excess rate is versus total records.</li>
                     </ul>
-                    <p>Double-click the node to open the dialog. Results are added to <strong>metadata</strong> and can
-                        be shown again with the Quality results viewer.</p>
+                    <p>
+                        After pressing <i>Ok</i>, TAPIS shows a results dialog with the selected checks.
+                        The same results are stored in the node and can be opened again later with
+                        <a href="https://www.tapis.grumets.cat/tapis/help/dataquality.htm#qualityResultsViewer"
+                            target="_blank">Quality results viewer</a>.
+                    </p>
+                    <img src="completness_image3.png" alt="Completeness results dialog" class="toolPage_image">
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
+                </div>
+            </div>
+            <!-- Old separate Completeness Omission help (kept for reference; tool was expanded into Completeness)
+            <div class="toolPage_main" id="completenessomission">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../completenessomission.png" alt="icon completenessomission"
+                            class="toolPage_title_icon">Completness omission
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="completnessOmission_image0.png" alt="icon" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p><strong>Completeness Omission</strong> tool allows you to calculate the <strong>rate of completeness omission</strong>
+                        in your data. You can calculate the rate for <strong>one column</strong> at a time, but you <strong>can link as many nodes</strong> as
+                        you want to carry out different omission calculations. The result obtained each time will be added
+                        to the <strong>metadata</strong>.</p>
+                    <img src="completnessOmission_image5.png" alt="icon" class="toolPage_image">
+                    <p>To display the dialog, <i>double-click</i> the node with the left mouse button. This node is simple:
+                        it only includes a <strong>selector for the column to evaluate</strong> and a <strong>checkbox to create a new column</strong>. The
+                        value of this new column depends on whether the evaluated column contains a <strong>value (true)</strong> or is
+                        <strong>missing (false)</strong>.</p>
+                    <img src="completnessOmission_image1.png" alt="icon" class="toolPage_image">
+                    <p>This is the result of the calculation. This dialog only appears after calculating the rate. To view
+                        the result again, click on <a>Metadata</a> at the top of the table below.</p>
+                    <img src="completnessOmission_image2.png" alt="icon" class="toolPage_image">
+                    <p>When you click on Metadata, a dialog will appear showing all the <strong>metadata calculated so far</strong>.</p>
+                    <img src="completnessOmission_image3.png" alt="icon" class="toolPage_image">
+                    <p>Here you can see the new column created, containing <strong>true or false values</strong> based on the omission
+                        calculation.</p>
+                    <img src="completnessOmission_image4.png" alt="icon" class="toolPage_image">
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <p> <i>No one yet</i></p>
                 </div>
@@ -276,6 +329,30 @@
                     <!-- <ul>
 
                 </ul> -->
+                </div>
+            </div>
+            <div class="toolPage_main" id="formatConsistency">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../formatConsistency.png" alt="icon formatConsistency"
+                            class="toolPage_title_icon">Format consistency
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="formatConsistency_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Format consistency</strong> tool checks that values in a column follow an expected format (numbers only quality metrics, then a results dialog).</p>
+<p>Double-click: choose the <strong>Column</strong> and the <strong>Format</strong> (Date, Time, Coordinates variants, Telephone, Email, UUID, Decimal point, or a custom pattern). Press Ok to compute invalid counts/rates. Reopen results later with Quality results viewer.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="temporalQuality">

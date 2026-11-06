@@ -431,6 +431,17 @@
                         Unlike <strong>Select Row</strong> (one record via radio button), this tool allows
                         selecting <strong>multiple records</strong> at once.
                     </p>
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="selectRowsTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Select Rows</strong> table tool builds a new table with only the records you check in the dialog (multiple rows). Unlike Select Row (one radio button), you can keep several records.</p>
+<p>Double-click, tick the rows to keep, press OK. Note: this removes the STA URL from the result, so it is not recommended on pure STA query chains if you still need server-side queries.</p>
+<img src="selectRowsTable_image1.png" alt="icon" class="toolPage_image">
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="FilterRowsTable">
@@ -1146,6 +1157,16 @@
                                 STA</a></li>
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="AddColumnPnt_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Add point column</strong> tool adds a new point column by converting an existing geometry or coordinate representation.</p>
+<p>Double-click: choose the input type (GeoJSON geometry, WKT, DGGS zone, or longitude/latitude pair with CRS), choose the output type (GeoJSON, WKT, DGGS or coordinate columns), set the new column name(s), then Add.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="AddColumnBBox">
@@ -1163,6 +1184,16 @@
                                 STA</a></li>
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="AddColumnBBox_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Add BBox column</strong> tool adds a bounding-box column from an existing GeoJSON polygon, WKT, or min/max coordinate columns.</p>
+<p>Double-click: select input format and columns, output format and names, then Add. Useful before spatial filters or Save Layer / Open Map.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="ColumnsCalculator">
@@ -1540,6 +1571,30 @@
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
+            <div class="toolPage_main" id="TransposeTable">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../TransposeTable.png" alt="icon TransposeTable"
+                            class="toolPage_title_icon">Transpose table
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="TransposeTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Transpose table</strong> tool swaps rows and columns. New column names come from the values of a chosen <strong>header column</strong>.</p>
+<p>Double-click: select the Header column and the name of the attribute column that will hold the old column names, then OK.</p>
+
+                    -->
+
+                </div>
+            </div>
             <div class="toolPage_main" id="ColumnStatistics">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../ColumnStatistics.png" alt="icon ColumnStatistics"
@@ -1723,6 +1778,16 @@
                                 of all observation features in an STA service</a></li>
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="SaveLayer_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Save Layer</strong> tool exports the table as GeoJSON (and optionally JSON schema / metaschema). It is a leaf node.</p>
+<p>Double-click: set Title, optional symbolizer, geometry source (geometry column, DGGS, or lon/lat), optional time series fields, then Save GeoJSON / schema. Requires coordinates or geometry in the table.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="guf">
@@ -1739,6 +1804,16 @@
                                 to a data catalogue and giving user feedback about a dataset</a></li>
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="guf_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Feedback</strong> (GUF) tool retrieves or adds geospatial user feedback related to the single row present in the table (for example a CSW record), using the NiMMbus repository.</p>
+<p>Connect a one-row table with dataURL/code information. Double-click: set Target, Title (required to add), Code and Codespace; then Add feedback, Edit previous, or Get feedback.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="uploadToIC">

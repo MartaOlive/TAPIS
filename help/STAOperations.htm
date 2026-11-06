@@ -59,15 +59,70 @@
                     <ul>
 
                     </ul>
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="RecursiveExpand_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Recursive Expand</strong> tool builds a new STA request that <strong>selects attributes</strong> and <strong>expands linked entities recursively</strong>, adding nested properties as columns.</p>
+<p>Connect it to an STA/STAplus entity node (not the bare service root). Double-click to open the select/expand dialog: tick the entities to expand and the attributes to keep. Confirm to reload with $select / $expand.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="ExpandColumnSTA">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../ExpandColumnSTA.png" alt="icon ExpandColumnSTA"
-                            class="toolPage_title_icon">Entity expand
+                            class="toolPage_title_icon">Expand entity
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <p>
+                        Connect an <strong>STA or STAplus service</strong> node to an <strong>entity</strong> node
+                        (for example <strong>Observations</strong>), and then connect the
+                        <strong>Expand entity</strong> tool to that entity.
+                    </p>
+                    <p>
+                        In this example, an STAplus service is loaded, the <strong>Observations</strong> entity is
+                        opened, and <strong>Datastream</strong> is expanded:
+                    </p>
+                    <img src="expandEntity_image0.png" alt="STA Observations connected to Expand Datastream"
+                        class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>
+                        The purpose of the <strong>Expand entity</strong> tool is to add a <strong>new column</strong>
+                        with the properties of a <strong>linked STA entity</strong>. The selection is applied as a
+                        <strong>new request to the STA service</strong> using <strong>$expand</strong>.
+                    </p>
+                    <p>
+                        To display the dialog, <i>double left-click</i> on the node. The dialog lists the related
+                        entities available through <i>@iot.navigationLink</i> fields (for example
+                        <strong>Datastream</strong>, <strong>FeatureOfInterest</strong>, etc.).
+                        <strong>Select the entity</strong> you want to expand and press the <i>OK</i> button.
+                    </p>
+                    <img src="expandEntity_image1.png" alt="Expand entity dialog with Datastream selected"
+                        class="toolPage_image">
+                    <p>
+                        The result is a table that keeps the original Observations columns and adds a
+                        <strong>Datastream</strong> column. That column contains the related Datastream as a
+                        <strong>JSON object</strong> (all properties together in a single cell).
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="expandEntity_image2.png"
+                            alt="Expand entity result table with Datastream JSON column"
+                            class="toolPage_image zoomable"></div>
+                    <p>
+                        Take a look at the new request that TAPIS internally makes:
+                    </p>
+                    <p><i>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Observations?<strong>$expand=</strong>Datastream</i>
+                    </p>
+                    <p>
+                        If you later want to <strong>see the added column more clearly</strong>, you can use the
+                        table tool
+                        <a href="https://www.tapis.grumets.cat/tapis/help/tableOperations.htm#SeparateColumns"
+                            target="_blank">Separate Columns</a>.
+                        It splits the JSON object that is currently stored in a single column and
+                        <strong>adds each property as its own column</strong>.
+                    </p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
@@ -95,6 +150,16 @@
 
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="MergeExpandsSTA_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Merge Expands</strong> tool merges the fields of two (or more) branches that started as expansions of the <strong>same entity</strong> into a single branch.</p>
+<p>Example: from Datastreams, one branch expands ObservedProperty and another expands Thing; connect both into Merge Expands to obtain one table with both sets of columns. There is no dialog; merging happens on connect.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="SelectColumnsSTA">
@@ -299,6 +364,16 @@
                                 current evolution of a variable captured by a particular party</a></li>
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="FilterRowsSTA_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Filter Rows</strong> (STA) tool keeps only records that match conditions you define. The filter is applied as a <strong>new request</strong> to the STA service ($filter), not only on the rows already loaded.</p>
+<p>Connect to a plural STA entity (or OGC API items/collections). Double-click to open the filter dialog, build conditions in the tree, check the filter preview, and confirm. The table reloads with matching records.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="FilterRowsByTime">
@@ -313,6 +388,16 @@
 
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="FilterRowsByTime_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Filter Rows by time</strong> tool filters STA records by a time interval. For Observations you can optionally <strong>aggregate by period</strong> (year, month, day, hour, minute).</p>
+<p>Connect to an entity that has a time property (for example Observations, Datastreams, Campaigns). Double-click: choose the time <strong>Property</strong>, set <strong>From</strong> and <strong>To</strong>, optional aggregation, then OK.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="GeoFilterPolSTA">
@@ -330,6 +415,16 @@
                                 temperatures from an area</a></li>
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="GeoFilterPolSTA_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Filter Rows by Polygon</strong> tool keeps STA records whose geometry (typically FeatureOfInterest) intersects a polygon.</p>
+<p>Connect two parents: (1) an STA entity list with URL, and (2) a table with a polygon geometry. On connect, TAPIS builds a geo.intersects filter and reloads. You can double-click to set how many records to request ($top).</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="GeoFilterPntSTA">
@@ -348,6 +443,16 @@
 
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="GeoFilterPntSTA_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Filter Rows by Distance</strong> tool keeps STA records closer than a given distance to a point (geo.distance).</p>
+<p>Double-click: choose the position source (FeatureOfInterest feature or Locations location), set the center point X/Y, operator and distance, then OK to reload the filtered table.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="SortBySTA">
@@ -493,6 +598,16 @@
 
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="UploadObservations_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Upload in STA</strong> tool posts observations from a table to a SensorThings API or STAplus server. It is a <strong>leaf node</strong>.</p>
+<p>Connect a table (sensor, CSV, etc.). Double-click: map columns for place description, longitude, latitude, date/time, sensor identity/type, set the STA service URL, choose layout options, then Upload. Authentication may be required. Status messages appear in the clarification area.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="CalculateStatisticsSTA">
@@ -507,6 +622,16 @@
 
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="CalculateStatisticsSTA_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Upload statistics in STA</strong> tool saves statistics of Observations to a SensorThings API or STAplus server. It is a leaf node.</p>
+<p>Typically connect from ObservedProperties (or a compatible STA path). Double-click the dialog to Create or Continue the upload of statistical values.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="CountResultsSTA">
@@ -597,6 +722,16 @@
                                 current evolution of a variable captured by a particular party</a></li>
                     </ul>
                     <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="OneValueSTA_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>One Value</strong> tool shows the last published observation value and can refresh it periodically. If WebSub is available it may subscribe; otherwise it polls every n seconds. It is a leaf node (cannot feed other dependents).</p>
+<p>Connect after Observations (or a filter of Observations). Double-click: choose the variable, optional alerting value, observation time field, refresh interval; OK to start, Stop refresh to pause.</p>
+
+                    -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="ViewQuerySTA">
@@ -633,22 +768,130 @@
                                 map
                                 of all observation features in an STA service</a></li>
                     </ul>
-
-                    <div class="toolPage_main" id="SubscribeSTA">
-                        <div class="toolPage_main_text">
-                            <h2 class="toolPage_title"><img src="../SubscribeSTA.png" alt="icon SubscribeSTA"
-                                    class="toolPage_title_icon">Subscribe and alert
-                            </h2>
-                            <p><strong>Setting Up the Node: </strong></p>
-                            <p><strong>How to Use the Node: </strong></p>
-                            <p> <strong>Recipes where this tool is used:</strong> </p>
-                            <ul>
-
-                            </ul>
-                            <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
-                        </div>
-                    </div>
                 </div>
+            </div>
+
+            <div class="toolPage_main" id="SubscribeSTA">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../SubscribeSTA.png" alt="icon SubscribeSTA"
+                            class="toolPage_title_icon">Subscribe and alert
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="SubscribeSTA_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>Subscribe and alert</strong> tool subscribes to change notifications on the parent STA/STAplus resource (WebSub). New records are appended to the table as they arrive.</p>
+<p>Connect to an STA entity that supports WebSub (not the bare service root). On connect, TAPIS copies the parent URL/data and starts listening for updates. (Subscribe dialog UI may be limited depending on build.)</p>
+
+                    -->
+
+                </div>
+            </div>
+
+            <div class="toolPage_main" id="me">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../me.png" alt="icon me"
+                            class="toolPage_title_icon">My party
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="me_image0.png" alt="STA Parties connected to My party" class="toolPage_image"
+                        style="height:350px;width: auto; ">
+
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>
+                        The <strong>My party</strong> tool asks the STAplus service for <strong>the Party that
+                            corresponds to the currently authenticated user</strong>.
+                        It must be connected <strong>after a Parties node</strong>; TAPIS does not allow linking it to
+                        other entity nodes.
+                    </p>
+                    <p>
+                        To open the dialog, <i>double left-click</i> on the node. The dialog only asks you to confirm
+                        that you want to retrieve your party information. There are no columns or filters to configure:
+                        click <i>OK</i> to send the request, or <i>Cancel</i> to close the dialog without changes.
+                    </p>
+                    <img src="me_image1.png" alt="My party confirmation dialog" class="toolPage_image">
+
+                    <p>
+                        After confirming, TAPIS appends an OData filter that uses the STAplus <strong>me()</strong>
+                        function on the <i>authId</i> property of Parties. The result is a table with the party record
+                        that matches the logged-in user (typically a single row).
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="me_image2.png" alt="My party result table"
+                            class="toolPage_image zoomable"></div>
+
+                    <p>
+                        This is the kind of request that TAPIS sends to the STA service:
+                    </p>
+                    <p><i>https://citiobs.demo.secure-dimensions.de/staplustest/v1.1/Parties?<strong>$filter=authId eq me()</strong></i>
+                    </p>
+                    <p>
+                        <strong>Note:</strong> the <i>me()</i> function only works when you are <strong>authenticated</strong>
+                        against the STAplus service. Without a valid login session, the request will fail or return no
+                        matching party.
+                    </p>
+
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
+                </div>
+            </div>
+
+            <div class="toolPage_main" id="staEntityBuilder">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../staEntityBuilder.png" alt="icon staEntityBuilder"
+                            class="toolPage_title_icon">STA Entity Builder
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="staEntityBuilder_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>STA Entity Builder</strong> configures and prepares STA entities and observations from sensor or table data <strong>without publishing</strong> them yet.</p>
+<p>Connect a table (Connect a sensor, Read SD, CSV, …). Double-click: review the STA service URL, include the entities you need, map columns (manual or from table), optionally save/load configuration, then <strong>Create table</strong> to produce a package preview. Continue with <strong>STA Publisher</strong> to send it to the server.</p>
+
+                    -->
+
+                </div>
+            </div>
+
+            <div class="toolPage_main" id="staPublisher">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../staPublisher.png" alt="icon staPublisher"
+                            class="toolPage_title_icon">STA Publisher
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+                    <!-- DRAFT HELP (review; images pending)
+
+<p><strong>Setting Up the Node: </strong></p>
+<img src="staPublisher_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+<p><strong>How to Use the Node: </strong></p>
+<p>The <strong>STA Publisher</strong> publishes to the STA/STAplus service the package prepared by <strong>STA Entity Builder</strong>. It is a leaf node and must be connected only after the Entity Builder.</p>
+<p>Double-click: review summary, counts and preview; press <strong>Publish to STA</strong> (or Retry pending). Logs show success or errors. You may also export JSON/PNG from the dialog.</p>
+
+                    -->
+
+                </div>
+            </div>
 
     </main>
 </body>

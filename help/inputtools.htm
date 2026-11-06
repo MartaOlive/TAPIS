@@ -141,13 +141,34 @@
                     <h2 class="toolPage_title"><img src="../ogcAPICols.png" alt="icon ogcAPICols"
                             class="toolPage_title_icon">OAPI Collections
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
+                    <p><strong>Setting Up the Node: </strong><img src="OGCAPICollections_image0.png"
+                            alt="OGC API collections icon in TAPIS" class="toolPage_image"></p>
+
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>OAPI Collections</strong> tool connects to an <strong>OGC API Features</strong> (or
+                        compatible) landing page and returns a table with the <strong>list of collections</strong>
+                        available on that service. It is a <strong>start node</strong>.</p>
+                    <p>Double-click the tool to open it. The form below will be displayed:</p>
+                    <img src="OAPIcollections_image1.png" alt="OGC API landing page dialog"
+                        class="toolPage_image">
+                    <p>Enter the service URL in the <strong>Landing page URL</strong> field. TAPIS provides several
+                        examples in <strong>Suggested services</strong>; select one and the URL is filled
+                        automatically.</p>
+                    <img src="OAPIcollections_image2.png" alt="Suggested OGC API services dropdown"
+                        class="toolPage_image">
+                    <p>Click <strong>OK</strong> to load the data. TAPIS appends <strong>/collections</strong> when
+                        needed. A successful result is a table of collections (for example <strong>id</strong>,
+                        <strong>title</strong>, <strong>link</strong>, and often an <strong>itemsLink</strong> column).
+                    </p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="OAPIcollections_image3.png"
+                            alt="Table of OGC API collections" class="toolPage_image zoomable" style="width: 80%;">
+                    </div>
+                    <p>From there you can continue with <strong>OAPI items</strong> to load the features of one
+                        collection (select a row that has an items link, then connect the items tool).</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
-
+                        <li>No one yet</li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
             </div>
             <div class="toolPage_main" id="ogcAPIItems">
@@ -156,12 +177,41 @@
                             class="toolPage_title_icon">OAPI items
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="OAPIItems_image5.png" alt="OGC API collections connected to OGC API items"
+                        class="toolPage_image">
+
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>OAPI items</strong> tool loads the <strong>features/items</strong> of one OGC API
+                        collection into a table. One of the columns usually contains the <strong>geometry</strong> as a
+                        JSON object.</p>
+                    <p>Typical workflow: start from an <strong>OAPI Collections</strong> node, <strong>select one
+                            collection row</strong>, then connect <strong>OAPI items</strong>.</p>
+                    <img src="OAPIItems_image1.png" alt="Select a collection then connect OAPI items"
+                        class="toolPage_image">
+                    <p>In the collections table, use a row that has an <strong>itemsLink</strong> (highlighted below).
+                        Some collections (for example coverages) may have no items link.</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="OAPIItems_image2.png"
+                            alt="itemsLink column in the collections table" class="toolPage_image zoomable"
+                            style="width: 80%;"></div>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="OAPIItems_image6.png"
+                            alt="Selected collection row with itemsLink" class="toolPage_image zoomable"
+                            style="width: 80%;"></div>
+                    <p>You can also open the items dialog and provide the collection items URL directly (or pick a
+                        suggested service). Confirm to request <strong>/items</strong> and fill the table.</p>
+                    <img src="OAPIItems_image4.png" alt="OGC API collection to extract items dialog"
+                        class="toolPage_image">
+                    <img src="OAPIItems_image7.png" alt="Items dialog with collection items URL"
+                        class="toolPage_image">
+                    <p>A successful result is a table of features for that collection (identifiers, property columns,
+                        and often an <strong>itemLink</strong> per feature).</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="OAPIItems_image3.png"
+                            alt="Table of OGC API items for a collection" class="toolPage_image zoomable"
+                            style="width: 80%;"></div>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
-
+                        <li>No one yet</li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="csw">
@@ -169,7 +219,11 @@
                     <h2 class="toolPage_title"><img src="../csw.png" alt="icon csw" class="toolPage_title_icon">OGC CSW
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="csw_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>OGC CSW</strong> tool connects to a <strong>Catalogue Service for the Web</strong> and returns a table of metadata records that have associated data.</p>
+                    <p>It is a <strong>start node</strong>. Double-click, enter the catalogue <strong>Landing page URL</strong> (or choose a suggested service). TAPIS builds a GetRecords request (limited number of records) and loads the result as a table.</p>
+                    <p>Typical next steps: open a record URL, import data, or use <strong>Feedback (GUF)</strong> on a single selected record.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
@@ -177,7 +231,7 @@
                                 Connecting
                                 to a data catalogue and giving user feedback about a dataset</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="s3Service">
@@ -186,7 +240,10 @@
                             class="toolPage_title_icon">S3 Service
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="s3Service_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>S3 Service</strong> tool connects to an Amazon S3 compatible endpoint (for example MinIO) and returns a table with the <strong>list of buckets</strong>.</p>
+                    <p>Double-click the dialog: enter the service <strong>Landing page URL</strong>, <strong>Access Key</strong> and <strong>Secret Key</strong> (HTTPS required). Confirm to load the buckets table. Continue with <strong>S3 Bucket</strong> to list objects inside a bucket.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
@@ -194,7 +251,7 @@
                                 Connecting
                                 to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="s3Bucket">
@@ -204,7 +261,10 @@
                         Bucket
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="s3Bucket_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>S3 Bucket</strong> tool lists the <strong>files/objects</strong> available in one bucket (root and subfolders) as a table.</p>
+                    <p>Connect it after <strong>S3 Service</strong> with a bucket selected (credentials can be reused), or fill URL and keys in the dialog. The resulting table often includes hrefs that import tools (CSV, GeoJSON, …) can use.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
@@ -212,7 +272,7 @@
                                 Connecting
                                 to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="edc">
@@ -222,14 +282,17 @@
                         cat.
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="edc_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>DataSpace cat.</strong> tool connects to an <strong>Eclipse Data Connector (EDC)</strong> catalogue and returns the list of <strong>assets</strong> as a table.</p>
+                    <p>Double-click: set <strong>Catalog URL</strong>, <strong>Catalog version</strong> and <strong>Consumer URL</strong> (HTTPS). Confirm to query the catalogue. Continue with <strong>DataSpace asset</strong> to negotiate a selected asset.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe10" target="_blank">Recipe 10:
                                 Connecting to a Eclipse Data Connector (Data Space)</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="edcAsset">
@@ -238,14 +301,17 @@
                             class="toolPage_title_icon">DataSpace asset
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="edcAsset_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>DataSpace asset</strong> tool prepares / negotiates an EDC asset from a catalogue row (needs fields such as assetId and offerId).</p>
+                    <p>Connect it after a <strong>DataSpace cat.</strong> node with one asset selected. There is no separate configuration form: negotiation uses the parent consumer URL and the selected asset fields. The result is a prepared asset node for further use.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe10" target="_blank">Recipe 10:
                                 Connecting to a Eclipse Data Connector (Data Space)</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="ImportCSV">
@@ -254,7 +320,11 @@
                             class="toolPage_title_icon">CSV
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="ImportCSV_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>CSV</strong> tool imports a CSV file and returns a table. It can be a start node, or connected after a row that provides a data URL.</p>
+                    <p>Double-click the dialog to set: <strong>Delimiter</strong> (character, Tab, or Auto), <strong>Encoding</strong>, whether the first line contains field names, whether to import numbers as strings, and optional <strong>Meaning</strong> (CSVW). Choose the CSV source: local file or URL.</p>
+                    <p>After loading, the data appear as a normal TAPIS table for further table or visualization tools.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
@@ -277,7 +347,7 @@
                                 Pivoting
                                 a table, from values in the rows of a selected column to new columns</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="ImportDBF">
@@ -286,12 +356,15 @@
                             class="toolPage_title_icon">DBF
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="ImportDBF_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>DBF</strong> tool imports a DBASE III+, IV or extended DBF file and returns an attribute table.</p>
+                    <p>Double-click: choose a <strong>local file</strong> or a <strong>URL</strong>, then Load. The resulting table can be used with generic table tools.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="ImportGPKG">
@@ -300,7 +373,10 @@
                             class="toolPage_title_icon">SQLite and GPKG
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="ImportGPKG_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>SQLite and GPKG</strong> tool opens a SQLite or GeoPackage database and returns a table listing the <strong>tables</strong> inside the file.</p>
+                    <p>Double-click: pick a local file or URL. Then connect <strong>GeoPack Table</strong> and select one table name to load its rows.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
@@ -308,7 +384,7 @@
                                 Determining data quality of a sequence of observations from a Geopackage equivalent to a
                                 STA</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="ImportGPKGTable">
@@ -317,7 +393,10 @@
                             class="toolPage_title_icon">GeoPack Table
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="ImportGPKGTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>GeoPack Table</strong> tool loads one table from a parent SQLite/GeoPackage node into a TAPIS data table.</p>
+                    <p>Connect it after <strong>SQLite and GPKG</strong> with a table row selected (tableName). There is no dialog: connecting loads that table’s records.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
@@ -325,7 +404,7 @@
                                 Determining data quality of a sequence of observations from a Geopackage equivalent to a
                                 STA</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="ImportJSONLD">
@@ -334,12 +413,15 @@
                             class="toolPage_title_icon">JSON-LD
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="ImportJSONLD_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>JSON-LD</strong> tool imports a JSON-LD file and flattens it into a table.</p>
+                    <p>In the dialog you can optionally <strong>Add geometry</strong> and <strong>Add observations</strong>, and choose a local file or URL. Confirm to build the table.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="ImportJSON">
@@ -348,12 +430,15 @@
                             class="toolPage_title_icon">JSON
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="ImportJSON_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>JSON</strong> tool imports JSON (object or array) into a table.</p>
+                    <p>Double-click: load from local file(s), a single URL, or a comma-separated list of URLs. The parsed records become STAdata for downstream tools.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="ImportGeoJSON">
@@ -362,7 +447,10 @@
                             class="toolPage_title_icon">GeoJSON
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="ImportGeoJSON_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>GeoJSON</strong> tool imports GeoJSON features as a table (one row per feature). One column contains the geometry JSON object.</p>
+                    <p>Optionally attach meaning/schema. Source can be a local file or URL. Useful before Open Map, Save Layer, or geometry column tools.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
@@ -370,7 +458,7 @@
                                 Selecting
                                 temperatures from an area</a></li>
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="CreateDGGS">
@@ -379,12 +467,15 @@
                             class="toolPage_title_icon">DGGS extent
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="CreateDGGS_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>DGGS extent</strong> tool creates a table of all DGGS zone codes that fall inside a geospatial bounding box. Optionally it can add parent levels and centroid coordinates.</p>
+                    <p>Double-click: set min/max longitude and latitude, choose the <strong>DGGS</strong> system and <strong>Level</strong>, optional parent levels and centroids, then Create.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
                 </div>
             </div>
             <div class="toolPage_main" id="CreateNewTable">
@@ -393,12 +484,50 @@
                             class="toolPage_title_icon">New table
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="CreateNewTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>New table</strong> tool creates an empty table from scratch.</p>
+                    <p>Double-click: enter a comma-separated <strong>list of column names</strong> and press Create. You can then edit records, add columns, or fill data with other table tools.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
+
+                </div>
+            </div>
+            <div class="toolPage_main" id="connectASensor">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../connectASensor.png" alt="icon connectASensor"
+                            class="toolPage_title_icon">Connect a sensor
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="connectASensor_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>Connect a sensor</strong> tool connects a physical sensor (USB or Bluetooth), collects measurements into a table, and makes them available for later tools (for example STA Entity Builder or Upload in STA).</p>
+                    <p>Connect it to an <strong>STA service</strong> node. Double-click the dialog to: set the reading interval; Connect via USB or Bluetooth; view sensor information; clear or pause/resume data; adjust kit options when available (SD/Wi-Fi mode, publish interval, calibration, battery). Collected rows appear in the table area.</p>
+                    <p>Close the dialog when finished; the table remains on the node for the workflow.</p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+
+                </div>
+            </div>
+            <div class="toolPage_main" id="readSDFromSensor">
+                <div class="toolPage_main_text">
+                    <h2 class="toolPage_title"><img src="../readSDFromSensor.png" alt="icon readSDFromSensor"
+                            class="toolPage_title_icon">Read SD from sensor
+                    </h2>
+                    <p><strong>Setting Up the Node: </strong></p>
+                    <img src="readSDFromSensor_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>Read SD from sensor</strong> tool reads CSV files from the SD card of a USB-connected sensor (Web Serial) and loads them as a TAPIS table.</p>
+                    <p>It is a start node (do not connect it from another node). Double-click: Connect via USB, browse files on the SD, preview CSV content, optionally save as CSV, and select a file to use in TAPIS.</p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <ul>
+
+                    </ul>
+
                 </div>
             </div>
             <div class="toolPage_main" id="staRoot">
@@ -408,13 +537,16 @@
                         root
                     </h2>
                     <p><strong>Setting Up the Node: </strong></p>
+                    <img src="staRoot_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
                     <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>STA root</strong> tool returns to the root of the SensorThings API or STAplus service in use: it removes path and query parameters from the previous node URL and reloads the entity list.</p>
+                    <p>Connect it under any STA/STAplus branch. There is no dialog; connecting rebuilds the root entity table for that service.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
 
                     </ul>
-                    <!-- <img src="STAplusService_image1.png" alt="icon" class="toolPage_image" > -->
                 </div>
+
             </div>
         </div>
     </main>

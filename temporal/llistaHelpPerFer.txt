@@ -1,0 +1,405 @@
+Llista help per fer (estat per eina)
+====================================
+
+Llegenda estat
+--------------
+	FET			Text visible + captures actives
+	TEXT_SENSE_CAPTURES	Hi ha text a la pagina, falten imatges
+	ESBORRANY_COMENTAT	Hi ha DRAFT HELP dins <!-- --> (no es veu)
+	TEXT_MES_ESBORRANY	Text visible + notes/draft comentat (ex. grafics)
+	BUIT			Sense contingut util
+
+Com completar una eina amb esborrany
+------------------------------------
+	1. Obrir el HTM, cercar id="Eina" i el bloc <!-- DRAFT HELP
+	2. Revisar el text vs dialeg real
+	3. Fer captures (setup / dialeg / resultat)
+	4. Descomentar el draft, deixar imgs amb .png, esborrar placeholders buits
+	5. Marcar com FET aqui
+
+Input tools (inputtools.htm)
+----------------------------
+
+	ogcAPICols	OAPI Collections
+		Estat:	FET
+		Tenim:	text + OGCAPICollections_image0, OAPIcollections_image1-3 (taula amb zoom)
+		Falta:	—
+
+	ogcAPIItems	OAPI items
+		Estat:	FET
+		Tenim:	text + OAPIItems_image1-7 (taules amb zoom)
+		Falta:	opcional: treure diàleg duplicat (image4 vs image7); recipes buides
+
+	csw	OGC CSW
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: csw_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	s3Service	S3 Service
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: s3Service_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	s3Bucket	S3 Bucket
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: s3Bucket_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	edc	DataSpace cat.
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: edc_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	edcAsset	DataSpace asset
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: edcAsset_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	ImportCSV	CSV
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportCSV_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	ImportDBF	DBF
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportDBF_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	ImportGPKG	SQLite and GPKG
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportGPKG_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	ImportGPKGTable	GeoPack Table
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportGPKGTable_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	ImportJSONLD	JSON-LD
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportJSONLD_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	ImportJSON	JSON
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportJSON_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	ImportGeoJSON	GeoJSON
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportGeoJSON_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	CreateDGGS	DGGS extent
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: CreateDGGS_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	CreateNewTable	New table
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: CreateNewTable_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	connectASensor	Connect a sensor
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: connectASensor_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text; draft resumit: ampliar detalls del dialeg si cal
+
+	readSDFromSensor	Read SD from sensor
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: readSDFromSensor_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text; draft resumit: ampliar detalls del dialeg si cal
+
+	staRoot	STA root
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: staRoot_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+STA tools (STAOperations.htm)
+-----------------------------
+
+	RecursiveExpandSTA	Recursive Expand
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: RecursiveExpand_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	ExpandColumnSTA	Expand entity
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~8 parags); 3 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	MergeExpandsSTA	Merge Expands
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: MergeExpandsSTA_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	SelectColumnsSTA	Select Columns
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~7 parags); 4 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	SelectRowSTA	Select Row
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~7 parags); 4 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	SelectResourceSTA	Select Resource
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~7 parags); 4 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	FilterRowsSTA	Filter Rows (només captura del dialog amb exemple TAPIS)
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: FilterRowsSTA_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	FilterRowsByTime	Filter Rows by time
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: FilterRowsByTime_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	GeoFilterPolSTA	Filter Rows by Polygon
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: GeoFilterPolSTA_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	GeoFilterPntSTA	Filter Rows by Distance
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: GeoFilterPntSTA_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	SortBySTA	Sort by
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~6 parags); 4 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	RangeSTA	Record range
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~5 parags); 4 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	UploadObservations	Upload in STA
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: UploadObservations_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text; draft resumit: ampliar detalls del dialeg si cal
+
+	CalculateStatisticsSTA	Upload statistics in STA
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: CalculateStatisticsSTA_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text; draft resumit: ampliar detalls del dialeg si cal
+
+	CountResultsSTA	Count results
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~6 parags); 4 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	ViewQuerySTA	View Query
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~2 parags); 4 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	OneValueSTA	One Value
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: OneValueSTA_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	SubscribeSTA	Subscribe and alert
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: SubscribeSTA_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text; draft resumit: ampliar detalls del dialeg si cal
+
+	me	My party
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~6 parags); 3 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	staEntityBuilder	STA Entity Builder
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: staEntityBuilder_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text; draft resumit: ampliar detalls del dialeg si cal
+
+	staPublisher	STA Publisher
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: staPublisher_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text; draft resumit: ampliar detalls del dialeg si cal
+
+Generic table tools (tableOperations.htm)
+-----------------------------------------
+
+	AddColumnPnt	Add point column
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: AddColumnPnt_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	AddColumnBBox	Add BBox column
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: AddColumnBBox_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	TransposeTable	Transpose table
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: TransposeTable_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	SaveLayer	Save Layer
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: SaveLayer_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	guf	Feedback
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: guf_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	SelectRowsTable	Select Rows
+		Estat:	Text visible, falten captures
+		Tenim:	text visible (~2 parags); DRAFT HELP comentat; refs imatge al draft: selectRowsTable_image0.png, selectRowsTable_image1.png
+		Falta:	fer captures i enllacar-les; revisar text vs dialeg actual
+
+Data quality (dataQuality.htm)
+------------------------------
+
+	completness	Completeness
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~4 parags); 4 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	formatConsistency	Format consistency
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: formatConsistency_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+Complex queries (complexQueries.htm)
+------------------------------------
+
+	ObsLayer	Observations Layer
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: ObsLayer_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+STA entities create/edit (STAentitiesSingular.htm)
+--------------------------------------------------
+
+	Campaign	Campaign
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: Campaign_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	Cell	Cell
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: Cell_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	Datastream	Datastream
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: Datastream_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	FeatureOfInterest	FeatureOfInterest
+		Estat:	Parcial
+		Tenim:	text visible (~31 parags); 15 imatge(s) activa(es)
+		Falta:	completar text i/o captures; fitxers que fallen: FeatureOfInterest_image0.png
+
+	HistoricalLocation	HistoricalLocation
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: HistoricalLocation_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	License	License
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: License_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	Location	Location
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~20 parags); 15 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	MultiDatastream	MultiDatastream
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: MultiDatastream_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	ObservationGroup	ObservationGroup
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: ObservationGroup_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	Observation	Observation
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: Observation_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	ObservedProperty	ObservedProperty
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~20 parags); 15 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	Party	Party
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~15 parags); 7 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	Relation	Relation
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: Relation_image0.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+
+	Sensor	Sensor
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~19 parags); 15 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	Thing	Thing
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~23 parags); 15 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+Statistics and visualization (StatisticsVisualize.htm)
+------------------------------------------------------
+
+	ScatterPlot	Scatter Plot
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~21 parags); 9 imatge(s) activa(es); DRAFT HELP comentat
+		Falta:	revisio opcional; verificar All/Series i UI actual abans de publicarlo
+
+	BarPlot	Bar Plot
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~9 parags); 7 imatge(s) activa(es); DRAFT HELP comentat
+		Falta:	revisio opcional; verificar All/Series i UI actual abans de publicarlo
+
+	circularChart	Circular Chart
+		Estat:	Text visible, falten captures
+		Tenim:	text visible (~4 parags); DRAFT HELP comentat; refs imatge al draft: circularChart_image0.png, circularChart_image1.png, circularChart_image2.png, circularChart_image3.png
+		Falta:	fer captures i enllacar-les; revisar text vs dialeg actual; verificar All/Series i UI actual abans de publicarlo
+
+	RadarPlot	Polar charts
+		Estat:	Esborrany comentat (no visible)
+		Tenim:	DRAFT HELP comentat; refs imatge al draft: RadarPlot_image0.png, RadarPlot_image1.png
+		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text; verificar All/Series i UI actual abans de publicarlo
+
+	ImageViewer	Image Viewer
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~4 parags); 5 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	OpenMap	Open Map
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~11 parags); 12 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+	ColumnStatistics	Columns statistics
+		Estat:	FET (text + captures actives)
+		Tenim:	text visible (~4 parags); 4 imatge(s) activa(es)
+		Falta:	revisio opcional
+
+Imatges referenciades que no existeixen (actives)
+-------------------------------------------------
+	STAentities.htm
+		Cells_image0.png
+
+	STAentitiesSingular.htm
+		FeatureOfInterest_image0.png
+
+	dataQuality.htm (nomes dins comentari antic Completeness Omission)
+		../completenessomission.png
