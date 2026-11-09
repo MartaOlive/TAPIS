@@ -1,0 +1,21 @@
+ID,Data,Ciutat,Comercial,Producte,Categoria,Quantitat,Import
+1,2026-03-01,Barcelona,Carlos,Impressora,Informatica,3,750
+2,2026-03-02,Girona,Laura,Disc dur,Accessoris,5,400
+3,2026-03-03,Tarragona,David,Portatil,Informatica,2,2200
+4,2026-03-04,Lleida,Sofia,Telefon,Telefonia,4,1600
+5,2026-03-05,Barcelona,Carlos,Audifons,Accessoris,8,320
+6,2026-03-06,Girona,Laura,Impressora,Informatica,2,500
+7,2026-03-07,Tarragona,David,Disc dur,Accessoris,6,480
+8,2026-03-08,Lleida,Sofia,Tablet,Informatica,3,1050
+9,2026-03-09,Barcelona,Carlos,Telefon,Telefonia,5,2000
+10,2026-03-10,Girona,Laura,Audifons,Accessoris,10,400
+11,2026-03-11,Tarragona,David,Impressora,Informatica,4,1000
+12,2026-03-12,Lleida,Sofia,Disc dur,Accessoris,7,560
+13,2026-03-13,Barcelona,Carlos,Tablet,Informatica,2,700
+14,2026-03-14,Girona,Laura,Telefon,Telefonia,3,1200
+15,2026-03-15,Tarragona,David,Audifons,Accessoris,12,480
+16,2026-03-16,Lleida,Sofia,Portatil,Informatica,1,1100
+17,2026-03-17,Barcelona,Carlos,Disc dur,Accessoris,9,720
+18,2026-03-18,Girona,Laura,Tablet,Informatica,5,1750
+19,2026-03-19,Tarragona,David,Telefon,Telefonia,2,800
+20,2026-03-20,Lleida,Sofia,Impressora,Informatica,3,750

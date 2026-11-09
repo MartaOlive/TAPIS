@@ -26,15 +26,6 @@ Input tools (inputtools.htm)
 		Tenim:	DRAFT HELP comentat; refs imatge al draft: csw_image0.png
 		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
 
-	s3Service	S3 Service
-		Estat:	FET
-		Tenim:	S3Service_image0-2 + s3Service_image3 (taula buckets de recipe08, amb zoom); Recipe 8
-		Falta:	—
-
-	s3Bucket	S3 Bucket
-		Estat:	FET
-		Tenim:	image0 (nodeArrange), image1 (select row recipe08), image2 (diàleg), image3 (filesTable zoom); Recipe 8
-		Falta:	—
 
 	edc	DataSpace cat.
 		Estat:	Esborrany comentat (no visible)
@@ -47,9 +38,9 @@ Input tools (inputtools.htm)
 		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
 
 	ImportCSV	CSV
-		Estat:	Esborrany comentat (no visible)
-		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportCSV_image0.png
-		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+		Estat:	FET (revisar captures si cal)
+		Tenim:	text polít; image0 (recipe04 node), image1 (recipe07 diàleg), image2 (recipe07 taula+zoom), image3 (recipe08 des d'S3); recipes 4,5,7,8,9,11
+		Falta:	opcional: captura icona més neta / diàleg local-file si es vol substituir les de recepta
 
 	ImportDBF	DBF
 		Estat:	Esborrany comentat (no visible)

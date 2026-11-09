@@ -356,33 +356,51 @@
                     <h2 class="toolPage_title"><img src="../ImportCSV.png" alt="icon ImportCSV"
                             class="toolPage_title_icon">CSV
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="ImportCSV_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>Setting Up the Node: </strong><img src="ImportCSV_image0.png"
+                            alt="CSV import node in TAPIS" class="toolPage_image"></p>
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>CSV</strong> tool imports a CSV file and returns a table. It can be a start node, or connected after a row that provides a data URL.</p>
-                    <p>Double-click the dialog to set: <strong>Delimiter</strong> (character, Tab, or Auto), <strong>Encoding</strong>, whether the first line contains field names, whether to import numbers as strings, and optional <strong>Meaning</strong> (CSVW). Choose the CSV source: local file or URL.</p>
-                    <p>After loading, the data appear as a normal TAPIS table for further table or visualization tools.</p>
+                    <p>The <strong>CSV</strong> tool imports a CSV (or compatible text) file and returns a TAPIS
+                        table. It can be a <strong>start node</strong>, or connected after a selected row that provides
+                        a data URL (for example from a catalogue, S3 bucket, or another table with
+                        <strong>href</strong> / <strong>dataURL</strong>).</p>
+                    <p>Double-click the tool to open <i>Import CSV file table</i>:</p>
+                    <img src="ImportCSV_image1.png" alt="Import CSV file table dialog" class="toolPage_image">
+                    <p>Configure:</p>
+                    <ul>
+                        <li><strong>Delimiter</strong> — a character (for example <code>;</code>), <strong>Tab</strong>,
+                            or <strong>Auto</strong></li>
+                        <li><strong>Encoding</strong> (for example Windows 1252 or UTF-8)</li>
+                        <li><strong>The first line contains field names</strong></li>
+                        <li><strong>Import numbers as strings</strong> (optional)</li>
+                    </ul>
+                    <p>Optionally set a <strong>Meaning source</strong> (CSVW): none, local CSVW file, CSVW URL, or
+                        automatic retrieve of shared meaning.</p>
+                    <p>Choose the <strong>CSV source</strong>: new based on CSVW, <strong>local file</strong> (Open
+                        CSV), or <strong>URL</strong> (type a URL or pick a suggested CSV URL, then Load). Click
+                        <strong>Done</strong> when finished.</p>
+                    <p>A successful import shows the records as a normal TAPIS table for further table or visualization
+                        tools.</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="ImportCSV_image2.png"
+                            alt="Table after importing a CSV" class="toolPage_image zoomable" style="width: 80%;">
+                    </div>
+                    <p>Example from a workflow that loads a CSV URL after selecting a file in an S3 bucket:</p>
+                    <img src="ImportCSV_image3.png" alt="CSV import dialog after selecting a file from S3"
+                        class="toolPage_image">
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
-
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe04" target="_blank">Recipe 4:
-                                Add
-                                semantics (meaning) to a table and share, retrieve and store it</a></li>
+                                Add semantics (meaning) to a table and share, retrieve and store it</a></li>
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
-                                Selecting
-                                temperatures from an area</a></li>
+                                Selecting temperatures from an area</a></li>
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe07" target="_blank">Recipe 7:
-                                Connecting
-                                to a data catalogue and giving user feedback about a dataset</a></li>
+                                Connecting to a data catalogue and giving user feedback about a dataset</a></li>
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe08" target="_blank">Recipe 8:
-                                Connecting
-                                to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
+                                Connecting to a S3 service and retreive and view a CSV file in a S3 bucket</a></li>
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe09" target="_blank">Recipe 9:
-                                Drawing a
-                                stacked bar chart</a></li>
+                                Drawing a stacked bar chart</a></li>
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe11" target="_blank">Recipe 11:
-                                Pivoting
-                                a table, from values in the rows of a selected column to new columns</a></li>
+                                Pivoting a table, from values in the rows of a selected column to new columns</a></li>
                     </ul>
 
                 </div>

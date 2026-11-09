@@ -1,0 +1,372 @@
+{
+	"nodes": [
+		{
+			"id": "87qa8.r3ro2a",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"ID": 1,
+					"Data": "2026-01-05",
+					"Ciutat": "Barcelona",
+					"Comercial": "Anna",
+					"Producte": "Portatil",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 1800
+				},
+				{
+					"ID": 2,
+					"Data": "2026-01-06",
+					"Ciutat": "Girona",
+					"Comercial": "Pau",
+					"Producte": "Teclat",
+					"Categoria": "Accessoris",
+					"Quantitat": 5,
+					"Import": 150
+				},
+				{
+					"ID": 3,
+					"Data": "2026-01-07",
+					"Ciutat": "Tarragona",
+					"Comercial": "Marta",
+					"Producte": "Monitor",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 750
+				},
+				{
+					"ID": 4,
+					"Data": "2026-01-08",
+					"Ciutat": "Lleida",
+					"Comercial": "Joan",
+					"Producte": "Mouse",
+					"Categoria": "Accessoris",
+					"Quantitat": 10,
+					"Import": 200
+				},
+				{
+					"ID": 5,
+					"Data": "2026-01-09",
+					"Ciutat": "Barcelona",
+					"Comercial": "Anna",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 4,
+					"Import": 1200
+				},
+				{
+					"ID": 6,
+					"Data": "2026-01-10",
+					"Ciutat": "Girona",
+					"Comercial": "Pau",
+					"Producte": "Portatil",
+					"Categoria": "Informatica",
+					"Quantitat": 1,
+					"Import": 900
+				},
+				{
+					"ID": 7,
+					"Data": "2026-01-11",
+					"Ciutat": "Tarragona",
+					"Comercial": "Marta",
+					"Producte": "Teclat",
+					"Categoria": "Accessoris",
+					"Quantitat": 8,
+					"Import": 240
+				},
+				{
+					"ID": 8,
+					"Data": "2026-01-12",
+					"Ciutat": "Lleida",
+					"Comercial": "Joan",
+					"Producte": "Monitor",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 500
+				},
+				{
+					"ID": 9,
+					"Data": "2026-01-13",
+					"Ciutat": "Barcelona",
+					"Comercial": "Anna",
+					"Producte": "Mouse",
+					"Categoria": "Accessoris",
+					"Quantitat": 6,
+					"Import": 120
+				},
+				{
+					"ID": 10,
+					"Data": "2026-01-14",
+					"Ciutat": "Girona",
+					"Comercial": "Pau",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 900
+				},
+				{
+					"ID": 11,
+					"Data": "2026-02-01",
+					"Ciutat": "Tarragona",
+					"Comercial": "Marta",
+					"Producte": "Portatil",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 1800
+				},
+				{
+					"ID": 12,
+					"Data": "2026-02-02",
+					"Ciutat": "Lleida",
+					"Comercial": "Joan",
+					"Producte": "Teclat",
+					"Categoria": "Accessoris",
+					"Quantitat": 4,
+					"Import": 120
+				},
+				{
+					"ID": 13,
+					"Data": "2026-02-03",
+					"Ciutat": "Barcelona",
+					"Comercial": "Anna",
+					"Producte": "Monitor",
+					"Categoria": "Informatica",
+					"Quantitat": 5,
+					"Import": 1250
+				},
+				{
+					"ID": 14,
+					"Data": "2026-02-04",
+					"Ciutat": "Girona",
+					"Comercial": "Pau",
+					"Producte": "Mouse",
+					"Categoria": "Accessoris",
+					"Quantitat": 7,
+					"Import": 140
+				},
+				{
+					"ID": 15,
+					"Data": "2026-02-05",
+					"Ciutat": "Tarragona",
+					"Comercial": "Marta",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 600
+				},
+				{
+					"ID": 16,
+					"Data": "2026-02-06",
+					"Ciutat": "Lleida",
+					"Comercial": "Joan",
+					"Producte": "Portatil",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 2700
+				},
+				{
+					"ID": 17,
+					"Data": "2026-02-07",
+					"Ciutat": "Barcelona",
+					"Comercial": "Anna",
+					"Producte": "Teclat",
+					"Categoria": "Accessoris",
+					"Quantitat": 9,
+					"Import": 270
+				},
+				{
+					"ID": 18,
+					"Data": "2026-02-08",
+					"Ciutat": "Girona",
+					"Comercial": "Pau",
+					"Producte": "Monitor",
+					"Categoria": "Informatica",
+					"Quantitat": 1,
+					"Import": 250
+				},
+				{
+					"ID": 19,
+					"Data": "2026-02-09",
+					"Ciutat": "Tarragona",
+					"Comercial": "Marta",
+					"Producte": "Mouse",
+					"Categoria": "Accessoris",
+					"Quantitat": 5,
+					"Import": 100
+				},
+				{
+					"ID": 20,
+					"Data": "2026-02-10",
+					"Ciutat": "Lleida",
+					"Comercial": "Joan",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 4,
+					"Import": 1200
+				}
+			],
+			"STAdataAttributes": {
+				"ID": {
+					"type": "integer"
+				},
+				"Data": {
+					"type": "string"
+				},
+				"Ciutat": {
+					"type": "string"
+				},
+				"Comercial": {
+					"type": "string"
+				},
+				"Producte": {
+					"type": "string"
+				},
+				"Categoria": {
+					"type": "string"
+				},
+				"Quantitat": {
+					"type": "integer"
+				},
+				"Import": {
+					"type": "integer"
+				}
+			},
+			"x": -39,
+			"y": -94
+		},
+		{
+			"id": "4t8d8.u32r5k",
+			"label": "Group by",
+			"image": "GroupBy.png",
+			"shape": "circularImage",
+			"groupByParams": {
+				"groupByAttr": [
+					"Ciutat"
+				],
+				"groupByDate": [],
+				"aggregationAttr": {
+					"Import": [
+						"Sum"
+					]
+				},
+				"sourceParentId": "87qa8.r3ro2a"
+			},
+			"STAdata": [
+				{
+					"Ciutat": "Barcelona",
+					"Import_Sum": 4640
+				},
+				{
+					"Ciutat": "Girona",
+					"Import_Sum": 2340
+				},
+				{
+					"Ciutat": "Lleida",
+					"Import_Sum": 4720
+				},
+				{
+					"Ciutat": "Tarragona",
+					"Import_Sum": 3490
+				}
+			],
+			"STAdataAttributes": {
+				"Ciutat": {
+					"type": "string"
+				},
+				"Import_Sum": {
+					"type": "integer"
+				}
+			},
+			"x": -10,
+			"y": 10
+		},
+		{
+			"id": "d10g.vkgvj2a",
+			"label": "Bar Plot",
+			"image": "BarPlot.png",
+			"shape": "circularImage",
+			"barPlotParentNodes": {
+				"4t8d8.u32r5k": {
+					"nodeLabel": "Group by",
+					"attrs": {
+						"Ciutat": {
+							"type": "string"
+						},
+						"Import_Sum": {
+							"type": "integer"
+						}
+					},
+					"numericNames": [
+						"Import_Sum"
+					],
+					"nonNumericNames": [
+						"Ciutat"
+					]
+				}
+			},
+			"barPlotOptions": {
+				"seriesColors": {
+					"__barUniform__": "#1f77b4"
+				},
+				"hiddenSeries": [],
+				"titleFontSize": 16,
+				"labelFontSize": 12,
+				"valueLabelFontSize": 12,
+				"showValueLabels": true,
+				"legendFontSize": 12,
+				"axisLabelFontSize": 12,
+				"errorMode": "none",
+				"errorColor": "#333333",
+				"errorDirection": "both",
+				"barColorMode": "same",
+				"confidencePct": 95,
+				"seriesGroups": [
+					{
+						"nodeSelected": "4t8d8.u32r5k",
+						"axisX": "Ciutat",
+						"axisY": "Import_Sum",
+						"valueColumns": [
+							"Import_Sum"
+						],
+						"seriesBy": "",
+						"columnAxes": {},
+						"valueMin": "Import_Sum",
+						"valueMax": "Import_Sum",
+						"legendText": "Group by"
+					}
+				],
+				"barType": "vertical",
+				"title": "",
+				"beginAtZero": true,
+				"groupByCategory": false,
+				"axisXLabel": "",
+				"axisYLabelLeft": "",
+				"axisYLabelRight": "",
+				"customErrorKind": "abs",
+				"customErrorVal": 1,
+				"axisX": "Ciutat",
+				"valueColumns": [
+					"Import_Sum"
+				],
+				"axisY": "Import_Sum",
+				"drawn": true
+			},
+			"x": 103,
+			"y": 24
+		}
+	],
+	"edges": [
+		{
+			"from": "87qa8.r3ro2a",
+			"to": "4t8d8.u32r5k",
+			"arrows": "from"
+		},
+		{
+			"from": "4t8d8.u32r5k",
+			"to": "d10g.vkgvj2a",
+			"arrows": "from"
+		}
+	]
+}
