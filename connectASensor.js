@@ -2678,6 +2678,15 @@ function updateConnectASensorNodeTable(record) {
 	if (!node.STAdata)
 		node.STAdata = [];
 	node.STAdata.push(record);
+	if (!node.STAmetadata || !node.STAmetadata.dataLineage || !node.STAmetadata.dataLineage.steps || !node.STAmetadata.dataLineage.steps.length) {
+		var parents = (typeof GetParentNodes === "function") ? GetParentNodes(node) : null;
+		if (parents && parents.length && parents[0].STAmetadata && typeof CopyParentMetadataToNode === "function")
+			CopyParentMetadataToNode(node, parents[0]);
+		if (typeof RecordProcessMetadata === "function")
+			RecordProcessMetadata(node);
+		else if (typeof InitInputNodeMetadata === "function")
+			InitInputNodeMetadata(node, {});
+	}
 	syncConnectASensorMeta(node);
 	updateConnectASensorConnectionButtons();
 	if (isConnectASensorDialogOpen()) {

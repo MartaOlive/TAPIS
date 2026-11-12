@@ -1420,63 +1420,362 @@ function getUpperCammelCaseAsTitle(type) {
 	return s;
 }
 
-function metadataAsHTML(metadata) {
-var cdns=[];
-	if (!metadata)
+function editRecordChangesAsHTML(selections) {
+	var cdns = [], i, e, esc;
+	if (!selections)
 		return "";
-	if (metadata.dataQualityInfos && metadata.dataQualityInfos.length) {
-		cdns.push("<h2>Data quality<h2>");
-		for (var q=0; q<metadata.dataQualityInfos.length; q++) {
-			for (var r=0; r<metadata.dataQualityInfos[q].reports.length; r++) {
-				if (q!=0 || r!=0)
-					cdns.push("<br>");
-				var report=metadata.dataQualityInfos[q].reports[r];
-				cdns.push("<hr style='width:30%; margin: auto;'><h3>", getUpperCammelCaseAsTitle(report.type), "</h3>");
-				if (report.measureIdentification) {
-					if (report.measureIdentification.code) {
-						// Avoid creating an iframe with a measure that does not exist and avoid the alert from this page.
-							cdns.push("<b>Measure:</b>", getUpperCammelCaseAsTitle(report.measureIdentification.code), qualityMLMeasures.includes(report.measureIdentification.code) ? UnfoldButtonIFrame("ShowQualitat_q"+q+"_r"+r, RootURLQualityML+"1.0/measure/"+report.measureIdentification.code) : "", "<br>");						
-							for (var d=0; d<report.measureIdentification.domains.length; d++) {
-							var domain=report.measureIdentification.domains[d];
-							cdns.push("<b>Domain:</b> ", getUpperCammelCaseAsTitle(domain.name), qualityMLDomains.includes(domain.name) ? UnfoldButtonIFrame("ShowQualitat_q"+q+"_r"+r+"_d"+d, RootURLQualityML+"1.0/domain/"+domain.name) : "", "<br>");							
-							if (domain.params && domain.params.length) {
-								for (var p=0; p<domain.params.length; p++)
-									cdns.push("<b>", domain.params[p].name, ":</b> ", domain.params[p].value, "<br>");
-							}
-						}
-					}
-					for (var rr=0; rr<report.results.length; rr++) {
-						var result=report.results[rr];
-						if (result.errorStatistic && result.errorStatistic.metric && result.errorStatistic.metric.name) {
-							var metric=result.errorStatistic.metric;
-							cdns.push("<b>", getUpperCammelCaseAsTitle(metric.name), qualityMLMetrics.includes(metric.name) ? UnfoldButtonIFrame("ShowQualitat_q"+q+"_r"+r+"_rr"+rr, RootURLQualityML+"1.0/metrics/"+metric.name) : "", ":</b> <big>");							
-							for (var v=0; v<report.results[rr].values.length; v++) {
-								cdns.push(report.results[rr].values[v]);
-								if (v+1<report.results[rr].values.length)
-									cdns.push(", ");
-							}
-							cdns.push("</big><br>");
-							if (metric.params && metric.params.length) {
-								for (var p=0; p<metric.params.length; p++)
-									cdns.push("<b>", metric.params[p].name, ":</b> ", metric.params[p].value, "<br>");
-							}
-						}
-						else
-						{
-							//cdns.push("<b>Result:</b> <small>(", result.type=="DQ_QuantitativeResult" ? "quantitative" : "conformance", ")</small><big>");
-							cdns.push("<b>Result:</b> <big>");
-							for (var v=0; v<report.results[rr].values.length; v++) {
-								cdns.push(report.results[rr].values[v]);
-								if (v+1<report.results[rr].values.length)
-									cdns.push(", ");
-							}
-							cdns.push("</big><br>");
-						}
-					}
+	esc = function (obj) {
+		try {
+			return String(JSON.stringify(obj, null, 2)).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+		} catch (err) {
+			return "";
+		}
+	};
+	if (selections.edited && selections.edited.length) {
+		cdns.push("<div style='margin-top:0.4em;'><b>", DonaCadena({cat: "Registres editats", spa: "Registros editados", eng: "Edited records"}), "</b><ul style='margin:0.2em 0 0 1.2em;'>");
+		for (i = 0; i < selections.edited.length; i++) {
+			e = selections.edited[i];
+			cdns.push("<li>#", (e.index != null ? e.index + 1 : "?"),
+				"<details style='margin-top:0.2em;'><summary>", DonaCadena({cat: "Abans / després", spa: "Antes / después", eng: "Before / after"}), "</summary>",
+				"<pre style='white-space:pre-wrap; font-size:11px; background:#f7f7f7; padding:0.4em;'>",
+				DonaCadena({cat: "Abans", spa: "Antes", eng: "Before"}), ":\n", esc(e.before), "\n\n",
+				DonaCadena({cat: "Després", spa: "Después", eng: "After"}), ":\n", esc(e.after),
+				"</pre></details></li>");
+		}
+		cdns.push("</ul></div>");
+	}
+	if (selections.created && selections.created.length) {
+		cdns.push("<div style='margin-top:0.4em;'><b>", DonaCadena({cat: "Registres creats", spa: "Registros creados", eng: "Created records"}), "</b><ul style='margin:0.2em 0 0 1.2em;'>");
+		for (i = 0; i < selections.created.length; i++) {
+			e = selections.created[i];
+			cdns.push("<li>#", (e.index != null ? e.index + 1 : "?"),
+				"<details style='margin-top:0.2em;'><summary>", DonaCadena({cat: "Contingut", spa: "Contenido", eng: "Content"}), "</summary>",
+				"<pre style='white-space:pre-wrap; font-size:11px; background:#f7f7f7; padding:0.4em;'>", esc(e.after), "</pre></details></li>");
+		}
+		cdns.push("</ul></div>");
+	}
+	if (selections.deleted && selections.deleted.length) {
+		cdns.push("<div style='margin-top:0.4em;'><b>", DonaCadena({cat: "Registres esborrats", spa: "Registros borrados", eng: "Deleted records"}), "</b><ul style='margin:0.2em 0 0 1.2em;'>");
+		for (i = 0; i < selections.deleted.length; i++) {
+			e = selections.deleted[i];
+			cdns.push("<li>#", (e.index != null ? e.index + 1 : "?"),
+				"<details style='margin-top:0.2em;'><summary>", DonaCadena({cat: "Contingut esborrat", spa: "Contenido borrado", eng: "Deleted content"}), "</summary>",
+				"<pre style='white-space:pre-wrap; font-size:11px; background:#f7f7f7; padding:0.4em;'>", esc(e.before), "</pre></details></li>");
+		}
+		cdns.push("</ul></div>");
+	}
+	return cdns.join("");
+}
+
+function processStepPayloadForDisplay(step) {
+	var payload = {}, key, skip = { tool: 1, label: 1, description: 1, selections: 1, at: 1, date: 1, branchSteps: 1 };
+	if (!step || typeof step !== "object")
+		return null;
+	if (step.selections && typeof step.selections === "object")
+		return step.selections;
+	for (key in step) {
+		if (Object.prototype.hasOwnProperty.call(step, key) && !skip[key])
+			payload[key] = step[key];
+	}
+	return Object.keys(payload).length ? payload : null;
+}
+
+function escapeHTMLText(s) {
+	return String(s == null ? "" : s)
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;");
+}
+
+function lineageIndentPad(level) {
+	return "<span style='display:inline-block; width:" + (level * 1.15) + "em;'></span>";
+}
+
+function formatLineageScalarText(value) {
+	if (value === null)
+		return "null";
+	if (value === undefined)
+		return "";
+	if (typeof value === "boolean")
+		return value ? "true" : "false";
+	return String(value);
+}
+
+// Hierarchical text with keys (no { } [ ] quotes); nested values indented under their key.
+function formatLineageValueHTML(value, level) {
+	var keys, i, html, child, itemLabel;
+	if (level == null)
+		level = 0;
+	if (value == null || typeof value !== "object")
+		return "<span>" + escapeHTMLText(formatLineageScalarText(value)) + "</span>";
+	if (Array.isArray(value)) {
+		if (!value.length)
+			return "<span style='color:#999;'>—</span>";
+		html = "";
+		for (i = 0; i < value.length; i++) {
+			child = value[i];
+			itemLabel = String(i + 1);
+			if (i)
+				html += "<br>";
+			html += lineageIndentPad(level);
+			if (child != null && typeof child === "object") {
+				html += "<span style='color:#085; font-weight:600;'>" + escapeHTMLText(itemLabel) + "</span>";
+				html += "<br>" + formatLineageValueHTML(child, level + 1);
+			} else {
+				html += "<span style='color:#085; font-weight:600;'>" + escapeHTMLText(itemLabel) + "</span>";
+				html += "<span style='color:#666;'>: </span>";
+				html += "<span>" + escapeHTMLText(formatLineageScalarText(child)) + "</span>";
+			}
+		}
+		return html;
+	}
+	keys = Object.keys(value);
+	if (!keys.length)
+		return "<span style='color:#999;'>—</span>";
+	html = "";
+	for (i = 0; i < keys.length; i++) {
+		child = value[keys[i]];
+		if (i)
+			html += "<br>";
+		html += lineageIndentPad(level);
+		html += "<span style='color:#085; font-weight:600;'>" + escapeHTMLText(keys[i]) + "</span>";
+		if (child != null && typeof child === "object")
+			html += "<br>" + formatLineageValueHTML(child, level + 1);
+		else {
+			html += "<span style='color:#666;'>: </span>";
+			html += "<span>" + escapeHTMLText(formatLineageScalarText(child)) + "</span>";
+		}
+	}
+	return html;
+}
+
+function lineageStepObjectForDisplay(step) {
+	var obj = {}, key, skip = { label: 1, description: 1, selections: 1, at: 1, branchSteps: 1 };
+	if (!step || typeof step !== "object")
+		return null;
+	if (step.tool != null) obj.tool = step.tool;
+	if (step.date != null) obj.date = step.date;
+	else if (step.at != null) obj.date = step.at;
+	if (step.selections && typeof step.selections === "object") {
+		for (key in step.selections) {
+			if (Object.prototype.hasOwnProperty.call(step.selections, key))
+				obj[key] = step.selections[key];
+		}
+	}
+	for (key in step) {
+		if (Object.prototype.hasOwnProperty.call(step, key) && !skip[key] && key !== "tool" && key !== "date")
+			obj[key] = step[key];
+	}
+	return obj;
+}
+
+function lineageToolTitle(step) {
+	var tool = step && step.tool ? step.tool : "";
+	var label;
+	if (step && step.label)
+		return DonaCadena(step.label);
+	if (typeof GetProcessToolLabel === "function" && tool) {
+		label = GetProcessToolLabel(tool + ".png");
+		if (label)
+			return DonaCadena(label);
+	}
+	return tool || DonaCadena({cat: "Pas", spa: "Paso", eng: "Step"});
+}
+
+function lineageStepSummary(step) {
+	var payload, summary;
+	if (!step)
+		return "";
+	if (step.description)
+		return step.description;
+	payload = processStepPayloadForDisplay(step);
+	if (typeof ProcessSelectionsSummary === "function" && step.tool)
+		summary = ProcessSelectionsSummary(step.tool + ".png", payload || step.selections || {});
+	return summary || "";
+}
+
+function processMetadataAsHTML(process) {
+	var cdns = [], steps, i, step, label, payload;
+	if (!process || !process.steps || !process.steps.length)
+		return "";
+	steps = process.steps;
+	cdns.push("<section style='margin:0 0 1em 0;'>");
+	cdns.push("<h2 style='margin:0 0 0.55em 0; font-size:1.15em; border-bottom:1px solid #ddd; padding-bottom:0.25em;'>",
+		DonaCadena({cat: "Llinatge de dades", spa: "Linaje de datos", eng: "Data lineage"}),
+		" <small style='color:#777; font-weight:normal;'>(", steps.length, " ",
+		DonaCadena({cat: "passos", spa: "pasos", eng: "steps"}), ")</small></h2>");
+	cdns.push("<ol style='list-style:none; padding:0; margin:0; counter-reset: lineage-step;'>");
+	for (i = 0; i < steps.length; i++) {
+		step = steps[i];
+		label = lineageToolTitle(step);
+		payload = lineageStepObjectForDisplay(step);
+		cdns.push("<li style='counter-increment: lineage-step; margin:0 0 0.75em 0; padding:0.7em 0.8em 0.7em 2.4em; background:#fafafa; border:1px solid #e5e5e5; border-radius:8px; position:relative;'>");
+		cdns.push("<span style='position:absolute; left:0.55em; top:0.7em; width:1.5em; height:1.5em; border-radius:50%; background:#555; color:#fff; font-size:0.85em; display:inline-flex; align-items:center; justify-content:center;'>", (i + 1), "</span>");
+		cdns.push("<div style='font-weight:700; font-size:1.02em; margin-bottom:0.45em;'>", escapeHTMLText(label), "</div>");
+		if (payload)
+			cdns.push("<div style='font-family: Consolas, Monaco, monospace; font-size:12px; line-height:1.45; background:#fff; border:1px solid #eee; border-radius:6px; padding:0.55em 0.7em; overflow:auto;'>",
+				formatLineageValueHTML(payload, 0), "</div>");
+		if (step.tool === "EditRecord")
+			cdns.push(editRecordChangesAsHTML(step.selections || step));
+		if (step.branchSteps && step.branchSteps.length) {
+			cdns.push("<div style='margin-top:0.5em;'>");
+			cdns.push("<div style='font-weight:600; margin-bottom:0.25em; color:#085;'>branchSteps</div>");
+			cdns.push("<div style='font-family: Consolas, Monaco, monospace; font-size:12px; line-height:1.45; background:#fff; border:1px solid #eee; border-radius:6px; padding:0.55em 0.7em; overflow:auto;'>");
+			cdns.push(formatLineageValueHTML(step.branchSteps.map(function (br) {
+				return lineageStepObjectForDisplay(br) || { tool: br.tool };
+			}), 0));
+			cdns.push("</div></div>");
+		}
+		cdns.push("</li>");
+	}
+	cdns.push("</ol></section>");
+	return cdns.join("");
+}
+
+function qualityParamsToObject(params) {
+	var obj = {}, i;
+	if (!params || !params.length)
+		return obj;
+	for (i = 0; i < params.length; i++) {
+		if (params[i] && params[i].name != null)
+			obj[params[i].name] = params[i].value;
+	}
+	return obj;
+}
+
+function qualityReportObjectForDisplay(report) {
+	var obj = {}, domains, domainObj, results, resultObj, metric, values, d, rr;
+	if (!report)
+		return null;
+	if (report.type)
+		obj.type = getUpperCammelCaseAsTitle(report.type);
+	if (report.measureIdentification) {
+		if (report.measureIdentification.code)
+			obj.measure = getUpperCammelCaseAsTitle(report.measureIdentification.code);
+		domains = report.measureIdentification.domains;
+		if (domains && domains.length) {
+			if (domains.length === 1) {
+				domainObj = { name: getUpperCammelCaseAsTitle(domains[0].name) };
+				Object.assign(domainObj, qualityParamsToObject(domains[0].params));
+				obj.domain = domainObj;
+			} else {
+				obj.domains = [];
+				for (d = 0; d < domains.length; d++) {
+					domainObj = { name: getUpperCammelCaseAsTitle(domains[d].name) };
+					Object.assign(domainObj, qualityParamsToObject(domains[d].params));
+					obj.domains.push(domainObj);
 				}
 			}
 		}
+		if (report.results && report.results.length) {
+			results = [];
+			for (rr = 0; rr < report.results.length; rr++) {
+				resultObj = {};
+				if (report.results[rr].errorStatistic && report.results[rr].errorStatistic.metric && report.results[rr].errorStatistic.metric.name) {
+					metric = report.results[rr].errorStatistic.metric;
+					resultObj.metric = getUpperCammelCaseAsTitle(metric.name);
+					Object.assign(resultObj, qualityParamsToObject(metric.params));
+				} else if (report.results[rr].type)
+					resultObj.resultType = report.results[rr].type;
+				values = report.results[rr].values;
+				if (values && values.length) {
+					if (values.length === 1)
+						resultObj.value = values[0];
+					else
+						resultObj.values = values.slice();
+				}
+				results.push(resultObj);
+			}
+			if (results.length === 1)
+				obj.result = results[0];
+			else if (results.length)
+				obj.results = results;
+		}
 	}
+	return obj;
+}
+
+function qualityReportLinksHTML(report, q, r) {
+	var cdns = [], d, rr, metric;
+	if (!report || !report.measureIdentification)
+		return "";
+	if (report.measureIdentification.code && qualityMLMeasures.includes(report.measureIdentification.code))
+		cdns.push("<span style='margin-right:0.6em;'>",
+			DonaCadena({cat: "Mesura", spa: "Medida", eng: "Measure"}),
+			UnfoldButtonIFrame("ShowQualitat_q" + q + "_r" + r, RootURLQualityML + "1.0/measure/" + report.measureIdentification.code),
+			"</span>");
+	if (report.measureIdentification.domains) {
+		for (d = 0; d < report.measureIdentification.domains.length; d++) {
+			if (qualityMLDomains.includes(report.measureIdentification.domains[d].name))
+				cdns.push("<span style='margin-right:0.6em;'>",
+					DonaCadena({cat: "Domini", spa: "Dominio", eng: "Domain"}),
+					UnfoldButtonIFrame("ShowQualitat_q" + q + "_r" + r + "_d" + d, RootURLQualityML + "1.0/domain/" + report.measureIdentification.domains[d].name),
+					"</span>");
+		}
+	}
+	if (report.results) {
+		for (rr = 0; rr < report.results.length; rr++) {
+			if (report.results[rr].errorStatistic && report.results[rr].errorStatistic.metric) {
+				metric = report.results[rr].errorStatistic.metric;
+				if (metric.name && qualityMLMetrics.includes(metric.name))
+					cdns.push("<span style='margin-right:0.6em;'>",
+						DonaCadena({cat: "Mètrica", spa: "Métrica", eng: "Metric"}),
+						UnfoldButtonIFrame("ShowQualitat_q" + q + "_r" + r + "_rr" + rr, RootURLQualityML + "1.0/metrics/" + metric.name),
+						"</span>");
+			}
+		}
+	}
+	return cdns.length ? ("<div style='margin:0.2em 0 0.45em 0; font-size:0.85em; color:#555;'>" + cdns.join("") + "</div>") : "";
+}
+
+function dataQualityInfosAsHTML(dataQualityInfos) {
+	var cdns = [], q, r, report, payload, n = 0, idx;
+	if (!dataQualityInfos || !dataQualityInfos.length)
+		return "";
+	for (q = 0; q < dataQualityInfos.length; q++) {
+		if (dataQualityInfos[q].reports)
+			n += dataQualityInfos[q].reports.length;
+	}
+	cdns.push("<section style='margin:1.1em 0 0 0; padding-top:0.85em; border-top:2px solid #c5d4e0;'>");
+	cdns.push("<h2 style='margin:0 0 0.55em 0; font-size:1.15em; border-bottom:1px solid #c5d4e0; padding-bottom:0.25em; color:#1f4e79;'>",
+		DonaCadena({cat: "Qualitat de les dades", spa: "Calidad de los datos", eng: "Data quality"}),
+		" <small style='color:#5a7a9a; font-weight:normal;'>(", n, ")</small></h2>");
+	cdns.push("<ol style='list-style:none; padding:0; margin:0;'>");
+	idx = 0;
+	for (q = 0; q < dataQualityInfos.length; q++) {
+		if (!dataQualityInfos[q].reports)
+			continue;
+		for (r = 0; r < dataQualityInfos[q].reports.length; r++) {
+			report = dataQualityInfos[q].reports[r];
+			payload = qualityReportObjectForDisplay(report);
+			idx++;
+			cdns.push("<li style='margin:0 0 0.75em 0; padding:0.7em 0.8em 0.7em 2.4em; background:#f4f8fb; border:1px solid #c5d4e0; border-left:4px solid #2a6fad; border-radius:8px; position:relative;'>");
+			cdns.push("<span style='position:absolute; left:0.55em; top:0.7em; width:1.5em; height:1.5em; border-radius:50%; background:#2a6fad; color:#fff; font-size:0.78em; display:inline-flex; align-items:center; justify-content:center;'>Q", idx, "</span>");
+			cdns.push("<div style='font-weight:700; font-size:1.02em; margin-bottom:0.2em; color:#1f4e79;'>",
+				escapeHTMLText(payload && payload.type ? payload.type : DonaCadena({cat: "Informe de qualitat", spa: "Informe de calidad", eng: "Quality report"})),
+				"</div>");
+			cdns.push(qualityReportLinksHTML(report, q, r));
+			if (payload)
+				cdns.push("<div style='font-family: Consolas, Monaco, monospace; font-size:12px; line-height:1.45; background:#fff; border:1px solid #d7e3ee; border-radius:6px; padding:0.55em 0.7em; overflow:auto;'>",
+					formatLineageValueHTML(payload, 0), "</div>");
+			cdns.push("</li>");
+		}
+	}
+	cdns.push("</ol></section>");
+	return cdns.join("");
+}
+
+function metadataAsHTML(metadata) {
+	var cdns = [];
+	if (!metadata)
+		return "";
+	if (metadata.dataLineage)
+		cdns.push(processMetadataAsHTML(metadata.dataLineage));
+	if (metadata.dataQualityInfos && metadata.dataQualityInfos.length)
+		cdns.push(dataQualityInfosAsHTML(metadata.dataQualityInfos));
+	if (!cdns.length)
+		cdns.push("<p style='color:#666;'>", DonaCadena({cat: "Aquest node encara no té metadades de llinatge ni de qualitat.", spa: "Este nodo aún no tiene metadatos de linaje ni de calidad.", eng: "This node has no lineage or quality metadata yet."}), "</p>");
 	return cdns.join("");
 }
 

@@ -106,6 +106,35 @@ function ShowTableSelectColumnsDialogSelect(div_id, parentNode, node, selected, 
 	document.getElementById("Dialog"+div_id+"HTML").innerHTML = cdns.join('');
 }
 
+// Re-apply stored SelectColumnsTable selection from parent data (no child propagation).
+function UpdateSelectColumnsTable(node) {
+	var parentNode, dataAttributes, dataAttributesArray, data, record, a, i, srcAttrs;
+	if (!node || !node.STASelectColumns)
+		return false;
+	parentNode = (typeof GetFirstParentNode === "function") ? GetFirstParentNode(node) : null;
+	if (!parentNode || !parentNode.STAdata)
+		return false;
+	srcAttrs = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
+	dataAttributesArray = Object.keys(srcAttrs);
+	dataAttributes = deapCopy(srcAttrs);
+	data = deapCopy(parentNode.STAdata);
+	for (i = 0; i < data.length; i++) {
+		record = data[i];
+		for (a = 0; a < dataAttributesArray.length; a++) {
+			if (!node.STASelectColumns[a])
+				delete record[dataAttributesArray[a]];
+		}
+	}
+	for (a = 0; a < dataAttributesArray.length; a++) {
+		if (!node.STASelectColumns[a])
+			delete dataAttributes[dataAttributesArray[a]];
+	}
+	node.STAdata = data;
+	node.STAdataAttributes = dataAttributes;
+	networkNodes.update(node);
+	return true;
+}
+
 function GetSelectColumns(event) {
 	hideNodeDialog("DialogSelectColumns", event);
 
@@ -118,41 +147,33 @@ function GetSelectColumns(event) {
 	if (parentNode.STAEntityName && node.image == "SelectColumnsSTA.png" && parentNode.STAURL)
 		return GetSelectColumnsSTA(event);
 
-
-	var dataAttributes = node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+	var dataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
 	var dataAttributesArray = Object.keys(dataAttributes);
+	var a;
 
-	for (var a = 0; a < dataAttributesArray.length; a++) {
+	for (a = 0; a < dataAttributesArray.length; a++) {
 		if (!document.getElementById("SelectColumns_" + a).checked)
 			break;
 	}
-	if (a == dataAttributesArray.length) //A unchecked attribute has been found ("for" breaks before ending).
+	if (a == dataAttributesArray.length) // all checked → nothing to do
 		return;
 
 	if (!node.STASelectColumns)
 		node.STASelectColumns=[];
 
 	//If there is no STA to query, the selection is done manually (table mode).
-	for (var a = 0; a < dataAttributesArray.length; a++) {
+	for (a = 0; a < dataAttributesArray.length; a++) {
 		if (document.getElementById("SelectColumns_" + a).checked)
 			node.STASelectColumns[a]=true;
 		else
 			node.STASelectColumns[a]=false;
 	}
 
-	var data=node.STAdata, record;
-	for (var i = 0; i < data.length; i++) {
-		record=data[i];
-		for (var a = 0; a < dataAttributesArray.length; a++) {
-			if (!node.STASelectColumns[a]) {
-				delete record[dataAttributesArray[a]];
-			}
-		}
-	}
-	for (var a = 0; a < dataAttributesArray.length; a++) {
-		if (!node.STASelectColumns[a])
-			delete dataAttributes[dataAttributesArray[a]];
-	}
+	UpdateSelectColumnsTable(node);
+	if (typeof RecordProcessMetadata === "function")
+		RecordProcessMetadata(node);
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
+	if (typeof UpdateChildenTable === "function")
+		UpdateChildenTable(node);
 }

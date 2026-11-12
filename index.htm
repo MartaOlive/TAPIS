@@ -315,6 +315,25 @@
 		</form>
 	</dialog>
 
+	<dialog id="DialogViewSTAMetadata" onClose='hideNodeDialog("DialogViewSTAMetadata", event)' style="max-width: min(92vw, 820px);">
+		<form>
+			<h3 style="margin: 0 0 0.6em 0;"><span data-lang="{&quot;cat&quot;: &quot;Metadades&quot;, &quot;spa&quot;: &quot;Metadatos&quot;, &quot;eng&quot;: &quot;Metadata&quot;}">Metadata</span></h3>
+			<p id="DialogViewSTAMetadataSubtitle" style="margin: 0 0 0.8em 0; color: #555; font-size: 0.95em;"></p>
+			<div id="DialogViewSTAMetadataHTML" style="max-height: 55vh; overflow: auto; margin-bottom: 10px; text-align: left;"></div>
+			<div id="DialogViewSTAMetadataJSONWrap" style="display: none; margin-bottom: 10px;">
+				<label for="DialogViewSTAMetadataJSON" style="display:block; margin-bottom:4px;"><span data-lang="{&quot;cat&quot;: &quot;JSON&quot;, &quot;spa&quot;: &quot;JSON&quot;, &quot;eng&quot;: &quot;JSON&quot;}">JSON</span></label>
+				<textarea id="DialogViewSTAMetadataJSON" readonly rows="14" style="width: 100%; box-sizing: border-box; font-family: Consolas, Monaco, monospace; font-size: 12px; white-space: pre;"></textarea>
+			</div>
+			<input type="hidden" id="DialogViewSTAMetadataNodeId"></input>
+			<input type="hidden" id="DialogViewSTAMetadataSourceNodeId"></input>
+			<div class="center" style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+				<button type="button" id="DialogViewSTAMetadataToggleJSON" onClick="ToggleViewSTAMetadataJSON(event)"><span data-lang="{&quot;cat&quot;: &quot;Mostra com a JSON&quot;, &quot;spa&quot;: &quot;Mostrar como JSON&quot;, &quot;eng&quot;: &quot;Show as JSON&quot;}">Show as JSON</span></button>
+				<button type="button" onClick="DownloadViewSTAMetadata(event)"><span data-lang="{&quot;cat&quot;: &quot;Descarrega JSON&quot;, &quot;spa&quot;: &quot;Descargar JSON&quot;, &quot;eng&quot;: &quot;Download JSON&quot;}">Download JSON</span></button>
+				<button value="cancel" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
+			</div>
+		</form>
+	</dialog>
+
 	<dialog id="DialogCreateUpdateDeleteEntity" onClose='hideNodeDialog("DialogCreateUpdateDeleteEntity", event)'>
 		<form>
 			<span id="dlgCreateUpdateDeleteEntityAttributes">
@@ -866,7 +885,8 @@
 			<div  style="text-align: center">
 				<button value="default" onClick="concatenateTables()" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;D'acord&quot;, &quot;spa&quot;: &quot;Aceptar&quot;, &quot;eng&quot;: &quot;Ok&quot;}">Ok</span></button>
 				<button value="cancel" formmethod="dialog" ><span data-lang="{&quot;cat&quot;: &quot;Cancel·la&quot;, &quot;spa&quot;: &quot;Cancelar&quot;, &quot;eng&quot;: &quot;Cancel&quot;}">Cancel</span></button>
-			</div>			
+			</div>
+			<input type="hidden" id="DialogConcatenateTablesNodeId"></input>
 		</form>		
 	</dialog>
 	

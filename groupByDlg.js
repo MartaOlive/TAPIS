@@ -298,6 +298,8 @@
 			var dataCurrentAttributes={};
 			node.STAdata=GroupByTableData(data, dataAttributes, dataCurrentAttributes, node.groupByParams);
 			node.STAdataAttributes=dataCurrentAttributes;
+			if (typeof RecordProcessMetadata === "function")
+				RecordProcessMetadata(node);
 			networkNodes.update(node);
 			updateQueryAndTableArea(node);
 			UpdateChildenTable(node);

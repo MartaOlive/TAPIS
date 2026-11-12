@@ -1045,6 +1045,8 @@ function ReadSDFromSensorSelectForTapis(event) {
 		: (typeof getDataAttributes === "function" ? getDataAttributes(mapped) : {});
 	node.STAdataAttributes = attrs;
 	syncReadSDConnectASensorMeta(node, state.openedFileName || "");
+	if (typeof InitInputNodeMetadata === "function")
+		InitInputNodeMetadata(node, {fileName: state.openedFileName || ""});
 	if (displayName)
 		rsdUpdateNodeLabel(node, displayName);
 	if (typeof networkNodes !== "undefined")

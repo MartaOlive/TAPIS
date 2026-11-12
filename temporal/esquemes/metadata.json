@@ -1,0 +1,813 @@
+{
+	"nodes": [
+		{
+			"id": "3imeu.b7p2tsg",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"ID": 1,
+					"Data": "2026-03-01",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Impressora",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 750
+				},
+				{
+					"ID": 2,
+					"Data": "2026-03-02",
+					"Ciutat": "Girona",
+					"Comercial": "Laura",
+					"Producte": "Disc dur",
+					"Categoria": "Accessoris",
+					"Quantitat": 5,
+					"Import": 400
+				},
+				{
+					"ID": 3,
+					"Data": "2026-03-03",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Portatil",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 2200
+				},
+				{
+					"ID": 4,
+					"Data": "2026-03-04",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 4,
+					"Import": 1600
+				},
+				{
+					"ID": 5,
+					"Data": "2026-03-05",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Audifons",
+					"Categoria": "Accessoris",
+					"Quantitat": 8,
+					"Import": 320
+				},
+				{
+					"ID": 6,
+					"Data": "2026-03-06",
+					"Ciutat": "Girona",
+					"Comercial": "Laura",
+					"Producte": "Impressora",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 500
+				},
+				{
+					"ID": 7,
+					"Data": "2026-03-07",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Disc dur",
+					"Categoria": "Accessoris",
+					"Quantitat": 6,
+					"Import": 480
+				},
+				{
+					"ID": 8,
+					"Data": "2026-03-08",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 1050
+				},
+				{
+					"ID": 9,
+					"Data": "2026-03-09",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 5,
+					"Import": 2000
+				},
+				{
+					"ID": 10,
+					"Data": "2026-03-10",
+					"Ciutat": "Girona",
+					"Comercial": "Laura",
+					"Producte": "Audifons",
+					"Categoria": "Accessoris",
+					"Quantitat": 10,
+					"Import": 400
+				},
+				{
+					"ID": 11,
+					"Data": "2026-03-11",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Impressora",
+					"Categoria": "Informatica",
+					"Quantitat": 4,
+					"Import": 1000
+				},
+				{
+					"ID": 12,
+					"Data": "2026-03-12",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Disc dur",
+					"Categoria": "Accessoris",
+					"Quantitat": 7,
+					"Import": 560
+				},
+				{
+					"ID": 13,
+					"Data": "2026-03-13",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 700
+				},
+				{
+					"ID": 14,
+					"Data": "2026-03-14",
+					"Ciutat": "Girona",
+					"Comercial": "Laura",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 3,
+					"Import": 1200
+				},
+				{
+					"ID": 15,
+					"Data": "2026-03-15",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Audifons",
+					"Categoria": "Accessoris",
+					"Quantitat": 12,
+					"Import": 480
+				},
+				{
+					"ID": 16,
+					"Data": "2026-03-16",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Portatil",
+					"Categoria": "Informatica",
+					"Quantitat": 1,
+					"Import": 1100
+				},
+				{
+					"ID": 17,
+					"Data": "2026-03-17",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Disc dur",
+					"Categoria": "Accessoris",
+					"Quantitat": 9,
+					"Import": 720
+				},
+				{
+					"ID": 18,
+					"Data": "2026-03-18",
+					"Ciutat": "Girona",
+					"Comercial": "Laura",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 5,
+					"Import": 1750
+				},
+				{
+					"ID": 19,
+					"Data": "2026-03-19",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 2,
+					"Import": 800
+				},
+				{
+					"ID": 20,
+					"Data": "2026-03-20",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Impressora",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 750
+				}
+			],
+			"STAmetadata": {
+				"dataLineage": {
+					"steps": [
+						{
+							"tool": "ImportCSV",
+							"date": "2026-11-12T14:09:23.188Z"
+						}
+					]
+				}
+			},
+			"STAdataAttributes": {
+				"ID": {
+					"type": "integer"
+				},
+				"Data": {
+					"type": "string"
+				},
+				"Ciutat": {
+					"type": "string"
+				},
+				"Comercial": {
+					"type": "string"
+				},
+				"Producte": {
+					"type": "string"
+				},
+				"Categoria": {
+					"type": "string"
+				},
+				"Quantitat": {
+					"type": "integer"
+				},
+				"Import": {
+					"type": "integer"
+				}
+			},
+			"x": 51,
+			"y": 144
+		},
+		{
+			"id": "4m85m.s3v3b",
+			"label": "Filter Rows",
+			"image": "FilterRowsTable.png",
+			"shape": "circularImage",
+			"STAmetadata": {
+				"dataLineage": {
+					"steps": [
+						{
+							"tool": "ImportCSV",
+							"date": "2026-11-12T14:09:23.188Z"
+						},
+						{
+							"tool": "FilterRowsTable",
+							"date": "2026-11-12T14:09:44.294Z",
+							"filter": "(Import > 500)"
+						}
+					]
+				}
+			},
+			"STAdata": [
+				{
+					"ID": 1,
+					"Data": "2026-03-01",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Impressora",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 750
+				},
+				{
+					"ID": 3,
+					"Data": "2026-03-03",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Portatil",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 2200
+				},
+				{
+					"ID": 4,
+					"Data": "2026-03-04",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 4,
+					"Import": 1600
+				},
+				{
+					"ID": 8,
+					"Data": "2026-03-08",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 1050
+				},
+				{
+					"ID": 9,
+					"Data": "2026-03-09",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 5,
+					"Import": 2000
+				},
+				{
+					"ID": 11,
+					"Data": "2026-03-11",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Impressora",
+					"Categoria": "Informatica",
+					"Quantitat": 4,
+					"Import": 1000
+				},
+				{
+					"ID": 12,
+					"Data": "2026-03-12",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Disc dur",
+					"Categoria": "Accessoris",
+					"Quantitat": 7,
+					"Import": 560
+				},
+				{
+					"ID": 13,
+					"Data": "2026-03-13",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 700
+				},
+				{
+					"ID": 14,
+					"Data": "2026-03-14",
+					"Ciutat": "Girona",
+					"Comercial": "Laura",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 3,
+					"Import": 1200
+				},
+				{
+					"ID": 16,
+					"Data": "2026-03-16",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Portatil",
+					"Categoria": "Informatica",
+					"Quantitat": 1,
+					"Import": 1100
+				},
+				{
+					"ID": 17,
+					"Data": "2026-03-17",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Disc dur",
+					"Categoria": "Accessoris",
+					"Quantitat": 9,
+					"Import": 720
+				},
+				{
+					"ID": 18,
+					"Data": "2026-03-18",
+					"Ciutat": "Girona",
+					"Comercial": "Laura",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 5,
+					"Import": 1750
+				},
+				{
+					"ID": 19,
+					"Data": "2026-03-19",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 2,
+					"Import": 800
+				},
+				{
+					"ID": 20,
+					"Data": "2026-03-20",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Impressora",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 750
+				}
+			],
+			"STAdataAttributes": {
+				"ID": {
+					"type": "integer"
+				},
+				"Data": {
+					"type": "string"
+				},
+				"Ciutat": {
+					"type": "string"
+				},
+				"Comercial": {
+					"type": "string"
+				},
+				"Producte": {
+					"type": "string"
+				},
+				"Categoria": {
+					"type": "string"
+				},
+				"Quantitat": {
+					"type": "integer"
+				},
+				"Import": {
+					"type": "integer"
+				}
+			},
+			"STAFilterTreeTable": {
+				"type": "group",
+				"logic": "and",
+				"children": [
+					{
+						"type": "condition",
+						"property": "Import",
+						"operator": "gt",
+						"value": "500",
+						"valueA": "",
+						"valueB": ""
+					}
+				]
+			},
+			"STAFilterExpr": "(Import > 500)",
+			"x": -40,
+			"y": 62
+		},
+		{
+			"id": "83jn3.7b323o",
+			"label": "Sort by",
+			"image": "SortByTables.png",
+			"shape": "circularImage",
+			"STAmetadata": {
+				"dataLineage": {
+					"steps": [
+						{
+							"tool": "ImportCSV",
+							"date": "2026-11-12T14:09:23.188Z"
+						},
+						{
+							"tool": "FilterRowsTable",
+							"date": "2026-11-12T14:09:44.294Z",
+							"filter": "(Import > 500)"
+						},
+						{
+							"tool": "SortByTables",
+							"date": "2026-11-12T14:10:05.681Z",
+							"sort": [
+								{
+									"attribute": "Ciutat",
+									"desc": false
+								}
+							]
+						}
+					]
+				}
+			},
+			"STAdataAttributes": {
+				"ID": {
+					"type": "integer"
+				},
+				"Data": {
+					"type": "string"
+				},
+				"Ciutat": {
+					"type": "string"
+				},
+				"Comercial": {
+					"type": "string"
+				},
+				"Producte": {
+					"type": "string"
+				},
+				"Categoria": {
+					"type": "string"
+				},
+				"Quantitat": {
+					"type": "integer"
+				},
+				"Import": {
+					"type": "integer"
+				}
+			},
+			"STASortByCriteria": [
+				{
+					"attribute": "Ciutat",
+					"desc": false
+				}
+			],
+			"STAdata": [
+				{
+					"ID": 1,
+					"Data": "2026-03-01",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Impressora",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 750
+				},
+				{
+					"ID": 9,
+					"Data": "2026-03-09",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 5,
+					"Import": 2000
+				},
+				{
+					"ID": 13,
+					"Data": "2026-03-13",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 700
+				},
+				{
+					"ID": 17,
+					"Data": "2026-03-17",
+					"Ciutat": "Barcelona",
+					"Comercial": "Carlos",
+					"Producte": "Disc dur",
+					"Categoria": "Accessoris",
+					"Quantitat": 9,
+					"Import": 720
+				},
+				{
+					"ID": 14,
+					"Data": "2026-03-14",
+					"Ciutat": "Girona",
+					"Comercial": "Laura",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 3,
+					"Import": 1200
+				},
+				{
+					"ID": 18,
+					"Data": "2026-03-18",
+					"Ciutat": "Girona",
+					"Comercial": "Laura",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 5,
+					"Import": 1750
+				},
+				{
+					"ID": 4,
+					"Data": "2026-03-04",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 4,
+					"Import": 1600
+				},
+				{
+					"ID": 8,
+					"Data": "2026-03-08",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Tablet",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 1050
+				},
+				{
+					"ID": 12,
+					"Data": "2026-03-12",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Disc dur",
+					"Categoria": "Accessoris",
+					"Quantitat": 7,
+					"Import": 560
+				},
+				{
+					"ID": 16,
+					"Data": "2026-03-16",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Portatil",
+					"Categoria": "Informatica",
+					"Quantitat": 1,
+					"Import": 1100
+				},
+				{
+					"ID": 20,
+					"Data": "2026-03-20",
+					"Ciutat": "Lleida",
+					"Comercial": "Sofia",
+					"Producte": "Impressora",
+					"Categoria": "Informatica",
+					"Quantitat": 3,
+					"Import": 750
+				},
+				{
+					"ID": 3,
+					"Data": "2026-03-03",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Portatil",
+					"Categoria": "Informatica",
+					"Quantitat": 2,
+					"Import": 2200
+				},
+				{
+					"ID": 11,
+					"Data": "2026-03-11",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Impressora",
+					"Categoria": "Informatica",
+					"Quantitat": 4,
+					"Import": 1000
+				},
+				{
+					"ID": 19,
+					"Data": "2026-03-19",
+					"Ciutat": "Tarragona",
+					"Comercial": "David",
+					"Producte": "Telefon",
+					"Categoria": "Telefonia",
+					"Quantitat": 2,
+					"Import": 800
+				}
+			],
+			"x": -77,
+			"y": -55
+		},
+		{
+			"id": "47rfc.0pno34",
+			"label": "Group by",
+			"image": "GroupBy.png",
+			"shape": "circularImage",
+			"STAmetadata": {
+				"dataLineage": {
+					"steps": [
+						{
+							"tool": "ImportCSV",
+							"date": "2026-11-12T14:09:23.188Z"
+						},
+						{
+							"tool": "FilterRowsTable",
+							"date": "2026-11-12T14:09:44.294Z",
+							"filter": "(Import > 500)"
+						},
+						{
+							"tool": "SortByTables",
+							"date": "2026-11-12T14:10:05.681Z",
+							"sort": [
+								{
+									"attribute": "Ciutat",
+									"desc": false
+								}
+							]
+						},
+						{
+							"tool": "GroupBy",
+							"date": "2026-11-12T14:10:21.353Z",
+							"groupByAttr": [
+								"Categoria"
+							],
+							"groupByDate": [],
+							"aggregationAttr": {
+								"Import": [
+									"Mean"
+								]
+							},
+							"sourceParentId": "83jn3.7b323o"
+						}
+					]
+				}
+			},
+			"groupByParams": {
+				"groupByAttr": [
+					"Categoria"
+				],
+				"groupByDate": [],
+				"aggregationAttr": {
+					"Import": [
+						"Mean"
+					]
+				},
+				"sourceParentId": "83jn3.7b323o"
+			},
+			"STAdata": [
+				{
+					"Categoria": "Accessoris",
+					"Import_Mean": 640
+				},
+				{
+					"Categoria": "Informatica",
+					"Import_Mean": 1162.5
+				},
+				{
+					"Categoria": "Telefonia",
+					"Import_Mean": 1400
+				}
+			],
+			"STAdataAttributes": {
+				"Categoria": {
+					"type": "string"
+				},
+				"Import_Mean": {
+					"type": "integer"
+				}
+			},
+			"x": 33,
+			"y": -105
+		},
+		{
+			"id": "2s8iq.cmoo8f",
+			"label": "View metadata",
+			"image": "ViewSTAMetadata.png",
+			"shape": "circularImage",
+			"STAmetadata": {
+				"dataLineage": {
+					"steps": [
+						{
+							"tool": "ImportCSV",
+							"date": "2026-11-12T14:09:23.188Z"
+						},
+						{
+							"tool": "FilterRowsTable",
+							"date": "2026-11-12T14:09:44.294Z",
+							"filter": "(Import > 500)"
+						},
+						{
+							"tool": "SortByTables",
+							"date": "2026-11-12T14:10:05.681Z",
+							"sort": [
+								{
+									"attribute": "Ciutat",
+									"desc": false
+								}
+							]
+						},
+						{
+							"tool": "GroupBy",
+							"date": "2026-11-12T14:10:21.353Z",
+							"groupByAttr": [
+								"Categoria"
+							],
+							"groupByDate": [],
+							"aggregationAttr": {
+								"Import": [
+									"Mean"
+								]
+							},
+							"sourceParentId": "83jn3.7b323o"
+						}
+					]
+				}
+			},
+			"x": 129,
+			"y": -24
+		}
+	],
+	"edges": [
+		{
+			"from": "3imeu.b7p2tsg",
+			"to": "4m85m.s3v3b",
+			"arrows": "from"
+		},
+		{
+			"from": "4m85m.s3v3b",
+			"to": "83jn3.7b323o",
+			"arrows": "from"
+		},
+		{
+			"from": "83jn3.7b323o",
+			"to": "47rfc.0pno34",
+			"arrows": "from"
+		},
+		{
+			"from": "47rfc.0pno34",
+			"to": "2s8iq.cmoo8f",
+			"arrows": "from"
+		}
+	]
+}

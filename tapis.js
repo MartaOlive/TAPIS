@@ -1017,12 +1017,23 @@ async function getSimplifyGUFRecords(metadatas){
 }
 
 function updateQueryAndTableArea(node) {
-	var nodeId = network.getSelectedNodes();
-	for (var i=0; i<nodeId.length; i++) {
-		if (nodeId[i]==node.id) {
-			ShowQueryNode(node);
-			ShowTableNode(node);
+	var nodeId, i, show;
+	if (!node)
+		return;
+	show = false;
+	nodeId = network.getSelectedNodes();
+	for (i = 0; i < nodeId.length; i++) {
+		if (nodeId[i] == node.id) {
+			show = true;
+			break;
 		}
+	}
+	// Also refresh when this is the active dialog/current node (even if selection is briefly out of sync).
+	if (!show && typeof currentNode !== "undefined" && currentNode && currentNode.id === node.id)
+		show = true;
+	if (show) {
+		ShowQueryNode(node);
+		ShowTableNode(node);
 	}
 }
 
@@ -1156,6 +1167,13 @@ async function LoadJSONNodeSTAData(node, callback, url) {
 			node.STAdataAttributes=getDataAttributes(node.STAdata);
 			addSemanticsSTADataAttributes(node.STAdataAttributes, node.STAURL);
 		}
+		(function () {
+			var parents = GetParentNodes(node);
+			if (!parents || !parents.length)
+				InitInputNodeMetadata(node, {url: node.STAURL || node.STAfileUrl});
+			else if (!node.STAmetadata)
+				CopyParentMetadataToNode(node, parents[0]);
+		})();
 		networkNodes.update(node);
 		if (node.image!="FilterRowsByTime.png") {
 			showInfoMessage({cat: "S'ha completat.", spa: "Completado.", eng: "Completed."}); 
@@ -1249,6 +1267,7 @@ function RetrieveMeaningTable(event, type) {
 	if (document.getElementById("DialogImport"+type+"SourceNew")?.checked) {
 		currentNode.STAdata=[];
 		currentNode.STAdata[0]=createEmptyRecordData(currentNode.STAdataAttributes);
+		InitInputNodeMetadata(currentNode, {});
 	}
 	if (!currentNode.STAdata) {
 		if (confirm(DonaCadena({cat: "No s'han carregat dades. Voleu tancar aquesta finestra igualment?", spa: "No se han cargado datos. ¿Quiere cerrar esta ventana de todos modos?", eng: "No data has been loaded. Do you want to close this window anyway?"})))
@@ -1257,6 +1276,8 @@ function RetrieveMeaningTable(event, type) {
 	else{
 		if (document.getElementById("DialogImportMeaning"+type+"SourceNone")?.checked)
 			currentNode.STAdataAttributes= getDataAttributes(currentNode.STAdata);
+		if (!currentNode.STAmetadata || !currentNode.STAmetadata.dataLineage || !currentNode.STAmetadata.dataLineage.steps || !currentNode.STAmetadata.dataLineage.steps.length)
+			InitInputNodeMetadata(currentNode, {url: currentNode.STAURL || currentNode.STAfileUrl});
 		networkNodes.update(currentNode);
 		updateQueryAndTableArea(currentNode);
 		UpdateChildenTable(currentNode);
@@ -1450,6 +1471,7 @@ function TransformTextCSVToTable(csvText, url, node) {
 		node.STAdata=data;
 		if (url)
 			node.STAfileUrl=url;
+		InitInputNodeMetadata(node, {url: url || node.STAURL || node.STAfileUrl});
 		if (node.STAISOAlert) alert(DonaCadena({cat: "Un dels atributs conté dades que semblen una data. El procés d'importació de CSV no pot distingir si aquest valor és una data vàlida o un altre tipus de dada (per exemple, un interval de temps), cosa que provoca un error. Els valors afectats s'han carregat com a nuls. Per conservar i visualitzar aquesta informació, torneu a carregar el fitxer CSV amb l'opció Importa els números com a cadenes activada. Després, useu la funcionalitat de significat per convertir les dades al tipus adequat", spa: "Uno de los atributos contiene datos que parecen una fecha. El proceso de importación de CSV no puede distinguir si este valor es una fecha válida u otro tipo de dato (por ejemplo, un intervalo de tiempo), lo que provoca un error. Los valores afectados se han cargado como nulos. Para conservar y visualizar esta información, vuelva a cargar el archivo CSV con la opción Importar los números como cadenas activada. Después, use la funcionalidad de significado para convertir los datos al tipo adecuado", eng: "One of the attributes contains data that looks like a date. The CSV import process cannot distinguish whether this value is a valid date or another type of data (for example, a time interval), which causes an error. The affected values have been loaded as null. To preserve and visualize this information, reload the CSV file with the Import numbers as strings option enabled. Then, use the meaning functionality to convert the data to the appropriate type"}))
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
@@ -1512,6 +1534,7 @@ function TransformBinaryDBFToTable(buffer, url) {
 	if (node.STAdata) {
 		if (url)
 			node.STAfileUrl=url;
+		InitInputNodeMetadata(node, {url: url || node.STAURL || node.STAfileUrl});
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		UpdateChildenTable(node);
@@ -1571,6 +1594,7 @@ function TransformBinaryGPKGToTable(buffer, url, node) {
 				node.STAfileUrl=url;
 			if (gpkg.db)
 				node.SQLiteDB=gpkg.db;  //This is an object with functions that cannot be saved as JSON afterwards
+			InitInputNodeMetadata(node, {url: url || node.STAURL || node.STAfileUrl});
 			networkNodes.update(node);
 			updateQueryAndTableArea(node);
 			UpdateChildenTable(node);
@@ -1592,6 +1616,10 @@ function TransformBinaryGPKGTableToTable(node, tableName) {
 	else
 		showInfoMessage({cat: "S'ha carregat la taula GeoPackage.", spa: "Se ha cargado la tabla GeoPackage.", eng: "GeoPackage table has been loaded."});
 	if (node.STAdata) {
+		if (!node.STAmetadata || !node.STAmetadata.dataLineage || !node.STAmetadata.dataLineage.steps || !node.STAmetadata.dataLineage.steps.length)
+			InitInputNodeMetadata(node, {url: node.STAURL || node.STAfileUrl, fileName: tableName});
+		else
+			RecordProcessMetadata(node);
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		UpdateChildenTable(node);
@@ -1664,6 +1692,7 @@ function TransformTextJSONLDToTable(jsonldText, addGeo, addObs, url, node) {
 	if (node.STAdata) {
 		if (url)
 			node.STAfileUrl=url;
+		InitInputNodeMetadata(node, {url: url || node.STAURL || node.STAfileUrl});
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 		UpdateChildenTable(node);
@@ -1745,6 +1774,7 @@ function TransformTextJSONToTable(json, jsonText, url, node, lastOne) {
 			node.STAdataAttributes=getDataAttributes(node.STAdata);
 			if (url)
 				node.STAfileUrl=url;
+			InitInputNodeMetadata(node, {url: url || node.STAURL || node.STAfileUrl});
 			networkNodes.update(node);
 			updateQueryAndTableArea(node);
 			UpdateChildenTable(node);
@@ -1995,7 +2025,8 @@ function TransformObjGeoJSONToTable(geojson, url, node) {
 		node.STAdataAttributes=getDataAttributes(node.STAdata);
 	}
 	if (url)
-		node.STAfileUrl=url;				
+		node.STAfileUrl=url;
+	InitInputNodeMetadata(node, {url: url || node.STAURL || node.STAfileUrl});
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
 	UpdateChildenTable(node);
@@ -2270,11 +2301,19 @@ async function AddMetadataToS3ServiceResponse(node) {
 }
 
 function TransformS3ServiceResponseToDataAttributes(node, text) {
+	var parents;
 	if (node.OGCType == "S3Buckets")
 		node.STAdata=ParseS3BucketsList(node.STAURL, text);
 	else {
 		node.STAdata=ParseS3Bucket(node.STAURL, text);
 		AddMetadataToS3ServiceResponse(node, text);
+	}
+	parents = GetParentNodes(node);
+	if (!parents || !parents.length || !parents[0].STAmetadata)
+		InitInputNodeMetadata(node, {url: node.STAURL});
+	else {
+		CopyParentMetadataToNode(node, parents[0]);
+		RecordProcessMetadata(node);
 	}
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
@@ -2323,6 +2362,7 @@ function GetDialogS3BucketEvent(event, url, security) {
 function TransformEDCCatalogResponseToDataAttributes(node, obj) {
 	node.STAdata = ParseEDCCatalog(obj);
 	node.OGCType = "EDCCatalogue";
+	InitInputNodeMetadata(node, {url: node.STAURL});
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
 	UpdateChildenTable(node);
@@ -4635,13 +4675,49 @@ function changeDialogReplaceTextInTableRadiobutton(source){
 
 function populateReplace(node){
 	saveNodeDialog("DialogReplaceTextInTable", node);
+	var parentNode=GetFirstParentNode(node);
+	var attrs = (node.STAdataAttributes) ? node.STAdataAttributes :
+		(parentNode && parentNode.STAdataAttributes) ? parentNode.STAdataAttributes :
+		(node.STAdata ? getDataAttributes(node.STAdata) : null);
 	var select= document.getElementById("dlgDialogReplaceTextInTable_select");
-	var attributes=Object.keys(node.STAdataAttributes);
-	var cdns=[];
-	for (var i=0;i<attributes.length;i++){
-		cdns.push(`<option value="${attributes[i]}">${attributes[i]} </option>`);
+	var attributes= attrs ? Object.keys(attrs) : [];
+	var cdns=[], i, r = node.STAReplace || {};
+	for (i=0;i<attributes.length;i++){
+		cdns.push(`<option value="${attributes[i]}"${(r.column && r.column===attributes[i]) ? " selected" : ""}>${attributes[i]} </option>`);
 	}
 	select.innerHTML=cdns.join("");
+	document.getElementById("dlgDialogReplaceTextInTable_input_search").value = r.searchValue != null ? r.searchValue : "";
+	document.getElementById("dlgDialogReplaceTextInTable_input_replace").value = r.replaceValue != null ? r.replaceValue : "";
+	document.getElementById("dlgDialogReplaceTextInTable_checkbox_numbersAsText").checked = r.numbersAsText !== false;
+	document.getElementById("dlgDialogReplaceTextInTable_checkbox_datesAsText").checked = r.datesAsText !== false;
+	if (r.scope === "column") {
+		document.getElementById("dlgDialogReplaceTextInTable_radiobutton_column").checked = true;
+		changeDialogReplaceTextInTableRadiobutton("column");
+	} else {
+		document.getElementById("dlgDialogReplaceTextInTable_radiobutton_all").checked = true;
+		changeDialogReplaceTextInTableRadiobutton("all");
+	}
+}
+
+function UpdateReplaceTextInTable(node) {
+	var parentNode, src, attrs, r, data;
+	if (!node || !node.STAReplace)
+		return false;
+	parentNode = GetFirstParentNode(node);
+	if (!parentNode || !parentNode.STAdata)
+		return false;
+	src = deapCopy(parentNode.STAdata);
+	attrs = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(src);
+	r = node.STAReplace;
+	data = (r.scope === "column" && r.column)
+		? ReplaceTextInTable(src, attrs, r.searchValue, r.replaceValue, r.numbersAsText, r.datesAsText, r.column)
+		: ReplaceTextInTable(src, attrs, r.searchValue, r.replaceValue, r.numbersAsText, r.datesAsText);
+	if (typeof data === "string")
+		return false;
+	node.STAdata = data;
+	node.STAdataAttributes = attrs;
+	networkNodes.update(node);
+	return true;
 }
 
 function ReplaceTextInTableApplyButton(event){
@@ -4651,31 +4727,29 @@ function ReplaceTextInTableApplyButton(event){
 	var replaceValue=document.getElementById("dlgDialogReplaceTextInTable_input_replace").value;
 	var numbersAsText=(document.getElementById("dlgDialogReplaceTextInTable_checkbox_numbersAsText").checked) ? true : false;
 	var datesAsText=(document.getElementById("dlgDialogReplaceTextInTable_checkbox_datesAsText").checked) ? true : false;
-	if (document.getElementById("dlgDialogReplaceTextInTable_radiobutton_all").checked){ //all
-		var data=ReplaceTextInTable(node.STAdata, node.STAdataAttributes, searchValue, replaceValue, numbersAsText, datesAsText);
-		if (typeof data === "string") 
-			alert(data);
-		else {
-			node.STAdata=data;
-			networkNodes.update(node);
-			updateQueryAndTableArea(node);
-			UpdateChildenTable(node);
-			hideNodeDialog("DialogReplaceTextInTable")
-		}
-
-	} else { //column
+	var scopeAll = document.getElementById("dlgDialogReplaceTextInTable_radiobutton_all").checked;
+	var column = null;
+	if (!scopeAll) {
 		var select=document.getElementById("dlgDialogReplaceTextInTable_select");
-		var data=ReplaceTextInTable(node.STAdata, node.STAdataAttributes, searchValue, replaceValue, numbersAsText, datesAsText, select.options[select.selectedIndex].value);
-		if (typeof data === "string") 
-			alert(data);
-		else {
-			node.STAdata=data;
-			networkNodes.update(node);
-			updateQueryAndTableArea(node);
-			UpdateChildenTable(node);
-			hideNodeDialog("DialogReplaceTextInTable")
-		}
+		column = select.options[select.selectedIndex].value;
 	}
+	node.STAReplace = {
+		searchValue: searchValue,
+		replaceValue: replaceValue,
+		numbersAsText: numbersAsText,
+		datesAsText: datesAsText,
+		scope: scopeAll ? "all" : "column",
+		column: column
+	};
+	if (!UpdateReplaceTextInTable(node)) {
+		alert(DonaCadena({cat: "No s'ha pogut aplicar la substitució.", spa: "No se ha podido aplicar la sustitución.", eng: "Could not apply the replacement."}));
+		return;
+	}
+	RecordProcessMetadata(node);
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
+	hideNodeDialog("DialogReplaceTextInTable");
 }
 
 function PopulateCreateUpdateDeleteRecord(currentNode, iRecord, verify) {
@@ -4783,7 +4857,8 @@ function GetLastRecord(event) {
 }
 
 function UpdateRecordId(node, iRecord) {
-	var data=node.STAdata; 
+	var data=node.STAdata;
+	var before;
 	if (iRecord<0 || iRecord>=data.length) {
 		alert(DonaCadena({cat: "El node pare és fora de l'interval", spa: "El nodo padre está fuera del intervalo", eng: "Parent node is out of range"}));
 		return false;
@@ -4792,6 +4867,7 @@ function UpdateRecordId(node, iRecord) {
 	var dataAttributesArray=Object.keys(dataAttributes)
 
 	var record=data[iRecord];
+	before = deapCopy(record);
 	var updated=false;
 	for (var a=0; a<dataAttributesArray.length; a++) {
 		var cell=record[dataAttributesArray[a]];
@@ -4805,9 +4881,10 @@ function UpdateRecordId(node, iRecord) {
 			var str=JSON.stringify(cell)
 			if (cell.getDate && str.charAt(0) == '"' && str.charAt(str.length -1) == '"') {
 				str=str.substr(1,str.length -2);
-				if (str!=value)
+				if (str!=value) {
 					record[dataAttributesArray[a]]=value;
 					updated=true;
+				}
 			} else if (str!=value) {
 				try {
 					record[dataAttributesArray[a]]=JSON.parse(value);
@@ -4822,8 +4899,17 @@ function UpdateRecordId(node, iRecord) {
 			updated=true;
 		}
 	}
-	if (updated==true)
+	if (updated==true) {
+		RecordEditRecordChange(node, "edited", {
+			index: iRecord,
+			before: before,
+			after: deapCopy(record)
+		});
 		networkNodes.update(node);
+		updateQueryAndTableArea(node);
+		UpdateChildenTable(node);
+	}
+	return updated;
 }
 
 function GetCreateRecord(event) {
@@ -4831,13 +4917,23 @@ function GetCreateRecord(event) {
 
 	var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
 	var data=currentNode.STAdata;
+	var newIndex, createdRecord;
 	if (iRecord<0 || iRecord>=data.length) {
 		alert(DonaCadena({cat: "El node pare és fora de l'interval", spa: "El nodo padre está fuera del intervalo", eng: "Parent node is out of range"}));
 		return false;
 	}
-	data.splice(iRecord+1, 0, deapCopy(data[iRecord]));
-	UpdateRecordId(currentNode, iRecord+1);
-	PopulateCreateUpdateDeleteRecord(currentNode, iRecord+1, false);
+	newIndex = iRecord + 1;
+	data.splice(newIndex, 0, deapCopy(data[iRecord]));
+	UpdateRecordId(currentNode, newIndex);
+	createdRecord = deapCopy(data[newIndex]);
+	RecordEditRecordChange(currentNode, "created", {
+		index: newIndex,
+		after: createdRecord
+	});
+	networkNodes.update(currentNode);
+	updateQueryAndTableArea(currentNode);
+	UpdateChildenTable(currentNode);
+	PopulateCreateUpdateDeleteRecord(currentNode, newIndex, false);
 }
 
 function GetUpdateRecord(event) {
@@ -4856,12 +4952,20 @@ function AskForDeleteRecord(event) {
 
 	var iRecord=parseInt(document.getElementById("dlgCreateUpdateDeleteRecordNumber").value)-1;
 	var data=currentNode.STAdata;
+	var deletedRecord;
 	if (iRecord<0 || iRecord>=data.length) {
 		alert(DonaCadena({cat: "El node pare és fora de l'interval", spa: "El nodo padre está fuera del intervalo", eng: "Parent node is out of range"}));
 		return false;
 	}
+	deletedRecord = deapCopy(data[iRecord]);
 	data.splice(iRecord, 1);
+	RecordEditRecordChange(currentNode, "deleted", {
+		index: iRecord,
+		before: deletedRecord
+	});
 	networkNodes.update(currentNode);
+	updateQueryAndTableArea(currentNode);
+	UpdateChildenTable(currentNode);
 	PopulateCreateUpdateDeleteRecord(currentNode, iRecord, false);
 }
 
@@ -4925,23 +5029,30 @@ function GetSelectRow(event, iToSelect) {
 		}
 		else  //This should be a table operation: I'll do it myself here
 		{
+			node.SelectedRowIndex = i;
 			if (parentNode.STAdata && i<parentNode.STAdata.length){
 				node.STAdata=[];
 				node.STAdata.push(deapCopy(parentNode.STAdata[i]));
 			}
+			if (parentNode.STAdataAttributes)
+				node.STAdataAttributes = deapCopy(parentNode.STAdataAttributes);
 		}
 	}
 	if (!requiresLoadJSON)
 		node.STAURL = null;
 		
+	if (!requiresLoadJSON)
+		RecordProcessMetadata(node);
 	networkNodes.update(node);
 	if (requiresLoadJSON) {
 		showInfoMessage({cat: "S'està seleccionant la fila OGC...", spa: "Seleccionando la fila OGC...", eng: "Selecting OGC row..."});
 		UpdateChildenSTAURL(node, node.STAURL, previousSTAURL);
 		LoadJSONNodeSTAData(node);
 	}
-	else
+	else {
 		updateQueryAndTableArea(node);
+		UpdateChildenTable(node);
+	}
 }
 
 function GetSelectRows(event) {
@@ -4956,24 +5067,28 @@ function GetSelectRows(event) {
 		return;
 
 	var elems = document.getElementsByName("SelectRowsCheck");
-	var selectedIds=[], selectedData=[];
+	var selectedIds=[], selectedIndexes=[], selectedData=[];
 	for (var i = 0; i < elems.length; i++) {
 		if (!elems[i].checked)
 			continue;
 		var s = elems[i].id.substring("SelectRows_".length);
 		var id = (parseInt(s)==s) ? parseInt(s) : s;
 		selectedIds.push(id);
+		selectedIndexes.push(i);
 		if (parentNode.STAdata && i < parentNode.STAdata.length)
 			selectedData.push(deapCopy(parentNode.STAdata[i]));
 	}
 	node.SelectedRowIds = selectedIds;
+	node.SelectedRowIndexes = selectedIndexes;
 	node.STAdata = selectedData;
 	if (parentNode.STAdataAttributes)
 		node.STAdataAttributes = deapCopy(parentNode.STAdataAttributes);
 	node.STAURL = null;
 
+	RecordProcessMetadata(node);
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
 }
 
 function GetSelectResource(event, resourceId) {
@@ -5106,8 +5221,10 @@ function GetJoinTables(event) {
 			parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(parentNodes[0].STAdata), 
 			parentNodes[1].STAdataAttributes ? parentNodes[1].STAdataAttributes : getDataAttributes(parentNodes[1].STAdata), 
 			currentNode.STAdataAttributes, currentNode.STAJoinTables);
+	RecordProcessMetadata(currentNode);
 	networkNodes.update(currentNode);
 	updateQueryAndTableArea(currentNode);
+	UpdateChildenTable(currentNode);
 }
 
 function UpdateChildenSTAURL(parentNode, currentSTAURLroot, previousSTAURLroot) {
@@ -5147,29 +5264,973 @@ function UpdateChildenSTAURL(parentNode, currentSTAURLroot, previousSTAURLroot) 
 	networkNodes.update(node);
 }*/
 
+function MergeMeaningAttributes(parentAttrs, savedMeaning, data) {
+	var attrs = parentAttrs ? deapCopy(parentAttrs) : (data && data.length ? getDataAttributes(data) : {});
+	var key, saved;
+	if (!savedMeaning) return attrs;
+	for (key in savedMeaning) {
+		if (!Object.prototype.hasOwnProperty.call(savedMeaning, key)) continue;
+		if (!attrs[key]) continue;
+		saved = savedMeaning[key];
+		if (!saved) continue;
+		if (saved.description != null) attrs[key].description = saved.description;
+		if (saved.definition != null) attrs[key].definition = saved.definition;
+		if (saved.UoM != null) attrs[key].UoM = saved.UoM;
+		if (saved.UoMSymbol != null) attrs[key].UoMSymbol = saved.UoMSymbol;
+		if (saved.UoMDefinition != null) attrs[key].UoMDefinition = saved.UoMDefinition;
+		if (saved.type != null) attrs[key].type = saved.type;
+		if (saved.nameInLegend != null) attrs[key].nameInLegend = saved.nameInLegend;
+	}
+	return attrs;
+}
+
+function UpdateMeaningTable(node) {
+	var parentNode, src, savedMeaning;
+	if (!node) return false;
+	parentNode = GetFirstParentNode(node);
+	if (!parentNode || !parentNode.STAdata) return false;
+	src = deapCopy(parentNode.STAdata);
+	savedMeaning = node.STAdataAttributes ? deapCopy(node.STAdataAttributes) : null;
+	node.STAdata = src;
+	node.STAdataAttributes = MergeMeaningAttributes(
+		parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(src),
+		savedMeaning, src);
+	networkNodes.update(node);
+	return true;
+}
+
+function UpdateEditRecord(node) {
+	var parentNode;
+	if (!node) return false;
+	parentNode = GetFirstParentNode(node);
+	if (!parentNode || !parentNode.STAdata) return false;
+	// Pass-through: edited rows live on this node until the parent chain refreshes.
+	node.STAdata = deapCopy(parentNode.STAdata);
+	node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+	networkNodes.update(node);
+	return true;
+}
+
+// ---- Data lineage metadata: what each tool did to the data ----
+function GetProcessToolLabel(toolImage) {
+	var id = (toolImage || "").replace(/\.png$/i, "");
+	var labels = {
+		ImportCSV: {cat: "Importar CSV", spa: "Importar CSV", eng: "Import CSV"},
+		ImportDBF: {cat: "Importar DBF", spa: "Importar DBF", eng: "Import DBF"},
+		ImportGPKG: {cat: "Importar GeoPackage", spa: "Importar GeoPackage", eng: "Import GeoPackage"},
+		ImportGPKGTable: {cat: "Taula GeoPackage", spa: "Tabla GeoPackage", eng: "GeoPackage table"},
+		ImportJSON: {cat: "Importar JSON", spa: "Importar JSON", eng: "Import JSON"},
+		ImportJSONLD: {cat: "Importar JSON-LD", spa: "Importar JSON-LD", eng: "Import JSON-LD"},
+		ImportGeoJSON: {cat: "Importar GeoJSON", spa: "Importar GeoJSON", eng: "Import GeoJSON"},
+		sta: {cat: "SensorThings", spa: "SensorThings", eng: "SensorThings"},
+		staRoot: {cat: "Arrel SensorThings", spa: "Raíz SensorThings", eng: "SensorThings root"},
+		ogcAPICols: {cat: "Col·leccions OGC API", spa: "Colecciones OGC API", eng: "OGC API collections"},
+		ogcAPIItems: {cat: "Elements OGC API", spa: "Elementos OGC API", eng: "OGC API items"},
+		csw: {cat: "Catàleg CSW", spa: "Catálogo CSW", eng: "CSW catalogue"},
+		s3Service: {cat: "Servei S3", spa: "Servicio S3", eng: "S3 Service"},
+		s3Bucket: {cat: "Contenidor S3", spa: "Contenedor S3", eng: "S3 Bucket"},
+		edc: {cat: "Catàleg DataSpace", spa: "Catálogo DataSpace", eng: "DataSpace catalogue"},
+		edcAsset: {cat: "Actiu DataSpace", spa: "Activo DataSpace", eng: "DataSpace asset"},
+		CreateDGGS: {cat: "Extensió DGGS", spa: "Extensión DGGS", eng: "DGGS extent"},
+		CreateNewTable: {cat: "Taula nova", spa: "Tabla nueva", eng: "New table"},
+		connectASensor: {cat: "Connecta un sensor", spa: "Conecta un sensor", eng: "Connect a sensor"},
+		readSDFromSensor: {cat: "Llegeix SD del sensor", spa: "Lee SD del sensor", eng: "Read SD from sensor"},
+		EditRecord: {cat: "Edita registres", spa: "Editar registros", eng: "Edit records"},
+		GroupBy: {cat: "Agrupar", spa: "Agrupar", eng: "Group by"},
+		SortByTables: {cat: "Ordenar", spa: "Ordenar", eng: "Sort"},
+		FilterRowsTable: {cat: "Filtrar files", spa: "Filtrar filas", eng: "Filter rows"},
+		SelectColumnsTable: {cat: "Seleccionar columnes", spa: "Seleccionar columnas", eng: "Select columns"},
+		SelectRowTable: {cat: "Seleccionar fila", spa: "Seleccionar fila", eng: "Select row"},
+		SelectRowsTable: {cat: "Seleccionar files", spa: "Seleccionar filas", eng: "Select rows"},
+		JoinTables: {cat: "Unir taules", spa: "Unir tablas", eng: "Join tables"},
+		PivotTable: {cat: "Taula dinàmica", spa: "Tabla dinámica", eng: "Pivot table"},
+		TransposeTable: {cat: "Transposar", spa: "Transponer", eng: "Transpose"},
+		SeparateColumns: {cat: "Separar columnes", spa: "Separar columnas", eng: "Separate columns"},
+		Replace: {cat: "Substituir text", spa: "Sustituir texto", eng: "Replace text"},
+		CreateColumns: {cat: "Crear columnes", spa: "Crear columnas", eng: "Create columns"},
+		AggregateColumns: {cat: "Agregar columnes", spa: "Agregar columnas", eng: "Aggregate columns"},
+		ColumnsCalculator: {cat: "Calculadora de columnes", spa: "Calculadora de columnas", eng: "Columns calculator"},
+		Meaning: {cat: "Significat", spa: "Significado", eng: "Meaning"},
+		ColumnStatistics: {cat: "Estadístiques de columnes", spa: "Estadísticas de columnas", eng: "Column statistics"},
+		ConcatenateTables: {cat: "Concatenar taules", spa: "Concatenar tablas", eng: "Concatenate tables"},
+		AddColumnPnt: {cat: "Afegir columna de punt", spa: "Añadir columna de punto", eng: "Add point column"},
+		AddColumnBBox: {cat: "Afegir columna BBox", spa: "Añadir columna BBox", eng: "Add BBox column"},
+		ViewSTAMetadata: {cat: "Visualitza metadades", spa: "Ver metadatos", eng: "View metadata"},
+		formatConsistency: {cat: "Qualitat: consistència de format", spa: "Calidad: consistencia de formato", eng: "Quality: format consistency"},
+		completness: {cat: "Qualitat: completesa", spa: "Calidad: completitud", eng: "Quality: completeness"},
+		logicalConsistency: {cat: "Qualitat: consistència lògica", spa: "Calidad: consistencia lógica", eng: "Quality: logical consistency"},
+		temporalQuality: {cat: "Qualitat temporal", spa: "Calidad temporal", eng: "Temporal quality"},
+		positionalQuality: {cat: "Qualitat posicional", spa: "Calidad posicional", eng: "Positional quality"},
+		thematicQuality: {cat: "Qualitat temàtica", spa: "Calidad temática", eng: "Thematic quality"},
+		misclassificationMatrix: {cat: "Matriu de confusió", spa: "Matriz de confusión", eng: "Misclassification matrix"},
+		uncertainty: {cat: "Incertesa", spa: "Incertidumbre", eng: "Uncertainty"},
+		qualityResultsViewer: {cat: "Visor de resultats de qualitat", spa: "Visor de resultados de calidad", eng: "Quality results viewer"}
+	};
+	return labels[id] || {cat: id, spa: id, eng: id};
+}
+
+function ProcessSelectionsSummary(toolImage, selections) {
+	var id = (toolImage || "").replace(/\.png$/i, "");
+	var s = selections || {}, parts = [], i, item;
+	if (id === "Replace" && s) {
+		parts.push(DonaCadena({cat: "Cercar", spa: "Buscar", eng: "Search"}) + ": \"" + (s.searchValue || "") + "\"");
+		parts.push(DonaCadena({cat: "Substituir per", spa: "Sustituir por", eng: "Replace with"}) + ": \"" + (s.replaceValue || "") + "\"");
+		parts.push(s.scope === "column"
+			? (DonaCadena({cat: "Columna", spa: "Columna", eng: "Column"}) + ": " + (s.column || ""))
+			: DonaCadena({cat: "Totes les columnes", spa: "Todas las columnas", eng: "All columns"}));
+	} else if ((id === "CreateColumns" || id === "AggregateColumns" || id === "ColumnsCalculator") && s) {
+		var colList = Array.isArray(s) ? s : (s.columns || []);
+		for (i = 0; i < colList.length; i++) {
+			item = colList[i];
+			if (id === "ColumnsCalculator")
+				parts.push((item.columnName || item[1] || "") + " = " + (item.formula || item[0] || ""));
+			else if (id === "CreateColumns")
+				parts.push((item.columnName || item[1] || "") + " (" + (item.typeOfOperation || item[0] || "") + (item.value != null && item.value !== "" ? ": " + item.value : (item[2] != null && item[2] !== "" ? ": " + item[2] : "")) + ")");
+			else
+				parts.push((item.columnName || item[1] || "") + " ← " + (item.aggregation || item[0] || "") + (item.selectedAttributes ? " [" + item.selectedAttributes.join(", ") + "]" : (item[2] ? " [" + (Array.isArray(item[2]) ? item[2].join(", ") : item[2]) + "]" : "")));
+		}
+	} else if (id === "SeparateColumns" && s) {
+		parts.push(DonaCadena({cat: "Mode", spa: "Modo", eng: "Mode"}) + ": " + (s.mode || "json"));
+		if (s.columnName) parts.push(DonaCadena({cat: "Columna", spa: "Columna", eng: "Column"}) + ": " + s.columnName);
+		if (s.delimiter) parts.push(DonaCadena({cat: "Delimitador", spa: "Delimitador", eng: "Delimiter"}) + ": \"" + s.delimiter + "\"");
+	} else if (id === "PivotTable" && s) {
+		if (s.Rows && s.Rows.length) parts.push("Rows: " + s.Rows.join(", "));
+		if (s.Columns && s.Columns.length) parts.push("Columns: " + s.Columns.join(", "));
+		if (s.Values && s.Values.length) parts.push("Values: " + s.Values.join(", "));
+		if (s.aggregation) parts.push("Aggregation: " + s.aggregation);
+	} else if (id === "TransposeTable" && s) {
+		if (s.headerColumn) parts.push(DonaCadena({cat: "Capçalera", spa: "Cabecera", eng: "Header"}) + ": " + s.headerColumn);
+		if (s.attributeColumnName) parts.push(DonaCadena({cat: "Columna d'atribut", spa: "Columna de atributo", eng: "Attribute column"}) + ": " + s.attributeColumnName);
+	} else if (id === "JoinTables" && s) {
+		if (s.NotMatch) parts.push(DonaCadena({cat: "No coincidents", spa: "No coincidentes", eng: "Unmatched"}) + ": " + s.NotMatch);
+		if (s.RowMatching && s.RowMatching.length) {
+			for (i = 0; i < s.RowMatching.length; i++)
+				parts.push((s.RowMatching[i].left || []).join("+") + " = " + (s.RowMatching[i].right || []).join("+"));
+		}
+	} else if (id === "ConcatenateTables" && s) {
+		parts.push(s.mode === "repeatedColumns"
+			? DonaCadena({cat: "Només columnes comunes", spa: "Solo columnas comunes", eng: "Shared columns only"})
+			: DonaCadena({cat: "Totes les columnes", spa: "Todas las columnas", eng: "All columns"}));
+	} else if (id === "AddColumnPnt" || id === "AddColumnBBox") {
+		if (s.radioIn) parts.push(DonaCadena({cat: "Entrada", spa: "Entrada", eng: "Input"}) + ": " + s.radioIn);
+		if (s.radioOut) parts.push(DonaCadena({cat: "Sortida", spa: "Salida", eng: "Output"}) + ": " + s.radioOut);
+		if (s.nameOut) parts.push(DonaCadena({cat: "Columna nova", spa: "Columna nueva", eng: "New column"}) + ": " + s.nameOut);
+	} else if (id === "SelectColumnsTable" && s) {
+		if (Array.isArray(s)) parts.push(s.join(", "));
+		else if (s.columns) parts.push((Array.isArray(s.columns) ? s.columns : Object.keys(s.columns)).join(", "));
+		else parts.push(JSON.stringify(s));
+	} else if (id === "GroupBy" && s) {
+		if (s.groupByAttr && s.groupByAttr.length)
+			parts.push(DonaCadena({cat: "Agrupar per", spa: "Agrupar por", eng: "Group by"}) + ": " + s.groupByAttr.join(", "));
+		if (s.groupByDate && s.groupByDate.length)
+			parts.push(DonaCadena({cat: "Data", spa: "Fecha", eng: "Date"}) + ": " + s.groupByDate.join(", "));
+		if (s.aggregationAttr && typeof s.aggregationAttr === "object") {
+			var aggKeys = Object.keys(s.aggregationAttr);
+			for (i = 0; i < aggKeys.length; i++)
+				parts.push(aggKeys[i] + ": " + (Array.isArray(s.aggregationAttr[aggKeys[i]]) ? s.aggregationAttr[aggKeys[i]].join(", ") : s.aggregationAttr[aggKeys[i]]));
+		}
+	} else if (id === "SortByTables" && s) {
+		var sortList = Array.isArray(s) ? s : (s.sort || []);
+		if (Array.isArray(sortList)) {
+			for (i = 0; i < sortList.length; i++)
+				parts.push((sortList[i].attribute || sortList[i].column || sortList[i][0] || "") + " " + ((sortList[i].desc ? "desc" : null) || sortList[i].order || sortList[i][1] || "asc"));
+		}
+	} else if (id === "FilterRowsTable" && s) {
+		if (typeof s === "string") parts.push(s);
+		else if (s.filter || s.expression || s.STAFilter || s.STAFilterExpr) parts.push(s.filter || s.expression || s.STAFilter || s.STAFilterExpr);
+		else parts.push(JSON.stringify(s));
+	} else if (id === "SelectRowTable" && s) {
+		if (s.index != null) parts.push(DonaCadena({cat: "Fila", spa: "Fila", eng: "Row"}) + ": " + s.index);
+	} else if (id === "SelectRowsTable" && s) {
+		if (s.indexes && s.indexes.length) parts.push(DonaCadena({cat: "Files", spa: "Filas", eng: "Rows"}) + ": " + s.indexes.join(", "));
+		else if (s.ids && s.ids.length) parts.push("IDs: " + s.ids.join(", "));
+	} else if (id === "EditRecord" && s) {
+		if (s.edited && s.edited.length)
+			parts.push(DonaCadena({cat: "Editats", spa: "Editados", eng: "Edited"}) + ": #" + s.edited.map(function (e) { return (e.index != null ? e.index + 1 : "?"); }).join(", #"));
+		if (s.created && s.created.length)
+			parts.push(DonaCadena({cat: "Creats", spa: "Creados", eng: "Created"}) + ": #" + s.created.map(function (e) { return (e.index != null ? e.index + 1 : "?"); }).join(", #"));
+		if (s.deleted && s.deleted.length)
+			parts.push(DonaCadena({cat: "Esborrats", spa: "Borrados", eng: "Deleted"}) + ": #" + s.deleted.map(function (e) { return (e.index != null ? e.index + 1 : "?"); }).join(", #"));
+	} else if (id === "formatConsistency" && s) {
+		if (s.column) parts.push(DonaCadena({cat: "Columna", spa: "Columna", eng: "Column"}) + ": " + s.column);
+		if (s.format) {
+			var fmt = (typeof s.format === "object") ? (s.format.option || "") : s.format;
+			if (fmt) parts.push(DonaCadena({cat: "Format", spa: "Formato", eng: "Format"}) + ": " + fmt);
+		}
+	} else if (id === "completness" && s) {
+		if (s.omission && (s.omission.enabled || s.omission === true))
+			parts.push("Omission: " + ((s.omission.column != null ? s.omission.column : s.omissionColumn) || ""));
+		if (s.commission && (s.commission.enabled || s.commission === true))
+			parts.push("Commission: " + ((s.commission.column != null ? s.commission.column : s.commissionColumn) || ""));
+		if (s.commissionExcess && s.commissionExcess.enabled)
+			parts.push("Excess: " + (s.commissionExcess.column || "") + " (expected " + (s.commissionExcess.expectedRecords || 0) + ")");
+		else if (s.excess)
+			parts.push("Excess: " + (s.excessColumn || "") + " (expected " + (s.expectedRecords || 0) + ")");
+	} else if (id === "logicalConsistency" && s) {
+		if (s.attributePairs && s.attributePairs.length) {
+			for (i = 0; i < s.attributePairs.length; i++)
+				parts.push((s.attributePairs[i].target || "") + " ↔ " + (s.attributePairs[i].reference || ""));
+		} else {
+			if (s.targets) parts.push(DonaCadena({cat: "Objectiu", spa: "Objetivo", eng: "Target"}) + ": " + s.targets.join(", "));
+			if (s.references) parts.push(DonaCadena({cat: "Referència", spa: "Referencia", eng: "Reference"}) + ": " + s.references.join(", "));
+		}
+	} else if (id === "misclassificationMatrix" && s) {
+		var classified = (s.columnsToCompare && s.columnsToCompare.classified) || s.classified;
+		var reference = (s.columnsToCompare && s.columnsToCompare.reference) || s.reference;
+		if (classified && reference) {
+			for (i = 0; i < classified.length; i++)
+				parts.push(classified[i] + " ↔ " + (reference[i] || ""));
+		}
+	} else if (id === "uncertainty" && s) {
+		if (s.resultColumn) parts.push("Result: " + s.resultColumn);
+		if (s.temporalGrouping)
+			parts.push("Time: " + (s.temporalGrouping.column || "") + (s.temporalGrouping.period != null ? " / " + s.temporalGrouping.period + " " + (s.temporalGrouping.unit || "") : ""));
+		else if (s.temporalColumn)
+			parts.push("Time: " + s.temporalColumn + (s.temporalNumber ? " / " + s.temporalNumber + " " + (s.unitTime || "") : ""));
+		if (s.positionalGrouping)
+			parts.push("X/Y: " + (s.positionalGrouping.columnX || "") + ", " + (s.positionalGrouping.columnY || ""));
+		else if (s.positionalX)
+			parts.push("X/Y: " + s.positionalX + ", " + (s.positionalY || ""));
+	} else if (id === "Meaning") {
+		parts.push(DonaCadena({cat: "Metadades de columnes actualitzades", spa: "Metadatos de columnas actualizados", eng: "Column meaning attributes updated"}));
+	} else if (id === "ColumnStatistics") {
+		parts.push(DonaCadena({cat: "Estadístiques calculades per a totes les columnes", spa: "Estadísticas calculadas para todas las columnas", eng: "Statistics computed for all columns"}));
+	} else if (s && typeof s === "object") {
+		try { parts.push(JSON.stringify(s)); } catch (e) { /* ignore */ }
+	}
+	return parts.join("; ");
+}
+
+function GetProcessSelectionsForNode(node) {
+	var img = node && node.image ? node.image.replace(/\.png$/i, "") : "";
+	var parent, attrs, keys, cols, a, sel;
+	if (!node) return null;
+	if (img === "Replace") return node.STAReplace || null;
+	if (img === "CreateColumns" || img === "AggregateColumns" || img === "ColumnsCalculator") {
+		sel = node.STAnewColumnsToAdd || null;
+		return sel ? { columns: sel } : null;
+	}
+	if (img === "SeparateColumns") return node.STASeparateColumns || null;
+	if (img === "PivotTable") return node.STApivotTable || null;
+	if (img === "TransposeTable") return node.STATransposeTable || null;
+	if (img === "JoinTables") return node.STAJoinTables || null;
+	if (img === "ConcatenateTables") return node.STAConcatenateTables || null;
+	if (img === "AddColumnPnt") return node.STAAddColumnPnt || null;
+	if (img === "AddColumnBBox") return node.STAAddColumnBBox || null;
+	if (img === "SelectColumnsTable") {
+		sel = node.STASelectColumns || node.STASelectedColumns || node.SelectedColumns || null;
+		if (Array.isArray(sel) && sel.length && typeof sel[0] === "boolean") {
+			parent = GetFirstParentNode(node);
+			attrs = parent && (parent.STAdataAttributes || (parent.STAdata ? getDataAttributes(parent.STAdata) : null));
+			if (attrs) {
+				keys = Object.keys(attrs);
+				cols = [];
+				for (a = 0; a < keys.length; a++)
+					if (sel[a]) cols.push(keys[a]);
+				return { columns: cols };
+			}
+		}
+		if (Array.isArray(sel)) return { columns: sel };
+		return sel;
+	}
+	if (img === "SortByTables") {
+		sel = node.STASortByCriteria || node.STASortBy || node.STAsortByTables || null;
+		return sel ? { sort: sel } : null;
+	}
+	if (img === "FilterRowsTable") {
+		sel = node.STAFilterExpr || node.STAFilterTreeTable || node.STAFilterTable || node.STAFilter || node.STAFilterOData || null;
+		if (sel == null) return null;
+		if (typeof sel === "string") return { filter: sel };
+		if (sel.filter || sel.expression || sel.STAFilter || sel.STAFilterExpr)
+			return { filter: sel.filter || sel.expression || sel.STAFilter || sel.STAFilterExpr };
+		return sel;
+	}
+	if (img === "GroupBy") return node.groupByParams || node.STAGroupBy || null;
+	if (img === "SelectRowTable") return { index: node.SelectedRowIndex };
+	if (img === "SelectRowsTable") return { indexes: node.SelectedRowIndexes, ids: node.SelectedRowIds };
+	if (img === "EditRecord") return node.STAEditRecordChanges || null;
+	if (img === "ImportGPKGTable") return { tableName: node.STAfileUrl || null };
+	if (img === "formatConsistency") return NestFormatConsistencyProcessSelections(node.STAFormatConsistencyOptions);
+	if (img === "completness") return NestCompletenessProcessSelections(node.STACompletenessOptions);
+	if (img === "logicalConsistency") return NestLogicalConsistencyProcessSelections(node.STALogicalConsistencyOptions);
+	if (img === "temporalQuality") return NestTemporalQualityProcessSelections(node.STATemporalQualityOptions);
+	if (img === "positionalQuality") return NestPositionalQualityProcessSelections(node.STAPositionalQualityOptions);
+	if (img === "thematicQuality") return NestThematicQualityProcessSelections(node.STAThematicQualityOptions);
+	if (img === "misclassificationMatrix") return NestMisclassificationProcessSelections(node.STAcolumnsList);
+	if (img === "uncertainty") return NestUncertaintyProcessSelections(node.STAUncertaintyOptions);
+	return null;
+}
+
+function NestUncertaintyProcessSelections(o) {
+	if (!o) return null;
+	return {
+		resultColumn: o.resultColumn || "",
+		temporalGrouping: {
+			column: o.temporalColumn || "",
+			period: o.temporalNumber != null ? Number(o.temporalNumber) : null,
+			unit: o.unitTime || ""
+		},
+		positionalGrouping: {
+			columnX: o.positionalX || "",
+			columnY: o.positionalY || "",
+			distance: o.positionalNumber != null ? Number(o.positionalNumber) : null
+		}
+	};
+}
+
+function NestCompletenessProcessSelections(o) {
+	if (!o) return null;
+	return {
+		omission: {
+			enabled: !!o.omission,
+			column: o.omissionColumn || "",
+			flagBadRecords: !!o.omissionFlag
+		},
+		commission: {
+			enabled: !!o.commission,
+			column: o.commissionColumn || "",
+			lowerUpperCaseIdentical: !!o.lowerUpperCase,
+			flagBadRecords: !!o.commissionFlag
+		},
+		commissionExcess: {
+			enabled: !!o.excess,
+			column: o.excessColumn || "",
+			expectedRecords: o.expectedRecords != null ? o.expectedRecords : 0
+		}
+	};
+}
+
+function NestFormatConsistencyProcessSelections(o) {
+	var format;
+	if (!o) return null;
+	format = { option: o.format || "" };
+	if (o.format === "date") format.datePattern = o.datePattern || "";
+	else if (o.format === "time") format.timePattern = o.timePattern || "";
+	else if (o.format === "coordinates") format.coordPattern = o.coordPattern || "";
+	else if (o.format === "telephone") {
+		format.telPrefixMode = o.telPrefixMode || "value";
+		if (format.telPrefixMode === "length") format.telPrefixLength = o.telPrefixLength;
+		else format.telPrefix = o.telPrefix || "";
+		format.telNumberLength = o.telNumberLength;
+	} else if (o.format === "uuid")
+		format.uuidAllowNoHyphens = !!o.uuidAllowNoHyphens;
+	else if (o.format === "custom")
+		format.patternTokens = o.patternTokens ? deapCopy(o.patternTokens) : [];
+	return { column: o.column || "", format: format };
+}
+
+function NestLogicalConsistencyProcessSelections(o) {
+	var pairs = [], i;
+	if (!o) return null;
+	if (o.targets && o.references) {
+		for (i = 0; i < o.targets.length; i++)
+			pairs.push({ target: o.targets[i], reference: o.references[i] || "" });
+	}
+	return { attributePairs: pairs, flagBadRecords: !!o.flag };
+}
+
+function NestMisclassificationProcessSelections(columnsList) {
+	if (!columnsList) return null;
+	return {
+		columnsToCompare: {
+			classified: columnsList.classified ? deapCopy(columnsList.classified) : [],
+			reference: columnsList.reference ? deapCopy(columnsList.reference) : []
+		}
+	};
+}
+
+function NestTemporalQualityProcessSelections(o) {
+	var accuracy, out;
+	if (!o) return null;
+	out = { temporalColumn: o.attributeSelected || "" };
+	accuracy = { enabled: !!o.temporalAccuracy };
+	if (o.temporalAccuracy) {
+		if (o.accuracyMethodValue === "uncertaintyColumn" || o.attributeSelectedUncertantly) {
+			accuracy.option = "uncertaintyColumn";
+			accuracy.uncertaintyColumn = o.attributeSelectedUncertantly || "";
+		} else {
+			accuracy.option = "calculate";
+			accuracy.groupingMode = o.temporalUncertaintyGroupColumnValue ? "grouped" : "all";
+			if (o.temporalUncertaintyGroupColumnValue)
+				accuracy.groupingColumn = o.temporalUncertaintyGroupColumnValue;
+			accuracy.createNewColumns = !!o.createNewColumns;
+		}
+	}
+	out.temporalAccuracy = accuracy;
+	out.temporalValidity = {
+		enabled: !!o.validity_calculate,
+		from: o.from || "",
+		to: o.to || ""
+	};
+	out.temporalResolution = { enabled: !!o.resolution_calculate };
+	out.temporalConsistency = {
+		enabled: !!o.consistency_calculate,
+		tolerance: o.consistencyInput != null ? o.consistencyInput : o.tolerance,
+		flagBadRecords: !!o.flag,
+		sort: !!o.sort
+	};
+	return out;
+}
+
+function NestPositionalQualityProcessSelections(o) {
+	var accuracy, validity, out;
+	if (!o) return null;
+	out = {
+		geographicCoordinates: {
+			longitude: o.attributeSelectedLong || "",
+			latitude: o.attributeSelectedLat || ""
+		}
+	};
+	accuracy = { enabled: !!o.positionalAccuracy };
+	if (o.positionalAccuracy) {
+		if (o.accuracyMethod === "points" || o.accuracyMethod === "geometryColumns" || o.accuracyMethodValue === "geometryColumns") {
+			accuracy.option = "evaluateColumn";
+			accuracy.units = o.selectUnitValue || o.units || "m";
+			accuracy.groupingMode = o.grouped ? "grouped" : "all";
+			if (o.grouped) accuracy.groupingColumn = o.grouped;
+			accuracy.createNewColumns = !!o.createNewColumns;
+		} else {
+			accuracy.option = "uncertaintyColumn";
+			accuracy.uncertaintyColumn = o.attributeSelectedUncertantly || "";
+		}
+	}
+	out.positionalAccuracy = accuracy;
+	validity = { enabled: !!o.positionalValidity };
+	if (o.positionalValidity) {
+		validity.xmin = o.xmin;
+		validity.xmax = o.xmax;
+		validity.ymin = o.ymin;
+		validity.ymax = o.ymax;
+		validity.flagBadRecords = !!o.flagBadRecords;
+	}
+	out.positionalValidity = validity;
+	return out;
+}
+
+function NestThematicQualityProcessSelections(o) {
+	var out, byValues, validity;
+	if (!o) return null;
+	out = {
+		attributeSelection: { column: o.thematicAttributeSelected || o.attributeSelected || "" },
+		thematicAccuracyByColumn: {
+			enabled: !!o.accuracyColumn,
+			uncertaintyColumn: o.uncertantyColumnValue || ""
+		}
+	};
+	byValues = { enabled: !!o.accuracyValues };
+	if (o.accuracyValues) {
+		byValues.way = o.inputWayValue2 || "alfaNum";
+		byValues.grouping = {
+			option: o.grouped ? "grouped" : "all",
+			column: o.grouped || "",
+			createNewColumns: true
+		};
+	}
+	out.thematicAccuracyByValues = byValues;
+	validity = { enabled: !!o.thematicValidity };
+	if (o.thematicValidity) {
+		validity.option = o.validityWay || "list";
+		if (validity.option === "list")
+			validity.referenceColumn = o.referenceAttributeValue || "";
+		else {
+			validity.from = o.from;
+			validity.to = o.to;
+		}
+		validity.flagBadRecords = !!o.flag;
+	}
+	out.thematicValidity = validity;
+	return out;
+}
+
+function CreateEmptySTAMetadata() {
+	return {
+		dataLineage: {
+			steps: []
+		}
+	};
+}
+
+function EnsureSTAMetadata(node) {
+	if (!node)
+		return null;
+	if (!node.STAmetadata)
+		node.STAmetadata = CreateEmptySTAMetadata();
+	if (!node.STAmetadata.dataLineage)
+		node.STAmetadata.dataLineage = { steps: [] };
+	if (!node.STAmetadata.dataLineage.steps)
+		node.STAmetadata.dataLineage.steps = [];
+	return node.STAmetadata;
+}
+
+function CopyParentMetadataToNode(nodeTo, nodeFrom) {
+	if (!nodeTo || !nodeFrom)
+		return;
+	if (nodeFrom.STAmetadata)
+		nodeTo.STAmetadata = deapCopy(nodeFrom.STAmetadata);
+	else
+		EnsureSTAMetadata(nodeTo);
+}
+
+function GetProcessParentNodeIds(node, toolId) {
+	var parents = GetParentNodes(node), ids, i;
+	if (!parents || !parents.length)
+		return null;
+	ids = [];
+	for (i = 0; i < parents.length; i++)
+		if (parents[i] && parents[i].id != null)
+			ids.push(parents[i].id);
+	if (!ids.length)
+		return null;
+	if (toolId === "JoinTables" && ids.length >= 2)
+		return { leftTable: ids[0], rightTable: ids[1] };
+	if (ids.length > 1)
+		return ids;
+	return null;
+}
+
+function BuildProcessStep(node, toolImage, selections) {
+	var toolId = (toolImage || (node && node.image) || "input").replace(/\.png$/i, "");
+	var step = { tool: toolId, date: new Date().toISOString() };
+	var parentIds = GetProcessParentNodeIds(node, toolId);
+	var copy, key;
+	if (parentIds)
+		step.parentNodeIds = parentIds;
+	if (selections != null) {
+		if (Array.isArray(selections))
+			step.columns = deapCopy(selections);
+		else if (typeof selections === "object") {
+			copy = deapCopy(selections);
+			for (key in copy) {
+				if (Object.prototype.hasOwnProperty.call(copy, key) && key !== "tool" && key !== "date")
+					step[key] = copy[key];
+			}
+		}
+	}
+	return step;
+}
+
+// Create/refresh data lineage metadata on input (source) nodes when data is loaded.
+function InitInputNodeMetadata(node, sourceInfo) {
+	var meta, source, payload;
+	if (!node)
+		return;
+	meta = CreateEmptySTAMetadata();
+	source = sourceInfo || {};
+	payload = {};
+	if (source.url || node.STAURL || node.STAfileUrl)
+		payload.url = source.url || node.STAURL || node.STAfileUrl;
+	else if (source.fileName)
+		payload.fileName = source.fileName;
+	if (source.option) payload.option = source.option;
+	if (source.meaningSource) payload.meaningSource = source.meaningSource;
+	if (source.tableName) payload.tableName = source.tableName;
+	if (source.assetId) payload.assetId = source.assetId;
+	if (source.offerId) payload.offerId = source.offerId;
+	if (source.mediaType) payload.mediaType = source.mediaType;
+	meta.dataLineage.steps.push(BuildProcessStep(node, node.image || "input", payload));
+	// Keep any quality infos already on the node (rare for pure inputs).
+	if (node.STAmetadata && node.STAmetadata.dataQualityInfos)
+		meta.dataQualityInfos = deapCopy(node.STAmetadata.dataQualityInfos);
+	node.STAmetadata = meta;
+}
+
+function CollectParentProcessMetadata(node) {
+	var parents = GetParentNodes(node), meta = {}, i, pMeta, steps, branchStep;
+	if (!parents || !parents.length)
+		return CreateEmptySTAMetadata();
+	// Start from first parent; if others have process steps not in the first, append them with a note.
+	if (parents[0].STAmetadata)
+		meta = deapCopy(parents[0].STAmetadata);
+	else
+		meta = CreateEmptySTAMetadata();
+	if (!meta.dataLineage)
+		meta.dataLineage = { steps: [] };
+	if (!meta.dataLineage.steps)
+		meta.dataLineage.steps = [];
+	for (i = 1; i < parents.length; i++) {
+		pMeta = parents[i].STAmetadata;
+		if (!pMeta || !pMeta.dataLineage || !pMeta.dataLineage.steps || !pMeta.dataLineage.steps.length)
+			continue;
+		steps = deapCopy(pMeta.dataLineage.steps);
+		branchStep = BuildProcessStep(node, "parentBranch.png", {
+			parentIndex: i + 1,
+			parentNodeId: parents[i].id
+		});
+		branchStep.branchSteps = steps;
+		meta.dataLineage.steps.push(branchStep);
+	}
+	return meta;
+}
+
+function EnsureEditRecordChanges(node) {
+	if (!node.STAEditRecordChanges)
+		node.STAEditRecordChanges = { edited: [], created: [], deleted: [] };
+	if (!node.STAEditRecordChanges.edited)
+		node.STAEditRecordChanges.edited = [];
+	if (!node.STAEditRecordChanges.created)
+		node.STAEditRecordChanges.created = [];
+	if (!node.STAEditRecordChanges.deleted)
+		node.STAEditRecordChanges.deleted = [];
+	return node.STAEditRecordChanges;
+}
+
+// Rebuild data lineage with a single consolidated EditRecord step (parent lineage + edits so far).
+function SyncEditRecordProcessMetadata(node) {
+	var meta, qualityInfos, selections;
+	if (!node)
+		return;
+	qualityInfos = (node.STAmetadata && node.STAmetadata.dataQualityInfos) ? deapCopy(node.STAmetadata.dataQualityInfos) : null;
+	meta = CollectParentProcessMetadata(node);
+	if (qualityInfos)
+		meta.dataQualityInfos = qualityInfos;
+	if (!meta.dataLineage)
+		meta.dataLineage = { steps: [] };
+	if (!meta.dataLineage.steps)
+		meta.dataLineage.steps = [];
+	selections = EnsureEditRecordChanges(node);
+	// Always one EditRecord step after parent lineage (rebuilds from STAEditRecordChanges).
+	meta.dataLineage.steps.push(BuildProcessStep(node, "EditRecord.png", selections));
+	node.STAmetadata = meta;
+}
+
+function RecordEditRecordChange(node, kind, entry) {
+	var changes, list, i, existing;
+	if (!node || !entry)
+		return;
+	changes = EnsureEditRecordChanges(node);
+	list = changes[kind];
+	if (!list)
+		return;
+	if (kind === "edited") {
+		// Keep original "before" for the same index; refresh "after".
+		for (i = 0; i < list.length; i++) {
+			if (list[i].index === entry.index) {
+				existing = list[i];
+				existing.after = entry.after;
+				if (existing.before == null && entry.before != null)
+					existing.before = entry.before;
+				SyncEditRecordProcessMetadata(node);
+				return;
+			}
+		}
+	}
+	list.push(entry);
+	SyncEditRecordProcessMetadata(node);
+}
+
+function RecordProcessMetadata(node) {
+	var meta, selections, toolImage, qualityInfos;
+	if (!node || !node.image)
+		return;
+	// EditRecord consolidates changes via SyncEditRecordProcessMetadata.
+	if (node.image === "EditRecord.png") {
+		SyncEditRecordProcessMetadata(node);
+		return;
+	}
+	if (node.image === "ViewSTAMetadata.png")
+		return;
+	qualityInfos = (node.STAmetadata && node.STAmetadata.dataQualityInfos) ? deapCopy(node.STAmetadata.dataQualityInfos) : null;
+	meta = CollectParentProcessMetadata(node);
+	if (qualityInfos)
+		meta.dataQualityInfos = qualityInfos;
+	toolImage = node.image;
+	selections = GetProcessSelectionsForNode(node);
+	meta.dataLineage.steps.push(BuildProcessStep(node, toolImage, selections));
+	node.STAmetadata = meta;
+}
+
+function recordedToolUpdate(node) {
+	RecordProcessMetadata(node);
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
+	return true;
+}
+
+// Re-apply a table-tool node's stored config from its parent(s). Returns true if handled.
+function UpdateTableToolFromParent(node) {
+	var img, parentNode, parents, i, idxs, data, id, record, attrs, opts, result, newData;
+	if (!node || !node.image)
+		return false;
+	img = node.image;
+	if (img == "GroupBy.png") {
+		if (typeof UpdateGroupBy === "function")
+			UpdateGroupBy(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "SortByTables.png") {
+		if (typeof UpdateSortByTables === "function" && UpdateSortByTables(node))
+			return recordedToolUpdate(node);
+		parentNode = GetFirstParentNode(node);
+		if (parentNode && parentNode.STAdata) {
+			node.STAdata = deapCopy(parentNode.STAdata);
+			node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+			networkNodes.update(node);
+		}
+		return true;
+	}
+	if (img == "FilterRowsTable.png") {
+		if (typeof UpdateFilterRowsTable === "function")
+			UpdateFilterRowsTable(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "SelectColumnsTable.png") {
+		if (typeof UpdateSelectColumnsTable === "function" && UpdateSelectColumnsTable(node))
+			return recordedToolUpdate(node);
+		parentNode = GetFirstParentNode(node);
+		if (parentNode && parentNode.STAdata) {
+			node.STAdata = deapCopy(parentNode.STAdata);
+			node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+			networkNodes.update(node);
+		}
+		return true;
+	}
+	if (img == "SelectRowTable.png") {
+		parentNode = GetFirstParentNode(node);
+		if (!parentNode || !parentNode.STAdata)
+			return true;
+		i = (typeof node.SelectedRowIndex === "number") ? node.SelectedRowIndex : -1;
+		if (i < 0 || i >= parentNode.STAdata.length)
+			return true;
+		node.STAdata = [deapCopy(parentNode.STAdata[i])];
+		node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+		return recordedToolUpdate(node);
+	}
+	if (img == "SelectRowsTable.png") {
+		parentNode = GetFirstParentNode(node);
+		if (!parentNode || !parentNode.STAdata)
+			return true;
+		idxs = node.SelectedRowIndexes;
+		data = [];
+		if (idxs && idxs.length) {
+			for (i = 0; i < idxs.length; i++) {
+				if (idxs[i] >= 0 && idxs[i] < parentNode.STAdata.length)
+					data.push(deapCopy(parentNode.STAdata[idxs[i]]));
+			}
+		} else if (node.SelectedRowIds && node.SelectedRowIds.length) {
+			for (i = 0; i < parentNode.STAdata.length; i++) {
+				record = parentNode.STAdata[i];
+				id = (record && (record["@iot.id"] != null)) ? record["@iot.id"] : i;
+				if (node.SelectedRowIds.indexOf(id) !== -1 || node.SelectedRowIds.indexOf(String(id)) !== -1)
+					data.push(deapCopy(record));
+			}
+		}
+		node.STAdata = data;
+		node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : (data.length ? getDataAttributes(data) : node.STAdataAttributes);
+		return recordedToolUpdate(node);
+	}
+	if (img == "JoinTables.png") {
+		parents = GetParentNodes(node);
+		if (!parents || parents.length < 2 || !node.STAJoinTables)
+			return true;
+		node.STAdataAttributes = {};
+		node.STAdata = JoinTablesData(parents[0].STAdata, parents[1].STAdata,
+			parents[0].STAdataAttributes ? parents[0].STAdataAttributes : getDataAttributes(parents[0].STAdata),
+			parents[1].STAdataAttributes ? parents[1].STAdataAttributes : getDataAttributes(parents[1].STAdata),
+			node.STAdataAttributes, node.STAJoinTables);
+		return recordedToolUpdate(node);
+	}
+	if (img == "PivotTable.png") {
+		parentNode = GetFirstParentNode(node);
+		if (!parentNode || !parentNode.STAdata || !node.STApivotTable)
+			return true;
+		newData = buildPivotTable(deapCopy(parentNode.STAdata), node.STApivotTable.Rows, node.STApivotTable.Columns, node.STApivotTable.Values, node.STApivotTable.aggregation);
+		if (typeof newData === "string")
+			return true;
+		node.STAdata = newData;
+		node.STAdataAttributes = uploadDataAttributesAddingNewColumns(
+			parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata),
+			newData, "");
+		return recordedToolUpdate(node);
+	}
+	if (img == "TransposeTable.png") {
+		parentNode = GetFirstParentNode(node);
+		if (!parentNode || !parentNode.STAdata || !node.STATransposeTable)
+			return true;
+		newData = buildTransposeTable(deapCopy(parentNode.STAdata),
+			parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata),
+			node.STATransposeTable.headerColumn, node.STATransposeTable.attributeColumnName);
+		if (typeof newData === "string")
+			return true;
+		node.STAdata = newData;
+		node.STAdataAttributes = getDataAttributes(newData);
+		return recordedToolUpdate(node);
+	}
+	if (img == "SeparateColumns.png") {
+		parentNode = GetFirstParentNode(node);
+		if (!parentNode || !parentNode.STAdata || !node.STASeparateColumns)
+			return true;
+		opts = node.STASeparateColumns;
+		attrs = parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
+		if (opts.mode === "json") {
+			result = separateObjectColumns(deapCopy(parentNode.STAdata), attrs, {
+				arraysAsRecords: !!opts.arraysAsRecords,
+				removeAlreadyPresent: !!opts.removeAlreadyPresent
+			});
+		} else if (opts.mode === "arrayColumns") {
+			result = separateColumnArrayColumns(deapCopy(parentNode.STAdata), attrs, opts.columnName, opts.delimiter);
+		} else if (opts.mode === "arrayRecords") {
+			result = separateColumnArrayRecords(deapCopy(parentNode.STAdata), attrs, opts.columnName, opts.delimiter);
+		} else
+			return true;
+		if (!result)
+			return true;
+		node.STAdata = result.data;
+		node.STAdataAttributes = result.dataAttributes;
+		return recordedToolUpdate(node);
+	}
+	if (img == "Replace.png") {
+		if (UpdateReplaceTextInTable(node))
+			return recordedToolUpdate(node);
+		parentNode = GetFirstParentNode(node);
+		if (parentNode && parentNode.STAdata) {
+			node.STAdata = deapCopy(parentNode.STAdata);
+			node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+			networkNodes.update(node);
+		}
+		return true;
+	}
+	if (img == "CreateColumns.png") {
+		if (UpdateCreateColumns(node))
+			return recordedToolUpdate(node);
+		parentNode = GetFirstParentNode(node);
+		if (parentNode && parentNode.STAdata) {
+			node.STAdata = deapCopy(parentNode.STAdata);
+			node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+			networkNodes.update(node);
+		}
+		return true;
+	}
+	if (img == "AggregateColumns.png") {
+		if (UpdateAggregateColumns(node))
+			return recordedToolUpdate(node);
+		parentNode = GetFirstParentNode(node);
+		if (parentNode && parentNode.STAdata) {
+			node.STAdata = deapCopy(parentNode.STAdata);
+			node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+			networkNodes.update(node);
+		}
+		return true;
+	}
+	if (img == "ColumnsCalculator.png") {
+		if (UpdateColumnsCalculator(node))
+			return recordedToolUpdate(node);
+		parentNode = GetFirstParentNode(node);
+		if (parentNode && parentNode.STAdata) {
+			node.STAdata = deapCopy(parentNode.STAdata);
+			node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+			networkNodes.update(node);
+		}
+		return true;
+	}
+	if (img == "Meaning.png") {
+		UpdateMeaningTable(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "EditRecord.png") {
+		// Special case: edited rows are the data itself (no re-applicable marks).
+		return false;
+	}
+	if (img == "ColumnStatistics.png") {
+		if (node.STAColumnStatistics && UpdateColumnStatistics(node))
+			return recordedToolUpdate(node);
+		return false;
+	}
+	if (img == "ConcatenateTables.png") {
+		if (UpdateConcatenateTables(node))
+			return recordedToolUpdate(node);
+		return false;
+	}
+	if (img == "AddColumnPnt.png") {
+		if (UpdateAddColumnPnt(node))
+			return recordedToolUpdate(node);
+		parentNode = GetFirstParentNode(node);
+		if (parentNode && parentNode.STAdata) {
+			node.STAdata = deapCopy(parentNode.STAdata);
+			node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+			networkNodes.update(node);
+		}
+		return true;
+	}
+	if (img == "AddColumnBBox.png") {
+		if (UpdateAddColumnBBox(node))
+			return recordedToolUpdate(node);
+		parentNode = GetFirstParentNode(node);
+		if (parentNode && parentNode.STAdata) {
+			node.STAdata = deapCopy(parentNode.STAdata);
+			node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+			networkNodes.update(node);
+		}
+		return true;
+	}
+	if (img == "formatConsistency.png") {
+		UpdateFormatConsistency(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "completness.png") {
+		UpdateCompleteness(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "logicalConsistency.png") {
+		UpdateLogicalConsistency(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "temporalQuality.png") {
+		UpdateTemporalQuality(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "positionalQuality.png") {
+		UpdatePositionalQuality(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "thematicQuality.png") {
+		UpdateThematicQuality(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "misclassificationMatrix.png") {
+		UpdateMisclassificationMatrix(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "uncertainty.png") {
+		UpdateUncertainty(node);
+		return recordedToolUpdate(node);
+	}
+	if (img == "qualityResultsViewer.png") {
+		UpdateQualityResultsViewer(node);
+		return recordedToolUpdate(node);
+	}
+	return false;
+}
+
+function refreshOpenChartDialogIfNode(node) {
+	if (!node)
+		return;
+	if (node.image == "ScatterPlot.png" && isNodeDialogOpen("DialogScatterPlot") && getNodeDialog("DialogScatterPlot") === node)
+		UpdateScatterPlot(null);
+	else if (node.image == "BarPlot.png" && isNodeDialogOpen("DialogBarPlot") && getNodeDialog("DialogBarPlot") === node)
+		DrawBarPlot(null);
+	else if (node.image == "RadarPlot.png" && isNodeDialogOpen("DialogRadarPlot") && getNodeDialog("DialogRadarPlot") === node)
+		DrawRadarPlot(null);
+	else if (node.image == "circularChart.png" && isNodeDialogOpen("DialogCircularChart") && getNodeDialog("DialogCircularChart") === node)
+		DrawCircularChart(null);
+}
+
 function UpdateChildenTable(parentNode) {
 	var nodeIds = network.getConnectedNodes(parentNode.id, 'to');
 	for (var i = 0; i < nodeIds.length; i++) {
-		var node=networkNodes.get(nodeIds[i]);
-		//if (parentNode.STAdata) { 
-		//	if (node.image == "SelectColumnsTable.png" || node.image == "Meaning.png"))
-		StartCircularImage(node, parentNode, false, false, true);  // Before was UpdateChildTableNode(node, parentNode);
-		//}
+		var node = networkNodes.get(nodeIds[i]);
+		if (!UpdateTableToolFromParent(node))
+			StartCircularImage(node, parentNode, false, false, true);
+		updateQueryAndTableArea(node);
+		refreshOpenChartDialogIfNode(node);
 		UpdateChildenTable(node);
-	 }
+	}
 }
 
 async function UpdateChildenLoadJSONCallback(parentNode) {
 	var nodeIds = network.getConnectedNodes(parentNode.id, 'to');
 	for (var i = 0; i < nodeIds.length; i++) {
-		var node = networkNodes.get(nodeIds[i])
-		//if (node.image == "SeparateColumns.png")
-			//SeparateColumnsNode(node, parentNode); No se si te sentit perque ara hi ha més possibilitats que quan es va pensar això
-		//else 
-		if (node.image == "SelectColumnsTable.png") {
-			//pensar com es podria fer.
-			showInfoMessage({cat: "L'actualització automàtica de Selecciona columnes STA no està implementada per als nodes de taula.", spa: "La actualización automática de Selecciona columnas STA no está implementada para los nodos de tabla.", eng: "Automatic update of SelectColumns not implemented for table nodes."});
-		} else if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || (STAOperations[removeFileExtension(node.image)] && STAOperations[removeFileExtension(node.image)].callSTALoad)) {
+		var node = networkNodes.get(nodeIds[i]);
+		if (IdOfSTAEntity(node) != -1 || IdOfSTASpecialQueries(node)!=-1 || (STAOperations[removeFileExtension(node.image)] && STAOperations[removeFileExtension(node.image)].callSTALoad)) {
 			showInfoMessage({cat: "S'està actualitzant {0} ...", spa: "Actualizando {0} ...", eng: "Updating {0} ..."}, removeFileExtension(node.image));
 			await LoadJSONNodeSTAData(node);
 		} else if (node.image == "OneValueSTA.png") {
@@ -5184,9 +6245,21 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 				node.STAtimeOut=null;
 			}
 			await requestAndRefreshCountResults(node, node.STAredrawPeriodCount);
-		} else if (node.image == "GroupBy.png") {
-			UpdateGroupBy(node);
-			UpdateChildenLoadJSONCallback(node);
+		} else if (UpdateTableToolFromParent(node)) {
+			if (node.image == "ScatterPlot.png") {
+				if (isNodeDialogOpen("DialogScatterPlot"))
+					UpdateScatterPlot(null);
+			} else if (node.image == "BarPlot.png") {
+				if (isNodeDialogOpen("DialogBarPlot"))
+					DrawBarPlot(null);
+			} else if (node.image == "RadarPlot.png") {
+				if (isNodeDialogOpen("DialogRadarPlot"))
+					DrawRadarPlot(null);
+			} else if (node.image == "circularChart.png") {
+				if (isNodeDialogOpen("DialogCircularChart"))
+					DrawCircularChart(null);
+			} else
+				await UpdateChildenLoadJSONCallback(node);
 		} else if (node.image == "ScatterPlot.png") {
 			if (isNodeDialogOpen("DialogScatterPlot"))
 				UpdateScatterPlot(null);
@@ -5199,6 +6272,9 @@ async function UpdateChildenLoadJSONCallback(parentNode) {
 		} else if (node.image == "circularChart.png") {
 			if (isNodeDialogOpen("DialogCircularChart"))
 				DrawCircularChart(null);
+		} else {
+			StartCircularImage(node, parentNode, false, false, true);
+			await UpdateChildenLoadJSONCallback(node);
 		}
 	}
 }
@@ -6253,8 +7329,10 @@ function SaveMeaningTable(event) {
 	hideNodeDialog("DialogMeaningTable", event);
 	var node=getNodeDialog("DialogMeaningTable");
 	node.STAdataAttributes=GetMeaningTable(node);
+	RecordProcessMetadata(node);
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
 }
 
 const urlSchemaMeaning="https://github.com/grumets/MiraMonMapBrowser/config_attributes_metaschema.json#/definitions/AttributeDescription";
@@ -6550,11 +7628,31 @@ function GetSelectedOptionsAddColumnPnt(){
 	return selectedOptions;
 }
 
+function UpdateAddColumnPnt(node) {
+	var parentNode, src, attrs, opts;
+	if (!node || !node.STAAddColumnPnt)
+		return false;
+	parentNode = GetFirstParentNode(node);
+	if (!parentNode || !parentNode.STAdata)
+		return false;
+	src = deapCopy(parentNode.STAdata);
+	attrs = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(src);
+	opts = node.STAAddColumnPnt;
+	AddColumnPntFromAnother(src, attrs, opts);
+	node.STAdata = src;
+	node.STAdataAttributes = attrs;
+	networkNodes.update(node);
+	return true;
+}
+
 function GetAddColumnPnt(event) {
 	hideNodeDialog("DialogAddColumnPnt", event);
 	var node=getNodeDialog("DialogAddColumnPnt");
-	var selectedOptions=GetSelectedOptionsAddColumnPnt();
-	AddColumnPntFromAnother(node.STAdata, node.STAdataAttributes, selectedOptions);
+	node.STAAddColumnPnt = GetSelectedOptionsAddColumnPnt();
+	if (!UpdateAddColumnPnt(node)) {
+		AddColumnPntFromAnother(node.STAdata, node.STAdataAttributes, node.STAAddColumnPnt);
+	}
+	RecordProcessMetadata(node);
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
 	UpdateChildenTable(node);
@@ -6580,11 +7678,31 @@ function GetSelectedOptionsAddColumnBBox(){
 	return selectedOptions;
 }
 
+function UpdateAddColumnBBox(node) {
+	var parentNode, src, attrs, opts;
+	if (!node || !node.STAAddColumnBBox)
+		return false;
+	parentNode = GetFirstParentNode(node);
+	if (!parentNode || !parentNode.STAdata)
+		return false;
+	src = deapCopy(parentNode.STAdata);
+	attrs = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(src);
+	opts = node.STAAddColumnBBox;
+	AddColumnBBoxFromAnother(src, attrs, opts);
+	node.STAdata = src;
+	node.STAdataAttributes = attrs;
+	networkNodes.update(node);
+	return true;
+}
+
 function GetAddColumnBBox(event) {
 	hideNodeDialog("DialogAddColumnBBox", event);
 	var node=getNodeDialog("DialogAddColumnBBox");
-	var selectedOptions=GetSelectedOptionsAddColumnBBox();
-	AddColumnBBoxFromAnother(node.STAdata, node.STAdataAttributes, selectedOptions);
+	node.STAAddColumnBBox = GetSelectedOptionsAddColumnBBox();
+	if (!UpdateAddColumnBBox(node)) {
+		AddColumnBBoxFromAnother(node.STAdata, node.STAdataAttributes, node.STAAddColumnBBox);
+	}
+	RecordProcessMetadata(node);
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
 	UpdateChildenTable(node);
@@ -6614,6 +7732,7 @@ function GetCreateTableDGGSCodes(event) {
 	var result=CreateTableDGGSZoneIds(selectedOptions);
 	node.STAdata=result.data;
 	node.STAdataAttributes=result.dataAttributes;
+	InitInputNodeMetadata(node, {});
 	networkNodes.update(node);
 	updateQueryAndTableArea(node);
 	UpdateChildenTable(node);
@@ -6630,17 +7749,30 @@ var cdns=[];
 }
 
 function ShowAddColumnPntDialog(node) {
-	var dataAttributes=currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(node.STAdata);
-	PopulateSelectSaveLayerDialog("DialogAddColumnPntJSON", dataAttributes, "geometry", "document.getElementById('DialogAddColumnPntRadioJSON').click()"); 
-	PopulateSelectSaveLayerDialog("DialogAddColumnPntWKT", dataAttributes, "wkt", "document.getElementById('DialogAddColumnPntRadioWKT').click()");
-	PopulateSelectSaveLayerDialog("DialogAddColumnPntZoneId", dataAttributes, "zone id", "document.getElementById('DialogAddColumnPntRadioDGGS').click()");
-	PopulateSelectSaveLayerDialog("DialogAddColumnPntLongitude", dataAttributes, "long", "document.getElementById('DialogAddColumnPntRadioLL').click()");
-	PopulateSelectSaveLayerDialog("DialogAddColumnPntLatitude", dataAttributes, "lat", "document.getElementById('DialogAddColumnPntRadioLL').click()");
-	document.getElementById("DialogAddColumnPntCRSSelect").innerHTML=getOptionsSelectProj4();
-	document.getElementById("DialogAddColumnPntCRSOutSelect").innerHTML=getOptionsSelectProj4();
-	document.getElementById("DialogAddColumnPntDGGSSelect").innerHTML=getOptionsSelectDGGSHashUber();
-	document.getElementById("DialogAddColumnPntDGGSOutSelect").innerHTML=getOptionsSelectDGGSHashUber();
-
+	var parentNode=GetFirstParentNode(node);
+	var opts=node.STAAddColumnPnt || {};
+	var dataAttributes=(parentNode && parentNode.STAdataAttributes) ? parentNode.STAdataAttributes :
+		(node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(node.STAdata));
+	PopulateSelectSaveLayerDialog("DialogAddColumnPntJSON", dataAttributes, opts.JSONIn || "geometry", "document.getElementById('DialogAddColumnPntRadioJSON').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnPntWKT", dataAttributes, opts.WKTIn || "wkt", "document.getElementById('DialogAddColumnPntRadioWKT').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnPntZoneId", dataAttributes, opts.zoneIdIn || "zone id", "document.getElementById('DialogAddColumnPntRadioDGGS').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnPntLongitude", dataAttributes, opts.longitudeIn || "long", "document.getElementById('DialogAddColumnPntRadioLL').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnPntLatitude", dataAttributes, opts.latitudeIn || "lat", "document.getElementById('DialogAddColumnPntRadioLL').click()");
+	document.getElementById("DialogAddColumnPntCRSSelect").innerHTML=getOptionsSelectProj4(opts.CRSIn);
+	document.getElementById("DialogAddColumnPntCRSOutSelect").innerHTML=getOptionsSelectProj4(opts.CRSOut);
+	document.getElementById("DialogAddColumnPntDGGSSelect").innerHTML=getOptionsSelectDGGSHashUber(opts.DGGSIn);
+	document.getElementById("DialogAddColumnPntDGGSOutSelect").innerHTML=getOptionsSelectDGGSHashUber(opts.DGGSOut);
+	if (opts.radioIn==="JSON") document.getElementById("DialogAddColumnPntRadioJSON").checked=true;
+	else if (opts.radioIn==="WKT") document.getElementById("DialogAddColumnPntRadioWKT").checked=true;
+	else if (opts.radioIn==="DGGS") document.getElementById("DialogAddColumnPntRadioDGGS").checked=true;
+	else if (opts.radioIn==="LL") document.getElementById("DialogAddColumnPntRadioLL").checked=true;
+	if (opts.radioOut==="JSON") document.getElementById("DialogAddColumnPntRadioJSONOut").checked=true;
+	else if (opts.radioOut==="WKT") document.getElementById("DialogAddColumnPntRadioWKTOut").checked=true;
+	else if (opts.radioOut==="DGGS") document.getElementById("DialogAddColumnPntRadioDGGSOut").checked=true;
+	else if (opts.radioOut==="LL") document.getElementById("DialogAddColumnPntRadioLLOut").checked=true;
+	if (opts.nameOut != null) document.getElementById("DialogAddColumnPntNameText").value=opts.nameOut;
+	if (opts.latitudeOut != null) document.getElementById("DialogAddColumnPntLatitudeNameText").value=opts.latitudeOut;
+	if (opts.level != null) document.getElementById("DialogAddColumnPntLevelText").value=opts.level;
 	saveNodeDialog("DialogAddColumnPnt", node);
 	ChangeAddColumnPntRadioOut();
 }
@@ -6663,16 +7795,28 @@ function ChangeAddColumnPntRadioOut(event) {
 }
 
 function ShowAddColumnBBoxDialog(node) {
-	var dataAttributes=currentNode.STAdataAttributes ? currentNode.STAdataAttributes : getDataAttributes(node.STAdata);
-	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxJSON", dataAttributes, "geometry", "document.getElementById('DialogAddColumnBBoxRadioJSON').click()"); 
-	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxWKT", dataAttributes, "wkt", "document.getElementById('DialogAddColumnBBoxRadioWKT').click()");
-	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMinLongitude", dataAttributes, "MinLong", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
-	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMinLatitude", dataAttributes, "MinLat", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
-	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMaxLongitude", dataAttributes, "MaxLong", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
-	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMaxLatitude", dataAttributes, "MaxLat", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
-	document.getElementById("DialogAddColumnBBoxCRSSelect").innerHTML=getOptionsSelectProj4();
-	document.getElementById("DialogAddColumnBBoxCRSOutSelect").innerHTML=getOptionsSelectProj4();
-
+	var parentNode=GetFirstParentNode(node);
+	var opts=node.STAAddColumnBBox || {};
+	var dataAttributes=(parentNode && parentNode.STAdataAttributes) ? parentNode.STAdataAttributes :
+		(node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(node.STAdata));
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxJSON", dataAttributes, opts.JSONIn || "geometry", "document.getElementById('DialogAddColumnBBoxRadioJSON').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxWKT", dataAttributes, opts.WKTIn || "wkt", "document.getElementById('DialogAddColumnBBoxRadioWKT').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMinLongitude", dataAttributes, opts.minLongIn || "MinLong", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMinLatitude", dataAttributes, opts.minLatIn || "MinLat", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMaxLongitude", dataAttributes, opts.maxLongIn || "MaxLong", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
+	PopulateSelectSaveLayerDialog("DialogAddColumnBBoxMaxLatitude", dataAttributes, opts.maxLatIn || "MaxLat", "document.getElementById('DialogAddColumnBBoxRadioLL').click()");
+	document.getElementById("DialogAddColumnBBoxCRSSelect").innerHTML=getOptionsSelectProj4(opts.CRSIn);
+	document.getElementById("DialogAddColumnBBoxCRSOutSelect").innerHTML=getOptionsSelectProj4(opts.CRSOut);
+	if (opts.radioIn==="JSON") document.getElementById("DialogAddColumnBBoxRadioJSON").checked=true;
+	else if (opts.radioIn==="WKT") document.getElementById("DialogAddColumnBBoxRadioWKT").checked=true;
+	else if (opts.radioIn==="LL") document.getElementById("DialogAddColumnBBoxRadioLL").checked=true;
+	if (opts.radioOut==="JSON") document.getElementById("DialogAddColumnBBoxRadioJSONOut").checked=true;
+	else if (opts.radioOut==="WKT") document.getElementById("DialogAddColumnBBoxRadioWKTOut").checked=true;
+	else if (opts.radioOut==="LL") document.getElementById("DialogAddColumnBBoxRadioLLOut").checked=true;
+	if (opts.nameOut != null) document.getElementById("DialogAddColumnBBoxNameText").value=opts.nameOut;
+	if (opts.minLatOut != null) document.getElementById("DialogAddColumnBBoxMinLatitudeNameText").value=opts.minLatOut;
+	if (opts.maxLongOut != null) document.getElementById("DialogAddColumnBBoxMaxLongitudeNameText").value=opts.maxLongOut;
+	if (opts.maxLatOut != null) document.getElementById("DialogAddColumnBBoxMaxLatitudeNameText").value=opts.maxLatOut;
 	saveNodeDialog("DialogAddColumnBBox", node);
 	ChangeAddColumnBBoxRadioOut();
 }
@@ -6978,6 +8122,11 @@ function SeparateColumns(event) {
 			options.arraysAsRecords=true;
 		if (document.getElementById("DialogSeparateColumns_RemovePresent").checked)
 			options.removeAlreadyPresent=true;
+		currentNode.STASeparateColumns = {
+			mode: "json",
+			arraysAsRecords: !!options.arraysAsRecords,
+			removeAlreadyPresent: !!options.removeAlreadyPresent
+		};
 		currentNode.STAdataAttributes={};
 		var result=separateObjectColumns(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, options);
 	} else { //document.getElementById("DialogSeparateColumnsAs_Columns").checked //ARRAY
@@ -6988,13 +8137,17 @@ function SeparateColumns(event) {
 			showInfoMessage({cat: "No s'han carregat dades al node pare.", spa: "No se han cargado datos en el nodo padre.", eng: "No data loaded in the parent node."});
 			return;
 		}
-		if (document.getElementById("DialogSeparateColumnsAs_Columns").checked) //array columns
+		if (document.getElementById("DialogSeparateColumnsAs_Columns").checked) { //array columns
+			currentNode.STASeparateColumns = { mode: "arrayColumns", columnName: columnName, delimiter: delimiter };
 			var result=separateColumnArrayColumns(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, columnName, delimiter);
-		else //array records
+		} else { //array records
+			currentNode.STASeparateColumns = { mode: "arrayRecords", columnName: columnName, delimiter: delimiter };
 			var result=separateColumnArrayRecords(parentNode.STAdata, parentNode.STAdataAttributes ? parentNode.STAdataAttributes : null, columnName, delimiter);
+		}
 	}
 	currentNode.STAdata=result.data;
 	currentNode.STAdataAttributes=result.dataAttributes;
+	RecordProcessMetadata(currentNode);
 	networkNodes.update(currentNode);
 	updateQueryAndTableArea(currentNode);
 	UpdateChildenTable(currentNode);
@@ -7002,24 +8155,41 @@ function SeparateColumns(event) {
 
 function populateSelectColumnSeparateColumns() {
 	var parentNode= GetFirstParentNode(currentNode);
+	var opts, i, selectedCol;
 	if (!parentNode || !parentNode.STAdata) {
 		showInfoMessage({cat: "No s'han carregat dades al node pare.", spa: "No se han cargado datos en el nodo padre.", eng: "No data loaded in the parent node."});
 		return;
 	}
 	currentNode.STAURL=null;
 	networkNodes.update(currentNode);
-	
+
 	var dataAttributes=(parentNode.STAdataAttributes) ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
 
 	var attributes= Object.keys(dataAttributes);
 	var selectColumnName= document.getElementById("SeparateColumsSelect_column");
 	selectColumnName.innerHTML="";
+	opts = currentNode.STASeparateColumns || {};
+	selectedCol = opts.columnName || "";
 	var cdns=[];
-	for (var i=0;i< attributes.length;i++) {
-		cdns.push(`<option value="${attributes[i]}"> ${attributes[i]} (${dataAttributes[attributes[i]].type})</option>`);
+	for (i=0;i< attributes.length;i++) {
+		cdns.push(`<option value="${attributes[i]}"${(selectedCol===attributes[i]) ? " selected" : ""}> ${attributes[i]} (${dataAttributes[attributes[i]].type})</option>`);
 	}
 	selectColumnName.innerHTML+=cdns.join("");
-	document.getElementById("SeparateColumsInput_column").value=",";
+	document.getElementById("SeparateColumsInput_column").value = (opts.delimiter != null && opts.delimiter !== "") ? opts.delimiter : ",";
+	if (opts.mode === "arrayColumns" || opts.mode === "arrayRecords") {
+		document.getElementById("DialogSeparateColumnsLists").checked = true;
+		if (opts.mode === "arrayRecords")
+			document.getElementById("DialogSeparateColumnsAs_Records").checked = true;
+		else
+			document.getElementById("DialogSeparateColumnsAs_Columns").checked = true;
+	} else {
+		document.getElementById("DialogSeparateColumnsJSON").checked = true;
+		if (opts.arraysAsRecords)
+			document.getElementById("DialogSeparateColumnsAs_Records").checked = true;
+		else
+			document.getElementById("DialogSeparateColumnsAs_Columns").checked = true;
+	}
+	document.getElementById("DialogSeparateColumns_RemovePresent").checked = !!opts.removeAlreadyPresent;
 }
 
 function ShowQueryNode(node) {
@@ -7401,12 +8571,97 @@ function ShowTableNode(node) {
 	}
 }
 
-function ShowMetadataDialog(nodeId) {
-	var node=networkNodes.get(nodeId);
-	if (node && node.STAmetadata) {
-		document.getElementById("dataQualityResult_info").innerHTML= metadataAsHTML(node.STAmetadata);
-		showNodeDialog("DialogDataQualityResult");		
+function GetSTAMetadataDialogSourceNode() {
+	var sourceId = document.getElementById("DialogViewSTAMetadataSourceNodeId");
+	if (sourceId && sourceId.value)
+		return networkNodes.get(sourceId.value);
+	return null;
+}
+
+function PopulateSTAMetadataDialog(sourceNode, dialogOwnerNode) {
+	var meta, jsonText, htmlBox, jsonBox, jsonWrap, toggleBtn, subtitle, nSteps, owner;
+	if (!sourceNode)
+		return;
+	meta = sourceNode.STAmetadata || CreateEmptySTAMetadata();
+	try {
+		jsonText = JSON.stringify(meta, null, 2);
+	} catch (e) {
+		jsonText = "{}";
 	}
+	htmlBox = document.getElementById("DialogViewSTAMetadataHTML");
+	jsonBox = document.getElementById("DialogViewSTAMetadataJSON");
+	jsonWrap = document.getElementById("DialogViewSTAMetadataJSONWrap");
+	toggleBtn = document.getElementById("DialogViewSTAMetadataToggleJSON");
+	subtitle = document.getElementById("DialogViewSTAMetadataSubtitle");
+	nSteps = (meta.dataLineage && meta.dataLineage.steps) ? meta.dataLineage.steps.length : 0;
+	if (htmlBox)
+		htmlBox.innerHTML = (typeof metadataAsHTML === "function") ? metadataAsHTML(meta) : "";
+	if (jsonBox)
+		jsonBox.value = jsonText;
+	if (jsonWrap)
+		jsonWrap.style.display = "none";
+	if (toggleBtn)
+		toggleBtn.textContent = DonaCadena({cat: "Mostra com a JSON", spa: "Mostrar como JSON", eng: "Show as JSON"});
+	if (subtitle) {
+		subtitle.textContent = DonaCadena({
+			cat: "Node: " + (sourceNode.label || sourceNode.id) + (nSteps ? (" · " + nSteps + " passos de llinatge") : ""),
+			spa: "Nodo: " + (sourceNode.label || sourceNode.id) + (nSteps ? (" · " + nSteps + " pasos de linaje") : ""),
+			eng: "Node: " + (sourceNode.label || sourceNode.id) + (nSteps ? (" · " + nSteps + " lineage steps") : "")
+		});
+	}
+	document.getElementById("DialogViewSTAMetadataSourceNodeId").value = sourceNode.id;
+	owner = dialogOwnerNode || sourceNode;
+	saveNodeDialog("DialogViewSTAMetadata", owner);
+	showNodeDialog("DialogViewSTAMetadata");
+}
+
+function ShowMetadataDialog(nodeId) {
+	var node = networkNodes.get(nodeId);
+	if (!node)
+		return;
+	PopulateSTAMetadataDialog(node, node);
+}
+
+function ShowViewSTAMetadataDialog(viewerNode) {
+	var parentNode = GetFirstParentNode(viewerNode);
+	if (!parentNode) {
+		alert(DonaCadena({cat: "Connecteu aquesta eina a un node pare.", spa: "Conecte esta herramienta a un nodo padre.", eng: "Connect this tool to a parent node."}));
+		return;
+	}
+	PopulateSTAMetadataDialog(parentNode, viewerNode);
+}
+
+function ToggleViewSTAMetadataJSON(event) {
+	var wrap, btn, showing;
+	if (event && event.preventDefault)
+		event.preventDefault();
+	wrap = document.getElementById("DialogViewSTAMetadataJSONWrap");
+	btn = document.getElementById("DialogViewSTAMetadataToggleJSON");
+	if (!wrap)
+		return false;
+	showing = wrap.style.display !== "none";
+	wrap.style.display = showing ? "none" : "block";
+	if (btn) {
+		btn.textContent = showing
+			? DonaCadena({cat: "Mostra com a JSON", spa: "Mostrar como JSON", eng: "Show as JSON"})
+			: DonaCadena({cat: "Amaga el JSON", spa: "Ocultar el JSON", eng: "Hide JSON"});
+	}
+	return false;
+}
+
+function DownloadViewSTAMetadata(event) {
+	var sourceNode, meta, name;
+	if (event && event.preventDefault)
+		event.preventDefault();
+	sourceNode = GetSTAMetadataDialogSourceNode();
+	if (!sourceNode)
+		sourceNode = getNodeDialog("DialogViewSTAMetadata");
+	meta = (sourceNode && sourceNode.STAmetadata) ? sourceNode.STAmetadata : CreateEmptySTAMetadata();
+	name = (sourceNode && sourceNode.label) ? String(sourceNode.label).replace(/[^\w\-]+/g, "_") : "STAmetadata";
+	if (!name)
+		name = "STAmetadata";
+	SaveLocalDataFile(JSON.stringify(meta, null, 2), name + "_STAmetadata", ".json", "application/json");
+	return false;
 }
 
 
@@ -7594,6 +8849,8 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		alert(DonaCadenaFmt({cat: "Node incompatible. {0}. No s'ha afegit.", spa: "Nodo incompatible. {0}. No se ha añadido.", eng: "Incompatible node. {0}. It has not been added."}, errorText));
 		return null;
 	}
+	// Propagate dataLineage/quality metadata from parent; tools will append steps later via RecordProcessMetadata.
+	CopyParentMetadataToNode(nodeTo, nodeFrom);
 	if (staNodes && nodeFrom.STAURL && IdOfSTAEntity(nodeTo) != -1) {
 		if (nodeFrom.image=="sta.png" || nodeFrom.image=="staRoot.png" || nodeFrom.image=="edcAsset.png")
 			nodeTo.STAURL = nodeFrom.STAURL + "/" + STAEntitiesArray[IdOfSTAEntity(nodeTo)];
@@ -8427,6 +9684,9 @@ function networkDoubleClick(params) {
 				showNodeDialog("DialogOK");
 			}
 		}
+		else if (currentNode.image == "ViewSTAMetadata.png") {
+			ShowViewSTAMetadataDialog(currentNode);
+		}
 		else if (currentNode.image == "UploadObservations.png") {
 			ShowUploadObservationsDialog(currentNode);
 			showNodeDialog("DialogUploadObservations");
@@ -8543,7 +9803,7 @@ function networkDoubleClick(params) {
 						currentNode.STAdataAttributes=parentNode.STAdataAttributes;
 						populateuploadToICDialogUploadIC(currentNode);
 						if (parentNode.STAmetadata && open==true) {
-							currentNode.STAmetadata= parentNode.STAmetadata;
+							CopyParentMetadataToNode(currentNode, parentNode);
 						}else{
 							alert(DonaCadena({cat: "Les dades han de contenir metadades", spa: "Los datos deben contener metadatos", eng: "The data has to contain metadata"}));
 						}
@@ -8561,13 +9821,11 @@ function networkDoubleClick(params) {
 		else if(currentNode.image =="uncertainty.png"){
 			saveNodeDialog("DialogUncertainty", currentNode);
 			var parentNode=GetFirstParentNode(currentNode);
-			var open=true; //Canviar a false si cal
+			var open=true;
 			if (parentNode){
 				 if(parentNode.STAdata) {
-				 	currentNode.STAdata=parentNode.STAdata;
-					currentNode.STAdataAttributes=parentNode.STAdataAttributes;
-					if (parentNode.STAmetadata)currentNode.STAmetadata=parentNode.STAmetadata;
-					populateUncertaintyDialog(currentNode)
+					PrepareQualityDialogFromParent(currentNode, parentNode);
+					populateUncertaintyDialog(currentNode);
 					networkNodes.update(currentNode);
 				}else{
 				 	open=false;
@@ -8714,61 +9972,42 @@ function networkDoubleClick(params) {
 		}				
 		else if (currentNode.image == "CreateColumns.png") {
 			var parentNode=GetFirstParentNode(currentNode);
-
-			createColumnListToAddColumns();//create columnsList including columns in the table 
 			saveNodeDialog("DialogCreateColumns", currentNode);
-			if (parentNode.STAdata){
-				currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
-				currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
-			}
-			 if (parentNode) {
-				if (!currentNode.STAnewColumnsToAdd){
-					currentNode.STAnewColumnsToAdd=[]; //First time: To create it. Later: To erase old values					
-				}
+			if (parentNode) {
+				// Keep processed STAdata; OK will re-read the parent. Snapshot marks for Cancel.
+				SnapshotTableToolDialogConfig(currentNode);
+				if (!currentNode.STAnewColumnsToAdd)
+					currentNode.STAnewColumnsToAdd=[];
+				createColumnListToAddColumns();
 				networkNodes.update(currentNode);
 				drawTableInColumnBoxTableInCreateColumns();
 				showNodeDialog("DialogCreateColumns");
-			 }		
+			}
 		}
 		else if (currentNode.image == "AggregateColumns.png") {
 			var parentNode=GetFirstParentNode(currentNode);
-			createColumnListToAddColumns();//create columnsList including columns in the table 
-			if (parentNode.STAdata){
-				currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
-				currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent
-			}
-			fillAggregateColumVariablesList(currentNode);
-			showCheckRadioOptions("operationsFieldSet", "operationsRadioAggrgatedColumns_", AggregationColumnsOptions, 3, "operationsRadioAggrgatedColumns", "writeColumnNameInAggregatedColumns (event)");
 			if (parentNode) {
-				if (!currentNode.STAnewColumnsToAdd){
-					currentNode.STAnewColumnsToAdd=[]; //First time: To create it. Later: To erase old values					
-				}
+				SnapshotTableToolDialogConfig(currentNode);
+				if (!currentNode.STAnewColumnsToAdd)
+					currentNode.STAnewColumnsToAdd=[];
+				createColumnListToAddColumns();
+				fillAggregateColumVariablesList(currentNode);
+				showCheckRadioOptions("operationsFieldSet", "operationsRadioAggrgatedColumns_", AggregationColumnsOptions, 3, "operationsRadioAggrgatedColumns", "writeColumnNameInAggregatedColumns (event)");
 				networkNodes.update(currentNode);
-				drawTableInColumnBoxTableInAggregateColumns(currentNode)
+				drawTableInColumnBoxTableInAggregateColumns(currentNode);
 				showNodeDialog("DialogAggregateColumns");
 			}
 		}
 		else if (currentNode.image == "ColumnsCalculator.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			saveNodeDialog("DialogColumnsCalculator", currentNode);
-			
-			if (parentNode.STAdata){
-				if (currentNode.STAdata){
-					currentNode.STAdataCopy=deapCopy(currentNode.STAdata); //To recovery data if cancel is pressed
-					createColumnListToAddColumns();//create columnsList including columns in the table
-					currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
-				}else{
-					currentNode.STAdata = deapCopy(parentNode.STAdata); //Necessary to reset data taking it from parent	
-					createColumnListToAddColumns();//create columnsList including columns in the table
-				}						
-			}
-			
-			fillCalculatorColumVariablesList();
-			document.getElementById("textAreaFormulaColumnsCalculator").setAttribute("data-mousePosition",0);
 			if (parentNode) {
-				if (!currentNode.STAnewColumnsToAdd){
-					currentNode.STAnewColumnsToAdd=[]; //First time: To create it. Later: To erase old values					
-				}
+				SnapshotTableToolDialogConfig(currentNode);
+				if (!currentNode.STAnewColumnsToAdd)
+					currentNode.STAnewColumnsToAdd=[];
+				createColumnListToAddColumns();
+				fillCalculatorColumVariablesList();
+				document.getElementById("textAreaFormulaColumnsCalculator").setAttribute("data-mousePosition",0);
 				networkNodes.update(currentNode);
 				drawTableInColumnBoxTableInCalculatorColumns();
 				showNodeDialog("DialogColumnsCalculator");
@@ -8797,6 +10036,11 @@ function networkDoubleClick(params) {
 			showNodeDialog("DialogAddColumnBBox");
 		}
 		else if (currentNode.image =="ConcatenateTables.png") {
+			saveNodeDialog("DialogConcatenateTables", currentNode);
+			if (currentNode.STAConcatenateTables && currentNode.STAConcatenateTables.mode === "repeatedColumns")
+				document.getElementById("concatenationType_repeatedColumns").checked = true;
+			else
+				document.getElementById("concatenationType_allColumns").checked = true;
 			showNodeDialog("DialogConcatenateTables");
 		}
 		else if (currentNode.image=="PivotTable.png"){
@@ -8868,9 +10112,7 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "completness.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode && parentNode.STAdata) {
-				currentNode.STAdata= deapCopy(parentNode.STAdata);
-				currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				PrepareQualityDialogFromParent(currentNode, parentNode);
 				populateDialogCompleteness(currentNode);
 				networkNodes.update(currentNode);
 				showNodeDialog("DialogCompleteness");
@@ -8881,9 +10123,7 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "formatConsistency.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode && parentNode.STAdata) {
-				currentNode.STAdata= deapCopy(parentNode.STAdata);
-				currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				PrepareQualityDialogFromParent(currentNode, parentNode);
 				populateDialogFormatConsistency(currentNode);
 				networkNodes.update(currentNode);
 				showNodeDialog("DialogFormatConsistency");
@@ -8896,14 +10136,11 @@ function networkDoubleClick(params) {
 			var parentNode=GetFirstParentNode(currentNode);
 			saveNodeDialog("DialogQualityMisclassificationMatrix", currentNode)
 			if (parentNode && parentNode.STAdata) {
-				currentNode.STAdata= deapCopy(parentNode.STAdata);
-				currentNode.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				PrepareQualityDialogFromParent(currentNode, parentNode);
 				if (!currentNode.STAcolumnsList){
-					currentNode.STAcolumnsList=[]; //First time: To create it. Later: To erase old values					
+					currentNode.STAcolumnsList=[];
 				}
 				populateDialogQualityMisclassificationMatrix(currentNode);
-			// 	networkNodes.update(currentNode);
 			 	showNodeDialog("DialogQualityMisclassificationMatrix");
 			}else{
 				alert(DonaCadena({cat: "El node pare ha de tenir dades per analitzar-les", spa: "El nodo padre debe tener datos para analizarlos", eng: "Parent node must have data to analyze"}));
@@ -8911,7 +10148,10 @@ function networkDoubleClick(params) {
 		}
 		else if (currentNode.image == "logicalConsistency.png") {
 			var parentNode=GetFirstParentNode(currentNode);
-			currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+			if (parentNode)
+				CopyParentMetadataToNode(currentNode, parentNode);
+			else
+				EnsureSTAMetadata(currentNode);
 			if (populateDialogQualityLogicalConsistency(currentNode)){
 				showNodeDialog("DialogQualityLogicalConsistency");
 			}else{
@@ -8921,9 +10161,7 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "temporalQuality.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode && parentNode.STAdata) {
-				currentNode.STAdata= deapCopy(parentNode.STAdata);
-				currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-				currentNode.STAmetadata = (parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				PrepareQualityDialogFromParent(currentNode, parentNode);
 				populateDialogQualityTemporalQuality(currentNode);
 				networkNodes.update(currentNode);
 				showNodeDialog("DialogQualityTemporalQuality");
@@ -8934,9 +10172,7 @@ function networkDoubleClick(params) {
 		else if (currentNode.image == "positionalQuality.png") {
 			var parentNode=GetFirstParentNode(currentNode);
 			if (parentNode && parentNode.STAdata) {
-				currentNode.STAdata= deapCopy(parentNode.STAdata);
-				currentNode.STAdataAttributes= parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
-				currentNode.STAmetadata=(parentNode.STAmetadata) ? parentNode.STAmetadata : {};
+				PrepareQualityDialogFromParent(currentNode, parentNode);
 				populateDialogQualityPositionalQuality(currentNode);
 				networkNodes.update(currentNode);
 				showNodeDialog("DialogQualityPositionalQuality");
@@ -9373,11 +10609,59 @@ async function reloadSTA(event) {
 	}
 }
 
+// Snapshot editable marks when opening Create/Aggregate/Calculator.
+// STAdata stays as the last processed result; Cancel restores marks only.
+function SnapshotTableToolDialogConfig(node) {
+	if (!node) return;
+	node.STADialogSnapshot = {
+		STAnewColumnsToAdd: deapCopy(node.STAnewColumnsToAdd || []),
+		STAcolumnsList: node.STAcolumnsList ? deapCopy(node.STAcolumnsList) : null
+	};
+}
+
+// Open a quality dialog without wiping processed STAdata.
+// Column lists come from the parent; OK/Update* re-reads parent data.
+function PrepareQualityDialogFromParent(node, parentNode) {
+	if (!node || !parentNode || !parentNode.STAdata)
+		return;
+	if (!node.STAdata || !node.STAdata.length) {
+		node.STAdata = deapCopy(parentNode.STAdata);
+		node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+	}
+	node.STADialogAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+	if (!node.STAmetadata)
+		CopyParentMetadataToNode(node, parentNode);
+}
+
+function GetDialogDataAttributes(node) {
+	if (node && node.STADialogAttributes)
+		return node.STADialogAttributes;
+	if (node && node.STAdataAttributes)
+		return node.STAdataAttributes;
+	if (node && node.STAdata)
+		return getDataAttributes(node.STAdata);
+	return {};
+}
+
+function RestoreTableToolDialogConfig(node) {
+	if (!node || !node.STADialogSnapshot) return;
+	node.STAnewColumnsToAdd = node.STADialogSnapshot.STAnewColumnsToAdd || [];
+	if (node.STADialogSnapshot.STAcolumnsList)
+		node.STAcolumnsList = node.STADialogSnapshot.STAcolumnsList;
+	delete node.STADialogSnapshot;
+}
+
+function ClearTableToolDialogSnapshot(node) {
+	if (node && node.STADialogSnapshot)
+		delete node.STADialogSnapshot;
+}
+
 //General to addColumns
 function cancelButtonRecoveryOldData(event){
 	event.preventDefault();
-	currentNode.STAdata=currentNode.STAdataCopy;
-	networkNodes.update(currentNode)
+	// Do not replace STAdata: it must remain the last processed table.
+	RestoreTableToolDialogConfig(currentNode);
+	networkNodes.update(currentNode);
 
 	if (currentNode.image=="CreateColumns.png"){
 		hideNodeDialog("DialogCreateColumns");
@@ -9440,7 +10724,23 @@ function columnExistInTheTable(node, columnName, column){
 }
 
 function createColumnListToAddColumns(){
-	var dataKeys= Object.keys(currentNode.STAdata[0]);
+	var parentNode=GetFirstParentNode(currentNode);
+	var src=(parentNode && parentNode.STAdata && parentNode.STAdata.length) ? parentNode.STAdata :
+		(currentNode.STAdata && currentNode.STAdata.length ? currentNode.STAdata : null);
+	if (!src) {
+		currentNode.STAcolumnsList=[];
+		networkNodes.update(currentNode);
+		return;
+	}
+	var dataKeys= Object.keys(src[0]);
+	// Also reserve names of columns already planned in this dialog.
+	if (currentNode.STAnewColumnsToAdd && currentNode.STAnewColumnsToAdd.length) {
+		for (var i=0;i<currentNode.STAnewColumnsToAdd.length;i++) {
+			var nm=currentNode.STAnewColumnsToAdd[i][1];
+			if (nm && dataKeys.indexOf(nm)===-1)
+				dataKeys.push(nm);
+		}
+	}
 	currentNode.STAcolumnsList=dataKeys;
 	networkNodes.update(currentNode);
 }
@@ -9515,31 +10815,53 @@ function drawTableInColumnBoxTableInCreateColumns(){
 	spanColumnsListAggregateColumns.innerHTML=cdns;
 }
 
+function ApplyCreateColumnsOps(data, newColumnsToAdd){
+	var n = newColumnsToAdd ? newColumnsToAdd.length : 0, i;
+	for (i=0;i<n;i++){
+		switch(newColumnsToAdd[i][0]) {
+		case  "constantValue":
+			addNewColumnWithUniqueValue(data, newColumnsToAdd[i][1], newColumnsToAdd[i][2]);
+			break;
+		case  "autoincrementalValue":
+			addNewColumnWithAutoincrementalValues(data, newColumnsToAdd[i][1], newColumnsToAdd[i][2]);
+			break;
+		case  "empty":
+			addNewEmptyColumn(data, newColumnsToAdd[i][1]);
+			break;
+		}
+	}
+}
+
+function UpdateCreateColumns(node) {
+	var parentNode, src, attributes;
+	if (!node || !node.STAnewColumnsToAdd || !node.STAnewColumnsToAdd.length)
+		return false;
+	parentNode = GetFirstParentNode(node);
+	if (!parentNode || !parentNode.STAdata)
+		return false;
+	src = deapCopy(parentNode.STAdata);
+	ApplyCreateColumnsOps(src, node.STAnewColumnsToAdd);
+	attributes = uploadDataAttributesAddingNewColumns(parentNode.STAdataAttributes, src);
+	node.STAdata = src;
+	node.STAdataAttributes = attributes;
+	networkNodes.update(node);
+	return true;
+}
+
 function addColumnsToTableInCreateColumns(){
 	event.preventDefault();
 	var node= getNodeDialog("DialogCreateColumns");
-		var n=node.STAnewColumnsToAdd.length;
-		for (var i=0;i<n;i++){
-
-		switch(node.STAnewColumnsToAdd[i][0]) {
-		case  "constantValue":
-				addNewColumnWithUniqueValue(node.STAdata, node.STAnewColumnsToAdd[i][1], node.STAnewColumnsToAdd[i][2])
-			break;
-		case  "autoincrementalValue":
-				addNewColumnWithAutoincrementalValues(node.STAdata,node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2])
-			break;
-		case  "empty":
-				addNewEmptyColumn(node.STAdata,node.STAnewColumnsToAdd[i][1]);
-			break;
-		}	
-		networkNodes.update(node);		
+	if (!UpdateCreateColumns(node)) {
+		showInfoMessage({cat: "No s'han pogut afegir columnes", spa: "No se han podido añadir columnas", eng: "Could not add columns"});
+		return;
 	}
-	var attributes= uploadDataAttributesAddingNewColumns(GetParentNodes(node)[0].STAdataAttributes, node.STAdata);
-	node.STAdataAttributes= attributes;
+	RecordProcessMetadata(node);
 	networkNodes.update(node);
+	ClearTableToolDialogSnapshot(node);
 	hideNodeDialog("DialogCreateColumns");
 	showInfoMessage({cat: "S'han afegit columnes noves", spa: "Se han añadido columnas nuevas", eng: "New columns have been added"});
-	updateQueryAndTableArea(node)
+	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
 }
 
 
@@ -9553,12 +10875,12 @@ function deselectColumnNameRadioButton(radiobutton){
 }
 
 function fillAggregateColumVariablesList(node){
-
-	var dataKeys= Object.keys(node.STAdata[0]);
 	var parentNode=GetFirstParentNode(node);
+	var src=(parentNode && parentNode.STAdata && parentNode.STAdata.length) ? parentNode.STAdata : node.STAdata;
+	var dataKeys= Object.keys(src[0]);
 	ShowTableSelectColumnsDialog("columnsFielset", parentNode, node, false,"writeColumnNameInAggregatedColumns (event)" );
 
-	//Create list of columns to avoid repetitions
+	//Create list of columns to avoid repetitions (source columns from parent)
 	node.STAcolumnsList=dataKeys;
 }
 
@@ -9573,7 +10895,9 @@ function addColumnToListAggregateColumns(event) {
 	var node= getNodeDialog("DialogAggregateColumns");
 	var TypeOfOperation = document.getElementsByName("operationsRadioAggrgatedColumns"); //operation
 	var STANewColumnsArray = [], attributesArray = [], attribute;
-	var dataKeys = Object.keys(node.STAdata[0]);
+	var parentNode=GetFirstParentNode(node);
+	var src=(parentNode && parentNode.STAdata && parentNode.STAdata.length) ? parentNode.STAdata : node.STAdata;
+	var dataKeys = Object.keys(src[0]);
 	var typeOfOperationLenght = TypeOfOperation.length, dataKeysLenght = dataKeys.length;
 	var columnName;
 
@@ -9652,168 +10976,175 @@ function drawTableInColumnBoxTableInAggregateColumns(node){
 	spanColumnsListAggregateColumns.innerHTML=cdns;
 }
 
+function ApplyAggregateColumnsOps(data, newColumnsToAdd){
+	var decimalNumber, n=newColumnsToAdd ? newColumnsToAdd.length : 0, i;
+	if (!n) return;
+	for (i=0;i<n;i++){
+		decimalNumber="";
+		if (newColumnsToAdd[i][3]){
+			decimalNumber=newColumnsToAdd[i][3];
+		}
+		switch(newColumnsToAdd[i][0]) {
+			case  "Sum":
+			if (decimalNumber!=""){
+					addnewColumnSummingColumns(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],decimalNumber);
+			}else{
+					addnewColumnSummingColumns(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "Product":
+				if (decimalNumber!=""){
+					addnewColumnMultiplyingColumns(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],decimalNumber);
+			}else{
+					addnewColumnMultiplyingColumns(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "MinValue":
+				if (decimalNumber!=""){
+				addnewColumnMinimalValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+				addnewColumnMinimalValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "MaxValue":
+				if (decimalNumber!=""){
+				addnewColumnMaximalValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+				addnewColumnMaximalValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "Mean":
+				if (decimalNumber!=""){
+				addnewColumnMeanValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+				addnewColumnMeanValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "Variance":
+				if (decimalNumber!=""){
+					addnewColumnVarianceValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+					addnewColumnVarianceValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "Median":
+				if (decimalNumber!=""){
+					addnewColumnMedianValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+					addnewColumnMedianValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "Concatenate":
+			addnewColumnConcatenatingValues(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2]);
+				break;
+			case  "Mode":
+				if (decimalNumber!=""){
+				addnewColumnModeValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+				addnewColumnModeValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "FirstValue":
+				if (decimalNumber!=""){
+				addnewColumnFirstValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+				addnewColumnFirstValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "StandardDeviation":
+				if (decimalNumber!=""){
+				addnewColumnStandardDeviationValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber,"");
+			}else{
+				addnewColumnStandardDeviationValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2]);
+				}
+				break;
+			case  "LastValue":
+				if (decimalNumber!=""){
+				addnewColumnLastValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+				addnewColumnLastValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "Q1":
+				if (decimalNumber!=""){
+				addnewColumnQ1Value(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+				addnewColumnQ1Value(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "Q3":
+				if (decimalNumber!=""){
+				addnewColumnQ3Value(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+				addnewColumnQ3Value(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "RandomValue":
+				if (decimalNumber!=""){
+				addnewColumnRandomValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber,"");
+			}else{
+				addnewColumnRandomValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2]);
+				}
+				break;
+			case  "Count":
+				addnewColumnCount(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2]);
+				break;
+			case  "CountDefined":
+				break;
+			case  "Range":
+				if (decimalNumber!=""){
+					addnewColumnRange(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+				}else{
+					addnewColumnRange(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+			case  "ProportionDefined":
+				if (decimalNumber!=""){
+				addnewColumnProportionDefined(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
+			}else{
+				addnewColumnProportionDefined(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2],"");
+				}
+				break;
+		}
+	}
+}
+
+function UpdateAggregateColumns(node) {
+	var parentNode, src, attributes;
+	if (!node || !node.STAnewColumnsToAdd || !node.STAnewColumnsToAdd.length)
+		return false;
+	parentNode = GetFirstParentNode(node);
+	if (!parentNode || !parentNode.STAdata)
+		return false;
+	src = deapCopy(parentNode.STAdata);
+	ApplyAggregateColumnsOps(src, node.STAnewColumnsToAdd);
+	attributes = uploadDataAttributesAddingNewColumns(parentNode.STAdataAttributes, src);
+	node.STAdata = src;
+	node.STAdataAttributes = attributes;
+	networkNodes.update(node);
+	return true;
+}
+
 function addColumnsToTableInAggregateColumns(event) {
 	event.preventDefault();
 	var node=getNodeDialog("DialogAggregateColumns");
-	var decimalNumber, n=node.STAnewColumnsToAdd.length;
-	
-	if (n!=0) {
-		for (var i=0;i<n;i++){
-			decimalNumber=""; //Restart 
-			if (node.STAnewColumnsToAdd[i][3]){
-				decimalNumber=node.STAnewColumnsToAdd[i][3];
-			}
-			switch(node.STAnewColumnsToAdd[i][0]) {
-				case  "Sum":
-				if (decimalNumber!=""){
-						addnewColumnSummingColumns(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],decimalNumber); //data, columnName,columnsToSum, decimalnumber
-
-				}else{
-						addnewColumnSummingColumns(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],""); //data, columnName,columnsToSum
-
-					}
-					break;
-				case  "Product": //(s'ha de crear)
-					if (decimalNumber!=""){
-						addnewColumnMultiplyingColumns(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],decimalNumber); //data, columnName,columnsToSum, decimalnumber
-
-				}else{
-						addnewColumnMultiplyingColumns(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],""); //data, columnName,columnsToSum
-
-					}
-					break;
-				case  "MinValue":
-					if (decimalNumber!=""){
-					addnewColumnMinimalValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber); 
-
-			}else{
-					addnewColumnMinimalValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],""); 
-					}
-					break;
-				case  "MaxValue":
-					if (decimalNumber!=""){
-					addnewColumnMaximalValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber); 
-			}else{
-					}
-					addnewColumnMaximalValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],""); 
-
-					break;
-				case  "Mean":
-					if (decimalNumber!=""){
-					addnewColumnMeanValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber);
-
-			}else{
-					addnewColumnMeanValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],"");
-
-					}
-					break;
-				case  "Variance":
-					if (decimalNumber!=""){
-						addnewColumnVarianceValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber);
-
-			}else{
-						addnewColumnVarianceValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],"");
-
-					}
-					break;
-				case  "Median":
-					if (decimalNumber!=""){
-						addnewColumnMedianValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber);
-
-				}else{
-						addnewColumnMedianValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],"");
-
-					}
-					break;
-				case  "Concatenate":
-				addnewColumnConcatenatingValues(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2]);
-					break;
-
-				case  "Mode":
-					if (decimalNumber!=""){
-					addnewColumnModeValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber);
-				}else{
-					addnewColumnModeValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],"");
-					}
-					break;
-				case  "FirstValue":
-					if (decimalNumber!=""){
-					addnewColumnFirstValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber);
-				}else{
-					addnewColumnFirstValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],"");
-					}
-					break;
-
-				case  "StandardDeviation":
-					if (decimalNumber!=""){
-					addnewColumnStandardDeviationValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber,"");
-				}else{
-					addnewColumnStandardDeviationValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2]);
-					}
-					break;
-				case  "LastValue":
-					if (decimalNumber!=""){
-					addnewColumnLastValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber);
-				}else{
-					addnewColumnLastValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],"");
-					}
-					break;
-				case  "Q1":
-					if (decimalNumber!=""){
-					addnewColumnQ1Value(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber);
-				}else{
-					addnewColumnQ1Value(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],"");
-					}
-					break;
-				case  "Q3":
-					if (decimalNumber!=""){
-					addnewColumnQ3Value(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber);
-				}else{
-					addnewColumnQ3Value(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2],"");
-					}
-					break;
-				case  "RandomValue":
-					if (decimalNumber!=""){
-					addnewColumnRandomValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber,"");
-				}else{
-					addnewColumnRandomValue(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2]);
-					}
-					break;
-				case  "Count": //TE SENTIT?
-					addnewColumnCount(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2]);
-					break;
-				case  "CountDefined": //Falta fer la funció que conta
-
-					break;
-				case  "Range": 						
-					if (decimalNumber!=""){
-						addnewColumnRange(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber);
-					}else{
-						addnewColumnRange(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2]),"";
-					}
-					break;
-				case  "ProportionDefined": //Falta fer la funció que conta
-					if (decimalNumber!=""){
-					addnewColumnProportionDefined(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2], decimalNumber);
-				}else{
-					addnewColumnProportionDefined(node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][2]),"";
-					}
-
-					break;
-			}
-		}
-		var attributes= uploadDataAttributesAddingNewColumns(GetParentNodes(node)[0].STAdataAttributes,node.STAdata);
-		node.STAdataAttributes=attributes;
-		networkNodes.update(node);
-		showInfoMessage({cat: "S'han afegit columnes noves", spa: "Se han añadido columnas nuevas", eng: "New columns have been added"});
-		hideNodeDialog("DialogAggregateColumns");
-		updateQueryAndTableArea(node);
-	}else{
-		alert(DonaCadena({cat: "No hi ha cap columna per afegir a la llista; no s'afegirà res a la taula", spa: "No hay ninguna columna que añadir en la lista; no se añadirá nada a la tabla", eng: "There are no columns in the list to add, nothing will be added to the table"}))
+	if (!node.STAnewColumnsToAdd || !node.STAnewColumnsToAdd.length) {
+		alert(DonaCadena({cat: "No hi ha cap columna per afegir a la llista; no s'afegirà res a la taula", spa: "No hay ninguna columna que añadir en la lista; no se añadirá nada a la tabla", eng: "There are no columns in the list to add, nothing will be added to the table"}));
+		return;
 	}
-
-
+	if (!UpdateAggregateColumns(node)) {
+		showInfoMessage({cat: "No s'han pogut afegir columnes", spa: "No se han podido añadir columnas", eng: "Could not add columns"});
+		return;
+	}
+	RecordProcessMetadata(node);
+	networkNodes.update(node);
+	ClearTableToolDialogSnapshot(node);
+	showInfoMessage({cat: "S'han afegit columnes noves", spa: "Se han añadido columnas nuevas", eng: "New columns have been added"});
+	hideNodeDialog("DialogAggregateColumns");
+	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
 }
+
 function uploadDataAttributesAddingNewColumns(attributes, data, origin){
 	var columnNames= Object.keys(data[0]);
 	var oldAttributes= Object.keys(attributes);
@@ -9848,7 +11179,9 @@ function writeColumnNameInAggregatedColumns(event){
 	var columnName=document.getElementById("columnNameAggregateColumns")
 	var columnNameValue=columnName.value;
 	var spanSuggested= document.getElementById("columnNameAggregateColumns_span");
-		var dataKeys= Object.keys(currentNode.STAdata[0]);
+		var parentNode=GetFirstParentNode(currentNode);
+		var src=(parentNode && parentNode.STAdata && parentNode.STAdata.length) ? parentNode.STAdata : currentNode.STAdata;
+		var dataKeys= Object.keys(src[0]);
 		var dataKeysLenght=dataKeys.length, attribute, columnNameText="";
 		for (var a=0;a<dataKeysLenght;a++ ){
 				attribute=document.getElementById("columnsFielset_"+a);
@@ -9928,7 +11261,9 @@ function fillCalculatorColumVariablesList(){ //omplir el desplegable
 	// var dataKeys= Object.keys(currentNode.STAdata[0]);
 	//var n= dataKeys.length;
 	var node= getNodeDialog("DialogColumnsCalculator");
-	var dataAttributes= node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes(currentNode.STAdata);
+	var parentNode=GetFirstParentNode(node || currentNode);
+	var dataAttributes= (parentNode && parentNode.STAdataAttributes) ? parentNode.STAdataAttributes :
+		(node.STAdataAttributes ? node.STAdataAttributes : getDataAttributes((parentNode && parentNode.STAdata) ? parentNode.STAdata : currentNode.STAdata));
 	var dataAttributesKeys=Object.keys(dataAttributes)
 	var n= dataAttributesKeys.length;
 	
@@ -9962,45 +11297,66 @@ function drawTableInColumnBoxTableInCalculatorColumns(){
 		spanColumnsListAggregateColumns.innerHTML=cdns;
 }
 
+function ApplyColumnsCalculatorOps(data, newColumnsToAdd){
+	var n=newColumnsToAdd ? newColumnsToAdd.length : 0, i, decimalNumber;
+	for (i=0;i<n;i++){
+		decimalNumber=newColumnsToAdd[i][2];
+		if (decimalNumber!=""){
+			addnewColumnWithFormula (data, newColumnsToAdd[i][1],newColumnsToAdd[i][0],decimalNumber);
+		}else{
+			addnewColumnWithFormula (data, newColumnsToAdd[i][1],newColumnsToAdd[i][0]);
+		}
+	}
+}
+
+function UpdateColumnsCalculator(node) {
+	var parentNode, src, attributes;
+	if (!node || !node.STAnewColumnsToAdd || !node.STAnewColumnsToAdd.length)
+		return false;
+	parentNode = GetFirstParentNode(node);
+	if (!parentNode || !parentNode.STAdata)
+		return false;
+	src = deapCopy(parentNode.STAdata);
+	ApplyColumnsCalculatorOps(src, node.STAnewColumnsToAdd);
+	attributes = uploadDataAttributesAddingNewColumns(parentNode.STAdataAttributes, src, "calculator");
+	node.STAdata = src;
+	node.STAdataAttributes = attributes;
+	networkNodes.update(node);
+	return true;
+}
+
 function addColumnsToTableInColumnsCalculator(){
 	event.preventDefault();
 	var node= getNodeDialog("DialogColumnsCalculator");
-	var decimalNumber;//decimalNumber=currentNode.STAnewColumnsToAdd[i][2];
-	var n=node.STAnewColumnsToAdd.length;
-	for (var i=0;i<n;i++){
-		decimalNumber=node.STAnewColumnsToAdd[i][2];
-		if (decimalNumber!=""){
-			addnewColumnWithFormula (node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][0],decimalNumber);
-		}else{
-			addnewColumnWithFormula (node.STAdata, node.STAnewColumnsToAdd[i][1],node.STAnewColumnsToAdd[i][0]);
-		}
+	if (!UpdateColumnsCalculator(node)) {
+		showInfoMessage({cat: "No s'han pogut afegir columnes", spa: "No se han podido añadir columnas", eng: "Could not add columns"});
+		return;
 	}
-
-	var attributes= uploadDataAttributesAddingNewColumns(GetParentNodes(node)[0].STAdataAttributes, node.STAdata, "calculator");
-	node.STAdataAttributes=attributes;
+	RecordProcessMetadata(node);
 	networkNodes.update(node);
+	ClearTableToolDialogSnapshot(node);
 	showInfoMessage({cat: "S'han afegit columnes noves", spa: "Se han añadido columnas nuevas", eng: "New columns have been added"});
 	hideNodeDialog("DialogColumnsCalculator");
 	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
 }
 
-function createColumnStatistics(event){
-	var node=getNodeDialog("DialogColumnStatistics");
-	event.preventDefault();
-	var parentNodes= GetParentNodes(node);
-	var staData= parentNodes[0].STAdata;
-	var dataAttributes= parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(staData);
-	var keys = Object.keys(staData[0]);
-	var collectedData,obj, finalArray=[],dataType;
-
-	for (var i=0;i<keys.length;i++){
+function UpdateColumnStatistics(node) {
+	var parentNodes, staData, dataAttributes, keys, collectedData, obj, finalArray=[], dataType, i, e;
+	if (!node) return false;
+	parentNodes = GetParentNodes(node);
+	if (!parentNodes || !parentNodes.length || !parentNodes[0].STAdata || !parentNodes[0].STAdata.length)
+		return false;
+	staData = parentNodes[0].STAdata;
+	dataAttributes = parentNodes[0].STAdataAttributes ? parentNodes[0].STAdataAttributes : getDataAttributes(staData);
+	keys = Object.keys(staData[0]);
+	for (i=0;i<keys.length;i++){
 		obj={};
 		collectedData=[];
 		dataType=dataAttributes[keys[i]]["type"];
-		for (var e=0;e<staData.length;e++){
+		for (e=0;e<staData.length;e++){
 			collectedData.push(staData[e][keys[i]]);
 		}
-
 		obj["ColumnName"]= keys[i];
 		obj["DataType"]= dataType;
 		obj["Mean"]= (dataType=="number")?aggrFuncMean(collectedData):"";
@@ -10009,62 +11365,62 @@ function createColumnStatistics(event){
 		obj["Q3"]= (dataType=="number")?aggrFuncQ3(collectedData):"";
 		obj["Min.value"]= (dataType=="number")?aggrFuncMinValue(collectedData):"";
 		obj["Max.value"]= (dataType=="number")?aggrFuncMaxValue(collectedData):"";
-		obj["Mode"]= aggrFuncMode(collectedData); //he triat la funció que només et dóna una moda (tenim la que et dóna totes, com prefereixis)
+		obj["Mode"]= aggrFuncMode(collectedData);
 		obj["StandardDeviation"]= (dataType=="number")?aggrFuncStandardDeviation(collectedData):"";
 		obj["Variance"]= (dataType=="number")?aggrFuncVariance(collectedData):"";
 		obj["Range"]= (dataType=="number")?aggrFuncRange(collectedData):"";
 		obj["FirstValue"]=(dataType=="number")? aggrFuncFirstValue(collectedData):"";
 		obj["LastValue"]= (dataType=="number")?aggrFuncLastValue(collectedData):"";
 		obj["RandomValue"]= aggrFuncRandomValue(collectedData);
-		//obj["CountDefined"]= aggrFuncCountDefined(collectedData);
 		obj["Count"]= aggrFuncCount(collectedData);
-		//obj["ProportionDefined"]= aggrFuncProportionDefined(collectedData); 
-
 		finalArray.push(obj);
 	}
-
 	node.STAdata=finalArray;
+	node.STAdataAttributes=getDataAttributes(finalArray);
+	node.STAColumnStatistics = true;
 	networkNodes.update(node);
-	updateQueryAndTableArea(node);
-
-	hideNodeDialog("DialogColumnStatistics");	
+	return true;
 }
 
-
-function concatenateTables() {
+function createColumnStatistics(event){
+	var node=getNodeDialog("DialogColumnStatistics");
 	event.preventDefault();
-	var selected= (document.getElementById("concatenationType_allColumns").checked ==true)?"allColumns":"repeatedColumns";
-	var parentNodes= GetParentNodes(currentNode);
-	var parentNodesArrayData=[], parentNodesArrayKeys=[], parentNodesArrayData=[];
+	if (!UpdateColumnStatistics(node))
+		return;
+	RecordProcessMetadata(node);
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
+	hideNodeDialog("DialogColumnStatistics");
+}
 
-
-	for(var i=0;i<parentNodes.length;i++){
+function ApplyConcatenateTables(node, selected) {
+	var parentNodes= GetParentNodes(node);
+	var parentNodesArrayData=[], parentNodesArrayKeys=[], i, e, finalKeys=[], sharedKeys=[], resultData=[], obj, allAttributes={}, attributes;
+	if (!parentNodes || parentNodes.length < 1)
+		return false;
+	for(i=0;i<parentNodes.length;i++){
+		if (!parentNodes[i].STAdata || !parentNodes[i].STAdata.length)
+			return false;
 		parentNodesArrayData.push(...parentNodes[i].STAdata);
 	 	parentNodesArrayKeys.push(...Object.keys(parentNodes[i].STAdata[0]));
 	}
-
-	var finalKeys=[], sharedKeys=[];
 	if (selected=="allColumns"){
-		var keysSet = new Set(parentNodesArrayKeys);
-		finalKeys = [...keysSet];
-				
-			}else{
+		finalKeys = [...new Set(parentNodesArrayKeys)];
+	} else {
 		parentNodesArrayKeys=parentNodesArrayKeys.sort();
 		var lastKey=parentNodesArrayKeys[0], count=1;
-
-		for (var e=1;e<parentNodesArrayKeys.length;e++){
-
+		for (e=1;e<parentNodesArrayKeys.length;e++){
 			if (parentNodesArrayKeys[e]==lastKey){
-				if (e== parentNodesArrayKeys.length-1){ //last one
-					if(count+1==parentNodes.length) //save last key (same as previous)
+				if (e== parentNodesArrayKeys.length-1){
+					if(count+1==parentNodes.length)
 						sharedKeys.push(lastKey);
-		}else{
+				}else{
 					count++;
 				}
-				
 			}else{
 				if (e!= parentNodesArrayKeys.length-1){
-					if (count==parentNodes.length){ //repited in all parents
+					if (count==parentNodes.length){
 						sharedKeys.push(lastKey);
 						count=1;
 						lastKey=parentNodesArrayKeys[e];
@@ -10072,21 +11428,18 @@ function concatenateTables() {
 						lastKey=parentNodesArrayKeys[e];
 						count=1;
 					}
-				}else{ //lastone
-					if (count==parentNodes.length){ //Save previous key
+				}else{
+					if (count==parentNodes.length){
 						sharedKeys.push(lastKey);
 					}
 				}
-
-			}			
+			}
 		}
 		finalKeys=sharedKeys;
 	}
-
-	var resultData=[], obj;
-	for (var i=0;i<parentNodesArrayData.length;i++){
+	for (i=0;i<parentNodesArrayData.length;i++){
 		obj={}
-		for (var e=0;e<finalKeys.length;e++){
+		for (e=0;e<finalKeys.length;e++){
 			if(parentNodesArrayData[i].hasOwnProperty(finalKeys[e])){
 				obj[finalKeys[e]]= parentNodesArrayData[i][finalKeys[e]];
 			}else{
@@ -10095,20 +11448,36 @@ function concatenateTables() {
 		}
 		resultData.push(obj);
 	}
-	currentNode.STAdata=resultData;
-	var parentNodes= GetParentNodes(currentNode);
-	var allAttributes={}
-	for (var i=0;i<parentNodes.length;i++){
+	node.STAdata=resultData;
+	for (i=0;i<parentNodes.length;i++){
 		if (parentNodes[i].STAdata)	{
 			allAttributes={...allAttributes,...getDataAttributes(parentNodes[i].STAdata)}
 		}
 	}
-	var attributes= uploadDataAttributesAddingNewColumns(allAttributes, currentNode.STAdata);
-	currentNode.STAdataAttributes=attributes;
-	networkNodes.update(currentNode);
-	updateQueryAndTableArea(currentNode)
-	hideNodeDialog("DialogConcatenateTables");
+	attributes= uploadDataAttributesAddingNewColumns(allAttributes, node.STAdata);
+	node.STAdataAttributes=attributes;
+	node.STAConcatenateTables = { mode: selected };
+	networkNodes.update(node);
+	return true;
+}
 
+function UpdateConcatenateTables(node) {
+	if (!node || !node.STAConcatenateTables)
+		return false;
+	return ApplyConcatenateTables(node, node.STAConcatenateTables.mode || "allColumns");
+}
+
+function concatenateTables() {
+	event.preventDefault();
+	var node = getNodeDialog("DialogConcatenateTables") || currentNode;
+	var selected= (document.getElementById("concatenationType_allColumns").checked ==true)?"allColumns":"repeatedColumns";
+	if (!ApplyConcatenateTables(node, selected))
+		return;
+	RecordProcessMetadata(node);
+	networkNodes.update(node);
+	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
+	hideNodeDialog("DialogConcatenateTables");
 }
 
 const RouteToLocation={
@@ -10294,6 +11663,8 @@ async function GetGeoDistanceFilter(event){
 	currentNode.STAURL= url;
 	currentNode.STAdata= await loadAPIDataWithReturn(url,"EntitiesFilterRow");
 	networkNodes.update(currentNode);
+	updateQueryAndTableArea(currentNode);
+	UpdateChildenTable(currentNode);
 	hideNodeDialog("DialogGeospatialFilterRowsByDistance");
 }
 
@@ -10544,19 +11915,19 @@ function createAndLoadImportGeoJSONNode(data,url){
 }
 
 function populateTransposeTableDialog(node){
-	var parentNode, attributes, i, options, selected, sel, nameEl;
+	var parentNode, attributes, i, options, selected, sel, nameEl, parentAttrs;
 	saveNodeDialog("DialogTransposeTable", node);
 	parentNode=GetFirstParentNode(node);
 	if (!parentNode || !parentNode.STAdata) {
 		alert(DonaCadena({cat: "El node pare ha de tenir dades per transposar-les", spa: "El nodo padre debe tener datos para transponerlos", eng: "Parent node must have data to transpose"}));
 		return;
 	}
-	node.STAdata=deapCopy(parentNode.STAdata);
-	node.STAdataAttributes=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+	// Keep processed STAdata; fill selects from parent columns. OK re-reads the parent.
+	parentAttrs=parentNode.STAdataAttributes ? parentNode.STAdataAttributes : getDataAttributes(parentNode.STAdata);
 	if (!node.STATransposeTable)
 		node.STATransposeTable={};
 	networkNodes.update(node);
-	attributes=Object.keys(node.STAdataAttributes || {});
+	attributes=Object.keys(parentAttrs || {});
 	options="";
 	for (i=0;i<attributes.length;i++)
 		options+='<option value="'+attributes[i]+'">'+attributes[i]+'</option>';
@@ -10589,26 +11960,31 @@ function okButtonInTransposeTable(event){
 		return;
 	}
 	node.STATransposeTable={ headerColumn: headerColumn, attributeColumnName: attributeColumnName };
-	newData=buildTransposeTable(node.STAdata, node.STAdataAttributes, headerColumn, attributeColumnName);
+	var parentNode=GetFirstParentNode(node);
+	var srcData = (parentNode && parentNode.STAdata) ? parentNode.STAdata : node.STAdata;
+	var srcAttrs = (parentNode && parentNode.STAdataAttributes) ? parentNode.STAdataAttributes : (node.STAdataAttributes || getDataAttributes(srcData));
+	newData=buildTransposeTable(deapCopy(srcData), srcAttrs, headerColumn, attributeColumnName);
 	if (typeof newData==="string") {
 		alert(newData);
 		return;
 	}
 	node.STAdata=newData;
 	node.STAdataAttributes=getDataAttributes(newData);
+	RecordProcessMetadata(node);
 	networkNodes.update(node);
 	hideNodeDialog("DialogTransposeTable", event);
 	updateQueryAndTableArea(node);
+	UpdateChildenTable(node);
 }
 
 function populatePivotTableDialog(node){
 	saveNodeDialog("DialogPivotTable", node);
 	var parentNode=GetParentNodes(node)[0];
-	node.STAdataAttributes=deapCopy(parentNode.STAdataAttributes);
-	node.STAdata= deapCopy(parentNode.STAdata);
+	var parentAttrs=parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(parentNode.STAdata);
+	// Keep processed STAdata; fill selects from parent columns. OK re-reads the parent.
 	if (!node.STApivotTable)node.STApivotTable={Columns:[], Rows:[], Values:[]};
 	networkNodes.update(node);
-	var attributes=Object.keys(node.STAdataAttributes);
+	var attributes=Object.keys(parentAttrs);
 
 	var options="";
 
@@ -10687,12 +12063,18 @@ function okButtonInPivotTable(event){
 		 break;
 		}
 	}
-	var newData=buildPivotTable(node.STAdata, node.STApivotTable.Rows, node.STApivotTable.Columns, node.STApivotTable.Values, aggregation);
+	var parentNode=GetFirstParentNode(node);
+	var srcData = (parentNode && parentNode.STAdata) ? deapCopy(parentNode.STAdata) : node.STAdata;
+	var srcAttrs = (parentNode && parentNode.STAdataAttributes) ? deapCopy(parentNode.STAdataAttributes) : node.STAdataAttributes;
+	var newData=buildPivotTable(srcData, node.STApivotTable.Rows, node.STApivotTable.Columns, node.STApivotTable.Values, aggregation);
 	if ( typeof newData != "string"){
 		node.STAdata=newData;
-		node.STAdataAttributes=uploadDataAttributesAddingNewColumns(node.STAdataAttributes, newData, "");
+		node.STAdataAttributes=uploadDataAttributesAddingNewColumns(srcAttrs || {}, newData, "");
+		RecordProcessMetadata(node);
 		networkNodes.update(node);
 		hideNodeDialog("DialogPivotTable");
+		updateQueryAndTableArea(node);
+		UpdateChildenTable(node);
 	}else
 		alert (newData) //Error
 }
@@ -10872,7 +12254,7 @@ function FormatConsistencyFillColumnSelect(node, selected) {
 	sel = document.getElementById("FormatConsistency_column");
 	if (!sel)
 		return;
-	attrs = node.STAdataAttributes || {};
+	attrs = GetDialogDataAttributes(node) || {};
 	keys = Object.keys(attrs);
 	html = "";
 	for (i = 0; i < keys.length; i++)
@@ -10928,6 +12310,303 @@ function populateDialogFormatConsistency(node) {
 	FormatConsistencyOnFormatChange();
 }
 
+function setSelectValueIfPresent(id, value) {
+	var el = document.getElementById(id);
+	if (!el || value == null || value === "") return;
+	el.value = value;
+}
+
+function seedQualityNodeFromParent(node) {
+	var parentNode = GetFirstParentNode(node);
+	if (!parentNode || !parentNode.STAdata)
+		return null;
+	node.STAdata = deapCopy(parentNode.STAdata);
+	node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : getDataAttributes(node.STAdata);
+	CopyParentMetadataToNode(node, parentNode);
+	return parentNode;
+}
+
+function UpdateFormatConsistency(node) {
+	var data, metadata, options, info;
+	if (!node || !node.STAFormatConsistencyOptions)
+		return false;
+	if (!seedQualityNodeFromParent(node))
+		return false;
+	options = node.STAFormatConsistencyOptions;
+	data = node.STAdata;
+	metadata = node.STAmetadata || {};
+	info = calculateDataQualityFormatConsistency(data, options.column, metadata, options);
+	node.STAdata = data;
+	node.STAdataAttributes = getDataAttributes(data);
+	node.STAmetadata = metadata;
+	node.STAQualityNodeResults = {
+		dataLength: info.totalItems,
+		column: options.column,
+		format: options.format,
+		invalidItems: info.invalidItems,
+		physicalStructureConflictsRate: info.physicalStructureConflictsRate
+	};
+	networkNodes.update(node);
+	return true;
+}
+
+function UpdateCompleteness(node) {
+	var options, data, metadata, STAQualityNodeResults, infoDataOmission, infoDataComission, infoDataExcess;
+	if (!node || !node.STACompletenessOptions)
+		return false;
+	if (!seedQualityNodeFromParent(node))
+		return false;
+	options = node.STACompletenessOptions;
+	data = node.STAdata;
+	metadata = node.STAmetadata || {};
+	STAQualityNodeResults = { dataLength: data.length, checks: [] };
+	if (options.omission) {
+		infoDataOmission = calculateDataQualityCompletnessOmission(data, options.omissionColumn, metadata, !!options.omissionFlag);
+		STAQualityNodeResults.checks.push({
+			check: "Omission",
+			column: options.omissionColumn,
+			empty: infoDataOmission.empty,
+			omissionRate: infoDataOmission.omissionRate,
+			completnessRate: infoDataOmission.completnessRate
+		});
+	}
+	if (options.commission) {
+		infoDataComission = calculateDataQualityCompletnessComission(data, options.commissionColumn, metadata, !!options.lowerUpperCase, !!options.commissionFlag);
+		STAQualityNodeResults.checks.push({
+			check: "Commission (duplicates)",
+			column: options.commissionColumn,
+			duplicated: infoDataComission.duplicated,
+			comissionRate: infoDataComission.comissionRate
+		});
+	}
+	if (options.excess) {
+		infoDataExcess = calculateDataQualityCompletnessComissionExcess(data, metadata, options.expectedRecords || 0, options.excessColumn);
+		STAQualityNodeResults.checks.push({
+			check: "Commission excess",
+			column: options.excessColumn,
+			expected: infoDataExcess.expected,
+			excess: infoDataExcess.excess,
+			excessRate: infoDataExcess.excessRate
+		});
+	}
+	node.STAdata = data;
+	node.STAdataAttributes = getDataAttributes(data);
+	node.STAmetadata = metadata;
+	node.STAQualityNodeResults = STAQualityNodeResults;
+	networkNodes.update(node);
+	return true;
+}
+
+function UpdateLogicalConsistency(node) {
+	var opts, parents, dataTarget, dataReference, metadata, info, idTarget, idReference;
+	if (!node || !node.STALogicalConsistencyOptions)
+		return false;
+	opts = node.STALogicalConsistencyOptions;
+	parents = GetParentNodes(node);
+	if (!parents || parents.length < 2)
+		return false;
+	idTarget = opts.idTarget || parents[0].id;
+	idReference = opts.idReference || parents[1].id;
+	dataTarget = networkNodes.get(idTarget);
+	dataReference = networkNodes.get(idReference);
+	if (!dataTarget || !dataTarget.STAdata || !dataReference || !dataReference.STAdata)
+		return false;
+	metadata = node.STAmetadata ? deapCopy(node.STAmetadata) : {};
+	info = calculateDataQualityLogicalConsistency(dataTarget.STAdata, dataReference.STAdata, opts.targets, opts.references, metadata, !!opts.flag);
+	node.STAdata = deapCopy(dataTarget.STAdata);
+	node.STAdataAttributes = getDataAttributes(node.STAdata);
+	node.STAmetadata = metadata;
+	node.STAQualityNodeResults = info;
+	node.STAQualityNodeResults.targets = opts.targets;
+	node.STAQualityNodeResults.references = opts.references;
+	node.STAQualityNodeResults.dataLength = dataTarget.STAdata.length;
+	networkNodes.update(node);
+	return true;
+}
+
+function UpdateMisclassificationMatrix(node) {
+	var metadata, confusionMatrixResult;
+	if (!node || !node.STAcolumnsList || !node.STAcolumnsList.classified || !node.STAcolumnsList.classified.length)
+		return false;
+	if (!seedQualityNodeFromParent(node))
+		return false;
+	metadata = node.STAmetadata ? deapCopy(node.STAmetadata) : {};
+	confusionMatrixResult = calculateDataQualityMisclassificationMatrix(node.STAdata, metadata, node.STAcolumnsList, {});
+	node.STAQualityNodeResults = confusionMatrixResult;
+	node.STAmetadata = metadata;
+	networkNodes.update(node);
+	return true;
+}
+
+function UpdateUncertainty(node) {
+	var opts, data, objWithGroupsTime;
+	if (!node || !node.STAUncertaintyOptions)
+		return false;
+	if (!seedQualityNodeFromParent(node))
+		return false;
+	opts = node.STAUncertaintyOptions;
+	data = node.STAdata;
+	SortTableByColumns(data, [opts.temporalColumn], "asc");
+	objWithGroupsTime = groupByTimeInCalculateUncertantyNode(data, opts.temporalColumn, opts.temporalNumber, opts.unitTime, opts.resultColumn);
+	node.STAdata = groupByPositionCalculateUncertantyNode(objWithGroupsTime, opts.temporalColumn, opts.positionalX, opts.positionalY, opts.positionalNumber, opts.resultColumn, opts.unitTime);
+	node.STAdataAttributes = getDataAttributes(node.STAdata);
+	networkNodes.update(node);
+	return true;
+}
+
+function UpdateQualityResultsViewer(node) {
+	var parents = GetParentNodes(node);
+	if (!parents || !parents.length)
+		return false;
+	if (parents[0].STAQualityNodeResults)
+		node.STAQualityNodeResults = parents[0].STAQualityNodeResults;
+	if (parents[0].STAdata)
+		node.STAdata = deapCopy(parents[0].STAdata);
+	if (parents[0].STAdataAttributes)
+		node.STAdataAttributes = deapCopy(parents[0].STAdataAttributes);
+	networkNodes.update(node);
+	return true;
+}
+
+function ApplyTemporalQualityOptions(node, o) {
+	var data, metadata, STAQualityNodeResults, attributeSelected;
+	if (!node || !o) return false;
+	data = node.STAdata;
+	metadata = node.STAmetadata ? deapCopy(node.STAmetadata) : {};
+	attributeSelected = o.attributeSelected;
+	STAQualityNodeResults = { accuracy:{}, validity:{}, resolution:{}, consistency:{}, dataLength: data.length, attributesSelected: attributeSelected };
+	if (o.temporalAccuracy) {
+		if (o.accuracyMethodValue === "uncertaintyColumn") {
+			STAQualityNodeResults.accuracy = accuracyFromUncertaintyInTemporal(data, metadata, o.attributeSelectedUncertantly);
+			STAQualityNodeResults.accuracy.uncertaintyColumnValue = o.attributeSelectedUncertantly;
+		} else if (o.accuracyMethodGrouped) {
+			STAQualityNodeResults.accuracy = calculateTemporalAccuracyFromTimes(data, attributeSelected, metadata, o.temporalUncertaintyGroupColumnValue, !!o.newColumn);
+		} else {
+			STAQualityNodeResults.accuracy = calculateTemporalAccuracyFromTimes(data, attributeSelected, metadata);
+		}
+	}
+	if (o.validity_calculate)
+		STAQualityNodeResults.validity = calculateDataQualityTemporalValidity(data, attributeSelected, o.from, o.to, metadata, !!o.flag);
+	if (o.resolution_calculate)
+		STAQualityNodeResults.resolution = calculateDataQualityTemporalResolution(data, attributeSelected, o.resolutionRadioValue, metadata, !!o.flag);
+	if (o.consistency_calculate) {
+		if (o.sort) sortDates(data, attributeSelected);
+		STAQualityNodeResults.consistency = calculateDataQualityTemporalConsistency(data, attributeSelected, o.consistencyInput, o.consistencyRadioValue, o.consistencyRadioMethod, o.tolerance, metadata, !!o.flag);
+	}
+	node.STAdata = data;
+	node.STAdataAttributes = getDataAttributes(data);
+	node.STAmetadata = metadata;
+	node.STAQualityNodeResults = STAQualityNodeResults;
+	networkNodes.update(node);
+	return true;
+}
+
+function UpdateTemporalQuality(node) {
+	if (!node || !node.STATemporalQualityOptions)
+		return false;
+	if (!seedQualityNodeFromParent(node))
+		return false;
+	return ApplyTemporalQualityOptions(node, node.STATemporalQualityOptions);
+}
+
+function ApplyPositionalQualityOptions(node, o) {
+	var data, metadata, STAQualityNodeResults, valid = true;
+	if (!node || !o) return false;
+	data = node.STAdata;
+	metadata = node.STAmetadata ? deapCopy(node.STAmetadata) : {};
+	STAQualityNodeResults = {
+		accuracy: {},
+		validity: {},
+		dataLength: data.length,
+		attributeSelectedLong: o.attributeSelectedLong,
+		attributeSelectedLat: o.attributeSelectedLat
+	};
+	if (o.positionalAccuracy) {
+		if (o.accuracyMethod === "uncertantlyColumn") {
+			STAQualityNodeResults.attributeSelectedUncertantly = o.attributeSelectedUncertantly;
+			STAQualityNodeResults.accuracy.accuracyMethod = o.accuracyMethod;
+			STAQualityNodeResults.accuracy = Object.assign(STAQualityNodeResults.accuracy, accuracyFromUncertaintyInPositions(data, metadata, o.attributeSelectedUncertantly));
+		} else {
+			if (o.grouped)
+				STAQualityNodeResults.accuracy.grouped = o.grouped;
+			STAQualityNodeResults.accuracy.accuracyMethod = o.accuracyMethod;
+			STAQualityNodeResults.accuracy = Object.assign(STAQualityNodeResults.accuracy, accuracyValuesInMetersWithPoints(data, metadata, o.attributeSelectedLong, o.attributeSelectedLat, o.selectUnitValue, o.grouped || false, !!o.newColumns));
+			if (STAQualityNodeResults.accuracy == null)
+				valid = false;
+		}
+	}
+	if (o.positionalValidity) {
+		STAQualityNodeResults.validity.positionalValidityRate = calculateDataQualityPositionalValidity(data, o.xmin, o.xmax, o.ymin, o.ymax, o.attributeSelectedLong, o.attributeSelectedLat, metadata, !!o.tag);
+		if (STAQualityNodeResults.validity.positionalValidityRate == null)
+			valid = false;
+	}
+	if (!valid)
+		return false;
+	node.STAdata = data;
+	node.STAdataAttributes = getDataAttributes(data);
+	node.STAmetadata = metadata;
+	node.STAQualityNodeResults = STAQualityNodeResults;
+	networkNodes.update(node);
+	return true;
+}
+
+function UpdatePositionalQuality(node) {
+	if (!node || !node.STAPositionalQualityOptions)
+		return false;
+	if (!seedQualityNodeFromParent(node))
+		return false;
+	return ApplyPositionalQualityOptions(node, node.STAPositionalQualityOptions);
+}
+
+function ApplyThematicQualityOptions(node, o, parents) {
+	var dataToEvaluate, metadata, STAQualityNodeResults, thematicAccuracy, thematicValidityOn, valid1=true, valid2=true, grouped=false, newColumns=false, thematicValidity;
+	if (!node || !o || !parents || !parents[0] || !parents[0].STAdata) return false;
+	dataToEvaluate = deapCopy(parents[0].STAdata);
+	metadata = parents[0].STAmetadata ? deapCopy(parents[0].STAmetadata) : {};
+	thematicAccuracy = !!(o.accuracyValues || o.accuracyColumn);
+	thematicValidityOn = !!o.thematicValidity;
+	STAQualityNodeResults = { accuracy:{}, validity:{}, dataLength: dataToEvaluate.length, inputWayValue: o.inputWayValue, thematicAttributeSelected: o.thematicAttributeSelected };
+	if (thematicAccuracy) {
+		if (o.inputWayValue == "accuracyStaDev" && o.uncertantyColumnValue) {
+			STAQualityNodeResults.accuracy = Object.assign(STAQualityNodeResults.accuracy, accuracyFromUncertaintyThematicQuality(dataToEvaluate, metadata, o.uncertantyColumnValue));
+			STAQualityNodeResults.accuracy.uncertaintyColumnValue = o.uncertantyColumnValue;
+		}
+		if (o.accuracyValues) {
+			grouped = o.grouped || false;
+			if (grouped) STAQualityNodeResults.accuracy.grouped = grouped;
+			STAQualityNodeResults.inputWayValue2 = o.inputWayValue2;
+			if (o.inputWayValue2 == "alfaNum")
+				STAQualityNodeResults.accuracy = Object.assign(STAQualityNodeResults.accuracy, accuracyFromAlfaNumValuesInThematicQuality(dataToEvaluate, metadata, o.thematicAttributeSelected, grouped, newColumns));
+			else if (o.inputWayValue2 == "number")
+				STAQualityNodeResults.accuracy = Object.assign(STAQualityNodeResults.accuracy, accuracyFromNumValuesInThematicQuality(dataToEvaluate, metadata, o.thematicAttributeSelected, grouped, newColumns));
+		}
+	}
+	if (thematicValidityOn) {
+		if (o.validityWay == "list") {
+			if (!(parents.length>1 && parents[1].STAdata)) return false;
+			thematicValidity = calculateDataQualityThematicValidityWithAList(dataToEvaluate, parents[1].STAdata, metadata, o.thematicAttributeSelected, o.referenceAttributeValue, !!o.flag);
+			STAQualityNodeResults.validity = Object.assign(STAQualityNodeResults.validity, thematicValidity);
+		} else {
+			thematicValidity = calculateDataQualityThematicValidityWithRange(dataToEvaluate, o.from, o.to, metadata, o.thematicAttributeSelected, !!o.flag);
+			STAQualityNodeResults.validity = Object.assign(STAQualityNodeResults.validity, thematicValidity);
+		}
+		valid2 = typeof thematicValidity == "string" ? false : true;
+	}
+	if (!(valid1 && valid2)) return false;
+	node.STAdata = dataToEvaluate;
+	node.STAdataAttributes = getDataAttributes(dataToEvaluate);
+	node.STAmetadata = metadata;
+	node.STAQualityNodeResults = STAQualityNodeResults;
+	networkNodes.update(node);
+	return true;
+}
+
+function UpdateThematicQuality(node) {
+	if (!node || !node.STAThematicQualityOptions)
+		return false;
+	return ApplyThematicQualityOptions(node, node.STAThematicQualityOptions, GetParentNodes(node));
+}
+
 function okButtonDataQualityFormatConsistency(event) {
 	var node, data, metadata, options, info;
 	if (event && event.preventDefault)
@@ -10976,6 +12655,10 @@ function okButtonDataQualityFormatConsistency(event) {
 	populateDialogQualityFormatConsistency(node);
 	showNodeDialog("DialogDataQualityResult");
 	updateQueryAndTableArea(node);
+	RecordProcessMetadata(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	UpdateChildenTable(node);
 }
 
 function populateDialogQualityFormatConsistency(node) {
@@ -10998,9 +12681,10 @@ function populateDialogQualityFormatConsistency(node) {
 }
 
 function populateDialogCompleteness(node){
-	document.getElementById("Completeness_omission_attributesList").innerHTML=populateAttributesListSelect(node.STAdataAttributes, "omission", "Column");
-	document.getElementById("Completeness_commission_attributesList").innerHTML=populateAttributesListSelect(node.STAdataAttributes, "commission", "Column");
-	document.getElementById("Completeness_excess_attributesList").innerHTML=populateAttributesListSelect(node.STAdataAttributes, "excess", "Column");
+	var attrs=GetDialogDataAttributes(node);
+	document.getElementById("Completeness_omission_attributesList").innerHTML=populateAttributesListSelect(attrs, "omission", "Column");
+	document.getElementById("Completeness_commission_attributesList").innerHTML=populateAttributesListSelect(attrs, "commission", "Column");
+	document.getElementById("Completeness_excess_attributesList").innerHTML=populateAttributesListSelect(attrs, "excess", "Column");
 	saveNodeDialog("DialogCompleteness", node);
 	var options=node.STACompletenessOptions || {};
 	document.getElementById("Completeness_check_omission").checked=!!options.omission;
@@ -11130,6 +12814,10 @@ function okButtonDataQualityCompleteness(event){
 	populateDialogQualityCompleteness(node);
 	showNodeDialog("DialogDataQualityResult");
 	updateQueryAndTableArea(node);
+	RecordProcessMetadata(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	UpdateChildenTable(node);
 }
 
 function completenessRateCell(value){
@@ -11226,6 +12914,15 @@ function populateDialogQualityLogicalConsistency(node){
 	document.getElementById("DialogQualityLogicalConsistency_selectAttribute1_1").innerHTML= options2;
 	document.getElementById("DialogQualityLogicalConsistency_selectAttribute2_1").innerHTML= options2;
 	document.getElementById("DialogQualityLogicalConsistency_selectAttribute3_1").innerHTML= options2;
+	var lopts=node.STALogicalConsistencyOptions||{};
+	if (lopts.targets && lopts.targets.length){
+		for (var li=0;li<lopts.targets.length && li<3;li++){
+			setSelectValueIfPresent("DialogQualityLogicalConsistency_selectAttribute"+(li+1)+"_0", lopts.targets[li]);
+			setSelectValueIfPresent("DialogQualityLogicalConsistency_selectAttribute"+(li+1)+"_1", lopts.references[li]);
+		}
+	}
+	var flagEl=document.getElementById("dataQuality_logicalConsistency_flag");
+	if (flagEl) flagEl.checked=!!lopts.flag;
 
 	return true;
 }
@@ -11276,12 +12973,17 @@ function okButtonDataQualityDialogQualityLogicalConsistency(event){
 		STAQualityNodeResults.targets=targets;
 		STAQualityNodeResults.references=references;
 		STAQualityNodeResults.dataLength=dataTargetLength;
+		node.STALogicalConsistencyOptions={targets:targets, references:references, flag:flag, idTarget:idTarget, idReference:idReference};
 		node.STAQualityNodeResults=STAQualityNodeResults
 		networkNodes.update(node);
 		hideNodeDialog("DialogQualityLogicalConsistency", event);
 		populateDialogdataQualityResultLogicalConsistency(node);
 		showNodeDialog("DialogDataQualityResult");
 		updateQueryAndTableArea(node);
+		RecordProcessMetadata(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	UpdateChildenTable(node);
 
 
 
@@ -11307,15 +13009,27 @@ function populateDialogdataQualityResultLogicalConsistency(node){
 }
 
 function populateDialogQualityTemporalQuality(node){
-	//var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "temporalQuality", "Column");
-	var attributesKeys= Object.keys(node.STAdataAttributes), options;
-	for (var i=0;i<attributesKeys.length;i++){
+	var attributesKeys= Object.keys(GetDialogDataAttributes(node)), options="", i, o=node.STATemporalQualityOptions||{};
+	for (i=0;i<attributesKeys.length;i++){
 		options+= `<option  value="${attributesKeys[i]}">${attributesKeys[i]}</option>`;
 	}
 	document.getElementById("TemporalQuality_select_temporalAccuracy_uncertantyColumn").innerHTML=options;
 	document.getElementById("TemporalQuality_select_temporalColumn").innerHTML=options;
 	document.getElementById("TemporalQuality_radio_temporalAccuracy_evaluateColumn_grouping_select").innerHTML=options;
 	saveNodeDialog("DialogQualityTemporalQuality", node);
+	setSelectValueIfPresent("TemporalQuality_select_temporalColumn", o.attributeSelected);
+	setSelectValueIfPresent("TemporalQuality_select_temporalAccuracy_uncertantyColumn", o.attributeSelectedUncertantly);
+	setSelectValueIfPresent("TemporalQuality_radio_temporalAccuracy_evaluateColumn_grouping_select", o.temporalUncertaintyGroupColumnValue);
+	document.getElementById("TemporalQuality_checkbox_calculate_temporalAccuracy").checked=!!o.temporalAccuracy;
+	document.getElementById("TemporalQuality_checkbox_calculate_temporalValidity").checked=!!o.validity_calculate;
+	document.getElementById("TemporalQuality_checkbox_calculate_temporalResolution").checked=!!o.resolution_calculate;
+	document.getElementById("TemporalQuality_checkbox_calculate_temporalConsistency").checked=!!o.consistency_calculate;
+	if (o.from!=null) document.getElementById("DialogQualityTemporalQuality_validity_inputText_from").value=o.from;
+	if (o.to!=null) document.getElementById("DialogQualityTemporalQuality_validity_inputText_to").value=o.to;
+	if (o.consistencyInput!=null) document.getElementById("TemporalQuality_consistency_toleranceNumber").value=o.consistencyInput;
+	if (o.tolerance!=null) document.getElementById("TemporalQuality_consistency_toleranceRange").value=o.tolerance;
+	document.getElementById("TemporalQuality_checkbox_flag").checked=!!o.flag;
+	document.getElementById("TemporalQuality_checkbox_sort").checked=!!o.sort;
 }
 
 function okButtonDataQualityTemporalQuality(event){
@@ -11344,7 +13058,20 @@ function okButtonDataQualityTemporalQuality(event){
 	var flag=(document.getElementById("TemporalQuality_checkbox_flag").checked)?true:false;
 	var sort= (document.getElementById("TemporalQuality_checkbox_sort").checked)?true:false;
 	var dataLength=data.length;
-	var metadata= (node.STAmetadata)? deapCopy(node.STAmetadata) :{}
+	var metadata= (node.STAmetadata)? deapCopy(node.STAmetadata) :{};
+	node.STATemporalQualityOptions={
+		attributeSelected:attributeSelected,
+		temporalAccuracy:temporalAccuracy,
+		validity_calculate:validity_calculate,
+		resolution_calculate:resolution_calculate,
+		consistency_calculate:consistency_calculate,
+		from:from, to:to,
+		resolutionRadioValue:resolutionRadioValue,
+		consistencyInput:consistencyInput,
+		consistencyRadioValue:consistencyRadioValue,
+		consistencyRadioMethod:consistencyRadioMethod,
+		tolerance:tolerance, flag:flag, sort:sort
+	};
 
 	var STAQualityNodeResults={
 		"accuracy":{},
@@ -11401,16 +13128,34 @@ function okButtonDataQualityTemporalQuality(event){
 
 	
 
+	if (temporalAccuracy){
+		var accuracyMethod=document.querySelector('input[name="TemporalQuality_radio_temporalAccuracy"]:checked');
+		node.STATemporalQualityOptions.accuracyMethodValue=accuracyMethod?accuracyMethod.value:"";
+		if (node.STATemporalQualityOptions.accuracyMethodValue=="uncertaintyColumn"){
+			var selectUncertantly=document.getElementById("TemporalQuality_select_temporalAccuracy_uncertantyColumn");
+			node.STATemporalQualityOptions.attributeSelectedUncertantly=selectUncertantly.options[selectUncertantly.selectedIndex].value;
+		}else{
+			node.STATemporalQualityOptions.accuracyMethodGrouped=document.getElementById("TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_group").checked;
+			if (node.STATemporalQualityOptions.accuracyMethodGrouped){
+				var gsel=document.getElementById("TemporalQuality_radio_temporalAccuracy_evaluateColumn_grouping_select");
+				node.STATemporalQualityOptions.temporalUncertaintyGroupColumnValue=gsel.options[gsel.selectedIndex].value;
+				node.STATemporalQualityOptions.newColumn=document.getElementById("TemporalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox").checked;
+			}
+		}
+	}
 	node.STAdata= data;
 	node.STAdataAttributes= getDataAttributes(data);
 	node.STAmetadata= metadata;
 	node.STAQualityNodeResults=STAQualityNodeResults;
-
 	networkNodes.update(node);
 	hideNodeDialog("DialogQualityTemporalQuality", event);
 	populateDialogdataQualityResultTemporalQuality(node);
 	showNodeDialog("DialogDataQualityResult");
 	updateQueryAndTableArea(node);
+	RecordProcessMetadata(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	UpdateChildenTable(node);
 }
 function populateDialogdataQualityResultTemporalQuality(node){
 	if (node.STAQualityNodeResults){
@@ -11455,10 +13200,8 @@ function populateDialogdataQualityResultTemporalQuality(node){
 }
 
 function populateDialogQualityPositionalQuality(node){
-	//var attributesCheckboxModule = populateAttributesListSelect(node.STAdataAttributes, "positionalQuality", "Geometry column");
-	//document.getElementById("DialogQualityPositionalQuality_attributesList").innerHTML=attributesCheckboxModule;
 	var options="";
-	var attributesKeys= Object.keys(node.STAdataAttributes);
+	var attributesKeys= Object.keys(GetDialogDataAttributes(node));
 	for (var i=0;i<attributesKeys.length;i++){
 		options+= `<option  value="${attributesKeys[i]}">${attributesKeys[i]}</option>`;
 	}
@@ -11467,11 +13210,21 @@ function populateDialogQualityPositionalQuality(node){
 	document.getElementById("PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_select").innerHTML= options;
 	saveNodeDialog("DialogQualityPositionalQuality", node);
 	var c="";
-	var attributesKeys= Object.keys(node.STAdataAttributes);
 	for (var i= 0; i< attributesKeys.length;i++)
 		c+=`<option value="${attributesKeys[i]}">${attributesKeys[i]}</option>`
 
 	document.getElementById("PositionalQuality_select_positionalAccuracy_uncertantlyColumn").innerHTML=c;
+	var po=node.STAPositionalQualityOptions||{};
+	setSelectValueIfPresent("PositionalQuality_select_geometricPositions_longitude", po.attributeSelectedLong);
+	setSelectValueIfPresent("PositionalQuality_select_geometricPositions_latitude", po.attributeSelectedLat);
+	setSelectValueIfPresent("PositionalQuality_select_positionalAccuracy_uncertantlyColumn", po.attributeSelectedUncertantly);
+	setSelectValueIfPresent("PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_select", po.grouped);
+	document.getElementById("PositionalQuality_checkbox_positionalAccuracy").checked=!!po.positionalAccuracy;
+	document.getElementById("PositionalQuality_checkbox_positionalValidity").checked=!!po.positionalValidity;
+	if (po.xmin!=null) document.getElementById("PositionalQuality_input_positionalValidity_xmin").value=po.xmin;
+	if (po.xmax!=null) document.getElementById("PositionalQuality_input_positionalValidity_xmax").value=po.xmax;
+	if (po.ymin!=null) document.getElementById("PositionalQuality_input_positionalValidity_ymin").value=po.ymin;
+	if (po.ymax!=null) document.getElementById("PositionalQuality_input_positionalValidity_ymax").value=po.ymax;
 }
 
 
@@ -11557,7 +13310,22 @@ function okButtonDataQualityPositionalQuality(event){
 		}
 	}
 	if (valid) {
-
+		node.STAPositionalQualityOptions={
+			positionalAccuracy:positionalAccuracy,
+			positionalValidity:positionalValidity,
+			attributeSelectedLong:attributeSelectedLong,
+			attributeSelectedLat:attributeSelectedLat,
+			accuracyMethod:(document.getElementById("PositionalQuality_radio_positionalAccuracy_uncertantlyColumn").checked)?"uncertantlyColumn":"geometryColumns",
+			attributeSelectedUncertantly:STAQualityNodeResults.attributeSelectedUncertantly,
+			selectUnitValue:(document.getElementById("PositionalQuality_radio_positionalAccuracy_uncertantlyColumn_degreeMeters")||{}).value,
+			grouped:STAQualityNodeResults.accuracy && STAQualityNodeResults.accuracy.grouped,
+			newColumns:!!(document.getElementById("PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox")&&document.getElementById("PositionalQuality_radio_positionalAccuracy_evaluateColumn_grouping_groupCheckbox").checked),
+			xmin:document.getElementById("PositionalQuality_input_positionalValidity_xmin").value,
+			xmax:document.getElementById("PositionalQuality_input_positionalValidity_xmax").value,
+			ymin:document.getElementById("PositionalQuality_input_positionalValidity_ymin").value,
+			ymax:document.getElementById("PositionalQuality_input_positionalValidity_ymax").value,
+			tag:!!(document.getElementById("dataQuality_temporalValidity_flag")&&document.getElementById("dataQuality_temporalValidity_flag").checked)
+		};
 		node.STAdata=data;
 		node.STAdataAttributes= getDataAttributes(data);
 		node.STAmetadata= metadata;
@@ -11567,6 +13335,10 @@ function okButtonDataQualityPositionalQuality(event){
 			showNodeDialog("DialogDataQualityResult");	
 			networkNodes.update(node);
 			updateQueryAndTableArea(node);
+			RecordProcessMetadata(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	UpdateChildenTable(node);
 			hideNodeDialog("DialogQualityPositionalQuality", event);	
 			
 		} else
@@ -11642,9 +13414,17 @@ function populateDialogQualityThematicQuality(node){
 	document.getElementById("ThematicQuality_select_tableList").innerHTML=parentNodes.length>1 ? parentNodes[1].label : "No second node is connected!";
 	if (parentNodes.length>1)
 		document.getElementById("DialogQualityThematic_select_Validity").innerHTML=createSelectForThematicQuality(parentNodes[1]); //validity column
+	var topts=node.STAThematicQualityOptions||{};
+	setSelectValueIfPresent("DialogQualityThematicQuality_attributesList", topts.thematicAttributeSelected);
+	setSelectValueIfPresent("DialogQualityThematicQuality_select_uncertantyColumn", topts.uncertantyColumnValue);
+	setSelectValueIfPresent("DialogQualityThematicQuality_select_accuracy_group", topts.grouped);
+	setSelectValueIfPresent("DialogQualityThematic_select_Validity", topts.referenceAttributeValue);
+	if (topts.from!=null) document.getElementById("thematicQuality_input_thematicValidity_from").value=topts.from;
+	if (topts.to!=null) document.getElementById("thematicQuality_input_thematicValidity_to").value=topts.to;
+	document.getElementById("ThematicQuality_checkbox_ThematicAccuracy_values").checked=!!topts.accuracyValues;
+	document.getElementById("ThematicQuality_checkbox_ThematicAccuracy_column").checked=!!topts.accuracyColumn;
+	document.getElementById("ThematicQuality_checkbox_ThematicValidity").checked=!!topts.thematicValidity;
 
-	//document.getElementById("DialogQualityThematicQuality").setAttribute("data-nodeIds", nodeIds);
-	
 	return true;
 }
 
@@ -11764,7 +13544,21 @@ function okButtonDataQualityThematicQuality(event) {
 	}
 		
 	if (valid1 && valid2) {
-
+		node.STAThematicQualityOptions={
+			thematicAttributeSelected:thematicAttributeSelected,
+			inputWayValue:inputWayValue,
+			inputWayValue2:STAQualityNodeResults.inputWayValue2,
+			accuracyValues:!!document.getElementById("ThematicQuality_checkbox_ThematicAccuracy_values").checked,
+			accuracyColumn:!!document.getElementById("ThematicQuality_checkbox_ThematicAccuracy_column").checked,
+			thematicValidity:!!document.getElementById("ThematicQuality_checkbox_ThematicValidity").checked,
+			uncertantyColumnValue:STAQualityNodeResults.accuracy && STAQualityNodeResults.accuracy.uncertaintyColumnValue,
+			grouped:STAQualityNodeResults.accuracy && STAQualityNodeResults.accuracy.grouped,
+			referenceAttributeValue:(document.getElementById("DialogQualityThematic_select_Validity")&&document.getElementById("DialogQualityThematic_select_Validity").value)||"",
+			from:document.getElementById("thematicQuality_input_thematicValidity_from").value,
+			to:document.getElementById("thematicQuality_input_thematicValidity_to").value,
+			validityWay:(document.getElementById("thematicQuality_radio_thematicValidity_list").checked)?"list":"range",
+			flag:!!document.getElementById("dataQuality_thematicValidity_flag").checked
+		};
 		node.STAdata = dataToEvaluate;
 		node.STAdataAttributes = getDataAttributes(dataToEvaluate);
 		node.STAmetadata = metadata;
@@ -11772,6 +13566,10 @@ function okButtonDataQualityThematicQuality(event) {
 		populateDialogdataQualityResultThematicQuality(node);
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
+		RecordProcessMetadata(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	UpdateChildenTable(node);
 		hideNodeDialog("DialogQualityThematicQuality", event);
 		showNodeDialog("DialogDataQualityResult");	
 	}
@@ -11878,6 +13676,8 @@ function GetCreateNewTable(event){
 		}
 		node.STAdata=[newTable];
 		node.STAdataAttributes= getDataAttributes([newTable]);
+		InitInputNodeMetadata(node, {});
+		networkNodes.update(node);
 		updateQueryAndTableArea(node);
 
 	}else{
@@ -12122,16 +13922,25 @@ function createJSONFromDataToSendToIPFS(data){
 
 function populateUncertaintyDialog(node){
 	saveNodeDialog("DialogUncertainty", node);
-	var attributesKeys= Object.keys(node.STAdataAttributes);
-	var c="";
-	for (var i=0;i<attributesKeys.length;i++){
+	var attributesKeys= Object.keys(GetDialogDataAttributes(node));
+	var c="", opts=node.STAUncertaintyOptions||{}, i;
+	for (i=0;i<attributesKeys.length;i++){
 			c+= `<option  value="${attributesKeys[i]}">${attributesKeys[i]}</option>`;
 	}
 	document.getElementById("DialogUncertainty_select_resultColumn").innerHTML=c;
 	document.getElementById("DialogUncertainty_select_temporalColumn").innerHTML=c;
 	document.getElementById("DialogUncertainty_select_PositionalColumn_x").innerHTML=c;
 	document.getElementById("DialogUncertainty_select_PositionalColumn_y").innerHTML=c;
-
+	setSelectValueIfPresent("DialogUncertainty_select_resultColumn", opts.resultColumn);
+	setSelectValueIfPresent("DialogUncertainty_select_temporalColumn", opts.temporalColumn);
+	setSelectValueIfPresent("DialogUncertainty_select_PositionalColumn_x", opts.positionalX);
+	setSelectValueIfPresent("DialogUncertainty_select_PositionalColumn_y", opts.positionalY);
+	if (opts.temporalNumber!=null) document.getElementById("DialogUncertainty_input_temporalValue").value=opts.temporalNumber;
+	if (opts.positionalNumber!=null) document.getElementById("DialogUncertainty_input_number").value=opts.positionalNumber;
+	if (opts.unitTime){
+		var ur=document.querySelector('input[name="DialogUncertainty_radio"][value="'+opts.unitTime+'"]');
+		if (ur) ur.checked=true;
+	}
 }
 function GetUncertainty(event){
 	var node= getNodeDialog("DialogUncertainty");
@@ -12170,14 +13979,27 @@ function GetUncertainty(event){
 		return;
 	}
 
-	//TIME PROCESS
-	SortTableByColumns(data, [selectTemporalColumnValue], "asc");
-	var objWithGroupsTime=groupByTimeInCalculateUncertantyNode(data, selectTemporalColumnValue,temporalNumber,unitTimeValue, resultColumnSelectValue);
-	//POSITION
-	node.STAdata=groupByPositionCalculateUncertantyNode(objWithGroupsTime,selectTemporalColumnValue,selectPositionalXColumnValue,selectPositionalYColumnValue,positionalNumber,resultColumnSelectValue,unitTimeValue)
-	node.STAdataAttributes = getDataAttributes(node.STAdata);  //@marta, crec que això s'hauria de fer manualment ara que saps perfectament el que estas fent. Així pots posar URLs a les definicions de l'uncertainty i les unitats i treure la columna de les unitats.
-	networkNodes.update(node);
+	node.STAUncertaintyOptions={
+		resultColumn:resultColumnSelectValue,
+		temporalColumn:selectTemporalColumnValue,
+		temporalNumber:temporalNumber,
+		unitTime:unitTimeValue,
+		positionalX:selectPositionalXColumnValue,
+		positionalY:selectPositionalYColumnValue,
+		positionalNumber:positionalNumber
+	};
+	if (!UpdateUncertainty(node)) {
+		SortTableByColumns(data, [selectTemporalColumnValue], "asc");
+		var objWithGroupsTime=groupByTimeInCalculateUncertantyNode(data, selectTemporalColumnValue,temporalNumber,unitTimeValue, resultColumnSelectValue);
+		node.STAdata=groupByPositionCalculateUncertantyNode(objWithGroupsTime,selectTemporalColumnValue,selectPositionalXColumnValue,selectPositionalYColumnValue,positionalNumber,resultColumnSelectValue,unitTimeValue);
+		node.STAdataAttributes = getDataAttributes(node.STAdata);
+		networkNodes.update(node);
+	}
 	updateQueryAndTableArea(node);
+	RecordProcessMetadata(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	UpdateChildenTable(node);
 	hideNodeDialog("DialogUncertainty", event);
 }
 function groupByTimeInCalculateUncertantyNode(data, timeColumn, number, unit){
@@ -12465,7 +14287,7 @@ function disableClassificationInBarPlot() {
 }
 
 function populateDialogQualityMisclassificationMatrix(node){
-	var attributes=Object.keys(node.STAdataAttributes);
+	var attributes=Object.keys(GetDialogDataAttributes(node));
 	var options="";
 
 	for (var i=0;i< attributes.length;i++){
@@ -12473,9 +14295,9 @@ function populateDialogQualityMisclassificationMatrix(node){
 	}
 	document.getElementById("Misclassification_select_classified").innerHTML=options;
 	document.getElementById("Misclassification_select_reference").innerHTML=options;
-	node.STAcolumnsList ={};
-	node.STAcolumnsList.classified=[];
-	node.STAcolumnsList.reference=[];
+	if (!node.STAcolumnsList) node.STAcolumnsList={};
+	if (!node.STAcolumnsList.classified) node.STAcolumnsList.classified=[];
+	if (!node.STAcolumnsList.reference) node.STAcolumnsList.reference=[];
 	drawTableInMisclassificationMatrix(node);
 }
 
@@ -12537,7 +14359,10 @@ function okButtonDataQualityMisclassificationmatrix(event){
 	populateDialogdataQualityResultMisclassificationMatrix(node);
 	updateQueryAndTableArea(node);
 	showNodeDialog("DialogDataQualityResult");
-	
+	RecordProcessMetadata(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	UpdateChildenTable(node);
 }
 function populateDialogdataQualityResultMisclassificationMatrix(node) {
 	if (node.STAQualityNodeResults){

@@ -1715,6 +1715,8 @@ function FilterSTAApplyFilterToNode(node) {
 		selectedExpands = node.STASelectedExpands = { selected: [], expanded: {} };
 	selectedExpands.filter = FilterSTAFilterForSelectedExpands(node);
 	FilterSTAStripLegacyFilterFields(node);
+	if (typeof RecordProcessMetadata === "function")
+		RecordProcessMetadata(node);
 	if (typeof networkNodes !== "undefined" && networkNodes.update)
 		networkNodes.update(node);
 	FinalizeSelectedSelectExpands(node, previousSTAURL, {cat: "S'estan filtrant les dades STA amb els criteris seleccionats... ", spa: "Filtrando los datos STA con los criterios seleccionados... ", eng: "Filtering STA by selected criteria... "});
@@ -4478,17 +4480,18 @@ function FilterTableTreeMatches(tree, record) {
 	return all;
 }
 
-function FilterTableApplyFilterToNode(node) {
+// Re-apply stored FilterRowsTable config from parent data (no child propagation).
+function UpdateFilterRowsTable(node) {
 	var parentNode, source, filtered, i, tree;
 	if (!node)
-		return;
+		return false;
 	FilterTableStripLegacyFilterFields(node);
 	parentNode = (typeof GetFirstParentNode === "function") ? GetFirstParentNode(node) : null;
 	source = (parentNode && parentNode.STAdata) ? parentNode.STAdata : null;
 	if (!source) {
 		if (typeof networkNodes !== "undefined" && networkNodes.update)
 			networkNodes.update(node);
-		return;
+		return false;
 	}
 	if (typeof deapCopy === "function")
 		source = deapCopy(source);
@@ -4514,6 +4517,18 @@ function FilterTableApplyFilterToNode(node) {
 	}
 	if (parentNode && parentNode.STAdataAttributes)
 		node.STAdataAttributes = typeof deapCopy === "function" ? deapCopy(parentNode.STAdataAttributes) : parentNode.STAdataAttributes;
+	else if (node.STAdata)
+		node.STAdataAttributes = typeof getDataAttributes === "function" ? getDataAttributes(node.STAdata) : node.STAdataAttributes;
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	return true;
+}
+
+function FilterTableApplyFilterToNode(node) {
+	if (!UpdateFilterRowsTable(node))
+		return;
+	if (typeof RecordProcessMetadata === "function")
+		RecordProcessMetadata(node);
 	if (typeof networkNodes !== "undefined" && networkNodes.update)
 		networkNodes.update(node);
 	if (typeof UpdateChildenTable === "function")

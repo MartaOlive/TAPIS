@@ -931,6 +931,32 @@ function GetSelectSortBySTA(parentNode, node){
 			: {cat: "ascendent", spa: "ascendente", eng: "ascending"});
 }
 
+// Re-apply stored SortByTables criteria from parent data (no child propagation).
+function UpdateSortByTables(node) {
+	var parentNode, columns = [], dirs = [], i, c, criteria;
+	if (!node)
+		return false;
+	parentNode = (typeof GetFirstParentNode === "function") ? GetFirstParentNode(node) : null;
+	if (!parentNode || !parentNode.STAdata || !parentNode.STAdata.length)
+		return false;
+	criteria = node.STASortByCriteria;
+	if (!criteria || !criteria.length)
+		return false;
+	for (i = 0; i < criteria.length; i++) {
+		c = criteria[i];
+		if (!c || !c.attribute)
+			continue;
+		columns.push(c.attribute);
+		dirs.push(c.desc ? "desc" : "asc");
+	}
+	if (!columns.length)
+		return false;
+	node.STAdata = SortTableByColumns(deapCopy(parentNode.STAdata), columns, dirs);
+	node.STAdataAttributes = parentNode.STAdataAttributes ? deapCopy(parentNode.STAdataAttributes) : (typeof getDataAttributes === "function" ? getDataAttributes(node.STAdata) : node.STAdataAttributes);
+	networkNodes.update(node);
+	return true;
+}
+
 function GetSelectSortBySTables(parentNode, node){
 	var criteriaPanel = document.getElementById("DialogSelectSortByCriteriaPanel");
 	if (criteriaPanel && criteriaPanel.style.display == "none")
@@ -949,8 +975,13 @@ function GetSelectSortBySTables(parentNode, node){
 	node.STASortByCriteria = SortByTablesDialogCriteria.map(function (crit) {
 		return {attribute: crit.attribute, desc: !!crit.desc};
 	});
-	node.STAdata = SortTableByColumns(deapCopy(parentNode.STAdata), columns, dirs);
-	networkNodes.update(node);
+	UpdateSortByTables(node);
+	if (typeof RecordProcessMetadata === "function")
+		RecordProcessMetadata(node);
+	if (typeof networkNodes !== "undefined" && networkNodes.update)
+		networkNodes.update(node);
+	if (typeof updateQueryAndTableArea === "function")
+		updateQueryAndTableArea(node);
 	if (typeof UpdateChildenTable === "function")
 		UpdateChildenTable(node);
 }
