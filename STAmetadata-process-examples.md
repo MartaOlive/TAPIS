@@ -168,7 +168,18 @@ Taula buida basada en CSVW + meaning auto:
 }
 ```
 
-(`option`: `emptyTable` | `file` | `url`; `meaningSource`: `none` | `file` | `url` | `auto`)
+Text enganxat (sense fitxer):
+
+```json
+{
+  "tool": "ImportCSV",
+  "option": "text",
+  "meaningSource": "none",
+  "date": "2026-11-11T11:00:00.000Z"
+}
+```
+
+(`option`: `emptyTable` | `file` | `url` | `text`; `meaningSource`: `none` | `file` | `url` | `auto`)
 
 ## ImportDBF
 
@@ -240,7 +251,17 @@ Fitxer local:
 }
 ```
 
-(`option`: `file` | `url`)
+Text enganxat:
+
+```json
+{
+  "tool": "ImportJSONLD",
+  "option": "text",
+  "date": "2026-11-11T11:00:00.000Z"
+}
+```
+
+(`option`: `file` | `url` | `text`)
 
 ## ImportJSON
 
@@ -281,7 +302,17 @@ Llista d'URL (cada URL és un JSON):
 }
 ```
 
-(`option`: `file` | `url` | `urlList`)
+Text enganxat:
+
+```json
+{
+  "tool": "ImportJSON",
+  "option": "text",
+  "date": "2026-11-11T11:00:00.000Z"
+}
+```
+
+(`option`: `file` | `url` | `urlList` | `text`)
 
 ## ImportGeoJSON
 
@@ -336,7 +367,17 @@ Dades externes (p. ex. des d’un altre node) + meaning esquema (fitxer):
 }
 ```
 
-(`option`: `file` | `url` | `externalData`; `meaningSource`: `file` | `url` | `auto`)
+Text enganxat:
+
+```json
+{
+  "tool": "ImportGeoJSON",
+  "option": "text",
+  "date": "2026-11-11T11:00:00.000Z"
+}
+```
+
+(`option`: `file` | `url` | `externalData` | `text`; `meaningSource`: `file` | `url` | `auto`)
 
 ## CreateDGGS
 
@@ -1865,27 +1906,6 @@ CSV → GroupBy → SelectColumnsTable → EditRecord
   "dataLineage": {
     "steps": [
       {
-        "tool": "ImportCSV",
-        "date": "2026-11-11T11:00:00.000Z"
-      },
-      {
-        "tool": "GroupBy",
-        "groupByAttr": [
-          "Ciutat"
-        ],
-        "groupByDate": [],
-        "aggregationAttr": {},
-        "sourceParentId": "parentId",
-        "date": "2026-11-11T11:01:00.000Z"
-      },
-      {
-        "tool": "SelectColumnsTable",
-        "columns": [
-          "Ciutat"
-        ],
-        "date": "2026-11-11T11:02:00.000Z"
-      },
-      {
         "tool": "EditRecord",
         "edited": [
           {
@@ -1901,6 +1921,27 @@ CSV → GroupBy → SelectColumnsTable → EditRecord
         "created": [],
         "deleted": [],
         "date": "2026-11-11T11:03:00.000Z"
+      },
+      {
+        "tool": "SelectColumnsTable",
+        "columns": [
+          "Ciutat"
+        ],
+        "date": "2026-11-11T11:02:00.000Z"
+      },
+      {
+        "tool": "GroupBy",
+        "groupByAttr": [
+          "Ciutat"
+        ],
+        "groupByDate": [],
+        "aggregationAttr": {},
+        "sourceParentId": "parentId",
+        "date": "2026-11-11T11:01:00.000Z"
+      },
+      {
+        "tool": "ImportCSV",
+        "date": "2026-11-11T11:00:00.000Z"
       }
     ]
   }

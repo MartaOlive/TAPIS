@@ -1202,27 +1202,32 @@ function MakeHrefData(data, mediatype)
 
 //type should be "CSV", "DBF", "GPKG", "JSON", "JSONLD" or "GeoJSON"
 function SelectImportFileSource(event, type) {
-	if (document.getElementById("DialogImport"+type+"SourceFile").checked) {
-		document.getElementById("DialogImport"+type+"SourceFileText").disabled=false;
-		document.getElementById("DialogImport"+type+"SourceURLInput").disabled=true;
-		document.getElementById("DialogImport"+type+"SourceURLButton").disabled=true;
-		if (type=="JSON"){
-			document.getElementById("DialogImportJSONInputSeveralRecords").disabled=true;
-			document.getElementById("DialogImportJSONSourceURLButtonMulti").disabled=true;
-		}
+	var fileEl = document.getElementById("DialogImport"+type+"SourceFile");
+	var urlEl = document.getElementById("DialogImport"+type+"SourceURL");
+	var textEl = document.getElementById("DialogImport"+type+"SourceText");
+	var urlListEl = (type === "JSON") ? document.getElementById("DialogImportJSONSourceURLList") : null;
+	var fileText = document.getElementById("DialogImport"+type+"SourceFileText");
+	var urlInput = document.getElementById("DialogImport"+type+"SourceURLInput");
+	var urlButton = document.getElementById("DialogImport"+type+"SourceURLButton");
+	var textArea = document.getElementById("DialogImport"+type+"SourceTextArea");
+	var textButton = document.getElementById("DialogImport"+type+"SourceTextButton");
+	var isFile = !!(fileEl && fileEl.checked);
+	var isUrl = !!(urlEl && urlEl.checked);
+	var isText = !!(textEl && textEl.checked);
+	var isUrlList = !!(urlListEl && urlListEl.checked);
 
-	} else /*if (document.getElementById("DialogImport"+type+"SourceURL").checked)*/ {
-		if (document.getElementById("DialogImportJSONSourceURLList").checked){
-			document.getElementById("DialogImportJSONSourceFileText").disabled=true;
-			document.getElementById("DialogImportJSONSourceURLInput").disabled=true;
-			document.getElementById("DialogImportJSONSourceURLButton").disabled=true;
-			document.getElementById("DialogImportJSONInputSeveralRecords").disabled=false;
-			document.getElementById("DialogImportJSONSourceURLButtonMulti").disabled=false;
-		}else{
-			document.getElementById("DialogImport"+type+"SourceFileText").disabled=true;
-			document.getElementById("DialogImport"+type+"SourceURLInput").disabled=false;
-			document.getElementById("DialogImport"+type+"SourceURLButton").disabled=false;
-		}
+	if (fileText) fileText.disabled = !isFile;
+	if (urlInput) urlInput.disabled = !isUrl;
+	if (urlButton) urlButton.disabled = !isUrl;
+	if (textArea) textArea.disabled = !isText;
+	if (textButton) textButton.disabled = !isText;
+	var urlSelect = document.getElementById("DialogImport"+type+"SourceURLSelect");
+	if (urlSelect) urlSelect.disabled = !isUrl;
+	if (type === "JSON") {
+		var multiArea = document.getElementById("DialogImportJSONInputSeveralRecords");
+		var multiBtn = document.getElementById("DialogImportJSONSourceURLButtonMulti");
+		if (multiArea) multiArea.disabled = !isUrlList;
+		if (multiBtn) multiBtn.disabled = !isUrlList;
 	}
 }
 
@@ -1498,6 +1503,18 @@ function ReadFileImportCSV(event) {
 	reader.readAsText(input.files[0], document.getElementById("DialogImportCSVEncoding").value);
 }
 
+function ReadTextImportCSV(event) {
+	var node = getNodeDialog("DialogImportCSV");
+	var text = document.getElementById("DialogImportCSVSourceTextArea").value;
+	if (!text || !String(text).trim()) {
+		alert(DonaCadena({cat: "Enganxeu text CSV al quadre de text.", spa: "Pegue texto CSV en el cuadro de texto.", eng: "Paste CSV text into the text box."}));
+		return;
+	}
+	TransformTextCSVToTable(text, null, node);
+	if (node && node.STAdata)
+		InitInputNodeMetadata(node, {option: "text"});
+}
+
 function ReadURLImportCSV(event, url, security) {
 	var node=getNodeDialog("DialogImportCSV");
 	var parentNode=GetFirstParentNode(node);
@@ -1713,6 +1730,18 @@ function ReadFileImportJSONLD(event) {
 		showInfoMessage({cat: "S'ha carregat JSON-LD.", spa: "Se ha cargado JSON-LD.", eng: "JSON-LD has been loaded."});
 	};
 	reader.readAsText(input.files[0]);   //By default it assumes "UTF8" as encoding
+}
+
+function ReadTextImportJSONLD(event) {
+	var node = getNodeDialog("DialogImportJSONLD");
+	var text = document.getElementById("DialogImportJSONLDSourceTextArea").value;
+	if (!text || !String(text).trim()) {
+		alert(DonaCadena({cat: "Enganxeu text JSON-LD al quadre de text.", spa: "Pegue texto JSON-LD en el cuadro de texto.", eng: "Paste JSON-LD text into the text box."}));
+		return;
+	}
+	TransformTextJSONLDToTable(text, document.getElementById("DialogImportJSONLDAddGeo").checked, document.getElementById("DialogImportJSONLDAddObs").checked, null, node);
+	if (node && node.STAdata)
+		InitInputNodeMetadata(node, {option: "text"});
 }
 
 function ReadURLImportJSONLD(event, url, security) {
@@ -2040,6 +2069,30 @@ function ReadFileImportGeoJSON(event) {
 		TransformTextGeoJSONToTable(reader.result, null, node);
 	};
 	reader.readAsText(input.files[0]);  //By default it assumes "UTF8" as encoding
+}
+
+function ReadTextImportGeoJSON(event) {
+	var node = getNodeDialog("DialogImportGeoJSON");
+	var text = document.getElementById("DialogImportGeoJSONSourceTextArea").value;
+	if (!text || !String(text).trim()) {
+		alert(DonaCadena({cat: "Enganxeu text GeoJSON al quadre de text.", spa: "Pegue texto GeoJSON en el cuadro de texto.", eng: "Paste GeoJSON text into the text box."}));
+		return;
+	}
+	TransformTextGeoJSONToTable(text, null, node);
+	if (node && node.STAdata)
+		InitInputNodeMetadata(node, {option: "text"});
+}
+
+function ReadTextImportJSON(event) {
+	var node = getNodeDialog("DialogImportJSON");
+	var text = document.getElementById("DialogImportJSONSourceTextArea").value;
+	if (!text || !String(text).trim()) {
+		alert(DonaCadena({cat: "Enganxeu text JSON al quadre de text.", spa: "Pegue texto JSON en el cuadro de texto.", eng: "Paste JSON text into the text box."}));
+		return;
+	}
+	TransformTextJSONToTable(null, text, null, node, "onlyOne");
+	if (node && node.STAdata)
+		InitInputNodeMetadata(node, {option: "text"});
 }
 
 
@@ -5827,7 +5880,7 @@ function InitInputNodeMetadata(node, sourceInfo) {
 	if (source.assetId) payload.assetId = source.assetId;
 	if (source.offerId) payload.offerId = source.offerId;
 	if (source.mediaType) payload.mediaType = source.mediaType;
-	meta.dataLineage.steps.push(BuildProcessStep(node, node.image || "input", payload));
+	meta.dataLineage.steps.unshift(BuildProcessStep(node, node.image || "input", payload));
 	// Keep any quality infos already on the node (rare for pure inputs).
 	if (node.STAmetadata && node.STAmetadata.dataQualityInfos)
 		meta.dataQualityInfos = deapCopy(node.STAmetadata.dataQualityInfos);
@@ -5838,7 +5891,7 @@ function CollectParentProcessMetadata(node) {
 	var parents = GetParentNodes(node), meta = {}, i, pMeta, steps, branchStep;
 	if (!parents || !parents.length)
 		return CreateEmptySTAMetadata();
-	// Start from first parent; if others have process steps not in the first, append them with a note.
+	// Start from first parent; if others have process steps not in the first, unshift them with a note.
 	if (parents[0].STAmetadata)
 		meta = deapCopy(parents[0].STAmetadata);
 	else
@@ -5857,7 +5910,7 @@ function CollectParentProcessMetadata(node) {
 			parentNodeId: parents[i].id
 		});
 		branchStep.branchSteps = steps;
-		meta.dataLineage.steps.push(branchStep);
+		meta.dataLineage.steps.unshift(branchStep);
 	}
 	return meta;
 }
@@ -5888,8 +5941,8 @@ function SyncEditRecordProcessMetadata(node) {
 	if (!meta.dataLineage.steps)
 		meta.dataLineage.steps = [];
 	selections = EnsureEditRecordChanges(node);
-	// Always one EditRecord step after parent lineage (rebuilds from STAEditRecordChanges).
-	meta.dataLineage.steps.push(BuildProcessStep(node, "EditRecord.png", selections));
+	// Always one EditRecord step at front of parent lineage (rebuilds from STAEditRecordChanges).
+	meta.dataLineage.steps.unshift(BuildProcessStep(node, "EditRecord.png", selections));
 	node.STAmetadata = meta;
 }
 
@@ -5935,7 +5988,7 @@ function RecordProcessMetadata(node) {
 		meta.dataQualityInfos = qualityInfos;
 	toolImage = node.image;
 	selections = GetProcessSelectionsForNode(node);
-	meta.dataLineage.steps.push(BuildProcessStep(node, toolImage, selections));
+	meta.dataLineage.steps.unshift(BuildProcessStep(node, toolImage, selections));
 	node.STAmetadata = meta;
 }
 
@@ -8849,7 +8902,7 @@ function StartCircularImage(nodeTo, nodeFrom, addEdge, staNodes, tableNodes)
 		alert(DonaCadenaFmt({cat: "Node incompatible. {0}. No s'ha afegit.", spa: "Nodo incompatible. {0}. No se ha añadido.", eng: "Incompatible node. {0}. It has not been added."}, errorText));
 		return null;
 	}
-	// Propagate dataLineage/quality metadata from parent; tools will append steps later via RecordProcessMetadata.
+	// Propagate dataLineage/quality metadata from parent; tools will unshift steps later via RecordProcessMetadata.
 	CopyParentMetadataToNode(nodeTo, nodeFrom);
 	if (staNodes && nodeFrom.STAURL && IdOfSTAEntity(nodeTo) != -1) {
 		if (nodeFrom.image=="sta.png" || nodeFrom.image=="staRoot.png" || nodeFrom.image=="edcAsset.png")
