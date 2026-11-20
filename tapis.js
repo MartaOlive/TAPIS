@@ -1319,6 +1319,12 @@ function TransformTextCSVWToDataAttributes(csvwText, node)
 		document.getElementById("DialogImportCSVHeader").checked=csvReadParams.header;
 	if (csvReadParams.dynamicTyping)
 		document.getElementById("DialogImportCSVStringTyping").checked=csvReadParams.dynamicTyping ? false : true;
+	if (csvReadParams.skipRows != null && csvReadParams.skipRows > 0) {
+		document.getElementById("DialogImportCSVSkipPreamble").checked = true;
+		document.getElementById("DialogImportCSVSkipPreambleCount").value = csvReadParams.skipRows;
+		OnImportCSVSkipPreambleChange();
+	}
+	UpdateImportCSVDeleteRowBounds();
 }
 
 function ReadFileImportCSVW(event) {
@@ -1425,8 +1431,110 @@ function TransformDatesToISO(data,node) {
 		}
 	}
 }
+function SkipCSVLeadingLines(csvText, n) {
+	var lines;
+	if (!csvText || !n || n < 1)
+		return csvText;
+	lines = String(csvText).split(/\r\n|\n|\r/);
+	if (n >= lines.length)
+		return "";
+	return lines.slice(n).join("\n");
+}
+
+function GetImportCSVSkipPreambleCount() {
+	var el;
+	if (!document.getElementById("DialogImportCSVSkipPreamble")?.checked)
+		return 0;
+	el = document.getElementById("DialogImportCSVSkipPreambleCount");
+	return Math.max(0, parseInt(el && el.value, 10) || 0);
+}
+
+function GetImportCSVDeleteRowsRange() {
+	var fromEl, toEl, from, to, hasHeader, minRow;
+	if (!document.getElementById("DialogImportCSVDeleteRows")?.checked)
+		return null;
+	fromEl = document.getElementById("DialogImportCSVDeleteRowsFrom");
+	toEl = document.getElementById("DialogImportCSVDeleteRowsTo");
+	from = parseInt(fromEl && fromEl.value, 10);
+	to = parseInt(toEl && toEl.value, 10);
+	if (!Number.isFinite(from) || !Number.isFinite(to))
+		return null;
+	hasHeader = document.getElementById("DialogImportCSVHeader")?.checked;
+	minRow = hasHeader ? 2 : 1;
+	if (from < minRow)
+		from = minRow;
+	if (to < from)
+		to = from;
+	return { from: from, to: to, hasHeader: !!hasHeader };
+}
+
+function ApplyImportCSVDeleteRows(data, range) {
+	var fromIdx, toIdx, start, count;
+	if (!data || !range)
+		return data;
+	fromIdx = range.hasHeader ? (range.from - 2) : (range.from - 1);
+	toIdx = range.hasHeader ? (range.to - 2) : (range.to - 1);
+	if (fromIdx < 0)
+		fromIdx = 0;
+	if (toIdx < fromIdx)
+		return data;
+	if (fromIdx >= data.length)
+		return data;
+	start = fromIdx;
+	count = Math.min(toIdx, data.length - 1) - start + 1;
+	if (count > 0)
+		data.splice(start, count);
+	return data;
+}
+
+function OnImportCSVSkipPreambleChange() {
+	var on = document.getElementById("DialogImportCSVSkipPreamble")?.checked;
+	var wrap = document.getElementById("DialogImportCSVSkipPreambleOptions");
+	if (wrap)
+		wrap.style.display = on ? "inline" : "none";
+}
+
+function OnImportCSVDeleteRowsChange() {
+	var on = document.getElementById("DialogImportCSVDeleteRows")?.checked;
+	var wrap = document.getElementById("DialogImportCSVDeleteRowsOptions");
+	if (wrap)
+		wrap.style.display = on ? "inline" : "none";
+	UpdateImportCSVDeleteRowBounds();
+}
+
+function UpdateImportCSVDeleteRowBounds() {
+	var hasHeader = document.getElementById("DialogImportCSVHeader")?.checked;
+	var minRow = hasHeader ? 2 : 1;
+	var fromEl = document.getElementById("DialogImportCSVDeleteRowsFrom");
+	var toEl = document.getElementById("DialogImportCSVDeleteRowsTo");
+	var from, to;
+	if (!fromEl || !toEl)
+		return;
+	fromEl.min = minRow;
+	toEl.min = minRow;
+	from = parseInt(fromEl.value, 10);
+	to = parseInt(toEl.value, 10);
+	if (!Number.isFinite(from) || from < minRow) {
+		fromEl.value = minRow;
+		from = minRow;
+	}
+	if (!Number.isFinite(to) || to < from)
+		toEl.value = from;
+}
+
+function OnImportCSVHeaderChange() {
+	UpdateImportCSVDeleteRowBounds();
+}
+
+function OnImportCSVDeleteRowsFromChange() {
+	UpdateImportCSVDeleteRowBounds();
+}
+
 function TransformCSVToTable(csvText,node) {
-	var result = Papa.parse(csvText, {delimiter: (document.getElementById("DialogImportCSVDelimiterAuto").checked ? null : (document.getElementById("DialogImportCSVDelimiterText").checked ? document.getElementById("DialogImportCSVDelimiter").value : '\t')),
+	var skipCount = GetImportCSVSkipPreambleCount();
+	var deleteRange = GetImportCSVDeleteRowsRange();
+	var text = skipCount ? SkipCSVLeadingLines(csvText, skipCount) : csvText;
+	var result = Papa.parse(text, {delimiter: (document.getElementById("DialogImportCSVDelimiterAuto").checked ? null : (document.getElementById("DialogImportCSVDelimiterText").checked ? document.getElementById("DialogImportCSVDelimiter").value : '\t')),
 	header: document.getElementById("DialogImportCSVHeader").checked,
 		
 	dynamicTyping: document.getElementById("DialogImportCSVStringTyping").checked ? false : true,
@@ -1436,6 +1544,7 @@ function TransformCSVToTable(csvText,node) {
 
 	// } 
 	if (result && result.data) {
+		ApplyImportCSVDeleteRows(result.data, deleteRange);
 		if (node)
 		TransformDatesToISO(result.data,node);  //Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
 		//We can consider to remove dynamicTyping because is generating all sort of problems with dates and then analize the response ourselves.
@@ -1463,8 +1572,21 @@ function evaluateIfItIsISOADate(value){
 	return regex.test(value);
 }
 
+function GetImportCSVLineageExtras() {
+	var extras = {}, skipCount, deleteRange;
+	skipCount = GetImportCSVSkipPreambleCount();
+	if (skipCount > 0)
+		extras.skipRowsBeforeHeader = skipCount;
+	deleteRange = GetImportCSVDeleteRowsRange();
+	if (deleteRange) {
+		extras.deleteRowsFrom = deleteRange.from;
+		extras.deleteRowsTo = deleteRange.to;
+	}
+	return extras;
+}
+
 function TransformTextCSVToTable(csvText, url, node) {
-	var data;
+	var data, metaInfo;
 	try {
 		data = TransformCSVToTable(csvText,node);
 	} catch (e) {
@@ -1476,7 +1598,8 @@ function TransformTextCSVToTable(csvText, url, node) {
 		node.STAdata=data;
 		if (url)
 			node.STAfileUrl=url;
-		InitInputNodeMetadata(node, {url: url || node.STAURL || node.STAfileUrl});
+		metaInfo = Object.assign({url: url || node.STAURL || node.STAfileUrl}, GetImportCSVLineageExtras());
+		InitInputNodeMetadata(node, metaInfo);
 		if (node.STAISOAlert) alert(DonaCadena({cat: "Un dels atributs conté dades que semblen una data. El procés d'importació de CSV no pot distingir si aquest valor és una data vàlida o un altre tipus de dada (per exemple, un interval de temps), cosa que provoca un error. Els valors afectats s'han carregat com a nuls. Per conservar i visualitzar aquesta informació, torneu a carregar el fitxer CSV amb l'opció Importa els números com a cadenes activada. Després, useu la funcionalitat de significat per convertir les dades al tipus adequat", spa: "Uno de los atributos contiene datos que parecen una fecha. El proceso de importación de CSV no puede distinguir si este valor es una fecha válida u otro tipo de dato (por ejemplo, un intervalo de tiempo), lo que provoca un error. Los valores afectados se han cargado como nulos. Para conservar y visualizar esta información, vuelva a cargar el archivo CSV con la opción Importar los números como cadenas activada. Después, use la funcionalidad de significado para convertir los datos al tipo adecuado", eng: "One of the attributes contains data that looks like a date. The CSV import process cannot distinguish whether this value is a valid date or another type of data (for example, a time interval), which causes an error. The affected values have been loaded as null. To preserve and visualize this information, reload the CSV file with the Import numbers as strings option enabled. Then, use the meaning functionality to convert the data to the appropriate type"}))
 		networkNodes.update(node);
 		updateQueryAndTableArea(node);
@@ -1512,7 +1635,7 @@ function ReadTextImportCSV(event) {
 	}
 	TransformTextCSVToTable(text, null, node);
 	if (node && node.STAdata)
-		InitInputNodeMetadata(node, {option: "text"});
+		InitInputNodeMetadata(node, Object.assign({option: "text"}, GetImportCSVLineageExtras()));
 }
 
 function ReadURLImportCSV(event, url, security) {
@@ -5880,6 +6003,9 @@ function InitInputNodeMetadata(node, sourceInfo) {
 	if (source.assetId) payload.assetId = source.assetId;
 	if (source.offerId) payload.offerId = source.offerId;
 	if (source.mediaType) payload.mediaType = source.mediaType;
+	if (source.skipRowsBeforeHeader != null) payload.skipRowsBeforeHeader = source.skipRowsBeforeHeader;
+	if (source.deleteRowsFrom != null) payload.deleteRowsFrom = source.deleteRowsFrom;
+	if (source.deleteRowsTo != null) payload.deleteRowsTo = source.deleteRowsTo;
 	meta.dataLineage.steps.unshift(BuildProcessStep(node, node.image || "input", payload));
 	// Keep any quality infos already on the node (rare for pure inputs).
 	if (node.STAmetadata && node.STAmetadata.dataQualityInfos)
@@ -11111,6 +11237,13 @@ function ApplyAggregateColumnsOps(data, newColumnsToAdd){
 				addnewColumnStandardDeviationValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2]);
 				}
 				break;
+			case  "StandardError":
+				if (decimalNumber!=""){
+				addnewColumnStandardErrorValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber,"");
+			}else{
+				addnewColumnStandardErrorValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2]);
+				}
+				break;
 			case  "LastValue":
 				if (decimalNumber!=""){
 				addnewColumnLastValue(data, newColumnsToAdd[i][1],newColumnsToAdd[i][2], decimalNumber);
@@ -11420,6 +11553,7 @@ function UpdateColumnStatistics(node) {
 		obj["Max.value"]= (dataType=="number")?aggrFuncMaxValue(collectedData):"";
 		obj["Mode"]= aggrFuncMode(collectedData);
 		obj["StandardDeviation"]= (dataType=="number")?aggrFuncStandardDeviation(collectedData):"";
+		obj["StandardError"]= (dataType=="number")?aggrFuncStandardError(collectedData):"";
 		obj["Variance"]= (dataType=="number")?aggrFuncVariance(collectedData):"";
 		obj["Range"]= (dataType=="number")?aggrFuncRange(collectedData):"";
 		obj["FirstValue"]=(dataType=="number")? aggrFuncFirstValue(collectedData):"";

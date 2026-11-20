@@ -69,6 +69,7 @@ const AggregationsOptions=[{name: "Mean", desc: "Mean", definition: "https://sta
 					 {name: "FirstValue", desc: "First value"},
 					 {name: "Median", desc: "Median", definition: "https://statproofbook.github.io/D/med"},
 					 {name: "StandardDeviation", desc: "Standard deviation", definition: "https://statproofbook.github.io/D/std-samp"},
+					 {name: "StandardError", desc: "Standard error"},
 					 {name: "LastValue", desc: "Last value"},
 					 {name: "Q1", desc: "Q1"},
 					 {name: "Variance", desc: "Variance", definition: "https://statproofbook.github.io/D/var-samp"},
@@ -94,6 +95,7 @@ const AggregationColumnsOptions=[{name: "Mean", desc: "Mean"},
 	{name: "FirstValue", desc: "First value"},
 	{name: "Median", desc: "Median"},
 	{name: "StandardDeviation", desc: "Standard deviation"},
+	{name: "StandardError", desc: "Standard error"},
 	{name: "LastValue", desc: "Last value"},
 	{name: "Q1", desc: "Q1"},
 	{name: "Variance", desc: "Variance"},
@@ -177,6 +179,11 @@ function aggrFuncMedian(values) {
 function aggrFuncStandardDeviation(values){
 	if (values.length<=1) return 0; //If you use it automatically and is one value it fails. 
 	return Math.sqrt(aggrFuncVariance(values));
+}
+
+function aggrFuncStandardError(values){
+	if (values.length<=1) return 0; //If you use it automatically and is one value it fails.
+	return aggrFuncStandardDeviation(values)/Math.sqrt(values.length);
 }
 
 function aggrFuncLastValue(values){

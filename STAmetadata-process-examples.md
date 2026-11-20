@@ -179,6 +179,21 @@ Text enganxat (sense fitxer):
 }
 ```
 
+Ometre files prèvies i/o eliminar un rang de registres (números de fila del CSV després d’ometre el preamble; amb capçalera, `deleteRowsFrom` ≥ 2):
+
+```json
+{
+  "tool": "ImportCSV",
+  "option": "file",
+  "file": "dades.csv",
+  "skipRowsBeforeHeader": 3,
+  "deleteRowsFrom": 2,
+  "deleteRowsTo": 5,
+  "meaningSource": "none",
+  "date": "2026-11-11T11:00:00.000Z"
+}
+```
+
 (`option`: `emptyTable` | `file` | `url` | `text`; `meaningSource`: `none` | `file` | `url` | `auto`)
 
 ## ImportDBF

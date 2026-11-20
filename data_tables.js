@@ -1081,6 +1081,9 @@ function addnewColumnFirstValue (data, columnName,columnsToEvaluate, decimalNumb
 function addnewColumnStandardDeviationValue (data, columnName,columnsToEvaluate, decimalNumber){
 	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncStandardDeviation, decimalNumber); 
 }
+function addnewColumnStandardErrorValue (data, columnName,columnsToEvaluate, decimalNumber){
+	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncStandardError, decimalNumber); 
+}
 function addnewColumnLastValue (data, columnName,columnsToEvaluate, decimalNumber){
 	return addnewColumnAggr(data, columnName,columnsToEvaluate, aggrFuncLastValue, decimalNumber); 
 }

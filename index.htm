@@ -1446,8 +1446,24 @@
 				<option value="x-mac-cyrillic">X-MAC-Cyrillic</option>
 			</select>
 			<br>
-			<label><input type="checkbox" id="DialogImportCSVHeader" checked="checked"></input><span data-lang="{&quot;cat&quot;: &quot;La primera línia conté els noms dels camps&quot;, &quot;spa&quot;: &quot;La primera línea contiene los nombres de los campos&quot;, &quot;eng&quot;: &quot;The first line contains field names&quot;}">The first line contains field names</span></label><br>
+			<label><input type="checkbox" id="DialogImportCSVHeader" checked="checked" onChange="OnImportCSVHeaderChange()"></input><span data-lang="{&quot;cat&quot;: &quot;La primera línia conté els noms dels camps&quot;, &quot;spa&quot;: &quot;La primera línea contiene los nombres de los campos&quot;, &quot;eng&quot;: &quot;The first line contains field names&quot;}">The first line contains field names</span></label><br>
 			<label><input type="checkbox" id="DialogImportCSVStringTyping"></input><span data-lang="{&quot;cat&quot;: &quot;Importa els números com a text&quot;, &quot;spa&quot;: &quot;Importar los números como texto&quot;, &quot;eng&quot;: &quot;Import numbers as strings&quot;}">Import numbers as strings</span></label>
+			<br>
+			<fieldset>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Elimina files&quot;, &quot;spa&quot;: &quot;Eliminar filas&quot;, &quot;eng&quot;: &quot;Delete rows&quot;}">Delete rows</span></legend>
+				<label><input type="checkbox" id="DialogImportCSVSkipPreamble" onChange="OnImportCSVSkipPreambleChange()"></input><span data-lang="{&quot;cat&quot;: &quot;Abans de la capçalera&quot;, &quot;spa&quot;: &quot;Antes de la cabecera&quot;, &quot;eng&quot;: &quot;Before the header&quot;}">Before the header</span></label>
+				<span id="DialogImportCSVSkipPreambleOptions" style="display:none; margin-left:0.6em;">
+					<span data-lang="{&quot;cat&quot;: &quot;Files a ometre:&quot;, &quot;spa&quot;: &quot;Filas a omitir:&quot;, &quot;eng&quot;: &quot;Rows to skip:&quot;}">Rows to skip:</span>
+					<input type="number" id="DialogImportCSVSkipPreambleCount" min="1" step="1" value="1" style="width:4.5em;">
+				</span><br>
+				<label><input type="checkbox" id="DialogImportCSVDeleteRows" onChange="OnImportCSVDeleteRowsChange()"></input><span data-lang="{&quot;cat&quot;: &quot;Després de la capçalera&quot;, &quot;spa&quot;: &quot;Después de la cabecera&quot;, &quot;eng&quot;: &quot;After the header&quot;}">After the header</span></label>
+				<span id="DialogImportCSVDeleteRowsOptions" style="display:none; margin-left:0.6em;">
+					<span data-lang="{&quot;cat&quot;: &quot;Des de:&quot;, &quot;spa&quot;: &quot;Desde:&quot;, &quot;eng&quot;: &quot;From:&quot;}">From:</span>
+					<input type="number" id="DialogImportCSVDeleteRowsFrom" min="2" step="1" value="2" style="width:4.5em;" onChange="OnImportCSVDeleteRowsFromChange()">
+					<span data-lang="{&quot;cat&quot;: &quot;Fins a:&quot;, &quot;spa&quot;: &quot;Hasta:&quot;, &quot;eng&quot;: &quot;To:&quot;}">To:</span>
+					<input type="number" id="DialogImportCSVDeleteRowsTo" min="2" step="1" value="2" style="width:4.5em;">
+				</span>
+			</fieldset>
 			<br>
 			<fieldset>
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Font del significat&quot;, &quot;spa&quot;: &quot;Fuente del significado&quot;, &quot;eng&quot;: &quot;Meaning source&quot;}">Meaning source</span></legend>

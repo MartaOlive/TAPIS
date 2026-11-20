@@ -127,7 +127,7 @@
 						"type": "array",
 						"items": { 
 							"type": "string",
-							"enum": ["Mean", "Mode", "FirstValue", "Median", "StandardDeviation", "LastValue", "Q1", "Variance", "RandomValue", "Q3", "Sum", "CountDefined", "MinValue", "Concatenate", "Count", "MaxValue", "Range", "ProportionDefined"]
+							"enum": ["Mean", "Mode", "FirstValue", "Median", "StandardDeviation", "StandardError", "LastValue", "Q1", "Variance", "RandomValue", "Q3", "Sum", "CountDefined", "MinValue", "Concatenate", "Count", "MaxValue", "Range", "ProportionDefined"]
 						} 
 					}
 				}
