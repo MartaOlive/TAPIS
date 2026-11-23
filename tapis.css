@@ -529,6 +529,31 @@
 	flex: 0 0 auto;
 }
 
+#DialogScatterPlot .DialogScatterPlotAreaPairFieldset {
+	margin: 8px 0;
+	padding: 8px 10px;
+	border: 1px solid #ccc;
+	min-width: 0;
+}
+
+#DialogScatterPlot .DialogScatterPlotAreaPairFieldset legend {
+	padding: 0 4px;
+}
+
+#DialogScatterPlot .DialogScatterPlotAreaPairRow {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin: 4px 0;
+}
+
+#DialogScatterPlot .DialogScatterPlotAreaPairRow select {
+	max-width: 100%;
+	min-width: 0;
+	flex: 1 1 140px;
+}
+
 #DialogScatterPlot .center button {
 	margin: 0 6px;
 }

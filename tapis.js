@@ -1546,9 +1546,11 @@ function TransformCSVToTable(csvText,node) {
 	if (result && result.data) {
 		ApplyImportCSVDeleteRows(result.data, deleteRange);
 		if (node)
-		TransformDatesToISO(result.data,node);  //Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
+			TransformDatesToISO(result.data,node);  //Papa.parse transforms ISO dates to javascript Dates. I revert this to ISO date expressed in text.
 		//We can consider to remove dynamicTyping because is generating all sort of problems with dates and then analize the response ourselves.
-		else TransformDatesToISO(result.data)
+		else
+			TransformDatesToISO(result.data);
+		NormalizeFlexibleDateStrings(result.data); // YYYY-MM-DD, DD-MM-YYYY, with - or /
 		return result.data;
 	}
 	return null;
@@ -1570,6 +1572,99 @@ function evaluateIfItIsISOADate(value){
 
 	var regex = /^\d{4}(-\d{2}(-\d{2}(T\d{2}(:\d{2}(:\d{2}(\.\d{1,3})?)?)?Z?)?)?)?$/;
 	return regex.test(value);
+}
+
+function padDatePart2(n) {
+	n = Number(n);
+	return (n < 10 ? "0" : "") + n;
+}
+
+function isValidCalendarYMD(year, month, day) {
+	var y = Number(year), m = Number(month), d = Number(day), dt;
+	if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d))
+		return false;
+	if (m < 1 || m > 12 || d < 1 || d > 31)
+		return false;
+	dt = new Date(Date.UTC(y, m - 1, d));
+	return dt.getUTCFullYear() === y && (dt.getUTCMonth() + 1) === m && dt.getUTCDate() === d;
+}
+
+/** Year-month-day: YYYY-MM-DD or YYYY/MM/DD (optional time). */
+function matchYMDDateString(value) {
+	var m, s;
+	if (typeof value !== "string")
+		return null;
+	s = value.trim();
+	m = s.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})(?:[ T]\d{1,2}(?::\d{2}){0,2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:?\d{2})?)?$/);
+	if (!m || !isValidCalendarYMD(m[1], m[2], m[3]))
+		return null;
+	return { year: Number(m[1]), month: Number(m[2]), day: Number(m[3]) };
+}
+
+/** Day-month-year: DD-MM-YYYY or DD/MM/YYYY (optional time). European order. */
+function matchDMYDateString(value) {
+	var m, s;
+	if (typeof value !== "string")
+		return null;
+	s = value.trim();
+	m = s.match(/^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})(?:[ T]\d{1,2}(?::\d{2}){0,2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:?\d{2})?)?$/);
+	if (!m || !isValidCalendarYMD(m[3], m[2], m[1]))
+		return null;
+	return { year: Number(m[3]), month: Number(m[2]), day: Number(m[1]) };
+}
+
+/** True for ISO partial/full dates, YMD and DMY with - or /. */
+function evaluateIfItIsADate(value) {
+	if (typeof value !== "string" || !value.length)
+		return false;
+	if (evaluateIfItIsISOADate(value))
+		return true;
+	if (matchYMDDateString(value) || matchDMYDateString(value))
+		return true;
+	return false;
+}
+
+/** Normalize flexible date strings to ISO YYYY-MM-DDTHH:mm:ssZ (date-only → midnight UTC). */
+function normalizeDateStringToISO(value) {
+	var parts, s;
+	if (typeof value !== "string")
+		return null;
+	s = value.trim();
+	if (!s)
+		return null;
+	if (typeof fragmentStartsWithISODate === "function") {
+		var n = fragmentStartsWithISODate(s, 0);
+		if (n && n === s.length)
+			return s;
+	}
+	if (evaluateIfItIsISOADate(s) && s.length >= 10 && s.charAt(4) === "-" && s.charAt(7) === "-") {
+		/* YYYY-MM-DD[…] already ISO-like: keep full datetime if present, else date at midnight UTC */
+		if (s.length === 10)
+			return s + "T00:00:00Z";
+		if (s.indexOf("T") === 10)
+			return s.charAt(s.length - 1) === "Z" || /[+-]\d{2}:?\d{2}$/.test(s) ? s : (s + "Z");
+	}
+	parts = matchYMDDateString(s) || matchDMYDateString(s);
+	if (!parts)
+		return null;
+	return parts.year + "-" + padDatePart2(parts.month) + "-" + padDatePart2(parts.day) + "T00:00:00Z";
+}
+
+function NormalizeFlexibleDateStrings(data) {
+	var r, k, keys, record, iso;
+	if (!data || !data.length)
+		return;
+	for (r = 0; r < data.length; r++) {
+		record = data[r];
+		keys = Object.keys(record);
+		for (k = 0; k < keys.length; k++) {
+			if (typeof record[keys[k]] !== "string")
+				continue;
+			iso = normalizeDateStringToISO(record[keys[k]]);
+			if (iso)
+				record[keys[k]] = iso;
+		}
+	}
 }
 
 function GetImportCSVLineageExtras() {
@@ -1596,6 +1691,7 @@ function TransformTextCSVToTable(csvText, url, node) {
 	if (data) {
 		var node=getNodeDialog("DialogImportCSV");
 		node.STAdata=data;
+		node.STAdataAttributes=getDataAttributes(data);
 		if (url)
 			node.STAfileUrl=url;
 		metaInfo = Object.assign({url: url || node.STAURL || node.STAfileUrl}, GetImportCSVLineageExtras());
@@ -6470,6 +6566,11 @@ function getJSONTypeOrISODatetime(s) {
 	if (type =="string" && s.length>0) { 
 		numberReturned=fragmentStartsWithISODate(s, 0);
 		if (s.length==numberReturned) 
+			return "isodatetime";
+		/* ISO partial/full, YMD and DMY ( - or / ) used in CSVs and tables */
+		if (typeof evaluateIfItIsADate === "function" && evaluateIfItIsADate(s))
+			return "isodatetime";
+		if (typeof evaluateIfItIsISOADate === "function" && evaluateIfItIsISOADate(s))
 			return "isodatetime";
 	}
 	else if (type =="object" && s.coordinates && s.type && isGeoJSONGeometryType(s.type))

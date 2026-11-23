@@ -1,0 +1,454 @@
+{
+	"nodes": [
+		{
+			"id": "8h7lr.bar4g2",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"estaci": "Embassament de Sau (Vilanova de Sau)",
+					"nivell_absolut": 405.27,
+					"percentatge_volum_embassat": 44.5
+				},
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"estaci": "Embassament de Susqueda (Osor)",
+					"nivell_absolut": 314.66,
+					"percentatge_volum_embassat": 34.7
+				},
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"estaci": "Embassament de Darnius Boadella (Darnius)",
+					"nivell_absolut": 139,
+					"percentatge_volum_embassat": 22.9
+				},
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"estaci": "Embassament de Siurana (Cornudella de Montsant)",
+					"nivell_absolut": 452.04,
+					"percentatge_volum_embassat": 2.1
+				},
+				{
+					"dia": "2024-06-26T00:00:00.000",
+					"estaci": "Embassament de la Baells (Cercs)",
+					"nivell_absolut": 611.89,
+					"percentatge_volum_embassat": 51
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"estaci": "Embassament de Sau (Vilanova de Sau)",
+					"nivell_absolut": 405.27,
+					"percentatge_volum_embassat": 44.6
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"estaci": "Embassament de Susqueda (Osor)",
+					"nivell_absolut": 314.66,
+					"percentatge_volum_embassat": 34.6
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"estaci": "Embassament de Darnius Boadella (Darnius)",
+					"nivell_absolut": 139,
+					"percentatge_volum_embassat": 22.6
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"estaci": "Embassament de Siurana (Cornudella de Montsant)",
+					"nivell_absolut": 452.04,
+					"percentatge_volum_embassat": 2.6
+				},
+				{
+					"dia": "2024-07-26T00:00:00.000",
+					"estaci": "Embassament de la Baells (Cercs)",
+					"nivell_absolut": 611.89,
+					"percentatge_volum_embassat": 56
+				}
+			],
+			"STAmetadata": {
+				"dataLineage": {
+					"steps": [
+						{
+							"tool": "ImportCSV",
+							"date": "2026-11-23T11:37:36.302Z"
+						}
+					]
+				}
+			},
+			"STAdataAttributes": {
+				"dia": {
+					"type": "isodatetime"
+				},
+				"estaci": {
+					"type": "string"
+				},
+				"nivell_absolut": {
+					"type": "number"
+				},
+				"percentatge_volum_embassat": {
+					"type": "number"
+				}
+			},
+			"x": -5,
+			"y": -62
+		},
+		{
+			"id": "54ov6.l75k2f",
+			"label": "Scatter Plot",
+			"image": "ScatterPlot.png",
+			"shape": "circularImage",
+			"STAmetadata": {
+				"dataLineage": {
+					"steps": [
+						{
+							"tool": "ImportCSV",
+							"date": "2026-11-23T11:37:36.302Z"
+						}
+					]
+				}
+			},
+			"x": -11,
+			"y": 50,
+			"STAattributesToSelect": {
+				"sorted": true,
+				"parentNodesInformation": {
+					"8h7lr.bar4g2": {
+						"attr": [
+							"dia",
+							"nivell_absolut",
+							"percentatge_volum_embassat"
+						],
+						"numericAttr": [
+							"nivell_absolut",
+							"percentatge_volum_embassat"
+						],
+						"nodeLabel": "CSV"
+					}
+				},
+				"dataGroupsSelectedToScatterPlot": [
+					{
+						"nodeSelected": "8h7lr.bar4g2",
+						"X": "dia",
+						"valueColumns": [
+							"nivell_absolut"
+						],
+						"R": "percentatge_volum_embassat",
+						"areaPairs": [
+							{
+								"y1": "Embassament de Sant Pon‡ (Clariana de Cardener)_nivell_absolut_Mean",
+								"y2": "Embassament de la Baells (Cercs)_nivell_absolut_Mean",
+								"axis": "right"
+							}
+						],
+						"columnAxes": {},
+						"graphicType": "line",
+						"regressionLine": false,
+						"legendText": "CSV"
+					}
+				],
+				"seriesColors": {
+					"s8h7lr.bar4g2_a0_y1_Embassament de Sant Pon‡ (Clariana de Cardener)_nivell_absolut_Mean": "#1f77b4",
+					"s8h7lr.bar4g2_a0_y2_Embassament de Darnius Boadella (Darnius)_nivell_absolut_Mean": "#aec7e8",
+					"s8h7lr.bar4g2_a1_y1_Embassament de Susqueda (Osor)_nivell_absolut_Mean": "#ff7f0e",
+					"s8h7lr.bar4g2_a1_y2_Embassament de Sau (Vilanova de Sau)_nivell_absolut_Mean": "#ffbb78",
+					"s8h7lr.bar4g2_a0_y1_Embassament de Susqueda (Osor)_nivell_absolut_Mean": "#1f77b4",
+					"s8h7lr.bar4g2_a1_y1_Embassament de Sant Pon‡ (Clariana de Cardener)_nivell_absolut_Mean": "#ff7f0e",
+					"s8h7lr.bar4g2_a0_y2_Embassament de Sau (Vilanova de Sau)_nivell_absolut_Mean": "#aec7e8",
+					"s8h7lr.bar4g2_a0_y2_Embassament de la Baells (Cercs)_nivell_absolut_Mean": "#aec7e8",
+					"s8h7lr.bar4g2_nivell_absolut": "#1f77b4"
+				},
+				"hiddenSeries": [
+					"s8h7lr.bar4g2_a1_y2_Embassament de Sau (Vilanova de Sau)_nivell_absolut_Mean"
+				],
+				"titleFontSize": 16,
+				"labelFontSize": 12,
+				"legendFontSize": 12,
+				"axisLabelFontSize": 12,
+				"lineInterpolation": "linear",
+				"seriesStyles": {},
+				"spanGaps": false,
+				"chartMode": "bubble",
+				"pointRadius": 2,
+				"beginAtZero": false,
+				"config": {
+					"data": {
+						"datasets": [
+							{
+								"label": "CSV / r:percentatge_volum_embassat",
+								"backgroundColor": "rgba(31,119,180,0.55)",
+								"borderColor": "#1f77b4",
+								"fill": false,
+								"data": [
+									{
+										"x": "2024-06-26T00:00:00+02:00",
+										"y": 405.27,
+										"r": 6.933209647495362
+									},
+									{
+										"x": "2024-06-26T00:00:00+02:00",
+										"y": 314.66,
+										"r": 6.024118738404453
+									},
+									{
+										"x": "2024-06-26T00:00:00+02:00",
+										"y": 139,
+										"r": 4.929499072356215
+									},
+									{
+										"x": "2024-06-26T00:00:00+02:00",
+										"y": 452.04,
+										"r": 3
+									},
+									{
+										"x": "2024-06-26T00:00:00+02:00",
+										"y": 611.89,
+										"r": 7.53617810760668
+									},
+									{
+										"x": "2024-07-26T00:00:00+02:00",
+										"y": 405.27,
+										"r": 6.942486085343228
+									},
+									{
+										"x": "2024-07-26T00:00:00+02:00",
+										"y": 314.66,
+										"r": 6.014842300556586
+									},
+									{
+										"x": "2024-07-26T00:00:00+02:00",
+										"y": 139,
+										"r": 4.901669758812616
+									},
+									{
+										"x": "2024-07-26T00:00:00+02:00",
+										"y": 452.04,
+										"r": 3.046382189239332
+									},
+									{
+										"x": "2024-07-26T00:00:00+02:00",
+										"y": 611.89,
+										"r": 8
+									}
+								],
+								"yAxisID": "yAxisleft",
+								"pointStyle": "circle",
+								"borderDash": [],
+								"spanGaps": false,
+								"type": "bubble",
+								"hidden": false
+							}
+						],
+						"labels": []
+					},
+					"options": {
+						"maintainAspectRatio": false,
+						"resizeDelay": 100,
+						"plugins": {
+							"legend": {
+								"display": false
+							},
+							"labels": {},
+							"filler": {
+								"propagate": false
+							},
+							"title": {
+								"text": "",
+								"display": false,
+								"font": {
+									"size": 16
+								}
+							},
+							"zoom": {
+								"pan": {
+									"enabled": true,
+									"mode": "x"
+								},
+								"zoom": {
+									"wheel": {
+										"enabled": true
+									},
+									"pinch": {
+										"enabled": true
+									},
+									"mode": "x"
+								}
+							}
+						},
+						"scales": {
+							"x": {
+								"axis": "x",
+								"type": "time",
+								"time": {
+									"unit": "minute",
+									"tooltipFormat": "yyyy-MM-dd HH:mm:ss",
+									"displayFormats": {
+										"second": "yyyy-MM-dd HH:mm:ss",
+										"minute": "yyyy-MM-dd HH:mm:ss",
+										"hour": "yyyy-MM-dd HH:mm",
+										"day": "yyyy-MM-dd",
+										"week": "yyyy-MM-dd",
+										"month": "yyyy-MM-dd",
+										"year": "yyyy-MM-dd",
+										"datetime": "MMM d, yyyy, h:mm:ss aaaa",
+										"millisecond": "h:mm:ss.SSS aaaa",
+										"quarter": "qqq - yyyy"
+									},
+									"parser": false,
+									"round": false,
+									"isoWeekday": false,
+									"minUnit": "millisecond"
+								},
+								"title": {
+									"text": "",
+									"display": false,
+									"font": {
+										"size": 12
+									},
+									"padding": {
+										"top": 4,
+										"bottom": 4
+									},
+									"color": "#666"
+								},
+								"min": "2024-06-26T00:00:00+02:00",
+								"max": "2024-07-26T00:00:00+02:00",
+								"ticks": {
+									"font": {
+										"size": 12
+									},
+									"source": "auto",
+									"major": {
+										"enabled": false
+									},
+									"minRotation": 0,
+									"maxRotation": 50,
+									"mirror": false,
+									"textStrokeWidth": 0,
+									"textStrokeColor": "",
+									"padding": 3,
+									"display": true,
+									"autoSkip": true,
+									"autoSkipPadding": 3,
+									"labelOffset": 0,
+									"minor": {},
+									"align": "center",
+									"crossAlign": "near",
+									"showLabelBackdrop": false,
+									"backdropColor": "rgba(255, 255, 255, 0.75)",
+									"backdropPadding": 2,
+									"color": "#666"
+								},
+								"bounds": "data",
+								"adapters": {},
+								"display": true,
+								"offset": false,
+								"reverse": false,
+								"beginAtZero": false,
+								"grace": 0,
+								"grid": {
+									"display": true,
+									"lineWidth": 1,
+									"drawBorder": true,
+									"drawOnChartArea": true,
+									"drawTicks": true,
+									"tickLength": 8,
+									"offset": false,
+									"borderDash": [],
+									"borderDashOffset": 0,
+									"borderWidth": 1,
+									"color": "rgba(0,0,0,0.1)",
+									"borderColor": "rgba(0,0,0,0.1)"
+								},
+								"id": "x",
+								"position": "bottom"
+							},
+							"yAxisleft": {
+								"axis": "y",
+								"type": "linear",
+								"position": "left",
+								"title": {
+									"display": false,
+									"text": "",
+									"font": {
+										"size": 12
+									},
+									"padding": {
+										"top": 4,
+										"bottom": 4
+									},
+									"color": "#666"
+								},
+								"max": 623.71225,
+								"min": 127.17775,
+								"ticks": {
+									"font": {
+										"size": 12
+									},
+									"minRotation": 0,
+									"maxRotation": 50,
+									"mirror": false,
+									"textStrokeWidth": 0,
+									"textStrokeColor": "",
+									"padding": 3,
+									"display": true,
+									"autoSkip": true,
+									"autoSkipPadding": 3,
+									"labelOffset": 0,
+									"minor": {},
+									"major": {},
+									"align": "center",
+									"crossAlign": "near",
+									"showLabelBackdrop": false,
+									"backdropColor": "rgba(255, 255, 255, 0.75)",
+									"backdropPadding": 2,
+									"color": "#666"
+								},
+								"display": true,
+								"offset": false,
+								"reverse": false,
+								"beginAtZero": false,
+								"bounds": "ticks",
+								"grace": 0,
+								"grid": {
+									"display": true,
+									"lineWidth": 1,
+									"drawBorder": true,
+									"drawOnChartArea": true,
+									"drawTicks": true,
+									"tickLength": 8,
+									"offset": false,
+									"borderDash": [],
+									"borderDashOffset": 0,
+									"borderWidth": 1,
+									"color": "rgba(0,0,0,0.1)",
+									"borderColor": "rgba(0,0,0,0.1)"
+								},
+								"id": "yAxisleft"
+							}
+						}
+					}
+				},
+				"drawn": true
+			}
+		}
+	],
+	"edges": [
+		{
+			"from": "8h7lr.bar4g2",
+			"to": "443va.2ptrc9",
+			"arrows": "from"
+		},
+		{
+			"from": "8h7lr.bar4g2",
+			"to": "hvn0.uuqnp5k",
+			"arrows": "from"
+		},
+		{
+			"from": "8h7lr.bar4g2",
+			"to": "54ov6.l75k2f",
+			"arrows": "from"
+		}
+	]
+}

@@ -165,6 +165,15 @@
                     </p>
 
                     <p>
+                        At the top of the dialog, <strong>Chart mode</strong> chooses how series are drawn:
+                        <strong>Lines / points</strong> (default; style still chosen per series in the legend),
+                        <strong>Area between lines</strong> (add one or more area groups; each group picks two Y columns
+                        and fills between them), or                         <strong>Bubbles</strong> (shared <strong>Axis X</strong>; optional
+                        <strong>Color by</strong> column to split points into coloured legend series;
+                        one <strong>Y</strong> column and one <strong>Radius</strong> column).
+                    </p>
+
+                    <p>
                         <strong>Options</strong> starts with <strong>Begin at zero</strong> and <strong>Sort values by X</strong>,
                         then groups the rest into <strong>Title</strong>, <strong>Axes</strong> (labels, number size,
                         axis label size, time interval), <strong>Legend</strong>, and <strong>Lines and points</strong>
@@ -180,7 +189,8 @@
                         <strong>Span gaps</strong> keeps drawing line series across missing Y values instead of breaking the line.
                         <strong>Line interpolation</strong> chooses how line series connect the points:
                         straight (default), cubic, monotone, or stepped (before, middle, or after the point).
-                        <strong>Point size</strong> applies to series drawn as dots (chosen per series in the legend).
+                        <strong>Point size</strong> applies to series drawn as dots (chosen per series in the legend);
+                        in bubble mode it scales the maximum bubble radius.
                         <strong>Axis label size</strong> changes the font of the X and Y axis titles.
                         <strong>Legend size</strong> changes the font of the series names beside the chart.
                     </p>

@@ -1962,6 +1962,12 @@
 			<span id="DialogScatterPlotTitle"></span>
 			<form>
 			<fieldset>
+				<legend><span data-lang="{&quot;cat&quot;: &quot;Mode del gràfic:&quot;, &quot;spa&quot;: &quot;Modo del gráfico:&quot;, &quot;eng&quot;: &quot;Chart mode:&quot;}">Chart mode:</span></legend>
+				<label><input type="radio" name="DialogScatterPlotChartMode" id="DialogScatterPlotChartModeSimple" value="simple" checked onChange="OnScatterPlotChartModeChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Línies / punts&quot;, &quot;spa&quot;: &quot;Líneas / puntos&quot;, &quot;eng&quot;: &quot;Lines / points&quot;}">Lines / points</span></label>
+				<label><input type="radio" name="DialogScatterPlotChartMode" id="DialogScatterPlotChartModeArea" value="areaBetween" onChange="OnScatterPlotChartModeChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Àrea entre línies&quot;, &quot;spa&quot;: &quot;Área entre líneas&quot;, &quot;eng&quot;: &quot;Area between lines&quot;}">Area between lines</span></label>
+				<label><input type="radio" name="DialogScatterPlotChartMode" id="DialogScatterPlotChartModeBubble" value="bubble" onChange="OnScatterPlotChartModeChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Bombolles&quot;, &quot;spa&quot;: &quot;Burbujas&quot;, &quot;eng&quot;: &quot;Bubbles&quot;}">Bubbles</span></label>
+			</fieldset>
+			<fieldset>
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Dades:&quot;, &quot;spa&quot;: &quot;Datos:&quot;, &quot;eng&quot;: &quot;Data:&quot;}">Data:</span></legend>
 				<div id="DialogScatterPlotDiv"></div>
 			</fieldset>

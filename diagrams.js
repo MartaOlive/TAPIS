@@ -68,7 +68,70 @@ function ensureScatterPlotStyleState(store) {
 		store.seriesStyles = {};
 	if (typeof store.spanGaps !== "boolean")
 		store.spanGaps = false;
+	store.chartMode = normalizeScatterChartMode(store.chartMode);
 	store.pointRadius = clampScatterPointRadius(store.pointRadius);
+}
+
+function normalizeScatterChartMode(mode) {
+	if (mode == "areaBetween" || mode == "bubble")
+		return mode;
+	return "simple";
+}
+
+function getScatterChartMode() {
+	if (document.getElementById("DialogScatterPlotChartModeArea")?.checked)
+		return "areaBetween";
+	if (document.getElementById("DialogScatterPlotChartModeBubble")?.checked)
+		return "bubble";
+	return "simple";
+}
+
+function setScatterChartModeControls(mode) {
+	mode = normalizeScatterChartMode(mode);
+	var simple = document.getElementById("DialogScatterPlotChartModeSimple");
+	var area = document.getElementById("DialogScatterPlotChartModeArea");
+	var bubble = document.getElementById("DialogScatterPlotChartModeBubble");
+	if (simple) simple.checked = (mode == "simple");
+	if (area) area.checked = (mode == "areaBetween");
+	if (bubble) bubble.checked = (mode == "bubble");
+}
+
+function OnScatterPlotChartModeChange() {
+	var node = getNodeDialog("DialogScatterPlot");
+	var mode = getScatterChartMode();
+	if (!node)
+		return;
+	if (!node.STAattributesToSelect)
+		node.STAattributesToSelect = {};
+	ensureScatterPlotStyleState(node.STAattributesToSelect);
+	node.STAattributesToSelect.chartMode = mode;
+	networkNodes.update(node);
+	createDialogWithSelectWithGroupsScatterPlot(node);
+	syncScatterPlotModeDependentOptions(mode);
+	if (node.STAattributesToSelect.drawn)
+		UpdateScatterPlot();
+}
+
+function syncScatterPlotModeDependentOptions(mode) {
+	var linesGroup = document.getElementById("DialogScatterPlotSpanGaps");
+	var pointRow = document.getElementById("DialogScatterPlotPointSize");
+	var interp = document.getElementById("DialogScatterPlotInterpolation");
+	mode = normalizeScatterChartMode(mode);
+	if (linesGroup)
+		linesGroup.disabled = (mode == "bubble");
+	if (interp)
+		interp.disabled = (mode == "bubble");
+	if (pointRow)
+		pointRow.disabled = false;
+}
+
+function scaleScatterBubbleRadius(value, minR, maxR, minPx, maxPx) {
+	var n = Number(value);
+	if (!Number.isFinite(n))
+		return minPx;
+	if (!Number.isFinite(minR) || !Number.isFinite(maxR) || maxR === minR)
+		return (minPx + maxPx) / 2;
+	return minPx + (n - minR) / (maxR - minR) * (maxPx - minPx);
 }
 
 function syncScatterPlotStyleControls(store) {
@@ -360,11 +423,13 @@ function showEmptyScatterPlotChart() {
 
 function buildScatterPlotLegendHtml(node, keys, labels, colors, seriesStyleFallbacks) {
 	var container = document.getElementById("DialogScatterPlotLegend");
-	var store, cdns = "", i, hidden, eyeTitle, hiddenFlags = [], style, isSeries, styles = [], isGradient;
+	var store, cdns = "", i, hidden, eyeTitle, hiddenFlags = [], style, isSeries, styles = [], isGradient, chartMode, allowStyle;
 	if (!container)
 		return;
 	store = node.STAattributesToSelect;
 	ensureScatterPlotStyleState(store);
+	chartMode = normalizeScatterChartMode(store.chartMode);
+	allowStyle = (chartMode == "simple");
 	seriesStyleFallbacks = seriesStyleFallbacks || {};
 	container.style.fontSize = (store.legendFontSize || 12) + "px";
 	for (i = 0; i < keys.length; i++) {
@@ -372,7 +437,12 @@ function buildScatterPlotLegendHtml(node, keys, labels, colors, seriesStyleFallb
 		hiddenFlags.push(hidden);
 		eyeTitle = hidden ? DonaCadena({cat: "Mostra", spa: "Mostrar", eng: "Show"}) : DonaCadena({cat: "Amaga", spa: "Ocultar", eng: "Hide"});
 		isSeries = ("" + keys[i]).charAt(0) == "s";
-		style = isSeries ? getScatterSeriesStyle(store, keys[i], seriesStyleFallbacks[keys[i]]) : "line";
+		if (chartMode == "areaBetween")
+			style = "line";
+		else if (chartMode == "bubble")
+			style = "circle";
+		else
+			style = isSeries ? getScatterSeriesStyle(store, keys[i], seriesStyleFallbacks[keys[i]]) : "line";
 		styles.push(style);
 		isGradient = style == "lineGradient";
 		cdns += '<div class="DialogScatterPlotLegendItem' + (hidden ? " is-hidden" : "") + '">';
@@ -387,7 +457,7 @@ function buildScatterPlotLegendHtml(node, keys, labels, colors, seriesStyleFallb
 		}
 		cdns += '<button type="button" class="DialogScatterPlotLegendEye" title="' + scatterPlotEscapeAttr(eyeTitle) +
 			'" onclick="onScatterLegendEyeClick(\'' + scatterPlotEscapeJs(keys[i]) + '\')">' + (hidden ? "&#10005;" : "&#128065;") + "</button>";
-		if (isSeries) {
+		if (isSeries && allowStyle) {
 			cdns += '<select class="DialogScatterPlotLegendStyle" title="' +
 				scatterPlotEscapeAttr(DonaCadena({cat: "Estil", spa: "Estilo", eng: "Style"})) +
 				'" onchange="onScatterLegendStyleChange(\'' + scatterPlotEscapeJs(keys[i]) + '\', this.value)">' +
@@ -457,23 +527,52 @@ function applyScatterLegendColor(key, color) {
 	UpdateScatterPlot();
 }
 
+function scatterPlotColumnLooksLikeISODate(rows, colName) {
+	var ri, cell;
+	if (!rows || !rows.length)
+		return false;
+	for (ri = 0; ri < rows.length; ri++) {
+		cell = rows[ri][colName];
+		if (cell === "" || cell === undefined || cell === null)
+			continue;
+		if (typeof cell !== "string")
+			return false;
+		if (typeof evaluateIfItIsADate === "function")
+			return evaluateIfItIsADate(cell);
+		return (typeof evaluateIfItIsISOADate === "function" && evaluateIfItIsISOADate(cell));
+	}
+	return false;
+}
+
 function collectScatterPlotParentInfo(parentNodes) {
-	var info = {}, i, attributesArray, numericArray, allAttributes, allAttributesKeys, c, t;
+	var info = {}, i, attributesArray, numericArray, allAttrArray, allAttributes, allAttributesKeys, c, t;
 	for (i = 0; i < (parentNodes || []).length; i++) {
 		if (!parentNodes[i] || !parentNodes[i].STAdata)
 			continue;
 		attributesArray = [];
 		numericArray = [];
+		allAttrArray = [];
 		allAttributes = parentNodes[i].STAdataAttributes ? parentNodes[i].STAdataAttributes : getDataAttributes(parentNodes[i].STAdata);
 		allAttributesKeys = Object.keys(allAttributes);
 		for (c = 0; c < allAttributesKeys.length; c++) {
 			t = allAttributes[allAttributesKeys[c]].type;
+			if (t == "string" && scatterPlotColumnLooksLikeISODate(parentNodes[i].STAdata, allAttributesKeys[c])) {
+				t = "isodatetime";
+				if (parentNodes[i].STAdataAttributes && parentNodes[i].STAdataAttributes[allAttributesKeys[c]])
+					parentNodes[i].STAdataAttributes[allAttributesKeys[c]].type = "isodatetime";
+			}
+			allAttrArray.push(allAttributesKeys[c]);
 			if (t == "number" || t == "isodatetime" || t == "integer")
 				attributesArray.push(allAttributesKeys[c]);
 			if (t == "number" || t == "integer")
 				numericArray.push(allAttributesKeys[c]);
 		}
-		info[parentNodes[i].id] = { attr: attributesArray, numericAttr: numericArray, nodeLabel: parentNodes[i].label };
+		info[parentNodes[i].id] = {
+			attr: attributesArray,
+			numericAttr: numericArray,
+			allAttr: allAttrArray,
+			nodeLabel: parentNodes[i].label
+		};
 	}
 	return info;
 }
@@ -490,7 +589,10 @@ function scatterPlotDefaultSeriesGroup(parentId, info) {
 	return {
 		nodeSelected: parentId,
 		X: x,
+		Y: values[0] || "",
 		valueColumns: values,
+		R: "",
+		colorBy: "",
 		columnAxes: {},
 		graphicType: "line",
 		regressionLine: false,
@@ -509,6 +611,110 @@ function ensureScatterPlotColumnAxes(g) {
 		g.columnAxes = {};
 }
 
+function ensureScatterAreaPairs(g) {
+	if (!g)
+		return;
+	if (!g.areaPairs || !Array.isArray(g.areaPairs))
+		g.areaPairs = [];
+	if (!g.areaPairs.length)
+		g.areaPairs.push({ y1: "", y2: "", axis: "left" });
+}
+
+function ensureScatterBubbleGroups(g) {
+	if (!g)
+		return;
+	if (!g.bubbleGroups || !Array.isArray(g.bubbleGroups))
+		g.bubbleGroups = [];
+	if (!g.bubbleGroups.length) {
+		if (g.Y && g.R)
+			g.bubbleGroups.push({ y: g.Y, r: g.R, axis: scatterPlotColumnAxis(g, g.Y) });
+		else
+			g.bubbleGroups.push({ y: "", r: "", axis: "left" });
+	} else if (g.bubbleGroups.length > 1) {
+		g.bubbleGroups = [g.bubbleGroups[0]];
+	}
+	if (g.bubbleGroups[0]) {
+		if (g.bubbleGroups[0].y)
+			g.Y = g.bubbleGroups[0].y;
+		if (g.bubbleGroups[0].r)
+			g.R = g.bubbleGroups[0].r;
+	}
+}
+
+function scatterAreaPairOptionsHtml(numeric, selected) {
+	var cdns = "", c, col;
+	cdns += '<option value="">' + DonaCadena({cat: "(trieu)", spa: "(elija)", eng: "(choose)"}) + "</option>";
+	for (c = 0; c < numeric.length; c++) {
+		col = numeric[c];
+		cdns += '<option value="' + scatterPlotEscapeAttr(col) + '"' + (col == selected ? " selected" : "") + ">" +
+			scatterPlotEscapeAttr(col) + "</option>";
+	}
+	return cdns;
+}
+
+function addScatterAreaPair(seriesIdx, nodeId) {
+	var current = networkNodes.get(nodeId), g;
+	if (!current || !current.STAattributesToSelect || !current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[seriesIdx])
+		return;
+	g = current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[seriesIdx];
+	ensureScatterAreaPairs(g);
+	g.areaPairs.push({ y1: "", y2: "", axis: "left" });
+	networkNodes.update(current);
+	createDialogWithSelectWithGroupsScatterPlot(current);
+}
+
+function removeScatterAreaPair(seriesIdx, pairIdx, nodeId) {
+	var current = networkNodes.get(nodeId), g;
+	if (!current || !current.STAattributesToSelect || !current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[seriesIdx])
+		return;
+	g = current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[seriesIdx];
+	ensureScatterAreaPairs(g);
+	if (pairIdx < 0 || pairIdx >= g.areaPairs.length)
+		return;
+	g.areaPairs.splice(pairIdx, 1);
+	if (!g.areaPairs.length)
+		g.areaPairs.push({ y1: "", y2: "", axis: "left" });
+	networkNodes.update(current);
+	createDialogWithSelectWithGroupsScatterPlot(current);
+}
+
+function updateScatterAreaPairField(seriesIdx, pairIdx, key, value, nodeId) {
+	var current = networkNodes.get(nodeId), g, pair;
+	if (!current || !current.STAattributesToSelect || !current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[seriesIdx])
+		return;
+	g = current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[seriesIdx];
+	ensureScatterAreaPairs(g);
+	pair = g.areaPairs[pairIdx];
+	if (!pair)
+		return;
+	if (key == "axis")
+		pair.axis = (value == "right") ? "right" : "left";
+	else if (key == "y1" || key == "y2")
+		pair[key] = value || "";
+	networkNodes.update(current);
+}
+
+function updateScatterBubbleGroupField(seriesIdx, groupIdx, key, value, nodeId) {
+	var current = networkNodes.get(nodeId), g, grp;
+	if (!current || !current.STAattributesToSelect || !current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[seriesIdx])
+		return;
+	g = current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[seriesIdx];
+	ensureScatterBubbleGroups(g);
+	grp = g.bubbleGroups[0];
+	if (!grp)
+		return;
+	if (key == "axis")
+		grp.axis = (value == "right") ? "right" : "left";
+	else if (key == "y" || key == "r") {
+		grp[key] = value || "";
+		if (key == "y")
+			g.Y = grp.y;
+		if (key == "r")
+			g.R = grp.r;
+	}
+	networkNodes.update(current);
+}
+
 function migrateScatterPlotSeriesGroups(old) {
 	var byNode = {}, i, g, id, cols, c, out = [], ids;
 	if (!old || !old.length)
@@ -522,13 +728,28 @@ function migrateScatterPlotSeriesGroups(old) {
 			byNode[id] = {
 				nodeSelected: id,
 				X: g.X,
+				Y: g.Y || "",
 				valueColumns: [],
+				R: g.R || "",
+				colorBy: g.colorBy || "",
+				areaPairs: (g.areaPairs && g.areaPairs.length) ? g.areaPairs.slice() : [],
+				bubbleGroups: (g.bubbleGroups && g.bubbleGroups.length) ? g.bubbleGroups.slice() : [],
 				columnAxes: {},
 				graphicType: g.graphicType || "line",
 				regressionLine: !!g.regressionLine,
 				legendText: g.legendText || ""
 			};
 		}
+		if (g.Y && !byNode[id].Y)
+			byNode[id].Y = g.Y;
+		if (g.R && !byNode[id].R)
+			byNode[id].R = g.R;
+		if (g.colorBy && !byNode[id].colorBy)
+			byNode[id].colorBy = g.colorBy;
+		if (g.areaPairs && g.areaPairs.length && (!byNode[id].areaPairs || !byNode[id].areaPairs.length))
+			byNode[id].areaPairs = g.areaPairs.slice();
+		if (g.bubbleGroups && g.bubbleGroups.length && (!byNode[id].bubbleGroups || !byNode[id].bubbleGroups.length))
+			byNode[id].bubbleGroups = g.bubbleGroups.slice();
 		if (g.columnAxes) {
 			for (c in g.columnAxes) {
 				if (Object.prototype.hasOwnProperty.call(g.columnAxes, c) && !byNode[id].columnAxes[c])
@@ -576,6 +797,10 @@ function syncScatterPlotSeriesWithParents(node) {
 				g.legendText = (info[ids[i]] && info[ids[i]].nodeLabel) || ids[i];
 			if (!g.graphicType)
 				g.graphicType = "line";
+			if (g.R == null)
+				g.R = "";
+			if (g.colorBy == null)
+				g.colorBy = "";
 		}
 		groups.push(g);
 	}
@@ -653,6 +878,8 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 	document.getElementById("DialogScatterPlotTitle").innerHTML = DonaCadena({cat: "Gràfic de dispersió", spa: "Gráfico de dispersión", eng: "Scatter plot"});
 	ensureScatterPlotStyleState(node.STAattributesToSelect);
 	syncScatterPlotStyleControls(node.STAattributesToSelect);
+	setScatterChartModeControls(node.STAattributesToSelect.chartMode);
+	syncScatterPlotModeDependentOptions(node.STAattributesToSelect.chartMode);
 	document.getElementById("DialogScatterPlotBeginZero").checked = !!node.STAattributesToSelect.beginAtZero;
 	if (document.getElementById("DialogScatterPlotSpanGaps"))
 		document.getElementById("DialogScatterPlotSpanGaps").checked = !!node.STAattributesToSelect.spanGaps;
@@ -667,9 +894,11 @@ function ShowScatterPlotDialog(parentNodes, node) { //doble click scatterplot.pn
 
 function createDialogWithSelectWithGroupsScatterPlot(node) {
 	var scatterPlotDiv = document.getElementById("DialogScatterPlotDiv");
-	var dialogGroups, parentInfo, cdns, i, parentId, info, attr, numeric, c, col, checked, selectedCols, nodeLabel, legend, g, axisSide;
+	var dialogGroups, parentInfo, cdns, i, parentId, info, attr, numeric, c, col, checked, selectedCols, nodeLabel, legend, g, axisSide, chartMode, radiusCols;
 	if (!scatterPlotDiv)
 		return;
+	ensureScatterPlotStyleState(node.STAattributesToSelect);
+	chartMode = normalizeScatterChartMode(node.STAattributesToSelect.chartMode);
 	dialogGroups = node.STAattributesToSelect.dataGroupsSelectedToScatterPlot || [];
 	parentInfo = node.STAattributesToSelect.parentNodesInformation || {};
 	cdns = "";
@@ -684,6 +913,10 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 		g.legendText = legend;
 		if (!g.valueColumns || !g.valueColumns.length)
 			g.valueColumns = g.Y && g.Y != g.X ? [g.Y] : [];
+		if (g.R == null)
+			g.R = "";
+		if (g.colorBy == null)
+			g.colorBy = "";
 		ensureScatterPlotColumnAxes(g);
 		selectedCols = g.valueColumns;
 		cdns += '<fieldset><legend>' + scatterPlotEscapeAttr(nodeLabel) + "</legend>";
@@ -697,32 +930,101 @@ function createDialogWithSelectWithGroupsScatterPlot(node) {
 			cdns += '<option value="' + scatterPlotEscapeAttr(col) + '"' + (col == g.X ? " selected" : "") + ">" + scatterPlotEscapeAttr(col) + "</option>";
 		}
 		cdns += "</select></label></div>";
-		cdns += '<div class="DialogScatterPlotSeriesRow"><span>' + DonaCadena({cat: "Eix Y (columnes):", spa: "Eje Y (columnas):", eng: "Axis Y (columns):"}) + "</span>";
-		cdns += '<div class="DialogScatterPlotValueColumns">';
 		numeric = numeric.filter(function (name) { return name != g.X; });
-		if (!numeric.length)
-			cdns += "<em>" + DonaCadena({cat: "No s'han trobat columnes numèriques.", spa: "No se han encontrado columnas numéricas.", eng: "No numeric columns found."}) + "</em>";
-		for (c = 0; c < numeric.length; c++) {
-			col = numeric[c];
-			checked = selectedCols.indexOf(col) != -1 ? " checked" : "";
-			axisSide = scatterPlotColumnAxis(g, col);
-			cdns += '<div class="DialogScatterPlotValueRow">';
-			cdns += '<label><input type="checkbox" class="DialogScatterPlotValueCb" data-series="' + i + '" value="' +
-				scatterPlotEscapeAttr(col) + '"' + checked +
-				' onchange="onScatterPlotValueColumnsChange(' + i + ',\'' + node.id + '\')"> ' +
-				scatterPlotEscapeAttr(col) + "</label>";
-			cdns += '<select class="DialogScatterPlotColumnAxis" onchange="onScatterPlotColumnAxisChange(' + i + ',\'' +
-				scatterPlotEscapeJs(col) + '\',this.value,\'' + node.id + '\')">';
-			cdns += '<option value="left"' + (axisSide != "right" ? " selected" : "") + ">" +
-				DonaCadena({cat: "Esquerra", spa: "Izquierda", eng: "Left"}) + "</option>";
-			cdns += '<option value="right"' + (axisSide == "right" ? " selected" : "") + ">" +
-				DonaCadena({cat: "Dreta", spa: "Derecha", eng: "Right"}) + "</option>";
-			cdns += "</select></div>";
+		if (chartMode == "bubble") {
+			var colorCols = (info.allAttr && info.allAttr.length) ? info.allAttr : attr;
+			cdns += '<div class="DialogScatterPlotSeriesRow"><label>' +
+				DonaCadena({cat: "Color per:", spa: "Color por:", eng: "Color by:"}) +
+				' <select onchange="updateScatterPlotSeriesField(' + i + ',\'colorBy\',this.value,\'' + node.id + '\')">';
+			cdns += '<option value="">' + DonaCadena({cat: "(cap)", spa: "(ninguno)", eng: "(none)"}) + "</option>";
+			for (c = 0; c < colorCols.length; c++) {
+				col = colorCols[c];
+				if (col == g.X)
+					continue;
+				cdns += '<option value="' + scatterPlotEscapeAttr(col) + '"' + (col == g.colorBy ? " selected" : "") + ">" +
+					scatterPlotEscapeAttr(col) + "</option>";
+			}
+			cdns += "</select></label></div>";
 		}
-		cdns += "</div></div>";
-		cdns += '<div class="DialogScatterPlotSeriesRow"><label><input type="checkbox"' + (g.regressionLine ? " checked" : "") +
-			' onchange="updateScatterPlotSeriesField(' + i + ',\'regressionLine\',this.checked,\'' + node.id + '\')"> ' +
-			DonaCadena({cat: "Mostra la recta de regressió", spa: "Mostrar la recta de regresión", eng: "Show regression line"}) + "</label></div>";
+		if (chartMode == "areaBetween") {
+			ensureScatterAreaPairs(g);
+			cdns += '<div class="DialogScatterPlotSeriesRow"><span>' +
+				DonaCadena({cat: "Grups d'àrea:", spa: "Grupos de área:", eng: "Area groups:"}) +
+				"</span></div>";
+			if (!numeric.length)
+				cdns += "<em>" + DonaCadena({cat: "No s'han trobat columnes numèriques.", spa: "No se han encontrado columnas numéricas.", eng: "No numeric columns found."}) + "</em>";
+			for (c = 0; c < g.areaPairs.length; c++) {
+				axisSide = (g.areaPairs[c].axis == "right") ? "right" : "left";
+				cdns += '<fieldset class="DialogScatterPlotAreaPairFieldset"><legend>' +
+					DonaCadena({cat: "Grup", spa: "Grupo", eng: "Group"}) + " " + (c + 1) + "</legend>";
+				cdns += '<div class="DialogScatterPlotAreaPairRow">';
+				cdns += "<select onchange=\"updateScatterAreaPairField(" + i + "," + c + ",'y1',this.value,'" + node.id + "')\">" +
+					scatterAreaPairOptionsHtml(numeric, g.areaPairs[c].y1) + "</select>";
+				cdns += "<select onchange=\"updateScatterAreaPairField(" + i + "," + c + ",'y2',this.value,'" + node.id + "')\">" +
+					scatterAreaPairOptionsHtml(numeric, g.areaPairs[c].y2) + "</select>";
+				cdns += "</div>";
+				cdns += '<div class="DialogScatterPlotAreaPairRow">';
+				cdns += "<select onchange=\"updateScatterAreaPairField(" + i + "," + c + ",'axis',this.value,'" + node.id + "')\">";
+				cdns += '<option value="left"' + (axisSide != "right" ? " selected" : "") + ">" +
+					DonaCadena({cat: "Esquerra", spa: "Izquierda", eng: "Left"}) + "</option>";
+				cdns += '<option value="right"' + (axisSide == "right" ? " selected" : "") + ">" +
+					DonaCadena({cat: "Dreta", spa: "Derecha", eng: "Right"}) + "</option>";
+				cdns += "</select> ";
+				cdns += '<button type="button" onClick="removeScatterAreaPair(' + i + ',' + c + ',\'' + node.id + '\')">' +
+					DonaCadena({cat: "Treu", spa: "Quitar", eng: "Remove"}) + "</button>";
+				cdns += "</div></fieldset>";
+			}
+			cdns += '<div class="DialogScatterPlotSeriesRow"><button type="button" onClick="addScatterAreaPair(' + i + ',\'' + node.id + '\')">' +
+				DonaCadena({cat: "Afegeix grup", spa: "Añadir grupo", eng: "Add group"}) + "</button></div>";
+		} else if (chartMode == "bubble") {
+			ensureScatterBubbleGroups(g);
+			axisSide = (g.bubbleGroups[0].axis == "right") ? "right" : "left";
+			if (!numeric.length)
+				cdns += "<em>" + DonaCadena({cat: "No s'han trobat columnes numèriques.", spa: "No se han encontrado columnas numéricas.", eng: "No numeric columns found."}) + "</em>";
+			else {
+				cdns += '<div class="DialogScatterPlotSeriesRow DialogScatterPlotAreaPairRow">';
+				cdns += '<label>' + DonaCadena({cat: "Y:", spa: "Y:", eng: "Y:"}) +
+					' <select onchange="updateScatterBubbleGroupField(' + i + ',0,\'y\',this.value,\'' + node.id + '\')">' +
+					scatterAreaPairOptionsHtml(numeric, g.bubbleGroups[0].y) + "</select></label>";
+				cdns += '<label>' + DonaCadena({cat: "Radi:", spa: "Radio:", eng: "Radius:"}) +
+					' <select onchange="updateScatterBubbleGroupField(' + i + ',0,\'r\',this.value,\'' + node.id + '\')">' +
+					scatterAreaPairOptionsHtml(numeric, g.bubbleGroups[0].r) + "</select></label>";
+				cdns += "<select onchange=\"updateScatterBubbleGroupField(" + i + ",0,'axis',this.value,'" + node.id + "')\">";
+				cdns += '<option value="left"' + (axisSide != "right" ? " selected" : "") + ">" +
+					DonaCadena({cat: "Esquerra", spa: "Izquierda", eng: "Left"}) + "</option>";
+				cdns += '<option value="right"' + (axisSide == "right" ? " selected" : "") + ">" +
+					DonaCadena({cat: "Dreta", spa: "Derecha", eng: "Right"}) + "</option>";
+				cdns += "</select></div>";
+			}
+		} else {
+			cdns += '<div class="DialogScatterPlotSeriesRow"><span>' + DonaCadena({cat: "Eix Y (columnes):", spa: "Eje Y (columnas):", eng: "Axis Y (columns):"}) + "</span>";
+			cdns += '<div class="DialogScatterPlotValueColumns">';
+			if (!numeric.length)
+				cdns += "<em>" + DonaCadena({cat: "No s'han trobat columnes numèriques.", spa: "No se han encontrado columnas numéricas.", eng: "No numeric columns found."}) + "</em>";
+			for (c = 0; c < numeric.length; c++) {
+				col = numeric[c];
+				checked = selectedCols.indexOf(col) != -1 ? " checked" : "";
+				axisSide = scatterPlotColumnAxis(g, col);
+				cdns += '<div class="DialogScatterPlotValueRow">';
+				cdns += '<label><input type="checkbox" class="DialogScatterPlotValueCb" data-series="' + i + '" value="' +
+					scatterPlotEscapeAttr(col) + '"' + checked +
+					' onchange="onScatterPlotValueColumnsChange(' + i + ',\'' + node.id + '\')"> ' +
+					scatterPlotEscapeAttr(col) + "</label>";
+				cdns += '<select class="DialogScatterPlotColumnAxis" onchange="onScatterPlotColumnAxisChange(' + i + ',\'' +
+					scatterPlotEscapeJs(col) + '\',this.value,\'' + node.id + '\')">';
+				cdns += '<option value="left"' + (axisSide != "right" ? " selected" : "") + ">" +
+					DonaCadena({cat: "Esquerra", spa: "Izquierda", eng: "Left"}) + "</option>";
+				cdns += '<option value="right"' + (axisSide == "right" ? " selected" : "") + ">" +
+					DonaCadena({cat: "Dreta", spa: "Derecha", eng: "Right"}) + "</option>";
+				cdns += "</select></div>";
+			}
+			cdns += "</div></div>";
+		}
+		if (chartMode == "simple") {
+			cdns += '<div class="DialogScatterPlotSeriesRow"><label><input type="checkbox"' + (g.regressionLine ? " checked" : "") +
+				' onchange="updateScatterPlotSeriesField(' + i + ',\'regressionLine\',this.checked,\'' + node.id + '\')"> ' +
+				DonaCadena({cat: "Mostra la recta de regressió", spa: "Mostrar la recta de regresión", eng: "Show regression line"}) + "</label></div>";
+		}
 		cdns += "</fieldset>";
 	}
 	scatterPlotDiv.innerHTML = cdns;
@@ -751,6 +1053,17 @@ function onScatterPlotColumnAxisChange(idx, col, value, nodeId) {
 	networkNodes.update(current);
 }
 
+function onScatterPlotBubbleAxisSideChange(idx, value, nodeId) {
+	var current = networkNodes.get(nodeId), g, col;
+	if (!current || !current.STAattributesToSelect || !current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[idx])
+		return;
+	g = current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[idx];
+	col = g.Y || (g.valueColumns && g.valueColumns[0]) || "";
+	if (!col)
+		return;
+	onScatterPlotColumnAxisChange(idx, col, value, nodeId);
+}
+
 function updateScatterPlotSeriesField(idx, key, value, nodeId) {
 	var current = networkNodes.get(nodeId), g, prev, info, numeric, cols, n;
 	if (!current || !current.STAattributesToSelect || !current.STAattributesToSelect.dataGroupsSelectedToScatterPlot[idx])
@@ -759,7 +1072,23 @@ function updateScatterPlotSeriesField(idx, key, value, nodeId) {
 	prev = g[key];
 	if (key == "legendText")
 		value = ("" + value).trim();
+	if (key == "colorBy")
+		value = value || "";
 	g[key] = value;
+	if (key == "Y") {
+		g.Y = value || "";
+		g.valueColumns = g.Y ? [g.Y] : [];
+		if (g.R && g.R == g.Y)
+			g.R = "";
+		networkNodes.update(current);
+		createDialogWithSelectWithGroupsScatterPlot(current);
+		return;
+	}
+	if (key == "R") {
+		g.R = value || "";
+		networkNodes.update(current);
+		return;
+	}
 	if (key == "X" && prev != value) {
 		info = current.STAattributesToSelect.parentNodesInformation || {};
 		numeric = (info[g.nodeSelected] && info[g.nodeSelected].numericAttr) ? info[g.nodeSelected].numericAttr : [];
@@ -770,6 +1099,28 @@ function updateScatterPlotSeriesField(idx, key, value, nodeId) {
 		if (numeric.indexOf(prev) != -1 && cols.indexOf(prev) == -1)
 			cols.push(prev);
 		g.valueColumns = cols;
+		if (g.Y == value)
+			g.Y = "";
+		if (g.R == value)
+			g.R = "";
+		if (g.colorBy == value)
+			g.colorBy = "";
+		if (g.areaPairs && g.areaPairs.length) {
+			for (n = 0; n < g.areaPairs.length; n++) {
+				if (g.areaPairs[n].y1 == value)
+					g.areaPairs[n].y1 = "";
+				if (g.areaPairs[n].y2 == value)
+					g.areaPairs[n].y2 = "";
+			}
+		}
+		if (g.bubbleGroups && g.bubbleGroups.length) {
+			for (n = 0; n < g.bubbleGroups.length; n++) {
+				if (g.bubbleGroups[n].y == value)
+					g.bubbleGroups[n].y = "";
+				if (g.bubbleGroups[n].r == value)
+					g.bubbleGroups[n].r = "";
+			}
+		}
 		networkNodes.update(current);
 		createDialogWithSelectWithGroupsScatterPlot(current);
 		return;
@@ -825,7 +1176,10 @@ function UpdateScatterPlot(event) {
 	var data = {datasets:[]};
 	var legendKeys = [], legendLabels = [], legendColors = [], seriesKey, seriesColor, regKey, titleFontSize, labelFontSize, axisLabelFontSize;
 	var e, yc, i, cols, yCol, axisXName, colorIndex = 0, baseLegend, parentInfo, seriesStyleFallbacks = {};
+	var chartMode, radiusCol, rVal, rNum, minBubbleR, maxBubbleR, bubbleMinPx, bubbleMaxPx, datasetFill, bgColor, totalYCols = 0;
 	ensureScatterPlotStyleState(node.STAattributesToSelect);
+	chartMode = getScatterChartMode();
+	node.STAattributesToSelect.chartMode = chartMode;
 	titleFontSize = parseInt(document.getElementById("DialogScatterPlotTitleSize").value, 10) || node.STAattributesToSelect.titleFontSize || 16;
 	labelFontSize = parseInt(document.getElementById("DialogScatterPlotLabelSize").value, 10) || node.STAattributesToSelect.labelFontSize || 12;
 	node.STAattributesToSelect.titleFontSize = titleFontSize;
@@ -848,23 +1202,80 @@ function UpdateScatterPlot(event) {
 		document.getElementById("DialogScatterPlotVisualizationTextNotSorted").style.display = "inline-block";
 	}
 
-	var seriesList = [];
+	var seriesList = [], areaPairs, pair, validPairs, p;
 	for (e = 0; e < dataGroups.length; e++) {
 		parentNode = networkNodes.get(dataGroups[e].nodeSelected);
 		if (!parentNode || !parentNode.STAdata || !dataGroups[e].X)
 			continue;
+		if (chartMode == "areaBetween") {
+			ensureScatterAreaPairs(dataGroups[e]);
+			areaPairs = dataGroups[e].areaPairs || [];
+			validPairs = [];
+			for (p = 0; p < areaPairs.length; p++) {
+				pair = areaPairs[p];
+				if (pair && pair.y1 && pair.y2 && pair.y1 != pair.y2 && pair.y1 != dataGroups[e].X && pair.y2 != dataGroups[e].X)
+					validPairs.push(pair);
+			}
+			if (!validPairs.length)
+				continue;
+			totalYCols += validPairs.length * 2;
+			seriesList.push({ group: dataGroups[e], cols: [], areaPairs: validPairs, parentNode: parentNode });
+			continue;
+		}
+		if (chartMode == "bubble") {
+			ensureScatterBubbleGroups(dataGroups[e]);
+			validPairs = [];
+			areaPairs = dataGroups[e].bubbleGroups || [];
+			for (p = 0; p < areaPairs.length; p++) {
+				pair = areaPairs[p];
+				if (pair && pair.y && pair.r && pair.y != pair.r && pair.y != dataGroups[e].X && pair.r != dataGroups[e].X)
+					validPairs.push(pair);
+			}
+			if (!validPairs.length)
+				continue;
+			totalYCols += validPairs.length;
+			seriesList.push({ group: dataGroups[e], cols: [], areaPairs: null, bubbleGroups: validPairs, parentNode: parentNode });
+			continue;
+		}
 		cols = (dataGroups[e].valueColumns || []).slice();
 		if (!cols.length && dataGroups[e].Y && dataGroups[e].Y != dataGroups[e].X)
 			cols = [dataGroups[e].Y];
 		cols = cols.filter(function (name) { return name && name != dataGroups[e].X; });
 		if (!cols.length)
 			continue;
-		seriesList.push({ group: dataGroups[e], cols: cols, parentNode: parentNode });
+		totalYCols += cols.length;
+		seriesList.push({ group: dataGroups[e], cols: cols, areaPairs: null, parentNode: parentNode });
 	}
 	if (!seriesList.length) {
-		if (event)
-			alert(DonaCadena({cat: "Seleccioneu eix X i almenys una columna Y.", spa: "Seleccione eje X y al menos una columna Y.", eng: "Select an X axis and at least one Y column."}));
+		if (event) {
+			if (chartMode == "areaBetween")
+				alert(DonaCadena({cat: "Afegiu almenys un grup d'àrea amb dues columnes Y diferents.", spa: "Añada al menos un grupo de área con dos columnas Y distintas.", eng: "Add at least one area group with two different Y columns."}));
+			else if (chartMode == "bubble")
+				alert(DonaCadena({cat: "Seleccioneu columnes Y i radi diferents.", spa: "Seleccione columnas Y y radio distintos.", eng: "Select different Y and radius columns."}));
+			else
+				alert(DonaCadena({cat: "Seleccioneu eix X i almenys una columna Y.", spa: "Seleccione eje X y al menos una columna Y.", eng: "Select an X axis and at least one Y column."}));
+		}
 		return;
+	}
+	if (chartMode == "bubble") {
+		minBubbleR = undefined;
+		maxBubbleR = undefined;
+		for (e = 0; e < seriesList.length; e++) {
+			validPairs = seriesList[e].bubbleGroups || [];
+			nodeData = seriesList[e].parentNode.STAdata;
+			for (p = 0; p < validPairs.length; p++) {
+				radiusCol = validPairs[p].r;
+				for (i = 0; i < nodeData.length; i++) {
+					rNum = Number(nodeData[i][radiusCol]);
+					if (!Number.isFinite(rNum))
+						continue;
+					if (minBubbleR === undefined || rNum < minBubbleR) minBubbleR = rNum;
+					if (maxBubbleR === undefined || rNum > maxBubbleR) maxBubbleR = rNum;
+				}
+			}
+		}
+		bubbleMinPx = 3;
+		bubbleMaxPx = Math.max(8, clampScatterPointRadius(node.STAattributesToSelect.pointRadius) * 4);
 	}
 	
 	for (e = 0; e < seriesList.length; e++) {
@@ -886,18 +1297,96 @@ function UpdateScatterPlot(event) {
 		baseLegend = (seriesList[e].group.legendText || "").trim() ||
 			((parentInfo[nodeId] && parentInfo[nodeId].nodeLabel) || nodeId);
 		cols = seriesList[e].cols;
-		for (yc = 0; yc < cols.length; yc++) {
-			yCol = cols[yc];
-			seriesKey = "s" + nodeId + "_" + yCol;
+		radiusCol = seriesList[e].group.R;
+		var drawSpecs = [], ds;
+		if (chartMode == "areaBetween") {
+			validPairs = seriesList[e].areaPairs || [];
+			for (p = 0; p < validPairs.length; p++) {
+				pair = validPairs[p];
+				drawSpecs.push({ yCol: pair.y1, fill: false, axis: (pair.axis == "right") ? "right" : "left", pairIdx: p, role: "y1", rCol: null });
+				drawSpecs.push({ yCol: pair.y2, fill: "-1", axis: (pair.axis == "right") ? "right" : "left", pairIdx: p, role: "y2", rCol: null });
+			}
+		} else if (chartMode == "bubble") {
+			validPairs = seriesList[e].bubbleGroups || [];
+			var colorByCol = seriesList[e].group.colorBy || "";
+			var catValues = [], catSeen = {}, catRaw, catKey;
+			if (colorByCol) {
+				for (i = 0; i < nodeData.length; i++) {
+					catRaw = nodeData[i][colorByCol];
+					if (catRaw === "" || catRaw === undefined || catRaw === null)
+						continue;
+					catKey = String(catRaw);
+					if (!catSeen[catKey]) {
+						catSeen[catKey] = true;
+						catValues.push(catRaw);
+					}
+				}
+			}
+			for (p = 0; p < validPairs.length; p++) {
+				pair = validPairs[p];
+				if (colorByCol && catValues.length) {
+					for (i = 0; i < catValues.length; i++) {
+						drawSpecs.push({
+							yCol: pair.y,
+							fill: false,
+							axis: (pair.axis == "right") ? "right" : "left",
+							pairIdx: p,
+							role: "bubble",
+							rCol: pair.r,
+							colorBy: colorByCol,
+							catValue: catValues[i]
+						});
+					}
+				} else {
+					drawSpecs.push({
+						yCol: pair.y,
+						fill: false,
+						axis: (pair.axis == "right") ? "right" : "left",
+						pairIdx: p,
+						role: "bubble",
+						rCol: pair.r,
+						colorBy: "",
+						catValue: null
+					});
+				}
+			}
+		} else {
+			for (yc = 0; yc < cols.length; yc++)
+				drawSpecs.push({ yCol: cols[yc], fill: false, axis: null, pairIdx: -1, role: "y", rCol: null });
+		}
+		for (yc = 0; yc < drawSpecs.length; yc++) {
+			ds = drawSpecs[yc];
+			yCol = ds.yCol;
+			radiusCol = ds.rCol || seriesList[e].group.R;
+			seriesKey = (chartMode == "areaBetween")
+				? ("s" + nodeId + "_a" + ds.pairIdx + "_" + ds.role + "_" + yCol)
+				: ((chartMode == "bubble")
+					? ("s" + nodeId + "_b" + ds.pairIdx + "_" + yCol + "_" + radiusCol +
+						(ds.colorBy ? ("_c" + String(ds.catValue)) : ""))
+					: ("s" + nodeId + "_" + yCol));
 			seriesStyleFallbacks[seriesKey] = seriesList[e].group.graphicType || "line";
-			seriesStyle = getScatterSeriesStyle(node.STAattributesToSelect, seriesKey, seriesList[e].group.graphicType);
-			node.STAattributesToSelect.seriesStyles[seriesKey] = seriesStyle;
-			type = isScatterSeriesLineStyle(seriesStyle) ? "line" : "scatter";
-			pointRadius = (type == "line") ? 0 : clampScatterPointRadius(node.STAattributesToSelect.pointRadius);
-			leftOrRight = scatterPlotColumnAxis(seriesList[e].group, yCol);
+			if (chartMode == "areaBetween") {
+				seriesStyle = "line";
+				type = "line";
+				pointRadius = 0;
+			} else if (chartMode == "bubble") {
+				seriesStyle = "circle";
+				type = "bubble";
+				pointRadius = clampScatterPointRadius(node.STAattributesToSelect.pointRadius);
+			} else {
+				seriesStyle = getScatterSeriesStyle(node.STAattributesToSelect, seriesKey, seriesList[e].group.graphicType);
+				node.STAattributesToSelect.seriesStyles[seriesKey] = seriesStyle;
+				type = isScatterSeriesLineStyle(seriesStyle) ? "line" : "scatter";
+				pointRadius = (type == "line") ? 0 : clampScatterPointRadius(node.STAattributesToSelect.pointRadius);
+			}
+			leftOrRight = (ds.axis != null) ? ds.axis : scatterPlotColumnAxis(seriesList[e].group, yCol);
 			items = [];
 			for (i = 0; i < nodeData.length; i++) {
 				record = nodeData[i];
+				if (chartMode == "bubble" && ds.colorBy && ds.catValue !== null && ds.catValue !== undefined) {
+					if (String(record[ds.colorBy]) !== String(ds.catValue))
+						continue;
+				}
 				dataRecord = (axisXType=="isodatetime") ? moment( new Date(record[axisXName])).format() : record[axisXName];
 				yVal = record[yCol];
 				if (yVal === "" || yVal === undefined || yVal === null || (typeof yVal == "number" && isNaN(yVal)))
@@ -922,25 +1411,53 @@ function UpdateScatterPlot(event) {
 							maxyRight = yVal;
 					}
 				}
-				items.push({ x: dataRecord, y: yVal, group: colorIndex });
+				if (chartMode == "bubble") {
+					rVal = record[radiusCol];
+					rNum = Number(rVal);
+					if (yVal === null || !Number.isFinite(rNum))
+						continue;
+					items.push({
+						x: dataRecord,
+						y: yVal,
+						r: scaleScatterBubbleRadius(rNum, minBubbleR, maxBubbleR, bubbleMinPx, bubbleMaxPx)
+					});
+				} else {
+					items.push({ x: dataRecord, y: yVal, group: colorIndex });
+				}
 			}
-			label = (cols.length == 1) ? baseLegend : (baseLegend + " / " + yCol);
+			if (chartMode == "areaBetween")
+				label = baseLegend + " / " + yCol + " (g" + (ds.pairIdx + 1) + ")";
+			else if (chartMode == "bubble")
+				label = ds.colorBy
+					? String(ds.catValue)
+					: (baseLegend + " / " + yCol + " / r:" + radiusCol);
+			else
+				label = (cols.length == 1) ? baseLegend : (baseLegend + " / " + yCol);
 			seriesColor = node.STAattributesToSelect.seriesColors[seriesKey] || ColorsForBarPlot[colorIndex % ColorsForBarPlot.length];
 			node.STAattributesToSelect.seriesColors[seriesKey] = seriesColor;
 			legendKeys.push(seriesKey);
 			legendLabels.push(label);
 			legendColors.push(seriesColor);
 
+			datasetFill = false;
+			bgColor = seriesColor;
+			if (chartMode == "areaBetween") {
+				datasetFill = ds.fill;
+				bgColor = hexColorWithAlpha(seriesColor, 0.35);
+			} else if (chartMode == "bubble") {
+				bgColor = hexColorWithAlpha(seriesColor, 0.55);
+			}
+
 			data.datasets.push(
 				{
 					label: label,
-					backgroundColor: seriesColor,
+					backgroundColor: bgColor,
 					borderColor: (seriesStyle == "lineGradient") ? scatterPlotLineGradientBorderColor : seriesColor,
-					fill: false,
+					fill: datasetFill,
 					data: items,
 					yAxisID: "yAxis" + leftOrRight,
-					pointRadius: pointRadius,
-					pointHoverRadius: pointRadius ? (pointRadius + 2) : 0,
+					pointRadius: (chartMode == "bubble") ? undefined : pointRadius,
+					pointHoverRadius: (chartMode == "bubble") ? undefined : (pointRadius ? (pointRadius + 2) : 0),
 					pointStyle: (type == "line") ? "circle" : seriesStyle,
 					borderDash: (seriesStyle == "lineDash") ? [6, 4] : [],
 					spanGaps: (type == "line") ? !!node.STAattributesToSelect.spanGaps : false,
@@ -952,7 +1469,7 @@ function UpdateScatterPlot(event) {
 				applyScatterLineInterpolation(data.datasets[data.datasets.length - 1], node.STAattributesToSelect.lineInterpolation);
 			yAxisTodisplay[leftOrRight]=true;
 
-			if (seriesList[e].group.regressionLine && items.length>1)
+			if (chartMode == "simple" && seriesList[e].group.regressionLine && items.length>1)
 			{
 				var itemsReg=[], itemsValid=[], vi, isDateX=(axisXType=="isodatetime"), linReg, xNum, xMinN, xMaxN, iMin=0, iMax=0, yReg0, yReg1;
 				for (vi = 0; vi < items.length; vi++) {
@@ -1023,11 +1540,12 @@ function UpdateScatterPlot(event) {
 			colorIndex++;
 		}
 	}
-	//Y axis
-	var finalMinYLeft = minyLeft - (maxyLeft - minyLeft) * 0.025;
-	var finalMinYRight = minyRight - (maxyRight - minyRight) * 0.025;
-	var finalMaxYLeft = maxyLeft + (maxyLeft - minyLeft) * 0.025;
-	var finalMaxYRight = maxyRight + (maxyRight - minyRight) * 0.025;
+	//Y axis (more padding in bubble mode so markers at extremes stay visible)
+	var yPadFrac = (chartMode == "bubble") ? 0.08 : 0.025;
+	var finalMinYLeft = minyLeft - (maxyLeft - minyLeft) * yPadFrac;
+	var finalMinYRight = minyRight - (maxyRight - minyRight) * yPadFrac;
+	var finalMaxYLeft = maxyLeft + (maxyLeft - minyLeft) * yPadFrac;
+	var finalMaxYRight = maxyRight + (maxyRight - minyRight) * yPadFrac;
 	if (finalMinYLeft==finalMaxYLeft){
 		finalMinYLeft++;
 		finalMaxYLeft--;
@@ -1055,6 +1573,26 @@ function UpdateScatterPlot(event) {
 		}else{
 			maxx++;
 			minx--;
+		}
+	}
+	// Expand X range so points/bubbles on the extremes are not clipped.
+	var xPadFrac = (chartMode == "bubble") ? 0.08 : ((chartMode == "simple") ? 0.03 : 0);
+	if (xPadFrac > 0 && minx !== undefined && maxx !== undefined && minx !== maxx) {
+		if (axisXType == "isodatetime") {
+			var tMinX = new Date(minx).getTime();
+			var tMaxX = new Date(maxx).getTime();
+			var tPadX = (tMaxX - tMinX) * xPadFrac;
+			if (!Number.isFinite(tPadX) || tPadX <= 0)
+				tPadX = 24 * 60 * 60 * 1000;
+			minx = new Date(tMinX - tPadX);
+			maxx = new Date(tMaxX + tPadX);
+		} else {
+			var xSpan = Number(maxx) - Number(minx);
+			var xPad = xSpan * xPadFrac;
+			if (!Number.isFinite(xPad) || xPad === 0)
+				xPad = Math.abs(Number(maxx) || 1) * xPadFrac || 1;
+			minx = Number(minx) - xPad;
+			maxx = Number(maxx) + xPad;
 		}
 	}
 	var executable=true;
@@ -1148,6 +1686,9 @@ function UpdateScatterPlot(event) {
 			plugins: {
 				legend: { display: false },
 				labels: { render: function () { return ""; } },
+				filler: {
+					propagate: false
+				},
 				title: {
 					text: document.getElementById("DialogScatterPlotAxisTitle").value,
 					display: (document.getElementById("DialogScatterPlotAxisTitle").value != "") ? true : false,
