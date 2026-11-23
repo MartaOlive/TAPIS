@@ -1971,10 +1971,29 @@
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Dades:&quot;, &quot;spa&quot;: &quot;Datos:&quot;, &quot;eng&quot;: &quot;Data:&quot;}">Data:</span></legend>
 				<div id="DialogScatterPlotDiv"></div>
 			</fieldset>
-			<fieldset>
+			<div class="center">
+				<button value="draw" onClick="UpdateScatterPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
+				<button value="ok" onClick="CloseDialogScatterPlot(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
+			</div>
+			<input type="hidden" id="DialogScatterPlotNodeId"></input>
+			</form>
+		</td>
+		<td class="DialogScatterPlotVizCell" style="vertical-align: top;">
+			<div class="DialogScatterPlotVizRow">
+				<div id="DialogScatterPlotVisualizationWrap">
+					<canvas id="DialogScatterPlotVisualization"></canvas>
+				</div>
+				<div id="DialogScatterPlotLegend" class="DialogScatterPlotLegend" aria-label="Legend"></div>
+			</div>
+			<p id="DialogScatterPlotVisualizationTextNotSorted" class="DialogScatterPlotSortHint"><span data-lang="{&quot;cat&quot;: &quot;Si el gràfic es veu estrany, ordena les dades per la columna de l'eix X.&quot;, &quot;spa&quot;: &quot;Si el gráfico se ve extraño, ordena los datos por la columna del eje X.&quot;, &quot;eng&quot;: &quot;If the chart looks odd, sort the data by the X axis column.&quot;}">If the chart looks odd, sort the data by the X axis column.</span></p>
+			<div id="DialogScatterPlotColorCard" class="DialogScatterPlotColorCard" style="display:none;"></div>
+			<div class="DialogScatterPlotSavePng">
+				<button type="button" onClick="SaveScatterPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
+			</div>
+			<fieldset id="DialogScatterPlotOptionsFieldset" class="DialogScatterPlotOptionsBelow">
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
-				<label><input type="checkbox" id="DialogScatterPlotBeginZero"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
-				<label><input type="checkbox" id="DialogScatterPlotAxisXSort" value="sort" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Ordena els valors per X&quot;, &quot;spa&quot;: &quot;Ordenar los valores por X&quot;, &quot;eng&quot;: &quot;Sort values by X&quot;}">Sort values by X</span></label>
+				<label><input type="checkbox" id="DialogScatterPlotBeginZero" onchange="onScatterPlotStyleChange(true)"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
+				<label><input type="checkbox" id="DialogScatterPlotAxisXSort" value="sort" checked="checked" onchange="onScatterPlotStyleChange(true)"></input> <span data-lang="{&quot;cat&quot;: &quot;Ordena els valors per X&quot;, &quot;spa&quot;: &quot;Ordenar los valores por X&quot;, &quot;eng&quot;: &quot;Sort values by X&quot;}">Sort values by X</span></label>
 				<fieldset class="DialogScatterPlotOptionsGroup">
 					<legend><span data-lang="{&quot;cat&quot;: &quot;Títol&quot;, &quot;spa&quot;: &quot;Título&quot;, &quot;eng&quot;: &quot;Title&quot;}">Title</span></legend>
 					<label><span data-lang="{&quot;cat&quot;: &quot;Títol:&quot;, &quot;spa&quot;: &quot;Título:&quot;, &quot;eng&quot;: &quot;Title:&quot;}">Title:</span>
@@ -1988,15 +2007,15 @@
 				<fieldset class="DialogScatterPlotOptionsGroup">
 					<legend><span data-lang="{&quot;cat&quot;: &quot;Eixos&quot;, &quot;spa&quot;: &quot;Ejes&quot;, &quot;eng&quot;: &quot;Axes&quot;}">Axes</span></legend>
 					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta eix X:&quot;, &quot;spa&quot;: &quot;Etiqueta eje X:&quot;, &quot;eng&quot;: &quot;X axis label:&quot;}">X axis label:</span>
-						<input type="text" id="DialogScatterPlotAxisXLabel"></input>
+						<input type="text" id="DialogScatterPlotAxisXLabel" onchange="onScatterPlotStyleChange(true)" onblur="onScatterPlotStyleChange(true)"></input>
 					</label>
 					<br>
 					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta Y esquerra:&quot;, &quot;spa&quot;: &quot;Etiqueta Y izquierda:&quot;, &quot;eng&quot;: &quot;Left Y label:&quot;}">Left Y label:</span>
-						<input type="text" id="DialogScatterPlotAxisYLabelLeft"></input>
+						<input type="text" id="DialogScatterPlotAxisYLabelLeft" onchange="onScatterPlotStyleChange(true)" onblur="onScatterPlotStyleChange(true)"></input>
 					</label>
 					<br>
 					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta Y dreta:&quot;, &quot;spa&quot;: &quot;Etiqueta Y derecha:&quot;, &quot;eng&quot;: &quot;Right Y label:&quot;}">Right Y label:</span>
-						<input type="text" id="DialogScatterPlotAxisYLabelRight"></input>
+						<input type="text" id="DialogScatterPlotAxisYLabelRight" onchange="onScatterPlotStyleChange(true)" onblur="onScatterPlotStyleChange(true)"></input>
 					</label>
 					<label class="DialogScatterPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números dels eixos:&quot;, &quot;spa&quot;: &quot;Tamaño de los números de los ejes:&quot;, &quot;eng&quot;: &quot;Axis number size:&quot;}">Axis number size:</span>
 						<input type="range" id="DialogScatterPlotLabelSize" min="8" max="28" value="12" oninput="onScatterPlotStyleChange(true)" onchange="onScatterPlotStyleChange(true)">
@@ -2007,7 +2026,7 @@
 						<span id="DialogScatterPlotAxisLabelSizeValue">12</span>
 					</label>
 					<label id="DialogScatterPlotIntervalRow"><span data-lang="{&quot;cat&quot;: &quot;Interval de temps:&quot;, &quot;spa&quot;: &quot;Intervalo de tiempo:&quot;, &quot;eng&quot;: &quot;Time interval:&quot;}">Time interval:</span>
-						<select id="DialogScatterPlotAxisXSelectInterval"></select>
+						<select id="DialogScatterPlotAxisXSelectInterval" onchange="onScatterPlotStyleChange(true)"></select>
 					</label>
 				</fieldset>
 				<fieldset class="DialogScatterPlotOptionsGroup">
@@ -2019,7 +2038,7 @@
 				</fieldset>
 				<fieldset class="DialogScatterPlotOptionsGroup">
 					<legend><span data-lang="{&quot;cat&quot;: &quot;Línies i punts&quot;, &quot;spa&quot;: &quot;Líneas y puntos&quot;, &quot;eng&quot;: &quot;Lines and points&quot;}">Lines and points</span></legend>
-					<label><input type="checkbox" id="DialogScatterPlotSpanGaps"></input> <span data-lang="{&quot;cat&quot;: &quot;Continua pels forats&quot;, &quot;spa&quot;: &quot;Continuar por los huecos&quot;, &quot;eng&quot;: &quot;Span gaps&quot;}">Span gaps</span></label>
+					<label><input type="checkbox" id="DialogScatterPlotSpanGaps" onchange="onScatterPlotStyleChange(true)"></input> <span data-lang="{&quot;cat&quot;: &quot;Continua pels forats&quot;, &quot;spa&quot;: &quot;Continuar por los huecos&quot;, &quot;eng&quot;: &quot;Span gaps&quot;}">Span gaps</span></label>
 					<label class="DialogScatterPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Interpolació de la línia:&quot;, &quot;spa&quot;: &quot;Interpolación de la línea:&quot;, &quot;eng&quot;: &quot;Line interpolation:&quot;}">Line interpolation:</span>
 						<select id="DialogScatterPlotInterpolation" onchange="onScatterPlotStyleChange(true)">
 							<option value="linear" data-lang="{&quot;cat&quot;: &quot;Recta&quot;, &quot;spa&quot;: &quot;Recta&quot;, &quot;eng&quot;: &quot;Straight&quot;}">Straight</option>
@@ -2036,25 +2055,6 @@
 					</label>
 				</fieldset>
 			</fieldset>
-			<div class="center">
-				<button value="draw" onClick="UpdateScatterPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
-				<button value="ok" onClick="CloseDialogScatterPlot(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
-			</div>
-			<input type="hidden" id="DialogScatterPlotNodeId"></input>
-			</form>
-		</td>
-		<td style="vertical-align: top;">
-			<div class="DialogScatterPlotVizRow">
-				<div id="DialogScatterPlotVisualizationWrap">
-					<canvas id="DialogScatterPlotVisualization"></canvas>
-				</div>
-				<div id="DialogScatterPlotLegend" class="DialogScatterPlotLegend" aria-label="Legend"></div>
-			</div>
-			<p id="DialogScatterPlotVisualizationTextNotSorted" class="DialogScatterPlotSortHint"><span data-lang="{&quot;cat&quot;: &quot;Si el gràfic es veu estrany, ordena les dades per la columna de l'eix X.&quot;, &quot;spa&quot;: &quot;Si el gráfico se ve extraño, ordena los datos por la columna del eje X.&quot;, &quot;eng&quot;: &quot;If the chart looks odd, sort the data by the X axis column.&quot;}">If the chart looks odd, sort the data by the X axis column.</span></p>
-			<div id="DialogScatterPlotColorCard" class="DialogScatterPlotColorCard" style="display:none;"></div>
-			<div class="DialogScatterPlotSavePng">
-				<button type="button" onClick="SaveScatterPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
-			</div>
 		</td>
 		</tr></table>
 	</dialog>
@@ -2100,9 +2100,28 @@
 					</label>
 				</div>
 			</fieldset>
-			<fieldset>
+			<br>
+			<div class="center">
+				<button value="draw" onClick="DrawBarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
+				<button value="ok" onClick="CloseDialogBarPlot(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
+			</div>
+			<input type="hidden" id="DialogBarPlotNodeId"></input>
+			</form>
+		</td>
+		<td class="DialogBarPlotVizCell" style="vertical-align: top;">
+			<div class="DialogBarPlotVizRow">
+				<div id="DialogBarPlotVisualization">
+					<canvas id="DialogBarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas>
+				</div>
+				<div id="DialogBarPlotLegend" class="DialogBarPlotLegend" aria-label="Legend"></div>
+			</div>
+			<div id="DialogBarPlotColorCard" class="DialogBarPlotColorCard" style="display:none;"></div>
+			<div class="DialogBarPlotSavePng">
+				<button type="button" onClick="SaveBarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
+			</div>
+			<fieldset id="DialogBarPlotOptionsFieldset" class="DialogBarPlotOptionsBelow">
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
-				<label><input type="checkbox" id="DialogBarPlotBeginZero" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
+				<label><input type="checkbox" id="DialogBarPlotBeginZero" checked="checked" onchange="onBarPlotStyleChange(true)"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
 				<div id="DialogBarPlotColorModeRow" class="DialogBarPlotColorModeRow">
 					<div class="DialogBarPlotColorModeTitle" data-lang="{&quot;cat&quot;: &quot;Colors de les barres:&quot;, &quot;spa&quot;: &quot;Colores de las barras:&quot;, &quot;eng&quot;: &quot;Bar colors:&quot;}">Bar colors:</div>
 					<label class="DialogBarPlotColorModeOption"><input type="radio" name="DialogBarPlotColorMode" id="DialogBarPlotColorModeSame" value="same" checked="checked" onchange="onBarPlotColorModeChange()"></input> <span data-lang="{&quot;cat&quot;: &quot;Totes del mateix color&quot;, &quot;spa&quot;: &quot;Todas del mismo color&quot;, &quot;eng&quot;: &quot;All the same color&quot;}">All the same color</span></label>
@@ -2119,15 +2138,15 @@
 				</label>
 				<div id="DialogBarPlotAxisLabels">
 					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta eix X:&quot;, &quot;spa&quot;: &quot;Etiqueta eje X:&quot;, &quot;eng&quot;: &quot;X axis label:&quot;}">X axis label:</span>
-						<input type="text" id="DialogBarPlotAxisXLabel"></input>
+						<input type="text" id="DialogBarPlotAxisXLabel" onchange="onBarPlotStyleChange(true)" onblur="onBarPlotStyleChange(true)"></input>
 					</label>
 					<br>
 					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta Y esquerra:&quot;, &quot;spa&quot;: &quot;Etiqueta Y izquierda:&quot;, &quot;eng&quot;: &quot;Left Y label:&quot;}">Left Y label:</span>
-						<input type="text" id="DialogBarPlotAxisYLabelLeft"></input>
+						<input type="text" id="DialogBarPlotAxisYLabelLeft" onchange="onBarPlotStyleChange(true)" onblur="onBarPlotStyleChange(true)"></input>
 					</label>
 					<br>
 					<label><span data-lang="{&quot;cat&quot;: &quot;Etiqueta Y dreta:&quot;, &quot;spa&quot;: &quot;Etiqueta Y derecha:&quot;, &quot;eng&quot;: &quot;Right Y label:&quot;}">Right Y label:</span>
-						<input type="text" id="DialogBarPlotAxisYLabelRight"></input>
+						<input type="text" id="DialogBarPlotAxisYLabelRight" onchange="onBarPlotStyleChange(true)" onblur="onBarPlotStyleChange(true)"></input>
 					</label>
 				</div>
 				<label class="DialogBarPlotSizeRow"><span data-lang="{&quot;cat&quot;: &quot;Mida dels números dels eixos:&quot;, &quot;spa&quot;: &quot;Tamaño de los números de los ejes:&quot;, &quot;eng&quot;: &quot;Axis number size:&quot;}">Axis number size:</span>
@@ -2148,26 +2167,6 @@
 					<span id="DialogBarPlotValueLabelSizeValue">12</span>
 				</label>
 			</fieldset>
-
-			<br>
-			<div class="center">
-				<button value="draw" onClick="DrawBarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
-				<button value="ok" onClick="CloseDialogBarPlot(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
-			</div>
-			<input type="hidden" id="DialogBarPlotNodeId"></input>
-			</form>
-		</td>
-		<td style="vertical-align: top;">
-			<div class="DialogBarPlotVizRow">
-				<div id="DialogBarPlotVisualization">
-					<canvas id="DialogBarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas>
-				</div>
-				<div id="DialogBarPlotLegend" class="DialogBarPlotLegend" aria-label="Legend"></div>
-			</div>
-			<div id="DialogBarPlotColorCard" class="DialogBarPlotColorCard" style="display:none;"></div>
-			<div class="DialogBarPlotSavePng">
-				<button type="button" onClick="SaveBarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
-			</div>
 		</td>
 		</tr></table>
 	</dialog>
@@ -2224,15 +2223,34 @@
 					<div id="DialogRadarPlotSeriesDiv"></div>
 				</div>
 			</fieldset>
-			<fieldset>
+			<br>
+			<div class="center">
+				<button value="draw" onClick="DrawRadarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
+				<button value="ok" onClick="CloseDialogRadarPlot(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
+			</div>
+			<input type="hidden" id="DialogRadarPlotNodeId"></input>
+			</form>
+		</td>
+		<td class="DialogRadarPlotVizCell" style="vertical-align: top;">
+			<div class="DialogRadarPlotVizRow">
+				<div id="DialogRadarPlotVisualization">
+					<canvas id="DialogRadarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas>
+				</div>
+				<div id="DialogRadarPlotLegend" class="DialogRadarPlotLegend" aria-label="Legend"></div>
+			</div>
+			<div id="DialogRadarPlotColorCard" class="DialogRadarPlotColorCard" style="display:none;"></div>
+			<div class="DialogRadarPlotSavePng">
+				<button type="button" onClick="SaveRadarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
+			</div>
+			<fieldset id="DialogRadarPlotOptionsFieldset" class="DialogRadarPlotOptionsBelow">
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
-				<label><input type="checkbox" id="DialogRadarPlotNormalize"></input> <span data-lang="{&quot;cat&quot;: &quot;Normalitza els valors (0-100)&quot;, &quot;spa&quot;: &quot;Normalizar los valores (0-100)&quot;, &quot;eng&quot;: &quot;Normalize values (0-100)&quot;}">Normalize values (0-100)</span></label>
+				<label><input type="checkbox" id="DialogRadarPlotNormalize" onchange="onRadarPlotStyleChange(true)"></input> <span data-lang="{&quot;cat&quot;: &quot;Normalitza els valors (0-100)&quot;, &quot;spa&quot;: &quot;Normalizar los valores (0-100)&quot;, &quot;eng&quot;: &quot;Normalize values (0-100)&quot;}">Normalize values (0-100)</span></label>
 				<br>
-				<label id="DialogRadarPlotFillLabel"><input type="checkbox" id="DialogRadarPlotFill" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Omplir l'àrea&quot;, &quot;spa&quot;: &quot;Rellenar el área&quot;, &quot;eng&quot;: &quot;Fill area&quot;}">Fill area</span></label>
+				<label id="DialogRadarPlotFillLabel"><input type="checkbox" id="DialogRadarPlotFill" checked="checked" onchange="onRadarPlotStyleChange(true)"></input> <span data-lang="{&quot;cat&quot;: &quot;Omplir l'àrea&quot;, &quot;spa&quot;: &quot;Rellenar el área&quot;, &quot;eng&quot;: &quot;Fill area&quot;}">Fill area</span></label>
 				<br>
-				<label><input type="checkbox" id="DialogRadarPlotBeginZero" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el  cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
+				<label><input type="checkbox" id="DialogRadarPlotBeginZero" checked="checked" onchange="onRadarPlotStyleChange(true)"></input> <span data-lang="{&quot;cat&quot;: &quot;Comença al zero&quot;, &quot;spa&quot;: &quot;Empezar en el  cero&quot;, &quot;eng&quot;: &quot;Begin at zero&quot;}">Begin at zero</span></label>
 				<br>
-				<label id="DialogRadarPlotSkipLabel"><input type="checkbox" id="DialogRadarPlotSkipMissing" checked="checked"></input> <span data-lang="{&quot;cat&quot;: &quot;Salta punts absents&quot;, &quot;spa&quot;: &quot;Saltar puntos ausentes&quot;, &quot;eng&quot;: &quot;Skip missing points&quot;}">Skip missing points</span></label>
+				<label id="DialogRadarPlotSkipLabel"><input type="checkbox" id="DialogRadarPlotSkipMissing" checked="checked" onchange="onRadarPlotStyleChange(true)"></input> <span data-lang="{&quot;cat&quot;: &quot;Salta punts absents&quot;, &quot;spa&quot;: &quot;Saltar puntos ausentes&quot;, &quot;eng&quot;: &quot;Skip missing points&quot;}">Skip missing points</span></label>
 				<br>
 				<label><span data-lang="{&quot;cat&quot;: &quot;Títol del gràfic:&quot;, &quot;spa&quot;: &quot;Título del gráfico:&quot;, &quot;eng&quot;: &quot;Graphic title:&quot;}">Graphic title:</span>
 					<input type="text" id="DialogRadarPlotTitleInput" onchange="onRadarPlotTitleChange()" onblur="onRadarPlotTitleChange()"></input>
@@ -2259,25 +2277,6 @@
 					<span id="DialogRadarPlotValueLabelSizeValue">11</span>
 				</label>
 			</fieldset>
-			<br>
-			<div class="center">
-				<button value="draw" onClick="DrawRadarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
-				<button value="ok" onClick="CloseDialogRadarPlot(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
-			</div>
-			<input type="hidden" id="DialogRadarPlotNodeId"></input>
-			</form>
-		</td>
-		<td style="vertical-align: top;">
-			<div class="DialogRadarPlotVizRow">
-				<div id="DialogRadarPlotVisualization">
-					<canvas id="DialogRadarPlotVisualizationCanvas" style="width:100%; height:100%;"></canvas>
-				</div>
-				<div id="DialogRadarPlotLegend" class="DialogRadarPlotLegend" aria-label="Legend"></div>
-			</div>
-			<div id="DialogRadarPlotColorCard" class="DialogRadarPlotColorCard" style="display:none;"></div>
-			<div class="DialogRadarPlotSavePng">
-				<button type="button" onClick="SaveRadarPlot(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
-			</div>
 		</td>
 		</tr></table>
 	</dialog>
@@ -2319,7 +2318,26 @@
 					<div id="DialogCircularChartSeriesDiv"></div>
 				</div>
 			</fieldset>
-			<fieldset>
+			<br>
+			<div class="center">
+				<button value="draw" onClick="DrawCircularChart(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
+				<button value="ok" onClick="CloseDialogCircularChart(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
+			</div>
+			<input type="hidden" id="DialogCircularChartNodeId"></input>
+			</form>
+		</td>
+		<td class="DialogCircularChartVizCell" style="vertical-align: top;">
+			<div class="DialogCircularChartVizRow">
+				<div id="DialogCircularChartVisualization">
+					<canvas id="DialogCircularChartVisualizationCanvas" style="width:100%; height:100%;"></canvas>
+				</div>
+				<div id="DialogCircularChartLegend" class="DialogCircularChartLegend" aria-label="Legend"></div>
+			</div>
+			<div id="DialogCircularChartColorCard" class="DialogCircularChartColorCard" style="display:none;"></div>
+			<div class="DialogCircularChartSavePng">
+				<button type="button" onClick="SaveCircularChart(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
+			</div>
+			<fieldset id="DialogCircularChartOptionsFieldset" class="DialogCircularChartOptionsBelow">
 				<legend><span data-lang="{&quot;cat&quot;: &quot;Opcions:&quot;, &quot;spa&quot;: &quot;Opciones:&quot;, &quot;eng&quot;: &quot;Options:&quot;}">Options:</span></legend>
 				<label><span data-lang="{&quot;cat&quot;: &quot;Títol del gràfic:&quot;, &quot;spa&quot;: &quot;Título del gráfico:&quot;, &quot;eng&quot;: &quot;Graphic title:&quot;}">Graphic title:</span>
 					<input type="text" id="DialogCircularChartTitleInput" onchange="onCircularChartTitleChange()" onblur="onCircularChartTitleChange()"></input>
@@ -2351,25 +2369,6 @@
 					</label>
 				</div>
 			</fieldset>
-			<br>
-			<div class="center">
-				<button value="draw" onClick="DrawCircularChart(event)"><span data-lang="{&quot;cat&quot;: &quot;Dibuixa&quot;, &quot;spa&quot;: &quot;Dibujar&quot;, &quot;eng&quot;: &quot;Draw&quot;}">Draw</span></button>
-				<button value="ok" onClick="CloseDialogCircularChart(event)" formmethod="dialog"><span data-lang="{&quot;cat&quot;: &quot;Tanca&quot;, &quot;spa&quot;: &quot;Cerrar&quot;, &quot;eng&quot;: &quot;Close&quot;}">Close</span></button>
-			</div>
-			<input type="hidden" id="DialogCircularChartNodeId"></input>
-			</form>
-		</td>
-		<td style="vertical-align: top;">
-			<div class="DialogCircularChartVizRow">
-				<div id="DialogCircularChartVisualization">
-					<canvas id="DialogCircularChartVisualizationCanvas" style="width:100%; height:100%;"></canvas>
-				</div>
-				<div id="DialogCircularChartLegend" class="DialogCircularChartLegend" aria-label="Legend"></div>
-			</div>
-			<div id="DialogCircularChartColorCard" class="DialogCircularChartColorCard" style="display:none;"></div>
-			<div class="DialogCircularChartSavePng">
-				<button type="button" onClick="SaveCircularChart(event)"><span data-lang="{&quot;cat&quot;: &quot;Desa com a PNG&quot;, &quot;spa&quot;: &quot;Guardar como PNG&quot;, &quot;eng&quot;: &quot;Save as PNG&quot;}">Save as PNG</span></button>
-			</div>
 		</td>
 		</tr></table>
 	</dialog>

@@ -1,0 +1,230 @@
+{
+	"nodes": [
+		{
+			"id": "3r6c4.9ksv0n",
+			"label": "CSV",
+			"image": "ImportCSV.png",
+			"shape": "circularImage",
+			"STAdata": [
+				{
+					"Month": "Jan",
+					"Rainfall": 42,
+					"Temperature": 8.2,
+					"Target": 40
+				},
+				{
+					"Month": "Feb",
+					"Rainfall": 38,
+					"Temperature": 9.1,
+					"Target": 40
+				},
+				{
+					"Month": "Mar",
+					"Rainfall": 55,
+					"Temperature": 12.4,
+					"Target": 45
+				},
+				{
+					"Month": "Apr",
+					"Rainfall": 48,
+					"Temperature": 15,
+					"Target": 45
+				},
+				{
+					"Month": "May",
+					"Rainfall": 62,
+					"Temperature": 18.7,
+					"Target": 50
+				},
+				{
+					"Month": "Jun",
+					"Rainfall": 35,
+					"Temperature": 22.3,
+					"Target": 50
+				},
+				{
+					"Month": "Jul",
+					"Rainfall": 28,
+					"Temperature": 25.1,
+					"Target": 45
+				},
+				{
+					"Month": "Aug",
+					"Rainfall": 30,
+					"Temperature": 24.8,
+					"Target": 45
+				},
+				{
+					"Month": "Sep",
+					"Rainfall": 51,
+					"Temperature": 20.2,
+					"Target": 50
+				},
+				{
+					"Month": "Oct",
+					"Rainfall": 67,
+					"Temperature": 15.6,
+					"Target": 55
+				},
+				{
+					"Month": "Nov",
+					"Rainfall": 58,
+					"Temperature": 11,
+					"Target": 50
+				},
+				{
+					"Month": "Dec",
+					"Rainfall": 49,
+					"Temperature": 8.5,
+					"Target": 45
+				}
+			],
+			"STAdataAttributes": {
+				"Month": {
+					"type": "string"
+				},
+				"Rainfall": {
+					"type": "integer"
+				},
+				"Temperature": {
+					"type": "number"
+				},
+				"Target": {
+					"type": "integer"
+				}
+			},
+			"STAmetadata": {
+				"dataLineage": {
+					"steps": [
+						{
+							"tool": "ImportCSV",
+							"date": "2026-11-23T14:34:57.607Z"
+						}
+					]
+				}
+			},
+			"x": -10,
+			"y": -61
+		},
+		{
+			"id": "63h77.u66t8c",
+			"label": "Bar Plot",
+			"image": "BarPlot.png",
+			"shape": "circularImage",
+			"STAmetadata": {
+				"dataLineage": {
+					"steps": [
+						{
+							"tool": "ImportCSV",
+							"date": "2026-11-23T14:34:57.607Z"
+						}
+					]
+				}
+			},
+			"barPlotParentNodes": {
+				"3r6c4.9ksv0n": {
+					"nodeLabel": "CSV",
+					"attrs": {
+						"Month": {
+							"type": "string"
+						},
+						"Rainfall": {
+							"type": "integer"
+						},
+						"Temperature": {
+							"type": "number"
+						},
+						"Target": {
+							"type": "integer"
+						}
+					},
+					"numericNames": [
+						"Rainfall",
+						"Temperature",
+						"Target"
+					],
+					"nonNumericNames": [
+						"Month"
+					]
+				}
+			},
+			"barPlotOptions": {
+				"seriesColors": {
+					"__barUniform__": "#1f77b4",
+					"Rainfall": "#1f77b4",
+					"Temperature": "#aec7e8",
+					"cat:Jan": "#1f77b4",
+					"cat:Feb": "#aec7e8",
+					"cat:Mar": "#ff7f0e",
+					"cat:Apr": "#ffbb78",
+					"cat:May": "#2ca02c",
+					"cat:Jun": "#98df8a",
+					"cat:Jul": "#d62728",
+					"cat:Aug": "#ff9896",
+					"cat:Sep": "#9467bd",
+					"cat:Oct": "#c5b0d5",
+					"cat:Nov": "#8c564b",
+					"cat:Dec": "#c49c94"
+				},
+				"hiddenSeries": [],
+				"titleFontSize": 16,
+				"labelFontSize": 12,
+				"valueLabelFontSize": 12,
+				"showValueLabels": true,
+				"legendFontSize": 12,
+				"axisLabelFontSize": 12,
+				"errorMode": "none",
+				"errorColor": "#333333",
+				"errorDirection": "both",
+				"barColorMode": "same",
+				"confidencePct": 95,
+				"seriesGroups": [
+					{
+						"nodeSelected": "3r6c4.9ksv0n",
+						"axisX": "Month",
+						"axisY": "Rainfall",
+						"valueColumns": [
+							"Rainfall",
+							"Temperature"
+						],
+						"seriesBy": "",
+						"columnAxes": {
+							"Temperature": "right"
+						},
+						"columnTypes": {
+							"Temperature": "line"
+						},
+						"valueMin": "Rainfall",
+						"valueMax": "Temperature",
+						"legendText": "CSV"
+					}
+				],
+				"barType": "vertical",
+				"title": "",
+				"beginAtZero": true,
+				"groupByCategory": false,
+				"axisXLabel": "",
+				"axisYLabelLeft": "",
+				"axisYLabelRight": "",
+				"customErrorKind": "abs",
+				"customErrorVal": 1,
+				"axisX": "Month",
+				"valueColumns": [
+					"Rainfall",
+					"Temperature"
+				],
+				"axisY": "",
+				"drawn": true
+			},
+			"x": 31,
+			"y": 53
+		}
+	],
+	"edges": [
+		{
+			"from": "3r6c4.9ksv0n",
+			"to": "63h77.u66t8c",
+			"arrows": "from"
+		}
+	]
+}

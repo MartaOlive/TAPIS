@@ -812,6 +812,27 @@
 	flex: 0 0 auto;
 }
 
+#DialogBarPlot .DialogBarPlotLinesFieldset {
+	margin: 8px 0 4px;
+	padding: 6px 8px;
+	border: 1px solid #ccc;
+}
+
+#DialogBarPlot .DialogBarPlotVizCell,
+#DialogScatterPlot .DialogScatterPlotVizCell,
+#DialogRadarPlot .DialogRadarPlotVizCell,
+#DialogCircularChart .DialogCircularChartVizCell {
+	min-width: 520px;
+}
+
+#DialogBarPlot .DialogBarPlotOptionsBelow,
+#DialogScatterPlot .DialogScatterPlotOptionsBelow,
+#DialogRadarPlot .DialogRadarPlotOptionsBelow,
+#DialogCircularChart .DialogCircularChartOptionsBelow {
+	margin-top: 14px;
+	max-width: 720px;
+}
+
 #DialogBarPlot #DialogBarPlotAxisLabels {
 	margin: 6px 0 10px 0;
 }
