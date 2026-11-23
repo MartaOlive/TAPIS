@@ -166,9 +166,7 @@
                     <p>From there you can continue with <strong>OAPI items</strong> to load the features of one
                         collection (select a row that has an items link, then connect the items tool).</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
-                        <li>No one yet</li>
-                    </ul>
+                    <p> <i>No one yet</i></p>
                 </div>
             </div>
             <div class="toolPage_main" id="ogcAPIItems">
@@ -208,9 +206,7 @@
                             alt="Table of OGC API items for a collection" class="toolPage_image zoomable"
                             style="width: 80%;"></div>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
-                        <li>No one yet</li>
-                    </ul>
+                    <p> <i>No one yet</i></p>
 
                 </div>
             </div>
@@ -410,15 +406,28 @@
                     <h2 class="toolPage_title"><img src="../ImportDBF.png" alt="icon ImportDBF"
                             class="toolPage_title_icon">DBF
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="ImportDBF_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-                    <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>DBF</strong> tool imports a DBASE III+, IV or extended DBF file and returns an attribute table.</p>
-                    <p>Double-click: choose a <strong>local file</strong> or a <strong>URL</strong>, then Load. The resulting table can be used with generic table tools.</p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
+                    <p><strong>Setting Up the Node: </strong><img src="ImportDBF_image0.png"
+                            alt="DBF import node in TAPIS" class="toolPage_image"></p>
 
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>DBF</strong> tool imports a DBASE III+, IV or MiraMon extended DBF file and returns a
+                        TAPIS table. It is a <strong>start node</strong> (it does not need a parent connection).</p>
+                    <p>Double-click the tool to open <i>Import dBASE III+, IV and MiraMon DBF Extended</i>:</p>
+                    <img src="ImportDBF_image1.png" alt="Import DBF dialog empty" class="toolPage_image">
+                    <p>Choose the <strong>DBF source</strong>:</p>
+                    <ul>
+                        <li><strong>Local file</strong> — pick a <code>.dbf</code> file</li>
+                        <li><strong>URL</strong> — type a URL and press <strong>Load</strong></li>
                     </ul>
+                    <p>Example with a local file selected:</p>
+                    <img src="ImportDBF_image2.png" alt="Import DBF dialog with a local file selected"
+                        class="toolPage_image">
+                    <p>Click <strong>Done</strong> when finished.</p>
+                    <p>A successful import shows the records as a normal TAPIS table for further table or visualization
+                        tools.</p>
+                    <img src="ImportDBF_image3.png" alt="Table after importing a DBF" class="toolPage_image">
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
 
                 </div>
             </div>
@@ -473,9 +482,7 @@
                     <p>The <strong>JSON-LD</strong> tool imports a JSON-LD file and flattens it into a table.</p>
                     <p>In the dialog you can optionally <strong>Add geometry</strong> and <strong>Add observations</strong>, and choose a local file or URL. Confirm to build the table.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
-
-                    </ul>
+                    <p> <i>No one yet</i></p>
 
                 </div>
             </div>
@@ -484,15 +491,46 @@
                     <h2 class="toolPage_title"><img src="../ImportJSON.png" alt="icon ImportJSON"
                             class="toolPage_title_icon">JSON
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="ImportJSON_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-                    <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>JSON</strong> tool imports JSON (object or array) into a table.</p>
-                    <p>Double-click: load from local file(s), a single URL, or a comma-separated list of URLs. The parsed records become STAdata for downstream tools.</p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
+                    <p><strong>Setting Up the Node: </strong><img src="ImportJSON_image0.png"
+                            alt="JSON import node in TAPIS" class="toolPage_image"></p>
 
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>JSON</strong> tool imports JSON (object or array of objects) and returns a TAPIS
+                        table. It is a <strong>start node</strong> (it does not need a parent connection).</p>
+                    <p>Double-click the tool to open <i>Import JSON</i>:</p>
+                    <img src="ImportJSON_image1.png" alt="Import JSON dialog empty" class="toolPage_image">
+                    <p>Choose the <strong>JSON source</strong>:</p>
+                    <ul>
+                        <li><strong>Local file</strong> — one or more <code>.json</code> files</li>
+                        <li><strong>URL single</strong> — one URL, then <strong>Load</strong></li>
+                        <li><strong>URL list</strong> — several URLs <strong>separated by comma</strong>, then
+                            <strong>Load</strong></li>
+                        <li><strong>Text (paste JSON)</strong> — paste JSON and press <strong>Load text</strong></li>
                     </ul>
+                    <p>Example with a <strong>local file</strong> selected:</p>
+                    <img src="ImportJSON_image2.png" alt="Import JSON dialog with a local file selected"
+                        class="toolPage_image">
+                    <p>A successful import from a local file shows the records as a normal TAPIS table:</p>
+                    <img src="ImportJSON_image3.png" alt="Table after importing JSON from a local file"
+                        class="toolPage_image">
+                    <p>Example with a <strong>URL list</strong> (URLs <strong>separated by comma</strong>). After entering
+                        the list you must press <strong>Load</strong> before <strong>Done</strong>:</p>
+                    <img src="ImportJSON_image4.png" alt="Import JSON dialog with a comma-separated URL list"
+                        class="toolPage_image">
+                    <p>Table after loading from the URL list:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="ImportJSON_image5.png"
+                            alt="Table after importing JSON from a URL list" class="toolPage_image zoomable"
+                            style="width: 80%;"></div>
+                    <p>Example with <strong>pasted text</strong>. After pasting the JSON you must press <strong>Load
+                            text</strong> before <strong>Done</strong>:</p>
+                    <img src="ImportJSON_image6.png" alt="Import JSON dialog with pasted JSON text"
+                        class="toolPage_image">
+                    <p>Table after loading from pasted text:</p>
+                    <img src="ImportJSON_image7.png" alt="Table after importing JSON from pasted text"
+                        class="toolPage_image">
+                    <p>Click <strong>Done</strong> when finished (for file, single URL, URL list, or pasted text).</p>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
 
                 </div>
             </div>
@@ -521,15 +559,31 @@
                     <h2 class="toolPage_title"><img src="../CreateDGGS.png" alt="icon CreateDGGS"
                             class="toolPage_title_icon">DGGS extent
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="CreateDGGS_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-                    <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>DGGS extent</strong> tool creates a table of all DGGS zone codes that fall inside a geospatial bounding box. Optionally it can add parent levels and centroid coordinates.</p>
-                    <p>Double-click: set min/max longitude and latitude, choose the <strong>DGGS</strong> system and <strong>Level</strong>, optional parent levels and centroids, then Create.</p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
+                    <p><strong>Setting Up the Node: </strong><img src="CreateDGGS_image0.png"
+                            alt="DGGS extent node in TAPIS" class="toolPage_image"></p>
 
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>DGGS extent</strong> tool creates a table of all DGGS zone codes that fall inside a
+                        geospatial bounding box. Optionally it can add parent levels and centroid coordinates. It is a
+                        <strong>start node</strong> (it does not need a parent connection).</p>
+                    <p>Double-click the tool to open <i>DGGS codes table from geospatial extent</i>:</p>
+                    <img src="CreateDGGS_image1.png" alt="DGGS codes table from geospatial extent dialog"
+                        class="toolPage_image">
+                    <p>Configure:</p>
+                    <ul>
+                        <li><strong>Minimum / maximum longitude and latitude</strong> — the bounding box</li>
+                        <li><strong>DGGS</strong> — the discrete global grid system</li>
+                        <li><strong>Level</strong> — the resolution of the zones</li>
+                        <li><strong>Parent levels</strong> (optional) — include codes for coarser parent zones</li>
+                        <li><strong>Add centroid coordinates</strong> (optional) — add longitude/latitude of each zone
+                            centre</li>
                     </ul>
+                    <p>Press <strong>Create</strong>. A successful create shows a TAPIS table of DGGS zone codes (and
+                        optional parent/centroid columns), ready for further table or map tools.</p>
+                    <img src="CreateDGGS_image2.png" alt="Table of DGGS codes after creating from extent"
+                        class="toolPage_image">
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
 
                 </div>
             </div>
@@ -538,15 +592,23 @@
                     <h2 class="toolPage_title"><img src="../CreateNewTable.png" alt="icon CreateNewTable"
                             class="toolPage_title_icon">New table
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="CreateNewTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
-                    <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>New table</strong> tool creates an empty table from scratch.</p>
-                    <p>Double-click: enter a comma-separated <strong>list of column names</strong> and press Create. You can then edit records, add columns, or fill data with other table tools.</p>
-                    <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
+                    <p><strong>Setting Up the Node: </strong><img src="CreateNewTable_image0.png"
+                            alt="New table node in TAPIS" class="toolPage_image"></p>
 
-                    </ul>
+                    <p><strong>How to Use the Node: </strong></p>
+                    <p>The <strong>New table</strong> tool creates an empty table from scratch. It is a
+                        <strong>start node</strong> (it does not need a parent connection).</p>
+                    <p>Double-click the tool to open <i>Create a new table</i>:</p>
+                    <img src="CreateNewTable_image1.png" alt="Create a new table dialog" class="toolPage_image">
+                    <p>Enter a comma-separated <strong>list of column names</strong> (for example
+                        <code>name, value, date</code>) and press <strong>Create</strong>.</p>
+                    <p>A successful create shows an empty TAPIS table with those columns, ready for further table or
+                        visualization tools.</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="CreateNewTable_image2.png"
+                            alt="Empty table after creating a new table" class="toolPage_image zoomable"
+                            style="width: 80%;"></div>
+                    <p> <strong>Recipes where this tool is used:</strong> </p>
+                    <p> <i>No one yet</i></p>
 
                 </div>
             </div>
@@ -562,9 +624,7 @@
                     <p>Connect it to an <strong>STA service</strong> node. Double-click the dialog to: set the reading interval; Connect via USB or Bluetooth; view sensor information; clear or pause/resume data; adjust kit options when available (SD/Wi-Fi mode, publish interval, calibration, battery). Collected rows appear in the table area.</p>
                     <p>Close the dialog when finished; the table remains on the node for the workflow.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
-
-                    </ul>
+                    <p> <i>No one yet</i></p>
 
                 </div>
             </div>
@@ -579,9 +639,7 @@
                     <p>The <strong>Read SD from sensor</strong> tool reads CSV files from the SD card of a USB-connected sensor (Web Serial) and loads them as a TAPIS table.</p>
                     <p>It is a start node (do not connect it from another node). Double-click: Connect via USB, browse files on the SD, preview CSV content, optionally save as CSV, and select a file to use in TAPIS.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
-
-                    </ul>
+                    <p> <i>No one yet</i></p>
 
                 </div>
             </div>
@@ -597,9 +655,7 @@
                     <p>The <strong>STA root</strong> tool returns to the root of the SensorThings API or STAplus service in use: it removes path and query parameters from the previous node URL and reloads the entity list.</p>
                     <p>Connect it under any STA/STAplus branch. There is no dialog; connecting rebuilds the root entity table for that service.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <ul>
-
-                    </ul>
+                    <p> <i>No one yet</i></p>
                 </div>
 
             </div>

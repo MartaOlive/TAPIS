@@ -43,9 +43,9 @@ Input tools (inputtools.htm)
 		Falta:	opcional: captura icona més neta / diàleg local-file si es vol substituir les de recepta
 
 	ImportDBF	DBF
-		Estat:	Esborrany comentat (no visible)
-		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportDBF_image0.png
-		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+		Estat:	FET (text + captures actives)
+		Tenim:	text polit; ImportDBF_image0..3 (node, dialeg buit, dialeg amb fitxer, taula); demo m_datum.dbf
+		Falta:	revisio opcional
 
 	ImportGPKG	SQLite and GPKG
 		Estat:	Esborrany comentat (no visible)
@@ -63,9 +63,9 @@ Input tools (inputtools.htm)
 		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
 
 	ImportJSON	JSON
-		Estat:	Esborrany comentat (no visible)
-		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportJSON_image0.png
-		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+		Estat:	TEXT_SENSE_CAPTURES (text polit; falten captures)
+		Tenim:	text polit; refs 0 node, 1 dialeg, 2 fitxer, 3 taula fitxer, 4 URL list (+Load), 5 taula URLs, 6 text (+Load text), 7 taula text
+		Falta:	captures 0..7; demos exampleTemp.json / URL list / helpImportJSON_textDemo.json
 
 	ImportGeoJSON	GeoJSON
 		Estat:	Esborrany comentat (no visible)
@@ -73,14 +73,14 @@ Input tools (inputtools.htm)
 		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
 
 	CreateDGGS	DGGS extent
-		Estat:	Esborrany comentat (no visible)
-		Tenim:	DRAFT HELP comentat; refs imatge al draft: CreateDGGS_image0.png
-		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+		Estat:	FET (text + captures actives)
+		Tenim:	text polit; CreateDGGS_image0.png, image1.png, image2.png
+		Falta:	revisio opcional
 
 	CreateNewTable	New table
-		Estat:	Esborrany comentat (no visible)
-		Tenim:	DRAFT HELP comentat; refs imatge al draft: CreateNewTable_image0.png
-		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+		Estat:	FET (text + captures actives)
+		Tenim:	text polit a inputtools.htm; CreateNewTable_image0.png, image1.png, image2.png
+		Falta:	revisio opcional
 
 	connectASensor	Connect a sensor
 		Estat:	Esborrany comentat (no visible)

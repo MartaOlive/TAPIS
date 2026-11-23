@@ -1681,10 +1681,12 @@
 				 <input type="text" size="70" id="DialogImportJSONSourceURLInput" disabled="disabled"></input> 
 				 <button type="button" id="DialogImportJSONSourceURLButton" onclick="ReadURLImportJSON(event)" disabled="disabled"><span data-lang="{&quot;cat&quot;: &quot;Carrega&quot;, &quot;spa&quot;: &quot;Cargar&quot;, &quot;eng&quot;: &quot;Load&quot;}">Load</span></button> 
 				<br>
-				<input type="radio" id="DialogImportJSONSourceURLList" name="DialogImportJSONSource" value="urlList" onClick='SelectImportFileSource(event, "JSON")'>
-				<label> <span data-lang="{&quot;cat&quot;: &quot;Llista d'URL:&quot;, &quot;spa&quot;: &quot;Lista de URL:&quot;, &quot;eng&quot;: &quot;URL list:&quot;}">URL list:</span> <i><span data-lang="{&quot;cat&quot;: &quot;Separades per coma&quot;, &quot;spa&quot;: &quot;Separadas por coma&quot;, &quot;eng&quot;: &quot;Separated by comma&quot;}">Separated by comma</span></i> </label> <br>
-				<textarea  type="text" cols="100" rows="10" style="margin-top:10px" id="DialogImportJSONInputSeveralRecords" disabled="disabled"></textarea>
-				<button type="button" id="DialogImportJSONSourceURLButtonMulti" onClick="ReadURLImportJSONMultiple(event)" disabled="disabled" ><span data-lang="{&quot;cat&quot;: &quot;Carrega&quot;, &quot;spa&quot;: &quot;Cargar&quot;, &quot;eng&quot;: &quot;Load&quot;}">Load</span></button></label><br>
+				<label><input type="radio" id="DialogImportJSONSourceURLList" name="DialogImportJSONSource" value="urlList" onClick='SelectImportFileSource(event, "JSON")'>
+				<span data-lang="{&quot;cat&quot;: &quot;Llista d'URL:&quot;, &quot;spa&quot;: &quot;Lista de URL:&quot;, &quot;eng&quot;: &quot;URL list:&quot;}">URL list:</span> <i><span data-lang="{&quot;cat&quot;: &quot;Separades per coma&quot;, &quot;spa&quot;: &quot;Separadas por coma&quot;, &quot;eng&quot;: &quot;Separated by comma&quot;}">Separated by comma</span></i></label><br>
+				<div style="margin: 4px 0 6px 1.7em;">
+					<textarea type="text" cols="100" rows="10" style="width:95%;" id="DialogImportJSONInputSeveralRecords" disabled="disabled"></textarea><br>
+					<button type="button" id="DialogImportJSONSourceURLButtonMulti" onClick="ReadURLImportJSONMultiple(event)" disabled="disabled"><span data-lang="{&quot;cat&quot;: &quot;Carrega&quot;, &quot;spa&quot;: &quot;Cargar&quot;, &quot;eng&quot;: &quot;Load&quot;}">Load</span></button>
+				</div>
 				<label><input type="radio" id="DialogImportJSONSourceText" name="DialogImportJSONSource" value="text" onClick='SelectImportFileSource(event, "JSON")'>
 				<span data-lang="{&quot;cat&quot;: &quot;Text (enganxa JSON):&quot;, &quot;spa&quot;: &quot;Texto (pegar JSON):&quot;, &quot;eng&quot;: &quot;Text (paste JSON):&quot;}">Text (paste JSON):</span></label><br>
 				<div style="margin: 4px 0 6px 1.7em;">
