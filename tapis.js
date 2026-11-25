@@ -5590,7 +5590,7 @@ function GetProcessToolLabel(toolImage) {
 		ImportCSV: {cat: "Importar CSV", spa: "Importar CSV", eng: "Import CSV"},
 		ImportDBF: {cat: "Importar DBF", spa: "Importar DBF", eng: "Import DBF"},
 		ImportGPKG: {cat: "Importar GeoPackage", spa: "Importar GeoPackage", eng: "Import GeoPackage"},
-		ImportGPKGTable: {cat: "Taula GeoPackage", spa: "Tabla GeoPackage", eng: "GeoPackage table"},
+		ImportGPKGTable: {cat: "SQLite i GeoPackage Table", spa: "SQLite y GeoPackage Table", eng: "SQLite and GeoPackage Table"},
 		ImportJSON: {cat: "Importar JSON", spa: "Importar JSON", eng: "Import JSON"},
 		ImportJSONLD: {cat: "Importar JSON-LD", spa: "Importar JSON-LD", eng: "Import JSON-LD"},
 		ImportGeoJSON: {cat: "Importar GeoJSON", spa: "Importar GeoJSON", eng: "Import GeoJSON"},

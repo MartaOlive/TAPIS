@@ -436,14 +436,32 @@
                     <h2 class="toolPage_title"><img src="../ImportGPKG.png" alt="icon ImportGPKG"
                             class="toolPage_title_icon">SQLite and GPKG
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="ImportGPKG_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>Setting Up the Node: </strong><img src="ImportGPKG_image0.png"
+                            alt="SQLite and GPKG node in TAPIS" class="toolPage_image"></p>
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>SQLite and GPKG</strong> tool opens a SQLite or GeoPackage database and returns a table listing the <strong>tables</strong> inside the file.</p>
-                    <p>Double-click: pick a local file or URL. Then connect <strong>GeoPack Table</strong> and select one table name to load its rows.</p>
+                    <p>The <strong>SQLite and GPKG</strong> tool opens a SQLite or GeoPackage database and returns a
+                        TAPIS table that lists the <strong>tables</strong> inside the file (name, row counts, and related
+                        metadata). It is a <strong>start node</strong> (it does not need a parent connection).</p>
+                    <p>Double-click the tool to open <i>Import SQLite and GPKG</i>:</p>
+                    <img src="ImportGPKG_image1.png" alt="Import SQLite and GPKG dialog empty" class="toolPage_image">
+                    <p>Choose the <strong>SQLite / GPKG source</strong>:</p>
+                    <ul>
+                        <li><strong>Local file</strong> — a <code>.gpkg</code>, <code>.sqlite</code>, <code>.db</code>
+                            or <code>.sqlite3</code> file</li>
+                        <li><strong>URL</strong> — type a URL and press <strong>Load</strong></li>
+                    </ul>
+                    <p>Example with a <strong>local file</strong> selected:</p>
+                    <img src="ImportGPKG_image2.png" alt="Import SQLite and GPKG dialog with a local file selected"
+                        class="toolPage_image">
+                    <p>Click <strong>Done</strong> when finished. Below you can see the catalogue of tables from the
+                        database:</p>
+                    <img src="ImportGPKG_image3.png" alt="Table listing after importing SQLite or GPKG"
+                        class="toolPage_image">
+                    <p>Next, select a row with a table name and connect a <strong>SQLite and GeoPackage
+                            Table</strong> node to load the rows of that table.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
-
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
                                 Determining data quality of a sequence of observations from a Geopackage equivalent to a
                                 STA</a></li>
@@ -454,16 +472,26 @@
             <div class="toolPage_main" id="ImportGPKGTable">
                 <div class="toolPage_main_text">
                     <h2 class="toolPage_title"><img src="../ImportGPKGTable.png" alt="icon ImportGPKGTable"
-                            class="toolPage_title_icon">GeoPack Table
+                            class="toolPage_title_icon">SQLite and GeoPackage Table
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="ImportGPKGTable_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>Setting Up the Node: </strong><img src="ImportGPKGTable_image0.png"
+                            alt="SQLite and GPKG with a selected row and SQLite and GeoPackage Table connected"
+                            class="toolPage_image"></p>
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>GeoPack Table</strong> tool loads one table from a parent SQLite/GeoPackage node into a TAPIS data table.</p>
-                    <p>Connect it after <strong>SQLite and GPKG</strong> with a table row selected (tableName). There is no dialog: connecting loads that table’s records.</p>
+                    <p>The <strong>SQLite and GeoPackage Table</strong> tool loads <strong>one concrete table</strong>
+                        from a SQLite or GeoPackage database into a TAPIS data table (the rows and columns of that
+                        table).</p>
+                    <p>It must be connected to a <strong>SQLite and GPKG</strong> node, but only after you have chosen
+                        which table you want: use <strong>Select Row</strong> on the catalogue (the row with the
+                        <strong>tableName</strong> you need), and then connect <strong>SQLite and GeoPackage
+                            Table</strong>. There is <strong>no dialog</strong>: connecting loads that table’s
+                        records.</p>
+                    <p>Below you can see an example after loading one table:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="ImportGPKGTable_image1.png"
+                            alt="Table loaded with SQLite and GeoPackage Table" class="toolPage_image"></div>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
-
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe12" target="_blank">Recipe 12:
                                 Determining data quality of a sequence of observations from a Geopackage equivalent to a
                                 STA</a></li>
@@ -539,17 +567,62 @@
                     <h2 class="toolPage_title"><img src="../ImportGeoJSON.png" alt="icon ImportGeoJSON"
                             class="toolPage_title_icon">GeoJSON
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="ImportGeoJSON_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>Setting Up the Node: </strong><img src="ImportGeoJSON_image0.png"
+                            alt="GeoJSON import node in TAPIS" class="toolPage_image"></p>
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>GeoJSON</strong> tool imports GeoJSON features as a table (one row per feature). One column contains the geometry JSON object.</p>
-                    <p>Optionally attach meaning/schema. Source can be a local file or URL. Useful before Open Map, Save Layer, or geometry column tools.</p>
+                    <p>The <strong>GeoJSON</strong> tool imports GeoJSON features as a TAPIS table (one row per
+                        feature). One column contains the geometry as a JSON object. It is a <strong>start
+                            node</strong> (it does not need a parent connection). Useful before Open Map, Save Layer, or
+                        geometry column tools.</p>
+                    <p>Double-click the tool to open <i>Import GeoJSON</i>:</p>
+                    <img src="ImportGeoJSON_image1.png" alt="Import GeoJSON dialog empty" class="toolPage_image">
+                    <p>Optionally set a <strong>Meaning source</strong> (schema): local schema file, schema URL, or
+                        automatic retrieve of shared meaning.</p>
+                    <p>Choose the <strong>GeoJSON source</strong>:</p>
+                    <ul>
+                        <li><strong>Local file</strong> — a <code>.geojson</code> / <code>.json</code> file</li>
+                        <li><strong>URL</strong> — type a URL (or pick a suggested one) and press <strong>Load</strong>
+                        </li>
+                        <li><strong>Text</strong> — paste GeoJSON and press <strong>Load text</strong></li>
+                        <li><strong>External data from</strong> — not used for normal imports. It is disabled by default
+                            and only appears when GeoJSON was loaded from an external source (for example MiraMon Map
+                            Browser); then it shows the origin URL of that data</li>
+                    </ul>
+                    <p>Example with a <strong>local GeoJSON file</strong>. In addition, the dialog shows how to choose a
+                        local schema file under <strong>Meaning source</strong> to load the meaning of the attributes in
+                        that file:</p>
+                    <img src="ImportGeoJSON_image2.png"
+                        alt="Import GeoJSON dialog with a local GeoJSON file and a local Meaning source schema"
+                        class="toolPage_image">
+                    <p>Click <strong>Done</strong> when finished. Below you can see the loaded table (one row per
+                        feature):</p>
+                    <img src="ImportGeoJSON_image3.png" alt="Table after importing GeoJSON from a local file"
+                        class="toolPage_image">
+                    <p>Below you can see how the attributes from the Meaning source are loaded and shown in the
+                        <strong>Meaning</strong> tool (<i>Column name, type, meaning and units</i>), where you can review
+                        descriptions, definitions and units:</p>
+                    <img src="ImportGeoJSON_image4.png"
+                        alt="Meaning tool showing attributes loaded from the GeoJSON schema" class="toolPage_image">
+                    <p>You can also load from a <strong>URL</strong>. After entering (or selecting) the URL you must
+                        press <strong>Load</strong> before <strong>Done</strong>:</p>
+                    <img src="ImportGeoJSON_image5.png" alt="Import GeoJSON dialog with a URL"
+                        class="toolPage_image">
+                    <p>Below you can see the table after loading from the URL:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="ImportGeoJSON_image6.png"
+                            alt="Table after importing GeoJSON from a URL" class="toolPage_image zoomable"
+                            style="width: 80%;"></div>
+                    <p>Another option is <strong>pasted text</strong>. After pasting the GeoJSON you must press
+                        <strong>Load text</strong> before <strong>Done</strong>:</p>
+                    <img src="ImportGeoJSON_image7.png" alt="Import GeoJSON dialog with pasted GeoJSON text"
+                        class="toolPage_image">
+                    <p>Below you can see the table after loading from the pasted text:</p>
+                    <img src="ImportGeoJSON_image8.png" alt="Table after importing GeoJSON from pasted text"
+                        class="toolPage_image">
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <ul>
-
                         <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe05" target="_blank">Recipe 5:
-                                Selecting
-                                temperatures from an area</a></li>
+                                Selecting temperatures from an area</a></li>
                     </ul>
 
                 </div>

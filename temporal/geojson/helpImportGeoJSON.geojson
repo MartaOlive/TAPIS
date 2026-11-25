@@ -1,0 +1,44 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [2.1734, 41.3851]
+			},
+			"properties": {
+				"name": "Barcelona",
+				"site": "Ciutat Vella",
+				"temperature": 18.2,
+				"observedAt": "2026-03-15T10:00:00Z"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [2.8214, 41.9794]
+			},
+			"properties": {
+				"name": "Girona",
+				"site": "Barri Vell",
+				"temperature": 16.5,
+				"observedAt": "2026-03-15T10:05:00Z"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [0.6200, 41.6167]
+			},
+			"properties": {
+				"name": "Lleida",
+				"site": "Centre",
+				"temperature": 17.1,
+				"observedAt": "2026-03-15T10:10:00Z"
+			}
+		}
+	]
+}
