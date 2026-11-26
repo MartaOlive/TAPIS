@@ -196,8 +196,8 @@ function getConnectASensorIntervalCode() {
 
 function getConnectASensorIntervalSeconds() {
 	var code, sec;
-	if (connectionMode === "usb" && usbReadIntSec != null && isFinite(usbReadIntSec) && usbReadIntSec > 0)
-		return usbReadIntSec;
+	/* Ritme de la taula TAPIS = selector (USB i BLE). El readint del kit (usbReadIntSec)
+	   és independent: només afecta el firmware / panell USB config. */
 	code = getConnectASensorIntervalCode();
 	sec = CONNECT_A_SENSOR_INTERVAL_SEC_BY_CODE[String(code)];
 	return sec != null ? sec : 60;
@@ -227,6 +227,9 @@ async function onConnectASensorIntervalChange(event) {
 			);
 		}
 	}
+	/* USB: el selector marca el ritme de lectura a TAPIS; interromp l'espera del cicle actual */
+	if (connectionMode === "usb" && monitoringRunning)
+		interruptConnectASensorWait();
 	renderConnectASensorInfo();
 	node = getConnectASensorNodeSafe();
 	if (node)
@@ -535,10 +538,17 @@ function updateConnectASensorConnectionButtons() {
 	var stopBtn = document.getElementById("DialogConnectASensorStop");
 	var resumeBtn = document.getElementById("DialogConnectASensorResume");
 	var clearBtn = document.getElementById("DialogConnectASensorClearData");
+	var saveBtn = document.getElementById("DialogConnectASensorSaveCsv");
+	var useBtn = document.getElementById("DialogConnectASensorUseInTapis");
 	var intervalRow = document.querySelector("#DialogConnectASensor .DialogConnectASensorIntervalRow");
 	var connected = isConnectASensorConnected();
+	var hasData = connectASensorHasCollectedData();
 	if (clearBtn)
-		clearBtn.disabled = !connectASensorHasCollectedData();
+		clearBtn.disabled = !hasData;
+	if (saveBtn)
+		saveBtn.disabled = !hasData;
+	if (useBtn)
+		useBtn.disabled = !hasData;
 	if (connectUsbBtn)
 		connectUsbBtn.disabled = connected;
 	if (connectBleBtn)
@@ -552,8 +562,89 @@ function updateConnectASensorConnectionButtons() {
 	if (resumeBtn)
 		resumeBtn.disabled = !connected || collectingData;
 	if (intervalRow)
-		intervalRow.hidden = connectionMode === "usb";
+		intervalRow.hidden = false;
 	updateConnectASensorUsbConfigVisibility();
+}
+
+function ConnectASensorSaveAsCsv(event) {
+	var node, data, attrs, baseName;
+	if (event)
+		event.preventDefault();
+	node = getConnectASensorNodeSafe();
+	data = (node && node.STAdata && node.STAdata.length) ? node.STAdata : sensorRecords;
+	if (!data || !data.length) {
+		showInfoMessage({
+			cat: "No hi ha dades per desar.",
+			spa: "No hay datos para guardar.",
+			eng: "No data to save."
+		});
+		return;
+	}
+	if (typeof SaveLocalDataFile !== "function" || typeof Papa === "undefined" || !Papa.unparse) {
+		showInfoMessage({
+			cat: "No es pot desar el CSV (funcions SaveAs no disponibles).",
+			spa: "No se puede guardar el CSV (funciones SaveAs no disponibles).",
+			eng: "Cannot save CSV (SaveAs functions not available)."
+		});
+		return;
+	}
+	attrs = (node && node.STAdataAttributes) ? node.STAdataAttributes : buildConnectASensorDataAttributes(data);
+	baseName = (node && node.label) ? String(node.label).replace(/[\\/:*?"<>|]+/g, "_") : "sensor";
+	SaveLocalDataFile(
+		Papa.unparse(
+			typeof StringifyObjectElements === "function" ? StringifyObjectElements(data, attrs) : data,
+			{ quotes: false, quoteChar: '"', escapeChar: '"', delimiter: ";", header: true, newline: "\r\n", skipEmptyLines: "greedy" }
+		),
+		baseName,
+		".csv",
+		"application/vnd.ms-excel"
+	);
+	showInfoMessage({
+		cat: "CSV descarregat.",
+		spa: "CSV descargado.",
+		eng: "CSV downloaded."
+	});
+}
+
+function ConnectASensorSelectForTapis(event) {
+	var node, data;
+	if (event)
+		event.preventDefault();
+	node = getConnectASensorNodeSafe();
+	if (!node) {
+		showInfoMessage({
+			cat: "No s'ha trobat el node.",
+			spa: "No se ha encontrado el nodo.",
+			eng: "Node not found."
+		});
+		return;
+	}
+	data = (node.STAdata && node.STAdata.length) ? node.STAdata : sensorRecords;
+	if (!data || !data.length) {
+		showInfoMessage({
+			cat: "No hi ha dades per usar a TAPIS.",
+			spa: "No hay datos para usar en TAPIS.",
+			eng: "No data to use in TAPIS."
+		});
+		return;
+	}
+	if (!node.STAdata || !node.STAdata.length)
+		node.STAdata = data.slice();
+	node.STAdataAttributes = buildConnectASensorDataAttributes(node.STAdata);
+	syncConnectASensorMeta(node);
+	if (typeof InitInputNodeMetadata === "function" &&
+		(!node.STAmetadata || !node.STAmetadata.dataLineage || !node.STAmetadata.dataLineage.steps || !node.STAmetadata.dataLineage.steps.length))
+		InitInputNodeMetadata(node, {});
+	if (typeof networkNodes !== "undefined")
+		networkNodes.update(node);
+	if (typeof hideNodeDialog === "function")
+		hideNodeDialog("DialogConnectASensor", event);
+	refreshConnectASensorMainTableUi(node.id);
+	showInfoMessage({
+		cat: "Seleccionat per a TAPIS: {0} files.",
+		spa: "Seleccionado para TAPIS: {0} filas.",
+		eng: "Selected for TAPIS: {0} rows."
+	}, node.STAdata.length);
 }
 
 function showConnectASensorDeviceInfo(event) {

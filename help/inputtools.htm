@@ -504,11 +504,50 @@
                     <h2 class="toolPage_title"><img src="../ImportJSONLD.png" alt="icon ImportJSONLD"
                             class="toolPage_title_icon">JSON-LD
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="ImportJSONLD_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>Setting Up the Node: </strong><img src="ImportJSONLD_image0.png"
+                            alt="JSON-LD import node in TAPIS" class="toolPage_image"></p>
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>JSON-LD</strong> tool imports a JSON-LD file and flattens it into a table.</p>
-                    <p>In the dialog you can optionally <strong>Add geometry</strong> and <strong>Add observations</strong>, and choose a local file or URL. Confirm to build the table.</p>
+                    <p>The <strong>JSON-LD</strong> tool imports JSON-LD (typically SOSA-style graphs with features of
+                        interest and observations) and flattens it into a TAPIS table. It is a <strong>start
+                            node</strong> (it does not need a parent connection).</p>
+                    <p>Double-click the tool to open <i>Import JSON-LD</i>:</p>
+                    <img src="ImportJSONLD_image1.png" alt="Import JSON-LD dialog empty" class="toolPage_image">
+                    <p>Under <strong>Include</strong> you can choose:</p>
+                    <ul>
+                        <li><strong>Add geometry</strong> — include coordinates / geometry from the feature of interest
+                            (sometimes the geometry is too big to import)</li>
+                        <li><strong>Add observations</strong> — expand observation members into rows (if geometry is
+                            also included, it is duplicated on each observation row)</li>
+                    </ul>
+                    <p>Choose the <strong>JSON-LD source</strong>:</p>
+                    <ul>
+                        <li><strong>Local file</strong> — a <code>.json</code> or <code>.jsonld</code> file</li>
+                        <li><strong>URL</strong> — type a URL and press <strong>Load</strong></li>
+                        <li><strong>Text (paste JSON-LD)</strong> — paste JSON-LD and press <strong>Load text</strong>
+                        </li>
+                    </ul>
+                    <p>Example with a <strong>local file</strong> selected:</p>
+                    <img src="ImportJSONLD_image2.png" alt="Import JSON-LD dialog with a local file selected"
+                        class="toolPage_image">
+                    <p>Click <strong>Done</strong> when finished. Below you can see the loaded table:</p>
+                    <img src="ImportJSONLD_image3.png" alt="Table after importing JSON-LD from a local file"
+                        class="toolPage_image">
+                    <p>Example with a <strong>URL</strong>. After entering the URL you must press <strong>Load</strong>
+                        before <strong>Done</strong>:</p>
+                    <img src="ImportJSONLD_image4.png" alt="Import JSON-LD dialog with a URL"
+                        class="toolPage_image">
+                    <p>Below you can see the table after loading from the URL:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="ImportJSONLD_image5.png"
+                            alt="Table after importing JSON-LD from a URL" class="toolPage_image zoomable"
+                            style="width: 80%;"></div>
+                    <p>Example with <strong>pasted text</strong>. After pasting the JSON-LD you must press
+                        <strong>Load text</strong> before <strong>Done</strong>:</p>
+                    <img src="ImportJSONLD_image6.png" alt="Import JSON-LD dialog with pasted JSON-LD text"
+                        class="toolPage_image">
+                    <p>Below you can see the table after loading from the pasted text:</p>
+                    <img src="ImportJSONLD_image7.png" alt="Table after importing JSON-LD from pasted text"
+                        class="toolPage_image">
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <p> <i>No one yet</i></p>
 
@@ -690,12 +729,43 @@
                     <h2 class="toolPage_title"><img src="../connectASensor.png" alt="icon connectASensor"
                             class="toolPage_title_icon">Connect a sensor
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="connectASensor_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>Setting Up the Node: </strong><img src="connectASensor_image0.png"
+                            alt="Connect a sensor node (optionally after an STA service)" class="toolPage_image"></p>
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>Connect a sensor</strong> tool connects a physical sensor (USB or Bluetooth), collects measurements into a table, and makes them available for later tools (for example STA Entity Builder or Upload in STA).</p>
-                    <p>Connect it to an <strong>STA service</strong> node. Double-click the dialog to: set the reading interval; Connect via USB or Bluetooth; view sensor information; clear or pause/resume data; adjust kit options when available (SD/Wi-Fi mode, publish interval, calibration, battery). Collected rows appear in the table area.</p>
-                    <p>Close the dialog when finished; the table remains on the node for the workflow.</p>
+                    <p>The <strong>Connect a sensor</strong> tool connects a physical sensor (USB or Bluetooth), collects
+                        measurements into a TAPIS table, and makes them available for later tools (for example
+                        <strong>STA Entity Builder</strong> or <strong>Upload in STA</strong>).</p>
+                    <p>You can use it on its own to collect data. To reuse an STA endpoint later in the workflow, connect
+                        it after an <strong>STA service</strong> node (the service URL is copied to this node).</p>
+                    <p>Double-click the tool to open <i>Connect a sensor</i>:</p>
+                    <img src="connectASensor_image1.png" alt="Connect a sensor dialog" class="toolPage_image">
+                    <p>Set the <strong>Reading interval</strong> (from 1 s to 5 min). This controls how often TAPIS
+                        reads the sensor and adds a row to the table, for <strong>both USB and Bluetooth</strong>. You
+                        can change it while collecting; the next cycle uses the new value. With Bluetooth (PMScan),
+                        changing the interval is also sent to the device.</p>
+                    <p>Then use:</p>
+                    <ul>
+                        <li><strong>Connect via USB</strong> — for a <strong>Smart Citizen</strong> kit (SCK), via Web
+                            Serial (for now this path is programmed for that device)</li>
+                        <li><strong>Connect via Bluetooth</strong> — for a <strong>PMScan</strong> sensor, via Web
+                            Bluetooth</li>
+                        <li><strong>Disconnect your sensor</strong> — end the connection</li>
+                        <li><strong>Stop collecting data</strong> / <strong>Resume collecting</strong> — pause or
+                            continue readings without disconnecting</li>
+                        <li><strong>Sensor information</strong> — device details</li>
+                        <li><strong>Clear data</strong> — remove collected rows from the node</li>
+                    </ul>
+                    <p>Collected rows appear under <strong>Collected data</strong> in the dialog. From there you can
+                        <strong>Save as CSV</strong> (download the collected rows) or <strong>Select to use in
+                            TAPIS</strong> (keep the data on the node and show it in the main table). Click
+                        <strong>Close</strong> when finished; the table remains on the node for the workflow. If you
+                        close the dialog <strong>without disconnecting</strong>, collection keeps running in the
+                        background and new rows continue to be added to the node.</p>
+                    <p>Below you can see an example with data already collected:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="connectASensor_image2.png"
+                            alt="Connect a sensor dialog with collected data" class="toolPage_image zoomable"
+                            style="width: 80%;"></div>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
                     <p> <i>No one yet</i></p>
 
@@ -706,13 +776,33 @@
                     <h2 class="toolPage_title"><img src="../readSDFromSensor.png" alt="icon readSDFromSensor"
                             class="toolPage_title_icon">Read SD from sensor
                     </h2>
-                    <p><strong>Setting Up the Node: </strong></p>
-                    <img src="readSDFromSensor_image0.png" alt="icon" class="toolPage_image" style="height:350px;width: auto; ">
+                    <p><strong>Setting Up the Node: </strong><img src="readSDFromSensor_image0.png"
+                            alt="Read SD from sensor node in TAPIS" class="toolPage_image"></p>
+
                     <p><strong>How to Use the Node: </strong></p>
-                    <p>The <strong>Read SD from sensor</strong> tool reads CSV files from the SD card of a USB-connected sensor (Web Serial) and loads them as a TAPIS table.</p>
-                    <p>It is a start node (do not connect it from another node). Double-click: Connect via USB, browse files on the SD, preview CSV content, optionally save as CSV, and select a file to use in TAPIS.</p>
+                    <p>The <strong>Read SD from sensor</strong> tool reads CSV files from the SD card of a
+                        USB-connected <strong>Smart Citizen</strong> sensor (Web Serial) and can load one file into a
+                        TAPIS table.</p>
+                    <p>Double-click the tool to open <i>Read SD from sensor</i>:</p>
+                    <img src="readSDFromSensor_image1.png" alt="Read SD from sensor dialog" class="toolPage_image">
+                    <p>Press <strong>Connect via USB</strong>, select the sensor, and wait until the file list is
+                        loaded under <strong>Files on the SD</strong>:</p>
+                    <img src="readSDFromSensor_image2.png" alt="SD files listed after USB connection"
+                        class="toolPage_image">
+                    <p>For each file you can <strong>Open</strong> (preview) or <strong>Delete</strong> (remove from
+                        the SD). Opening a CSV shows its content below (after the header, three metadata rows are
+                        discarded). You can then <strong>Save as CSV</strong> or press <strong>Select to use in
+                            TAPIS</strong> to keep the data on the node:</p>
+                    <div class="image-wrapper" onclick="zoomToImage(this)"><img src="readSDFromSensor_image3.png"
+                            alt="Opened SD CSV table in the dialog" class="toolPage_image zoomable"
+                            style="width: 80%;"></div>
+                    <p>Click <strong>Close</strong> when finished. Use <strong>Disconnect</strong> to end the USB
+                        session, or <strong>Sensor information</strong> for device details.</p>
                     <p> <strong>Recipes where this tool is used:</strong> </p>
-                    <p> <i>No one yet</i></p>
+                    <ul>
+                        <li><a href="https://www.tapis.grumets.cat/tapis/recipes/#recipe13_02" target="_blank">Recipe 13:
+                                Cooking method 2: From sensor data to STAplus</a></li>
+                    </ul>
 
                 </div>
             </div>

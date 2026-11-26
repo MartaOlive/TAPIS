@@ -1,11 +1,12 @@
 Llista help per fer (estat per eina)
 ====================================
 
-Resum: què queda (41 eines + 2 imatges trencades)
+Resum: què queda (38 eines + 2 imatges trencades)
 -------------------------------------------------
-	1. inputtools.htm — 9
-		1 csw  2 edc  3 edcAsset  4 ImportGPKG  5 ImportGPKGTable
-		6 ImportJSONLD  7 connectASensor  8 readSDFromSensor  9 staRoot
+	1. inputtools.htm — 6
+		1 csw  2 edc  3 edcAsset  4 ImportJSONLD
+		5 connectASensor  6 staRoot
+		(JSON-LD: text iniciat, aparcat; Read SD: FET amb imatges recipe)
 
 	2. STAOperations.htm — 12
 		1 RecursiveExpandSTA  2 MergeExpandsSTA  3 FilterRowsSTA
@@ -68,30 +69,15 @@ Input tools (inputtools.htm)
 		Tenim:	DRAFT HELP comentat; refs imatge al draft: edcAsset_image0.png
 		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
 
-	ImportGPKG	SQLite and GPKG
-		Estat:	TEXT_SENSE_CAPTURES (text polit; falten captures)
-		Tenim:	text polit; refs 0..3; demo temporal/gpkg/helpImportGPKG.sqlite
-		Falta:	captures 0 (node), 1 (dialeg buit), 2 (fitxer local), 3 (cataleg taules)
-
-	ImportGPKGTable	SQLite and GeoPackage Table
-		Estat:	TEXT_SENSE_CAPTURES (text polit; falten captures)
-		Tenim:	text polit (títol help: SQLite and GeoPackage Table); refs 0..1; sense dialeg
-		Falta:	captures 0 (SQLite and GPKG + fila seleccionada + Table connectat), 1 (taula carregada)
-
 	ImportJSONLD	JSON-LD
-		Estat:	Esborrany comentat (no visible)
-		Tenim:	DRAFT HELP comentat; refs imatge al draft: ImportJSONLD_image0.png
-		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text
+		Estat:	APARCAT (text iniciat; falten captures) — tornar-hi després
+		Tenim:	text polit; refs 0..7
+		Falta:	captures 0..7
 
 	connectASensor	Connect a sensor
-		Estat:	Esborrany comentat (no visible)
-		Tenim:	DRAFT HELP comentat; refs imatge al draft: connectASensor_image0.png
-		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text; draft resumit: ampliar detalls del dialeg si cal
-
-	readSDFromSensor	Read SD from sensor
-		Estat:	Esborrany comentat (no visible)
-		Tenim:	DRAFT HELP comentat; refs imatge al draft: readSDFromSensor_image0.png
-		Falta:	revisar i descomentar el draft; fer captures (setup, dialeg, resultat); enllacar imatges i polir text; draft resumit: ampliar detalls del dialeg si cal
+		Estat:	TEXT_SENSE_CAPTURES (text polit; falten captures)
+		Tenim:	text polit; refs 0..2 (interval, USB/BT, stop/resume, info, clear, USB SCK, collected data)
+		Falta:	captures 0 (node ± STA service), 1 (dialeg), 2 (dades recollides)
 
 	staRoot	STA root
 		Estat:	Esborrany comentat (no visible)
